@@ -10,7 +10,8 @@ let store: Store = {} as Store;
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default function configureStore(
-  initialState: Record<string, never>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialState: Record<string, any>,
   history: History<History.LocationState>
 ) {
   store = createStore(

@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
@@ -9,9 +10,14 @@ import {
   API_ENDPOINT,
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+
+beforeEach(() => {
+  getConfiguration.mockResolvedValueOnce(metadataResponse);
+});
 
 it('logging out redirects to the login page', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
@@ -28,9 +34,7 @@ it('logging out redirects to the login page', async () => {
   // The response to the appcatalogs call (no catalogs)
   getMockCall('/v4/appcatalogs/');
 
-  nock(API_ENDPOINT)
-    .delete('/v4/auth-tokens/')
-    .reply(StatusCodes.Ok);
+  nock(API_ENDPOINT).delete('/v4/auth-tokens/').reply(StatusCodes.Ok);
 
   // Given I am logged in and on the home page.
   const { getByText } = renderRouteWithStore(AppRoutes.Home);

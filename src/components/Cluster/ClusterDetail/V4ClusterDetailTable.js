@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { selectResourcesV4 } from 'selectors/clusterSelectors';
-import { Providers } from 'shared/constants';
-import { FlexRowWithTwoBlocksOnEdges } from 'styles';
+import { CSSBreakpoints, Providers } from 'shared/constants';
+import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
 import Button from 'UI/Button';
 
 import CredentialInfoRow from './CredentialInfoRow';
@@ -29,6 +29,47 @@ const WrapperDiv = styled.div`
       text-decoration: underline;
     }
   }
+`;
+
+const KubernetesURIWrapper = styled(FlexRowWithTwoBlocksOnEdges)`
+  flex-wrap: wrap;
+
+  .progress_button--container {
+    margin-right: 0;
+  }
+
+  & > div:nth-of-type(1) {
+    margin-right: 0;
+
+    & > * {
+      display: flex;
+    }
+  }
+
+  & > div:nth-of-type(2) {
+    margin-left: 0;
+    margin-right: 0;
+
+    ${mq(CSSBreakpoints.Large)} {
+      & > * {
+        margin-left: 0;
+      }
+    }
+  }
+
+  i {
+    padding: 0 8px;
+  }
+`;
+
+const GetStartedWrapper = styled.div`
+  ${mq(CSSBreakpoints.Large)} {
+    margin: 8px 0;
+  }
+`;
+
+const StyledURIBlock = styled(URIBlock)`
+  flex: 1 1 auto;
 `;
 
 class V4ClusterDetailTable extends React.Component {
@@ -88,14 +129,16 @@ class V4ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-        <FlexRowWithTwoBlocksOnEdges>
-          <URIBlock title='Kubernetes endpoint URI:'>{api_endpoint}</URIBlock>
-          <div style={{ transform: 'translateX(10px)' }}>
+        <KubernetesURIWrapper>
+          <StyledURIBlock title='Kubernetes endpoint URI:'>
+            {api_endpoint}
+          </StyledURIBlock>
+          <GetStartedWrapper>
             <Button onClick={this.props.accessCluster}>
               <i className='fa fa-start' /> GET STARTED
             </Button>
-          </div>
-        </FlexRowWithTwoBlocksOnEdges>
+          </GetStartedWrapper>
+        </KubernetesURIWrapper>
 
         <PortMappingsRow cluster={cluster} />
 
@@ -180,7 +223,7 @@ const makeMapStateToProps = () => {
   const resourcesV4 = selectResourcesV4();
   const mapStateToProps = (state, props) => {
     return {
-      resources: resourcesV4(state, props),
+      resources: resourcesV4(state, props.cluster.id),
     };
   };
 

@@ -28,8 +28,8 @@
 
     <script>
       var config = {
-        apiEndpoint: 'http://localhost:8000',
-        passageEndpoint: 'http://localhost:5001',
+        apiEndpoint: '<%= apiEndpoint %>',
+        passageEndpoint: '<%= passageEndpoint %>',
         // environment is set to:
         // 'dev' while developing
         // 'kubernetes' when deployed in production
@@ -75,14 +75,7 @@
     </noscript>
 
     <div id="app"></div>
-    <footer class="col-9">
-      Happa VERSION ·
-      <a
-        rel="noopener noreferrer"
-        href="https://github.com/giantswarm/happa/releases"
-        >Release Notes</a
-      >
-    </footer>
+
     <script type="text/javascript" src="/vendor/modernizr.js"></script>
   </body>
 </html>

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -11,6 +12,7 @@ import {
   AWSInfoResponse,
   generateRandomString,
   getMockCall,
+  metadataResponse,
   postMockCall,
   USER_EMAIL,
   userResponse,
@@ -18,6 +20,10 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('PasswordReset', () => {
+  beforeEach(() => {
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
+  });
+
   // Letting the server know that you forgot your
   describe('ForgotPassword', () => {
     it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {
@@ -266,12 +272,6 @@ describe('PasswordReset', () => {
     });
 
     it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
-      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-      getMockCall('/v4/user/', userResponse);
-      getMockCall('/v4/organizations/');
-      getMockCall('/v4/appcatalogs/');
-      getMockCall('/v4/clusters/');
-
       nock(global.config.passageEndpoint)
         .post(`/recovery/${token}/`, { email: USER_EMAIL })
         .reply(StatusCodes.Ok, {

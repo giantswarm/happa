@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
-import { ConnectedRouter, push } from 'connected-react-router';
+import App from 'App';
+import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import Routes from 'Routes';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
@@ -23,33 +23,27 @@ export const initialStorage = {
 export function renderRouteWithStore(
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage,
-  history = createMemoryHistory()
+  storage = initialStorage
 ) {
   localStorage.replaceWith(storage);
 
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+    initialIndex: 0,
+  });
+
   const store = configureStore(state, history);
 
-  const app = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>
-  );
-
-  store.dispatch(push(initialRoute));
+  const app = render(<App {...{ store, theme, history }} />);
 
   return app;
 }
 
 /**
  * Render component in the Theme context
- * @param {React.ReactType} component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
- * @param {<Q extends TestingLibrary.Queries>TestingLibrary.RenderOptions<Q>} [options] Testing library render options
+ * @param {React.ElementType} component The React Component
+ * @param {Object} props Props to pass to the component
+ * @param {Object} [options] Testing library render options
  */
 export function renderWithTheme(component, props, options) {
   return render(getComponentWithTheme(component, props), options);
@@ -58,7 +52,7 @@ export function renderWithTheme(component, props, options) {
 /**
  * Include component in the Theme context and return it
  * @param {React.ReactType} Component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
+ * @param {Object} props Props to pass to the component
  */
 export function getComponentWithTheme(Component, props) {
   return (
@@ -71,8 +65,8 @@ export function getComponentWithTheme(Component, props) {
 /**
  * Render component in the Store context
  * @param {React.ReactType} component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
- * @param {Record<string, any>} state Current Store state
+ * @param {<P extends Record<string, any>>React.ComponentProps<P>} [props] Props to pass to the component
+ * @param {Record<string, any>} [state] Current Store state
  * @param {<Q extends TestingLibrary.Queries>TestingLibrary.RenderOptions<Q>} [options] Testing library render options
  */
 export function renderWithStore(component, props, state, options) {

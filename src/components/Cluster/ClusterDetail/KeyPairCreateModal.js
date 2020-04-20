@@ -4,19 +4,17 @@ import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import Button from 'UI/Button';
 
 import ExpiryHoursPicker from './ExpiryHoursPicker';
-
-const EXPIRE_TTL_TIME = 720;
 
 const KeyPairCreateModal = (props) => {
   const defaultDescription = (email) => {
     return `Added by user ${email} using Happa web interface`;
   };
 
-  const [expireTTL, setExpireTTL] = useState(EXPIRE_TTL_TIME);
+  const [expireTTL, setExpireTTL] = useState(Constants.KEYPAIR_DEFAULT_TTL);
   const [description, setDescription] = useState(
     defaultDescription(props.user.email)
   );
@@ -110,6 +108,7 @@ const KeyPairCreateModal = (props) => {
   };
 
   const close = () => {
+    setExpireTTL(Constants.KEYPAIR_DEFAULT_TTL);
     setCNPrefix('');
     setCertificateOrganizations('');
     setDescription(defaultDescription(props.user.email));
@@ -272,6 +271,7 @@ const KeyPairCreateModal = (props) => {
                     <label>Expires:</label>
                     <ExpiryHoursPicker
                       initialValue={expireTTL}
+                      maxSafeValueHours={Constants.KEYPAIR_MAX_SAFE_TTL}
                       onChange={handleTTLChange}
                     />
 

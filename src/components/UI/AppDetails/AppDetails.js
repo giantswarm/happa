@@ -2,8 +2,10 @@ import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import Truncated from 'UI/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';
@@ -94,6 +96,47 @@ const Install = styled.div`
   }
 `;
 
+const Readme = styled.div`
+  max-width: 800px;
+
+  .markdown pre {
+    background-color: ${(props) => props.theme.colors.darkBlueDarker6};
+    border: none;
+    font-size: 16px;
+    color: ${(props) => props.theme.colors.white2};
+  }
+
+  .markdown h1 {
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .markdown h2 {
+    margin-top: 40px;
+    font-size: 20px;
+  }
+`;
+
+function flatten(text, child) {
+  return typeof child === 'string'
+    ? text + child
+    : React.Children.toArray(child.props.children).reduce(flatten, text);
+}
+
+function HeadingRenderer(headingProps) {
+  const children = React.Children.toArray(headingProps.children);
+  const text = children.reduce(flatten, '');
+  const slug = text.toLowerCase().replace(/\W/g, '-');
+
+  return React.createElement(
+    `h${headingProps.level}`,
+    { id: slug },
+    headingProps.children
+  );
+}
+
 const AppDetails = (props) => {
   const {
     app,
@@ -102,7 +145,7 @@ const AppDetails = (props) => {
     q,
     imgErrorFlag,
     imgError,
-    repo,
+    catalog,
     children,
   } = props;
 
@@ -116,11 +159,12 @@ const AppDetails = (props) => {
     home,
     sources,
     urls,
+    readme,
   } = app;
 
   const appCatalogAppListPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppList,
-    { repo: params.repo }
+    { catalogName: params.catalogName }
   );
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 
@@ -128,7 +172,7 @@ const AppDetails = (props) => {
     <div>
       <Link to={to}>
         <i aria-hidden='true' className='fa fa-chevron-left' />
-        Back to &quot;{repo.spec.title}&quot;
+        Back to &quot;{catalog.spec.title}&quot;
       </Link>
       <br />
       <br />
@@ -152,7 +196,8 @@ const AppDetails = (props) => {
 
           <div className='version'>
             <small>Chart&nbsp;Version</small>&nbsp;
-            <code>{version}</code> <small>App&nbsp;Version</small>&nbsp;
+            <Truncated as='code'>{version}</Truncated>{' '}
+            <small>App&nbsp;Version</small>&nbsp;
             <code className='appVersion'>{appVersion}</code>
           </div>
         </Title>
@@ -161,6 +206,18 @@ const AppDetails = (props) => {
       </Header>
 
       <ChartVersionsTable appVersions={appVersions} />
+
+      {readme && (
+        <Readme>
+          <ReactMarkdown
+            className='markdown'
+            renderers={{ heading: HeadingRenderer }}
+          >
+            {readme}
+          </ReactMarkdown>
+          <hr />
+        </Readme>
+      )}
 
       <AppDetailsBody description={description}>
         {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
@@ -178,7 +235,7 @@ AppDetails.propTypes = {
   q: PropTypes.string,
   imgErrorFlag: PropTypes.bool,
   imgError: PropTypes.func,
-  repo: PropTypes.object,
+  catalog: PropTypes.object,
   children: PropTypes.any,
 };
 

@@ -20,7 +20,7 @@ export const messageTTL = {
 };
 
 export class FlashMessage {
-  constructor(text, type, ttl, subtext) {
+  constructor(text, type, ttl, subtext, onClose) {
     // make sure to only pass escaped HTML to this.text!
     this.text = `<p>${escapeHTML(text)}</p>`;
     if (subtext) {
@@ -36,6 +36,9 @@ export class FlashMessage {
       type: type,
       text: this.text,
       timeout: this.timeout,
+      callbacks: {
+        onClose,
+      },
       theme: 'bootstrap-v3',
       layout: 'topRight',
       visibilityControl: true,

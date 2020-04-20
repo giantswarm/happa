@@ -1,15 +1,14 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { render } from '@testing-library/react';
+import App from 'App';
 import auth0 from 'auth0-js';
-import { ConnectedRouter, push } from 'connected-react-router';
-import { ThemeProvider } from 'emotion-theming';
+import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import React from 'react';
-import { Provider } from 'react-redux';
-import Routes from 'Routes';
 import { AuthorizationTypes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
@@ -17,7 +16,7 @@ import theme from 'styles/theme';
 import {
   AWSInfoResponse,
   getMockCall,
-  getMockCallTimes,
+  metadataResponse,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -62,32 +61,41 @@ helpers.isJwtExpired = jest.fn();
 // eslint-disable-next-line no-import-assign
 helpers.validateOrRaise = jest.fn();
 
+// Mock metadata
+const metadataStateMock = {
+  version: {
+    current: 'VERSION',
+    new: null,
+    isUpdating: false,
+    lastCheck: 0,
+    timer: 0,
+  },
+};
+
 const renderRouteWithStore = (
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage,
-  history = createMemoryHistory()
+  storage = initialStorage
 ) => {
   localStorage.replaceWith(storage);
 
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+    initialIndex: 0,
+  });
+
   store = configureStore(state, history);
 
-  const app = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>
-  );
-
-  store.dispatch(push(initialRoute));
+  const app = render(<App {...{ store, theme, history }} />);
 
   return app;
 };
 
 describe('AdminLogin', () => {
+  beforeEach(() => {
+    getConfiguration.mockResolvedValue(metadataResponse);
+  });
+
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
 
@@ -107,7 +115,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
@@ -121,17 +129,16 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to homepage if the user has been previously logged in', async () => {
-    getMockCallTimes('/v4/user/', userResponse, 2);
+    getMockCall('/v4/user/', userResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     helpers.isJwtExpired.mockReturnValue(false);
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     // Check if the user has been redirected to the homepage
@@ -139,12 +146,11 @@ describe('AdminLogin', () => {
   });
 
   it('renews user token if the previously stored one is expired', async () => {
-    getMockCallTimes('/v4/user/', userResponse, 2);
+    getMockCall('/v4/user/', userResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     const mockUserDataWithNewToken = Object.assign({}, mockUserData, {
       auth: {
@@ -165,7 +171,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     // Check if the user has been redirected to the homepage
@@ -182,7 +188,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=invalid`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
@@ -198,7 +204,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
     });
 
@@ -213,12 +219,6 @@ describe('AdminLogin', () => {
     // eslint-disable-next-line no-console
     console.error = jest.fn();
 
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/appcatalogs/');
-    getMockCall('/v4/organizations/');
-    getMockCall('/v4/clusters/', []);
-
     const mockAuthResponseWithNewToken = Object.assign(
       {},
       mockSuccessfulAuthResponse,
@@ -231,7 +231,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     await findByText(

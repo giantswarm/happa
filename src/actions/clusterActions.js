@@ -1,9 +1,7 @@
-import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
 import { StatusCodes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
@@ -56,17 +54,74 @@ export function clustersList({ withLoadingFlags }) {
       .then((data) => {
         const clusters = clustersLoadArrayToObject(data, provider);
 
+        const allIds = data.map((cluster) => cluster.id);
+
         const v5ClusterIds = data
           .filter((cluster) => cluster.path.startsWith('/v5'))
           .map((cluster) => cluster.id);
 
-        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
+        dispatch({
+          type: types.CLUSTERS_LIST_SUCCESS,
+          clusters,
+          v5ClusterIds,
+          allIds,
+        });
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);
         dispatch({
           type: types.CLUSTERS_LIST_ERROR,
+          error: error.message,
+        });
+      });
+  };
+}
+
+/**
+ * Let's fetch the clusters list without overwriting the existent list
+ */
+export function refreshClustersList() {
+  return function (dispatch, getState) {
+    dispatch({ type: types.CLUSTERS_LIST_REFRESH_REQUEST });
+
+    const provider = getState().main.info.general.provider;
+    const clusterStoredIds = Object.keys(getState().entities.clusters.items);
+
+    // Fetch all clusters.
+    clustersApi
+      .getClusters()
+      .then((data) => {
+        // Compare clusters.
+        const addedClusters = data.filter(
+          (cluster) => !clusterStoredIds.includes(cluster.id)
+        );
+
+        const clusters = {};
+        const v5ClusterIds = [];
+
+        // If there are new clusters...
+        if (addedClusters.length > 0) {
+          clusters = clustersLoadArrayToObject(addedClusters, provider);
+
+          v5ClusterIds = addedClusters
+            .filter((cluster) => cluster.path.startsWith('/v5'))
+            .map((cluster) => cluster.id);
+        }
+
+        // If clusters and v5Clusters are empty, we still want to dispatch this in
+        // order to set the loading flag to false.
+        dispatch({
+          type: types.CLUSTERS_LIST_REFRESH_SUCCESS,
+          clusters,
+          v5ClusterIds,
+        });
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        dispatch({
+          type: types.CLUSTERS_LIST_REFRESH_ERROR,
           error: error.message,
         });
       });
@@ -189,7 +244,7 @@ export function clusterLoadDetails(
 
       return cluster;
     } catch (error) {
-      if (error.response.status === StatusCodes.NotFound) {
+      if (error.response?.status === StatusCodes.NotFound) {
         new FlashMessage(
           `Cluster <code>${clusterId}</code> no longer exists.`,
           messageType.INFO,
@@ -202,7 +257,6 @@ export function clusterLoadDetails(
           clusterId,
           isV5Cluster,
         });
-        dispatch(push(AppRoutes.Home));
 
         return {};
       }
@@ -302,12 +356,6 @@ export function clusterCreate(cluster, isV5Cluster) {
           clusterId,
         });
       }
-
-      new FlashMessage(
-        `Your new cluster with ID <code>${clusterId}</code> is being created.`,
-        messageType.SUCCESS,
-        messageTTL.MEDIUM
-      );
 
       return { clusterId, owner: cluster.owner };
     } catch (error) {

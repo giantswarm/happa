@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import Truncated from 'UI/Truncated';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
@@ -150,11 +151,12 @@ const AppContainer = ({
   const appCatalogAppDetailPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppDetail,
     {
-      repo: catalog.metadata.name,
+      catalogName: catalog.metadata.name,
       app: appVersions[0].name,
+      version: appVersions[0].version,
     }
   );
-  const to = `${appCatalogAppDetailPath}?q=${searchQuery}`;
+  const to = `${appCatalogAppDetailPath}/?q=${searchQuery}`;
 
   return (
     <Wrapper {...props}>
@@ -174,7 +176,7 @@ const AppContainer = ({
         </AppIcon>
         <AppDetails>
           <h3>{name}</h3>
-          <span>{version}</span>
+          <Truncated>{version}</Truncated>
         </AppDetails>
       </StyledLink>
     </Wrapper>

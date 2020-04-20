@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -13,6 +14,7 @@ import {
   azureInfoResponse,
   getMockCall,
   getMockCallTimes,
+  metadataResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -32,6 +34,7 @@ describe('V4AzureClusterManagement', () => {
   // Responses to requests
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(azureInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
@@ -187,7 +190,8 @@ describe('V4AzureClusterManagement', () => {
     expect(createButton.disabled).toBeFalsy();
     fireEvent.click(createButton);
 
-    const successMessage = await findByText(/is being created/i);
+    // Expect to be redirected to the cluster detail page
+    const successMessage = await findByText(/kubernetes endpoint URI/i);
     expect(successMessage).toBeInTheDocument();
 
     // eslint-disable-next-line no-empty-function

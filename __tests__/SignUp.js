@@ -3,12 +3,14 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -23,11 +25,7 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 
 describe('Signup', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/appcatalogs/');
-    getMockCall('/v4/clusters/');
-    getMockCall('/v4/organizations/');
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
   });
 
   it('renders without crashing', async () => {

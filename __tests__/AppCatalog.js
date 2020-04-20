@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppCatalogRoutes, OrganizationsRoutes } from 'shared/constants/routes';
@@ -14,6 +15,7 @@ import {
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
+  metadataResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -29,6 +31,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 describe('Apps and App Catalog', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
   });
@@ -106,7 +109,7 @@ describe('Apps and App Catalog', () => {
 
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppList,
-        { repo: 'giantswarm-incubator' }
+        { catalogName: 'giantswarm-incubator' }
       );
       const { findByText } = renderRouteWithStore(appCatalogListPath);
 
@@ -141,7 +144,7 @@ describe('Apps and App Catalog', () => {
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
         {
-          repo: 'giantswarm-incubator',
+          catalogName: 'giantswarm-incubator',
           app: 'nginx-ingress-controller-app',
         }
       );
@@ -197,7 +200,7 @@ describe('Apps and App Catalog', () => {
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
         {
-          repo: 'giantswarm-incubator',
+          catalogName: 'giantswarm-incubator',
           app: 'nginx-ingress-controller-app',
         }
       );
@@ -231,7 +234,14 @@ describe('Apps and App Catalog', () => {
         message: `We're installing your app called 'test-app' on ${V4_CLUSTER.id}`,
       };
       nock(API_ENDPOINT)
-        .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT')
+        .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT', {
+          spec: {
+            catalog: 'giantswarm-incubator',
+            name: 'nginx-ingress-controller-app',
+            namespace: 'kube-system',
+            version: '1.1.1',
+          },
+        })
         .reply(StatusCodes.Ok, installAppResponse);
 
       getMockCallTimes('/v4/user/', userResponse);
@@ -268,7 +278,7 @@ describe('Apps and App Catalog', () => {
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
         {
-          repo: 'giantswarm-incubator',
+          catalogName: 'giantswarm-incubator',
           app: testApp,
         }
       );
@@ -296,7 +306,7 @@ describe('Apps and App Catalog', () => {
       expect(getByLabelText(/namespace:/i).readOnly).toBeTruthy();
 
       // Upload a configmap file
-      let fileInput = getByLabelText(/configmap:/i);
+      let fileInput = getByLabelText(/User level config values YAML:/i);
       let file = new Blob(
         [
           JSON.stringify({
@@ -316,7 +326,7 @@ describe('Apps and App Catalog', () => {
       });
 
       // Upload a secrets file
-      fileInput = getByLabelText(/secret:/i);
+      fileInput = getByLabelText(/User level secret values YAML:/i);
       file = new Blob(
         [
           JSON.stringify({

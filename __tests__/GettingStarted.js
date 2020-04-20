@@ -2,12 +2,14 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { AppRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -22,6 +24,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 // Responses to requests
 beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getConfiguration.mockResolvedValueOnce(metadataResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);

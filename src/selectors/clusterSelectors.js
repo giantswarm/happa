@@ -13,8 +13,17 @@ import {
 import { createDeepEqualSelector, typeWithoutSuffix } from './selectorUtils';
 
 // Regular selectors
-const selectClusterById = (state, props) => {
-  return state.entities.clusters.items[props.cluster.id];
+export const selectClusterById = (state, id) => {
+  return state.entities.clusters.items[id];
+};
+
+const selectOrganizationClusterNames = (state) => {
+  const clusters = state.entities.clusters.items;
+  const clusterIds = Object.keys(clusters);
+
+  return clusterIds
+    .filter((id) => clusters[id].owner === state.main.selectedOrganization)
+    .sort((a, b) => (clusters[a].name > clusters[b].name ? 1 : -1));
 };
 
 const selectNodePools = (state) => state.entities.nodePools.items;
@@ -68,6 +77,13 @@ export const selectErrorMessageByAction = (state, actionType) => {
 // Using factory functions because they create new references each time that are called,
 // so each cluster can have its dedicated function. More info:
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
+
+export const selectClustersList = () => {
+  return createDeepEqualSelector(
+    selectOrganizationClusterNames,
+    (clusters) => clusters
+  );
+};
 
 export const selectResourcesV4 = () =>
   createDeepEqualSelector(selectClusterById, (cluster) => {

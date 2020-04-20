@@ -11,6 +11,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
+  selectClusterById,
   selectClusterNodePools,
   selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
@@ -134,7 +135,11 @@ function ClusterDashboardItem({
   nodePools,
   dispatch,
   nodePoolsLoadError,
+  clusterId,
 }) {
+  // If the cluster has been deleted using gsctl, Happa doesn't know yet.
+  if (!cluster) return null;
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -151,12 +156,11 @@ function ClusterDashboardItem({
   };
 
   const accessCluster = () => {
-    const { id, owner } = cluster;
     const clusterGuidePath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.Overview,
       {
-        orgId: owner,
-        clusterId: id,
+        orgId: cluster.owner,
+        clusterId,
       }
     );
 
@@ -167,7 +171,7 @@ function ClusterDashboardItem({
     OrganizationsRoutes.Clusters.Detail,
     {
       orgId: selectedOrganization,
-      clusterId: cluster.id,
+      clusterId,
     }
   );
 
@@ -175,7 +179,7 @@ function ClusterDashboardItem({
     return (
       <WrapperDeleted>
         <LabelWrapper>
-          <ClusterIDLabel clusterID={cluster.id} copyEnabled />
+          <ClusterIDLabel clusterID={clusterId} copyEnabled />
         </LabelWrapper>
 
         <ContentWrapper>
@@ -194,7 +198,7 @@ function ClusterDashboardItem({
     <Wrapper>
       <LabelWrapper>
         <Link to={linkToCluster}>
-          <ClusterIDLabel clusterID={cluster.id} copyEnabled />
+          <ClusterIDLabel clusterID={clusterId} copyEnabled />
         </Link>
       </LabelWrapper>
 
@@ -204,7 +208,7 @@ function ClusterDashboardItem({
             <RefreshableLabel value={cluster.name}>
               <NameWrapper>{cluster.name}</NameWrapper>
             </RefreshableLabel>
-            <UpgradeNotice clusterId={cluster.id} />
+            <UpgradeNotice clusterId={clusterId} />
           </Link>
         </TitleWrapper>
 
@@ -261,14 +265,16 @@ ClusterDashboardItem.propTypes = {
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,
   nodePoolsLoadError: PropTypes.string,
+  clusterId: PropTypes.string,
 };
 
 function mapStateToProps(state, props) {
   return {
-    nodePools: selectClusterNodePools(state, props.cluster.id),
+    cluster: selectClusterById(state, props.clusterId),
+    nodePools: selectClusterNodePools(state, props.clusterId),
     nodePoolsLoadError: selectErrorByIdAndAction(
       state,
-      props.cluster.id,
+      props.clusterId,
       actionTypes.CLUSTER_NODEPOOLS_LOAD_REQUEST
     ),
   };

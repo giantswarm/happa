@@ -35,7 +35,7 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
         })
         // here error.response.status -> delete node pools
         .catch((error) => {
-          if (error.response.status === StatusCodes.NotFound) {
+          if (error.response?.status === StatusCodes.NotFound) {
             // If 404, it means that the cluster has been deleted.
             // We want to just log the errors silently, because cluster load
             //action is already triggering an error message so the user knows
@@ -204,9 +204,12 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * adding multiple node pools from the v5 cluster details view
  * Dispatches NODEPOOL_CREATE_SUCCESS on success or NODEPOOL_CREATE_ERROR on error.
  *
- * @param {Array} nodePools Array of Node Pool definition objects
+ * @param {string} clusterId - The ID of the cluster
+ * @param {Array} nodePools - Array of Node Pool definition objects
+ * @param {Object} [opts] - Optional parameters
+ * @param {boolean} [opts.withFlashMessages] - If the action should show flash messages after execution
  */
-export function nodePoolsCreate(clusterId, nodePools) {
+export function nodePoolsCreate(clusterId, nodePools, opts) {
   return async function (dispatch) {
     dispatch({ type: types.NODEPOOLS_CREATE_REQUEST });
 
@@ -229,11 +232,13 @@ export function nodePoolsCreate(clusterId, nodePools) {
               nodePool: nodePoolWithStatus,
             });
 
-            new FlashMessage(
-              `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
-              messageType.SUCCESS,
-              messageTTL.MEDIUM
-            );
+            if (opts?.withFlashMessages) {
+              new FlashMessage(
+                `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
+                messageType.SUCCESS,
+                messageTTL.MEDIUM
+              );
+            }
 
             return nodePoolWithStatus;
           })
@@ -245,12 +250,14 @@ export function nodePoolsCreate(clusterId, nodePools) {
               nodePool,
             });
 
-            new FlashMessage(
-              'Something went wrong while trying to create the node pool',
-              messageType.ERROR,
-              messageTTL.MEDIUM,
-              'Please try again later or contact support: support@giantswarm.io'
-            );
+            if (opts?.withFlashMessages) {
+              new FlashMessage(
+                'Something went wrong while trying to create the node pool',
+                messageType.ERROR,
+                messageTTL.MEDIUM,
+                'Please try again later or contact support: support@giantswarm.io'
+              );
+            }
 
             // eslint-disable-next-line no-console
             console.error(error);
