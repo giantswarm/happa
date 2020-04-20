@@ -63,7 +63,7 @@ const VersionsRow = ({ appVersion, entries, className }) => {
 
         {entries.length > expandVersions ? (
           <ExpandVersions onClick={expand}>
-            {`+ ${(entries.length - expandVersions).toString()} more ...`}
+            + {(entries.length - expandVersions).toString()} more &hellip;
           </ExpandVersions>
         ) : undefined}
       </td>
