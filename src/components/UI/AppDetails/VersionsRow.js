@@ -38,7 +38,7 @@ const VersionsRow = ({ appVersion, entries, className }) => {
     INITIAL_MAX_CHART_VERSIONS
   );
 
-  const toggleExpandVersion = () => {
+  const expand = () => {
     setExpandVersions(entries.length);
   };
 
@@ -61,7 +61,7 @@ const VersionsRow = ({ appVersion, entries, className }) => {
         </div>
         <br style={{ clear: 'both' }} />
         {entries.length > expandVersions ? (
-          <ExpandVersions onClick={toggleExpandVersion}>
+          <ExpandVersions onClick={expand}>
             {`+ ${(entries.length - expandVersions).toString()} more ...`}
           </ExpandVersions>
         ) : undefined}
