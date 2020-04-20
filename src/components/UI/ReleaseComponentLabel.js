@@ -1,39 +1,8 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const radius = '5px';
-
-const Wrapper = styled.div`
-  display: inline-block;
-  margin-bottom: 15px;
-  margin-right: 5px;
-  white-space: nowrap;
-`;
-
-const CommonCSS = css`
-  padding: 5px 8px;
-  border: 1px solid #395b70;
-  font-size: 14px;
-  font-weight: 300;
-`;
-
-const NameWrapper = styled.span`
-  ${CommonCSS};
-  background-color: #395b70;
-  border-top-left-radius: ${radius};
-  border-bottom-left-radius: ${radius};
-  border-right: none;
-`;
-
-const VersionWrapper = styled.span`
-  ${CommonCSS};
-  border-top-right-radius: ${radius};
-  border-bottom-right-radius: ${radius};
-  border-left: none;
-  color: #eee;
-`;
+import ValueLabel from './ValueLabel';
 
 const OldVersion = styled.span`
   color: #f56262;
@@ -52,7 +21,7 @@ const VersionLabel = (props) => {
 
   if (oldVersion) {
     return (
-      <VersionWrapper>
+      <>
         <OldVersion aria-label={`version ${oldVersion}`}>
           {oldVersion}
         </OldVersion>
@@ -60,23 +29,17 @@ const VersionLabel = (props) => {
         <NewVersion aria-label={`version ${newVersion}`}>
           {newVersion}
         </NewVersion>
-      </VersionWrapper>
+      </>
     );
   } else if (isRemoved) {
-    return <VersionWrapper>removed</VersionWrapper>;
+    return 'removed';
   } else if (isAdded) {
     return (
-      <VersionWrapper aria-label={`version ${newVersion}`}>
-        {newVersion} (added)
-      </VersionWrapper>
+      <span aria-label={`version ${newVersion}`}>{newVersion} (added)</span>
     );
   }
 
-  return (
-    <VersionWrapper aria-label={`version ${newVersion}`}>
-      {newVersion}
-    </VersionWrapper>
-  );
+  return <span aria-label={`version ${newVersion}`}>{newVersion}</span>;
 };
 
 VersionLabel.propTypes = {
@@ -91,15 +54,19 @@ const ReleaseComponentLabel = (props) => {
   const { name, version, oldVersion, isAdded, isRemoved, className } = props;
 
   return (
-    <Wrapper className={className}>
-      <NameWrapper>{name}</NameWrapper>
-      <VersionLabel
-        isAdded={isAdded}
-        isRemoved={isRemoved}
-        newVersion={version}
-        oldVersion={oldVersion}
-      />
-    </Wrapper>
+    <ValueLabel
+      className={className}
+      color='#395b70'
+      label={name}
+      value={
+        <VersionLabel
+          isAdded={isAdded}
+          isRemoved={isRemoved}
+          newVersion={version}
+          oldVersion={oldVersion}
+        />
+      }
+    />
   );
 };
 

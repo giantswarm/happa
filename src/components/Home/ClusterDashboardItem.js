@@ -21,6 +21,7 @@ import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
+import LabelsList from 'UI/LabelsList';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
@@ -126,6 +127,10 @@ const ClusterDetailsDiv = styled.div`
     display: inline-block;
     transform: translateY(-1px);
   }
+`;
+
+const ClusterLabelsDiv = styled.div`
+  margin-top: 4px;
 `;
 
 function ClusterDashboardItem({
@@ -236,6 +241,12 @@ function ClusterDashboardItem({
             )}
           </ClusterDetailsDiv>
         </ErrorFallback>
+
+        {isV5Cluster && (
+          <ClusterLabelsDiv>
+            <LabelsList labels={cluster.labels} />
+          </ClusterLabelsDiv>
+        )}
       </ContentWrapper>
 
       <ButtonsWrapper>
