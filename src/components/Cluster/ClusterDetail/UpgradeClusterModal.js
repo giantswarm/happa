@@ -40,7 +40,7 @@ class UpgradeClusterModal extends React.Component {
 
   changedComponents = () => {
     const { release } = this.props;
-    let currentComponents = {};
+    let currentComponents = [];
     if (release && release.components) {
       currentComponents = release.components;
     }
