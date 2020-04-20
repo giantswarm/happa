@@ -7,13 +7,13 @@ import VersionsRow from './VersionsRow';
 const ChartVersionTable = styled.table`
   border: 1px solid ${(props) => props.theme.colors.shade4};
   margin-top: 10px;
-  max-width: 320px;
+  max-width: 325px;
   table-layout: fixed;
-  white-space: nowrap;
   float: right;
 
   td {
-    vertical-align: top;
+    vertical-align: middle;
+    line-height: 30px;
     code {
       max-width: 150px;
       display: inline-block;
@@ -25,6 +25,7 @@ const ChartVersionTable = styled.table`
   }
 
   td.appVersion {
+    vertical-align: top;
     border-left: 1px dashed ${(props) => props.theme.colors.shade1};
     text-align: center;
   }

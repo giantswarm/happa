@@ -7,11 +7,13 @@ import Truncated from 'UI/Truncated';
 const INITIAL_MAX_CHART_VERSIONS = 2;
 
 const ChartVersion = styled(Copyable)`
-  margin-bottom: 10px;
-  float: left;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 18px;
 `;
 
 const AppVersion = styled(Copyable)`
+  line-height: 18px;
   display: inline-block;
   float: none;
   position: relative;
@@ -25,6 +27,7 @@ const AppVersion = styled(Copyable)`
 const ExpandVersions = styled.button`
   padding: 0px;
   background-color: inherit;
+  margin-bottom: 0px;
   font-size: 14px;
   color: ${(props) => props.theme.colors.darkBlueLighter6};
 
@@ -45,21 +48,19 @@ const VersionsRow = ({ appVersion, entries, className }) => {
   return (
     <tr className={className}>
       <td>
-        <div>
-          {entries.slice(0, expandVersions).map((appVersionObject) => {
-            return (
-              <ChartVersion
-                key={appVersionObject.version}
-                copyText={appVersionObject.version}
-              >
-                <Truncated numStart={12} as='code'>
-                  {appVersionObject.version}
-                </Truncated>
-              </ChartVersion>
-            );
-          })}
-        </div>
-        <br style={{ clear: 'both' }} />
+        {entries.slice(0, expandVersions).map((appVersionObject) => {
+          return (
+            <ChartVersion
+              key={appVersionObject.version}
+              copyText={appVersionObject.version}
+            >
+              <Truncated numStart={12} as='code'>
+                {appVersionObject.version}
+              </Truncated>
+            </ChartVersion>
+          );
+        })}
+
         {entries.length > expandVersions ? (
           <ExpandVersions onClick={expand}>
             {`+ ${(entries.length - expandVersions).toString()} more ...`}
