@@ -6,12 +6,27 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const process = require('process');
+
+const makeEndpoints = () => {
+  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = process.env;
+
+  return {
+    apiEndpoint: HAPPA_API_ENDPOINT
+      ? HAPPA_API_ENDPOINT
+      : 'http://localhost:8000',
+    passageEndpoint: HAPPA_PASSAGE_ENDPOINT
+      ? HAPPA_PASSAGE_ENDPOINT
+      : 'http://localhost:5001',
+  };
+};
 
 module.exports = {
   entry: ['react-hot-loader/patch', './src/components/index.tsx'],
   context: __dirname,
   node: {
-    fs: 'empty'
+    fs: 'empty',
   },
   output: {
     publicPath: '/',
@@ -93,6 +108,9 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
+      templateParameters: {
+        ...makeEndpoints(),
+      },
     }),
     // Ignore locale data from the moment package, which we don't use.
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
