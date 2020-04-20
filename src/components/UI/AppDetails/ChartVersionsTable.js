@@ -1,10 +1,8 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Copyable from 'shared/Copyable';
-import Truncated from 'UI/Truncated';
 
-const StyledCopyable = styled(Copyable)``;
+import VersionsRow from './VersionsRow';
 
 const ChartVersionTable = styled.table`
   border: 1px solid ${(props) => props.theme.colors.shade4};
@@ -20,11 +18,6 @@ const ChartVersionTable = styled.table`
       max-width: 150px;
       display: inline-block;
     }
-
-    ${StyledCopyable} {
-      float: left;
-      margin-bottom: 10px;
-    }
   }
 
   th.appVersion {
@@ -34,17 +27,6 @@ const ChartVersionTable = styled.table`
   td.appVersion {
     border-left: 1px dashed ${(props) => props.theme.colors.shade1};
     text-align: center;
-
-    ${StyledCopyable} {
-      display: inline-block;
-      float: none;
-      position: relative;
-      left: 8px;
-      code {
-        background-color: ${(props) => props.theme.colors.darkBlueLighter8};
-        color: ${(props) => props.theme.colors.darkBlue};
-      }
-    }
   }
 
   tr:nth-of-type(even) {
@@ -80,30 +62,11 @@ const ChartVersionsTable = (props) => {
         {Object.entries(groupedAppVersions).map(
           ([appVersionString, entries]) => {
             return (
-              <tr key={appVersionString}>
-                <td>
-                  {entries.map((appVersionObject) => {
-                    return (
-                      <StyledCopyable
-                        key={appVersionObject.version}
-                        copyText={appVersionObject.version}
-                      >
-                        <Truncated numStart={12} as='code'>
-                          {appVersionObject.version}
-                        </Truncated>
-                      </StyledCopyable>
-                    );
-                  })}
-                </td>
-
-                <td className='appVersion'>
-                  <StyledCopyable copyText={appVersionString}>
-                    <Truncated numStart={8} as='code'>
-                      {appVersionString}
-                    </Truncated>
-                  </StyledCopyable>
-                </td>
-              </tr>
+              <VersionsRow
+                appVersion={appVersionString}
+                entries={entries}
+                key={appVersionString}
+              />
             );
           }
         )}
