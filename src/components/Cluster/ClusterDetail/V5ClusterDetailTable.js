@@ -496,7 +496,17 @@ class V5ClusterDetailTable extends React.Component {
                 >
                   <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
                 </OverlayTrigger>
-                <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='spot-tooltip'>
+                      {Constants.SPOT_NODES_EXPLNANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
+                </OverlayTrigger>
+
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
