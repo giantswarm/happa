@@ -200,7 +200,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
 
     return (
       <>
-        On demand instances: {baseCapacity} (on demand base capacity)
+        On-demand base capacity: {baseCapacity}
         <br />
         Spot instance percentage: {spotPercentage}
       </>
@@ -227,7 +227,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         overlay={
           <Tooltip id={`${id}-instance-types`}>
             {instanceTypesAvailable
-              ? instance_types.join(', ')
+              ? `Currently used: ${instance_types.join(', ')}`
               : 'Unable to display used instance types'}
           </Tooltip>
         }
