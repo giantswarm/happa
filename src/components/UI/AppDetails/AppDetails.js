@@ -5,8 +5,10 @@ import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import { CSSBreakpoints } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import { mq } from 'styles';
 import Truncated from 'UI/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';
@@ -101,6 +103,10 @@ const Install = styled.div`
 const About = styled.div`
   display: flex;
 
+  ${mq(CSSBreakpoints.Large)} {
+    flex-direction: column;
+  }
+
   div:nth-of-type(1) {
     flex: 1;
   }
@@ -109,6 +115,12 @@ const About = styled.div`
     flex: 0 0 320px;
     width: 320px;
     margin-left: 40px;
+
+    ${mq(CSSBreakpoints.Large)} {
+      flex: 1;
+      margin-left: 0px;
+      margin-top: 40px;
+    }
   }
 `;
 
