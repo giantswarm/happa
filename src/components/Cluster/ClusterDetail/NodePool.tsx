@@ -73,11 +73,8 @@ const NameWrapperDiv = styled.div`
 `;
 
 const InstanceTypesWrapperDiv = styled.div`
-  ${Code} {
-    margin-right: 4px;
-  }
-  ${Code}:last-of-type {
-    margin-right: 0;
+  small {
+    display: inline-block;
   }
 `;
 
@@ -238,15 +235,10 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       >
         <InstanceTypesWrapperDiv>
           {instanceTypesAvailable ? (
-            instance_types.length <= 2 ? (
-              instance_types.map((type: string) => (
-                <Code key={type}>{type}</Code>
-              ))
-            ) : (
-              <>
-                {instance_type} +{instance_types.length - 1}
-              </>
-            )
+            <>
+              <Code>{instance_type}</Code>{' '}
+              <small>+{instance_types.length - 1}</small>
+            </>
           ) : (
             <Code>mixed</Code>
           )}
