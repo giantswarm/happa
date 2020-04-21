@@ -28,6 +28,7 @@ import {
 } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import Tabs from 'shared/Tabs';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -38,7 +39,6 @@ import ClusterApps from './ClusterApps';
 import Ingress from './Ingress/Ingress';
 import KeyPairs from './KeyPairs';
 import ScaleClusterModal from './ScaleClusterModal';
-import Tabs from './Tabs';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';

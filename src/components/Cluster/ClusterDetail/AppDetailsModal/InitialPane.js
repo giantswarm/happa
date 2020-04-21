@@ -21,13 +21,6 @@ const InitialPane = (props) => {
         </div>
 
         <div className='labelvaluepair'>
-          <div className='labelvaluepair--label'>NAMESPACE</div>
-          <div className='labelvaluepair--value code'>
-            <span>{props.app.spec.namespace}</span>
-          </div>
-        </div>
-
-        <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>CHART VERSION</div>
           {/* If we have a catalog, but we're still loading the appVersions
               then show a loading spinner.
@@ -66,12 +59,32 @@ const InitialPane = (props) => {
         </div>
 
         <div className='labelvaluepair'>
+          <div className='labelvaluepair--label'>NAMESPACE</div>
+          <div className='labelvaluepair--value code'>
+            <span>{props.app.spec.namespace}</span>
+          </div>
+        </div>
+
+        <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>APP VERSION</div>
           <div className='labelvaluepair--value code'>
             {props.app.status.app_version === '' ? (
               <span>Information pending...</span>
             ) : (
               <Truncated as='span'>{props.app.status.app_version}</Truncated>
+            )}
+          </div>
+        </div>
+
+        <div className='labelvaluepair' />
+
+        <div className='labelvaluepair'>
+          <div className='labelvaluepair--label'>RELEASE STATUS</div>
+          <div className='labelvaluepair--value code'>
+            {props.app.status?.release?.status ? (
+              <Truncated as='span'>{props.app.status.release.status}</Truncated>
+            ) : (
+              <span>Information pending...</span>
             )}
           </div>
         </div>
