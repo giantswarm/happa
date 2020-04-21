@@ -160,6 +160,18 @@ const SpotValuesLabelText = styled.span`
 
 const SpotValuesNumberPickerWrapper = styled.div`
   margin-bottom: 8px;
+
+  .spot-number-picker {
+    margin-right: 8px;
+  }
+`;
+
+const SpotValuesHelpText = styled.p`
+  padding-bottom: 20px;
+  padding-left: 28px;
+  i {
+    white-space: nowrap;
+  }
 `;
 
 const CheckboxWrapper = styled.div`
@@ -617,7 +629,7 @@ class AddNodePool extends Component {
               <Checkbox
                 checked={this.state.spotInstancesEnabled}
                 onChange={this.setSpotInstancesEnabled}
-                label='Enable AWS Spot Instances'
+                label='Enable Spot Instances'
               />
             </CheckboxWrapper>
             {this.state.spotInstancesEnabled && (
@@ -638,12 +650,13 @@ class AddNodePool extends Component {
                     onChange={this.setSpotInstancePercentage}
                     theme='spot-number-picker'
                   />
+                  <SpotValuesLabelText>percent</SpotValuesLabelText>
                 </SpotValuesNumberPickerWrapper>
-                <p>
+                <SpotValuesHelpText>
                   Controls the percentage of spot instances to be used for
                   worker nodes beyond the number of{' '}
                   <i>on demand base capacity</i>.
-                </p>
+                </SpotValuesHelpText>
                 <SpotValuesNumberPickerWrapper>
                   <SpotValuesLabelText>
                     On demand base capacity
@@ -659,11 +672,12 @@ class AddNodePool extends Component {
                     onChange={this.setOnDemandBaseCapacity}
                     theme='spot-number-picker'
                   />
+                  <SpotValuesLabelText>instances</SpotValuesLabelText>
                 </SpotValuesNumberPickerWrapper>
-                <p>
+                <SpotValuesHelpText>
                   Controls how much of the initial capacity is made up of
                   on-demand instances.
-                </p>
+                </SpotValuesHelpText>
               </SpotValuesSection>
             )}
           </label>
