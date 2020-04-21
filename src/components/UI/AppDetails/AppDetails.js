@@ -101,11 +101,11 @@ const Install = styled.div`
 const About = styled.div`
   display: flex;
 
-  div:nth-child(1) {
+  div:nth-of-type(1) {
     flex: 1;
   }
 
-  dl:nth-child(2) {
+  div:nth-of-type(2) {
     flex: 0 0 320px;
     width: 320px;
     margin-left: 40px;
@@ -235,13 +235,15 @@ const AppDetails = (props) => {
                 </ReactMarkdown>
               </Readme>
             )}
-            <AppDetailsBody description={description}>
-              {home && home !== '' && (
-                <AppDetailsItem data={home} label='Home' />
-              )}
-              {sources && <AppDetailsItem data={sources} label='Sources' />}
-              {urls && <AppDetailsItem data={urls} label='URLS' />}
-            </AppDetailsBody>
+            <div>
+              <AppDetailsBody description={description}>
+                {home && home !== '' && (
+                  <AppDetailsItem data={home} label='Home' />
+                )}
+                {sources && <AppDetailsItem data={sources} label='Sources' />}
+                {urls && <AppDetailsItem data={urls} label='URLS' />}
+              </AppDetailsBody>
+            </div>
           </About>
         </Tab>
 
