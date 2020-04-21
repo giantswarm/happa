@@ -238,7 +238,7 @@ const AppDetails = (props) => {
           <About>
             {readme && (
               <Readme>
-                <small style={{ 'font-weight': 'bold' }}>Readme</small>
+                <small style={{ fontWeight: 'bold' }}>Readme</small>
                 <ReactMarkdown
                   className='markdown'
                   renderers={{ heading: HeadingRenderer }}
