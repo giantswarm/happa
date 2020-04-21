@@ -27,3 +27,6 @@ Icon
 
 # Test Coverage (Jest)
 /coverage
+
+# Environmental variables
+.env

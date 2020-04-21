@@ -92,7 +92,8 @@
     "superagent": "5.2.2",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.10.2",
-    "validate.js": "0.13.1"
+    "validate.js": "0.13.1",
+    "dotenv": "8.2.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
