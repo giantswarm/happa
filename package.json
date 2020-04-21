@@ -70,7 +70,7 @@
     "react-bootstrap": "0.33.1",
     "react-bootstrap-table-next": "4.0.0",
     "react-breadcrumbs": "2.1.7",
-    "react-content-loader": "^5.0.2",
+    "react-content-loader": "^5.0.4",
     "react-datepicker": "2.14.1",
     "react-dom": "16.13.1",
     "react-gravatar": "2.6.3",
