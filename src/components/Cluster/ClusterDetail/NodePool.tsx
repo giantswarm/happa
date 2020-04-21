@@ -5,6 +5,8 @@ import { spinner } from 'images';
 import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { INodePool } from 'shared/types';
@@ -67,6 +69,15 @@ const NameWrapperDiv = styled.div`
   a {
     ${Ellipsis}
     display: inline-block;
+  }
+`;
+
+const InstanceTypesWrapperDiv = styled.div`
+  ${Code} {
+    margin-right: 4px;
+  }
+  ${Code}:last-of-type {
+    margin-right: 0;
   }
 `;
 
@@ -185,15 +196,63 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     const { instance_distribution } = this.props.nodePool.node_spec.aws;
 
     const baseCapacity = instance_distribution?.on_demand_base_capacity ?? '-';
-    let spotInstancePercentage =
-      instance_distribution?.on_demand_percentage_above_base_capacity ?? '-';
-
-    if (spotInstancePercentage !== '-') {
+    const spotPercentage =
       /* eslint-disable-next-line no-magic-numbers */
-      spotInstancePercentage = `${100 - spotInstancePercentage} %`;
+      100 - instance_distribution?.on_demand_percentage_above_base_capacity ??
+      '-';
+
+    return (
+      <>
+        On demand instances: {baseCapacity} (on demand base capacity)
+        <br />
+        Spot instance percentage: {spotPercentage}
+      </>
+    );
+  };
+
+  formatInstanceTypes = () => {
+    const {
+      id,
+      status: { instance_types },
+      node_spec: {
+        aws: { use_alike_instance_types, instance_type },
+      },
+    } = this.props.nodePool;
+
+    if (!use_alike_instance_types) {
+      return <Code>{instance_type}</Code>;
     }
 
-    return `${baseCapacity}/${spotInstancePercentage}`;
+    const instanceTypesAvailable = Boolean(instance_types);
+
+    return (
+      <OverlayTrigger
+        overlay={
+          <Tooltip id={`${id}-instance-types`}>
+            {instanceTypesAvailable
+              ? instance_types.join(', ')
+              : 'Unable to display used instance types'}
+          </Tooltip>
+        }
+        placement='top'
+      >
+        <InstanceTypesWrapperDiv>
+          {instanceTypesAvailable ? (
+            instance_types.length <= 2 ? (
+              instance_types.map((type: string) => (
+                <Code key={type}>{type}</Code>
+              ))
+            ) : (
+              <>
+                {instance_type} +{instance_types.length - 1}
+              </>
+            )
+          ) : (
+            <Code>mixed</Code>
+          )}
+        </InstanceTypesWrapperDiv>
+      </OverlayTrigger>
+    );
   };
 
   render() {
@@ -201,7 +260,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       return <img className='loader' src={spinner} />;
     }
     const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
-    const { id, scaling, availability_zones, status, node_spec } = nodePool;
+    const { id, scaling, availability_zones, status } = nodePool;
     const { nodes_ready: current, nodes: desired, spot_instances } = status;
     const { isNameBeingEdited } = this.state;
 
@@ -225,11 +284,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         {/* Hide the rest of fields when editing name */}
         {!isNameBeingEdited && (
           <>
-            <Code>
-              {node_spec.aws.use_alike_instance_types
-                ? 'mixed'
-                : node_spec.aws.instance_type}
-            </Code>
+            {this.formatInstanceTypes()}
             <div>
               <AvailabilityZonesWrapper
                 availableZonesGridTemplateAreas={
@@ -238,15 +293,20 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
                 zones={availability_zones}
               />
             </div>
-            <NodesWrapper>
-              <span data-testid='scaling-min'>{scaling.min}</span>–
-              <span data-testid='scaling-max'>{scaling.max}</span>
-            </NodesWrapper>
-            <NodesWrapper>{this.formatInstanceDistribution()}</NodesWrapper>
-            <NodesWrapper highlight={current < desired}>
-              {desired}/{current}
-            </NodesWrapper>
-            <NodesWrapper>{spot_instances}</NodesWrapper>
+            <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
+            <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
+            <NodesWrapper>{desired}</NodesWrapper>
+            <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
+            <OverlayTrigger
+              overlay={
+                <Tooltip id={`${id}-spot-distribution-tooltip`}>
+                  {this.formatInstanceDistribution()}
+                </Tooltip>
+              }
+              placement='top'
+            >
+              <NodesWrapper>{spot_instances}</NodesWrapper>
+            </OverlayTrigger>
             <NodePoolDropdownMenu
               clusterId={cluster.id}
               nodePool={nodePool}

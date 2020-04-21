@@ -69,7 +69,7 @@ const GridRowNodePoolsBase = css`
   display: grid;
   grid-gap: 0 10px;
   grid-template-columns:
-    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(4, 2fr)
+    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(5, 2fr)
     1fr;
   grid-template-rows: 30px;
   justify-content: space-between;
@@ -87,7 +87,7 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: 5 / span 4;
+    grid-column: 5 / span 5;
     font-size: 12px;
     position: relative;
     width: 100%;
@@ -456,33 +456,47 @@ class V5ClusterDetailTable extends React.Component {
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
-                <NodePoolsColumnHeader>Scaling Range</NodePoolsColumnHeader>
-                <NodePoolsColumnHeader>Base/Spot</NodePoolsColumnHeader>
                 <OverlayTrigger
                   overlay={
-                    <Tooltip id='min-max-tooltip'>
-                      {Constants.MIN_NODES_EXPLANATION}/
+                    <Tooltip id='min-tooltip'>
+                      {Constants.MIN_NODES_EXPLANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
+                </OverlayTrigger>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='max-tooltip'>
                       {Constants.MAX_NODES_EXPLANATION}
                     </Tooltip>
                   }
                   placement='top'
                 >
-                  <NodePoolsColumnHeader>Min/Max</NodePoolsColumnHeader>
+                  <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
                 </OverlayTrigger>
                 <OverlayTrigger
                   overlay={
-                    <Tooltip id='desired-current-tooltip'>
-                      {Constants.DESIRED_NODES_EXPLANATION}/
+                    <Tooltip id='desired-tooltip'>
+                      {Constants.DESIRED_NODES_EXPLANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
+                </OverlayTrigger>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='current-tooltip'>
                       {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
                     </Tooltip>
                   }
                   placement='top'
                 >
-                  <NodePoolsColumnHeader>
-                    Desired/ Current
-                  </NodePoolsColumnHeader>
+                  <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
                 </OverlayTrigger>
-                <NodePoolsColumnHeader>Spot Instances</NodePoolsColumnHeader>
+                <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>

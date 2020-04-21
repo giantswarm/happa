@@ -7,6 +7,7 @@ interface INodePoolStatus {
   nodes: number;
   nodes_ready: number;
   spot_instances: number;
+  instance_types: string[];
 }
 
 export interface INodePool {
