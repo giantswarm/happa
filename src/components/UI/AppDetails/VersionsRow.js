@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Copyable from 'shared/Copyable';
 import Truncated from 'UI/Truncated';
 
-const INITIAL_MAX_CHART_VERSIONS = 2;
+const INITIAL_MAX_CHART_VERSIONS = 5;
 
 const ChartVersion = styled(Copyable)`
   display: inline-block;

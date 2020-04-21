@@ -7,9 +7,7 @@ import VersionsRow from './VersionsRow';
 const ChartVersionTable = styled.table`
   border: 1px solid ${(props) => props.theme.colors.shade4};
   margin-top: 10px;
-  max-width: 325px;
   table-layout: fixed;
-  float: right;
 
   td {
     vertical-align: middle;
@@ -55,8 +53,8 @@ const ChartVersionsTable = (props) => {
     <ChartVersionTable>
       <thead>
         <tr>
-          <th>Chart Versions</th>
-          <th className='appVersion'>App Version</th>
+          <th>Version</th>
+          <th className='appVersion'>Provides</th>
         </tr>
       </thead>
       <tbody>

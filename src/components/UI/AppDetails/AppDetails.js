@@ -2,9 +2,11 @@ import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Tab from 'react-bootstrap/lib/Tab';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import Tabs from 'shared/Tabs';
 import Truncated from 'UI/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';
@@ -93,6 +95,20 @@ const Install = styled.div`
 
   small {
     font-size: 12px;
+  }
+`;
+
+const About = styled.div`
+  display: flex;
+
+  div:nth-child(1) {
+    flex: 1;
+  }
+
+  dl:nth-child(2) {
+    flex: 0 0 320px;
+    width: 320px;
+    margin-left: 40px;
   }
 `;
 
@@ -195,9 +211,9 @@ const AppDetails = (props) => {
           </div>
 
           <div className='version'>
-            <small>Chart&nbsp;Version</small>&nbsp;
-            <Truncated as='code'>{version}</Truncated>{' '}
-            <small>App&nbsp;Version</small>&nbsp;
+            <small>Version</small>&nbsp;
+            <Truncated as='code'>{version}</Truncated> <small>Provides</small>
+            &nbsp;
             <code className='appVersion'>{appVersion}</code>
           </div>
         </Title>
@@ -205,25 +221,34 @@ const AppDetails = (props) => {
         <Install>{children}</Install>
       </Header>
 
-      <ChartVersionsTable appVersions={appVersions} />
+      <Tabs>
+        <Tab eventKey={1} title='About'>
+          <About>
+            {readme && (
+              <Readme>
+                <small style={{ 'font-weight': 'bold' }}>Readme</small>
+                <ReactMarkdown
+                  className='markdown'
+                  renderers={{ heading: HeadingRenderer }}
+                >
+                  {readme}
+                </ReactMarkdown>
+              </Readme>
+            )}
+            <AppDetailsBody description={description}>
+              {home && home !== '' && (
+                <AppDetailsItem data={home} label='Home' />
+              )}
+              {sources && <AppDetailsItem data={sources} label='Sources' />}
+              {urls && <AppDetailsItem data={urls} label='URLS' />}
+            </AppDetailsBody>
+          </About>
+        </Tab>
 
-      {readme && (
-        <Readme>
-          <ReactMarkdown
-            className='markdown'
-            renderers={{ heading: HeadingRenderer }}
-          >
-            {readme}
-          </ReactMarkdown>
-          <hr />
-        </Readme>
-      )}
-
-      <AppDetailsBody description={description}>
-        {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
-        {sources && <AppDetailsItem data={sources} label='Sources' />}
-        {urls && <AppDetailsItem data={urls} label='URLS' />}
-      </AppDetailsBody>
+        <Tab eventKey={2} title='Other Versions'>
+          <ChartVersionsTable appVersions={appVersions} />
+        </Tab>
+      </Tabs>
     </div>
   );
 };
