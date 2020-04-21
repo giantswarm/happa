@@ -76,23 +76,23 @@ describe('readme loading', () => {
         'This is a sample readme, fetched from http://mockserver.fake/README.md'
       );
 
-    const appVersionWithEmptySources = {
+    const appVersionWithReadmeInSources = {
       sources: ['http://mockserver.fake/README.md'],
     };
 
     await store.dispatch(
-      loadAppReadme('notUnderTest', appVersionWithEmptySources)
+      loadAppReadme('notUnderTest', appVersionWithReadmeInSources)
     );
 
     const expectedActions = [
       {
         type: types.CLUSTER_LOAD_APP_README_REQUEST,
-        appVersion: appVersionWithEmptySources,
+        appVersion: appVersionWithReadmeInSources,
         catalogName: 'notUnderTest',
       },
       {
         type: types.CLUSTER_LOAD_APP_README_SUCCESS,
-        appVersion: appVersionWithEmptySources,
+        appVersion: appVersionWithReadmeInSources,
         catalogName: 'notUnderTest',
         readmeText:
           'This is a sample readme, fetched from http://mockserver.fake/README.md',
@@ -113,25 +113,64 @@ describe('readme loading', () => {
         'This is a sample readme, fetched from http://mockserver.fake/REALLY-LONG-COMMIT-SHA/README.md'
       );
 
-    const appVersionWithEmptySources = {
+    const appVersionWithTestVersionReadmeInSources = {
       sources: [
         'http://mockserver.fake/1.2.3-REALLY-LONG-COMMIT-SHA/README.md',
       ],
     };
 
     await store.dispatch(
-      loadAppReadme('notUnderTest', appVersionWithEmptySources)
+      loadAppReadme('notUnderTest', appVersionWithTestVersionReadmeInSources)
     );
 
     const expectedActions = [
       {
         type: types.CLUSTER_LOAD_APP_README_REQUEST,
-        appVersion: appVersionWithEmptySources,
+        appVersion: appVersionWithTestVersionReadmeInSources,
         catalogName: 'notUnderTest',
       },
       {
         type: types.CLUSTER_LOAD_APP_README_SUCCESS,
-        appVersion: appVersionWithEmptySources,
+        appVersion: appVersionWithTestVersionReadmeInSources,
+        catalogName: 'notUnderTest',
+        readmeText:
+          'This is a sample readme, fetched from http://mockserver.fake/REALLY-LONG-COMMIT-SHA/README.md',
+      },
+    ];
+
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  it('is able to fetch READMEs from test apps that arent tagged yet, but contain the SHA in the url, also if they start with v', async () => {
+    const initialState = {};
+    const store = mockStore(initialState);
+
+    nock('http://mockserver.fake')
+      .get('/REALLY-LONG-COMMIT-SHA/README.md')
+      .reply(
+        StatusCodes.Ok,
+        'This is a sample readme, fetched from http://mockserver.fake/REALLY-LONG-COMMIT-SHA/README.md'
+      );
+
+    const appVersionWithTestVersionReadmeInSources = {
+      sources: [
+        'http://mockserver.fake/v1.2.3-REALLY-LONG-COMMIT-SHA/README.md',
+      ],
+    };
+
+    await store.dispatch(
+      loadAppReadme('notUnderTest', appVersionWithTestVersionReadmeInSources)
+    );
+
+    const expectedActions = [
+      {
+        type: types.CLUSTER_LOAD_APP_README_REQUEST,
+        appVersion: appVersionWithTestVersionReadmeInSources,
+        catalogName: 'notUnderTest',
+      },
+      {
+        type: types.CLUSTER_LOAD_APP_README_SUCCESS,
+        appVersion: appVersionWithTestVersionReadmeInSources,
         catalogName: 'notUnderTest',
         readmeText:
           'This is a sample readme, fetched from http://mockserver.fake/REALLY-LONG-COMMIT-SHA/README.md',
