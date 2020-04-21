@@ -335,6 +335,11 @@ export function loadAppReadme(catalogName, appVersion) {
 
     try {
       const response = await fetch(readmeURL, { mode: 'cors' });
+      if (response.status !== StatusCodes.Ok) {
+        throw new Error(
+          `Error fetching Readme. Response Status: ${response.status}`
+        );
+      }
       const readmeText = await response.text();
 
       dispatch({

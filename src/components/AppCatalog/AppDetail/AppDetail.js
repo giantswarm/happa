@@ -1,12 +1,19 @@
-import { CLUSTER_LOAD_APP_README_REQUEST } from 'actions/actionTypes';
+import {
+  CLUSTER_LOAD_APP_README_ERROR,
+  CLUSTER_LOAD_APP_README_REQUEST,
+} from 'actions/actionTypes';
 import { loadAppReadme } from 'actions/appActions';
+import { clearError } from 'actions/errorActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import {
+  selectErrorByAction,
+  selectLoadingFlagByAction,
+} from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -41,6 +48,7 @@ class AppDetail extends React.Component {
   }
 
   componentDidMount() {
+    this.props.dispatch(clearError(CLUSTER_LOAD_APP_README_ERROR));
     this.loadReadme();
   }
 
@@ -53,7 +61,16 @@ class AppDetail extends React.Component {
    * it hasn't been loaded yet.
    */
   loadReadme() {
-    const { catalog, selectedAppVersion, dispatch, loadingReadme } = this.props;
+    const {
+      catalog,
+      selectedAppVersion,
+      dispatch,
+      loadingReadme,
+      errorLoadingReadme,
+    } = this.props;
+
+    // Skip if there was an error loading the readme.
+    if (errorLoadingReadme) return;
 
     // Skip if there is no readme source to load.
     if (!hasReadmeSource(selectedAppVersion)) return;
@@ -135,6 +152,7 @@ AppDetail.propTypes = {
   loadingCluster: PropTypes.bool,
   dispatch: PropTypes.func,
   loadingReadme: PropTypes.bool,
+  errorLoadingReadme: PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -165,6 +183,10 @@ function mapStateToProps(state, ownProps) {
     loadingReadme: selectLoadingFlagByAction(
       state,
       CLUSTER_LOAD_APP_README_REQUEST
+    ),
+    errorLoadingReadme: selectErrorByAction(
+      state,
+      CLUSTER_LOAD_APP_README_ERROR
     ),
   };
 }
