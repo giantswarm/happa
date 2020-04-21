@@ -368,7 +368,8 @@ function fixTestAppReadmeURLs(readmeURL) {
   // Test app urls will have a semver version followed by a hyphen followed by
   // a long commit sha. We need to remove the version part. If the regex
   // doesn't match, then the string is returned as is.
-  const regexMatcher = /^(.*)\/[0-9]+\.[0-9]+\.[0-9]+-(.*)\/README\.md$/;
+  // https://regex101.com/r/K2dxdN/1
+  const regexMatcher = /^(.*)\/v?[0-9]+\.[0-9]+\.[0-9]+-(.*)\/README\.md$/;
   const fixedReadmeURL = readmeURL.replace(regexMatcher, '$1/$2/README.md');
 
   return fixedReadmeURL;

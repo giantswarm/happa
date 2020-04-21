@@ -141,7 +141,7 @@ describe('readme loading', () => {
     expect(store.getActions()).toEqual(expectedActions);
   });
 
-  it.only('is able to fetch READMEs from test apps that arent tagged yet, but contain the SHA in the url, also if they start with v', async () => {
+  it('is able to fetch READMEs from test apps that arent tagged yet, but contain the SHA in the url, also if they start with v', async () => {
     const initialState = {};
     const store = mockStore(initialState);
 
