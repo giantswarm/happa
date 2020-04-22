@@ -63,9 +63,17 @@ const NameWrapperDiv = styled.div`
 `;
 
 const InstanceTypesWrapperDiv = styled.div`
+  position: relative;
   small {
     display: inline-block;
+    position: absolute;
+    top: 4px;
+    margin-left: 8px;
   }
+`;
+
+const MixedInstanceType = styled(Code)`
+  background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
 interface INPViewAndEditName {
@@ -216,6 +224,8 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       <OverlayTrigger
         overlay={
           <Tooltip id={`${id}-instance-types`}>
+            Alike instances enabled.
+            <br />
             {instanceTypesAvailable
               ? `Currently used: ${instance_types.join(', ')}`
               : 'Unable to display used instance types'}
@@ -224,13 +234,11 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         placement='top'
       >
         <InstanceTypesWrapperDiv>
-          {instanceTypesAvailable ? (
-            <>
-              <Code>{instance_type}</Code>{' '}
-              <small>+{instance_types.length - 1}</small>
-            </>
-          ) : (
-            <Code>mixed</Code>
+          <MixedInstanceType>
+            {instanceTypesAvailable ? instance_type : 'mixed'}
+          </MixedInstanceType>
+          {instanceTypesAvailable && instance_types.length > 1 && (
+            <small>+{instance_types.length - 1}</small>
           )}
         </InstanceTypesWrapperDiv>
       </OverlayTrigger>
