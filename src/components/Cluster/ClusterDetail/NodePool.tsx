@@ -285,7 +285,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
             <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
-            {typeof spot_instances !== undefined || spot_instances !== null ? (
+            {typeof spot_instances === 'number' ? (
               <OverlayTrigger
                 overlay={
                   <Tooltip id={`${id}-spot-distribution-tooltip`}>
@@ -297,7 +297,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
                 <NodesWrapper>{spot_instances}</NodesWrapper>
               </OverlayTrigger>
             ) : (
-              <NodesWrapper>&nbsp;</NodesWrapper>
+              <NodesWrapper />
             )}
             <NodePoolDropdownMenu
               clusterId={cluster.id}
