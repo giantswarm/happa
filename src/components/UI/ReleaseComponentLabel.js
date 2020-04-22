@@ -1,15 +1,16 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import theme from 'styles/theme';
 
 import ValueLabel from './ValueLabel';
 
 const OldVersion = styled.span`
-  color: #f56262;
+  color: ${(p) => p.theme.colors.redOld};
 `;
 
 const NewVersion = styled.span`
-  color: #24a524;
+  color: ${(p) => p.theme.colors.greenNew};
 `;
 
 const ChangeArrow = styled.span`
@@ -56,7 +57,7 @@ const ReleaseComponentLabel = (props) => {
   return (
     <ValueLabel
       className={className}
-      color='#395b70'
+      color={theme.colors.darkBlueLighter1}
       label={name}
       value={
         <VersionLabel

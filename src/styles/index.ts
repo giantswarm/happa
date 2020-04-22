@@ -47,6 +47,8 @@ export interface IColorMap {
   error: string;
   loadingForeground: string;
   foreground: string;
+  redOld: string;
+  greenNew: string;
 }
 
 export interface IThemeFonts {

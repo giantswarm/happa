@@ -57,6 +57,9 @@ const theme: ITheme = {
     loadingForeground: '#507184',
 
     foreground: '#375b70',
+
+    redOld: '#f56262',
+    greenNew: '#24A524',
   },
   border_radius: '4px',
   breakpoints: {

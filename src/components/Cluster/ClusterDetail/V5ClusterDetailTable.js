@@ -337,7 +337,7 @@ const LabelsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
 
-  div, span {
+  & > span, div {
     margin: 5px 5px 5px 0;
   }
 `;

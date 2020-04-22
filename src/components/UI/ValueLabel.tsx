@@ -5,6 +5,8 @@ import React, { ReactNode } from 'react';
 
 const radius = '5px';
 
+const defaultThemeColor = 'shade5';
+
 const Wrapper = styled.div`
   display: inline-block;
   margin-bottom: 15px;
@@ -20,8 +22,10 @@ const CommonCSS = css`
 
 const LabelWrapper = styled.span`
   ${CommonCSS};
-  border: 1px solid ${(props) => props.color ?? '#397049'};
-  background-color: ${(props) => props.color ?? '#397049'};
+  border: 1px solid
+    ${({ color, theme }) => color ?? theme.colors[defaultThemeColor]};
+  background-color: ${({ color, theme }) =>
+    color ?? theme.colors[defaultThemeColor]};
   border-top-left-radius: ${radius};
   border-bottom-left-radius: ${radius};
   border-right: none;
@@ -29,7 +33,8 @@ const LabelWrapper = styled.span`
 
 const ValueWrapper = styled.span`
   ${CommonCSS};
-  border: 1px solid ${(props) => props.color ?? '#397049'};
+  border: 1px solid
+    ${({ color, theme }) => color ?? theme.colors[defaultThemeColor]};
   border-top-right-radius: ${radius};
   border-bottom-right-radius: ${radius};
   border-left: none;
