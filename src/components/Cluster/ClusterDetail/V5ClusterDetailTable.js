@@ -69,7 +69,7 @@ const GridRowNodePoolsBase = css`
   display: grid;
   grid-gap: 0 10px;
   grid-template-columns:
-    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(4, 2fr)
+    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(5, 2fr)
     1fr;
   grid-template-rows: 30px;
   justify-content: space-between;
@@ -87,7 +87,7 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: 5 / span 4;
+    grid-column: 5 / span 5;
     font-size: 12px;
     position: relative;
     width: 100%;
@@ -115,9 +115,19 @@ const GridRowNodePoolsNodes = styled.div`
 const GridRowNodePoolsHeaders = styled.div`
   ${GridRowNodePoolsBase};
   margin-bottom: 0;
-  span {
-    text-align: center;
-  }
+`;
+
+const NodePoolsColumnHeader = styled.span`
+  text-align: center;
+  text-transform: uppercase;
+`;
+
+const NodePoolsNameColumn = styled.span`
+  ${NodePoolsColumnHeader};
+  text-align: center;
+  text-transform: uppercase;
+  padding-left: 8px;
+  justify-self: left;
 `;
 
 const GridRowNodePoolsItem = styled.div`
@@ -432,7 +442,7 @@ class V5ClusterDetailTable extends React.Component {
 
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          {nodePools && nodePools.length > 0 && !loadingNodePools && (
+          {!zeroNodePools && !loadingNodePools && (
             <>
               <GridRowNodePoolsNodes>
                 <div>
@@ -440,12 +450,12 @@ class V5ClusterDetailTable extends React.Component {
                 </div>
               </GridRowNodePoolsNodes>
               <GridRowNodePoolsHeaders>
-                <span>ID</span>
-                <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
-                  NAME
-                </span>
-                <span>INSTANCE TYPE</span>
-                <span>AVAILABILITY ZONES</span>
+                <NodePoolsColumnHeader>Id</NodePoolsColumnHeader>
+                <NodePoolsNameColumn>Name</NodePoolsNameColumn>
+                <NodePoolsColumnHeader>Instance Type</NodePoolsColumnHeader>
+                <NodePoolsColumnHeader>
+                  Availability Zones
+                </NodePoolsColumnHeader>
                 <OverlayTrigger
                   overlay={
                     <Tooltip id='min-tooltip'>
@@ -454,7 +464,7 @@ class V5ClusterDetailTable extends React.Component {
                   }
                   placement='top'
                 >
-                  <span>MIN</span>
+                  <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
                 </OverlayTrigger>
                 <OverlayTrigger
                   overlay={
@@ -464,7 +474,7 @@ class V5ClusterDetailTable extends React.Component {
                   }
                   placement='top'
                 >
-                  <span>MAX</span>
+                  <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
                 </OverlayTrigger>
                 <OverlayTrigger
                   overlay={
@@ -474,7 +484,7 @@ class V5ClusterDetailTable extends React.Component {
                   }
                   placement='top'
                 >
-                  <span>DESIRED</span>
+                  <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
                 </OverlayTrigger>
                 <OverlayTrigger
                   overlay={
@@ -484,9 +494,20 @@ class V5ClusterDetailTable extends React.Component {
                   }
                   placement='top'
                 >
-                  <span>CURRENT</span>
+                  <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
                 </OverlayTrigger>
-                <span> </span>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='spot-tooltip'>
+                      {Constants.SPOT_NODES_EXPLNANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
+                </OverlayTrigger>
+
+                <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
                 {nodePools
@@ -531,7 +552,7 @@ class V5ClusterDetailTable extends React.Component {
               <AddNodePoolFlexColumnDiv>
                 <AddNodePool
                   clusterId={cluster.id}
-                  releaseVersion={release_version}
+                  selectedRelease={release_version}
                   closeForm={this.toggleAddNodePoolForm}
                   informParent={this.updateNodePoolForm}
                 />

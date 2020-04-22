@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -11,13 +12,12 @@ import {
   AWSInfoResponse,
   generateRandomString,
   getMockCall,
+  metadataResponse,
   postMockCall,
   USER_EMAIL,
   userResponse,
-  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getConfiguration } from 'model/services/metadata';
 
 describe('PasswordReset', () => {
   beforeEach(() => {

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppCatalogRoutes, OrganizationsRoutes } from 'shared/constants/routes';
@@ -14,6 +15,7 @@ import {
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
+  metadataResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -23,10 +25,8 @@ import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
-  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getConfiguration } from 'model/services/metadata';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {

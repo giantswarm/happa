@@ -1,13 +1,13 @@
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   userResponse,
-  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getConfiguration } from 'model/services/metadata';
 
 const elementIDs = {
   ChangeEmailForm: 'account-settings/change-email',

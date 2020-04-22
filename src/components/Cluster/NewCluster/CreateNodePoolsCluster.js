@@ -144,16 +144,6 @@ const AZWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  .emphasized {
-    font-size: 16px;
-    span {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
-  .no-margin {
-    margin-left: 18px;
-  }
   .danger {
     font-weight: 400;
     margin: 0 0 0 15px;
