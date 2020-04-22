@@ -133,7 +133,7 @@ const NodePoolsNameColumn = styled.span`
 
 const GridRowNodePoolsItem = styled.div`
   ${GridRowNodePoolsBase};
-  background-color: ${(props) => props.theme.colors.shade7};
+  background-color: ${({ theme }) => theme.colors.foreground};
 `;
 
 export const AddNodePoolWrapper = (props) => css`
@@ -333,7 +333,7 @@ const StyledURIBlock = styled(URIBlock)`
 
 const LabelsRow = styled.div`
   ${Row}
-  background-color: ${(props) => props.theme.colors.shade7};
+  background-color: ${({ theme }) => theme.colors.foreground};
   display: flex;
   flex-wrap: wrap;
 

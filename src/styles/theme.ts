@@ -55,6 +55,8 @@ const theme: ITheme = {
     error: '#e49090',
 
     loadingForeground: '#507184',
+
+    foreground: '#375b70',
   },
   border_radius: '4px',
   breakpoints: {
