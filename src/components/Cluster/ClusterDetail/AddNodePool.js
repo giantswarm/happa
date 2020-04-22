@@ -5,9 +5,12 @@ import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import BaseTransition from 'styles/transitions/BaseTransition';
+import Checkbox from 'UI/Checkbox';
+import NumberPicker from 'UI/NumberPicker';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
@@ -28,6 +31,9 @@ const Emphasized = css`
   .emphasized {
     margin: 0 18px 0 28px;
     transform: translateY(-4px);
+  }
+  .indented {
+    margin-left: 28px;
   }
 `;
 
@@ -140,6 +146,47 @@ const AZLabel = styled.label`
   }
 `;
 
+const SpotValuesSection = styled.label`
+  padding-top: 20px;
+`;
+
+const SpotValuesLabelText = styled.span`
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 32px;
+  display: inline-block;
+  width: 210px;
+`;
+
+const SpotValuesNumberPickerWrapper = styled.div`
+  margin-bottom: 8px;
+
+  .spot-number-picker {
+    margin-right: 8px;
+  }
+`;
+
+const SpotValuesHelpText = styled.p`
+  padding-bottom: 20px;
+  padding-left: 28px;
+  i {
+    white-space: nowrap;
+  }
+`;
+
+const CheckboxWrapper = styled.div`
+  ${(props) =>
+    props.marginTop &&
+    css`
+      margin-top: 20px;
+    `}
+
+  .checkbox-label {
+    font-size: 16px;
+    font-weight: normal;
+  }
+`;
+
 class AddNodePool extends Component {
   state = {
     name: {
@@ -177,19 +224,46 @@ class AddNodePool extends Component {
         valid: true,
         value: this.props.defaultInstanceType,
       },
+      useAlike: false,
+      instanceDistribution: {
+        onDemandBaseCapacity: 0,
+        spotInstancePercentage: 100,
+      },
     },
+    spotInstancesEnabled: false,
     awsInstanceTypes: {},
+    allowSpotInstances: false,
+    allowAlikeInstances: false,
   };
 
   componentDidMount() {
     this.setState({
       awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
+      ...this.computeInstanceCapabilities(),
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.isValid();
+    const { selectedRelease: prevSelectedRelease } = prevProps;
+    const { selectedRelease } = this.props;
+    if (prevSelectedRelease !== selectedRelease) {
+      this.setState(this.computeInstanceCapabilities());
+    }
   }
+
+  computeInstanceCapabilities = () => {
+    const { selectedRelease, provider } = this.props;
+
+    return {
+      allowSpotInstances:
+        provider === Providers.AWS &&
+        cmp(Constants.AWS_ONDEMAND_INSTANCES_VERSION, selectedRelease) <= 0,
+      allowAlikeInstances:
+        provider === Providers.AWS &&
+        cmp(Constants.AWS_USE_ALIKE_INSTANCES_VERSION, selectedRelease) <= 0,
+    };
+  };
 
   updateName = (event) => {
     const name = event.target.value;
@@ -230,6 +304,42 @@ class AddNodePool extends Component {
     });
   };
 
+  setUseAlikeInstancesEnabled = (useAlike) => {
+    this.setState(({ aws }) => ({ aws: { ...aws, useAlike } }));
+  };
+
+  setSpotInstancesEnabled = (spotInstancesEnabled) => {
+    this.setState({ spotInstancesEnabled });
+  };
+
+  setSpotInstancePercentage = ({ value: spotInstancePercentage, valid }) => {
+    if (valid) {
+      this.setState(({ aws }) => ({
+        aws: {
+          ...aws,
+          instanceDistribution: {
+            ...aws.instanceDistribution,
+            spotInstancePercentage,
+          },
+        },
+      }));
+    }
+  };
+
+  setOnDemandBaseCapacity = ({ value: onDemandBaseCapacity, valid }) => {
+    if (valid) {
+      this.setState(({ aws }) => ({
+        aws: {
+          ...aws,
+          instanceDistribution: {
+            ...aws.instanceDistribution,
+            onDemandBaseCapacity,
+          },
+        },
+      }));
+    }
+  };
+
   updateAZ = (payload) => {
     if (this.state.hasAZLabels) {
       this.setState({ availabilityZonesLabels: payload });
@@ -268,6 +378,22 @@ class AddNodePool extends Component {
         ? true
         : false;
 
+    // defaults for disabled spot instances
+    let instanceDistribution = {
+      on_demand_base_capacity: 0,
+      on_demand_percentage_above_base_capacity: 100,
+    };
+
+    if (this.state.spotInstancesEnabled) {
+      instanceDistribution = {
+        on_demand_base_capacity: this.state.aws.instanceDistribution
+          .onDemandBaseCapacity,
+        on_demand_percentage_above_base_capacity:
+          /* eslint-disable-next-line no-magic-numbers */
+          100 - this.state.aws.instanceDistribution.spotInstancePercentage,
+      };
+    }
+
     this.props.informParent(
       {
         isValid,
@@ -287,6 +413,8 @@ class AddNodePool extends Component {
           node_spec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
+              use_alike_instance_types: this.state.aws.useAlike,
+              instance_distribution: instanceDistribution,
             },
           },
         },
@@ -353,6 +481,15 @@ class AddNodePool extends Component {
             />
             <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
           </FlexWrapperDiv>
+          {this.state.allowAlikeInstances && (
+            <CheckboxWrapper marginTop>
+              <Checkbox
+                checked={this.state.aws.useAlike}
+                onChange={this.setUseAlikeInstancesEnabled}
+                label='Allow usage of similar instance types'
+              />
+            </CheckboxWrapper>
+          )}
         </label>
         <AZLabel
           htmlFor='availability-zones'
@@ -395,7 +532,7 @@ class AddNodePool extends Component {
           >
             <div key='az-automatic'>
               <FlexWrapperAZDiv>
-                <p className='emphasized no-margin'>
+                <p className='emphasized'>
                   Number of availability zones to use:
                 </p>
                 <AvailabilityZonesParser
@@ -408,9 +545,7 @@ class AddNodePool extends Component {
                 />
               </FlexWrapperAZDiv>
               <FlexWrapperAZDiv>
-                {/* This is a hack for fixing height for this element and at the same time
-                  control the height of the wrapper so it matches labels wrapper */}
-                <p style={{ margin: '5px 0 24px 28px', height: '38px' }}>
+                <p className='indented' style={{ marginTop: '8px' }}>
                   {this.state.availabilityZonesPicker.value < 2
                     ? `Covering one availability zone, the worker nodes of this node pool
                       will be placed in the same availability zone as the
@@ -459,11 +594,11 @@ class AddNodePool extends Component {
             >
               <div key='az-manual'>
                 <FlexColumnAZDiv>
-                  <p>
+                  <p className='indented'>
                     You can select up to {maxAZ} availability zones to make use
                     of.
                   </p>
-                  <FlexWrapperAZDiv>
+                  <FlexWrapperAZDiv className='indented'>
                     <AvailabilityZonesParser
                       min={minAZ}
                       max={maxAZ}
@@ -488,6 +623,65 @@ class AddNodePool extends Component {
             </BaseTransition>
           </RadioWrapperDiv>
         </AZLabel>
+        {this.state.allowSpotInstances && (
+          <label>
+            <CheckboxWrapper>
+              <Checkbox
+                checked={this.state.spotInstancesEnabled}
+                onChange={this.setSpotInstancesEnabled}
+                label='Enable Spot Instances'
+              />
+            </CheckboxWrapper>
+            {this.state.spotInstancesEnabled && (
+              <SpotValuesSection>
+                <span className='label-span'>Instance distribution</span>
+                <SpotValuesNumberPickerWrapper>
+                  <SpotValuesLabelText>
+                    Spot instance percentage
+                  </SpotValuesLabelText>
+                  <NumberPicker
+                    readOnly={false}
+                    max={100}
+                    min={0}
+                    stepSize={10}
+                    value={
+                      this.state.aws.instanceDistribution.spotInstancePercentage
+                    }
+                    onChange={this.setSpotInstancePercentage}
+                    theme='spot-number-picker'
+                  />
+                  <SpotValuesLabelText>percent</SpotValuesLabelText>
+                </SpotValuesNumberPickerWrapper>
+                <SpotValuesHelpText>
+                  Controls the percentage of spot instances to be used for
+                  worker nodes beyond the number of{' '}
+                  <i>on demand base capacity</i>.
+                </SpotValuesHelpText>
+                <SpotValuesNumberPickerWrapper>
+                  <SpotValuesLabelText>
+                    On demand base capacity
+                  </SpotValuesLabelText>
+                  <NumberPicker
+                    readOnly={false}
+                    min={0}
+                    max={32767}
+                    stepSize={1}
+                    value={
+                      this.state.aws.instanceDistribution.onDemandBaseCapacity
+                    }
+                    onChange={this.setOnDemandBaseCapacity}
+                    theme='spot-number-picker'
+                  />
+                  <SpotValuesLabelText>instances</SpotValuesLabelText>
+                </SpotValuesNumberPickerWrapper>
+                <SpotValuesHelpText>
+                  Controls how much of the initial capacity is made up of
+                  on-demand instances.
+                </SpotValuesHelpText>
+              </SpotValuesSection>
+            )}
+          </label>
+        )}
         <label className='scaling-range' htmlFor='scaling-range'>
           <span className='label-span'>Scaling range</span>
           <NodeCountSelector

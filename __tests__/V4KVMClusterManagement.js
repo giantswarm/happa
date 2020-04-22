@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -13,6 +14,7 @@ import {
   getMockCall,
   getMockCallTimes,
   KVMInfoResponse,
+  metadataResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -22,11 +24,9 @@ import {
   v4ClustersResponse,
   v4KVMClusterResponse,
   v4KVMClusterStatusResponse,
-  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodes } from 'utils/clusterUtils';
-import { getConfiguration } from 'model/services/metadata';
 
 const minNodesCount = 3;
 
@@ -75,7 +75,7 @@ it('renders all the v4 KVM cluster data correctly', async () => {
   const portsInResponse = v4KVMClusterResponse.kvm.port_mappings;
   const portsContainer = getByText('Ingress ports:');
 
-  portsInResponse.forEach(mapping => {
+  portsInResponse.forEach((mapping) => {
     const protocol = mapping.protocol.toUpperCase();
     const html = `<dt>${protocol}</dt><dd>${mapping.port}</dd>`;
     expect(portsContainer).toContainHTML(html);

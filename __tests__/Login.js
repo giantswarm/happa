@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -10,12 +11,11 @@ import {
   authTokenResponse,
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   postMockCall,
   userResponse,
-  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getConfiguration } from 'model/services/metadata';
 
 beforeEach(() => {
   getConfiguration.mockResolvedValueOnce(metadataResponse);
@@ -135,9 +135,7 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   // Given I have a Giant Swarm API that does not accept my login attempt
 
   // The failed 401 response to the login call
-  nock(API_ENDPOINT)
-    .post('/v4/auth-tokens/')
-    .reply(StatusCodes.Unauthorized);
+  nock(API_ENDPOINT).post('/v4/auth-tokens/').reply(StatusCodes.Unauthorized);
 
   // And I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(

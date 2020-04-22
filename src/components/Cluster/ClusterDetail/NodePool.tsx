@@ -4,11 +4,12 @@ import { spinner } from 'images';
 import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
-import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
 
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
@@ -35,12 +36,15 @@ const NPViewAndEditNameStyled = styled<
   }
 `;
 
-const NodesWrapper = styled.div`
+const NodesWrapper = styled.div<{ highlight?: boolean }>`
   width: 36px;
   height: 30px;
   line-height: 31px;
   text-align: center;
   border-radius: 3px;
+  white-space: nowrap;
+  background-color: ${({ theme, highlight }) =>
+    highlight && theme.colors.goldBackground};
 `;
 
 const NameWrapperDiv = styled.div`
@@ -56,6 +60,20 @@ const NameWrapperDiv = styled.div`
     ${Ellipsis}
     display: inline-block;
   }
+`;
+
+const InstanceTypesWrapperDiv = styled.div`
+  position: relative;
+  small {
+    display: inline-block;
+    position: absolute;
+    top: 4px;
+    margin-left: 8px;
+  }
+`;
+
+const MixedInstanceType = styled(Code)`
+  background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
 interface INPViewAndEditName {
@@ -169,13 +187,69 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     this.scaleNodePoolModal?.setNodePool(nodePool);
   };
 
+  formatInstanceDistribution = () => {
+    const { instance_distribution } = this.props.nodePool.node_spec.aws;
+
+    const baseCapacity = instance_distribution?.on_demand_base_capacity ?? '-';
+    const spotPercentage =
+      /* eslint-disable-next-line no-magic-numbers */
+      100 - instance_distribution?.on_demand_percentage_above_base_capacity ??
+      '-';
+
+    return (
+      <>
+        On-demand base capacity: {baseCapacity}
+        <br />
+        Spot instance percentage: {spotPercentage}
+      </>
+    );
+  };
+
+  formatInstanceTypes = () => {
+    const {
+      id,
+      status: { instance_types },
+      node_spec: {
+        aws: { use_alike_instance_types, instance_type },
+      },
+    } = this.props.nodePool;
+
+    if (!use_alike_instance_types) {
+      return <Code>{instance_type}</Code>;
+    }
+
+    const instanceTypesAvailable = Boolean(instance_types);
+
+    return (
+      <OverlayTrigger
+        overlay={
+          <Tooltip id={`${id}-instance-types`}>
+            Similar instances enabled.
+            <br />
+            {instanceTypesAvailable
+              ? `Currently used: ${instance_types.join(', ')}`
+              : 'Unable to display used instance types'}
+          </Tooltip>
+        }
+        placement='top'
+      >
+        <InstanceTypesWrapperDiv>
+          <MixedInstanceType>{instance_type}</MixedInstanceType>
+          {instanceTypesAvailable && instance_types.length > 1 && (
+            <small>+{instance_types.length - 1}</small>
+          )}
+        </InstanceTypesWrapperDiv>
+      </OverlayTrigger>
+    );
+  };
+
   render() {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
     }
     const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
-    const { id, scaling, availability_zones, status, node_spec } = nodePool;
-    const { nodes_ready: current, nodes: desired } = status;
+    const { id, scaling, availability_zones, status } = nodePool;
+    const { nodes_ready: current, nodes: desired, spot_instances } = status;
     const { isNameBeingEdited } = this.state;
 
     return (
@@ -198,7 +272,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         {/* Hide the rest of fields when editing name */}
         {!isNameBeingEdited && (
           <>
-            <Code>{node_spec.aws.instance_type}</Code>
+            {this.formatInstanceTypes()}
             <div>
               <AvailabilityZonesWrapper
                 availableZonesGridTemplateAreas={
@@ -210,14 +284,21 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
             <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
-            <NodesWrapper
-              style={{
-                background:
-                  current < desired ? theme.colors.goldBackground : undefined,
-              }}
-            >
-              {current}
-            </NodesWrapper>
+            <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
+            {typeof spot_instances === 'number' ? (
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id={`${id}-spot-distribution-tooltip`}>
+                    {this.formatInstanceDistribution()}
+                  </Tooltip>
+                }
+                placement='top'
+              >
+                <NodesWrapper>{spot_instances}</NodesWrapper>
+              </OverlayTrigger>
+            ) : (
+              <NodesWrapper />
+            )}
             <NodePoolDropdownMenu
               clusterId={cluster.id}
               nodePool={nodePool}

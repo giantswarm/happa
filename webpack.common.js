@@ -1,24 +1,29 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const path = require('path');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
+const dotenv = require('dotenv');
 
 const makeEndpoints = () => {
-  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = process.env;
+  const defaults = {
+    HAPPA_API_ENDPOINT: 'http://localhost:8000',
+    HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
+  };
+  const envFileVars = JSON.stringify(dotenv.config().parsed);
+
+  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = Object.assign(
+    {},
+    defaults,
+    envFileVars,
+    process.env
+  );
 
   return {
-    apiEndpoint: HAPPA_API_ENDPOINT
-      ? HAPPA_API_ENDPOINT
-      : 'http://localhost:8000',
-    passageEndpoint: HAPPA_PASSAGE_ENDPOINT
-      ? HAPPA_PASSAGE_ENDPOINT
-      : 'http://localhost:5001',
+    apiEndpoint: HAPPA_API_ENDPOINT,
+    passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };
 
