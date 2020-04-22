@@ -1,4 +1,3 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { spinner } from 'images';
@@ -11,7 +10,6 @@ import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
-import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
 
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
@@ -38,23 +36,15 @@ const NPViewAndEditNameStyled = styled<
   }
 `;
 
-interface INodesWrapperProps {
-  highlight?: boolean;
-  children: React.ReactNode;
-}
-
-const NodesWrapper = styled.div`
+const NodesWrapper = styled.div<{ highlight?: boolean }>`
   width: 36px;
   height: 30px;
   line-height: 31px;
   text-align: center;
   border-radius: 3px;
   white-space: nowrap;
-  ${({ highlight }: INodesWrapperProps) =>
-    highlight &&
-    css`
-      background-color: ${theme.colors.goldBackground};
-    `}
+  background-color: ${({ theme, highlight }) =>
+    highlight && theme.colors.goldBackground};
 `;
 
 const NameWrapperDiv = styled.div`
