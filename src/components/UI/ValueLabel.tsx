@@ -9,7 +9,7 @@ const defaultThemeColor = 'shade5';
 
 const Wrapper = styled.div`
   display: inline-block;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   margin-right: 5px;
   white-space: nowrap;
 `;
