@@ -224,7 +224,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       <OverlayTrigger
         overlay={
           <Tooltip id={`${id}-instance-types`}>
-            Alike instances enabled.
+            Similar instances enabled.
             <br />
             {instanceTypesAvailable
               ? `Currently used: ${instance_types.join(', ')}`
@@ -234,9 +234,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         placement='top'
       >
         <InstanceTypesWrapperDiv>
-          <MixedInstanceType>
-            {instanceTypesAvailable ? instance_type : 'mixed'}
-          </MixedInstanceType>
+          <MixedInstanceType>{instance_type}</MixedInstanceType>
           {instanceTypesAvailable && instance_types.length > 1 && (
             <small>+{instance_types.length - 1}</small>
           )}
