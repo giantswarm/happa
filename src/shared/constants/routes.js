@@ -35,6 +35,8 @@ const OrganizationsRoutes = {
       Overview: '/organizations/:orgId/clusters/:clusterId/getting-started',
       ConfigureKubeCtl:
         '/organizations/:orgId/clusters/:clusterId/getting-started/configure',
+      InstallIngress:
+        '/organizations/:orgId/clusters/:clusterId/getting-started/ingress',
       SimpleExample:
         '/organizations/:orgId/clusters/:clusterId/getting-started/example',
       NextSteps:
