@@ -29,7 +29,7 @@ const entityLoadingReducer = produce((draft, action) => {
     return;
   }
 
-  draft[id] = { [requestName]: requestState === 'REQUEST' };
+  draft[id] = { ...draft[id], [requestName]: requestState === 'REQUEST' };
 }, initialState);
 
 export default entityLoadingReducer;
