@@ -1,14 +1,27 @@
+import {
+  CLUSTER_INSTALL_APP_REQUEST,
+  CLUSTER_LOAD_APPS_REQUEST,
+} from 'actions/actionTypes';
+import { loadApps } from 'actions/appActions';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectClusterById } from 'selectors/clusterSelectors';
+import {
+  selectClusterById,
+  selectIngressAppFromCluster,
+  selectLoadingFlagByAction,
+} from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 const InstallIngress = (props) => {
+  useEffect(() => {
+    props.dispatch(loadApps(props.cluster.id));
+  }, [props.cluster.id]);
+
   const pathParams = {
     orgId: props.match.params.orgId,
     clusterId: props.match.params.clusterId,
@@ -28,6 +41,28 @@ const InstallIngress = (props) => {
     OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
     pathParams
   );
+
+  const buttonState = (prps) => {
+    const appsLoading =
+      'Checking if an ingress controller is already installed.';
+    const installingIngress = 'Installing your ingress controller now.';
+    const ingressInstalled = '✅ Ingress controller already installed!';
+    const noIngressYet = (
+      <>
+        Click this button to install an ingress controller on{' '}
+        <ClusterIDLabel clusterID={prps.cluster.id} />
+      </>
+    );
+
+    if (prps.appsLoading) return { message: appsLoading, disabled: true };
+    if (prps.ingressInstalling)
+      return { message: installingIngress, disabled: true };
+    if (prps.ingressApp) return { message: ingressInstalled, disabled: true };
+
+    return { message: noIngressYet, disabled: false };
+  };
+
+  const installIngressController = () => {};
 
   return (
     <Breadcrumb
@@ -63,14 +98,20 @@ const InstallIngress = (props) => {
           through the process.
         </p>
 
-        <div className='well' style={{ textAlign: 'center' }}>
+        <div
+          className='well'
+          style={{ verticalAlign: 'middle', overflow: 'auto' }}
+        >
           <button
             type='button'
             className='primary'
-            style={{ marginBottom: '0px' }}
+            disabled={buttonState(props).disabled}
+            style={{ marginBottom: '0px', float: 'left', marginRight: '18px' }}
+            onClick={installIngressController}
           >
             Install Ingress Controller
           </button>
+          <p style={{ marginTop: '9px' }}>{buttonState(props).message}</p>
         </div>
         <hr />
 
@@ -121,6 +162,10 @@ InstallIngress.propTypes = {
   goToSlide: PropTypes.func,
   match: PropTypes.object,
   cluster: PropTypes.object,
+  dispatch: PropTypes.func,
+  appsLoading: PropTypes.bool,
+  ingressApp: PropTypes.object,
+  ingressInstalling: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -129,9 +174,28 @@ function mapStateToProps(state, ownProps) {
     ownProps.match.params.clusterId
   );
 
+  const appsLoading = selectLoadingFlagByAction(
+    state,
+    CLUSTER_LOAD_APPS_REQUEST
+  );
+  const ingressInstalling = selectLoadingFlagByAction(
+    state,
+    CLUSTER_INSTALL_APP_REQUEST
+  );
+  const ingressApp = selectIngressAppFromCluster(selectedCluster);
+
   return {
     cluster: selectedCluster,
+    ingressApp,
+    appsLoading,
+    ingressInstalling,
   };
 }
 
-export default connect(mapStateToProps)(InstallIngress);
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: dispatch,
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InstallIngress);
