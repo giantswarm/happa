@@ -8,7 +8,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const colorHashCache = {};
 
-const Wrapper = styled.div`
+const Wrapper = styled.span`
   display: inline-block;
 
   &:hover {
