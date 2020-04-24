@@ -50,7 +50,7 @@ export const selectErrorByIdAndAction = (state, id, actionType) => {
 
 export const selectLoadingFlagByIdAndAction = (state, id, actionType) => {
   return (
-    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null
+    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? true
   );
 };
 
