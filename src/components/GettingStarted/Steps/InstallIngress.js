@@ -2,7 +2,7 @@ import {
   CLUSTER_INSTALL_APP_REQUEST,
   CLUSTER_LOAD_APPS_REQUEST,
 } from 'actions/actionTypes';
-import { loadApps } from 'actions/appActions';
+import { installApp, loadApps } from 'actions/appActions';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -62,7 +62,24 @@ const InstallIngress = (props) => {
     return { message: noIngressYet, disabled: false };
   };
 
-  const installIngressController = () => {};
+  const installIngressController = async () => {
+    await props.dispatch(
+      installApp(
+        {
+          catalog: 'giantswarm',
+          chartName: 'nginx-ingress-controller-app',
+          namespace: 'kube-system',
+          name: 'nginx-ingress-controller-app',
+          valuesYAML: '',
+          secretsYAML: '',
+          version: '1.6.9',
+        },
+        props.cluster.id
+      )
+    );
+
+    await props.dispatch(loadApps(props.cluster.id));
+  };
 
   return (
     <Breadcrumb
@@ -94,8 +111,9 @@ const InstallIngress = (props) => {
 
         <p>
           For convenience, you can click on the &apos;Install Ingress
-          Controller&apos; button below to bring up a modal which will guide you
-          through the process.
+          Controller&apos; button below to immediately install the{' '}
+          <code>nginx-ingress-controller</code>
+          on your cluster.
         </p>
 
         <div
