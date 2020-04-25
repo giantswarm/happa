@@ -122,12 +122,7 @@ export function installApp(app, clusterID) {
         },
       }).catch((error) => {
         showAppInstallationErrorFlashMessage(app.name, clusterID, error);
-
-        dispatch({
-          type: types.CLUSTER_INSTALL_APP_ERROR,
-          id: clusterID,
-          error,
-        });
+        throw error;
       });
 
       dispatch({
