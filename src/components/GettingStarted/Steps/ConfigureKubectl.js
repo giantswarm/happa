@@ -147,11 +147,6 @@ class ConfigKubeCtl extends React.Component {
       pathParams
     );
 
-    const clusterGuideExamplePath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
-      pathParams
-    );
-
     const clusterGuideOverviewPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.Overview,
       pathParams
@@ -335,7 +330,7 @@ class ConfigKubeCtl extends React.Component {
               </button>
             </Link>
 
-            <Link to={clusterGuideExamplePath}>
+            <Link to={this.props.steps[this.props.stepIndex + 1].url}>
               <button className='primary' type='button'>
                 Continue <i className='fa fa-chevron-right' />
               </button>
@@ -355,6 +350,8 @@ ConfigKubeCtl.propTypes = {
   match: PropTypes.object,
   selectedCluster: PropTypes.object,
   user: PropTypes.object,
+  steps: PropTypes.array,
+  stepIndex: PropTypes.number,
 };
 
 function mapStateToProps(state, ownProps) {

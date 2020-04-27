@@ -80,11 +80,6 @@ class SimpleExample extends React.Component {
       clusterId: this.props.match.params.clusterId,
     };
 
-    const clusterGuideConfigurationPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.GettingStarted.ConfigureKubeCtl,
-      pathParams
-    );
-
     const clusterGuideExamplePath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
       pathParams
@@ -313,7 +308,7 @@ class SimpleExample extends React.Component {
           </CodeBlock>
 
           <div className='component_slider--nav'>
-            <Link to={clusterGuideConfigurationPath}>
+            <Link to={this.props.steps[this.props.stepIndex - 1].url}>
               <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
@@ -337,6 +332,8 @@ SimpleExample.propTypes = {
   dispatch: PropTypes.func,
   goToSlide: PropTypes.func,
   match: PropTypes.object,
+  steps: PropTypes.array,
+  stepIndex: PropTypes.number,
 };
 
 function mapStateToProps(state, ownProps) {
