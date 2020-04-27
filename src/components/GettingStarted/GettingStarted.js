@@ -52,7 +52,7 @@ const GettingStarted = (props) => {
     {
       title: 'Run a simple example',
       description:
-        'To make sure everything works as expected, let&apos;s start a hello world application',
+        "To make sure everything works as expected, let's start a hello world application",
       url: clusterGuideExamplePath,
       routePath: OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
       component: SimpleExample,
@@ -103,15 +103,11 @@ const GettingStarted = (props) => {
               exact
               path={OrganizationsRoutes.Clusters.GettingStarted.Overview}
             />
-            {steps.map(({ component, routePath, title }, i) => (
+            {steps.map(({ component: Component, routePath, title }, i) => (
               <Route
-                render={() =>
-                  React.createElement(component, {
-                    steps: steps,
-                    stepIndex: i,
-                    ...props,
-                  })
-                }
+                render={() => (
+                  <Component steps={steps} stepIndex={i} {...props} />
+                )}
                 exact
                 path={routePath}
                 key={title}
