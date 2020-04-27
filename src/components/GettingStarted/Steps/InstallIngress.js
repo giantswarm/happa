@@ -20,10 +20,11 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 const InstallIngress = (props) => {
   const clusterId = props.cluster.id;
+  const dispatch = props.dispatch;
 
   useEffect(() => {
-    props.dispatch(loadApps(props.cluster.id));
-  }, [clusterId]);
+    dispatch(loadApps(clusterId));
+  }, [clusterId, dispatch]);
 
   const [installing, setInstalling] = useState(false);
 
