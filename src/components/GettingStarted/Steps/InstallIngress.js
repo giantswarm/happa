@@ -72,32 +72,34 @@ const InstallIngress = (props) => {
   };
 
   const installIngressController = async () => {
-    setInstalling(true);
+    try {
+      setInstalling(true);
 
-    await props.dispatch(
-      installApp(
-        {
-          catalog: 'giantswarm',
-          chartName: 'nginx-ingress-controller-app',
-          namespace: 'kube-system',
-          name: 'nginx-ingress-controller-app',
-          valuesYAML: '',
-          secretsYAML: '',
-          version: '1.6.9',
-        },
-        props.cluster.id
-      )
-    );
+      await props.dispatch(
+        installApp(
+          {
+            catalog: 'giantswarm',
+            chartName: 'nginx-ingress-controller-app',
+            namespace: 'kube-system',
+            name: 'nginx-ingress-controller-app',
+            valuesYAML: '',
+            secretsYAML: '',
+            version: '1.6.9',
+          },
+          props.cluster.id
+        )
+      );
 
-    await props.dispatch(loadApps(props.cluster.id));
-
-    setInstalling(false);
+      await props.dispatch(loadApps(props.cluster.id));
+    } finally {
+      setInstalling(false);
+    }
   };
 
   return (
     <Breadcrumb
       data={{
-        title: 'INSTALL_INGRESS',
+        title: 'INSTALL INGRESS',
         pathname: clusterGuideIngressPath,
       }}
     >
