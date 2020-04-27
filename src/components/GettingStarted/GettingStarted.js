@@ -51,8 +51,7 @@ const GettingStarted = (props) => {
 
     {
       title: 'Run a simple example',
-      description:
-        "To make sure everything works as expected, let's start a hello world application",
+      description: `To make sure everything works as expected, let's start a hello world application`,
       url: clusterGuideExamplePath,
       routePath: OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
       component: SimpleExample,
@@ -71,8 +70,7 @@ const GettingStarted = (props) => {
   // Insert the install ingress step if the cluster has optional ingress.
   const ingressStep = {
     title: 'Install an ingress controller',
-    description:
-      "We'll need an ingress controller before we can access any services from the browser",
+    description: `We'll need an ingress controller before we can access any services from the browser`,
     url: clusterGuideIngressPath,
     routePath: OrganizationsRoutes.Clusters.GettingStarted.InstallIngress,
     component: InstallIngress,
