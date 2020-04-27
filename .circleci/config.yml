@@ -140,8 +140,8 @@ jobs:
           at: ~/happa
 
       - run:
-          name: Validate code style using prettier
-          command: yarn run validate-prettier --no-color
+          name: Lint code using ESlint
+          command: yarn run lint --no-color
 
   prettier:
     <<: *defaults
