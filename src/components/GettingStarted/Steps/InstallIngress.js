@@ -3,9 +3,10 @@ import {
   CLUSTER_LOAD_APPS_REQUEST,
 } from 'actions/actionTypes';
 import { installApp, loadApps } from 'actions/appActions';
+import { spinner } from 'images';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -23,6 +24,8 @@ const InstallIngress = (props) => {
   useEffect(() => {
     props.dispatch(loadApps(props.cluster.id));
   }, [clusterId]);
+
+  const [installing, setInstalling] = useState(false);
 
   const pathParams = {
     orgId: props.match.params.orgId,
@@ -45,9 +48,9 @@ const InstallIngress = (props) => {
   );
 
   const buttonState = (prps) => {
-    const appsLoading =
-      'Checking if an ingress controller is already installed.';
-    const installingIngress = 'Installing your ingress controller now.';
+    const loading = (
+      <img style={{ width: '20px' }} className='loader' src={spinner} />
+    );
     const ingressInstalled =
       '🎉 Ingress controller installed. Please continue to the next step.';
     const noIngressYet = (
@@ -57,17 +60,20 @@ const InstallIngress = (props) => {
       </>
     );
 
+    if (installing) return { message: loading, disabled: true, visible: true };
+
     if (prps.ingressApp)
       return { message: ingressInstalled, disabled: true, visible: false };
+
     if (prps.appsLoading)
-      return { message: appsLoading, disabled: true, visible: true };
-    if (prps.ingressInstalling)
-      return { message: installingIngress, disabled: true, visible: true };
+      return { message: loading, disabled: true, visible: true };
 
     return { message: noIngressYet, disabled: false, visible: true };
   };
 
   const installIngressController = async () => {
+    setInstalling(true);
+
     await props.dispatch(
       installApp(
         {
@@ -84,6 +90,8 @@ const InstallIngress = (props) => {
     );
 
     await props.dispatch(loadApps(props.cluster.id));
+
+    setInstalling(false);
   };
 
   return (
