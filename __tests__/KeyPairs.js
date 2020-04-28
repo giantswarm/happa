@@ -58,9 +58,9 @@ it('lets me create a keypair', async () => {
   );
   getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`, keyPairsResponse);
 
-  // And the app is on the cluster detail page.
+  // And the app is on the cluster detail page, keypairs tab.
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.KeyPairs,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -74,12 +74,8 @@ it('lets me create a keypair', async () => {
     getByLabelText,
   } = renderRouteWithStore(clusterDetailPath);
 
-  // And it is done loading.
-  const clusterName = await findByText(V5_CLUSTER.name);
-  expect(clusterName).toBeInTheDocument();
-
   // Then I should see also that there are no keypairs yet.
-  const message = getByText(
+  const message = await findByText(
     `No key pairs yet. Why don't you create your first?`
   );
   expect(message).toBeInTheDocument();
@@ -145,7 +141,7 @@ it('lists existing keypairs', async () => {
   getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`, keyPairsResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.KeyPairs,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -155,16 +151,8 @@ it('lists existing keypairs', async () => {
   // And the app is on the cluster detail page.
   const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
 
-  // And it is done loading.
-  const clusterName = await findByText(V5_CLUSTER.name);
-  expect(clusterName).toBeInTheDocument();
-
-  // When I click the Key Pairs tab button.
-  const keyPairTab = getByText('Key Pairs');
-  fireEvent.click(keyPairTab);
-
   // Then I should see existing key pairs.
-  const firstKeypair = getByText(/first-key-pair-cn.*/i);
+  const firstKeypair = await findByText(/first-key-pair-cn.*/i);
   expect(firstKeypair).toBeInTheDocument();
 
   const secondKeypair = getByText(/second-key-pair-cn.*/i);

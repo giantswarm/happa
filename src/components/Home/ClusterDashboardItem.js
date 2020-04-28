@@ -168,7 +168,7 @@ function ClusterDashboardItem({
   };
 
   const linkToCluster = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: selectedOrganization,
       clusterId,

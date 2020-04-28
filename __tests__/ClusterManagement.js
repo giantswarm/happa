@@ -179,7 +179,7 @@ it(`redirects the user to clusters to list and shows flash message when cluster 
   getMockCall('/v4/clusters/');
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: fakeCluster,

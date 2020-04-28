@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useDispatch } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { selectTargetRelease } from 'selectors/clusterSelectors';
 import { AppRoutes } from 'shared/constants/routes';
-import _ from 'underscore';
 
 import GettingStarted from '../../GettingStarted/GettingStarted';
 import ClusterDetailView from './ClusterDetailView';
@@ -36,17 +35,14 @@ const ClusterDetail = (props) => {
     >
       <Switch>
         <Route
-          exact
-          path={`${props.match.path}`}
-          render={() => <ClusterDetailView {...props} />}
-        />
-
-        <Route
           path={`${props.match.path}/getting-started/`}
           render={() => <GettingStarted {...props} />}
         />
 
-        <Redirect path={`${props.match.path}/*`} to={`${props.match.url}`} />
+        <Route
+          path={`${props.match.path}`}
+          render={() => <ClusterDetailView {...props} />}
+        />
       </Switch>
     </Breadcrumb>
   );

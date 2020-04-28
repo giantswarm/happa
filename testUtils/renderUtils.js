@@ -76,10 +76,10 @@ export function renderWithStore(component, props, state, options) {
 /**
  * Include component in the Store context and return it
  * @param {React.ReactType} Component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
+ * @param {Object} props Props to pass to the component
  * @param {Record<string, any>} state Current Store state
  * @param {Record<string, any>} storage Current LocalStorage value
- * @param {History} history Current Browser history
+ * @param {History<any>} history Current Browser history
  */
 export function getComponentWithStore(
   Component,

@@ -56,7 +56,7 @@ it('renders all the v4 KVM cluster data correctly', async () => {
   );
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V4_CLUSTER.id,
@@ -124,7 +124,7 @@ scales correctly`, async () => {
     .reply(StatusCodes.Ok, scaleResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V4_CLUSTER.id,

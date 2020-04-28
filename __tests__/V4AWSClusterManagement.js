@@ -56,7 +56,7 @@ beforeEach(() => {
 // and hence the warning because we are transforming an array into an array
 it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V4_CLUSTER.id,
@@ -124,7 +124,7 @@ scales correctly`, async () => {
     .reply(StatusCodes.Ok, clusterPatchResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V4_CLUSTER.id,
@@ -192,7 +192,7 @@ it('deletes a v4 cluster', async () => {
     .reply(StatusCodes.Ok, clusterDeleteResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V4_CLUSTER.id,
@@ -251,7 +251,7 @@ it('patches v4 cluster name correctly', async () => {
     .reply(StatusCodes.Ok, clusterPatchResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V4_CLUSTER.id,
