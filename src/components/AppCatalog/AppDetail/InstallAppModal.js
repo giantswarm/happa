@@ -210,9 +210,8 @@ const InstallAppModal = (props) => {
         onClose();
         props.dispatch(push(clusterDetailPath));
       })
-      .catch((error) => {
+      .catch(() => {
         setLoading(false);
-        throw error;
       });
   };
 
