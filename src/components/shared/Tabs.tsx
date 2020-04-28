@@ -1,19 +1,29 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import BootstrapTabs from 'react-bootstrap/lib/Tabs';
 import { useHistory, useLocation } from 'react-router';
 
-const Tabs = ({ defaultActiveKey, children, useRoutes }) => {
+interface ITabsProps {
+  defaultActiveKey: string;
+  children: ReactNode;
+  useRoutes?: boolean;
+}
+
+const Tabs: React.FC<ITabsProps> = ({
+  defaultActiveKey,
+  children,
+  useRoutes,
+}) => {
   const history = useHistory();
   const { pathname } = useLocation();
 
   // eslint-disable-next-line init-declarations
-  let activeKey;
+  let activeKey: string | undefined;
   if (useRoutes) {
     activeKey = pathname;
   }
 
-  const handleTabChange = (eventKey) => {
+  const handleTabChange = (eventKey: string) => {
     if (useRoutes && pathname !== eventKey) {
       history.replace(eventKey);
     }
@@ -22,7 +32,7 @@ const Tabs = ({ defaultActiveKey, children, useRoutes }) => {
   return (
     <BootstrapTabs
       activeKey={activeKey}
-      onSelect={handleTabChange}
+      onSelect={handleTabChange as never}
       defaultActiveKey={defaultActiveKey}
       animation={false}
       id='tabs'
@@ -33,10 +43,15 @@ const Tabs = ({ defaultActiveKey, children, useRoutes }) => {
     </BootstrapTabs>
   );
 };
+
 Tabs.propTypes = {
   children: PropTypes.node,
-  defaultActiveKey: PropTypes.node,
+  defaultActiveKey: PropTypes.any,
   useRoutes: PropTypes.bool,
+};
+
+Tabs.defaultProps = {
+  useRoutes: false,
 };
 
 export default Tabs;

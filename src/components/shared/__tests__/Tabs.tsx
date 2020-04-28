@@ -7,14 +7,17 @@ import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
 import Tabs from '../Tabs';
 
 describe('Tabs', () => {
-  const renderComponent = (props = {}, history = createMemoryHistory()) => {
+  const renderComponent = (
+    props: Partial<React.ComponentProps<typeof Tabs>> = {},
+    history = createMemoryHistory()
+  ) => {
     return render(
       getComponentWithStore(Tabs, props, {}, initialStorage, history)
     );
   };
 
   it('renders without crashing', () => {
-    renderComponent(Tabs);
+    renderComponent();
   });
 
   it('renders only the first tab', () => {
