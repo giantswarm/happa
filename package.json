@@ -133,7 +133,7 @@
     "@types/superagent": "^4.1.7",
     "@types/underscore": "^1.9.4",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
-    "@typescript-eslint/parser": "^2.29.0",
+    "@typescript-eslint/parser": "^2.30.0",
     "babel-cli": "6.26.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "25.4.0",
