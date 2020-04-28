@@ -54,7 +54,7 @@ beforeEach(() => {
 
 it('renders all the v5 cluster data correctly', async () => {
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -82,7 +82,7 @@ it('renders all the v5 cluster data correctly', async () => {
 
 it('renders all node pools in store', async () => {
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -119,7 +119,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     .reply(StatusCodes.Ok, nodePoolPatchResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -187,7 +187,7 @@ scales node pools correctly`, async () => {
     .reply(StatusCodes.Ok, nodePoolPatchResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -264,7 +264,7 @@ it('deletes a v5 cluster', async () => {
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -323,7 +323,7 @@ it('deletes a node pool', async () => {
     .reply(StatusCodes.Ok, nodePoolDeleteResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -397,7 +397,7 @@ it('adds a node pool with default values', async () => {
     .reply(StatusCodes.Created, nodePoolCreationResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -430,7 +430,7 @@ it('adds a node pool with default values', async () => {
 
 it('renders an error message if there was an error loading apps', () => {
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,

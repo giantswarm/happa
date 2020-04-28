@@ -273,7 +273,7 @@ function clusterIDCellFormatter(cell) {
 // eslint-disable-next-line react/no-multi-comp
 function upgradeNoticeIcon(_, cluster, orgId) {
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId,
       clusterId: cluster.id,
@@ -301,7 +301,7 @@ function clusterActionsCellFormatter(_cell, row) {
   }
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       // eslint-disable-next-line react/no-this-in-sfc
       orgId: this.props.organization.id,

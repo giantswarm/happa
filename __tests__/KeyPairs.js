@@ -60,7 +60,7 @@ it('lets me create a keypair', async () => {
 
   // And the app is on the cluster detail page.
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,
@@ -145,7 +145,7 @@ it('lists existing keypairs', async () => {
   getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`, keyPairsResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail,
+    OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId: ORGANIZATION,
       clusterId: V5_CLUSTER.id,

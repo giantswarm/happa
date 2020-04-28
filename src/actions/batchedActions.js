@@ -74,7 +74,7 @@ export const batchedClusterCreate = (
       clusterActions.clusterCreate(cluster, isV5Cluster)
     );
     const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
+      OrganizationsRoutes.Clusters.Detail.Home,
       {
         orgId: owner,
         clusterId: clusterId,

@@ -30,7 +30,9 @@ const OrganizationsRoutes = {
   Detail: '/organizations/:orgId',
   Clusters: {
     New: '/organizations/:orgId/clusters/new',
-    Detail: '/organizations/:orgId/clusters/:clusterId',
+    Detail: {
+      Home: '/organizations/:orgId/clusters/:clusterId',
+    },
     GettingStarted: {
       Overview: '/organizations/:orgId/clusters/:clusterId/getting-started',
       ConfigureKubeCtl:

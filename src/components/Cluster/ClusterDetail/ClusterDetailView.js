@@ -251,7 +251,7 @@ class ClusterDetailView extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  <Tabs>
+                  <Tabs useRoutes={true}>
                     <Tab eventKey={1} title='General'>
                       {isV5Cluster ? (
                         <V5ClusterDetailTable

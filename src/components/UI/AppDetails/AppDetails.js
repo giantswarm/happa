@@ -233,7 +233,7 @@ const AppDetails = (props) => {
         <Install>{children}</Install>
       </Header>
 
-      <Tabs>
+      <Tabs defaultActiveKey={1}>
         <Tab eventKey={1} title='About'>
           <About>
             {readme && (

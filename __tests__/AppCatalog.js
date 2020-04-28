@@ -378,7 +378,7 @@ describe('Apps and App Catalog', () => {
       getMockCall('/v4/releases/', releasesResponse);
 
       const clusterDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.Detail,
+        OrganizationsRoutes.Clusters.Detail.Home,
         {
           orgId: ORGANIZATION,
           clusterId: V4_CLUSTER.id,
