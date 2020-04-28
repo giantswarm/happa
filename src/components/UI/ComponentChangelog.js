@@ -32,6 +32,14 @@ const ChangeItems = styled.dd`
   }
 `;
 
+function LinkRenderer(p) {
+  return (
+    <a href={p.href} rel='noopener noreferrer' target='_blank'>
+      {p.children}
+    </a>
+  );
+}
+
 const ComponentChangelog = (props) => {
   const { name, changes } = props;
 
@@ -41,7 +49,9 @@ const ComponentChangelog = (props) => {
       {changes.map((change, index) => {
         return (
           <ChangeItems key={index}>
-            <ReactMarkdown>{change}</ReactMarkdown>
+            <ReactMarkdown renderers={{ link: LinkRenderer }}>
+              {change}
+            </ReactMarkdown>
           </ChangeItems>
         );
       })}
