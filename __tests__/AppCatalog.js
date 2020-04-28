@@ -221,9 +221,8 @@ describe('Apps and App Catalog', () => {
 
       await findByText(/is being installed on/i);
 
-      // Check if the user got redirected to the cluster detail view
-      await findAllByText(V4_CLUSTER.name);
-      await findByText(/kubernetes endpoint uri/i);
+      // Check if the user got redirected to the cluster detail page, apps tab
+      await findByText(/these apps and services are preinstalled on your cluster and managed by Giant Swarm./i);
     });
 
     it('installs an app in a cluster, with custom settings', async () => {
@@ -351,9 +350,8 @@ describe('Apps and App Catalog', () => {
 
       await findByText(/is being installed on/i);
 
-      // Check if the user got redirected to the cluster detail view
-      await findAllByText(V4_CLUSTER.name);
-      await findByText(/kubernetes endpoint uri/i);
+      // Check if the user got redirected to the cluster detail page, apps tab
+      await findByText(/these apps and services are preinstalled on your cluster and managed by Giant Swarm./i);
     });
   });
 
