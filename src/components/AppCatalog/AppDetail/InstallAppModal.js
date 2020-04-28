@@ -200,7 +200,7 @@ const InstallAppModal = (props) => {
       .then(() => {
         const installedApp = props.clusters.find((c) => c.id === clusterID);
         const clusterDetailPath = RoutePath.createUsablePath(
-          OrganizationsRoutes.Clusters.Detail.Home,
+          OrganizationsRoutes.Clusters.Detail.Apps,
           {
             orgId: installedApp.owner,
             clusterId: clusterID,
