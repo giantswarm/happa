@@ -163,6 +163,12 @@ function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
       messageType.ERROR,
       messageTTL.LONG
     );
+  } else if (error.status === StatusCodes.ServiceUnavailable) {
+    new FlashMessage(
+      `The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
   } else if (error.status === StatusCodes.BadRequest) {
     new FlashMessage(
       `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
