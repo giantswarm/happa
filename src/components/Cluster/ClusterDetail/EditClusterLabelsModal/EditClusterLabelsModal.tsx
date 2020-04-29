@@ -1,4 +1,5 @@
 import * as clusterLabelsActions from 'actions/clusterLabelsActions';
+import { V5ClusterLabels } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, {
   Reducer,
@@ -16,10 +17,6 @@ import EditableValueLabel from 'UI/EditableValueLabel';
 import GenericModal from '../../../Modals/GenericModal';
 import AddClusterLabel from './AddClusterLabel';
 
-interface ILabels {
-  [key: string]: string;
-}
-
 interface IStateProps {
   loading: boolean;
 }
@@ -31,7 +28,7 @@ interface IDispatchProps extends DispatchProp {
 
 interface IEditClusterLabelsModalProps extends IDispatchProps, IStateProps {
   clusterId: string;
-  labels: ILabels;
+  labels: V5ClusterLabels;
 }
 
 interface IUpdateLabelReducerAction {
@@ -47,7 +44,7 @@ const EditClusterLabelsModal = ({
   loading,
 }: IEditClusterLabelsModalProps) => {
   const editableLabels = useMemo(() => {
-    const editable: ILabels = {};
+    const editable: V5ClusterLabels = {};
 
     for (const labelKey of Object.keys(labels)) {
       if (labelKey.includes('giantswarm.io') === false) {
@@ -59,7 +56,7 @@ const EditClusterLabelsModal = ({
   }, [labels]);
 
   const [modifiedLabels, updateLabel] = useReducer<
-    Reducer<ILabels, IUpdateLabelReducerAction>
+    Reducer<V5ClusterLabels, IUpdateLabelReducerAction>
   >((oldLabels, newLabel) => {
     if (newLabel.reset) {
       return {};
@@ -89,54 +86,58 @@ const EditClusterLabelsModal = ({
     });
   }, [actions, clusterId, modifiedLabels]);
 
-  return open ? (
-    <GenericModal
-      visible={true}
-      title={
+  if (open) {
+    return (
+      <GenericModal
+        visible={true}
+        title={
+          <>
+            Edit labels for <ClusterIDLabel clusterID={clusterId} />
+          </>
+        }
+        onClose={closeModal}
+        footer={
+          <>
+            <Button
+              bsStyle='primary'
+              loading={loading}
+              loadingPosition='left'
+              onClick={saveLabels}
+              type='submit'
+              disabled={Object.keys(modifiedLabels).length === 0}
+            >
+              {loading ? 'Saving Labels' : 'Save Labels'}
+            </Button>
+            <Button bsStyle='link' onClick={closeModal}>
+              Cancel
+            </Button>
+          </>
+        }
+      >
         <>
-          Edit labels for <ClusterIDLabel clusterID={clusterId} />
+          <p>
+            Here, you can edit the labels of cluster <code>{clusterId}</code>.
+            <br />
+            Modification or creation of labels with keys containing{' '}
+            <code>giantswarm.io</code> is not allowed.
+          </p>
+          <div>
+            {Object.entries(displayLabels).map(([label, value]) => (
+              <EditableValueLabel
+                key={label}
+                label={label}
+                value={value}
+                onSave={updateLabel}
+              />
+            ))}
+            <AddClusterLabel onSave={updateLabel} />
+          </div>
         </>
-      }
-      onClose={closeModal}
-      footer={
-        <>
-          <Button
-            bsStyle='primary'
-            loading={loading}
-            loadingPosition='left'
-            onClick={saveLabels}
-            type='submit'
-            disabled={Object.keys(modifiedLabels).length === 0}
-          >
-            {loading ? 'Saving Labels' : 'Save Labels'}
-          </Button>
-          <Button bsStyle='link' onClick={closeModal}>
-            Cancel
-          </Button>
-        </>
-      }
-    >
-      <>
-        <p>
-          Here, you can edit the labels of cluster <code>{clusterId}</code>.
-          <br />
-          Modification or creation of labels with keys containing{' '}
-          <code>giantswarm.io</code> is not allowed.
-        </p>
-        <div>
-          {Object.entries(displayLabels).map(([label, value]) => (
-            <EditableValueLabel
-              key={label}
-              label={label}
-              value={value}
-              onSave={updateLabel}
-            />
-          ))}
-          <AddClusterLabel onSave={updateLabel} />
-        </div>
-      </>
-    </GenericModal>
-  ) : (
+      </GenericModal>
+    );
+  }
+
+  return (
     <Button bsStyle='link' onClick={() => setOpen(true)}>
       Edit
     </Button>

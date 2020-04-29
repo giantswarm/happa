@@ -7,7 +7,7 @@ interface IAddClusterLabelProps {
   onSave({ label, value }: { label: string; value: string | null }): void;
 }
 
-const AddClusterLabel = ({ onSave }: IAddClusterLabelProps) => {
+const AddClusterLabel: React.FC<IAddClusterLabelProps> = ({ onSave }) => {
   const [isAdding, setIsAdding] = useState(false);
 
   if (!isAdding) {
@@ -29,11 +29,7 @@ const AddClusterLabel = ({ onSave }: IAddClusterLabelProps) => {
 };
 
 AddClusterLabel.propTypes = {
-  onSave: PropTypes.func,
-};
-
-AddClusterLabel.defaultProps = {
-  onSave: () => {},
+  onSave: PropTypes.func.isRequired,
 };
 
 export default AddClusterLabel;

@@ -1,16 +1,13 @@
+import { V5ClusterLabels } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ValueLabel from 'UI/ValueLabel';
 
-interface ILabel {
-  [key: string]: string;
+interface ILabelsListProps {
+  labels: V5ClusterLabels;
 }
 
-interface ILabelsList {
-  labels: ILabel;
-}
-
-const LabelsList = ({ labels }: ILabelsList) => {
+const LabelsList: React.FC<ILabelsListProps> = ({ labels }) => {
   if (!labels) {
     return null;
   }
@@ -27,6 +24,7 @@ const LabelsList = ({ labels }: ILabelsList) => {
 };
 
 LabelsList.propTypes = {
+  // @ts-ignore
   labels: PropTypes.object.isRequired,
 };
 
