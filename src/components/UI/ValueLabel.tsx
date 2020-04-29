@@ -59,9 +59,13 @@ const ValueLabel = ({ label, value, className, color }: IValueLabelProps) => {
 
 ValueLabel.propTypes = {
   label: PropTypes.node.isRequired,
-  value: PropTypes.node.isRequired,
+  value: PropTypes.node,
   className: PropTypes.string,
   color: PropTypes.string,
+};
+
+ValueLabel.defaultProps = {
+  value: '',
 };
 
 export default ValueLabel;

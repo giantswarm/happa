@@ -24,6 +24,7 @@ import ErrorFallback from 'UI/ErrorFallback';
 import LabelsList from 'UI/LabelsList';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
+import EditClusterLabelsModal from '../Cluster/ClusterDetail/EditClusterLabelsModal/EditClusterLabelsModal';
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
 import UpgradeNotice from './UpgradeNotice';
@@ -245,6 +246,10 @@ function ClusterDashboardItem({
         {isV5Cluster && (
           <ClusterLabelsDiv>
             <LabelsList labels={cluster.labels} />
+            <EditClusterLabelsModal
+              clusterId={cluster.id}
+              labels={cluster.labels}
+            />
           </ClusterLabelsDiv>
         )}
       </ContentWrapper>
