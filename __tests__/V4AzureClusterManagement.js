@@ -60,7 +60,7 @@ describe('V4AzureClusterManagement', () => {
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
 
     const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
+      OrganizationsRoutes.Clusters.Detail.Home,
       {
         orgId: ORGANIZATION,
         clusterId: V4_CLUSTER.id,
@@ -237,7 +237,7 @@ scales correctly`, async () => {
       .reply(StatusCodes.Ok, scaleResponse);
 
     const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
+      OrganizationsRoutes.Clusters.Detail.Home,
       {
         orgId: ORGANIZATION,
         clusterId: V4_CLUSTER.id,

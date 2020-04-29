@@ -200,7 +200,7 @@ const InstallAppModal = (props) => {
       .then(() => {
         const installedApp = props.clusters.find((c) => c.id === clusterID);
         const clusterDetailPath = RoutePath.createUsablePath(
-          OrganizationsRoutes.Clusters.Detail,
+          OrganizationsRoutes.Clusters.Detail.Apps,
           {
             orgId: installedApp.owner,
             clusterId: clusterID,
@@ -210,9 +210,8 @@ const InstallAppModal = (props) => {
         onClose();
         props.dispatch(push(clusterDetailPath));
       })
-      .catch((error) => {
+      .catch(() => {
         setLoading(false);
-        throw error;
       });
   };
 

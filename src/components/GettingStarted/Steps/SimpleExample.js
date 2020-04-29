@@ -80,11 +80,6 @@ class SimpleExample extends React.Component {
       clusterId: this.props.match.params.clusterId,
     };
 
-    const clusterGuideConfigurationPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.GettingStarted.ConfigureKubeCtl,
-      pathParams
-    );
-
     const clusterGuideExamplePath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
       pathParams
@@ -182,9 +177,10 @@ class SimpleExample extends React.Component {
             </Prompt>
             <Output>
               {`
-                  service 'helloworld' created
-                  deployment 'helloworld' created
-                  ingress "helloworld" created
+                  service/helloworld created
+                  deployment.apps/helloworld created
+                  poddisruptionbudget.policy/helloworld-pdb created§
+                  ingress.networking.k8s.io/helloworld created
                 `}
             </Output>
           </CodeBlock>
@@ -214,8 +210,8 @@ class SimpleExample extends React.Component {
             <Prompt>kubectl get deployment -l app=helloworld</Prompt>
             <Output>
               {`
-                  NAME         DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-                  helloworld   2         2         2            2           2m
+                  NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+                  helloworld   2/2     2            2           2m
                 `}
             </Output>
           </CodeBlock>
@@ -230,8 +226,8 @@ class SimpleExample extends React.Component {
             <Prompt>kubectl get svc -l app=helloworld</Prompt>
             <Output>
               {`
-                  NAME         CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-                  helloworld   10.100.70.153   <none>        80/TCP    2m
+                  NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+                  helloworld   ClusterIP   172.31.144.55   <none>        8080/TCP   2m
                 `}
             </Output>
           </CodeBlock>
@@ -300,20 +296,19 @@ class SimpleExample extends React.Component {
           </p>
 
           <CodeBlock>
-            <Prompt>
-              kubectl delete service,deployment,ingress helloworld
-            </Prompt>
+            <Prompt>kubectl delete -f helloworld-manifest.yaml</Prompt>
             <Output>
               {`
                   service "helloworld" deleted
-                  deployment "helloworld" deleted
-                  ingress "helloworld" deleted
+                  deployment.apps "helloworld" deleted
+                  poddisruptionbudget.policy "helloworld-pdb" deleted
+                  ingress.networking.k8s.io "helloworld" deleted
                 `}
             </Output>
           </CodeBlock>
 
           <div className='component_slider--nav'>
-            <Link to={clusterGuideConfigurationPath}>
+            <Link to={this.props.steps[this.props.stepIndex - 1].url}>
               <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
@@ -337,6 +332,8 @@ SimpleExample.propTypes = {
   dispatch: PropTypes.func,
   goToSlide: PropTypes.func,
   match: PropTypes.object,
+  steps: PropTypes.array,
+  stepIndex: PropTypes.number,
 };
 
 function mapStateToProps(state, ownProps) {

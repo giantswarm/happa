@@ -29,12 +29,20 @@ const OrganizationsRoutes = {
   List: '/organizations',
   Detail: '/organizations/:orgId',
   Clusters: {
+    Home: '/organizations/:orgId/clusters',
     New: '/organizations/:orgId/clusters/new',
-    Detail: '/organizations/:orgId/clusters/:clusterId',
+    Detail: {
+      Home: '/organizations/:orgId/clusters/:clusterId',
+      KeyPairs: '/organizations/:orgId/clusters/:clusterId/keypairs',
+      Apps: '/organizations/:orgId/clusters/:clusterId/apps',
+      Ingress: '/organizations/:orgId/clusters/:clusterId/ingress',
+    },
     GettingStarted: {
       Overview: '/organizations/:orgId/clusters/:clusterId/getting-started',
       ConfigureKubeCtl:
         '/organizations/:orgId/clusters/:clusterId/getting-started/configure',
+      InstallIngress:
+        '/organizations/:orgId/clusters/:clusterId/getting-started/ingress',
       SimpleExample:
         '/organizations/:orgId/clusters/:clusterId/getting-started/example',
       NextSteps:

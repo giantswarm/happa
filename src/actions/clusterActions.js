@@ -97,8 +97,8 @@ export function refreshClustersList() {
           (cluster) => !clusterStoredIds.includes(cluster.id)
         );
 
-        const clusters = {};
-        const v5ClusterIds = [];
+        let clusters = {};
+        let v5ClusterIds = [];
 
         // If there are new clusters...
         if (addedClusters.length > 0) {

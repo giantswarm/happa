@@ -17,6 +17,16 @@ export const selectClusterById = (state, id) => {
   return state.entities.clusters.items[id];
 };
 
+export const selectIngressAppFromCluster = (cluster) => {
+  const apps = cluster.apps || [];
+
+  const ingressApp = apps.find((app) => {
+    return app.spec.name === 'nginx-ingress-controller-app';
+  });
+
+  return ingressApp;
+};
+
 const selectOrganizationClusterNames = (state) => {
   const clusters = state.entities.clusters.items;
   const clusterIds = Object.keys(clusters);
@@ -50,7 +60,7 @@ export const selectErrorByIdAndAction = (state, id, actionType) => {
 
 export const selectLoadingFlagByIdAndAction = (state, id, actionType) => {
   return (
-    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null
+    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? true
   );
 };
 

@@ -33,6 +33,7 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import ViewAndEditName from 'UI/ViewEditName';
+import { memoize } from 'underscore';
 import { getNumberOfNodes } from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
@@ -209,6 +210,28 @@ class ClusterDetailView extends React.Component {
     }
   };
 
+  /**
+   * Get the paths for all tabs
+   * @param clusterID {string} - The current cluster's ID
+   * @param clusterOwner {string} - The current cluster's organization
+   * @returns {Record<OrganizationsRoutes.Clusters.Detail, string>}
+   */
+  getPathsForTabs = memoize((clusterID, clusterOwner) => {
+    const result = Object.entries(OrganizationsRoutes.Clusters.Detail).reduce(
+      (acc, [name, path]) => {
+        acc[name] = RoutePath.createUsablePath(path, {
+          clusterId: clusterID,
+          orgId: clusterOwner,
+        });
+
+        return acc;
+      },
+      {}
+    );
+
+    return result;
+  });
+
   render() {
     const {
       canClusterUpgrade,
@@ -226,6 +249,9 @@ class ClusterDetailView extends React.Component {
     } = this.props;
 
     const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
+
+    const { id, owner } = cluster;
+    const tabsPaths = this.getPathsForTabs(id, owner);
 
     return (
       <>
@@ -251,8 +277,8 @@ class ClusterDetailView extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  <Tabs>
-                    <Tab eventKey={1} title='General'>
+                  <Tabs useRoutes={true}>
+                    <Tab eventKey={tabsPaths.Home} title='General'>
                       {isV5Cluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
@@ -302,12 +328,12 @@ class ClusterDetailView extends React.Component {
                         </div>
                       </div>
                     </Tab>
-                    <Tab eventKey={2} title='Key Pairs'>
+                    <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
                       <LoadingOverlay loading={this.props.loadingCluster}>
                         <KeyPairs cluster={cluster} />
                       </LoadingOverlay>
                     </Tab>
-                    <Tab eventKey={3} title='Apps'>
+                    <Tab eventKey={tabsPaths.Apps} title='Apps'>
                       <ClusterApps
                         clusterId={this.props.clusterId}
                         dispatch={dispatch}
@@ -321,7 +347,7 @@ class ClusterDetailView extends React.Component {
                         }
                       />
                     </Tab>
-                    <Tab eventKey={4} title='Ingress'>
+                    <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
                       <Ingress
                         provider={provider}
                         k8sEndpoint={cluster.api_endpoint}

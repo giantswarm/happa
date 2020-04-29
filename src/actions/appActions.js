@@ -122,12 +122,7 @@ export function installApp(app, clusterID) {
         },
       }).catch((error) => {
         showAppInstallationErrorFlashMessage(app.name, clusterID, error);
-
-        dispatch({
-          type: types.CLUSTER_INSTALL_APP_ERROR,
-          id: clusterID,
-          error,
-        });
+        throw error;
       });
 
       dispatch({
@@ -165,6 +160,12 @@ function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
   if (error.status === StatusCodes.Conflict) {
     new FlashMessage(
       `An app called <code>${appName}</code> already exists on cluster <code>${clusterID}</code>`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else if (error.status === StatusCodes.ServiceUnavailable) {
+    new FlashMessage(
+      `The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.`,
       messageType.ERROR,
       messageTTL.LONG
     );

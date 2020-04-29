@@ -16,7 +16,7 @@ const Cluster = () => (
     />
     <Route
       component={ClusterDetail}
-      path={OrganizationsRoutes.Clusters.Detail}
+      path={OrganizationsRoutes.Clusters.Detail.Home}
     />
     <Redirect to={OrganizationsRoutes.List} />
   </Switch>
