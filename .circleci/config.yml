@@ -158,7 +158,7 @@ jobs:
 
   test:
     <<: *defaults
-    resource_class: large
+    resource_class: xlarge
 
     steps:
       - checkout
@@ -172,6 +172,7 @@ jobs:
 
   build:
     <<: *defaults
+    resource_class: xlarge
 
     steps:
       - checkout
