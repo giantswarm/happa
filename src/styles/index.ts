@@ -46,6 +46,9 @@ export interface IColorMap {
   gray: string;
   error: string;
   loadingForeground: string;
+  foreground: string;
+  redOld: string;
+  greenNew: string;
 }
 
 export interface IThemeFonts {
@@ -110,7 +113,7 @@ export const Ellipsis = css`
 export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
   ${Row};
-  background-color: ${(props) => props.theme.colors.shade7};
+  background-color: ${(props) => props.theme.colors.foreground};
   > div {
     display: flex;
     align-items: center;

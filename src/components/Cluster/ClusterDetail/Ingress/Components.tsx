@@ -28,7 +28,7 @@ export const Description = styled.small`
 export const Info = styled.div`
   ${FlexRowBase};
   ${Row};
-  background-color: ${(props) => props.theme.colors.shade7};
+  background-color: ${(props) => props.theme.colors.foreground};
   flex-wrap: wrap;
 
   & + & {

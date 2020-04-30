@@ -44,7 +44,7 @@ const NameWrapper = styled.span`
 
 const WrapperStyles = (props) => css`
   display: flex;
-  background-color: ${props.theme.colors.darkBlueLighter1};
+  background-color: ${props.theme.colors.foreground};
   border-radius: 5px;
   border: 0px;
   min-height: 20px;

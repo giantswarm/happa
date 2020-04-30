@@ -6,11 +6,11 @@ const App = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #395c72;
+  background-color: ${({ theme }) => theme.colors.foreground};
   margin-bottom: 14px;
   padding: 12px;
   border-radius: 5px;
-  border: 1px solid #395c72;
+  border: 1px solid ${({ theme }) => theme.colors.foreground};
 
   &:hover {
     cursor: pointer;
