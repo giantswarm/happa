@@ -5960,9 +5960,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git#cluster-labeling-types":
+"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git#659da82dbf677b68e321bddf5f0c71468d770fc7":
   version "4.0.1"
-  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#6c46747464ba33f6af85383005c2ce5513edee68"
+  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#659da82dbf677b68e321bddf5f0c71468d770fc7"
   dependencies:
     superagent "3.8.3"
 
