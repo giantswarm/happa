@@ -35,6 +35,7 @@ interface IGlobalConfig {
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
   happaVersion: string;
+  defaultRequestTimeoutSeconds: number;
 }
 
 declare global {
