@@ -132,7 +132,7 @@ const NodePoolsNameColumn = styled.span`
 
 const GridRowNodePoolsItem = styled.div`
   ${GridRowNodePoolsBase};
-  background-color: ${(props) => props.theme.colors.shade7};
+  background-color: ${({ theme }) => theme.colors.foreground};
 `;
 
 export const AddNodePoolWrapper = (props) => css`
