@@ -65,6 +65,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: ingress-base-domain
+        - name: DEFAULT_REQUEST_TIMEOUT_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: default-request-timeout-seconds
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
