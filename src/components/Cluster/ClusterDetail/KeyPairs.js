@@ -3,7 +3,7 @@ import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';

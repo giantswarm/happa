@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import produce from 'immer';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';

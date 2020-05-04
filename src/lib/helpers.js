@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';

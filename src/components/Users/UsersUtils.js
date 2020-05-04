@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment/moment';
 
 export const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 const sToMs = 1000;

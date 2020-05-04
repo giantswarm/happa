@@ -4,7 +4,7 @@ import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DatePicker from 'react-datepicker';

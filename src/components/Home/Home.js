@@ -5,7 +5,7 @@ import * as nodePoolActions from 'actions/nodePoolActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';

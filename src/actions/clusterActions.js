@@ -1,6 +1,6 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import { StatusCodes } from 'shared/constants';
 import { computeCapabilities } from 'utils/clusterUtils';
 
