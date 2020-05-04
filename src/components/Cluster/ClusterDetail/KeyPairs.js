@@ -15,7 +15,7 @@ import Button from 'UI/Button';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeyPairCreateModal';
-import KeyPairDetailsModal from './KeyPairDetailsModal';
+import KeyPairDetailsModal from './KeypairDetailsModal/KeyPairDetailsModal';
 
 const Disclaimer = styled.p`
   margin: 0 0 20px;
