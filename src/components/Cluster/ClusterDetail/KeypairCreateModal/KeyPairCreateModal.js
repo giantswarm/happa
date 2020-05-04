@@ -7,7 +7,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Constants, Providers } from 'shared/constants';
 import Button from 'UI/Button';
 
-import ExpiryHoursPicker from './ExpiryHoursPicker';
+import ExpiryHoursPicker from '../ExpiryHoursPicker';
 
 const KeyPairCreateModal = (props) => {
   const defaultDescription = (email) => {
@@ -115,7 +115,7 @@ const KeyPairCreateModal = (props) => {
     setModal({
       visible: false,
       loading: false,
-      template: '',
+      template: modal.template,
     });
   };
 
@@ -194,20 +194,21 @@ const KeyPairCreateModal = (props) => {
   };
 
   let title = '';
-  let closeButtonText = 'Close';
+  let closeButtonText = '';
   switch (modal.template) {
-    case 'addKeyPair':
-      title = 'Create New Key Pair and Kubeconfig';
-      closeButtonText = 'Cancel';
-      break;
-
     case 'addKeyPairSuccess':
       title = 'Your key pair and kubeconfig has been created.';
+      closeButtonText = 'Close';
       break;
 
     case 'addKeyPairFailure':
       title = 'Could not create key pair.';
+      closeButtonText = 'Close';
       break;
+
+    default:
+      title = 'Create New Key Pair and Kubeconfig';
+      closeButtonText = 'Cancel';
   }
 
   return (
@@ -375,7 +376,7 @@ const KeyPairCreateModal = (props) => {
               return null;
             })()}
           </BootstrapModal.Body>
-          <BootstrapModal.Footer data-test-id='create-key-pair-modal-footer'>
+          <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
             {modal.template === 'addKeyPair' && (
               <Button
                 bsStyle='primary'
