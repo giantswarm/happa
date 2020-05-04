@@ -50,9 +50,9 @@ const KeyPairCreateModal = (props) => {
   };
 
   const confirmAddKeyPair = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
+
+    if (modal.template !== 'addKeyPair') return;
 
     setModal({
       visible: true,
@@ -115,6 +115,7 @@ const KeyPairCreateModal = (props) => {
     setModal({
       visible: false,
       loading: false,
+      template: '',
     });
   };
 
@@ -192,220 +193,209 @@ const KeyPairCreateModal = (props) => {
     });
   };
 
+  let title = '';
+  let closeButtonText = 'Close';
+  switch (modal.template) {
+    case 'addKeyPair':
+      title = 'Create New Key Pair and Kubeconfig';
+      closeButtonText = 'Cancel';
+      break;
+
+    case 'addKeyPairSuccess':
+      title = 'Your key pair and kubeconfig has been created.';
+      break;
+
+    case 'addKeyPairFailure':
+      title = 'Could not create key pair.';
+      break;
+  }
+
   return (
     <>
       <Button bsStyle='default' className='small' onClick={show}>
         <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
-      {(() => {
-        switch (modal.template) {
-          case 'addKeyPair':
-            return (
-              <BootstrapModal
-                data-testid='create-key-pair-modal'
-                className='create-key-pair-modal'
-                onHide={close}
-                show={modal.visible}
-              >
-                <BootstrapModal.Header closeButton>
-                  <BootstrapModal.Title>
-                    Create New Key Pair and Kubeconfig
-                  </BootstrapModal.Title>
-                </BootstrapModal.Header>
-                <form onSubmit={confirmAddKeyPair}>
-                  <BootstrapModal.Body>
-                    <p>
-                      A key pair grants you access to the Kubernetes API of this
-                      cluster.
-                    </p>
-                    <p>
-                      Kubernetes uses the common name of the certificate as the
-                      username, and assigns the Organizations as groups. This
-                      allows you to set up role based access rights.
-                    </p>
-                    <div className='row'>
-                      <div className='col-6'>
-                        <label htmlFor='cnPrefix'>Common Name Prefix:</label>
-                        <input
-                          id='cnPrefix'
-                          autoFocus
-                          onChange={handleCNPrefixChange}
-                          type='text'
-                          value={cnPrefix}
-                        />
-                        <div className='text-field-hint'>
-                          {cnPrefixError === null ? (
-                            `${cnPrefixOrEmail()}.user.api.clusterdomain`
-                          ) : (
-                            <span className='error'>
-                              <i className='fa fa-warning' /> {cnPrefixError}
-                            </span>
-                          )}
+      <BootstrapModal
+        data-testid='create-key-pair-modal'
+        className='create-key-pair-modal'
+        onHide={close}
+        show={modal.visible}
+      >
+        <BootstrapModal.Header closeButton>
+          <BootstrapModal.Title>{title}</BootstrapModal.Title>
+        </BootstrapModal.Header>
+        <form onSubmit={confirmAddKeyPair}>
+          <BootstrapModal.Body>
+            {(() => {
+              switch (modal.template) {
+                case 'addKeyPair':
+                  return (
+                    <>
+                      <p>
+                        A key pair grants you access to the Kubernetes API of
+                        this cluster.
+                      </p>
+                      <p>
+                        Kubernetes uses the common name of the certificate as
+                        the username, and assigns the Organizations as groups.
+                        This allows you to set up role based access rights.
+                      </p>
+                      <div className='row'>
+                        <div className='col-6'>
+                          <label htmlFor='cnPrefix'>Common Name Prefix:</label>
+                          <input
+                            id='cnPrefix'
+                            autoFocus
+                            onChange={handleCNPrefixChange}
+                            type='text'
+                            value={cnPrefix}
+                          />
+                          <div className='text-field-hint'>
+                            {cnPrefixError === null ? (
+                              `${cnPrefixOrEmail()}.user.api.clusterdomain`
+                            ) : (
+                              <span className='error'>
+                                <i className='fa fa-warning' /> {cnPrefixError}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className='col-6'>
+                          <label htmlFor='organizations'>Organizations:</label>
+                          <input
+                            id='organizations'
+                            onChange={handleCertificateOrganizationsChange}
+                            type='text'
+                            value={certificateOrganizations}
+                          />
+                          <div className='text-field-hint'>
+                            Comma seperated values. e.g.:
+                            admin,blue-team,staging
+                          </div>
                         </div>
                       </div>
-                      <div className='col-6'>
-                        <label htmlFor='organizations'>Organizations:</label>
-                        <input
-                          id='organizations'
-                          onChange={handleCertificateOrganizationsChange}
-                          type='text'
-                          value={certificateOrganizations}
-                        />
-                        <div className='text-field-hint'>
-                          Comma seperated values. e.g.: admin,blue-team,staging
+                      <br />
+                      <div className='row'>
+                        <div className='col-12'>
+                          <label>Description:</label>
+                          <input
+                            onChange={handleDescriptionChange}
+                            type='text'
+                            value={description}
+                          />
                         </div>
                       </div>
-                    </div>
-                    <br />
-                    <div className='row'>
-                      <div className='col-12'>
-                        <label>Description:</label>
-                        <input
-                          onChange={handleDescriptionChange}
-                          type='text'
-                          value={description}
-                        />
-                      </div>
-                    </div>
-                    <br />
-                    <label>Expires:</label>
-                    <ExpiryHoursPicker
-                      initialValue={expireTTL}
-                      maxSafeValueHours={Constants.KEYPAIR_MAX_SAFE_TTL}
-                      onChange={handleTTLChange}
-                    />
+                      <br />
+                      <label>Expires:</label>
+                      <ExpiryHoursPicker
+                        initialValue={expireTTL}
+                        maxSafeValueHours={Constants.KEYPAIR_MAX_SAFE_TTL}
+                        onChange={handleTTLChange}
+                      />
 
-                    {props.provider === Providers.AWS && (
-                      <>
-                        <br />
+                      {props.provider === Providers.AWS && (
+                        <>
+                          <br />
 
-                        <label>Kubernetes API Endpoint:</label>
-                        <input
-                          id='internalApi'
-                          type='checkbox'
-                          checked={useInternalAPI}
-                          onChange={handleUseInternalAPIChange}
-                        />
-                        <label htmlFor='internalApi' className='checkbox-label'>
-                          Use alternative internal api endpoint.
-                        </label>
-                        <small>
-                          When this is selected, the server entry of the created
-                          kubeconfig will be https://internal-api.
-                          {window.config.ingressBaseDomain}
-                        </small>
-                        <small>
-                          This is preferred in some restricted environments.
-                        </small>
+                          <label>Kubernetes API Endpoint:</label>
+                          <input
+                            id='internalApi'
+                            type='checkbox'
+                            checked={useInternalAPI}
+                            onChange={handleUseInternalAPIChange}
+                          />
+                          <label
+                            htmlFor='internalApi'
+                            className='checkbox-label'
+                          >
+                            Use alternative internal api endpoint.
+                          </label>
+                          <small>
+                            When this is selected, the server entry of the
+                            created kubeconfig will be https://internal-api.
+                            {window.config.ingressBaseDomain}
+                          </small>
+                          <small>
+                            This is preferred in some restricted environments.
+                          </small>
 
-                        <br />
-                      </>
-                    )}
-                  </BootstrapModal.Body>
-                  <BootstrapModal.Footer>
-                    <Button
-                      bsStyle='primary'
-                      disabled={cnPrefixError !== null}
-                      loading={modal.loading}
-                      onClick={confirmAddKeyPair}
-                      type='submit'
-                    >
-                      {modal.loading ? 'Creating Key Pair' : 'Create Key Pair'}
-                    </Button>
+                          <br />
+                        </>
+                      )}
+                    </>
+                  );
 
-                    {modal.loading ? null : (
-                      <Button bsStyle='link' onClick={close}>
-                        Cancel
-                      </Button>
-                    )}
-                  </BootstrapModal.Footer>
-                </form>
-              </BootstrapModal>
-            );
+                case 'addKeyPairSuccess':
+                  return (
+                    <>
+                      <p>
+                        Copy the text below and save it to a text file named
+                        kubeconfig on your local machine. Caution: You
+                        won&apos;t see the key and certificate again!
+                      </p>
+                      <p>
+                        <b>Important:</b> Make sure that only you have access to
+                        this file, as it enables for complete administrative
+                        access to your cluster.
+                      </p>
 
-          case 'addKeyPairSuccess':
-            return (
-              <BootstrapModal
-                data-testid='create-key-pair-modal'
-                className='create-key-pair-modal--success'
-                onHide={close}
-                show={modal.visible}
+                      <textarea readOnly value={kubeconfig} />
+
+                      {hasContentInClipboard ? (
+                        <Button bsStyle='default' onClick={copyKubeConfig}>
+                          &nbsp;&nbsp;
+                          <i aria-hidden='true' className='fa fa-done' />
+                          &nbsp;&nbsp;
+                        </Button>
+                      ) : (
+                        <Button bsStyle='default' onClick={copyKubeConfig}>
+                          Copy
+                        </Button>
+                      )}
+
+                      {downloadAsFileLink()}
+                    </>
+                  );
+
+                case 'addKeyPairFailure':
+                  return (
+                    <>
+                      <p>
+                        Something went wrong while trying to create your key
+                        pair.
+                      </p>
+                      <p>
+                        Perhaps our servers are down, please try again later or
+                        contact support: support@giantswarm.io
+                      </p>
+                    </>
+                  );
+              }
+
+              return null;
+            })()}
+          </BootstrapModal.Body>
+          <BootstrapModal.Footer data-test-id='create-key-pair-modal-footer'>
+            {modal.template === 'addKeyPair' && (
+              <Button
+                bsStyle='primary'
+                disabled={cnPrefixError !== null}
+                loading={modal.loading}
+                onClick={confirmAddKeyPair}
+                type='submit'
               >
-                <BootstrapModal.Header closeButton>
-                  <BootstrapModal.Title>
-                    Your key pair and kubeconfig has been created.
-                  </BootstrapModal.Title>
-                </BootstrapModal.Header>
-                <BootstrapModal.Body>
-                  <p>
-                    Copy the text below and save it to a text file named
-                    kubeconfig on your local machine. Caution: You won&apos;t
-                    see the key and certificate again!
-                  </p>
-                  <p>
-                    <b>Important:</b> Make sure that only you have access to
-                    this file, as it enables for complete administrative access
-                    to your cluster.
-                  </p>
+                {modal.loading ? 'Creating Key Pair' : 'Create Key Pair'}
+              </Button>
+            )}
 
-                  <form>
-                    <textarea readOnly value={kubeconfig} />
-                  </form>
-
-                  {hasContentInClipboard ? (
-                    <Button bsStyle='default' onClick={copyKubeConfig}>
-                      &nbsp;&nbsp;
-                      <i aria-hidden='true' className='fa fa-done' />
-                      &nbsp;&nbsp;
-                    </Button>
-                  ) : (
-                    <Button bsStyle='default' onClick={copyKubeConfig}>
-                      Copy
-                    </Button>
-                  )}
-
-                  {downloadAsFileLink()}
-                </BootstrapModal.Body>
-                <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
-                  <Button bsStyle='link' onClick={close}>
-                    Close
-                  </Button>
-                </BootstrapModal.Footer>
-              </BootstrapModal>
-            );
-
-          case 'addKeyPairFailure':
-            return (
-              <BootstrapModal
-                className='create-key-pair-modal--success'
-                onHide={close}
-                show={modal.visible}
-              >
-                <BootstrapModal.Header closeButton>
-                  <BootstrapModal.Title>
-                    Could not create key pair.
-                  </BootstrapModal.Title>
-                </BootstrapModal.Header>
-                <BootstrapModal.Body>
-                  <p>
-                    Something went wrong while trying to create your key pair.
-                  </p>
-                  <p>
-                    Perhaps our servers are down, please try again later or
-                    contact support: support@giantswarm.io
-                  </p>
-                </BootstrapModal.Body>
-                <BootstrapModal.Footer>
-                  <Button bsStyle='link' onClick={close}>
-                    Close
-                  </Button>
-                </BootstrapModal.Footer>
-              </BootstrapModal>
-            );
-        }
-
-        return null;
-      })()}
+            {!modal.loading && (
+              <Button bsStyle='link' onClick={close}>
+                {closeButtonText}
+              </Button>
+            )}
+          </BootstrapModal.Footer>
+        </form>
+      </BootstrapModal>
     </>
   );
 };
