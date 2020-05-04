@@ -155,7 +155,7 @@
     "eslint-plugin-simple-import-sort": "5.0.3",
     "file-loader": "6.0.0",
     "fstream": "1.0.12",
-    "html-webpack-plugin": "4.2.1",
+    "html-webpack-plugin": "4.3.0",
     "husky": "4.2.5",
     "jest": "25.5.4",
     "json-loader": "0.5.7",
