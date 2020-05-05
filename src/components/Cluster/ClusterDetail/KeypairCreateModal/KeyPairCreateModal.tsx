@@ -15,6 +15,12 @@ const getDefaultDescription = (email: string): string => {
   return `Added by user ${email} using Happa web interface`;
 };
 
+enum KeypairCreateModalTemplates {
+  Add,
+  Success,
+  Failure,
+}
+
 interface IKeyPairCreateModalProps {
   user: Record<string, never>;
   actions: Record<string, (...args: never[]) => Promise<never>>;
@@ -35,18 +41,18 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   const [modal, setModal] = useState({
     visible: false,
     loading: false,
-    template: 'addKeyPair',
+    template: KeypairCreateModalTemplates.Add,
   });
 
   const confirmAddKeyPair = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (modal.template !== 'addKeyPair') return;
+    if (modal.template !== KeypairCreateModalTemplates.Add) return;
 
     setModal({
       visible: true,
       loading: true,
-      template: 'addKeyPair',
+      template: KeypairCreateModalTemplates.Add,
     });
     props.actions
       .clusterCreateKeyPair(props.cluster.id, {
@@ -62,7 +68,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         setModal({
           visible: true,
           loading: false,
-          template: 'addKeyPairSuccess',
+          template: KeypairCreateModalTemplates.Success,
         });
 
         return props.actions.clusterLoadKeyPairs(props.cluster.id);
@@ -77,7 +83,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
           setModal({
             visible: true,
             loading: false,
-            template: 'addKeyPairFailure',
+            template: KeypairCreateModalTemplates.Failure,
           });
         }, modalChangeTimeout);
       });
@@ -161,19 +167,19 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
     setModal({
       visible: true,
       loading: false,
-      template: 'addKeyPair',
+      template: KeypairCreateModalTemplates.Add,
     });
   };
 
   let title = '';
   let closeButtonText = '';
   switch (modal.template) {
-    case 'addKeyPairSuccess':
+    case KeypairCreateModalTemplates.Success:
       title = 'Your key pair and kubeconfig has been created.';
       closeButtonText = 'Close';
       break;
 
-    case 'addKeyPairFailure':
+    case KeypairCreateModalTemplates.Failure:
       title = 'Could not create key pair.';
       closeButtonText = 'Close';
       break;
@@ -201,7 +207,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
           <BootstrapModal.Body>
             {(() => {
               switch (modal.template) {
-                case 'addKeyPair':
+                case KeypairCreateModalTemplates.Add:
                   return (
                     <AddKeyPairTemplate
                       email={props.user.email}
@@ -223,10 +229,10 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
                     />
                   );
 
-                case 'addKeyPairSuccess':
+                case KeypairCreateModalTemplates.Success:
                   return <AddKeyPairSuccessTemplate kubeconfig={kubeconfig} />;
 
-                case 'addKeyPairFailure':
+                case KeypairCreateModalTemplates.Failure:
                   return <AddKeyPairFailureTemplate />;
               }
 
@@ -234,7 +240,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
             })()}
           </BootstrapModal.Body>
           <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
-            {modal.template === 'addKeyPair' && (
+            {modal.template === KeypairCreateModalTemplates.Add && (
               <Button
                 bsStyle='primary'
                 disabled={cnPrefixError !== null}
