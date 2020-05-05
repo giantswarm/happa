@@ -1,6 +1,12 @@
+import styled from '@emotion/styled';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+
+const PKILabel = styled.span`
+  text-decoration: underline;
+  font-weight: 700;
+`;
 
 interface IAddKeyPairServiceUnavailableErrorTemplateProps {}
 
@@ -13,7 +19,7 @@ const AddKeyPairServiceUnavailableError: React.FC<IAddKeyPairServiceUnavailableE
         overlay={<Tooltip id='tooltip'>Public Key Infrastructure</Tooltip>}
         placement='top'
       >
-        <span>PKI</span>
+        <PKILabel>PKI</PKILabel>
       </OverlayTrigger>{' '}
       <span>backend is not yet available. Please try again in a moment.</span>
     </>

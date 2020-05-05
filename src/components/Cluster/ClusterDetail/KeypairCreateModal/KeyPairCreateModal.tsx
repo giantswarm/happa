@@ -1,43 +1,25 @@
-import AddKeyPairFailureTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairFailureTemplate';
+import AddKeyPairErrorTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairErrorTemplate';
 import AddKeyPairSuccessTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairSuccessTemplate';
 import AddKeyPairTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairTemplate';
+import {
+  cnPrefixValidation,
+  getDefaultDescription,
+  getModalCloseButtonText,
+  getModalTitle,
+  getSubmitButtonText,
+  KeypairCreateModalStatus,
+  MODAL_CHANGE_TIMEOUT,
+  VALIDATION_DEBOUNCE_RATE,
+} from 'Cluster/ClusterDetail/KeypairCreateModal/Utils';
 import useDebounce from 'lib/effects/useDebounce';
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { Providers } from 'shared';
+import { Providers, StatusCodes } from 'shared';
 import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';
-
-const MODAL_CHANGE_TIMEOUT = 200;
-const VALIDATION_DEBOUNCE_RATE = 1000;
-
-const getDefaultDescription = (email: string): string => {
-  return `Added by user ${email} using Happa web interface`;
-};
-
-const cnPrefixValidation = (value: string): string | null => {
-  let error = null;
-  if (value !== '') {
-    const endRegex = /[a-zA-Z0-9]$/g;
-    const regex = /^[a-zA-Z0-9][a-zA-Z0-9@.-]*$/g;
-    if (!endRegex.test(value)) {
-      error = 'The CN prefix must end with a-z, A-Z, 0-9';
-    } else if (!regex.test(value)) {
-      error = 'The CN prefix must contain only a-z, A-Z, 0-9 or -';
-    }
-  }
-
-  return error;
-};
-
-enum KeypairCreateModalTemplates {
-  Add,
-  Success,
-  Failure,
-}
 
 interface IKeyPairCreateModalProps {
   user: Record<string, never>;
@@ -59,11 +41,13 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   const [modal, setModal] = useState<{
     visible: boolean;
     loading: boolean;
-    template: KeypairCreateModalTemplates;
+    errorCode: number | null;
+    status: KeypairCreateModalStatus;
   }>({
     visible: false,
     loading: false,
-    template: KeypairCreateModalTemplates.Add,
+    errorCode: null,
+    status: KeypairCreateModalStatus.Adding,
   });
 
   const confirmAddKeyPair = async (
@@ -71,12 +55,14 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   ): Promise<void> => {
     e.preventDefault();
 
-    if (modal.template !== KeypairCreateModalTemplates.Add) return;
+    if (modal.status !== KeypairCreateModalStatus.Adding || modal.loading)
+      return;
 
     setModal({
       visible: true,
       loading: true,
-      template: KeypairCreateModalTemplates.Add,
+      errorCode: null,
+      status: KeypairCreateModalStatus.Adding,
     });
     try {
       const keypair: IKeyPair = await props.actions.clusterCreateKeyPair(
@@ -94,16 +80,18 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
       setModal({
         visible: true,
         loading: false,
-        template: KeypairCreateModalTemplates.Success,
+        errorCode: null,
+        status: KeypairCreateModalStatus.Success,
       });
 
       await props.actions.clusterLoadKeyPairs(props.cluster.id);
-    } catch {
+    } catch (err) {
       setTimeout(() => {
         setModal({
           visible: true,
           loading: false,
-          template: KeypairCreateModalTemplates.Failure,
+          errorCode: err.status ?? StatusCodes.InternalServerError,
+          status: KeypairCreateModalStatus.Adding,
         });
       }, MODAL_CHANGE_TIMEOUT);
     }
@@ -117,7 +105,8 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
     setModal({
       visible: false,
       loading: false,
-      template: modal.template,
+      errorCode: null,
+      status: modal.status,
     });
   };
 
@@ -173,30 +162,17 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
     setModal({
       visible: true,
       loading: false,
-      template: KeypairCreateModalTemplates.Add,
+      errorCode: null,
+      status: KeypairCreateModalStatus.Adding,
     });
   };
 
-  let title = '';
-  let closeButtonText = '';
-  const submitButtonText = modal.loading
-    ? 'Creating Key Pair'
-    : 'Create Key Pair';
-  switch (modal.template) {
-    case KeypairCreateModalTemplates.Success:
-      title = 'Your key pair and kubeconfig has been created.';
-      closeButtonText = 'Close';
-      break;
-
-    case KeypairCreateModalTemplates.Failure:
-      title = 'Could not create key pair.';
-      closeButtonText = 'Close';
-      break;
-
-    default:
-      title = 'Create New Key Pair and Kubeconfig';
-      closeButtonText = 'Cancel';
-  }
+  const title = getModalTitle(modal.status);
+  const closeButtonText = getModalCloseButtonText(modal.status);
+  const submitButtonText = getSubmitButtonText(
+    modal.loading,
+    modal.errorCode !== null
+  );
 
   return (
     <>
@@ -214,42 +190,33 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         </BootstrapModal.Header>
         <form onSubmit={confirmAddKeyPair}>
           <BootstrapModal.Body>
-            {(() => {
-              switch (modal.template) {
-                case KeypairCreateModalTemplates.Add:
-                  return (
-                    <AddKeyPairTemplate
-                      email={props.user.email}
-                      provider={props.provider}
-                      cnPrefix={cnPrefix}
-                      cnPrefixError={cnPrefixError}
-                      handleCNPrefixChange={handleCNPrefixChange}
-                      certificateOrganizations={certificateOrganizations}
-                      handleCertificateOrganizationsChange={
-                        handleCertificateOrganizationsChange
-                      }
-                      description={description}
-                      handleDescriptionChange={handleDescriptionChange}
-                      expireTTL={expireTTL}
-                      handleTTLChange={handleTTLChange}
-                      useInternalAPI={useInternalAPI}
-                      handleUseInternalAPIChange={handleUseInternalAPIChange}
-                      ingressBaseDomain={window.config.ingressBaseDomain}
-                    />
-                  );
+            {modal.status === KeypairCreateModalStatus.Success ? (
+              <AddKeyPairSuccessTemplate kubeconfig={kubeconfig} />
+            ) : (
+              <AddKeyPairTemplate
+                email={props.user.email}
+                provider={props.provider}
+                cnPrefix={cnPrefix}
+                cnPrefixError={cnPrefixError}
+                handleCNPrefixChange={handleCNPrefixChange}
+                certificateOrganizations={certificateOrganizations}
+                handleCertificateOrganizationsChange={
+                  handleCertificateOrganizationsChange
+                }
+                description={description}
+                handleDescriptionChange={handleDescriptionChange}
+                expireTTL={expireTTL}
+                handleTTLChange={handleTTLChange}
+                useInternalAPI={useInternalAPI}
+                handleUseInternalAPIChange={handleUseInternalAPIChange}
+                ingressBaseDomain={window.config.ingressBaseDomain}
+              />
+            )}
 
-                case KeypairCreateModalTemplates.Success:
-                  return <AddKeyPairSuccessTemplate kubeconfig={kubeconfig} />;
-
-                case KeypairCreateModalTemplates.Failure:
-                  return <AddKeyPairFailureTemplate />;
-              }
-
-              return null;
-            })()}
+            <AddKeyPairErrorTemplate>{modal.errorCode}</AddKeyPairErrorTemplate>
           </BootstrapModal.Body>
           <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
-            {modal.template === KeypairCreateModalTemplates.Add && (
+            {modal.status !== KeypairCreateModalStatus.Success && (
               <Button
                 bsStyle='primary'
                 disabled={cnPrefixError !== null}
