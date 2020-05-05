@@ -179,6 +179,9 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
 
   let title = '';
   let closeButtonText = '';
+  const submitButtonText = modal.loading
+    ? 'Creating Key Pair'
+    : 'Create Key Pair';
   switch (modal.template) {
     case KeypairCreateModalTemplates.Success:
       title = 'Your key pair and kubeconfig has been created.';
@@ -254,7 +257,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
                 onClick={confirmAddKeyPair}
                 type='submit'
               >
-                {modal.loading ? 'Creating Key Pair' : 'Create Key Pair'}
+                {submitButtonText}
               </Button>
             )}
 

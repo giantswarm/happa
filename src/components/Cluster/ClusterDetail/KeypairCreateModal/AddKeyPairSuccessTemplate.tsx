@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';
 
+const CLIPBOARD_RESET_TIME = 500;
+
 interface IAddKeyPairSuccessTemplateProps {
   kubeconfig: string;
 }
@@ -16,12 +18,10 @@ const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
   const copyKubeconfig = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const clipboardResetTime = 500;
-
     setClipboardContent(kubeconfig);
     setTimeout(() => {
       setClipboardContent(null);
-    }, clipboardResetTime);
+    }, CLIPBOARD_RESET_TIME);
   };
 
   return (
