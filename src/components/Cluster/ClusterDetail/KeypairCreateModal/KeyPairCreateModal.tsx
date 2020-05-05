@@ -11,8 +11,26 @@ import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';
 
+const MODAL_CHANGE_TIMEOUT = 200;
+const VALIDATION_DEBOUNCE_RATE = 1000;
+
 const getDefaultDescription = (email: string): string => {
   return `Added by user ${email} using Happa web interface`;
+};
+
+const cnPrefixValidation = (value: string): string | null => {
+  let error = null;
+  if (value !== '') {
+    const endRegex = /[a-zA-Z0-9]$/g;
+    const regex = /^[a-zA-Z0-9][a-zA-Z0-9@.-]*$/g;
+    if (!endRegex.test(value)) {
+      error = 'The CN prefix must end with a-z, A-Z, 0-9';
+    } else if (!regex.test(value)) {
+      error = 'The CN prefix must contain only a-z, A-Z, 0-9 or -';
+    }
+  }
+
+  return error;
 };
 
 enum KeypairCreateModalTemplates {
@@ -48,7 +66,9 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
     template: KeypairCreateModalTemplates.Add,
   });
 
-  const confirmAddKeyPair = (e: React.FormEvent<HTMLFormElement>) => {
+  const confirmAddKeyPair = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     if (modal.template !== KeypairCreateModalTemplates.Add) return;
@@ -58,39 +78,35 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
       loading: true,
       template: KeypairCreateModalTemplates.Add,
     });
-    props.actions
-      .clusterCreateKeyPair(props.cluster.id, {
-        certificate_organizations: certificateOrganizations,
-        cn_prefix: cnPrefix,
-        description: description,
-        ttl_hours: expireTTL,
-      } as never)
-      .then((keypair: IKeyPair) => {
-        setKubeconfig(
-          dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
-        );
+    try {
+      const keypair: IKeyPair = await props.actions.clusterCreateKeyPair(
+        props.cluster.id,
+        {
+          certificate_organizations: certificateOrganizations,
+          cn_prefix: cnPrefix,
+          description: description,
+          ttl_hours: expireTTL,
+        } as never
+      );
+      setKubeconfig(
+        dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
+      );
+      setModal({
+        visible: true,
+        loading: false,
+        template: KeypairCreateModalTemplates.Success,
+      });
+
+      await props.actions.clusterLoadKeyPairs(props.cluster.id);
+    } catch {
+      setTimeout(() => {
         setModal({
           visible: true,
           loading: false,
-          template: KeypairCreateModalTemplates.Success,
+          template: KeypairCreateModalTemplates.Failure,
         });
-
-        return props.actions.clusterLoadKeyPairs(props.cluster.id);
-      })
-      .catch((error: Error) => {
-        const modalChangeTimeout = 200;
-
-        // eslint-disable-next-line no-console
-        console.error(error);
-
-        setTimeout(() => {
-          setModal({
-            visible: true,
-            loading: false,
-            template: KeypairCreateModalTemplates.Failure,
-          });
-        }, modalChangeTimeout);
-      });
+      }, MODAL_CHANGE_TIMEOUT);
+    }
   };
 
   const close = () => {
@@ -105,28 +121,13 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
     });
   };
 
-  const cnPrefixValidation = (value: string) => {
-    let error = null;
-    if (value !== '') {
-      const endRegex = /[a-zA-Z0-9]$/g;
-      const regex = /^[a-zA-Z0-9][a-zA-Z0-9@.-]*$/g;
-      if (!endRegex.test(value)) {
-        error = 'The CN prefix must end with a-z, A-Z, 0-9';
-      } else if (!regex.test(value)) {
-        error = 'The CN prefix must contain only a-z, A-Z, 0-9 or -';
-      }
-    }
-
-    setCNPrefixError(error);
-  };
-
-  const debounceRateTime = 1000;
-  const cnPrefixDebounced = useDebounce(cnPrefix, debounceRateTime);
+  const cnPrefixDebounced = useDebounce(cnPrefix, VALIDATION_DEBOUNCE_RATE);
   useEffect(
     () => {
       // Make sure we have a value (user has entered something in input)
       if (cnPrefixDebounced) {
-        cnPrefixValidation(cnPrefixDebounced);
+        const error = cnPrefixValidation(cnPrefixDebounced);
+        setCNPrefixError(error);
       }
     },
     // This is the useEffect input array
@@ -141,7 +142,8 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
 
     if (cnPrefixError) {
       setCNPrefix(inputValue);
-      cnPrefixValidation(inputValue);
+      const error = cnPrefixValidation(inputValue);
+      setCNPrefixError(error);
     } else {
       setCNPrefix(inputValue);
     }
