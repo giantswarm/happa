@@ -81,6 +81,13 @@ describe('KeyPairCreateModal', () => {
 
     fireEvent.change(cnNamePrefixInput, {
       target: {
+        value: '',
+      },
+    });
+    expect(validationText).not.toBeInTheDocument();
+
+    fireEvent.change(cnNamePrefixInput, {
+      target: {
         value: 'adasdassd@@',
       },
     });
