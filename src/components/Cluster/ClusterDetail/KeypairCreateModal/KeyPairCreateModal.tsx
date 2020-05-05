@@ -1,3 +1,4 @@
+import { css, keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
 import AddKeyPairErrorTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairErrorTemplate';
 import AddKeyPairSuccessTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairSuccessTemplate';
@@ -22,7 +23,34 @@ import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';
 
-const StyledModal = styled(BootstrapModal)`
+const errorAnimation = keyframes`
+  from, 20%, 53%, 80%, to {
+    transform: translate3d(0, 0, 0);
+  }
+
+  40%, 43% {
+    transform: translate3d(-30px, 0, 0);
+  }
+
+  70% {
+    transform: translate3d(-15px, 0, 0);
+  }
+
+  90% {
+    transform: translate3d(-4px, 0, 0);
+  }
+`;
+
+const filterModalProps = (propName: string): boolean => {
+  return propName !== 'error';
+};
+
+const StyledModal = styled<
+  React.ComponentType<React.ComponentProps<typeof BootstrapModal>>,
+  { error: boolean }
+>(BootstrapModal, {
+  shouldForwardProp: filterModalProps,
+})`
   .modal-dialog {
     width: 95%;
     max-width: 700px;
@@ -32,6 +60,12 @@ const StyledModal = styled(BootstrapModal)`
     display: inline;
     margin-left: 10px;
   }
+
+  animation: ${({ error }) =>
+    error &&
+    css`
+      ${errorAnimation} 0.75s ease-in-out 1
+    `};
 `;
 
 interface IKeyPairCreateModalProps {
@@ -196,6 +230,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         data-testid='create-key-pair-modal'
         onHide={close}
         show={modal.visible}
+        error={modal.errorCode !== null}
       >
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>{title}</BootstrapModal.Title>
