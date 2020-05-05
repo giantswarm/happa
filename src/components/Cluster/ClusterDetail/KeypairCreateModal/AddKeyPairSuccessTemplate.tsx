@@ -51,12 +51,16 @@ const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
         it enables for complete administrative access to your cluster.
       </p>
 
-      <StyledTextBox readOnly value={kubeconfig} />
+      <StyledTextBox readOnly value={kubeconfig} title='kubeconfig' />
 
       {hasContentInClipboard ? (
         <Button bsStyle='default' onClick={copyKubeconfig}>
           &nbsp;&nbsp;
-          <i aria-hidden='true' className='fa fa-done' />
+          <i
+            aria-hidden='true'
+            className='fa fa-done'
+            title='Content copied to clipboard'
+          />
           &nbsp;&nbsp;
         </Button>
       ) : (

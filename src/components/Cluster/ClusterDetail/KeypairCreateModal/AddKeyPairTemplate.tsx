@@ -95,8 +95,9 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
       <br />
       <div className='row'>
         <div className='col-12'>
-          <label>Description:</label>
+          <label htmlFor='description'>Description:</label>
           <input
+            id='description'
             onChange={handleDescriptionChange}
             type='text'
             value={description}

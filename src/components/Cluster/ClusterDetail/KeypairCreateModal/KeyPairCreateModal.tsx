@@ -102,9 +102,6 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   ): Promise<void> => {
     e.preventDefault();
 
-    if (modal.status !== KeypairCreateModalStatus.Adding || modal.loading)
-      return;
-
     setModal({
       visible: true,
       loading: true,
