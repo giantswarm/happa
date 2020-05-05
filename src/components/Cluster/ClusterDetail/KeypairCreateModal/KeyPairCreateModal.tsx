@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import AddKeyPairErrorTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairErrorTemplate';
 import AddKeyPairSuccessTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairSuccessTemplate';
 import AddKeyPairTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairTemplate';
@@ -20,6 +21,18 @@ import { Providers, StatusCodes } from 'shared';
 import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';
+
+const StyledModal = styled(BootstrapModal)`
+  .modal-dialog {
+    width: 95%;
+    max-width: 700px;
+  }
+
+  .checkbox-label {
+    display: inline;
+    margin-left: 10px;
+  }
+`;
 
 interface IKeyPairCreateModalProps {
   user: Record<string, never>;
@@ -179,9 +192,8 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
       <Button bsStyle='default' className='small' onClick={show}>
         <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
-      <BootstrapModal
+      <StyledModal
         data-testid='create-key-pair-modal'
-        className='create-key-pair-modal'
         onHide={close}
         show={modal.visible}
       >
@@ -235,7 +247,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
             )}
           </BootstrapModal.Footer>
         </form>
-      </BootstrapModal>
+      </StyledModal>
     </>
   );
 };

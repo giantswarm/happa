@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import DownloadKubeconfigButton from 'Cluster/ClusterDetail/KeypairCreateModal/DownloadKubeconfigButton';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import PropTypes from 'prop-types';
@@ -5,6 +6,20 @@ import React from 'react';
 import Button from 'UI/Button';
 
 const CLIPBOARD_RESET_TIME = 500;
+
+const StyledTextBox = styled.textarea`
+  height: 300px;
+  font-family: 'Inconsolata';
+  background-color: #333333;
+  padding: 9px 13px;
+  border-radius: 10px;
+  position: relative;
+  transition: background-color 0.02s linear;
+  border: none;
+  line-height: initial;
+  padding-right: 55px;
+  overflow: visible;
+`;
 
 interface IAddKeyPairSuccessTemplateProps {
   kubeconfig: string;
@@ -36,7 +51,7 @@ const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
         it enables for complete administrative access to your cluster.
       </p>
 
-      <textarea readOnly value={kubeconfig} />
+      <StyledTextBox readOnly value={kubeconfig} />
 
       {hasContentInClipboard ? (
         <Button bsStyle='default' onClick={copyKubeconfig}>
