@@ -218,9 +218,7 @@ describe('KeyPairCreateModal', () => {
     const useAlternativeEndpoint = getByLabelText(
       /use alternative internal api endpoint./i
     );
-    fireEvent.change(useAlternativeEndpoint, {
-      target: { checked: true },
-    });
+    fireEvent.click(useAlternativeEndpoint);
 
     const createButton = getByText(/^create key pair$/i);
     fireEvent.click(createButton);
