@@ -1,13 +1,12 @@
+import AddKeyPairTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairTemplate';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import useDebounce from 'lib/effects/useDebounce';
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { Constants, Providers } from 'shared/constants';
+import { Constants } from 'shared/constants';
 import Button from 'UI/Button';
-
-import ExpiryHoursPicker from '../ExpiryHoursPicker';
 
 const KeyPairCreateModal = (props) => {
   const defaultDescription = (email) => {
@@ -119,19 +118,11 @@ const KeyPairCreateModal = (props) => {
     });
   };
 
-  const cnPrefixOrEmail = () => {
-    if (cnPrefix === '') {
-      return props.user.email;
-    }
-
-    return cnPrefix;
-  };
-
   const cnPrefixValidation = (value) => {
     let error = null;
     if (value !== '') {
       const endRegex = /[a-zA-Z0-9]$/g;
-      const regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*$/g;
+      const regex = /^[a-zA-Z0-9][a-zA-Z0-9@.-]*$/g;
       if (!endRegex.test(value)) {
         error = 'The CN prefix must end with a-z, A-Z, 0-9';
       } else if (!regex.test(value)) {
@@ -231,99 +222,24 @@ const KeyPairCreateModal = (props) => {
               switch (modal.template) {
                 case 'addKeyPair':
                   return (
-                    <>
-                      <p>
-                        A key pair grants you access to the Kubernetes API of
-                        this cluster.
-                      </p>
-                      <p>
-                        Kubernetes uses the common name of the certificate as
-                        the username, and assigns the Organizations as groups.
-                        This allows you to set up role based access rights.
-                      </p>
-                      <div className='row'>
-                        <div className='col-6'>
-                          <label htmlFor='cnPrefix'>Common Name Prefix:</label>
-                          <input
-                            id='cnPrefix'
-                            autoFocus
-                            onChange={handleCNPrefixChange}
-                            type='text'
-                            value={cnPrefix}
-                          />
-                          <div className='text-field-hint'>
-                            {cnPrefixError === null ? (
-                              `${cnPrefixOrEmail()}.user.api.clusterdomain`
-                            ) : (
-                              <span className='error'>
-                                <i className='fa fa-warning' /> {cnPrefixError}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className='col-6'>
-                          <label htmlFor='organizations'>Organizations:</label>
-                          <input
-                            id='organizations'
-                            onChange={handleCertificateOrganizationsChange}
-                            type='text'
-                            value={certificateOrganizations}
-                          />
-                          <div className='text-field-hint'>
-                            Comma seperated values. e.g.:
-                            admin,blue-team,staging
-                          </div>
-                        </div>
-                      </div>
-                      <br />
-                      <div className='row'>
-                        <div className='col-12'>
-                          <label>Description:</label>
-                          <input
-                            onChange={handleDescriptionChange}
-                            type='text'
-                            value={description}
-                          />
-                        </div>
-                      </div>
-                      <br />
-                      <label>Expires:</label>
-                      <ExpiryHoursPicker
-                        initialValue={expireTTL}
-                        maxSafeValueHours={Constants.KEYPAIR_MAX_SAFE_TTL}
-                        onChange={handleTTLChange}
-                      />
-
-                      {props.provider === Providers.AWS && (
-                        <>
-                          <br />
-
-                          <label>Kubernetes API Endpoint:</label>
-                          <input
-                            id='internalApi'
-                            type='checkbox'
-                            checked={useInternalAPI}
-                            onChange={handleUseInternalAPIChange}
-                          />
-                          <label
-                            htmlFor='internalApi'
-                            className='checkbox-label'
-                          >
-                            Use alternative internal api endpoint.
-                          </label>
-                          <small>
-                            When this is selected, the server entry of the
-                            created kubeconfig will be https://internal-api.
-                            {window.config.ingressBaseDomain}
-                          </small>
-                          <small>
-                            This is preferred in some restricted environments.
-                          </small>
-
-                          <br />
-                        </>
-                      )}
-                    </>
+                    <AddKeyPairTemplate
+                      email={props.user.email}
+                      provider={props.provider}
+                      cnPrefix={cnPrefix}
+                      cnPrefixError={cnPrefixError}
+                      handleCNPrefixChange={handleCNPrefixChange}
+                      certificateOrganizations={certificateOrganizations}
+                      handleCertificateOrganizationsChange={
+                        handleCertificateOrganizationsChange
+                      }
+                      description={description}
+                      handleDescriptionChange={handleDescriptionChange}
+                      expireTTL={expireTTL}
+                      handleTTLChange={handleTTLChange}
+                      useInternalAPI={useInternalAPI}
+                      handleUseInternalAPIChange={handleUseInternalAPIChange}
+                      ingressBaseDomain={window.config.ingressBaseDomain}
+                    />
                   );
 
                 case 'addKeyPairSuccess':
