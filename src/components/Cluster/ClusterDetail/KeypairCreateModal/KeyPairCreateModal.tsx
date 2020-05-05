@@ -38,7 +38,11 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   const [cnPrefix, setCNPrefix] = useState('');
   const [cnPrefixError, setCNPrefixError] = useState<string | null>(null);
   const [certificateOrganizations, setCertificateOrganizations] = useState('');
-  const [modal, setModal] = useState({
+  const [modal, setModal] = useState<{
+    visible: boolean;
+    loading: boolean;
+    template: KeypairCreateModalTemplates;
+  }>({
     visible: false,
     loading: false,
     template: KeypairCreateModalTemplates.Add,
