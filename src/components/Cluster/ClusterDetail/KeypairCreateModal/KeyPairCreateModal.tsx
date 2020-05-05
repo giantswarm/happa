@@ -102,17 +102,6 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   ): Promise<void> => {
     e.preventDefault();
 
-    setTimeout(() => {
-      setModal({
-        visible: true,
-        loading: false,
-        errorCode: StatusCodes.InternalServerError,
-        status: KeypairCreateModalStatus.Adding,
-      });
-    }, MODAL_CHANGE_TIMEOUT);
-
-    return;
-
     if (modal.status !== KeypairCreateModalStatus.Adding || modal.loading)
       return;
 
