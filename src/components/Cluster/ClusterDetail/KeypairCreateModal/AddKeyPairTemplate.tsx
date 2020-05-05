@@ -43,7 +43,7 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
   handleUseInternalAPIChange,
   ingressBaseDomain,
 }) => {
-  const cnPrefixOrEmail = () => {
+  const getCnPrefixOrEmail = (): string => {
     if (cnPrefix === '') {
       return email;
     }
@@ -71,7 +71,7 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
           />
           <div className='text-field-hint'>
             {cnPrefixError === null ? (
-              `${cnPrefixOrEmail()}.user.api.clusterdomain`
+              `${getCnPrefixOrEmail()}.user.api.clusterdomain`
             ) : (
               <span className='error'>
                 <i className='fa fa-warning' /> {cnPrefixError}

@@ -1,5 +1,6 @@
+import AddKeyPairFailureTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairFailureTemplate';
+import AddKeyPairSuccessTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairSuccessTemplate';
 import AddKeyPairTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairTemplate';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import useDebounce from 'lib/effects/useDebounce';
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -8,18 +9,17 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Constants } from 'shared/constants';
 import Button from 'UI/Button';
 
-const KeyPairCreateModal = (props) => {
-  const defaultDescription = (email) => {
-    return `Added by user ${email} using Happa web interface`;
-  };
+const getDefaultDescription = (email) => {
+  return `Added by user ${email} using Happa web interface`;
+};
 
+const KeyPairCreateModal = (props) => {
   const [expireTTL, setExpireTTL] = useState(Constants.KEYPAIR_DEFAULT_TTL);
   const [description, setDescription] = useState(
-    defaultDescription(props.user.email)
+    getDefaultDescription(props.user.email)
   );
   const [useInternalAPI, setUseInternalAPI] = useState(false);
-  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
-  const [kubeconfig, setKubeconfig] = useState(false);
+  const [kubeconfig, setKubeconfig] = useState(null);
   const [cnPrefix, setCNPrefix] = useState('');
   const [cnPrefixError, setCNPrefixError] = useState(null);
   const [certificateOrganizations, setCertificateOrganizations] = useState('');
@@ -28,25 +28,6 @@ const KeyPairCreateModal = (props) => {
     loading: false,
     template: 'addKeyPair',
   });
-
-  const blob = () => {
-    const kubeConfigBlob = new Blob([kubeconfig], {
-      type: 'application/plain;charset=utf-8',
-    });
-
-    return kubeConfigBlob;
-  };
-
-  const copyKubeConfig = (e) => {
-    e.preventDefault();
-
-    const clipboardResetTime = 500;
-
-    setClipboardContent(kubeconfig);
-    setTimeout(() => {
-      setClipboardContent(null);
-    }, clipboardResetTime);
-  };
 
   const confirmAddKeyPair = (e) => {
     e.preventDefault();
@@ -93,24 +74,11 @@ const KeyPairCreateModal = (props) => {
       });
   };
 
-  // eslint-disable-next-line react/no-multi-comp
-  const downloadAsFileLink = () => {
-    return (
-      <a
-        className='btn btn-default'
-        download='giantswarm-kubeconfig'
-        href={window.URL.createObjectURL(blob())}
-      >
-        Download
-      </a>
-    );
-  };
-
   const close = () => {
     setExpireTTL(Constants.KEYPAIR_DEFAULT_TTL);
     setCNPrefix('');
     setCertificateOrganizations('');
-    setDescription(defaultDescription(props.user.email));
+    setDescription(getDefaultDescription(props.user.email));
     setModal({
       visible: false,
       loading: false,
@@ -243,50 +211,10 @@ const KeyPairCreateModal = (props) => {
                   );
 
                 case 'addKeyPairSuccess':
-                  return (
-                    <>
-                      <p>
-                        Copy the text below and save it to a text file named
-                        kubeconfig on your local machine. Caution: You
-                        won&apos;t see the key and certificate again!
-                      </p>
-                      <p>
-                        <b>Important:</b> Make sure that only you have access to
-                        this file, as it enables for complete administrative
-                        access to your cluster.
-                      </p>
-
-                      <textarea readOnly value={kubeconfig} />
-
-                      {hasContentInClipboard ? (
-                        <Button bsStyle='default' onClick={copyKubeConfig}>
-                          &nbsp;&nbsp;
-                          <i aria-hidden='true' className='fa fa-done' />
-                          &nbsp;&nbsp;
-                        </Button>
-                      ) : (
-                        <Button bsStyle='default' onClick={copyKubeConfig}>
-                          Copy
-                        </Button>
-                      )}
-
-                      {downloadAsFileLink()}
-                    </>
-                  );
+                  return <AddKeyPairSuccessTemplate kubeconfig={kubeconfig} />;
 
                 case 'addKeyPairFailure':
-                  return (
-                    <>
-                      <p>
-                        Something went wrong while trying to create your key
-                        pair.
-                      </p>
-                      <p>
-                        Perhaps our servers are down, please try again later or
-                        contact support: support@giantswarm.io
-                      </p>
-                    </>
-                  );
+                  return <AddKeyPairFailureTemplate />;
               }
 
               return null;
