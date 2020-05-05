@@ -102,6 +102,17 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   ): Promise<void> => {
     e.preventDefault();
 
+    setTimeout(() => {
+      setModal({
+        visible: true,
+        loading: false,
+        errorCode: StatusCodes.InternalServerError,
+        status: KeypairCreateModalStatus.Adding,
+      });
+    }, MODAL_CHANGE_TIMEOUT);
+
+    return;
+
     if (modal.status !== KeypairCreateModalStatus.Adding || modal.loading)
       return;
 
@@ -152,7 +163,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
     setModal({
       visible: false,
       loading: false,
-      errorCode: null,
+      errorCode: modal.errorCode,
       status: modal.status,
     });
   };
@@ -270,6 +281,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
                 loading={modal.loading}
                 onClick={confirmAddKeyPair}
                 type='submit'
+                loadingTimeout={0}
               >
                 {submitButtonText}
               </Button>

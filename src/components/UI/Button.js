@@ -32,13 +32,18 @@ const Button = (props) => {
     onClick,
     type,
     children,
+    loadingTimeout,
     ...rest
   } = props;
 
   return (
     <div className='progress_button--container'>
       {loadingPosition === 'left' ? (
-        <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
+        <LoadingIndicator
+          loading={loading}
+          loadingPosition={loadingPosition}
+          timeout={loadingTimeout}
+        />
       ) : undefined}
 
       <BsButton
@@ -53,7 +58,11 @@ const Button = (props) => {
       </BsButton>
 
       {loadingPosition === 'right' ? (
-        <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
+        <LoadingIndicator
+          loading={loading}
+          loadingPosition={loadingPosition}
+          timeout={loadingTimeout}
+        />
       ) : undefined}
     </div>
   );
@@ -69,6 +78,7 @@ Button.propTypes = {
   loadingPosition: PropTypes.string,
   children: PropTypes.node,
   className: PropTypes.string,
+  loadingTimeout: PropTypes.number,
 };
 
 Button.defaultProps = {
