@@ -68,6 +68,7 @@ Button.propTypes = {
   loading: PropTypes.bool,
   loadingPosition: PropTypes.string,
   children: PropTypes.node,
+  className: PropTypes.string,
 };
 
 Button.defaultProps = {

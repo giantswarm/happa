@@ -19,7 +19,7 @@ interface IAddKeyPairTemplateProps {
   handleDescriptionChange: ChangeEventHandler<HTMLInputElement>;
 
   expireTTL: number;
-  handleTTLChange: ChangeEventHandler<HTMLInputElement>;
+  handleTTLChange: (ttl: number) => void;
 
   useInternalAPI: boolean;
   handleUseInternalAPIChange: ChangeEventHandler<HTMLInputElement>;

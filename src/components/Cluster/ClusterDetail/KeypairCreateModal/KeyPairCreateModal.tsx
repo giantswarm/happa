@@ -6,22 +6,31 @@ import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { Providers } from 'shared';
 import { Constants } from 'shared/constants';
+import { IKeyPair, PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';
 
-const getDefaultDescription = (email) => {
+const getDefaultDescription = (email: string): string => {
   return `Added by user ${email} using Happa web interface`;
 };
 
-const KeyPairCreateModal = (props) => {
+interface IKeyPairCreateModalProps {
+  user: Record<string, never>;
+  actions: Record<string, (...args: never[]) => Promise<never>>;
+  cluster: Record<string, never>;
+  provider: PropertiesOf<typeof Providers>;
+}
+
+const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   const [expireTTL, setExpireTTL] = useState(Constants.KEYPAIR_DEFAULT_TTL);
   const [description, setDescription] = useState(
     getDefaultDescription(props.user.email)
   );
   const [useInternalAPI, setUseInternalAPI] = useState(false);
-  const [kubeconfig, setKubeconfig] = useState(null);
+  const [kubeconfig, setKubeconfig] = useState('');
   const [cnPrefix, setCNPrefix] = useState('');
-  const [cnPrefixError, setCNPrefixError] = useState(null);
+  const [cnPrefixError, setCNPrefixError] = useState<string | null>(null);
   const [certificateOrganizations, setCertificateOrganizations] = useState('');
   const [modal, setModal] = useState({
     visible: false,
@@ -29,7 +38,7 @@ const KeyPairCreateModal = (props) => {
     template: 'addKeyPair',
   });
 
-  const confirmAddKeyPair = (e) => {
+  const confirmAddKeyPair = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (modal.template !== 'addKeyPair') return;
@@ -45,8 +54,8 @@ const KeyPairCreateModal = (props) => {
         cn_prefix: cnPrefix,
         description: description,
         ttl_hours: expireTTL,
-      })
-      .then((keypair) => {
+      } as never)
+      .then((keypair: IKeyPair) => {
         setKubeconfig(
           dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
         );
@@ -58,7 +67,7 @@ const KeyPairCreateModal = (props) => {
 
         return props.actions.clusterLoadKeyPairs(props.cluster.id);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         const modalChangeTimeout = 200;
 
         // eslint-disable-next-line no-console
@@ -86,7 +95,7 @@ const KeyPairCreateModal = (props) => {
     });
   };
 
-  const cnPrefixValidation = (value) => {
+  const cnPrefixValidation = (value: string) => {
     let error = null;
     if (value !== '') {
       const endRegex = /[a-zA-Z0-9]$/g;
@@ -117,7 +126,7 @@ const KeyPairCreateModal = (props) => {
     [cnPrefixDebounced]
   );
 
-  const handleCNPrefixChange = (e) => {
+  const handleCNPrefixChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
     if (cnPrefixError) {
@@ -128,19 +137,23 @@ const KeyPairCreateModal = (props) => {
     }
   };
 
-  const handleCertificateOrganizationsChange = (e) => {
+  const handleCertificateOrganizationsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setCertificateOrganizations(e.target.value);
   };
 
-  const handleTTLChange = (ttl) => {
+  const handleTTLChange = (ttl: number) => {
     setExpireTTL(ttl);
   };
 
-  const handleUseInternalAPIChange = (event) => {
-    setUseInternalAPI(event.target.checked);
+  const handleUseInternalAPIChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setUseInternalAPI(e.target.checked);
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
   };
 
@@ -246,11 +259,13 @@ const KeyPairCreateModal = (props) => {
 };
 
 KeyPairCreateModal.propTypes = {
-  user: PropTypes.object,
-  actions: PropTypes.object,
-  cluster: PropTypes.object,
-  provider: PropTypes.string,
-  show: PropTypes.func,
+  // @ts-ignore
+  user: PropTypes.object.isRequired,
+  // @ts-ignore
+  actions: PropTypes.object.isRequired,
+  // @ts-ignore
+  cluster: PropTypes.object.isRequired,
+  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
 };
 
 export default KeyPairCreateModal;
