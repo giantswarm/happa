@@ -14,7 +14,7 @@ import Copyable from 'shared/Copyable';
 import Button from 'UI/Button';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
-import KeypairCreateModal from './KeyPairCreateModal';
+import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';
 import KeyPairDetailsModal from './KeyPairDetailsModal';
 
 const Disclaimer = styled.p`

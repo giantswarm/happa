@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
@@ -132,8 +130,10 @@ it('lets me create a keypair', async () => {
   const closeButton = within(modalFooter).getByText('Close');
   fireEvent.click(closeButton);
 
-  // Then the modal should be gone.
-  expect(modal).not.toBeInTheDocument();
+  await waitFor(() => {
+    // Then the modal should be gone.
+    expect(modal).not.toBeInTheDocument();
+  });
 });
 
 it('lists existing keypairs', async () => {
