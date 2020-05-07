@@ -89,6 +89,11 @@ class ClusterApps extends React.Component {
   // The `appMetas` object below is a mapping of known
   // release component names to logos and categories.
   appMetas = {
+    'aws-cni': {
+      name: 'aws-cni',
+      logoUrl: '/images/app_icons/awscni@2x.png',
+      category: 'essentials',
+    },
     calico: {
       name: 'calico',
       logoUrl: '/images/app_icons/calico@2x.png',
