@@ -52,24 +52,22 @@ class ReleaseDetailsModal extends React.Component {
                 >
                   <h2>
                     Version {release.version}{' '}
-                    {
-                      // If we have a way of selecting a release, show the selection
-                      // buttons. This way the create cluster screen can show the
-                      // select button, and the cluster detail screen can omit it.
-                      this.props.selectedRelease ? (
-                        this.props.selectedRelease === release.version ? (
-                          <span className='selected'>Selected</span>
-                        ) : (
-                          <Button
-                            onClick={() =>
-                              this.props.selectRelease(release.version)
-                            }
-                          >
-                            Select
-                          </Button>
-                        )
-                      ) : undefined
-                    }
+                    {// If we have a way of selecting a release, show the selection
+                    // buttons. This way the create cluster screen can show the
+                    // select button, and the cluster detail screen can omit it.
+                    this.props.selectedRelease ? (
+                      this.props.selectedRelease === release.version ? (
+                        <span className='selected'>Selected</span>
+                      ) : (
+                        <Button
+                          onClick={() =>
+                            this.props.selectRelease(release.version)
+                          }
+                        >
+                          Select
+                        </Button>
+                      )
+                    ) : undefined}
                   </h2>
                   <p className='release-selector-modal--release-details--date'>
                     Released <span>{relativeDate(release.timestamp)}</span>
