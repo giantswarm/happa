@@ -21,4 +21,11 @@ export interface INodePool {
   status: INodePoolStatus;
 }
 
+export interface IKeyPair {
+  certificate_organizations: string;
+  cn_prefix: string;
+  description: string;
+  ttl_hours: number;
+}
+
 export type PropertiesOf<T> = T[keyof T];

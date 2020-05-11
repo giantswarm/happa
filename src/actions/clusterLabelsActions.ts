@@ -21,7 +21,7 @@ const clusterLabelsApi = new GiantSwarm.ClusterLabelsApi();
  */
 export function clusterLabelsPatch(
   clusterId: string,
-  labels: GiantSwarm.V5ClusterLabels
+  labels: GiantSwarm.V5ClusterLabelsProperty
 ) {
   return function (dispatch: Dispatch) {
     dispatch({

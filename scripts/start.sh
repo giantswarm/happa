@@ -24,6 +24,10 @@ if [ -n "$AZURE_CAPABILITIES_JSON" ]; then
   sed -i "s|azureCapabilitiesJSON: .*|azureCapabilitiesJSON: '$AZURE_CAPABILITIES_JSON',|" /www/index.html
 fi
 
+if [ -n "$DEFAULT_REQUEST_TIMEOUT_SECONDS" ]; then
+  sed -i "s|defaultRequestTimeoutSeconds: .*|defaultRequestTimeoutSeconds: $DEFAULT_REQUEST_TIMEOUT_SECONDS,|" /www/index.html
+fi
+
 if [ -n "$ENVIRONMENT" ]; then
   sed -i "s|environment: .*|environment: '$ENVIRONMENT',|" /www/index.html
 else

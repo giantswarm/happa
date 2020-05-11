@@ -1,5 +1,5 @@
 import * as clusterLabelsActions from 'actions/clusterLabelsActions';
-import { V5ClusterLabels } from 'giantswarm';
+import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, {
   Reducer,
@@ -28,7 +28,7 @@ interface IDispatchProps extends DispatchProp {
 
 interface IEditClusterLabelsModalProps extends IDispatchProps, IStateProps {
   clusterId: string;
-  labels: V5ClusterLabels;
+  labels: V5ClusterLabelsProperty;
 }
 
 interface IUpdateLabelReducerAction {
@@ -44,7 +44,7 @@ const EditClusterLabelsModal = ({
   loading,
 }: IEditClusterLabelsModalProps) => {
   const editableLabels = useMemo(() => {
-    const editable: V5ClusterLabels = {};
+    const editable: V5ClusterLabelsProperty = {};
 
     for (const labelKey of Object.keys(labels)) {
       if (labelKey.includes('giantswarm.io') === false) {
@@ -56,7 +56,7 @@ const EditClusterLabelsModal = ({
   }, [labels]);
 
   const [modifiedLabels, updateLabel] = useReducer<
-    Reducer<V5ClusterLabels, IUpdateLabelReducerAction>
+    Reducer<V5ClusterLabelsProperty, IUpdateLabelReducerAction>
   >((oldLabels, newLabel) => {
     if (newLabel.reset) {
       return {};

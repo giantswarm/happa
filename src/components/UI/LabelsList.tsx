@@ -1,10 +1,10 @@
-import { V5ClusterLabels } from 'giantswarm';
+import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ValueLabel from 'UI/ValueLabel';
 
 interface ILabelsListProps {
-  labels: V5ClusterLabels;
+  labels: V5ClusterLabelsProperty;
 }
 
 const LabelsList: React.FC<ILabelsListProps> = ({ labels }) => {

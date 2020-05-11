@@ -220,7 +220,7 @@ jobs:
       - run:
           name: Launch container for tests
           command: |
-            docker run --name happa-branch -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+            docker run --name happa-branch -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
             sleep 2
             CURL_OUTPUT=$(curl -s http://localhost:8000)
             echo "${CURL_OUTPUT}" | grep Happa

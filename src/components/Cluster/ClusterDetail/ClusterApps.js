@@ -7,12 +7,113 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { selectErrorByIdAndAction } from 'selectors/clusterSelectors';
+import cmp from 'semver-compare';
+import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
+
+// The `appMetas` object below is a mapping of known
+// release component names to logos and categories.
+const appMetas = {
+  'aws-cni': {
+    name: 'aws-cni',
+    logoUrl: '/images/app_icons/awscni@2x.png',
+    category: 'essentials',
+  },
+  calico: {
+    name: 'calico',
+    logoUrl: '/images/app_icons/calico@2x.png',
+    category: 'essentials',
+  },
+  'cluster-autoscaler': {
+    name: 'cluster-autoscaler',
+    logoUrl: '/images/app_icons/cluster_autoscaler@2x.png',
+    category: 'essentials',
+  },
+  containerlinux: (version) => {
+    const component = {
+      name: 'containerlinux',
+      logoUrl: '/images/app_icons/container_linux@2x.png',
+      category: 'essentials',
+    };
+
+    if (cmp(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
+      component.name = 'flatcar';
+      component.logoUrl = '/images/app_icons/flatcar_linux@2x.png';
+    }
+
+    return component;
+  },
+  coredns: {
+    name: 'coredns',
+    logoUrl: '/images/app_icons/coredns@2x.png',
+    category: 'essentials',
+  },
+  docker: {
+    name: 'docker',
+    logoUrl: '/images/app_icons/docker@2x.png',
+    category: 'essentials',
+  },
+  etcd: {
+    name: 'etcd',
+    logoUrl: '/images/app_icons/etcd@2x.png',
+    category: 'essentials',
+  },
+  kubernetes: {
+    name: 'kubernetes',
+    logoUrl: '/images/app_icons/kubernetes@2x.png',
+    category: 'essentials',
+  },
+  'metrics-server': {
+    name: 'metrics-server',
+    logoUrl: '/images/app_icons/metrics_server@2x.png',
+    category: 'essentials',
+  },
+  'kube-state-metrics': {
+    name: 'kube-state-metrics',
+    logoUrl: '/images/app_icons/kube_state_metrics@2x.png',
+    category: 'management',
+  },
+  'chart-operator': {
+    name: 'chart-operator',
+    logoUrl: '/images/app_icons/chart_operator@2x.png',
+    category: 'management',
+  },
+  'cert-exporter': {
+    name: 'cert-exporter',
+    logoUrl: '/images/app_icons/cert_exporter@2x.png',
+    category: 'management',
+  },
+  'net-exporter': {
+    name: 'net-exporter',
+    logoUrl: '/images/app_icons/net_exporter@2x.png',
+    category: 'management',
+  },
+  'node-exporter': {
+    name: 'node-exporter',
+    logoUrl: '/images/app_icons/node_exporter@2x.png',
+    category: 'management',
+  },
+  'nginx-ingress-controller': {
+    name: 'nginx-ingress-controller',
+    logoUrl: '/images/app_icons/nginx_ingress_controller@2x.png',
+    category: 'ingress',
+  },
+  kiam: {
+    name: 'kiam',
+    logoUrl: '/images/app_icons/kiam@2x.png',
+    category: 'essentials',
+  },
+  'external-dns': {
+    name: 'external-dns',
+    logoUrl: '/images/app_icons/external_dns@2x.png',
+    category: 'essentials',
+  },
+};
 
 // This component shows the list of components and apps installed on a cluster.
 // Apps can be:
@@ -86,91 +187,6 @@ class ClusterApps extends React.Component {
     this.isComponentMounted = false;
   }
 
-  // The `appMetas` object below is a mapping of known
-  // release component names to logos and categories.
-  appMetas = {
-    calico: {
-      name: 'calico',
-      logoUrl: '/images/app_icons/calico@2x.png',
-      category: 'essentials',
-    },
-    'cluster-autoscaler': {
-      name: 'cluster-autoscaler',
-      logoUrl: '/images/app_icons/cluster_autoscaler@2x.png',
-      category: 'essentials',
-    },
-    containerlinux: {
-      name: 'containerlinux',
-      logoUrl: '/images/app_icons/container_linux@2x.png',
-      category: 'essentials',
-    },
-    coredns: {
-      name: 'coredns',
-      logoUrl: '/images/app_icons/coredns@2x.png',
-      category: 'essentials',
-    },
-    docker: {
-      name: 'docker',
-      logoUrl: '/images/app_icons/docker@2x.png',
-      category: 'essentials',
-    },
-    etcd: {
-      name: 'etcd',
-      logoUrl: '/images/app_icons/etcd@2x.png',
-      category: 'essentials',
-    },
-    kubernetes: {
-      name: 'kubernetes',
-      logoUrl: '/images/app_icons/kubernetes@2x.png',
-      category: 'essentials',
-    },
-    'metrics-server': {
-      name: 'metrics-server',
-      logoUrl: '/images/app_icons/metrics_server@2x.png',
-      category: 'essentials',
-    },
-    'kube-state-metrics': {
-      name: 'kube-state-metrics',
-      logoUrl: '/images/app_icons/kube_state_metrics@2x.png',
-      category: 'management',
-    },
-    'chart-operator': {
-      name: 'chart-operator',
-      logoUrl: '/images/app_icons/chart_operator@2x.png',
-      category: 'management',
-    },
-    'cert-exporter': {
-      name: 'cert-exporter',
-      logoUrl: '/images/app_icons/cert_exporter@2x.png',
-      category: 'management',
-    },
-    'net-exporter': {
-      name: 'net-exporter',
-      logoUrl: '/images/app_icons/net_exporter@2x.png',
-      category: 'management',
-    },
-    'node-exporter': {
-      name: 'node-exporter',
-      logoUrl: '/images/app_icons/node_exporter@2x.png',
-      category: 'management',
-    },
-    'nginx-ingress-controller': {
-      name: 'nginx-ingress-controller',
-      logoUrl: '/images/app_icons/nginx_ingress_controller@2x.png',
-      category: 'ingress',
-    },
-    kiam: {
-      name: 'kiam',
-      logoUrl: '/images/app_icons/kiam@2x.png',
-      category: 'essentials',
-    },
-    'external-dns': {
-      name: 'external-dns',
-      logoUrl: '/images/app_icons/external_dns@2x.png',
-      category: 'essentials',
-    },
-  };
-
   // Since some components are not yet in the release endpoint output, but we do
   // still want to see them on this page, we manually add them to the release endpoint
   // response before running the mapping.
@@ -212,26 +228,28 @@ class ClusterApps extends React.Component {
     };
 
     for (i = 0; i < this.props.release?.components.length; i++) {
-      const component = this.props.release.components[i];
+      const { name, version } = this.props.release.components[i];
 
       // Remove component that is now present in the release response
       // from the manuallyAddAppMetas list to avoid showing them twice.
       this.manuallyAddAppMetas = this.manuallyAddAppMetas.filter((app) => {
-        return app.name !== component.name;
+        return app.name !== name;
       });
 
       // Find the component in the mapping above. If it's not there, then
       // it isn't something we want to show here.
-      if (this.appMetas[component.name]) {
-        // Fetch the metadata as defined above.
-        const appMeta = this.appMetas[component.name];
+      if (appMetas[name]) {
+        let appMeta = appMetas[name];
 
-        // Add the version.
-        appMeta.version = component.version;
-
+        if (typeof appMeta === 'function') {
+          appMeta = appMeta(version);
+        }
         // Add the app to the list of apps we'll show in the interface, in the
         // correct category.
-        displayApps[appMeta.category].push(appMeta);
+        displayApps[appMeta.category].push({
+          ...appMeta,
+          version,
+        });
       }
     }
 
