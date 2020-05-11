@@ -114,7 +114,7 @@
     "@types/lunr": "^2.3.3",
     "@types/node": "^13.13.5",
     "@types/prop-types": "^15.7.3",
-    "@types/react": "^16.9.34",
+    "@types/react": "^16.9.35",
     "@types/react-bootstrap": "^0.32.21",
     "@types/react-breadcrumbs": "^2.1.1",
     "@types/react-datepicker": "^2.11.0",
