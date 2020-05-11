@@ -7,7 +7,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
 const dotenv = require('dotenv');
 
-const envFileVars = JSON.parse(JSON.stringify(dotenv.config().parsed));
+const envFileVars = dotenv.config().parsed;
 
 const makeEndpoints = () => {
   const defaults = {
@@ -42,7 +42,7 @@ const makeFeatureFlags = () => {
 
   return JSON.parse(
     JSON.stringify({
-      FEATURE_CLUSTER_LABELS_V0: FEATURE_CLUSTER_LABELS_V0,
+      FEATURE_CLUSTER_LABELS_V0: Boolean(FEATURE_CLUSTER_LABELS_V0),
     })
   );
 };
