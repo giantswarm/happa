@@ -12,42 +12,40 @@ import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 
 class AdminLogin extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     const auth = Auth.getInstance();
 
-    if (
-      this.props.user &&
-      this.props.user.auth &&
-      this.props.user.auth.scheme === AuthorizationTypes.BEARER
-    ) {
-      if (isJwtExpired(this.props.user.auth.token)) {
-        // Token is expired. Try to renew it silently, and if that succeeds, redirect
-        // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
-        auth
-          .renewToken()
-          .then(async (result) => {
+    try {
+      if (
+        this.props.user &&
+        this.props.user.auth &&
+        this.props.user.auth.scheme === AuthorizationTypes.BEARER
+      ) {
+        if (isJwtExpired(this.props.user.auth.token)) {
+          try {
+            // Token is expired. Try to renew it silently, and if that succeeds, redirect
+            // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
+            const result = await auth.renewToken();
             // Update state with new token.
             await this.props.dispatch(userActions.auth0Login(result));
 
             // Redirect to dashboard.
             this.props.dispatch(push(AppRoutes.Home));
-          })
-          .catch((e) => {
-            // eslint-disable-next-line no-console
-            console.error(e);
+          } catch {
             // Unable to refresh token silently, so send the down the auth0
             // flow.
-            auth.login();
-          });
+            await auth.login();
+          }
+        } else {
+          // Token isn't expired yet, so just redirect the user to the dashboard.
+          this.props.dispatch(push(AppRoutes.Home));
+        }
       } else {
-        // Token isn't expired yet, so just redirect the user to the dashboard.
-        this.props.dispatch(push(AppRoutes.Home));
+        // User doesn't have any previous token at all, send them to auth0 so
+        // they can get one.
+        await auth.login();
       }
-    } else {
-      // User doesn't have any previous token at all, send them to auth0 so
-      // they can get one.
-      auth.login();
-    }
+    } catch (err) {}
   }
 
   // eslint-disable-next-line class-methods-use-this
