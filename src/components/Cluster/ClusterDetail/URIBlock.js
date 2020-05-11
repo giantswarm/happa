@@ -54,12 +54,17 @@ const CopyContent = styled.div`
 
 const StyledCode = styled(Code)`
   margin-right: 8px;
-  overflow-x: auto;
   width: calc(100% - 8px + 8px + 14px);
+  overflow: hidden;
 
   ${mq(CSSBreakpoints.Large)} {
     margin: 8px 0;
   }
+`;
+
+const CodeWrapper = styled.span`
+  display: block;
+  overflow-x: auto;
 `;
 
 const Title = styled.span`
@@ -84,7 +89,9 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
       {title && <Title>{title}</Title>}
 
       <CopyContent>
-        <StyledCode>{children}</StyledCode>
+        <StyledCode>
+          <CodeWrapper>{children}</CodeWrapper>
+        </StyledCode>
 
         {hasContentInClipboard ? (
           <StatusIcon
