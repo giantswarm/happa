@@ -24,7 +24,7 @@ const CopyButton = styled.div`
 
   &:hover {
     ${StatusIcon} {
-      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
+      text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
   }
 `;
@@ -72,7 +72,7 @@ const Title = styled.span`
   flex: 0 1 100px;
 `;
 
-const getTooltip = content => (
+const getTooltip = (content) => (
   <Tooltip id='tooltip'>
     Copy <Truncated>{content}</Truncated> to clipboard.
   </Tooltip>
