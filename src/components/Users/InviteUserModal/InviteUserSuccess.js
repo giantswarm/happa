@@ -14,7 +14,7 @@ const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
 
   return (
     <>
-      <p>Invitation has been created succesfully!</p>
+      <p>Invitation has been created successfully!</p>
       <p>{sendEmailContent}</p>
       <label>Invitation Accept Link:</label>
       <URIBlock>{invitationResult.invitation_accept_link}</URIBlock>
