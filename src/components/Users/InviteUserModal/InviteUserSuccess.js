@@ -1,8 +1,16 @@
+import styled from '@emotion/styled';
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import { getInitialState } from '.';
+
+const StyledURIBlock = styled(URIBlock)`
+  code {
+    padding: 0;
+    margin-right: 0;
+  }
+`;
 
 const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
   /* prettier-ignore */
@@ -17,7 +25,7 @@ const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
       <p>Invitation has been created successfully!</p>
       <p>{sendEmailContent}</p>
       <label>Invitation Accept Link:</label>
-      <URIBlock>{invitationResult.invitation_accept_link}</URIBlock>
+      <StyledURIBlock>{invitationResult.invitation_accept_link}</StyledURIBlock>
     </>
   );
 };
