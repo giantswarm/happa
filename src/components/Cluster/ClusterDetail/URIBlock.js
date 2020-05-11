@@ -6,6 +6,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { CSSBreakpoints } from 'shared/constants/cssBreakpoints';
 import { Code, mq } from 'styles';
+import Truncated from 'UI/Truncated';
 
 const StatusIcon = styled.i`
   width: 14px;
@@ -23,7 +24,7 @@ const CopyButton = styled.div`
 
   &:hover {
     ${StatusIcon} {
-      text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
+      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
     }
   }
 `;
@@ -71,13 +72,16 @@ const Title = styled.span`
   flex: 0 1 100px;
 `;
 
-const getTooltip = (text) => <Tooltip id='tooltip'>{text}</Tooltip>;
+const getTooltip = content => (
+  <Tooltip id='tooltip'>
+    Copy <Truncated>{content}</Truncated> to clipboard.
+  </Tooltip>
+);
 
 // eslint-disable-next-line react/no-multi-comp
 const URIBlock = ({ children, title, copyContent, ...props }) => {
   const content = copyContent ?? children;
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
-  const tooltipText = `Copy ${content} to clipboard.`;
 
   const copyToClipboard = () => {
     setClipboardContent(content);
@@ -100,7 +104,7 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
             title='Content copied to clipboard'
           />
         ) : (
-          <OverlayTrigger placement='top' overlay={getTooltip(tooltipText)}>
+          <OverlayTrigger placement='top' overlay={getTooltip(content)}>
             <CopyButton onClick={copyToClipboard}>
               <StatusIcon
                 aria-hidden='true'
