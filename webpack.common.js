@@ -7,12 +7,13 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
 const dotenv = require('dotenv');
 
+const envFileVars = JSON.parse(JSON.stringify(dotenv.config().parsed));
+
 const makeEndpoints = () => {
   const defaults = {
     HAPPA_API_ENDPOINT: 'http://localhost:8000',
     HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
   };
-  const envFileVars = JSON.stringify(dotenv.config().parsed);
 
   const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = Object.assign(
     {},
@@ -25,6 +26,25 @@ const makeEndpoints = () => {
     apiEndpoint: HAPPA_API_ENDPOINT,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
+};
+
+const makeFeatureFlags = () => {
+  const defaults = {
+    FEATURE_CLUSTER_LABELS_V0: false,
+  };
+
+  const { FEATURE_CLUSTER_LABELS_V0 } = Object.assign(
+    {},
+    defaults,
+    envFileVars,
+    process.env
+  );
+
+  return JSON.parse(
+    JSON.stringify({
+      FEATURE_CLUSTER_LABELS_V0: FEATURE_CLUSTER_LABELS_V0,
+    })
+  );
 };
 
 module.exports = {
@@ -119,5 +139,6 @@ module.exports = {
     }),
     // Ignore locale data from the moment package, which we don't use.
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.DefinePlugin(makeFeatureFlags()),
   ],
 };
