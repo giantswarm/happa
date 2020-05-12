@@ -7,7 +7,7 @@ import { getInitialState } from '.';
 
 const StyledURIBlock = styled(URIBlock)`
   code {
-    padding: 0;
+    background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
     margin-right: 0;
   }
 `;
