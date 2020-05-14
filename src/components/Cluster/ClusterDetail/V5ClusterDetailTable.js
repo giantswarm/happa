@@ -18,6 +18,7 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Constants, CSSBreakpoints } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -26,6 +27,7 @@ import LabelsList from 'UI/LabelsList';
 
 import AddNodePool from './AddNodePool';
 import CredentialInfoRow from './CredentialInfoRow';
+import EditClusterLabelsModal from './EditClusterLabelsModal/EditClusterLabelsModal';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
 import PortMappingsRow from './PortMappingsRow';
@@ -433,10 +435,16 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-        <LabelsRow>
-          <span>Labels:</span>
-          <LabelsList labels={labels} />
-        </LabelsRow>
+        {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
+          <LabelsRow>
+            <span>Labels:</span>
+            <LabelsList labels={labels} />
+            <EditClusterLabelsModal
+              clusterId={cluster.id}
+              labels={cluster.labels}
+            />
+          </LabelsRow>
+        )}
         <KubernetesURIWrapper>
           <StyledURIBlock title='Kubernetes endpoint URI:'>
             {api_endpoint}
