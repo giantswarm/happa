@@ -49,6 +49,7 @@ class ReleaseDetailsModal extends React.Component {
                 <div
                   className='release-selector-modal--release-details'
                   key={release.version}
+                  data-testid={`release-${release.version}`}
                 >
                   <h2>
                     Version {release.version}{' '}

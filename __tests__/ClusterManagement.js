@@ -226,3 +226,33 @@ it('Cluster list shows all clusters, each one with its details, for the selected
   expect(v5ClusterResources.getByText(/6 nodes/i)).toBeInTheDocument();
   expect(v5ClusterResources.getByText(/24 CPU cores/i)).toBeInTheDocument();
 });
+
+it(`it does not show disabled releases in release selection modal`, async () => {
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/releases/', releasesResponse);
+
+  const newClusterPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    {
+      orgId: ORGANIZATION,
+    }
+  );
+
+  const { findByText, getByTestId, queryByTestId } = renderRouteWithStore(
+    newClusterPath
+  );
+
+  fireEvent.click(await findByText('Details and Alternatives'));
+
+  // Wait for the modal to pop up.
+  await findByText('Release Details');
+
+  for (const { version, active } of releasesResponse) {
+    if (active === true) {
+      expect(getByTestId(`release-${version}`)).toBeInTheDocument();
+    } else {
+      expect(queryByTestId(`release-${version}`)).not.toBeInTheDocument();
+    }
+  }
+});
