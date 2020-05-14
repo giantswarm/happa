@@ -16,6 +16,7 @@ import {
   getMockCallTimes,
   metadataResponse,
   nodePoolsResponse,
+  nodePoolWithFlatcarRelease,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -255,4 +256,33 @@ it(`it does not show disabled releases in release selection modal`, async () => 
       expect(queryByTestId(`release-${version}`)).not.toBeInTheDocument();
     }
   }
+});
+
+it(`it shows 'flatcar' for containerlinux versions >= 2345.3.1 in release selection modal`, async () => {
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/releases/', releasesResponse);
+
+  const newClusterPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    {
+      orgId: ORGANIZATION,
+    }
+  );
+
+  const { findByText, findByTestId } = renderRouteWithStore(newClusterPath);
+
+  fireEvent.click(await findByText('Details and Alternatives'));
+
+  // Wait for the modal to pop up.
+  await findByText('Release Details');
+
+  const flatcarRelease = await findByTestId(
+    `release-${nodePoolWithFlatcarRelease.version}`
+  );
+
+  expect(flatcarRelease.textContent).toEqual(
+    expect.not.stringMatching('containerlinux')
+  );
+  expect(flatcarRelease.textContent).toEqual(expect.stringMatching('flatcar'));
 });
