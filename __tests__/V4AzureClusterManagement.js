@@ -18,6 +18,7 @@ import {
   ORGANIZATION,
   orgResponse,
   orgsResponse,
+  preNodePoolRelease,
   releasesResponse,
   userResponse,
   V4_CLUSTER,
@@ -104,16 +105,7 @@ describe('V4AzureClusterManagement', () => {
   });
 
   it('prevents availability zones customization for an unsupported release version', async () => {
-    // Cloning to not break the releases list for the next tests
-    const unsupportedReleaseResponse = releasesResponse.slice();
-    unsupportedReleaseResponse[2] = Object.assign(
-      {},
-      unsupportedReleaseResponse[2],
-      {
-        version: '8.4.0',
-      }
-    );
-    getMockCall('/v4/releases/', unsupportedReleaseResponse);
+    getMockCall('/v4/releases/', [preNodePoolRelease]);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
     const clusterCreationPath = RoutePath.createUsablePath(

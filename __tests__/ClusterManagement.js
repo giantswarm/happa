@@ -16,9 +16,11 @@ import {
   getMockCallTimes,
   metadataResponse,
   nodePoolsResponse,
+  nodePoolWithFlatcarRelease,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
+  preNodePoolRelease,
   releasesResponse,
   userResponse,
   V4_CLUSTER,
@@ -150,18 +152,9 @@ details view`, async () => {
 
   fireEvent.click(await findByText('Details and Alternatives'));
 
-  // Wait for the modal to pop up.
-  await findByText('Release Details');
-
-  // Find the second button which is the 8.5.0
-  // TODO Improve this, check with cmp that this is not a node pools release
-  const button = document
-    .querySelectorAll(
-      `.modal-content .release-selector-modal--release-details h2`
-    )[1]
-    .querySelector('button');
-
-  fireEvent.click(button);
+  fireEvent.click(
+    await findByTestId(`select-release-${preNodePoolRelease.version}`)
+  );
 
   // Click the create cluster button.
   fireEvent.click(await findByText('Create Cluster'));
@@ -233,4 +226,63 @@ it('Cluster list shows all clusters, each one with its details, for the selected
   expect(v5ClusterResources.getByText(/2 node pools/i)).toBeInTheDocument();
   expect(v5ClusterResources.getByText(/6 nodes/i)).toBeInTheDocument();
   expect(v5ClusterResources.getByText(/24 CPU cores/i)).toBeInTheDocument();
+});
+
+it(`it does not show disabled releases in release selection modal`, async () => {
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/releases/', releasesResponse);
+
+  const newClusterPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    {
+      orgId: ORGANIZATION,
+    }
+  );
+
+  const { findByText, getByTestId, queryByTestId } = renderRouteWithStore(
+    newClusterPath
+  );
+
+  fireEvent.click(await findByText('Details and Alternatives'));
+
+  // Wait for the modal to pop up.
+  await findByText('Release Details');
+
+  for (const { version, active } of releasesResponse) {
+    if (active === true) {
+      expect(getByTestId(`release-${version}`)).toBeInTheDocument();
+    } else {
+      expect(queryByTestId(`release-${version}`)).not.toBeInTheDocument();
+    }
+  }
+});
+
+it(`it shows 'flatcar' for containerlinux versions >= 2345.3.1 in release selection modal`, async () => {
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/releases/', releasesResponse);
+
+  const newClusterPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    {
+      orgId: ORGANIZATION,
+    }
+  );
+
+  const { findByText, findByTestId } = renderRouteWithStore(newClusterPath);
+
+  fireEvent.click(await findByText('Details and Alternatives'));
+
+  // Wait for the modal to pop up.
+  await findByText('Release Details');
+
+  const flatcarRelease = await findByTestId(
+    `release-${nodePoolWithFlatcarRelease.version}`
+  );
+
+  expect(flatcarRelease.textContent).toEqual(
+    expect.not.stringMatching('containerlinux')
+  );
+  expect(flatcarRelease.textContent).toEqual(expect.stringMatching('flatcar'));
 });

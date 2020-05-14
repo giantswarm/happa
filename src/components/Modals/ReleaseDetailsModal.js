@@ -2,6 +2,8 @@ import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import cmp from 'semver-compare';
+import { Constants } from 'shared/constants';
 import theme from 'styles/theme';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
@@ -49,6 +51,7 @@ class ReleaseDetailsModal extends React.Component {
                 <div
                   className='release-selector-modal--release-details'
                   key={release.version}
+                  data-testid={`release-${release.version}`}
                 >
                   <h2>
                     Version {release.version}{' '}
@@ -64,6 +67,7 @@ class ReleaseDetailsModal extends React.Component {
                             onClick={() =>
                               this.props.selectRelease(release.version)
                             }
+                            data-testid={`select-release-${release.version}`}
                           >
                             Select
                           </Button>
@@ -77,10 +81,19 @@ class ReleaseDetailsModal extends React.Component {
 
                   <div className='release-selector-modal--components'>
                     {_.sortBy(release.components, 'name').map((component) => {
+                      const componentName =
+                        component.name === 'containerlinux' &&
+                        cmp(
+                          component.version,
+                          Constants.FLATCAR_CONTAINERLINUX_SINCE
+                        ) >= 0
+                          ? 'flatcar'
+                          : component.name;
+
                       return (
                         <ReleaseComponentLabel
                           key={component.name}
-                          name={component.name}
+                          name={componentName}
                           version={component.version}
                         />
                       );
