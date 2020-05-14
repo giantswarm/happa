@@ -64,6 +64,7 @@ class ReleaseDetailsModal extends React.Component {
                             onClick={() =>
                               this.props.selectRelease(release.version)
                             }
+                            data-testid={`select-release-${release.version}`}
                           >
                             Select
                           </Button>

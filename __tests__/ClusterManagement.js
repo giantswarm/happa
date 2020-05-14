@@ -19,6 +19,7 @@ import {
   ORGANIZATION,
   orgResponse,
   orgsResponse,
+  preNodePoolRelease,
   releasesResponse,
   userResponse,
   V4_CLUSTER,
@@ -150,18 +151,9 @@ details view`, async () => {
 
   fireEvent.click(await findByText('Details and Alternatives'));
 
-  // Wait for the modal to pop up.
-  await findByText('Release Details');
-
-  // Find the second button which is the 8.5.0
-  // TODO Improve this, check with cmp that this is not a node pools release
-  const button = document
-    .querySelectorAll(
-      `.modal-content .release-selector-modal--release-details h2`
-    )[1]
-    .querySelector('button');
-
-  fireEvent.click(button);
+  fireEvent.click(
+    await findByTestId(`select-release-${preNodePoolRelease.version}`)
+  );
 
   // Click the create cluster button.
   fireEvent.click(await findByText('Create Cluster'));
