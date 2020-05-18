@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ChangeEvent, ElementRef, ReactNode } from 'react';
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
-  :last-child: {
+  &:last-child {
     margin-bottom: 0;
   }
 `;
@@ -19,7 +19,7 @@ const InputWrapper = styled.div`
   display: flex;
 `;
 
-const Input = styled.input`
+export const InputElement = styled.input`
   background-color: ${(props) => props.theme.colors.shade5};
   border: 1px solid ${(props) => props.theme.colors.shade6};
   border-radius: ${(props) => props.theme.border_radius};
@@ -52,10 +52,27 @@ const Hint = styled.span`
   font-size: 12px;
 `;
 
-const TextInput = (props) => {
-  const onChange = (e) => {
+interface IInput {
+  onChange?(changed: string | FileList | null): void;
+  label?: string;
+  description?: ReactNode;
+  children?: ReactNode;
+  value?: string;
+  readOnly?: boolean;
+  icon?: string;
+  validationError?: ReactNode;
+  type?: string;
+  hint?: ReactNode;
+}
+
+const Input: React.FC<IInput> = (props) => {
+  const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
     if (props.onChange) {
-      props.onChange(e.target.value);
+      if (props.type === 'file') {
+        props.onChange(e.target.files);
+      } else {
+        props.onChange(e.target.value);
+      }
     }
   };
 
@@ -71,14 +88,16 @@ const TextInput = (props) => {
         {props.icon ? <Icon className={`fa fa-${props.icon}`} /> : undefined}
         {props.children ? (
           props.children
-        ) : (
-          <Input
+        ) : props.type === 'text' ? (
+          <InputElement
             id={props.label}
             onChange={onChange}
             type='text'
             value={props.value}
             readOnly={props.readOnly}
           />
+        ) : (
+          <InputElement id={props.label} onChange={onChange} type='file' />
         )}
       </InputWrapper>
       {props.validationError ? (
@@ -92,7 +111,7 @@ const TextInput = (props) => {
   );
 };
 
-TextInput.propTypes = {
+Input.propTypes = {
   description: PropTypes.string,
   hint: PropTypes.object,
   icon: PropTypes.string,
@@ -102,6 +121,13 @@ TextInput.propTypes = {
   value: PropTypes.string,
   readOnly: PropTypes.bool,
   children: PropTypes.node,
+  type: PropTypes.oneOf(['text', 'file']),
 };
 
-export default TextInput;
+Input.defaultProps = {
+  type: 'text',
+  hint: '',
+  onChange: () => {},
+};
+
+export default Input;

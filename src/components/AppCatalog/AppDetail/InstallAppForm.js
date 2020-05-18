@@ -1,10 +1,8 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
+import Input from 'UI/Input';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
-
-import FileInput from './FileInput';
-import Input from './Input';
 
 const FormWrapper = styled.div`
   display: flex;
@@ -128,22 +126,24 @@ const InstallAppForm = ({
         />
       )}
 
-      <FileInput
+      <Input
         description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
         hint={<>&nbsp;</>}
         label='User level config values YAML:'
         onChange={updateValuesYAML}
         validationError={valuesYAMLError}
         value={valuesYAML}
+        type='file'
       />
 
-      <FileInput
+      <Input
         description='Sensitive configuration values can be uploaded separately.'
         hint={<>&nbsp;</>}
         label='User level secret values YAML:'
         onChange={updateSecretsYAML}
         validationError={secretsYAMLError}
         value={secretsYAML}
+        type='file'
       />
     </FormWrapper>
   );
