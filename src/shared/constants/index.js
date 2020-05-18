@@ -44,4 +44,7 @@ export const Constants = {
   KVM_INGRESS_TCP_HTTPS_PORT: 36001,
 
   FLATCAR_CONTAINERLINUX_SINCE: '2345.3.1',
+
+  // Used to filter cluster labels in api responses
+  RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING: 'giantswarm.io',
 };

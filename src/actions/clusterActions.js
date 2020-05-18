@@ -2,7 +2,7 @@ import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
 import { StatusCodes } from 'shared/constants';
-import { computeCapabilities } from 'utils/clusterUtils';
+import { computeCapabilities, filterLabels } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
 
@@ -30,6 +30,7 @@ function clustersLoadArrayToObject(clusters, provider) {
         // currently selected org, we also need to computeCapabilities here.
         // The install app modal lists all clusters and needs to know the capabiltiies.
         capabilities: computeCapabilities(cluster.release_version, provider),
+        labels: filterLabels(cluster.labels),
       };
     })
     .reduce((accumulator, current) => {
@@ -235,6 +236,10 @@ export function clusterLoadDetails(
 
       // Remove cluster's create_date because we are loading it in clustersList()
       delete cluster.create_date;
+
+      if (cluster.labels) {
+        cluster.labels = filterLabels(cluster.labels);
+      }
 
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,

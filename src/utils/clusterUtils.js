@@ -155,3 +155,21 @@ export const isClusterYoungerThanOneHour = (createDate) => {
 
   return moment().utc().isBefore(creationPlusOneHour);
 };
+
+export const filterLabels = (labels) => {
+  if (!labels) {
+    return undefined;
+  }
+
+  const filteredLabels = {};
+
+  for (const key of Object.keys(labels)) {
+    if (
+      key.includes(Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING) === false
+    ) {
+      filteredLabels[key] = labels[key];
+    }
+  }
+
+  return filteredLabels;
+};
