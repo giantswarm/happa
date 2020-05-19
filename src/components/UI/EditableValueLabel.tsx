@@ -6,7 +6,7 @@ import Overlay from 'react-bootstrap/lib/Overlay';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Button from 'UI/Button';
 import { InputElement } from 'UI/Input';
-import { IValidation, IValidationFunction } from 'utils/labelUtils';
+import { IValidationFunction } from 'utils/labelUtils';
 
 interface IEditableValueLabel {
   onCancel(): void;
@@ -17,10 +17,6 @@ interface IEditableValueLabel {
 
   allowEdit?: boolean;
   isNew?: boolean;
-}
-
-interface IReducerState extends IValidation {
-  internalValue: string;
 }
 
 const EditModeWrapper = styled.div`
