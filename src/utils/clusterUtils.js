@@ -144,9 +144,20 @@ export function getCpusTotalNodePools(nodePools = []) {
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.
 export function computeCapabilities(releaseVersion, provider) {
+  let hasOptionalIngress = false;
+
+  switch (provider) {
+    case Providers.AWS:
+      hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
+      break;
+
+    case Providers.AZURE:
+      hasOptionalIngress = cmp(releaseVersion, '11.4.0') >= 0;
+      break;
+  }
+
   return {
-    hasOptionalIngress:
-      provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
+    hasOptionalIngress,
   };
 }
 
