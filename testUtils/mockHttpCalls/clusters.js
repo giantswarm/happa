@@ -125,6 +125,9 @@ export const v5ClustersResponse = [
     owner: ORGANIZATION,
     path: `/v5/clusters/${V5_CLUSTER.id}/`,
     release_version: V5_CLUSTER.releaseVersion,
+    labels: {
+      ding: 'dong',
+    },
   },
 ];
 
@@ -152,4 +155,7 @@ export const v5ClusterResponse = {
       version: '10.0.0',
     },
   ],
+  labels: {
+    ding: 'dong',
+  },
 };
