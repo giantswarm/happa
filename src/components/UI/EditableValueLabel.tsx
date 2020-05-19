@@ -1,12 +1,7 @@
 import styled from '@emotion/styled';
+import useValidatingInternalValue from 'hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
-import React, {
-  KeyboardEventHandler,
-  Reducer,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { KeyboardEventHandler, useRef, useState } from 'react';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Button from 'UI/Button';
@@ -14,13 +9,14 @@ import { InputElement } from 'UI/Input';
 import { IValidation, IValidationFunction } from 'utils/labelUtils';
 
 interface IEditableValueLabel {
-  allowEdit: boolean;
-  isNew: boolean;
   onCancel(): void;
   onEdit(): void;
   onSave(value: string): void;
   validationFunc: IValidationFunction;
   value: string;
+
+  allowEdit?: boolean;
+  isNew?: boolean;
 }
 
 interface IReducerState extends IValidation {
@@ -62,14 +58,14 @@ const ValidationErrorTooltip = styled(Tooltip)`
   }
 `;
 
-const Editable = styled.span<{ allowEdit: boolean }>`
+const Editable = styled.span<{ allowEdit?: boolean }>`
   text-decoration: ${({ allowEdit }) => (allowEdit ? 'underline' : 'none')};
   text-decoration-style: dotted;
   cursor: ${({ allowEdit }) => (allowEdit ? 'pointer' : 'default')};
   opacity: ${({ allowEdit }) => (allowEdit ? '1' : '0.6')};
 `;
 
-const EditableValueLabel = ({
+const EditableValueLabel: React.FC<IEditableValueLabel> = ({
   allowEdit,
   isNew,
   onCancel,
@@ -77,7 +73,7 @@ const EditableValueLabel = ({
   onSave,
   validationFunc,
   value,
-}: IEditableValueLabel) => {
+}) => {
   const valueElement = useRef<HTMLSpanElement>(null);
   const inputElement = useRef<HTMLInputElement>(null);
 
@@ -85,16 +81,7 @@ const EditableValueLabel = ({
   const [
     { internalValue, isValid, validationError },
     setInternalValue,
-  ] = useReducer<Reducer<IReducerState, string>>(
-    (_, newInternalValue) => ({
-      internalValue: newInternalValue,
-      ...validationFunc(newInternalValue),
-    }),
-    {
-      internalValue: value,
-      ...validationFunc(value),
-    }
-  );
+  ] = useValidatingInternalValue(value, validationFunc);
 
   const keyHandler: KeyboardEventHandler<HTMLInputElement> = ({ key }) => {
     if (key === 'Escape') {
@@ -120,8 +107,7 @@ const EditableValueLabel = ({
     >
       {value}
       <Overlay
-        // @ts-ignore
-        target={valueElement.current}
+        target={valueElement.current as HTMLSpanElement}
         placement='top'
         show={editing}
         shouldUpdatePosition={true}
@@ -139,8 +125,7 @@ const EditableValueLabel = ({
               onKeyUp={keyHandler}
             />
             <Overlay
-              // @ts-ignore
-              target={inputElement.current}
+              target={inputElement.current as HTMLInputElement}
               placement='top'
               show={!isValid}
               shouldUpdatePosition={true}
@@ -178,22 +163,19 @@ const EditableValueLabel = ({
 };
 
 EditableValueLabel.propTypes = {
+  onCancel: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  validationFunc: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+
   allowEdit: PropTypes.bool,
   isNew: PropTypes.bool,
-  onCancel: PropTypes.func,
-  onEdit: PropTypes.func,
-  onSave: PropTypes.func,
-  validationFunc: PropTypes.func,
-  value: PropTypes.string.isRequired,
 };
 
 EditableValueLabel.defaultProps = {
   allowEdit: true,
   isNew: false,
-  onCancel: () => {},
-  onEdit: () => {},
-  onSave: () => {},
-  validationFunc: () => ({ isValid: true, validationError: '' }),
 };
 
 export default EditableValueLabel;
