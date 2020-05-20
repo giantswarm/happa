@@ -1,5 +1,5 @@
 import { css } from '@emotion/core';
-import styled, { WithTheme } from '@emotion/styled';
+import styled from '@emotion/styled';
 import { CSSBreakpoints } from 'shared/constants';
 
 import theme from './theme';
@@ -83,21 +83,6 @@ export const FlexRowBase = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-export const Input = (props: WithTheme<{}, ITheme>) => css`
-  input {
-    box-sizing: border-box;
-    width: 100%;
-    background-color: ${props.theme.colors.shade5};
-    padding: 11px 10px;
-    outline: 0;
-    color: ${props.theme.colors.whiteInput};
-    border-radius: 4px;
-    border: ${props.theme.border};
-    padding-left: 15px;
-    line-height: normal;
-  }
 `;
 
 export const Ellipsis = css`
