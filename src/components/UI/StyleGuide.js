@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import RadioInput from 'UI/Inputs/RadioInput';
 
 import ClusterEmptyState from './ClusterEmptyState';
 import ComponentChangelog from './ComponentChangelog';
@@ -50,6 +51,28 @@ const StyleGuide = () => {
       <h1>Style Guide</h1>
 
       <hr />
+
+      <Header name='Inputs' />
+
+      <small>Radio</small>
+      <ExampleBox>
+        <fieldset>
+          <RadioInput
+            value='naah'
+            id='some-radio'
+            name='inputtrickery'
+            label='Some text'
+          />
+        </fieldset>
+        <fieldset>
+          <RadioInput
+            value='yaah'
+            id='some-other-radio'
+            name='inputtrickery'
+            label='Some other text'
+          />
+        </fieldset>
+      </ExampleBox>
 
       <Header name='VersionPicker' />
 
