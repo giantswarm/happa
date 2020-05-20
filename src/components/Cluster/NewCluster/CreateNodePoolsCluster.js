@@ -203,6 +203,7 @@ class CreateNodePoolsCluster extends Component {
     );
   }
 
+  // TODO: Add master nodes state here.
   state = {
     name: {
       value: this.props.clusterName,
@@ -224,6 +225,9 @@ class CreateNodePoolsCluster extends Component {
       isSubmitting: false,
       // one object for each np form inside this array
       nodePools: { 1: defaultNodePool(1) },
+    },
+    masterNodes: {
+      isHighAvailability: false,
     },
   };
 
@@ -303,6 +307,12 @@ class CreateNodePoolsCluster extends Component {
       };
     }
 
+    if (FeatureFlags.FEATURE_HA_MASTERS) {
+      createPayload.master_nodes = {
+        high_availability: this.state.masterNodes.isHighAvailability,
+      };
+    }
+
     await this.props.dispatch(
       batchedClusterCreate(
         createPayload,
@@ -333,6 +343,17 @@ class CreateNodePoolsCluster extends Component {
     );
   };
 
+  updateMasterNodesHighAvailability = (isHA) => {
+    this.setState((prevState) => {
+      return {
+        masterNodes: {
+          ...prevState.masterNodes,
+          isHighAvailability: isHA,
+        },
+      };
+    });
+  };
+
   removeNodePoolForm = (id) => {
     this.setState(
       produce((draft) => {
@@ -350,7 +371,7 @@ class CreateNodePoolsCluster extends Component {
   };
 
   render() {
-    const { hasAZLabels, name, submitting } = this.state;
+    const { hasAZLabels, name, submitting, masterNodes } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { nodePools } = this.state.nodePoolsForms;
     const { minAZ, maxAZ, defaultAZ } = this.props;
@@ -398,7 +419,10 @@ class CreateNodePoolsCluster extends Component {
                   </div>
                 </label>
                 {FeatureFlags.FEATURE_HA_MASTERS ? (
-                  <MasterNodes />
+                  <MasterNodes
+                    isHighAvailability={masterNodes.isHighAvailability}
+                    onChange={this.updateMasterNodesHighAvailability}
+                  />
                 ) : (
                   <>
                     <span className='label-span'>

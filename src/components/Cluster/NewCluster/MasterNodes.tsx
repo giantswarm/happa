@@ -15,12 +15,12 @@ const InputSubtitle = styled.small`
 // TODO: Remove 'skip-format' and other external class names once possible, to make this extendable.
 
 interface IMasterNodesProps {
-  highAvailability?: boolean;
+  isHighAvailability?: boolean;
   onChange?: (isHA: boolean) => void;
 }
 
 const MasterNodes: React.FC<IMasterNodesProps> = ({
-  highAvailability,
+  isHighAvailability,
   onChange,
 }) => {
   const handleChange = (isHA: boolean) => () => {
@@ -38,7 +38,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
             label='High availability'
             rootProps={{ className: 'skip-format' }}
             className='skip-format'
-            checked={highAvailability}
+            checked={isHighAvailability}
             value='true'
             name='high-availability'
             onChange={handleChange(true)}
@@ -54,7 +54,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
             label='Single master'
             rootProps={{ className: 'skip-format' }}
             className='skip-format'
-            checked={!highAvailability}
+            checked={!isHighAvailability}
             value='false'
             name='high-availability'
             onChange={handleChange(false)}
@@ -69,12 +69,12 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
 };
 
 MasterNodes.propTypes = {
-  highAvailability: PropTypes.bool,
+  isHighAvailability: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
 MasterNodes.defaultProps = {
-  highAvailability: false,
+  isHighAvailability: false,
 };
 
 export default MasterNodes;
