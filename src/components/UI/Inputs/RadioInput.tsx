@@ -11,6 +11,7 @@ const Label = styled.label`
 const StyledInput = styled.input`
   visibility: hidden;
   opacity: 0;
+  position: absolute;
 `;
 
 const Bullet = styled.span<{ disabled?: boolean }>`
@@ -23,7 +24,7 @@ const Bullet = styled.span<{ disabled?: boolean }>`
   width: 16px;
   height: 16px;
   z-index: 0;
-  margin-right: 8px;
+  margin-right: 12px;
 
   &:after {
     content: '';
@@ -52,6 +53,7 @@ const Bullet = styled.span<{ disabled?: boolean }>`
 
 const LabelText = styled.span<{ disabled?: boolean }>`
   font-weight: 300;
+  font-size: 0.9rem;
   color: ${({ theme, disabled }) => disabled && theme.colors.gray};
 `;
 
