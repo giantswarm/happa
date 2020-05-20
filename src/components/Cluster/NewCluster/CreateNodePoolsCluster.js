@@ -203,7 +203,6 @@ class CreateNodePoolsCluster extends Component {
     );
   }
 
-  // TODO: Add master nodes state here.
   state = {
     name: {
       value: this.props.clusterName,
