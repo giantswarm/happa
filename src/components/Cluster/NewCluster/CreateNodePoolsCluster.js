@@ -12,10 +12,10 @@ import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
-import { Input } from 'styles';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ErrorFallback from 'UI/ErrorFallback';
+import RadioInput from 'UI/Inputs/RadioInput';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 import AddNodePool from '../ClusterDetail/AddNodePool';
@@ -25,6 +25,10 @@ import {
   AddNodePoolWrapper,
 } from '../ClusterDetail/V5ClusterDetailTable';
 import ReleaseSelector from './ReleaseSelector';
+
+const InputGroup = styled.fieldset`
+  margin-bottom: 4px;
+`;
 
 export const Wrapper = css`
   h1 {
@@ -48,7 +52,8 @@ export const FlexColumnDiv = styled.div`
   flex-direction: column;
   margin: 0 auto;
   max-width: 650px;
-  label {
+
+  label:not(.skip-format) {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -60,6 +65,7 @@ export const FlexColumnDiv = styled.div`
       line-height: 1.4;
     }
   }
+
   .label-span {
     color: ${(props) => props.theme.colors.white1};
   }
@@ -70,7 +76,19 @@ export const FlexColumnDiv = styled.div`
     margin-bottom: 13px;
     font-weight: 400;
   }
-  ${Input};
+
+  input:not(.skip-format) {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: ${({ theme }) => theme.colors.shade5};
+    padding: 11px 10px 11px 15px;
+    outline: 0;
+    color: ${({ theme }) => theme.colors.whiteInput};
+    border-radius: 4px;
+    border: ${({ theme }) => theme.border};
+    line-height: normal;
+  }
+
   p {
     margin: 0;
     font-size: 14px;
@@ -129,12 +147,6 @@ export const RadioWrapper = (props) => css`
         background-color: ${props.theme.colors.shade2};
       }
     }
-  }
-`;
-
-const RadioWrapperDiv = styled.div`
-  div {
-    ${RadioWrapper};
   }
 `;
 
@@ -387,56 +399,28 @@ class CreateNodePoolsCluster extends Component {
                 <span className='label-span'>
                   Master node availability zones selection
                 </span>
-                <RadioWrapperDiv>
-                  {/* Automatically */}
-                  <div>
-                    <div className='fake-radio'>
-                      <div
-                        className={`fake-radio-checked ${
-                          hasAZLabels === false && 'visible'
-                        }`}
-                      />
-                    </div>
-                    <input
-                      type='radio'
+                <div>
+                  <InputGroup>
+                    <RadioInput
                       id='automatic'
-                      value={false}
-                      checked={hasAZLabels === false}
+                      checked={!hasAZLabels}
+                      label='Automatic'
                       onChange={() => this.toggleMasterAZSelector(false)}
-                      tabIndex='0'
+                      rootProps={{ className: 'skip-format' }}
+                      className='skip-format'
                     />
-                    <label
-                      htmlFor='automatic'
-                      onClick={() => this.toggleMasterAZSelector(false)}
-                    >
-                      Automatic
-                    </label>
-                  </div>
-                  {/* Manual */}
-                  <div>
-                    <div className='fake-radio'>
-                      <div
-                        className={`fake-radio-checked ${
-                          hasAZLabels === true && 'visible'
-                        }`}
-                      />
-                    </div>
-                    <input
-                      type='radio'
+                  </InputGroup>
+                  <InputGroup>
+                    <RadioInput
                       id='manual'
-                      value={true}
-                      checked={hasAZLabels === true}
-                      tabIndex='0'
+                      checked={hasAZLabels}
+                      label='Manual'
                       onChange={() => this.toggleMasterAZSelector(true)}
+                      rootProps={{ className: 'skip-format' }}
+                      className='skip-format'
                     />
-                    <label
-                      htmlFor='manual'
-                      onClick={() => this.toggleMasterAZSelector(true)}
-                    >
-                      Manual
-                    </label>
-                  </div>
-                </RadioWrapperDiv>
+                  </InputGroup>
+                </div>
 
                 <AZWrapperDiv>
                   {hasAZLabels && (
