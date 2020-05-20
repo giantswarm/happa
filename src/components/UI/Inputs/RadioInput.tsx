@@ -27,14 +27,14 @@ const Bullet = styled.span<{}>`
   &:after {
     content: '';
     position: absolute;
-    left: calc(4px / 2);
-    top: 0;
-    bottom: 0;
-    margin: auto;
     background: ${({ theme }) => theme.colors.shade2};
     border-radius: 50%;
     width: calc(100% - 4px);
     height: calc(100% - 4px);
+    left: calc(4px / 2);
+    top: 0;
+    bottom: 0;
+    margin: auto;
     z-index: 1;
 
     transition: 0.4s cubic-bezier(0.81, 0, 0.34, 1.75);
@@ -53,6 +53,7 @@ const LabelText = styled.span`
 `;
 
 interface IRadioInputProps extends ComponentProps<'input'> {
+  bulletProps?: ComponentProps<'span'>;
   id: string;
   label?: string;
   labelTextProps?: ComponentProps<'span'>;
@@ -61,6 +62,7 @@ interface IRadioInputProps extends ComponentProps<'input'> {
 
 const RadioInput: React.FC<IRadioInputProps> = ({
   id,
+  bulletProps,
   label,
   labelTextProps,
   rootProps,
@@ -69,7 +71,7 @@ const RadioInput: React.FC<IRadioInputProps> = ({
   return (
     <Label {...rootProps} htmlFor={id}>
       <StyledInput {...rest} type='radio' id={id} />
-      <Bullet />
+      <Bullet {...bulletProps} />
 
       {label && <LabelText {...labelTextProps}>{label}</LabelText>}
     </Label>
@@ -79,6 +81,7 @@ const RadioInput: React.FC<IRadioInputProps> = ({
 RadioInput.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
+  bulletProps: PropTypes.object,
   labelTextProps: PropTypes.object,
   rootProps: PropTypes.object,
 };
