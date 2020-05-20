@@ -39,6 +39,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
             rootProps={{ className: 'skip-format' }}
             className='skip-format'
             checked={highAvailability}
+            value='true'
             name='high-availability'
             onChange={handleChange(true)}
           />
@@ -54,6 +55,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
             rootProps={{ className: 'skip-format' }}
             className='skip-format'
             checked={!highAvailability}
+            value='false'
             name='high-availability'
             onChange={handleChange(false)}
           />
