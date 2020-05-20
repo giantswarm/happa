@@ -1413,10 +1413,10 @@
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.31.tgz#d17fa0ec242b51c3db302481c557ce3813bf45cb"
   integrity sha512-0PKlnDIxOh3xJHwJpVONR2PP11LhdM+QYiLJGLIbzMqRwLAPxN6lQar2RpdRhfIEh/HjVMgMdhHWJA0CgC5X6w==
 
-"@types/bootstrap@^4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-4.3.2.tgz#25e6be5fc09ad58911555eb8d01dcf05f37156d8"
-  integrity sha512-ArJM2BsZ6KvPb7M3PGWNjlriFYP6gh3hINk76TTVXBqUiPYFOeyXA08gsVFSIjUqMitregBEqT79rvfgXEiLQQ==
+"@types/bootstrap@^4.3.3":
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-4.3.3.tgz#3f602b1e4c3fd9328683a3d96fe32e7f14a58244"
+  integrity sha512-zMsk1IiLKhYO6aXgaoPPkDCqKgKYuyrJllfWLwgS6WnFrnq6G2OVZcjNs5oE0sFSuvhZB1TYkCpicklavdFVFA==
   dependencies:
     "@types/jquery" "*"
     popper.js "^1.14.1"
