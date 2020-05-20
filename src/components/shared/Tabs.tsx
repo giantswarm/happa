@@ -17,7 +17,7 @@ const Tabs: React.FC<ITabsProps> = ({
   const history = useHistory();
   const { pathname } = useLocation();
 
-  // eslint-disable-next-line init-declarations
+  // eslint-disable-next-line @typescript-eslint/init-declarations
   let activeKey: string | undefined;
   if (useRoutes) {
     activeKey = pathname;

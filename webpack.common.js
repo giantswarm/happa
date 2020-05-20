@@ -31,9 +31,10 @@ const makeEndpoints = () => {
 const makeFeatureFlags = () => {
   const defaults = {
     FEATURE_CLUSTER_LABELS_V0: false,
+    FEATURE_HA_MASTERS: false,
   };
 
-  const { FEATURE_CLUSTER_LABELS_V0 } = Object.assign(
+  const { FEATURE_CLUSTER_LABELS_V0, FEATURE_HA_MASTERS } = Object.assign(
     {},
     defaults,
     envFileVars,
@@ -43,6 +44,7 @@ const makeFeatureFlags = () => {
   return JSON.parse(
     JSON.stringify({
       FEATURE_CLUSTER_LABELS_V0: Boolean(FEATURE_CLUSTER_LABELS_V0),
+      FEATURE_HA_MASTERS: Boolean(FEATURE_HA_MASTERS),
     })
   );
 };
