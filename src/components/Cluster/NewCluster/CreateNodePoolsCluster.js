@@ -575,7 +575,7 @@ function mapStateToProps(state) {
   const provider = state.main.info.general.provider;
   const clusterCreationStats = state.main.info.stats.cluster_creation_duration;
 
-  // eslint-disable-next-line init-declarations
+  // eslint-disable-next-line @typescript-eslint/init-declarations
   let defaultInstanceType;
   if (
     state.main.info.workers.instance_type &&
