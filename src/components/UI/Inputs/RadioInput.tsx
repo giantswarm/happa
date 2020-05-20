@@ -29,9 +29,9 @@ const Bullet = styled.span<{}>`
     position: absolute;
     background: ${({ theme }) => theme.colors.shade2};
     border-radius: 50%;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    left: calc(4px / 2);
+    width: 10px;
+    height: 10px;
+    left: 2px;
     top: 0;
     bottom: 0;
     margin: auto;
