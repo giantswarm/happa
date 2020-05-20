@@ -25,6 +25,7 @@ module.exports = {
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
+    FEATURE_CLUSTER_LABELS_V0: true,
     // window.config object will now be available in all tests
     config: {
       apiEndpoint: 'http://1.2.3.4',

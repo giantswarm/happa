@@ -18,12 +18,14 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Constants, CSSBreakpoints } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 
 import AddNodePool from './AddNodePool';
+import ClusterLabels from './ClusterLabels/ClusterLabels';
 import CredentialInfoRow from './CredentialInfoRow';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
@@ -330,6 +332,11 @@ const StyledURIBlock = styled(URIBlock)`
   flex: 1 1 auto;
 `;
 
+const LabelsRow = styled(ClusterLabels)`
+  ${Row};
+  background-color: ${({ theme }) => theme.colors.foreground};
+`;
+
 // TODO Now on every addition or deletion of a NP, this component will be rerendered.
 // It would be nice to split this into subcomponents so only the littele bits that need
 // to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
@@ -392,7 +399,7 @@ class V5ClusterDetailTable extends React.Component {
       loadingNodePools,
     } = this.props;
 
-    const { create_date, release_version, api_endpoint } = cluster;
+    const { create_date, release_version, api_endpoint, labels } = cluster;
     const { numberOfNodes, memory, cores } = resources;
 
     const zeroNodePools = nodePools && nodePools.length === 0;
@@ -421,6 +428,9 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
+        {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
+          <LabelsRow labels={labels} clusterId={cluster.id} />
+        )}
         <KubernetesURIWrapper>
           <StyledURIBlock title='Kubernetes endpoint URI:'>
             {api_endpoint}
