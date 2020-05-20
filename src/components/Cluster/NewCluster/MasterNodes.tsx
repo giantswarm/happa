@@ -16,9 +16,18 @@ const InputSubtitle = styled.small`
 
 interface IMasterNodesProps {
   highAvailability?: boolean;
+  onChange?: (isHA: boolean) => void;
 }
 
-const MasterNodes: React.FC<IMasterNodesProps> = ({ highAvailability }) => {
+const MasterNodes: React.FC<IMasterNodesProps> = ({
+  highAvailability,
+  onChange,
+}) => {
+  const handleChange = (isHA: boolean) => () => {
+    // eslint-disable-next-line no-unused-expressions
+    onChange?.(isHA);
+  };
+
   return (
     <>
       <span className='label-span'>Master nodes</span>
@@ -30,6 +39,8 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({ highAvailability }) => {
             rootProps={{ className: 'skip-format' }}
             className='skip-format'
             checked={highAvailability}
+            name='high-availability'
+            onChange={handleChange(true)}
           />
           <InputSubtitle>
             Three master nodes, each placed in a separate availability zone,
@@ -43,6 +54,8 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({ highAvailability }) => {
             rootProps={{ className: 'skip-format' }}
             className='skip-format'
             checked={!highAvailability}
+            name='high-availability'
+            onChange={handleChange(false)}
           />
           <InputSubtitle>
             One master node, placed in an availability zone selected at random.
@@ -55,6 +68,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({ highAvailability }) => {
 
 MasterNodes.propTypes = {
   highAvailability: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 MasterNodes.defaultProps = {
