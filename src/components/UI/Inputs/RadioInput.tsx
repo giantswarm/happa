@@ -13,11 +13,12 @@ const StyledInput = styled.input`
   opacity: 0;
 `;
 
-const Bullet = styled.span<{}>`
+const Bullet = styled.span<{ disabled?: boolean }>`
   display: block;
   position: relative;
   border: ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.colors.white1};
+  background: ${({ theme, disabled }) =>
+    disabled ? theme.colors.gray : theme.colors.white1};
   border-radius: 50%;
   width: 16px;
   height: 16px;
@@ -27,7 +28,8 @@ const Bullet = styled.span<{}>`
   &:after {
     content: '';
     position: absolute;
-    background: ${({ theme }) => theme.colors.shade2};
+    background: ${({ theme, disabled }) =>
+      disabled ? theme.colors.darkBlueLighter1 : theme.colors.shade2};
     border-radius: 50%;
     width: 10px;
     height: 10px;
@@ -48,8 +50,9 @@ const Bullet = styled.span<{}>`
   }
 `;
 
-const LabelText = styled.span`
+const LabelText = styled.span<{ disabled?: boolean }>`
   font-weight: 300;
+  color: ${({ theme, disabled }) => disabled && theme.colors.gray};
 `;
 
 interface IRadioInputProps extends ComponentProps<'input'> {
@@ -66,20 +69,26 @@ const RadioInput: React.FC<IRadioInputProps> = ({
   label,
   labelTextProps,
   rootProps,
+  disabled,
   ...rest
 }) => {
   return (
     <Label {...rootProps} htmlFor={id}>
-      <StyledInput {...rest} type='radio' id={id} />
-      <Bullet {...bulletProps} />
+      <StyledInput {...rest} type='radio' id={id} disabled={disabled} />
+      <Bullet {...bulletProps} disabled={disabled} />
 
-      {label && <LabelText {...labelTextProps}>{label}</LabelText>}
+      {label && (
+        <LabelText {...labelTextProps} disabled={disabled}>
+          {label}
+        </LabelText>
+      )}
     </Label>
   );
 };
 
 RadioInput.propTypes = {
   id: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   label: PropTypes.string,
   bulletProps: PropTypes.object,
   labelTextProps: PropTypes.object,
