@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { ComponentProps } from 'react';
+import React, { ComponentPropsWithRef } from 'react';
 
 const Label = styled.label`
   cursor: pointer;
@@ -55,14 +55,32 @@ const LabelText = styled.span<{ disabled?: boolean }>`
   color: ${({ theme, disabled }) => disabled && theme.colors.gray};
 `;
 
-interface IRadioInputProps extends ComponentProps<'input'> {
-  bulletProps?: ComponentProps<'span'>;
+interface IRadioInputProps
+  extends Omit<ComponentPropsWithRef<'input'>, 'type'> {
+  /* The ID of the input. */
   id: string;
+
+  /* Customization props for the element that displays the 'bullet' symbol. */
+  bulletProps?: ComponentPropsWithRef<'span'>;
+
+  /* A helpful label that describes what this input means. */
   label?: string;
-  labelTextProps?: ComponentProps<'span'>;
-  rootProps?: ComponentProps<'label'>;
+
+  /* Customization props for the label element. */
+  labelTextProps?: ComponentPropsWithRef<'span'>;
+
+  /* Customization props for the root label element. */
+  rootProps?: Omit<ComponentPropsWithRef<'label'>, 'htmlFor'>;
 }
 
+/**
+ * A component used for displaying a radio input. It is meant to be used similar
+ * to the native `input` element, only with a label built in, and a mandatory
+ * `id` attribute.
+ *
+ * How to use this:
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio
+ */
 const RadioInput: React.FC<IRadioInputProps> = ({
   id,
   bulletProps,
