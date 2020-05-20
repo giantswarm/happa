@@ -62,7 +62,8 @@ const RadioInput: React.FC<IRadioInputProps> = ({ id, label, ...rest }) => {
     <Label htmlFor={id}>
       <StyledInput {...rest} type='radio' id={id} />
       <Bullet />
-      <LabelText>{label}</LabelText>
+
+      {label && <LabelText>{label}</LabelText>}
     </Label>
   );
 };
