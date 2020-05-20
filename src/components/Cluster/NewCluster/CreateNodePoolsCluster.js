@@ -2,6 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
+import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
@@ -12,6 +13,7 @@ import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ErrorFallback from 'UI/ErrorFallback';
@@ -395,32 +397,37 @@ class CreateNodePoolsCluster extends Component {
                     />
                   </div>
                 </label>
-                {/* Master Node AZ */}
-                <span className='label-span'>
-                  Master node availability zones selection
-                </span>
-                <div>
-                  <InputGroup>
-                    <RadioInput
-                      id='automatic'
-                      checked={!hasAZLabels}
-                      label='Automatic'
-                      onChange={() => this.toggleMasterAZSelector(false)}
-                      rootProps={{ className: 'skip-format' }}
-                      className='skip-format'
-                    />
-                  </InputGroup>
-                  <InputGroup>
-                    <RadioInput
-                      id='manual'
-                      checked={hasAZLabels}
-                      label='Manual'
-                      onChange={() => this.toggleMasterAZSelector(true)}
-                      rootProps={{ className: 'skip-format' }}
-                      className='skip-format'
-                    />
-                  </InputGroup>
-                </div>
+                {FeatureFlags.FEATURE_HA_MASTERS ? (
+                  <MasterNodes />
+                ) : (
+                  <>
+                    <span className='label-span'>
+                      Master node availability zones selection
+                    </span>
+                    <div>
+                      <InputGroup>
+                        <RadioInput
+                          id='automatic'
+                          checked={!hasAZLabels}
+                          label='Automatic'
+                          onChange={() => this.toggleMasterAZSelector(false)}
+                          rootProps={{ className: 'skip-format' }}
+                          className='skip-format'
+                        />
+                      </InputGroup>
+                      <InputGroup>
+                        <RadioInput
+                          id='manual'
+                          checked={hasAZLabels}
+                          label='Manual'
+                          onChange={() => this.toggleMasterAZSelector(true)}
+                          rootProps={{ className: 'skip-format' }}
+                          className='skip-format'
+                        />
+                      </InputGroup>
+                    </div>
+                  </>
+                )}
 
                 <AZWrapperDiv>
                   {hasAZLabels && (
