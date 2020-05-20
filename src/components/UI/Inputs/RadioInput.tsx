@@ -53,6 +53,7 @@ const LabelText = styled.span`
 `;
 
 interface IRadioInputProps extends ComponentProps<'input'> {
+  id: string;
   label?: string;
 }
 
@@ -67,7 +68,7 @@ const RadioInput: React.FC<IRadioInputProps> = ({ id, label, ...rest }) => {
 };
 
 RadioInput.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   label: PropTypes.string,
 };
 
