@@ -92,6 +92,7 @@ const ClusterLabels: FC<
             />
             <DeleteLabelButton
               bsStyle='link'
+              disabled={!allowEditing}
               className={!allowEditing ? 'invisible' : ''}
               onClick={() => {
                 // onSave({ label, value: null });
