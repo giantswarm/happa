@@ -42,7 +42,6 @@ const appMetas = {
     };
 
     if (cmp(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
-      component.name = 'flatcar';
       component.logoUrl = '/images/app_icons/flatcar_linux@2x.png';
     }
 
