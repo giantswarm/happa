@@ -132,7 +132,7 @@ module.exports = {
     'no-use-before-define': 0,
     'constructor-super': 2,
     'no-class-assign': 2,
-    'no-confusing-arrow': 2,
+    'no-confusing-arrow': 0,
     'no-const-assign': 0,
     'no-dupe-class-members': 0,
     'no-duplicate-imports': 0,
