@@ -19,7 +19,6 @@ const Bullet = styled.span<{}>`
   border: ${({ theme }) => theme.border};
   background: ${({ theme }) => theme.colors.white1};
   border-radius: 50%;
-  vertical-align: middle;
   width: 16px;
   height: 16px;
   z-index: 0;
