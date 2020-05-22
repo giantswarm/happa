@@ -28,7 +28,7 @@ const InfoWrapper = styled.div`
 
 interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
   isHA?: boolean;
-  availabilityZones?: string[];
+  availabilityZones?: string[] | null;
   numOfReadyNodes?: number;
   numOfMaxHANodes?: number;
   onConvert?: () => Promise<void>;
@@ -44,6 +44,9 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
 }) => {
   const [isConverting, setIsConverting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Account for nil slices in the server code.
+  const azs: string[] = availabilityZones || [];
 
   const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
 
@@ -89,7 +92,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
         >
           <MasterNodesInfo
             isHA={isHA}
-            availabilityZones={availabilityZones}
+            availabilityZones={azs}
             numOfReadyNodes={numOfReadyNodes}
             maxNumOfNodes={maxNumOfNodes}
             onConvert={() => setIsConverting(true)}
