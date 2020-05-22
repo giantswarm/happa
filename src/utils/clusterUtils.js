@@ -144,9 +144,21 @@ export function getCpusTotalNodePools(nodePools = []) {
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.
 export function computeCapabilities(releaseVersion, provider) {
+  let hasOptionalIngress = false;
+  let supportsHAMasters = false;
+
+  switch (provider) {
+    case Providers.AWS:
+      hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
+      supportsHAMasters =
+        cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 1;
+
+      break;
+  }
+
   return {
-    hasOptionalIngress:
-      provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
+    hasOptionalIngress,
+    supportsHAMasters,
   };
 }
 
