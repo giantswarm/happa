@@ -24,8 +24,8 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
 }) => {
   const handleEventListener = (
     callback?: () => void
-  ): ((e: React.MouseEvent<HTMLDivElement>) => void) => {
-    return (e: React.MouseEvent<HTMLDivElement>) => {
+  ): ((e: React.MouseEvent<HTMLButtonElement>) => void) => {
+    return (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
