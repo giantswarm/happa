@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
+import Button from 'UI/Button';
 
 const Group = styled.span`
   & + & {
@@ -18,20 +19,31 @@ const AZGroup = styled(Group)`
   flex-shrink: 0;
 `;
 
+const ConvertButton = styled(Button)`
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-left: 12px;
+`;
+
 const AZLabel = styled.span`
   margin-right: 0.8rem;
 `;
 
-interface IMasterNodesInfoProps {
+interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
+  isHA?: boolean;
   availabilityZones?: string[];
   numOfReadyNodes?: number;
   maxNumOfNodes?: number;
+  onConvert?: () => void;
 }
 
 const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
+  isHA,
   availabilityZones,
   maxNumOfNodes,
   numOfReadyNodes,
+  onConvert,
+  ...rest
 }) => {
   const azLabel = getAvailabilityZonesSectionLabel(
     availabilityZones as string[]
@@ -42,25 +54,44 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
     maxNumOfNodes as number
   );
 
+  const handleOnConvert = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // eslint-disable-next-line no-unused-expressions
+    onConvert?.();
+  };
+
   return (
-    <>
+    <div {...rest}>
       <Group>{readinessLabel}</Group>
       <Group>&#183;</Group>
       <AZGroup>
         <AZLabel>{azLabel}</AZLabel>
         <AvailabilityZonesLabels zones={availabilityZones} labelsChecked={[]} />
       </AZGroup>
-    </>
+
+      {!isHA && (
+        <Group>
+          <ConvertButton onClick={handleOnConvert}>
+            Switch to high availability...
+          </ConvertButton>
+        </Group>
+      )}
+    </div>
   );
 };
 
 MasterNodesInfo.propTypes = {
+  isHA: PropTypes.bool,
   availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   numOfReadyNodes: PropTypes.number,
   maxNumOfNodes: PropTypes.number,
+  onConvert: PropTypes.func,
 };
 
 MasterNodesInfo.defaultProps = {
+  isHA: false,
   availabilityZones: [],
   numOfReadyNodes: 0,
   maxNumOfNodes: 0,

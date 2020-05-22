@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
+import { TransitionGroup } from 'react-transition-group';
 import { Constants } from 'shared/constants';
+import SlideTransition from 'styles/transitions/SlideTransition';
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,6 +36,8 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   numOfMaxHANodes,
   ...rest
 }) => {
+  const [isConverting, setIsConverting] = useState(true);
+
   const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
 
   return (
@@ -41,11 +46,21 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
         <span>Master nodes:</span>
       </TitleWrapper>
       <InfoWrapper>
-        <MasterNodesInfo
-          availabilityZones={availabilityZones}
-          numOfReadyNodes={numOfReadyNodes}
-          maxNumOfNodes={maxNumOfNodes}
-        />
+        <TransitionGroup>
+          <SlideTransition direction='up'>
+            {isConverting ? (
+              <MasterNodeConverter onCancel={() => setIsConverting(false)} />
+            ) : (
+              <MasterNodesInfo
+                isHA={isHA}
+                availabilityZones={availabilityZones}
+                numOfReadyNodes={numOfReadyNodes}
+                maxNumOfNodes={maxNumOfNodes}
+                onConvert={() => setIsConverting(true)}
+              />
+            )}
+          </SlideTransition>
+        </TransitionGroup>
       </InfoWrapper>
     </Wrapper>
   );
