@@ -26,6 +26,7 @@ export const Constants = {
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.2.0',
   // TODO(axbarsan): Change this to the actual version
   AWS_HA_MASTERS_VERSION: '12.0.1',
+  AWS_HA_MASTERS_MAX_NODES: 3,
 
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:

@@ -2,6 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -147,7 +148,7 @@ export const AddNodePoolWrapper = (props) => css`
 `;
 
 const AddNodePoolWrapperDiv = styled.div`
-  ${AddNodePoolWrapper}
+  ${AddNodePoolWrapper};
   padding: 20px 20px 40px;
 `;
 
@@ -332,6 +333,11 @@ const StyledURIBlock = styled(URIBlock)`
   flex: 1 1 auto;
 `;
 
+const MasterNodesRow = styled(MasterNodes)`
+  ${Row};
+  background-color: ${({ theme }) => theme.colors.foreground};
+`;
+
 const LabelsRow = styled(ClusterLabels)`
   ${Row};
   background-color: ${({ theme }) => theme.colors.foreground};
@@ -428,6 +434,11 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
+
+        {cluster.capabilities.supportsHAMasters && (
+          <MasterNodesRow availabilityZones={['b', 'c', 'd']} />
+        )}
+
         {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
           <LabelsRow labels={labels} clusterId={cluster.id} />
         )}
