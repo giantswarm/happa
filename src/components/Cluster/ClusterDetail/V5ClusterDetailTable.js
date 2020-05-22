@@ -405,8 +405,22 @@ class V5ClusterDetailTable extends React.Component {
       loadingNodePools,
     } = this.props;
 
-    const { create_date, release_version, api_endpoint, labels } = cluster;
+    const {
+      create_date,
+      release_version,
+      api_endpoint,
+      labels,
+      // TODO(axbarsan): Uncomment to use data from the API.
+      // master_nodes,
+    } = cluster;
     const { numberOfNodes, memory, cores } = resources;
+
+    // TODO(axbarsan): Delete this after using data from the API.
+    const master_nodes = {
+      high_availability: false,
+      availability_zones: ['b'],
+      num_ready: 0,
+    };
 
     const zeroNodePools = nodePools && nodePools.length === 0;
 
@@ -436,7 +450,11 @@ class V5ClusterDetailTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
 
         {cluster.capabilities.supportsHAMasters && (
-          <MasterNodesRow availabilityZones={['b', 'c', 'd']} />
+          <MasterNodesRow
+            isHA={master_nodes.high_availability}
+            availabilityZones={master_nodes.availability_zones}
+            numOfReadyNodes={master_nodes.num_ready}
+          />
         )}
 
         {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
