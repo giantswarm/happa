@@ -1,3 +1,5 @@
+import FeatureFlags from 'shared/FeatureFlags';
+
 import { computeCapabilities } from '../clusterUtils';
 
 describe('computeCapabilities', () => {
@@ -35,6 +37,16 @@ describe('computeCapabilities', () => {
   });
 
   describe('supportsHAMasters', () => {
+    const prevHAMastersFeatureFlagValue = FeatureFlags.FEATURE_HA_MASTERS;
+
+    beforeAll(() => {
+      FeatureFlags.FEATURE_HA_MASTERS = true;
+    });
+
+    afterAll(() => {
+      FeatureFlags.FEATURE_HA_MASTERS = prevHAMastersFeatureFlagValue;
+    });
+
     describe('on azure', () => {
       it('is false for Azure at any version', () => {
         const capabilities = computeCapabilities('8.1.0', 'azure');
