@@ -36,7 +36,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   numOfMaxHANodes,
   ...rest
 }) => {
-  const [isConverting, setIsConverting] = useState(true);
+  const [isConverting, setIsConverting] = useState(false);
 
   const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
 
