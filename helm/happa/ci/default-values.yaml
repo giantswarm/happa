@@ -1,0 +1,46 @@
+Installation:
+  V1:
+    GiantSwarm:
+      API:
+        Address: ""
+      Happa:
+        DefaultRequestTimeoutSeconds: ""
+        Host: ""
+        Letsencrypt: ""
+      Passage:
+        Address: ""
+    Guest:
+      Kubernetes:
+        IngressController:
+          BaseDomain: ""
+    Provider:
+      AWS:
+        EC2:
+          Instance:
+            Capabilities: {}
+      Azure:
+        VM:
+          VmSize:
+            Capabilities: {}
+      Kind: ""
+    Registry:
+      Domain: ""
+    Secret:
+      Certificate:
+        GiantSwarm:
+          CrtPem: ""
+          KeyPem: ""
+          CAPem: ""
+      Registry:
+        PullSecret:
+          DockerConfigJSON: ""
+    Security:
+      Subnet:
+        Others: ""
+        VPN: ""
+        Customer:
+          Private: ""
+          Public: ""
+      RestrictAccess:
+        GuestAPI:
+          Public: false
