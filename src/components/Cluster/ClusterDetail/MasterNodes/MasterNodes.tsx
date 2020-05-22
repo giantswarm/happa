@@ -3,7 +3,6 @@ import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesCo
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { TransitionGroup } from 'react-transition-group';
 import { Constants } from 'shared/constants';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
@@ -46,21 +45,32 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
         <span>Master nodes:</span>
       </TitleWrapper>
       <InfoWrapper>
-        <TransitionGroup>
-          <SlideTransition direction='up'>
-            {isConverting ? (
-              <MasterNodeConverter onCancel={() => setIsConverting(false)} />
-            ) : (
-              <MasterNodesInfo
-                isHA={isHA}
-                availabilityZones={availabilityZones}
-                numOfReadyNodes={numOfReadyNodes}
-                maxNumOfNodes={maxNumOfNodes}
-                onConvert={() => setIsConverting(true)}
-              />
-            )}
-          </SlideTransition>
-        </TransitionGroup>
+        <SlideTransition
+          in={isConverting}
+          direction='up'
+          timeout={{
+            enter: 200,
+            exit: 0,
+          }}
+        >
+          <MasterNodeConverter onCancel={() => setIsConverting(false)} />
+        </SlideTransition>
+        <SlideTransition
+          in={!isConverting}
+          direction='up'
+          timeout={{
+            enter: 200,
+            exit: 0,
+          }}
+        >
+          <MasterNodesInfo
+            isHA={isHA}
+            availabilityZones={availabilityZones}
+            numOfReadyNodes={numOfReadyNodes}
+            maxNumOfNodes={maxNumOfNodes}
+            onConvert={() => setIsConverting(true)}
+          />
+        </SlideTransition>
       </InfoWrapper>
     </Wrapper>
   );
