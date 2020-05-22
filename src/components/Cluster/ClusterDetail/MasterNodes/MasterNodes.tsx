@@ -31,6 +31,7 @@ interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
   availabilityZones?: string[];
   numOfReadyNodes?: number;
   numOfMaxHANodes?: number;
+  onConvert?: () => Promise<void>;
 }
 
 const MasterNodes: React.FC<IMasterNodesProps> = ({
@@ -38,11 +39,25 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   availabilityZones,
   numOfReadyNodes,
   numOfMaxHANodes,
+  onConvert,
   ...rest
 }) => {
   const [isConverting, setIsConverting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
+
+  const handleConvertToHA = async () => {
+    setIsLoading(true);
+    try {
+      await onConvert?.();
+      setIsConverting(false);
+      // eslint-disable-next-line no-empty
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Wrapper {...rest}>
@@ -58,7 +73,11 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
             exit: 0,
           }}
         >
-          <MasterNodeConverter onCancel={() => setIsConverting(false)} />
+          <MasterNodeConverter
+            onApply={handleConvertToHA}
+            onCancel={() => setIsConverting(false)}
+            isLoading={isLoading}
+          />
         </SlideTransition>
         <SlideTransition
           in={!isConverting}
@@ -86,6 +105,7 @@ MasterNodes.propTypes = {
   availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   numOfReadyNodes: PropTypes.number,
   numOfMaxHANodes: PropTypes.number,
+  onConvert: PropTypes.func,
 };
 
 MasterNodes.defaultProps = {

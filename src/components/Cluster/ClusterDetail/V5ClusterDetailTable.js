@@ -1,6 +1,7 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
+import * as clusterActions from 'actions/clusterActions';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import produce from 'immer';
@@ -390,6 +391,20 @@ class V5ClusterDetailTable extends React.Component {
     );
   };
 
+  patchCluster(payload) {
+    return this.props.dispatch(
+      clusterActions.clusterPatch(this.props.cluster, payload)
+    );
+  }
+
+  enableHAMasters = () => {
+    return this.patchCluster({
+      master_nodes: {
+        high_availability: true,
+      },
+    });
+  };
+
   render() {
     const { nodePoolForm } = this.state;
     const {
@@ -454,6 +469,7 @@ class V5ClusterDetailTable extends React.Component {
             isHA={master_nodes.high_availability}
             availabilityZones={master_nodes.availability_zones}
             numOfReadyNodes={master_nodes.num_ready}
+            onConvert={this.enableHAMasters}
           />
         )}
 

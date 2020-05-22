@@ -15,11 +15,13 @@ interface IMasterNodeConverterProps
   extends React.ComponentPropsWithoutRef<'div'> {
   onApply?: () => void;
   onCancel?: () => void;
+  isLoading?: boolean;
 }
 
 const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
   onApply,
   onCancel,
+  isLoading,
   ...rest
 }) => {
   const handleEventListener = (
@@ -51,7 +53,12 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
         <Strong>Note:</Strong> there is no way to undo this switch.
       </p>
       <ButtonWrapper>
-        <Button bsStyle='primary' onClick={handleEventListener(onApply)}>
+        <Button
+          bsStyle='primary'
+          loading={isLoading}
+          loadingTimeout={0}
+          onClick={handleEventListener(onApply)}
+        >
           Switch to high availability
         </Button>
         <Button onClick={handleEventListener(onCancel)}>Cancel</Button>
@@ -63,6 +70,11 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
 MasterNodeConverter.propTypes = {
   onApply: PropTypes.func,
   onCancel: PropTypes.func,
+  isLoading: PropTypes.bool,
+};
+
+MasterNodeConverter.defaultProps = {
+  isLoading: false,
 };
 
 export default MasterNodeConverter;
