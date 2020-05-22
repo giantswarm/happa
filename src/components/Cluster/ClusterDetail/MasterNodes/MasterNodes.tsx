@@ -1,12 +1,8 @@
 import styled from '@emotion/styled';
-import {
-  getAvailabilityZonesSectionLabel,
-  getReadinessLabel,
-} from 'Cluster/ClusterDetail/MasterNodes/MasterNodesUtils';
+import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Constants } from 'shared/constants';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,24 +13,10 @@ const TitleWrapper = styled.div`
   flex: 0 1 203px;
 `;
 
-const Group = styled.span`
-  & + & {
-    margin-left: 0.4rem;
-  }
-`;
-
-const AZGroup = styled(Group)`
-  margin-left: 0.4rem;
-  flex-shrink: 0;
-`;
-
-const AZLabel = styled.span`
-  margin-right: 0.8rem;
-`;
-
 const InfoWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
+  flex: 1 0 calc(100% - 203px);
 `;
 
 interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -51,15 +33,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   numOfMaxHANodes,
   ...rest
 }) => {
-  const azLabel = getAvailabilityZonesSectionLabel(
-    availabilityZones as string[]
-  );
-
   const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
-  const readinessLabel = getReadinessLabel(
-    numOfReadyNodes as number,
-    maxNumOfNodes
-  );
 
   return (
     <Wrapper {...rest}>
@@ -67,15 +41,11 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
         <span>Master nodes:</span>
       </TitleWrapper>
       <InfoWrapper>
-        <Group>{readinessLabel}</Group>
-        <Group>&#183;</Group>
-        <AZGroup>
-          <AZLabel>{azLabel}</AZLabel>
-          <AvailabilityZonesLabels
-            zones={availabilityZones}
-            labelsChecked={[]}
-          />
-        </AZGroup>
+        <MasterNodesInfo
+          availabilityZones={availabilityZones}
+          numOfReadyNodes={numOfReadyNodes}
+          maxNumOfNodes={maxNumOfNodes}
+        />
       </InfoWrapper>
     </Wrapper>
   );
