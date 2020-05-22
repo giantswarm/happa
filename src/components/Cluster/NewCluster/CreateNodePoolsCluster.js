@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
-import FeatureFlags from 'shared/FeatureFlags';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ErrorFallback from 'UI/ErrorFallback';
@@ -306,7 +305,7 @@ class CreateNodePoolsCluster extends Component {
       };
     }
 
-    if (FeatureFlags.FEATURE_HA_MASTERS) {
+    if (this.props.capabilities.supportsHAMasters) {
       createPayload.master_nodes = {
         high_availability: this.state.masterNodes.isHighAvailability,
       };
@@ -417,7 +416,7 @@ class CreateNodePoolsCluster extends Component {
                     />
                   </div>
                 </label>
-                {FeatureFlags.FEATURE_HA_MASTERS ? (
+                {this.props.capabilities.supportsHAMasters ? (
                   <MasterNodes
                     isHighAvailability={masterNodes.isHighAvailability}
                     onChange={this.updateMasterNodesHighAvailability}
@@ -575,6 +574,7 @@ CreateNodePoolsCluster.propTypes = {
   clusterName: PropTypes.string,
   updateClusterNameInParent: PropTypes.func,
   clusterCreateError: PropTypes.string,
+  capabilities: PropTypes.object,
 };
 
 function mapStateToProps(state) {

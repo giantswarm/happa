@@ -1,6 +1,7 @@
 import moment from 'moment';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
@@ -156,6 +157,7 @@ export function computeCapabilities(releaseVersion, provider) {
     case Providers.AWS:
       hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
       supportsHAMasters =
+        FeatureFlags.FEATURE_HA_MASTERS &&
         cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
 
       break;
