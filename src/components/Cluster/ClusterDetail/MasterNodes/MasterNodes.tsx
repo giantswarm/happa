@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import { getAvailabilityZonesSectionLabel } from 'Cluster/ClusterDetail/MasterNodes/MasterNodesUtils';
+import {
+  getAvailabilityZonesSectionLabel,
+  getReadinessLabel,
+} from 'Cluster/ClusterDetail/MasterNodes/MasterNodesUtils';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Constants } from 'shared/constants';
@@ -42,11 +45,20 @@ interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const MasterNodes: React.FC<IMasterNodesProps> = ({
+  isHA,
   availabilityZones,
+  numOfReadyNodes,
+  numOfMaxHANodes,
   ...rest
 }) => {
   const azLabel = getAvailabilityZonesSectionLabel(
     availabilityZones as string[]
+  );
+
+  const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
+  const readinessLabel = getReadinessLabel(
+    numOfReadyNodes as number,
+    maxNumOfNodes
   );
 
   return (
@@ -55,7 +67,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
         <span>Master nodes:</span>
       </TitleWrapper>
       <InfoWrapper>
-        <Group>All 3 master nodes ready</Group>
+        <Group>{readinessLabel}</Group>
         <Group>&#183;</Group>
         <AZGroup>
           <AZLabel>{azLabel}</AZLabel>
