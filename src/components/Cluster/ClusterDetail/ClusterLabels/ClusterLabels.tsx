@@ -2,20 +2,15 @@ import styled from '@emotion/styled';
 import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { FC, HTMLAttributes, useState } from 'react';
-import Button from 'UI/Button';
-import EditableValueLabel from 'UI/EditableValueLabel';
-import ValueLabel from 'UI/ValueLabel';
-import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
+import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
+
+import DeleteLabelButton from './DeleteLabelButton';
+import EditLabelTooltip from './EditLabelTooltip';
 
 interface IClusterLabelsProps {
   clusterId: string;
   labels: V5ClusterLabelsProperty;
 }
-
-const DeleteLabelButton = styled(Button)`
-  margin: 0;
-  padding: 0;
-`;
 
 const ClusterLabelsWrapper = styled.div`
   display: grid;
@@ -31,10 +26,6 @@ const LabelsWrapper = styled.div`
   margin-bottom: 15px;
 `;
 
-const LabelWrapper = styled.div`
-  margin: 5px 5px 5px 0;
-`;
-
 const LabelsTitle = styled.span`
   grid-area: title;
   margin: 5px;
@@ -48,8 +39,8 @@ const HelpText = styled.span`
   }
 `;
 
-const StyledValueLabel = styled(ValueLabel)`
-  margin-bottom: 0;
+const NoLabels = styled.div`
+  grid-area: labels;
 `;
 
 const ClusterLabels: FC<
@@ -61,51 +52,57 @@ const ClusterLabels: FC<
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
 
+  const noLabels = Object.keys(labels).length === 0;
+
   return (
     <ClusterLabelsWrapper className={className}>
       <LabelsTitle>Labels:</LabelsTitle>
-      <LabelsWrapper>
-        {Object.entries(labels).map(([label, value]) => (
-          <LabelWrapper key={label}>
-            <StyledValueLabel
-              label={
-                <EditableValueLabel
-                  allowEdit={allowEditing}
-                  onCancel={() => setAllowEditing(true)}
-                  onEdit={() => setAllowEditing(false)}
+      {noLabels ? (
+        <NoLabels>
+          This cluster has no labels. You can add a label by clicking the{' '}
+          <EditLabelTooltip
+            allowInteraction={allowEditing}
+            label=''
+            onOpen={(isOpen) => setAllowEditing(isOpen)}
+            onSave={() => setAllowEditing(true)}
+            value=''
+          />{' '}
+          button.
+        </NoLabels>
+      ) : (
+        <>
+          <LabelsWrapper>
+            {Object.entries(labels).map(([label, value]) => (
+              <LabelWrapper key={label}>
+                <EditLabelTooltip
+                  allowInteraction={allowEditing}
+                  label={label}
+                  onOpen={(isOpen) => setAllowEditing(isOpen)}
                   onSave={() => setAllowEditing(true)}
-                  validationFunc={validateLabelKey}
-                  value={label}
-                />
-              }
-              value={
-                <EditableValueLabel
-                  allowEdit={allowEditing}
-                  onCancel={() => setAllowEditing(true)}
-                  onEdit={() => setAllowEditing(false)}
-                  onSave={() => setAllowEditing(true)}
-                  validationFunc={validateLabelValue}
                   value={value}
                 />
-              }
-              key={label}
+                <DeleteLabelButton
+                  allowInteraction={allowEditing}
+                  onOpen={(isOpen) => setAllowEditing(isOpen)}
+                  onDelete={() => {}}
+                >
+                  &times;
+                </DeleteLabelButton>
+              </LabelWrapper>
+            ))}
+            <EditLabelTooltip
+              allowInteraction={allowEditing}
+              label=''
+              onOpen={(isOpen) => setAllowEditing(isOpen)}
+              onSave={() => setAllowEditing(true)}
+              value=''
             />
-            <DeleteLabelButton
-              bsStyle='link'
-              disabled={!allowEditing}
-              className={!allowEditing ? 'invisible' : ''}
-              onClick={() => {
-                // onSave({ label, value: null });
-              }}
-            >
-              &times;
-            </DeleteLabelButton>
-          </LabelWrapper>
-        ))}
-      </LabelsWrapper>
-      <HelpText>
-        Click the <u>underlined</u> text to modify label keys and values.
-      </HelpText>
+          </LabelsWrapper>
+          <HelpText>
+            Click the <u>underlined</u> text to modify label keys and values.
+          </HelpText>
+        </>
+      )}
     </ClusterLabelsWrapper>
   );
 };
