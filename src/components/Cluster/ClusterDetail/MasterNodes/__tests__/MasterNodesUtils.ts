@@ -47,8 +47,9 @@ describe('MasterNodesUtils', () => {
     });
 
     it('returns the correct value for a maximum node count of 3 and a current value equal to the maximum', () => {
-      const result = getReadinessLabel(1, 1);
-      expect(result).toBe('Ready');
+      // eslint-disable-next-line no-magic-numbers
+      const result = getReadinessLabel(3, 3);
+      expect(result).toBe('All 3 master nodes ready');
     });
 
     it('returns the correct value for an unknown current node count', () => {
