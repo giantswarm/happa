@@ -518,7 +518,7 @@ scales node pools correctly`, async () => {
     );
     renderRouteWithStore(clusterDetailPath);
 
-    fireEvent.click(await screen.findByText(/switch to high availability.../i));
+    fireEvent.click(await screen.findByText(/switch to high availability…/i));
     fireEvent.click(await screen.findByText(/^switch to high availability$/i));
 
     await waitForElementToBeRemoved(() =>

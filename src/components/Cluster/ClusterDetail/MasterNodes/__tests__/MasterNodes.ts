@@ -23,7 +23,7 @@ describe('MasterNodes', () => {
     expect(screen.getByText(/availability zone/i)).toBeInTheDocument();
     expect(screen.getByText(/^b$/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/switch to high availability.../i)
+      screen.getByText(/switch to high availability…/i)
     ).toBeInTheDocument();
   });
 
@@ -67,7 +67,7 @@ describe('MasterNodes', () => {
       onConvert: handleConvertToHAMock,
     });
 
-    const switchButton = screen.getByText(/switch to high availability.../i);
+    const switchButton = screen.getByText(/switch to high availability…/i);
     fireEvent.click(switchButton);
 
     const converterLabel = await screen.findByText(
@@ -95,7 +95,7 @@ describe('MasterNodes', () => {
       onConvert: handleConvertToHAMock,
     });
 
-    const switchButton = screen.getByText(/switch to high availability.../i);
+    const switchButton = screen.getByText(/switch to high availability…/i);
     fireEvent.click(switchButton);
 
     expect(
