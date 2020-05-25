@@ -31,7 +31,7 @@ const makeEndpoints = () => {
 const makeFeatureFlags = () => {
   const defaults = {
     FEATURE_CLUSTER_LABELS_V0: false,
-    FEATURE_HA_MASTERS: false,
+    FEATURE_HA_MASTERS: true,
   };
 
   const { FEATURE_CLUSTER_LABELS_V0, FEATURE_HA_MASTERS } = Object.assign(
