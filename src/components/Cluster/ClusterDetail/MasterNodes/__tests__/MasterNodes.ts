@@ -71,7 +71,7 @@ describe('MasterNodes', () => {
     fireEvent.click(switchButton);
 
     const converterLabel = await screen.findByText(
-      /Do you want to convert this cluster to use three instead of one master nodes\?/i
+      /Do you want to convert this cluster to use three master nodes instead of one\?/i
     );
     expect(converterLabel).toBeInTheDocument();
 
@@ -100,7 +100,7 @@ describe('MasterNodes', () => {
 
     expect(
       await screen.findByText(
-        /Do you want to convert this cluster to use three instead of one master nodes\?/i
+        /Do you want to convert this cluster to use three master nodes instead of one\?/i
       )
     ).toBeInTheDocument();
 
