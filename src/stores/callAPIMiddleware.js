@@ -32,7 +32,5 @@ export function callAPIMiddleware({ dispatch, getState }) {
           type: types.error,
         });
       });
-
-    return next(action);
   };
 }
