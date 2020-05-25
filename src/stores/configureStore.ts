@@ -4,6 +4,8 @@ import rootReducer from 'reducers';
 import { applyMiddleware, compose, createStore, Store } from 'redux';
 import thunk from 'redux-thunk';
 
+import { callAPIMiddleware } from './callAPIMiddleware';
+
 let store: Store = {} as Store;
 
 // @ts-ignore
@@ -17,7 +19,9 @@ export default function configureStore(
   store = createStore(
     rootReducer(history),
     initialState,
-    composeEnhancers(applyMiddleware(routerMiddleware(history), thunk))
+    composeEnhancers(
+      applyMiddleware(routerMiddleware(history), thunk, callAPIMiddleware)
+    )
   );
 
   return store;
