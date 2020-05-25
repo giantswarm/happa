@@ -107,9 +107,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   const keyHandler: KeyboardEventHandler<HTMLInputElement> = ({ key }) => {
     if (key === 'Escape') {
       onClose();
-    } else if (
-      keyIsValid && valueIsValid && key === 'Enter'
-    ) {
+    } else if (keyIsValid && valueIsValid && key === 'Enter') {
       save();
     }
   };
