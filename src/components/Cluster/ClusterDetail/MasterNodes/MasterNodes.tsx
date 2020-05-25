@@ -29,7 +29,7 @@ const InfoWrapper = styled.div`
 interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
   isHA?: boolean;
   availabilityZones?: string[] | null;
-  numOfReadyNodes?: number;
+  numOfReadyNodes?: number | null;
   numOfMaxHANodes?: number;
   onConvert?: () => Promise<void>;
 }
@@ -114,7 +114,7 @@ MasterNodes.propTypes = {
 MasterNodes.defaultProps = {
   isHA: false,
   availabilityZones: [],
-  numOfReadyNodes: 0,
+  numOfReadyNodes: null,
   numOfMaxHANodes: Constants.AWS_HA_MASTERS_MAX_NODES,
 };
 

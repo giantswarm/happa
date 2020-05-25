@@ -9,9 +9,13 @@ export function getAvailabilityZonesSectionLabel(azs: string[]): string {
 }
 
 export function getReadinessLabel(
-  currentNodeCount: number,
+  currentNodeCount: number | null,
   maxNodeCount: number
 ): string {
+  if (currentNodeCount === null) {
+    return 'No status info';
+  }
+
   if (currentNodeCount < maxNodeCount) {
     if (maxNodeCount === 1) {
       return 'Not ready';

@@ -32,7 +32,7 @@ const AZLabel = styled.span`
 interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
   isHA?: boolean;
   availabilityZones?: string[];
-  numOfReadyNodes?: number;
+  numOfReadyNodes?: number | null;
   maxNumOfNodes?: number;
   onConvert?: () => void;
 }
@@ -93,7 +93,7 @@ MasterNodesInfo.propTypes = {
 MasterNodesInfo.defaultProps = {
   isHA: false,
   availabilityZones: [],
-  numOfReadyNodes: 0,
+  numOfReadyNodes: null,
   maxNumOfNodes: 0,
 };
 

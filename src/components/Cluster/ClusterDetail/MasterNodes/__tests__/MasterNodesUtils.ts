@@ -50,5 +50,10 @@ describe('MasterNodesUtils', () => {
       const result = getReadinessLabel(1, 1);
       expect(result).toBe('Ready');
     });
+
+    it('returns the correct value for an unknown current node count', () => {
+      const result = getReadinessLabel(null, 1);
+      expect(result).toBe('No status info');
+    });
   });
 });
