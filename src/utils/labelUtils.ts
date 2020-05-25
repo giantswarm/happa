@@ -113,7 +113,7 @@ const isQualifiedName: IValidationFunction = (key) => {
   if (name.length === 0) {
     return {
       isValid: false,
-      validationError: `Key name part cannot be empty.`,
+      validationError: 'Key name part cannot be empty.',
     };
   }
 
