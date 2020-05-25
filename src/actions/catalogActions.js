@@ -103,14 +103,14 @@ export function catalogLoadIndex(catalog) {
   return function (dispatch, getState) {
     if (getState().entities.catalogs.items[catalog.metadata.name].apps) {
       // Skip if we already have apps loaded.
-      return new Promise.resolve();
+      return Promise.resolve();
     }
 
     if (
       getState().entities.catalogs.items[catalog.metadata.name].isFetchingIndex
     ) {
       // Skip if we are already fetching it.
-      return new Promise.resolve();
+      return Promise.resolve();
     }
 
     dispatch({
