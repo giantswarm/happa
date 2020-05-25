@@ -139,7 +139,7 @@ workflows:
           context: architect
           app_name: "happa"
           app_collection_repo: "kvm-app-collection"
-          unique: "trueg
+          unique: "true"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
