@@ -1,4 +1,8 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import {
+  fireEvent,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import { renderWithTheme } from 'testUtils/renderUtils';
 
@@ -18,7 +22,9 @@ describe('MasterNodes', () => {
     expect(screen.getByText(/ready/i)).toBeInTheDocument();
     expect(screen.getByText(/availability zone/i)).toBeInTheDocument();
     expect(screen.getByText(/^b$/i)).toBeInTheDocument();
-    expect(screen.getByText(/switch to high availability.../i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/switch to high availability.../i)
+    ).toBeInTheDocument();
   });
 
   it('renders the correct information for a HA master node', () => {
@@ -49,8 +55,9 @@ describe('MasterNodes', () => {
     expect(screen.getByText(/^n\/a$/i)).toBeInTheDocument();
   });
 
-  it('can convert non-ha masters to ha', () => {
+  it('can convert non-ha masters to ha', async () => {
     const handleConvertToHAMock = jest.fn();
+    handleConvertToHAMock.mockResolvedValueOnce(true);
 
     renderWithTheme(MasterNodes, {
       isHA: false,
@@ -63,6 +70,43 @@ describe('MasterNodes', () => {
     const switchButton = screen.getByText(/switch to high availability.../i);
     fireEvent.click(switchButton);
 
-    expect(screen.getByText(/Do you want to convert this cluster to use three instead of one master nodes \?/i)).toBeInTheDocument();
+    const converterLabel = await screen.findByText(
+      /Do you want to convert this cluster to use three instead of one master nodes\?/i
+    );
+    expect(converterLabel).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText(/^switch to high availability$/i));
+    await waitForElementToBeRemoved(() =>
+      screen.getByText(/^switch to high availability$/i)
+    );
+
+    expect(handleConvertToHAMock).toBeCalled();
+  });
+
+  it('can cancel converting to HA', async () => {
+    const handleConvertToHAMock = jest.fn();
+    handleConvertToHAMock.mockResolvedValueOnce(true);
+
+    renderWithTheme(MasterNodes, {
+      isHA: false,
+      availabilityZones: ['b'],
+      numOfReadyNodes: 1,
+      numOfMaxHANodes: 1,
+      onConvert: handleConvertToHAMock,
+    });
+
+    const switchButton = screen.getByText(/switch to high availability.../i);
+    fireEvent.click(switchButton);
+
+    expect(
+      await screen.findByText(
+        /Do you want to convert this cluster to use three instead of one master nodes\?/i
+      )
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText(/cancel/i));
+    await waitForElementToBeRemoved(() => screen.getByText(/cancel/i));
+
+    expect(handleConvertToHAMock).not.toBeCalled();
   });
 });
