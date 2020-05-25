@@ -1616,10 +1616,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-gravatar@^2.6.7":
-  version "2.6.7"
-  resolved "https://registry.yarnpkg.com/@types/react-gravatar/-/react-gravatar-2.6.7.tgz#1ef929509cf4e7a6b423eb77e11c54ddbfa97b95"
-  integrity sha512-/NYulxNKmAeiRtf2VkB8SDvhXb2b3n1NecvIue/uoIE7XB18/+sAXitx9JiTl01uFBp2aj/XuiC8+M6P5sWuaw==
+"@types/react-gravatar@^2.6.8":
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/@types/react-gravatar/-/react-gravatar-2.6.8.tgz#968eb0e59591a31e5a2906dca19bb4e7f2f9c515"
+  integrity sha512-VMk0bF0w72l+opBm+EqLs0JqUG+hPowMBWCVGrbTwUWm/oDncvwNrf7P/ImwYwkTCKiLnU8Rc+/lyhehaIE/Rw==
   dependencies:
     "@types/react" "*"
 
