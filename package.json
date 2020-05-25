@@ -54,7 +54,7 @@
     "immer": "6.0.5",
     "immutable": "3.8.2",
     "js-base64": "2.5.2",
-    "js-yaml": "^3.12.1",
+    "js-yaml": "^3.14.0",
     "lunr": "^2.3.6",
     "moment": "2.25.3",
     "normalize.css": "8.0.1",
