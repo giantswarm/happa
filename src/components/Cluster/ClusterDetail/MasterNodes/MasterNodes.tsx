@@ -13,9 +13,6 @@ const Wrapper = styled.div`
 
 const TitleWrapper = styled.div`
   flex: 0 1 203px;
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
 `;
 
 const InfoWrapper = styled.div`
