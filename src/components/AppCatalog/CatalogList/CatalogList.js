@@ -19,7 +19,11 @@ const CatalogList = (props) => (
       ) : (
         <div className='app-catalog--repos'>
           {Object.values(props.catalogs.items).map((catalog) => (
-            <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
+            <CatalogRepo
+              key={catalog.metadata.name}
+              catalog={catalog}
+              catalogLoadIndex={props.catalogLoadIndex}
+            />
           ))}
         </div>
       )}
@@ -29,6 +33,7 @@ const CatalogList = (props) => (
 
 CatalogList.propTypes = {
   catalogs: PropTypes.object,
+  catalogLoadIndex: PropTypes.func,
   match: PropTypes.object,
 };
 

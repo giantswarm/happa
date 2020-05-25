@@ -1,9 +1,9 @@
 import { push } from 'connected-react-router';
 import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { listCatalogs } from 'stores/appcatalog/actions';
 
 import * as appActions from './appActions';
-import * as catalogActions from './catalogActions';
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
@@ -16,7 +16,7 @@ export const batchedLayout = () => async (dispatch) => {
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
-    dispatch(catalogActions.catalogsLoad());
+    dispatch(listCatalogs());
     dispatch(releaseActions.loadReleases());
     await dispatch(
       clusterActions.clustersList({

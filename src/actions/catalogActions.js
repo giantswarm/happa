@@ -100,10 +100,27 @@ export function catalogsLoad() {
 }
 
 export function catalogLoadIndex(catalog) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    if (getState().entities.catalogs.items[catalog.metadata.name].apps) {
+      // Skip if we already have apps loaded.
+      return new Promise((resolve) => {
+        resolve();
+      });
+    }
+
+    if (
+      getState().entities.catalogs.items[catalog.metadata.name].isFetchingIndex
+    ) {
+      // Skip if we are already fetching it.
+      return new Promise((resolve) => {
+        resolve();
+      });
+    }
+
     dispatch({
       type: types.CATALOG_LOAD_INDEX_REQUEST,
       catalogName: catalog.metadata.name,
+      id: catalog.metadata.name,
     });
 
     return loadCatalogIndex(catalog)
@@ -111,6 +128,7 @@ export function catalogLoadIndex(catalog) {
         dispatch({
           type: types.CATALOG_LOAD_INDEX_SUCCESS,
           catalog: loadedCatalog,
+          id: catalog.metadata.name,
         });
       })
 
@@ -122,6 +140,7 @@ export function catalogLoadIndex(catalog) {
           type: types.CATALOG_LOAD_INDEX_ERROR,
           error: error,
           catalogName: catalog.metadata.name,
+          id: catalog.metadata.name,
         });
 
         throw error;
