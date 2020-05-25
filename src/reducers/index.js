@@ -1,7 +1,7 @@
 import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
+import catalogs from 'stores/appcatalog/reducer';
 
-import catalogs from './catalogReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
