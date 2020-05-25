@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.8.9
+  architect: giantswarm/architect@0.8.17
 
 defaults: &defaults
   working_directory: ~/happa
@@ -139,7 +139,7 @@ workflows:
           context: architect
           app_name: "happa"
           app_collection_repo: "kvm-app-collection"
-          unique: "true"
+          unique: "trueg
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
