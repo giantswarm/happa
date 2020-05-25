@@ -10253,10 +10253,10 @@ react-content-loader@^5.0.4:
   resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-5.0.4.tgz#1493491d2f6b309d281d84144a655417ea734486"
   integrity sha512-hxv4Td1kQxFOmIUbBZ2S3HGZ/jJr28aJvM+8fndm9TmNOE7tSde7WSTL6R68aTS6qE0BA3ptcWIErrP704pQSw==
 
-react-datepicker@2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-2.15.0.tgz#1e182699f1fd96b96080d0b6c294c6dc383117a0"
-  integrity sha512-IZU3izNcP7UFFsaKGpPW1bej6CVF0oL/wgisjDiuy8FZk9wdcFDcrk1/FFY2UinrYSGzgafc4jdOmgVj/7YrJA==
+react-datepicker@2.16.0:
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-2.16.0.tgz#6bd68de94f5fb38c8f6a4370f3c612837c700e4e"
+  integrity sha512-TvcmSY27rn0JKvuJuIXNNS+niGQNdgtuG/CsBttVYhPOA9KmSw7c2PvQBPVEvzkyV+QPNJ8jN/KVJNj9uvopqA==
   dependencies:
     classnames "^2.2.6"
     date-fns "^2.0.1"
