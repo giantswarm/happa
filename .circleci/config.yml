@@ -56,35 +56,97 @@ workflows:
             - build
           <<: *job_filters
 
-      - architect/push-to-docker-legacy:
-          name: push-happa-to-aliyun-master
-          image: 'registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa'
-          username_envar: 'ALIYUN_USERNAME'
-          password_envar: 'ALIYUN_PASSWORD'
+      - architect/push-to-docker:
+          name: push-happa-to-quay
+          context: architect
+          image: "quay.io/giantswarm/happa"
+          username_envar: "QUAY_USERNAME"
+          password_envar: "QUAY_PASSWORD"
           requires:
             - build-container
+          # Needed to trigger job also on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
+          name: push-happa-to-aliyun
+          context: architect
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa"
+          username_envar: "ALIYUN_USERNAME"
+          password_envar: "ALIYUN_PASSWORD"
+          requires:
+            - build-container
+          # Needed to trigger job only on git tag.
           filters:
             branches:
               only: master
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-      - deploy-to-all:
+              only: /^v.*/
+
+      - architect/push-to-app-catalog:
+          name: push-happa-to-control-plane-app-catalog
+          context: architect
+          app_catalog: "control-plane-catalog"
+          app_catalog_test: "control-plane-test-catalog"
+          chart: "happa"
           requires:
-            - build-container
-            - push-happa-to-aliyun-master
+            - push-happa-to-quay
+          # Needed to trigger job also on git tag.
           filters:
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              ignore: /.*/
-      - deploy-to-testing:
+              only: /^v.*/
+
+      - hold-push-happa-to-aliyun-pr:
+          type: approval
           requires:
             - build-container
-            - push-happa-to-aliyun-master
+          # Needed to prevent job from being triggered on master branch.
           filters:
             branches:
-              only:
-                - master
+              ignore: master
+
+      - architect/push-to-app-collection:
+          name: push-happa-to-aws-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "aws-app-collection"
+          unique: "true"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          name: push-happa-to-azure-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "azure-app-collection"
+          unique: "true"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          name: push-happa-to-kvm-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "kvm-app-collection"
+          unique: "true"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
 jobs:
   checkout:
