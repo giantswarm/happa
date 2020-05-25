@@ -44,13 +44,21 @@ const ValueWrapper = styled.span`
 interface IValueLabelProps {
   label: ReactNode;
   value: ReactNode;
+
   className?: string;
   color?: string;
+  onClick?(): void;
 }
 
-const ValueLabel = ({ label, value, className, color }: IValueLabelProps) => {
+const ValueLabel = ({
+  label,
+  value,
+  className,
+  color,
+  onClick,
+}: IValueLabelProps) => {
   return (
-    <Wrapper className={className}>
+    <Wrapper className={className} onClick={onClick}>
       <LabelWrapper color={color}>{label}</LabelWrapper>
       <ValueWrapper color={color}>{value}</ValueWrapper>
     </Wrapper>
@@ -60,12 +68,15 @@ const ValueLabel = ({ label, value, className, color }: IValueLabelProps) => {
 ValueLabel.propTypes = {
   label: PropTypes.node.isRequired,
   value: PropTypes.node,
+
   className: PropTypes.string,
   color: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 ValueLabel.defaultProps = {
   value: '',
+  onClick: () => {},
 };
 
 export default ValueLabel;
