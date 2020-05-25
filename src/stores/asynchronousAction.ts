@@ -4,19 +4,15 @@ export interface IActionTypeCollection {
   error: string;
 }
 
-export interface IAsynchronousAction<StateType, ResponseType> {
+export interface IAsynchronousAction<S, R> {
   types: IActionTypeCollection;
-  doPerform: (state: StateType) => Promise<ResponseType> | undefined;
+  doPerform: (state: S) => Promise<R> | undefined;
 }
 
-export interface IAsynchronousActionParams<
-  PayloadType,
-  StateType,
-  ResponseType
-> {
+export interface IAsynchronousActionParams<P, S, R> {
   actionTypePrefix: string;
-  perform: (state: StateType, payload?: PayloadType) => Promise<ResponseType>;
-  shouldPerform: (state: StateType) => boolean;
+  perform: (state: S, payload?: P) => Promise<R>;
+  shouldPerform: (state: S) => boolean;
 }
 
 /**
@@ -51,20 +47,20 @@ export interface IAsynchronousActionParams<
  `{type: 'GET_CLUSTER_DETAILS_SUCCESS', response: response}`
 
  */
-export function createAsynchronousAction<PayloadType, StateType, ResponseType>({
+export function createAsynchronousAction<P, S, R>({
   actionTypePrefix,
   perform,
   shouldPerform,
-}: IAsynchronousActionParams<PayloadType, StateType, ResponseType>): (
-  payload?: PayloadType
-) => IAsynchronousAction<StateType, ResponseType> {
-  const action = (payload?: PayloadType) => ({
+}: IAsynchronousActionParams<P, S, R>): (
+  payload?: P
+) => IAsynchronousAction<S, R> {
+  const action = (payload?: P) => ({
     types: {
       request: `${actionTypePrefix}_REQUEST`,
       success: `${actionTypePrefix}_SUCCESS`,
       error: `${actionTypePrefix}_ERROR`,
     },
-    doPerform: (state: StateType) =>
+    doPerform: (state: S) =>
       shouldPerform(state) ? perform(state, payload) : undefined,
   });
 
