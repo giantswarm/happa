@@ -38,7 +38,7 @@ describe('Apps and App Catalog', () => {
 
   describe('App Catalogs, Apps, Installing Apps', () => {
     it('renders all non internal app catalogs in the app catalogs overview', async () => {
-      getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
       getMockCall(
@@ -84,7 +84,7 @@ describe('Apps and App Catalog', () => {
     });
 
     it('renders all apps in the app list for a given catalog', async () => {
-      getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
       getMockCall(
@@ -96,15 +96,6 @@ describe('Apps and App Catalog', () => {
 
       nock('https://catalogshost')
         .get('/giantswarm-incubator-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-test-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/helmstable/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -126,19 +117,10 @@ describe('Apps and App Catalog', () => {
         v4AWSClusterStatusResponse
       );
       getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-      getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
       nock('https://catalogshost')
         .get('/giantswarm-incubator-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-test-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/helmstable/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -168,7 +150,7 @@ describe('Apps and App Catalog', () => {
 
       getMockCallTimes('/v4/user/', userResponse);
       getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-      getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse);
       getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
       getMockCallTimes(
         `/v4/clusters/${V4_CLUSTER.id}/`,
@@ -187,15 +169,6 @@ describe('Apps and App Catalog', () => {
       nock('https://catalogshost')
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-test-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/helmstable/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
@@ -204,7 +177,7 @@ describe('Apps and App Catalog', () => {
           app: 'nginx-ingress-controller-app',
         }
       );
-      const { findByText, findAllByText, getByText } = renderRouteWithStore(
+      const { findByText, getByText } = renderRouteWithStore(
         appCatalogListPath
       );
 
@@ -222,7 +195,9 @@ describe('Apps and App Catalog', () => {
       await findByText(/is being installed on/i);
 
       // Check if the user got redirected to the cluster detail page, apps tab
-      await findByText(/these apps and services are preinstalled on your cluster and managed by Giant Swarm./i);
+      await findByText(
+        /these apps and services are preinstalled on your cluster and managed by Giant Swarm./i
+      );
     });
 
     it('installs an app in a cluster, with custom settings', async () => {
@@ -246,7 +221,7 @@ describe('Apps and App Catalog', () => {
       getMockCallTimes('/v4/user/', userResponse);
       getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
       getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-      getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
       getMockCallTimes(
         `/v4/clusters/${V4_CLUSTER.id}/`,
         v4AWSClusterResponse,
@@ -264,15 +239,6 @@ describe('Apps and App Catalog', () => {
       nock('https://catalogshost')
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-test-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/helmstable/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
@@ -281,12 +247,9 @@ describe('Apps and App Catalog', () => {
           app: testApp,
         }
       );
-      const {
-        findByText,
-        findAllByText,
-        getByText,
-        getByLabelText,
-      } = renderRouteWithStore(appCatalogListPath);
+      const { findByText, getByText, getByLabelText } = renderRouteWithStore(
+        appCatalogListPath
+      );
 
       // Press the configure button
       let installButton = await findByText(/configure & install/i);
@@ -351,7 +314,9 @@ describe('Apps and App Catalog', () => {
       await findByText(/is being installed on/i);
 
       // Check if the user got redirected to the cluster detail page, apps tab
-      await findByText(/these apps and services are preinstalled on your cluster and managed by Giant Swarm./i);
+      await findByText(
+        /these apps and services are preinstalled on your cluster and managed by Giant Swarm./i
+      );
     });
   });
 
