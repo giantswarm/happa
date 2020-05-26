@@ -97,15 +97,6 @@ workflows:
             tags:
               only: /^v.*/
 
-      - hold-push-happa-to-aliyun-pr:
-          type: approval
-          requires:
-            - build-container
-          # Needed to prevent job from being triggered on master branch.
-          filters:
-            branches:
-              ignore: master
-
       - architect/push-to-app-collection:
           name: push-happa-to-aws-app-collection
           context: architect
