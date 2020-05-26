@@ -2,12 +2,14 @@ import styled from '@emotion/styled';
 import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { FC, HTMLAttributes, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
 
 import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';
 
-interface IClusterLabelsProps {
+interface IClusterLabelsProps extends HTMLAttributes<HTMLDivElement> {
   clusterId: string;
   labels: V5ClusterLabelsProperty;
 }
@@ -43,16 +45,20 @@ const NoLabels = styled.div`
   grid-area: labels;
 `;
 
-const ClusterLabels: FC<
-  IClusterLabelsProps & HTMLAttributes<HTMLDivElement>
-> = ({
+const ClusterLabels: FC<IClusterLabelsProps> = ({
   className,
-  // clusterId,
+  clusterId,
   labels,
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
 
   const noLabels = Object.keys(labels).length === 0;
+
+  const dispatch = useDispatch();
+
+  const save: (change: ILabelChange) => void = (change) => {
+    dispatch(updateClusterLabels({ clusterId, ...change }));
+  };
 
   return (
     <ClusterLabelsWrapper className={className}>
@@ -64,7 +70,7 @@ const ClusterLabels: FC<
             allowInteraction={allowEditing}
             label=''
             onOpen={(isOpen) => setAllowEditing(isOpen)}
-            onSave={() => setAllowEditing(true)}
+            onSave={save}
             value=''
           />{' '}
           button.
@@ -78,13 +84,15 @@ const ClusterLabels: FC<
                   allowInteraction={allowEditing}
                   label={label}
                   onOpen={(isOpen) => setAllowEditing(isOpen)}
-                  onSave={() => setAllowEditing(true)}
+                  onSave={save}
                   value={value}
                 />
                 <DeleteLabelButton
                   allowInteraction={allowEditing}
                   onOpen={(isOpen) => setAllowEditing(isOpen)}
-                  onDelete={() => {}}
+                  onDelete={() => {
+                    save({ key: label, value: null });
+                  }}
                 >
                   &times;
                 </DeleteLabelButton>
@@ -94,7 +102,7 @@ const ClusterLabels: FC<
               allowInteraction={allowEditing}
               label=''
               onOpen={(isOpen) => setAllowEditing(isOpen)}
-              onSave={() => setAllowEditing(true)}
+              onSave={save}
               value=''
             />
           </LabelsWrapper>
