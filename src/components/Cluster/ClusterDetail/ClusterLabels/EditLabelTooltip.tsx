@@ -10,15 +10,10 @@ import ValidityStyledInputElement from 'UI/ClusterLabels/ValidityStyledInputElem
 import ValueLabel from 'UI/ClusterLabels/ValueLabel';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
-interface ILabel {
-  key: string;
-  value: string;
-}
-
 interface IEditLabelTooltip {
   label: string;
   onOpen(isOpen: boolean): void;
-  onSave(label: ILabel): void;
+  onSave(change: ILabelChange): void;
   value: string;
 
   allowInteraction?: boolean;

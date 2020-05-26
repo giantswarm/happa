@@ -35,6 +35,11 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
 
   const divElement = useRef<HTMLDivElement>(null);
 
+  const close = () => {
+    setIsOpen(false);
+    onOpen(isOpen);
+  };
+
   return (
     <DeleteLabelButtonWrapper ref={divElement}>
       <StyledDeleteButton
@@ -53,19 +58,19 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
         shouldUpdatePosition={true}
         animation={false}
       >
-        <EditValueTooltip>
+        <EditValueTooltip id='delete-label'>
           <DeleteLabelTooltipInner>
             <span>Are you sure you want to delete this label?</span>
-            <Button bsStyle='danger' onClick={onDelete}>
-              Delete
-            </Button>
             <Button
-              bsStyle='link'
+              bsStyle='danger'
               onClick={() => {
-                setIsOpen(false);
-                onOpen(isOpen);
+                close();
+                onDelete();
               }}
             >
+              Delete
+            </Button>
+            <Button bsStyle='link' onClick={close}>
               Cancel
             </Button>
           </DeleteLabelTooltipInner>
