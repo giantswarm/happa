@@ -393,7 +393,7 @@ class V5ClusterDetailTable extends React.Component {
 
   patchCluster(payload) {
     return this.props.dispatch(
-      clusterActions.clusterPatch(this.props.cluster, payload)
+      clusterActions.clusterPatch(this.props.cluster, payload, true)
     );
   }
 

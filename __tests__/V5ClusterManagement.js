@@ -491,14 +491,13 @@ scales node pools correctly`, async () => {
     expect(screen.queryByText(/master nodes/i)).not.toBeInTheDocument();
   });
 
-  // TODO(axbarsan): Enable this once the new client version is in place.
-  it.skip('can convert a cluster to HA masters', async () => {
+  it('can convert a cluster to HA masters', async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
       release_version: '11.5.0',
     });
     getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, clusterResponse);
 
-    const patchResponse = Object.assign({}, v5ClusterResponse, {
+    const patchResponse = Object.assign({}, clusterResponse, {
       master_nodes: {
         high_availability: true,
         availability_zones: ['b', 'c', 'd'],
@@ -508,6 +507,7 @@ scales node pools correctly`, async () => {
     nock(API_ENDPOINT)
       .intercept(`/v5/clusters/${V5_CLUSTER.id}/`, 'PATCH')
       .reply(StatusCodes.Ok, patchResponse);
+    getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, patchResponse);
 
     const clusterDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Home,

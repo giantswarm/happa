@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
@@ -41,6 +41,15 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
 }) => {
   const [isConverting, setIsConverting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   // Account for nil slices in the server code.
   const azs: string[] = availabilityZones || [];
@@ -51,11 +60,15 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
     setIsLoading(true);
     try {
       await onConvert?.();
-      setIsConverting(false);
-      // eslint-disable-next-line no-empty
+      if (isMounted.current) {
+        setIsConverting(false);
+      }
     } catch {
+      // Skipping because we're handling the error in the action.
     } finally {
-      setIsLoading(false);
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
     }
   };
 
