@@ -113,6 +113,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
         <AddLabelButton
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
+          data-testid='add-label-button'
         >
           Add
         </AddLabelButton>
@@ -144,6 +145,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
               value={internalKeyValue}
               isValid={keyIsValid}
               onKeyUp={keyHandler}
+              data-testid='label-key-input'
             />
             :
             <ValueInput
@@ -154,11 +156,13 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
               value={internalValueValue}
               isValid={valueIsValid}
               onKeyUp={keyHandler}
+              data-testid='label-value-input'
             />
             <Button
               bsStyle='success'
               disabled={!keyIsValid || !valueIsValid}
               onClick={save}
+              data-testid='save-label-button'
             >
               Save
             </Button>

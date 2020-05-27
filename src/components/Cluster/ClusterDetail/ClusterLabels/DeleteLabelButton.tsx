@@ -30,6 +30,7 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
   onDelete,
   onOpen,
   allowInteraction,
+  ...restProps
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,6 +49,7 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
           setIsOpen(true);
           onOpen(isOpen);
         }}
+        {...restProps}
       >
         &times;
       </StyledDeleteButton>
@@ -67,6 +69,7 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
                 close();
                 onDelete();
               }}
+              data-testid='delete-label-button'
             >
               Delete
             </Button>

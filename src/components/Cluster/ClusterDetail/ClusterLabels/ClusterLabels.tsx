@@ -108,6 +108,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
                   onDelete={() => {
                     save({ key: label, value: null });
                   }}
+                  data-testid={`delete-${label}`}
                 >
                   &times;
                 </DeleteLabelButton>
