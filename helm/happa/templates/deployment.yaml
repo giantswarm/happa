@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        releasetime: {{ $.Release.Time }}
+        releaseRevision: {{ .Release.Revision }}
       labels:
         app: happa
     spec:
@@ -38,7 +38,7 @@ spec:
         runAsGroup: {{ .Values.groupID }}
       containers:
       - name: happa
-        image: {{ .Values.Installation.V1.Registry.Domain }}/giantswarm/happa:[[ .SHA ]]
+        image: {{ .Values.Installation.V1.Registry.Domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
         - name: AWS_CAPABILITIES_JSON
           valueFrom:
