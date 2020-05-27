@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
-import React, { FC, HTMLAttributes, useState } from 'react';
+import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getClusterLabelsError,
@@ -13,7 +13,7 @@ import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
 import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';
 
-interface IClusterLabelsProps extends HTMLAttributes<HTMLDivElement> {
+interface IClusterLabelsProps extends ComponentPropsWithoutRef<'div'> {
   clusterId: string;
   labels: V5ClusterLabelsProperty;
 }
