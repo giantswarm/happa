@@ -1,2 +1,7 @@
-name: happa-chart
-version: 1.0.0-[[ .SHA ]]
+apiVersion: v1
+name: happa
+description: >-
+  Web user interface for Giant Swarm Kubernetes as a Service.
+home: https://github.com/giantswarm/happa
+version: [[ .Version ]]
+appVersion: [[ .AppVersion ]]
