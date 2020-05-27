@@ -456,14 +456,16 @@ class V5ClusterDetailTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
 
-        {cluster.capabilities.supportsHAMasters && (
-          <MasterNodesRow
-            isHA={master_nodes?.high_availability}
-            availabilityZones={master_nodes?.availability_zones}
-            numOfReadyNodes={master_nodes?.num_ready}
-            onConvert={this.enableHAMasters}
-          />
-        )}
+        <MasterNodesRow
+          isHA={master_nodes?.high_availability}
+          availabilityZones={master_nodes?.availability_zones}
+          numOfReadyNodes={master_nodes?.num_ready}
+          onConvert={this.enableHAMasters}
+          canBeConverted={
+            !master_nodes?.high_availability &&
+            cluster.capabilities.supportsHAMasters
+          }
+        />
 
         {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
           <LabelsRow labels={labels} clusterId={cluster.id} />

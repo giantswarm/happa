@@ -14,6 +14,7 @@ describe('MasterNodes', () => {
   it('renders the correct information for a non-HA master node', () => {
     renderWithTheme(MasterNodes, {
       isHA: false,
+      canBeConverted: true,
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
@@ -61,6 +62,7 @@ describe('MasterNodes', () => {
 
     renderWithTheme(MasterNodes, {
       isHA: false,
+      canBeConverted: true,
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
@@ -89,6 +91,7 @@ describe('MasterNodes', () => {
 
     renderWithTheme(MasterNodes, {
       isHA: false,
+      canBeConverted: true,
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
@@ -108,5 +111,19 @@ describe('MasterNodes', () => {
     await waitForElementToBeRemoved(() => screen.getByText(/cancel/i));
 
     expect(handleConvertToHAMock).not.toBeCalled();
+  });
+
+  it(`doesn't display the conversion button if it cannot be converted`, () => {
+    renderWithTheme(MasterNodes, {
+      isHA: false,
+      canBeConverted: false,
+      availabilityZones: ['b'],
+      numOfReadyNodes: 1,
+      numOfMaxHANodes: 1,
+    });
+
+    expect(
+      screen.queryByText(/switch to high availability…/i)
+    ).not.toBeInTheDocument();
   });
 });

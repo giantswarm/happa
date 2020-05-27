@@ -25,6 +25,7 @@ const InfoWrapper = styled.div`
 
 interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
   isHA?: boolean;
+  canBeConverted?: boolean;
   availabilityZones?: string[] | null;
   numOfReadyNodes?: number | null;
   numOfMaxHANodes?: number;
@@ -33,6 +34,7 @@ interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
 
 const MasterNodes: React.FC<IMasterNodesProps> = ({
   isHA,
+  canBeConverted,
   availabilityZones,
   numOfReadyNodes,
   numOfMaxHANodes,
@@ -101,7 +103,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           }}
         >
           <MasterNodesInfo
-            isHA={isHA}
+            canBeConverted={canBeConverted}
             availabilityZones={azs}
             numOfReadyNodes={numOfReadyNodes}
             maxNumOfNodes={maxNumOfNodes}
@@ -115,6 +117,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
 
 MasterNodes.propTypes = {
   isHA: PropTypes.bool,
+  canBeConverted: PropTypes.bool,
   availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   numOfReadyNodes: PropTypes.number,
   numOfMaxHANodes: PropTypes.number,
@@ -123,6 +126,7 @@ MasterNodes.propTypes = {
 
 MasterNodes.defaultProps = {
   isHA: false,
+  canBeConverted: false,
   availabilityZones: [],
   numOfReadyNodes: null,
   numOfMaxHANodes: Constants.AWS_HA_MASTERS_MAX_NODES,

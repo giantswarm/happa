@@ -470,7 +470,7 @@ scales node pools correctly`, async () => {
     expect(queryByTestId('no-apps-found')).toBeNull();
   });
 
-  it(`doesn't render the master nodes row for an unsupported release version`, async () => {
+  it(`renders the master nodes row for an unsupported release version`, async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
       release_version: '11.0.0',
     });
@@ -488,7 +488,10 @@ scales node pools correctly`, async () => {
     expect(
       await screen.findByText(/kubernetes endpoint uri/i)
     ).toBeInTheDocument();
-    expect(screen.queryByText(/master nodes/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/master nodes/i)).toBeInTheDocument();
+    expect(
+      screen.queryByText(/switch to high availability…/i)
+    ).not.toBeInTheDocument();
   });
 
   it('can convert a cluster to HA masters', async () => {

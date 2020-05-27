@@ -30,7 +30,7 @@ const AZLabel = styled.span`
 `;
 
 interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
-  isHA?: boolean;
+  canBeConverted?: boolean;
   availabilityZones?: string[];
   numOfReadyNodes?: number | null;
   maxNumOfNodes?: number;
@@ -38,7 +38,7 @@ interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
-  isHA,
+  canBeConverted,
   availabilityZones,
   maxNumOfNodes,
   numOfReadyNodes,
@@ -71,7 +71,7 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
         <AvailabilityZonesLabels zones={availabilityZones} labelsChecked={[]} />
       </AZGroup>
 
-      {!isHA && numOfReadyNodes !== null && (
+      {numOfReadyNodes !== null && canBeConverted && (
         <Group>
           <ConvertButton onClick={handleOnConvert}>
             Switch to high availability…
@@ -83,7 +83,7 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
 };
 
 MasterNodesInfo.propTypes = {
-  isHA: PropTypes.bool,
+  canBeConverted: PropTypes.bool,
   availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   numOfReadyNodes: PropTypes.number,
   maxNumOfNodes: PropTypes.number,
@@ -91,7 +91,7 @@ MasterNodesInfo.propTypes = {
 };
 
 MasterNodesInfo.defaultProps = {
-  isHA: false,
+  canBeConverted: false,
   availabilityZones: [],
   numOfReadyNodes: null,
   maxNumOfNodes: 0,
