@@ -19,13 +19,13 @@ const clusterLabelsReducer = produce((draft: IState, action) => {
       draft.requestInProgress = true;
       draft.error = null;
 
-      return;
+      break;
 
     case types.success:
       draft.requestInProgress = false;
       draft.error = null;
 
-      return;
+      break;
 
     case types.error:
       draft.requestInProgress = false;
