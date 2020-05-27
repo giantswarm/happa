@@ -24,7 +24,6 @@ export const Constants = {
   AZURE_MULTI_AZ_VERSION: '11.1.0',
   AWS_ONDEMAND_INSTANCES_VERSION: '11.2.0',
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.2.0',
-  // TODO(axbarsan): Change this to the actual version
   AWS_HA_MASTERS_VERSION: '11.5.0',
   AWS_HA_MASTERS_MAX_NODES: 3,
 

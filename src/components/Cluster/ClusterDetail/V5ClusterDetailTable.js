@@ -425,17 +425,9 @@ class V5ClusterDetailTable extends React.Component {
       release_version,
       api_endpoint,
       labels,
-      // TODO(axbarsan): Uncomment to use data from the API.
-      // master_nodes,
+      master_nodes,
     } = cluster;
     const { numberOfNodes, memory, cores } = resources;
-
-    // TODO(axbarsan): Delete this after using data from the API.
-    const master_nodes = {
-      high_availability: false,
-      availability_zones: ['b'],
-      num_ready: 1,
-    };
 
     const zeroNodePools = nodePools && nodePools.length === 0;
 
