@@ -74,7 +74,7 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
       {!isHA && numOfReadyNodes !== null && (
         <Group>
           <ConvertButton onClick={handleOnConvert}>
-            switch to high availability…
+            Switch to high availability…
           </ConvertButton>
         </Group>
       )}

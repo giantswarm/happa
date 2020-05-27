@@ -61,7 +61,10 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
         >
           Switch to high availability
         </Button>
-        <Button onClick={handleEventListener(onCancel)}>Cancel</Button>
+
+        {!isLoading && (
+          <Button onClick={handleEventListener(onCancel)}>Cancel</Button>
+        )}
       </ButtonWrapper>
     </div>
   );
