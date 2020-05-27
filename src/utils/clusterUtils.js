@@ -146,7 +146,7 @@ export function getCpusTotalNodePools(nodePools = []) {
  * This function takes a release version and provider and returns a
  * capabilities object with the features that this cluster supports.
  * @param releaseVersion {string} - The cluster's release version.
- * @param provider {aws|azure|kvm} - Possible service providers.
+ * @param provider {"aws"|"azure"|"kvm"} - Possible service providers.
  * @returns {{supportsHAMasters: boolean, hasOptionalIngress: boolean}}
  */
 export function computeCapabilities(releaseVersion, provider) {
