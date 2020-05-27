@@ -12,7 +12,6 @@ import { getInstallationInfo } from 'model/services/giantSwarm';
 import { selectAuthToken } from 'selectors/authSelectors';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
-import _ from 'underscore';
 
 import * as types from './actionTypes';
 
@@ -294,10 +293,10 @@ export function usersLoad() {
       .then((usersArray) => {
         const users = {};
 
-        _.each(usersArray, (user) => {
+        for (const user of usersArray) {
           user.emaildomain = user.email.split('@')[1];
           users[user.email] = user;
-        });
+        }
 
         dispatch({
           type: types.USERS_LOAD_SUCCESS,

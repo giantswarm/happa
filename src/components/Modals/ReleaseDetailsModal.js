@@ -6,7 +6,7 @@ import theme from 'styles/theme';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
-import _ from 'underscore';
+import { groupBy, sortBy } from 'underscore';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
@@ -39,7 +39,7 @@ class ReleaseDetailsModal extends React.Component {
           <BootstrapModal.Body>
             {this.props.releases.map((release) => {
               // group changes by component
-              const changes = _.groupBy(release.changelog, (item) => {
+              const changes = groupBy(release.changelog, (item) => {
                 return item.component;
               });
 
@@ -78,7 +78,7 @@ class ReleaseDetailsModal extends React.Component {
                   </p>
 
                   <div className='release-selector-modal--components'>
-                    {_.sortBy(release.components, 'name').map((component) => (
+                    {sortBy(release.components, 'name').map((component) => (
                       <ReleaseComponentLabel
                         key={component.name}
                         name={component.name}
