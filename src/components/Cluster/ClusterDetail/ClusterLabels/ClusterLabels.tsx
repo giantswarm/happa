@@ -2,7 +2,11 @@ import styled from '@emotion/styled';
 import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { FC, HTMLAttributes, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getClusterLabelsError,
+  getClusterLabelsLoading,
+} from 'selectors/clusterLabelSelectors';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
 
@@ -16,7 +20,7 @@ interface IClusterLabelsProps extends HTMLAttributes<HTMLDivElement> {
 
 const ClusterLabelsWrapper = styled.div`
   display: grid;
-  grid-template: 'title labels' '. help';
+  grid-template: 'title labels' '. bottom';
   grid-template-columns: 203px 1fr;
 `;
 
@@ -33,12 +37,20 @@ const LabelsTitle = styled.span`
   margin: 5px;
 `;
 
-const HelpText = styled.span`
-  grid-area: help;
+const BottomAreaText = styled.span`
+  grid-area: bottom;
   font-size: 13px;
+`;
+
+const HelpText = styled(BottomAreaText)`
   u {
     text-decoration-style: dotted;
   }
+`;
+
+const ErrorText = styled(BottomAreaText)`
+  color: ${({ theme }) => theme.colors.error};
+  font-weight: 400;
 `;
 
 const NoLabels = styled.div`
@@ -56,6 +68,9 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
 
   const dispatch = useDispatch();
 
+  const loading = useSelector(getClusterLabelsLoading);
+  const error = useSelector(getClusterLabelsError);
+
   const save: (change: ILabelChange) => void = (change) => {
     dispatch(updateClusterLabels({ clusterId, ...change }));
   };
@@ -67,7 +82,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
         <NoLabels>
           This cluster has no labels. You can add a label by clicking the{' '}
           <EditLabelTooltip
-            allowInteraction={allowEditing}
+            allowInteraction={!loading && allowEditing}
             label=''
             onOpen={(isOpen) => setAllowEditing(isOpen)}
             onSave={save}
@@ -81,14 +96,14 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
             {Object.entries(labels).map(([label, value]) => (
               <LabelWrapper key={label}>
                 <EditLabelTooltip
-                  allowInteraction={allowEditing}
+                  allowInteraction={!loading && allowEditing}
                   label={label}
                   onOpen={(isOpen) => setAllowEditing(isOpen)}
                   onSave={save}
                   value={value}
                 />
                 <DeleteLabelButton
-                  allowInteraction={allowEditing}
+                  allowInteraction={!loading && allowEditing}
                   onOpen={(isOpen) => setAllowEditing(isOpen)}
                   onDelete={() => {
                     save({ key: label, value: null });
@@ -99,16 +114,20 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
               </LabelWrapper>
             ))}
             <EditLabelTooltip
-              allowInteraction={allowEditing}
+              allowInteraction={!loading && allowEditing}
               label=''
               onOpen={(isOpen) => setAllowEditing(isOpen)}
               onSave={save}
               value=''
             />
           </LabelsWrapper>
-          <HelpText>
-            Click the <u>underlined</u> text to modify label keys and values.
-          </HelpText>
+          {error ? (
+            <ErrorText>Could not save labels. Please try again.</ErrorText>
+          ) : (
+            <HelpText>
+              Click the <u>underlined</u> text to modify label keys and values.
+            </HelpText>
+          )}
         </>
       )}
     </ClusterLabelsWrapper>
