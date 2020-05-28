@@ -534,6 +534,8 @@ scales node pools correctly`, async () => {
 });
 
 it('renders cluster labels', async () => {
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
+
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail.Home,
     {
@@ -561,6 +563,8 @@ it('renders cluster labels', async () => {
 });
 
 it('allows to delete cluster labels', async () => {
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
+
   mockCall('put', `/v5/clusters/${V5_CLUSTER.id}/labels/`, {
     labels: {
       'giantswarm.io/hidden-label': 'ok',
@@ -588,6 +592,8 @@ it('allows to delete cluster labels', async () => {
 });
 
 it('disallows to add invalid cluster labels', async () => {
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
+
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail.Home,
     {
@@ -627,6 +633,8 @@ it('disallows to add invalid cluster labels', async () => {
 });
 
 it('allows to add cluster labels', async () => {
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
+
   const newLabelKey = 'brand-new-label';
   const newLabelValue = generateRandomString();
   mockCall('put', `/v5/clusters/${V5_CLUSTER.id}/labels/`, {
