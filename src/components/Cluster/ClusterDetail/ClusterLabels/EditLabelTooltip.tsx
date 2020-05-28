@@ -28,6 +28,7 @@ const FormWrapper = styled.div`
   margin: 5px 0 0 5px;
   grid-template: 'keylabel valuelabel .' 'keyinput valueinput buttons';
   grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 0 8px;
 `;
 
 const GridCell = styled.div`
@@ -37,7 +38,6 @@ const GridCell = styled.div`
 
 const KeyInputWrapper = styled(GridCell)`
   grid-area: keyinput;
-  padding-right: 4px;
 `;
 
 const ValueInputWrapper = styled(GridCell)`
@@ -46,14 +46,6 @@ const ValueInputWrapper = styled(GridCell)`
 
 const Buttons = styled(GridCell)`
   grid-area: buttons;
-`;
-
-const KeyInput = styled(ValidityStyledInputElement)`
-  margin-right: 2px;
-`;
-
-const ValueInput = styled(ValidityStyledInputElement)`
-  margin: 0 10px 0 0;
 `;
 
 const AddLabelButton = styled(Button)`
@@ -170,7 +162,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           <FormWrapper>
             <KeyInputLabel htmlFor='label-key-input'>Label key:</KeyInputLabel>
             <KeyInputWrapper>
-              <KeyInput
+              <ValidityStyledInputElement
                 type='text'
                 onChange={({ target: { value: newRawValue } }) =>
                   setInternalKeyValue(newRawValue)
@@ -186,7 +178,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
               Label value:
             </ValueInputLabel>
             <ValueInputWrapper>
-              <ValueInput
+              <ValidityStyledInputElement
                 type='text'
                 onChange={({ target: { value: newRawValue } }) =>
                   setInternalValueValue(newRawValue)
