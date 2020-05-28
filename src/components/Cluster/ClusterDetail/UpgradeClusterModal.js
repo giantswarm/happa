@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
-import _ from 'underscore';
+import { groupBy, sortBy } from 'underscore';
 
 class UpgradeClusterModal extends React.Component {
   state = {
@@ -57,7 +57,7 @@ class UpgradeClusterModal extends React.Component {
 
     const changedComponents = diff.diff(components, targetComponents);
 
-    const changes = _.groupBy(this.props.targetRelease.changelog, (item) => {
+    const changes = groupBy(this.props.targetRelease.changelog, (item) => {
       return item.component;
     });
     const changedComponentNames = Object.keys(changes).sort();
@@ -75,7 +75,7 @@ class UpgradeClusterModal extends React.Component {
           <b>Component Changes</b>
         </p>
         <div className='release-selector-modal--components'>
-          {_.sortBy(changedComponents, 'name').map((diffEdit) => {
+          {sortBy(changedComponents, 'name').map((diffEdit) => {
             if (diffEdit.kind === 'E') {
               const component = components[diffEdit.path[0]];
 
