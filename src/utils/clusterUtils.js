@@ -1,6 +1,7 @@
 import moment from 'moment';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
@@ -141,12 +142,30 @@ export function getCpusTotalNodePools(nodePools = []) {
   return TotalCPUs;
 }
 
-// computeCapabilities takes a release version and provider and returns a
-// capabilities object with the features that this cluster supports.
+/**
+ * This function takes a release version and provider and returns a
+ * capabilities object with the features that this cluster supports.
+ * @param releaseVersion {string} - The cluster's release version.
+ * @param provider {"aws"|"azure"|"kvm"} - Possible service providers.
+ * @returns {{supportsHAMasters: boolean, hasOptionalIngress: boolean}}
+ */
 export function computeCapabilities(releaseVersion, provider) {
+  let hasOptionalIngress = false;
+  let supportsHAMasters = false;
+
+  switch (provider) {
+    case Providers.AWS:
+      hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
+      supportsHAMasters =
+        FeatureFlags.FEATURE_HA_MASTERS &&
+        cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
+
+      break;
+  }
+
   return {
-    hasOptionalIngress:
-      provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
+    hasOptionalIngress,
+    supportsHAMasters,
   };
 }
 
