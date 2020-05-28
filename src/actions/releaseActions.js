@@ -5,7 +5,7 @@ import cmp from 'semver-compare';
 import * as types from './actionTypes';
 
 export function loadReleases() {
-  return function (dispatch) {
+  return function (dispatch, getState) {
     const releasesApi = new GiantSwarm.ReleasesApi();
 
     return releasesApi
@@ -31,11 +31,13 @@ export function loadReleases() {
           return { ...accumulator, [release.version]: release };
         }, {});
 
-        const activeSortedReleases = Object.keys(releases)
-          // TODO remove second condition
-          .filter((release) => releases[release].active || release === '10.0.0')
-          .sort(cmp)
-          .reverse();
+        let activeSortedReleases = Object.keys(releases).sort(cmp).reverse();
+
+        if (!getState().main.loggedInUser.isAdmin) {
+          activeSortedReleases = activeSortedReleases.filter(
+            (release) => releases[release].active
+          );
+        }
 
         if (activeSortedReleases.length === 0) {
           new FlashMessage(
