@@ -483,9 +483,11 @@ export function clusterLoadKeyPairs(clusterId) {
  *
  * @param {Object} cluster Cluster object
  * @param {Object} payload object with just the data we want to modify
+ * @param {boolean} reloadCluster - Whether it should reload the cluster after it's done patching. Useful for
+ * not doing optimistic updates.
  */
-export function clusterPatch(cluster, payload) {
-  return function (dispatch, getState) {
+export function clusterPatch(cluster, payload, reloadCluster = false) {
+  return async function (dispatch, getState) {
     const v5Clusters = getState().entities.clusters.v5Clusters;
     const isV5Cluster = v5Clusters.includes(cluster.id);
 
@@ -497,10 +499,21 @@ export function clusterPatch(cluster, payload) {
     });
 
     const modifyCluster = isV5Cluster
-      ? clustersApi.modifyClusterV5(cluster.id, payload)
-      : clustersApi.modifyCluster(cluster.id, payload);
+      ? clustersApi.modifyClusterV5.bind(clustersApi)
+      : clustersApi.modifyCluster.bind(clustersApi);
 
-    return modifyCluster.catch((error) => {
+    try {
+      await modifyCluster(cluster.id, payload);
+
+      if (reloadCluster) {
+        await dispatch(
+          clusterLoadDetails(cluster.id, {
+            withLoadingFlags: false,
+            initializeNodePools: false,
+          })
+        );
+      }
+    } catch (error) {
       // Undo update to store if the API call fails.
       dispatch({
         type: types.CLUSTER_PATCH_ERROR,
@@ -519,7 +532,7 @@ export function clusterPatch(cluster, payload) {
       console.error(error);
 
       throw error;
-    });
+    }
   };
 }
 
