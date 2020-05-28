@@ -1,25 +1,26 @@
 import styled from '@emotion/styled';
 import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
-import React, { FC, HTMLAttributes, useState } from 'react';
-import Button from 'UI/Button';
-import EditableValueLabel from 'UI/EditableValueLabel';
-import ValueLabel from 'UI/ValueLabel';
-import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
+import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getClusterLabelsError,
+  getClusterLabelsLoading,
+} from 'selectors/clusterLabelSelectors';
+import { updateClusterLabels } from 'stores/clusterlabels/actions';
+import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
 
-interface IClusterLabelsProps {
+import DeleteLabelButton from './DeleteLabelButton';
+import EditLabelTooltip from './EditLabelTooltip';
+
+interface IClusterLabelsProps extends ComponentPropsWithoutRef<'div'> {
   clusterId: string;
   labels: V5ClusterLabelsProperty;
 }
 
-const DeleteLabelButton = styled(Button)`
-  margin: 0;
-  padding: 0;
-`;
-
 const ClusterLabelsWrapper = styled.div`
   display: grid;
-  grid-template: 'title labels' '. help';
+  grid-template: 'title labels' '. bottom';
   grid-template-columns: 203px 1fr;
 `;
 
@@ -31,81 +32,106 @@ const LabelsWrapper = styled.div`
   margin-bottom: 15px;
 `;
 
-const LabelWrapper = styled.div`
-  margin: 5px 5px 5px 0;
-`;
-
 const LabelsTitle = styled.span`
   grid-area: title;
   margin: 5px;
 `;
 
-const HelpText = styled.span`
-  grid-area: help;
+const BottomAreaText = styled.span`
+  grid-area: bottom;
   font-size: 13px;
+`;
+
+const HelpText = styled(BottomAreaText)`
   u {
     text-decoration-style: dotted;
   }
 `;
 
-const StyledValueLabel = styled(ValueLabel)`
-  margin-bottom: 0;
+const ErrorText = styled(BottomAreaText)`
+  color: ${({ theme }) => theme.colors.error};
+  font-weight: 400;
 `;
 
-const ClusterLabels: FC<
-  IClusterLabelsProps & HTMLAttributes<HTMLDivElement>
-> = ({
+const NoLabels = styled.div`
+  grid-area: labels;
+`;
+
+const ClusterLabels: FC<IClusterLabelsProps> = ({
   className,
-  // clusterId,
+  clusterId,
   labels,
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
 
+  const noLabels = Object.keys(labels).length === 0;
+
+  const dispatch = useDispatch();
+
+  const loading = useSelector(getClusterLabelsLoading);
+  const error = useSelector(getClusterLabelsError);
+
+  const save: (change: ILabelChange) => void = (change) => {
+    dispatch(updateClusterLabels({ clusterId, ...change }));
+  };
+
   return (
     <ClusterLabelsWrapper className={className}>
       <LabelsTitle>Labels:</LabelsTitle>
-      <LabelsWrapper>
-        {Object.entries(labels).map(([label, value]) => (
-          <LabelWrapper key={label}>
-            <StyledValueLabel
-              label={
-                <EditableValueLabel
-                  allowEdit={allowEditing}
-                  onCancel={() => setAllowEditing(true)}
-                  onEdit={() => setAllowEditing(false)}
-                  onSave={() => setAllowEditing(true)}
-                  validationFunc={validateLabelKey}
-                  value={label}
-                />
-              }
-              value={
-                <EditableValueLabel
-                  allowEdit={allowEditing}
-                  onCancel={() => setAllowEditing(true)}
-                  onEdit={() => setAllowEditing(false)}
-                  onSave={() => setAllowEditing(true)}
-                  validationFunc={validateLabelValue}
+      {noLabels ? (
+        <NoLabels>
+          This cluster has no labels. You can add a label by clicking the{' '}
+          <EditLabelTooltip
+            allowInteraction={!loading && allowEditing}
+            label=''
+            onOpen={(isOpen) => setAllowEditing(isOpen)}
+            onSave={save}
+            value=''
+          />{' '}
+          button.
+        </NoLabels>
+      ) : (
+        <>
+          <LabelsWrapper>
+            {Object.entries(labels).map(([label, value]) => (
+              <LabelWrapper key={label}>
+                <EditLabelTooltip
+                  allowInteraction={!loading && allowEditing}
+                  label={label}
+                  onOpen={(isOpen) => setAllowEditing(isOpen)}
+                  onSave={save}
                   value={value}
                 />
-              }
-              key={label}
+                <DeleteLabelButton
+                  allowInteraction={!loading && allowEditing}
+                  onOpen={(isOpen) => setAllowEditing(isOpen)}
+                  onDelete={() => {
+                    save({ key: label, value: null });
+                  }}
+                  role='button'
+                  aria-label={`Delete '${label}' label`}
+                >
+                  &times;
+                </DeleteLabelButton>
+              </LabelWrapper>
+            ))}
+            <EditLabelTooltip
+              allowInteraction={!loading && allowEditing}
+              label=''
+              onOpen={(isOpen) => setAllowEditing(isOpen)}
+              onSave={save}
+              value=''
             />
-            <DeleteLabelButton
-              bsStyle='link'
-              disabled={!allowEditing}
-              className={!allowEditing ? 'invisible' : ''}
-              onClick={() => {
-                // onSave({ label, value: null });
-              }}
-            >
-              &times;
-            </DeleteLabelButton>
-          </LabelWrapper>
-        ))}
-      </LabelsWrapper>
-      <HelpText>
-        Click the <u>underlined</u> text to modify label keys and values.
-      </HelpText>
+          </LabelsWrapper>
+          {error ? (
+            <ErrorText>Could not save labels. Please try again.</ErrorText>
+          ) : (
+            <HelpText>
+              Click the <u>underlined</u> text to modify label keys and values.
+            </HelpText>
+          )}
+        </>
+      )}
     </ClusterLabelsWrapper>
   );
 };

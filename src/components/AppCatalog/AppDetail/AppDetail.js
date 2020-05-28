@@ -1,4 +1,5 @@
 import {
+  CATALOG_LOAD_INDEX_REQUEST,
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'actions/actionTypes';
@@ -13,8 +14,10 @@ import { connect } from 'react-redux';
 import {
   selectErrorByAction,
   selectLoadingFlagByAction,
+  selectLoadingFlagByIdAndAction,
 } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import { listCatalogs } from 'stores/appcatalog/actions';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
@@ -53,6 +56,10 @@ class AppDetail extends React.Component {
   }
 
   componentDidUpdate() {
+    if (this.props.catalog) {
+      this.props.catalogLoadIndex(this.props.catalog);
+    }
+
     this.loadReadme();
   }
 
@@ -90,6 +97,8 @@ class AppDetail extends React.Component {
       catalogName: this.props.match.params.catalogName,
     });
 
+    const loading = this.props.loadingIndex || this.props.loadingCatalogs;
+
     return (
       <Breadcrumb
         data={{
@@ -98,14 +107,8 @@ class AppDetail extends React.Component {
         }}
       >
         <>
-          <LoadingOverlay
-            loading={!catalog || this.props.catalog.isFetchingIndex}
-          />
-          {!(
-            !catalog ||
-            this.props.catalog.isFetchingIndex ||
-            this.props.loadingCluster
-          ) && (
+          <LoadingOverlay loading={loading} />
+          {!loading && (
             <Breadcrumb
               data={{
                 title: this.props.selectedAppVersion.name,
@@ -149,10 +152,12 @@ AppDetail.propTypes = {
   match: PropTypes.object,
   catalog: PropTypes.object,
   selectedClusterID: PropTypes.string,
-  loadingCluster: PropTypes.bool,
   dispatch: PropTypes.func,
   loadingReadme: PropTypes.bool,
+  loadingCatalogs: PropTypes.bool,
+  loadingIndex: PropTypes.bool,
   errorLoadingReadme: PropTypes.string,
+  catalogLoadIndex: PropTypes.func,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -164,6 +169,7 @@ function mapStateToProps(state, ownProps) {
   if (
     state.entities.catalogs.items[catalogName] &&
     !state.entities.catalogs.items[catalogName].isFetchingIndex &&
+    state.entities.catalogs.items[catalogName].apps &&
     state.entities.catalogs.items[catalogName].apps[appName]
   ) {
     appVersions = state.entities.catalogs.items[catalogName].apps[appName] || [
@@ -180,6 +186,15 @@ function mapStateToProps(state, ownProps) {
     selectedAppVersion: selectedAppVersion || appVersions[0],
     catalog: state.entities.catalogs.items[catalogName],
     selectedClusterID: state.main.selectedClusterID,
+    loadingCatalogs: selectLoadingFlagByAction(
+      state,
+      listCatalogs().types.request
+    ),
+    loadingIndex: selectLoadingFlagByIdAndAction(
+      state,
+      ownProps.match.params.catalogName,
+      CATALOG_LOAD_INDEX_REQUEST
+    ),
     loadingReadme: selectLoadingFlagByAction(
       state,
       CLUSTER_LOAD_APP_README_REQUEST

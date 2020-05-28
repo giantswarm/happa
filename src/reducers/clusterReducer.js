@@ -1,5 +1,6 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
+import { updateClusterLabels } from 'stores/clusterlabels/actions';
 
 const initialState = {
   lastUpdated: null,
@@ -116,6 +117,13 @@ const clusterReducer = produce((draft, action) => {
         draft.items[action.clusterId].nodePools = draft.items[
           action.clusterId
         ].nodePools.filter((np) => np !== action.nodePoolId);
+      }
+
+      return;
+
+    case updateClusterLabels().types.success:
+      if (draft.items[action.response.clusterId]) {
+        draft.items[action.response.clusterId].labels = action.response.labels;
       }
   }
 }, initialState);

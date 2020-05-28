@@ -1,4 +1,4 @@
-/* global FEATURE_CLUSTER_LABELS_V0:false */
+/* global FEATURE_CLUSTER_LABELS_V0:true */
 /* global FEATURE_HA_MASTERS:false */
 
 interface IFeatureFlags {
