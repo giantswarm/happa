@@ -9,16 +9,18 @@ import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
+import { Constants, StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
+  generateRandomString,
   getMockCall,
   getMockCallTimes,
   metadataResponse,
+  mockCall,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -30,7 +32,7 @@ import {
   v5ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
+import { filterLabels, getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 
 describe('V5ClusterManagement', () => {
   // Responses to requests
@@ -529,4 +531,140 @@ scales node pools correctly`, async () => {
     );
     expect(screen.getByText(/1 of 3 master nodes ready/i)).toBeInTheDocument();
   });
+});
+
+it('renders cluster labels', async () => {
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail.Home,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const { findByText, getByText, queryByText } = renderRouteWithStore(
+    clusterDetailPath
+  );
+
+  await findByText('Labels:');
+
+  for (const [key, value] of Object.entries(v5ClusterResponse.labels)) {
+    if (
+      key.includes(Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING) === false
+    ) {
+      expect(getByText(key)).toBeInTheDocument();
+      expect(getByText(value)).toBeInTheDocument();
+    } else {
+      expect(queryByText(key)).not.toBeInTheDocument();
+      expect(queryByText(value)).not.toBeInTheDocument();
+    }
+  }
+});
+
+it('allows to delete cluster labels', async () => {
+  mockCall('put', `/v5/clusters/${V5_CLUSTER.id}/labels/`, {
+    labels: {
+      'giantswarm.io/hidden-label': 'ok',
+    },
+  });
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail.Home,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const visibleLabels = Object.entries(filterLabels(v5ClusterResponse.labels));
+
+  const { findByText, getByRole } = renderRouteWithStore(clusterDetailPath);
+
+  await findByText('Labels:');
+
+  fireEvent.click(
+    getByRole('button', { name: `Delete '${visibleLabels[0][0]}' label` })
+  );
+  fireEvent.click(await findByText('Delete', { selector: 'button' }));
+
+  await findByText(/This cluster has no labels./);
+});
+
+it('disallows to add invalid cluster labels', async () => {
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail.Home,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const {
+    findByLabelText,
+    findByText,
+    getByLabelText,
+    getByText,
+  } = renderRouteWithStore(clusterDetailPath);
+
+  await findByText('Labels:');
+  fireEvent.click(getByText('Add', { selector: 'button ' }));
+
+  const keyInput = await findByLabelText('Label key:');
+  const valueInput = getByLabelText('Label value:');
+  const saveButton = getByText('Save', { selector: 'button' });
+
+  fireEvent.change(keyInput, { target: { value: '.invalid.' } });
+  fireEvent.change(valueInput, { target: { value: 'valid' } });
+
+  await findByText(
+    `Key name part must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character.`
+  );
+  expect(saveButton.disabled).toBeTruthy();
+
+  fireEvent.change(keyInput, { target: { value: 'valid' } });
+  fireEvent.change(valueInput, { target: { value: '.invalid.' } });
+
+  await findByText(
+    `Value must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character.`
+  );
+  expect(saveButton.disabled).toBeTruthy();
+});
+
+it('allows to add cluster labels', async () => {
+  const newLabelKey = 'brand-new-label';
+  const newLabelValue = generateRandomString();
+  mockCall('put', `/v5/clusters/${V5_CLUSTER.id}/labels/`, {
+    labels: {
+      ...v5ClusterResponse.labels,
+      ...{ [newLabelKey]: newLabelValue },
+    },
+  });
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail.Home,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const {
+    findByLabelText,
+    findByText,
+    getByLabelText,
+    getByText,
+  } = renderRouteWithStore(clusterDetailPath);
+
+  await findByText('Labels:');
+  fireEvent.click(getByText('Add', { selector: 'button ' }));
+
+  const keyInput = await findByLabelText('Label key:');
+  const valueInput = getByLabelText('Label value:');
+  const saveButton = getByText('Save', { selector: 'button' });
+
+  fireEvent.change(keyInput, { target: { value: newLabelKey } });
+  fireEvent.change(valueInput, {
+    target: { value: newLabelValue },
+  });
+
+  expect(saveButton.disabled).toBeFalsy();
+
+  fireEvent.click(saveButton);
+
+  expect(await findByText(newLabelKey)).toBeInTheDocument();
+  expect(getByText(newLabelValue)).toBeInTheDocument();
 });
