@@ -30,7 +30,7 @@ const makeEndpoints = () => {
 
 const makeFeatureFlags = () => {
   const defaults = {
-    FEATURE_CLUSTER_LABELS_V0: false,
+    FEATURE_CLUSTER_LABELS_V0: true,
     FEATURE_HA_MASTERS: false,
   };
 
