@@ -32,11 +32,13 @@ module.exports = merge(common, {
       chunkFilename: 'assets/[id].[chunkhash:12].css',
     }),
     // Momentary solution until we do code splitting
-    new CopyPlugin([
-      { from: 'src/metadata.json', to: 'metadata.json' },
-      { from: 'src/images', to: 'images' },
-      { from: 'src/vendor/modernizr.js', to: 'vendor/modernizr.js' },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/metadata.json', to: 'metadata.json' },
+        { from: 'src/images', to: 'images' },
+        { from: 'src/vendor/modernizr.js', to: 'vendor/modernizr.js' },
+      ],
+    }),
   ],
   module: {
     rules: [
