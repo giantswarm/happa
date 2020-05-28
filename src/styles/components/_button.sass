@@ -19,7 +19,7 @@ button, .button
 
 button.primary, .btn-primary
   background-color: #2d9a2c
-  border: 0px
+  border: 1px #2d9a2c solid
 
 .btn-link
   color: #ccc
@@ -32,21 +32,25 @@ button.primary, .btn-primary
 
 button.primary:hover, .btn-primary:hover
   background-color: lighten(#2d9a2c, 5%)
+  border-color: lighten(#2d9a2c, 5%)
 
 button:hover
   background-color: lighten(#52728a, 5%)
 
 button.primary:active, .btn-primary:active:focus
   background-color: darken(#2d9a2c, 5%)
+  border-color: darken(#2d9a2c, 5%)
 
 button.primary:focus, .btn-primary:focus
   background-color: darken(#2d9a2c, 5%)
+  border-color: darken(#2d9a2c, 5%)
 
 button:active, button:active:focus
   background-color: darken(#52728a, 5%)
 
 button:disabled:hover, button:disabled
   background-color: #aaa
+  border-color: #aaa
 
 .open
   >button.outline.dropdown-toggle.btn-default
