@@ -6,7 +6,7 @@ import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { NavLink } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import _ from 'underscore';
+import { sortBy } from 'underscore';
 
 const Wrapper = styled.div`
   display: inline;
@@ -170,7 +170,7 @@ class OrganizationDropdown extends React.Component {
             </MenuItem>
             <MenuItem divider />
             <MenuItem header>Switch Organization</MenuItem>
-            {_.sortBy(this.props.organizations.items, 'id').map((org) => {
+            {sortBy(this.props.organizations.items, 'id').map((org) => {
               return (
                 <MenuItem
                   eventKey={org.id}

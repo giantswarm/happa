@@ -20,36 +20,26 @@ export const V5_CLUSTER = {
 
 /***** Helper functions *****/
 export const getMockCall = (endpoint, response = []) =>
-  nock(API_ENDPOINT)
-    .get(endpoint)
-    .reply(StatusCodes.Ok, response);
+  nock(API_ENDPOINT).get(endpoint).reply(StatusCodes.Ok, response);
 
 export const getMockCallTimes = (endpoint, response = [], times = 1) =>
-  nock(API_ENDPOINT)
-    .get(endpoint)
-    .times(times)
-    .reply(StatusCodes.Ok, response);
+  nock(API_ENDPOINT).get(endpoint).times(times).reply(StatusCodes.Ok, response);
 
 export const getPersistedMockCall = (endpoint, response = []) =>
-  nock(API_ENDPOINT)
-    .persist()
-    .get(endpoint)
-    .reply(StatusCodes.Ok, response);
+  nock(API_ENDPOINT).persist().get(endpoint).reply(StatusCodes.Ok, response);
 
 export const postMockCall = (endpoint, response = []) =>
-  nock(API_ENDPOINT)
-    .post(endpoint)
-    .reply(StatusCodes.Ok, response);
+  nock(API_ENDPOINT).post(endpoint).reply(StatusCodes.Ok, response);
 
 export const postPayloadMockCall = (
   endpoint,
   payload = {},
   response = [],
   statusCode = StatusCodes.Ok
-) =>
-  nock(API_ENDPOINT)
-    .post(endpoint, payload)
-    .reply(statusCode, response);
+) => nock(API_ENDPOINT).post(endpoint, payload).reply(statusCode, response);
+
+export const mockCall = (method, endpoint, response = []) =>
+  nock(API_ENDPOINT)[method](endpoint).reply(StatusCodes.Ok, response);
 
 // https://gist.github.com/6174/6062387#gistcomment-2651745
 /* eslint-disable no-magic-numbers */

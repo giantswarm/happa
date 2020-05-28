@@ -1,6 +1,7 @@
 import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
 import catalogs from 'stores/appcatalog/reducer';
+import clusterLabels from 'stores/clusterlabels/reducer';
 
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
@@ -18,13 +19,14 @@ import users from './userReducer';
 
 const entities = combineReducers({
   catalogs,
+  clusterLabels,
   clusters,
   credentials,
   invitations,
+  nodePools,
   organizations,
   releases,
   users,
-  nodePools,
 });
 
 const rootReducer = (history) =>
