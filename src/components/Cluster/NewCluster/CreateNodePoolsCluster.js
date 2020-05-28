@@ -225,7 +225,7 @@ class CreateNodePoolsCluster extends Component {
       nodePools: { 1: defaultNodePool(1) },
     },
     masterNodes: {
-      isHighAvailability: false,
+      isHighAvailability: true,
     },
   };
 
