@@ -127,6 +127,7 @@ export const v5ClustersResponse = [
     release_version: V5_CLUSTER.releaseVersion,
     labels: {
       ding: 'dong',
+      'giantswarm.io/hidden-label': 'ok',
     },
   },
 ];
@@ -157,5 +158,6 @@ export const v5ClusterResponse = {
   ],
   labels: {
     ding: 'dong',
+    'giantswarm.io/hidden-label': 'ok',
   },
 };

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { FC, useRef, useState } from 'react';
+import React, { ComponentPropsWithoutRef, FC, useRef, useState } from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import StyledDeleteButton from 'UI/ClusterLabels/DeleteLabelButton';
 import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
 
-interface IDeleteLabelButton {
+interface IDeleteLabelButton extends ComponentPropsWithoutRef<'button'> {
   onDelete(): void;
   onOpen(isOpen: boolean): void;
 
@@ -30,10 +30,16 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
   onDelete,
   onOpen,
   allowInteraction,
+  ...restProps
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const divElement = useRef<HTMLDivElement>(null);
+
+  const close = () => {
+    setIsOpen(false);
+    onOpen(isOpen);
+  };
 
   return (
     <DeleteLabelButtonWrapper ref={divElement}>
@@ -43,6 +49,7 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
           setIsOpen(true);
           onOpen(isOpen);
         }}
+        {...restProps}
       >
         &times;
       </StyledDeleteButton>
@@ -53,19 +60,19 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
         shouldUpdatePosition={true}
         animation={false}
       >
-        <EditValueTooltip>
+        <EditValueTooltip id='delete-label'>
           <DeleteLabelTooltipInner>
             <span>Are you sure you want to delete this label?</span>
-            <Button bsStyle='danger' onClick={onDelete}>
-              Delete
-            </Button>
             <Button
-              bsStyle='link'
+              bsStyle='danger'
               onClick={() => {
-                setIsOpen(false);
-                onOpen(isOpen);
+                close();
+                onDelete();
               }}
             >
+              Delete
+            </Button>
+            <Button bsStyle='link' onClick={close}>
               Cancel
             </Button>
           </DeleteLabelTooltipInner>

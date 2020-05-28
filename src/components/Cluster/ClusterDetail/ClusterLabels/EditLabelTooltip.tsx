@@ -10,28 +10,42 @@ import ValidityStyledInputElement from 'UI/ClusterLabels/ValidityStyledInputElem
 import ValueLabel from 'UI/ClusterLabels/ValueLabel';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
-interface ILabel {
-  key: string;
-  value: string;
-}
-
 interface IEditLabelTooltip {
   label: string;
   onOpen(isOpen: boolean): void;
-  onSave(label: ILabel): void;
+  onSave(change: ILabelChange): void;
   value: string;
 
   allowInteraction?: boolean;
 }
 
-const TempLabelWrapper = styled.div`
+const EditLabelTooltipWrapper = styled.div`
   display: inline-block;
 `;
 
-const InputWrapper = styled.div`
+const FormWrapper = styled.div`
+  display: grid;
+  margin: 5px 0 0 5px;
+  grid-template: 'keylabel valuelabel .' 'keyinput valueinput buttons';
+  grid-template-columns: 1fr 1fr 1fr;
+`;
+
+const GridCell = styled.div`
   display: flex;
   align-items: center;
-  margin: 10px 0 0 5px;
+`;
+
+const KeyInputWrapper = styled(GridCell)`
+  grid-area: keyinput;
+  padding-right: 4px;
+`;
+
+const ValueInputWrapper = styled(GridCell)`
+  grid-area: valueinput;
+`;
+
+const Buttons = styled(GridCell)`
+  grid-area: buttons;
 `;
 
 const KeyInput = styled(ValidityStyledInputElement)`
@@ -39,13 +53,25 @@ const KeyInput = styled(ValidityStyledInputElement)`
 `;
 
 const ValueInput = styled(ValidityStyledInputElement)`
-  margin: 0 10px 0 4px;
+  margin: 0 10px 0 0;
 `;
 
 const AddLabelButton = styled(Button)`
   padding: 6px 8px;
   font-size: 12px;
   line-height: 12px;
+`;
+
+const KeyInputLabel = styled.label`
+  grid-area: keylabel;
+  font-weight: 300;
+  margin: 0 0 0 4px;
+  text-align: left;
+  color: ${({ theme }) => theme.colors.white2};
+`;
+
+const ValueInputLabel = styled(KeyInputLabel)`
+  grid-area: valuelabel;
 `;
 
 const Editable = styled.span<{ allowInteraction?: boolean }>`
@@ -113,11 +139,12 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   };
 
   return (
-    <TempLabelWrapper ref={divElement}>
+    <EditLabelTooltipWrapper ref={divElement}>
       {label === '' ? (
         <AddLabelButton
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
+          data-testid='add-label-button'
         >
           Add
         </AddLabelButton>
@@ -140,37 +167,49 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
         animation={false}
       >
         <EditValueTooltip id='add-label-tooltip'>
-          <InputWrapper>
-            <KeyInput
-              type='text'
-              onChange={({ target: { value: newRawValue } }) =>
-                setInternalKeyValue(newRawValue)
-              }
-              value={internalKeyValue}
-              isValid={keyIsValid}
-              onKeyUp={keyHandler}
-            />
-            :
-            <ValueInput
-              type='text'
-              onChange={({ target: { value: newRawValue } }) =>
-                setInternalValueValue(newRawValue)
-              }
-              value={internalValueValue}
-              isValid={valueIsValid}
-              onKeyUp={keyHandler}
-            />
-            <Button
-              bsStyle='success'
-              disabled={!keyIsValid || !valueIsValid}
-              onClick={save}
-            >
-              Save
-            </Button>
-            <Button bsStyle='link' onClick={onClose}>
-              Cancel
-            </Button>
-          </InputWrapper>
+          <FormWrapper>
+            <KeyInputLabel htmlFor='label-key-input'>Label key:</KeyInputLabel>
+            <KeyInputWrapper>
+              <KeyInput
+                type='text'
+                onChange={({ target: { value: newRawValue } }) =>
+                  setInternalKeyValue(newRawValue)
+                }
+                value={internalKeyValue}
+                isValid={keyIsValid}
+                onKeyUp={keyHandler}
+                id='label-key-input'
+              />
+              :
+            </KeyInputWrapper>
+            <ValueInputLabel htmlFor='label-value-input'>
+              Label value:
+            </ValueInputLabel>
+            <ValueInputWrapper>
+              <ValueInput
+                type='text'
+                onChange={({ target: { value: newRawValue } }) =>
+                  setInternalValueValue(newRawValue)
+                }
+                value={internalValueValue}
+                isValid={valueIsValid}
+                onKeyUp={keyHandler}
+                id='label-value-input'
+              />
+            </ValueInputWrapper>
+            <Buttons>
+              <Button
+                bsStyle='success'
+                disabled={!keyIsValid || !valueIsValid}
+                onClick={save}
+              >
+                Save
+              </Button>
+              <Button bsStyle='link' onClick={onClose}>
+                Cancel
+              </Button>
+            </Buttons>
+          </FormWrapper>
           <ValidationError isValid={keyIsValid && valueIsValid}>
             {[keyValidationError, valueValidationError]
               .filter((err) => err)
@@ -178,7 +217,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           </ValidationError>
         </EditValueTooltip>
       </Overlay>
-    </TempLabelWrapper>
+    </EditLabelTooltipWrapper>
   );
 };
 
