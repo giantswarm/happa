@@ -460,6 +460,7 @@ class V5ClusterDetailTable extends React.Component {
           <MasterNodesRow
             isHA={master_nodes.high_availability}
             availabilityZones={master_nodes.availability_zones}
+            supportsReadyNodes={cluster.capabilities.supportsHAMasters}
             numOfReadyNodes={master_nodes.num_ready}
             onConvert={this.enableHAMasters}
             canBeConverted={

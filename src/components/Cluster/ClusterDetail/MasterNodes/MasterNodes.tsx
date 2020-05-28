@@ -27,6 +27,7 @@ interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
   isHA?: boolean;
   canBeConverted?: boolean;
   availabilityZones?: string[] | null;
+  supportsReadyNodes?: boolean;
   numOfReadyNodes?: number | null;
   numOfMaxHANodes?: number;
   onConvert?: () => Promise<void>;
@@ -36,6 +37,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   isHA,
   canBeConverted,
   availabilityZones,
+  supportsReadyNodes,
   numOfReadyNodes,
   numOfMaxHANodes,
   onConvert,
@@ -108,6 +110,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           <MasterNodesInfo
             canBeConverted={canBeConverted}
             availabilityZones={azs}
+            supportsReadyNodes={supportsReadyNodes}
             numOfReadyNodes={numOfReadyNodes}
             maxNumOfNodes={maxNumOfNodes}
             onConvert={() => setIsConverting(true)}
@@ -122,6 +125,7 @@ MasterNodes.propTypes = {
   isHA: PropTypes.bool,
   canBeConverted: PropTypes.bool,
   availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
+  supportsReadyNodes: PropTypes.bool,
   numOfReadyNodes: PropTypes.number,
   numOfMaxHANodes: PropTypes.number,
   onConvert: PropTypes.func,
@@ -131,6 +135,7 @@ MasterNodes.defaultProps = {
   isHA: false,
   canBeConverted: false,
   availabilityZones: [],
+  supportsReadyNodes: false,
   numOfReadyNodes: null,
   numOfMaxHANodes: Constants.AWS_HA_MASTERS_MAX_NODES,
 };

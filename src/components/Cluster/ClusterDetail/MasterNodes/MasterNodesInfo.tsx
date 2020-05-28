@@ -15,8 +15,11 @@ const Group = styled.span`
 `;
 
 const AZGroup = styled(Group)`
-  margin-left: 0.4rem;
   flex-shrink: 0;
+
+  * + & {
+    margin-left: 0.4rem;
+  }
 `;
 
 const ConvertButton = styled(Button)`
@@ -33,6 +36,7 @@ interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
   canBeConverted?: boolean;
   availabilityZones?: string[];
   numOfReadyNodes?: number | null;
+  supportsReadyNodes?: boolean;
   maxNumOfNodes?: number;
   onConvert?: () => void;
 }
@@ -40,8 +44,9 @@ interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
 const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
   canBeConverted,
   availabilityZones,
-  maxNumOfNodes,
+  supportsReadyNodes,
   numOfReadyNodes,
+  maxNumOfNodes,
   onConvert,
   ...rest
 }) => {
@@ -64,8 +69,13 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
 
   return (
     <div {...rest}>
-      <Group>{readinessLabel}</Group>
-      <Group>&#183;</Group>
+      {supportsReadyNodes && (
+        <>
+          <Group>{readinessLabel}</Group>
+          <Group>&#183;</Group>
+        </>
+      )}
+
       <AZGroup>
         <AZLabel>{azLabel}</AZLabel>
         <AvailabilityZonesLabels zones={availabilityZones} labelsChecked={[]} />
@@ -85,6 +95,7 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
 MasterNodesInfo.propTypes = {
   canBeConverted: PropTypes.bool,
   availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
+  supportsReadyNodes: PropTypes.bool,
   numOfReadyNodes: PropTypes.number,
   maxNumOfNodes: PropTypes.number,
   onConvert: PropTypes.func,
@@ -93,6 +104,7 @@ MasterNodesInfo.propTypes = {
 MasterNodesInfo.defaultProps = {
   canBeConverted: false,
   availabilityZones: [],
+  supportsReadyNodes: false,
   numOfReadyNodes: null,
   maxNumOfNodes: 0,
 };
