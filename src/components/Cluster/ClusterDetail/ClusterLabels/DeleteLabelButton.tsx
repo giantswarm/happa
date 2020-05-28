@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { FC, useRef, useState } from 'react';
+import React, { ComponentPropsWithoutRef, FC, useRef, useState } from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import StyledDeleteButton from 'UI/ClusterLabels/DeleteLabelButton';
 import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
 
-interface IDeleteLabelButton {
+interface IDeleteLabelButton extends ComponentPropsWithoutRef<'button'> {
   onDelete(): void;
   onOpen(isOpen: boolean): void;
 
@@ -69,7 +69,6 @@ const DeleteLabelButton: FC<IDeleteLabelButton> = ({
                 close();
                 onDelete();
               }}
-              data-testid='delete-label-button'
             >
               Delete
             </Button>

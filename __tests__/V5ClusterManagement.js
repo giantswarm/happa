@@ -490,14 +490,16 @@ it('allows to delete cluster labels', async () => {
       clusterId: V5_CLUSTER.id,
     }
   );
-  const { findByText, findByTestId } = renderRouteWithStore(clusterDetailPath);
+  const visibleLabels = Object.entries(filterLabels(v5ClusterResponse.labels));
+
+  const { findByText, getByRole } = renderRouteWithStore(clusterDetailPath);
 
   await findByText('Labels:');
 
-  const visibleLabels = Object.entries(filterLabels(v5ClusterResponse.labels));
-
-  fireEvent.click(await findByTestId(`delete-${visibleLabels[0][0]}`));
-  fireEvent.click(await findByTestId('delete-label-button'));
+  fireEvent.click(
+    getByRole('button', { name: `Delete '${visibleLabels[0][0]}' label` })
+  );
+  fireEvent.click(await findByText('Delete', { selector: 'button' }));
 
   await findByText(/This cluster has no labels./);
 });
@@ -510,14 +512,19 @@ it('disallows to add invalid cluster labels', async () => {
       clusterId: V5_CLUSTER.id,
     }
   );
-  const { findByText, findByTestId } = renderRouteWithStore(clusterDetailPath);
+  const {
+    findByLabelText,
+    findByText,
+    getByLabelText,
+    getByText,
+  } = renderRouteWithStore(clusterDetailPath);
 
   await findByText('Labels:');
-  fireEvent.click(await findByTestId('add-label-button'));
+  fireEvent.click(getByText('Add', { selector: 'button ' }));
 
-  const keyInput = await findByTestId('label-key-input');
-  const valueInput = await findByTestId('label-value-input');
-  const saveButton = await findByTestId('save-label-button');
+  const keyInput = await findByLabelText('Label key:');
+  const valueInput = getByLabelText('Label value:');
+  const saveButton = getByText('Save', { selector: 'button' });
 
   fireEvent.change(keyInput, { target: { value: '.invalid.' } });
   fireEvent.change(valueInput, { target: { value: 'valid' } });
@@ -552,14 +559,19 @@ it('allows to add cluster labels', async () => {
       clusterId: V5_CLUSTER.id,
     }
   );
-  const { findByText, findByTestId } = renderRouteWithStore(clusterDetailPath);
+  const {
+    findByLabelText,
+    findByText,
+    getByLabelText,
+    getByText,
+  } = renderRouteWithStore(clusterDetailPath);
 
   await findByText('Labels:');
-  fireEvent.click(await findByTestId('add-label-button'));
+  fireEvent.click(getByText('Add', { selector: 'button ' }));
 
-  const keyInput = await findByTestId('label-key-input');
-  const valueInput = await findByTestId('label-value-input');
-  const saveButton = await findByTestId('save-label-button');
+  const keyInput = await findByLabelText('Label key:');
+  const valueInput = getByLabelText('Label value:');
+  const saveButton = getByText('Save', { selector: 'button' });
 
   fireEvent.change(keyInput, { target: { value: newLabelKey } });
   fireEvent.change(valueInput, {
@@ -570,6 +582,6 @@ it('allows to add cluster labels', async () => {
 
   fireEvent.click(saveButton);
 
-  await findByText(newLabelKey);
-  await findByText(newLabelValue);
+  expect(await findByText(newLabelKey)).toBeInTheDocument();
+  expect(getByText(newLabelValue)).toBeInTheDocument();
 });

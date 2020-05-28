@@ -108,7 +108,8 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
                   onDelete={() => {
                     save({ key: label, value: null });
                   }}
-                  data-testid={`delete-${label}`}
+                  role='button'
+                  aria-label={`Delete '${label}' label`}
                 >
                   &times;
                 </DeleteLabelButton>
