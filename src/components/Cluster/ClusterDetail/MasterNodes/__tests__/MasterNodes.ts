@@ -18,6 +18,7 @@ describe('MasterNodes', () => {
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
+      supportsReadyNodes: true,
     });
 
     expect(screen.getByText(/ready/i)).toBeInTheDocument();
@@ -34,6 +35,7 @@ describe('MasterNodes', () => {
       availabilityZones: ['b', 'c', 'd'],
       numOfReadyNodes: 3,
       numOfMaxHANodes: 3,
+      supportsReadyNodes: true,
     });
 
     expect(screen.getByText(/all 3 master nodes ready/i)).toBeInTheDocument();
@@ -49,6 +51,7 @@ describe('MasterNodes', () => {
       availabilityZones: null,
       numOfReadyNodes: 3,
       numOfMaxHANodes: 3,
+      supportsReadyNodes: true,
     });
 
     expect(screen.getByText(/all 3 master nodes ready/i)).toBeInTheDocument();
@@ -66,6 +69,7 @@ describe('MasterNodes', () => {
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
+      supportsReadyNodes: true,
       onConvert: handleConvertToHAMock,
     });
 
@@ -95,6 +99,7 @@ describe('MasterNodes', () => {
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
+      supportsReadyNodes: true,
       onConvert: handleConvertToHAMock,
     });
 
@@ -120,6 +125,7 @@ describe('MasterNodes', () => {
       availabilityZones: ['b'],
       numOfReadyNodes: 1,
       numOfMaxHANodes: 1,
+      supportsReadyNodes: true,
     });
 
     expect(
@@ -135,6 +141,7 @@ describe('MasterNodes', () => {
       availabilityZones: visibleAZs,
       numOfReadyNodes: 4,
       numOfMaxHANodes: 4,
+      supportsReadyNodes: true,
     });
 
     const azLabel = screen.getByText(/availability zones/i);
@@ -147,5 +154,16 @@ describe('MasterNodes', () => {
     }
 
     expect(azs).toStrictEqual(visibleAZs);
+  });
+
+  it('hides the master node count if HA masters are not supported', () => {
+    renderWithTheme(MasterNodes, {
+      isHA: false,
+      availabilityZones: ['b'],
+      numOfMaxHANodes: 1,
+      supportsReadyNodes: false,
+    });
+
+    expect(screen.queryByText(/No status info/i)).not.toBeInTheDocument();
   });
 });
