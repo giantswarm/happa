@@ -54,7 +54,10 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   }, []);
 
   // Account for nil slices in the server code.
-  const azs: string[] = availabilityZones || [];
+  let azs: string[] = availabilityZones || [];
+  if (azs.length > 0) {
+    azs = azs.sort();
+  }
 
   const maxNumOfNodes: number = isHA ? (numOfMaxHANodes as number) : 1;
 
