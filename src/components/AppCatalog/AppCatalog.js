@@ -8,7 +8,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 
 import Detail from './AppDetail/AppDetail';
 import AppList from './AppList/AppList';
-import Catalogs from './CatalogList/CatalogList';
+import CatalogList from './CatalogList/CatalogList';
 
 class AppCatalog extends React.Component {
   catalogLoadIndex = (catalog) => {
@@ -42,7 +42,7 @@ class AppCatalog extends React.Component {
             <Route
               path={AppCatalogRoutes.Home}
               render={() => (
-                <Catalogs
+                <CatalogList
                   {...this.props}
                   catalogLoadIndex={this.catalogLoadIndex}
                 />
@@ -65,6 +65,7 @@ AppCatalog.propTypes = {
 function mapStateToProps(state) {
   return {
     catalogs: state.entities.catalogs,
+    isAdmin: state.main.loggedInUser.isAdmin,
   };
 }
 

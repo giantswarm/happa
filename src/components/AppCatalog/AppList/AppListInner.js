@@ -1,12 +1,20 @@
+import styled from '@emotion/styled';
 import { replace } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import { memoize } from 'underscore';
 
 import AppListItems from './AppListItems';
 import AppListSearch from './AppListSearch';
 
 const SEARCH_URL_PARAM = 'q';
+
+const StyledCatalogTypeLabel = styled(CatalogTypeLabel)`
+  position: relative;
+  top: -4px;
+  margin-left: 10px;
+`;
 
 class AppListInner extends React.Component {
   static filterApps(searchQuery, allApps) {
@@ -114,6 +122,13 @@ class AppListInner extends React.Component {
       <>
         <h1>
           {catalog.spec.title}
+
+          <StyledCatalogTypeLabel
+            catalogType={
+              catalog.metadata.labels['application.giantswarm.io/catalog-type']
+            }
+          />
+
           <AppListSearch
             value={searchQuery}
             onChange={this.updateSearchParams}
