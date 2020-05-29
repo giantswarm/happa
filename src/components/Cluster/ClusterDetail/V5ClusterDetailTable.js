@@ -456,7 +456,7 @@ class V5ClusterDetailTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
 
-        {master_nodes && (
+        {FeatureFlags.FEATURE_HA_MASTERS && master_nodes && (
           <MasterNodesRow
             isHA={master_nodes.high_availability}
             availabilityZones={master_nodes.availability_zones}
