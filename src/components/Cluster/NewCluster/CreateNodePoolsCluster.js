@@ -100,7 +100,7 @@ export const FlexColumnDiv = styled.div`
   }
 `;
 
-const FlexRowDiv = styled.div`
+export const FlexRowDiv = styled.div`
   display: flex;
   margin: 0 auto 23px;
   max-width: 650px;

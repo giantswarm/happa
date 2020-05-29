@@ -11,7 +11,7 @@ const ClusterCreationDuration = (props) => {
     submitted.`
       : `Clusters usually take between 10 and 30 minutes to come up.`;
 
-  return <p style={{ marginTop: '23px' }}>{message}</p>;
+  return <p>{message}</p>;
 };
 
 ClusterCreationDuration.propTypes = {

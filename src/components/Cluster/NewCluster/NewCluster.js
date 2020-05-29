@@ -1,4 +1,5 @@
 import { loadReleases } from 'actions/releaseActions';
+import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -7,7 +8,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
-import { OrganizationsRoutes } from 'shared/constants/routes';
+import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import { computeCapabilities } from 'utils/clusterUtils';
 
@@ -111,6 +112,10 @@ class NewCluster extends React.Component {
       this.props.provider
     );
 
+    const closeForm = () => {
+      this.props.dispatch(push(AppRoutes.Home));
+    };
+
     return (
       <Component
         {...props}
@@ -123,6 +128,7 @@ class NewCluster extends React.Component {
         clusterName={this.state.clusterName}
         updateClusterNameInParent={this.updateClusterName}
         capabilities={capabilities}
+        closeForm={closeForm}
       />
     );
   };
