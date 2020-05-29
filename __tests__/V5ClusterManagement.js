@@ -499,6 +499,11 @@ scales node pools correctly`, async () => {
   it('can convert a cluster to HA masters', async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
       release_version: '11.5.0',
+      master_nodes: {
+        high_availability: false,
+        availability_zones: ['b'],
+        num_ready: 1,
+      },
     });
     getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, clusterResponse);
 
