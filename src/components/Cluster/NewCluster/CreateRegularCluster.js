@@ -19,7 +19,7 @@ import NumberPicker from 'UI/NumberPicker';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
 import ClusterCreationDuration from './ClusterCreationDuration';
-import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
+import { FlexColumnDiv, FlexRowDiv, Wrapper } from './CreateNodePoolsCluster';
 import ProviderCredentials from './ProviderCredentials';
 import ReleaseSelector from './ReleaseSelector';
 import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
@@ -581,7 +581,7 @@ class CreateRegularCluster extends React.Component {
 
             <hr style={{ margin: '37px 0 31px' }} />
 
-            <FlexColumnDiv style={{ marginBottom: '23px' }}>
+            <FlexRowDiv>
               <ErrorFallbackStyled error={noReleasesErrorText} />
               <ErrorFallback error={this.props.clusterCreateError}>
                 <Button
@@ -595,6 +595,19 @@ class CreateRegularCluster extends React.Component {
                   Create Cluster
                 </Button>
               </ErrorFallback>
+              {!this.state.submitting && (
+                <Button
+                  bsSize='large'
+                  bsStyle='default'
+                  loading={this.state.submitting}
+                  onClick={this.props.closeForm}
+                  type='button'
+                >
+                  Cancel
+                </Button>
+              )}
+            </FlexRowDiv>
+            <FlexColumnDiv>
               <ClusterCreationDuration
                 stats={this.props.clusterCreationStats}
               />
@@ -632,6 +645,7 @@ CreateRegularCluster.propTypes = {
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
   match: PropTypes.object,
+  closeForm: PropTypes.func,
   clusterCreationStats: PropTypes.object,
   informParent: PropTypes.func,
   selectableReleases: PropTypes.array,
