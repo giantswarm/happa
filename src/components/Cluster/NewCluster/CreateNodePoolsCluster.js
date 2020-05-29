@@ -2,6 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
+import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
@@ -52,7 +53,6 @@ export const FlexColumnDiv = styled.div`
   flex-direction: column;
   margin: 0 auto;
   max-width: 650px;
-
   label:not(.skip-format) {
     display: flex;
     justify-content: space-between;
@@ -65,7 +65,6 @@ export const FlexColumnDiv = styled.div`
       line-height: 1.4;
     }
   }
-
   .label-span {
     color: ${(props) => props.theme.colors.white1};
   }
@@ -76,7 +75,6 @@ export const FlexColumnDiv = styled.div`
     margin-bottom: 13px;
     font-weight: 400;
   }
-
   input:not(.skip-format) {
     box-sizing: border-box;
     width: 100%;
@@ -88,7 +86,6 @@ export const FlexColumnDiv = styled.div`
     border: ${({ theme }) => theme.border};
     line-height: normal;
   }
-
   p {
     margin: 0;
     font-size: 14px;
@@ -223,6 +220,9 @@ class CreateNodePoolsCluster extends Component {
       // one object for each np form inside this array
       nodePools: { 1: defaultNodePool(1) },
     },
+    masterNodes: {
+      isHighAvailability: true,
+    },
   };
 
   clusterNameInput = React.createRef();
@@ -301,6 +301,12 @@ class CreateNodePoolsCluster extends Component {
       };
     }
 
+    if (this.props.capabilities.supportsHAMasters) {
+      createPayload.master_nodes = {
+        high_availability: this.state.masterNodes.isHighAvailability,
+      };
+    }
+
     await this.props.dispatch(
       batchedClusterCreate(
         createPayload,
@@ -331,6 +337,17 @@ class CreateNodePoolsCluster extends Component {
     );
   };
 
+  updateMasterNodesHighAvailability = (isHA) => {
+    this.setState((prevState) => {
+      return {
+        masterNodes: {
+          ...prevState.masterNodes,
+          isHighAvailability: isHA,
+        },
+      };
+    });
+  };
+
   removeNodePoolForm = (id) => {
     this.setState(
       produce((draft) => {
@@ -348,7 +365,7 @@ class CreateNodePoolsCluster extends Component {
   };
 
   render() {
-    const { hasAZLabels, name, submitting } = this.state;
+    const { hasAZLabels, name, submitting, masterNodes } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { nodePools } = this.state.nodePoolsForms;
     const { minAZ, maxAZ, defaultAZ } = this.props;
@@ -395,32 +412,40 @@ class CreateNodePoolsCluster extends Component {
                     />
                   </div>
                 </label>
-                {/* Master Node AZ */}
-                <span className='label-span'>
-                  Master node availability zones selection
-                </span>
-                <div>
-                  <InputGroup>
-                    <RadioInput
-                      id='automatic'
-                      checked={!hasAZLabels}
-                      label='Automatic'
-                      onChange={() => this.toggleMasterAZSelector(false)}
-                      rootProps={{ className: 'skip-format' }}
-                      className='skip-format'
-                    />
-                  </InputGroup>
-                  <InputGroup>
-                    <RadioInput
-                      id='manual'
-                      checked={hasAZLabels}
-                      label='Manual'
-                      onChange={() => this.toggleMasterAZSelector(true)}
-                      rootProps={{ className: 'skip-format' }}
-                      className='skip-format'
-                    />
-                  </InputGroup>
-                </div>
+                {this.props.capabilities.supportsHAMasters ? (
+                  <MasterNodes
+                    isHighAvailability={masterNodes.isHighAvailability}
+                    onChange={this.updateMasterNodesHighAvailability}
+                  />
+                ) : (
+                  <>
+                    <span className='label-span'>
+                      Master node availability zones selection
+                    </span>
+                    <div>
+                      <InputGroup>
+                        <RadioInput
+                          id='automatic'
+                          checked={!hasAZLabels}
+                          label='Automatic'
+                          onChange={() => this.toggleMasterAZSelector(false)}
+                          rootProps={{ className: 'skip-format' }}
+                          className='skip-format'
+                        />
+                      </InputGroup>
+                      <InputGroup>
+                        <RadioInput
+                          id='manual'
+                          checked={hasAZLabels}
+                          label='Manual'
+                          onChange={() => this.toggleMasterAZSelector(true)}
+                          rootProps={{ className: 'skip-format' }}
+                          className='skip-format'
+                        />
+                      </InputGroup>
+                    </div>
+                  </>
+                )}
 
                 <AZWrapperDiv>
                   {hasAZLabels && (
@@ -545,6 +570,7 @@ CreateNodePoolsCluster.propTypes = {
   clusterName: PropTypes.string,
   updateClusterNameInParent: PropTypes.func,
   clusterCreateError: PropTypes.string,
+  capabilities: PropTypes.object,
 };
 
 function mapStateToProps(state) {
