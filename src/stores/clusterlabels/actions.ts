@@ -16,9 +16,16 @@ export const updateClusterLabels = createAsynchronousAction<
   actionTypePrefix: 'UPDATE_CLUSTER_LABELS',
   perform: async (_, payload) => {
     if (payload) {
+      const labelsPayload = {
+        [payload.key]: payload.value,
+      };
+      if (payload.replaceLabelWithKey) {
+        labelsPayload[payload.replaceLabelWithKey] = null;
+      }
+
       const api = new GiantSwarm.ClusterLabelsApi();
       const resp = await api.setClusterLabels(payload.clusterId, {
-        labels: { [payload.key]: payload.value },
+        labels: labelsPayload,
       });
 
       return {
