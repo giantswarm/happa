@@ -137,6 +137,10 @@ export const v5ClusterResponse = {
   create_date: clusterCreateDateToday,
   id: V5_CLUSTER.id,
   master: { availability_zone: 'eu-central-1a' },
+  master_nodes: {
+    high_availability: false,
+    availability_zones: ['b'],
+  },
   name: V5_CLUSTER.name,
   owner: ORGANIZATION,
   release_version: V5_CLUSTER.releaseVersion,
