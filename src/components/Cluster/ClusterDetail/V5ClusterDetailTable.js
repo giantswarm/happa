@@ -1,7 +1,9 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
+import * as clusterActions from 'actions/clusterActions';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -147,7 +149,7 @@ export const AddNodePoolWrapper = (props) => css`
 `;
 
 const AddNodePoolWrapperDiv = styled.div`
-  ${AddNodePoolWrapper}
+  ${AddNodePoolWrapper};
   padding: 20px 20px 40px;
 `;
 
@@ -293,30 +295,24 @@ export const CopyToClipboardDiv = styled.div`
 
 const KubernetesURIWrapper = styled(FlexRowWithTwoBlocksOnEdges)`
   flex-wrap: wrap;
-
   .progress_button--container {
     margin-right: 0;
   }
-
   & > div:nth-of-type(1) {
     margin-right: 0;
-
     & > * {
       display: flex;
     }
   }
-
   & > div:nth-of-type(2) {
     margin-left: 0;
     margin-right: 0;
-
     ${mq(CSSBreakpoints.Large)} {
       & > * {
         margin-left: 0;
       }
     }
   }
-
   i {
     padding: 0 8px;
   }
@@ -330,6 +326,11 @@ const GetStartedWrapper = styled.div`
 
 const StyledURIBlock = styled(URIBlock)`
   flex: 1 1 auto;
+`;
+
+const MasterNodesRow = styled(MasterNodes)`
+  ${Row};
+  background-color: ${({ theme }) => theme.colors.foreground};
 `;
 
 const LabelsRow = styled(ClusterLabels)`
@@ -384,6 +385,20 @@ class V5ClusterDetailTable extends React.Component {
     );
   };
 
+  patchCluster(payload) {
+    return this.props.dispatch(
+      clusterActions.clusterPatch(this.props.cluster, payload, true)
+    );
+  }
+
+  enableHAMasters = () => {
+    return this.patchCluster({
+      master_nodes: {
+        high_availability: true,
+      },
+    });
+  };
+
   render() {
     const { nodePoolForm } = this.state;
     const {
@@ -399,7 +414,13 @@ class V5ClusterDetailTable extends React.Component {
       loadingNodePools,
     } = this.props;
 
-    const { create_date, release_version, api_endpoint, labels } = cluster;
+    const {
+      create_date,
+      release_version,
+      api_endpoint,
+      labels,
+      master_nodes,
+    } = cluster;
     const { numberOfNodes, memory, cores } = resources;
 
     const zeroNodePools = nodePools && nodePools.length === 0;
@@ -428,6 +449,21 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
+
+        {master_nodes && (
+          <MasterNodesRow
+            isHA={master_nodes.high_availability}
+            availabilityZones={master_nodes.availability_zones}
+            supportsReadyNodes={cluster.capabilities.supportsHAMasters}
+            numOfReadyNodes={master_nodes.num_ready}
+            onConvert={this.enableHAMasters}
+            canBeConverted={
+              !master_nodes.high_availability &&
+              cluster.capabilities.supportsHAMasters
+            }
+          />
+        )}
+
         {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
           <LabelsRow labels={labels} clusterId={cluster.id} />
         )}
