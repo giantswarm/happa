@@ -29,7 +29,12 @@ function ClusterDashboardResourcesV5({
     <div data-testid='cluster-resources'>
       {hasNodePools && (
         <RefreshableLabel value={numberOfNodes}>
-          <span>{cluster.nodePools.length} node pools, </span>
+          <span>
+            {cluster.nodePools.length === 1
+              ? '1 node pool'
+              : `${cluster.nodePools.length} node pools`}
+            ,{' '}
+          </span>
         </RefreshableLabel>
       )}
       <RefreshableLabel value={numberOfNodes}>
