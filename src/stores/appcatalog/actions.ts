@@ -10,17 +10,8 @@ export const listCatalogs = createAsynchronousAction<any, any, any>({
     const appsApi = new GiantSwarm.AppsApi();
     const catalogs = await appsApi.getAppCatalogs(); // Use model layer?
 
-    // Filter out 'internal' catalogs and turn it into a hash where the keys
-    // are catalog names.
+    // Turn the array response into a hash where the keys are the catalog names.
     const catalogsHash = Array.from(catalogs).reduce((agg, currCatalog) => {
-      const labels = currCatalog?.metadata?.labels;
-      const catalogType = labels?.['application.giantswarm.io/catalog-type'];
-
-      // Skip if the catalog is internal.
-      if (catalogType === 'internal') {
-        return agg;
-      }
-
       currCatalog.isFetchingIndex = false;
       agg[currCatalog.metadata.name] = currCatalog;
 
