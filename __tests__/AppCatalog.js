@@ -37,50 +37,91 @@ describe('Apps and App Catalog', () => {
   });
 
   describe('App Catalogs, Apps, Installing Apps', () => {
-    it('renders all non internal app catalogs in the app catalogs overview', async () => {
-      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-      getMockCall('/v4/user/', userResponse);
-      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-      getMockCall(
-        `/v4/clusters/${V4_CLUSTER.id}/status/`,
-        v4AWSClusterStatusResponse
-      );
-      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-      getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    describe('internal app catalogs', () => {
+      beforeEach(() => {
+        getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+        getMockCall('/v4/user/', userResponse);
+        getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+        getMockCall(
+          `/v4/clusters/${V4_CLUSTER.id}/status/`,
+          v4AWSClusterStatusResponse
+        );
+        getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+        getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
-      nock('https://catalogshost')
-        .get('/giantswarm-incubator-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-test-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/helmstable/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
-      nock('https://catalogshost')
-        .get('/giantswarm-catalog/index.yaml')
-        .reply(StatusCodes.Ok, catalogIndexResponse);
+        nock('https://catalogshost')
+          .get('/giantswarm-incubator-catalog/index.yaml')
+          .reply(StatusCodes.Ok, catalogIndexResponse);
+        nock('https://catalogshost')
+          .get('/giantswarm-test-catalog/index.yaml')
+          .reply(StatusCodes.Ok, catalogIndexResponse);
+        nock('https://catalogshost')
+          .get('/helmstable/index.yaml')
+          .reply(StatusCodes.Ok, catalogIndexResponse);
+        nock('https://catalogshost')
+          .get('/giantswarm-catalog/index.yaml')
+          .reply(StatusCodes.Ok, catalogIndexResponse);
+      });
 
-      const { findByText } = renderRouteWithStore(AppCatalogRoutes.Home);
+      it('renders all non internal app catalogs in the app catalogs overview for non admins', async () => {
+        const nonAdminUserInStorage = {
+          user:
+            '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
+        };
+        const { findByText } = renderRouteWithStore(
+          AppCatalogRoutes.Home,
+          {},
+          nonAdminUserInStorage
+        );
 
-      const introText = await findByText(
-        'Pick an App Catalog to browse all the Apps in it.'
-      );
-      expect(introText).toBeInTheDocument();
+        const introText = await findByText(
+          'Pick an App Catalog to browse all the Apps in it.'
+        );
 
-      for (const catalog of appCatalogsResponse) {
-        // Skip expectation for internal catalogs.
-        // They should not show up in Happa.
-        if (
-          catalog.metadata.labels['application.giantswarm.io/catalog-type'] ===
-          'internal'
-        ) {
-          continue;
+        expect(introText).toBeInTheDocument();
+
+        for (const catalog of appCatalogsResponse) {
+          // Skip expectation for internal catalogs.
+          // They should not show up for non-admins.
+          if (
+            catalog.metadata.labels[
+              'application.giantswarm.io/catalog-type'
+            ] === 'internal'
+          ) {
+            continue;
+          }
+
+          const catalogTitle = await findByText(catalog.spec.title);
+          expect(catalogTitle).toBeInTheDocument();
         }
+      });
 
-        const catalogTitle = await findByText(catalog.spec.title);
-        expect(catalogTitle).toBeInTheDocument();
-      }
+      it('renders all app catalogs in the app catalogs overview for admins', async () => {
+        nock('https://catalogshost')
+          .get('/giantswarm-internal-catalog/index.yaml')
+          .reply(StatusCodes.Ok, catalogIndexResponse);
+
+        const adminUserInStorage = {
+          user:
+            '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+        };
+        const { findByText } = renderRouteWithStore(
+          AppCatalogRoutes.Home,
+          {},
+          adminUserInStorage
+        );
+
+        const introText = await findByText(
+          'Pick an App Catalog to browse all the Apps in it.'
+        );
+
+        expect(introText).toBeInTheDocument();
+
+        for (const catalog of appCatalogsResponse) {
+          const catalogTitle = await findByText(catalog.spec.title);
+          expect(catalogTitle).toBeInTheDocument();
+        }
+      });
     });
 
     it('renders all apps in the app list for a given catalog', async () => {
