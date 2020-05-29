@@ -109,7 +109,14 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   };
 
   const save = () => {
-    onSave({ key: internalKeyValue, value: internalValueValue });
+    const savePayload: ILabelChange = {
+      key: internalKeyValue,
+      value: internalValueValue,
+    };
+    if (internalKeyValue !== label) {
+      savePayload.replaceLabelWithKey = label;
+    }
+    onSave(savePayload);
     onClose();
   };
 
