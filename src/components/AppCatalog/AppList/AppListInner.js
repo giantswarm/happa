@@ -14,6 +14,7 @@ const StyledCatalogTypeLabel = styled(CatalogTypeLabel)`
   position: relative;
   top: -4px;
   margin-left: 10px;
+  margin-right: 0px;
 `;
 
 class AppListInner extends React.Component {
