@@ -53,7 +53,6 @@ export const FlexColumnDiv = styled.div`
   flex-direction: column;
   margin: 0 auto;
   max-width: 650px;
-
   label:not(.skip-format) {
     display: flex;
     justify-content: space-between;
@@ -66,7 +65,6 @@ export const FlexColumnDiv = styled.div`
       line-height: 1.4;
     }
   }
-
   .label-span {
     color: ${(props) => props.theme.colors.white1};
   }
@@ -77,7 +75,6 @@ export const FlexColumnDiv = styled.div`
     margin-bottom: 13px;
     font-weight: 400;
   }
-
   input:not(.skip-format) {
     box-sizing: border-box;
     width: 100%;
@@ -89,7 +86,6 @@ export const FlexColumnDiv = styled.div`
     border: ${({ theme }) => theme.border};
     line-height: normal;
   }
-
   p {
     margin: 0;
     font-size: 14px;

@@ -27,21 +27,27 @@ const Wrapper = styled.div`
  * CatalogTypeLabel shows some information about a catalog depending on its type.
  */
 const CatalogTypeLabel = (props) => {
+  const { catalogType, className } = props;
   let icon = '';
   let message = '';
 
-  const validCatalogTypes = ['community', 'incubator', 'test'];
+  const validCatalogTypes = ['community', 'incubator', 'test', 'internal'];
 
   // Early return if we're dealing with a unknown catalog type.
-  if (!validCatalogTypes.includes(props.catalogType)) {
+  if (!validCatalogTypes.includes(catalogType)) {
     return null;
   }
 
-  switch (props.catalogType) {
+  switch (catalogType) {
+    case 'internal':
+      icon = 'eye-with-line';
+      message =
+        'Only Giant Swarm admins are able to see these catalogs. They usually contain apps for the control plane.';
+      break;
     case 'community':
       icon = 'warning';
       message =
-        'Apps from this catalog will not work on your cluster without some alterations to the security settings.';
+        'Apps from this catalog will most likely not work on your cluster without some alterations to the security settings.';
       break;
     case 'incubator':
       icon = 'info';
@@ -58,13 +64,13 @@ const CatalogTypeLabel = (props) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <OverlayTrigger
         overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
         placement='top'
       >
         <div>
-          <span>{props.catalogType}</span> <i className={`fa fa-${icon}`} />
+          <span>{catalogType}</span> <i className={`fa fa-${icon}`} />
         </div>
       </OverlayTrigger>
     </Wrapper>
@@ -73,6 +79,7 @@ const CatalogTypeLabel = (props) => {
 
 CatalogTypeLabel.propTypes = {
   catalogType: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default CatalogTypeLabel;
