@@ -129,6 +129,14 @@ class AppListInner extends React.Component {
             }
           />
 
+          <StyledCatalogTypeLabel
+            catalogType={
+              catalog.metadata.labels[
+                'application.giantswarm.io/catalog-visibility'
+              ]
+            }
+          />
+
           <AppListSearch
             value={searchQuery}
             onChange={this.updateSearchParams}

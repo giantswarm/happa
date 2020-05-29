@@ -85,7 +85,7 @@ describe('Apps and App Catalog', () => {
           // They should not show up for non-admins.
           if (
             catalog.metadata.labels[
-              'application.giantswarm.io/catalog-type'
+              'application.giantswarm.io/catalog-visibility'
             ] === 'internal'
           ) {
             continue;

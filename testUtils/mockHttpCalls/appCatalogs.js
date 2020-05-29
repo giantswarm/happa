@@ -4,7 +4,7 @@ export const appCatalogsResponse = [
       name: 'giantswarm-internal',
       labels: {
         'app-operator.giantswarm.io/version': '1.0.0',
-        'application.giantswarm.io/catalog-type': 'internal',
+        'application.giantswarm.io/catalog-visibility': 'internal',
       },
     },
     spec: {
