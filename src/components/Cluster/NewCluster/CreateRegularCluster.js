@@ -641,6 +641,7 @@ CreateRegularCluster.propTypes = {
   updateClusterNameInParent: PropTypes.func,
   clusterCreateError: PropTypes.string,
   releasesLoadError: PropTypes.string,
+  capabilities: PropTypes.object,
 };
 
 function mapStateToProps(state) {

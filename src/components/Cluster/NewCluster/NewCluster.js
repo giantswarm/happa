@@ -9,6 +9,7 @@ import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import LoadingOverlay from 'UI/LoadingOverlay';
+import { computeCapabilities } from 'utils/clusterUtils';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
@@ -105,6 +106,11 @@ class NewCluster extends React.Component {
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 
+    const capabilities = computeCapabilities(
+      this.state.selectedRelease,
+      this.props.provider
+    );
+
     return (
       <Component
         {...props}
@@ -116,6 +122,7 @@ class NewCluster extends React.Component {
         activeSortedReleases={this.props.activeSortedReleases}
         clusterName={this.state.clusterName}
         updateClusterNameInParent={this.updateClusterName}
+        capabilities={capabilities}
       />
     );
   };
