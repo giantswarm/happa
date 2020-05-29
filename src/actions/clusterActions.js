@@ -483,7 +483,7 @@ export function clusterLoadKeyPairs(clusterId) {
  *
  * @param {Object} cluster Cluster object
  * @param {Object} payload object with just the data we want to modify
- * @param {boolean} reloadCluster - Whether it should reload the cluster after it's done patching. Useful for
+ * @param {boolean} [reloadCluster=false] - Whether it should reload the cluster after it's done patching. Useful for
  * not doing optimistic updates.
  */
 export function clusterPatch(cluster, payload, reloadCluster = false) {
