@@ -106,7 +106,7 @@
     "@types/classnames": "^2.2.10",
     "@types/color-hash": "^1.0.0",
     "@types/deep-diff": "^1.0.0",
-    "@types/history": "^4.7.5",
+    "@types/history": "^4.7.6",
     "@types/jest": "^25.2.1",
     "@types/lunr": "^2.3.3",
     "@types/node": "^14.0.5",
