@@ -10302,10 +10302,10 @@ react-addons-update@15.6.2:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
 
-react-bootstrap-table-next@4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-4.0.2.tgz#d6032de8052c4d95d2364afa4a263f9dd4827344"
-  integrity sha512-s4D13KRoJQFvICfBVT8bPRj15BECHj22NQbyG0hk+Ho4NGWgU6qSODcCo0C4R0n4QqhMt33tbvzLOZfoi+99gw==
+react-bootstrap-table-next@4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-4.0.3.tgz#b55873b01adfe22a7181904b784a9d24ac2822cf"
+  integrity sha512-uKxC73qUdUfusRf2uzDfMiF9LvTG5vuhTZa0lbAgHWSLLLaKTsI0iHf1e4+c7gP71q8dFsp7StvkP65SxC1JRg==
   dependencies:
     classnames "^2.2.5"
     react-transition-group "^4.2.0"
