@@ -73,7 +73,6 @@ const MixedInstanceType = styled(Code)`
 
 interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
-  value: string;
 }
 
 interface IStateProps {
