@@ -50,4 +50,8 @@ export const Constants = {
 
   // Used to filter cluster labels in api responses
   RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING: 'giantswarm.io',
+
+  // Cluster & node pool name length restrictions
+  MIN_NAME_LENGTH: 3,
+  MAX_NAME_LENGTH: 100,
 };

@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
 import ValidationError from 'UI/ClusterLabels/ValidationError';
-import ValidityStyledInputElement from 'UI/ClusterLabels/ValidityStyledInputElement';
 import ValueLabel from 'UI/ClusterLabels/ValueLabel';
+import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
 interface IEditLabelTooltip {

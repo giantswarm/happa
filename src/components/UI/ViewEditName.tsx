@@ -1,19 +1,35 @@
 import styled from '@emotion/styled';
+import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {
+  Component,
+  ElementRef,
+  FormEvent,
+  GetDerivedStateFromProps,
+  KeyboardEventHandler,
+} from 'react';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { Constants } from 'shared/constants';
+import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
 
 import Button from './Button';
 
-const MIN_NAME_LENGTH = 3;
+interface IViewAndEditNameProps extends React.ComponentPropsWithRef<'span'> {
+  value: string;
+  typeLabel: string;
+  onSave(value: string): void;
+  onToggleEditingState?(editing: boolean): void;
+}
 
-const validationMessages = {
-  TooShort: `Please use a name with at least ${MIN_NAME_LENGTH} characters`,
-};
+interface IViewAndEditNameState {
+  editing: boolean;
+  errorMessage: string;
+  value: string;
+}
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.span`
   display: inline-block;
 
   form {
@@ -27,18 +43,13 @@ const FormWrapper = styled.div`
   }
 `;
 
-const NameInput = styled.input`
+const NameInput = styled(ValidityStyledInputElement)`
   &[type='text'] {
     display: inline-block;
     padding: 0px 5px;
     width: 320px;
     margin-right: 5px;
     font-size: 85%;
-
-    &,
-    &:focus {
-      border-color: ${({ hasError, theme }) => hasError && theme.colors.error};
-    }
   }
 `;
 
@@ -53,46 +64,62 @@ const NameLabel = styled.a`
  * A widget to display and edit an entity
  * name in the same place.
  */
-class ViewAndEditName extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.value === null && nextProps.name !== prevState.value) {
-      return { value: nextProps.name };
+class ViewAndEditName extends Component<
+  IViewAndEditNameProps,
+  IViewAndEditNameState
+> {
+  static defaultProps = {
+    onSave: () => {},
+  };
+
+  static propTypes = {
+    value: PropTypes.string,
+    typeLabel: PropTypes.string,
+    onSave: PropTypes.func,
+    onToggleEditingState: PropTypes.func,
+  };
+
+  static getDerivedStateFromProps: GetDerivedStateFromProps<
+    IViewAndEditNameProps,
+    IViewAndEditNameState
+  > = (nextProps, prevState) => {
+    if (prevState.value === 'init' && nextProps.value !== prevState.value) {
+      return { value: nextProps.value };
     }
 
     return null;
-  }
+  };
 
-  static validate(value) {
-    const result = {
-      valid: true,
-      error: '',
+  static validate(value: string): { valid: boolean; error: string } {
+    const [valid, error] = hasAppropriateLength(
+      value,
+      Constants.MIN_NAME_LENGTH,
+      Constants.MAX_NAME_LENGTH
+    );
+
+    return {
+      valid: valid as boolean,
+      error: error as string,
     };
-
-    if (value.length < MIN_NAME_LENGTH) {
-      result.valid = false;
-      result.error = validationMessages.TooShort;
-    }
-
-    return result;
   }
 
-  inputRef = React.createRef();
+  private inputRef: React.RefObject<HTMLInputElement> = React.createRef();
 
   state = {
     editing: false,
-    value: null,
+    value: 'init',
     errorMessage: '',
   };
 
-  componentDidUpdate(prevProps) {
-    if (!this.state.editing && this.props.name !== prevProps.name) {
+  componentDidUpdate(prevProps: IViewAndEditNameProps) {
+    if (!this.state.editing && this.props.value !== prevProps.value) {
       this.setState({
-        value: this.props.name,
+        value: this.props.value,
       });
     }
   }
 
-  toggleEditMode(state, additionalState) {
+  toggleEditMode(state: boolean, additionalState?: IViewAndEditNameState) {
     this.setState({
       editing: state,
       ...additionalState,
@@ -109,12 +136,13 @@ class ViewAndEditName extends React.Component {
 
   handleCancel = () => {
     this.toggleEditMode(false, {
-      value: this.props.name,
+      value: this.props.value,
       errorMessage: '',
+      editing: false,
     });
   };
 
-  handleChange = (e) => {
+  handleChange: React.ChangeEventHandler<ElementRef<'input'>> = (e) => {
     const { value } = e.target;
     const validationResult = ViewAndEditName.validate(value);
 
@@ -124,7 +152,7 @@ class ViewAndEditName extends React.Component {
     });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = (e?: FormEvent<ElementRef<'form'>>) => {
     // eslint-disable-next-line no-unused-expressions
     e?.preventDefault();
 
@@ -135,16 +163,17 @@ class ViewAndEditName extends React.Component {
     if (!validationResult.valid) return;
 
     this.toggleEditMode(false, {
+      editing: false,
+      value,
       errorMessage: '',
     });
 
-    if (value !== this.props.name) {
-      // eslint-disable-next-line no-unused-expressions
-      this.props.onSubmit?.(value);
+    if (value !== this.props.value) {
+      this.props.onSave(value);
     }
   };
 
-  handleKey = (e) => {
+  handleKey: KeyboardEventHandler<ElementRef<'input'>> = (e) => {
     switch (e.key) {
       case 'Escape':
         this.handleCancel();
@@ -159,7 +188,13 @@ class ViewAndEditName extends React.Component {
   };
 
   render() {
-    const { type, name, onSubmit, onToggleEditingState, ...rest } = this.props;
+    const {
+      typeLabel,
+      value,
+      onSave,
+      onToggleEditingState,
+      ...rest
+    } = this.props;
     const { errorMessage } = this.state;
     const hasError = errorMessage !== '';
 
@@ -176,10 +211,10 @@ class ViewAndEditName extends React.Component {
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
               value={this.state.value}
-              hasError={hasError}
+              isValid={!hasError}
             />
             <Overlay
-              target={this.inputRef.current}
+              target={this.inputRef.current as HTMLInputElement}
               placement='bottom'
               show={hasError}
               shouldUpdatePosition={true}
@@ -202,7 +237,9 @@ class ViewAndEditName extends React.Component {
     return (
       <span {...rest}>
         <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>Click to edit {type} name</Tooltip>}
+          overlay={
+            <Tooltip id='tooltip'>Click to edit {typeLabel} name</Tooltip>
+          }
           placement='top'
         >
           <NameLabel onClick={this.activateEditMode}>
@@ -214,18 +251,4 @@ class ViewAndEditName extends React.Component {
   }
 }
 
-ViewAndEditName.propTypes = {
-  name: PropTypes.string,
-  type: PropTypes.string,
-  onSubmit: PropTypes.func,
-  onToggleEditingState: PropTypes.func,
-};
-
-ViewAndEditName.defaultProps = {
-  name: '',
-  type: '',
-};
-
-export default React.forwardRef((props, ref) => (
-  <ViewAndEditName ref={ref} {...props} />
-));
+export default ViewAndEditName;
