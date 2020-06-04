@@ -22,10 +22,7 @@ function ExceptionNotificationTest(): ReactNode {
 
       <hr />
       <h3>Uncaught Exception</h3>
-      <p>
-        Click this button to generate an uncaught exception. It will most likely
-        kill Happa.
-      </p>
+      <p>Click this button to generate an uncaught exception.</p>
       <Button onClick={generateUncaughtException}>Break Me</Button>
       <hr />
       <h3>Manually Reported Exception</h3>
