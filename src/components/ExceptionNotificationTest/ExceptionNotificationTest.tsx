@@ -3,9 +3,7 @@ import React, { ReactNode } from 'react';
 import Button from 'UI/Button';
 
 function generateUncaughtException() {
-  // @ts-ignore
-  // eslint-disable-next-line no-undef
-  return a_thing_that_doesnt_exist_on_purpose;
+  throw Error('Error thrown on purpose from /exception-notification-test/');
 }
 
 function reportException() {
