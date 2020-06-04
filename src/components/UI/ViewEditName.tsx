@@ -3,7 +3,6 @@ import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, {
   Component,
-  ElementRef,
   FormEvent,
   GetDerivedStateFromProps,
   KeyboardEventHandler,
@@ -142,7 +141,7 @@ class ViewAndEditName extends Component<
     });
   };
 
-  handleChange: React.ChangeEventHandler<ElementRef<'input'>> = (e) => {
+  handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { value } = e.target;
     const validationResult = ViewAndEditName.validate(value);
 
@@ -152,7 +151,7 @@ class ViewAndEditName extends Component<
     });
   };
 
-  handleSubmit = (e?: FormEvent<ElementRef<'form'>>) => {
+  handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
     // eslint-disable-next-line no-unused-expressions
     e?.preventDefault();
 
@@ -173,7 +172,7 @@ class ViewAndEditName extends Component<
     }
   };
 
-  handleKey: KeyboardEventHandler<ElementRef<'input'>> = (e) => {
+  handleKey: KeyboardEventHandler<HTMLInputElement> = (e) => {
     switch (e.key) {
       case 'Escape':
         this.handleCancel();
