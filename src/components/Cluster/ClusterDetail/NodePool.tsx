@@ -258,9 +258,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             typeLabel='node pool'
             onSave={this.editNodePoolName}
             ref={(viewEditName: HTMLSpanElement | null): void => {
-              if (viewEditName) {
-                this.viewEditNameRef = viewEditName as INPViewAndEditName;
-              }
+              this.viewEditNameRef = viewEditName as INPViewAndEditName;
             }}
             onToggleEditingState={this.toggleEditingState}
           />
