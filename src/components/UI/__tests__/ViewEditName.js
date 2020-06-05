@@ -3,16 +3,16 @@ import { renderWithTheme } from 'testUtils/renderUtils';
 import ViewEditName from 'UI/ViewEditName';
 
 const defaultEntity = {
-  name: 'Some value',
-  type: 'test-type',
+  value: 'Some value',
+  typeLabel: 'test-type',
 };
 
 const renderComponent = (props = {}) => {
   const propsWithDefault = Object.assign(
     {},
     {
-      name: defaultEntity.name,
-      type: defaultEntity.type,
+      value: defaultEntity.value,
+      typeLabel: defaultEntity.typeLabel,
     },
     props
   );
@@ -139,7 +139,7 @@ describe('ViewEditName', () => {
 
     // A warning is shown
     expect(
-      getByText(/please use a name with at least 3 characters/i)
+      getByText(/name must not contain less than 3 characters/i)
     ).toBeInTheDocument();
 
     // Input is still here, data not saved
@@ -168,7 +168,7 @@ describe('ViewEditName', () => {
 
     // A warning is shown
     expect(
-      getByText(/please use a name with at least 3 characters/i)
+      getByText(/name must not contain less than 3 characters/i)
     ).toBeInTheDocument();
 
     // Input is still here, data not saved
@@ -180,7 +180,7 @@ describe('ViewEditName', () => {
     const onToggleEditingStateMock = jest.fn();
 
     const { getByText, getByDisplayValue } = renderComponent({
-      onSubmit: onSubmitMock,
+      onSave: onSubmitMock,
       onToggleEditingState: onToggleEditingStateMock,
     });
 
@@ -206,7 +206,7 @@ describe('ViewEditName', () => {
     const onToggleEditingStateMock = jest.fn();
 
     const { getByText, getByDisplayValue } = renderComponent({
-      onSubmit: onSubmitMock,
+      onSave: onSubmitMock,
       onToggleEditingState: onToggleEditingStateMock,
     });
 
@@ -232,7 +232,7 @@ describe('ViewEditName', () => {
     const onToggleEditingStateMock = jest.fn();
 
     const { getByText, getByDisplayValue } = renderComponent({
-      onSubmit: onSubmitMock,
+      onSave: onSubmitMock,
       onToggleEditingState: onToggleEditingStateMock,
     });
 

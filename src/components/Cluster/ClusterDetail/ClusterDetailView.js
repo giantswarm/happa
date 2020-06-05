@@ -268,9 +268,9 @@ class ClusterDetailView extends React.Component {
                   <h1 style={{ marginLeft: '-10px' }}>
                     <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
                     <ViewAndEditName
-                      name={cluster.name}
-                      type='cluster'
-                      onSubmit={this.editClusterName}
+                      value={cluster.name}
+                      typeLabel='cluster'
+                      onSave={this.editClusterName}
                     />{' '}
                   </h1>
                 </div>

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { ChangeEvent, ElementRef, ReactNode } from 'react';
+import React, { ChangeEvent, ElementRef, FC, ReactNode } from 'react';
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -52,52 +52,40 @@ const Hint = styled.span`
   font-size: 12px;
 `;
 
-interface IInput {
-  onChange?(changed: string | FileList | null): void;
-  label?: string;
-  description?: ReactNode;
+export interface IInput<T> {
   children?: ReactNode;
-  value?: string;
-  readOnly?: boolean;
-  icon?: string;
-  validationError?: ReactNode;
-  type?: string;
+  description?: ReactNode;
   hint?: ReactNode;
+  icon?: string;
+  label?: string;
+  onChange?(changed: T | null): void;
+  readOnly?: boolean;
+  validationError?: ReactNode;
+  value?: T;
 }
 
-const Input: React.FC<IInput> = (props) => {
+const Input: FC<IInput<string | FileList>> = (props) => {
   const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
-    if (props.onChange) {
-      if (props.type === 'file') {
-        props.onChange(e.target.files);
-      } else {
-        props.onChange(e.target.value);
-      }
-    }
+    // eslint-disable-next-line no-unused-expressions
+    props.onChange?.(e.target.value);
   };
 
   return (
     <Wrapper>
       <Text>
-        {props.label ? (
-          <label htmlFor={props.label}>{props.label}</label>
-        ) : undefined}
-        {props.description ? <p>{props.description}</p> : undefined}
+        {props.label && <label htmlFor={props.label}>{props.label}</label>}
+        {props.description && <p>{props.description}</p>}
       </Text>
       <InputWrapper>
-        {props.icon ? <Icon className={`fa fa-${props.icon}`} /> : undefined}
-        {props.children ? (
-          props.children
-        ) : props.type === 'text' ? (
+        {props.icon && <Icon className={`fa fa-${props.icon}`} />}
+        {props.children ?? (
           <InputElement
             id={props.label}
             onChange={onChange}
             type='text'
-            value={props.value}
+            value={props.value as string}
             readOnly={props.readOnly}
           />
-        ) : (
-          <InputElement id={props.label} onChange={onChange} type='file' />
         )}
       </InputWrapper>
       {props.validationError ? (
@@ -105,29 +93,22 @@ const Input: React.FC<IInput> = (props) => {
           <i className='fa fa-warning' /> {props.validationError}
         </ValidationError>
       ) : (
-        <Hint>{props.hint}</Hint>
+        <Hint>{props.hint ?? <>&nbsp;</>}</Hint>
       )}
     </Wrapper>
   );
 };
 
 Input.propTypes = {
+  children: PropTypes.node,
   description: PropTypes.string,
-  hint: PropTypes.object,
+  hint: PropTypes.node,
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
-  validationError: PropTypes.string,
-  value: PropTypes.string,
   readOnly: PropTypes.bool,
-  children: PropTypes.node,
-  type: PropTypes.oneOf(['text', 'file']),
-};
-
-Input.defaultProps = {
-  type: 'text',
-  hint: '',
-  onChange: () => {},
+  validationError: PropTypes.string,
+  value: PropTypes.any,
 };
 
 export default Input;
