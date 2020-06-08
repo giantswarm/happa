@@ -20,8 +20,12 @@ import Button from 'UI/Button';
 
 import { parseErrorMessages } from './parseErrorMessages';
 
+const StyledLoginDivider = styled(LoginDivider)`
+  margin-top: 16px;
+`;
+
 const CPWrapper = styled.div`
-  margin: 24px 0 48px;
+  margin: 24px 0 8px;
 `;
 
 // The props coming from the global state (AKA: `mapStateToProps`)
@@ -190,7 +194,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
               <Link to={AppRoutes.ForgotPassword}>Forgot your password?</Link>
             </form>
 
-            <LoginDivider />
+            <StyledLoginDivider />
             <CPWrapper>
               <CPLogin />
             </CPWrapper>
