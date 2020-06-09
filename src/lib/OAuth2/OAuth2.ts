@@ -1,4 +1,4 @@
-import { User, UserManager } from 'oidc-client/dist/oidc-client';
+import { User, UserManager, UserManagerSettings } from 'oidc-client';
 
 export enum OAuth2Events {
   UserLoaded = 'userLoaded',
@@ -10,7 +10,7 @@ export enum OAuth2Events {
 }
 
 interface IOAuth2EventCallbacks {
-  [OAuth2Events.UserLoaded]: (event?: CustomEvent<User>) => void;
+  [OAuth2Events.UserLoaded]: (event: CustomEvent<User>) => void;
   [OAuth2Events.TokenExpired]: () => void;
   [OAuth2Events.TokenExpiring]: () => void;
   [OAuth2Events.UserUnloaded]: () => void;
@@ -21,9 +21,11 @@ interface IOAuth2EventCallbacks {
 interface IOAuth2Config {
   authority: string;
   clientId: string;
+  clientSecret: string;
   redirectUri: string;
   responseType?: string;
   scope?: string;
+  prompt?: string;
 }
 
 class OAuth2 {
@@ -31,14 +33,28 @@ class OAuth2 {
   private eventEmitter: EventTarget;
 
   constructor(config: IOAuth2Config) {
+    const managerConfig: UserManagerSettings = {
+      authority: config.authority,
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      redirect_uri: config.redirectUri,
+      response_type: config.responseType,
+      scope: config.scope,
+      prompt: config.prompt,
+    };
+
     this.eventEmitter = new EventTarget();
-    this.userManager = new UserManager(config);
+    this.userManager = new UserManager(managerConfig);
 
     this.registerInternalEvents();
   }
 
-  public async login(): Promise<User> {
-    return this.userManager.signinCallback();
+  public async attemptLogin(): Promise<void> {
+    return this.userManager.signinRedirect();
+  }
+
+  public async handleLoginResponse(): Promise<User> {
+    return this.userManager.signinRedirectCallback();
   }
 
   public addEventListener<
