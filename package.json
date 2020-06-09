@@ -48,6 +48,7 @@
     "connected-react-router": "6.6.1",
     "copy-to-clipboard": "3.3.1",
     "deep-diff": "1.0.2",
+    "dotenv": "8.2.0",
     "emotion-theming": "10.0.27",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "history": "4.10.1",
@@ -59,6 +60,7 @@
     "moment": "2.25.3",
     "normalize.css": "8.0.1",
     "noty": "^3.1.4",
+    "oidc-client": "^1.10.1",
     "platform": "1.3.5",
     "prop-types": "15.7.2",
     "query-string": "6.12.1",
@@ -89,8 +91,7 @@
     "superagent": "5.2.2",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.10.2",
-    "validate.js": "0.13.1",
-    "dotenv": "8.2.0"
+    "validate.js": "0.13.1"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
