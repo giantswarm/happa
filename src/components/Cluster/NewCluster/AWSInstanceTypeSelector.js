@@ -7,6 +7,13 @@ import Button from 'UI/Button';
 
 const WrapperDiv = styled.div`
   max-width: 200px;
+  .textfield,
+  input[type='text'] {
+    margin-bottom: 0;
+    label {
+      display: none;
+    }
+  }
 `;
 
 class AWSInstanceTypeSelector extends React.Component {

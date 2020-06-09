@@ -1,49 +1,42 @@
 import styled from '@emotion/styled';
-import {
-  CLUSTER_CREATE_REQUEST,
-  RELEASES_LOAD_REQUEST,
-} from 'actions/actionTypes';
+import { CLUSTER_CREATE_REQUEST } from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
-import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
+import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
+import { InstanceTypeDescription } from 'UI/ClusterCreation/InstanceTypeSelection';
+import Section from 'UI/ClusterCreation/Section';
+import StyledInput from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
+import { FlexColumn, FlexRow, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
 
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
 import ClusterCreationDuration from './ClusterCreationDuration';
-import { FlexColumnDiv, FlexRowDiv, Wrapper } from './CreateNodePoolsCluster';
 import ProviderCredentials from './ProviderCredentials';
-import ReleaseSelector from './ReleaseSelector';
 import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
 
 const WrapperDiv = styled.div`
-  ${Wrapper}
   .worker-nodes {
     position: absolute;
     left: 0;
     font-weight: 700;
   }
-  .textfield label,
-  .textfield,
-  .textfield input {
-    margin: 0;
-  }
   .availability-zones {
-    margin-bottom: 8px;
-    .label-span {
-      margin-bottom: 7px;
+    input {
+      font-weight: 400;
     }
   }
+  .instance-type input {
+    font-weight: 400;
+  }
   .scaling-range {
-    margin-bottom: 0;
     form {
       label {
         margin-bottom: 7px;
@@ -52,20 +45,6 @@ const WrapperDiv = styled.div`
       }
     }
   }
-`;
-
-const FlexWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  p {
-    margin-left: 15px;
-  }
-`;
-
-const ErrorFallbackStyled = styled(ErrorFallback)`
-  margin-bottom: 15px;
-  line-height: 1.2em;
 `;
 
 class CreateRegularCluster extends React.Component {
@@ -92,7 +71,6 @@ class CreateRegularCluster extends React.Component {
     },
     // eslint-disable-next-line react/no-unused-state
     releaseVersion: this.props.selectedRelease,
-    clusterName: this.props.clusterName,
     scaling: {
       automatic: false,
       min: 3,
@@ -135,7 +113,6 @@ class CreateRegularCluster extends React.Component {
   };
 
   componentDidMount() {
-    this.clusterNameInput.select();
     this.setState({
       awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
@@ -160,12 +137,6 @@ class CreateRegularCluster extends React.Component {
         maxValid: nodeCountSelector.scaling.maxValid,
       },
     });
-  };
-
-  updateClusterName = (event) => {
-    const clusterName = event.target.value;
-    this.setState({ clusterName });
-    this.props.updateClusterNameInParent(clusterName);
   };
 
   createCluster = () => {
@@ -227,23 +198,12 @@ class CreateRegularCluster extends React.Component {
           min: this.state.scaling.min,
           max: this.state.scaling.max,
         },
-        name:
-          this.state.clusterName === ''
-            ? 'Unnamed cluster'
-            : this.state.clusterName,
+        name: this.props.clusterName,
         owner: this.props.selectedOrganization,
         release_version: this.props.selectedRelease,
         workers: workers,
       })
     );
-  };
-
-  selectRelease = (releaseVersion) => {
-    this.setState({
-      // eslint-disable-next-line react/no-unused-state
-      releaseVersion,
-    });
-    this.props.informParent(releaseVersion);
   };
 
   errorState() {
@@ -366,8 +326,7 @@ class CreateRegularCluster extends React.Component {
   };
 
   valid() {
-    // If no releases, the form can't be valid.
-    if (this.props.releasesLoadError) return false;
+    if (!this.props.allowSubmit) return false;
 
     // If any of the releaseVersion hasn't been set yet, return false
     if (!this.props.selectedRelease) return false;
@@ -408,213 +367,173 @@ class CreateRegularCluster extends React.Component {
       this.props.selectedRelease
     );
 
-    const noReleasesErrorText = this.props.releasesLoadError
-      ? `The cluster can't be created because there is no active release currently availabe for this platform.`
-      : null;
-
     return (
-      <Breadcrumb
-        data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
-      >
-        <DocumentTitle
-          title={`Create Cluster | ${this.props.selectedOrganization}`}
-        >
-          <WrapperDiv data-testid='cluster-creation-view'>
-            <h1>Create a Cluster</h1>
+      <WrapperDiv data-testid='cluster-creation-view'>
+        <HorizontalLine />
 
-            <FlexColumnDiv>
-              <label htmlFor='name'>
-                <span className='label-span'>Name</span>
-                <div className='name-container'>
-                  <input
-                    autoFocus
-                    onChange={this.updateClusterName}
-                    ref={(i) => {
-                      this.clusterNameInput = i;
-                    }}
-                    type='text'
-                    id='name'
-                    value={this.state.clusterName}
-                    placeholder={
-                      this.state.clusterName === '' ? 'Unnamed cluster' : null
-                    }
-                  />
-                </div>
-                <p>Give your cluster a name to recognize it among others.</p>
-              </label>
+        <FlexColumn>
+          <div className='worker-nodes'>Worker nodes</div>
+          {(provider === Providers.AWS || provider === Providers.AZURE) && (
+            <V4AvailabilityZonesSelector
+              minValue={this.props.minAvailabilityZones}
+              maxValue={this.props.maxAvailabilityZones}
+              onChange={this.updateAvailabilityZonesPicker}
+              {...multiAZSelectorProps}
+            />
+          )}
+          <label htmlFor='instance-type' className='instance-type'>
+            {(() => {
+              switch (provider) {
+                case Providers.AWS: {
+                  const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
 
-              <label htmlFor='name'>
-                <span className='label-span'>Release version</span>
-                <ReleaseSelector
-                  selectRelease={this.selectRelease}
-                  selectedRelease={this.props.selectedRelease}
-                  selectableReleases={this.props.selectableReleases}
-                  releases={this.props.releases}
-                  activeSortedReleases={this.props.activeSortedReleases}
-                />
-              </label>
-            </FlexColumnDiv>
+                  return (
+                    <StyledInput
+                      inputId='instance-type'
+                      label='Instance type'
+                      // regular space, hides hint ;)
+                      hint={<>&#32;</>}
+                    >
+                      <FlexWrapperDiv>
+                        <AWSInstanceTypeSelector
+                          allowedInstanceTypes={this.props.allowedInstanceTypes}
+                          onChange={this.updateAWSInstanceType}
+                          readOnly={false}
+                          value={this.state.aws.instanceType.value}
+                        />
+                        <InstanceTypeDescription>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</InstanceTypeDescription>
+                      </FlexWrapperDiv>
+                    </StyledInput>
+                  );
+                }
+                case Providers.KVM:
+                  return (
+                    <>
+                      <span className='label-span'>Worker Configuration</span>
+                      <p>
+                        Configure the amount of CPU, RAM and Storage for your
+                        workers. The storage size specified will apply to both
+                        the kubelet and the Docker volume of the node, so please
+                        make sure to have twice the specified size available as
+                        disk space.
+                      </p>
 
-            <hr style={{ margin: '0 0 35px' }} />
+                      <NumberPicker
+                        label='CPU Cores'
+                        max={999}
+                        min={2}
+                        onChange={this.updateCPUCores}
+                        stepSize={1}
+                        value={this.state.kvm.cpuCores.value}
+                      />
+                      <br />
 
-            <FlexColumnDiv>
-              <div className='worker-nodes'>Worker nodes</div>
-              {(provider === Providers.AWS || provider === Providers.AZURE) && (
-                <V4AvailabilityZonesSelector
-                  minValue={this.props.minAvailabilityZones}
-                  maxValue={this.props.maxAvailabilityZones}
-                  onChange={this.updateAvailabilityZonesPicker}
-                  {...multiAZSelectorProps}
-                />
-              )}
-              <label htmlFor='instance-type'>
-                {(() => {
-                  switch (provider) {
-                    case Providers.AWS: {
-                      const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
+                      <NumberPicker
+                        label='Memory (GB)'
+                        max={999}
+                        min={3}
+                        onChange={this.updateMemorySize}
+                        stepSize={1}
+                        unit='GB'
+                        value={this.state.kvm.memorySize.value}
+                      />
+                      <br />
 
-                      return (
-                        <>
-                          <span className='label-span'>Instance Type</span>
-                          <FlexWrapperDiv>
-                            <AWSInstanceTypeSelector
-                              allowedInstanceTypes={
-                                this.props.allowedInstanceTypes
-                              }
-                              onChange={this.updateAWSInstanceType}
-                              readOnly={false}
-                              value={this.state.aws.instanceType.value}
-                            />
-                            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
-                          </FlexWrapperDiv>
-                        </>
-                      );
-                    }
-                    case Providers.KVM:
-                      return (
-                        <>
-                          <span className='label-span'>
-                            Worker Configuration
-                          </span>
-                          <p>
-                            Configure the amount of CPU, RAM and Storage for
-                            your workers. The storage size specified will apply
-                            to both the kubelet and the Docker volume of the
-                            node, so please make sure to have twice the
-                            specified size available as disk space.
-                          </p>
+                      <NumberPicker
+                        label='Storage (GB)'
+                        max={999}
+                        min={10}
+                        onChange={this.updateDiskSize}
+                        stepSize={10}
+                        unit='GB'
+                        value={this.state.kvm.diskSize.value}
+                      />
+                    </>
+                  );
+                case Providers.AZURE: {
+                  const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
 
-                          <NumberPicker
-                            label='CPU Cores'
-                            max={999}
-                            min={2}
-                            onChange={this.updateCPUCores}
-                            stepSize={1}
-                            value={this.state.kvm.cpuCores.value}
-                          />
-                          <br />
+                  return (
+                    <StyledInput
+                      inputId='instance-type'
+                      label='VM Size'
+                      // regular space, hides hint ;)
+                      hint={<>&#32;</>}
+                    >
+                      <FlexWrapperDiv>
+                        <AzureVMSizeSelector
+                          allowedVMSizes={this.props.allowedVMSizes}
+                          onChange={this.updateVMSize}
+                          readOnly={false}
+                          value={this.state.azure.vmSize.value}
+                        />
+                        <InstanceTypeDescription>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</InstanceTypeDescription>
+                      </FlexWrapperDiv>
+                    </StyledInput>
+                  );
+                }
+              }
 
-                          <NumberPicker
-                            label='Memory (GB)'
-                            max={999}
-                            min={3}
-                            onChange={this.updateMemorySize}
-                            stepSize={1}
-                            unit='GB'
-                            value={this.state.kvm.memorySize.value}
-                          />
-                          <br />
-
-                          <NumberPicker
-                            label='Storage (GB)'
-                            max={999}
-                            min={10}
-                            onChange={this.updateDiskSize}
-                            stepSize={10}
-                            unit='GB'
-                            value={this.state.kvm.diskSize.value}
-                          />
-                        </>
-                      );
-                    case Providers.AZURE: {
-                      const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
-
-                      return (
-                        <>
-                          <span className='label-span'>VM Size</span>
-                          <FlexWrapperDiv>
-                            <AzureVMSizeSelector
-                              allowedVMSizes={this.props.allowedVMSizes}
-                              onChange={this.updateVMSize}
-                              readOnly={false}
-                              value={this.state.azure.vmSize.value}
-                            />
-                            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
-                          </FlexWrapperDiv>
-                        </>
-                      );
-                    }
-                  }
-
-                  return null;
-                })()}
-              </label>
-              <label className='scaling-range' htmlFor='scaling-range'>
-                <span className='label-span'>Number of worker nodes</span>
-                <NodeCountSelector
-                  autoscalingEnabled={CreateRegularCluster.isScalingAutomatic(
-                    provider,
-                    this.props.selectedRelease
-                  )}
-                  maxValue={this.props.maxWorkersPerCluster}
-                  onChange={this.updateScaling}
-                  readOnly={false}
-                  scaling={this.state.scaling}
-                />
-                <ProviderCredentials
-                  organizationName={this.props.selectedOrganization}
-                  provider={provider}
-                />
-                {this.state.error && this.errorState()}
-              </label>
-            </FlexColumnDiv>
-
-            <hr style={{ margin: '37px 0 31px' }} />
-
-            <FlexRowDiv>
-              <ErrorFallbackStyled error={noReleasesErrorText} />
-              <ErrorFallback error={this.props.clusterCreateError}>
-                <Button
-                  bsSize='large'
-                  bsStyle='primary'
-                  disabled={!this.valid()}
-                  loading={this.state.submitting}
-                  onClick={this.createCluster}
-                  type='submit'
-                >
-                  Create Cluster
-                </Button>
-              </ErrorFallback>
-              {!this.state.submitting && (
-                <Button
-                  bsSize='large'
-                  bsStyle='default'
-                  loading={this.state.submitting}
-                  onClick={this.props.closeForm}
-                  type='button'
-                >
-                  Cancel
-                </Button>
-              )}
-            </FlexRowDiv>
-            <FlexColumnDiv>
-              <ClusterCreationDuration
-                stats={this.props.clusterCreationStats}
+              return null;
+            })()}
+          </label>
+          <Section className='scaling-range' htmlFor='scaling-range'>
+            <StyledInput
+              inputId='scaling-range'
+              label='Number of worker nodes'
+              // regular space, hides hint ;)
+              hint={<>&#32;</>}
+            >
+              <NodeCountSelector
+                autoscalingEnabled={CreateRegularCluster.isScalingAutomatic(
+                  provider,
+                  this.props.selectedRelease
+                )}
+                maxValue={this.props.maxWorkersPerCluster}
+                onChange={this.updateScaling}
+                readOnly={false}
+                scaling={this.state.scaling}
               />
-            </FlexColumnDiv>
-          </WrapperDiv>
-        </DocumentTitle>
-      </Breadcrumb>
+              <ProviderCredentials
+                organizationName={this.props.selectedOrganization}
+                provider={provider}
+              />
+              {this.state.error && this.errorState()}
+            </StyledInput>
+          </Section>
+        </FlexColumn>
+
+        <HorizontalLine />
+
+        <FlexRow>
+          <ErrorFallback error={this.props.clusterCreateError}>
+            <Button
+              bsSize='large'
+              bsStyle='primary'
+              disabled={!this.valid()}
+              loading={this.state.submitting}
+              onClick={this.createCluster}
+              type='submit'
+            >
+              Create Cluster
+            </Button>
+          </ErrorFallback>
+          {!this.state.submitting && (
+            <Button
+              bsSize='large'
+              bsStyle='default'
+              loading={this.state.submitting}
+              onClick={this.props.closeForm}
+              type='button'
+            >
+              Cancel
+            </Button>
+          )}
+        </FlexRow>
+        <FlexColumn>
+          <ClusterCreationDuration stats={this.props.clusterCreationStats} />
+        </FlexColumn>
+      </WrapperDiv>
     );
   }
 }
@@ -630,6 +549,8 @@ CreateRegularCluster.defaultProps = {
 };
 
 CreateRegularCluster.propTypes = {
+  clusterName: PropTypes.string,
+  allowSubmit: PropTypes.bool,
   minAvailabilityZones: PropTypes.number,
   maxAvailabilityZones: PropTypes.number,
   maxWorkersPerCluster: PropTypes.number,
@@ -644,18 +565,9 @@ CreateRegularCluster.propTypes = {
   defaultCPUCores: PropTypes.number,
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
-  match: PropTypes.object,
   closeForm: PropTypes.func,
   clusterCreationStats: PropTypes.object,
-  informParent: PropTypes.func,
-  selectableReleases: PropTypes.array,
-  releases: PropTypes.object,
-  activeSortedReleases: PropTypes.array,
-  clusterName: PropTypes.string,
-  updateClusterNameInParent: PropTypes.func,
   clusterCreateError: PropTypes.string,
-  releasesLoadError: PropTypes.string,
-  capabilities: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -699,7 +611,6 @@ function mapStateToProps(state) {
   return {
     ...propsToPush,
     clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
-    releasesLoadError: selectErrorByAction(state, RELEASES_LOAD_REQUEST),
   };
 }
 

@@ -1,5 +1,4 @@
 import { Reducer, useReducer } from 'react';
-import { IValidation, IValidationFunction } from 'utils/labelUtils';
 
 interface IReducerState extends IValidation {
   internalValue: string;

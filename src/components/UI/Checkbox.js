@@ -2,10 +2,11 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const CheckboxWrapper = styled.span``;
+const CheckboxWrapper = styled.span`
+  cursor: pointer;
+`;
 
 const FaCheckBoxIcon = styled.i`
-  cursor: pointer;
   font-size: 16px;
 `;
 

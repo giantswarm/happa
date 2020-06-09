@@ -1,3 +1,4 @@
+import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { ChangeEvent, ElementRef, FC, ReactNode } from 'react';
@@ -14,19 +15,25 @@ const Text = styled.div`
   color: ${(props) => props.theme.colors.white2};
 `;
 
-const InputWrapper = styled.div`
-  align-items: center;
-  display: flex;
+const InputWrapper = styled.div<{ flexCenter: boolean }>`
+  ${({ flexCenter }) =>
+    flexCenter &&
+    css`
+      align-items: center;
+      display: flex;
+    `}
 `;
 
 export const InputElement = styled.input`
   background-color: ${(props) => props.theme.colors.shade5};
   border: 1px solid ${(props) => props.theme.colors.shade6};
   border-radius: ${(props) => props.theme.border_radius};
+  color: ${(props) => props.theme.colors.whiteInput};
   font-size: 14px;
   line-height: normal;
   padding: 8px 10px;
   width: 100%;
+  font-weight: 400;
 
   &:read-only {
     cursor: not-allowed;
@@ -54,11 +61,14 @@ const Hint = styled.span`
 
 export interface IInput<T> {
   children?: ReactNode;
+  className?: string;
   description?: ReactNode;
   hint?: ReactNode;
   icon?: string;
+  inputId?: string;
   label?: string;
   onChange?(changed: T | null): void;
+  placeholder?: string;
   readOnly?: boolean;
   validationError?: ReactNode;
   value?: T;
@@ -71,20 +81,28 @@ const Input: FC<IInput<string | FileList>> = (props) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper className={props.className}>
       <Text>
-        {props.label && <label htmlFor={props.label}>{props.label}</label>}
+        {props.label && (
+          <label
+            className='input-field-label'
+            htmlFor={props.inputId ?? props.label}
+          >
+            {props.label}
+          </label>
+        )}
         {props.description && <p>{props.description}</p>}
       </Text>
-      <InputWrapper>
+      <InputWrapper flexCenter={Boolean(props.icon)}>
         {props.icon && <Icon className={`fa fa-${props.icon}`} />}
         {props.children ?? (
           <InputElement
-            id={props.label}
+            id={props.inputId ?? props.label}
             onChange={onChange}
             type='text'
             value={props.value as string}
             readOnly={props.readOnly}
+            placeholder={props.placeholder}
           />
         )}
       </InputWrapper>
@@ -101,11 +119,14 @@ const Input: FC<IInput<string | FileList>> = (props) => {
 
 Input.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
   description: PropTypes.string,
   hint: PropTypes.node,
   icon: PropTypes.string,
+  inputId: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
+  placeholder: PropTypes.string,
   readOnly: PropTypes.bool,
   validationError: PropTypes.string,
   value: PropTypes.any,
