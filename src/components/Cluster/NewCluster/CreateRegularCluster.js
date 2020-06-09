@@ -11,7 +11,9 @@ import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import { InstanceTypeDescription } from 'UI/ClusterCreation/InstanceTypeSelection';
 import Section from 'UI/ClusterCreation/Section';
-import StyledInput from 'UI/ClusterCreation/StyledInput';
+import StyledInput, {
+  AdditionalInputHint,
+} from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
 import { FlexColumn, FlexRow, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
@@ -45,6 +47,11 @@ const WrapperDiv = styled.div`
       }
     }
   }
+`;
+
+const KVMNumberPicker = styled(NumberPicker)`
+  display: block;
+  margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
 class CreateRegularCluster extends React.Component {
@@ -408,47 +415,51 @@ class CreateRegularCluster extends React.Component {
                 }
                 case Providers.KVM:
                   return (
-                    <>
-                      <span className='label-span'>Worker Configuration</span>
-                      <p>
-                        Configure the amount of CPU, RAM and Storage for your
-                        workers. The storage size specified will apply to both
-                        the kubelet and the Docker volume of the node, so please
-                        make sure to have twice the specified size available as
-                        disk space.
-                      </p>
+                    <Section>
+                      <StyledInput
+                        inputId='instance-type'
+                        label='Worker Configuration'
+                        // regular space, hides hint ;)
+                        hint={<>&#32;</>}
+                      >
+                        <AdditionalInputHint>
+                          Configure the amount of CPU, RAM and Storage for your
+                          workers. The storage size specified will apply to both
+                          the kubelet and the Docker volume of the node, so
+                          please make sure to have twice the specified size
+                          available as disk space.
+                        </AdditionalInputHint>
 
-                      <NumberPicker
-                        label='CPU Cores'
-                        max={999}
-                        min={2}
-                        onChange={this.updateCPUCores}
-                        stepSize={1}
-                        value={this.state.kvm.cpuCores.value}
-                      />
-                      <br />
+                        <KVMNumberPicker
+                          label='CPU Cores'
+                          max={999}
+                          min={2}
+                          onChange={this.updateCPUCores}
+                          stepSize={1}
+                          value={this.state.kvm.cpuCores.value}
+                        />
 
-                      <NumberPicker
-                        label='Memory (GB)'
-                        max={999}
-                        min={3}
-                        onChange={this.updateMemorySize}
-                        stepSize={1}
-                        unit='GB'
-                        value={this.state.kvm.memorySize.value}
-                      />
-                      <br />
+                        <KVMNumberPicker
+                          label='Memory (GB)'
+                          max={999}
+                          min={3}
+                          onChange={this.updateMemorySize}
+                          stepSize={1}
+                          unit='GB'
+                          value={this.state.kvm.memorySize.value}
+                        />
 
-                      <NumberPicker
-                        label='Storage (GB)'
-                        max={999}
-                        min={10}
-                        onChange={this.updateDiskSize}
-                        stepSize={10}
-                        unit='GB'
-                        value={this.state.kvm.diskSize.value}
-                      />
-                    </>
+                        <KVMNumberPicker
+                          label='Storage (GB)'
+                          max={999}
+                          min={10}
+                          onChange={this.updateDiskSize}
+                          stepSize={10}
+                          unit='GB'
+                          value={this.state.kvm.diskSize.value}
+                        />
+                      </StyledInput>
+                    </Section>
                   );
                 case Providers.AZURE: {
                   const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
