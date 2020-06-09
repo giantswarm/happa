@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import Input from 'UI/Input';
+import FileInput from 'UI/Inputs/FileInput';
+import Input from 'UI/Inputs/Input';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 const FormWrapper = styled.div`
@@ -86,7 +87,6 @@ const InstallAppForm = ({
     <FormWrapper>
       <Input
         description='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
-        hint={<>&nbsp;</>}
         label='Application Name:'
         onChange={updateName}
         validationError={nameError}
@@ -96,7 +96,6 @@ const InstallAppForm = ({
       <Input
         label='Chart Version:'
         description='This will determine what version of the app eventually gets installed.'
-        hint={<>&nbsp;</>}
       >
         <VersionPicker
           onChange={updateVersion}
@@ -107,18 +106,16 @@ const InstallAppForm = ({
 
       {formAbilities.hasFixedNamespace ? (
         <Input
-          key='fixed-namespace'
           description={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
-          hint={<>&nbsp;</>}
+          key='fixed-namespace'
           label='Namespace:'
-          value={formAbilities.fixedNamespace}
           readOnly={true}
+          value={formAbilities.fixedNamespace}
         />
       ) : (
         <Input
-          key='dedicated-namespace'
           description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
-          hint={<>&nbsp;</>}
+          key='dedicated-namespace'
           label='Namespace:'
           onChange={updateNamespace}
           validationError={namespaceError}
@@ -126,24 +123,20 @@ const InstallAppForm = ({
         />
       )}
 
-      <Input
+      <FileInput
         description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
-        hint={<>&nbsp;</>}
         label='User level config values YAML:'
         onChange={updateValuesYAML}
         validationError={valuesYAMLError}
         value={valuesYAML}
-        type='file'
       />
 
-      <Input
+      <FileInput
         description='Sensitive configuration values can be uploaded separately.'
-        hint={<>&nbsp;</>}
         label='User level secret values YAML:'
         onChange={updateSecretsYAML}
         validationError={secretsYAMLError}
         value={secretsYAML}
-        type='file'
       />
     </FormWrapper>
   );
