@@ -35,8 +35,14 @@ const WrapperDiv = styled.div`
       font-weight: 400;
     }
   }
-  .instance-type input {
-    font-weight: 400;
+  .instance-type {
+    /* Same margin-bottom as <Section /> */
+    margin-bottom: ${({ theme }) =>
+      /* eslint-disable-next-line no-magic-numbers */
+      theme.spacingPx * 8}px;
+    input {
+      font-weight: 400;
+    }
   }
   .scaling-range {
     form {
