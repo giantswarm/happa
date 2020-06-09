@@ -4,6 +4,7 @@ import {
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
 import * as UserActions from 'actions/userActions';
+import CPLoginPage from 'Auth/CP/CPLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
@@ -87,6 +88,7 @@ class Layout extends React.Component {
                   exact
                   path={AccountSettingsRoutes.Home}
                 />
+                <Route component={CPLoginPage} path={AppRoutes.CPAccess} />
                 <Redirect path='*' to={AppRoutes.Home} />
               </Switch>
             </div>

@@ -113,6 +113,13 @@ class UserDropdown extends React.Component {
           ) : undefined}
           <MenuItem
             componentClass={NavLink}
+            href={AppRoutes.CPAccess}
+            to={AppRoutes.CPAccess}
+          >
+            Control Plane Access
+          </MenuItem>
+          <MenuItem
+            componentClass={NavLink}
             href={AppRoutes.Logout}
             to={AppRoutes.Logout}
           >

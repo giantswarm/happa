@@ -7,6 +7,7 @@ const AppRoutes = {
   SetPassword: '/forgot_password/:token',
   SignUp: '/signup/:token',
   OAuthCallback: '/oauth/callback',
+  CPAccess: '/cp-access',
   StyleGuide: '/styleguide',
 };
 
