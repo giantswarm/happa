@@ -8,6 +8,7 @@ const AppRoutes = {
   SignUp: '/signup/:token',
   OAuthCallback: '/oauth/callback',
   CPAccess: '/cp-access',
+  CPAccessCallback: '/cp-access/callback',
   StyleGuide: '/styleguide',
 };
 

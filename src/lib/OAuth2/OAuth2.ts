@@ -18,7 +18,7 @@ interface IOAuth2EventCallbacks {
   [OAuth2Events.SilentRenewError]: (error: CustomEvent<Error>) => void;
 }
 
-interface IOAuth2Config {
+export interface IOAuth2Config {
   authority: string;
   clientId: string;
   clientSecret: string;

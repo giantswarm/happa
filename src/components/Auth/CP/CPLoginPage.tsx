@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import CPLoginButton from 'Auth/CP/CPLoginButton';
-import React from 'react';
+import CPAuth from 'lib/CPAuth';
+import React, { useCallback, useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { AppRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
@@ -21,6 +22,36 @@ const CPStatusText = styled.div<{ loggedIn: boolean }>`
 interface ICPLoginPageProps {}
 
 const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
+  const handleLogin = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        const auth = CPAuth.getInstance();
+        await auth.attemptLogin();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (window.location.href.includes(AppRoutes.CPAccessCallback)) {
+      const handleAuthParams = async () => {
+        try {
+          const auth = CPAuth.getInstance();
+          await auth.handleLoginResponse();
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      handleAuthParams();
+    }
+  }, []);
+
   return (
     <Breadcrumb
       data={{
@@ -36,7 +67,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         </p>
         <CPStatus>
           <CPStatusText loggedIn={false}>You are not logged in.</CPStatusText>
-          <CPLoginButton />
+          <CPLoginButton onClick={handleLogin} />
         </CPStatus>
       </DocumentTitle>
     </Breadcrumb>
