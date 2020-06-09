@@ -1,7 +1,4 @@
-import styled from '@emotion/styled';
 import * as userActions from 'actions/userActions';
-import CPLogin from 'Auth/CPLogin';
-import LoginDivider from 'Auth/LoginDivider';
 import { push } from 'connected-react-router';
 import {
   clearQueues,
@@ -19,14 +16,6 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 
 import { parseErrorMessages } from './parseErrorMessages';
-
-const StyledLoginDivider = styled(LoginDivider)`
-  margin-top: 16px;
-`;
-
-const CPWrapper = styled.div`
-  margin: 24px 0 8px;
-`;
 
 // The props coming from the global state (AKA: `mapStateToProps`)
 interface IStateProps {
@@ -51,7 +40,7 @@ interface ILoginState {
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
-  public static propTypes: ILoginProps = {
+  public static propTypes: IStateProps & IDispatchProps = {
     /**
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
@@ -193,11 +182,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
               </Button>
               <Link to={AppRoutes.ForgotPassword}>Forgot your password?</Link>
             </form>
-
-            <StyledLoginDivider />
-            <CPWrapper>
-              <CPLogin />
-            </CPWrapper>
 
             <div className='login_form--legal'>
               By logging in you acknowledge that we track your activities in
