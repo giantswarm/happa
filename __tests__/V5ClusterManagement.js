@@ -520,7 +520,7 @@ it('disallows to add invalid cluster labels', async () => {
   } = renderRouteWithStore(clusterDetailPath);
 
   await findByText('Labels:');
-  fireEvent.click(getByText('Add', { selector: 'button ' }));
+  fireEvent.click(getByText('Add label', { selector: 'button ' }));
 
   const keyInput = await findByLabelText('Label key:');
   const valueInput = getByLabelText('Label value:');
@@ -567,7 +567,7 @@ it('allows to add cluster labels', async () => {
   } = renderRouteWithStore(clusterDetailPath);
 
   await findByText('Labels:');
-  fireEvent.click(getByText('Add', { selector: 'button ' }));
+  fireEvent.click(getByText('Add label', { selector: 'button ' }));
 
   const keyInput = await findByLabelText('Label key:');
   const valueInput = getByLabelText('Label value:');
