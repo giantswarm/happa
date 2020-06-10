@@ -117,9 +117,7 @@ const AZLabel = styled.label`
   transition: height 0.3s;
   transition-delay: 0s;
   /* Same margin-bottom as <Section /> */
-  margin-bottom: ${({ theme }) =>
-    /* eslint-disable-next-line no-magic-numbers */
-    theme.spacingPx * 8}px;
+  margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
   &.with-labels {
     transition: height 0.3s;
     transition-delay: 0.4s;

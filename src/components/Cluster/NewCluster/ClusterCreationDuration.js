@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const Message = styled.p`
-  margin-top: ${({ theme }) =>
-    /* eslint-disable-next-line no-magic-numbers */
-    theme.spacingPx * 8}px;
+  margin-top: ${({ theme }) => theme.spacingPx * 8}px;
   font-size: 14px;
 `;
 

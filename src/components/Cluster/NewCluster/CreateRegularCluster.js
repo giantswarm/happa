@@ -37,9 +37,7 @@ const WrapperDiv = styled.div`
   }
   .instance-type {
     /* Same margin-bottom as <Section /> */
-    margin-bottom: ${({ theme }) =>
-      /* eslint-disable-next-line no-magic-numbers */
-      theme.spacingPx * 8}px;
+    margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
     input {
       font-weight: 400;
     }
