@@ -31,8 +31,8 @@ export interface IOAuth2Config {
 }
 
 class OAuth2 {
-  private userManager: UserManager;
-  private eventEmitter: EventTarget;
+  protected userManager: UserManager;
+  protected eventEmitter: EventTarget;
 
   constructor(config: IOAuth2Config) {
     const managerConfig: UserManagerSettings = {
@@ -119,7 +119,7 @@ class OAuth2 {
     this.userManager.events.removeSilentRenewError(this.onSilentRenewError);
   }
 
-  private registerInternalEvents() {
+  protected registerInternalEvents() {
     this.userManager.events.addUserLoaded(this.onUserLoaded);
     this.userManager.events.addAccessTokenExpired(this.onAccessTokenExpired);
     this.userManager.events.addAccessTokenExpiring(this.onAccessTokenExpiring);
@@ -129,7 +129,7 @@ class OAuth2 {
   }
 
   // TODO(axbarsan): Use custom `User` type.
-  private onUserLoaded = (user: User) => {
+  protected onUserLoaded = (user: User) => {
     const newUser = OAuth2UserImpl.fromOIDCUser(user);
     const event = new CustomEvent(OAuth2Events.UserLoaded, {
       detail: newUser,
@@ -137,27 +137,27 @@ class OAuth2 {
     this.eventEmitter.dispatchEvent(event);
   };
 
-  private onAccessTokenExpired = () => {
+  protected onAccessTokenExpired = () => {
     const event = new CustomEvent(OAuth2Events.TokenExpired);
     this.eventEmitter.dispatchEvent(event);
   };
 
-  private onAccessTokenExpiring = () => {
+  protected onAccessTokenExpiring = () => {
     const event = new CustomEvent(OAuth2Events.TokenExpiring);
     this.eventEmitter.dispatchEvent(event);
   };
 
-  private onUserUnloaded = () => {
+  protected onUserUnloaded = () => {
     const event = new CustomEvent(OAuth2Events.UserUnloaded);
     this.eventEmitter.dispatchEvent(event);
   };
 
-  private onUserSignedOut = () => {
+  protected onUserSignedOut = () => {
     const event = new CustomEvent(OAuth2Events.UserSignedOut);
     this.eventEmitter.dispatchEvent(event);
   };
 
-  private onSilentRenewError = (error: Error) => {
+  protected onSilentRenewError = (error: Error) => {
     const event = new CustomEvent(OAuth2Events.UserLoaded, {
       detail: error,
     });
