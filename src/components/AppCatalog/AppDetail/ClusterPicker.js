@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-import Input from 'UI/Input';
+import Input from 'UI/Inputs/Input';
 
 const ClusterPickerWrapper = styled.div`
   display: flex;

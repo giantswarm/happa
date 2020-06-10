@@ -34,19 +34,17 @@ const makeFeatureFlags = () => {
     FEATURE_HA_MASTERS: false,
   };
 
-  const { FEATURE_CLUSTER_LABELS_V0, FEATURE_HA_MASTERS } = Object.assign(
-    {},
-    defaults,
-    envFileVars,
-    process.env
-  );
+  const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
 
-  return JSON.parse(
-    JSON.stringify({
-      FEATURE_CLUSTER_LABELS_V0: Boolean(FEATURE_CLUSTER_LABELS_V0),
-      FEATURE_HA_MASTERS: Boolean(FEATURE_HA_MASTERS),
-    })
-  );
+  const flags = Object.create(null);
+
+  for (const flagName of Object.keys(defaults)) {
+    if (typeof dirtyFlags[flagName] !== 'boolean') {
+      flags[flagName] = Boolean(JSON.parse(dirtyFlags[flagName].toLowerCase()));
+    }
+  }
+
+  return flags;
 };
 
 module.exports = {

@@ -26,6 +26,10 @@ const AccountSettingsRoutes = {
   Home: '/account-settings',
 };
 
+const ExceptionNotificationTestRoutes = {
+  Home: '/exception-notification-test',
+};
+
 const OrganizationsRoutes = {
   Home: '/organizations',
   List: '/organizations',
@@ -59,4 +63,5 @@ export {
   AppCatalogRoutes,
   OrganizationsRoutes,
   UsersRoutes,
+  ExceptionNotificationTestRoutes,
 };

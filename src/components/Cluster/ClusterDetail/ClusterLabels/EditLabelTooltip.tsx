@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
 import ValidationError from 'UI/ClusterLabels/ValidationError';
-import ValidityStyledInputElement from 'UI/ClusterLabels/ValidityStyledInputElement';
 import ValueLabel from 'UI/ClusterLabels/ValueLabel';
+import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
 interface IEditLabelTooltip {
@@ -17,6 +17,7 @@ interface IEditLabelTooltip {
   value: string;
 
   allowInteraction?: boolean;
+  className?: string;
 }
 
 const EditLabelTooltipWrapper = styled.div`
@@ -81,6 +82,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   onSave,
   value,
   allowInteraction,
+  className,
 }) => {
   const [currentlyEditing, setCurrentlyEditing] = useState(false);
 
@@ -138,14 +140,14 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   };
 
   return (
-    <EditLabelTooltipWrapper ref={divElement}>
+    <EditLabelTooltipWrapper ref={divElement} className={className}>
       {label === '' ? (
         <AddLabelButton
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
           data-testid='add-label-button'
         >
-          Add
+          <i className='fa fa-add-circle' /> Add label
         </AddLabelButton>
       ) : (
         <ValueLabel
@@ -227,6 +229,7 @@ EditLabelTooltip.propTypes = {
   value: PropTypes.string.isRequired,
 
   allowInteraction: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default EditLabelTooltip;

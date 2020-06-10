@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { InputElement } from 'UI/Input';
+import { InputElement } from 'UI/Inputs/Input';
 
 const ValidityStyledInputElement = styled(InputElement)<{ isValid: boolean }>`
   ${({ isValid, theme }) =>
