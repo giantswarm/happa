@@ -41,10 +41,6 @@ const clusterNameLengthValidator: IValidationFunction = (value) => {
   };
 };
 
-interface IReleases {
-  [key: string]: IRelease;
-}
-
 interface INewClusterWrapper {
   activeSortedReleases: string[];
   breadcrumbPathname: string;
