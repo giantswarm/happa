@@ -12,10 +12,10 @@ const CPLoginButton: React.FC<ICPLoginButtonProps> = ({
   wrapperProps,
   ...rest
 }) => {
-  const buttonStyle = isLoggedIn ? 'info' : 'danger';
-  let buttonText = 'Log in to Control Plane via OIDC';
+  const buttonStyle = isLoggedIn ? 'danger' : 'info';
+  let buttonText = 'Log out';
   if (!isLoggedIn) {
-    buttonText = 'Log out';
+    buttonText = 'Log in to Control Plane via OIDC';
   }
 
   return (

@@ -46,6 +46,7 @@ class OAuth2 {
       automaticSilentRenew: config.automaticSilentRenew,
       includeIdTokenInSilentRenew: true,
       loadUserInfo: false,
+      revokeAccessTokenOnSignout: true,
     };
 
     this.eventEmitter = new EventTarget();

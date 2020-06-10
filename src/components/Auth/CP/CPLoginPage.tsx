@@ -8,6 +8,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
+import { userSignedOut } from 'stores/cpauth/actions';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 const CPStatus = styled.div`
@@ -37,6 +38,16 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
     []
   );
 
+  const handleLogout = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      dispatch(userSignedOut());
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     const currentURL = window.location.href;
 
@@ -57,6 +68,8 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
   }, [dispatch]);
 
   const user = useSelector(getCPAuthUser);
+  const isLoggedIn = user !== null;
+  const loginButtonCallback = isLoggedIn ? handleLogout : handleLogin;
 
   return (
     <Breadcrumb
@@ -73,7 +86,10 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         </p>
         <CPStatus>
           <CPLoginStatusText email={user?.email} />
-          <CPLoginButton onClick={handleLogin} />
+          <CPLoginButton
+            isLoggedIn={isLoggedIn}
+            onClick={loginButtonCallback}
+          />
         </CPStatus>
       </DocumentTitle>
     </Breadcrumb>
