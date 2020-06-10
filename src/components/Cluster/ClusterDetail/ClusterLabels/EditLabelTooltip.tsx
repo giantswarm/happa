@@ -147,7 +147,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           onClick={open}
           data-testid='add-label-button'
         >
-          Add
+          <i className='fa fa-add-circle' /> Add
         </AddLabelButton>
       ) : (
         <ValueLabel
