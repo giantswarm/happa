@@ -88,7 +88,7 @@ AdminLogin.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state: IState) {
+function mapStateToProps(state: Partial<IState>) {
   return {
     user: state.main.loggedInUser,
   };

@@ -86,6 +86,17 @@ class OAuth2 {
     }
   }
 
+  public async renewUser(): Promise<OAuth2UserImpl> {
+    try {
+      const origUser = await this.userManager.signinSilent();
+      const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+
+      return newUser;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
+
   public addEventListener<
     T extends OAuth2Events,
     U extends IOAuth2EventCallbacks[T]
