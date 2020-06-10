@@ -1,3 +1,4 @@
+import OAuth2UserImpl from 'lib/OAuth2/OAuth2User';
 import { User, UserManager, UserManagerSettings } from 'oidc-client';
 
 export enum OAuth2Events {
@@ -10,7 +11,7 @@ export enum OAuth2Events {
 }
 
 interface IOAuth2EventCallbacks {
-  [OAuth2Events.UserLoaded]: (event: CustomEvent<User>) => void;
+  [OAuth2Events.UserLoaded]: (event: CustomEvent<OAuth2UserImpl>) => void;
   [OAuth2Events.TokenExpired]: () => void;
   [OAuth2Events.TokenExpiring]: () => void;
   [OAuth2Events.UserUnloaded]: () => void;
@@ -57,12 +58,32 @@ class OAuth2 {
     return this.userManager.signinRedirect();
   }
 
-  public handleLoginResponse(currentURL: string): Promise<User> {
-    return this.userManager.signinRedirectCallback(currentURL);
+  public async handleLoginResponse(
+    currentURL: string
+  ): Promise<OAuth2UserImpl> {
+    try {
+      const origUser = await this.userManager.signinRedirectCallback(
+        currentURL
+      );
+      const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+
+      return newUser;
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 
-  public getLoggedInUser(): Promise<User | null> {
-    return this.userManager.getUser();
+  public async getLoggedInUser(): Promise<OAuth2UserImpl | null> {
+    try {
+      const origUser = await this.userManager.getUser();
+      if (!origUser) return null;
+
+      const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+
+      return newUser;
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 
   public addEventListener<
@@ -109,8 +130,9 @@ class OAuth2 {
 
   // TODO(axbarsan): Use custom `User` type.
   private onUserLoaded = (user: User) => {
+    const newUser = OAuth2UserImpl.fromOIDCUser(user);
     const event = new CustomEvent(OAuth2Events.UserLoaded, {
-      detail: user,
+      detail: newUser,
     });
     this.eventEmitter.dispatchEvent(event);
   };
