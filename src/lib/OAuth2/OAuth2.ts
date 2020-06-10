@@ -26,6 +26,7 @@ export interface IOAuth2Config {
   responseType?: string;
   scope?: string;
   prompt?: string;
+  automaticSilentRenew?: boolean;
 }
 
 class OAuth2 {
@@ -41,6 +42,9 @@ class OAuth2 {
       response_type: config.responseType,
       scope: config.scope,
       prompt: config.prompt,
+      automaticSilentRenew: config.automaticSilentRenew,
+      includeIdTokenInSilentRenew: true,
+      loadUserInfo: false,
     };
 
     this.eventEmitter = new EventTarget();
@@ -49,12 +53,16 @@ class OAuth2 {
     this.registerInternalEvents();
   }
 
-  public async attemptLogin(): Promise<void> {
+  public attemptLogin(): Promise<void> {
     return this.userManager.signinRedirect();
   }
 
-  public async handleLoginResponse(): Promise<User> {
-    return this.userManager.signinRedirectCallback();
+  public handleLoginResponse(currentURL: string): Promise<User> {
+    return this.userManager.signinRedirectCallback(currentURL);
+  }
+
+  public getLoggedInUser(): Promise<User | null> {
+    return this.userManager.getUser();
   }
 
   public addEventListener<

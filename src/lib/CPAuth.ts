@@ -7,9 +7,10 @@ const defaultConfig: IOAuth2Config = {
   clientSecret: 'TVHzVPin2WTiCma6bqp5hdxgKbWZKRbz',
   redirectUri: `${window.location.origin}${AppRoutes.CPAccessCallback}`,
   scope:
-    'openid profile email groups offline_access audience:server:client_id:dex-k8s-authenticator',
-  responseType: 'id_token',
+    'openid offline_access profile email groups audience:server:client_id:dex-k8s-authenticator',
+  responseType: 'id_token token',
   prompt: 'none',
+  automaticSilentRenew: true,
 };
 
 class CPAuth extends OAuth2 {

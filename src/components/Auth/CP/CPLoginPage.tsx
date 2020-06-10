@@ -38,11 +38,13 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
   );
 
   useEffect(() => {
-    if (window.location.href.includes(AppRoutes.CPAccessCallback)) {
+    const currentURL = window.location.href;
+
+    if (currentURL.includes(AppRoutes.CPAccessCallback)) {
       const handleAuthParams = async () => {
         try {
           const auth = CPAuth.getInstance();
-          await auth.handleLoginResponse();
+          await auth.handleLoginResponse(currentURL);
         } catch (err) {
           console.log(err);
         }
