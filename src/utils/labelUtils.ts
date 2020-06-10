@@ -8,14 +8,6 @@ import { Constants } from 'shared';
 // check functions IsValidLabelValue for label values
 //               & IsQualifiedName for label keys
 
-export interface IValidation {
-  isValid: boolean;
-  validationError: string;
-}
-
-export interface IValidationFunction {
-  (valueOrKey: string): IValidation;
-}
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IisDNS1123Subdomain {
   (value: string): boolean;

@@ -14,6 +14,7 @@ const FlexRowDiv = styled.div`
   p {
     display: inline;
     margin: 0 10px 0 0;
+    font-size: 14px;
   }
   .progress_button--container {
     position: relative;
@@ -66,7 +67,10 @@ class ReleaseSelector extends React.PureComponent {
             this.releaseDetailsModal = r;
           }}
           releases={this.props.selectableReleases}
-          selectRelease={this.props.selectRelease}
+          selectRelease={(r) => {
+            this.releaseDetailsModal.close();
+            this.props.selectRelease(r);
+          }}
           selectedRelease={this.props.selectedRelease}
         />
       </>

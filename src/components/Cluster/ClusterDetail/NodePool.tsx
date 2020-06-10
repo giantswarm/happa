@@ -16,12 +16,7 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-const NPViewAndEditNameStyled = styled<
-  React.ForwardRefExoticComponent<{}>,
-  // TODO: Remove this once `ViewAndEditName` is typed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any
->(ViewAndEditName)`
+const NPViewAndEditNameStyled = styled(ViewAndEditName)`
   input[type='text'] {
     font-size: 15px;
     line-height: 1.8em;
@@ -76,9 +71,8 @@ const MixedInstanceType = styled(Code)`
   background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
-interface INPViewAndEditName {
+interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
-  name: string;
 }
 
 interface IStateProps {
@@ -260,11 +254,11 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           style={{ gridColumn: isNameBeingEdited ? '2 / 9' : undefined }}
         >
           <NPViewAndEditNameStyled
-            name={nodePool.name}
-            type='node pool'
-            onSubmit={this.editNodePoolName}
-            ref={(viewEditName: INPViewAndEditName): void => {
-              this.viewEditNameRef = viewEditName;
+            value={nodePool.name}
+            typeLabel='node pool'
+            onSave={this.editNodePoolName}
+            ref={(viewEditName: HTMLSpanElement | null): void => {
+              this.viewEditNameRef = viewEditName as INPViewAndEditName;
             }}
             onToggleEditingState={this.toggleEditingState}
           />

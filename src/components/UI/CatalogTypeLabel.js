@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   font-size: 12px;
   display: inline-block;
   margin-bottom: 12px;
+  margin-right: 10px;
 
   span {
     background-color: #1e4156;

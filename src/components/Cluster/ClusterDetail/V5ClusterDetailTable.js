@@ -25,6 +25,7 @@ import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 
 import AddNodePool from './AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';
@@ -153,70 +154,9 @@ const AddNodePoolWrapperDiv = styled.div`
   padding: 20px 20px 40px;
 `;
 
-export const AddNodePoolFlexColumnDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  max-width: 650px;
-  margin: 0 auto;
-  label {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin: 0 0 31px;
-    &.instance-type {
-      margin-bottom: 21px;
-    }
-    p {
-      line-height: 1.4;
-    }
-  }
-  label:last-of-type {
-    margin-bottom: 0;
-  }
-  .label-span {
-    color: ${(props) => props.theme.colors.white1};
-  }
-  .label-span,
-  input,
-  select {
-    font-size: 16px;
-    margin-bottom: 13px;
-    font-weight: 400;
-  }
-  input {
-    box-sizing: border-box;
-    width: 100%;
-    background-color: ${(props) => props.theme.colors.shade5};
-    padding: 11px 10px;
-    outline: 0;
-    color: ${(props) => props.theme.colors.whiteInput};
-    border-radius: 4px;
-    border: 1px solid ${(props) => props.theme.colors.shade6};
-    padding-left: 15px;
-    line-height: normal;
-  }
-  p {
-    margin: 0;
-    font-size: 14px;
-    color: ${(props) => props.theme.colors.white1};
-  }
+export const AddNodePoolFlexColumnDiv = styled(FlexColumn)`
   a {
     text-decoration: underline;
-  }
-  /* Name input */
-  .name-container {
-    position: relative;
-    margin-bottom: 23px;
-  }
-  input[id='name'] {
-    margin-bottom: 0;
-  }
-  /* Overrides for AWSInstanceTypeSelector */
-  .textfield label,
-  .textfield,
-  .textfield input {
-    margin: 0;
   }
   /* Overrides for NumberPicker */
   .availability-zones {
@@ -240,10 +180,7 @@ export const AddNodePoolFlexColumnDiv = styled.div`
   }
 `;
 
-export const FlexWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+const NodePoolsFlexWrapperDiv = styled(FlexWrapperDiv)`
   p {
     font-size: 14px;
     line-height: 1.2;
@@ -637,7 +574,9 @@ class V5ClusterDetailTable extends React.Component {
           </SlideTransition>
         )}
         {!this.state.isNodePoolBeingAdded && !loadingNodePools && (
-          <FlexWrapperDiv className={zeroNodePools && 'zero-nodepools'}>
+          <NodePoolsFlexWrapperDiv
+            className={zeroNodePools && 'zero-nodepools'}
+          >
             {zeroNodePools && (
               <p>
                 Add at least one node pool to this cluster so that you can
@@ -663,7 +602,7 @@ class V5ClusterDetailTable extends React.Component {
                 </a>
               </p>
             )}
-          </FlexWrapperDiv>
+          </NodePoolsFlexWrapperDiv>
         )}
         <p className='last-updated' style={{ marginTop: '20px' }}>
           <small>

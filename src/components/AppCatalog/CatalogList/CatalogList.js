@@ -15,8 +15,10 @@ const CatalogList = (props) => {
 
     const labels = catalog.metadata.labels;
     const catalogType = labels['application.giantswarm.io/catalog-type'];
+    const catalogVisibility =
+      labels['application.giantswarm.io/catalog-visibility'];
 
-    return catalogType !== 'internal';
+    return catalogType !== 'internal' && catalogVisibility !== 'internal';
   };
 
   return (

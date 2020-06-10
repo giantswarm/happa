@@ -62,6 +62,7 @@ const theme: ITheme = {
     greenNew: '#24A524',
   },
   border_radius: '4px',
+  spacingPx: 4,
   breakpoints: {
     [CSSBreakpoints.Small]: 540,
     [CSSBreakpoints.Medium]: 825,

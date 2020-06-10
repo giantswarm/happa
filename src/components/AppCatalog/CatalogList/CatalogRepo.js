@@ -74,6 +74,9 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
         <CatalogTypeLabel
           catalogType={labels['application.giantswarm.io/catalog-type']}
         />
+        <CatalogTypeLabel
+          catalogType={labels['application.giantswarm.io/catalog-visibility']}
+        />
         <ReactMarkdown renderers={markdownRenderers}>
           {description}
         </ReactMarkdown>
