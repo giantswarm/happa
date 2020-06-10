@@ -1,5 +1,5 @@
 export interface IAppCatalog {
-  metaData: IMetaData;
+  metadata: IMetaData;
   spec: ISpec;
 }
 

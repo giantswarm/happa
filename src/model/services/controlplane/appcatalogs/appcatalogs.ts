@@ -54,7 +54,7 @@ function convertAppCatalogCRToCatalog(
   };
 
   const newCatalog: IAppCatalog = {
-    metaData: metadata,
+    metadata: metadata,
     spec: spec,
   };
 

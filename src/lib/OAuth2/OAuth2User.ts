@@ -1,9 +1,12 @@
 import { User } from 'oidc-client';
+import { AuthorizationTypes } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 
 export interface IOAuth2User {
   idToken: string;
   accessToken: string;
   expiresAt: number;
+  authorizationType: PropertiesOf<typeof AuthorizationTypes>;
 
   groups: string[];
   email: string;
@@ -14,6 +17,8 @@ class OAuth2UserImpl implements IOAuth2User {
   public readonly idToken: string = '';
   public readonly accessToken: string = '';
   public readonly expiresAt: number = 0;
+  public readonly authorizationType: PropertiesOf<typeof AuthorizationTypes> =
+    AuthorizationTypes.BEARER;
 
   public readonly groups: string[] = [];
   public readonly email: string = '';
@@ -54,6 +59,7 @@ class OAuth2UserImpl implements IOAuth2User {
       idToken: this.idToken,
       accessToken: this.accessToken,
       expiresAt: this.expiresAt,
+      authorizationType: this.authorizationType,
 
       groups: this.groups,
       email: this.email,
