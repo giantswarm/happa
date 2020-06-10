@@ -17,6 +17,7 @@ interface IEditLabelTooltip {
   value: string;
 
   allowInteraction?: boolean;
+  className?: string;
 }
 
 const EditLabelTooltipWrapper = styled.div`
@@ -81,6 +82,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   onSave,
   value,
   allowInteraction,
+  className,
 }) => {
   const [currentlyEditing, setCurrentlyEditing] = useState(false);
 
@@ -138,7 +140,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   };
 
   return (
-    <EditLabelTooltipWrapper ref={divElement}>
+    <EditLabelTooltipWrapper ref={divElement} className={className}>
       {label === '' ? (
         <AddLabelButton
           disabled={!allowInteraction || currentlyEditing}
@@ -227,6 +229,7 @@ EditLabelTooltip.propTypes = {
   value: PropTypes.string.isRequired,
 
   allowInteraction: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default EditLabelTooltip;
