@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import StyledInput from 'UI/ClusterCreation/StyledInput';
 import RadioInput from 'UI/Inputs/RadioInput';
 
 const InputGroup = styled.fieldset`
@@ -11,8 +12,6 @@ const InputSubtitle = styled.small`
   font-size: 0.74rem;
   padding-left: 29px;
 `;
-
-// TODO: Remove 'skip-format' and other external class names once possible, to make this extendable.
 
 interface IMasterNodesProps {
   isHighAvailability?: boolean;
@@ -29,42 +28,40 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   };
 
   return (
-    <>
-      <span className='label-span'>Master nodes</span>
-      <div>
-        <InputGroup>
-          <RadioInput
-            id='high-availability'
-            label='High availability'
-            rootProps={{ className: 'skip-format' }}
-            className='skip-format'
-            checked={isHighAvailability}
-            value='true'
-            name='high-availability'
-            onChange={handleChange(true)}
-          />
-          <InputSubtitle>
-            Three master nodes, each placed in a separate availability zone,
-            selected at random. Preferred for production clusters.
-          </InputSubtitle>
-        </InputGroup>
-        <InputGroup>
-          <RadioInput
-            id='single-master'
-            label='Single master'
-            rootProps={{ className: 'skip-format' }}
-            className='skip-format'
-            checked={!isHighAvailability}
-            value='false'
-            name='high-availability'
-            onChange={handleChange(false)}
-          />
-          <InputSubtitle>
-            One master node, placed in an availability zone selected at random.
-          </InputSubtitle>
-        </InputGroup>
-      </div>
-    </>
+    <StyledInput
+      inputId='master-nodes'
+      label='Master nodes'
+      // "breaking space" hides the hint
+      hint={<>&#32;</>}
+    >
+      <InputGroup>
+        <RadioInput
+          id='high-availability'
+          label='High availability'
+          checked={isHighAvailability}
+          value='true'
+          name='high-availability'
+          onChange={handleChange(true)}
+        />
+        <InputSubtitle>
+          Three master nodes, each placed in a separate availability zone,
+          selected at random. Preferred for production clusters.
+        </InputSubtitle>
+      </InputGroup>
+      <InputGroup>
+        <RadioInput
+          id='single-master'
+          label='Single master'
+          checked={!isHighAvailability}
+          value='false'
+          name='high-availability'
+          onChange={handleChange(false)}
+        />
+        <InputSubtitle>
+          One master node, placed in an availability zone selected at random.
+        </InputSubtitle>
+      </InputGroup>
+    </StyledInput>
   );
 };
 

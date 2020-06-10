@@ -248,8 +248,6 @@ class CreateNodePoolsCluster extends Component {
                       checked={!hasAZLabels}
                       label='Automatic'
                       onChange={() => this.toggleMasterAZSelector(false)}
-                      rootProps={{ className: 'skip-format' }}
-                      className='skip-format'
                     />
                   </InputGroup>
                   <InputGroup>
@@ -258,8 +256,6 @@ class CreateNodePoolsCluster extends Component {
                       checked={hasAZLabels}
                       label='Manual'
                       onChange={() => this.toggleMasterAZSelector(true)}
-                      rootProps={{ className: 'skip-format' }}
-                      className='skip-format'
                     />
                   </InputGroup>
                 </div>
