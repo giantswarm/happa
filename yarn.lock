@@ -6083,6 +6083,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+"giantswarm-cp-client@https://github.com/giantswarm/giantswarm-cp-client":
+  version "1.0.0"
+  resolved "https://github.com/giantswarm/giantswarm-cp-client#f133a742a1d8e8031778b22c56577c5ccf43c58e"
+
 "giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git":
   version "4.0.1"
   resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#fbc4838ae77f65ca9edd00884392e3c583ef6e04"
