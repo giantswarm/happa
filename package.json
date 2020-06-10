@@ -51,7 +51,7 @@
     "dotenv": "8.2.0",
     "emotion-theming": "10.0.27",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
-    "giantswarm-cp-client": "https://github.com/giantswarm/giantswarm-cp-client",
+    "giantswarm-cp-client": "git+https://github.com/giantswarm/giantswarm-cp-client.git",
     "history": "4.10.1",
     "immer": "6.0.9",
     "immutable": "3.8.2",
