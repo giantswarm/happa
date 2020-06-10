@@ -5,5 +5,9 @@ import { ICPAuthState } from 'stores/cpauth/types';
 export interface IState extends Record<string, any> {
   entities: {
     cpAuth: ICPAuthState;
+    clusterLabels: {
+      requestInProgress: string;
+      error: Error | null;
+    };
   };
 }

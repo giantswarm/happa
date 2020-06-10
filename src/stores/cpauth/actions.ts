@@ -18,38 +18,38 @@ import {
   ICPAuthUserSignedOutAction,
 } from 'stores/cpauth/types';
 
-export const userExpiring = (): ICPAuthUserExpiringAction => {
+export function userExpiring(): ICPAuthUserExpiringAction {
   return {
     type: CPAUTH_USER_EXPIRING,
   };
-};
+}
 
-export const userExpired = (): ICPAuthUserExpiredAction => {
+export function userExpired(): ICPAuthUserExpiredAction {
   return {
     type: CPAUTH_USER_EXPIRED,
   };
-};
+}
 
-export const userSignedOut = (): ICPAuthUserSignedOutAction => {
+export function userSignedOut(): ICPAuthUserSignedOutAction {
   return {
     type: CPAUTH_USER_SIGNED_OUT,
   };
-};
+}
 
-export const userSessionTerminated = (): ICPAuthUserSessionTerminatedAction => {
+export function userSessionTerminated(): ICPAuthUserSessionTerminatedAction {
   return {
     type: CPAUTH_USER_SESSION_TERMINATED,
   };
-};
+}
 
-export const loadUserSuccess = (
+export function loadUserSuccess(
   user: IOAuth2User | null
-): ICPAuthLoadUserActionSuccess => {
+): ICPAuthLoadUserActionSuccess {
   return {
     type: CPAUTH_USER_LOAD_SUCCESS,
     response: user,
   };
-};
+}
 
 export const loadUser = createAsynchronousAction<
   CPAuth,
