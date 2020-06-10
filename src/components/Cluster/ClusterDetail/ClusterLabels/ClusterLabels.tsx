@@ -84,8 +84,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
       <LabelsTitle>Labels:</LabelsTitle>
       {noLabels ? (
         <NoLabels>
-          This cluster has no labels. You can add a label by clicking the Add
-          button.
+          This cluster has no labels.
           <NoLabelsEditLabelTooltip
             allowInteraction={!loading && allowEditing}
             label=''
