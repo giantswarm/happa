@@ -87,7 +87,11 @@ module.exports = {
     'no-loop-func': 2,
     'no-magic-numbers': [
       1,
-      { ignore: [-1, 0, 1, 2], detectObjects: false, enforceConst: true },
+      {
+        ignore: [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        detectObjects: false,
+        enforceConst: true,
+      },
     ],
     'no-multi-str': 1,
     'no-new-func': 2,

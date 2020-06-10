@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
@@ -22,9 +20,4 @@ const Cluster = () => (
   </Switch>
 );
 
-Cluster.propTypes = {
-  dispatch: PropTypes.func,
-  match: PropTypes.object,
-};
-
-export default connect()(Cluster);
+export default Cluster;

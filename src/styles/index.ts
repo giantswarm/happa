@@ -61,6 +61,7 @@ export interface ITheme {
   breakpoints: Record<CSSBreakpoints, number>;
   fontFamilies: IThemeFonts;
   border: string;
+  spacingPx: number;
 }
 
 /***** BASE STYLES ****/
