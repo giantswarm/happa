@@ -57,6 +57,10 @@ const NoLabels = styled.div`
   grid-area: labels;
 `;
 
+const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
+  margin-left: ${({ theme }) => theme.spacingPx * 2}px;
+`;
+
 const ClusterLabels: FC<IClusterLabelsProps> = ({
   className,
   clusterId,
@@ -80,15 +84,14 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
       <LabelsTitle>Labels:</LabelsTitle>
       {noLabels ? (
         <NoLabels>
-          This cluster has no labels. You can add a label by clicking the{' '}
-          <EditLabelTooltip
+          This cluster has no labels.
+          <NoLabelsEditLabelTooltip
             allowInteraction={!loading && allowEditing}
             label=''
             onOpen={(isOpen) => setAllowEditing(isOpen)}
             onSave={save}
             value=''
-          />{' '}
-          button.
+          />
         </NoLabels>
       ) : (
         <>
