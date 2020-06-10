@@ -41,6 +41,14 @@ class OAuth2UserImpl implements IOAuth2User {
     }
   }
 
+  public isExpired(): boolean {
+    const sInMs = 1000;
+    const now = Math.trunc(Date.now() / sInMs); // In seconds.
+    const expiresIn = this.expiresAt - now;
+
+    return expiresIn <= 0;
+  }
+
   public serialize(): IOAuth2User {
     return {
       idToken: this.idToken,
