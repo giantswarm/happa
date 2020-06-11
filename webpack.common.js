@@ -46,7 +46,7 @@ const makeFeatureFlags = () => {
         break;
 
       case 'boolean':
-        flags[flagName] = dirtyFlags[flagName];
+        flags[flagName] = flag;
         break;
     }
   }
