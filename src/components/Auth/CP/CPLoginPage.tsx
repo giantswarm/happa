@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import CPLoginButton from 'Auth/CP/CPLoginButton';
 import CPLoginStatusText from 'Auth/CP/CPLoginStatusText';
-import { replace } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { useCallback, useEffect } from 'react';
@@ -46,6 +45,9 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
       try {
         const auth = CPAuth.getInstance();
         await auth.logout();
+
+        // Force a reload, so we could re-run the batched actions.
+        window.location.href = AppRoutes.Home;
       } catch (err) {
         new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
       }
@@ -62,7 +64,8 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
           const auth = CPAuth.getInstance();
           await auth.handleLoginResponse(currentURL);
 
-          dispatch(replace(AppRoutes.CPAccess));
+          // Force a reload, so we could re-run the batched actions.
+          window.location.href = AppRoutes.Home;
         } catch (err) {
           new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
         }
