@@ -145,14 +145,17 @@ details view`, async () => {
   // Empty response
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
 
-  const { findByText, findByTestId, getAllByText } = renderRouteWithStore(
-    newClusterPath
-  );
+  const {
+    findByText,
+    findByTestId,
+    getAllByText,
+    getByTitle,
+  } = renderRouteWithStore(newClusterPath);
 
-  fireEvent.click(await findByText('Details and Alternatives'));
+  fireEvent.click(await findByText(/Available releases/i));
 
   fireEvent.click(
-    await findByTestId(`select-release-${preNodePoolRelease.version}`)
+    getByTitle(new RegExp(`Select release v${preNodePoolRelease.version}`, 'i'))
   );
 
   // Click the create cluster button.
@@ -244,22 +247,19 @@ it('it does not show disabled releases in release selection modal for regular us
     }
   );
 
-  const { findByText, getByTestId, queryByTestId } = renderRouteWithStore(
+  const { findByText, getByText, queryByText } = renderRouteWithStore(
     newClusterPath,
     {},
     storage
   );
 
-  fireEvent.click(await findByText('Details and Alternatives'));
-
-  // Wait for the modal to pop up.
-  await findByText('Release Details');
+  fireEvent.click(await findByText(/Available releases/i));
 
   for (const { version, active } of releasesResponse) {
     if (active === true) {
-      expect(getByTestId(`release-${version}`)).toBeInTheDocument();
+      expect(getByText(`v${version}`)).toBeInTheDocument();
     } else {
-      expect(queryByTestId(`release-${version}`)).not.toBeInTheDocument();
+      expect(queryByText(`v${version}`)).not.toBeInTheDocument();
     }
   }
 });
@@ -281,18 +281,15 @@ it('it displays disabled releases in release selection modal for admin users', a
     }
   );
 
-  const { findByText, getByTestId } = renderRouteWithStore(
+  const { findByText, getByText } = renderRouteWithStore(
     newClusterPath,
     {},
     storage
   );
 
-  fireEvent.click(await findByText('Details and Alternatives'));
-
-  // Wait for the modal to pop up.
-  await findByText('Release Details');
+  fireEvent.click(await findByText(/Available releases/i));
 
   for (const { version } of releasesResponse) {
-    expect(getByTestId(`release-${version}`)).toBeInTheDocument();
+    expect(getByText(`v${version}`)).toBeInTheDocument();
   }
 });

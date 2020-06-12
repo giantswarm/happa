@@ -62,9 +62,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             {({ css }) => (
               <StyledRadioInput
                 id={`select-${version}`}
-                // label='High availability'
-                // rootProps={{ className: 'skip-format' }}
-                // className='skip-format'
+                title={`Select release v${version}`}
                 checked={isSelected}
                 value={isSelected ? 'true' : 'false'}
                 name={`select-${version}`}
@@ -79,6 +77,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         <td>{kubernetesVersion}</td>
         <td>
           <TableButton
+            data-testid={`show-components-${version}`}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -91,6 +90,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         </td>
         <td>
           <TableButton
+            data-testid={`open-changelog-${version}`}
             href={`https://github.com/giantswarm/releases/blob/master/${provider}/v${version}/release-notes.md`}
             target='_blank'
             rel='noopener noreferrer'
@@ -104,7 +104,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
       {!collapsed && (
         <tr>
           <td colSpan={6}>
-            <ComponentsWrapper>
+            <ComponentsWrapper data-testid={`components-${version}`}>
               {components
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((component) => (
