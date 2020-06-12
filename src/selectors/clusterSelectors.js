@@ -166,7 +166,7 @@ export const selectTargetRelease = (state, cluster) => {
 
   if (!state.main.loggedInUser.isAdmin) {
     availableVersions = availableVersions.filter(
-      (release) => releases[release].active
+      (release) => releases[release].state === 'active'
     );
   }
 

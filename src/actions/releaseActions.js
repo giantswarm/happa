@@ -35,7 +35,7 @@ export function loadReleases() {
 
         if (!getState().main.loggedInUser.isAdmin) {
           activeSortedReleases = activeSortedReleases.filter(
-            (release) => releases[release].active
+            (release) => releases[release].state === 'active'
           );
         }
 

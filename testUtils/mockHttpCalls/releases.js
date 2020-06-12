@@ -1,5 +1,6 @@
 export const disabledRelease = {
   active: false,
+  state: 'deprecated',
   changelog: [
     {
       component: 'cloudformation',
@@ -91,6 +92,7 @@ export const disabledRelease = {
 
 export const preNodePoolRelease = {
   active: true,
+  state: 'active',
   changelog: [
     {
       component: 'cloudformation',
@@ -208,6 +210,7 @@ export const preNodePoolRelease = {
 
 export const nodePoolRelease = {
   active: true,
+  state: 'active',
   changelog: [
     {
       component: 'cloudformation',
@@ -332,6 +335,7 @@ export const nodePoolRelease = {
 
 export const nodePoolWithFlatcarRelease = {
   active: true,
+  state: 'active',
   changelog: [
     {
       component: 'See release notes',
@@ -424,7 +428,8 @@ export const nodePoolWithFlatcarRelease = {
   timestamp: '2020-05-11T15:00:00Z',
   version: '11.3.0',
 };
-// Just thre of them: a false release, a pre node pools release and a node pools release
+
+// Just three of them: a false release, a pre node pools release and a node pools release
 // A releases response with four responses:
 // - (A) a disabled one
 // - (B) enabled pre node pools
