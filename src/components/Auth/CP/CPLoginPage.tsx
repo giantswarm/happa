@@ -50,7 +50,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
       }
     },
-    [dispatch]
+    []
   );
 
   useEffect(() => {
