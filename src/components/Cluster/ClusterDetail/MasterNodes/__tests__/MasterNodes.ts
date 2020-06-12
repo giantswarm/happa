@@ -133,29 +133,6 @@ describe('MasterNodes', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('sorts availability zones alphabetically in ascending order', () => {
-    const visibleAZs = ['b', 'a', 'v', 'd'];
-
-    renderWithTheme(MasterNodes, {
-      isHA: true,
-      availabilityZones: visibleAZs,
-      numOfReadyNodes: 4,
-      numOfMaxHANodes: 4,
-      supportsReadyNodes: true,
-    });
-
-    const azLabel = screen.getByText(/availability zones/i);
-
-    const azs = [];
-    for (const child of (azLabel.parentElement as HTMLElement).children) {
-      if (Object.is(child, azLabel)) continue;
-
-      azs.push(child.textContent?.toLowerCase());
-    }
-
-    expect(azs).toStrictEqual(visibleAZs);
-  });
-
   it('hides the master node count if HA masters are not supported', () => {
     renderWithTheme(MasterNodes, {
       isHA: false,
