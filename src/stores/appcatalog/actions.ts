@@ -3,6 +3,7 @@ import CPClient from 'model/clients/CPClient';
 import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
+import FeatureFlags from 'shared/FeatureFlags';
 import { IAppCatalogsState, IStoredAppCatalog } from 'stores/appcatalog/types';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
 
@@ -16,11 +17,9 @@ export const listCatalogs = createAsynchronousAction<
   actionTypePrefix: 'LIST_CATALOGS',
 
   perform: async (currentState: IState): Promise<IAppCatalogsState> => {
-    const isCPOn = true;
-
     let catalogs: IAppCatalog[] = [];
 
-    if (isCPOn) {
+    if (FeatureFlags.FEATURE_CP_ACCESS) {
       const user = getCPAuthUser(currentState);
       if (!user) {
         throw new Error('You are not allowed to use this command.');

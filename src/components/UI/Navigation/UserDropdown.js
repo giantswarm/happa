@@ -7,6 +7,7 @@ import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
 import { AuthorizationTypes } from 'shared';
 import { AccountSettingsRoutes, AppRoutes } from 'shared/constants/routes';
+import FeatureFlags from 'shared/FeatureFlags';
 
 const Wrapper = styled.div`
   margin-left: 10px;
@@ -111,13 +112,17 @@ class UserDropdown extends React.Component {
               Account Settings
             </MenuItem>
           ) : undefined}
-          <MenuItem
-            componentClass={NavLink}
-            href={AppRoutes.CPAccess}
-            to={AppRoutes.CPAccess}
-          >
-            Control Plane Access
-          </MenuItem>
+
+          {FeatureFlags.FEATURE_CP_ACCESS && (
+            <MenuItem
+              componentClass={NavLink}
+              href={AppRoutes.CPAccess}
+              to={AppRoutes.CPAccess}
+            >
+              Control Plane Access
+            </MenuItem>
+          )}
+
           <MenuItem
             componentClass={NavLink}
             href={AppRoutes.Logout}

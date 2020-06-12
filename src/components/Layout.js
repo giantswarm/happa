@@ -24,6 +24,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import FeatureFlags from 'shared/FeatureFlags';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
@@ -81,7 +82,7 @@ class Layout extends React.Component {
             <div className='main col-9'>
               <Switch>
                 {/*prettier-ignore*/}
-                <Route component={Home} exact path={AppRoutes.Home} />
+                <Route component={Home} exact path={AppRoutes.Home}/>
                 <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
                 <Route component={Users} exact path={UsersRoutes.Home} />
                 <Route
@@ -98,7 +99,11 @@ class Layout extends React.Component {
                   exact
                   path={ExceptionNotificationTestRoutes.Home}
                 />
-                <Route component={CPLoginPage} path={AppRoutes.CPAccess} />
+
+                {FeatureFlags.FEATURE_CP_ACCESS && (
+                  <Route component={CPLoginPage} path={AppRoutes.CPAccess} />
+                )}
+
                 <Redirect path='*' to={AppRoutes.Home} />
               </Switch>
             </div>

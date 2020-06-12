@@ -27,6 +27,7 @@ module.exports = {
   globals: {
     FEATURE_CLUSTER_LABELS_V0: true,
     FEATURE_HA_MASTERS: true,
+    FEATURE_CP_ACCESS: false,
     // window.config object will now be available in all tests
     config: {
       apiEndpoint: 'http://1.2.3.4',

@@ -1,5 +1,6 @@
 import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
+import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
@@ -19,7 +20,7 @@ import releases from './releaseReducer';
 import users from './userReducer';
 
 const entities = combineReducers({
-  cpAuth,
+  cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
   catalogs,
   clusterLabels,
   clusters,
