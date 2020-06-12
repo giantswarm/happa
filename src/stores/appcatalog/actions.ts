@@ -1,10 +1,10 @@
 import GiantSwarm from 'giantswarm';
-import CPAuth from 'lib/CPAuth';
 import CPClient from 'model/clients/CPClient';
 import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import { IAppCatalogsState, IStoredAppCatalog } from 'stores/appcatalog/types';
+import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
@@ -15,14 +15,13 @@ export const listCatalogs = createAsynchronousAction<
 >({
   actionTypePrefix: 'LIST_CATALOGS',
 
-  perform: async (): Promise<IAppCatalogsState> => {
+  perform: async (currentState: IState): Promise<IAppCatalogsState> => {
     const isCPOn = true;
 
     let catalogs: IAppCatalog[] = [];
 
     if (isCPOn) {
-      const cpAuth = CPAuth.getInstance();
-      const user = await cpAuth.getLoggedInUser();
+      const user = getCPAuthUser(currentState);
       if (!user) {
         throw new Error('You are not allowed to use this command.');
       }
