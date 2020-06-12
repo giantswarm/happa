@@ -24,9 +24,9 @@ export default function configureStore(
     initialState,
     composeEnhancers(
       applyMiddleware(
+        cpAuthMiddleware(cpAuth),
         routerMiddleware(history),
         thunk,
-        cpAuthMiddleware(cpAuth),
         callAPIMiddleware
       )
     )
