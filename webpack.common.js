@@ -39,8 +39,15 @@ const makeFeatureFlags = () => {
   const flags = Object.create(null);
 
   for (const flagName of Object.keys(defaults)) {
-    if (typeof dirtyFlags[flagName] !== 'boolean') {
-      flags[flagName] = Boolean(JSON.parse(dirtyFlags[flagName].toLowerCase()));
+    const flag = dirtyFlags[flagName];
+    switch (typeof flag) {
+      case 'string':
+        flags[flagName] = flag.toLowerCase() === 'true';
+        break;
+
+      case 'boolean':
+        flags[flagName] = flag;
+        break;
     }
   }
 
