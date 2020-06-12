@@ -3,6 +3,7 @@ import CPLoginButton from 'Auth/CP/CPLoginButton';
 import CPLoginStatusText from 'Auth/CP/CPLoginStatusText';
 import { replace } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { useCallback, useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,7 +32,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         const auth = CPAuth.getInstance();
         await auth.attemptLogin();
       } catch (err) {
-        console.log(err);
+        new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
       }
     },
     []
@@ -46,7 +47,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         const auth = CPAuth.getInstance();
         await auth.logout();
       } catch (err) {
-        console.log(err);
+        new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
       }
     },
     [dispatch]
@@ -63,7 +64,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
 
           dispatch(replace(AppRoutes.CPAccess));
         } catch (err) {
-          console.log(err);
+          new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
         }
       };
 
