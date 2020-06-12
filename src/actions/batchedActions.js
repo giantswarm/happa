@@ -1,5 +1,5 @@
 import { push } from 'connected-react-router';
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';

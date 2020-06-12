@@ -9,7 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import { ErrorReporter } from 'lib/errors';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';

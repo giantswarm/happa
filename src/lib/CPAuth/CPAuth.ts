@@ -1,8 +1,9 @@
+import { getAuthorityURLFromGSApiURL } from 'lib/CPAuth/util';
 import OAuth2, { IOAuth2Config } from 'lib/OAuth2/OAuth2';
 import { AppRoutes } from 'shared/constants/routes';
 
 const defaultConfig: IOAuth2Config = {
-  authority: 'https://dex.g8s.ginger.eu-west-1.aws.gigantic.io',
+  authority: getAuthorityURLFromGSApiURL(window.config.apiEndpoint),
   clientId: 'zQiFLUnrTFQwrybYzeY53hWWfhOKWRAU',
   clientSecret: 'TVHzVPin2WTiCma6bqp5hdxgKbWZKRbz',
   redirectUri: `${window.location.origin}${AppRoutes.CPAccessCallback}`,

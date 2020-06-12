@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import CPLoginButton from 'Auth/CP/CPLoginButton';
 import CPLoginStatusText from 'Auth/CP/CPLoginStatusText';
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { useCallback, useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';

@@ -3,7 +3,7 @@ import App from 'App';
 import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { AppRoutes } from 'shared/constants/routes';

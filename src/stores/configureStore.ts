@@ -1,6 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import rootReducer from 'reducers';
 import {
   applyMiddleware,

@@ -1,4 +1,4 @@
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import { OAuth2Events } from 'lib/OAuth2/OAuth2';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import React, { ReactElement, useCallback, useEffect } from 'react';

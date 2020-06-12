@@ -1,4 +1,4 @@
-import CPAuth from 'lib/CPAuth';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import OAuth2UserImpl from 'lib/OAuth2/OAuth2User';
 import { AnyAction, Middleware } from 'redux';
 import { loadUserError, userExpired } from 'stores/cpauth/actions';
