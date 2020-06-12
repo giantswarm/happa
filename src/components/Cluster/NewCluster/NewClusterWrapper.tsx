@@ -26,7 +26,7 @@ import { computeCapabilities } from 'utils/clusterUtils';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
-import ReleaseSelector from './ReleaseSelector';
+import ReleaseSelector from './ReleaseSelector/ReleaseSelector';
 
 const clusterNameLengthValidator: IValidationFunction = (value) => {
   const [isValid, validationError] = hasAppropriateLength(
@@ -134,7 +134,6 @@ const NewClusterWrapper: FC<INewClusterWrapper> = ({
                   selectedRelease={selectedRelease}
                   selectableReleases={selectableReleases}
                   releases={releases}
-                  activeSortedReleases={activeSortedReleases}
                 />
               </StyledInput>
             </Section>
