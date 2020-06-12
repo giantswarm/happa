@@ -1,5 +1,10 @@
 import OAuth2UserImpl from 'lib/OAuth2/OAuth2User';
-import { User, UserManager, UserManagerSettings } from 'oidc-client';
+import {
+  User,
+  UserManager,
+  UserManagerSettings,
+  WebStorageStateStore,
+} from 'oidc-client';
 
 export enum OAuth2Events {
   UserLoaded = 'userLoaded',
@@ -34,6 +39,7 @@ export interface IOAuth2Config {
   revokeAccessTokenOnLogout?: boolean;
   filterProtocolClaims?: boolean;
   validateSubOnSilentRenew?: boolean;
+  persistenceMethod?: Storage;
 }
 
 class OAuth2 {
@@ -41,6 +47,10 @@ class OAuth2 {
   protected eventEmitter: EventTarget;
 
   constructor(config: IOAuth2Config) {
+    const persistenceMethod = new WebStorageStateStore({
+      store: config.persistenceMethod,
+    });
+
     const managerConfig: UserManagerSettings = {
       authority: config.authority,
       client_id: config.clientId,
@@ -56,6 +66,7 @@ class OAuth2 {
       revokeAccessTokenOnSignout: config.revokeAccessTokenOnLogout,
       filterProtocolClaims: config.filterProtocolClaims,
       validateSubOnSilentRenew: config.validateSubOnSilentRenew,
+      userStore: persistenceMethod,
     };
 
     this.eventEmitter = new EventTarget();

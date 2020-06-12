@@ -18,6 +18,7 @@ const defaultConfig: IOAuth2Config = {
   revokeAccessTokenOnLogout: true,
   filterProtocolClaims: true,
   validateSubOnSilentRenew: true,
+  persistenceMethod: localStorage,
 };
 
 class CPAuth extends OAuth2 {
