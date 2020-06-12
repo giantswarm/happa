@@ -122,7 +122,6 @@ class OAuth2 {
   }
 
   public async logout(): Promise<void> {
-    this.userManager.events.unload();
     await this.userManager.removeUser();
     await this.userManager.clearStaleState();
   }
