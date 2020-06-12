@@ -6,11 +6,13 @@ import {
   CPAUTH_USER_EXPIRED,
   CPAUTH_USER_EXPIRING,
   CPAUTH_USER_LOAD,
+  CPAUTH_USER_LOAD_ERROR,
   CPAUTH_USER_LOAD_SUCCESS,
   CPAUTH_USER_SESSION_TERMINATED,
   CPAUTH_USER_SIGNED_OUT,
 } from 'stores/cpauth/constants';
 import {
+  ICPAuthLoadUserActionError,
   ICPAuthLoadUserActionSuccess,
   ICPAuthUserExpiredAction,
   ICPAuthUserExpiringAction,
@@ -48,6 +50,13 @@ export function loadUserSuccess(
   return {
     type: CPAUTH_USER_LOAD_SUCCESS,
     response: user,
+  };
+}
+
+export function loadUserError(error: string): ICPAuthLoadUserActionError {
+  return {
+    type: CPAUTH_USER_LOAD_ERROR,
+    error,
   };
 }
 

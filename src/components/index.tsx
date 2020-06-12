@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
+import CPAuth from 'lib/CPAuth';
 import { ErrorReporter } from 'lib/errors';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
@@ -46,7 +47,7 @@ declare global {
 }
 
 // Configure the redux store.
-const store: Store = configureStore({}, history);
+const store: Store = configureStore({}, history, CPAuth.getInstance());
 
 // Patch the Giant Swarm client so it has access to the store and can dispatch
 // redux actions. This is needed because admin tokens expire after 5 minutes.

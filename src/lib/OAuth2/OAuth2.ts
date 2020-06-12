@@ -79,6 +79,7 @@ class OAuth2 {
       const origUser = await this.userManager.getUser();
       if (!origUser) return null;
 
+      this.userManager.events.load(origUser);
       const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
 
       return newUser;

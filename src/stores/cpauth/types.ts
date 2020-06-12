@@ -2,6 +2,7 @@ import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import {
   CPAUTH_USER_EXPIRED,
   CPAUTH_USER_EXPIRING,
+  CPAUTH_USER_LOAD_ERROR,
   CPAUTH_USER_LOAD_SUCCESS,
   CPAUTH_USER_SESSION_TERMINATED,
   CPAUTH_USER_SIGNED_OUT,
@@ -33,9 +34,15 @@ export interface ICPAuthLoadUserActionSuccess {
   response: IOAuth2User | null;
 }
 
+export interface ICPAuthLoadUserActionError {
+  type: typeof CPAUTH_USER_LOAD_ERROR;
+  error: string;
+}
+
 export type CPAuthActions =
   | ICPAuthUserExpiringAction
   | ICPAuthUserExpiredAction
   | ICPAuthUserSignedOutAction
   | ICPAuthUserSessionTerminatedAction
-  | ICPAuthLoadUserActionSuccess;
+  | ICPAuthLoadUserActionSuccess
+  | ICPAuthLoadUserActionError;
