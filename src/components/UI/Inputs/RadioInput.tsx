@@ -113,7 +113,6 @@ RadioInput.propTypes = {
   bulletProps: PropTypes.object,
   labelTextProps: PropTypes.object,
   rootProps: PropTypes.object,
-  className: PropTypes.string,
 };
 
 export default RadioInput;
