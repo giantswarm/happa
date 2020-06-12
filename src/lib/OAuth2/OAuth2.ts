@@ -29,6 +29,11 @@ export interface IOAuth2Config {
   scope?: string;
   prompt?: string;
   automaticSilentRenew?: boolean;
+  includeIDTokenInSilentRenew?: boolean;
+  loadUserInfo?: boolean;
+  revokeAccessTokenOnLogout?: boolean;
+  filterProtocolClaims?: boolean;
+  validateSubOnSilentRenew?: boolean;
 }
 
 class OAuth2 {
@@ -46,11 +51,11 @@ class OAuth2 {
       scope: config.scope,
       prompt: config.prompt,
       automaticSilentRenew: config.automaticSilentRenew,
-      includeIdTokenInSilentRenew: true,
-      loadUserInfo: true,
-      revokeAccessTokenOnSignout: true,
-      filterProtocolClaims: true,
-      validateSubOnSilentRenew: true,
+      includeIdTokenInSilentRenew: config.includeIDTokenInSilentRenew,
+      loadUserInfo: config.loadUserInfo,
+      revokeAccessTokenOnSignout: config.revokeAccessTokenOnLogout,
+      filterProtocolClaims: config.filterProtocolClaims,
+      validateSubOnSilentRenew: config.validateSubOnSilentRenew,
     };
 
     this.eventEmitter = new EventTarget();

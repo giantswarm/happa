@@ -13,6 +13,11 @@ const defaultConfig: IOAuth2Config = {
   responseMode: 'query',
   prompt: 'none',
   automaticSilentRenew: true,
+  includeIDTokenInSilentRenew: true,
+  loadUserInfo: true,
+  revokeAccessTokenOnLogout: true,
+  filterProtocolClaims: true,
+  validateSubOnSilentRenew: true,
 };
 
 class CPAuth extends OAuth2 {
