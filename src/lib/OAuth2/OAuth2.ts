@@ -47,7 +47,7 @@ class OAuth2 {
       prompt: config.prompt,
       automaticSilentRenew: config.automaticSilentRenew,
       includeIdTokenInSilentRenew: true,
-      loadUserInfo: false,
+      loadUserInfo: true,
       revokeAccessTokenOnSignout: true,
       filterProtocolClaims: true,
       validateSubOnSilentRenew: true,
@@ -103,6 +103,12 @@ class OAuth2 {
     } catch (err) {
       return Promise.reject(err);
     }
+  }
+
+  public async logout(): Promise<void> {
+    this.userManager.events.unload();
+    await this.userManager.removeUser();
+    await this.userManager.clearStaleState();
   }
 
   public addEventListener<

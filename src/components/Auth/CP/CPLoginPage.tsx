@@ -8,7 +8,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { userSignedOut } from 'stores/cpauth/actions';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 const CPStatus = styled.div`
@@ -39,11 +38,16 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
   );
 
   const handleLogout = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
-      dispatch(userSignedOut());
+      try {
+        const auth = CPAuth.getInstance();
+        await auth.logout();
+      } catch (err) {
+        console.log(err);
+      }
     },
     [dispatch]
   );
