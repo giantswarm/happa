@@ -26,9 +26,12 @@ export function cpAuthMiddleware(cpAuth: CPAuth): Middleware {
 
     // Let's get the latest user information.
     try {
-      const user = await cpAuth.getLoggedInUser();
+      let user = await cpAuth.getLoggedInUser();
       if (user?.isExpired()) {
-        return next(userExpired());
+        user = await cpAuth.renewUser();
+        if (user.isExpired()) {
+          return next(userExpired());
+        }
       }
 
       return next(action);

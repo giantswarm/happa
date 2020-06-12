@@ -1,7 +1,9 @@
 import { push } from 'connected-react-router';
+import CPAuth from 'lib/CPAuth';
 import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { loadUser } from 'stores/cpauth/actions';
 
 import * as appActions from './appActions';
 import * as clusterActions from './clusterActions';
@@ -14,6 +16,7 @@ import * as userActions from './userActions';
 export const batchedLayout = () => async (dispatch) => {
   try {
     await dispatch(userActions.refreshUserInfo());
+    await dispatch(loadUser(CPAuth.getInstance()));
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
     dispatch(listCatalogs());

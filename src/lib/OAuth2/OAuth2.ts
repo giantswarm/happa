@@ -91,6 +91,8 @@ class OAuth2 {
   public async renewUser(): Promise<OAuth2UserImpl> {
     try {
       const origUser = await this.userManager.signinSilent();
+
+      this.userManager.events.load(origUser);
       const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
 
       return newUser;
