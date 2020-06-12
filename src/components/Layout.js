@@ -77,7 +77,9 @@ class Layout extends React.Component {
             showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
             user={this.props.user}
           />
-          <CPAuthProvider />
+
+          {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
+
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
             <div className='main col-9'>
               <Switch>
