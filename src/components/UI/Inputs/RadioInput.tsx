@@ -73,6 +73,9 @@ interface IRadioInputProps
 
   /* Customization props for the root label element. */
   rootProps?: Omit<ComponentPropsWithRef<'label'>, 'htmlFor'>;
+
+  /* className for applying a class to the root. */
+  className?: string;
 }
 
 /**
@@ -90,10 +93,11 @@ const RadioInput: React.FC<IRadioInputProps> = ({
   labelTextProps,
   rootProps,
   disabled,
+  className,
   ...rest
 }) => {
   return (
-    <Label {...rootProps} htmlFor={id}>
+    <Label {...rootProps} htmlFor={id} className={className}>
       <StyledInput {...rest} type='radio' id={id} disabled={disabled} />
       <Bullet {...bulletProps} disabled={disabled} />
 
@@ -113,6 +117,7 @@ RadioInput.propTypes = {
   bulletProps: PropTypes.object,
   labelTextProps: PropTypes.object,
   rootProps: PropTypes.object,
+  className: PropTypes.string,
 };
 
 export default RadioInput;
