@@ -104,7 +104,7 @@ describe('V5ClusterManagement', () => {
 
     await waitFor(() => findAllByTestId('node-pool-id'));
 
-    nodePoolsResponse.forEach((nodePool) => {
+    nodePoolsResponse.forEach(nodePool => {
       expect(getByText(nodePool.id)).toBeInTheDocument();
     });
   });
@@ -615,7 +615,7 @@ scales node pools correctly`, async () => {
     } = renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
-    fireEvent.click(getByText('Add', { selector: 'button ' }));
+    fireEvent.click(getByText('Add label', { selector: 'button ' }));
 
     const keyInput = await findByLabelText('Label key:');
     const valueInput = getByLabelText('Label value:');
@@ -664,7 +664,7 @@ scales node pools correctly`, async () => {
     } = renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
-    fireEvent.click(getByText('Add', { selector: 'button ' }));
+    fireEvent.click(getByText('Add label', { selector: 'button ' }));
 
     const keyInput = await findByLabelText('Label key:');
     const valueInput = getByLabelText('Label value:');
