@@ -3,14 +3,19 @@ import CPAuth from 'lib/CPAuth';
 import CPClient from 'model/clients/CPClient';
 import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
+import { IState } from 'reducers/types';
+import { IAppCatalogsState, IStoredAppCatalog } from 'stores/appcatalog/types';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const listCatalogs = createAsynchronousAction<any, any, any>({
+export const listCatalogs = createAsynchronousAction<
+  undefined,
+  IState,
+  IAppCatalogsState
+>({
   actionTypePrefix: 'LIST_CATALOGS',
 
-  perform: async () => {
+  perform: async (): Promise<IAppCatalogsState> => {
     const isCPOn = true;
 
     let catalogs: IAppCatalog[] = [];
@@ -33,11 +38,11 @@ export const listCatalogs = createAsynchronousAction<any, any, any>({
 
     // Turn the array response into a hash where the keys are the catalog names.
     const catalogsHash = catalogs.reduce(
-      (agg: Record<string, IAppCatalog>, currCatalog) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (currCatalog as any).isFetchingIndex = false;
+      (agg: IAppCatalogsState, currCatalog) => {
+        const catalog: IStoredAppCatalog = currCatalog as IStoredAppCatalog;
+        catalog.isFetchingIndex = false;
 
-        agg[currCatalog.metadata.name] = currCatalog;
+        agg[currCatalog.metadata.name] = catalog;
 
         return agg;
       },

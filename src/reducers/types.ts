@@ -1,3 +1,4 @@
+import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { ICPAuthState } from 'stores/cpauth/types';
 
 // Giving state a generic type for now, until whole state is typed
@@ -9,5 +10,6 @@ export interface IState extends Record<string, any> {
       requestInProgress: string;
       error: Error | null;
     };
+    catalogs: IAppCatalogsState;
   };
 }
