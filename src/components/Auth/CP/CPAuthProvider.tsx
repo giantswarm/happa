@@ -41,7 +41,7 @@ const CPAuthProvider: React.FC<ICPAuthProviderProps> = ({ children }) => {
     cpAuth.addEventListener(OAuth2Events.UserSignedOut, onUserSignedOut);
     cpAuth.addEventListener(OAuth2Events.TokenExpiring, onTokenExpiring);
     cpAuth.addEventListener(OAuth2Events.TokenExpired, onTokenExpired);
-    cpAuth.addEventListener(OAuth2Events.SilentRenewError, console.log);
+    cpAuth.addEventListener(OAuth2Events.SilentRenewError, onUserSignedOut);
 
     return () => {
       cpAuth.removeEventListener(OAuth2Events.UserLoaded, onUserLoaded);
@@ -49,7 +49,10 @@ const CPAuthProvider: React.FC<ICPAuthProviderProps> = ({ children }) => {
       cpAuth.removeEventListener(OAuth2Events.UserSignedOut, onUserSignedOut);
       cpAuth.removeEventListener(OAuth2Events.TokenExpiring, onTokenExpiring);
       cpAuth.removeEventListener(OAuth2Events.TokenExpired, onTokenExpired);
-      cpAuth.removeEventListener(OAuth2Events.SilentRenewError, console.log);
+      cpAuth.removeEventListener(
+        OAuth2Events.SilentRenewError,
+        onUserSignedOut
+      );
     };
   }, [onUserLoaded, onUserSignedOut, onTokenExpiring, onTokenExpired]);
 

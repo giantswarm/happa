@@ -8,7 +8,8 @@ const defaultConfig: IOAuth2Config = {
   redirectUri: `${window.location.origin}${AppRoutes.CPAccessCallback}`,
   scope:
     'openid offline_access profile email groups audience:server:client_id:dex-k8s-authenticator',
-  responseType: 'id_token token',
+  responseType: 'code',
+  responseMode: 'query',
   prompt: 'none',
   automaticSilentRenew: true,
 };

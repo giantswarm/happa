@@ -25,6 +25,7 @@ export interface IOAuth2Config {
   clientSecret: string;
   redirectUri: string;
   responseType?: string;
+  responseMode?: 'query' | 'fragment';
   scope?: string;
   prompt?: string;
   automaticSilentRenew?: boolean;
@@ -41,12 +42,15 @@ class OAuth2 {
       client_secret: config.clientSecret,
       redirect_uri: config.redirectUri,
       response_type: config.responseType,
+      response_mode: config.responseMode,
       scope: config.scope,
       prompt: config.prompt,
       automaticSilentRenew: config.automaticSilentRenew,
       includeIdTokenInSilentRenew: true,
       loadUserInfo: false,
       revokeAccessTokenOnSignout: true,
+      filterProtocolClaims: true,
+      validateSubOnSilentRenew: true,
     };
 
     this.eventEmitter = new EventTarget();
@@ -56,7 +60,7 @@ class OAuth2 {
   }
 
   public attemptLogin(): Promise<void> {
-    return this.userManager.signinRedirect();
+    return this.userManager.signinRedirect({ useReplaceToNavigate: true });
   }
 
   public async handleLoginResponse(
@@ -143,7 +147,6 @@ class OAuth2 {
     this.userManager.events.addSilentRenewError(this.onSilentRenewError);
   }
 
-  // TODO(axbarsan): Use custom `User` type.
   protected onUserLoaded = (user: User) => {
     const newUser = OAuth2UserImpl.fromOIDCUser(user);
     const event = new CustomEvent(OAuth2Events.UserLoaded, {

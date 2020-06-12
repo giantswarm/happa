@@ -4,7 +4,7 @@ import { PropertiesOf } from 'shared/types';
 
 export interface IOAuth2User {
   idToken: string;
-  accessToken: string;
+  refreshToken: string;
   expiresAt: number;
   authorizationType: PropertiesOf<typeof AuthorizationTypes>;
 
@@ -15,7 +15,7 @@ export interface IOAuth2User {
 
 class OAuth2UserImpl implements IOAuth2User {
   public readonly idToken: string = '';
-  public readonly accessToken: string = '';
+  public readonly refreshToken: string = '';
   public readonly expiresAt: number = 0;
   public readonly authorizationType: PropertiesOf<typeof AuthorizationTypes> =
     AuthorizationTypes.BEARER;
@@ -27,7 +27,7 @@ class OAuth2UserImpl implements IOAuth2User {
   public static fromOIDCUser(user: User): OAuth2UserImpl {
     const newUser = new OAuth2UserImpl({
       idToken: user.id_token,
-      accessToken: user.access_token,
+      refreshToken: user.refresh_token,
       expiresAt: user.expires_at,
       groups: user.profile.groups || [],
       email: user.profile.email,
@@ -57,7 +57,7 @@ class OAuth2UserImpl implements IOAuth2User {
   public serialize(): IOAuth2User {
     return {
       idToken: this.idToken,
-      accessToken: this.accessToken,
+      refreshToken: this.refreshToken,
       expiresAt: this.expiresAt,
       authorizationType: this.authorizationType,
 
