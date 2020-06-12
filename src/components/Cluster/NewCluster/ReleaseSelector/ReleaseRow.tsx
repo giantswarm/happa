@@ -1,4 +1,4 @@
-import { ClassNames } from '@emotion/core';
+import { css, Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -35,8 +35,13 @@ const Tr = styled.tr<{ isSelected: boolean }>`
     isSelected ? theme.colors.foreground : 'transparent'};
 `;
 
-const StyledRadioInput = styled(RadioInput)`
-  margin-bottom: 0;
+const BulletStyle = css`
+  span.release-selection-bullet {
+    margin-right: 0;
+  }
+  .release-selection-radio {
+    margin-bottom: 0;
+  }
 `;
 
 const ReleaseRow: FC<IReleaseRow> = ({
@@ -56,21 +61,19 @@ const ReleaseRow: FC<IReleaseRow> = ({
 
   return (
     <>
+      <Global styles={BulletStyle} />
       <Tr isSelected={isSelected} onClick={() => selectRelease(version)}>
         <td>
-          <ClassNames>
-            {({ css }) => (
-              <StyledRadioInput
-                id={`select-${version}`}
-                title={`Select release v${version}`}
-                checked={isSelected}
-                value={isSelected ? 'true' : 'false'}
-                name={`select-${version}`}
-                onChange={() => selectRelease(version)}
-                bulletProps={{ className: css({ margin: 0 }) }}
-              />
-            )}
-          </ClassNames>
+          <RadioInput
+            id={`select-${version}`}
+            title={`Select release v${version}`}
+            checked={isSelected}
+            value={isSelected ? 'true' : 'false'}
+            name={`select-${version}`}
+            onChange={() => selectRelease(version)}
+            rootProps={{ className: 'release-selection-radio' }}
+            bulletProps={{ className: 'release-selection-bullet' }}
+          />
         </td>
         <td>v{version}</td>
         <td>{relativeDate(timestamp)}</td>
