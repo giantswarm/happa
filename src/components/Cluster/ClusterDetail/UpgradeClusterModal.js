@@ -155,8 +155,8 @@ class UpgradeClusterModal extends React.Component {
               please make sure to have enough workers before upgrading.
             </li>
             <li>
-              The master node will be terminated and replaced by a new one. The
-              Kubernetes API will be unavailable during this time.
+              The master nodes will be terminated one by one. The Kubernetes API
+              may be briefly unavailable during this process.
             </li>
           </ul>
         </BootstrapModal.Body>
