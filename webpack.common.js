@@ -32,7 +32,7 @@ const makeFeatureFlags = () => {
   const defaults = {
     FEATURE_CLUSTER_LABELS_V0: true,
     FEATURE_HA_MASTERS: false,
-    FEATURE_CP_ACCESS: false,
+    FEATURE_CP_ACCESS: true,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);

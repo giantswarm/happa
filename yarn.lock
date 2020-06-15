@@ -6079,7 +6079,7 @@ getpass@^0.1.1:
 
 "giantswarm-cp-client@git+https://github.com/giantswarm/giantswarm-cp-client.git":
   version "1.0.0"
-  resolved "git+https://github.com/giantswarm/giantswarm-cp-client.git#5744585a520f8eab3815f405ae7e54a276990cea"
+  resolved "git+https://github.com/giantswarm/giantswarm-cp-client.git#e9ac9c6ef1108329e3a6a260dc9e74ec17a25144"
 
 "giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git":
   version "4.0.1"
