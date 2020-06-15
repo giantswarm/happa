@@ -48,8 +48,8 @@ describe('computeCapabilities', () => {
         expect(capabilities.supportsHAMasters).toBe(false);
       });
 
-      it('is true for AWS at 12.0.1', () => {
-        const capabilities = computeCapabilities('11.5.0', 'aws');
+      it('is true for AWS at 11.4.0', () => {
+        const capabilities = computeCapabilities('11.4.0', 'aws');
         expect(capabilities.supportsHAMasters).toBe(true);
       });
 
