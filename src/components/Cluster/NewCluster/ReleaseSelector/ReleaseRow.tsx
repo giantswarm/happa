@@ -21,6 +21,7 @@ const TableButton = styled(Button)`
   top: -2px;
   margin-left: 5px;
   padding: 0px 15px;
+  text-transform: uppercase;
   i {
     margin-right: 4px;
   }
