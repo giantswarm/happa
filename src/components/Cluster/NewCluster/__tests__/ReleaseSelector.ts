@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import {
   getComponentWithStore,
@@ -77,7 +77,7 @@ describe('ReleaseSelector', () => {
   });
 
   it('renders expanded once clicked', () => {
-    renderWithStore(
+    const { container } = renderWithStore(
       ReleaseSelector,
       // @ts-ignore
       { ...defaultProps },
@@ -97,8 +97,12 @@ describe('ReleaseSelector', () => {
       expect(screen.getByText(heading)).toBeInTheDocument();
     }
 
+    const table = container.querySelector('table');
+
     for (const release of mockSelectableReleases) {
-      expect(screen.getByText(`v${release.version}`)).toBeInTheDocument();
+      expect(
+        within(table as HTMLTableElement).getByText(release.version)
+      ).toBeInTheDocument();
       expect(
         screen.getByTestId(`show-components-${release.version}`)
       ).toBeInTheDocument();
@@ -144,7 +148,7 @@ describe('ReleaseSelector', () => {
 
     const versionToSelect = defaultProps.selectableReleases[1].version;
     fireEvent.click(
-      screen.getByTitle(new RegExp(`Select release v${versionToSelect}`, 'i'))
+      screen.getByTitle(new RegExp(`Select release ${versionToSelect}`, 'i'))
     );
 
     expect(selectReleaseCallbackMock).toBeCalledWith(versionToSelect);

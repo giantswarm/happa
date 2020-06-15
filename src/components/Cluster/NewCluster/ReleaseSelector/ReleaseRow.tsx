@@ -71,7 +71,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         <td>
           <RadioInput
             id={`select-${version}`}
-            title={`Select release v${version}`}
+            title={`Select release ${version}`}
             checked={isSelected}
             value={isSelected ? 'true' : 'false'}
             name={`select-${version}`}
@@ -80,7 +80,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             bulletProps={{ className: 'release-selection-bullet' }}
           />
         </td>
-        <td>v{version}</td>
+        <td>{version}</td>
         <td>{relativeDate(timestamp)}</td>
         <td>{kubernetesVersion}</td>
         <td>
