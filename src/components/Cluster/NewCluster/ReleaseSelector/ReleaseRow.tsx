@@ -40,6 +40,10 @@ const Tr = styled.tr<{ isSelected: boolean }>`
   }
 `;
 
+const CursorPointerCell = styled.td`
+  cursor: pointer;
+`;
+
 const BulletStyle = css`
   span.release-selection-bullet {
     margin-right: 0;
@@ -68,7 +72,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
     <>
       <Global styles={BulletStyle} />
       <Tr isSelected={isSelected} onClick={() => selectRelease(version)}>
-        <td>
+        <CursorPointerCell>
           <RadioInput
             id={`select-${version}`}
             title={`Select release ${version}`}
@@ -79,11 +83,11 @@ const ReleaseRow: FC<IReleaseRow> = ({
             rootProps={{ className: 'release-selection-radio' }}
             bulletProps={{ className: 'release-selection-bullet' }}
           />
-        </td>
-        <td>{version}</td>
-        <td>{relativeDate(timestamp)}</td>
-        <td>{kubernetesVersion}</td>
-        <td>
+        </CursorPointerCell>
+        <CursorPointerCell>{version}</CursorPointerCell>
+        <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
+        <CursorPointerCell>{kubernetesVersion}</CursorPointerCell>
+        <td onClick={(e) => e.stopPropagation()}>
           <TableButton
             data-testid={`show-components-${version}`}
             onClick={(e) => {
@@ -96,7 +100,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             {collapsed ? 'Show' : 'Hide'}
           </TableButton>
         </td>
-        <td>
+        <td onClick={(e) => e.stopPropagation()}>
           <TableButton
             data-testid={`open-changelog-${version}`}
             href={`https://github.com/giantswarm/releases/blob/master/${provider}/v${version}/release-notes.md`}
