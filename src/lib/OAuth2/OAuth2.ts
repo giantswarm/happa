@@ -82,43 +82,29 @@ class OAuth2 {
   public async handleLoginResponse(
     currentURL: string
   ): Promise<OAuth2UserImpl> {
-    try {
-      const origUser = await this.userManager.signinRedirectCallback(
-        currentURL
-      );
-      const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+    const origUser = await this.userManager.signinRedirectCallback(currentURL);
+    const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
 
-      return newUser;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    return newUser;
   }
 
   public async getLoggedInUser(): Promise<OAuth2UserImpl | null> {
-    try {
-      const origUser = await this.userManager.getUser();
-      if (!origUser) return null;
+    const origUser = await this.userManager.getUser();
+    if (!origUser) return null;
 
-      this.userManager.events.load(origUser);
-      const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+    this.userManager.events.load(origUser);
+    const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
 
-      return newUser;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    return newUser;
   }
 
   public async renewUser(): Promise<OAuth2UserImpl> {
-    try {
-      const origUser = await this.userManager.signinSilent();
+    const origUser = await this.userManager.signinSilent();
 
-      this.userManager.events.load(origUser);
-      const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+    this.userManager.events.load(origUser);
+    const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
 
-      return newUser;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    return newUser;
   }
 
   public async logout(): Promise<void> {

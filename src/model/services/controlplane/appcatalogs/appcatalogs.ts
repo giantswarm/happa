@@ -20,16 +20,12 @@ export async function getAppCatalogs(
   const baseConfig = await getBaseConfiguration(client);
   const appsAPI = new ApplicationGiantswarmIoV1alpha1Api(baseConfig);
 
-  try {
-    const catalogs = await appsAPI.listApplicationGiantswarmIoV1alpha1AppCatalog(
-      {}
-    );
-    const result = catalogs.items.map(convertAppCatalogCRToCatalog);
+  const catalogs = await appsAPI.listApplicationGiantswarmIoV1alpha1AppCatalog(
+    {}
+  );
+  const result = catalogs.items.map(convertAppCatalogCRToCatalog);
 
-    return Promise.resolve(result);
-  } catch (err) {
-    return Promise.reject(err);
-  }
+  return result;
 }
 
 function convertAppCatalogCRToCatalog(
