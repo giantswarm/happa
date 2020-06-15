@@ -16,6 +16,7 @@ const Group = styled.span`
 
 const AZGroup = styled(Group)`
   flex-shrink: 0;
+
   * + & {
     margin-left: 0.4rem;
   }
