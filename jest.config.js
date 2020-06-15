@@ -25,7 +25,6 @@ module.exports = {
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
-    FEATURE_CLUSTER_LABELS_V0: true,
     FEATURE_HA_MASTERS: true,
     // window.config object will now be available in all tests
     config: {
