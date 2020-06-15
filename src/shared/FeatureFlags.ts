@@ -1,5 +1,5 @@
 /* global FEATURE_CLUSTER_LABELS_V0:true */
-/* global FEATURE_HA_MASTERS:false */
+/* global FEATURE_HA_MASTERS:true */
 /* global FEATURE_CP_ACCESS:false */
 
 interface IFeatureFlags {
