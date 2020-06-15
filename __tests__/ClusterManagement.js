@@ -155,7 +155,7 @@ details view`, async () => {
   fireEvent.click(await findByText(/Available releases/i));
 
   fireEvent.click(
-    getByTitle(new RegExp(`Select release v${preNodePoolRelease.version}`, 'i'))
+    getByTitle(new RegExp(`Select release ${preNodePoolRelease.version}`, 'i'))
   );
 
   // Click the create cluster button.
@@ -247,7 +247,7 @@ it('it does not show disabled releases in release selection modal for regular us
     }
   );
 
-  const { findByText, getByText, queryByText } = renderRouteWithStore(
+  const { findByText, queryByText, container } = renderRouteWithStore(
     newClusterPath,
     {},
     storage
@@ -255,11 +255,13 @@ it('it does not show disabled releases in release selection modal for regular us
 
   fireEvent.click(await findByText(/Available releases/i));
 
+  const table = container.querySelector('table');
+
   for (const { version, active } of releasesResponse) {
     if (active === true) {
-      expect(getByText(`v${version}`)).toBeInTheDocument();
+      expect(within(table).getByText(version)).toBeInTheDocument();
     } else {
-      expect(queryByText(`v${version}`)).not.toBeInTheDocument();
+      expect(queryByText(version)).not.toBeInTheDocument();
     }
   }
 });
@@ -281,7 +283,7 @@ it('it displays disabled releases in release selection modal for admin users', a
     }
   );
 
-  const { findByText, getByText } = renderRouteWithStore(
+  const { findByText, container } = renderRouteWithStore(
     newClusterPath,
     {},
     storage
@@ -289,7 +291,9 @@ it('it displays disabled releases in release selection modal for admin users', a
 
   fireEvent.click(await findByText(/Available releases/i));
 
+  const table = container.querySelector('table');
+
   for (const { version } of releasesResponse) {
-    expect(getByText(`v${version}`)).toBeInTheDocument();
+    expect(within(table).getByText(version)).toBeInTheDocument();
   }
 });
