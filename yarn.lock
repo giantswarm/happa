@@ -6077,9 +6077,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git#generate-for-aws-ha-masters":
+"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git":
   version "4.0.1"
-  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#24de0aa4432eeb96e841f398bb7489eff3198d8e"
+  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#ae85ec4ff8b4ac0e8dff5644d03d807c86df6a61"
   dependencies:
     superagent "3.8.3"
 
