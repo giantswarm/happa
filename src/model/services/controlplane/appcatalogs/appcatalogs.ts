@@ -1,7 +1,3 @@
-import {
-  ApplicationGiantswarmIoV1alpha1Api,
-  ComGithubGiantswarmApiextensionsPkgApisApplicationV1alpha1AppCatalog,
-} from 'giantswarm-cp-client';
 import { HttpClient } from 'model/clients';
 import {
   IAppCatalog,
@@ -18,7 +14,10 @@ import { getBaseConfiguration } from 'model/services/controlplane/base';
 export async function getAppCatalogs(
   client: HttpClient
 ): Promise<IAppCatalog[]> {
-  const baseConfig = getBaseConfiguration(client);
+  const { ApplicationGiantswarmIoV1alpha1Api } = await import(
+    'giantswarm-cp-client'
+  );
+  const baseConfig = await getBaseConfiguration(client);
   const appsAPI = new ApplicationGiantswarmIoV1alpha1Api(baseConfig);
 
   try {
@@ -34,7 +33,7 @@ export async function getAppCatalogs(
 }
 
 function convertAppCatalogCRToCatalog(
-  catalog: ComGithubGiantswarmApiextensionsPkgApisApplicationV1alpha1AppCatalog
+  catalog: import('giantswarm-cp-client').ComGithubGiantswarmApiextensionsPkgApisApplicationV1alpha1AppCatalog
 ): IAppCatalog {
   const metadata: IMetaData = {
     name: catalog.metadata.name ?? '',
