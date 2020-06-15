@@ -110,7 +110,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
           role='button'
           onClick={() => setCollapsed(!collapsed)}
         >
-          <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />{' '}
+          <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
           Available releases
         </ReleaseListToggler>
       </div>
