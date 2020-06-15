@@ -1,3 +1,7 @@
+import {
+  convertToOIDCMetadata,
+  IOAuth2CustomMetadata,
+} from 'lib/OAuth2/OAuth2CustomMetadata';
 import OAuth2UserImpl from 'lib/OAuth2/OAuth2User';
 import {
   User,
@@ -24,6 +28,15 @@ interface IOAuth2EventCallbacks {
   [OAuth2Events.SilentRenewError]: (error: CustomEvent<Error>) => void;
 }
 
+export interface IOAuth2SigningKey {
+  use: string;
+  kty: string;
+  kid: string;
+  alg: string;
+  n: string;
+  e: string;
+}
+
 export interface IOAuth2Config {
   authority: string;
   clientId: string;
@@ -40,6 +53,8 @@ export interface IOAuth2Config {
   filterProtocolClaims?: boolean;
   validateSubOnSilentRenew?: boolean;
   persistenceMethod?: Storage;
+  customMetadata?: Partial<IOAuth2CustomMetadata>;
+  signingKeys?: IOAuth2SigningKey[];
 }
 
 class OAuth2 {
@@ -50,6 +65,8 @@ class OAuth2 {
     const persistenceMethod = new WebStorageStateStore({
       store: config.persistenceMethod,
     });
+
+    const customMetadata = convertToOIDCMetadata(config.customMetadata);
 
     const managerConfig: UserManagerSettings = {
       authority: config.authority,
@@ -67,6 +84,8 @@ class OAuth2 {
       filterProtocolClaims: config.filterProtocolClaims,
       validateSubOnSilentRenew: config.validateSubOnSilentRenew,
       userStore: persistenceMethod,
+      signingKeys: config.signingKeys,
+      metadata: customMetadata,
     };
 
     this.eventEmitter = new EventTarget();
