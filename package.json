@@ -84,7 +84,7 @@
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
     "semver-compare": "1.0.0",
-    "serialize-javascript": "3.1.0",
+    "serialize-javascript": "4.0.0",
     "stacktrace-js": "^2.0.2",
     "superagent": "5.2.2",
     "superagent-bluebird-promise": "4.2.0",
