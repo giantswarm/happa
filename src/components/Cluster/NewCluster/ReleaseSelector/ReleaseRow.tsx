@@ -93,7 +93,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             }}
           >
             <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
-            Show
+            {collapsed ? 'Show' : 'Hide'}
           </TableButton>
         </td>
         <td>
