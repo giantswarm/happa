@@ -45,7 +45,7 @@ describe('ReleaseSelector', () => {
 
     expect(
       screen.getByText(
-        /There is no active release currently availabe for this platform./i
+        /There is no active release currently available for this platform./i
       )
     ).toBeInTheDocument();
   });
