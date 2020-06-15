@@ -77,7 +77,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   if (!selectedKubernetesVersion) {
     return (
       <div>
-        <p>There is no active release currently availabe for this platform.</p>
+        <p>There is no active release currently available for this platform.</p>
       </div>
     );
   }
