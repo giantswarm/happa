@@ -34,6 +34,10 @@ const ComponentsWrapper = styled.div`
 const Tr = styled.tr<{ isSelected: boolean }>`
   background-color: ${({ isSelected, theme }) =>
     isSelected ? theme.colors.foreground : 'transparent'};
+  td {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
 `;
 
 const BulletStyle = css`

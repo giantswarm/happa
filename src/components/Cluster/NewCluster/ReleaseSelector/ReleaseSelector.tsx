@@ -62,6 +62,15 @@ const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
   margin-bottom: 0;
 `;
 
+const Table = styled.table`
+  font-weight: 300;
+  th {
+    font-weight: 300;
+    color: ${({ theme }) => theme.colors.white4};
+    text-align: center;
+  }
+`;
+
 const ReleaseSelector: FC<IReleaseSelector> = ({
   releases,
   selectRelease,
@@ -107,7 +116,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
       </div>
       {!collapsed && (
         <div>
-          <table>
+          <Table>
             <thead>
               <tr>
                 <th>&nbsp;</th>
@@ -128,7 +137,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
                 />
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
     </>
