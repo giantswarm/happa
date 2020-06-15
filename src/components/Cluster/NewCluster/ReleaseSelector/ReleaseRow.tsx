@@ -37,6 +37,15 @@ const Tr = styled.tr<{ isSelected: boolean }>`
     text-align: center;
     font-variant-numeric: tabular-nums;
   }
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.shade3};
+  }
+`;
+
+const ComponentsRow = styled.tr`
+  &:hover td {
+    color: ${({ theme }) => theme.colors.gray};
+  }
 `;
 
 const CursorPointerCell = styled.td`
@@ -113,7 +122,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         </td>
       </Tr>
       {!collapsed && (
-        <tr>
+        <ComponentsRow>
           <td colSpan={6}>
             <ComponentsWrapper data-testid={`components-${version}`}>
               {components
@@ -127,7 +136,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
                 ))}
             </ComponentsWrapper>
           </td>
-        </tr>
+        </ComponentsRow>
       )}
     </>
   );
