@@ -1,11 +1,10 @@
 import { css, Global } from '@emotion/core';
 import styled from '@emotion/styled';
+import useReleaseNotesURL from 'hooks/useReleaseNotesURL';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import Button from 'react-bootstrap/lib/Button';
-import { useSelector } from 'react-redux';
-import { getProvider } from 'selectors/mainInfoSelectors';
 import RadioInput from 'UI/Inputs/RadioInput';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
@@ -60,7 +59,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
   timestamp,
   version,
 }) => {
-  const provider = useSelector(getProvider);
+  const releaseNotesURL = useReleaseNotesURL(version);
   const [collapsed, setCollapsed] = useState(true);
   const kubernetesVersion = useMemo(
     () =>
@@ -103,7 +102,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         <td onClick={(e) => e.stopPropagation()}>
           <TableButton
             data-testid={`open-changelog-${version}`}
-            href={`https://github.com/giantswarm/releases/blob/master/${provider}/v${version}/release-notes.md`}
+            href={releaseNotesURL}
             target='_blank'
             rel='noopener noreferrer'
             onClick={(e) => e.stopPropagation()}
