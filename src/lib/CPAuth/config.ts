@@ -54,8 +54,9 @@ const signingKeys: IOAuth2SigningKey[] = [
 
 export const defaultConfig: IOAuth2Config = {
   authority: authority,
-  clientId: 'zQiFLUnrTFQwrybYzeY53hWWfhOKWRAU',
-  clientSecret: 'TVHzVPin2WTiCma6bqp5hdxgKbWZKRbz',
+  clientId: 'fFlz7lckhWA0kIaW3fLIl8chFSs2wvW6',
+  clientSecret:
+    'PoioOqWKUndxVnbcRzlv59EgvwPVJQIdIlved143Uko0SjGJ7OprnecZQbab3WhH',
   redirectUri: `${window.location.origin}${AppRoutes.CPAccessCallback}`,
   scope:
     'openid offline_access profile email groups audience:server:client_id:dex-k8s-authenticator',
