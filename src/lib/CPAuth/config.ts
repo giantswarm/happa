@@ -65,7 +65,7 @@ export const defaultConfig: IOAuth2Config = {
   prompt: 'none',
   automaticSilentRenew: true,
   includeIDTokenInSilentRenew: true,
-  loadUserInfo: true,
+  loadUserInfo: false,
   revokeAccessTokenOnLogout: true,
   filterProtocolClaims: true,
   validateSubOnSilentRenew: true,
