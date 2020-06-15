@@ -1,4 +1,5 @@
 import GiantSwarm from 'giantswarm';
+import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import CPClient from 'model/clients/CPClient';
 import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
@@ -19,13 +20,16 @@ export const listCatalogs = createAsynchronousAction<
   perform: async (currentState: IState): Promise<IAppCatalogsState> => {
     let catalogs: IAppCatalog[] = [];
 
+    let cpAuthUser: IOAuth2User | null = null;
     if (FeatureFlags.FEATURE_CP_ACCESS) {
-      const user = getCPAuthUser(currentState);
-      if (!user) {
-        throw new Error('You are not allowed to use this command.');
-      }
+      cpAuthUser = getCPAuthUser(currentState);
+    }
 
-      const client = new CPClient(user.idToken, user.authorizationType);
+    if (cpAuthUser) {
+      const client = new CPClient(
+        cpAuthUser.idToken,
+        cpAuthUser.authorizationType
+      );
 
       catalogs = await getAppCatalogs(client);
     } else {
