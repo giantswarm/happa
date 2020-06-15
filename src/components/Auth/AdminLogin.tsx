@@ -88,7 +88,8 @@ AdminLogin.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state: Partial<IState>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapStateToProps(state: Record<string, any>) {
   return {
     user: state.main.loggedInUser,
   };
