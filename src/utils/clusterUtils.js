@@ -211,6 +211,8 @@ export function hasClusterLatestCondition(cluster, conditionToCheck) {
  * @returns {boolean}
  */
 export function isClusterCreating(cluster) {
+  if (!cluster.conditions || cluster.conditions.length === 0) return true;
+
   const conditionToCheck = 'Creating';
 
   return hasClusterLatestCondition(cluster, conditionToCheck);
