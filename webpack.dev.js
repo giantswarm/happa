@@ -6,9 +6,9 @@
  * This file is set up for serving the webpack-dev-server, which will watch for changes and recompile as required if
  * the subfolder /webpack-dev-server/ is visited. Visiting the root will not automatically reload.
  *
- * It also starts helpful CORS proxies if HAPPA_API_PROXY  and or HAPPA_PASSAGE_PROXY environment variables are set:
+ * It also starts helpful CORS proxies if HAPPA_PROXY_INSTALLATION or HAPPA_PROXY_BASE_DOMAIN environment variables are set:
  *
- * HAPPA_API_PROXY=https://api.g8s.example.io  HAPPA_PASSAGE_PROXY=https://passage.g8s.example.io yarn start
+ * HAPPA_PROXY_INSTALLATION=ginger yarn start
  */
 
 const merge = require('webpack-merge');
