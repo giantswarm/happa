@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
+import { ErrorReporter } from 'lib/errors';
 import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
@@ -45,8 +46,7 @@ export const batchedLayout = () => async (dispatch) => {
       })
     );
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedLayout', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
 
@@ -67,8 +67,7 @@ export const batchedRefreshClusters = () => async (dispatch) => {
       })
     );
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedRefreshClusters', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
 
@@ -109,8 +108,7 @@ export const batchedClusterCreate = (
 
     dispatch(push(clusterDetailPath));
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedCreateCluster', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
 
@@ -149,8 +147,7 @@ export const batchedClusterDetailView = (
       );
     }
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedClusterDetailView', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
 
@@ -178,8 +175,7 @@ export const batchedRefreshClusterDetailView = (
       dispatch(appActions.loadApps(clusterId));
     }
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedRefreshClusterDetailView', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
 
@@ -196,8 +192,7 @@ export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
     dispatch(push(organizationDetailPath));
     dispatch(modalActions.modalHide());
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedClusterDeleteConfirmed', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
 
@@ -217,7 +212,6 @@ export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
       })
     );
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error in batchedOrganizationSelect', err);
+    ErrorReporter.getInstance().notify(err);
   }
 };
