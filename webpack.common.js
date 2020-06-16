@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
 const dotenv = require('dotenv');
+const getServiceURL = require('./scripts/webpack/getServiceURL');
 
 const envFileVars = dotenv.config().parsed;
 
@@ -13,18 +14,26 @@ const makeEndpoints = () => {
   const defaults = {
     HAPPA_API_ENDPOINT: 'http://localhost:8000',
     HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
+    PROXY: undefined,
   };
 
   const {
     HAPPA_API_ENDPOINT,
-    HAPPA_API_PROXY,
-    HAPPA_AUDIENCE,
     HAPPA_PASSAGE_ENDPOINT,
+    HAPPA_PROXY_INSTALLATION,
+    HAPPA_PROXY_BASE_DOMAIN,
   } = Object.assign({}, defaults, envFileVars, process.env);
+
+  let apiAudienceUrl = '';
+  if (HAPPA_PROXY_INSTALLATION) {
+    apiAudienceUrl = getServiceURL(HAPPA_PROXY_INSTALLATION, 'api');
+  } else if (HAPPA_PROXY_BASE_DOMAIN) {
+    apiAudienceUrl = `https://api.${HAPPA_PROXY_BASE_DOMAIN}`;
+  }
 
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,
-    audience: HAPPA_AUDIENCE || HAPPA_API_PROXY || HAPPA_API_ENDPOINT,
+    audience: apiAudienceUrl || HAPPA_API_ENDPOINT,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };

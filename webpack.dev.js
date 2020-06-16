@@ -14,7 +14,7 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
-const ProxyPlugin = require('./scripts/proxyPlugin');
+const ProxyPlugin = require('./scripts/webpack/proxyPlugin');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -31,8 +31,16 @@ module.exports = merge(common, {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ProxyPlugin('API', 'HAPPA_API_PROXY', 8000),
-    new ProxyPlugin('PASSAGE', 'HAPPA_PASSAGE_PROXY', 5001),
+    new ProxyPlugin([
+      {
+        service: 'api',
+        localPort: 8000,
+      },
+      {
+        service: 'passage',
+        localPort: 5001,
+      },
+    ]),
   ],
   module: {
     rules: [
