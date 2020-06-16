@@ -127,11 +127,6 @@ it('tells the user to give a email if they leave it blank', async () => {
 });
 
 it('shows an error if the user logs in with invalid credentials', async () => {
-  // Don't want to pollute the terminal with this error
-  /* eslint-disable no-console */
-  const originalConsoleError = console.error;
-  console.error = jest.fn();
-
   // Given I have a Giant Swarm API that does not accept my login attempt
 
   // The failed 401 response to the login call
@@ -161,8 +156,4 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   await waitFor(() => {
     expect(getByText(/Could not log in/i)).toBeInTheDocument();
   });
-
-  // Restore console.og
-  console.error = originalConsoleError;
-  /* eslint-enable no-console */
 });

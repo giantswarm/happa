@@ -48,8 +48,6 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
 
             return;
           }
-          // eslint-disable-next-line no-console
-          console.error('Error loading cluster node pools:', error);
 
           dispatch({
             type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
@@ -137,9 +135,6 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
-        // eslint-disable-next-line no-console
-        console.error(error);
-
         throw error;
       });
   };
@@ -185,9 +180,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
-
-        // eslint-disable-next-line no-console
-        console.error(error);
 
         return dispatch({
           type: types.NODEPOOL_DELETE_ERROR,
@@ -258,9 +250,6 @@ export function nodePoolsCreate(clusterId, nodePools, opts) {
                 'Please try again later or contact support: support@giantswarm.io'
               );
             }
-
-            // eslint-disable-next-line no-console
-            console.error(error);
 
             throw error;
           });
