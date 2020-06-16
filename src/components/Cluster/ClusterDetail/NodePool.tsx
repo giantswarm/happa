@@ -52,7 +52,7 @@ const NameWrapperDiv = styled.div`
     display: flex;
   }
   a {
-    ${Ellipsis}
+    ${Ellipsis};
     display: inline-block;
   }
 `;
@@ -88,7 +88,6 @@ interface INodePoolsProps extends IStateProps, IDispatchProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cluster: any;
   provider: string;
-  availableZonesGridTemplateAreas?: string;
 }
 
 interface INodePoolsState {
@@ -107,7 +106,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
      */
-    availableZonesGridTemplateAreas: PropTypes.string,
     cluster: PropTypes.object,
     // @ts-ignore
     nodePool: PropTypes.shape({
@@ -241,7 +239,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
     }
-    const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
+    const { cluster, nodePool } = this.props;
     const { id, scaling, availability_zones, status } = nodePool;
     const { nodes_ready: current, nodes: desired, spot_instances } = status;
     const { isNameBeingEdited } = this.state;
@@ -268,12 +266,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           <>
             {this.formatInstanceTypes()}
             <div>
-              <AvailabilityZonesWrapper
-                availableZonesGridTemplateAreas={
-                  availableZonesGridTemplateAreas
-                }
-                zones={availability_zones}
-              />
+              <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
             <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
             <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>

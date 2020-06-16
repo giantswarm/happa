@@ -69,8 +69,6 @@ export function clustersList({ withLoadingFlags }) {
         });
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
         dispatch({
           type: types.CLUSTERS_LIST_ERROR,
           error: error.message,
@@ -119,8 +117,6 @@ export function refreshClustersList() {
         });
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
         dispatch({
           type: types.CLUSTERS_LIST_REFRESH_ERROR,
           error: error.message,
@@ -266,8 +262,6 @@ export function clusterLoadDetails(
         return {};
       }
 
-      // eslint-disable-next-line no-console
-      console.error('Error loading cluster details:', error);
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_ERROR,
         id: clusterId,
@@ -305,8 +299,7 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
       .catch((error) => {
         // TODO: Find a better way to deal with status endpoint errors in dev:
         // https://github.com/giantswarm/giantswarm/issues/6757
-        // eslint-disable-next-line no-console
-        console.error(error);
+
         if (error.status === StatusCodes.NotFound) {
           dispatch({ type: types.CLUSTER_LOAD_STATUS_NOT_FOUND, clusterId });
         } else {
@@ -372,9 +365,6 @@ export function clusterCreate(cluster, isV5Cluster) {
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'
       );
-
-      // eslint-disable-next-line no-console
-      console.error(error);
     }
 
     return null;
@@ -419,9 +409,6 @@ export function clusterDeleteConfirmed(cluster) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
-        // eslint-disable-next-line no-console
-        console.error(error);
-
         return dispatch({
           type: types.CLUSTER_DELETE_ERROR,
           clusterId: cluster.id,
@@ -464,14 +451,11 @@ export function clusterLoadKeyPairs(clusterId) {
           keyPairs: keyPairsWithDates,
         });
       })
-      .catch((error) => {
+      .catch(() => {
         dispatch({
           type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
           clusterId,
         });
-
-        // eslint-disable-next-line no-console
-        console.error(error);
       });
   };
 }
@@ -528,9 +512,6 @@ export function clusterPatch(cluster, payload, reloadCluster = false) {
         'Please try again later or contact support: support@giantswarm.io'
       );
 
-      // eslint-disable-next-line no-console
-      console.error(error);
-
       throw error;
     }
   };
@@ -568,9 +549,6 @@ export function clusterCreateKeyPair(clusterId, keypair) {
           type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
           error,
         });
-
-        // eslint-disable-next-line no-console
-        console.error(error);
 
         throw error;
       });

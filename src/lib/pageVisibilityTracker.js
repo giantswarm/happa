@@ -21,18 +21,8 @@ class PageVisibilityTracker {
    * @param {change handler} func
    */
   addEventListener(func) {
-    if (
-      typeof document.addEventListener === 'undefined' ||
-      typeof this.hidden === 'undefined'
-    ) {
-      // eslint-disable-next-line no-console
-      console.error(
-        'This piece of code requires a browser that supports the Page Visibility API.'
-      );
-    } else {
-      // Handle page visibility change
-      document.addEventListener(this.visibilityChange, func, false);
-    }
+    // Handle page visibility change
+    document.addEventListener(this.visibilityChange, func, false);
   }
 
   /**

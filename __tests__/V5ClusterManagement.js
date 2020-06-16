@@ -104,7 +104,7 @@ describe('V5ClusterManagement', () => {
 
     await waitFor(() => findAllByTestId('node-pool-id'));
 
-    nodePoolsResponse.forEach(nodePool => {
+    nodePoolsResponse.forEach((nodePool) => {
       expect(getByText(nodePool.id)).toBeInTheDocument();
     });
   });
@@ -498,7 +498,7 @@ scales node pools correctly`, async () => {
 
   it('can convert a cluster to HA masters', async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
-      release_version: '11.5.0',
+      release_version: '11.4.0',
       master_nodes: {
         high_availability: false,
         availability_zones: ['b'],
