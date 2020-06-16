@@ -15,15 +15,15 @@ const makeEndpoints = () => {
     HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
   };
 
-  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = Object.assign(
-    {},
-    defaults,
-    envFileVars,
-    process.env
-  );
+  const {
+    HAPPA_API_ENDPOINT,
+    HAPPA_AUDIENCE,
+    HAPPA_PASSAGE_ENDPOINT,
+  } = Object.assign({}, defaults, envFileVars, process.env);
 
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,
+    audience: HAPPA_AUDIENCE || HAPPA_API_ENDPOINT,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };
