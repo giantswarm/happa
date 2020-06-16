@@ -48,11 +48,8 @@ class ConfigKubeCtl extends React.Component {
           },
         });
       })
-      .catch((error) => {
+      .catch(() => {
         const keyPairChangeDelay = 200;
-
-        // eslint-disable-next-line no-console
-        console.error(error);
 
         setTimeout(() => {
           this.setState({
