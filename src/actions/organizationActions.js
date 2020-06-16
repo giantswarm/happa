@@ -114,9 +114,6 @@ export function organizationsLoad() {
         organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
       );
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error loading organizations:', error);
-
       new FlashMessage(
         'An error occurred as we tried to load organizations.',
         messageType.ERROR,
@@ -190,10 +187,8 @@ export function organizationDeleteConfirmed(orgId) {
       .then(() => {
         return dispatch(organizationDeleteSuccess(orgId));
       })
-      .catch((error) => {
+      .catch(() => {
         dispatch(modalHide());
-        // eslint-disable-next-line no-console
-        console.error('Error deleting organization:', error);
 
         new FlashMessage(
           `Could not delete organization <code>${orgId}</code>.`,
@@ -257,9 +252,7 @@ export function organizationCreateConfirmed(orgId) {
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error creating organization:', error);
+      .catch(() => {
         dispatch(modalHide());
 
         new FlashMessage(
@@ -388,9 +381,7 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error removing member from org:', error);
+      .catch(() => {
         dispatch(modalHide());
 
         new FlashMessage(
@@ -431,9 +422,7 @@ export function organizationCredentialsLoad(orgId) {
           credentials: Array.from(credentials),
         });
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error loading credentials for organization:', error);
+      .catch(() => {
         new FlashMessage(
           `Could not load credentials for <code>${orgId}</code>.`,
           messageType.ERROR,
@@ -508,10 +497,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
         // update credentials data for the organization
         return dispatch(organizationCredentialsLoad(orgId));
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
-
+      .catch(() => {
         new FlashMessage(
           `Could not set credentials for organization <code>${orgId}</code>.`,
           messageType.ERROR,

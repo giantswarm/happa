@@ -104,7 +104,7 @@ describe('V5ClusterManagement', () => {
 
     await waitFor(() => findAllByTestId('node-pool-id'));
 
-    nodePoolsResponse.forEach(nodePool => {
+    nodePoolsResponse.forEach((nodePool) => {
       expect(getByText(nodePool.id)).toBeInTheDocument();
     });
   });
@@ -498,7 +498,7 @@ scales node pools correctly`, async () => {
 
   it('can convert a cluster to HA masters', async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
-      release_version: '11.5.0',
+      release_version: '11.4.0',
       master_nodes: {
         high_availability: false,
         availability_zones: ['b'],
@@ -535,6 +535,38 @@ scales node pools correctly`, async () => {
       screen.getByText(/^switch to high availability$/i)
     );
     expect(screen.getByText(/1 of 3 master nodes ready/i)).toBeInTheDocument();
+  });
+
+  it(`can't convert a cluster that is not ready to HA masters`, async () => {
+    const clusterResponse = Object.assign({}, v5ClusterResponse, {
+      conditions: [
+        {
+          last_transition_time: new Date().toISOString(),
+          condition: 'Creating',
+        },
+      ],
+      release_version: '11.4.0',
+      master_nodes: {
+        high_availability: false,
+        availability_zones: ['b'],
+        num_ready: 1,
+      },
+    });
+    getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, clusterResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.Home,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V5_CLUSTER.id,
+      }
+    );
+    renderRouteWithStore(clusterDetailPath);
+
+    await screen.findByText(/all purpose cluster/i);
+    expect(
+      screen.queryByText(/switch to high availability…/i)
+    ).not.toBeInTheDocument();
   });
 
   it('renders cluster labels', async () => {
