@@ -14,3 +14,7 @@ interface IRelease {
   changelog: IReleaseChangelog[];
   components: IReleaseComponent[];
 }
+
+interface IReleases {
+  [key: string]: IRelease;
+}
