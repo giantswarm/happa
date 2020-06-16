@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
 import {
-  selectAndProduceAZGridTemplateAreas,
   selectClusterNodePools,
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
@@ -353,7 +352,6 @@ class V5ClusterDetailTable extends React.Component {
       region,
       release,
       resources,
-      AZGridTemplateAreas,
       loadingNodePools,
     } = this.props;
 
@@ -521,7 +519,6 @@ class V5ClusterDetailTable extends React.Component {
                     >
                       <GridRowNodePoolsItem data-testid={nodePool.id}>
                         <NodePool
-                          availableZonesGridTemplateAreas={AZGridTemplateAreas}
                           cluster={cluster}
                           nodePool={nodePool}
                           provider={this.props.provider}
@@ -633,7 +630,6 @@ V5ClusterDetailTable.propTypes = {
   workerNodesDesired: PropTypes.number,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
-  AZGridTemplateAreas: PropTypes.string,
   loadingNodePools: PropTypes.bool,
 };
 
@@ -641,12 +637,10 @@ V5ClusterDetailTable.propTypes = {
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 const makeMapStateToProps = () => {
   const resourcesV5 = selectResourcesV5();
-  const AZGridTemplateAreas = selectAndProduceAZGridTemplateAreas();
   const mapStateToProps = (state, props) => {
     return {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
-      AZGridTemplateAreas: AZGridTemplateAreas(state, props.cluster.id),
       loadingNodePools: selectLoadingFlagByIdAndAction(
         state,
         props.cluster.id,
