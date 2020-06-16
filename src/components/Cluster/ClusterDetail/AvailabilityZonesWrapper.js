@@ -10,54 +10,20 @@ import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
  */
 
 const Wrapper = styled.div`
-  display: grid;
-  /* grid-gap: 5px; */
-  grid-template-rows: 26px;
-  /* grid-template-areas: 'a b c d'; */
-  .a {
-    grid-area: a;
-  }
-  .b {
-    grid-area: b;
-  }
-  .c {
-    grid-area: c;
-  }
-  .d {
-    grid-area: d;
-  }
-  .e {
-    grid-area: e;
-  }
-  .f {
-    grid-area: f;
-  }
-  .g {
-    grid-area: g;
-  }
+  display: flex;
 `;
 
 // It returns a wrapper with grid template areas to position labels properly.
-const AvailabilityZonesWrapper = ({
-  zones,
-  availableZonesGridTemplateAreas: gridTemplateAreas, // Renaming prop here.
-}) => {
-  const labelWidth = '30px';
-  const gridTemplateColumns = gridTemplateAreas
-    .split(' ')
-    .map(() => labelWidth)
-    .join(' ');
-
+const AvailabilityZonesWrapper = ({ zones }) => {
   return (
-    <Wrapper style={{ gridTemplateAreas, gridTemplateColumns }}>
+    <Wrapper>
       <AvailabilityZonesLabels zones={zones} />
     </Wrapper>
   );
 };
 
 AvailabilityZonesWrapper.propTypes = {
-  availableZonesGridTemplateAreas: PropTypes.string,
-  zones: PropTypes.PropTypes.arrayOf(PropTypes.string),
+  zones: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default AvailabilityZonesWrapper;

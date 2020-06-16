@@ -50,9 +50,6 @@ export function loadApps(clusterId) {
         return apps;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error loading cluster apps:', error);
-
         dispatch({
           type: types.CLUSTER_LOAD_APPS_ERROR,
           id: clusterId,
