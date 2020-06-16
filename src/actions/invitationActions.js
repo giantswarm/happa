@@ -40,9 +40,6 @@ export function invitationsLoad() {
         });
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error when loading invitation:', error);
-
         new FlashMessage(
           'Something went wrong while trying to load invitations',
           messageType.ERROR,
@@ -88,9 +85,6 @@ export function invitationCreate(invitation) {
         return result;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error inviting user:', error);
-
         new FlashMessage(
           'Something went wrong while trying to create your invitation.',
           messageType.ERROR,
