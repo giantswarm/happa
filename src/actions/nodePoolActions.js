@@ -55,8 +55,16 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
             error: error.message,
           });
 
+          let errorMessage =
+            'Something went wrong while trying to load node pools on this cluster.';
+          if (error.response?.message || error.message) {
+            errorMessage = `There was a problem loading node pools: ${
+              error.response?.message ?? error.message
+            }`;
+          }
+
           new FlashMessage(
-            'Something went wrong while trying to load node pools on this cluster.',
+            errorMessage,
             messageType.ERROR,
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
