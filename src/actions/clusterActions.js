@@ -269,8 +269,10 @@ export function clusterLoadDetails(
       });
 
       let errorMessage = `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`;
-      if (error.message) {
-        errorMessage = `There was a problem loading cluster details: ${error.message}`;
+      if (error.response?.message || error.message) {
+        errorMessage = `There was a problem loading the cluster details: ${
+          error.response?.message ?? error.message
+        }`;
       }
 
       new FlashMessage(
@@ -312,8 +314,10 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
 
           let errorMessage =
             'Something went wrong while trying to load the cluster status.';
-          if (error.message) {
-            errorMessage = `There was a problem loading cluster status: ${error.message}`;
+          if (error.response?.message || error.message) {
+            errorMessage = `There was a problem loading the cluster status: ${
+              error.response?.message ?? error.message
+            }`;
           }
 
           new FlashMessage(

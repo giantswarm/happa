@@ -57,8 +57,10 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
 
           let errorMessage =
             'Something went wrong while trying to load node pools on this cluster.';
-          if (error.message) {
-            errorMessage = `There was a problem loading node pools: ${error.message}`;
+          if (error.response?.message || error.message) {
+            errorMessage = `There was a problem loading node pools: ${
+              error.response?.message ?? error.message
+            }`;
           }
 
           new FlashMessage(
