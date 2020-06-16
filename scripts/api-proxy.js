@@ -17,7 +17,10 @@ var startProxy = function (port, proxyUrl, proxyPartial, credentials, origin) {
 
   proxy.use('/' + cleanProxyPartial, function (req, res) {
     try {
-      console.log(chalk.green('Request Proxied -> ' + req.url));
+      console.log(
+        chalk.green('🏄🏽‍♂️  [API Proxy Plugin]'),
+        'Request Proxied -> ' + req.url
+      );
     } catch (e) {}
     req
       .pipe(
@@ -29,13 +32,6 @@ var startProxy = function (port, proxyUrl, proxyPartial, credentials, origin) {
             accessControlAllowOriginHeader &&
             accessControlAllowOriginHeader !== origin
           ) {
-            console.log(
-              chalk.blue(
-                'Override access-control-allow-origin header from proxified URL : ' +
-                  chalk.green(accessControlAllowOriginHeader) +
-                  '\n'
-              )
-            );
             response.headers['access-control-allow-origin'] = origin;
           }
         })

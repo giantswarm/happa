@@ -15,6 +15,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const chalk = require('chalk');
 const apiProxy = require('./scripts/api-proxy.js');
 
 module.exports = merge(common, {
@@ -37,7 +38,10 @@ module.exports = merge(common, {
         compiler.hooks.afterEnvironment.tap(
           'Start proxy if HAPPA_AUDIENCE is defined',
           () => {
-            console.log('[API Proxy Plugin] Checking for HAPPA_AUDIENCE');
+            console.log(
+              chalk.green('🏄🏽‍♂️  [API Proxy Plugin]'),
+              'Checking for HAPPA_AUDIENCE'
+            );
 
             const envFileVars = dotenv.config().parsed;
             const { HAPPA_AUDIENCE } = Object.assign(
@@ -48,20 +52,25 @@ module.exports = merge(common, {
 
             if (!HAPPA_AUDIENCE) {
               console.log(
-                '[API Proxy Plugin] Skipping. HAPPA_AUDIENCE not defined. '
+                chalk.green('🏄🏽‍♂️  [API Proxy Plugin]'),
+                'Skipping. HAPPA_AUDIENCE not defined. '
               );
 
               return;
             }
 
             console.log(
-              '[API Proxy Plugin] Starting CORS proxy on localhost:8000 to:',
+              chalk.green('🏄🏽‍♂️  [API Proxy Plugin]'),
+              'Starting CORS proxy on localhost:8000 to:',
               HAPPA_AUDIENCE
             );
 
             apiProxy.startProxy(8000, HAPPA_AUDIENCE, '', false, '*');
 
-            console.log('[API Proxy Plugin] Succesfully started CORS proxy');
+            console.log(
+              chalk.green('🏄🏽‍♂️  [API Proxy Plugin]'),
+              'Succesfully started CORS proxy'
+            );
           }
         );
       },
