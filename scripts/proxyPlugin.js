@@ -91,7 +91,9 @@ class ProxyPlugin {
           return;
         }
 
-        this.log(`Starting CORS proxy on localhost:8000 to: ${PROXY_URL}`);
+        this.log(
+          `Starting CORS proxy on localhost:${this.localPort} to: ${PROXY_URL}`
+        );
 
         this.startProxy(this.localPort, PROXY_URL, false, '*');
 
