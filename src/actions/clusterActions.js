@@ -268,8 +268,13 @@ export function clusterLoadDetails(
         error,
       });
 
+      let errorMessage = `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`;
+      if (error.message) {
+        errorMessage = `There was a problem loading cluster details: ${error.message}`;
+      }
+
       new FlashMessage(
-        `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`,
+        errorMessage,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'
@@ -305,8 +310,14 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
         } else {
           dispatch({ type: types.CLUSTER_LOAD_STATUS_ERROR, error });
 
+          let errorMessage =
+            'Something went wrong while trying to load the cluster status.';
+          if (error.message) {
+            errorMessage = `There was a problem loading cluster status: ${error.message}`;
+          }
+
           new FlashMessage(
-            'Something went wrong while trying to load the cluster status.',
+            errorMessage,
             messageType.ERROR,
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
