@@ -1,6 +1,5 @@
 import { css, Global } from '@emotion/core';
 import styled from '@emotion/styled';
-import useReleaseNotesURL from 'hooks/useReleaseNotesURL';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
@@ -63,13 +62,14 @@ const BulletStyle = css`
 `;
 
 const ReleaseRow: FC<IReleaseRow> = ({
+  changelog,
   components,
   isSelected,
   selectRelease,
   timestamp,
   version,
 }) => {
-  const releaseNotesURL = useReleaseNotesURL(version);
+  const releaseNotesURL = useMemo(() => changelog[0].description, [changelog]);
   const [collapsed, setCollapsed] = useState(true);
   const kubernetesVersion = useMemo(
     () =>
@@ -144,6 +144,12 @@ const ReleaseRow: FC<IReleaseRow> = ({
 };
 
 ReleaseRow.propTypes = {
+  changelog: PropTypes.arrayOf(
+    PropTypes.shape({
+      component: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
   components: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
