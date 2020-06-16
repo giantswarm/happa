@@ -61,10 +61,10 @@ spec:
               name: happa-configmap
               key: api-endpoint
         - name: AUDIENCE
-        valueFrom:
-          configMapKeyRef:
-            name: happa-configmap
-            key: audience
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: audience
         - name: INGRESS_BASE_DOMAIN
           valueFrom:
             configMapKeyRef:
