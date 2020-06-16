@@ -409,10 +409,7 @@ class V5ClusterDetailTable extends React.Component {
             canBeConverted={canBeConvertedToHAMasters}
           />
         )}
-
-        {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
-          <LabelsRow labels={labels} clusterId={cluster.id} />
-        )}
+        <LabelsRow labels={labels} clusterId={cluster.id} />
         <KubernetesURIWrapper>
           <StyledURIBlock title='Kubernetes endpoint URI:'>
             {api_endpoint}
