@@ -17,13 +17,14 @@ const makeEndpoints = () => {
 
   const {
     HAPPA_API_ENDPOINT,
+    HAPPA_API_PROXY,
     HAPPA_AUDIENCE,
     HAPPA_PASSAGE_ENDPOINT,
   } = Object.assign({}, defaults, envFileVars, process.env);
 
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,
-    audience: HAPPA_AUDIENCE || HAPPA_API_ENDPOINT,
+    audience: HAPPA_AUDIENCE || HAPPA_API_PROXY || HAPPA_API_ENDPOINT,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };
