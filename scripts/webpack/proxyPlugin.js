@@ -35,7 +35,7 @@ class ProxyPlugin {
 
     if (!HAPPA_PROXY_INSTALLATION && !HAPPA_PROXY_BASE_DOMAIN) {
       this.log(
-        `Skipping proxy setup, HAPPA_PROXY_INSTALLATION and HAPPA_PROXY_BASE_DOMAIN are not set.`
+        `Skipping proxy setup, HAPPA_PROXY_INSTALLATION and HAPPA_PROXY_BASE_DOMAIN are not set`
       );
       this.apply = this.noopApply;
       return;

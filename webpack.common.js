@@ -7,29 +7,61 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
 const dotenv = require('dotenv');
 const getServiceURL = require('./scripts/webpack/getServiceURL');
+const chalk = require('chalk');
 
 const envFileVars = dotenv.config().parsed;
+
+const determineAudienceURL = () => {
+  console.log(
+    chalk.blue(
+      `🛠  [AudienceURL Helper] Checking for HAPPA_PROXY_INSTALLATION or HAPPA_PROXY_BASE_DOMAIN`
+    )
+  );
+
+  const { HAPPA_PROXY_INSTALLATION, HAPPA_PROXY_BASE_DOMAIN } = Object.assign(
+    {},
+    envFileVars,
+    process.env
+  );
+
+  let apiAudienceUrl = '';
+  if (HAPPA_PROXY_INSTALLATION) {
+    console.log(
+      chalk.blue(
+        `🛠  [AudienceURL Helper] HAPPA_PROXY_INSTALLATION is ${HAPPA_PROXY_INSTALLATION}. Setting audience based on opsctl response.`
+      )
+    );
+    apiAudienceUrl = getServiceURL(HAPPA_PROXY_INSTALLATION, 'api');
+  } else if (HAPPA_PROXY_BASE_DOMAIN) {
+    console.log(
+      chalk.blue(
+        `🛠  [AudienceURL Helper] HAPPA_PROXY_BASE_DOMAIN is ${HAPPA_PROXY_BASE_DOMAIN}. Setting the audience based on that.`
+      )
+    );
+    apiAudienceUrl = `https://api.${HAPPA_PROXY_BASE_DOMAIN}`;
+  }
+
+  console.log(
+    chalk.blue(`🛠  [AudienceURL Helper] Set audience to ${apiAudienceUrl}.`)
+  );
+
+  return apiAudienceUrl;
+};
 
 const makeEndpoints = () => {
   const defaults = {
     HAPPA_API_ENDPOINT: 'http://localhost:8000',
     HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
-    PROXY: undefined,
   };
 
-  const {
-    HAPPA_API_ENDPOINT,
-    HAPPA_PASSAGE_ENDPOINT,
-    HAPPA_PROXY_INSTALLATION,
-    HAPPA_PROXY_BASE_DOMAIN,
-  } = Object.assign({}, defaults, envFileVars, process.env);
+  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = Object.assign(
+    {},
+    defaults,
+    envFileVars,
+    process.env
+  );
 
-  let apiAudienceUrl = '';
-  if (HAPPA_PROXY_INSTALLATION) {
-    apiAudienceUrl = getServiceURL(HAPPA_PROXY_INSTALLATION, 'api');
-  } else if (HAPPA_PROXY_BASE_DOMAIN) {
-    apiAudienceUrl = `https://api.${HAPPA_PROXY_BASE_DOMAIN}`;
-  }
+  const apiAudienceUrl = determineAudienceURL();
 
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,

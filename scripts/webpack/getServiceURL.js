@@ -3,11 +3,23 @@
 
 const { execSync } = require('child_process');
 const yaml = require('js-yaml');
+const chalk = require('chalk');
 
 let cache;
 
 const getInstallationInfo = function (installation) {
-  if (cache) return cache;
+  if (cache) {
+    console.log(
+      chalk.yellow(
+        `📡  [opsctl] Using cached installation info for: ${installation}`
+      )
+    );
+    return cache;
+  }
+
+  console.log(
+    chalk.yellow(`📡  [opsctl] Fetching installation info for: ${installation}`)
+  );
 
   const installationInfoYAML = execSync(
     `opsctl show cluster -i ${installation}`,
@@ -16,6 +28,7 @@ const getInstallationInfo = function (installation) {
   const installationInfo = yaml.safeLoad(installationInfoYAML);
 
   cache = installationInfo;
+  console.log(chalk.yellow(`📡  [opsctl] Done`));
 
   return cache;
 };
