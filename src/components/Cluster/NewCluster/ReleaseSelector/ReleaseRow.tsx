@@ -39,7 +39,7 @@ const Tr = styled.tr<{ isSelected: boolean }>`
   }
   &:hover {
     background-color: ${({ isSelected, theme }) =>
-      theme.colors[isSelected ? 'foreground' : 'shade3']};
+      theme.colors[isSelected ? 'foreground' : 'shade4']};
   }
 `;
 
