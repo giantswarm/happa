@@ -26,6 +26,7 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
+import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AddNodePool from './AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';
@@ -368,6 +369,12 @@ class V5ClusterDetailTable extends React.Component {
 
     const zeroNodePools = nodePools && nodePools.length === 0;
 
+    const canBeConvertedToHAMasters =
+      !master_nodes?.high_availability &&
+      cluster.capabilities.supportsHAMasters &&
+      !isClusterCreating(cluster) &&
+      !isClusterUpdating(cluster);
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
@@ -400,10 +407,7 @@ class V5ClusterDetailTable extends React.Component {
             supportsReadyNodes={cluster.capabilities.supportsHAMasters}
             numOfReadyNodes={master_nodes.num_ready}
             onConvert={this.enableHAMasters}
-            canBeConverted={
-              !master_nodes.high_availability &&
-              cluster.capabilities.supportsHAMasters
-            }
+            canBeConverted={canBeConvertedToHAMasters}
           />
         )}
 
