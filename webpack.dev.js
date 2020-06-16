@@ -1,17 +1,21 @@
+/* eslint-disable @typescript-eslint/no-var-requires, no-magic-numbers, no-console */
+
 /*
  * Webpack development server configuration
  *
  * This file is set up for serving the webpack-dev-server, which will watch for changes and recompile as required if
  * the subfolder /webpack-dev-server/ is visited. Visiting the root will not automatically reload.
+ *
+ * It also starts a helpful CORS proxy if the HAPPA_AUDIENCE environment variable is set:
+ *
+ * HAPPA_AUDIENCE=https://api.g8s.example.io yarn start
  */
 
-/* eslint-disable */
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 const apiProxy = require('./scripts/api-proxy.js');
-/* eslint-enable */
 
 module.exports = merge(common, {
   mode: 'development',
@@ -33,7 +37,6 @@ module.exports = merge(common, {
         compiler.hooks.afterEnvironment.tap(
           'Start proxy if HAPPA_AUDIENCE is defined',
           () => {
-            // eslint-disable-next-line
             console.log('[API Proxy Plugin] Checking for HAPPA_AUDIENCE');
 
             const envFileVars = dotenv.config().parsed;
@@ -44,7 +47,6 @@ module.exports = merge(common, {
             );
 
             if (!HAPPA_AUDIENCE) {
-              // eslint-disable-next-line
               console.log(
                 '[API Proxy Plugin] Skipping. HAPPA_AUDIENCE not defined. '
               );
@@ -52,16 +54,13 @@ module.exports = merge(common, {
               return;
             }
 
-            // eslint-disable-next-line
             console.log(
               '[API Proxy Plugin] Starting CORS proxy on localhost:8000 to:',
               HAPPA_AUDIENCE
             );
 
-            // eslint-disable-next-line
             apiProxy.startProxy(8000, HAPPA_AUDIENCE, '', false, '*');
 
-            // eslint-disable-next-line
             console.log('[API Proxy Plugin] Succesfully started CORS proxy');
           }
         );
