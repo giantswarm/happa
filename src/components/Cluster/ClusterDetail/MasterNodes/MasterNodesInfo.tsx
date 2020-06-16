@@ -81,7 +81,7 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
         <AvailabilityZonesLabels zones={availabilityZones} labelsChecked={[]} />
       </AZGroup>
 
-      {numOfReadyNodes !== null && canBeConverted && (
+      {canBeConverted && (
         <Group>
           <ConvertButton onClick={handleOnConvert}>
             Switch to high availability…

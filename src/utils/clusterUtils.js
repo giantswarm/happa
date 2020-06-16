@@ -192,3 +192,48 @@ export const filterLabels = (labels) => {
 
   return filteredLabels;
 };
+
+/**
+ * Check whether the given condition is a cluster's latest condition.
+ * @param cluster {Object} - The cluster object.
+ * @param conditionToCheck {string} - The name of the condition to check for.
+ * @returns {boolean}
+ */
+export function hasClusterLatestCondition(cluster, conditionToCheck) {
+  if (!cluster.conditions || cluster.conditions.length === 0) return false;
+
+  return cluster.conditions[0].condition === conditionToCheck;
+}
+
+/**
+ * Check whether a cluster is in creation state.
+ * @param cluster {Object} - The cluster object.
+ * @returns {boolean}
+ */
+export function isClusterCreating(cluster) {
+  const conditionToCheck = 'Creating';
+
+  return hasClusterLatestCondition(cluster, conditionToCheck);
+}
+
+/**
+ * Check whether a cluster is in updating state.
+ * @param cluster {Object} - The cluster object.
+ * @returns {boolean}
+ */
+export function isClusterUpdating(cluster) {
+  const conditionToCheck = 'Updating';
+
+  return hasClusterLatestCondition(cluster, conditionToCheck);
+}
+
+/**
+ * Check whether a cluster is in deleting state.
+ * @param cluster {Object} - The cluster object.
+ * @returns {boolean}
+ */
+export function isClusterDeleting(cluster) {
+  const conditionToCheck = 'Deleting';
+
+  return hasClusterLatestCondition(cluster, conditionToCheck);
+}
