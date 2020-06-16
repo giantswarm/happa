@@ -38,7 +38,8 @@ const Tr = styled.tr<{ isSelected: boolean }>`
     font-variant-numeric: tabular-nums;
   }
   &:hover {
-    background-color: ${({ theme }) => theme.colors.shade3};
+    background-color: ${({ isSelected, theme }) =>
+      theme.colors[isSelected ? 'foreground' : 'shade3']};
   }
 `;
 
