@@ -370,7 +370,8 @@ class V5ClusterDetailTable extends React.Component {
     const zeroNodePools = nodePools && nodePools.length === 0;
 
     const canBeConvertedToHAMasters =
-      !master_nodes?.high_availability &&
+      master_nodes &&
+      !master_nodes.high_availability &&
       cluster.capabilities.supportsHAMasters &&
       !isClusterCreating(cluster) &&
       !isClusterUpdating(cluster);
