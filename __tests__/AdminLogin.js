@@ -214,11 +214,6 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to OAuth provider login page if renewing the token fails', async () => {
-    // eslint-disable-next-line no-console
-    const originalConsoleError = console.error;
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-
     const mockAuthResponseWithNewToken = Object.assign(
       {},
       mockSuccessfulAuthResponse,
@@ -237,8 +232,5 @@ describe('AdminLogin', () => {
     await findByText(
       /verifying credentials, and redirecting to our authentication provider if necessary./i
     );
-
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
   });
 });
