@@ -110,6 +110,10 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
+const GetStartedButton = styled(Button)`
+  text-transform: uppercase;
+`;
+
 const DeleteDateWrapper = styled.div`
   color: ${(props) => props.theme.colors.darkBlueLighter5};
 `;
@@ -241,10 +245,10 @@ function ClusterDashboardItem({
       <ButtonsWrapper>
         {clusterYoungerThan30Days() ? (
           <ButtonGroup>
-            <Button onClick={accessCluster}>
+            <GetStartedButton onClick={accessCluster}>
               <i className='fa fa-start' />
               Get Started
-            </Button>
+            </GetStartedButton>
           </ButtonGroup>
         ) : (
           ''
