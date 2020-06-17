@@ -42,6 +42,7 @@ export class FlashMessage {
       theme: 'bootstrap-v3',
       layout: 'topRight',
       visibilityControl: true,
+      closeWith: ['click', 'button'],
       animation: {
         close: 'flash_message_close',
       },
