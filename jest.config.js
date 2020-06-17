@@ -29,6 +29,7 @@ module.exports = {
     // window.config object will now be available in all tests
     config: {
       apiEndpoint: 'http://1.2.3.4',
+      audience: 'http://1.2.3.4',
       passageEndpoint: 'http://5.6.7.8',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',
