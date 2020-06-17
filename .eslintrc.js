@@ -220,10 +220,8 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/no-use-before-define': [2, { functions: false }],
     '@typescript-eslint/unbound-method': 0,
-    'prettier/prettier': 2,
   },
   extends: [
-    'prettier',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
@@ -235,7 +233,6 @@ module.exports = {
     'emotion',
     'react',
     'react-hooks',
-    'prettier',
     'simple-import-sort',
     'import',
   ],
