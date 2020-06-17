@@ -27,8 +27,6 @@ const ClusterDetail = ({ match, cluster, clusterId, ...rest }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!cluster) return null;
-
   return (
     <Breadcrumb
       data={{
