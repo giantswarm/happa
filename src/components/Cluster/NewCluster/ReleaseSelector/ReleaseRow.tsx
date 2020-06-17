@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import {
   BulletStyle,
+  CenteredCell,
   ComponentsRow,
   ComponentsWrapper,
   CursorPointerCell,
@@ -53,7 +54,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         <CursorPointerCell>{version}</CursorPointerCell>
         <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
         <CursorPointerCell>{kubernetesVersion}</CursorPointerCell>
-        <td onClick={(e) => e.stopPropagation()}>
+        <CenteredCell onClick={(e) => e.stopPropagation()}>
           <TableButton
             data-testid={`show-components-${version}`}
             onClick={(e) => {
@@ -65,8 +66,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
             <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
             {collapsed ? 'Show' : 'Hide'}
           </TableButton>
-        </td>
-        <td onClick={(e) => e.stopPropagation()}>
+        </CenteredCell>
+        <CenteredCell onClick={(e) => e.stopPropagation()}>
           <TableButton
             data-testid={`open-changelog-${version}`}
             href={releaseNotesURL}
@@ -77,7 +78,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             <i className='fa fa-open-in-new' />
             Open
           </TableButton>
-        </td>
+        </CenteredCell>
       </Tr>
       {!collapsed && (
         <ComponentsRow>

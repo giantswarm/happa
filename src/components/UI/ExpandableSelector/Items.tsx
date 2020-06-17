@@ -23,7 +23,6 @@ export const Tr = styled.tr<{ isSelected: boolean }>`
   background-color: ${({ isSelected, theme }) =>
     isSelected ? theme.colors.foreground : 'transparent'};
   td {
-    text-align: center;
     font-variant-numeric: tabular-nums;
   }
   &:hover {
@@ -38,7 +37,11 @@ export const ComponentsRow = styled.tr`
   }
 `;
 
-export const CursorPointerCell = styled.td`
+export const CenteredCell = styled.td`
+  text-align: center;
+`;
+
+export const CursorPointerCell = styled(CenteredCell)`
   cursor: pointer;
 `;
 

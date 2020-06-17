@@ -54,7 +54,7 @@ function WorkerNodesAzure({
       </LineDiv>
       <LineDiv>
         <div>VM size</div>
-        <InstanceType>{instanceType ?? 'n/a'}</InstanceType>
+        <InstanceType>{instanceType.name ?? 'n/a'}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>
