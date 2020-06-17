@@ -230,9 +230,6 @@ export function clusterLoadDetails(
         );
       }
 
-      // Remove cluster's create_date because we are loading it in clustersList()
-      delete cluster.create_date;
-
       if (cluster.labels) {
         cluster.labels = filterLabels(cluster.labels);
       }
