@@ -39,7 +39,7 @@ const ClusterDetail = ({ match, cluster, clusterId, ...rest }) => {
       <Switch>
         <Route
           path={`${match.path}/getting-started/`}
-          render={() => <GettingStarted {...rest} />}
+          render={() => <GettingStarted {...rest} match={match} />}
         />
 
         <Route
@@ -47,6 +47,7 @@ const ClusterDetail = ({ match, cluster, clusterId, ...rest }) => {
           render={() => (
             <ClusterDetailView
               {...rest}
+              match={match}
               cluster={cluster}
               clusterId={clusterId}
             />
