@@ -37,7 +37,8 @@ const getServiceURL = (installation, service) => {
   const installationInfo = getInstallationInfo(installation);
 
   const { scheme, host } = installationInfo.services[service];
-  return scheme + '://' + host;
+  const hostWithoutPort = host.split(':')[0];
+  return scheme + '://' + hostWithoutPort;
 };
 
 module.exports = getServiceURL;
