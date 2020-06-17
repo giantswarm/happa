@@ -18,7 +18,7 @@ const ProxyPlugin = require('./scripts/webpack/proxyPlugin');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'eval-cheap-module-source-map',
   output: {
     filename: 'assets/[name].[hash].js',
   },
