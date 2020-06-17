@@ -1,3 +1,4 @@
+import QueueImpl from 'lib/Queue';
 import Noty from 'noty';
 
 // messageType affects the visual markup to distinguish severity
@@ -20,7 +21,15 @@ export const messageTTL = {
 };
 
 export class FlashMessage {
+  static queue = new QueueImpl();
+
+  static hashQueueItem(type, text) {
+    return `${type}:${text}`;
+  }
+
   constructor(text, type, ttl, subtext, onClose) {
+    const hash = FlashMessage.hashQueueItem(type, text);
+
     // make sure to only pass escaped HTML to this.text!
     this.text = `<p>${escapeHTML(text)}</p>`;
     if (subtext) {
@@ -37,6 +46,8 @@ export class FlashMessage {
       text: this.text,
       timeout: this.timeout,
       callbacks: {
+        beforeShow: this.onBeforeShow(hash),
+        afterClose: this.onAfterClose(hash),
         onClose,
       },
       theme: 'bootstrap-v3',
@@ -48,8 +59,18 @@ export class FlashMessage {
       },
     });
 
-    this.noty.show();
+    if (!FlashMessage.queue.includes(hash)) {
+      this.noty.show();
+    }
   }
+
+  onBeforeShow = (hash) => () => {
+    FlashMessage.queue.add(hash);
+  };
+
+  onAfterClose = (hash) => () => {
+    FlashMessage.queue.remove(hash);
+  };
 }
 
 /**
@@ -57,6 +78,7 @@ export class FlashMessage {
  */
 export function clearQueues() {
   Noty.closeAll();
+  FlashMessage.queue.clear();
 }
 
 /**
@@ -64,6 +86,7 @@ export function clearQueues() {
  */
 export function clearQueue(queueName) {
   Noty.closeAll(queueName);
+  FlashMessage.queue.clear();
 }
 
 /**
