@@ -14,7 +14,7 @@ import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 
 interface IStateProps {
-  user: Record<string, Record<string, never> | never>;
+  user?: Record<string, Record<string, never> | never>;
 }
 
 interface IDispatchProps {
@@ -85,7 +85,7 @@ AdminLogin.propTypes = {
   // @ts-ignore
   actions: PropTypes.object.isRequired,
   // @ts-ignore
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 function mapStateToProps(state: IState) {
