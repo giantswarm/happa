@@ -107,13 +107,15 @@ class ClusterDetailView extends React.Component {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
-    dispatch(
-      batchedClusterDetailView(
-        organizationId,
-        cluster.id,
-        this.props.isV5Cluster
-      )
-    );
+    if (cluster) {
+      dispatch(
+        batchedClusterDetailView(
+          organizationId,
+          cluster.id,
+          this.props.isV5Cluster
+        )
+      );
+    }
   };
 
   refreshClusterData = () => {
@@ -123,7 +125,9 @@ class ClusterDetailView extends React.Component {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
-    dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+    if (cluster) {
+      dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+    }
   };
 
   handleVisibilityChange = () => {
@@ -250,6 +254,7 @@ class ClusterDetailView extends React.Component {
 
     const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
 
+    if (!cluster) return null;
     const { id, owner } = cluster;
     const tabsPaths = this.getPathsForTabs(id, owner);
 
@@ -428,7 +433,7 @@ function mapStateToProps(state, props) {
     // This looks for this specific cluster to be loaded.
     loadingCluster: selectLoadingFlagByIdAndAction(
       state,
-      props.cluster.id,
+      props.cluster?.id,
       CLUSTER_LOAD_DETAILS_REQUEST
     ),
   };
