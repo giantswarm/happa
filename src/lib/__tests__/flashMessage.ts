@@ -7,21 +7,13 @@ import {
 
 describe('FlashMessage', () => {
   it(`won't display messages that are already in the queue by default`, () => {
-    new FlashMessage(
-      `Yo! Something went wrong.`,
-      messageType.ERROR,
-      messageTTL.MEDIUM
-    );
-    new FlashMessage(
-      `Yo! Something went wrong.`,
-      messageType.ERROR,
-      messageTTL.MEDIUM
-    );
-    new FlashMessage(
-      `Yo! Something went wrong.`,
-      messageType.ERROR,
-      messageTTL.MEDIUM
-    );
+    for (let i = 0; i < 6; i++) {
+      new FlashMessage(
+        `Yo! Something went wrong.`,
+        messageType.ERROR,
+        messageTTL.MEDIUM
+      );
+    }
 
     let notificationWrapper = document.querySelector(
       '.noty_layout'
