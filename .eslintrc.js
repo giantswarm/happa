@@ -208,6 +208,7 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-inferrable-types': 0,
     '@typescript-eslint/ban-ts-ignore': 0,
+    '@typescript-eslint/no-misused-promises': 0,
     '@typescript-eslint/no-unused-vars': [
       2,
       {
