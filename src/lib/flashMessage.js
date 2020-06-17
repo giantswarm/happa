@@ -21,6 +21,10 @@ export const messageTTL = {
 };
 
 export class FlashMessage {
+  /**
+   * The messages waiting to be displayed.
+   * @type {IQueue<string>}
+   */
   static queue = new QueueImpl();
 
   static hashQueueItem(type, text) {
