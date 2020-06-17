@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
+import {
+  ListToggler,
+  SelectedDescription,
+  SelectedItem,
+  SelectedWrapper,
+  Table,
+} from 'UI/ExpandableSelector/Selector';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 import ReleaseRow from './ReleaseRow';
@@ -21,54 +28,9 @@ const extractKubernetesVersion: (
   )?.version;
 };
 
-const TextBase = styled.span`
-  font-size: 14px;
-  i {
-    font-size: 16px;
-  }
-`;
-
-const SelectedReleaseVersion = styled(TextBase)`
-  margin-right: ${({ theme }) => theme.spacingPx * 9}px;
-`;
-
-const SelectedK8sVersion = styled(TextBase)`
-  font-weight: 300;
-`;
-
-const SelectedWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
-`;
-
-const ReleaseListToggler = styled(TextBase)`
-  cursor: pointer;
-  font-weight: 300;
-  padding: ${({ theme }) => theme.spacingPx * 2}px 0;
-  color: ${({ theme }) => theme.colors.white4};
-  user-select: none;
-  &:hover {
-    text-decoration: underline;
-  }
-  i {
-    margin-right: ${({ theme }) => theme.spacingPx}px;
-    width: 14px;
-  }
-`;
-
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
   margin-left: ${({ theme }) => theme.spacingPx}px;
   margin-bottom: 0;
-`;
-
-const Table = styled.table`
-  font-weight: 300;
-  th {
-    font-weight: 300;
-    color: ${({ theme }) => theme.colors.white4};
-    text-align: center;
-  }
 `;
 
 const ReleaseSelector: FC<IReleaseSelector> = ({
@@ -94,51 +56,46 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   return (
     <>
       <SelectedWrapper>
-        <SelectedReleaseVersion>
+        <SelectedItem>
           <i className='fa fa-version-tag' /> {selectedRelease}
-        </SelectedReleaseVersion>
-        <SelectedK8sVersion>
+        </SelectedItem>
+        <SelectedDescription>
           This release contains:
           <K8sReleaseComponentLabel
             name='kubernetes'
             version={selectedKubernetesVersion}
           />
-        </SelectedK8sVersion>
+        </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ReleaseListToggler
-          role='button'
-          onClick={() => setCollapsed(!collapsed)}
-        >
+        <ListToggler role='button' onClick={() => setCollapsed(!collapsed)}>
           <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
           Available releases
-        </ReleaseListToggler>
+        </ListToggler>
       </div>
       {!collapsed && (
-        <div>
-          <Table>
-            <thead>
-              <tr>
-                <th>&nbsp;</th>
-                <th>Version</th>
-                <th>Released</th>
-                <th>Kubernetes</th>
-                <th>Components</th>
-                <th>Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectableReleases.map((release) => (
-                <ReleaseRow
-                  key={release.version}
-                  {...release}
-                  isSelected={release.version === selectedRelease}
-                  selectRelease={selectRelease}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </div>
+        <Table>
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Version</th>
+              <th>Released</th>
+              <th>Kubernetes</th>
+              <th>Components</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectableReleases.map((release) => (
+              <ReleaseRow
+                key={release.version}
+                {...release}
+                isSelected={release.version === selectedRelease}
+                selectRelease={selectRelease}
+              />
+            ))}
+          </tbody>
+        </Table>
       )}
     </>
   );

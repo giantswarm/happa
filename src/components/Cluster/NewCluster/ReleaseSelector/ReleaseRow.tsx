@@ -1,9 +1,15 @@
-import { css, Global } from '@emotion/core';
-import styled from '@emotion/styled';
+import { Global } from '@emotion/core';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
-import Button from 'react-bootstrap/lib/Button';
+import {
+  BulletStyle,
+  ComponentsRow,
+  ComponentsWrapper,
+  CursorPointerCell,
+  TableButton,
+  Tr,
+} from 'UI/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
@@ -11,55 +17,6 @@ interface IReleaseRow extends IRelease {
   isSelected: boolean;
   selectRelease(releaseVersion: string): void;
 }
-
-const TableButton = styled(Button)`
-  height: 24px;
-  line-height: 24px;
-  position: relative;
-  top: -2px;
-  margin-left: 5px;
-  padding: 0px 15px;
-  text-transform: uppercase;
-  i {
-    margin-right: 4px;
-  }
-`;
-
-const ComponentsWrapper = styled.div`
-  margin-left: ${({ theme }) => theme.spacingPx * 9}px;
-`;
-
-const Tr = styled.tr<{ isSelected: boolean }>`
-  background-color: ${({ isSelected, theme }) =>
-    isSelected ? theme.colors.foreground : 'transparent'};
-  td {
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-  }
-  &:hover {
-    background-color: ${({ isSelected, theme }) =>
-      theme.colors[isSelected ? 'foreground' : 'shade4']};
-  }
-`;
-
-const ComponentsRow = styled.tr`
-  &:hover td {
-    color: ${({ theme }) => theme.colors.gray};
-  }
-`;
-
-const CursorPointerCell = styled.td`
-  cursor: pointer;
-`;
-
-const BulletStyle = css`
-  span.release-selection-bullet {
-    margin-right: 0;
-  }
-  .release-selection-radio {
-    margin-bottom: 0;
-  }
-`;
 
 const ReleaseRow: FC<IReleaseRow> = ({
   changelog,
