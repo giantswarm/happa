@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -11,37 +11,46 @@ import { AppRoutes } from 'shared/constants/routes';
 import GettingStarted from '../../GettingStarted/GettingStarted';
 import ClusterDetailView from './ClusterDetailView';
 
-const ClusterDetail = (props) => {
+const ClusterDetail = ({ match, cluster, clusterId, ...rest }) => {
   const dispatch = useDispatch();
 
-  if (!props.cluster) {
-    new FlashMessage(
-      `Cluster <code>${props.clusterId}</code> doesn't exist.`,
-      messageType.INFO,
-      messageTTL.MEDIUM
-    );
+  useEffect(() => {
+    if (!cluster) {
+      new FlashMessage(
+        `Cluster <code>${clusterId}</code> doesn't exist.`,
+        messageType.INFO,
+        messageTTL.MEDIUM
+      );
 
-    dispatch(push(AppRoutes.Home));
+      dispatch(push(AppRoutes.Home));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return null;
-  }
+  if (!cluster) return null;
 
   return (
     <Breadcrumb
       data={{
-        title: props.match.params.clusterId,
-        pathname: props.match.url,
+        title: match.params.clusterId,
+        pathname: match.url,
       }}
     >
       <Switch>
         <Route
-          path={`${props.match.path}/getting-started/`}
-          render={() => <GettingStarted {...props} />}
+          path={`${match.path}/getting-started/`}
+          render={() => <GettingStarted {...rest} />}
         />
 
         <Route
-          path={`${props.match.path}`}
-          render={() => <ClusterDetailView {...props} />}
+          path={`${match.path}`}
+          render={() => (
+            <ClusterDetailView
+              {...rest}
+              cluster={cluster}
+              clusterId={clusterId}
+            />
+          )}
         />
       </Switch>
     </Breadcrumb>
@@ -69,6 +78,7 @@ ClusterDetail.propTypes = {
   user: PropTypes.object,
   isV5Cluster: PropTypes.bool,
 };
+
 function mapStateToProps(state, ownProps) {
   const clusterID = ownProps.match.params.clusterId;
   const cluster = state.entities.clusters.items[clusterID];
