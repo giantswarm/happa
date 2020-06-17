@@ -40,26 +40,6 @@ lint:
 		-v ${PWD}/.eslintignore:/usr/src/app/.eslintignore:z \
 		quay.io/giantswarm/happa-build:latest yarn lint
 
-run-prettier:
-	docker run --rm -ti \
-    -v ${PWD}/src:/usr/src/app/src:z \
-    -v ${PWD}/dist:/usr/src/app/dist:z \
-    -v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
-    -v ${PWD}/package.json:/usr/src/app/package.json:z \
-    -v ${PWD}/tsconfig.json:/usr/src/app/tsconfig.json:z \
-    -v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
-    quay.io/giantswarm/happa-build:latest yarn run prettier
-
-validate-prettier:
-	docker run --rm -t \
-		-v ${PWD}/src:/usr/src/app/src:z \
-		-v ${PWD}/dist:/usr/src/app/dist:z \
-		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
-		-v ${PWD}/package.json:/usr/src/app/package.json:z \
-		-v ${PWD}/tsconfig.json:/usr/src/app/tsconfig.json:z \
-		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
-		quay.io/giantswarm/happa-build:latest yarn run validate-prettier --no-color
-
 dist:
 	docker run --rm -ti \
 		-v ${PWD}/src:/usr/src/app/src:z \

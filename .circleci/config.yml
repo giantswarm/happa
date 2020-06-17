@@ -35,10 +35,6 @@ workflows:
           requires:
             - checkout
           <<: *job_filters
-      - prettier:
-          requires:
-            - checkout
-          <<: *job_filters
       - typecheck:
           requires:
             - checkout
@@ -51,7 +47,6 @@ workflows:
           requires:
             - test
             - lint
-            - prettier
             - typecheck
             - build
           <<: *job_filters
@@ -195,19 +190,6 @@ jobs:
       - run:
           name: Lint code using ESlint
           command: yarn run lint --no-color
-
-  prettier:
-    <<: *defaults
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
-
-      - run:
-          name: Validate code style using prettier
-          command: yarn run validate-prettier --no-color
 
   test:
     <<: *defaults
