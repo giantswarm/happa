@@ -89,6 +89,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           loading={isLoading}
           bsStyle='primary'
           bsSize='lg'
+          loadingTimeout={0}
           onClick={installIngressController}
         >
           Install Ingress Controller
