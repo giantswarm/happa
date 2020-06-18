@@ -7,7 +7,7 @@ import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
+import { isClusterCreating } from 'utils/clusterUtils';
 
 export const WrapperDiv = styled.div`
   font-size: 16px;
@@ -31,7 +31,7 @@ export const ScalingNodeCounter = styled(RefreshableLabel)`
 
 function WorkerNodesAzure({
   az,
-  createDate,
+  cluster,
   instanceType,
   nodes,
   showScalingModal,
@@ -64,7 +64,7 @@ function WorkerNodesAzure({
       <LineDiv>
         <div>Nodes</div>
         <ScalingNodeCounter value={nodeCount}>
-          {nodeCount === 0 && isClusterYoungerThanOneHour(createDate) ? (
+          {nodeCount === 0 && isClusterCreating(cluster) ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             nodeCount
@@ -78,7 +78,7 @@ function WorkerNodesAzure({
 
 WorkerNodesAzure.propTypes = {
   az: PropTypes.array,
-  createDate: PropTypes.string,
+  cluster: PropTypes.object,
   instanceType: PropTypes.object,
   nodes: PropTypes.number,
   showScalingModal: PropTypes.func,
