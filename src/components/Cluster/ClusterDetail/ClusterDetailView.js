@@ -358,6 +358,9 @@ class ClusterDetailView extends React.Component {
                         k8sEndpoint={cluster.api_endpoint}
                         kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
                         kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                        hasOptionalIngress={
+                          cluster.capabilities.hasOptionalIngress
+                        }
                       />
                     </Tab>
                   </Tabs>

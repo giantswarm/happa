@@ -49,6 +49,7 @@ interface IIngressProps {
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
   kvmTCPHTTPSPort?: number;
+  hasOptionalIngress?: boolean;
 }
 
 const Ingress: React.FC<IIngressProps> = ({
@@ -56,6 +57,7 @@ const Ingress: React.FC<IIngressProps> = ({
   k8sEndpoint,
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
+  hasOptionalIngress,
   ...rest
 }) => {
   // Safe because of default props
@@ -196,6 +198,7 @@ Ingress.propTypes = {
   k8sEndpoint: PropTypes.string,
   kvmTCPHTTPPort: PropTypes.number,
   kvmTCPHTTPSPort: PropTypes.number,
+  hasOptionalIngress: PropTypes.bool,
 };
 
 Ingress.defaultProps = {
@@ -203,6 +206,7 @@ Ingress.defaultProps = {
   k8sEndpoint: '',
   kvmTCPHTTPPort: 0,
   kvmTCPHTTPSPort: 0,
+  hasOptionalIngress: false,
 };
 
 export default Ingress;
