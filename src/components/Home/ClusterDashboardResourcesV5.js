@@ -23,7 +23,9 @@ function ClusterDashboardResourcesV5({
   const hasNodePools = numberOfNodes !== 0 && cluster?.nodePools?.length > 0;
   const loading = loadingClusters || loadingStatus || loadingNodePools;
 
-  if (loading) return <ClusterDashboardLoadingPlaceholder isV5Cluster={true} />;
+  if (loading) {
+    return <ClusterDashboardLoadingPlaceholder isV5Cluster={true} />;
+  }
 
   return (
     <div data-testid='cluster-resources'>
@@ -39,8 +41,8 @@ function ClusterDashboardResourcesV5({
       )}
       <RefreshableLabel value={numberOfNodes}>
         <ClusterDashboardNodes
+          cluster={cluster}
           numberOfNodes={numberOfNodes}
-          createDate={cluster.create_date}
         />
       </RefreshableLabel>
       {hasNodePools && (

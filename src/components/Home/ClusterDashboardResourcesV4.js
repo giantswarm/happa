@@ -21,15 +21,16 @@ function ClusterDashboardResourcesV4({
   const { storage, numberOfNodes } = resources;
   const loading = loadingClusters || loadingStatus;
 
-  if (loading)
+  if (loading) {
     return <ClusterDashboardLoadingPlaceholder isV5Cluster={false} />;
+  }
 
   return (
     <div data-testid='cluster-resources'>
       <RefreshableLabel value={numberOfNodes}>
         <ClusterDashboardNodes
           numberOfNodes={numberOfNodes}
-          createDate={cluster.create_date}
+          cluster={cluster}
         />
       </RefreshableLabel>
       {cluster.kvm && (
