@@ -59,6 +59,22 @@ class CreateRegularCluster extends React.Component {
     return multiAZSelectorProps;
   }
 
+  static getWorkerConfigurationComponent(provider) {
+    switch (provider) {
+      case Providers.AWS:
+        return { component: InstanceTypeSelector, label: 'Instance type' };
+      case Providers.AZURE:
+        return { component: InstanceTypeSelector, label: 'VM size' };
+      case Providers.KVM:
+        return {
+          component: KVMWorkerConfiguration,
+          label: 'Worker configuration',
+        };
+    }
+
+    return null;
+  }
+
   state = {
     availabilityZonesPicker: {
       value: 1,
@@ -285,6 +301,11 @@ class CreateRegularCluster extends React.Component {
       this.props.selectedRelease
     );
 
+    const {
+      component: WorkerConfiguration,
+      label: workerConfigurationLabel,
+    } = CreateRegularCluster.getWorkerConfigurationComponent(provider);
+
     return (
       <WrapperDiv data-testid='cluster-creation-view'>
         <HorizontalLine />
@@ -300,53 +321,31 @@ class CreateRegularCluster extends React.Component {
             />
           )}
           <Section htmlFor='instance-type'>
-            {(() => {
-              switch (provider) {
-                case Providers.AWS: {
-                  return (
-                    <StyledInput
-                      inputId='instance-type'
-                      label='Instance type'
-                      // regular space, hides hint ;)
-                      hint={<>&#32;</>}
-                    >
-                      <InstanceTypeSelector
-                        selectedInstanceType={this.state.aws.instanceType}
-                        selectInstanceType={this.setAWSInstanceType}
-                      />
-                    </StyledInput>
-                  );
+            <StyledInput
+              inputId='instance-type'
+              label={workerConfigurationLabel}
+              // regular space, hides hint ;)
+              hint={<>&#32;</>}
+            >
+              <WorkerConfiguration
+                selectedInstanceType={
+                  provider === Providers.AWS
+                    ? this.state.aws.instanceType
+                    : this.state.azure.vmSize
                 }
-                case Providers.KVM:
-                  return (
-                    <KVMWorkerConfiguration
-                      cpuCores={this.state.kvm.cpuCores.value}
-                      diskSize={this.state.kvm.diskSize.value}
-                      memorySize={this.state.kvm.memorySize.value}
-                      onUpdateCPUCores={this.updateCPUCores}
-                      onUpdateDiskSize={this.updateDiskSize}
-                      onUpdateMemorySize={this.updateMemorySize}
-                    />
-                  );
-                case Providers.AZURE: {
-                  return (
-                    <StyledInput
-                      inputId='instance-type'
-                      label='VM Size'
-                      // regular space, hides hint ;)
-                      hint={<>&#32;</>}
-                    >
-                      <InstanceTypeSelector
-                        selectedInstanceType={this.state.azure.vmSize}
-                        selectInstanceType={this.setAzureVMSize}
-                      />
-                    </StyledInput>
-                  );
+                selectInstanceType={
+                  provider === Providers.AWS
+                    ? this.setAWSInstanceType
+                    : this.setAzureVMSize
                 }
-              }
-
-              return null;
-            })()}
+                cpuCores={this.state.kvm.cpuCores.value}
+                diskSize={this.state.kvm.diskSize.value}
+                memorySize={this.state.kvm.memorySize.value}
+                onUpdateCPUCores={this.updateCPUCores}
+                onUpdateDiskSize={this.updateDiskSize}
+                onUpdateMemorySize={this.updateMemorySize}
+              />
+            </StyledInput>
           </Section>
           <Section className='scaling-range' htmlFor='scaling-range'>
             <StyledInput

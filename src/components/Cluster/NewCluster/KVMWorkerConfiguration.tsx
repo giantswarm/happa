@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
-import StyledInput, {
-  AdditionalInputHint,
-} from 'UI/ClusterCreation/StyledInput';
+import { AdditionalInputHint } from 'UI/ClusterCreation/StyledInput';
 import NumberPicker from 'UI/NumberPicker';
 
 interface INumberPickerOnChangePayload {
@@ -32,49 +30,42 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
   onUpdateCPUCores,
   onUpdateDiskSize,
   onUpdateMemorySize,
-}) => {
-  return (
-    <StyledInput
-      inputId='instance-type'
-      label='Worker Configuration'
-      // regular space, hides hint ;)
-      hint={<>&#32;</>}
-    >
-      <AdditionalInputHint>
-        Configure the amount of CPU, RAM and Storage for your workers. The
-        storage size specified will apply to both the kubelet and the Docker
-        volume of the node, so please make sure to have twice the specified size
-        available as disk space.
-      </AdditionalInputHint>
-      <KVMNumberPicker
-        label='CPU Cores'
-        max={999}
-        min={2}
-        onChange={onUpdateCPUCores}
-        stepSize={1}
-        value={cpuCores}
-      />
-      <KVMNumberPicker
-        label='Memory (GB)'
-        max={999}
-        min={3}
-        onChange={onUpdateMemorySize}
-        stepSize={1}
-        unit='GB'
-        value={memorySize}
-      />
-      <KVMNumberPicker
-        label='Storage (GB)'
-        max={999}
-        min={10}
-        onChange={onUpdateDiskSize}
-        stepSize={10}
-        unit='GB'
-        value={diskSize}
-      />
-    </StyledInput>
-  );
-};
+}) => (
+  <>
+    <AdditionalInputHint>
+      Configure the amount of CPU, RAM and Storage for your workers. The storage
+      size specified will apply to both the kubelet and the Docker volume of the
+      node, so please make sure to have twice the specified size available as
+      disk space.
+    </AdditionalInputHint>
+    <KVMNumberPicker
+      label='CPU Cores'
+      max={999}
+      min={2}
+      onChange={onUpdateCPUCores}
+      stepSize={1}
+      value={cpuCores}
+    />
+    <KVMNumberPicker
+      label='Memory (GB)'
+      max={999}
+      min={3}
+      onChange={onUpdateMemorySize}
+      stepSize={1}
+      unit='GB'
+      value={memorySize}
+    />
+    <KVMNumberPicker
+      label='Storage (GB)'
+      max={999}
+      min={10}
+      onChange={onUpdateDiskSize}
+      stepSize={10}
+      unit='GB'
+      value={diskSize}
+    />
+  </>
+);
 
 KVMWorkerConfiguration.propTypes = {
   cpuCores: PropTypes.number.isRequired,
