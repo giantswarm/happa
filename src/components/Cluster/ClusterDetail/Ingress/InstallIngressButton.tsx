@@ -14,6 +14,16 @@ import {
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
+const appToInstall = {
+  catalog: 'giantswarm',
+  chartName: 'nginx-ingress-controller-app',
+  namespace: 'kube-system',
+  name: 'nginx-ingress-controller-app',
+  valuesYAML: '',
+  secretsYAML: '',
+  version: '1.6.9',
+};
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -47,29 +57,25 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const dispatch: ThunkDispatch<IState, undefined, AnyAction> = useDispatch();
 
   useEffect(() => {
-    dispatch(loadApps(clusterID));
+    const tryToLoadApps = async () => {
+      try {
+        await dispatch(loadApps(clusterID));
+      } catch {
+        // Do nothing, flash message is shown in action.
+      }
+    };
+
+    tryToLoadApps();
   }, [dispatch, clusterID]);
 
   const installIngressController = async () => {
     try {
       setIsInstalling(true);
 
-      await dispatch(
-        installApp(
-          {
-            catalog: 'giantswarm',
-            chartName: 'nginx-ingress-controller-app',
-            namespace: 'kube-system',
-            name: 'nginx-ingress-controller-app',
-            valuesYAML: '',
-            secretsYAML: '',
-            version: '1.6.9',
-          },
-          clusterID
-        )
-      );
-
+      await dispatch(installApp(appToInstall, clusterID));
       await dispatch(loadApps(clusterID));
+    } catch {
+      // Do nothing, flash message is shown in actions.
     } finally {
       setIsInstalling(false);
     }
