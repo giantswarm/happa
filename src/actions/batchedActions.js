@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router';
 import { ErrorReporter } from 'lib/errors';
 import RoutePath from 'lib/routePath';
-import { OrganizationsRoutes } from 'shared/constants/routes';
+import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
 
 import * as appActions from './appActions';
@@ -173,15 +173,8 @@ export const batchedRefreshClusterDetailView = (
 
 export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
   try {
-    const organizationDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Detail,
-      {
-        orgId: cluster.owner,
-      }
-    );
-
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
-    dispatch(push(organizationDetailPath));
+    dispatch(push(AppRoutes.Home));
     dispatch(modalActions.modalHide());
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
