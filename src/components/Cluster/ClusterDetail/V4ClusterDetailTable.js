@@ -7,6 +7,7 @@ import { selectResourcesV4 } from 'selectors/clusterSelectors';
 import { CSSBreakpoints, Providers } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
 import Button from 'UI/Button';
+import { isClusterCreating } from 'utils/clusterUtils';
 
 import CredentialInfoRow from './CredentialInfoRow';
 import NodesRunning from './NodesRunning';
@@ -106,6 +107,8 @@ class V4ClusterDetailTable extends React.Component {
     const { create_date, release_version, api_endpoint } = cluster;
     const { numberOfNodes, memory, cores } = resources;
 
+    const isCreating = isClusterCreating(cluster);
+
     return (
       <WrapperDiv>
         <FlexRowWithTwoBlocksOnEdges>
@@ -122,7 +125,7 @@ class V4ClusterDetailTable extends React.Component {
           </div>
           <div>
             <NodesRunning
-              cluster={cluster}
+              isClusterCreating={isClusterCreating(cluster)}
               workerNodesRunning={numberOfNodes}
               RAM={memory}
               CPUs={cores}
@@ -154,7 +157,7 @@ class V4ClusterDetailTable extends React.Component {
           Object.keys(this.state.azureVMSizes).length > 0 && (
             <WorkerNodesAzure
               az={cluster.availability_zones}
-              cluster={cluster}
+              isClusterCreating={isCreating}
               instanceType={
                 this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
               }
@@ -164,7 +167,7 @@ class V4ClusterDetailTable extends React.Component {
           )}
         {provider === Providers.KVM && (
           <WorkerNodesKVM
-            cluster={cluster}
+            isClusterCreating={isCreating}
             worker={cluster.workers[0]}
             nodes={numberOfNodes}
             showScalingModal={this.props.showScalingModal}
@@ -174,7 +177,7 @@ class V4ClusterDetailTable extends React.Component {
           Object.keys(this.state.awsInstanceTypes).length > 0 && (
             <WorkerNodesAWS
               az={cluster.availability_zones}
-              cluster={cluster}
+              isClusterCreating={isCreating}
               instanceName={cluster.workers[0].aws.instance_type}
               instanceType={
                 this.state.awsInstanceTypes[

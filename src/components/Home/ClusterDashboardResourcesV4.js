@@ -14,6 +14,7 @@ import ClusterDashboardNodes from './ClusterDashboardNodes';
 
 function ClusterDashboardResourcesV4({
   cluster,
+  isClusterCreating,
   loadingClusters,
   loadingStatus,
   resources,
@@ -30,7 +31,7 @@ function ClusterDashboardResourcesV4({
       <RefreshableLabel value={numberOfNodes}>
         <ClusterDashboardNodes
           numberOfNodes={numberOfNodes}
-          cluster={cluster}
+          isClusterCreating={isClusterCreating}
         />
       </RefreshableLabel>
       {cluster.kvm && (
@@ -47,6 +48,7 @@ function ClusterDashboardResourcesV4({
 
 ClusterDashboardResourcesV4.propTypes = {
   cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingClusters: PropTypes.bool,

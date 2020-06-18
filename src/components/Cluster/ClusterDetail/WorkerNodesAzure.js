@@ -7,7 +7,6 @@ import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 export const WrapperDiv = styled.div`
   font-size: 16px;
@@ -31,7 +30,7 @@ export const ScalingNodeCounter = styled(RefreshableLabel)`
 
 function WorkerNodesAzure({
   az,
-  cluster,
+  isClusterCreating,
   instanceType,
   nodes,
   showScalingModal,
@@ -64,7 +63,7 @@ function WorkerNodesAzure({
       <LineDiv>
         <div>Nodes</div>
         <ScalingNodeCounter value={nodeCount}>
-          {nodeCount === 0 && isClusterCreating(cluster) ? (
+          {nodeCount === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             nodeCount
@@ -78,7 +77,7 @@ function WorkerNodesAzure({
 
 WorkerNodesAzure.propTypes = {
   az: PropTypes.array,
-  cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   instanceType: PropTypes.object,
   nodes: PropTypes.number,
   showScalingModal: PropTypes.func,

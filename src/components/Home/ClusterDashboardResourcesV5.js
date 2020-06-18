@@ -14,6 +14,7 @@ import ClusterDashboardNodes from './ClusterDashboardNodes';
 
 function ClusterDashboardResourcesV5({
   cluster,
+  isClusterCreating,
   loadingClusters,
   loadingNodePools,
   loadingStatus,
@@ -41,7 +42,7 @@ function ClusterDashboardResourcesV5({
       )}
       <RefreshableLabel value={numberOfNodes}>
         <ClusterDashboardNodes
-          cluster={cluster}
+          isClusterCreating={isClusterCreating}
           numberOfNodes={numberOfNodes}
         />
       </RefreshableLabel>
@@ -63,6 +64,7 @@ function ClusterDashboardResourcesV5({
 
 ClusterDashboardResourcesV5.propTypes = {
   cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,
   resources: PropTypes.object,

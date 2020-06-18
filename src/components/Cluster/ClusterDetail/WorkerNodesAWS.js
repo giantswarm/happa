@@ -8,13 +8,12 @@ import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 
 function WorkerNodesAWS({
   az,
-  cluster,
+  isClusterCreating,
   instanceName,
   instanceType,
   scaling,
@@ -71,7 +70,7 @@ function WorkerNodesAWS({
           </OverlayTrigger>
         </div>
         <RefreshableLabel value={workerNodesDesired}>
-          {workerNodesDesired === 0 && isClusterCreating(cluster) ? (
+          {workerNodesDesired === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             workerNodesDesired
@@ -81,7 +80,7 @@ function WorkerNodesAWS({
       <LineDiv data-testid='running-nodes'>
         <div>Current number</div>
         <RefreshableLabel value={workerNodesRunning}>
-          {workerNodesRunning === 0 && isClusterCreating(cluster) ? (
+          {workerNodesRunning === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             workerNodesRunning
@@ -94,7 +93,7 @@ function WorkerNodesAWS({
 
 WorkerNodesAWS.propTypes = {
   az: PropTypes.array,
-  cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   instanceName: PropTypes.string,
   instanceType: PropTypes.object,
   scaling: PropTypes.object,

@@ -22,6 +22,7 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import RefreshableLabel from 'UI/RefreshableLabel';
+import { isClusterCreating } from 'utils/clusterUtils';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
@@ -144,6 +145,8 @@ function ClusterDashboardItem({
   // If the cluster has been deleted using gsctl, Happa doesn't know yet.
   if (!cluster) return null;
 
+  const isCreating = isClusterCreating(cluster);
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -234,9 +237,13 @@ function ClusterDashboardItem({
               <ClusterDashboardResourcesV5
                 cluster={cluster}
                 nodePools={nodePools}
+                isClusterCreating={isCreating}
               />
             ) : (
-              <ClusterDashboardResourcesV4 cluster={cluster} />
+              <ClusterDashboardResourcesV4
+                cluster={cluster}
+                isClusterCreating={isCreating}
+              />
             )}
           </ClusterDetailsDiv>
         </ErrorFallback>

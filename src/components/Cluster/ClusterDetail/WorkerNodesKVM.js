@@ -4,11 +4,15 @@ import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 
-function WorkerNodesKVM({ cluster, worker, nodes, showScalingModal }) {
+function WorkerNodesKVM({
+  isClusterCreating,
+  worker,
+  nodes,
+  showScalingModal,
+}) {
   const nodeSpecText = worker
     ? `${worker.cpu.cores} CPUs, ${worker.memory.size_gb} GB RAM`
     : '0 CPUs, 0 GB RAM';
@@ -24,7 +28,7 @@ function WorkerNodesKVM({ cluster, worker, nodes, showScalingModal }) {
       <LineDiv>
         <div>Nodes</div>
         <ScalingNodeCounter value={nodeCount}>
-          {nodeCount === 0 && isClusterCreating(cluster) ? (
+          {nodeCount === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             nodeCount
@@ -37,7 +41,7 @@ function WorkerNodesKVM({ cluster, worker, nodes, showScalingModal }) {
 }
 
 WorkerNodesKVM.propTypes = {
-  cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   worker: PropTypes.object,
   nodes: PropTypes.number,
   showScalingModal: PropTypes.func,

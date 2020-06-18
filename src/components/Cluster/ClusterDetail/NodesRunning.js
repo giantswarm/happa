@@ -2,16 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { Dot, FallbackSpan } from 'styles';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 const NodesRunning = ({
-  cluster,
+  isClusterCreating,
   workerNodesRunning,
   RAM,
   CPUs,
   nodePools,
 }) => {
-  if (workerNodesRunning === 0 && isClusterCreating(cluster)) {
+  if (workerNodesRunning === 0 && isClusterCreating) {
     return (
       <div data-testid='nodes-running'>
         <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
@@ -42,7 +41,7 @@ const NodesRunning = ({
 };
 
 NodesRunning.propTypes = {
-  cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   workerNodesRunning: PropTypes.number,
   // TODO Change this when cluster_utils functions are refactored
   RAM: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
