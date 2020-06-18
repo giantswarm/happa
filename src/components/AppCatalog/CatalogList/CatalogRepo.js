@@ -25,7 +25,6 @@ const Repo = styled(Link)`
   background-color: ${({ theme }) => theme.colors.shade4};
   padding: 18px;
   border: 1px solid transparent;
-  font-weight: 300;
 
   &:hover {
     text-decoration: none;
@@ -57,7 +56,7 @@ const Image = styled.img`
   border-radius: 5px;
 
   &:before {
-    content: "${(props) => acronymize(props.alt)}";
+    content: "${({ acronym }) => acronym}";
     display: block;
     position: absolute;
     border-radius: 5px;
@@ -66,7 +65,6 @@ const Image = styled.img`
     background-color: #fff;
     color: #2e556a;
     font-size: 20px;
-    font-weight: 300;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -92,7 +90,7 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
 
   return (
     <Repo to={appCatalogListPath}>
-      <Image src={logoURL} alt={title} />
+      <Image src={logoURL} alt={title} acronym={acronymize(title)} />
       <Description>
         <Title>{title}</Title>
         <CatalogTypeLabel
