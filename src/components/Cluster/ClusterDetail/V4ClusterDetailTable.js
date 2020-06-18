@@ -122,8 +122,8 @@ class V4ClusterDetailTable extends React.Component {
           </div>
           <div>
             <NodesRunning
+              cluster={cluster}
               workerNodesRunning={numberOfNodes}
-              createDate={create_date}
               RAM={memory}
               CPUs={cores}
             />

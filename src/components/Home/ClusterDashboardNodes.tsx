@@ -14,8 +14,6 @@ const ClusterDashboardNodes: React.FC<IClusterDashboardNodesProps> = ({
   numberOfNodes,
   cluster,
 }) => {
-  // If it was created more than an hour ago, then we should not show this message
-  // because something went wrong, so it's best to make it noticeable.
   if (numberOfNodes === 0 && isClusterCreating(cluster))
     return <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>;
 
