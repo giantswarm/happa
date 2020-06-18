@@ -24,7 +24,7 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
 }) => {
   return (
     <Tr isSelected={isSelected} onClick={() => selectInstanceType(name)}>
-      <CursorPointerCell>
+      <LeftAlignedCell>
         <RadioInput
           id={`select-${name}`}
           title={`Select TODO ${name}`}
@@ -35,7 +35,7 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
           rootProps={{ className: 'selection-radio' }}
           bulletProps={{ className: 'selection-bullet' }}
         />
-      </CursorPointerCell>
+      </LeftAlignedCell>
       <CursorPointerCell>{name}</CursorPointerCell>
       <CursorPointerCell>{cpu}</CursorPointerCell>
       <CursorPointerCell>{ram} GB</CursorPointerCell>
