@@ -86,16 +86,22 @@ export function nodePoolsLoad({
     const allClusters = getState().entities.clusters.items;
     const v5ClustersId = getState().entities.clusters.v5Clusters || [];
 
-    // Remove deleted clusters from clusters array
-    const v5ActiveClustersIds = v5ClustersId.filter(
-      (id) => !allClusters[id].delete_date
-    );
+    const filteredClusters = v5ClustersId.filter((id) => {
+      const cluster = allClusters[id];
+      if (!cluster) return false;
 
-    const filteredClusters = filterBySelectedOrganization
-      ? v5ActiveClustersIds.filter(
-          (id) => allClusters[id].owner === selectedOrganization
-        )
-      : v5ActiveClustersIds;
+      // Remove deleted clusters.
+      if (cluster.delete_date) return false;
+
+      if (
+        filterBySelectedOrganization &&
+        cluster.owner !== selectedOrganization
+      ) {
+        return false;
+      }
+
+      return true;
+    });
 
     if (filteredClusters.length > 0) {
       await Promise.all(
