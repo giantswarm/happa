@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Option from 'Cluster/ClusterDetail/Ingress/Option';
 import Ports from 'Cluster/ClusterDetail/Ingress/Ports';
+import { getBasePathFromK8sEndpoint } from 'Cluster/ClusterDetail/Ingress/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
@@ -52,7 +53,7 @@ const Instructions: React.FC<IInstructionsProps> = ({
   kvmTCPHTTPSPort,
   ...rest
 }) => {
-  // Safe because of default props
+  // Safe because of default props.
   const basePath: string = getBasePathFromK8sEndpoint(k8sEndpoint as string);
   const examplePath: string = `${IngressPathPrefixes.Example}${basePath}`;
   const balancerPath: string = `${IngressPathPrefixes.LoadBalancer}${basePath}`;
@@ -185,14 +186,3 @@ Instructions.defaultProps = {
 };
 
 export default Instructions;
-
-function getBasePathFromK8sEndpoint(endpoint: string): string {
-  const replacer = 'https://api';
-  let result = '';
-
-  if (endpoint.startsWith(replacer)) {
-    result = endpoint.replace(replacer, '');
-  }
-
-  return result;
-}
