@@ -391,7 +391,7 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <NodesRunning
               workerNodesRunning={numberOfNodes}
-              createDate={create_date}
+              isClusterCreating={isClusterCreating(cluster)}
               RAM={memory}
               CPUs={cores}
               nodePools={nodePools}
