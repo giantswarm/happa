@@ -36,7 +36,8 @@ const Text = styled.span`
   margin-left: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
-interface IInstallIngressButtonProps extends React.ComponentProps<'div'> {
+interface IInstallIngressButtonProps
+  extends React.ComponentPropsWithoutRef<'div'> {
   cluster: Record<string, never>;
 }
 
