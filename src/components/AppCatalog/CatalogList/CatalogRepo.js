@@ -9,6 +9,13 @@ import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 
 import CatalogExternalLink from './CatalogExternalLink';
 
+function acronymize(text) {
+  const matches = text.match(/\b(\w)/g); // ['J','S','O','N']
+  const acronym = matches.join(''); // JSON
+
+  return acronym;
+}
+
 const Repo = styled(Link)`
   flex: 0 0;
   display: flex;
@@ -47,6 +54,21 @@ const Image = styled.img`
   background-color: ${({ theme }) => theme.colors.white1};
   flex-shrink: 0;
   border-radius: 5px;
+
+  &:before {
+    content: "${({ acronym }) => acronym}";
+    display: block;
+    position: absolute;
+    border-radius: 5px;
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+    color: #2e556a;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
 `;
 
 const markdownRenderers = {
@@ -68,7 +90,7 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
 
   return (
     <Repo to={appCatalogListPath}>
-      <Image src={logoURL} alt={name} />
+      <Image src={logoURL} alt={title} acronym={acronymize(title)} />
       <Description>
         <Title>{title}</Title>
         <CatalogTypeLabel
