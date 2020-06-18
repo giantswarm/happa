@@ -32,6 +32,12 @@ describe('FlashMessage', () => {
       messageType.ERROR,
       messageTTL.MEDIUM
     );
+
+    /**
+     * Create a message with the same text, but a different type,
+     * so we can check if types are taken into consideration when
+     * checking if a message already exists.
+     */
     new FlashMessage(
       `Yo! Something went wrong.`,
       messageType.INFO,
