@@ -2,18 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { Dot, FallbackSpan } from 'styles';
-import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 const NodesRunning = ({
+  isClusterCreating,
   workerNodesRunning,
-  createDate,
   RAM,
   CPUs,
   nodePools,
 }) => {
-  //  If it was created more than an hour ago, then we should not show this message
-  //  because something went wrong, so it's best to make it noticeable.
-  if (workerNodesRunning === 0 && isClusterYoungerThanOneHour(createDate)) {
+  if (workerNodesRunning === 0 && isClusterCreating) {
     return (
       <div data-testid='nodes-running'>
         <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
@@ -44,8 +41,8 @@ const NodesRunning = ({
 };
 
 NodesRunning.propTypes = {
+  isClusterCreating: PropTypes.bool,
   workerNodesRunning: PropTypes.number,
-  createDate: PropTypes.string,
   // TODO Change this when cluster_utils functions are refactored
   RAM: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   CPUs: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
