@@ -279,8 +279,6 @@ scales node pools correctly`, async () => {
       .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
       .reply(StatusCodes.Ok, clusterDeleteResponse);
 
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-
     const clusterDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Home,
       {
