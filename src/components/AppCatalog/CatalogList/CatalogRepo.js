@@ -10,8 +10,8 @@ import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import CatalogExternalLink from './CatalogExternalLink';
 
 function acronymize(text) {
-  var matches = text.match(/\b(\w)/g); // ['J','S','O','N']
-  var acronym = matches.join(''); // JSON
+  const matches = text.match(/\b(\w)/g); // ['J','S','O','N']
+  const acronym = matches.join(''); // JSON
 
   return acronym;
 }
