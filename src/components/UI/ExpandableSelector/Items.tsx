@@ -1,4 +1,3 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import Button from 'react-bootstrap/lib/Button';
 
@@ -24,6 +23,12 @@ export const Tr = styled.tr<{ isSelected: boolean }>`
     isSelected ? theme.colors.foreground : 'transparent'};
   td {
     font-variant-numeric: tabular-nums;
+    span.selection-bullet {
+      margin-right: 0;
+    }
+    .selection-radio {
+      margin-bottom: 0;
+    }
   }
   &:hover {
     background-color: ${({ isSelected, theme }) =>
@@ -43,13 +48,4 @@ export const CenteredCell = styled.td`
 
 export const CursorPointerCell = styled(CenteredCell)`
   cursor: pointer;
-`;
-
-export const BulletStyle = css`
-  span.release-selection-bullet {
-    margin-right: 0;
-  }
-  .release-selection-radio {
-    margin-bottom: 0;
-  }
 `;

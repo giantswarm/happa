@@ -1,13 +1,8 @@
-import { Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import { IInstanceType } from 'hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
-import {
-  BulletStyle,
-  CursorPointerCell,
-  Tr,
-} from 'UI/ExpandableSelector/Items';
+import { CursorPointerCell, Tr } from 'UI/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
 
 interface IInstanceTypeRow extends IInstanceType {
@@ -28,27 +23,24 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
   selectInstanceType,
 }) => {
   return (
-    <>
-      <Global styles={BulletStyle} />
-      <Tr isSelected={isSelected} onClick={() => selectInstanceType(name)}>
-        <CursorPointerCell>
-          <RadioInput
-            id={`select-${name}`}
-            title={`Select TODO ${name}`}
-            checked={isSelected}
-            value={isSelected ? 'true' : 'false'}
-            name={`select-${name}`}
-            onChange={() => selectInstanceType(name)}
-            rootProps={{ className: 'release-selection-radio' }}
-            bulletProps={{ className: 'release-selection-bullet' }}
-          />
-        </CursorPointerCell>
-        <CursorPointerCell>{name}</CursorPointerCell>
-        <CursorPointerCell>{cpu}</CursorPointerCell>
-        <CursorPointerCell>{ram} GB</CursorPointerCell>
-        <LeftAlignedCell>{description}</LeftAlignedCell>
-      </Tr>
-    </>
+    <Tr isSelected={isSelected} onClick={() => selectInstanceType(name)}>
+      <CursorPointerCell>
+        <RadioInput
+          id={`select-${name}`}
+          title={`Select TODO ${name}`}
+          checked={isSelected}
+          value={isSelected ? 'true' : 'false'}
+          name={`select-${name}`}
+          onChange={() => selectInstanceType(name)}
+          rootProps={{ className: 'selection-radio' }}
+          bulletProps={{ className: 'selection-bullet' }}
+        />
+      </CursorPointerCell>
+      <CursorPointerCell>{name}</CursorPointerCell>
+      <CursorPointerCell>{cpu}</CursorPointerCell>
+      <CursorPointerCell>{ram} GB</CursorPointerCell>
+      <LeftAlignedCell>{description}</LeftAlignedCell>
+    </Tr>
   );
 };
 

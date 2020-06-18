@@ -1,9 +1,7 @@
-import { Global } from '@emotion/core';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import {
-  BulletStyle,
   CenteredCell,
   ComponentsRow,
   ComponentsWrapper,
@@ -37,7 +35,6 @@ const ReleaseRow: FC<IReleaseRow> = ({
 
   return (
     <>
-      <Global styles={BulletStyle} />
       <Tr isSelected={isSelected} onClick={() => selectRelease(version)}>
         <CursorPointerCell>
           <RadioInput
@@ -47,8 +44,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
             value={isSelected ? 'true' : 'false'}
             name={`select-${version}`}
             onChange={() => selectRelease(version)}
-            rootProps={{ className: 'release-selection-radio' }}
-            bulletProps={{ className: 'release-selection-bullet' }}
+            rootProps={{ className: 'selection-radio' }}
+            bulletProps={{ className: 'selection-bullet' }}
           />
         </CursorPointerCell>
         <CursorPointerCell>{version}</CursorPointerCell>
