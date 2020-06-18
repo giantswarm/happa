@@ -101,7 +101,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           ) : (
             <>
               Click this button to install an ingress controller on{' '}
-              <ClusterIDLabel clusterID={cluster.id} />
+              <ClusterIDLabel clusterID={clusterID} />
             </>
           )}
         </Text>
