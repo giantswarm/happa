@@ -5,20 +5,20 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const Wrapper = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   display: inline-block;
   margin-bottom: 12px;
   margin-right: 10px;
+  background-color: #1e4156;
+  padding: 5px 6px 6px 8px;
+  border-radius: 4px;
 
   span {
-    background-color: #1e4156;
-    padding: 4px 6px;
-    border-radius: 4px;
     margin-right: 5px;
   }
 
   .fa {
-    font-size: 16px;
+    font-size: 14px;
     position: relative;
     top: 1px;
   }
