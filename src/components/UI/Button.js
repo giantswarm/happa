@@ -52,6 +52,7 @@ const Button = (props) => {
         disabled={disabled || loading}
         onClick={onClick}
         type={type}
+        role='button'
         {...rest}
       >
         {children}

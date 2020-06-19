@@ -1,8 +1,12 @@
-import { within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { Providers } from 'shared/constants';
-import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
+import {
+  appResponseWithCustomConfig,
+  v5ClusterResponse,
+} from 'testUtils/mockHttpCalls';
+import { getComponentWithTheme, renderWithStore } from 'testUtils/renderUtils';
 
-import Ingress from '../Ingress/Ingress';
+import Ingress from '../Ingress';
 
 const getByTextInParent = (
   parent: HTMLElement,
@@ -11,14 +15,20 @@ const getByTextInParent = (
   return within(parent).getByText(text);
 };
 
+const defaultCluster = {
+  ...v5ClusterResponse,
+  apps: [appResponseWithCustomConfig],
+};
+
 describe('Ingress', () => {
   it('renders without crashing', () => {
-    renderWithTheme(Ingress, {});
+    renderWithStore(Ingress, { cluster: defaultCluster });
   });
 
   it('formats all the ingress paths correctly', () => {
-    const { getByText } = renderWithTheme(Ingress, {
+    const { getByText } = renderWithStore(Ingress, {
       k8sEndpoint: 'https://api.t3st.k8s.giantswarm.io',
+      cluster: defaultCluster,
     });
 
     // Base domain
@@ -58,11 +68,12 @@ describe('Ingress', () => {
 
   it('displays the TCP ports for KVM installations', () => {
     const defaultProps = {
+      cluster: defaultCluster,
       kvmTCPHTTPPort: 10000,
       kvmTCPHTTPSPort: 10001,
     };
 
-    const { queryByText, getByText, rerender } = renderWithTheme(Ingress, {
+    const { queryByText, getByText, rerender } = renderWithStore(Ingress, {
       ...defaultProps,
       provider: Providers.AWS,
     });
@@ -84,6 +95,22 @@ describe('Ingress', () => {
     ).toBeInTheDocument();
     expect(
       getByTextInParent(tcpParent, defaultProps.kvmTCPHTTPSPort.toString())
+    ).toBeInTheDocument();
+  });
+
+  it('displays ingress controller installation instructions, in case no ingress controller is installed', async () => {
+    const cluster = { ...v5ClusterResponse, apps: [] };
+    renderWithStore(Ingress, { cluster });
+
+    expect(
+      await screen.findByText(
+        /in order to expose services via Ingress, you must have external-dns and an Ingress controller installed/i
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /this will install the nginx ingress controller app on cluster/i
+      )
     ).toBeInTheDocument();
   });
 });
