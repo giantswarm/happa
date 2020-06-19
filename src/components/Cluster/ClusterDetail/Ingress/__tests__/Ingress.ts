@@ -6,7 +6,7 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { getComponentWithTheme, renderWithStore } from 'testUtils/renderUtils';
 
-import Ingress from '../Ingress/Ingress';
+import Ingress from '../Ingress';
 
 const getByTextInParent = (
   parent: HTMLElement,
