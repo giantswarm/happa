@@ -108,7 +108,9 @@ describe('Ingress', () => {
       )
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/click this button to install an ingress controller/i)
+      screen.getByText(
+        /this will install the nginx ingress controller app on cluster/i
+      )
     ).toBeInTheDocument();
   });
 });

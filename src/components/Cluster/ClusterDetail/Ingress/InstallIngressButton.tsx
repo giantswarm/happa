@@ -104,7 +104,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
             '🎉 Ingress controller installed. Please continue to the next step.'
           ) : (
             <>
-              Click this button to install an ingress controller on{' '}
+              This will install the NGINX Ingress Controller app on cluster{' '}
               <ClusterIDLabel clusterID={clusterID} />
             </>
           )}

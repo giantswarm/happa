@@ -38,7 +38,7 @@ describe('InstallIngressButton', () => {
 
     expect(
       await screen.findByText(
-        /click this button to install an ingress controller/i
+        /this will install the nginx ingress controller app/i
       )
     ).toBeInTheDocument();
 
@@ -74,7 +74,7 @@ describe('InstallIngressButton', () => {
       screen.queryByText(/ingress controller installed/i)
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByText(/click this button to install an ingress controller/i)
+      screen.queryByText(/this will install the nginx ingress controller app/i)
     ).not.toBeInTheDocument();
 
     const button = screen.getByRole('button', {
@@ -89,7 +89,7 @@ describe('InstallIngressButton', () => {
 
     expect(
       await screen.findByText(
-        /click this button to install an ingress controller/i
+        /this will install the nginx ingress controller app/i
       )
     ).toBeInTheDocument();
     expect(
