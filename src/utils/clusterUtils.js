@@ -1,4 +1,3 @@
-import moment from 'moment';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import FeatureFlags from 'shared/FeatureFlags';
@@ -168,12 +167,6 @@ export function computeCapabilities(releaseVersion, provider) {
     supportsHAMasters,
   };
 }
-
-export const isClusterYoungerThanOneHour = (createDate) => {
-  const creationPlusOneHour = moment(createDate).add(1, 'hour');
-
-  return moment().utc().isBefore(creationPlusOneHour);
-};
 
 export const filterLabels = (labels) => {
   if (!labels) {

@@ -178,8 +178,6 @@ scales correctly`, async () => {
 });
 
 it('deletes a v4 cluster', async () => {
-  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-
   const cluster = v4AWSClusterResponse;
   const clusterDeleteResponse = {
     code: 'RESOURCE_DELETION_STARTED',
