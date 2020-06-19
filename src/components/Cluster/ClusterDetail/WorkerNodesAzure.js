@@ -2,10 +2,10 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
-import { Code, FallbackSpan } from 'styles';
-import theme from 'styles/theme';
+import { FallbackSpan } from 'styles';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
+import InstanceType from 'UI/InstanceType';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 export const WrapperDiv = styled.div`
@@ -53,9 +53,7 @@ function WorkerNodesAzure({
       </LineDiv>
       <LineDiv>
         <div>VM size</div>
-        <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
-          {instanceType && instanceType.name}
-        </Code>
+        <InstanceType>{instanceType.name ?? 'n/a'}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>
