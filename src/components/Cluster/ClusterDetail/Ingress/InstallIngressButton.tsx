@@ -47,13 +47,15 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 }) => {
   const [isInstalling, setIsInstalling] = useState(false);
 
-  const isLoadingApps = useSelector((state) =>
+  const isLoadingApps: boolean | null = useSelector((state) =>
     selectLoadingFlagByAction(state, CLUSTER_LOAD_APPS_REQUEST)
   );
-  const ingressApp = selectIngressAppFromCluster(cluster);
+  const ingressApp:
+    | Record<string, never>
+    | undefined = selectIngressAppFromCluster(cluster);
   const isLoading = isLoadingApps || isInstalling;
 
-  const clusterID = cluster.id;
+  const clusterID: string = cluster.id;
 
   const dispatch: ThunkDispatch<IState, undefined, AnyAction> = useDispatch();
 
