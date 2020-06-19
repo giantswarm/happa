@@ -3,10 +3,10 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants, FallbackMessages } from 'shared/constants';
-import { Code, FallbackSpan } from 'styles';
-import theme from 'styles/theme';
+import { FallbackSpan } from 'styles';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
+import InstanceType from 'UI/InstanceType';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
@@ -41,9 +41,7 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv>
         <div>Instance type</div>
-        <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
-          {instanceName && instanceName}
-        </Code>
+        <InstanceType>{instanceName ?? 'n/a'}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>

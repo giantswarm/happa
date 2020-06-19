@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { CLUSTER_CREATE_REQUEST } from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
+import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,18 +10,13 @@ import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
-import { InstanceTypeDescription } from 'UI/ClusterCreation/InstanceTypeSelection';
 import Section from 'UI/ClusterCreation/Section';
-import StyledInput, {
-  AdditionalInputHint,
-} from 'UI/ClusterCreation/StyledInput';
+import StyledInput from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
-import { FlexColumn, FlexRow, FlexWrapperDiv } from 'UI/FlexDivs';
-import NumberPicker from 'UI/NumberPicker';
+import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 
-import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
-import AzureVMSizeSelector from './AzureVMSizeSelector';
 import ClusterCreationDuration from './ClusterCreationDuration';
+import KVMWorkerConfiguration from './KVMWorkerConfiguration';
 import ProviderCredentials from './ProviderCredentials';
 import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
 
@@ -35,13 +31,6 @@ const WrapperDiv = styled.div`
       font-weight: 400;
     }
   }
-  .instance-type {
-    /* Same margin-bottom as <Section /> */
-    margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
-    input {
-      font-weight: 400;
-    }
-  }
   .scaling-range {
     form {
       label {
@@ -51,11 +40,6 @@ const WrapperDiv = styled.div`
       }
     }
   }
-`;
-
-const KVMNumberPicker = styled(NumberPicker)`
-  display: block;
-  margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
 class CreateRegularCluster extends React.Component {
@@ -73,6 +57,22 @@ class CreateRegularCluster extends React.Component {
     }
 
     return multiAZSelectorProps;
+  }
+
+  static getWorkerConfigurationComponent(provider) {
+    switch (provider) {
+      case Providers.AWS:
+        return { component: InstanceTypeSelector, label: 'Instance type' };
+      case Providers.AZURE:
+        return { component: InstanceTypeSelector, label: 'VM size' };
+      case Providers.KVM:
+        return {
+          component: KVMWorkerConfiguration,
+          label: 'Worker configuration',
+        };
+    }
+
+    return null;
   }
 
   state = {
@@ -94,16 +94,10 @@ class CreateRegularCluster extends React.Component {
     valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
     error: false,
     aws: {
-      instanceType: {
-        valid: true,
-        value: this.props.defaultInstanceType,
-      },
+      instanceType: this.props.defaultInstanceType,
     },
     azure: {
-      vmSize: {
-        valid: true,
-        value: this.props.defaultVMSize,
-      },
+      vmSize: this.props.defaultVMSize,
     },
     kvm: {
       cpuCores: {
@@ -119,16 +113,7 @@ class CreateRegularCluster extends React.Component {
         valid: true,
       },
     },
-    awsInstanceTypes: {},
-    azureInstanceTypes: {},
   };
-
-  componentDidMount() {
-    this.setState({
-      awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
-      azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
-    });
-  }
 
   updateAvailabilityZonesPicker = (n) => {
     this.setState({
@@ -165,7 +150,7 @@ class CreateRegularCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           aws: {
-            instance_type: this.state.aws.instanceType.value,
+            instance_type: this.state.aws.instanceType,
           },
         });
       }
@@ -173,7 +158,7 @@ class CreateRegularCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           azure: {
-            vm_size: this.state.azure.vmSize.value,
+            vm_size: this.state.azure.vmSize,
           },
         });
       }
@@ -232,26 +217,12 @@ class CreateRegularCluster extends React.Component {
     );
   }
 
-  updateAWSInstanceType = (value) => {
-    this.setState({
-      aws: {
-        instanceType: {
-          value: value.value,
-          valid: value.valid,
-        },
-      },
-    });
+  setAWSInstanceType = (instanceType) => {
+    this.setState({ aws: { instanceType } });
   };
 
-  updateVMSize = (value) => {
-    this.setState({
-      azure: {
-        vmSize: {
-          value: value.value,
-          valid: value.valid,
-        },
-      },
-    });
+  setAzureVMSize = (vmSize) => {
+    this.setState({ azure: { vmSize } });
   };
 
   updateCPUCores = (value) => {
@@ -293,49 +264,6 @@ class CreateRegularCluster extends React.Component {
     }));
   };
 
-  produceRAMAndCoresAWS = () => {
-    const { awsInstanceTypes } = this.state;
-    const instanceType = this.state.aws.instanceType.value;
-
-    // Check whether this.state.awsInstanceTypes is populated and that instance name
-    // in input matches an instance in the array
-    const instanceTypesKeys = Object.keys(awsInstanceTypes);
-
-    const hasInstances =
-      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
-
-    const RAM = hasInstances
-      ? awsInstanceTypes[instanceType].memory_size_gb
-      : '0';
-    const CPUCores = hasInstances
-      ? awsInstanceTypes[instanceType].cpu_cores
-      : '0';
-
-    return [RAM, CPUCores];
-  };
-
-  produceRAMAndCoresAzure = () => {
-    const { azureInstanceTypes } = this.state;
-    const instanceType = this.state.azure.vmSize.value;
-
-    // Check whether this.state.azureInstanceTypes is populated and that instance name
-    // in input matches an instance in the array
-    const instanceTypesKeys = Object.keys(azureInstanceTypes);
-
-    const hasInstances =
-      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
-
-    const RAM = hasInstances
-      ? // eslint-disable-next-line no-magic-numbers
-        (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)
-      : '0';
-    const CPUCores = hasInstances
-      ? azureInstanceTypes[instanceType].numberOfCores
-      : '0';
-
-    return [RAM, CPUCores];
-  };
-
   valid() {
     if (!this.props.allowSubmit) return false;
 
@@ -350,11 +278,6 @@ class CreateRegularCluster extends React.Component {
 
     // If the max scaling numberpickers is invalid, return false
     if (!this.state.scaling.maxValid) return false;
-
-    // If the aws instance type is invalid, return false
-    if (!this.state.aws.instanceType.valid) return false;
-
-    if (!this.state.azure.vmSize.valid) return false;
 
     // If the kvm worker is invalid, return false
     if (
@@ -378,6 +301,11 @@ class CreateRegularCluster extends React.Component {
       this.props.selectedRelease
     );
 
+    const {
+      component: WorkerConfiguration,
+      label: workerConfigurationLabel,
+    } = CreateRegularCluster.getWorkerConfigurationComponent(provider);
+
     return (
       <WrapperDiv data-testid='cluster-creation-view'>
         <HorizontalLine />
@@ -392,106 +320,33 @@ class CreateRegularCluster extends React.Component {
               {...multiAZSelectorProps}
             />
           )}
-          <label htmlFor='instance-type' className='instance-type'>
-            {(() => {
-              switch (provider) {
-                case Providers.AWS: {
-                  const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
-
-                  return (
-                    <StyledInput
-                      inputId='instance-type'
-                      label='Instance type'
-                      // regular space, hides hint ;)
-                      hint={<>&#32;</>}
-                    >
-                      <FlexWrapperDiv>
-                        <AWSInstanceTypeSelector
-                          allowedInstanceTypes={this.props.allowedInstanceTypes}
-                          onChange={this.updateAWSInstanceType}
-                          readOnly={false}
-                          value={this.state.aws.instanceType.value}
-                        />
-                        <InstanceTypeDescription>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</InstanceTypeDescription>
-                      </FlexWrapperDiv>
-                    </StyledInput>
-                  );
+          <Section htmlFor='instance-type'>
+            <StyledInput
+              inputId='instance-type'
+              label={workerConfigurationLabel}
+              // regular space, hides hint ;)
+              hint={<>&#32;</>}
+            >
+              <WorkerConfiguration
+                selectedInstanceType={
+                  provider === Providers.AWS
+                    ? this.state.aws.instanceType
+                    : this.state.azure.vmSize
                 }
-                case Providers.KVM:
-                  return (
-                    <Section>
-                      <StyledInput
-                        inputId='instance-type'
-                        label='Worker Configuration'
-                        // regular space, hides hint ;)
-                        hint={<>&#32;</>}
-                      >
-                        <AdditionalInputHint>
-                          Configure the amount of CPU, RAM and Storage for your
-                          workers. The storage size specified will apply to both
-                          the kubelet and the Docker volume of the node, so
-                          please make sure to have twice the specified size
-                          available as disk space.
-                        </AdditionalInputHint>
-
-                        <KVMNumberPicker
-                          label='CPU Cores'
-                          max={999}
-                          min={2}
-                          onChange={this.updateCPUCores}
-                          stepSize={1}
-                          value={this.state.kvm.cpuCores.value}
-                        />
-
-                        <KVMNumberPicker
-                          label='Memory (GB)'
-                          max={999}
-                          min={3}
-                          onChange={this.updateMemorySize}
-                          stepSize={1}
-                          unit='GB'
-                          value={this.state.kvm.memorySize.value}
-                        />
-
-                        <KVMNumberPicker
-                          label='Storage (GB)'
-                          max={999}
-                          min={10}
-                          onChange={this.updateDiskSize}
-                          stepSize={10}
-                          unit='GB'
-                          value={this.state.kvm.diskSize.value}
-                        />
-                      </StyledInput>
-                    </Section>
-                  );
-                case Providers.AZURE: {
-                  const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
-
-                  return (
-                    <StyledInput
-                      inputId='instance-type'
-                      label='VM Size'
-                      // regular space, hides hint ;)
-                      hint={<>&#32;</>}
-                    >
-                      <FlexWrapperDiv>
-                        <AzureVMSizeSelector
-                          allowedVMSizes={this.props.allowedVMSizes}
-                          onChange={this.updateVMSize}
-                          readOnly={false}
-                          value={this.state.azure.vmSize.value}
-                        />
-                        <InstanceTypeDescription>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</InstanceTypeDescription>
-                      </FlexWrapperDiv>
-                    </StyledInput>
-                  );
+                selectInstanceType={
+                  provider === Providers.AWS
+                    ? this.setAWSInstanceType
+                    : this.setAzureVMSize
                 }
-              }
-
-              return null;
-            })()}
-          </label>
+                cpuCores={this.state.kvm.cpuCores.value}
+                diskSize={this.state.kvm.diskSize.value}
+                memorySize={this.state.kvm.memorySize.value}
+                onUpdateCPUCores={this.updateCPUCores}
+                onUpdateDiskSize={this.updateDiskSize}
+                onUpdateMemorySize={this.updateMemorySize}
+              />
+            </StyledInput>
+          </Section>
           <Section className='scaling-range' htmlFor='scaling-range'>
             <StyledInput
               inputId='scaling-range'
@@ -559,8 +414,6 @@ CreateRegularCluster.defaultProps = {
   defaultCPUCores: 4,
   defaultMemorySize: 4,
   defaultDiskSize: 20,
-  allowedInstanceTypes: [],
-  allowedVMSizes: [],
 };
 
 CreateRegularCluster.propTypes = {
@@ -569,8 +422,6 @@ CreateRegularCluster.propTypes = {
   minAvailabilityZones: PropTypes.number,
   maxAvailabilityZones: PropTypes.number,
   maxWorkersPerCluster: PropTypes.number,
-  allowedInstanceTypes: PropTypes.array,
-  allowedVMSizes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   selectedRelease: PropTypes.string,
   dispatch: PropTypes.func,
@@ -607,15 +458,6 @@ function mapStateToProps(state) {
     state.main.info.workers.vm_size.default
   ) {
     propsToPush.defaultVMSize = state.main.info.workers.vm_size.default;
-  }
-
-  if (provider === Providers.AWS) {
-    propsToPush.allowedInstanceTypes =
-      state.main.info.workers.instance_type.options;
-  }
-
-  if (provider === Providers.AZURE) {
-    propsToPush.allowedVMSizes = state.main.info.workers.vm_size.options;
   }
 
   if (state.main.info.workers.count_per_cluster.max) {

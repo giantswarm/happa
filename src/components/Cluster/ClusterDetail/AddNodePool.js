@@ -11,7 +11,6 @@ import NodeCountSelector from 'shared/NodeCountSelector';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
-import { InstanceTypeDescription } from 'UI/ClusterCreation/InstanceTypeSelection';
 import NameInput from 'UI/ClusterCreation/NameInput';
 import Section from 'UI/ClusterCreation/Section';
 import StyledInput, {
@@ -20,8 +19,8 @@ import StyledInput, {
 import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
 
-import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
+import InstanceTypeSelector from './InstanceTypeSelector/InstanceTypeSelector';
 
 // Availability Zones styles
 const Emphasized = css`
@@ -257,10 +256,7 @@ class AddNodePool extends Component {
     // eslint-disable-next-line react/no-unused-state
     error: false,
     aws: {
-      instanceType: {
-        valid: true,
-        value: this.props.defaultInstanceType,
-      },
+      instanceType: this.props.defaultInstanceType,
       useAlike: false,
       instanceDistribution: {
         onDemandBaseCapacity: 0,
@@ -268,14 +264,12 @@ class AddNodePool extends Component {
       },
     },
     spotInstancesEnabled: false,
-    awsInstanceTypes: {},
     allowSpotInstances: false,
     allowAlikeInstances: false,
   };
 
   componentDidMount() {
     this.setState({
-      awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       ...this.computeInstanceCapabilities(),
     });
   }
@@ -318,12 +312,8 @@ class AddNodePool extends Component {
     );
   };
 
-  updateAWSInstanceType = (payload) => {
-    this.setState(
-      produce((draft) => {
-        draft.aws.instanceType = payload;
-      })
-    );
+  setAWSInstanceType = (instanceType) => {
+    this.setState(({ aws }) => ({ aws: { ...aws, instanceType } }));
   };
 
   toggleAZSelector = (isLabels) => {
@@ -391,7 +381,6 @@ class AddNodePool extends Component {
       availabilityZonesLabels,
       hasAZLabels,
       scaling,
-      aws,
       name,
     } = this.state;
 
@@ -399,7 +388,6 @@ class AddNodePool extends Component {
     const isValid =
       scaling.minValid &&
       scaling.maxValid &&
-      aws.instanceType.valid &&
       name.valid &&
       ((hasAZLabels && availabilityZonesLabels.valid) ||
         (!hasAZLabels && availabilityZonesPicker.valid))
@@ -440,7 +428,7 @@ class AddNodePool extends Component {
               : this.state.name.value,
           node_spec: {
             aws: {
-              instance_type: this.state.aws.instanceType.value,
+              instance_type: this.state.aws.instanceType,
               use_alike_instance_types: this.state.aws.useAlike,
               instance_distribution: instanceDistribution,
             },
@@ -452,28 +440,7 @@ class AddNodePool extends Component {
     );
   };
 
-  produceRAMAndCores = () => {
-    const instanceType = this.state.aws.instanceType.value;
-    // Check whether this.state.instanceTypes is populated and that instance name
-    // in input matches an instance in the array
-    const instanceTypesKeys = Object.keys(this.state.awsInstanceTypes);
-
-    const hasInstances =
-      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
-
-    const RAM = hasInstances
-      ? this.state.awsInstanceTypes[instanceType].memory_size_gb
-      : '0';
-
-    const CPUCores = hasInstances
-      ? this.state.awsInstanceTypes[instanceType].cpu_cores
-      : '0';
-
-    return [RAM, CPUCores];
-  };
-
   render() {
-    const [RAM, CPUCores] = this.produceRAMAndCores();
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { hasAZLabels, name } = this.state;
     const { minAZ, maxAZ, defaultAZ } = this.props;
@@ -502,15 +469,10 @@ class AddNodePool extends Component {
             // regular space, hides hint ;)
             hint={<>&#32;</>}
           >
-            <FlexWrapperDiv>
-              <AWSInstanceTypeSelector
-                allowedInstanceTypes={this.props.allowedInstanceTypes}
-                onChange={this.updateAWSInstanceType}
-                readOnly={false}
-                value={this.state.aws.instanceType.value}
-              />
-              <InstanceTypeDescription>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</InstanceTypeDescription>
-            </FlexWrapperDiv>
+            <InstanceTypeSelector
+              selectedInstanceType={this.state.aws.instanceType}
+              selectInstanceType={this.setAWSInstanceType}
+            />
           </StyledInput>
           {this.state.allowAlikeInstances && (
             <CheckboxWrapper>
@@ -749,7 +711,6 @@ class AddNodePool extends Component {
 
 AddNodePool.propTypes = {
   availabilityZones: PropTypes.array,
-  allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
@@ -794,14 +755,8 @@ function mapStateToProps(state) {
   const defaultMemorySize = 4; // TODO
   const defaultDiskSize = 20; // TODO
 
-  const allowedInstanceTypes =
-    provider === Providers.AWS
-      ? state.main.info.workers.instance_type.options
-      : [];
-
   return {
     availabilityZones,
-    allowedInstanceTypes,
     provider,
     defaultInstanceType,
     defaultCPUCores,
