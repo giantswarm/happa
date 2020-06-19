@@ -1,4 +1,4 @@
-import { within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { Providers } from 'shared/constants';
 import {
   appResponseWithCustomConfig,
@@ -95,6 +95,20 @@ describe('Ingress', () => {
     ).toBeInTheDocument();
     expect(
       getByTextInParent(tcpParent, defaultProps.kvmTCPHTTPSPort.toString())
+    ).toBeInTheDocument();
+  });
+
+  it('displays ingress controller installation instructions, in case no ingress controller is installed', async () => {
+    const cluster = { ...v5ClusterResponse, apps: [] };
+    renderWithStore(Ingress, { cluster });
+
+    expect(
+      await screen.findByText(
+        /in order to expose services via Ingress, you must have external-dns and an Ingress controller installed/i
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/click this button to install an ingress controller/i)
     ).toBeInTheDocument();
   });
 });
