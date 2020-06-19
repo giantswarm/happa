@@ -44,7 +44,7 @@ const Ingress: React.FC<IIngressProps> = ({
             <Text>
               {hasIngress
                 ? 'These details help you to set up Ingress for exposing services in this cluster.'
-                : 'In order to expose services via Ingress, you must have an Ingress controller installed. Giant Swarm provides the NGINX Ingress Controller as a managed app.'}
+                : 'In order to expose services via Ingress, you must have external-dns and an Ingress controller installed. Giant Swarm provides the NGINX Ingress Controller as a managed app.'}
             </Text>
           </div>
         </div>
