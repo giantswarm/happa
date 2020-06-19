@@ -9,9 +9,20 @@ const ProgressButtonStatusIndicator = styled.div`
 `;
 
 const LoadingIndicator = ({ loading, loadingPosition, timeout, ...rest }) => (
-  <ProgressButtonStatusIndicator {...rest}>
+  <ProgressButtonStatusIndicator
+    {...rest}
+    role='progressbar'
+    aria-valuetext='Loading…'
+    aria-busy='true'
+    aria-live='assertive'
+    aria-hidden={!loading}
+  >
     <SlideTransition direction={loadingPosition} in={loading} timeout={timeout}>
-      <img className={`loader ${loadingPosition}`} src={spinner} />
+      <img
+        className={`loader ${loadingPosition}`}
+        src={spinner}
+        alt='loading'
+      />
     </SlideTransition>
   </ProgressButtonStatusIndicator>
 );
