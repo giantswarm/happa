@@ -3,12 +3,12 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import ClusterDetail from './ClusterDetail/ClusterDetail';
-import NewCluster from './NewCluster/NewCluster';
+import NewClusterWrapper from './NewCluster/NewClusterWrapper';
 
 const Cluster = () => (
   <Switch>
     <Route
-      component={NewCluster}
+      component={NewClusterWrapper}
       exact
       path={OrganizationsRoutes.Clusters.New}
     />

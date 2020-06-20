@@ -9,7 +9,6 @@ import {
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { ErrorReporter } from 'lib/errors';
@@ -408,7 +407,6 @@ ClusterDetailView.propTypes = {
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
-  releaseActions: PropTypes.object,
   release: PropTypes.object,
   provider: PropTypes.string,
   region: PropTypes.string,
@@ -443,7 +441,6 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
-    releaseActions: bindActionCreators(releaseActions, dispatch),
     nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };

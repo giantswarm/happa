@@ -9,10 +9,15 @@ interface IReleaseComponent {
 }
 
 interface IRelease {
-  version: string;
-  timestamp: string;
+  // declared by api response
   changelog: IReleaseChangelog[];
   components: IReleaseComponent[];
+  timestamp: string;
+  version: string;
+  active: boolean;
+
+  // additonal information
+  kubernetesVersion: string;
 }
 
 interface IReleases {

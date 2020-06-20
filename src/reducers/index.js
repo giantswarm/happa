@@ -2,6 +2,7 @@ import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
 import catalogs from 'stores/appcatalog/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
+import releases from 'stores/releases/reducer';
 
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
@@ -14,7 +15,6 @@ import makeMainReducer from './mainReducer';
 import modal from './modalReducer';
 import nodePools from './nodePoolReducer';
 import organizations from './organizationReducer';
-import releases from './releaseReducer';
 import users from './userReducer';
 
 const entities = combineReducers({
