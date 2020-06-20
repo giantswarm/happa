@@ -10,22 +10,25 @@ const mockReleases: IReleases = {
     changelog: [{ component: 'dummy', description: 'dummy' }],
     active: true,
     kubernetesVersion: '1.16.3',
+    releaseNotesURL: 'dummy',
   },
   '999.0.0': {
     version: '999.0.0',
     timestamp: '2020-05-05T12:34:56Z',
     components: [{ name: 'kubernetes', version: '1.15.10' }],
     changelog: [{ component: 'dummy', description: 'dummy' }],
-    active: false,
+    active: true,
     kubernetesVersion: '1.15.10',
+    releaseNotesURL: 'dummy',
   },
   '888.0.0': {
     version: '888.0.0',
     timestamp: '2020-01-05T12:34:56Z',
     components: [{ name: 'kubernetes', version: '1.15.2' }],
     changelog: [{ component: 'dummy', description: 'dummy' }],
-    active: false,
+    active: true,
     kubernetesVersion: '1.15.2',
+    releaseNotesURL: 'dummy',
   },
 };
 

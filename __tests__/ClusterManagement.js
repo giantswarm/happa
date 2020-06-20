@@ -111,7 +111,6 @@ details view`, async () => {
   // eslint-disable-next-line no-magic-numbers
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
   getMockCall('/v4/clusters/');
-  getMockCall('/v4/releases/', releasesResponse);
   getMockCallTimes('/v4/releases/', releasesResponse, 2);
 
   const v4ClusterCreationResponse = {

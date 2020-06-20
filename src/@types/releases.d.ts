@@ -16,8 +16,9 @@ interface IRelease {
   version: string;
   active: boolean;
 
-  // additonal information
+  // additional information
   kubernetesVersion: string;
+  releaseNotesURL: string;
 }
 
 interface IReleases {

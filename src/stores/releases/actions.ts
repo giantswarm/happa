@@ -27,10 +27,13 @@ export const loadReleases = createAsynchronousAction<
           (component) => component.name === 'kubernetes'
         )?.version;
 
+        const releaseNotesURL = release.changelog[0].description;
+
         if (kubernetesVersion) {
           releases[release.version] = {
             ...release,
             kubernetesVersion,
+            releaseNotesURL,
           };
         }
       }
