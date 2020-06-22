@@ -11,7 +11,7 @@ export const loadReleases = createAsynchronousAction<
   IState,
   IReleaseActionResponse
 >({
-  actionTypePrefix: 'RELEASES',
+  actionTypePrefix: 'RELEASES_LOAD',
   perform: async (state) => {
     const releases: IReleases = {};
     let sortedReleaseVersions: string[] = [];

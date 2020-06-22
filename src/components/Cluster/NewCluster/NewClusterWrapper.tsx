@@ -1,4 +1,3 @@
-import { RELEASES_LOAD_REQUEST } from 'actions/actionTypes';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import useValidatingInternalValue from 'hooks/useValidatingInternalValue';
@@ -9,7 +8,6 @@ import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
 import {
   getFirstNodePoolsRelease,
   getProvider,
@@ -51,9 +49,6 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
 }) => {
   const provider = useSelector(getProvider);
   const firstNodePoolsRelease = useSelector(getFirstNodePoolsRelease);
-  const releasesLoadError = useSelector((state) =>
-    selectErrorByAction(state, RELEASES_LOAD_REQUEST)
-  );
 
   const [
     {
@@ -127,7 +122,6 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
                 label='Release version'
                 // "breaking space" hides the hint
                 hint={<>&#32;</>}
-                validationError={releasesLoadError}
               >
                 <ReleaseSelector
                   selectRelease={setSelectedRelease}
