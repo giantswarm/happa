@@ -160,7 +160,7 @@
     "husky": "4.2.5",
     "jest": "26.0.1",
     "json-loader": "0.5.7",
-    "lint-staged": "10.2.10",
+    "lint-staged": "10.2.11",
     "mini-css-extract-plugin": "0.9.0",
     "nock": "12.0.3",
     "node-sass": "4.14.1",
