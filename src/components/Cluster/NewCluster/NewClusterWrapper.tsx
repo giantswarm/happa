@@ -45,7 +45,10 @@ const clusterNameLengthValidator: IValidationFunction = (value) => {
 
 interface INewClusterWrapperProps extends RouteComponentProps<{}> {}
 
-const NewClusterWrapper: FC<INewClusterWrapperProps> = ({ location, match }) => {
+const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
+  location,
+  match,
+}) => {
   const provider = useSelector(getProvider);
   const firstNodePoolsRelease = useSelector(getFirstNodePoolsRelease);
   const releasesLoadError = useSelector((state) =>
