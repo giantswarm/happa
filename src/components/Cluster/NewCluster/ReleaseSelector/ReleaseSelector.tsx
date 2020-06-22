@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getUserIsAdmin } from 'selectors/authSelectors';
 import {
   getReleases,
   getReleasesError,
@@ -38,6 +39,8 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   const sortedReleaseVersions = useSelector(getSortedReleaseVersions);
   const releasesIsFetching = useSelector(getReleasesIsFetching);
   const releasesError = useSelector(getReleasesError);
+
+  const isAdmin = useSelector(getUserIsAdmin);
 
   const selectedKubernetesVersion = useMemo(
     () => releases[selectedRelease]?.kubernetesVersion,
@@ -93,28 +96,36 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
         </ListToggler>
       </div>
       {!collapsed && (
-        <Table>
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Version</th>
-              <th>Released</th>
-              <th>Kubernetes</th>
-              <th>Components</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedReleaseVersions.map((version) => (
-              <ReleaseRow
-                key={version}
-                {...releases[version]}
-                isSelected={version === selectedRelease}
-                selectRelease={selectRelease}
-              />
-            ))}
-          </tbody>
-        </Table>
+        <>
+          {isAdmin && (
+            <p>
+              <i className='fa fa-warning' /> Dark font indicates a inactive or
+              wip release which is only available to Giant Swarm staff
+            </p>
+          )}
+          <Table>
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th>Version</th>
+                <th>Released</th>
+                <th>Kubernetes</th>
+                <th>Components</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedReleaseVersions.map((version) => (
+                <ReleaseRow
+                  key={version}
+                  {...releases[version]}
+                  isSelected={version === selectedRelease}
+                  selectRelease={selectRelease}
+                />
+              ))}
+            </tbody>
+          </Table>
+        </>
       )}
     </LoadingOverlay>
   );
