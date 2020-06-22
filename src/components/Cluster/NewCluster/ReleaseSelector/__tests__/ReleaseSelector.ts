@@ -1,47 +1,79 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
-import {
-  getComponentWithStore,
-  renderWithStore,
-  renderWithTheme,
-} from 'testUtils/renderUtils';
+import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
-const mockSelectableReleases = [
-  {
+const mockReleases: IReleases = {
+  '1000.0.0': {
     version: '1000.0.0',
     timestamp: '2020-06-11T12:34:56Z',
     components: [{ name: 'kubernetes', version: '1.16.3' }],
     changelog: [{ component: 'dummy', description: 'dummy' }],
+    active: true,
+    kubernetesVersion: '1.16.3',
+    releaseNotesURL: 'dummy',
   },
-  {
+  '999.0.0': {
     version: '999.0.0',
     timestamp: '2020-05-05T12:34:56Z',
     components: [{ name: 'kubernetes', version: '1.15.10' }],
     changelog: [{ component: 'dummy', description: 'dummy' }],
+    active: true,
+    kubernetesVersion: '1.15.10',
+    releaseNotesURL: 'dummy',
   },
-];
+  '888.0.0': {
+    version: '888.0.0',
+    timestamp: '2020-01-05T12:34:56Z',
+    components: [{ name: 'kubernetes', version: '1.15.2' }],
+    changelog: [{ component: 'dummy', description: 'dummy' }],
+    active: true,
+    kubernetesVersion: '1.15.2',
+    releaseNotesURL: 'dummy',
+  },
+};
+
+const mockSortedReleaseVersions = Object.keys(mockReleases);
 
 const defaultProps = {
-  releases: {
-    [mockSelectableReleases[0].version]: mockSelectableReleases[0],
-    [mockSelectableReleases[1].version]: mockSelectableReleases[1],
-  },
   selectRelease: () => {},
-  selectableReleases: mockSelectableReleases,
-  selectedRelease: mockSelectableReleases[0].version,
+  selectedRelease: mockSortedReleaseVersions[0],
+};
+
+const defaultStoreState = {
+  main: { loggedInUser: { isAdmin: true } },
+  entities: {
+    releases: {
+      isFetching: false,
+      items: mockReleases,
+      sortedVersions: mockSortedReleaseVersions,
+    },
+  },
 };
 
 describe('ReleaseSelector', () => {
   it('renders without crashing', () => {
-    renderWithTheme(ReleaseSelector, { ...defaultProps });
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps },
+      { ...defaultStoreState }
+    );
   });
 
   it('renders an empty state', () => {
-    renderWithTheme(ReleaseSelector, {
-      ...defaultProps,
-      releases: {},
-      selectedRelease: '',
-    });
+    renderWithStore(
+      ReleaseSelector,
+      {
+        ...defaultProps,
+      },
+      {
+        ...defaultStoreState,
+        ...{
+          entities: {
+            releases: { isFetching: false, items: {}, sortedVersions: [] },
+          },
+        },
+      }
+    );
 
     expect(
       screen.getByText(
@@ -51,15 +83,19 @@ describe('ReleaseSelector', () => {
   });
 
   it('renders the currently selected version & k8s version', () => {
-    renderWithTheme(ReleaseSelector, { ...defaultProps });
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps },
+      { ...defaultStoreState }
+    );
 
-    expect(screen.getByText(defaultProps.selectedRelease)).toBeInTheDocument();
+    expect(screen.getByText(mockSortedReleaseVersions[0])).toBeInTheDocument();
     expect(screen.getByText(/This release contains:/i)).toBeInTheDocument();
     expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
     expect(
       screen.getByText(
-        defaultProps.releases[defaultProps.selectedRelease].components[0]
-          .version
+        mockReleases[mockReleases[mockSortedReleaseVersions[0]].version]
+          .kubernetesVersion
       )
     ).toBeInTheDocument();
   });
@@ -67,7 +103,11 @@ describe('ReleaseSelector', () => {
   const tableHeadings = [/Version/i, /Released/i, /Components/i, /Notes/i];
 
   it('renders initial state collapsed', () => {
-    renderWithTheme(ReleaseSelector, { ...defaultProps });
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps },
+      { ...defaultStoreState }
+    );
 
     expect(screen.getByText(/Available releases/i)).toBeInTheDocument();
     // Table headings
@@ -81,7 +121,7 @@ describe('ReleaseSelector', () => {
       ReleaseSelector,
       // @ts-ignore
       { ...defaultProps },
-      { main: { info: { general: { provider: 'aws' } } } }
+      { ...defaultStoreState }
     );
 
     const clickTarget = screen.getByText(/Available releases/i);
@@ -99,15 +139,15 @@ describe('ReleaseSelector', () => {
 
     const table = container.querySelector('table');
 
-    for (const release of mockSelectableReleases) {
+    for (const release of mockSortedReleaseVersions) {
       expect(
-        within(table as HTMLTableElement).getByText(release.version)
+        within(table as HTMLTableElement).getByText(release)
       ).toBeInTheDocument();
       expect(
-        screen.getByTestId(`show-components-${release.version}`)
+        screen.getByTestId(`show-components-${release}`)
       ).toBeInTheDocument();
       expect(
-        screen.getByTestId(`open-changelog-${release.version}`)
+        screen.getByTestId(`open-changelog-${release}`)
       ).toBeInTheDocument();
     }
   });
@@ -117,7 +157,7 @@ describe('ReleaseSelector', () => {
       ReleaseSelector,
       // @ts-ignore
       { ...defaultProps },
-      { main: { info: { general: { provider: 'aws' } } } }
+      { ...defaultStoreState }
     );
 
     fireEvent.click(screen.getByText(/Available releases/i));
@@ -141,12 +181,12 @@ describe('ReleaseSelector', () => {
       ReleaseSelector,
       // @ts-ignore
       { ...defaultProps, selectRelease: selectReleaseCallbackMock },
-      { main: { info: { general: { provider: 'aws' } } } }
+      { ...defaultStoreState }
     );
 
     fireEvent.click(screen.getByText(/Available releases/i));
 
-    const versionToSelect = defaultProps.selectableReleases[1].version;
+    const versionToSelect = mockSortedReleaseVersions[1];
     fireEvent.click(
       screen.getByTitle(new RegExp(`Select release ${versionToSelect}`, 'i'))
     );
@@ -154,11 +194,15 @@ describe('ReleaseSelector', () => {
     expect(selectReleaseCallbackMock).toBeCalledWith(versionToSelect);
 
     rerender(
-      getComponentWithStore(ReleaseSelector, {
-        ...defaultProps,
-        selectRelease: selectReleaseCallbackMock,
-        selectedRelease: versionToSelect,
-      })
+      getComponentWithStore(
+        ReleaseSelector,
+        {
+          ...defaultProps,
+          selectRelease: selectReleaseCallbackMock,
+          selectedRelease: versionToSelect,
+        },
+        { ...defaultStoreState }
+      )
     );
 
     // Collapse
@@ -168,9 +212,7 @@ describe('ReleaseSelector', () => {
     expect(screen.getByText(/This release contains:/i)).toBeInTheDocument();
     expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
     expect(
-      screen.getByText(
-        defaultProps.releases[versionToSelect].components[0].version
-      )
+      screen.getByText(mockReleases[versionToSelect].components[0].version)
     ).toBeInTheDocument();
   });
 });

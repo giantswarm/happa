@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import {
+  getReleases,
+  getReleasesError,
+  getReleasesIsFetching,
+  getSortedReleaseVersions,
+} from 'selectors/releaseSelectors';
 import {
   ListToggler,
   SelectedDescription,
@@ -8,25 +15,15 @@ import {
   SelectedWrapper,
   Table,
 } from 'UI/ExpandableSelector/Selector';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 import ReleaseRow from './ReleaseRow';
 
 interface IReleaseSelector {
-  releases: IReleases;
   selectRelease(releaseVersion: string): void;
-  selectableReleases: IRelease[];
   selectedRelease: string;
 }
-
-const extractKubernetesVersion: (
-  selectedRelease: string,
-  releases: IReleases
-) => string | undefined = (selectedRelease, releases) => {
-  return releases[selectedRelease]?.components.find(
-    (component) => component.name === 'kubernetes'
-  )?.version;
-};
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
   margin-left: ${({ theme }) => theme.spacingPx}px;
@@ -34,18 +31,40 @@ const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
 `;
 
 const ReleaseSelector: FC<IReleaseSelector> = ({
-  releases,
   selectRelease,
-  selectableReleases,
   selectedRelease,
 }) => {
+  const releases = useSelector(getReleases);
+  const sortedReleaseVersions = useSelector(getSortedReleaseVersions);
+  const releasesIsFetching = useSelector(getReleasesIsFetching);
+  const releasesError = useSelector(getReleasesError);
+
   const selectedKubernetesVersion = useMemo(
-    () => extractKubernetesVersion(selectedRelease, releases),
-    [selectedRelease, releases]
+    () => releases[selectedRelease]?.kubernetesVersion,
+    [releases, selectedRelease]
   );
+
+  useEffect(() => {
+    if (sortedReleaseVersions.length !== 0) {
+      selectRelease(sortedReleaseVersions[0]);
+    }
+  }, [selectRelease, sortedReleaseVersions]);
+
   const [collapsed, setCollapsed] = useState(true);
 
-  if (!selectedKubernetesVersion) {
+  if (releasesError) {
+    return (
+      <div>
+        <p>
+          There was an error loading releases.
+          <br />
+          {releasesError.toString()}
+          <br />
+          Please try again later or contact support: support@giantswarm.io
+        </p>
+      </div>
+    );
+  } else if (!selectedKubernetesVersion) {
     return (
       <div>
         <p>There is no active release currently available for this platform.</p>
@@ -54,7 +73,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   }
 
   return (
-    <>
+    <LoadingOverlay loading={releasesIsFetching}>
       <SelectedWrapper>
         <SelectedItem>
           <i className='fa fa-version-tag' /> {selectedRelease}
@@ -86,44 +105,23 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
             </tr>
           </thead>
           <tbody>
-            {selectableReleases.map((release) => (
+            {sortedReleaseVersions.map((version) => (
               <ReleaseRow
-                key={release.version}
-                {...release}
-                isSelected={release.version === selectedRelease}
+                key={version}
+                {...releases[version]}
+                isSelected={version === selectedRelease}
                 selectRelease={selectRelease}
               />
             ))}
           </tbody>
         </Table>
       )}
-    </>
+    </LoadingOverlay>
   );
 };
 
 ReleaseSelector.propTypes = {
-  // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
-  // @ts-ignore
-  releases: PropTypes.object.isRequired,
   selectRelease: PropTypes.func.isRequired,
-  selectableReleases: PropTypes.arrayOf(
-    PropTypes.shape({
-      version: PropTypes.string.isRequired,
-      timestamp: PropTypes.string.isRequired,
-      changelog: PropTypes.arrayOf(
-        PropTypes.shape({
-          component: PropTypes.string.isRequired,
-          description: PropTypes.string.isRequired,
-        }).isRequired
-      ).isRequired,
-      components: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          version: PropTypes.string.isRequired,
-        }).isRequired
-      ).isRequired,
-    }).isRequired
-  ).isRequired,
   selectedRelease: PropTypes.string.isRequired,
 };
 

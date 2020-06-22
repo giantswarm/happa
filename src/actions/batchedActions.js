@@ -3,13 +3,13 @@ import { ErrorReporter } from 'lib/errors';
 import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { loadReleases } from 'stores/releases/actions';
 
 import * as appActions from './appActions';
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
-import * as releaseActions from './releaseActions';
 import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
@@ -18,7 +18,7 @@ export const batchedLayout = () => async (dispatch) => {
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
     dispatch(listCatalogs());
-    dispatch(releaseActions.loadReleases());
+    dispatch(loadReleases());
     await dispatch(
       clusterActions.clustersList({
         withLoadingFlags: true,
@@ -119,7 +119,7 @@ export const batchedClusterDetailView = (
           clusterId
         )
       ),
-      dispatch(releaseActions.loadReleases()),
+      dispatch(loadReleases()),
       dispatch(appActions.loadApps(clusterId)),
       dispatch(clusterActions.clusterLoadKeyPairs(clusterId)),
     ]);

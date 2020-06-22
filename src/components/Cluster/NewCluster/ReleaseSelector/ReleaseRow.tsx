@@ -1,6 +1,6 @@
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
   CenteredCell,
   ComponentsRow,
@@ -18,20 +18,15 @@ interface IReleaseRow extends IRelease {
 }
 
 const ReleaseRow: FC<IReleaseRow> = ({
-  changelog,
   components,
   isSelected,
+  kubernetesVersion,
+  releaseNotesURL,
   selectRelease,
   timestamp,
   version,
 }) => {
-  const releaseNotesURL = useMemo(() => changelog[0].description, [changelog]);
   const [collapsed, setCollapsed] = useState(true);
-  const kubernetesVersion = useMemo(
-    () =>
-      components.find((component) => component.name === 'kubernetes')?.version,
-    [components]
-  );
 
   return (
     <>
@@ -111,6 +106,8 @@ ReleaseRow.propTypes = {
       version: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
+  kubernetesVersion: PropTypes.string.isRequired,
+  releaseNotesURL: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   selectRelease: PropTypes.func.isRequired,
   timestamp: PropTypes.string.isRequired,
