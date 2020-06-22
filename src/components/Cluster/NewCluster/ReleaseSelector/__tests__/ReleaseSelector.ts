@@ -231,7 +231,7 @@ describe('ReleaseSelector', () => {
 
     expect(
       screen.getByText(
-        /Dark font indicates a inactive or wip release which is only available to Giant Swarm staff/i
+        /Dark font indicates an inactive or wip release which is only available to Giant Swarm staff/i
       )
     ).toBeInTheDocument();
   });
