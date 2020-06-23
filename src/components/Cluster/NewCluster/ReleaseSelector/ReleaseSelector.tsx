@@ -99,8 +99,8 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
         <>
           {isAdmin && (
             <p>
-              <i className='fa fa-warning' /> Dark font indicates an inactive or
-              wip release which is only available to Giant Swarm staff
+              <i className='fa fa-warning' /> Light font color indicates an
+              inactive or wip release only available to Giant Swarm staff
             </p>
           )}
           <Table>

@@ -23,7 +23,7 @@ export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
     isSelected ? theme.colors.foreground : 'transparent'};
   td {
     ${({ toneDown, theme }) =>
-      toneDown ? `color: ${theme.colors.darkBlueMuted};` : ''}
+      toneDown ? `color: ${theme.colors.darkBlueLighter4};` : ''}
     font-variant-numeric: tabular-nums;
     span.selection-bullet {
       margin-right: 0;
@@ -35,6 +35,7 @@ export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
   &:hover {
     background-color: ${({ isSelected, theme }) =>
       theme.colors[isSelected ? 'foreground' : 'shade4']};
+    color: #fff;
   }
 `;
 
