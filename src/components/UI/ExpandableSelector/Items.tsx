@@ -23,7 +23,7 @@ export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
     isSelected ? theme.colors.foreground : 'transparent'};
   td {
     ${({ toneDown, theme }) =>
-      toneDown ? `color: ${theme.colors.darkBlueDarker9};` : ''}
+      toneDown ? `color: ${theme.colors.darkBlueMuted};` : ''}
     font-variant-numeric: tabular-nums;
     span.selection-bullet {
       margin-right: 0;

@@ -15,6 +15,7 @@ export interface IColorMap {
   darkBlueDarker7: string;
   darkBlueDarker8: string;
   darkBlueDarker9: string;
+  darkBlueMuted: string;
   darkBlueLighter1: string;
   darkBlueLighter2: string;
   darkBlueLighter3: string;
