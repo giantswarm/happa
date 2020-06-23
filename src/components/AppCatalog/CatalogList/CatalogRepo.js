@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import ColorHash from 'color-hash';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -9,11 +10,23 @@ import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 
 import CatalogExternalLink from './CatalogExternalLink';
 
+const colorHashCache = {};
+
 function acronymize(text) {
   const matches = text.match(/\b(\w)/g); // ['J','S','O','N']
   const acronym = matches.join(''); // JSON
 
   return acronym;
+}
+
+function calculateColour(str) {
+  if (!colorHashCache[str]) {
+    const colorHash = new ColorHash({ lightness: 0.6, saturation: 0.6 });
+    const colorAsHex = colorHash.hex(str);
+    colorHashCache[str] = colorAsHex;
+  }
+
+  return colorHashCache[str];
 }
 
 const Repo = styled(Link)`
@@ -51,12 +64,12 @@ const Description = styled.div`
 const Image = styled.img`
   width: 100px;
   height: 100px;
-  background-color: ${({ theme }) => theme.colors.white1};
+  background-color: ${({ alt }) => calculateColour(alt)};
   flex-shrink: 0;
   border-radius: 5px;
 
   &:before {
-    content: "${({ acronym }) => acronym}";
+    content: "${({ alt }) => acronymize(alt)}";
     display: block;
     position: absolute;
     border-radius: 5px;
@@ -90,7 +103,7 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
 
   return (
     <Repo to={appCatalogListPath}>
-      <Image src={logoURL} alt={title} acronym={acronymize(title)} />
+      <Image src={logoURL} alt={title} />
       <Description>
         <Title>{title}</Title>
         <CatalogTypeLabel
