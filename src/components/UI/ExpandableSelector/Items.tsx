@@ -18,10 +18,12 @@ export const ComponentsWrapper = styled.div`
   margin-left: ${({ theme }) => theme.spacingPx * 9}px;
 `;
 
-export const Tr = styled.tr<{ isSelected: boolean }>`
+export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
   background-color: ${({ isSelected, theme }) =>
     isSelected ? theme.colors.foreground : 'transparent'};
   td {
+    ${({ toneDown, theme }) =>
+      toneDown ? `color: ${theme.colors.darkBlueLighter4};` : ''}
     font-variant-numeric: tabular-nums;
     span.selection-bullet {
       margin-right: 0;
@@ -33,6 +35,7 @@ export const Tr = styled.tr<{ isSelected: boolean }>`
   &:hover {
     background-color: ${({ isSelected, theme }) =>
       theme.colors[isSelected ? 'foreground' : 'shade4']};
+    color: #fff;
   }
 `;
 

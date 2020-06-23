@@ -2,6 +2,8 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
+jest.unmock('selectors/authSelectors');
+
 const mockReleases: IReleases = {
   '1000.0.0': {
     version: '1000.0.0',
@@ -17,7 +19,7 @@ const mockReleases: IReleases = {
     timestamp: '2020-05-05T12:34:56Z',
     components: [{ name: 'kubernetes', version: '1.15.10' }],
     changelog: [{ component: 'dummy', description: 'dummy' }],
-    active: true,
+    active: false,
     kubernetesVersion: '1.15.10',
     releaseNotesURL: 'dummy',
   },
@@ -40,7 +42,6 @@ const defaultProps = {
 };
 
 const defaultStoreState = {
-  main: { loggedInUser: { isAdmin: true } },
   entities: {
     releases: {
       isFetching: false,
@@ -213,6 +214,25 @@ describe('ReleaseSelector', () => {
     expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
     expect(
       screen.getByText(mockReleases[versionToSelect].components[0].version)
+    ).toBeInTheDocument();
+  });
+
+  it('shows a notice to admin users indicating inactive versions', () => {
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps },
+      {
+        ...defaultStoreState,
+        ...{ main: { loggedInUser: { isAdmin: true } } },
+      }
+    );
+
+    fireEvent.click(screen.getByText(/Available releases/i));
+
+    expect(
+      screen.getByText(
+        /Light font color indicates an inactive or wip release only available to Giant Swarm staff/i
+      )
     ).toBeInTheDocument();
   });
 });

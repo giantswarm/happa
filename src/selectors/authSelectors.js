@@ -43,3 +43,5 @@ export async function selectAuthToken(dispatch, state) {
     return Promise.reject(newErr);
   }
 }
+
+export const getUserIsAdmin = (state) => state.main.loggedInUser.isAdmin;
