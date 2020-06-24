@@ -72,11 +72,7 @@ const CatalogList = (props) => {
               .filter(filterFunc)
               .sort(sortFunc)
               .map((catalog) => (
-                <CatalogRepo
-                  key={catalog.metadata.name}
-                  catalog={catalog}
-                  catalogLoadIndex={props.catalogLoadIndex}
-                />
+                <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
               ))}
           </div>
         )}
@@ -89,7 +85,6 @@ CatalogList.propTypes = {
   isAdmin: PropTypes.bool,
   catalogs: PropTypes.object,
   adminCatalogs: PropTypes.object,
-  catalogLoadIndex: PropTypes.func,
   match: PropTypes.object,
 };
 
