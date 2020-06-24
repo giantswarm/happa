@@ -41,12 +41,7 @@ class AppCatalog extends React.Component {
             />
             <Route
               path={AppCatalogRoutes.Home}
-              render={() => (
-                <CatalogList
-                  {...this.props}
-                  catalogLoadIndex={this.catalogLoadIndex}
-                />
-              )}
+              render={() => <CatalogList {...this.props} />}
             />
           </Switch>
         </div>

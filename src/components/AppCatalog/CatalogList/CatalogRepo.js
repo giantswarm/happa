@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
@@ -75,13 +75,9 @@ const markdownRenderers = {
   link: CatalogExternalLink,
 };
 
-const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
+const CatalogRepo = ({ catalog }) => {
   const { name, labels } = catalog.metadata;
   const { logoURL, title, description } = catalog.spec;
-
-  useEffect(() => {
-    catalogLoadIndex(catalog);
-  }, [name, catalog, catalogLoadIndex]);
 
   const appCatalogListPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppList,
@@ -109,7 +105,6 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
 
 CatalogRepo.propTypes = {
   catalog: PropTypes.object,
-  catalogLoadIndex: PropTypes.func,
 };
 
 export default CatalogRepo;
