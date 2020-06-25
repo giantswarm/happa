@@ -12,63 +12,6 @@ export function selectCluster(clusterID) {
 }
 
 /**
- * Loads apps for a cluster.
- *
- * @param {String} clusterId Cluster ID
- */
-export function loadApps(clusterId) {
-  return function (dispatch, getState) {
-    const appsApi = new GiantSwarm.AppsApi();
-
-    const v5Clusters = getState().entities.clusters.v5Clusters || [];
-    const isV5Cluster = v5Clusters.includes(clusterId);
-
-    let getClusterApps = appsApi.getClusterAppsV4.bind(appsApi);
-
-    if (isV5Cluster) {
-      getClusterApps = appsApi.getClusterAppsV5.bind(appsApi);
-    }
-
-    dispatch({
-      type: types.CLUSTER_LOAD_APPS_REQUEST,
-      clusterId,
-    });
-
-    return getClusterApps(clusterId)
-      .then((apps) => {
-        // For some reason the array that we get back from the generated js client is an
-        // array-like structure, so I make a new one here.
-        // In tests we are using a real array, so we are applying Array.from() to an actual
-        // array. Apparently it works fine.
-        const appsArray = Array.from(apps);
-        dispatch({
-          type: types.CLUSTER_LOAD_APPS_SUCCESS,
-          clusterId,
-          apps: appsArray,
-        });
-
-        return apps;
-      })
-      .catch((error) => {
-        dispatch({
-          type: types.CLUSTER_LOAD_APPS_ERROR,
-          id: clusterId,
-          error,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to load apps installed on this cluster.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        throw error;
-      });
-  };
-}
-
-/**
  * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
  * on success or CLUSTER_INSTALL_APP_ERROR on error.
  *
