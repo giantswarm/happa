@@ -11,11 +11,7 @@ interface ILoadClusterAppsResponse {
   apps: V4App[];
   clusterId: string;
 }
-/**
- * Loads apps for a cluster.
- *
- * @param {String} clusterId Cluster ID
- */
+
 export const loadClusterApps = createAsynchronousAction<
   ILoadClusterAppsRequest,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
