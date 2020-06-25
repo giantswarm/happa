@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -10,6 +9,7 @@ import { selectErrorByIdAndAction } from 'selectors/clusterSelectors';
 import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
@@ -114,15 +114,6 @@ const appMetas = {
   },
 };
 
-// This component shows the list of components and apps installed on a cluster.
-// Apps can be:
-//  - installed by users,
-//  - installed automatically by our operators during cluster creation
-//
-// Components are
-//  - not really ever installed (no App CR) but still something we want to show
-//    here. These would be components from the release.
-
 const OptionalIngressNotice = styled.div``;
 
 const SmallHeading = styled.h6`
@@ -142,6 +133,14 @@ const Disclaimer = styled.p`
   line-height: 1.2;
 `;
 
+// This component shows the list of components and apps installed on a cluster.
+// Apps can be:
+//  - installed by users,
+//  - installed automatically by our operators during cluster creation
+//
+// Components are
+//  - not really ever installed (no App CR) but still something we want to show
+//    here. These would be components from the release.
 class ClusterApps extends React.Component {
   static getDerivedStateFromProps(newProps, prevState) {
     if (prevState.appDetailsModal.visible) {
@@ -441,7 +440,7 @@ function mapStateToProps(state, props) {
     appsLoadError: selectErrorByIdAndAction(
       state,
       props.clusterId,
-      actionTypes.CLUSTER_LOAD_APPS_REQUEST
+      loadClusterApps().types.request
     ),
   };
 }

@@ -5,6 +5,10 @@ export interface IActionTypeCollection {
 }
 
 export interface IAsynchronousAction<S, R> {
+  // type is here to make this conform to the redux's AnyAction interface,
+  // so that we can dispatch it. Even though the callApiMiddleware intercepts it,
+  // and it is not a real "action" that a reducer will ever see.
+  type: string;
   types: IActionTypeCollection;
   doPerform: (state: S) => Promise<R> | undefined;
 }
@@ -55,6 +59,7 @@ export function createAsynchronousAction<P, S, R>({
   payload?: P
 ) => IAsynchronousAction<S, R> {
   const action = (payload?: P) => ({
+    type: 'CALL_API_MIDDLEWARE_ACTION',
     types: {
       request: `${actionTypePrefix}_REQUEST`,
       success: `${actionTypePrefix}_SUCCESS`,

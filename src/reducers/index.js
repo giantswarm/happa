@@ -4,7 +4,7 @@ import catalogs from 'stores/appcatalog/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
 import releases from 'stores/releases/reducer';
 
-import clusters from './clusterReducer';
+import clusters from '../stores/cluster/reducer';
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
 import loadingFlagsByEntity from './entityLoadingReducer';

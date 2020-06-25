@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { CLUSTER_LOAD_APPS_REQUEST } from 'actions/actionTypes';
-import { installApp, loadApps } from 'actions/appActions';
+import { installApp } from 'actions/appActions';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +10,8 @@ import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
+import { IAsynchronousAction } from 'stores/asynchronousAction';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -48,7 +49,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const [isInstalling, setIsInstalling] = useState(false);
 
   const isLoadingApps: boolean | null = useSelector((state) =>
-    selectLoadingFlagByAction(state, CLUSTER_LOAD_APPS_REQUEST)
+    selectLoadingFlagByAction(state, loadClusterApps().types.request)
   );
   const ingressApp:
     | Record<string, never>
@@ -57,12 +58,17 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
   const clusterID: string = cluster.id;
 
-  const dispatch: ThunkDispatch<IState, undefined, AnyAction> = useDispatch();
+  const dispatch: ThunkDispatch<
+    IState,
+    undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    AnyAction | IAsynchronousAction<any, any>
+  > = useDispatch();
 
   useEffect(() => {
-    const tryToLoadApps = async () => {
+    const tryToLoadApps = () => {
       try {
-        await dispatch(loadApps(clusterID));
+        dispatch(loadClusterApps({ clusterId: clusterID }));
       } catch {
         // Do nothing, flash message is shown in action.
       }
@@ -76,7 +82,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
       setIsInstalling(true);
 
       await dispatch(installApp(appToInstall, clusterID));
-      await dispatch(loadApps(clusterID));
+      dispatch(loadClusterApps({ clusterId: clusterID }));
     } catch {
       // Do nothing, flash message is shown in actions.
     } finally {
