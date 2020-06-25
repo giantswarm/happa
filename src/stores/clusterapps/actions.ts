@@ -106,25 +106,28 @@ export const installApp = createAsynchronousAction<
     if (isV5Cluster) {
       createApp = appsApi.createClusterAppV5.bind(appsApi);
     }
+    try {
+      if (Object.keys(payload.app.valuesYAML).length !== 0) {
+        await dispatch(
+          createAppConfig(
+            payload.app.name,
+            payload.clusterId,
+            payload.app.valuesYAML
+          )
+        );
+      }
 
-    if (Object.keys(payload.app.valuesYAML).length !== 0) {
-      await dispatch(
-        createAppConfig(
-          payload.app.name,
-          payload.clusterId,
-          payload.app.valuesYAML
-        )
-      );
-    }
-
-    if (Object.keys(payload.app.secretsYAML).length !== 0) {
-      await dispatch(
-        createAppSecret(
-          payload.app.name,
-          payload.clusterId,
-          payload.app.secretsYAML
-        )
-      );
+      if (Object.keys(payload.app.secretsYAML).length !== 0) {
+        await dispatch(
+          createAppSecret(
+            payload.app.name,
+            payload.clusterId,
+            payload.app.secretsYAML
+          )
+        );
+      }
+    } catch (error) {
+      throw error;
     }
 
     await createApp(payload.clusterId, payload.app.name, {

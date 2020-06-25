@@ -152,6 +152,8 @@ export function createAppConfig(appName, clusterID, values) {
             messageTTL.LONG
           );
         }
+
+        throw error;
       });
   };
 }

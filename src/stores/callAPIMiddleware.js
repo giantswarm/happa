@@ -31,6 +31,7 @@ export function callAPIMiddleware({ dispatch, getState }) {
           error,
           type: types.error,
         });
+        throw error;
       });
   };
 }

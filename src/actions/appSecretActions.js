@@ -76,6 +76,8 @@ export function updateAppSecret(appName, clusterID, values) {
             messageTTL.LONG
           );
         }
+
+        throw error;
       });
   };
 }
