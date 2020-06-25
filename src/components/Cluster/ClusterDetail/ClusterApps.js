@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -10,6 +9,7 @@ import { selectErrorByIdAndAction } from 'selectors/clusterSelectors';
 import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
@@ -440,7 +440,7 @@ function mapStateToProps(state, props) {
     appsLoadError: selectErrorByIdAndAction(
       state,
       props.clusterId,
-      actionTypes.CLUSTER_LOAD_APPS_REQUEST
+      loadClusterApps().types.request
     ),
   };
 }

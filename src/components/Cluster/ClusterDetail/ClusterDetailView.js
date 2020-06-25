@@ -36,7 +36,6 @@ import { memoize } from 'underscore';
 import { getNumberOfNodes } from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
-import NewClusterApps from './ClusterApps/ClusterApps';
 import Ingress from './Ingress/Ingress';
 import KeyPairs from './KeyPairs';
 import ScaleClusterModal from './ScaleClusterModal';
@@ -340,20 +339,6 @@ class ClusterDetailView extends React.Component {
                     </Tab>
                     <Tab eventKey={tabsPaths.Apps} title='Apps'>
                       <ClusterApps
-                        clusterId={this.props.clusterId}
-                        dispatch={dispatch}
-                        installedApps={cluster.apps}
-                        release={release}
-                        showInstalledAppsBlock={
-                          Object.keys(this.props.catalogs.items).length > 0
-                        }
-                        hasOptionalIngress={
-                          cluster.capabilities.hasOptionalIngress
-                        }
-                      />
-                    </Tab>
-                    <Tab eventKey={tabsPaths.AppsNew} title='Apps (new)'>
-                      <NewClusterApps
                         clusterId={this.props.clusterId}
                         dispatch={dispatch}
                         installedApps={cluster.apps}
