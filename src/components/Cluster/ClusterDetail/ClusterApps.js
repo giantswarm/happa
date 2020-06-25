@@ -114,15 +114,6 @@ const appMetas = {
   },
 };
 
-// This component shows the list of components and apps installed on a cluster.
-// Apps can be:
-//  - installed by users,
-//  - installed automatically by our operators during cluster creation
-//
-// Components are
-//  - not really ever installed (no App CR) but still something we want to show
-//    here. These would be components from the release.
-
 const OptionalIngressNotice = styled.div``;
 
 const SmallHeading = styled.h6`
@@ -142,6 +133,14 @@ const Disclaimer = styled.p`
   line-height: 1.2;
 `;
 
+// This component shows the list of components and apps installed on a cluster.
+// Apps can be:
+//  - installed by users,
+//  - installed automatically by our operators during cluster creation
+//
+// Components are
+//  - not really ever installed (no App CR) but still something we want to show
+//    here. These would be components from the release.
 class ClusterApps extends React.Component {
   static getDerivedStateFromProps(newProps, prevState) {
     if (prevState.appDetailsModal.visible) {
