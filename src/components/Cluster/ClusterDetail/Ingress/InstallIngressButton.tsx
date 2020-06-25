@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { installApp } from 'actions/appActions';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +10,7 @@ import {
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
 import { IAsynchronousAction } from 'stores/asynchronousAction';
+import { installApp } from 'stores/clusterapps/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -77,11 +77,11 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     tryToLoadApps();
   }, [dispatch, clusterID]);
 
-  const installIngressController = async () => {
+  const installIngressController = () => {
     try {
       setIsInstalling(true);
 
-      await dispatch(installApp(appToInstall, clusterID));
+      dispatch(installApp({ app: appToInstall, clusterId: clusterID }));
       dispatch(loadClusterApps({ clusterId: clusterID }));
     } catch {
       // Do nothing, flash message is shown in actions.

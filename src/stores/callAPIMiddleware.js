@@ -19,7 +19,7 @@ export function callAPIMiddleware({ dispatch, getState }) {
       type: types.request,
     });
 
-    return doPerform(getState())
+    return doPerform(getState(), dispatch)
       .then((response) => {
         dispatch({
           response,

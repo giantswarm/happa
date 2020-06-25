@@ -1,3 +1,7 @@
+import { IState } from 'reducers/types';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+
 export interface IActionTypeCollection {
   request: string;
   success: string;
@@ -10,12 +14,19 @@ export interface IAsynchronousAction<S, R> {
   // and it is not a real "action" that a reducer will ever see.
   type: string;
   types: IActionTypeCollection;
-  doPerform: (state: S) => Promise<R> | undefined;
+  doPerform: (
+    state: S,
+    dispatch: ThunkDispatch<IState, void, AnyAction>
+  ) => Promise<R> | undefined;
 }
 
 export interface IAsynchronousActionParams<P, S, R> {
   actionTypePrefix: string;
-  perform: (state: S, payload?: P) => Promise<R>;
+  perform: (
+    state: S,
+    dispatch: ThunkDispatch<IState, void, AnyAction>,
+    payload?: P
+  ) => Promise<R>;
   shouldPerform: (state: S) => boolean;
 }
 
@@ -65,8 +76,8 @@ export function createAsynchronousAction<P, S, R>({
       success: `${actionTypePrefix}_SUCCESS`,
       error: `${actionTypePrefix}_ERROR`,
     },
-    doPerform: (state: S) =>
-      shouldPerform(state) ? perform(state, payload) : undefined,
+    doPerform: (state: S, dispatch: ThunkDispatch<IState, void, AnyAction>) =>
+      shouldPerform(state) ? perform(state, dispatch, payload) : undefined,
   });
 
   return action;

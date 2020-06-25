@@ -14,7 +14,7 @@ export const updateClusterLabels = createAsynchronousAction<
   void | ILabelChangeResponse
 >({
   actionTypePrefix: 'UPDATE_CLUSTER_LABELS',
-  perform: async (_, payload) => {
+  perform: async (_s, _d, payload) => {
     if (payload) {
       const labelsPayload = {
         [payload.key]: payload.value,
