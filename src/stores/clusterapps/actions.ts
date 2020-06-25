@@ -3,11 +3,11 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
-interface IRequest {
+interface ILoadClusterAppsRequest {
   clusterId: string;
 }
 
-interface IResponse {
+interface ILoadClusterAppsResponse {
   apps: V4App[];
   clusterId: string;
 }
@@ -17,10 +17,10 @@ interface IResponse {
  * @param {String} clusterId Cluster ID
  */
 export const loadClusterApps = createAsynchronousAction<
-  IRequest,
+  ILoadClusterAppsRequest,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
-  IResponse
+  ILoadClusterAppsResponse
 >({
   actionTypePrefix: 'LOAD_CLUSTER_APPS',
 
