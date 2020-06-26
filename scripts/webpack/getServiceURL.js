@@ -22,7 +22,7 @@ const getInstallationInfo = function (installation) {
   );
 
   const installationInfoYAML = execSync(
-    `opsctl show cluster -i ${installation}`,
+    `opsctl show installation -i ${installation}`,
     { encoding: 'utf-8' }
   );
   const installationInfo = yaml.safeLoad(installationInfoYAML);
