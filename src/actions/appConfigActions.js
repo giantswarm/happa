@@ -89,6 +89,11 @@ export function updateAppConfig(appName, clusterID, values) {
  */
 export function createAppConfig(appName, clusterID, values) {
   return function (dispatch, getState) {
+    if (Object.keys(values).length === 0) {
+      // Skip creating an empty app config.
+      return Promise.resolve();
+    }
+
     dispatch({
       type: types.CLUSTER_CREATE_APP_CONFIG_REQUEST,
       clusterID,

@@ -83,6 +83,18 @@ interface IInstallAppResponse {
   clusterId: string;
 }
 
+const createAppV4orV5 = (state: IState, clusterId: string) => {
+  const appsApi = new GiantSwarm.AppsApi();
+
+  const v5Clusters = state.entities.clusters.v5Clusters;
+  const isV5Cluster = v5Clusters.includes(clusterId);
+
+  let createApp = appsApi.createClusterAppV4.bind(appsApi);
+  if (isV5Cluster) createApp = appsApi.createClusterAppV5.bind(appsApi);
+
+  return createApp;
+};
+
 export const installApp = createAsynchronousAction<
   IInstallAppRequest,
   IState,
@@ -91,69 +103,53 @@ export const installApp = createAsynchronousAction<
   actionTypePrefix: 'INSTALL_APP',
 
   perform: async (state, dispatch, payload) => {
-    if (!payload || !payload.clusterId || !payload.app) {
-      throw new TypeError(
-        'request payload cannot be undefined and must contain a clusterId and an app to install'
-      );
+    if (!payload) {
+      throw new TypeError('action payload cannot be empty');
     }
 
-    const appsApi = new GiantSwarm.AppsApi();
+    const {
+      name,
+      valuesYAML,
+      secretsYAML,
+      catalog,
+      chartName,
+      namespace,
+      version,
+    } = payload.app;
 
-    const v5Clusters = state.entities.clusters.v5Clusters;
-    const isV5Cluster = v5Clusters.includes(payload.clusterId);
+    const clusterId = payload.clusterId;
 
-    let createApp = appsApi.createClusterAppV4.bind(appsApi);
+    await dispatch(createAppConfig(name, clusterId, valuesYAML));
+    await dispatch(createAppSecret(name, clusterId, secretsYAML));
 
-    if (isV5Cluster) {
-      createApp = appsApi.createClusterAppV5.bind(appsApi);
-    }
-
-    if (Object.keys(payload.app.valuesYAML).length !== 0) {
-      await dispatch(
-        createAppConfig(
-          payload.app.name,
-          payload.clusterId,
-          payload.app.valuesYAML
-        )
-      );
-    }
-
-    if (Object.keys(payload.app.secretsYAML).length !== 0) {
-      await dispatch(
-        createAppSecret(
-          payload.app.name,
-          payload.clusterId,
-          payload.app.secretsYAML
-        )
-      );
-    }
-
-    await createApp(payload.clusterId, payload.app.name, {
+    const request = {
       body: {
         spec: {
-          catalog: payload.app.catalog,
-          name: payload.app.chartName,
-          namespace: payload.app.namespace,
-          version: payload.app.version,
+          catalog: catalog,
+          name: chartName,
+          namespace: namespace,
+          version: version,
         },
       },
-    }).catch((error) => {
-      showAppInstallationErrorFlashMessage(
-        payload.app.name,
-        payload.clusterId,
-        error
-      );
+    };
+
+    const createApp = createAppV4orV5(state, clusterId);
+
+    try {
+      await createApp(clusterId, name, request);
+    } catch (error) {
+      showAppInstallationErrorFlashMessage(name, clusterId, error);
       throw error;
-    });
+    }
 
     new FlashMessage(
-      `Your app <code>${payload.app.name}</code> is being installed on <code>${payload.clusterId}</code>`,
+      `Your app <code>${name}</code> is being installed on <code>${clusterId}</code>`,
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
 
     return {
-      clusterId: payload.clusterId,
+      clusterId: clusterId,
     };
   },
   shouldPerform: () => true,
