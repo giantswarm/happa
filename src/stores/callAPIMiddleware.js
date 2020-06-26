@@ -1,6 +1,6 @@
 export function callAPIMiddleware({ dispatch, getState }) {
   return (next) => (action) => {
-    const { types, doPerform } = action;
+    const { types, doPerform, throwOnError } = action;
 
     if (!types) {
       // Normal action: pass it on
@@ -31,7 +31,10 @@ export function callAPIMiddleware({ dispatch, getState }) {
           error,
           type: types.error,
         });
-        throw error;
+
+        if (throwOnError) {
+          throw error;
+        }
       });
   };
 }

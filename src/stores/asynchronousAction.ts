@@ -28,6 +28,7 @@ export interface IAsynchronousActionParams<P, S, R> {
     payload?: P
   ) => Promise<R>;
   shouldPerform: (state: S) => boolean;
+  throwOnError: boolean;
 }
 
 /**
@@ -66,6 +67,7 @@ export function createAsynchronousAction<P, S, R>({
   actionTypePrefix,
   perform,
   shouldPerform,
+  throwOnError = false,
 }: IAsynchronousActionParams<P, S, R>): (
   payload?: P
 ) => IAsynchronousAction<S, R> {
@@ -78,6 +80,7 @@ export function createAsynchronousAction<P, S, R>({
     },
     doPerform: (state: S, dispatch: ThunkDispatch<IState, void, AnyAction>) =>
       shouldPerform(state) ? perform(state, dispatch, payload) : undefined,
+    throwOnError: throwOnError,
   });
 
   return action;

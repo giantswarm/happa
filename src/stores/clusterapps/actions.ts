@@ -61,6 +61,7 @@ export const loadClusterApps = createAsynchronousAction<
     }
   },
   shouldPerform: () => true,
+  throwOnError: false,
 });
 
 interface IInstallAppRequestApp {
@@ -106,28 +107,25 @@ export const installApp = createAsynchronousAction<
     if (isV5Cluster) {
       createApp = appsApi.createClusterAppV5.bind(appsApi);
     }
-    try {
-      if (Object.keys(payload.app.valuesYAML).length !== 0) {
-        await dispatch(
-          createAppConfig(
-            payload.app.name,
-            payload.clusterId,
-            payload.app.valuesYAML
-          )
-        );
-      }
 
-      if (Object.keys(payload.app.secretsYAML).length !== 0) {
-        await dispatch(
-          createAppSecret(
-            payload.app.name,
-            payload.clusterId,
-            payload.app.secretsYAML
-          )
-        );
-      }
-    } catch (error) {
-      throw error;
+    if (Object.keys(payload.app.valuesYAML).length !== 0) {
+      await dispatch(
+        createAppConfig(
+          payload.app.name,
+          payload.clusterId,
+          payload.app.valuesYAML
+        )
+      );
+    }
+
+    if (Object.keys(payload.app.secretsYAML).length !== 0) {
+      await dispatch(
+        createAppSecret(
+          payload.app.name,
+          payload.clusterId,
+          payload.app.secretsYAML
+        )
+      );
     }
 
     await createApp(payload.clusterId, payload.app.name, {
@@ -159,6 +157,7 @@ export const installApp = createAsynchronousAction<
     };
   },
   shouldPerform: () => true,
+  throwOnError: true,
 });
 
 /**

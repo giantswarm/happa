@@ -37,4 +37,5 @@ export const updateClusterLabels = createAsynchronousAction<
     return Promise.resolve();
   },
   shouldPerform: () => true,
+  throwOnError: false,
 });
