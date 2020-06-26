@@ -110,27 +110,39 @@ const AppDetailsModal = (props) => {
   }
 
   async function createAppConfig(values, done) {
-    await props.dispatch(createAppConfigAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(createAppConfigAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function updateAppConfig(values, done) {
-    await props.dispatch(updateAppConfigAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(updateAppConfigAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function createAppSecret(values, done) {
-    await props.dispatch(createAppSecretAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(createAppSecretAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function updateAppSecret(values, done) {
-    await props.dispatch(updateAppSecretAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(updateAppSecretAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   // eslint-disable-next-line react/no-multi-comp
