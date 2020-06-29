@@ -100,7 +100,7 @@
     "@testing-library/jest-dom": "5.10.1",
     "@testing-library/react-hooks": "3.2.1",
     "@testing-library/react": "10.2.1",
-    "@types/auth0-js": "^9.13.1",
+    "@types/auth0-js": "^9.13.2",
     "@types/bluebird": "^3.5.32",
     "@types/bootstrap": "^4.3.3",
     "@types/classnames": "^2.2.10",
