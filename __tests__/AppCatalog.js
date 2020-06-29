@@ -48,19 +48,6 @@ describe('Apps and App Catalog', () => {
         );
         getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
         getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-
-        nock('https://catalogshost')
-          .get('/giantswarm-incubator-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-        nock('https://catalogshost')
-          .get('/giantswarm-test-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-        nock('https://catalogshost')
-          .get('/helmstable/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-        nock('https://catalogshost')
-          .get('/giantswarm-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
       });
 
       it('renders all non internal app catalogs in the app catalogs overview for non admins', async () => {
@@ -97,10 +84,6 @@ describe('Apps and App Catalog', () => {
       });
 
       it('renders all app catalogs in the app catalogs overview for admins', async () => {
-        nock('https://catalogshost')
-          .get('/giantswarm-internal-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-
         const adminUserInStorage = {
           user:
             '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',

@@ -30,6 +30,8 @@ const theme: ITheme = {
     darkBlueLighter8: '#d0d8dd',
     darkBlueLighter9: '#e7ebee',
 
+    darkBlueMuted: '#020a29',
+
     shade1: '#1E4156',
     shade2: '#224A61',
     shade3: '#234D65',

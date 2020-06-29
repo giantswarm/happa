@@ -18,6 +18,7 @@ interface IReleaseRow extends IRelease {
 }
 
 const ReleaseRow: FC<IReleaseRow> = ({
+  active,
   components,
   isSelected,
   kubernetesVersion,
@@ -30,7 +31,11 @@ const ReleaseRow: FC<IReleaseRow> = ({
 
   return (
     <>
-      <Tr isSelected={isSelected} onClick={() => selectRelease(version)}>
+      <Tr
+        isSelected={isSelected}
+        onClick={() => selectRelease(version)}
+        toneDown={!active}
+      >
         <CursorPointerCell>
           <RadioInput
             id={`select-${version}`}
@@ -94,6 +99,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
 };
 
 ReleaseRow.propTypes = {
+  active: PropTypes.bool.isRequired,
   changelog: PropTypes.arrayOf(
     PropTypes.shape({
       component: PropTypes.string.isRequired,
