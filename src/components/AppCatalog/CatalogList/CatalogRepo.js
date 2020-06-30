@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import ColorHash from 'color-hash';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,26 +6,17 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
+import CachingColorHash from 'utils/cachingColorHash';
 
 import CatalogExternalLink from './CatalogExternalLink';
 
-const colorHashCache = {};
+const colorHash = new CachingColorHash();
 
 function acronymize(text) {
   const matches = text.match(/\b(\w)/g); // ['J','S','O','N']
   const acronym = matches.join(''); // JSON
 
   return acronym;
-}
-
-function calculateColour(str) {
-  if (!colorHashCache[str]) {
-    const colorHash = new ColorHash({ lightness: 0.6, saturation: 0.6 });
-    const colorAsHex = colorHash.hex(str);
-    colorHashCache[str] = colorAsHex;
-  }
-
-  return colorHashCache[str];
 }
 
 const Repo = styled(Link)`
@@ -64,7 +54,7 @@ const Description = styled.div`
 const Image = styled.img`
   width: 100px;
   height: 100px;
-  background-color: ${({ alt }) => calculateColour(alt)};
+  background-color: ${({ alt }) => colorHash.calculateColor(alt)};
   flex-shrink: 0;
   border-radius: 5px;
 
