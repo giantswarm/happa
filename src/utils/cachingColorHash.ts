@@ -1,7 +1,7 @@
 import ColorHash from 'color-hash';
 
 class CachingColorHash {
-  private cache: { [k: string]: string } = {};
+  private cache: Record<string, string> = {};
   private instance: ColorHash;
   constructor(opts?: object) {
     let colorHashOptions = {
