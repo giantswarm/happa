@@ -17,7 +17,7 @@ export interface IAsynchronousAction<S, R> {
   doPerform: (
     state: S,
     dispatch: ThunkDispatch<IState, void, AnyAction>
-  ) => Promise<R> | undefined;
+  ) => Promise<R> | void;
 }
 
 export interface IAsynchronousActionParams<P, S, R> {
