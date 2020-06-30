@@ -76,6 +76,8 @@ export function updateAppSecret(appName, clusterID, values) {
             messageTTL.LONG
           );
         }
+
+        throw error;
       });
   };
 }
@@ -89,6 +91,11 @@ export function updateAppSecret(appName, clusterID, values) {
  */
 export function createAppSecret(appName, clusterID, values) {
   return function (dispatch, getState) {
+    if (Object.keys(values).length === 0) {
+      // Skip creating an empty app secret.
+      return Promise.resolve();
+    }
+
     dispatch({
       type: types.CLUSTER_CREATE_APP_SECRET_REQUEST,
       clusterID,

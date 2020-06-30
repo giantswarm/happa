@@ -53,4 +53,5 @@ export const loadReleases = createAsynchronousAction<
     return { releases, sortedReleaseVersions };
   },
   shouldPerform: () => true,
+  throwOnError: false,
 });

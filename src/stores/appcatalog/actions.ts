@@ -21,4 +21,5 @@ export const listCatalogs = createAsynchronousAction<any, any, any>({
     return catalogsHash;
   },
   shouldPerform: () => true,
+  throwOnError: false,
 });
