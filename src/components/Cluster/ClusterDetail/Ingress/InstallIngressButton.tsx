@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from 'reducers/types';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
-import { IAsynchronousAction } from 'stores/asynchronousAction';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { installApp } from 'stores/clusterapps/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
@@ -58,12 +56,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
   const clusterID: string = cluster.id;
 
-  const dispatch: ThunkDispatch<
-    IState,
-    undefined,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    AnyAction | IAsynchronousAction<any, any>
-  > = useDispatch();
+  const dispatch: IAsynchronousDispatch<IState> = useDispatch();
 
   useEffect(() => {
     const tryToLoadApps = () => {
@@ -77,11 +70,11 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     tryToLoadApps();
   }, [dispatch, clusterID]);
 
-  const installIngressController = () => {
+  const installIngressController = async () => {
     try {
       setIsInstalling(true);
 
-      dispatch(installApp({ app: appToInstall, clusterId: clusterID }));
+      await dispatch(installApp({ app: appToInstall, clusterId: clusterID }));
       dispatch(loadClusterApps({ clusterId: clusterID }));
     } catch {
       // Do nothing, flash message is shown in actions.

@@ -2,6 +2,9 @@ import { IState } from 'reducers/types';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+export interface IAsynchronousDispatch<S> {
+  <R>(action: IAsynchronousAction<S, R>): Promise<R>;
+}
 export interface IActionTypeCollection {
   request: string;
   success: string;
