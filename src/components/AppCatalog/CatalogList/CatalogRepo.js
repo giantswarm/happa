@@ -5,6 +5,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import ImgWithFallback from 'shared/ImgWithFallback';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import CachingColorHash from 'utils/cachingColorHash';
 
@@ -51,27 +52,17 @@ const Description = styled.div`
   line-height: 12px;
 `;
 
-const Image = styled.img`
+const Image = styled(ImgWithFallback)`
   width: 100px;
   height: 100px;
-  background-color: ${({ alt }) => colorHash.calculateColor(alt)};
   flex-shrink: 0;
   border-radius: 5px;
-
-  &:before {
-    content: "${({ alt }) => acronymize(alt)}";
-    display: block;
-    position: absolute;
-    border-radius: 5px;
-    height: 100px;
-    width: 100px;
-    background-color: #fff;
-    color: #2e556a;
-    font-size: 20px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
+  background-color: ${({ alt }) => colorHash.calculateColor(alt)};
+  color: ${({ theme }) => theme.colors.white};
+  display: flex;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const markdownRenderers = {
@@ -89,7 +80,12 @@ const CatalogRepo = ({ catalog }) => {
 
   return (
     <Repo to={appCatalogListPath}>
-      <Image src={logoURL} alt={title} />
+      <Image
+        src={logoURL}
+        alt={title}
+        fallbackStr={acronymize(title)}
+        title={title}
+      />
       <Description>
         <Title>{title}</Title>
         <CatalogTypeLabel
