@@ -57,9 +57,6 @@ const OuterNav = styled.nav`
 
   .subactions {
     margin-left: auto;
-    ${mq(CSSBreakpoints.Large)} {
-      margin-right: 10px;
-    }
 
     a:last-child {
       margin-right: 0px;
