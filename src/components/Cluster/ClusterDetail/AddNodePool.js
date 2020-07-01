@@ -688,12 +688,6 @@ class AddNodePool extends Component {
           <StyledInput
             labelId={`scaling-range-${this.props.id}`}
             label='Scaling range'
-            hint={
-              <AdditionalInputHint>
-                To enable autoscaling, set minimum and maximum to different
-                values.
-              </AdditionalInputHint>
-            }
           >
             <NodeCountSelector
               autoscalingEnabled={true}

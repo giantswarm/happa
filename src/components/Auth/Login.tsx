@@ -140,7 +140,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         <div className='login_form--mask' />
 
         <SlideTransition appear={true} in={true} direction='down'>
-          <div className='login_form--container col-4'>
+          <div className='login_form--container'>
             <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
               <div className='textfield'>

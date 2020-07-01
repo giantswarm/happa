@@ -21,7 +21,7 @@ class OauthCallback extends React.Component {
         <div className='login_form--mask' />
 
         <SlideTransition in={true} appear={true} direction='down'>
-          <div className='login_form--container col-4'>
+          <div className='login_form--container'>
             <h1>OAuth Callback</h1>
             <p>
               This is where we process and store the token and move on to what

@@ -41,7 +41,7 @@ const InstallIngress = (props) => {
         pathname: clusterGuideIngressPath,
       }}
     >
-      <div className='centered col-9'>
+      <>
         <h1>Install an ingress controller</h1>
 
         <p>
@@ -79,7 +79,7 @@ const InstallIngress = (props) => {
             </button>
           </Link>
         </div>
-      </div>
+      </>
     </Breadcrumb>
   );
 };

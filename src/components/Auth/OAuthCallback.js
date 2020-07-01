@@ -45,7 +45,7 @@ const OAuthCallback = ({ location, dispatch, actions }) => {
       <div className='login_form--mask' />
 
       <SlideTransition in={true} appear={true} direction='down'>
-        <div className='login_form--container col-4 login_form--admin'>
+        <div className='login_form--container login_form--admin'>
           {error ? (
             <div>
               <h1>Something went wrong</h1>

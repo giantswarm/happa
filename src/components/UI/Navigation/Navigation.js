@@ -34,15 +34,13 @@ const OuterNav = styled.nav`
 
   .main-nav {
     margin: auto;
+    padding: 0px 10px;
+    display: flex;
 
     @media only screen and (max-width: ${(props) =>
         props.theme.breakpoints.large}px) and (min-width: ${(props) =>
         props.theme.breakpoints.med}px) {
       min-width: 800px;
-    }
-
-    & > a {
-      float: left;
     }
 
     .nav-toggle {
@@ -58,7 +56,7 @@ const OuterNav = styled.nav`
   }
 
   .subactions {
-    float: right;
+    margin-left: auto;
     ${mq(CSSBreakpoints.Large)} {
       margin-right: 10px;
     }
@@ -74,9 +72,6 @@ const OuterNav = styled.nav`
     vertical-align: middle;
     position: relative;
     top: -1px;
-    ${mq(CSSBreakpoints.Medium)} {
-      margin-left: 10px;
-    }
   }
 `;
 
@@ -85,7 +80,7 @@ class Navigation extends React.Component {
   render() {
     return (
       <OuterNav>
-        <div className='main-nav col-9'>
+        <div className='main-nav'>
           <Link to={AppRoutes.Home}>
             <img className='logo' src={logo} />
           </Link>
@@ -106,7 +101,7 @@ class Navigation extends React.Component {
         </div>
 
         <div className='breadcrumb-wrapper'>
-          <div className='main col-9'>
+          <div className='main'>
             <Breadcrumbs />
           </div>
         </div>

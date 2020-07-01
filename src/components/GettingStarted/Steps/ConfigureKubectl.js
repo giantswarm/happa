@@ -33,7 +33,7 @@ class ConfigKubeCtl extends React.Component {
     switch (this.state.selectedPlatform) {
       case 'Windows':
         return (
-          <div>
+          <>
             <p>
               <a href='http://scoop.sh/' rel='noopener noreferrer'>
                 scoop
@@ -67,7 +67,7 @@ class ConfigKubeCtl extends React.Component {
               , unpack the binary and move it to a location covered by your{' '}
               <code>PATH</code> environment variable.
             </p>
-          </div>
+          </>
         );
       case 'Mac':
         return (
@@ -159,7 +159,7 @@ class ConfigKubeCtl extends React.Component {
           pathname: clusterGuideConfigurationPath,
         }}
       >
-        <div className='centered col-9'>
+        <div className='centered'>
           <h1>
             Configure kubectl for cluster: {this.props.selectedCluster.name}{' '}
             <ClusterIDLabel clusterID={this.props.selectedCluster.id} />

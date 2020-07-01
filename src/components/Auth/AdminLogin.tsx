@@ -68,7 +68,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
     <div>
       <div className='login_form--mask' />
 
-      <div className='login_form--container login_form--admin col-4'>
+      <div className='login_form--container login_form--admin'>
         <img className='loader' src={spinner} />
         <p>
           Verifying credentials, and redirecting to our authentication provider

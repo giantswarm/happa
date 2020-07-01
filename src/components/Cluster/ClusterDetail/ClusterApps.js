@@ -142,6 +142,19 @@ const Disclaimer = styled.p`
   line-height: 1.2;
 `;
 
+const PreinstalledApps = styled.div`
+  display: flex;
+
+  & > div {
+    flex: 1;
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+`;
+
 class ClusterApps extends React.Component {
   static getDerivedStateFromProps(newProps, prevState) {
     if (prevState.appDetailsModal.visible) {
@@ -342,8 +355,8 @@ class ClusterApps extends React.Component {
           </Disclaimer>
           <div className='row'>
             {this.props.release ? (
-              <>
-                <div className='col-4' key='essentials'>
+              <PreinstalledApps>
+                <div key='essentials'>
                   <SmallHeading>essentials</SmallHeading>
                   {preinstalledApps.essentials.map((app) => (
                     <ClusterDetailPreinstalledApp
@@ -355,7 +368,7 @@ class ClusterApps extends React.Component {
                   ))}
                 </div>
 
-                <div className='col-4' key='management'>
+                <div key='management'>
                   <SmallHeading>management</SmallHeading>
                   {preinstalledApps.management.map((app) => (
                     <ClusterDetailPreinstalledApp
@@ -367,7 +380,7 @@ class ClusterApps extends React.Component {
                   ))}
                 </div>
 
-                <div className='col-4' key='ingress'>
+                <div key='ingress'>
                   <SmallHeading>ingress</SmallHeading>
                   {this.props.hasOptionalIngress && (
                     <OptionalIngressNotice>
@@ -397,7 +410,7 @@ class ClusterApps extends React.Component {
                     />
                   ))}
                 </div>
-              </>
+              </PreinstalledApps>
             ) : (
               <div className='flash-messages--flash-message flash-messages--danger'>
                 Unable to load the list of preinstalled apps. Please try again

@@ -18,6 +18,7 @@ import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Ellipsis } from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import Section from 'UI/Section';
 
 import Credentials from './Credentials';
 
@@ -173,14 +174,9 @@ class OrganizationDetail extends React.Component {
 
     if (this.canCredentials(this.props.app.info.general.provider)) {
       credentialsSection = (
-        <div className='row section' id='credentials-section'>
-          <div className='col-3'>
-            <h3 className='table-label'>Provider credentials</h3>
-          </div>
-          <div className='col-9'>
-            <Credentials organizationName={this.props.match.params.orgId} />
-          </div>
-        </div>
+        <Section title='Provider credentials'>
+          <Credentials organizationName={this.props.match.params.orgId} />
+        </Section>
       );
     }
 
@@ -189,18 +185,10 @@ class OrganizationDetail extends React.Component {
         <DocumentTitle
           title={`Organization Details | ${this.props.organization.id}`}
         >
-          <div>
-            <div className='row'>
-              <div className='col-12'>
-                <h1>Organization: {this.props.match.params.orgId}</h1>
-              </div>
-            </div>
-
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Clusters</h3>
-              </div>
-              <div className='col-9'>
+          <>
+            <h1>Organization: {this.props.match.params.orgId}</h1>
+            <Section title='Clusters'>
+              <>
                 {this.props.clusters.length === 0 ? (
                   <p>This organization doesn&apos;t have any clusters.</p>
                 ) : (
@@ -218,14 +206,11 @@ class OrganizationDetail extends React.Component {
                     <i className='fa fa-add-circle' /> Create Cluster
                   </Button>
                 </Link>
-              </div>
-            </div>
+              </>
+            </Section>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Members</h3>
-              </div>
-              <MembersTable className='col-9'>
+            <Section title='Members'>
+              <MembersTable>
                 {this.props.organization.members.length === 0 ? (
                   <p>This organization has no members</p>
                 ) : (
@@ -242,10 +227,10 @@ class OrganizationDetail extends React.Component {
                   <i className='fa fa-add-circle' /> Add Member
                 </Button>
               </MembersTable>
-            </div>
+            </Section>
 
             {credentialsSection}
-          </div>
+          </>
         </DocumentTitle>
       );
     }

@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import NumberPicker from 'UI/NumberPicker';
+import TwoInputArea from 'UI/TwoInputArea';
 
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 1,
@@ -62,8 +63,8 @@ class NodeCountSelector extends React.Component {
     if (this.props.autoscalingEnabled === true) {
       return (
         <form onSubmit={this.handleFormSubmit}>
-          <div className='row'>
-            <div className='col-6'>
+          <TwoInputArea>
+            <div>
               <label data-testid='node-count-selector-picker'>
                 <SpanWrapper>
                   {label && label.min ? label.min : 'Minimum'}
@@ -79,7 +80,7 @@ class NodeCountSelector extends React.Component {
                 />
               </label>
             </div>
-            <div className='col-6'>
+            <div>
               <label data-testid='node-count-selector-picker'>
                 <SpanWrapper>
                   {label && label.max ? label.max : 'Maximum'}
@@ -95,38 +96,30 @@ class NodeCountSelector extends React.Component {
                 />
               </label>
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-12'>
-              <p data-testid='node-count-selector-autoscaling-label'>
-                {scaling.min === scaling.max
-                  ? 'To enable autoscaling, set minimum and maximum to different values.'
-                  : 'To disable autoscaling, set both numbers to the same value.'}
-              </p>
-            </div>
-          </div>
+          </TwoInputArea>
+          <p data-testid='node-count-selector-autoscaling-label'>
+            {scaling.min === scaling.max
+              ? 'To enable autoscaling, set minimum and maximum to different values.'
+              : 'To disable autoscaling, set both numbers to the same value.'}
+          </p>
         </form>
       );
     }
 
     return (
-      <div className='row'>
-        <div className='col-12'>
-          <form onSubmit={this.handleFormSubmit}>
-            <label data-testid='node-count-selector-picker'>
-              <NumberPicker
-                label=''
-                min={minValue}
-                max={maxValue}
-                onChange={this.updateNodeCount}
-                readOnly={readOnly}
-                stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-                value={scaling.max}
-              />
-            </label>
-          </form>
-        </div>
-      </div>
+      <form onSubmit={this.handleFormSubmit}>
+        <label data-testid='node-count-selector-picker'>
+          <NumberPicker
+            label=''
+            min={minValue}
+            max={maxValue}
+            onChange={this.updateNodeCount}
+            readOnly={readOnly}
+            stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+            value={scaling.max}
+          />
+        </label>
+      </form>
     );
   }
 }
