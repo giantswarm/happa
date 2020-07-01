@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared';
 import { PropertiesOf } from 'shared/types';
-import TwoInputArea from 'UI/TwoInputArea';
+import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
 
 interface IAddKeyPairTemplateProps {
   email: string;
@@ -61,7 +61,7 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
         based access rights.
       </p>
       <TwoInputArea>
-        <div>
+        <InnerTwoInputArea>
           <label htmlFor='cnPrefix'>Common Name Prefix:</label>
           <input
             id='cnPrefix'
@@ -79,8 +79,8 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
               </span>
             )}
           </div>
-        </div>
-        <div>
+        </InnerTwoInputArea>
+        <InnerTwoInputArea>
           <label htmlFor='organizations'>Organizations:</label>
           <input
             id='organizations'
@@ -91,7 +91,7 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
           <div className='text-field-hint'>
             Comma seperated values. e.g.: admin,blue-team,staging
           </div>
-        </div>
+        </InnerTwoInputArea>
       </TwoInputArea>
       <br />
       <div>

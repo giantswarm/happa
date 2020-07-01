@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import NumberPicker from 'UI/NumberPicker';
-import TwoInputArea from 'UI/TwoInputArea';
+import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
 
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 1,
@@ -64,7 +64,7 @@ class NodeCountSelector extends React.Component {
       return (
         <form onSubmit={this.handleFormSubmit}>
           <TwoInputArea>
-            <div>
+            <InnerTwoInputArea>
               <label data-testid='node-count-selector-picker'>
                 <SpanWrapper>
                   {label && label.min ? label.min : 'Minimum'}
@@ -79,8 +79,8 @@ class NodeCountSelector extends React.Component {
                   value={scaling.min}
                 />
               </label>
-            </div>
-            <div>
+            </InnerTwoInputArea>
+            <InnerTwoInputArea>
               <label data-testid='node-count-selector-picker'>
                 <SpanWrapper>
                   {label && label.max ? label.max : 'Maximum'}
@@ -95,7 +95,7 @@ class NodeCountSelector extends React.Component {
                   value={scaling.max}
                 />
               </label>
-            </div>
+            </InnerTwoInputArea>
           </TwoInputArea>
           <p data-testid='node-count-selector-autoscaling-label'>
             {scaling.min === scaling.max
