@@ -1,22 +1,36 @@
 import PropTypes from 'prop-types';
 import React, { FC, ImgHTMLAttributes, useState } from 'react';
 
+interface IFallback {
+  label: string;
+  backgroundColor: string;
+}
+
 interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
-  fallbackStr: string;
+  fallback: IFallback;
 }
 
 const ImgWithFallback: FC<IImgWithFallback> = (props) => {
   const [loadError, setLoadError] = useState(false);
 
+  const { fallback, ...restProps } = props;
+
   if (loadError) {
-    return <div {...props}>{props.fallbackStr}</div>;
+    return (
+      <div {...restProps} style={{ backgroundColor: fallback.backgroundColor }}>
+        {fallback.label}
+      </div>
+    );
   }
 
-  return <img {...props} onError={() => setLoadError(true)} />;
+  return <img {...restProps} onError={() => setLoadError(true)} />;
 };
 
 ImgWithFallback.propTypes = {
-  fallbackStr: PropTypes.string.isRequired,
+  fallback: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    backgroundColor: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ImgWithFallback;

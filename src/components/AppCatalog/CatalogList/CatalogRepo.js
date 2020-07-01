@@ -57,8 +57,8 @@ const Image = styled(ImgWithFallback)`
   height: 100px;
   flex-shrink: 0;
   border-radius: 5px;
-  background-color: ${({ alt }) => colorHash.calculateColor(alt)};
-  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white1};
+  color: ${({ theme }) => theme.colors.white1};
   display: flex;
   font-size: 20px;
   align-items: center;
@@ -83,7 +83,10 @@ const CatalogRepo = ({ catalog }) => {
       <Image
         src={logoURL}
         alt={title}
-        fallbackStr={acronymize(title)}
+        fallback={{
+          label: acronymize(title),
+          backgroundColor: colorHash.calculateColor(name),
+        }}
         title={title}
       />
       <Description>
