@@ -85,7 +85,7 @@ const CatalogRepo = ({ catalog }) => {
         alt={title}
         fallback={{
           label: acronymize(title),
-          backgroundColor: colorHash.calculateColor(appCatalogListPath),
+          backgroundColor: colorHash.calculateColor(name),
         }}
         title={title}
       />
