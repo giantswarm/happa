@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Overview = (props) => (
-  <div className='centered col-10'>
+  <>
     <h1>Get started with your Kubernetes cluster</h1>
     <ol className='step_selector'>
       {props.steps.map(({ url, title, description }, i) => (
@@ -26,7 +26,7 @@ const Overview = (props) => (
         </button>
       </Link>
     </div>
-  </div>
+  </>
 );
 
 Overview.propTypes = {

@@ -1,9 +1,5 @@
 import React from 'react';
 
-const UsersPlaceholder = () => (
-  <div>
-    <p>No users in the system yet.</p>
-  </div>
-);
+const UsersPlaceholder = () => <p>No users in the system yet.</p>;
 
 export default UsersPlaceholder;

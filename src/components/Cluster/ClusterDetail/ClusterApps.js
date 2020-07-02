@@ -142,6 +142,19 @@ const Disclaimer = styled.p`
   line-height: 1.2;
 `;
 
+const PreinstalledApps = styled.div`
+  display: flex;
+
+  & > div {
+    flex: 1;
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+`;
+
 class ClusterApps extends React.Component {
   static getDerivedStateFromProps(newProps, prevState) {
     if (prevState.appDetailsModal.visible) {
@@ -325,12 +338,10 @@ class ClusterApps extends React.Component {
             error={appsLoadError}
             onShowDetail={this.showAppDetail}
           >
-            <div>
-              <BrowseButton onClick={this.openAppCatalog}>
-                <i className='fa fa-add-circle' />
-                Install App
-              </BrowseButton>
-            </div>
+            <BrowseButton onClick={this.openAppCatalog}>
+              <i className='fa fa-add-circle' />
+              Install App
+            </BrowseButton>
           </UserInstalledApps>
         )}
 
@@ -340,72 +351,72 @@ class ClusterApps extends React.Component {
             These apps and services are preinstalled on your cluster and managed
             by Giant Swarm.
           </Disclaimer>
-          <div className='row'>
-            {this.props.release ? (
-              <>
-                <div className='col-4' key='essentials'>
-                  <SmallHeading>essentials</SmallHeading>
-                  {preinstalledApps.essentials.map((app) => (
-                    <ClusterDetailPreinstalledApp
-                      logoUrl={app.logoUrl}
-                      name={app.name}
-                      version={app.version}
-                      key={app.name}
-                    />
-                  ))}
-                </div>
 
-                <div className='col-4' key='management'>
-                  <SmallHeading>management</SmallHeading>
-                  {preinstalledApps.management.map((app) => (
-                    <ClusterDetailPreinstalledApp
-                      logoUrl={app.logoUrl}
-                      name={app.name}
-                      version={app.version}
-                      key={app.name}
-                    />
-                  ))}
-                </div>
-
-                <div className='col-4' key='ingress'>
-                  <SmallHeading>ingress</SmallHeading>
-                  {this.props.hasOptionalIngress && (
-                    <OptionalIngressNotice>
-                      <Disclaimer>
-                        The ingress controller is optional on this cluster.
-                        <br />
-                        You can install one using our app catalog.
-                        <br />
-                        <br />
-                        Read more in our{' '}
-                        <a
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'
-                        >
-                          installing an ingress controller guide.
-                        </a>
-                      </Disclaimer>
-                    </OptionalIngressNotice>
-                  )}
-                  {preinstalledApps.ingress.map((app) => (
-                    <ClusterDetailPreinstalledApp
-                      logoUrl={app.logoUrl}
-                      name={app.name}
-                      version={app.version}
-                      key={app.name}
-                    />
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className='flash-messages--flash-message flash-messages--danger'>
-                Unable to load the list of preinstalled apps. Please try again
-                later or contact support: support@giantswarm.io
+          {this.props.release ? (
+            <PreinstalledApps>
+              <div key='essentials'>
+                <SmallHeading>essentials</SmallHeading>
+                {preinstalledApps.essentials.map((app) => (
+                  <ClusterDetailPreinstalledApp
+                    logoUrl={app.logoUrl}
+                    name={app.name}
+                    version={app.version}
+                    key={app.name}
+                  />
+                ))}
               </div>
-            )}
-          </div>
+
+              <div key='management'>
+                <SmallHeading>management</SmallHeading>
+                {preinstalledApps.management.map((app) => (
+                  <ClusterDetailPreinstalledApp
+                    logoUrl={app.logoUrl}
+                    name={app.name}
+                    version={app.version}
+                    key={app.name}
+                  />
+                ))}
+              </div>
+
+              <div key='ingress'>
+                <SmallHeading>ingress</SmallHeading>
+                {this.props.hasOptionalIngress && (
+                  <OptionalIngressNotice>
+                    <Disclaimer>
+                      The ingress controller is optional on this cluster.
+                      <br />
+                      You can install one using our app catalog.
+                      <br />
+                      <br />
+                      Read more in our{' '}
+                      <a
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'
+                      >
+                        installing an ingress controller guide.
+                      </a>
+                    </Disclaimer>
+                  </OptionalIngressNotice>
+                )}
+                {preinstalledApps.ingress.map((app) => (
+                  <ClusterDetailPreinstalledApp
+                    logoUrl={app.logoUrl}
+                    name={app.name}
+                    version={app.version}
+                    key={app.name}
+                  />
+                ))}
+              </div>
+            </PreinstalledApps>
+          ) : (
+            <div className='flash-messages--flash-message flash-messages--danger'>
+              Unable to load the list of preinstalled apps. Please try again
+              later or contact support: support@giantswarm.io
+            </div>
+          )}
         </div>
+
         {this.state.appDetailsModal.appName && (
           <AppDetailsModal
             // Instead of just assigning the selected app to the state of this component,

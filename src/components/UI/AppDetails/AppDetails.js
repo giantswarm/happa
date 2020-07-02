@@ -108,13 +108,13 @@ const About = styled.div`
   }
 
   div:nth-of-type(1) {
-    flex: 1;
+    flex: 3;
+    margin-right: 40px;
   }
 
-  div:nth-of-type(2) {
-    flex: 0 0 320px;
-    width: 320px;
-    margin-left: 40px;
+  dl {
+    flex: 1 1;
+    min-width: 320px;
 
     ${mq(CSSBreakpoints.Large)} {
       flex: 1;
@@ -125,7 +125,7 @@ const About = styled.div`
 `;
 
 const Readme = styled.div`
-  max-width: 800px;
+  width: 800px;
 
   .markdown pre {
     background-color: ${(props) => props.theme.colors.darkBlueDarker6};
@@ -197,7 +197,7 @@ const AppDetails = (props) => {
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 
   return (
-    <div>
+    <>
       <Link to={to}>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to &quot;{catalog.spec.title}&quot;
@@ -247,15 +247,14 @@ const AppDetails = (props) => {
                 </ReactMarkdown>
               </Readme>
             )}
-            <div>
-              <AppDetailsBody description={description}>
-                {home && home !== '' && (
-                  <AppDetailsItem data={home} label='Home' />
-                )}
-                {sources && <AppDetailsItem data={sources} label='Sources' />}
-                {urls && <AppDetailsItem data={urls} label='URLS' />}
-              </AppDetailsBody>
-            </div>
+
+            <AppDetailsBody description={description}>
+              {home && home !== '' && (
+                <AppDetailsItem data={home} label='Home' />
+              )}
+              {sources && <AppDetailsItem data={sources} label='Sources' />}
+              {urls && <AppDetailsItem data={urls} label='URLS' />}
+            </AppDetailsBody>
           </About>
         </Tab>
 
@@ -263,7 +262,7 @@ const AppDetails = (props) => {
           <ChartVersionsTable appVersions={appVersions} />
         </Tab>
       </Tabs>
-    </div>
+    </>
   );
 };
 

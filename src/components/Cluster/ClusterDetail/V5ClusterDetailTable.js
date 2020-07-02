@@ -173,9 +173,6 @@ export const AddNodePoolFlexColumnDiv = styled(FlexColumn)`
         color: ${(props) => props.theme.colors.white1};
         font-weight: 400;
       }
-      & > div:nth-of-type(2) {
-        display: none;
-      }
     }
   }
 `;

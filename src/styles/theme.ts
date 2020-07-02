@@ -68,7 +68,7 @@ const theme: ITheme = {
   breakpoints: {
     [CSSBreakpoints.Small]: 540,
     [CSSBreakpoints.Medium]: 825,
-    [CSSBreakpoints.Large]: 1200,
+    [CSSBreakpoints.Large]: 1024,
   },
   fontFamilies: {
     console: 'Inconsolata, monospace',

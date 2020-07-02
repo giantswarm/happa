@@ -70,9 +70,9 @@ const CatalogTypeLabel = (props) => {
         overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
         placement='top'
       >
-        <div>
+        <>
           <span>{catalogType}</span> <i className={`fa fa-${icon}`} />
-        </div>
+        </>
       </OverlayTrigger>
     </Wrapper>
   );

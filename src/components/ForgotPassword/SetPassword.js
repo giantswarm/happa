@@ -298,13 +298,13 @@ class SetPassword extends React.Component {
     }
 
     return (
-      <div>
+      <>
         <div className='forgot-password--token-validating'>
           Something went wrong.
         </div>
         <br />
         <Link to={AppRoutes.ForgotPassword}>Request a new token</Link>
-      </div>
+      </>
     );
   };
 
@@ -352,16 +352,16 @@ class SetPassword extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <div className='login_form--mask' />
 
         <SlideTransition in={true} appear={true} direction='down'>
-          <div className='login_form--container col-4'>
+          <div className='login_form--container'>
             <h1>Set your new password</h1>
             {this.state.email ? this.setPasswordForm() : this.setEmailForm()}
           </div>
         </SlideTransition>
-      </div>
+      </>
     );
   }
 }

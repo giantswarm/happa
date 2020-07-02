@@ -9,13 +9,7 @@ import { PropertiesOf } from 'shared/types';
 
 import { Text } from './Components';
 
-const IngressWrapper = styled.div`
-  max-width: 1200px;
-
-  & > .col-12 > .row + .row {
-    margin-top: ${({ theme }) => theme.spacingPx * 4}px;
-  }
-`;
+const IngressWrapper = styled.div``;
 
 interface IIngressProps extends React.ComponentPropsWithoutRef<'div'> {
   cluster: Record<string, never>;
@@ -37,18 +31,12 @@ const Ingress: React.FC<IIngressProps> = ({
   const hasIngress = typeof ingressApp !== 'undefined';
 
   return (
-    <IngressWrapper className='row' {...rest}>
-      <div className='col-12'>
-        <div className='row'>
-          <div className='col-12'>
-            <Text>
-              {hasIngress
-                ? 'These details help you to set up Ingress for exposing services in this cluster.'
-                : 'In order to expose services via Ingress, you must have external-dns and an Ingress controller installed. Giant Swarm provides the NGINX Ingress Controller as a managed app.'}
-            </Text>
-          </div>
-        </div>
-      </div>
+    <IngressWrapper {...rest}>
+      <Text>
+        {hasIngress
+          ? 'These details help you to set up Ingress for exposing services in this cluster.'
+          : 'In order to expose services via Ingress, you must have external-dns and an Ingress controller installed. Giant Swarm provides the NGINX Ingress Controller as a managed app.'}
+      </Text>
 
       {hasIngress ? (
         <Instructions
@@ -58,11 +46,7 @@ const Ingress: React.FC<IIngressProps> = ({
           kvmTCPHTTPSPort={kvmTCPHTTPSPort}
         />
       ) : (
-        <div className='row'>
-          <div className='col-12'>
-            <InstallIngressButton cluster={cluster} />
-          </div>
-        </div>
+        <InstallIngressButton cluster={cluster} />
       )}
     </IngressWrapper>
   );

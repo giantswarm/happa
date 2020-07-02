@@ -65,10 +65,10 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
   }, [dispatch, user]);
 
   return (
-    <div>
+    <>
       <div className='login_form--mask' />
 
-      <div className='login_form--container login_form--admin col-4'>
+      <div className='login_form--container login_form--admin'>
         <img className='loader' src={spinner} />
         <p>
           Verifying credentials, and redirecting to our authentication provider
@@ -76,7 +76,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
         </p>
         <p>If nothing happens please let us know in #support.</p>
       </div>
-    </div>
+    </>
   );
 };
 

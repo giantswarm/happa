@@ -49,7 +49,7 @@ class KeyPairDetailsModal extends React.Component {
         title='Key Pair Details'
         visible={this.props.visible}
       >
-        <div>
+        <>
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label'>ID</div>
             <div className='labelvaluepair--value code'>
@@ -115,7 +115,7 @@ class KeyPairDetailsModal extends React.Component {
               )}
             </div>
           </div>
-        </div>
+        </>
       </GenericModal>
     );
   }
