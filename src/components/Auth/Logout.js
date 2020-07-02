@@ -31,7 +31,7 @@ class Logout extends React.Component {
   // eslint-disable-next-line class-methods-use-this
   render() {
     return (
-      <div>
+      <>
         <BaseTransition
           in={true}
           appear={true}
@@ -47,7 +47,7 @@ class Logout extends React.Component {
         <div className='logout--container'>
           <img className='loader' src={spinner} />
         </div>
-      </div>
+      </>
     );
   }
 }

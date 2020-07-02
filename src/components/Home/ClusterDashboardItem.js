@@ -219,7 +219,7 @@ function ClusterDashboardItem({
           </Link>
         </TitleWrapper>
 
-        <div>
+        <>
           <RefreshableLabel value={cluster.release_version}>
             <span>
               <i className='fa fa-version-tag' title='Release version' />{' '}
@@ -228,7 +228,7 @@ function ClusterDashboardItem({
           </RefreshableLabel>
           <Dot style={{ paddingLeft: 0 }} />
           Created {relativeDate(cluster.create_date)}
-        </div>
+        </>
 
         {/* Cluster resources */}
         <ErrorFallback error={nodePoolsLoadError}>

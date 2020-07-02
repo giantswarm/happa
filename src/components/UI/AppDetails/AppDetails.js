@@ -111,7 +111,7 @@ const About = styled.div`
     flex: 1;
   }
 
-  div:nth-of-type(2) {
+  dl {
     flex: 0 0 320px;
     width: 320px;
     margin-left: 40px;
@@ -197,7 +197,7 @@ const AppDetails = (props) => {
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 
   return (
-    <div>
+    <>
       <Link to={to}>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to &quot;{catalog.spec.title}&quot;
@@ -247,15 +247,14 @@ const AppDetails = (props) => {
                 </ReactMarkdown>
               </Readme>
             )}
-            <div>
-              <AppDetailsBody description={description}>
-                {home && home !== '' && (
-                  <AppDetailsItem data={home} label='Home' />
-                )}
-                {sources && <AppDetailsItem data={sources} label='Sources' />}
-                {urls && <AppDetailsItem data={urls} label='URLS' />}
-              </AppDetailsBody>
-            </div>
+
+            <AppDetailsBody description={description}>
+              {home && home !== '' && (
+                <AppDetailsItem data={home} label='Home' />
+              )}
+              {sources && <AppDetailsItem data={sources} label='Sources' />}
+              {urls && <AppDetailsItem data={urls} label='URLS' />}
+            </AppDetailsBody>
           </About>
         </Tab>
 
@@ -263,7 +262,7 @@ const AppDetails = (props) => {
           <ChartVersionsTable appVersions={appVersions} />
         </Tab>
       </Tabs>
-    </div>
+    </>
   );
 };
 

@@ -187,7 +187,7 @@ class KeyPairs extends React.Component {
             );
           } else if (!this.props.cluster.keyPairs) {
             return (
-              <div>
+              <>
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   Something went wrong while trying to load the list of key
                   pairs.
@@ -195,30 +195,26 @@ class KeyPairs extends React.Component {
                 <Button onClick={this.loadKeyPairs}>
                   Try loading key pairs again.
                 </Button>
-              </div>
+              </>
             );
           } else if (
             this.props.cluster.keyPairs &&
             this.props.cluster.keyPairs.length === 0
           ) {
             return (
-              <div>
-                <p>No key pairs yet. Why don&apos;t you create your first?</p>
-              </div>
+              <p>No key pairs yet. Why don&apos;t you create your first?</p>
             );
           }
 
           return (
-            <div>
-              <BootstrapTable
-                bordered={false}
-                columns={this.getKeypairsTableColumnsConfig()}
-                data={this.props.cluster.keyPairs}
-                defaultSortDirection='asc'
-                defaultSorted={[{ dataField: 'create_date', order: 'desc' }]}
-                keyField='id'
-              />
-            </div>
+            <BootstrapTable
+              bordered={false}
+              columns={this.getKeypairsTableColumnsConfig()}
+              data={this.props.cluster.keyPairs}
+              defaultSortDirection='asc'
+              defaultSorted={[{ dataField: 'create_date', order: 'desc' }]}
+              keyField='id'
+            />
           );
         })()}
         <KeypairCreateModal

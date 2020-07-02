@@ -17,7 +17,7 @@ class OauthCallback extends React.Component {
     const parsedHash = QueryString.parse(this.props.location.hash);
 
     return (
-      <div>
+      <>
         <div className='login_form--mask' />
 
         <SlideTransition in={true} appear={true} direction='down'>
@@ -47,7 +47,7 @@ class OauthCallback extends React.Component {
             <pre>{parsedHash.state}</pre>
           </div>
         </SlideTransition>
-      </div>
+      </>
     );
   }
 }

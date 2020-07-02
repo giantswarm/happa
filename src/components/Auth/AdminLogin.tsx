@@ -65,7 +65,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
   }, [dispatch, user]);
 
   return (
-    <div>
+    <>
       <div className='login_form--mask' />
 
       <div className='login_form--container login_form--admin'>
@@ -76,7 +76,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
         </p>
         <p>If nothing happens please let us know in #support.</p>
       </div>
-    </div>
+    </>
   );
 };
 

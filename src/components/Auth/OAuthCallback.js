@@ -41,23 +41,23 @@ const OAuthCallback = ({ location, dispatch, actions }) => {
   }, [location, dispatch, actions]);
 
   return (
-    <div>
+    <>
       <div className='login_form--mask' />
 
       <SlideTransition in={true} appear={true} direction='down'>
         <div className='login_form--container login_form--admin'>
           {error ? (
-            <div>
+            <>
               <h1>Something went wrong</h1>
               <p>{error.errorDescription}</p>
               <Link to={AppRoutes.AdminLogin}>Try again</Link>
-            </div>
+            </>
           ) : (
             <img className='loader' src={spinner} />
           )}
         </div>
       </SlideTransition>
-    </div>
+    </>
   );
 };
 

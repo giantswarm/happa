@@ -71,7 +71,7 @@ class ConfigKubeCtl extends React.Component {
         );
       case 'Mac':
         return (
-          <div>
+          <>
             <p>
               Homebrew provides the most convenient way to install gsctl and
               keep it up to date. To install, use this command:
@@ -99,23 +99,21 @@ class ConfigKubeCtl extends React.Component {
               , unpack the binary and move it to a location covered by your{' '}
               <code>PATH</code> environment variable.
             </p>
-          </div>
+          </>
         );
       case 'Linux':
         return (
-          <div>
-            <p>
-              Download the latest release{' '}
-              <a
-                href='https://github.com/giantswarm/gsctl/releases'
-                rel='noopener noreferrer'
-              >
-                from GitHub
-              </a>
-              , unpack the binary and move it to a location covered by your{' '}
-              <code>PATH</code> environment variable.
-            </p>
-          </div>
+          <p>
+            Download the latest release{' '}
+            <a
+              href='https://github.com/giantswarm/gsctl/releases'
+              rel='noopener noreferrer'
+            >
+              from GitHub
+            </a>
+            , unpack the binary and move it to a location covered by your{' '}
+            <code>PATH</code> environment variable.
+          </p>
         );
       default:
         return <p>Shouldn&apos;t be here</p>;

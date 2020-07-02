@@ -66,44 +66,42 @@ const FlexColumnAZDiv = styled(FlexColumn)`
 `;
 
 const RadioWrapperDiv = styled.div`
-  div {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  label {
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+  input {
+    max-width: 28px;
+    cursor: pointer;
+    margin-right: 14px;
+  }
+  input[type='radio'] {
+    opacity: 0;
+  }
+  .fake-radio {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    top: 4px;
+    border: ${({ theme }) => theme.border};
+    background: ${({ theme }) => theme.colors.white1};
     display: flex;
-    justify-content: flex-start;
-    position: relative;
-    label {
-      font-size: 14px;
-      font-weight: 300;
-      margin-bottom: 0;
-      cursor: pointer;
-    }
-    input {
-      max-width: 28px;
-      cursor: pointer;
-      margin-right: 14px;
-    }
-    input[type='radio'] {
-      opacity: 0;
-    }
-    .fake-radio {
-      position: absolute;
-      width: 16px;
-      height: 16px;
+    justify-content: space-around;
+    align-items: center;
+    &-checked {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      top: 4px;
-      border: ${({ theme }) => theme.border};
-      background: ${({ theme }) => theme.colors.white1};
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      &-checked {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: ${({ theme }) => theme.colors.white1};
-        transition: background-color 0.2s;
-        &.visible {
-          background-color: ${({ theme }) => theme.colors.shade2};
-        }
+      background-color: ${({ theme }) => theme.colors.white1};
+      transition: background-color 0.2s;
+      &.visible {
+        background-color: ${({ theme }) => theme.colors.shade2};
       }
     }
   }
@@ -491,29 +489,28 @@ class AddNodePool extends Component {
           <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
           <RadioWrapperDiv>
             {/* Automatically */}
-            <div>
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    hasAZLabels === false && 'visible'
-                  }`}
-                />
-              </div>
-              <input
-                type='radio'
-                id={`automatically-${this.props.id}`}
-                value={false}
-                checked={hasAZLabels === false}
-                onChange={() => this.toggleAZSelector(false)}
-                tabIndex='0'
+
+            <div className='fake-radio'>
+              <div
+                className={`fake-radio-checked ${
+                  hasAZLabels === false && 'visible'
+                }`}
               />
-              <label
-                htmlFor='automatically'
-                onClick={() => this.toggleAZSelector(false)}
-              >
-                Automatic
-              </label>
             </div>
+            <input
+              type='radio'
+              id={`automatically-${this.props.id}`}
+              value={false}
+              checked={hasAZLabels === false}
+              onChange={() => this.toggleAZSelector(false)}
+              tabIndex='0'
+            />
+            <label
+              htmlFor='automatically'
+              onClick={() => this.toggleAZSelector(false)}
+            >
+              Automatic
+            </label>
           </RadioWrapperDiv>
           <BaseTransition
             in={!hasAZLabels}
@@ -552,29 +549,28 @@ class AddNodePool extends Component {
           <RadioWrapperDiv
             className={`manual-radio-input ${!hasAZLabels ? 'down' : null}`}
           >
-            <div>
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    hasAZLabels === true && 'visible'
-                  }`}
-                />
-              </div>
-              <input
-                type='radio'
-                id={`manually-${this.props.id}`}
-                value={true}
-                checked={hasAZLabels === true}
-                tabIndex='0'
-                onChange={() => this.toggleAZSelector(true)}
+            <div className='fake-radio'>
+              <div
+                className={`fake-radio-checked ${
+                  hasAZLabels === true && 'visible'
+                }`}
               />
-              <label
-                htmlFor='manually'
-                onClick={() => this.toggleAZSelector(true)}
-              >
-                Manual
-              </label>
             </div>
+            <input
+              type='radio'
+              id={`manually-${this.props.id}`}
+              value={true}
+              checked={hasAZLabels === true}
+              tabIndex='0'
+              onChange={() => this.toggleAZSelector(true)}
+            />
+            <label
+              htmlFor='manually'
+              onClick={() => this.toggleAZSelector(true)}
+            >
+              Manual
+            </label>
+
             <BaseTransition
               in={hasAZLabels}
               appear={true}

@@ -223,11 +223,9 @@ class Users extends React.Component {
             <Heading>
               <h1>Users</h1>
 
-              <div>
-                <Button onClick={this.inviteUser}>
-                  <i className='fa fa-add-circle' /> INVITE USER
-                </Button>
-              </div>
+              <Button onClick={this.inviteUser}>
+                <i className='fa fa-add-circle' /> INVITE USER
+              </Button>
             </Heading>
             <p>
               This is the list of user accounts on{' '}
