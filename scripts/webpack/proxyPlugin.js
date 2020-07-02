@@ -114,7 +114,7 @@ class ProxyPlugin {
         .pipe(res);
     });
 
-    proxy.listen(port);
+    proxy.listen(port, 'localhost');
   }
 
   /**
