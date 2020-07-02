@@ -108,13 +108,13 @@ const About = styled.div`
   }
 
   div:nth-of-type(1) {
-    flex: 1;
+    flex: 3;
+    margin-right: 40px;
   }
 
   dl {
-    flex: 0 0 320px;
-    width: 320px;
-    margin-left: 40px;
+    flex: 1 1;
+    min-width: 320px;
 
     ${mq(CSSBreakpoints.Large)} {
       flex: 1;
@@ -125,7 +125,7 @@ const About = styled.div`
 `;
 
 const Readme = styled.div`
-  max-width: 800px;
+  width: 800px;
 
   .markdown pre {
     background-color: ${(props) => props.theme.colors.darkBlueDarker6};
