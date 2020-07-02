@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from 'react';
  */
 function useDelayedChange(value, delay) {
   const [delayedValue, setDelayedValue] = useState(value);
-  const [timeoutRef, setTimeoutRef] = useState(undefined);
 
   const isComponentMounted = useRef(true);
   const lastUpdateFinishTime = useRef(Date.now());
@@ -30,15 +29,11 @@ function useDelayedChange(value, delay) {
 
     lastUpdateFinishTime.current = currentTime + delay;
 
-    clearTimeout(timeoutRef);
-
-    const ref = setTimeout(() => {
+    setTimeout(() => {
       if (isComponentMounted.current) {
         setDelayedValue(value);
       }
     }, secondsToNextUpdate);
-
-    setTimeoutRef(ref);
   }, [value, delay]);
 
   return delayedValue;

@@ -17,7 +17,7 @@ export const BaseTransitionPropTypes = {
 };
 
 const BaseTransition = ({ children, in: inProp, ...props }) => {
-  const delayTimeout = 500;
+  const delayTimeout = props.timeout ?? 500;
   const delayedInProp = useDelayedChange(inProp, delayTimeout);
 
   return (
