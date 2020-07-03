@@ -49,6 +49,8 @@ describe('InstallIngressButton', () => {
   });
 
   it('displays a message if an IC is already installed', async () => {
+    getMockCall(`/v4/clusters/${v4AWSClusterResponse.id}/apps/`, [icApp]);
+
     renderWithStore(InstallIngressButton, {
       cluster: { ...v4AWSClusterResponse, apps: [icApp] },
     });

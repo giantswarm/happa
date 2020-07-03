@@ -46,6 +46,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   ...rest
 }) => {
   const [isInstalling, setIsInstalling] = useState(false);
+  const [isNew, setIsNew] = useState(true);
 
   const isLoadingApps: boolean | null = useSelector((state) =>
     selectLoadingFlagByAction(state, CLUSTER_LOAD_APPS_REQUEST)
@@ -53,8 +54,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const ingressApp:
     | Record<string, never>
     | undefined = selectIngressAppFromCluster(cluster);
-  const isLoading = isLoadingApps || isInstalling;
 
+  const isLoading = isLoadingApps || isInstalling || isNew;
   const clusterID: string = cluster.id;
 
   const dispatch: ThunkDispatch<IState, undefined, AnyAction> = useDispatch();
@@ -63,7 +64,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     const tryToLoadApps = async () => {
       try {
         await dispatch(loadApps(clusterID));
-      } catch {
+        setIsNew(false);
+      } catch (error) {
         // Do nothing, flash message is shown in action.
       }
     };
