@@ -2,6 +2,7 @@ import { screen, within } from '@testing-library/react';
 import { Providers } from 'shared/constants';
 import {
   appResponseWithCustomConfig,
+  getMockCall,
   v5ClusterResponse,
 } from 'testUtils/mockHttpCalls';
 import { getComponentWithTheme, renderWithStore } from 'testUtils/renderUtils';
@@ -99,6 +100,7 @@ describe('Ingress', () => {
   });
 
   it('displays ingress controller installation instructions, in case no ingress controller is installed', async () => {
+    getMockCall(`/v4/clusters/${v5ClusterResponse.id}/apps/`, []);
     const cluster = { ...v5ClusterResponse, apps: [] };
     renderWithStore(Ingress, { cluster });
 
@@ -107,8 +109,9 @@ describe('Ingress', () => {
         /in order to expose services via Ingress, you must have external-dns and an Ingress controller installed/i
       )
     ).toBeInTheDocument();
+
     expect(
-      screen.getByText(
+      await screen.findByText(
         /this will install the nginx ingress controller app on cluster/i
       )
     ).toBeInTheDocument();
