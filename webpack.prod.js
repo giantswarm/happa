@@ -22,7 +22,10 @@ module.exports = merge(common, {
   optimization: {
     // Terser is a substitution for AgressiveMergingPlugin
     minimizer: [
-      new TerserPlugin({ sourceMap: true }),
+      new TerserPlugin({
+        sourceMap: true,
+        extractComments: 'all',
+      }),
       new OptimizeCSSAssetsPlugin({}),
     ],
   },
