@@ -24,7 +24,7 @@ module.exports = merge(common, {
     minimizer: [
       new TerserPlugin({
         sourceMap: true,
-        extractComments: 'all',
+        extractComments: 'some',
       }),
       new OptimizeCSSAssetsPlugin({}),
     ],
