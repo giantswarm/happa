@@ -8,7 +8,7 @@ describe('listCatalogs', () => {
   it('does the api call to get catalogs', async () => {
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
-    const response = await listCatalogs().doPerform({});
+    const response = await listCatalogs().doPerform({}, () => {});
 
     expect(response['giantswarm-incubator'].metadata.name).toEqual(
       'giantswarm-incubator'

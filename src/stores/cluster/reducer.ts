@@ -1,5 +1,6 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
 
 const initialState = {
@@ -54,9 +55,9 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_APPS_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].apps = action.apps;
+    case loadClusterApps().types.success:
+      if (draft.items[action.response.clusterId]) {
+        draft.items[action.response.clusterId].apps = action.response.apps;
       }
 
       return;
@@ -85,7 +86,7 @@ const clusterReducer = produce((draft, action) => {
     case types.CLUSTER_REMOVE_FROM_STORE:
       delete draft.items[action.clusterId];
       if (action.isV5Cluster) {
-        draft.v5Clusters.filter((id) => id !== action.clusterId);
+        draft.v5Clusters.filter((id: string) => id !== action.clusterId);
       }
 
       return;
@@ -116,7 +117,7 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].nodePools = draft.items[
           action.clusterId
-        ].nodePools.filter((np) => np !== action.nodePoolId);
+        ].nodePools.filter((np: string) => np !== action.nodePoolId);
       }
 
       return;
