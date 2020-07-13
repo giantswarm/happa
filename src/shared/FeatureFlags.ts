@@ -1,10 +1,10 @@
-/* global FEATURE_CLUSTER_LABELS_V0:false */
+/* global FEATURE_HA_MASTERS:true */
+
 interface IFeatureFlags {
-  FEATURE_CLUSTER_LABELS_V0: boolean;
+  FEATURE_HA_MASTERS: boolean;
 }
 const FeatureFlags: IFeatureFlags = {
-  // @ts-ignore
-  FEATURE_CLUSTER_LABELS_V0,
+  FEATURE_HA_MASTERS,
 };
 
 export default FeatureFlags;

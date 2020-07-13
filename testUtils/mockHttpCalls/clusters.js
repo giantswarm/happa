@@ -125,6 +125,10 @@ export const v5ClustersResponse = [
     owner: ORGANIZATION,
     path: `/v5/clusters/${V5_CLUSTER.id}/`,
     release_version: V5_CLUSTER.releaseVersion,
+    labels: {
+      ding: 'dong',
+      'giantswarm.io/hidden-label': 'ok',
+    },
   },
 ];
 
@@ -133,6 +137,10 @@ export const v5ClusterResponse = {
   create_date: clusterCreateDateToday,
   id: V5_CLUSTER.id,
   master: { availability_zone: 'eu-central-1a' },
+  master_nodes: {
+    high_availability: false,
+    availability_zones: ['b'],
+  },
   name: V5_CLUSTER.name,
   owner: ORGANIZATION,
   release_version: V5_CLUSTER.releaseVersion,
@@ -152,4 +160,8 @@ export const v5ClusterResponse = {
       version: '10.0.0',
     },
   ],
+  labels: {
+    ding: 'dong',
+    'giantswarm.io/hidden-label': 'ok',
+  },
 };

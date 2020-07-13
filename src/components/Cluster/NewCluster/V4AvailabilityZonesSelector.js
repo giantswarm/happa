@@ -3,6 +3,8 @@ import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesPars
 import PropTypes from 'prop-types';
 import React from 'react';
 import cmp from 'semver-compare';
+import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
+import Section from 'UI/ClusterCreation/Section';
 import NumberPicker from 'UI/NumberPicker';
 
 const AZWrapper = styled.div`
@@ -12,8 +14,12 @@ const AZWrapper = styled.div`
 
   p {
     margin-right: 18px;
-    transform: translateY(-4px);
   }
+`;
+
+const PickerLabel = styled.p`
+  font-size: 14px;
+  margin-right: 18px;
 `;
 
 const V4AvailabilityZonesSelector = ({
@@ -30,11 +36,11 @@ const V4AvailabilityZonesSelector = ({
   }
 
   return (
-    <label className='availability-zones' htmlFor='availability-zones'>
-      <span className='label-span'>Availability Zones</span>
+    <Section className='availability-zones' htmlFor='availability-zones'>
+      <ClusterCreationLabelSpan>Availability Zones</ClusterCreationLabelSpan>
       {isAvailable ? (
         <AZWrapper>
-          <p>Number of availability zones to use:</p>
+          <PickerLabel>Number of availability zones to use:</PickerLabel>
           <div>
             <AvailabilityZonesParser
               max={maxValue}
@@ -46,16 +52,14 @@ const V4AvailabilityZonesSelector = ({
         </AZWrapper>
       ) : (
         <>
-          <p>
+          <PickerLabel>
             Selection of availability zones is only possible for release version{' '}
             {requiredReleaseVersion} or greater.
-          </p>
-          <div className='col-3'>
-            <NumberPicker readOnly={true} value={1} />
-          </div>
+          </PickerLabel>
+          <NumberPicker readOnly={true} value={1} />
         </>
       )}
-    </label>
+    </Section>
   );
 };
 

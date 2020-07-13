@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { invitationCreate, invitationsLoad } from 'actions/invitationActions';
 import {
   userDelete,
@@ -18,6 +19,14 @@ import InviteUserModal from './InviteUserModal';
 import UnexpireUserModal from './UnexpireUserModal';
 import UsersTable from './UsersTable';
 import { formatStatus } from './UsersUtils';
+
+const Heading = styled.div`
+  display: flex;
+
+  div {
+    margin-left: auto;
+  }
+`;
 
 const UserModalTypes = {
   Unexpire: 'unexpire',
@@ -210,19 +219,14 @@ class Users extends React.Component {
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: UsersRoutes.Home }}>
         <DocumentTitle title='Users'>
-          <div>
-            <div className='row'>
-              <div className='col-7'>
-                <h1>Users</h1>
-              </div>
-              <div className='col-5'>
-                <div className='pull-right btn-group'>
-                  <Button onClick={this.inviteUser}>
-                    <i className='fa fa-add-circle' /> INVITE USER
-                  </Button>
-                </div>
-              </div>
-            </div>
+          <>
+            <Heading>
+              <h1>Users</h1>
+
+              <Button onClick={this.inviteUser}>
+                <i className='fa fa-add-circle' /> INVITE USER
+              </Button>
+            </Heading>
             <p>
               This is the list of user accounts on{' '}
               <code>{installationNameLabel}</code>
@@ -242,7 +246,7 @@ class Users extends React.Component {
               invitations={invitations}
             />
             {this.renderModalComponent()}
-          </div>
+          </>
         </DocumentTitle>
       </Breadcrumb>
     );

@@ -3,18 +3,17 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants, FallbackMessages } from 'shared/constants';
-import { Code, FallbackSpan } from 'styles';
-import theme from 'styles/theme';
+import { FallbackSpan } from 'styles';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
+import InstanceType from 'UI/InstanceType';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 
 function WorkerNodesAWS({
   az,
-  createDate,
+  isClusterCreating,
   instanceName,
   instanceType,
   scaling,
@@ -42,9 +41,7 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv>
         <div>Instance type</div>
-        <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
-          {instanceName && instanceName}
-        </Code>
+        <InstanceType>{instanceName ?? 'n/a'}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>
@@ -71,8 +68,7 @@ function WorkerNodesAWS({
           </OverlayTrigger>
         </div>
         <RefreshableLabel value={workerNodesDesired}>
-          {workerNodesDesired === 0 &&
-          isClusterYoungerThanOneHour(createDate) ? (
+          {workerNodesDesired === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             workerNodesDesired
@@ -82,8 +78,7 @@ function WorkerNodesAWS({
       <LineDiv data-testid='running-nodes'>
         <div>Current number</div>
         <RefreshableLabel value={workerNodesRunning}>
-          {workerNodesRunning === 0 &&
-          isClusterYoungerThanOneHour(createDate) ? (
+          {workerNodesRunning === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             workerNodesRunning
@@ -96,9 +91,9 @@ function WorkerNodesAWS({
 
 WorkerNodesAWS.propTypes = {
   az: PropTypes.array,
+  isClusterCreating: PropTypes.bool,
   instanceName: PropTypes.string,
   instanceType: PropTypes.object,
-  createDate: PropTypes.string,
   scaling: PropTypes.object,
   showScalingModal: PropTypes.func,
   workerNodesDesired: PropTypes.number,

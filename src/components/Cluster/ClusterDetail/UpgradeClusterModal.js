@@ -9,9 +9,20 @@ import { bindActionCreators } from 'redux';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
-import _ from 'underscore';
+import { groupBy, sortBy } from 'underscore';
 
 class UpgradeClusterModal extends React.Component {
+  static getMasterNodesInfo(cluster) {
+    if (
+      cluster.capabilities.supportsHAMasters &&
+      cluster.master_nodes?.high_availability
+    ) {
+      return 'The master nodes will be terminated one by one. The Kubernetes API may be briefly unavailable during this process due to the etcd leader election process.';
+    }
+
+    return 'The master node will be terminated and replaced by a new one. The Kubernetes API will be unavailable during this time.';
+  }
+
   state = {
     loading: false,
     modalVisible: false,
@@ -57,7 +68,7 @@ class UpgradeClusterModal extends React.Component {
 
     const changedComponents = diff.diff(components, targetComponents);
 
-    const changes = _.groupBy(this.props.targetRelease.changelog, (item) => {
+    const changes = groupBy(this.props.targetRelease.changelog, (item) => {
       return item.component;
     });
     const changedComponentNames = Object.keys(changes).sort();
@@ -75,7 +86,7 @@ class UpgradeClusterModal extends React.Component {
           <b>Component Changes</b>
         </p>
         <div className='release-selector-modal--components'>
-          {_.sortBy(changedComponents, 'name').map((diffEdit) => {
+          {sortBy(changedComponents, 'name').map((diffEdit) => {
             if (diffEdit.kind === 'E') {
               const component = components[diffEdit.path[0]];
 
@@ -155,8 +166,7 @@ class UpgradeClusterModal extends React.Component {
               please make sure to have enough workers before upgrading.
             </li>
             <li>
-              The master node will be terminated and replaced by a new one. The
-              Kubernetes API will be unavailable during this time.
+              {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
             </li>
           </ul>
         </BootstrapModal.Body>

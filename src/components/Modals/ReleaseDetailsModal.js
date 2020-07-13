@@ -2,13 +2,11 @@ import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import cmp from 'semver-compare';
-import { Constants } from 'shared/constants';
 import theme from 'styles/theme';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
-import _ from 'underscore';
+import { groupBy, sortBy } from 'underscore';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
@@ -41,7 +39,7 @@ class ReleaseDetailsModal extends React.Component {
           <BootstrapModal.Body>
             {this.props.releases.map((release) => {
               // group changes by component
-              const changes = _.groupBy(release.changelog, (item) => {
+              const changes = groupBy(release.changelog, (item) => {
                 return item.component;
               });
 
@@ -80,24 +78,13 @@ class ReleaseDetailsModal extends React.Component {
                   </p>
 
                   <div className='release-selector-modal--components'>
-                    {_.sortBy(release.components, 'name').map((component) => {
-                      const componentName =
-                        component.name === 'containerlinux' &&
-                        cmp(
-                          component.version,
-                          Constants.FLATCAR_CONTAINERLINUX_SINCE
-                        ) >= 0
-                          ? 'flatcar'
-                          : component.name;
-
-                      return (
-                        <ReleaseComponentLabel
-                          key={component.name}
-                          name={componentName}
-                          version={component.version}
-                        />
-                      );
-                    })}
+                    {sortBy(release.components, 'name').map((component) => (
+                      <ReleaseComponentLabel
+                        key={component.name}
+                        name={component.name}
+                        version={component.version}
+                      />
+                    ))}
                   </div>
 
                   <p>Changes</p>

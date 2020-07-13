@@ -138,33 +138,18 @@ export const selectResourcesV5 = () =>
     }
   );
 
-export const selectAndProduceAZGridTemplateAreas = () =>
-  createDeepEqualSelector(selectClusterNodePools, (nodePools) => {
-    const allZones = nodePools
-      ? nodePools
-          .reduce((accumulator, current) => {
-            return [...accumulator, ...current.availability_zones];
-          }, [])
-          .map((zone) => zone.slice(-1))
-      : [];
-
-    // This array stores available zones that are in at least one node pool.
-    // We only want unique values because this is used fot building the grid.
-    const availableZonesGridTemplateAreas = [...new Set(allZones)]
-      .sort()
-      .join(' ');
-
-    return `"${availableZonesGridTemplateAreas}"`;
-  });
-
 export const selectTargetRelease = (state, cluster) => {
   if (!cluster || Object.keys(state.entities.releases.items).length === 0)
     return null;
 
   const releases = state.entities.releases.items;
-  const availableVersions = Object.keys(releases)
-    .filter((release) => releases[release].active)
-    .sort(cmp);
+  let availableVersions = Object.keys(releases).sort(cmp);
+
+  if (!state.main.loggedInUser.isAdmin) {
+    availableVersions = availableVersions.filter(
+      (release) => releases[release].active
+    );
+  }
 
   // Guard against the release version of this cluster not being in the /v4/releases/
   // response.

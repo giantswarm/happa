@@ -1,6 +1,6 @@
-import moment from 'moment';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
@@ -141,31 +141,32 @@ export function getCpusTotalNodePools(nodePools = []) {
   return TotalCPUs;
 }
 
-// computeCapabilities takes a release version and provider and returns a
-// capabilities object with the features that this cluster supports.
+/**
+ * This function takes a release version and provider and returns a
+ * capabilities object with the features that this cluster supports.
+ * @param releaseVersion {string} - The cluster's release version.
+ * @param provider {"aws"|"azure"|"kvm"} - Possible service providers.
+ * @returns {{supportsHAMasters: boolean, hasOptionalIngress: boolean}}
+ */
 export function computeCapabilities(releaseVersion, provider) {
   let hasOptionalIngress = false;
+  let supportsHAMasters = false;
 
   switch (provider) {
     case Providers.AWS:
       hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
-      break;
+      supportsHAMasters =
+        FeatureFlags.FEATURE_HA_MASTERS &&
+        cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
 
-    case Providers.AZURE:
-      hasOptionalIngress = cmp(releaseVersion, '11.4.0') >= 0;
       break;
   }
 
   return {
     hasOptionalIngress,
+    supportsHAMasters,
   };
 }
-
-export const isClusterYoungerThanOneHour = (createDate) => {
-  const creationPlusOneHour = moment(createDate).add(1, 'hour');
-
-  return moment().utc().isBefore(creationPlusOneHour);
-};
 
 export const filterLabels = (labels) => {
   if (!labels) {
@@ -184,3 +185,50 @@ export const filterLabels = (labels) => {
 
   return filteredLabels;
 };
+
+/**
+ * Check whether the given condition is a cluster's latest condition.
+ * @param cluster {Object} - The cluster object.
+ * @param conditionToCheck {string} - The name of the condition to check for.
+ * @returns {boolean}
+ */
+export function hasClusterLatestCondition(cluster, conditionToCheck) {
+  if (!cluster.conditions || cluster.conditions.length === 0) return false;
+
+  return cluster.conditions[0].condition === conditionToCheck;
+}
+
+/**
+ * Check whether a cluster is in creation state.
+ * @param cluster {Object} - The cluster object.
+ * @returns {boolean}
+ */
+export function isClusterCreating(cluster) {
+  if (!cluster.conditions || cluster.conditions.length === 0) return true;
+
+  const conditionToCheck = 'Creating';
+
+  return hasClusterLatestCondition(cluster, conditionToCheck);
+}
+
+/**
+ * Check whether a cluster is in updating state.
+ * @param cluster {Object} - The cluster object.
+ * @returns {boolean}
+ */
+export function isClusterUpdating(cluster) {
+  const conditionToCheck = 'Updating';
+
+  return hasClusterLatestCondition(cluster, conditionToCheck);
+}
+
+/**
+ * Check whether a cluster is in deleting state.
+ * @param cluster {Object} - The cluster object.
+ * @returns {boolean}
+ */
+export function isClusterDeleting(cluster) {
+  const conditionToCheck = 'Deleting';
+
+  return hasClusterLatestCondition(cluster, conditionToCheck);
+}

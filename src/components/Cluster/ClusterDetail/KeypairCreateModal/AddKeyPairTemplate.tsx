@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared';
 import { PropertiesOf } from 'shared/types';
+import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
 
 interface IAddKeyPairTemplateProps {
   email: string;
@@ -59,8 +60,8 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
         assigns the Organizations as groups. This allows you to set up role
         based access rights.
       </p>
-      <div className='row'>
-        <div className='col-6'>
+      <TwoInputArea>
+        <InnerTwoInputArea>
           <label htmlFor='cnPrefix'>Common Name Prefix:</label>
           <input
             id='cnPrefix'
@@ -78,8 +79,8 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
               </span>
             )}
           </div>
-        </div>
-        <div className='col-6'>
+        </InnerTwoInputArea>
+        <InnerTwoInputArea>
           <label htmlFor='organizations'>Organizations:</label>
           <input
             id='organizations'
@@ -90,19 +91,17 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
           <div className='text-field-hint'>
             Comma seperated values. e.g.: admin,blue-team,staging
           </div>
-        </div>
-      </div>
+        </InnerTwoInputArea>
+      </TwoInputArea>
       <br />
-      <div className='row'>
-        <div className='col-12'>
-          <label htmlFor='description'>Description:</label>
-          <input
-            id='description'
-            onChange={handleDescriptionChange}
-            type='text'
-            value={description}
-          />
-        </div>
+      <div>
+        <label htmlFor='description'>Description:</label>
+        <input
+          id='description'
+          onChange={handleDescriptionChange}
+          type='text'
+          value={description}
+        />
       </div>
       <br />
       <label>Expires:</label>

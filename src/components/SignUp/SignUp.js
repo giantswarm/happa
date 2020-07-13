@@ -374,7 +374,7 @@ export class SignUp extends React.Component {
 
   render() {
     return (
-      <div className='signup--container col-6'>
+      <div className='signup--container'>
         <h1
           ref={(t) => {
             this.title = t;

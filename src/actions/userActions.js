@@ -12,7 +12,6 @@ import { getInstallationInfo } from 'model/services/giantSwarm';
 import { selectAuthToken } from 'selectors/authSelectors';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
-import _ from 'underscore';
 
 import * as types from './actionTypes';
 
@@ -164,9 +163,6 @@ export function giantswarmLogin(email, password) {
         return userData;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error trying to log in:', error);
-
         dispatch(loginError(error));
         dispatch(push(AppRoutes.Login));
 
@@ -258,9 +254,6 @@ export function getInfo() {
         info: infoRes.data,
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error loading installation info:', error);
-
       dispatch({
         type: types.INFO_LOAD_ERROR,
         error: error.data,
@@ -294,20 +287,17 @@ export function usersLoad() {
       .then((usersArray) => {
         const users = {};
 
-        _.each(usersArray, (user) => {
+        for (const user of usersArray) {
           user.emaildomain = user.email.split('@')[1];
           users[user.email] = user;
-        });
+        }
 
         dispatch({
           type: types.USERS_LOAD_SUCCESS,
           users,
         });
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-
+      .catch(() => {
         new FlashMessage(
           'Something went wrong while trying to load all users',
           messageType.ERROR,
@@ -341,10 +331,7 @@ export function userRemoveExpiration(email) {
           user,
         });
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error removing user expiration:', error);
-
+      .catch(() => {
         new FlashMessage(
           'Something went wrong while trying to remove expiration from this user',
           messageType.ERROR,
@@ -375,10 +362,7 @@ export function userDelete(email) {
           email,
         });
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error when deleting user:', error);
-
+      .catch(() => {
         new FlashMessage(
           'Something went wrong while trying to delete this user',
           messageType.ERROR,

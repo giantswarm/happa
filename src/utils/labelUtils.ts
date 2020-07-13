@@ -8,14 +8,6 @@ import { Constants } from 'shared';
 // check functions IsValidLabelValue for label values
 //               & IsQualifiedName for label keys
 
-export interface IValidation {
-  isValid: boolean;
-  validationError: string;
-}
-
-export interface IValidationFunction {
-  (valueOrKey: string): IValidation;
-}
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IisDNS1123Subdomain {
   (value: string): boolean;
@@ -56,7 +48,7 @@ export const validateLabelValue: IValidationFunction = (value) => {
   if (labelValueRegexp.test(strValue) === false) {
     return {
       isValid: false,
-      validationError: `a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character`,
+      validationError: `Value must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character.`,
     };
   }
 
@@ -110,14 +102,27 @@ const isQualifiedName: IValidationFunction = (key) => {
       };
   }
 
+  if (name.length === 0) {
+    return {
+      isValid: false,
+      validationError: 'Key name part cannot be empty.',
+    };
+  }
+
+  if (name.length > qualifiedNameMaxLength) {
+    return {
+      isValid: false,
+      validationError: `Key name part must be no longer than ${qualifiedNameMaxLength} characters.`,
+    };
+  }
+
   if (
-    name.length === 0 ||
     name.length > qualifiedNameMaxLength ||
     qualifiedNameRegexp.test(name) === false
   ) {
     return {
       isValid: false,
-      validationError: `Key name part must be nonempty, no longer than ${qualifiedNameMaxLength}, consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character.`,
+      validationError: `Key name part must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character.`,
     };
   }
 

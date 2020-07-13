@@ -6,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
+import Section from 'UI/Section';
 
 import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './ChangePasswordForm';
@@ -15,18 +16,10 @@ const AccountSettings = (props) => (
     data={{ title: 'ACCOUNT SETTINGS', pathname: AccountSettingsRoutes.Home }}
   >
     <DocumentTitle title='Account Settings'>
-      <div>
-        <div className='row'>
-          <div className='col-12'>
-            <h1>Your Account Settings</h1>
-          </div>
-        </div>
-
-        <div className='row section'>
-          <div className='col-3'>
-            <h3 className='table-label'>Email</h3>
-          </div>
-          <div className='col-9'>
+      <>
+        <h1>Your Account Settings</h1>
+        <Section title='Email'>
+          <>
             <p>
               This address is used for logging in and for all communication. Be
               aware that it is also visible to other members of your
@@ -38,8 +31,8 @@ const AccountSettings = (props) => (
               user={props.user}
               data-testid='account-settings/change-email'
             />
-          </div>
-        </div>
+          </>
+        </Section>
 
         <ChangePasswordForm
           actions={props.actions}
@@ -47,21 +40,16 @@ const AccountSettings = (props) => (
           data-testid='account-settings/change-password'
         />
 
-        <div className='row section'>
-          <div className='col-3'>
-            <h3 className='table-label'>Delete Account</h3>
-          </div>
-          <div className='col-9'>
-            <p>
-              Please send an email to{' '}
-              <a href='mailto:support@giantswarm.io?subject=Please delete my account'>
-                support@giantswarm.io
-              </a>{' '}
-              to delete your account.
-            </p>
-          </div>
-        </div>
-      </div>
+        <Section title='Delete Account'>
+          <p>
+            Please send an email to{' '}
+            <a href='mailto:support@giantswarm.io?subject=Please delete my account'>
+              support@giantswarm.io
+            </a>{' '}
+            to delete your account.
+          </p>
+        </Section>
+      </>
     </DocumentTitle>
   </Breadcrumb>
 );

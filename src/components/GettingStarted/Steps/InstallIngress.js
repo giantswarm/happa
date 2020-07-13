@@ -1,33 +1,19 @@
-import {
-  CLUSTER_INSTALL_APP_REQUEST,
-  CLUSTER_LOAD_APPS_REQUEST,
-} from 'actions/actionTypes';
-import { installApp, loadApps } from 'actions/appActions';
-import { spinner } from 'images';
+import styled from '@emotion/styled';
+import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {
-  selectClusterById,
-  selectIngressAppFromCluster,
-  selectLoadingFlagByAction,
-} from 'selectors/clusterSelectors';
+import { selectClusterById } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+const StyledInstallIngressButton = styled(InstallIngressButton)`
+  margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;
+`;
 
 const InstallIngress = (props) => {
-  const clusterId = props.cluster.id;
-  const dispatch = props.dispatch;
-
-  useEffect(() => {
-    dispatch(loadApps(clusterId));
-  }, [clusterId, dispatch]);
-
-  const [installing, setInstalling] = useState(false);
-
   const pathParams = {
     orgId: props.match.params.orgId,
     clusterId: props.match.params.clusterId,
@@ -48,55 +34,6 @@ const InstallIngress = (props) => {
     pathParams
   );
 
-  const buttonState = (prps) => {
-    const loading = (
-      <img style={{ width: '20px' }} className='loader' src={spinner} />
-    );
-    const ingressInstalled =
-      '🎉 Ingress controller installed. Please continue to the next step.';
-    const noIngressYet = (
-      <>
-        Click this button to install an ingress controller on{' '}
-        <ClusterIDLabel clusterID={prps.cluster.id} />
-      </>
-    );
-
-    if (installing) return { message: loading, disabled: true, visible: true };
-
-    if (prps.ingressApp)
-      return { message: ingressInstalled, disabled: true, visible: false };
-
-    if (prps.appsLoading)
-      return { message: loading, disabled: true, visible: true };
-
-    return { message: noIngressYet, disabled: false, visible: true };
-  };
-
-  const installIngressController = async () => {
-    try {
-      setInstalling(true);
-
-      await props.dispatch(
-        installApp(
-          {
-            catalog: 'giantswarm',
-            chartName: 'nginx-ingress-controller-app',
-            namespace: 'kube-system',
-            name: 'nginx-ingress-controller-app',
-            valuesYAML: '',
-            secretsYAML: '',
-            version: '1.6.9',
-          },
-          props.cluster.id
-        )
-      );
-
-      await props.dispatch(loadApps(props.cluster.id));
-    } finally {
-      setInstalling(false);
-    }
-  };
-
   return (
     <Breadcrumb
       data={{
@@ -104,7 +41,7 @@ const InstallIngress = (props) => {
         pathname: clusterGuideIngressPath,
       }}
     >
-      <div className='centered col-9'>
+      <>
         <h1>Install an ingress controller</h1>
 
         <p>
@@ -127,27 +64,7 @@ const InstallIngress = (props) => {
           controller on your cluster.
         </p>
 
-        <div
-          className='well'
-          style={{ verticalAlign: 'middle', overflow: 'auto' }}
-        >
-          {buttonState(props).visible ? (
-            <button
-              type='button'
-              className='primary'
-              disabled={buttonState(props).disabled}
-              style={{
-                marginBottom: '0px',
-                float: 'left',
-                marginRight: '18px',
-              }}
-              onClick={installIngressController}
-            >
-              Install Ingress Controller
-            </button>
-          ) : undefined}
-          <p style={{ marginTop: '9px' }}>{buttonState(props).message}</p>
-        </div>
+        <StyledInstallIngressButton cluster={props.cluster} />
 
         <div className='component_slider--nav'>
           <Link to={clusterGuideConfigurationPath}>
@@ -162,7 +79,7 @@ const InstallIngress = (props) => {
             </button>
           </Link>
         </div>
-      </div>
+      </>
     </Breadcrumb>
   );
 };
@@ -172,9 +89,6 @@ InstallIngress.propTypes = {
   match: PropTypes.object,
   cluster: PropTypes.object,
   dispatch: PropTypes.func,
-  appsLoading: PropTypes.bool,
-  ingressApp: PropTypes.object,
-  ingressInstalling: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -183,21 +97,8 @@ function mapStateToProps(state, ownProps) {
     ownProps.match.params.clusterId
   );
 
-  const appsLoading = selectLoadingFlagByAction(
-    state,
-    CLUSTER_LOAD_APPS_REQUEST
-  );
-  const ingressInstalling = selectLoadingFlagByAction(
-    state,
-    CLUSTER_INSTALL_APP_REQUEST
-  );
-  const ingressApp = selectIngressAppFromCluster(selectedCluster);
-
   return {
     cluster: selectedCluster,
-    ingressApp,
-    appsLoading,
-    ingressInstalling,
   };
 }
 

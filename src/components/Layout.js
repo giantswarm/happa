@@ -18,12 +18,14 @@ import {
   AccountSettingsRoutes,
   AppCatalogRoutes,
   AppRoutes,
+  ExceptionNotificationTestRoutes,
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
+import ExceptionNotificationTest from './ExceptionNotificationTest/ExceptionNotificationTest';
 import Home from './Home/Home';
 import Modals from './Modals/Modals';
 import Organizations from './Organizations/Organizations';
@@ -73,8 +75,9 @@ class Layout extends React.Component {
             user={this.props.user}
           />
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
-            <div className='main col-9'>
+            <div className='main'>
               <Switch>
+                {/*prettier-ignore*/}
                 <Route component={Home} exact path={AppRoutes.Home} />
                 <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
                 <Route component={Users} exact path={UsersRoutes.Home} />
@@ -86,6 +89,11 @@ class Layout extends React.Component {
                   component={AccountSettings}
                   exact
                   path={AccountSettingsRoutes.Home}
+                />
+                <Route
+                  component={ExceptionNotificationTest}
+                  exact
+                  path={ExceptionNotificationTestRoutes.Home}
                 />
                 <Redirect path='*' to={AppRoutes.Home} />
               </Switch>

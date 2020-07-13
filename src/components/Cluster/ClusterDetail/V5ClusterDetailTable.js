@@ -1,7 +1,9 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
+import * as clusterActions from 'actions/clusterActions';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -12,18 +14,21 @@ import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
 import {
-  selectAndProduceAZGridTemplateAreas,
   selectClusterNodePools,
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Constants, CSSBreakpoints } from 'shared/constants';
+import FeatureFlags from 'shared/FeatureFlags';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
+import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AddNodePool from './AddNodePool';
+import ClusterLabels from './ClusterLabels/ClusterLabels';
 import CredentialInfoRow from './CredentialInfoRow';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
@@ -145,74 +150,13 @@ export const AddNodePoolWrapper = (props) => css`
 `;
 
 const AddNodePoolWrapperDiv = styled.div`
-  ${AddNodePoolWrapper}
+  ${AddNodePoolWrapper};
   padding: 20px 20px 40px;
 `;
 
-export const AddNodePoolFlexColumnDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  max-width: 650px;
-  margin: 0 auto;
-  label {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin: 0 0 31px;
-    &.instance-type {
-      margin-bottom: 21px;
-    }
-    p {
-      line-height: 1.4;
-    }
-  }
-  label:last-of-type {
-    margin-bottom: 0;
-  }
-  .label-span {
-    color: ${(props) => props.theme.colors.white1};
-  }
-  .label-span,
-  input,
-  select {
-    font-size: 16px;
-    margin-bottom: 13px;
-    font-weight: 400;
-  }
-  input {
-    box-sizing: border-box;
-    width: 100%;
-    background-color: ${(props) => props.theme.colors.shade5};
-    padding: 11px 10px;
-    outline: 0;
-    color: ${(props) => props.theme.colors.whiteInput};
-    border-radius: 4px;
-    border: 1px solid ${(props) => props.theme.colors.shade6};
-    padding-left: 15px;
-    line-height: normal;
-  }
-  p {
-    margin: 0;
-    font-size: 14px;
-    color: ${(props) => props.theme.colors.white1};
-  }
+export const AddNodePoolFlexColumnDiv = styled(FlexColumn)`
   a {
     text-decoration: underline;
-  }
-  /* Name input */
-  .name-container {
-    position: relative;
-    margin-bottom: 23px;
-  }
-  input[id='name'] {
-    margin-bottom: 0;
-  }
-  /* Overrides for AWSInstanceTypeSelector */
-  .textfield label,
-  .textfield,
-  .textfield input {
-    margin: 0;
   }
   /* Overrides for NumberPicker */
   .availability-zones {
@@ -229,17 +173,11 @@ export const AddNodePoolFlexColumnDiv = styled.div`
         color: ${(props) => props.theme.colors.white1};
         font-weight: 400;
       }
-      & > div:nth-of-type(2) {
-        display: none;
-      }
     }
   }
 `;
 
-export const FlexWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+const NodePoolsFlexWrapperDiv = styled(FlexWrapperDiv)`
   p {
     font-size: 14px;
     line-height: 1.2;
@@ -330,6 +268,16 @@ const StyledURIBlock = styled(URIBlock)`
   flex: 1 1 auto;
 `;
 
+const MasterNodesRow = styled(MasterNodes)`
+  ${Row};
+  background-color: ${({ theme }) => theme.colors.foreground};
+`;
+
+const LabelsRow = styled(ClusterLabels)`
+  ${Row};
+  background-color: ${({ theme }) => theme.colors.foreground};
+`;
+
 // TODO Now on every addition or deletion of a NP, this component will be rerendered.
 // It would be nice to split this into subcomponents so only the littele bits that need
 // to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
@@ -377,6 +325,20 @@ class V5ClusterDetailTable extends React.Component {
     );
   };
 
+  patchCluster(payload) {
+    return this.props.dispatch(
+      clusterActions.clusterPatch(this.props.cluster, payload, true)
+    );
+  }
+
+  enableHAMasters = () => {
+    return this.patchCluster({
+      master_nodes: {
+        high_availability: true,
+      },
+    });
+  };
+
   render() {
     const { nodePoolForm } = this.state;
     const {
@@ -388,14 +350,26 @@ class V5ClusterDetailTable extends React.Component {
       region,
       release,
       resources,
-      AZGridTemplateAreas,
       loadingNodePools,
     } = this.props;
 
-    const { create_date, release_version, api_endpoint } = cluster;
+    const {
+      create_date,
+      release_version,
+      api_endpoint,
+      labels,
+      master_nodes,
+    } = cluster;
     const { numberOfNodes, memory, cores } = resources;
 
     const zeroNodePools = nodePools && nodePools.length === 0;
+
+    const canBeConvertedToHAMasters =
+      master_nodes &&
+      !master_nodes.high_availability &&
+      cluster.capabilities.supportsHAMasters &&
+      !isClusterCreating(cluster) &&
+      !isClusterUpdating(cluster);
 
     return (
       <>
@@ -414,13 +388,25 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <NodesRunning
               workerNodesRunning={numberOfNodes}
-              createDate={create_date}
+              isClusterCreating={isClusterCreating(cluster)}
               RAM={memory}
               CPUs={cores}
               nodePools={nodePools}
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
+
+        {FeatureFlags.FEATURE_HA_MASTERS && master_nodes && (
+          <MasterNodesRow
+            isHA={master_nodes.high_availability}
+            availabilityZones={master_nodes.availability_zones}
+            supportsReadyNodes={cluster.capabilities.supportsHAMasters}
+            numOfReadyNodes={master_nodes.num_ready}
+            onConvert={this.enableHAMasters}
+            canBeConverted={canBeConvertedToHAMasters}
+          />
+        )}
+        <LabelsRow labels={labels} clusterId={cluster.id} />
         <KubernetesURIWrapper>
           <StyledURIBlock title='Kubernetes endpoint URI:'>
             {api_endpoint}
@@ -532,7 +518,6 @@ class V5ClusterDetailTable extends React.Component {
                     >
                       <GridRowNodePoolsItem data-testid={nodePool.id}>
                         <NodePool
-                          availableZonesGridTemplateAreas={AZGridTemplateAreas}
                           cluster={cluster}
                           nodePool={nodePool}
                           provider={this.props.provider}
@@ -585,7 +570,9 @@ class V5ClusterDetailTable extends React.Component {
           </SlideTransition>
         )}
         {!this.state.isNodePoolBeingAdded && !loadingNodePools && (
-          <FlexWrapperDiv className={zeroNodePools && 'zero-nodepools'}>
+          <NodePoolsFlexWrapperDiv
+            className={zeroNodePools && 'zero-nodepools'}
+          >
             {zeroNodePools && (
               <p>
                 Add at least one node pool to this cluster so that you can
@@ -611,7 +598,7 @@ class V5ClusterDetailTable extends React.Component {
                 </a>
               </p>
             )}
-          </FlexWrapperDiv>
+          </NodePoolsFlexWrapperDiv>
         )}
         <p className='last-updated' style={{ marginTop: '20px' }}>
           <small>
@@ -642,7 +629,6 @@ V5ClusterDetailTable.propTypes = {
   workerNodesDesired: PropTypes.number,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
-  AZGridTemplateAreas: PropTypes.string,
   loadingNodePools: PropTypes.bool,
 };
 
@@ -650,12 +636,10 @@ V5ClusterDetailTable.propTypes = {
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 const makeMapStateToProps = () => {
   const resourcesV5 = selectResourcesV5();
-  const AZGridTemplateAreas = selectAndProduceAZGridTemplateAreas();
   const mapStateToProps = (state, props) => {
     return {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
-      AZGridTemplateAreas: AZGridTemplateAreas(state, props.cluster.id),
       loadingNodePools: selectLoadingFlagByIdAndAction(
         state,
         props.cluster.id,

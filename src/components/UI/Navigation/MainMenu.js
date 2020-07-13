@@ -33,7 +33,7 @@ const NavDiv = styled.div`
     }
   }
 
-  ${mq(CSSBreakpoints.Large)} {
+  ${mq(CSSBreakpoints.Medium)} {
     display: none;
   }
 `;
@@ -62,20 +62,18 @@ const DropdownMenuStyled = styled(DropdownMenu)`
     font-weight: 700;
   }
 
-  ${mq(CSSBreakpoints.Large)} {
+  ${mq(CSSBreakpoints.Medium)} {
     display: flex;
   }
 
   ${mq(CSSBreakpoints.Medium)} {
-    transform: translate(40px, 5px);
-
     ul {
       width: calc(100vw - 8px);
       left: -35px;
     }
 
     a {
-      font-size: 18px;
+      font-size: 16px;
       padding: 20px 30px;
     }
   }

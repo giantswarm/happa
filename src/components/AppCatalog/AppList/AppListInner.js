@@ -1,12 +1,34 @@
+import styled from '@emotion/styled';
 import { replace } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import { memoize } from 'underscore';
 
 import AppListItems from './AppListItems';
 import AppListSearch from './AppListSearch';
 
 const SEARCH_URL_PARAM = 'q';
+
+const StyledCatalogTypeLabel = styled(CatalogTypeLabel)`
+  position: relative;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  margin-right: 0px;
+  line-height: 16px;
+`;
+
+const TitleRow = styled('h1')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const TitleAndIcons = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 class AppListInner extends React.Component {
   static filterApps(searchQuery, allApps) {
@@ -112,14 +134,33 @@ class AppListInner extends React.Component {
 
     return (
       <>
-        <h1>
-          {catalog.spec.title}
+        <TitleRow>
+          <TitleAndIcons>
+            <div>{catalog.spec.title}</div>
+
+            <StyledCatalogTypeLabel
+              catalogType={
+                catalog.metadata.labels[
+                  'application.giantswarm.io/catalog-type'
+                ]
+              }
+            />
+
+            <StyledCatalogTypeLabel
+              catalogType={
+                catalog.metadata.labels[
+                  'application.giantswarm.io/catalog-visibility'
+                ]
+              }
+            />
+          </TitleAndIcons>
+
           <AppListSearch
             value={searchQuery}
             onChange={this.updateSearchParams}
             onReset={this.resetFilters}
           />
-        </h1>
+        </TitleRow>
         <div className='app-catalog-overview'>
           <AppListItems
             apps={filteredApps}

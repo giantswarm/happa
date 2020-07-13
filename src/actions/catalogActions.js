@@ -8,19 +8,12 @@ import * as types from './actionTypes';
 function loadCatalogIndex(catalog) {
   return fetch(`${catalog.spec.storage.URL}index.yaml`, { mode: 'cors' })
     .catch(() => {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Fetch error for ${catalog.spec.storage.URL}, attempting with cors anywhere.`
-      );
-
       return fetch(
         `https://cors-anywhere.herokuapp.com/${catalog.spec.storage.URL}index.yaml`,
         { mode: 'cors' }
       );
     })
     .catch((error) => {
-      // eslint-disable-next-line no-console
-      console.error('Fetch error: ', error);
       throw error;
     })
     .then((response) => {
@@ -86,9 +79,6 @@ export function catalogsLoad() {
         return catalogsDict;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-
         dispatch({
           type: types.CATALOGS_LOAD_ERROR,
           error: error,
@@ -100,10 +90,23 @@ export function catalogsLoad() {
 }
 
 export function catalogLoadIndex(catalog) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    if (getState().entities.catalogs.items[catalog.metadata.name].apps) {
+      // Skip if we already have apps loaded.
+      return Promise.resolve();
+    }
+
+    if (
+      getState().entities.catalogs.items[catalog.metadata.name].isFetchingIndex
+    ) {
+      // Skip if we are already fetching it.
+      return Promise.resolve();
+    }
+
     dispatch({
       type: types.CATALOG_LOAD_INDEX_REQUEST,
       catalogName: catalog.metadata.name,
+      id: catalog.metadata.name,
     });
 
     return loadCatalogIndex(catalog)
@@ -111,17 +114,16 @@ export function catalogLoadIndex(catalog) {
         dispatch({
           type: types.CATALOG_LOAD_INDEX_SUCCESS,
           catalog: loadedCatalog,
+          id: catalog.metadata.name,
         });
       })
 
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-
         dispatch({
           type: types.CATALOG_LOAD_INDEX_ERROR,
           error: error,
           catalogName: catalog.metadata.name,
+          id: catalog.metadata.name,
         });
 
         throw error;

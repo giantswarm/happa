@@ -58,11 +58,11 @@ function Hamburger({ onClickHandler, onKeyDownHandler, isOpen }) {
       onKeyDown={onKeyDownHandler}
       type='button'
     >
-      <div>
+      <>
         <div className='first' />
         <div className='second' />
         <div className='third' />
-      </div>
+      </>
     </HamburgerDiv>
   );
 }

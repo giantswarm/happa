@@ -1,5 +1,11 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+const Message = styled.p`
+  margin-top: ${({ theme }) => theme.spacingPx * 8}px;
+  font-size: 14px;
+`;
 
 const ClusterCreationDuration = (props) => {
   // eslint-disable-next-line no-magic-numbers
@@ -11,7 +17,7 @@ const ClusterCreationDuration = (props) => {
     submitted.`
       : `Clusters usually take between 10 and 30 minutes to come up.`;
 
-  return <p style={{ marginTop: '23px' }}>{message}</p>;
+  return <Message>{message}</Message>;
 };
 
 ClusterCreationDuration.propTypes = {

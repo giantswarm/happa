@@ -6,8 +6,47 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
 const dotenv = require('dotenv');
+const getServiceURL = require('./scripts/webpack/getServiceURL');
+const chalk = require('chalk');
 
 const envFileVars = dotenv.config().parsed;
+
+const determineAudienceURL = () => {
+  console.log(
+    chalk.blue(
+      `🛠  [AudienceURL Helper] Checking for HAPPA_PROXY_INSTALLATION or HAPPA_PROXY_BASE_DOMAIN`
+    )
+  );
+
+  const { HAPPA_PROXY_INSTALLATION, HAPPA_PROXY_BASE_DOMAIN } = Object.assign(
+    {},
+    envFileVars,
+    process.env
+  );
+
+  let apiAudienceUrl = '';
+  if (HAPPA_PROXY_INSTALLATION) {
+    console.log(
+      chalk.blue(
+        `🛠  [AudienceURL Helper] HAPPA_PROXY_INSTALLATION is ${HAPPA_PROXY_INSTALLATION}. Setting audience based on opsctl response.`
+      )
+    );
+    apiAudienceUrl = getServiceURL(HAPPA_PROXY_INSTALLATION, 'api');
+  } else if (HAPPA_PROXY_BASE_DOMAIN) {
+    console.log(
+      chalk.blue(
+        `🛠  [AudienceURL Helper] HAPPA_PROXY_BASE_DOMAIN is ${HAPPA_PROXY_BASE_DOMAIN}. Setting the audience based on that.`
+      )
+    );
+    apiAudienceUrl = `https://api.${HAPPA_PROXY_BASE_DOMAIN}`;
+  }
+
+  console.log(
+    chalk.blue(`🛠  [AudienceURL Helper] Set audience to ${apiAudienceUrl}.`)
+  );
+
+  return apiAudienceUrl;
+};
 
 const makeEndpoints = () => {
   const defaults = {
@@ -22,29 +61,38 @@ const makeEndpoints = () => {
     process.env
   );
 
+  const apiAudienceUrl = determineAudienceURL();
+
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,
+    audience: apiAudienceUrl || HAPPA_API_ENDPOINT,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };
 
 const makeFeatureFlags = () => {
   const defaults = {
-    FEATURE_CLUSTER_LABELS_V0: false,
+    FEATURE_HA_MASTERS: true,
   };
 
-  const { FEATURE_CLUSTER_LABELS_V0 } = Object.assign(
-    {},
-    defaults,
-    envFileVars,
-    process.env
-  );
+  const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
 
-  return JSON.parse(
-    JSON.stringify({
-      FEATURE_CLUSTER_LABELS_V0: Boolean(FEATURE_CLUSTER_LABELS_V0),
-    })
-  );
+  const flags = Object.create(null);
+
+  for (const flagName of Object.keys(defaults)) {
+    const flag = dirtyFlags[flagName];
+    switch (typeof flag) {
+      case 'string':
+        flags[flagName] = flag.toLowerCase() === 'true';
+        break;
+
+      case 'boolean':
+        flags[flagName] = flag;
+        break;
+    }
+  }
+
+  return flags;
 };
 
 module.exports = {

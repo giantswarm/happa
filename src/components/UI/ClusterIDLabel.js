@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
-import ColorHash from 'color-hash';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import CachingColorHash from 'utils/cachingColorHash';
 
-const colorHashCache = {};
+const colorHash = new CachingColorHash();
 
 const Wrapper = styled.span`
   display: inline-block;
@@ -32,21 +32,11 @@ const Wrapper = styled.span`
 `;
 
 const Label = styled.span`
-  background-color: ${(props) => calculateColour(props.clusterID)};
+  background-color: ${(props) => colorHash.calculateColor(props.clusterID)};
   font-family: ${(props) => props.theme.fontFamilies.console};
   padding: 0.2em 0.4em;
   border-radius: 0.2em;
 `;
-
-function calculateColour(str) {
-  if (!colorHashCache[str]) {
-    const colorHash = new ColorHash({ lightness: 0.4, saturation: 0.4 });
-    const colorAsHex = colorHash.hex(str);
-    colorHashCache[str] = colorAsHex;
-  }
-
-  return colorHashCache[str];
-}
 
 const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();

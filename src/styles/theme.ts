@@ -30,6 +30,8 @@ const theme: ITheme = {
     darkBlueLighter8: '#d0d8dd',
     darkBlueLighter9: '#e7ebee',
 
+    darkBlueMuted: '#020a29',
+
     shade1: '#1E4156',
     shade2: '#224A61',
     shade3: '#234D65',
@@ -62,10 +64,11 @@ const theme: ITheme = {
     greenNew: '#24A524',
   },
   border_radius: '4px',
+  spacingPx: 4,
   breakpoints: {
     [CSSBreakpoints.Small]: 540,
     [CSSBreakpoints.Medium]: 825,
-    [CSSBreakpoints.Large]: 1200,
+    [CSSBreakpoints.Large]: 1024,
   },
   fontFamilies: {
     console: 'Inconsolata, monospace',

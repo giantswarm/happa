@@ -10,25 +10,23 @@ import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Checkbox from 'UI/Checkbox';
+import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
+import NameInput from 'UI/ClusterCreation/NameInput';
+import Section from 'UI/ClusterCreation/Section';
+import StyledInput, {
+  AdditionalInputHint,
+} from 'UI/ClusterCreation/StyledInput';
+import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
-import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
-import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
-import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
-
-const FlexWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  p {
-    margin-left: 15px;
-  }
-`;
+import InstanceTypeSelector from './InstanceTypeSelector/InstanceTypeSelector';
 
 // Availability Zones styles
 const Emphasized = css`
   .emphasized {
+    font-size: 14px;
+    line-height: 1.4;
     margin: 0 18px 0 28px;
     transform: translateY(-4px);
   }
@@ -37,12 +35,13 @@ const Emphasized = css`
   }
 `;
 
-export const FlexWrapperAZDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+export const FlexWrapperAZDiv = styled(FlexWrapperDiv)`
   margin-bottom: 2px;
   ${Emphasized};
+  .indented {
+    font-size: 14px;
+    line-height: 1.4;
+  }
   .danger {
     font-weight: 400;
     margin: 0 0 0 15px;
@@ -50,10 +49,9 @@ export const FlexWrapperAZDiv = styled.div`
   }
 `;
 
-const FlexColumnAZDiv = styled.div`
-  display: flex;
+const FlexColumnAZDiv = styled(FlexColumn)`
   flex-flow: column nowrap;
-  justify-content: space-between;
+  margin: 0;
   p {
     font-size: 14px;
     margin: 0 0 14px 0;
@@ -68,8 +66,44 @@ const FlexColumnAZDiv = styled.div`
 `;
 
 const RadioWrapperDiv = styled.div`
-  div {
-    ${RadioWrapper};
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  label {
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+  input {
+    max-width: 28px;
+    cursor: pointer;
+    margin-right: 14px;
+  }
+  input[type='radio'] {
+    opacity: 0;
+  }
+  .fake-radio {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    top: 4px;
+    border: ${({ theme }) => theme.border};
+    background: ${({ theme }) => theme.colors.white1};
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    &-checked {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: ${({ theme }) => theme.colors.white1};
+      transition: background-color 0.2s;
+      &.visible {
+        background-color: ${({ theme }) => theme.colors.shade2};
+      }
+    }
   }
 `;
 
@@ -79,6 +113,8 @@ const AZLabel = styled.label`
   position: relative;
   transition: height 0.3s;
   transition-delay: 0s;
+  /* Same margin-bottom as <Section /> */
+  margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
   &.with-labels {
     transition: height 0.3s;
     transition-delay: 0.4s;
@@ -144,10 +180,13 @@ const AZLabel = styled.label`
       transition-delay: 0.2s;
     }
   }
+  span input {
+    font-weight: 400;
+  }
 `;
 
-const SpotValuesSection = styled.label`
-  padding-top: 20px;
+const AZSelectionLabel = styled(ClusterCreationLabelSpan)`
+  display: block;
 `;
 
 const SpotValuesLabelText = styled.span`
@@ -169,18 +208,13 @@ const SpotValuesNumberPickerWrapper = styled.div`
 const SpotValuesHelpText = styled.p`
   padding-bottom: 20px;
   padding-left: 28px;
+  font-size: 14px;
   i {
     white-space: nowrap;
   }
 `;
 
 const CheckboxWrapper = styled.div`
-  ${(props) =>
-    props.marginTop &&
-    css`
-      margin-top: 20px;
-    `}
-
   .checkbox-label {
     font-size: 16px;
     font-weight: normal;
@@ -220,10 +254,7 @@ class AddNodePool extends Component {
     // eslint-disable-next-line react/no-unused-state
     error: false,
     aws: {
-      instanceType: {
-        valid: true,
-        value: this.props.defaultInstanceType,
-      },
+      instanceType: this.props.defaultInstanceType,
       useAlike: false,
       instanceDistribution: {
         onDemandBaseCapacity: 0,
@@ -231,14 +262,12 @@ class AddNodePool extends Component {
       },
     },
     spotInstancesEnabled: false,
-    awsInstanceTypes: {},
     allowSpotInstances: false,
     allowAlikeInstances: false,
   };
 
   componentDidMount() {
     this.setState({
-      awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       ...this.computeInstanceCapabilities(),
     });
   }
@@ -265,21 +294,12 @@ class AddNodePool extends Component {
     };
   };
 
-  updateName = (event) => {
-    const name = event.target.value;
-    const maxNameLength = 100;
-    const [isValid, message] = hasAppropriateLength(name, 0, maxNameLength);
-
-    // We don't let the user write more characters if the name exceeds the max number allowed
-    if (!isValid) {
-      this.setState(
-        produce((draft) => {
-          draft.name.validationError = message;
-        })
-      );
-
-      return;
-    }
+  updateName = (name) => {
+    const [isValid, message] = hasAppropriateLength(
+      name,
+      Constants.MIN_NAME_LENGTH,
+      Constants.MAX_NAME_LENGTH
+    );
 
     this.setState(
       produce((draft) => {
@@ -290,12 +310,8 @@ class AddNodePool extends Component {
     );
   };
 
-  updateAWSInstanceType = (payload) => {
-    this.setState(
-      produce((draft) => {
-        draft.aws.instanceType = payload;
-      })
-    );
+  setAWSInstanceType = (instanceType) => {
+    this.setState(({ aws }) => ({ aws: { ...aws, instanceType } }));
   };
 
   toggleAZSelector = (isLabels) => {
@@ -363,7 +379,6 @@ class AddNodePool extends Component {
       availabilityZonesLabels,
       hasAZLabels,
       scaling,
-      aws,
       name,
     } = this.state;
 
@@ -371,7 +386,6 @@ class AddNodePool extends Component {
     const isValid =
       scaling.minValid &&
       scaling.maxValid &&
-      aws.instanceType.valid &&
       name.valid &&
       ((hasAZLabels && availabilityZonesLabels.valid) ||
         (!hasAZLabels && availabilityZonesPicker.valid))
@@ -412,7 +426,7 @@ class AddNodePool extends Component {
               : this.state.name.value,
           node_spec: {
             aws: {
-              instance_type: this.state.aws.instanceType.value,
+              instance_type: this.state.aws.instanceType,
               use_alike_instance_types: this.state.aws.useAlike,
               instance_distribution: instanceDistribution,
             },
@@ -424,65 +438,42 @@ class AddNodePool extends Component {
     );
   };
 
-  produceRAMAndCores = () => {
-    const instanceType = this.state.aws.instanceType.value;
-    // Check whether this.state.instanceTypes is populated and that instance name
-    // in input matches an instance in the array
-    const instanceTypesKeys = Object.keys(this.state.awsInstanceTypes);
-
-    const hasInstances =
-      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
-
-    const RAM = hasInstances
-      ? this.state.awsInstanceTypes[instanceType].memory_size_gb
-      : '0';
-
-    const CPUCores = hasInstances
-      ? this.state.awsInstanceTypes[instanceType].cpu_cores
-      : '0';
-
-    return [RAM, CPUCores];
-  };
-
   render() {
-    const [RAM, CPUCores] = this.produceRAMAndCores();
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { hasAZLabels, name } = this.state;
     const { minAZ, maxAZ, defaultAZ } = this.props;
 
     return (
       <>
-        <label htmlFor='node-pool-name'>
-          <span className='label-span'>Name</span>
-          <div className='name-container'>
-            <input
-              value={name.value}
-              onChange={this.updateName}
-              id='node-pool-name'
-              type='text'
-              placeholder={name.value === '' ? 'Unnamed node pool' : null}
-            />
-            <ValidationErrorMessage message={name.validationError} />
-          </div>
-          <p>
+        <Section>
+          <NameInput
+            value={name.value}
+            label='Name'
+            inputId={`node-pool-name-${this.props.id}`}
+            placeholder={name.value === '' ? 'Unnamed node pool' : null}
+            validationError={name.validationError}
+            onChange={this.updateName}
+          />
+          <AdditionalInputHint>
             Pick a name that helps team mates to understand what these nodes are
             here for. You can change this later. Each node pool also gets a
             unique identifier.
-          </p>
-        </label>
-        <label className='instance-type' htmlFor='instance-type'>
-          <span className='label-span'>Instance type</span>
-          <FlexWrapperDiv>
-            <AWSInstanceTypeSelector
-              allowedInstanceTypes={this.props.allowedInstanceTypes}
-              onChange={this.updateAWSInstanceType}
-              readOnly={false}
-              value={this.state.aws.instanceType.value}
+          </AdditionalInputHint>
+        </Section>
+        <Section>
+          <StyledInput
+            inputId={`instance-type-${this.props.id}`}
+            label='Instance type'
+            // regular space, hides hint ;)
+            hint={<>&#32;</>}
+          >
+            <InstanceTypeSelector
+              selectedInstanceType={this.state.aws.instanceType}
+              selectInstanceType={this.setAWSInstanceType}
             />
-            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
-          </FlexWrapperDiv>
+          </StyledInput>
           {this.state.allowAlikeInstances && (
-            <CheckboxWrapper marginTop>
+            <CheckboxWrapper>
               <Checkbox
                 checked={this.state.aws.useAlike}
                 onChange={this.setUseAlikeInstancesEnabled}
@@ -490,37 +481,36 @@ class AddNodePool extends Component {
               />
             </CheckboxWrapper>
           )}
-        </label>
+        </Section>
         <AZLabel
           htmlFor='availability-zones'
           className={hasAZLabels && 'with-labels'}
         >
-          <span className='label-span'>Availability Zones selection</span>
+          <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
           <RadioWrapperDiv>
             {/* Automatically */}
-            <div>
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    hasAZLabels === false && 'visible'
-                  }`}
-                />
-              </div>
-              <input
-                type='radio'
-                id={`automatically-${this.props.id}`}
-                value={false}
-                checked={hasAZLabels === false}
-                onChange={() => this.toggleAZSelector(false)}
-                tabIndex='0'
+
+            <div className='fake-radio'>
+              <div
+                className={`fake-radio-checked ${
+                  hasAZLabels === false && 'visible'
+                }`}
               />
-              <label
-                htmlFor='automatically'
-                onClick={() => this.toggleAZSelector(false)}
-              >
-                Automatic
-              </label>
             </div>
+            <input
+              type='radio'
+              id={`automatically-${this.props.id}`}
+              value={false}
+              checked={hasAZLabels === false}
+              onChange={() => this.toggleAZSelector(false)}
+              tabIndex='0'
+            />
+            <label
+              htmlFor='automatically'
+              onClick={() => this.toggleAZSelector(false)}
+            >
+              Automatic
+            </label>
           </RadioWrapperDiv>
           <BaseTransition
             in={!hasAZLabels}
@@ -559,29 +549,28 @@ class AddNodePool extends Component {
           <RadioWrapperDiv
             className={`manual-radio-input ${!hasAZLabels ? 'down' : null}`}
           >
-            <div>
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    hasAZLabels === true && 'visible'
-                  }`}
-                />
-              </div>
-              <input
-                type='radio'
-                id={`manually-${this.props.id}`}
-                value={true}
-                checked={hasAZLabels === true}
-                tabIndex='0'
-                onChange={() => this.toggleAZSelector(true)}
+            <div className='fake-radio'>
+              <div
+                className={`fake-radio-checked ${
+                  hasAZLabels === true && 'visible'
+                }`}
               />
-              <label
-                htmlFor='manually'
-                onClick={() => this.toggleAZSelector(true)}
-              >
-                Manual
-              </label>
             </div>
+            <input
+              type='radio'
+              id={`manually-${this.props.id}`}
+              value={true}
+              checked={hasAZLabels === true}
+              tabIndex='0'
+              onChange={() => this.toggleAZSelector(true)}
+            />
+            <label
+              htmlFor='manually'
+              onClick={() => this.toggleAZSelector(true)}
+            >
+              Manual
+            </label>
+
             <BaseTransition
               in={hasAZLabels}
               appear={true}
@@ -624,17 +613,26 @@ class AddNodePool extends Component {
           </RadioWrapperDiv>
         </AZLabel>
         {this.state.allowSpotInstances && (
-          <label>
-            <CheckboxWrapper>
-              <Checkbox
-                checked={this.state.spotInstancesEnabled}
-                onChange={this.setSpotInstancesEnabled}
-                label='Enable Spot Instances'
-              />
-            </CheckboxWrapper>
+          <Section>
+            <StyledInput
+              label='Instance distribution'
+              inputId={`spot-instances-${this.props.id}`}
+              // regular space, hides hint ;)
+              hint={<>&#32;</>}
+            >
+              <CheckboxWrapper>
+                <Checkbox
+                  checked={this.state.spotInstancesEnabled}
+                  onChange={this.setSpotInstancesEnabled}
+                  label='Enable Spot instances'
+                />
+              </CheckboxWrapper>
+            </StyledInput>
             {this.state.spotInstancesEnabled && (
-              <SpotValuesSection>
-                <span className='label-span'>Instance distribution</span>
+              <>
+                <ClusterCreationLabelSpan>
+                  Spot instances
+                </ClusterCreationLabelSpan>
                 <SpotValuesNumberPickerWrapper>
                   <SpotValuesLabelText>
                     Spot instance percentage
@@ -678,23 +676,24 @@ class AddNodePool extends Component {
                   Controls how much of the initial capacity is made up of
                   on-demand instances.
                 </SpotValuesHelpText>
-              </SpotValuesSection>
+              </>
             )}
-          </label>
+          </Section>
         )}
-        <label className='scaling-range' htmlFor='scaling-range'>
-          <span className='label-span'>Scaling range</span>
-          <NodeCountSelector
-            autoscalingEnabled={true}
-            label={{ max: 'MAX', min: 'MIN' }}
-            onChange={this.updateScaling}
-            readOnly={false}
-            scaling={this.state.scaling}
-          />
-        </label>
-        <p style={{ marginBottom: '31px' }}>
-          To enable autoscaling, set minimum and maximum to different values.
-        </p>
+        <Section className='scaling-range'>
+          <StyledInput
+            labelId={`scaling-range-${this.props.id}`}
+            label='Scaling range'
+          >
+            <NodeCountSelector
+              autoscalingEnabled={true}
+              label={{ max: 'MAX', min: 'MIN' }}
+              onChange={this.updateScaling}
+              readOnly={false}
+              scaling={this.state.scaling}
+            />
+          </StyledInput>
+        </Section>
       </>
     );
   }
@@ -702,7 +701,6 @@ class AddNodePool extends Component {
 
 AddNodePool.propTypes = {
   availabilityZones: PropTypes.array,
-  allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
@@ -747,14 +745,8 @@ function mapStateToProps(state) {
   const defaultMemorySize = 4; // TODO
   const defaultDiskSize = 20; // TODO
 
-  const allowedInstanceTypes =
-    provider === Providers.AWS
-      ? state.main.info.workers.instance_type.options
-      : [];
-
   return {
     availabilityZones,
-    allowedInstanceTypes,
     provider,
     defaultInstanceType,
     defaultCPUCores,

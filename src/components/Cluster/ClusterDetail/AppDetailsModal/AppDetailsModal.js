@@ -4,7 +4,6 @@ import {
 } from 'actions/actionTypes.js';
 import {
   deleteApp as deleteAppAction,
-  loadApps as loadAppsAction,
   updateApp as updateAppAction,
 } from 'actions/appActions';
 import {
@@ -24,6 +23,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -78,7 +78,7 @@ const AppDetailsModal = (props) => {
 
   async function loadAppsAndClose() {
     onClose();
-    await props.dispatch(loadAppsAction(clusterId));
+    await props.dispatch(loadClusterApps({ clusterId: clusterId }));
   }
 
   async function editChartVersion() {
@@ -110,27 +110,39 @@ const AppDetailsModal = (props) => {
   }
 
   async function createAppConfig(values, done) {
-    await props.dispatch(createAppConfigAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(createAppConfigAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function updateAppConfig(values, done) {
-    await props.dispatch(updateAppConfigAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(updateAppConfigAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function createAppSecret(values, done) {
-    await props.dispatch(createAppSecretAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(createAppSecretAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function updateAppSecret(values, done) {
-    await props.dispatch(updateAppSecretAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(updateAppSecretAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   // eslint-disable-next-line react/no-multi-comp

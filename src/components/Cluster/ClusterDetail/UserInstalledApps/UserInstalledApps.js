@@ -60,7 +60,7 @@ const UserInstalledApps = ({
   return (
     <InstalledAppsWrapper data-testid='installed-apps-section' {...rest}>
       <h3 className='table-label'>Installed Apps</h3>
-      <div className='row'>
+      <>
         {error && (
           <p className='well' data-testid='error-loading-apps'>
             <b>Error Loading Apps:</b>
@@ -103,7 +103,7 @@ const UserInstalledApps = ({
         )}
 
         {children}
-      </div>
+      </>
     </InstalledAppsWrapper>
   );
 };

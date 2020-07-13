@@ -2,7 +2,6 @@ import moment from 'moment';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import _ from 'underscore';
 import validate from 'validate.js';
 
 export function dedent(strings, ...values) {
@@ -204,13 +203,9 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
 // clustersForOrg takes a orgId and a list of clusters and returns just the clusters
 // that are owned by that orgId
 export function clustersForOrg(orgId, allClusters) {
-  let clusters = [];
-
-  clusters = _.filter(allClusters, (cluster) => {
-    return cluster.owner === orgId;
-  });
-
-  return clusters;
+  return allClusters
+    ? Object.values(allClusters).filter((cluster) => cluster.owner === orgId)
+    : [];
 }
 
 // isJwtExpired expired takes a JWT token and will return true if it is expired.

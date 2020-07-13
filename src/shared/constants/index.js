@@ -24,6 +24,9 @@ export const Constants = {
   AZURE_MULTI_AZ_VERSION: '11.1.0',
   AWS_ONDEMAND_INSTANCES_VERSION: '11.2.0',
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.2.0',
+  AWS_HA_MASTERS_VERSION: '11.4.0',
+  AWS_HA_MASTERS_MAX_NODES: 3,
+
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
     'Current number of worker nodes in the node pool',
@@ -47,4 +50,8 @@ export const Constants = {
 
   // Used to filter cluster labels in api responses
   RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING: 'giantswarm.io',
+
+  // Cluster & node pool name length restrictions
+  MIN_NAME_LENGTH: 3,
+  MAX_NAME_LENGTH: 100,
 };

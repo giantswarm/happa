@@ -16,7 +16,6 @@ import {
   getMockCallTimes,
   metadataResponse,
   nodePoolsResponse,
-  nodePoolWithFlatcarRelease,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -112,7 +111,6 @@ details view`, async () => {
   // eslint-disable-next-line no-magic-numbers
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
   getMockCall('/v4/clusters/');
-  getMockCall('/v4/releases/', releasesResponse);
   getMockCallTimes('/v4/releases/', releasesResponse, 2);
 
   const v4ClusterCreationResponse = {
@@ -146,14 +144,17 @@ details view`, async () => {
   // Empty response
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
 
-  const { findByText, findByTestId, getAllByText } = renderRouteWithStore(
-    newClusterPath
-  );
+  const {
+    findByText,
+    findByTestId,
+    getAllByText,
+    getByTitle,
+  } = renderRouteWithStore(newClusterPath);
 
-  fireEvent.click(await findByText('Details and Alternatives'));
+  fireEvent.click(await findByText(/Available releases/i));
 
   fireEvent.click(
-    await findByTestId(`select-release-${preNodePoolRelease.version}`)
+    getByTitle(new RegExp(`Select release ${preNodePoolRelease.version}`, 'i'))
   );
 
   // Click the create cluster button.
@@ -228,10 +229,15 @@ it('Cluster list shows all clusters, each one with its details, for the selected
   expect(v5ClusterResources.getByText(/24 CPU cores/i)).toBeInTheDocument();
 });
 
-it(`it does not show disabled releases in release selection modal`, async () => {
+it('it does not show disabled releases in release selection modal for regular users', async () => {
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
   getMockCall('/v4/clusters/');
   getMockCall('/v4/releases/', releasesResponse);
+
+  const storage = {
+    user:
+      '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
+  };
 
   const newClusterPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.New,
@@ -240,28 +246,34 @@ it(`it does not show disabled releases in release selection modal`, async () => 
     }
   );
 
-  const { findByText, getByTestId, queryByTestId } = renderRouteWithStore(
-    newClusterPath
+  const { findByText, queryByText, container } = renderRouteWithStore(
+    newClusterPath,
+    {},
+    storage
   );
 
-  fireEvent.click(await findByText('Details and Alternatives'));
+  fireEvent.click(await findByText(/Available releases/i));
 
-  // Wait for the modal to pop up.
-  await findByText('Release Details');
+  const table = container.querySelector('table');
 
   for (const { version, active } of releasesResponse) {
     if (active === true) {
-      expect(getByTestId(`release-${version}`)).toBeInTheDocument();
+      expect(within(table).getByText(version)).toBeInTheDocument();
     } else {
-      expect(queryByTestId(`release-${version}`)).not.toBeInTheDocument();
+      expect(queryByText(version)).not.toBeInTheDocument();
     }
   }
 });
 
-it(`it shows 'flatcar' for containerlinux versions >= 2345.3.1 in release selection modal`, async () => {
+it('it displays disabled releases in release selection modal for admin users', async () => {
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
   getMockCall('/v4/clusters/');
   getMockCall('/v4/releases/', releasesResponse);
+
+  const storage = {
+    user:
+      '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+  };
 
   const newClusterPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.New,
@@ -270,19 +282,17 @@ it(`it shows 'flatcar' for containerlinux versions >= 2345.3.1 in release select
     }
   );
 
-  const { findByText, findByTestId } = renderRouteWithStore(newClusterPath);
-
-  fireEvent.click(await findByText('Details and Alternatives'));
-
-  // Wait for the modal to pop up.
-  await findByText('Release Details');
-
-  const flatcarRelease = await findByTestId(
-    `release-${nodePoolWithFlatcarRelease.version}`
+  const { findByText, container } = renderRouteWithStore(
+    newClusterPath,
+    {},
+    storage
   );
 
-  expect(flatcarRelease.textContent).toEqual(
-    expect.not.stringMatching('containerlinux')
-  );
-  expect(flatcarRelease.textContent).toEqual(expect.stringMatching('flatcar'));
+  fireEvent.click(await findByText(/Available releases/i));
+
+  const table = container.querySelector('table');
+
+  for (const { version } of releasesResponse) {
+    expect(within(table).getByText(version)).toBeInTheDocument();
+  }
 });

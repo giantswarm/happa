@@ -28,7 +28,7 @@ const NextSteps = (props) => {
         pathname: clusterGuideNextStepsPath,
       }}
     >
-      <div className='centered col-9'>
+      <>
         <h1>
           <span>🎉</span> Congratulations
         </h1>
@@ -104,7 +104,7 @@ const NextSteps = (props) => {
             </button>
           </Link>
         </div>
-      </div>
+      </>
     </Breadcrumb>
   );
 };

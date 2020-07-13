@@ -20,7 +20,6 @@ import {
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
-import _ from 'underscore';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
 

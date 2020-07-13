@@ -40,9 +40,7 @@ class OrganizationListWrapper extends React.Component {
           <EmptyStateDisplay
             displayEmptyState={this.props.organizations.length === 0}
             emptyState={
-              <div>
-                <p>No organizations, create one using the button below:</p>
-              </div>
+              <p>No organizations, create one using the button below:</p>
             }
           >
             <OrganizationList

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import Section from 'UI/Section';
 
 import PasswordField from '../SignUp/PasswordField';
 
@@ -163,11 +164,8 @@ class ChangePassword extends React.Component {
     const { user, actions, ...rest } = this.props;
 
     return (
-      <div className='row section' {...rest}>
-        <div className='col-3'>
-          <h3 className='table-label'>Password</h3>
-        </div>
-        <div className='col-9'>
+      <Section title='Password' {...rest}>
+        <>
           <p>Use this form to change your password.</p>
 
           <form className='change_password_form' onSubmit={this.submit}>
@@ -237,8 +235,8 @@ class ChangePassword extends React.Component {
               </SlideTransition>
             </div>
           </form>
-        </div>
-      </div>
+        </>
+      </Section>
     );
   }
 }

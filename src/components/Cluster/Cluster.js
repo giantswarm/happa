@@ -1,16 +1,14 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import ClusterDetail from './ClusterDetail/ClusterDetail';
-import NewCluster from './NewCluster/NewCluster';
+import NewClusterWrapper from './NewCluster/NewClusterWrapper';
 
 const Cluster = () => (
   <Switch>
     <Route
-      component={NewCluster}
+      component={NewClusterWrapper}
       exact
       path={OrganizationsRoutes.Clusters.New}
     />
@@ -22,9 +20,4 @@ const Cluster = () => (
   </Switch>
 );
 
-Cluster.propTypes = {
-  dispatch: PropTypes.func,
-  match: PropTypes.object,
-};
-
-export default connect()(Cluster);
+export default Cluster;

@@ -16,12 +16,7 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-const NPViewAndEditNameStyled = styled<
-  React.ForwardRefExoticComponent<{}>,
-  // TODO: Remove this once `ViewAndEditName` is typed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any
->(ViewAndEditName)`
+const NPViewAndEditNameStyled = styled(ViewAndEditName)`
   input[type='text'] {
     font-size: 15px;
     line-height: 1.8em;
@@ -57,7 +52,7 @@ const NameWrapperDiv = styled.div`
     display: flex;
   }
   a {
-    ${Ellipsis}
+    ${Ellipsis};
     display: inline-block;
   }
 `;
@@ -76,9 +71,8 @@ const MixedInstanceType = styled(Code)`
   background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
-interface INPViewAndEditName {
+interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
-  name: string;
 }
 
 interface IStateProps {
@@ -94,7 +88,6 @@ interface INodePoolsProps extends IStateProps, IDispatchProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cluster: any;
   provider: string;
-  availableZonesGridTemplateAreas?: string;
 }
 
 interface INodePoolsState {
@@ -113,7 +106,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
      */
-    availableZonesGridTemplateAreas: PropTypes.string,
     cluster: PropTypes.object,
     // @ts-ignore
     nodePool: PropTypes.shape({
@@ -247,7 +239,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
     }
-    const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
+    const { cluster, nodePool } = this.props;
     const { id, scaling, availability_zones, status } = nodePool;
     const { nodes_ready: current, nodes: desired, spot_instances } = status;
     const { isNameBeingEdited } = this.state;
@@ -260,11 +252,11 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           style={{ gridColumn: isNameBeingEdited ? '2 / 9' : undefined }}
         >
           <NPViewAndEditNameStyled
-            name={nodePool.name}
-            type='node pool'
-            onSubmit={this.editNodePoolName}
-            ref={(viewEditName: INPViewAndEditName): void => {
-              this.viewEditNameRef = viewEditName;
+            value={nodePool.name}
+            typeLabel='node pool'
+            onSave={this.editNodePoolName}
+            ref={(viewEditName: HTMLSpanElement | null): void => {
+              this.viewEditNameRef = viewEditName as INPViewAndEditName;
             }}
             onToggleEditingState={this.toggleEditingState}
           />
@@ -274,12 +266,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           <>
             {this.formatInstanceTypes()}
             <div>
-              <AvailabilityZonesWrapper
-                availableZonesGridTemplateAreas={
-                  availableZonesGridTemplateAreas
-                }
-                zones={availability_zones}
-              />
+              <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
             <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
             <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>

@@ -9,7 +9,6 @@ import {
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { ErrorReporter } from 'lib/errors';
@@ -32,6 +31,7 @@ import Tabs from 'shared/Tabs';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
+import Section from 'UI/Section';
 import ViewAndEditName from 'UI/ViewEditName';
 import { memoize } from 'underscore';
 import { getNumberOfNodes } from 'utils/clusterUtils';
@@ -107,13 +107,15 @@ class ClusterDetailView extends React.Component {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
-    dispatch(
-      batchedClusterDetailView(
-        organizationId,
-        cluster.id,
-        this.props.isV5Cluster
-      )
-    );
+    if (cluster) {
+      dispatch(
+        batchedClusterDetailView(
+          organizationId,
+          cluster.id,
+          this.props.isV5Cluster
+        )
+      );
+    }
   };
 
   refreshClusterData = () => {
@@ -123,7 +125,9 @@ class ClusterDetailView extends React.Component {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
-    dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+    if (cluster) {
+      dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+    }
   };
 
   handleVisibilityChange = () => {
@@ -250,6 +254,7 @@ class ClusterDetailView extends React.Component {
 
     const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
 
+    if (!cluster) return null;
     const { id, owner } = cluster;
     const tabsPaths = this.getPathsForTabs(id, owner);
 
@@ -263,101 +268,94 @@ class ClusterDetailView extends React.Component {
               className='cluster-details'
               data-testid='cluster-details-view'
             >
-              <div className='row' style={{ marginBottom: '30px' }}>
-                <div className='col-sm-12 col-md-7 col-9'>
-                  <h1 style={{ marginLeft: '-10px' }}>
-                    <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
-                    <ViewAndEditName
-                      name={cluster.name}
-                      type='cluster'
-                      onSubmit={this.editClusterName}
-                    />{' '}
-                  </h1>
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-12'>
-                  <Tabs useRoutes={true}>
-                    <Tab eventKey={tabsPaths.Home} title='General'>
-                      {isV5Cluster ? (
-                        <V5ClusterDetailTable
-                          accessCluster={this.accessCluster}
-                          canClusterUpgrade={canClusterUpgrade}
-                          cluster={cluster}
-                          credentials={credentials}
-                          provider={provider}
-                          release={release}
-                          region={region}
-                          showUpgradeModal={this.showUpgradeModal}
-                          workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        />
-                      ) : (
-                        <V4ClusterDetailTable
-                          accessCluster={this.accessCluster}
-                          canClusterUpgrade={canClusterUpgrade}
-                          cluster={cluster}
-                          credentials={credentials}
-                          provider={provider}
-                          release={release}
-                          region={region}
-                          showScalingModal={this.showScalingModal}
-                          showUpgradeModal={this.showUpgradeModal}
-                          workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        />
-                      )}
+              <h1>
+                <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
+                <ViewAndEditName
+                  value={cluster.name}
+                  typeLabel='cluster'
+                  onSave={this.editClusterName}
+                />{' '}
+              </h1>
 
-                      <div className='row section cluster_delete col-12'>
-                        <div className='row'>
-                          <h3 className='table-label'>Delete This Cluster</h3>
-                        </div>
-                        <div className='row'>
-                          <Disclaimer>
-                            All workloads on this cluster will be terminated.
-                            Data stored on the worker nodes will be lost. There
-                            is no way to undo this action.
-                          </Disclaimer>
-                          <Button
-                            bsStyle='danger'
-                            onClick={this.showDeleteClusterModal.bind(
-                              this,
-                              cluster
-                            )}
-                          >
-                            <i className='fa fa-delete' /> Delete Cluster
-                          </Button>
-                        </div>
-                      </div>
-                    </Tab>
-                    <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
-                      <LoadingOverlay loading={this.props.loadingCluster}>
-                        <KeyPairs cluster={cluster} />
-                      </LoadingOverlay>
-                    </Tab>
-                    <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                      <ClusterApps
-                        clusterId={this.props.clusterId}
-                        dispatch={dispatch}
-                        installedApps={cluster.apps}
-                        release={release}
-                        showInstalledAppsBlock={
-                          Object.keys(this.props.catalogs.items).length > 0
-                        }
-                        hasOptionalIngress={
-                          cluster.capabilities.hasOptionalIngress
-                        }
-                      />
-                    </Tab>
-                    <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                      <Ingress
+              <>
+                <Tabs useRoutes={true}>
+                  <Tab eventKey={tabsPaths.Home} title='General'>
+                    {isV5Cluster ? (
+                      <V5ClusterDetailTable
+                        accessCluster={this.accessCluster}
+                        canClusterUpgrade={canClusterUpgrade}
+                        cluster={cluster}
+                        credentials={credentials}
                         provider={provider}
-                        k8sEndpoint={cluster.api_endpoint}
-                        kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                        kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                        release={release}
+                        region={region}
+                        showUpgradeModal={this.showUpgradeModal}
+                        workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />
-                    </Tab>
-                  </Tabs>
-                </div>
-              </div>
+                    ) : (
+                      <V4ClusterDetailTable
+                        accessCluster={this.accessCluster}
+                        canClusterUpgrade={canClusterUpgrade}
+                        cluster={cluster}
+                        credentials={credentials}
+                        provider={provider}
+                        release={release}
+                        region={region}
+                        showScalingModal={this.showScalingModal}
+                        showUpgradeModal={this.showUpgradeModal}
+                        workerNodesDesired={this.getDesiredNumberOfNodes()}
+                      />
+                    )}
+
+                    <Section title='Delete This Cluster' flat>
+                      <>
+                        <Disclaimer>
+                          All workloads on this cluster will be terminated. Data
+                          stored on the worker nodes will be lost. There is no
+                          way to undo this action.
+                        </Disclaimer>
+                        <Button
+                          bsStyle='danger'
+                          onClick={this.showDeleteClusterModal.bind(
+                            this,
+                            cluster
+                          )}
+                        >
+                          <i className='fa fa-delete' /> Delete Cluster
+                        </Button>
+                      </>
+                    </Section>
+                  </Tab>
+                  <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
+                    <LoadingOverlay loading={this.props.loadingCluster}>
+                      <KeyPairs cluster={cluster} />
+                    </LoadingOverlay>
+                  </Tab>
+                  <Tab eventKey={tabsPaths.Apps} title='Apps'>
+                    <ClusterApps
+                      clusterId={this.props.clusterId}
+                      dispatch={dispatch}
+                      installedApps={cluster.apps}
+                      release={release}
+                      showInstalledAppsBlock={
+                        Object.keys(this.props.catalogs.items).length > 0
+                      }
+                      hasOptionalIngress={
+                        cluster.capabilities.hasOptionalIngress
+                      }
+                    />
+                  </Tab>
+                  <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
+                    <Ingress
+                      cluster={cluster}
+                      provider={provider}
+                      k8sEndpoint={cluster.api_endpoint}
+                      kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                      kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                    />
+                  </Tab>
+                </Tabs>
+              </>
               {!isV5Cluster && (
                 <ScaleClusterModal
                   cluster={cluster}
@@ -402,7 +400,6 @@ ClusterDetailView.propTypes = {
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
-  releaseActions: PropTypes.object,
   release: PropTypes.object,
   provider: PropTypes.string,
   region: PropTypes.string,
@@ -428,7 +425,7 @@ function mapStateToProps(state, props) {
     // This looks for this specific cluster to be loaded.
     loadingCluster: selectLoadingFlagByIdAndAction(
       state,
-      props.cluster.id,
+      props.cluster?.id,
       CLUSTER_LOAD_DETAILS_REQUEST
     ),
   };
@@ -437,7 +434,6 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
-    releaseActions: bindActionCreators(releaseActions, dispatch),
     nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };

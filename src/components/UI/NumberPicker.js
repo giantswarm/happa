@@ -58,6 +58,7 @@ const ValueSpan = styled.span`
     width: 100%;
     height: 100%;
     outline: none;
+    font-size: 16px;
   }
   input:focus {
     outline: none;
@@ -222,7 +223,7 @@ class NumberPicker extends React.Component {
   render() {
     return (
       <Wrapper
-        className={`${this.props.theme ? this.props.theme : ''} ${
+        className={`${this.props.className ?? ''} ${this.props.theme ?? ''} ${
           this.props.readOnly ? 'readonly ' : ''
         }`}
       >
@@ -276,6 +277,7 @@ NumberPicker.propTypes = {
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   theme: PropTypes.string,
+  className: PropTypes.string,
 };
 
 function isWholeNumber(value) {

@@ -2,31 +2,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
-import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
-interface IClusterDashboardNodes {
+interface IClusterDashboardNodesProps {
   numberOfNodes: number;
-  createDate: string;
+  isClusterCreating: boolean;
 }
 
 // This component outputs 'Nodes not ready' or the actual number of nodes in the cluster.
-function ClusterDashboardNodes({
+const ClusterDashboardNodes: React.FC<IClusterDashboardNodesProps> = ({
   numberOfNodes,
-  createDate,
-}: IClusterDashboardNodes): React.ReactElement {
-  // If it was created more than an hour ago, then we should not show this message
-  // because something went wrong, so it's best to make it noticeable.
-  if (numberOfNodes === 0 && isClusterYoungerThanOneHour(createDate))
+  isClusterCreating,
+}) => {
+  if (numberOfNodes === 0 && isClusterCreating)
     return <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>;
 
   return (
     <span>{`${numberOfNodes} ${numberOfNodes === 1 ? 'node' : 'nodes'}`}</span>
   );
-}
+};
 
 ClusterDashboardNodes.propTypes = {
-  createDate: PropTypes.string,
-  numberOfNodes: PropTypes.number,
+  numberOfNodes: PropTypes.number.isRequired,
+  isClusterCreating: PropTypes.bool.isRequired,
 };
 
 export default ClusterDashboardNodes;

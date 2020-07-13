@@ -14,6 +14,7 @@ import ClusterDashboardNodes from './ClusterDashboardNodes';
 
 function ClusterDashboardResourcesV5({
   cluster,
+  isClusterCreating,
   loadingClusters,
   loadingNodePools,
   loadingStatus,
@@ -23,19 +24,26 @@ function ClusterDashboardResourcesV5({
   const hasNodePools = numberOfNodes !== 0 && cluster?.nodePools?.length > 0;
   const loading = loadingClusters || loadingStatus || loadingNodePools;
 
-  if (loading) return <ClusterDashboardLoadingPlaceholder isV5Cluster={true} />;
+  if (loading) {
+    return <ClusterDashboardLoadingPlaceholder isV5Cluster={true} />;
+  }
 
   return (
     <div data-testid='cluster-resources'>
       {hasNodePools && (
         <RefreshableLabel value={numberOfNodes}>
-          <span>{cluster.nodePools.length} node pools, </span>
+          <span>
+            {cluster.nodePools.length === 1
+              ? '1 node pool'
+              : `${cluster.nodePools.length} node pools`}
+            ,{' '}
+          </span>
         </RefreshableLabel>
       )}
       <RefreshableLabel value={numberOfNodes}>
         <ClusterDashboardNodes
+          isClusterCreating={isClusterCreating}
           numberOfNodes={numberOfNodes}
-          createDate={cluster.create_date}
         />
       </RefreshableLabel>
       {hasNodePools && (
@@ -56,6 +64,7 @@ function ClusterDashboardResourcesV5({
 
 ClusterDashboardResourcesV5.propTypes = {
   cluster: PropTypes.object,
+  isClusterCreating: PropTypes.bool,
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,
   resources: PropTypes.object,

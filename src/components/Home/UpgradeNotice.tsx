@@ -1,13 +1,8 @@
 import styled from '@emotion/styled';
-import { RELEASES_LOAD_REQUEST } from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  selectCanClusterUpgrade,
-  selectLoadingFlagByAction,
-} from 'selectors/clusterSelectors';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
 
 const UpgradeWrapperDiv = styled.div`
   display: inline-block;
@@ -32,7 +27,6 @@ const UpgradeWrapperDiv = styled.div`
 
 interface IUpgradeNoticeProps {
   canClusterUpgrade: boolean;
-  loadingReleases: boolean;
   className: string;
   clusterId: string;
   onClick?: () => void;
@@ -42,22 +36,19 @@ interface IUpgradeNoticeProps {
 // in case it is, outputs an upgrade notice,
 function UpgradeNotice({
   canClusterUpgrade,
-  loadingReleases,
   onClick,
   className,
 }: IUpgradeNoticeProps) {
   if (!canClusterUpgrade) return null;
 
   return (
-    <LoadingOverlay loading={loadingReleases}>
-      <UpgradeWrapperDiv
-        className={className}
-        onClick={onClick ? onClick : undefined}
-      >
-        <i className='fa fa-warning' />
-        <span>Upgrade Available</span>
-      </UpgradeWrapperDiv>
-    </LoadingOverlay>
+    <UpgradeWrapperDiv
+      className={className}
+      onClick={onClick ? onClick : undefined}
+    >
+      <i className='fa fa-warning' />
+      <span>Upgrade Available</span>
+    </UpgradeWrapperDiv>
   );
 }
 
@@ -76,7 +67,6 @@ function mapStateToProps(
 ) {
   return {
     canClusterUpgrade: selectCanClusterUpgrade(state, props.clusterId),
-    loadingReleases: selectLoadingFlagByAction(state, RELEASES_LOAD_REQUEST),
   };
 }
 

@@ -1,6 +1,5 @@
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage from 'lib/passageClient';
-import _ from 'underscore';
 
 import * as types from './actionTypes';
 
@@ -30,10 +29,10 @@ export function invitationsLoad() {
       .then((invitesArray) => {
         const invites = {};
 
-        _.each(invitesArray, (invite) => {
+        for (const invite of invitesArray) {
           invite.emaildomain = invite.email.split('@')[1];
           invites[invite.email] = invite;
-        });
+        }
 
         dispatch({
           type: types.INVITATIONS_LOAD_SUCCESS,
@@ -41,9 +40,6 @@ export function invitationsLoad() {
         });
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error when loading invitation:', error);
-
         new FlashMessage(
           'Something went wrong while trying to load invitations',
           messageType.ERROR,
@@ -89,9 +85,6 @@ export function invitationCreate(invitation) {
         return result;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error inviting user:', error);
-
         new FlashMessage(
           'Something went wrong while trying to create your invitation.',
           messageType.ERROR,

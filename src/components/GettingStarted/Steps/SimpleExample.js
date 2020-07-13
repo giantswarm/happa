@@ -97,7 +97,7 @@ class SimpleExample extends React.Component {
           pathname: clusterGuideExamplePath,
         }}
       >
-        <div className='centered col-9'>
+        <>
           <h1>Let&apos;s create an example application</h1>
           <p>
             To check if every part of your cluster is running as it should,
@@ -320,7 +320,7 @@ class SimpleExample extends React.Component {
               </button>
             </Link>
           </div>
-        </div>
+        </>
       </Breadcrumb>
     );
   }

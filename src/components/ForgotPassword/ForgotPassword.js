@@ -54,14 +54,11 @@ class ForgotPassword extends React.Component {
             break;
           default: {
             const heading = 'Unable to reset password';
-            let message =
-              'Something went wrong. Our servers might be down, or perhaps you&apos;ve made too many requests in a row. Please try again in 5 minutes.';
+            let message = `Something went wrong. Our servers might be down, or perhaps you've made too many requests in a row. Please try again in 5 minutes.`;
 
-            if (error.message) {
-              if (error.message.includes('Access-Control-Allow-Origin')) {
-                message =
-                  'Please ensure you have installed the required certificates to talk to the API server.';
-              }
+            if (error.message?.includes('Access-Control-Allow-Origin')) {
+              message =
+                'Please ensure you have installed the required certificates to talk to the API server.';
             }
 
             new FlashMessage(
@@ -119,7 +116,7 @@ class ForgotPassword extends React.Component {
 
   form = () => {
     return (
-      <div>
+      <>
         <h1>Forgot your password?</h1>
         <p>
           Enter the email you used to sign-up and submit the form. We&apos;ll
@@ -149,13 +146,13 @@ class ForgotPassword extends React.Component {
           </Button>
           <Link to={AppRoutes.Login}>Back to login form</Link>
         </form>
-      </div>
+      </>
     );
   };
 
   render() {
     return (
-      <div>
+      <>
         <div className='login_form--mask' />
 
         <SlideTransition in={true} appear={true} direction='down'>
@@ -163,7 +160,7 @@ class ForgotPassword extends React.Component {
             {this.state.tokenRequested ? this.success() : this.form()}
           </LoginFormContainer>
         </SlideTransition>
-      </div>
+      </>
     );
   }
 }

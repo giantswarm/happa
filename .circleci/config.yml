@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.8.9
+  architect: giantswarm/architect@0.10.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -56,35 +56,88 @@ workflows:
             - build
           <<: *job_filters
 
-      - architect/push-to-docker-legacy:
-          name: push-happa-to-aliyun-master
-          image: 'registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa'
-          username_envar: 'ALIYUN_USERNAME'
-          password_envar: 'ALIYUN_PASSWORD'
+      - architect/push-to-docker:
+          name: push-happa-to-quay
+          context: architect
+          image: "quay.io/giantswarm/happa"
+          username_envar: "QUAY_USERNAME"
+          password_envar: "QUAY_PASSWORD"
           requires:
             - build-container
+          # Needed to trigger job also on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
+          name: push-happa-to-aliyun
+          context: architect
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa"
+          username_envar: "ALIYUN_USERNAME"
+          password_envar: "ALIYUN_PASSWORD"
+          requires:
+            - build-container
+          # Needed to trigger job only on git tag.
           filters:
             branches:
               only: master
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-      - deploy-to-all:
+              only: /^v.*/
+
+      - architect/push-to-app-catalog:
+          name: push-happa-to-control-plane-app-catalog
+          context: architect
+          app_catalog: "control-plane-catalog"
+          app_catalog_test: "control-plane-test-catalog"
+          chart: "happa"
           requires:
-            - build-container
-            - push-happa-to-aliyun-master
+            - push-happa-to-quay
+          # Needed to trigger job also on git tag.
           filters:
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              ignore: /.*/
-      - deploy-to-testing:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          name: push-happa-to-aws-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "aws-app-collection"
+          unique: "true"
           requires:
-            - build-container
-            - push-happa-to-aliyun-master
+            - push-happa-to-control-plane-app-catalog
           filters:
             branches:
-              only:
-                - master
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          name: push-happa-to-azure-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "azure-app-collection"
+          unique: "true"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          name: push-happa-to-kvm-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "kvm-app-collection"
+          unique: "true"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
 jobs:
   checkout:
@@ -220,7 +273,7 @@ jobs:
       - run:
           name: Launch container for tests
           command: |
-            docker run --name happa-branch -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+            docker run --name happa-branch -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 -e AUDIENCE=test -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
             sleep 2
             CURL_OUTPUT=$(curl -s http://localhost:8000)
             echo "${CURL_OUTPUT}" | grep Happa

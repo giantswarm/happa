@@ -48,11 +48,8 @@ class ConfigKubeCtl extends React.Component {
           },
         });
       })
-      .catch((error) => {
+      .catch(() => {
         const keyPairChangeDelay = 200;
-
-        // eslint-disable-next-line no-console
-        console.error(error);
 
         setTimeout(() => {
           this.setState({
@@ -222,7 +219,7 @@ class ConfigKubeCtl extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <p>
           Generate and download a cluster configuration file for{' '}
           <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster,
@@ -318,7 +315,7 @@ class ConfigKubeCtl extends React.Component {
             can save your future self some time by creating an alias.
           </p>
         </div>
-      </div>
+      </>
     );
   }
 }
