@@ -2,10 +2,7 @@ import {
   CLUSTER_UPDATE_APP_ERROR,
   CLUSTER_UPDATE_APP_REQUEST,
 } from 'actions/actionTypes.js';
-import {
-  deleteApp as deleteAppAction,
-  updateApp as updateAppAction,
-} from 'actions/appActions';
+import { updateApp as updateAppAction } from 'actions/appActions';
 import {
   createAppConfig as createAppConfigAction,
   deleteAppConfig as deleteAppConfigAction,
@@ -23,6 +20,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { deleteClusterApp as deleteAppAction } from 'stores/clusterapps/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -105,7 +103,7 @@ const AppDetailsModal = (props) => {
   }
 
   async function deleteApp() {
-    await props.dispatch(deleteAppAction(appName, clusterId));
+    await props.dispatch(deleteAppAction({ appName, clusterId }));
     await loadAppsAndClose();
   }
 
