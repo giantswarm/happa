@@ -19,7 +19,6 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Constants, CSSBreakpoints } from 'shared/constants';
-import FeatureFlags from 'shared/FeatureFlags';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -396,7 +395,7 @@ class V5ClusterDetailTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
 
-        {FeatureFlags.FEATURE_HA_MASTERS && master_nodes && (
+        {master_nodes && (
           <MasterNodesRow
             isHA={master_nodes.high_availability}
             availabilityZones={master_nodes.availability_zones}

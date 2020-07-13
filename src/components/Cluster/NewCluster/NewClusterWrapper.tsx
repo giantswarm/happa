@@ -59,6 +59,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
     setClusterName,
   ] = useValidatingInternalValue('Unnamed cluster', clusterNameLengthValidator);
   const [selectedRelease, setSelectedRelease] = useState('');
+  const capabilitiesFactory = useSelector(computeCapabilities);
 
   const CreationForm = useMemo(() => {
     let semVerCompare = -1;
@@ -74,7 +75,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
   }, [provider, firstNodePoolsRelease, selectedRelease]);
 
   const creationCapabilities = useMemo(
-    () => computeCapabilities(selectedRelease, provider),
+    () => capabilitiesFactory(selectedRelease, provider),
     [selectedRelease, provider]
   );
 
