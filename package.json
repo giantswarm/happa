@@ -127,7 +127,7 @@
     "@types/react-window": "^1.8.2",
     "@types/semver-compare": "^1.0.1",
     "@types/serialize-javascript": "^1.5.0",
-    "@types/superagent": "^4.1.7",
+    "@types/superagent": "^4.1.8",
     "@types/underscore": "^1.10.7",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
