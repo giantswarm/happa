@@ -160,6 +160,10 @@ export function computeCapabilities(releaseVersion, provider) {
         cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
 
       break;
+
+    case Providers.AZURE:
+      hasOptionalIngress = cmp(releaseVersion, '12.0.0') >= 0;
+      break;
   }
 
   return {

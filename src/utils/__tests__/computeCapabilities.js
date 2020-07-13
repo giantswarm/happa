@@ -3,9 +3,19 @@ import { computeCapabilities } from '../clusterUtils';
 describe('computeCapabilities', () => {
   describe('hasOptionalIngress', () => {
     describe('on azure', () => {
-      it('is false for Azure at any version', () => {
-        const capabilities = computeCapabilities('8.1.0', 'azure');
+      it('is false for Azure below 12.0.0', () => {
+        const capabilities = computeCapabilities('9.0.0', 'azure');
         expect(capabilities.hasOptionalIngress).toBe(false);
+      });
+
+      it('is true for Azure at 12.0.0', () => {
+        const capabilities = computeCapabilities('12.0.0', 'azure');
+        expect(capabilities.hasOptionalIngress).toBe(true);
+      });
+
+      it('is true for Azure above 12.0.0', () => {
+        const capabilities = computeCapabilities('13.0.0', 'azure');
+        expect(capabilities.hasOptionalIngress).toBe(true);
       });
     });
 
@@ -64,23 +74,6 @@ describe('computeCapabilities', () => {
         const capabilities = computeCapabilities('8.0.0', 'kvm');
         expect(capabilities.supportsHAMasters).toBe(false);
       });
-    });
-  });
-
-  describe('on azure', () => {
-    it('is false for Azure below 11.4.0', () => {
-      const capabilities = computeCapabilities('9.0.0', 'azure');
-      expect(capabilities.hasOptionalIngress).toBe(false);
-    });
-
-    it('is true for Azure at 11.4.0', () => {
-      const capabilities = computeCapabilities('11.4.0', 'azure');
-      expect(capabilities.hasOptionalIngress).toBe(true);
-    });
-
-    it('is true for Azure above 11.4.0', () => {
-      const capabilities = computeCapabilities('12.0.0', 'azure');
-      expect(capabilities.hasOptionalIngress).toBe(true);
     });
   });
 });
