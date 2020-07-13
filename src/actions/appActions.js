@@ -10,52 +10,6 @@ export function selectCluster(clusterID) {
 }
 
 /**
- * Takes an app and a cluster id and tries to delete it. Dispatches CLUSTER_DELETE_APP_SUCCESS
- * on success or CLUSTER_DELETE_APP_ERROR on error.
- *
- * @param {Object} appName The name of the app
- * @param {Object} clusterID Where to delete the app.
- */
-export function deleteApp(appName, clusterID) {
-  return function (dispatch, getState) {
-    dispatch({
-      type: types.CLUSTER_DELETE_APP_REQUEST,
-      clusterID,
-      appName,
-    });
-
-    const appsApi = new GiantSwarm.AppsApi();
-
-    const v5Clusters = getState().entities.clusters.v5Clusters;
-    const isV5Cluster = v5Clusters.includes(clusterID);
-
-    let removeApp = appsApi.deleteClusterAppV4.bind(appsApi);
-
-    if (isV5Cluster) {
-      removeApp = appsApi.deleteClusterAppV5.bind(appsApi);
-    }
-
-    return removeApp(clusterID, appName)
-      .then(() => {
-        new FlashMessage(
-          `App <code>${appName}</code> was scheduled for deletion on <code>${clusterID}</code>. This may take a couple of minutes.`,
-          messageType.SUCCESS,
-          messageTTL.LONG
-        );
-      })
-      .catch((error) => {
-        new FlashMessage(
-          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
-          messageType.ERROR,
-          messageTTL.LONG
-        );
-
-        throw error;
-      });
-  };
-}
-
-/**
  * Takes an app and a cluster id and some values and tries to update the app to those values. Dispatches `CLUSTER_UPDATE_APP_SUCCESS`
  * on success or `CLUSTER_UPDATE_APP_ERROR` on error.
  *

@@ -4,8 +4,65 @@ import GiantSwarm, { V4App } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
 import { StatusCodes } from 'shared/constants';
+import { v4orV5 } from 'utils/v4orV5';
 
 import { createAsynchronousAction } from '../asynchronousAction';
+
+interface IDeleteClusterAppRequest {
+  appName: string;
+  clusterId: string;
+}
+
+interface IDeleteClusterAppResponse {
+  appName: string;
+  clusterId: string;
+}
+
+export const deleteClusterApp = createAsynchronousAction<
+  IDeleteClusterAppRequest,
+  IState,
+  IDeleteClusterAppResponse
+>({
+  actionTypePrefix: 'DELETE_CLUSTER_APP',
+  perform: async (state, _dispatch, payload) => {
+    if (!payload) {
+      throw new TypeError('request payload cannot be undefined');
+    }
+
+    const { appName, clusterId } = payload;
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const deleteApp = v4orV5(
+      appsApi.deleteClusterAppV4.bind(appsApi),
+      appsApi.deleteClusterAppV5.bind(appsApi),
+      clusterId,
+      state
+    );
+
+    try {
+      await deleteApp(clusterId, appName);
+
+      new FlashMessage(
+        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterId}</code>. This may take a couple of minutes.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return { appName, clusterId };
+    } catch (error) {
+      new FlashMessage(
+        `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+        messageType.ERROR,
+        messageTTL.LONG
+      );
+
+      throw error;
+    }
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
 
 interface ILoadClusterAppsRequest {
   clusterId: string;
@@ -32,14 +89,12 @@ export const loadClusterApps = createAsynchronousAction<
 
     const appsApi = new GiantSwarm.AppsApi();
 
-    const v5Clusters = state.entities.clusters.v5Clusters || [];
-    const isV5Cluster = v5Clusters.includes(payload.clusterId);
-
-    let getClusterApps = appsApi.getClusterAppsV4.bind(appsApi);
-
-    if (isV5Cluster) {
-      getClusterApps = appsApi.getClusterAppsV5.bind(appsApi);
-    }
+    const getClusterApps = v4orV5(
+      appsApi.getClusterAppsV4.bind(appsApi),
+      appsApi.getClusterAppsV5.bind(appsApi),
+      payload.clusterId,
+      state
+    );
 
     try {
       let apps = await getClusterApps(payload.clusterId);
@@ -83,18 +138,6 @@ interface IInstallAppResponse {
   clusterId: string;
 }
 
-const createAppV4orV5 = (state: IState, clusterId: string) => {
-  const appsApi = new GiantSwarm.AppsApi();
-
-  const v5Clusters = state.entities.clusters.v5Clusters;
-  const isV5Cluster = v5Clusters.includes(clusterId);
-
-  let createApp = appsApi.createClusterAppV4.bind(appsApi);
-  if (isV5Cluster) createApp = appsApi.createClusterAppV5.bind(appsApi);
-
-  return createApp;
-};
-
 export const installApp = createAsynchronousAction<
   IInstallAppRequest,
   IState,
@@ -133,7 +176,14 @@ export const installApp = createAsynchronousAction<
       },
     };
 
-    const createApp = createAppV4orV5(state, clusterId);
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const createApp = v4orV5(
+      appsApi.createClusterAppV4.bind(appsApi),
+      appsApi.createClusterAppV5.bind(appsApi),
+      payload.clusterId,
+      state
+    );
 
     try {
       await createApp(clusterId, name, request);
