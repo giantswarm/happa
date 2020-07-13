@@ -1,9 +1,4 @@
 import {
-  CLUSTER_UPDATE_APP_ERROR,
-  CLUSTER_UPDATE_APP_REQUEST,
-} from 'actions/actionTypes.js';
-import { updateApp as updateAppAction } from 'actions/appActions';
-import {
   createAppConfig as createAppConfigAction,
   deleteAppConfig as deleteAppConfigAction,
   updateAppConfig as updateAppConfigAction,
@@ -20,7 +15,10 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
-import { deleteClusterApp as deleteAppAction } from 'stores/clusterapps/actions';
+import {
+  deleteClusterApp as deleteAppAction,
+  updateClusterApp as updateAppAction,
+} from 'stores/clusterapps/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -40,7 +38,9 @@ const modalPanes = {
 const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
-  const { clear: clearUpdateAppError } = useError(CLUSTER_UPDATE_APP_ERROR);
+  const { clear: clearUpdateAppError } = useError(
+    updateAppAction().types.error
+  );
 
   const { app, catalog, dispatch } = props;
 
@@ -80,9 +80,8 @@ const AppDetailsModal = (props) => {
   }
 
   async function editChartVersion() {
-    const changes = { spec: { version: desiredVersion } };
     const { error } = await props.dispatch(
-      updateAppAction(appName, clusterId, changes)
+      updateAppAction({ appName, clusterId, version: desiredVersion })
     );
 
     if (error) {
@@ -313,7 +312,7 @@ function mapStateToProps(state, ownProps) {
   return {
     clusterUpdateRequestPending: selectLoadingFlagByAction(
       state,
-      CLUSTER_UPDATE_APP_REQUEST
+      updateAppAction().types.request
     ),
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:
