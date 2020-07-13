@@ -163,6 +163,7 @@ export function computeCapabilities(releaseVersion, provider) {
 
     case Providers.AZURE:
       hasOptionalIngress = cmp(releaseVersion, '12.0.0') >= 0;
+
       break;
   }
 

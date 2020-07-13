@@ -4,7 +4,7 @@ describe('computeCapabilities', () => {
   describe('hasOptionalIngress', () => {
     describe('on azure', () => {
       it('is false for Azure below 12.0.0', () => {
-        const capabilities = computeCapabilities('9.0.0', 'azure');
+        const capabilities = computeCapabilities('11.0.0', 'azure');
         expect(capabilities.hasOptionalIngress).toBe(false);
       });
 
