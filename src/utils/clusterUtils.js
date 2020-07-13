@@ -145,17 +145,18 @@ export function getCpusTotalNodePools(nodePools = []) {
  * This function takes a release version and provider and returns a
  * capabilities object with the features that this cluster supports.
  * @param state {IState} - The app's global state.
+ * @returns {function (string, string): {hasOptionalIngress: boolean, supportsHAMasters: boolean}}
  */
 export const computeCapabilities = (state) => (releaseVersion, provider) => {
   let hasOptionalIngress = false;
   let supportsHAMasters = false;
 
-  const minHAMAstersVersion = getMinHAMastersVersion(state);
+  const minHAMastersVersion = getMinHAMastersVersion(state);
 
   switch (provider) {
     case Providers.AWS:
       hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
-      supportsHAMasters = cmp(releaseVersion, minHAMAstersVersion) >= 0;
+      supportsHAMasters = cmp(releaseVersion, minHAMastersVersion) >= 0;
 
       break;
 
