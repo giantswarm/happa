@@ -1,10 +1,10 @@
-import { CLUSTER_UPDATE_APP_ERROR } from 'actions/actionTypes.js';
 import { useError } from 'hooks/errors';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { updateClusterApp } from 'stores/clusterapps/actions';
 
 const EditChartVersionPane = (props) => {
-  const { errorMessage } = useError(CLUSTER_UPDATE_APP_ERROR);
+  const { errorMessage } = useError(updateClusterApp().types.error);
 
   return (
     <div data-testid='edit-chart-version-pane'>

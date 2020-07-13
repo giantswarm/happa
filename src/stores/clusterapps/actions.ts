@@ -8,6 +8,62 @@ import { v4orV5 } from 'utils/v4orV5';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
+interface IUpdateClusterAppRequest {
+  appName: string;
+  clusterId: string;
+  version: string;
+}
+
+interface IUpdateClusterAppResponse {
+  error: string;
+}
+
+export const updateClusterApp = createAsynchronousAction<
+  IUpdateClusterAppRequest,
+  IState,
+  IUpdateClusterAppResponse
+>({
+  actionTypePrefix: 'UPDATE_CLUSTER_APP',
+  perform: async (state, _dispatch, payload) => {
+    if (!payload) {
+      throw new TypeError('request payload cannot be undefined');
+    }
+
+    const { appName, clusterId, version } = payload;
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const modifyApp = v4orV5(
+      appsApi.modifyClusterAppV4.bind(appsApi),
+      appsApi.modifyClusterAppV5.bind(appsApi),
+      clusterId,
+      state
+    );
+
+    try {
+      await modifyApp(clusterId, appName, { body: { spec: version } });
+
+      new FlashMessage(
+        `App <code>${appName}</code> on <code>${clusterId}</code> has been updated. Changes might take some time to take effect.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return {
+        error: '',
+      };
+    } catch (error) {
+      const errorMessage =
+        error?.message ||
+        'Something went wrong while trying to update your app. Please try again later or contact support.';
+
+      throw new Error(errorMessage);
+    }
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
+
 interface IDeleteClusterAppRequest {
   appName: string;
   clusterId: string;

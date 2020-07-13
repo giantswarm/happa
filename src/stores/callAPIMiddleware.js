@@ -25,16 +25,24 @@ export function callAPIMiddleware({ dispatch, getState }) {
           response,
           type: types.success,
         });
+
+        return response;
       })
       .catch((error) => {
         dispatch({
-          error,
+          error: error.message,
           type: types.error,
         });
 
         if (throwOnError) {
           throw error;
         }
+
+        // TODO: Remove this, this supports a pattern we want to factor out
+        // eventually.
+        return {
+          error: error.message,
+        };
       });
   };
 }
