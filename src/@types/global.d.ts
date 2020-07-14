@@ -1,2 +1,5 @@
-// Feature flags.
-declare var FEATURE_HA_MASTERS: boolean;
+/**
+ * Declare feature flags here, with the format:
+ *
+ * declare var FEATURE_SOME_FEATURE: boolean;
+ */

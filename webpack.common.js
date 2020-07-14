@@ -71,9 +71,7 @@ const makeEndpoints = () => {
 };
 
 const makeFeatureFlags = () => {
-  const defaults = {
-    FEATURE_HA_MASTERS: true,
-  };
+  const defaults = {};
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
 

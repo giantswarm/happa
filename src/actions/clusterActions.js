@@ -17,7 +17,7 @@ const clustersApi = new GiantSwarm.ClustersApi();
 
 // This is a helper function that transforms an array of clusters into an object
 // of clusters with its ids as keys. Also we add some data to the clusters objects.
-function clustersLoadArrayToObject(clusters, provider) {
+function clustersLoadArrayToObject(clusters, provider, makeCapabilities) {
   return clusters
     .map((cluster) => {
       return {
@@ -29,7 +29,7 @@ function clustersLoadArrayToObject(clusters, provider) {
         // Since we only load cluster details for clusters that are in the
         // currently selected org, we also need to computeCapabilities here.
         // The install app modal lists all clusters and needs to know the capabiltiies.
-        capabilities: computeCapabilities(cluster.release_version, provider),
+        capabilities: makeCapabilities(cluster.release_version, provider),
         labels: filterLabels(cluster.labels),
       };
     })
@@ -48,12 +48,17 @@ export function clustersList({ withLoadingFlags }) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
     const provider = getState().main.info.general.provider;
+    const makeCapabilities = computeCapabilities(getState());
 
     // Fetch all clusters.
     return clustersApi
       .getClusters()
       .then((data) => {
-        const clusters = clustersLoadArrayToObject(data, provider);
+        const clusters = clustersLoadArrayToObject(
+          data,
+          provider,
+          makeCapabilities
+        );
 
         const allIds = data.map((cluster) => cluster.id);
 
@@ -86,6 +91,7 @@ export function refreshClustersList() {
 
     const provider = getState().main.info.general.provider;
     const clusterStoredIds = Object.keys(getState().entities.clusters.items);
+    const makeCapabilities = computeCapabilities(getState());
 
     // Fetch all clusters.
     clustersApi
@@ -101,7 +107,11 @@ export function refreshClustersList() {
 
         // If there are new clusters...
         if (addedClusters.length > 0) {
-          clusters = clustersLoadArrayToObject(addedClusters, provider);
+          clusters = clustersLoadArrayToObject(
+            addedClusters,
+            provider,
+            makeCapabilities
+          );
 
           v5ClusterIds = addedClusters
             .filter((cluster) => cluster.path.startsWith('/v5'))
@@ -197,7 +207,7 @@ export function clusterLoadDetails(
       if (isV5Cluster && initializeNodePools) cluster.nodePools = [];
 
       const provider = getState().main.info.general.provider;
-      cluster.capabilities = computeCapabilities(
+      cluster.capabilities = computeCapabilities(getState())(
         cluster.release_version,
         provider
       );
