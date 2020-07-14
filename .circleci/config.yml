@@ -281,6 +281,7 @@ jobs:
       - run:
           name: Launch container for tests
           command: |
+            set -x
             docker run --name happa-branch \
               -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
               -e AUDIENCE=test \
