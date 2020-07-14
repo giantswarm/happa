@@ -295,7 +295,7 @@ jobs:
               -d \
               "$(cat .docker_image_name)"
             sleep 2
-            CURL_OUTPUT=$(curl -s http://localhost:8000)
+            CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep Happa
 
   deploy-to-testing:
