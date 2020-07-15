@@ -1,6 +1,6 @@
+import { getMinHAMastersVersion } from 'selectors/featureSelectors';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
-import FeatureFlags from 'shared/FeatureFlags';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
@@ -144,20 +144,24 @@ export function getCpusTotalNodePools(nodePools = []) {
 /**
  * This function takes a release version and provider and returns a
  * capabilities object with the features that this cluster supports.
- * @param releaseVersion {string} - The cluster's release version.
- * @param provider {"aws"|"azure"|"kvm"} - Possible service providers.
- * @returns {{supportsHAMasters: boolean, hasOptionalIngress: boolean}}
+ * @param state {IState} - The app's global state.
+ * @returns {function (string, string): {hasOptionalIngress: boolean, supportsHAMasters: boolean}}
  */
-export function computeCapabilities(releaseVersion, provider) {
+export const computeCapabilities = (state) => (releaseVersion, provider) => {
   let hasOptionalIngress = false;
   let supportsHAMasters = false;
+
+  const minHAMastersVersion = getMinHAMastersVersion(state);
 
   switch (provider) {
     case Providers.AWS:
       hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
-      supportsHAMasters =
-        FeatureFlags.FEATURE_HA_MASTERS &&
-        cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
+      supportsHAMasters = cmp(releaseVersion, minHAMastersVersion) >= 0;
+
+      break;
+
+    case Providers.AZURE:
+      hasOptionalIngress = cmp(releaseVersion, '12.0.0') >= 0;
 
       break;
   }
@@ -166,7 +170,7 @@ export function computeCapabilities(releaseVersion, provider) {
     hasOptionalIngress,
     supportsHAMasters,
   };
-}
+};
 
 export const filterLabels = (labels) => {
   if (!labels) {

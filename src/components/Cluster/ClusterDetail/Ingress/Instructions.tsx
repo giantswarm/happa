@@ -64,42 +64,40 @@ const Instructions: React.FC<IInstructionsProps> = ({
   return (
     <>
       <Wrapper {...rest}>
-        <>
-          <Info>
-            <InfoRow>
-              <Label>Base domain:</Label>
-              <URIWrapper>
-                <StyledURIBlock>{basePath}</StyledURIBlock>
-              </URIWrapper>
-            </InfoRow>
-            <InfoRow>
-              <Label>Load balancer DNS name:</Label>
-              <URIWrapper>
-                <StyledURIBlock>{balancerPath}</StyledURIBlock>
-              </URIWrapper>
-            </InfoRow>
-            <InfoRow>
-              <Label>Hostname pattern:</Label>
-              <URIWrapper>
-                <StyledURIBlock copyContent={patternPath}>
-                  <Emphasis>{IngressPathPrefixes.Pattern}</Emphasis>
-                  {basePath}
-                </StyledURIBlock>
-                <Description>
-                  Replace <code>{IngressPathPrefixes.Pattern}</code> with a
-                  unique domain name segment to address your service.
-                </Description>
-              </URIWrapper>
-            </InfoRow>
+        <Info>
+          <InfoRow>
+            <Label>Base domain:</Label>
+            <URIWrapper>
+              <StyledURIBlock>{basePath}</StyledURIBlock>
+            </URIWrapper>
+          </InfoRow>
+          <InfoRow>
+            <Label>Load balancer DNS name:</Label>
+            <URIWrapper>
+              <StyledURIBlock>{balancerPath}</StyledURIBlock>
+            </URIWrapper>
+          </InfoRow>
+          <InfoRow>
+            <Label>Hostname pattern:</Label>
+            <URIWrapper>
+              <StyledURIBlock copyContent={patternPath}>
+                <Emphasis>{IngressPathPrefixes.Pattern}</Emphasis>
+                {basePath}
+              </StyledURIBlock>
+              <Description>
+                Replace <code>{IngressPathPrefixes.Pattern}</code> with a unique
+                domain name segment to address your service.
+              </Description>
+            </URIWrapper>
+          </InfoRow>
 
-            {provider === Providers.KVM && (
-              <InfoRow>
-                <Label>Load balancer TCP ports:</Label>
-                <Ports HTTP={kvmTCPHTTPPort} HTTPS={kvmTCPHTTPSPort} />
-              </InfoRow>
-            )}
-          </Info>
-        </>
+          {provider === Providers.KVM && (
+            <InfoRow>
+              <Label>Load balancer TCP ports:</Label>
+              <Ports HTTP={kvmTCPHTTPPort} HTTPS={kvmTCPHTTPSPort} />
+            </InfoRow>
+          )}
+        </Info>
       </Wrapper>
 
       <Text>

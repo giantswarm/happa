@@ -1,13 +1,8 @@
 import { IState } from 'reducers/types';
 import { Constants, Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 
-enum Provider {
-  AWS = 'aws',
-  AZURE = 'azure',
-  KVM = 'kvm',
-}
-
-export const getProvider = (state: IState): Provider =>
+export const getProvider = (state: IState): PropertiesOf<typeof Providers> =>
   state.main.info.general.provider;
 
 export const getFirstNodePoolsRelease = (state: IState): string => {
@@ -15,11 +10,11 @@ export const getFirstNodePoolsRelease = (state: IState): string => {
   let releaseVersion = '';
 
   switch (provider) {
-    case Provider.AWS:
+    case Providers.AWS:
       releaseVersion = Constants.AWS_V5_VERSION;
       break;
 
-    case Provider.AZURE:
+    case Providers.AZURE:
       releaseVersion = Constants.AZURE_V5_VERSION;
       break;
   }

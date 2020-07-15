@@ -1,6 +1,6 @@
 FROM nginx:1.16-alpine
 
-RUN apk --no-cache add jq findutils gzip && \
+RUN apk --no-cache add findutils gzip && \
   rm -r /etc/nginx/conf.d && \
   mkdir -p /etc/nginx/config
 

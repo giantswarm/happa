@@ -59,6 +59,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
     setClusterName,
   ] = useValidatingInternalValue('Unnamed cluster', clusterNameLengthValidator);
   const [selectedRelease, setSelectedRelease] = useState('');
+  const makeCapabilities = useSelector(computeCapabilities);
 
   const CreationForm = useMemo(() => {
     if (provider === Providers.KVM) {
@@ -73,7 +74,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
   }, [provider, firstNodePoolsRelease, selectedRelease]);
 
   const creationCapabilities = useMemo(
-    () => computeCapabilities(selectedRelease, provider),
+    () => makeCapabilities(selectedRelease, provider),
     [selectedRelease, provider]
   );
 
