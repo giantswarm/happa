@@ -20,7 +20,8 @@ export const getFirstNodePoolsRelease = (state: IState): string => {
   }
 
   if (state.main.info.features) {
-    releaseVersion = state.main.info.features.nodepools.release_version_minimum;
+    releaseVersion =
+      state.main.info.features.nodepools?.release_version_minimum;
   }
 
   return releaseVersion;
