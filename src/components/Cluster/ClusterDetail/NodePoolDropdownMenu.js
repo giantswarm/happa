@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import * as Providers from 'shared/constants/providers';
 import DropdownMenu from 'UI/DropdownMenu';
 
 const NodePoolDropdownMenu = ({
@@ -7,6 +8,7 @@ const NodePoolDropdownMenu = ({
   deleteNodePool,
   nodePool,
   showNodePoolScalingModal,
+  provider,
   ...rest
 }) => {
   return (
@@ -43,17 +45,21 @@ const NodePoolDropdownMenu = ({
                   Rename
                 </a>
               </li>
-              <li>
-                <a
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    showNodePoolScalingModal(nodePool);
-                  }}
-                >
-                  Edit scaling limits
-                </a>
-              </li>
+
+              {provider === Providers.AWS && (
+                <li>
+                  <a
+                    href='#'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showNodePoolScalingModal(nodePool);
+                    }}
+                  >
+                    Edit scaling limits
+                  </a>
+                </li>
+              )}
+
               <li>
                 <a
                   href='#'
@@ -75,6 +81,7 @@ const NodePoolDropdownMenu = ({
 
 NodePoolDropdownMenu.propTypes = {
   clusterId: PropTypes.string,
+  provider: PropTypes.string,
   nodePool: PropTypes.object,
   deleteNodePool: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,

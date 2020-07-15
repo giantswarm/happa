@@ -306,6 +306,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
               </>
             )}
             <StyledNodePoolDropdownMenu
+              provider={provider}
               clusterId={cluster.id}
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}
