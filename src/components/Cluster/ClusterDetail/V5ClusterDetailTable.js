@@ -4,12 +4,11 @@ import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
+import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
@@ -18,7 +17,7 @@ import {
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
-import { Constants, CSSBreakpoints } from 'shared/constants';
+import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
@@ -122,7 +121,7 @@ const GridRowNodePoolsHeaders = styled.div`
   margin-bottom: 0;
 `;
 
-const NodePoolsColumnHeader = styled.span`
+export const NodePoolsColumnHeader = styled.span`
   text-align: center;
   text-transform: uppercase;
 `;
@@ -444,60 +443,11 @@ class V5ClusterDetailTable extends React.Component {
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
+
                 {provider === Providers.AWS && (
-                  <>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip id='min-tooltip'>
-                          {Constants.MIN_NODES_EXPLANATION}
-                        </Tooltip>
-                      }
-                      placement='top'
-                    >
-                      <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip id='max-tooltip'>
-                          {Constants.MAX_NODES_EXPLANATION}
-                        </Tooltip>
-                      }
-                      placement='top'
-                    >
-                      <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip id='desired-tooltip'>
-                          {Constants.DESIRED_NODES_EXPLANATION}
-                        </Tooltip>
-                      }
-                      placement='top'
-                    >
-                      <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip id='current-tooltip'>
-                          {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
-                        </Tooltip>
-                      }
-                      placement='top'
-                    >
-                      <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip id='spot-tooltip'>
-                          {Constants.SPOT_NODES_EXPLNANATION}
-                        </Tooltip>
-                      }
-                      placement='top'
-                    >
-                      <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
-                    </OverlayTrigger>
-                  </>
+                  <V5ClusterDetailTableNodePoolScaling />
                 )}
+
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>

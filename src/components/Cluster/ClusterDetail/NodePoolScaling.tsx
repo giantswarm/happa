@@ -17,7 +17,7 @@ const NodesWrapper = styled.div<{ highlight?: boolean }>`
     highlight && theme.colors.goldBackground};
 `;
 
-interface INodePoolScalingProps extends React.ComponentPropsWithoutRef<'div'> {
+interface INodePoolScalingProps {
   nodePool: INodePool;
   provider: PropertiesOf<typeof Providers>;
 }
