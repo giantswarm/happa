@@ -92,11 +92,15 @@ export function getNumberOfNodePoolsNodes(nodePools = []) {
 }
 
 export function getMemoryTotalNodePools(nodePools = []) {
-  if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
+  const provider = guessProviderFromNodePools(nodePools);
+  if (provider === null) {
     return 0;
   }
 
-  const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+  const instanceTypes = getInstanceTypesForProvider(provider);
+  if (instanceTypes === null) {
+    return 0;
+  }
 
   // Here we are returning (and accumulating) for each node pool the number
   // of RAM each instance has multiplied by the number of nodes the node pool has.
@@ -105,23 +109,42 @@ export function getMemoryTotalNodePools(nodePools = []) {
   // of instances, and this method will have to be modified
   const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
     let instanceTypeRAM = 0;
-    if (awsInstanceTypes[nodePool.node_spec.aws.instance_type]) {
-      instanceTypeRAM =
-        awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+    let currInstanceType = '';
+
+    switch (provider) {
+      case Providers.AWS:
+        currInstanceType = nodePool.node_spec.aws.instance_type;
+        instanceTypeRAM = instanceTypes[currInstanceType]?.memory_size_gb ?? 0;
+
+        break;
+
+      case Providers.AZURE:
+        currInstanceType = nodePool.node_spec.azure.vm_size;
+        instanceTypeRAM = instanceTypes[currInstanceType]?.memoryInMb ?? 0;
+        // eslint-disable-next-line no-magic-numbers
+        instanceTypeRAM = (instanceTypeRAM / 1000).toFixed(1);
+
+        break;
     }
 
-    return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
+    instanceTypeRAM = instanceTypeRAM * nodePool.status.nodes_ready;
+
+    return accumulator + instanceTypeRAM;
   }, 0);
 
   return TotalRAM;
 }
 
 export function getCpusTotalNodePools(nodePools = []) {
-  if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
+  const provider = guessProviderFromNodePools(nodePools);
+  if (provider === null) {
     return 0;
   }
 
-  const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+  const instanceTypes = getInstanceTypesForProvider(provider);
+  if (instanceTypes === null) {
+    return 0;
+  }
 
   // Here we are returning (and accumulating) for each node pool the number
   // of CPUs each instance has multiplied by the number of nodes the node pool has.
@@ -130,12 +153,25 @@ export function getCpusTotalNodePools(nodePools = []) {
   // of instances, and this method will have to be modified
   const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
     let instanceTypeCPUs = 0;
-    if (awsInstanceTypes[nodePool.node_spec.aws.instance_type]) {
-      instanceTypeCPUs =
-        awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
+    let currInstanceType = '';
+
+    switch (provider) {
+      case Providers.AWS:
+        currInstanceType = nodePool.node_spec.aws.instance_type;
+        instanceTypeCPUs = instanceTypes[currInstanceType]?.cpu_cores ?? 0;
+
+        break;
+
+      case Providers.AZURE:
+        currInstanceType = nodePool.node_spec.azure.vm_size;
+        instanceTypeCPUs = instanceTypes[currInstanceType]?.numberOfCores ?? 0;
+
+        break;
     }
 
-    return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
+    instanceTypeCPUs = instanceTypeCPUs * nodePool.status.nodes_ready;
+
+    return accumulator + instanceTypeCPUs;
   }, 0);
 
   return TotalCPUs;
@@ -235,4 +271,49 @@ export function isClusterDeleting(cluster) {
   const conditionToCheck = 'Deleting';
 
   return hasClusterLatestCondition(cluster, conditionToCheck);
+}
+
+/**
+ * Try to guess the current provider from a list of node pools.
+ * @param nodePools
+ * @return {string|null}
+ */
+export function guessProviderFromNodePools(nodePools) {
+  if (nodePools.length === 0) {
+    return null;
+  }
+
+  if (nodePools[0].node_spec.aws) {
+    return Providers.AWS;
+  } else if (nodePools[0].node_spec.azure) {
+    return Providers.AZURE;
+  }
+
+  return null;
+}
+
+/**
+ * Get instance types for an existing provider.
+ * @param provider
+ * @return {null|Record<string,any>}
+ */
+export function getInstanceTypesForProvider(provider) {
+  switch (provider) {
+    case Providers.AWS:
+      if (!window.config.awsCapabilitiesJSON) {
+        return null;
+      }
+
+      return JSON.parse(window.config.awsCapabilitiesJSON);
+
+    case Providers.AZURE:
+      if (!window.config.azureCapabilitiesJSON) {
+        return null;
+      }
+
+      return JSON.parse(window.config.azureCapabilitiesJSON);
+
+    default:
+      return null;
+  }
 }

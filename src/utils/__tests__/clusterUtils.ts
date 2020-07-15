@@ -1,5 +1,7 @@
 import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
 import {
+  getInstanceTypesForProvider,
+  guessProviderFromNodePools,
   hasClusterLatestCondition,
   isClusterCreating,
   isClusterDeleting,
@@ -73,6 +75,83 @@ describe('clusterUtils', () => {
         ],
       });
       expect(isClusterDeleting(cluster)).toBeTruthy();
+    });
+  });
+
+  describe('guessProviderFromNodePools', () => {
+    it(`returns 'null' for an empty NP list`, () => {
+      const result = guessProviderFromNodePools([]);
+
+      expect(result).toBeNull();
+    });
+
+    it(`returns 'aws' for an AWS node pool list`, () => {
+      const nodePools = [
+        {
+          id: '3jx5q',
+          node_spec: {
+            aws: { instance_type: 'm3.xlarge' },
+          },
+        },
+      ];
+      const result = guessProviderFromNodePools(nodePools);
+
+      expect(result).toBe('aws');
+    });
+
+    it(`returns 'azure' for an Azure node pool list`, () => {
+      const nodePools = [
+        {
+          id: '3jx5q',
+          node_spec: {
+            azure: { vm_size: 'm3.xlarge' },
+          },
+        },
+      ];
+      const result = guessProviderFromNodePools(nodePools);
+
+      expect(result).toBe('azure');
+    });
+
+    it(`returns 'null' for an unknown provider node pool list`, () => {
+      const nodePools = [
+        {
+          id: '3jx5q',
+          node_spec: {},
+        },
+      ];
+      const result = guessProviderFromNodePools(nodePools);
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getInstanceTypesForProvider', () => {
+    const initialAWSCapabilitiesJSON = window.config.awsCapabilitiesJSON;
+    const initialAzureCapabilitiesJSON = window.config.azureCapabilitiesJSON;
+
+    afterEach(() => {
+      window.config.awsCapabilitiesJSON = initialAWSCapabilitiesJSON;
+      window.config.azureCapabilitiesJSON = initialAzureCapabilitiesJSON;
+    });
+
+    it('gets the correct list for the AWS provider', () => {
+      const instanceTypes = getInstanceTypesForProvider('aws');
+      expect(instanceTypes).toStrictEqual(
+        JSON.parse(initialAWSCapabilitiesJSON)
+      );
+    });
+
+    it('gets the correct list for the Azure provider', () => {
+      const instanceTypes = getInstanceTypesForProvider('azure');
+      expect(instanceTypes).toStrictEqual(
+        JSON.parse(initialAzureCapabilitiesJSON)
+      );
+    });
+
+    it(`returns 'null' for an unknown provider`, () => {
+      const instanceTypes = getInstanceTypesForProvider('');
+      expect(instanceTypes).toBeNull();
     });
   });
 });

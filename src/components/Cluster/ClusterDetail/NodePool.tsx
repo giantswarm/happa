@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
+import { Providers } from 'shared';
 import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
 import ViewAndEditName from 'UI/ViewEditName';
@@ -201,15 +202,18 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     const {
       id,
       status: { instance_types },
-      node_spec: {
-        aws: { use_alike_instance_types, instance_type },
-      },
+      node_spec: { aws, azure },
     } = this.props.nodePool;
 
-    if (!use_alike_instance_types) {
-      return <Code>{instance_type}</Code>;
+    if (aws && !aws.use_alike_instance_types) {
+      return <Code>{aws.instance_type}</Code>;
     }
 
+    if (azure) {
+      return <Code>{azure.vm_size}</Code>;
+    }
+
+    // Spot instances.
     const instanceTypesAvailable = Boolean(instance_types);
 
     return (
@@ -226,7 +230,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         placement='top'
       >
         <InstanceTypesWrapperDiv>
-          <MixedInstanceType>{instance_type}</MixedInstanceType>
+          <MixedInstanceType>{aws.instance_type}</MixedInstanceType>
           {instanceTypesAvailable && instance_types.length > 1 && (
             <small>+{instance_types.length - 1}</small>
           )}
@@ -239,7 +243,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
     }
-    const { cluster, nodePool } = this.props;
+    const { cluster, nodePool, provider } = this.props;
     const { id, scaling, availability_zones, status } = nodePool;
     const { nodes_ready: current, nodes: desired, spot_instances } = status;
     const { isNameBeingEdited } = this.state;
@@ -272,7 +276,8 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
             <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
-            {typeof spot_instances === 'number' ? (
+            {provider !== Providers.AZURE &&
+            typeof spot_instances === 'number' ? (
               <OverlayTrigger
                 overlay={
                   <Tooltip id={`${id}-spot-distribution-tooltip`}>
@@ -298,7 +303,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         <ScaleNodePoolModal
           cluster={cluster}
           nodePool={nodePool}
-          provider={this.props.provider}
+          provider={provider}
           ref={(s: IScaleNodePoolModal): void => {
             this.scaleNodePoolModal = s;
           }}
