@@ -2,9 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import DropdownMenu from 'UI/DropdownMenu';
 
-const NodePoolDropdownMenu = (props) => {
+const NodePoolDropdownMenu = ({
+  triggerEditName,
+  deleteNodePool,
+  nodePool,
+  showNodePoolScalingModal,
+  ...rest
+}) => {
   return (
     <DropdownMenu
+      {...rest}
       render={({
         isOpen,
         onClickHandler,
@@ -30,7 +37,7 @@ const NodePoolDropdownMenu = (props) => {
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.triggerEditName();
+                    triggerEditName();
                   }}
                 >
                   Rename
@@ -41,7 +48,7 @@ const NodePoolDropdownMenu = (props) => {
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.showNodePoolScalingModal(props.nodePool);
+                    showNodePoolScalingModal(nodePool);
                   }}
                 >
                   Edit scaling limits
@@ -52,7 +59,7 @@ const NodePoolDropdownMenu = (props) => {
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.deleteNodePool();
+                    deleteNodePool();
                   }}
                 >
                   Delete

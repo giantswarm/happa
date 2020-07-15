@@ -19,6 +19,7 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Constants, CSSBreakpoints } from 'shared/constants';
+import * as Providers from 'shared/constants/providers';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -429,11 +430,13 @@ class V5ClusterDetailTable extends React.Component {
           <h2>Node Pools</h2>
           {!zeroNodePools && !loadingNodePools && (
             <>
-              <GridRowNodePoolsNodes>
-                <div>
-                  <span>NODES</span>
-                </div>
-              </GridRowNodePoolsNodes>
+              {provider === Providers.AWS && (
+                <GridRowNodePoolsNodes>
+                  <div>
+                    <span>NODES</span>
+                  </div>
+                </GridRowNodePoolsNodes>
+              )}
               <GridRowNodePoolsHeaders>
                 <NodePoolsColumnHeader>Id</NodePoolsColumnHeader>
                 <NodePoolsNameColumn>Name</NodePoolsNameColumn>
@@ -441,57 +444,60 @@ class V5ClusterDetailTable extends React.Component {
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='min-tooltip'>
-                      {Constants.MIN_NODES_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='max-tooltip'>
-                      {Constants.MAX_NODES_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='desired-tooltip'>
-                      {Constants.DESIRED_NODES_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='current-tooltip'>
-                      {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='spot-tooltip'>
-                      {Constants.SPOT_NODES_EXPLNANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
-                </OverlayTrigger>
-
+                {provider === Providers.AWS && (
+                  <>
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id='min-tooltip'>
+                          {Constants.MIN_NODES_EXPLANATION}
+                        </Tooltip>
+                      }
+                      placement='top'
+                    >
+                      <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id='max-tooltip'>
+                          {Constants.MAX_NODES_EXPLANATION}
+                        </Tooltip>
+                      }
+                      placement='top'
+                    >
+                      <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id='desired-tooltip'>
+                          {Constants.DESIRED_NODES_EXPLANATION}
+                        </Tooltip>
+                      }
+                      placement='top'
+                    >
+                      <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id='current-tooltip'>
+                          {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
+                        </Tooltip>
+                      }
+                      placement='top'
+                    >
+                      <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id='spot-tooltip'>
+                          {Constants.SPOT_NODES_EXPLNANATION}
+                        </Tooltip>
+                      }
+                      placement='top'
+                    >
+                      <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
+                    </OverlayTrigger>
+                  </>
+                )}
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
@@ -519,7 +525,7 @@ class V5ClusterDetailTable extends React.Component {
                         <NodePool
                           cluster={cluster}
                           nodePool={nodePool}
-                          provider={this.props.provider}
+                          provider={provider}
                         />
                       </GridRowNodePoolsItem>
                     </BaseTransition>

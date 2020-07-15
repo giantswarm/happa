@@ -72,6 +72,10 @@ const MixedInstanceType = styled(Code)`
   background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
+const StyledNodePoolDropdownMenu = styled(NodePoolDropdownMenu)`
+  grid-column: 10/10;
+`;
+
 interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
 }
@@ -272,26 +276,36 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <div>
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
-            <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
-            <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
-            <NodesWrapper>{desired}</NodesWrapper>
-            <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
-            {provider !== Providers.AZURE &&
-            typeof spot_instances === 'number' ? (
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id={`${id}-spot-distribution-tooltip`}>
-                    {this.formatInstanceDistribution()}
-                  </Tooltip>
-                }
-                placement='top'
-              >
-                <NodesWrapper>{spot_instances}</NodesWrapper>
-              </OverlayTrigger>
-            ) : (
-              <NodesWrapper />
+            {provider === Providers.AWS && (
+              <>
+                <NodesWrapper data-testid='scaling-min'>
+                  {scaling.min}
+                </NodesWrapper>
+                <NodesWrapper data-testid='scaling-max'>
+                  {scaling.max}
+                </NodesWrapper>
+                <NodesWrapper>{desired}</NodesWrapper>
+                <NodesWrapper highlight={current < desired}>
+                  {current}
+                </NodesWrapper>
+                {provider === Providers.AWS &&
+                typeof spot_instances === 'number' ? (
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id={`${id}-spot-distribution-tooltip`}>
+                        {this.formatInstanceDistribution()}
+                      </Tooltip>
+                    }
+                    placement='top'
+                  >
+                    <NodesWrapper>{spot_instances}</NodesWrapper>
+                  </OverlayTrigger>
+                ) : (
+                  <NodesWrapper />
+                )}
+              </>
             )}
-            <NodePoolDropdownMenu
+            <StyledNodePoolDropdownMenu
               clusterId={cluster.id}
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}
