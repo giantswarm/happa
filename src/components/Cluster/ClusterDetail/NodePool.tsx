@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
+import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { spinner } from 'images';
 import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
@@ -30,17 +31,6 @@ const NPViewAndEditNameStyled = styled(ViewAndEditName)`
     font-size: 13px;
     padding: 4px 10px;
   }
-`;
-
-const NodesWrapper = styled.div<{ highlight?: boolean }>`
-  width: 36px;
-  height: 30px;
-  line-height: 31px;
-  text-align: center;
-  border-radius: 3px;
-  white-space: nowrap;
-  background-color: ${({ theme, highlight }) =>
-    highlight && theme.colors.goldBackground};
 `;
 
 const NameWrapperDiv = styled.div`
@@ -184,24 +174,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     this.scaleNodePoolModal?.setNodePool(nodePool);
   };
 
-  formatInstanceDistribution = () => {
-    const { instance_distribution } = this.props.nodePool.node_spec.aws;
-
-    const baseCapacity = instance_distribution?.on_demand_base_capacity ?? '-';
-    const spotPercentage =
-      /* eslint-disable-next-line no-magic-numbers */
-      100 - instance_distribution?.on_demand_percentage_above_base_capacity ??
-      '-';
-
-    return (
-      <>
-        On-demand base capacity: {baseCapacity}
-        <br />
-        Spot instance percentage: {spotPercentage}
-      </>
-    );
-  };
-
   formatInstanceTypes = () => {
     const {
       id,
@@ -234,7 +206,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         placement='top'
       >
         <InstanceTypesWrapperDiv>
-          <MixedInstanceType>{aws.instance_type}</MixedInstanceType>
+          <MixedInstanceType>{aws?.instance_type ?? ''}</MixedInstanceType>
           {instanceTypesAvailable && instance_types.length > 1 && (
             <small>+{instance_types.length - 1}</small>
           )}
@@ -248,8 +220,8 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       return <img className='loader' src={spinner} />;
     }
     const { cluster, nodePool, provider } = this.props;
-    const { id, scaling, availability_zones, status } = nodePool;
-    const { nodes_ready: current, nodes: desired, spot_instances } = status;
+    const { id, availability_zones, status } = nodePool;
+    const { nodes_ready: current, nodes: desired } = status;
     const { isNameBeingEdited } = this.state;
 
     return (
@@ -277,33 +249,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
             {provider === Providers.AWS && (
-              <>
-                <NodesWrapper data-testid='scaling-min'>
-                  {scaling.min}
-                </NodesWrapper>
-                <NodesWrapper data-testid='scaling-max'>
-                  {scaling.max}
-                </NodesWrapper>
-                <NodesWrapper>{desired}</NodesWrapper>
-                <NodesWrapper highlight={current < desired}>
-                  {current}
-                </NodesWrapper>
-                {provider === Providers.AWS &&
-                typeof spot_instances === 'number' ? (
-                  <OverlayTrigger
-                    overlay={
-                      <Tooltip id={`${id}-spot-distribution-tooltip`}>
-                        {this.formatInstanceDistribution()}
-                      </Tooltip>
-                    }
-                    placement='top'
-                  >
-                    <NodesWrapper>{spot_instances}</NodesWrapper>
-                  </OverlayTrigger>
-                ) : (
-                  <NodesWrapper />
-                )}
-              </>
+              <NodePoolScaling nodePool={nodePool} provider={provider} />
             )}
             <StyledNodePoolDropdownMenu
               provider={provider}
