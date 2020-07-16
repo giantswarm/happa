@@ -10,28 +10,28 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import { mq } from 'styles';
-import DropdownMenu from 'UI/DropdownMenu';
+import DropdownMenu, { List } from 'UI/DropdownMenu';
 
 import Hamburger from './Hamburger';
+
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
+  color: ${(props) => props.theme.colors.white4};
+  margin-right: 18px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover {
+    color: ${(props) => props.theme.colors.white1};
+  }
+`;
 
 const NavDiv = styled.div`
   float: left;
   padding-left: 20px;
   height: 40px;
-
-  & > a {
-    text-decoration: none;
-    color: ${(props) => props.theme.colors.white4};
-    margin-right: 18px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-
-    &:hover {
-      color: ${(props) => props.theme.colors.white1};
-    }
-  }
 
   ${mq(CSSBreakpoints.Medium)} {
     display: none;
@@ -40,23 +40,11 @@ const NavDiv = styled.div`
 
 const DropdownMenuStyled = styled(DropdownMenu)`
   display: none;
-  left: reset;
+  left: unset;
   flex-direction: column;
   transform: translate(30px, 5px);
   position: fixed;
   width: 38px;
-
-  .dropdown-trigger {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-  }
-
-  ul {
-    right: unset;
-    line-height: 1.45em;
-    margin: 7px 0 0 -1px;
-  }
 
   .active {
     font-weight: 700;
@@ -65,39 +53,44 @@ const DropdownMenuStyled = styled(DropdownMenu)`
   ${mq(CSSBreakpoints.Medium)} {
     display: flex;
   }
-
-  ${mq(CSSBreakpoints.Medium)} {
-    ul {
-      width: calc(100vw - 8px);
-      left: -35px;
-    }
-
-    a {
-      font-size: 16px;
-      padding: 20px 30px;
-    }
-  }
 `;
+
+const DropdownList = styled(List)`
+  right: unset;
+  left: -35px;
+  line-height: 1.45em;
+  margin: 7px 0 0 -1px;
+  width: calc(100vw - 8px);
+`;
+
+const DropdownNavLink = styled(StyledNavLink)`
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 20px 30px;
+`;
+
+const DropdownAnchor = DropdownNavLink.withComponent('a');
 
 function MainMenu({ showAppCatalog, isUserAdmin }) {
   return (
     <>
       <NavDiv>
-        <NavLink activeClassName='active' exact to={AppRoutes.Home}>
+        <StyledNavLink activeClassName='active' exact to={AppRoutes.Home}>
           Clusters
-        </NavLink>
-        <NavLink activeClassName='active' to={OrganizationsRoutes.Home}>
+        </StyledNavLink>
+        <StyledNavLink activeClassName='active' to={OrganizationsRoutes.Home}>
           Organizations
-        </NavLink>
+        </StyledNavLink>
         {showAppCatalog && (
-          <NavLink activeClassName='active' to={AppCatalogRoutes.Home}>
+          <StyledNavLink activeClassName='active' to={AppCatalogRoutes.Home}>
             App Catalogs
-          </NavLink>
+          </StyledNavLink>
         )}
         {isUserAdmin ? (
-          <NavLink activeClassName='active' to={UsersRoutes.Home}>
+          <StyledNavLink activeClassName='active' to={UsersRoutes.Home}>
             Users
-          </NavLink>
+          </StyledNavLink>
         ) : undefined}
         <a
           href='https://docs.giantswarm.io'
@@ -116,71 +109,66 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
           onBlurHandler,
           onKeyDownHandler,
         }) => (
-          <div
-            className='mobile-nav-div'
-            onBlur={onBlurHandler}
-            onFocus={onFocusHandler}
-            tabIndex='0'
-          >
+          <div onBlur={onBlurHandler} onFocus={onFocusHandler} tabIndex='0'>
             <Hamburger
               isOpen={isOpen}
               onClickHandler={onClickHandler}
               onKeyDownHandler={onKeyDownHandler}
             />
             {isOpen && (
-              <ul role='menu'>
+              <DropdownList role='menu'>
                 <li>
-                  <NavLink
+                  <DropdownNavLink
                     activeClassName='active'
                     exact
                     to={AppRoutes.Home}
                     onClick={onClickHandler}
                   >
                     Clusters
-                  </NavLink>
+                  </DropdownNavLink>
                 </li>
                 <li>
-                  <NavLink
+                  <DropdownNavLink
                     activeClassName='active'
                     to={OrganizationsRoutes.Home}
                     onClick={onClickHandler} // This closes the dropdown.
                   >
                     Organizations
-                  </NavLink>
+                  </DropdownNavLink>
                 </li>
                 {showAppCatalog && (
                   <li>
-                    <NavLink
+                    <DropdownNavLink
                       activeClassName='active'
                       to={AppCatalogRoutes.Home}
                       onClick={onClickHandler}
                     >
                       App Catalogs
-                    </NavLink>
+                    </DropdownNavLink>
                   </li>
                 )}
                 {isUserAdmin ? (
                   <li>
-                    <NavLink
+                    <DropdownNavLink
                       activeClassName='active'
                       to={UsersRoutes.Home}
                       onClick={onClickHandler}
                     >
                       Users
-                    </NavLink>
+                    </DropdownNavLink>
                   </li>
                 ) : undefined}
                 <li>
-                  <a
+                  <DropdownAnchor
                     href='https://docs.giantswarm.io'
                     rel='noopener noreferrer'
                     target='_blank'
                     onClick={onClickHandler}
                   >
                     Documentation <i className='fa fa-open-in-new' />
-                  </a>
+                  </DropdownAnchor>
                 </li>
-              </ul>
+              </DropdownList>
             )}
           </div>
         )}

@@ -1,28 +1,28 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import DropdownMenu from 'UI/DropdownMenu';
+import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
 
 const INNER_PADDING = '5px 15px';
 const WIDTH = '250px';
 const MAX_HEIGHT = '250px';
 
-const Wrapper = styled.div`
-  div > .dropdown-trigger {
-    background-color: ${(props) => props.theme.colors.shade5};
-    border: 1px solid ${(props) => props.theme.colors.shade6};
-    border-radius: ${(props) => props.theme.border_radius};
-    font-size: 14px;
-    line-height: normal;
-    padding: 8px 10px;
-    width: auto;
-    height: 34px;
+const VersionPickerDropdownTrigger = styled(DropdownTrigger)`
+  background-color: ${(props) => props.theme.colors.shade5};
+  border: 1px solid ${(props) => props.theme.colors.shade6};
+  border-radius: ${(props) => props.theme.border_radius};
+  font-size: 14px;
+  line-height: normal;
+  padding: 8px 10px;
+  width: auto;
+  height: 34px;
 
-    .caret {
-      margin-left: 10px;
-    }
+  .caret {
+    margin-left: 10px;
   }
 `;
+
+const Wrapper = styled.div``;
 
 const Menu = styled.form`
   width: ${WIDTH};
@@ -30,7 +30,7 @@ const Menu = styled.form`
   background-color: ${(props) => props.theme.colors.shade4};
   overflow: hidden;
   font-size: 14px;
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
   position: absolute;
   top: 45px;
 `;
@@ -47,12 +47,12 @@ const Header = styled.div`
   label {
     border-top: 1px solid ${(props) => props.theme.colors.shade2};
 
-    padding: 0px;
+    padding: 0;
     cursor: pointer;
     font-weight: normal;
 
     &::selection {
-      color: none;
+      color: unset;
       background: none;
     }
 
@@ -65,7 +65,7 @@ const Header = styled.div`
 
     a {
       display: inline;
-      padding: 0px;
+      padding: 0;
 
       &:hover {
         background-color: inherit;
@@ -77,26 +77,25 @@ const Header = styled.div`
 const Body = styled.div`
   max-height: ${MAX_HEIGHT};
   overflow-y: scroll;
+`;
 
-  ul {
-    padding: 0px;
-    width: 100%;
-    position: relative;
-    right: 0px;
-  }
+const VersionPickerList = styled(List)`
+  padding: 0;
+  width: 100%;
+  position: relative;
+  right: 0;
+`;
 
-  li {
-    list-style-type: none;
-    border-bottom: 1px solid ${(props) => props.theme.colors.shade1};
-    cursor: pointer;
+const VersionPickerItem = styled.li`
+  list-style-type: none;
+  border-bottom: 1px solid ${(props) => props.theme.colors.shade1};
+  cursor: pointer;
+`;
 
-    a.selected {
-      font-weight: bold;
-    }
-
-    a {
-      padding: 10px 15px;
-    }
+const VersionPickerLink = styled(Link)`
+  padding: 10px 15px;
+  &.selected {
+    font-weight: bold;
   }
 `;
 
@@ -162,8 +161,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
           onFocusHandler,
         }) => (
           <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
-            <button
-              className='dropdown-trigger'
+            <VersionPickerDropdownTrigger
               aria-expanded={isOpen}
               aria-haspopup='true'
               onClick={onClickHandler}
@@ -172,7 +170,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
             >
               {selectedVersion}
               <span className='caret' />
-            </button>
+            </VersionPickerDropdownTrigger>
             {isOpen && (
               <Menu {...props}>
                 <Header>
@@ -200,15 +198,15 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                 </Header>
 
                 <Body role='menu' data-testid='menu'>
-                  <ul>
+                  <VersionPickerList>
                     {versions
                       ?.filter((version) => {
                         return includeTestVersions ? true : !version.test;
                       })
                       .map((version) => {
                         return (
-                          <li key={version.version}>
-                            <a
+                          <VersionPickerItem key={version.version}>
+                            <VersionPickerLink
                               className={
                                 version.version === selectedVersion
                                   ? 'selected'
@@ -222,11 +220,11 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                               role='menuitem'
                             >
                               {version.version}
-                            </a>
-                          </li>
+                            </VersionPickerLink>
+                          </VersionPickerItem>
                         );
                       })}
-                  </ul>
+                  </VersionPickerList>
                 </Body>
               </Menu>
             )}

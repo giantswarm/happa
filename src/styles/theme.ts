@@ -59,6 +59,7 @@ const theme: ITheme = {
     loadingForeground: '#507184',
 
     foreground: '#375b70',
+    dropdownBackground: '#2a5874',
 
     redOld: '#f56262',
     greenNew: '#24A524',

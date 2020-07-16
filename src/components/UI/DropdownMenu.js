@@ -12,52 +12,54 @@ import React, { useState } from 'react';
  * component where it is being used
  */
 
+export const List = styled.ul`
+  position: absolute;
+  right: 7px;
+  list-style-type: none;
+  margin: 2px 0 0;
+  padding: 5px 0;
+  width: 180px;
+  background: ${(props) => props.theme.colors.shade2};
+  z-index: 1;
+  background-color: ${({ theme }) => theme.colors.dropdownBackground};
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+`;
+
+export const Link = styled.a`
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 7px 15px;
+  width: 100%;
+  &:hover {
+    background: ${(props) => props.theme.colors.shade9};
+  }
+`;
+
+export const DropdownTrigger = styled.button`
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  background: unset;
+  transition: background 0.3s;
+  &:focus {
+    outline: 5px auto -webkit-focus-ring-color;
+  }
+  &:hover,
+  &:focus,
+  &:focus-within {
+    background: ${(props) => props.theme.colors.shade8};
+  }
+`;
+
 const MenuWrapper = styled.div`
   position: relative;
-  .dropdown-trigger {
-    width: 40px;
-    height: 40px;
-    /* Overrides for bootstrap */
-    margin: 0;
-    border-radius: 0;
-    padding: 0;
-    background: unset;
-    transition: background 0.3s;
-    &:focus {
-      outline: 5px auto -webkit-focus-ring-color;
-    }
-    &:hover,
-    &:focus,
-    &:focus-within {
-      background: ${(props) => props.theme.colors.shade8};
-    }
-  }
-  ul {
-    position: absolute;
-    right: 7px;
-    list-style-type: none;
-    margin: 2px 0 0;
-    padding: 5px 0;
-    width: 180px;
-    background: ${(props) => props.theme.colors.shade2};
-    z-index: 1;
-    background-color: #2a5874;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  }
-  a {
-    display: inline-block;
-    text-decoration: none;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 7px 15px;
-    width: 100%;
-    &:hover {
-      background: ${(props) => props.theme.colors.shade9};
-    }
-  }
 `;
 
 function DropdownMenu(props) {
