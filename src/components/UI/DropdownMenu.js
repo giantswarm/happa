@@ -19,7 +19,6 @@ export const List = styled.ul`
   margin: 2px 0 0;
   padding: 5px 0;
   width: 180px;
-  background: ${(props) => props.theme.colors.shade2};
   z-index: 1;
   background-color: ${({ theme }) => theme.colors.dropdownBackground};
   border: none;
