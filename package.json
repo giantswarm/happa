@@ -186,7 +186,7 @@
   "resolutions": {
     "**/crypto-js": "^3.2.1",
     "kind-of": "^6.0.3",
-    "lodash": "^4.17.16"
+    "lodash": "^4.17.19"
   },
   "husky": {
     "hooks": {
