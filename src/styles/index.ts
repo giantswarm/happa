@@ -47,6 +47,7 @@ export interface IColorMap {
   gray: string;
   error: string;
   loadingForeground: string;
+  dropdownBackground: string;
   foreground: string;
   redOld: string;
   greenNew: string;

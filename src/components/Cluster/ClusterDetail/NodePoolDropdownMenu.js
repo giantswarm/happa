@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import DropdownMenu from 'UI/DropdownMenu';
+import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
 
 const NodePoolDropdownMenu = (props) => {
   return (
@@ -13,20 +13,19 @@ const NodePoolDropdownMenu = (props) => {
         onKeyDownHandler,
       }) => (
         <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
-          <button
+          <DropdownTrigger
             aria-expanded={isOpen}
             aria-haspopup='true'
-            className='dropdown-trigger'
             onClick={onClickHandler}
             onKeyDown={onKeyDownHandler}
             type='button'
           >
             •••
-          </button>
+          </DropdownTrigger>
           {isOpen && (
-            <ul aria-labelledby='node_pools_dropdown' role='menu'>
+            <List aria-labelledby='node_pools_dropdown' role='menu'>
               <li>
-                <a
+                <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
@@ -34,10 +33,10 @@ const NodePoolDropdownMenu = (props) => {
                   }}
                 >
                   Rename
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
@@ -45,10 +44,10 @@ const NodePoolDropdownMenu = (props) => {
                   }}
                 >
                   Edit scaling limits
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
@@ -56,9 +55,9 @@ const NodePoolDropdownMenu = (props) => {
                   }}
                 >
                   Delete
-                </a>
+                </Link>
               </li>
-            </ul>
+            </List>
           )}
         </div>
       )}
