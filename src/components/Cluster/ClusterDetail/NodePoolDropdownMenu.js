@@ -1,10 +1,19 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import * as Providers from 'shared/constants/providers';
 import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
 
-const NodePoolDropdownMenu = (props) => {
+const NodePoolDropdownMenu = ({
+  triggerEditName,
+  deleteNodePool,
+  nodePool,
+  showNodePoolScalingModal,
+  provider,
+  ...rest
+}) => {
   return (
     <DropdownMenu
+      {...rest}
       render={({
         isOpen,
         onClickHandler,
@@ -29,29 +38,33 @@ const NodePoolDropdownMenu = (props) => {
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.triggerEditName();
+                    triggerEditName();
                   }}
                 >
                   Rename
                 </Link>
               </li>
+
+              {provider === Providers.AWS && (
+                <li>
+                  <Link
+                    href='#'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showNodePoolScalingModal(nodePool);
+                    }}
+                  >
+                    Edit scaling limits
+                  </Link>
+                </li>
+              )}
+
               <li>
                 <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.showNodePoolScalingModal(props.nodePool);
-                  }}
-                >
-                  Edit scaling limits
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    props.deleteNodePool();
+                    deleteNodePool();
                   }}
                 >
                   Delete
@@ -67,6 +80,7 @@ const NodePoolDropdownMenu = (props) => {
 
 NodePoolDropdownMenu.propTypes = {
   clusterId: PropTypes.string,
+  provider: PropTypes.string,
   nodePool: PropTypes.object,
   deleteNodePool: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,

@@ -62,16 +62,18 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
   const makeCapabilities = useSelector(computeCapabilities);
 
   const CreationForm = useMemo(() => {
-    let semVerCompare = -1;
-    if (selectedRelease && firstNodePoolsRelease) {
-      semVerCompare = cmp(selectedRelease, firstNodePoolsRelease);
+    if (provider === Providers.KVM) {
+      return CreateRegularCluster;
     }
 
-    return semVerCompare < 0 ||
-      provider === Providers.AZURE ||
-      provider === Providers.KVM
-      ? CreateRegularCluster // new v4 form
-      : CreateNodePoolsCluster; // new v5 form
+    if (
+      firstNodePoolsRelease !== '' &&
+      cmp(selectedRelease, firstNodePoolsRelease) >= 0
+    ) {
+      return CreateNodePoolsCluster;
+    }
+
+    return CreateRegularCluster;
   }, [provider, firstNodePoolsRelease, selectedRelease]);
 
   const creationCapabilities = useMemo(
