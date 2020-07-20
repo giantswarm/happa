@@ -17,8 +17,17 @@ import {
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
+import { memoize } from 'underscore';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
+
+const newClusterPathMemoized = memoize(
+  (orgId) =>
+    RoutePath.createUsablePath(OrganizationsRoutes.Clusters.New, {
+      orgId,
+    }),
+  (orgId) => orgId
+);
 
 class Home extends React.Component {
   state = {
@@ -26,12 +35,6 @@ class Home extends React.Component {
   };
 
   visibilityTracker = new PageVisibilityTracker();
-
-  static newClusterPath(orgId) {
-    return RoutePath.createUsablePath(OrganizationsRoutes.Clusters.New, {
-      orgId,
-    });
-  }
 
   componentDidMount() {
     this.registerRefreshInterval();
@@ -83,17 +86,19 @@ class Home extends React.Component {
     return 'Cluster Overview';
   }
 
+  newClusterPath() {
+    return newClusterPathMemoized(this.props.selectedOrganization);
+  }
+
   render() {
     const { clusters, selectedOrganization } = this.props;
-
-    const newClusterPath = Home.newClusterPath(selectedOrganization);
 
     return (
       <DocumentTitle title={this.title()}>
         <div data-testid='clusters-list'>
           {selectedOrganization && (
             <div className='well launch-new-cluster'>
-              <Link to={newClusterPath}>
+              <Link to={this.newClusterPath()}>
                 <Button bsStyle='primary' type='button'>
                   <i className='fa fa-add-circle' /> Launch New Cluster
                 </Button>
