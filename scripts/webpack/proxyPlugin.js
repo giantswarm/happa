@@ -84,17 +84,35 @@ class ProxyPlugin {
    */
   startProxy(port, proxyUrl, credentials, origin, service) {
     let proxy = express();
-    proxy.use(cors({ credentials: credentials, origin: origin }));
-    proxy.options('*', cors({ credentials: credentials, origin: origin }));
+    proxy.use(
+      cors({
+        credentials: credentials,
+        origin: origin,
+        exposedHeaders: 'Location',
+        maxAge: 86400,
+      })
+    );
+    proxy.options(
+      '*',
+      cors({
+        credentials: credentials,
+        origin: origin,
+        exposedHeaders: 'Location',
+        maxAge: 86400,
+      })
+    );
 
     // remove trailing slash
-    var cleanProxyUrl = proxyUrl.replace(/\/$/, '');
+    let cleanProxyUrl = proxyUrl.replace(/\/$/, '');
 
     let log = this.log.bind(this);
 
     proxy.use('/', function (req, res) {
       try {
-        log('Request Proxied -> ' + req.url, service);
+        log(
+          `Request Proxied -> ${req.method.toUpperCase()} ${req.url}`,
+          service
+        );
       } catch (e) {}
 
       req
