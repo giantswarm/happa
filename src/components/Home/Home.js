@@ -23,7 +23,6 @@ import ClusterDashboardItem from './ClusterDashboardItem';
 class Home extends React.Component {
   state = {
     lastUpdated: '',
-    newClusterPath: '',
   };
 
   visibilityTracker = new PageVisibilityTracker();
@@ -39,23 +38,12 @@ class Home extends React.Component {
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.setState({
       lastUpdated: moment().fromNow(),
-      newClusterPath: Home.newClusterPath(this.props.selectedOrganization),
     });
   }
 
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
     this.props.clearInterval(this.refreshInterval);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { selectedOrganization } = this.props;
-
-    if (selectedOrganization !== prevProps.selectedOrganization) {
-      this.setState({
-        newClusterPath: Home.newClusterPath(selectedOrganization),
-      });
-    }
   }
 
   /**
@@ -98,12 +86,14 @@ class Home extends React.Component {
   render() {
     const { clusters, selectedOrganization } = this.props;
 
+    const newClusterPath = Home.newClusterPath(selectedOrganization);
+
     return (
       <DocumentTitle title={this.title()}>
         <div data-testid='clusters-list'>
           {selectedOrganization && (
             <div className='well launch-new-cluster'>
-              <Link to={this.state.newClusterPath}>
+              <Link to={newClusterPath}>
                 <Button bsStyle='primary' type='button'>
                   <i className='fa fa-add-circle' /> Launch New Cluster
                 </Button>
