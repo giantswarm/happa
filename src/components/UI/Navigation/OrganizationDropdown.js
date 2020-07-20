@@ -116,22 +116,6 @@ const MenuHeader = styled.div`
   white-space: nowrap;
 `;
 
-const OrganizationItem = styled.li`
-  color: ${({ theme }) => theme.colors.white1};
-  padding: 8px 15px;
-  display: block;
-  clear: both;
-  font-weight: 400;
-  line-height: 1.42857143;
-  white-space: nowrap;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.shade9};
-    color: ${({ theme }) => theme.colors.white1};
-  }
-`;
-
 const ScrollableOrganizations = styled.div`
   overflow: auto;
   max-height: 50vh;
@@ -194,6 +178,7 @@ const OrganizationDropdown = ({
                       <MenuItem
                         href={organizationDetailPath}
                         to={organizationDetailPath}
+                        activeClassName=''
                       >
                         Details for {selectedOrganization}
                       </MenuItem>
@@ -205,6 +190,7 @@ const OrganizationDropdown = ({
                   <MenuItem
                     href={OrganizationsRoutes.List}
                     to={OrganizationsRoutes.List}
+                    activeClassName=''
                   >
                     Manage organizations
                   </MenuItem>
@@ -215,15 +201,20 @@ const OrganizationDropdown = ({
                     <MenuHeader role='heading'>Switch Organization</MenuHeader>
                     <ScrollableOrganizations>
                       {sortedOrganizations.map((org) => (
-                        <OrganizationItem
-                          key={org}
-                          onClick={() => {
-                            onSelectOrganization(org);
-                            onClickHandler();
-                          }}
-                        >
-                          {org}
-                        </OrganizationItem>
+                        <li role='presentation' key={org}>
+                          <MenuItem
+                            href='#'
+                            to='#'
+                            activeClassName=''
+                            onClick={() => {
+                              onSelectOrganization(org);
+                              onClickHandler();
+                            }}
+                            title={`Switch to ${org}`}
+                          >
+                            {org}
+                          </MenuItem>
+                        </li>
                       ))}
                     </ScrollableOrganizations>
                   </>
