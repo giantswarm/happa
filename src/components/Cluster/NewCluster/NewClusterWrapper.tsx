@@ -66,7 +66,10 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
       return CreateRegularCluster;
     }
 
-    if (cmp(selectedRelease, firstNodePoolsRelease) >= 0) {
+    if (
+      firstNodePoolsRelease !== '' &&
+      cmp(selectedRelease, firstNodePoolsRelease) >= 0
+    ) {
       return CreateNodePoolsCluster;
     }
 
