@@ -98,7 +98,7 @@
     "@babel/preset-react": "7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@testing-library/jest-dom": "5.11.0",
-    "@testing-library/react": "10.2.1",
+    "@testing-library/react": "10.4.7",
     "@testing-library/react-hooks": "3.2.1",
     "@types/auth0-js": "^9.13.3",
     "@types/bluebird": "^3.5.32",
@@ -186,7 +186,7 @@
   "resolutions": {
     "**/crypto-js": "^3.2.1",
     "kind-of": "^6.0.3",
-    "lodash": "^4.17.16"
+    "lodash": "^4.17.19"
   },
   "husky": {
     "hooks": {
