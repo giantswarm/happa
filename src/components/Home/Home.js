@@ -1,7 +1,5 @@
 import * as actionTypes from 'actions/actionTypes';
 import { batchedRefreshClusters } from 'actions/batchedActions';
-import * as clusterActions from 'actions/clusterActions';
-import * as nodePoolActions from 'actions/nodePoolActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
@@ -12,7 +10,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { bindActionCreators } from 'redux';
 import {
   selectClustersList,
   selectErrorByAction,
@@ -26,19 +23,39 @@ import ClusterDashboardItem from './ClusterDashboardItem';
 class Home extends React.Component {
   state = {
     lastUpdated: '',
+    newClusterPath: '',
   };
 
   visibilityTracker = new PageVisibilityTracker();
 
+  static newClusterPath(orgId) {
+    return RoutePath.createUsablePath(OrganizationsRoutes.Clusters.New, {
+      orgId,
+    });
+  }
+
   componentDidMount() {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
-    this.setState({ lastUpdated: moment().fromNow() });
+    this.setState({
+      lastUpdated: moment().fromNow(),
+      newClusterPath: Home.newClusterPath(this.props.selectedOrganization),
+    });
   }
 
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
     this.props.clearInterval(this.refreshInterval);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { selectedOrganization } = this.props;
+
+    if (selectedOrganization !== prevProps.selectedOrganization) {
+      this.setState({
+        newClusterPath: Home.newClusterPath(selectedOrganization),
+      });
+    }
   }
 
   /**
@@ -47,7 +64,7 @@ class Home extends React.Component {
   registerRefreshInterval = () => {
     // eslint-disable-next-line no-magic-numbers
     const refreshIntervalDuration = 30 * 1000; // 30 seconds
-    this.refreshInterval = window.setInterval(
+    this.refreshInterval = this.props.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration
     );
@@ -81,19 +98,12 @@ class Home extends React.Component {
   render() {
     const { clusters, selectedOrganization } = this.props;
 
-    const newClusterPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.New,
-      {
-        orgId: selectedOrganization,
-      }
-    );
-
     return (
       <DocumentTitle title={this.title()}>
         <div data-testid='clusters-list'>
           {selectedOrganization && (
             <div className='well launch-new-cluster'>
-              <Link to={newClusterPath}>
+              <Link to={this.state.newClusterPath}>
                 <Button bsStyle='primary' type='button'>
                   <i className='fa fa-add-circle' /> Launch New Cluster
                 </Button>
@@ -106,7 +116,6 @@ class Home extends React.Component {
           {clusters.length === 0 && (
             <ClusterEmptyState
               errorLoadingClusters={this.props.errorLoadingClusters}
-              organizations={this.props.organizations}
               selectedOrganization={selectedOrganization}
             />
           )}
@@ -119,11 +128,9 @@ class Home extends React.Component {
                 timeout={500}
               >
                 <ClusterDashboardItem
-                  animate={true}
                   clusterId={id}
                   isV5Cluster={this.props.v5Clusters.includes(id)}
                   key={id}
-                  nodePools={this.props.nodePools}
                   selectedOrganization={selectedOrganization}
                 />
               </CSSTransition>
@@ -149,13 +156,11 @@ class Home extends React.Component {
 
 Home.propTypes = {
   clearInterval: PropTypes.func,
+  setInterval: PropTypes.func,
   clusters: PropTypes.array,
-  actions: PropTypes.object,
   selectedOrganization: PropTypes.string,
-  organizations: PropTypes.object,
   errorLoadingClusters: PropTypes.bool,
   v5Clusters: PropTypes.array,
-  nodePools: PropTypes.object,
   dispatch: PropTypes.func,
 };
 
@@ -164,21 +169,17 @@ const makeMapStateToProps = () => {
 
   function mapStateToProps(state) {
     const selectedOrganization = state.main.selectedOrganization;
-    const organizations = state.entities.organizations.items;
     const errorLoadingClusters = selectErrorByAction(
       state,
       actionTypes.CLUSTERS_LIST_REQUEST
     );
     const v5Clusters = state.entities.clusters.v5Clusters;
-    const nodePools = state.entities.nodePools.items;
 
     return {
       clusters: selectClusters(state),
-      organizations,
       errorLoadingClusters: Boolean(errorLoadingClusters),
       selectedOrganization,
       v5Clusters,
-      nodePools,
     };
   }
 
@@ -187,8 +188,6 @@ const makeMapStateToProps = () => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(clusterActions, dispatch),
-    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };
 }

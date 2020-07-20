@@ -47,7 +47,7 @@ const WrapperStyles = (props) => css`
   display: flex;
   background-color: ${props.theme.colors.foreground};
   border-radius: 5px;
-  border: 0px;
+  border: 0;
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
@@ -267,11 +267,7 @@ function ClusterDashboardItem({
 
 ClusterDashboardItem.propTypes = {
   cluster: PropTypes.object,
-  actions: PropTypes.object,
-  className: PropTypes.string,
-  children: PropTypes.array,
   selectedOrganization: PropTypes.string,
-  animate: PropTypes.bool,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,
