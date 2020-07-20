@@ -194,6 +194,7 @@ const OrganizationDropdown = ({
                       <MenuItem
                         href={organizationDetailPath}
                         to={organizationDetailPath}
+                        activeClassName=''
                       >
                         Details for {selectedOrganization}
                       </MenuItem>
@@ -205,6 +206,7 @@ const OrganizationDropdown = ({
                   <MenuItem
                     href={OrganizationsRoutes.List}
                     to={OrganizationsRoutes.List}
+                    activeClassName=''
                   >
                     Manage organizations
                   </MenuItem>
