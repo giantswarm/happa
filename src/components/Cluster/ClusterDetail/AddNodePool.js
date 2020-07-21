@@ -262,7 +262,7 @@ class AddNodePool extends Component {
       },
     },
     azure: {
-      vmSize: '',
+      vmSize: this.props.defaultVmSize,
     },
     spotInstancesEnabled: false,
     allowSpotInstances: false,
@@ -775,6 +775,7 @@ AddNodePool.propTypes = {
   selectedOrganization: PropTypes.string,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
+  defaultVmSize: PropTypes.string,
   defaultCPUCores: PropTypes.number,
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
@@ -812,6 +813,10 @@ function mapStateToProps(state) {
       ? state.main.info.workers.instance_type.default
       : 'm3.large';
 
+  const defaultVmSize =
+    state.main.info.workers.vm_size?.default ??
+    Constants.AZURE_NODEPOOL_DEFAULT_VM_SIZE;
+
   const defaultCPUCores = 4; // TODO
   const defaultMemorySize = 4; // TODO
   const defaultDiskSize = 20; // TODO
@@ -820,6 +825,7 @@ function mapStateToProps(state) {
     availabilityZones,
     provider,
     defaultInstanceType,
+    defaultVmSize,
     defaultCPUCores,
     defaultMemorySize,
     defaultDiskSize,
