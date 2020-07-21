@@ -7,6 +7,7 @@ interface IState {
   error?: Error;
   isFetching: boolean;
   items: IReleases;
+  allReleases: IReleases;
   sortedVersions: string[];
 }
 
@@ -14,6 +15,7 @@ const initialState: IState = {
   error: undefined,
   isFetching: false,
   items: {},
+  allReleases: {},
   sortedVersions: [],
 };
 
@@ -35,6 +37,7 @@ const releasesReducer = produce(
         draft.error = undefined;
         draft.items = action.response.releases;
         draft.sortedVersions = action.response.sortedReleaseVersions;
+        draft.allReleases = action.response.allReleases;
 
         break;
 
