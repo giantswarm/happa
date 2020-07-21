@@ -323,14 +323,12 @@ class ConfigKubeCtl extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
   };
 }
 
 ConfigKubeCtl.propTypes = {
   user: PropTypes.object,
   cluster: PropTypes.object,
-  dispatch: PropTypes.func,
   actions: PropTypes.object,
 };
 

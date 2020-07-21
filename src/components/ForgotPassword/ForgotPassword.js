@@ -167,13 +167,11 @@ class ForgotPassword extends React.Component {
 
 ForgotPassword.propTypes = {
   actions: PropTypes.object,
-  dispatch: PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(forgotPasswordActions, dispatch),
-    dispatch: dispatch,
   };
 }
 

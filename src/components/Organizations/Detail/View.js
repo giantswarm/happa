@@ -244,7 +244,6 @@ OrganizationDetail.propTypes = {
   actions: PropTypes.object,
   clusters: PropTypes.array,
   organization: PropTypes.object,
-  dispatch: PropTypes.func,
   match: PropTypes.object,
   app: PropTypes.object,
   membersForTable: PropTypes.array,

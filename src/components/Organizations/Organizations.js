@@ -28,8 +28,6 @@ const Organizations = (props) => {
 };
 
 Organizations.propTypes = {
-  dispatch: PropTypes.func,
-  match: PropTypes.object,
   loadingClustersDetails: PropTypes.bool,
 };
 

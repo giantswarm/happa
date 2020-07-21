@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { IState } from 'reducers/types';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { AnyAction, Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -18,7 +18,6 @@ interface IStateProps {
 }
 
 interface IDispatchProps {
-  actions: typeof userActions;
   dispatch: ThunkDispatch<IState, null, AnyAction>;
 }
 
@@ -54,7 +53,9 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
           // they can get one.
           await auth.login();
         }
-      } catch (err) {}
+      } catch (err) {
+        // NOOP
+      }
     };
 
     handleLogin();
@@ -83,8 +84,6 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
 AdminLogin.propTypes = {
   dispatch: PropTypes.func.isRequired,
   // @ts-ignore
-  actions: PropTypes.object.isRequired,
-  // @ts-ignore
   user: PropTypes.object,
 };
 
@@ -96,7 +95,6 @@ function mapStateToProps(state: IState) {
 
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   return {
-    actions: bindActionCreators(userActions, dispatch),
     dispatch: dispatch,
   };
 }

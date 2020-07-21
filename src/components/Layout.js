@@ -3,7 +3,6 @@ import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
-import * as UserActions from 'actions/userActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
@@ -12,7 +11,6 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
   AccountSettingsRoutes,
@@ -106,17 +104,10 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  location: PropTypes.object,
-  children: PropTypes.object,
-  routes: PropTypes.array,
-  params: PropTypes.object,
-  match: PropTypes.object,
   user: PropTypes.object,
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
-  firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
-  actions: PropTypes.object,
   catalogs: PropTypes.object,
   loadingClustersList: PropTypes.bool,
 };
@@ -136,7 +127,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(UserActions, dispatch),
     dispatch: dispatch,
   };
 }

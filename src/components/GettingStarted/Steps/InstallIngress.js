@@ -85,10 +85,8 @@ const InstallIngress = (props) => {
 };
 
 InstallIngress.propTypes = {
-  goToSlide: PropTypes.func,
   match: PropTypes.object,
   cluster: PropTypes.object,
-  dispatch: PropTypes.func,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -102,10 +100,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(InstallIngress);
+export default connect(mapStateToProps)(InstallIngress);
