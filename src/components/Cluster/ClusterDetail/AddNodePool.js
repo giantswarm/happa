@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePoolMachineType';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -20,7 +21,6 @@ import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
 
 import AvailabilityZonesParser from './AvailabilityZonesParser';
-import InstanceTypeSelector from './InstanceTypeSelector/InstanceTypeSelector';
 
 // Availability Zones styles
 const Emphasized = css`
@@ -261,6 +261,9 @@ class AddNodePool extends Component {
         spotInstancePercentage: 100,
       },
     },
+    azure: {
+      vmSize: '',
+    },
     spotInstancesEnabled: false,
     allowSpotInstances: false,
     allowAlikeInstances: false,
@@ -273,7 +276,7 @@ class AddNodePool extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.isValid();
+    this.updateValue();
     const { selectedRelease: prevSelectedRelease } = prevProps;
     const { selectedRelease } = this.props;
     if (prevSelectedRelease !== selectedRelease) {
@@ -310,8 +313,32 @@ class AddNodePool extends Component {
     );
   };
 
-  setAWSInstanceType = (instanceType) => {
-    this.setState(({ aws }) => ({ aws: { ...aws, instanceType } }));
+  setMachineType = (machineType) => {
+    this.setState((state, props) => {
+      switch (props.provider) {
+        case Providers.AWS:
+          return { aws: { ...state.aws, instanceType: machineType } };
+
+        case Providers.AZURE:
+          return { azure: { ...state.azure, vmSize: machineType } };
+
+        default:
+          return null;
+      }
+    });
+  };
+
+  getMachineType = () => {
+    switch (this.props.provider) {
+      case Providers.AWS:
+        return this.state.aws.instanceType;
+
+      case Providers.AZURE:
+        return this.state.azure.vmSize;
+
+      default:
+        return '';
+    }
   };
 
   toggleAZSelector = (isLabels) => {
@@ -371,7 +398,38 @@ class AddNodePool extends Component {
   // Always true?
   isScalingAutomatic = () => true;
 
-  isValid = () => {
+  validate() {
+    const {
+      availabilityZonesPicker,
+      availabilityZonesLabels,
+      hasAZLabels,
+      scaling,
+      name,
+    } = this.state;
+    const { provider } = this.props;
+
+    if (!name.valid) {
+      return false;
+    }
+
+    if (
+      provider === Providers.AWS &&
+      (!scaling.minValid || !scaling.maxValid)
+    ) {
+      return false;
+    }
+
+    if (hasAZLabels && !availabilityZonesLabels.valid) {
+      return false;
+    }
+    if (!hasAZLabels && !availabilityZonesPicker.valid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  updateValue = () => {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
     const {
@@ -380,58 +438,73 @@ class AddNodePool extends Component {
       hasAZLabels,
       scaling,
       name,
+      spotInstancesEnabled,
+      aws,
     } = this.state;
+    const { provider } = this.props;
 
-    // Should we check the validity of the release somewhere?
-    const isValid =
-      scaling.minValid &&
-      scaling.maxValid &&
-      name.valid &&
-      ((hasAZLabels && availabilityZonesLabels.valid) ||
-        (!hasAZLabels && availabilityZonesPicker.valid))
-        ? true
-        : false;
-
-    // defaults for disabled spot instances
-    let instanceDistribution = {
-      on_demand_base_capacity: 0,
-      on_demand_percentage_above_base_capacity: 100,
+    const nodePoolDefinition = {
+      availability_zones: {},
+      name: Constants.DEFAULT_NODEPOOL_NAME,
+      node_spec: {},
     };
 
-    if (this.state.spotInstancesEnabled) {
-      instanceDistribution = {
-        on_demand_base_capacity: this.state.aws.instanceDistribution
-          .onDemandBaseCapacity,
-        on_demand_percentage_above_base_capacity:
-          /* eslint-disable-next-line no-magic-numbers */
-          100 - this.state.aws.instanceDistribution.spotInstancePercentage,
-      };
+    // Set name if it was changed.
+    if (name.value !== '') {
+      nodePoolDefinition.name = name.value;
     }
+
+    // Set availability zones.
+    if (hasAZLabels) {
+      nodePoolDefinition.availability_zones.zones =
+        availabilityZonesLabels.zonesArray;
+    } else {
+      nodePoolDefinition.availability_zones.number =
+        availabilityZonesPicker.value;
+    }
+
+    switch (provider) {
+      case Providers.AWS: {
+        nodePoolDefinition.node_spec.aws = {
+          instance_type: aws.instanceType,
+          use_alike_instance_types: aws.useAlike,
+          instance_distribution: {
+            on_demand_base_capacity: 0,
+            on_demand_percentage_above_base_capacity: 100,
+          },
+        };
+        // Add spot instances setup.
+        if (spotInstancesEnabled) {
+          nodePoolDefinition.node_spec.aws.instance_distribution.on_demand_base_capacity =
+            aws.instanceDistribution.onDemandBaseCapacity;
+          nodePoolDefinition.node_spec.aws.instance_distribution.on_demand_percentage_above_base_capacity =
+            /* eslint-disable-next-line no-magic-numbers */
+            100 - this.state.aws.instanceDistribution.spotInstancePercentage;
+        }
+
+        // Add scaling setup.
+        nodePoolDefinition.scaling = {
+          min: scaling.min,
+          max: scaling.max,
+        };
+
+        break;
+      }
+
+      case Providers.AZURE:
+        nodePoolDefinition.node_spec.azure = {
+          vm_size: this.state.azure.vmSize,
+        };
+
+        break;
+    }
+
+    const isValid = this.validate();
 
     this.props.informParent(
       {
         isValid,
-        data: {
-          // TODO Is the endpoint expecting to receive either a string or a number??
-          availability_zones: this.state.hasAZLabels
-            ? { zones: this.state.availabilityZonesLabels.zonesArray }
-            : { number: this.state.availabilityZonesPicker.value },
-          scaling: {
-            min: this.state.scaling.min,
-            max: this.state.scaling.max,
-          },
-          name:
-            this.state.name.value === ''
-              ? 'Unnamed node pool'
-              : this.state.name.value,
-          node_spec: {
-            aws: {
-              instance_type: this.state.aws.instanceType,
-              use_alike_instance_types: this.state.aws.useAlike,
-              instance_distribution: instanceDistribution,
-            },
-          },
-        },
+        data: nodePoolDefinition,
       },
       // We need to know which node pool it is in the v5 cluster creation form
       this.props.id ? this.props.id : null
@@ -441,7 +514,9 @@ class AddNodePool extends Component {
   render() {
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { hasAZLabels, name } = this.state;
-    const { minAZ, maxAZ, defaultAZ } = this.props;
+    const { minAZ, maxAZ, defaultAZ, provider, id } = this.props;
+
+    const machineType = this.getMachineType();
 
     return (
       <>
@@ -449,7 +524,7 @@ class AddNodePool extends Component {
           <NameInput
             value={name.value}
             label='Name'
-            inputId={`node-pool-name-${this.props.id}`}
+            inputId={`node-pool-name-${id}`}
             placeholder={name.value === '' ? 'Unnamed node pool' : null}
             validationError={name.validationError}
             onChange={this.updateName}
@@ -461,17 +536,13 @@ class AddNodePool extends Component {
           </AdditionalInputHint>
         </Section>
         <Section>
-          <StyledInput
-            inputId={`instance-type-${this.props.id}`}
-            label='Instance type'
-            // regular space, hides hint ;)
-            hint={<>&#32;</>}
-          >
-            <InstanceTypeSelector
-              selectedInstanceType={this.state.aws.instanceType}
-              selectInstanceType={this.setAWSInstanceType}
-            />
-          </StyledInput>
+          <AddNodePoolMachineType
+            provider={provider}
+            id={id}
+            onChange={this.setMachineType}
+            machineType={machineType}
+          />
+
           {this.state.allowAlikeInstances && (
             <CheckboxWrapper>
               <Checkbox
@@ -499,7 +570,7 @@ class AddNodePool extends Component {
             </div>
             <input
               type='radio'
-              id={`automatically-${this.props.id}`}
+              id={`automatically-${id}`}
               value={false}
               checked={hasAZLabels === false}
               onChange={() => this.toggleAZSelector(false)}
@@ -558,7 +629,7 @@ class AddNodePool extends Component {
             </div>
             <input
               type='radio'
-              id={`manually-${this.props.id}`}
+              id={`manually-${id}`}
               value={true}
               checked={hasAZLabels === true}
               tabIndex='0'
@@ -616,7 +687,7 @@ class AddNodePool extends Component {
           <Section>
             <StyledInput
               label='Instance distribution'
-              inputId={`spot-instances-${this.props.id}`}
+              inputId={`spot-instances-${id}`}
               // regular space, hides hint ;)
               hint={<>&#32;</>}
             >
@@ -680,20 +751,20 @@ class AddNodePool extends Component {
             )}
           </Section>
         )}
-        <Section className='scaling-range'>
-          <StyledInput
-            labelId={`scaling-range-${this.props.id}`}
-            label='Scaling range'
-          >
-            <NodeCountSelector
-              autoscalingEnabled={true}
-              label={{ max: 'MAX', min: 'MIN' }}
-              onChange={this.updateScaling}
-              readOnly={false}
-              scaling={this.state.scaling}
-            />
-          </StyledInput>
-        </Section>
+
+        {provider === Providers.AWS && (
+          <Section className='scaling-range'>
+            <StyledInput labelId={`scaling-range-${id}`} label='Scaling range'>
+              <NodeCountSelector
+                autoscalingEnabled={true}
+                label={{ max: 'MAX', min: 'MIN' }}
+                onChange={this.updateScaling}
+                readOnly={false}
+                scaling={this.state.scaling}
+              />
+            </StyledInput>
+          </Section>
+        )}
       </>
     );
   }
