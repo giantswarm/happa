@@ -5,11 +5,13 @@ import { Providers } from 'shared';
 import { PropertiesOf } from 'shared/types';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
 
+type ChangeHandler = (machineType: string) => void;
+
 interface IAddNodePoolMachineTypeProps {
   provider?: PropertiesOf<typeof Providers>;
   id?: string;
   machineType?: string;
-  onChange?: (machineType: string) => void;
+  onChange?: ChangeHandler;
 }
 
 const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
@@ -55,7 +57,7 @@ const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
     >
       <InstanceTypeSelector
         selectedInstanceType={machineType as string}
-        selectInstanceType={onChange as (machineType: string) => void}
+        selectInstanceType={onChange as ChangeHandler}
       />
     </StyledInput>
   );
