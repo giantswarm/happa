@@ -1,14 +1,31 @@
 import { IState } from 'reducers/types';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 
 export const getProvider = (state: IState): PropertiesOf<typeof Providers> =>
   state.main.info.general.provider;
 
-export const getFirstNodePoolsRelease = (state: IState): string =>
-  state.main.info.features
-    ? state.main.info.features.nodepools.release_version_minimum
-    : '10.0.0';
+export const getFirstNodePoolsRelease = (state: IState): string => {
+  const provider = getProvider(state);
+  let releaseVersion = '';
+
+  switch (provider) {
+    case Providers.AWS:
+      releaseVersion = Constants.AWS_V5_VERSION;
+      break;
+
+    case Providers.AZURE:
+      releaseVersion = Constants.AZURE_V5_VERSION;
+      break;
+  }
+
+  if (state.main.info.features) {
+    releaseVersion =
+      state.main.info.features.nodepools?.release_version_minimum;
+  }
+
+  return releaseVersion;
+};
 
 export const getAllowedInstanceTypeNames = (state: IState): string[] => {
   switch (state.main.info.general.provider) {

@@ -4,7 +4,7 @@ import AvailabilityZonesLabel from 'UI/AvailabilityZonesLabel';
 
 // Returns an array of AvailabilityZonesLabel components
 const AvailabilityZonesLabels = ({ zones, labelsChecked, ...props }) => {
-  if (typeof zones === 'undefined' || zones.length === 0) {
+  if (!zones || zones.length === 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
 
