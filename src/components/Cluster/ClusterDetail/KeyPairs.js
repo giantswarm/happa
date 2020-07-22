@@ -238,7 +238,6 @@ KeyPairs.propTypes = {
   actions: PropTypes.object,
   provider: PropTypes.string,
   cluster: PropTypes.object,
-  dispatch: PropTypes.func,
   loadingKeyPairs: PropTypes.bool,
 };
 
@@ -257,7 +256,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
   };
 }
 

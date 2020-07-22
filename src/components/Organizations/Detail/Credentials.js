@@ -74,7 +74,6 @@ class Credentials extends React.Component {
 }
 
 Credentials.propTypes = {
-  actions: PropTypes.object,
   info: PropTypes.object,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,

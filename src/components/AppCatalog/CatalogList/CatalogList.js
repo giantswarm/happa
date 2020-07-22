@@ -84,8 +84,6 @@ const CatalogList = (props) => {
 CatalogList.propTypes = {
   isAdmin: PropTypes.bool,
   catalogs: PropTypes.object,
-  adminCatalogs: PropTypes.object,
-  match: PropTypes.object,
 };
 
 export default CatalogList;

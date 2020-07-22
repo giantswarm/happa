@@ -246,9 +246,7 @@ class CredentialsForm extends React.Component {
 }
 
 CredentialsForm.propTypes = {
-  actions: PropTypes.object,
   provider: PropTypes.string,
-  credentials: PropTypes.object,
   formData: PropTypes.object,
   onSubmit: PropTypes.func,
   organizationName: PropTypes.string,

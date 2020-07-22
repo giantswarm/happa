@@ -1,10 +1,8 @@
-import * as userActions from 'actions/userActions';
 import { clearQueues } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import QueryString from 'query-string';
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OauthCallback extends React.Component {
@@ -53,25 +51,13 @@ class OauthCallback extends React.Component {
 }
 
 OauthCallback.propTypes = {
-  actions: PropTypes.object,
   location: PropTypes.object,
-  dispatch: PropTypes.func,
-  flashMessages: PropTypes.object,
-  params: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
     user: state.main.loggedInUser,
-    flashMessages: state.flashMessages,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(userActions, dispatch),
-    dispatch: dispatch,
-  };
-}
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(OauthCallback);
+module.exports = connect(mapStateToProps)(OauthCallback);
