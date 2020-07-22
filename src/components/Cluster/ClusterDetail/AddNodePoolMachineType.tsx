@@ -6,7 +6,8 @@ import StyledInput from 'UI/ClusterCreation/StyledInput';
 
 type ChangeHandler = (machineType: string) => void;
 
-interface IAddNodePoolMachineTypeProps {
+interface IAddNodePoolMachineTypeProps
+  extends React.ComponentProps<typeof StyledInput> {
   id?: string;
   machineType?: string;
   onChange?: ChangeHandler;
@@ -16,11 +17,13 @@ const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
   id,
   onChange,
   machineType,
+  ...rest
 }) => {
   const { singular: label } = useInstanceTypeSelectionLabels();
 
   return (
     <StyledInput
+      {...rest}
       inputId={`machine-type-${id}`}
       label={label}
       // regular space, hides hint ;)
