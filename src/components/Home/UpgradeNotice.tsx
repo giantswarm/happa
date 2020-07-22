@@ -38,11 +38,13 @@ function UpgradeNotice({
   canClusterUpgrade,
   onClick,
   className,
+  clusterId,
 }: IUpgradeNoticeProps) {
   if (!canClusterUpgrade) return null;
 
   return (
     <UpgradeWrapperDiv
+      id={`upgrade-notice-${clusterId}`}
       className={className}
       onClick={onClick ? onClick : undefined}
     >
@@ -55,7 +57,6 @@ function UpgradeNotice({
 UpgradeNotice.propTypes = {
   clusterId: PropTypes.string,
   canClusterUpgrade: PropTypes.bool,
-  loadingReleases: PropTypes.bool,
   onClick: PropTypes.func,
   className: PropTypes.string,
 };

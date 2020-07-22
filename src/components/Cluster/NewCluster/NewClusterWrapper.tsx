@@ -78,7 +78,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
 
   const creationCapabilities = useMemo(
     () => makeCapabilities(selectedRelease, provider),
-    [selectedRelease, provider]
+    [selectedRelease, provider, makeCapabilities]
   );
 
   const selectedOrganization = useMemo(() => {

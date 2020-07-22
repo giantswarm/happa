@@ -108,7 +108,6 @@ AvailabilityZonesParser.propTypes = {
   min: PropTypes.number,
   defaultValue: PropTypes.number,
   zones: PropTypes.array,
-  value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
   isLabels: PropTypes.bool,
   isRadioButtons: PropTypes.bool,

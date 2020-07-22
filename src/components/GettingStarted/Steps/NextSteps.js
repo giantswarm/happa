@@ -110,7 +110,6 @@ const NextSteps = (props) => {
 };
 
 NextSteps.propTypes = {
-  goToSlide: PropTypes.func,
   match: PropTypes.object,
 };
 

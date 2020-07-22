@@ -571,17 +571,13 @@ class V5ClusterDetailTable extends React.Component {
 
 V5ClusterDetailTable.propTypes = {
   accessCluster: PropTypes.func,
-  canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
-  lastUpdated: PropTypes.number,
   provider: PropTypes.string,
   region: PropTypes.string,
   release: PropTypes.object,
-  setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
-  workerNodesDesired: PropTypes.number,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingNodePools: PropTypes.bool,

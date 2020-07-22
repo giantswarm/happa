@@ -268,7 +268,6 @@ class NumberPicker extends React.Component {
 }
 
 NumberPicker.propTypes = {
-  unit: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   stepSize: PropTypes.number,

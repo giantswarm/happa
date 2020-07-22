@@ -60,7 +60,6 @@ const OrganizationListRow = ({
 OrganizationListRow.propTypes = {
   getViewURL: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
-  onSelect: PropTypes.func,
   organization: PropTypes.object,
   clusters: PropTypes.array,
   provider: PropTypes.string,
