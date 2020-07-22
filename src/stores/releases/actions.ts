@@ -14,13 +14,10 @@ export const loadReleases = createAsynchronousAction<
   actionTypePrefix: 'RELEASES_LOAD',
   perform: async (state) => {
     const releases: IReleases = {};
-    const allReleases: IReleases = {};
     let sortedReleaseVersions: string[] = [];
 
     const api = new GiantSwarm.ReleasesApi();
     const response = await api.getReleases();
-
-    const userIsAdmin = state.main.loggedInUser.isAdmin;
 
     for (const release of response) {
       const kubernetesVersion = release.components.find(
@@ -30,20 +27,17 @@ export const loadReleases = createAsynchronousAction<
       const releaseNotesURL = release.changelog[0].description;
 
       if (kubernetesVersion) {
-        const r = {
+        releases[release.version] = {
           ...release,
           kubernetesVersion,
           releaseNotesURL,
         };
-
-        if (userIsAdmin || release.active) {
-          releases[release.version] = r;
-        }
-        allReleases[release.version] = r;
       }
     }
 
     sortedReleaseVersions = Object.keys(releases).sort(cmp).reverse();
+
+    const userIsAdmin = state.main.loggedInUser.isAdmin;
 
     if (sortedReleaseVersions.length === 0 && !userIsAdmin) {
       new FlashMessage(
@@ -54,7 +48,7 @@ export const loadReleases = createAsynchronousAction<
       );
     }
 
-    return { releases, allReleases, sortedReleaseVersions };
+    return { releases, sortedReleaseVersions };
   },
   shouldPerform: () => true,
   throwOnError: false,

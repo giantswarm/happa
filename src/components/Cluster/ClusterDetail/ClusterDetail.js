@@ -6,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { selectTargetRelease } from 'selectors/clusterSelectors';
+import { getAllReleases } from 'selectors/releaseSelectors';
 import { AppRoutes } from 'shared/constants/routes';
 
 import GettingStarted from '../../GettingStarted/GettingStarted';
@@ -82,7 +83,7 @@ function mapStateToProps(state, ownProps) {
   const clusterID = ownProps.match.params.clusterId;
   const cluster = state.entities.clusters.items[clusterID];
   const release = cluster
-    ? state.entities.releases.allReleases[cluster.release_version]
+    ? getAllReleases(state)?.[cluster.release_version]
     : null;
   const isV5Cluster = state.entities.clusters.v5Clusters.includes(clusterID);
   const targetReleaseVersion = selectTargetRelease(state, cluster);
