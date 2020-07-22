@@ -5,7 +5,7 @@
  * This file is set up for serving the distribution version. It will be compiled to dist/ by default
  */
 
-const merge = require('webpack-merge');
+const merge = require('webpack-merge').merge;
 const common = require('./webpack.common.js');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
