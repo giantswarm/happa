@@ -180,8 +180,6 @@ AppListInner.propTypes = {
   catalog: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
-  loading: PropTypes.bool,
-  match: PropTypes.object,
 };
 
 export default AppListInner;

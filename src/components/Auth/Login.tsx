@@ -21,8 +21,6 @@ import { parseErrorMessages } from './parseErrorMessages';
 interface IStateProps {
   // For now, until we have a type for it
   user: Record<string, never>;
-  // For now, until we have a type for it
-  flashMessages: Record<string, never>;
 }
 
 // The props coming from injected actions (AKA: `mapDispatchToProps`)
@@ -47,8 +45,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
      */
     // @ts-ignore
     dispatch: PropTypes.func,
-    // @ts-ignore
-    flashMessages: PropTypes.object,
     // @ts-ignore
     actions: PropTypes.object,
   };
@@ -208,7 +204,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 function mapStateToProps(state: Record<string, any>): IStateProps {
   return {
     user: state.main.loggedInUser,
-    flashMessages: state.flashMessages,
   };
 }
 

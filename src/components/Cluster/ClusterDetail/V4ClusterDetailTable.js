@@ -206,14 +206,11 @@ class V4ClusterDetailTable extends React.Component {
 
 V4ClusterDetailTable.propTypes = {
   accessCluster: PropTypes.func,
-  canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,
-  lastUpdated: PropTypes.number,
   provider: PropTypes.string,
   release: PropTypes.object,
   region: PropTypes.string,
-  setInterval: PropTypes.func,
   showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesDesired: PropTypes.number,

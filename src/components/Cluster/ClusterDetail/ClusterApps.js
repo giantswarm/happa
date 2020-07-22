@@ -432,7 +432,6 @@ ClusterApps.propTypes = {
   installedApps: PropTypes.array,
   showInstalledAppsBlock: PropTypes.bool,
   clusterId: PropTypes.string,
-  organizationId: PropTypes.string,
   release: PropTypes.object,
   hasOptionalIngress: PropTypes.bool,
 };

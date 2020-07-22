@@ -342,9 +342,6 @@ class ConfigKubeCtl extends React.Component {
 
 ConfigKubeCtl.propTypes = {
   actions: PropTypes.object,
-  clusters: PropTypes.object,
-  dispatch: PropTypes.func,
-  goToSlide: PropTypes.func,
   match: PropTypes.object,
   selectedCluster: PropTypes.object,
   user: PropTypes.object,
@@ -366,7 +363,6 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
   };
 }
 
