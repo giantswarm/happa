@@ -14,7 +14,7 @@
 const merge = require('webpack-merge').merge;
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
-const ProxyPlugin = require('./scripts/webpack/proxyPlugin');
+const ProxyPlugin = require('../scripts/webpack/proxyPlugin');
 
 module.exports = merge(common, {
   mode: 'development',

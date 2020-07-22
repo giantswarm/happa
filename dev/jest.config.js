@@ -7,20 +7,20 @@ module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
   setupFiles: [
-    path.resolve(`${__dirname}/testUtils/browserMocks.js`),
-    path.resolve(`${__dirname}/testUtils/modelMocks.js`),
+    path.resolve(`${__dirname}/../testUtils/browserMocks.js`),
+    path.resolve(`${__dirname}/../testUtils/modelMocks.js`),
   ],
-  setupFilesAfterEnv: [path.resolve(`${__dirname}/testUtils/setupTests.js`)],
+  setupFilesAfterEnv: [path.resolve(`${__dirname}/../testUtils/setupTests.js`)],
   moduleDirectories: [
-    'node_modules',
-    path.resolve(`${__dirname}/src`),
-    path.resolve(`${__dirname}/src/components`),
-    path.resolve(`${__dirname}/`),
+    '../node_modules',
+    path.resolve(`${__dirname}/../src`),
+    path.resolve(`${__dirname}/../src/components`),
+    path.resolve(`${__dirname}/../`),
   ],
   moduleNameMapper: {
-    '\\.css$': require.resolve('./testUtils/assetsMock.js'),
+    '\\.css$': require.resolve('../testUtils/assetsMock.js'),
     '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
-      './testUtils/assetsMock.js'
+      '../testUtils/assetsMock.js'
     ),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
