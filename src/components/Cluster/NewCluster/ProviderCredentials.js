@@ -75,7 +75,6 @@ ProviderCredentials.propTypes = {
   dispatch: PropTypes.func,
   provider: PropTypes.string,
   organizationName: PropTypes.string,
-  actions: PropTypes.object,
   credentials: PropTypes.object,
 };
 

@@ -49,7 +49,6 @@ function ClusterDashboardResourcesV4({
 ClusterDashboardResourcesV4.propTypes = {
   cluster: PropTypes.object,
   isClusterCreating: PropTypes.bool,
-  nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingClusters: PropTypes.bool,
   loadingStatus: PropTypes.bool,

@@ -30,8 +30,6 @@ const Overview = (props) => (
 );
 
 Overview.propTypes = {
-  match: PropTypes.object,
-  goToSlide: PropTypes.func,
   steps: PropTypes.array,
 };
 

@@ -772,16 +772,9 @@ class AddNodePool extends Component {
 
 AddNodePool.propTypes = {
   availabilityZones: PropTypes.array,
-  selectedOrganization: PropTypes.string,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
   defaultVmSize: PropTypes.string,
-  defaultCPUCores: PropTypes.number,
-  defaultMemorySize: PropTypes.number,
-  defaultDiskSize: PropTypes.number,
-  match: PropTypes.object,
-  clusterCreationStats: PropTypes.object,
-  closeForm: PropTypes.func,
   informParent: PropTypes.func,
   name: PropTypes.string,
   id: PropTypes.string,
@@ -803,9 +796,7 @@ function mapStateToProps(state) {
   const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
-  const selectedOrganization = state.main.selectedOrganization;
   const provider = state.main.info.general.provider;
-  const clusterCreationStats = state.main.info.stats.cluster_creation_duration;
 
   const defaultInstanceType =
     state.main.info.workers.instance_type &&
@@ -817,20 +808,11 @@ function mapStateToProps(state) {
     state.main.info.workers.vm_size?.default ??
     Constants.AZURE_NODEPOOL_DEFAULT_VM_SIZE;
 
-  const defaultCPUCores = 4; // TODO
-  const defaultMemorySize = 4; // TODO
-  const defaultDiskSize = 20; // TODO
-
   return {
     availabilityZones,
     provider,
     defaultInstanceType,
     defaultVmSize,
-    defaultCPUCores,
-    defaultMemorySize,
-    defaultDiskSize,
-    selectedOrganization,
-    clusterCreationStats,
     minAZ,
     maxAZ,
     defaultAZ,

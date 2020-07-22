@@ -100,12 +100,6 @@ const ReleaseRow: FC<IReleaseRow> = ({
 
 ReleaseRow.propTypes = {
   active: PropTypes.bool.isRequired,
-  changelog: PropTypes.arrayOf(
-    PropTypes.shape({
-      component: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-    }).isRequired
-  ).isRequired,
   components: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
