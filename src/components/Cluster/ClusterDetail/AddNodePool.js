@@ -537,7 +537,6 @@ class AddNodePool extends Component {
         </Section>
         <Section>
           <AddNodePoolMachineType
-            provider={provider}
             id={id}
             onChange={this.setMachineType}
             machineType={machineType}
