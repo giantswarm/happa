@@ -1,12 +1,42 @@
+import styled from '@emotion/styled';
 import React from 'react';
 
+const Container = styled.div`
+  margin-bottom: 40px;
+`;
+
+const TOSText = styled.div`
+  overflow: scroll;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid #1f3947;
+  border-radius: 4px;
+  background-color: #32526a;
+  padding: 16px;
+  margin-bottom: 10px;
+
+  h1 {
+    font-size: 20px;
+    margin-top: 0px;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: 700;
+    text-align: left;
+  }
+`;
+
 const TermsOfService = () => (
-  <div className='terms-of-service--container'>
+  <Container>
     <label htmlFor='readTOS'>
       Confirm that you acknowledge our Terms of Service:
     </label>
 
-    <div className='tostext'>
+    <TOSText>
       <h1>Terms of Service</h1>
       <h2>1. Scope of Terms</h2>
       <p>
@@ -537,9 +567,9 @@ const TermsOfService = () => (
         provision which most approximates the economic purpose of the invalid
         provision. The same applies in case of a gap.
       </p>
-    </div>
+    </TOSText>
 
-    <div className='toslink'>
+    <div>
       <a
         href='https://giantswarm.io/terms/'
         rel='noopener noreferrer'
@@ -550,7 +580,7 @@ const TermsOfService = () => (
       <br />
       <small>(link opens in new window/tab)</small>
     </div>
-  </div>
+  </Container>
 );
 
 export default TermsOfService;
