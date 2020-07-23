@@ -1,26 +1,18 @@
 import styled from '@emotion/styled';
+import { catalogLoadIndex } from 'actions/catalogActions';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from 'reducers/types';
 import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
+import { Constants } from 'shared';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { installApp, loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-
-const appToInstall = {
-  catalog: 'giantswarm',
-  chartName: 'nginx-ingress-controller-app',
-  namespace: 'kube-system',
-  name: 'nginx-ingress-controller-app',
-  valuesYAML: '',
-  secretsYAML: '',
-  version: '1.6.9',
-};
 
 const Wrapper = styled.div`
   display: flex;
@@ -53,7 +45,37 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     | Record<string, never>
     | undefined = selectIngressAppFromCluster(cluster);
 
-  const isLoading = isLoadingApps || isInstalling || isNew;
+  const gsCatalog = useSelector(
+    (state: IState) =>
+      state.entities.catalogs.items[
+        Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME
+      ]
+  );
+
+  const catalogLoadGetState = useMemo(
+    () => () => ({
+      entities: {
+        catalogs: {
+          items: {
+            [Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME]: gsCatalog,
+          },
+        },
+      },
+    }),
+    [gsCatalog]
+  );
+
+  const ingressAppToInstall = useMemo(
+    () => gsCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0],
+    [gsCatalog]
+  );
+
+  const isLoading =
+    isLoadingApps ||
+    isInstalling ||
+    isNew ||
+    !gsCatalog.apps ||
+    !ingressAppToInstall;
   const clusterID: string = cluster.id;
 
   const dispatch: IAsynchronousDispatch<IState> = useDispatch();
@@ -61,7 +83,10 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   useEffect(() => {
     const tryToLoadApps = async () => {
       try {
-        await dispatch(loadClusterApps({ clusterId: clusterID }));
+        await Promise.all([
+          catalogLoadIndex(gsCatalog)(dispatch, catalogLoadGetState),
+          dispatch(loadClusterApps({ clusterId: clusterID })),
+        ]);
         setIsNew(false);
       } catch (error) {
         // Do nothing, flash message is shown in action.
@@ -74,6 +99,18 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const installIngressController = async () => {
     try {
       setIsInstalling(true);
+
+      const { name, version } = ingressAppToInstall;
+
+      const appToInstall = {
+        name,
+        chartName: name,
+        version,
+        catalog: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        namespace: 'kube-system',
+        valuesYAML: '',
+        secretsYAML: '',
+      };
 
       await dispatch(installApp({ app: appToInstall, clusterId: clusterID }));
       dispatch(loadClusterApps({ clusterId: clusterID }));
@@ -104,7 +141,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
             '🎉 Ingress controller installed. Please continue to the next step.'
           ) : (
             <>
-              This will install the NGINX Ingress Controller app on cluster{' '}
+              This will install the NGINX Ingress Controller app{' '}
+              {ingressAppToInstall.version} on cluster{' '}
               <ClusterIDLabel clusterID={clusterID} />
             </>
           )}
