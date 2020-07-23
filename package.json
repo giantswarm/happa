@@ -4,7 +4,7 @@
   "src": "src",
   "test": "test",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint --ignore-path .eslintignore --ext .js,.ts,.tsx ./src/",
+    "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx ./src/",
     "lint:fix": "yarn lint --fix",
     "lint:css": "./node_modules/.bin/stylelint './src/**/*.{js,ts,tsx}'",
     "start": "./node_modules/.bin/webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
@@ -18,6 +18,40 @@
     "precommit": "./node_modules/.bin/lint-staged",
     "typecheck": "./node_modules/.bin/tsc",
     "dist": "./node_modules/.bin/webpack --config webpack.prod.js"
+  },
+  "eslintIgnore": ["node_modules", "dist", "coverage", "helm", ".vscode", ".github", ".circleci", "scripts"],
+  "babel": {
+      "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react",
+        [
+          "@babel/preset-typescript",
+          {
+            "allExtensions": true,
+            "isTSX": true
+          }
+        ]
+      ],
+      "plugins": [
+        "transform-class-properties",
+        "emotion",
+        "react-hot-loader/babel"
+      ],
+      "env": {
+        "test": {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets": {
+                  "node": "current"
+                }
+              }
+            ],
+            "@babel/preset-react"
+          ]
+        }
+      }
   },
   "prettier": {
     "singleQuote": true,
