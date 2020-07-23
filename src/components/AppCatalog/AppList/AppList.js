@@ -1,5 +1,6 @@
 import { CATALOG_LOAD_INDEX_REQUEST } from 'actions/actionTypes';
 import DocumentTitle from 'components/shared/DocumentTitle';
+import usePrevious from 'lib/effects/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -24,12 +25,19 @@ const AppList = ({
 }) => {
   const catalogName = catalog?.metadata?.name;
   const breadCrumbTitle = catalogName ? catalogName.toUpperCase() : '';
+  const previousCatalogName = usePrevious(catalogName);
 
   useEffect(() => {
-    if (catalogName) {
+    if (catalogName !== previousCatalogName) {
       catalogLoadIndex(catalog);
     }
-  }, [catalogName, loadingCatalogs, catalogLoadIndex, catalog]);
+  }, [
+    catalogName,
+    loadingCatalogs,
+    catalogLoadIndex,
+    catalog,
+    previousCatalogName,
+  ]);
 
   return (
     <Breadcrumb
