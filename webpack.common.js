@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
 const dotenv = require('dotenv');
-const getServiceURL = require('../scripts/webpack/getServiceURL');
+const getServiceURL = require('./scripts/webpack/getServiceURL');
 const chalk = require('chalk');
 
 const envFileVars = dotenv.config().parsed;
@@ -95,7 +95,7 @@ const makeFeatureFlags = () => {
 
 module.exports = {
   entry: ['react-hot-loader/patch', './src/components/index.tsx'],
-  context: __dirname + "/../",
+  context: __dirname,
   node: {
     fs: 'empty',
   },
@@ -167,8 +167,8 @@ module.exports = {
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     modules: [
       'node_modules',
-      path.resolve(`${__dirname}/../src`),
-      path.resolve(`${__dirname}/../src/components`),
+      path.resolve(`${__dirname}/src`),
+      path.resolve(`${__dirname}/src/components`),
     ],
 
     alias: {
