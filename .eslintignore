@@ -1,8 +1,0 @@
-node_modules
-dist
-coverage
-helm
-.vscode
-.github
-.circleci
-scripts
