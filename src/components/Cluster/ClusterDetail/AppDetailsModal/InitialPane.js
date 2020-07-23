@@ -165,7 +165,7 @@ const InitialPane = (props) => {
       </div>
 
       <div className='labelvaluepair'>
-        <div className='labelvaluepair--label delete-app'>Delete This App</div>
+        <div className='labelvaluepair--label'>Delete This App</div>
         <Button bsStyle='danger' onClick={props.showDeleteAppPane}>
           <i className='fa fa-delete' />
           Delete App

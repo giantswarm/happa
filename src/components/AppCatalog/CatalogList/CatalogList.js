@@ -1,8 +1,18 @@
+import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Well from 'UI/Well';
 
 import CatalogRepo from './CatalogRepo';
+
+const Wrapper = styled.div`
+  h1 {
+    border-bottom: 1px solid ${({ theme }) => theme.colors.shade5};
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+  }
+`;
 
 const CatalogList = (props) => {
   const catalogs = props.catalogs.items;
@@ -54,29 +64,27 @@ const CatalogList = (props) => {
 
   return (
     <DocumentTitle title='App Catalogs'>
-      <>
+      <Wrapper>
         <h1>App Catalogs</h1>
         <p>Pick an App Catalog to browse all the Apps in it.</p>
         {Object.keys(props.catalogs.items).length === 0 ? (
-          <p className='well'>
+          <Well>
             <b>Could not find any appcatalogs:</b>
             <br />
             It appears we haven&apos;t configured the <code>
               appcatalog
             </code>{' '}
             resources yet for your installation. Please come back later!
-          </p>
+          </Well>
         ) : (
-          <div className='app-catalog--repos'>
-            {Object.values(catalogs)
-              .filter(filterFunc)
-              .sort(sortFunc)
-              .map((catalog) => (
-                <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
-              ))}
-          </div>
+          Object.values(catalogs)
+            .filter(filterFunc)
+            .sort(sortFunc)
+            .map((catalog) => (
+              <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
+            ))
         )}
-      </>
+      </Wrapper>
     </DocumentTitle>
   );
 };

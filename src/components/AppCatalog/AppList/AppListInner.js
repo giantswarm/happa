@@ -22,6 +22,9 @@ const TitleRow = styled('h1')`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.shade5};
+  padding-bottom: 10px;
+  margin-bottom: 25px;
 `;
 
 const TitleAndIcons = styled('div')`
@@ -165,16 +168,15 @@ class AppListInner extends React.Component {
             onReset={this.resetFilters}
           />
         </TitleRow>
-        <div className='app-catalog-overview'>
-          <AppListItems
-            apps={filteredApps}
-            catalog={catalog}
-            searchQuery={searchQuery}
-            iconErrors={this.iconErrors}
-            onImgError={this.onImgError}
-            scrollToApp={this.state.scrollToApp}
-          />
-        </div>
+
+        <AppListItems
+          apps={filteredApps}
+          catalog={catalog}
+          searchQuery={searchQuery}
+          iconErrors={this.iconErrors}
+          onImgError={this.onImgError}
+          scrollToApp={this.state.scrollToApp}
+        />
       </>
     );
   }
