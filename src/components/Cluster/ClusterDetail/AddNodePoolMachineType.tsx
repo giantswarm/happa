@@ -7,7 +7,7 @@ import StyledInput from 'UI/ClusterCreation/StyledInput';
 type ChangeHandler = (machineType: string) => void;
 
 interface IAddNodePoolMachineTypeProps
-  extends React.ComponentProps<typeof StyledInput> {
+  extends React.ComponentPropsWithoutRef<typeof StyledInput> {
   id?: string;
   machineType?: string;
   onChange?: ChangeHandler;
