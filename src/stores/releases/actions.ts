@@ -19,27 +19,25 @@ export const loadReleases = createAsynchronousAction<
     const api = new GiantSwarm.ReleasesApi();
     const response = await api.getReleases();
 
-    const userIsAdmin = state.main.loggedInUser.isAdmin;
-
     for (const release of response) {
-      if (userIsAdmin || release.active) {
-        const kubernetesVersion = release.components.find(
-          (component) => component.name === 'kubernetes'
-        )?.version;
+      const kubernetesVersion = release.components.find(
+        (component) => component.name === 'kubernetes'
+      )?.version;
 
-        const releaseNotesURL = release.changelog[0].description;
+      const releaseNotesURL = release.changelog[0].description;
 
-        if (kubernetesVersion) {
-          releases[release.version] = {
-            ...release,
-            kubernetesVersion,
-            releaseNotesURL,
-          };
-        }
+      if (kubernetesVersion) {
+        releases[release.version] = {
+          ...release,
+          kubernetesVersion,
+          releaseNotesURL,
+        };
       }
     }
 
     sortedReleaseVersions = Object.keys(releases).sort(cmp).reverse();
+
+    const userIsAdmin = state.main.loggedInUser.isAdmin;
 
     if (sortedReleaseVersions.length === 0 && !userIsAdmin) {
       new FlashMessage(
