@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import AppListPlaceholder from 'AppCatalog/AppList/AppListPlaceholder';
 import PropTypes from 'prop-types';
 import React from 'react';
 import AppContainer from 'UI/AppContainer';
@@ -41,6 +42,10 @@ class AppListItems extends React.Component {
       apps,
       this.props.scrollToApp
     );
+
+    if (apps.length < 1) {
+      return <AppListPlaceholder searchQuery={searchQuery} />;
+    }
 
     return (
       <StyledAppsWrapper ref={this.appsListRef}>

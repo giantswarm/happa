@@ -19,11 +19,15 @@ const AppListPlaceholder: React.FC<IAppListPlaceholderProps> = ({
   searchQuery,
   ...rest
 }) => {
-  return (
-    <Wrapper {...rest}>
-      No apps matched your search query: &quot;{searchQuery}&quot;
-    </Wrapper>
-  );
+  const getMessage = () => {
+    if ((searchQuery as string).length > 0) {
+      return `No apps matched your search query: "${searchQuery}"`;
+    }
+
+    return 'There are no apps available in this catalog.';
+  };
+
+  return <Wrapper {...rest}>{getMessage()}</Wrapper>;
 };
 
 AppListPlaceholder.propTypes = {
