@@ -325,4 +325,22 @@ describe('HttpClient', () => {
       );
     }
   });
+
+  it(`accepts an undefined 'response' property in the error object`, async () => {
+    const client = new HttpClient();
+    client.onBeforeRequest = () => {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        response: undefined,
+      };
+    };
+
+    try {
+      await client.execute();
+    } catch (err) {
+      expect(err.message).toStrictEqual(
+        `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`
+      );
+    }
+  });
 });
