@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
@@ -341,6 +339,31 @@ describe('Apps and App Catalog', () => {
       await findByText(
         /these apps and services are preinstalled on your cluster and managed by Giant Swarm./i
       );
+    });
+
+    it(`doesn't crash when loading apps for a catalog fails`, async () => {
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      getMockCall('/v4/user/', userResponse);
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+      getMockCall(
+        `/v4/clusters/${V4_CLUSTER.id}/status/`,
+        v4AWSClusterStatusResponse
+      );
+      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+      getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+
+      nock('https://catalogshost')
+        .get('/giantswarm-incubator-catalog/index.yaml')
+        .reply(StatusCodes.InternalServerError, 'Cannot get catalog apps.');
+
+      const appCatalogListPath = RoutePath.createUsablePath(
+        AppCatalogRoutes.AppList,
+        { catalogName: 'giantswarm-incubator' }
+      );
+      renderRouteWithStore(appCatalogListPath);
+
+      const noAppsPlaceholder = await screen.findByText(/no apps/i);
+      expect(noAppsPlaceholder).toBeInTheDocument();
     });
   });
 
