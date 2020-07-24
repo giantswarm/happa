@@ -341,7 +341,7 @@ describe('Apps and App Catalog', () => {
       );
     });
 
-    it(`doesn't crash when loading apps for a catalog fails`, async () => {
+    it('displays a placeholder when trying to view apps for a catalog, and loading them fails', async () => {
       getMockCall('/v4/appcatalogs/', appCatalogsResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
@@ -362,7 +362,37 @@ describe('Apps and App Catalog', () => {
       );
       renderRouteWithStore(appCatalogListPath);
 
-      const noAppsPlaceholder = await screen.findByText(/no apps/i);
+      const noAppsPlaceholder = await screen.findByText(
+        /there are no apps available in this catalog/i
+      );
+      expect(noAppsPlaceholder).toBeInTheDocument();
+    });
+
+    it('displays a placeholder when the app the user searched for cannot be found', async () => {
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      getMockCall('/v4/user/', userResponse);
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+      getMockCall(
+        `/v4/clusters/${V4_CLUSTER.id}/status/`,
+        v4AWSClusterStatusResponse
+      );
+      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+      getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+
+      nock('https://catalogshost')
+        .get('/giantswarm-incubator-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
+      const searchQuery = 'something-random';
+      const appCatalogListPath = RoutePath.createUsablePath(
+        `${AppCatalogRoutes.AppList}?q=${searchQuery}`,
+        { catalogName: 'giantswarm-incubator' }
+      );
+      renderRouteWithStore(appCatalogListPath);
+
+      const noAppsPlaceholder = await screen.findByText(
+        new RegExp(`no apps matched your search query: "${searchQuery}"`, 'i')
+      );
       expect(noAppsPlaceholder).toBeInTheDocument();
     });
   });
