@@ -44,14 +44,6 @@ import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
 
-const WrapperDiv = styled.div`
-  h2 {
-    font-weight: 400;
-    font-size: 22px;
-    margin: 0 0 15px;
-  }
-`;
-
 const Disclaimer = styled.p`
   margin: 0 0 20px;
   line-height: 1.2;
@@ -264,10 +256,7 @@ class ClusterDetailView extends React.Component {
 
         {!loading && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
-            <WrapperDiv
-              className='cluster-details'
-              data-testid='cluster-details-view'
-            >
+            <div data-testid='cluster-details-view'>
               <h1>
                 <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
                 <ViewAndEditName
@@ -371,7 +360,7 @@ class ClusterDetailView extends React.Component {
                 release={release}
                 targetRelease={targetRelease}
               />
-            </WrapperDiv>
+            </div>
           </DocumentTitle>
         )}
       </>
