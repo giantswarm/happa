@@ -81,6 +81,10 @@ class AppListInner extends React.Component {
   }
 
   getAppsWithOrderedVersions = memoize((allApps) => {
+    if (!allApps) {
+      return [];
+    }
+
     const apps = Object.values(allApps);
 
     apps.map(this.sortVersionsByCreationDateDESC);
