@@ -297,27 +297,3 @@ jobs:
             sleep 2
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep Happa
-
-  deploy-to-testing:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - deploy:
-          name: Deploy with architect to testing envs
-          command: |
-            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-            chmod +x ./architect
-            ./architect deploy --group=testing
-
-  deploy-to-all:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - deploy:
-          name: Deploy with architect to all envs
-          command: |
-            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-            chmod +x ./architect
-            ./architect deploy

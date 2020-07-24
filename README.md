@@ -8,6 +8,7 @@
 The Giant Swarm web user interface. It lets users:
 
 - View and manage clusters
+- Install and manage applications from an app catalog
 - Manage their account
 - Add / remove organizations
 - Add / remove members from organizations
@@ -21,87 +22,26 @@ Happa is a single page JavaScript application using React+Redux and runs in mode
 
 ## Getting started with development / demoing
 
-Happa has to talk to an API endpoint. It used to be possible to change a locally
-running happa's configuration to talk to any API server. This has since been
-restricted with CORS accept headers.
+Running Happa locally requires [NodeJS 12](https://nodejs.org/) and [Yarn](https://yarnpkg.com/).
 
-The only option now is to bring up the API suite locally, or demo happa running
-on one of our installations.
+You must have [opsctl](https://github.com/giantswarm/opsctl) installed and configured properly.
+opsctl is our internal tool for managing access to clusters and performing ops related tasks.
 
-### Bring up the API suite locally
+Bring up Happa and have it speak to the 'ginger' installation by using the following
+command:
 
-This requires Docker and `docker-compose`, and access to our private `api` repo.
-Currently only Giant Swarm employees are able to see that repo. We're considering
-open sourcing it.
-
-Start the `api` and dependencies first by going to the `api` [repo](https://github.com/giantswarm/api) and running
-the dockercompose file in the testing folder there:
-
-```nohighlight
-cd $GOPATH/src/github.com/giantswarm/api/testing
-make aws
-make up
 ```
-
-> Notice the `make aws` command in that example? There is also `make azure` and `make kvm`
-> to create a docker-compose file that sets up the API and other microservices as if
-> they were on these types of installations.
-
-As part of `make up`, `./fixtures.sh` will run and create the initial user and
-organization you can log in with.
-
-You should now be able to start happa's development server from within this
-(giantswarm/happa) repo like so:
-
-```nohighlight
-docker-compose up --build
+HAPPA_PROXY_INSTALLATION=ginger yarn start
 ```
-
-It can take a minute or two for dependencies to be available.
-Wait for a line like `: Compiled successfully.` to appear in the console.
-This shows that the dev server is ready to handle requests.
-
-Then visit http://localhost:7000/
-
-Any code changes should cause the browser to reload automatically.
-
-Once everything is up you can log in as `developer@giantswarm.io` with
-`password` as your password.
-
-If you want to test out things like the forgot password feature, all e-mail ends up in
-the mailcatcher app running at http://localhost:1080/
-
-## Tear down the dev / demo environment
-
-Hit `Ctrl-C` to escape from `docker-compose` log output.
-
-Use `docker-compose stop` to stop containers or `docker-compose down` to remove them.
 
 ## Running tests
 
 We have a few tests, and are adding more. Run them with `yarn test`
 
-## Deploying
+## Deploying / Releasing
 
-Commits to the master branch are continuously deployed to Giant Swarm test installations.
-Tagged releases are continuously deployed to all installations.
-
-## Building / Running locally
-
-If you want to test locally `make production` will build and run
-Happa's production container.
-
-Happa makes use of the development container to produce production assets.
-The production container then takes those assets and serves them using nginx.
-
-The build process is as follows:
-
-0. Build the development container `make docker-build-dev`
-
-1. Create production assets using the development container (`grunt build`), save them in the
-   dist folder. `make dist`
-
-1. Create the production container `make docker-build-prod`
+Tagged releases are continuously deployed to all installations. For details
+see [Release.md](docs/Release.md)
 
 ## Configuration
 
@@ -122,8 +62,8 @@ A startup script (`start.sh`) applies the values from the environment variables
 to `index.html` by editing the file. This way Happa remains a fully static website
 that can be served by nginx.
 
-In development, environment variables are not applied. This is because the development container
-does not start in the same way that the production container does.
+In development, these environment variables are applied as part of a templating step
+that generates index.html (configured in webpack.common.js).
 
 ## Redux in a nutshell
 
@@ -157,7 +97,8 @@ https://fortawesome.com/kits/d940f7eb/docs
 
 ## Checking for outdated dependencies
 
-To see what dependencies have updates run `make npm-check-updates`
+Dependabot is configured to automatically create PR's that update our dependencies
+when they go stale. Keep an eye on the PR's, dependabot creates them on Mondays.
 
 ## Feature Flags (Development)
 
