@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import AppListPlaceholder from 'AppCatalog/AppList/AppListPlaceholder';
 import { replace } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -135,6 +136,10 @@ class AppListInner extends React.Component {
 
     const allApps = this.getAppsWithOrderedVersions(catalog.apps);
     const filteredApps = AppListInner.filterApps(searchQuery, allApps);
+
+    if (filteredApps.length < 1) {
+      return <AppListPlaceholder searchQuery={searchQuery} />;
+    }
 
     return (
       <>
