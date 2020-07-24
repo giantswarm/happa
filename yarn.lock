@@ -6014,9 +6014,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git#add-azure-v5-nodepool-creation":
+"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git":
   version "4.0.1"
-  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#173a2d42ba7fe19dc0eb2fd5bc95c784993d1fc6"
+  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#bf2810afa140487c44a9ef392c65eb211bd416e6"
   dependencies:
     superagent "3.8.3"
 
