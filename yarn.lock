@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airbrake/browser@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@airbrake/browser/-/browser-1.3.0.tgz#3e245a227c986609c021e37d4bc955f53d6d550d"
-  integrity sha512-ioD0fa6tFA12hYrBBldzr5bGsi/9S17CTHpefy0u6irbtQ3/cXm6FxGP1qYoX5NN1tHlSFf1ZJe74YTUmunZVg==
+"@airbrake/browser@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@airbrake/browser/-/browser-1.4.0.tgz#0b3cf20ccd7a5fd88e340de98af02c3e3326ef4a"
+  integrity sha512-JKPK8qgOkhz8YOnOH3Uo7b5FiBndCu5MGgiXM4NVw+GYLP/RvW2s9EkQuklW69xJt6XZp8N9SzJ1OPDWaF1K7Q==
   dependencies:
     "@types/promise-polyfill" "^6.0.3"
     "@types/request" "2.48.5"
@@ -1373,10 +1373,10 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.0.tgz#14264692a9d6e2fa4db3df5e56e94b5e25647ac0"
   integrity sha512-iIgQNzCm0v7QMhhe4Jjn9uRh+I6GoPmt03CbEtwx3ao8/EfoQcmgtqH4vQ5Db/lxiIGaWDv6nwvunuh0RyX0+A==
 
-"@types/auth0-js@^9.13.3":
-  version "9.13.3"
-  resolved "https://registry.yarnpkg.com/@types/auth0-js/-/auth0-js-9.13.3.tgz#434b8663215bf5de5da824962fee50582dd80b96"
-  integrity sha512-LAh7kCV/9/SgT7cmet20czGeVl7lLYYf4z179+/Ch+udi/J5Z8Ag9124HrMnY6G//VBQb8SX5Xei+hWv91ysUg==
+"@types/auth0-js@^9.13.4":
+  version "9.13.4"
+  resolved "https://registry.yarnpkg.com/@types/auth0-js/-/auth0-js-9.13.4.tgz#d9dab97b7d6b9cf27be5ebb844c6107adcc86257"
+  integrity sha512-cNF8SB9lrNkjsq1Y3SZxcQt4pLW3HEqvLjJT7+26oPTngbExxRWONSXre1N+xJzcVHhrtn8A3uF0Ca+CoZ9qSw==
 
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.9"
@@ -1558,10 +1558,10 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.0.tgz#69a23a3ad29caf0097f06eda59b361ee2f0639f6"
   integrity sha1-aaI6OtKcrwCX8G7aWbNh7i8GOfY=
 
-"@types/node@*", "@types/node@^14.0.23":
-  version "14.0.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.23.tgz#676fa0883450ed9da0bb24156213636290892806"
-  integrity sha512-Z4U8yDAl5TFkmYsZdFPdjeMa57NOvnaf1tljHzhouaPEp7LCj2JKkejpI1ODviIAQuW4CcQmxkQ77rnLsOOoKw==
+"@types/node@*", "@types/node@^14.0.26":
+  version "14.0.26"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.26.tgz#22a3b8a46510da8944b67bfc27df02c34a35331c"
+  integrity sha512-W+fpe5s91FBGE0pEa0lnqGLL4USgpLgs4nokw16SrBBco/gQxuua7KnArSEOd5iaMqbbSHV10vUDkJYJJqpXKA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1608,10 +1608,10 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-datepicker@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/react-datepicker/-/react-datepicker-3.0.2.tgz#5752612d599361181563d62f7425a03a05f2fdf1"
-  integrity sha512-xW04NZRF+9ZnzOD3XrlIzBEKgUsN6LVgZJJsXH8NIUlVjyPh+sdtLPfVoDp+GQzGq1M0TuMLNZsv0sJ3N9XwDA==
+"@types/react-datepicker@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-datepicker/-/react-datepicker-3.1.0.tgz#e55d23224479346cc0405fbe1215017413243419"
+  integrity sha512-NhI001C2W5Sx6aOxKC1P1bvl8WB3PwxGOJ0bTimf7GcjPY2qIfhtFaSnCHZ+rLUQjG7O75UDXpMc0fEEej11dw==
   dependencies:
     "@types/react" "*"
     date-fns "^2.0.1"
@@ -1702,10 +1702,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.9.11", "@types/react@^16.9.35":
-  version "16.9.35"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.35.tgz#a0830d172e8aadd9bd41709ba2281a3124bbd368"
-  integrity sha512-q0n0SsWcGc8nDqH2GJfWQWUOmZSJhXV64CjVN5SvcNti3TdEaA3AH0D8DwNmMdzjMAC/78tB8nAZIlV8yTz+zQ==
+"@types/react@*", "@types/react@^16.9.11", "@types/react@^16.9.43":
+  version "16.9.43"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.43.tgz#c287f23f6189666ee3bebc2eb8d0f84bcb6cdb6b"
+  integrity sha512-PxshAFcnJqIWYpJbLPriClH53Z2WlJcVZE+NP2etUtWQs2s7yIMj3/LDKZT/5CHJ/F62iyjVCDu2H3jHEXIxSg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -1785,10 +1785,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/underscore@^1.10.7":
-  version "1.10.7"
-  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.10.7.tgz#d7900c8d34675f768489d880af1a0840194f0f70"
-  integrity sha512-v1wOSqwcyqeE65A/Pr+INp1rLBbrUZkekX0i6Io96p6rgpYAoN7r0JYoKnT1sSFSBV3VoF6YQMJCDWZM8wrKXg==
+"@types/underscore@^1.10.14":
+  version "1.10.14"
+  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.10.14.tgz#a2a831c72a12deddaef26028d16a5aa48aadbee0"
+  integrity sha512-VE20ZYf38nmOU1lU0wpQBWcGPlskfKK8uU8AN1UIz5PjxT2YM7HTF0iUA85iGJnbQ3tZweqIfQqmLgLMtP27YQ==
 
 "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.3"
@@ -10373,10 +10373,10 @@ react-prop-types@^0.4.0:
   dependencies:
     warning "^3.0.0"
 
-react-redux@7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.0.tgz#f970f62192b3981642fec46fd0db18a074fe879d"
-  integrity sha512-EvCAZYGfOLqwV7gh849xy9/pt55rJXPwmYvI4lilPM5rUT/1NxuuN59ipdBksRVSvz0KInbPnp4IfoXJXCqiDA==
+react-redux@7.2.1:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.1.tgz#8dedf784901014db2feca1ab633864dee68ad985"
+  integrity sha512-T+VfD/bvgGTUA74iW9d2i5THrDQWbweXP0AVNI8tNd1Rk5ch1rnMiJkDD67ejw7YBKM4+REvcvqRuWJb7BLuEg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     hoist-non-react-statics "^3.3.0"
