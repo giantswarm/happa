@@ -1,18 +1,11 @@
 import styled from '@emotion/styled';
+import AppListPlaceholder from 'AppCatalog/AppList/AppListPlaceholder';
 import PropTypes from 'prop-types';
 import React from 'react';
 import AppContainer from 'UI/AppContainer';
 
 import VirtualizedScrollableGrid from '../../shared/VirtualizedScrollableGrid';
 import { APP_CONTAINER_HEIGHT } from '../../UI/AppContainer';
-
-const StyledEmptyState = styled.div`
-  text-align: center;
-  padding: 20px 30px;
-  margin: 100px auto 0px auto;
-  border-radius: 4px;
-  font-size: 18px;
-`;
 
 const StyledAppsWrapper = styled.div`
   width: 100%;
@@ -50,12 +43,8 @@ class AppListItems extends React.Component {
       this.props.scrollToApp
     );
 
-    if (apps.length === 0) {
-      return (
-        <StyledEmptyState>
-          No apps matched your search query: &quot;{searchQuery}&quot;
-        </StyledEmptyState>
-      );
+    if (apps.length < 1) {
+      return <AppListPlaceholder searchQuery={searchQuery} />;
     }
 
     return (
