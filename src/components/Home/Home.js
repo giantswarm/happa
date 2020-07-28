@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { batchedRefreshClusters } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
@@ -28,6 +29,32 @@ const newClusterPathMemoized = memoize(
     }),
   (orgId) => orgId
 );
+
+const AnimationWrapper = styled.div`
+  .cluster-list-item-enter,
+  .cluster-list-item-appear {
+    opacity: 0;
+  }
+
+  .cluster-list-item-appear.cluster-list-item-appear-active {
+    opacity: 1;
+    transition: opacity 150ms ease-in;
+  }
+
+  .cluster-list-item-enter.cluster-list-item-enter-active {
+    opacity: 1;
+    transition: opacity 150ms ease-in;
+  }
+
+  .cluster-list-item-exit {
+    opacity: 1;
+  }
+
+  .cluster-list-item-exit.cluster-list-item-exit-active {
+    opacity: 0;
+    transition: opacity 150ms ease-in;
+  }
+`;
 
 class Home extends React.Component {
   state = {
@@ -115,22 +142,31 @@ class Home extends React.Component {
             />
           )}
 
-          <TransitionGroup className='cluster-list'>
-            {clusters.map((id) => (
-              <CSSTransition
-                classNames='cluster-list-item'
-                key={id}
-                timeout={500}
+          {clusters.length > 0 && (
+            <AnimationWrapper>
+              <TransitionGroup
+                className='cluster-list'
+                appear={true}
+                enter={true}
               >
-                <ClusterDashboardItem
-                  clusterId={id}
-                  isV5Cluster={this.props.v5Clusters.includes(id)}
-                  key={id}
-                  selectedOrganization={selectedOrganization}
-                />
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
+                {clusters.map((id) => (
+                  <CSSTransition
+                    classNames='cluster-list-item'
+                    key={id}
+                    timeout={200}
+                    exit={false}
+                  >
+                    <ClusterDashboardItem
+                      clusterId={id}
+                      isV5Cluster={this.props.v5Clusters.includes(id)}
+                      key={id}
+                      selectedOrganization={selectedOrganization}
+                    />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
+            </AnimationWrapper>
+          )}
 
           {clusters.length > 0 ? (
             <p className='last-updated'>
