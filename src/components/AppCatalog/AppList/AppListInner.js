@@ -168,7 +168,6 @@ class AppListInner extends React.Component {
             onReset={this.resetFilters}
           />
         </TitleRow>
-
         <AppListItems
           apps={filteredApps}
           catalog={catalog}
