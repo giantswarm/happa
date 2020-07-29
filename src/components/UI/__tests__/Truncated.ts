@@ -73,6 +73,16 @@ describe('Truncated', () => {
     expect(getByText('ATextThatIsTooLongToBeDisplayed')).toBeInTheDocument();
   });
 
+  it('doesnt display a tooltip for text that wasnt truncated', () => {
+    const { getByText } = renderWithTheme(Truncated, {
+      children: 'short',
+    });
+
+    const label: HTMLSpanElement = getByText('short');
+    fireEvent.mouseOver(label);
+    expect(label).not.toHaveAttribute('aria-describedby');
+  });
+
   it('can have props passed to the root component', () => {
     const { getByText } = renderWithTheme(Truncated, {
       children: 'Test',
