@@ -73,7 +73,7 @@ describe('Truncated', () => {
     expect(getByText('ATextThatIsTooLongToBeDisplayed')).toBeInTheDocument();
   });
 
-  it('doesnt display a tooltip for text that wasnt truncated', () => {
+  it(`doesn't display a tooltip for text that wasn't truncated`, () => {
     const { getByText } = renderWithTheme(Truncated, {
       children: 'short',
     });
