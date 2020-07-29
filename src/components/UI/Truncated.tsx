@@ -35,8 +35,7 @@ const Truncated: React.FC<ITruncatedProps> = ({
   str = truncate(str, replacer as string, numStart as number, numEnd as number);
 
   // Skip the tooltip if the content was not truncated
-  let skipTooltip = false;
-  if (str === children) skipTooltip = true;
+  const skipTooltip = str === children;
 
   return (
     <Wrapper {...rest}>
