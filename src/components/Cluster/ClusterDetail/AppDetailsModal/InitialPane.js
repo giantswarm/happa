@@ -82,7 +82,7 @@ const InitialPane = (props) => {
           <div className='labelvaluepair--label'>RELEASE STATUS</div>
           <div className='labelvaluepair--value code'>
             {props.app.status?.release?.status ? (
-              <Truncated as='span'>{props.app.status.release.status}</Truncated>
+              <span>{props.app.status.release.status}</span>
             ) : (
               <span>Information pending...</span>
             )}
