@@ -84,14 +84,16 @@ export class SignUp extends React.Component {
       .catch((error) => {
         this.setState({
           // eslint-disable-next-line react/no-unused-state
-          checkInviteStatus: 'failed',
+          checkInviteStatus: 'completed',
         });
 
         let statusMessage = 'verify_failed';
 
         if (error.message === 'InvalidToken') {
-          statusMessage = 'invalid_token';
+          statusMessage = 'verify_completed';
         }
+
+        this.advanceForm();
 
         this.setState({
           statusMessage: statusMessage,
