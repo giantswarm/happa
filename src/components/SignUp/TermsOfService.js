@@ -1,14 +1,44 @@
+import styled from '@emotion/styled';
 import React from 'react';
 
+const Container = styled.div`
+  margin-bottom: 40px;
+`;
+
+const TOSText = styled.div`
+  overflow: scroll;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid ${({ theme }) => theme.colors.shade6};
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.shade5};
+  padding: 16px;
+  margin-bottom: 10px;
+`;
+
+const H1 = styled.h1`
+  font-size: 20px;
+  margin-top: 0px;
+  font-weight: 700;
+  text-align: left;
+`;
+
+const H2 = styled.h2`
+  font-size: 16px;
+  margin-top: 10px;
+  font-weight: 700;
+  text-align: left;
+`;
+
 const TermsOfService = () => (
-  <div className='terms-of-service--container'>
+  <Container>
     <label htmlFor='readTOS'>
       Confirm that you acknowledge our Terms of Service:
     </label>
 
-    <div className='tostext'>
-      <h1>Terms of Service</h1>
-      <h2>1. Scope of Terms</h2>
+    <TOSText>
+      <H1>Terms of Service</H1>
+      <H2>1. Scope of Terms</H2>
       <p>
         1.1 These Terms of Service (hereinafter &quot;Terms&quot;) apply to
         Giant Swarm Websites and to any and all online resources, software, data
@@ -54,7 +84,7 @@ const TermsOfService = () => (
         Terms will become effective at the start of the next billing interval if
         the changes have been posted 14 days in advance.
       </p>
-      <h2>2. Giant Swarm Account</h2>
+      <H2>2. Giant Swarm Account</H2>
       <p>
         2.1 In order to access some features or main elements of the Giant Swarm
         Service, you will have to create a Giant Swarm Account (hereinafter
@@ -105,7 +135,7 @@ const TermsOfService = () => (
         with the general availability of the Giant Swarm Services for other
         customers.
       </p>
-      <h2>3. Use of Giant Swarm Service</h2>
+      <H2>3. Use of Giant Swarm Service</H2>
       <p>
         3.1 Your use of the Giant Swarm Service must comply with all applicable
         laws, regulations and ordinances, including any laws regarding the
@@ -193,7 +223,7 @@ const TermsOfService = () => (
         </a>
         , which is also incorporated herein by this reference.
       </p>
-      <h2>4. Removals and Suspension</h2>
+      <H2>4. Removals and Suspension</H2>
       <p>
         4.1 Giant Swarm reserves the right to remove any or all Content from the
         Giant Swarm Service that violates the AUP or is otherwise in conflict
@@ -226,7 +256,7 @@ const TermsOfService = () => (
         Suspension will be to the minimum extent required, and of the minimum
         duration, to prevent or eliminate the Emergency Security Issue.
       </p>
-      <h2>5. Fees and Payment Terms</h2>
+      <H2>5. Fees and Payment Terms</H2>
       <p>
         5.1 Giant Swarm Service is provided to you without charge up to certain
         limits. A use of Giant Swarm above this limit requires your purchase of
@@ -268,7 +298,7 @@ const TermsOfService = () => (
         in which such change will take effect. Changes to the Giant Swarm Fees
         will be also posted at Giant Swarm Websites.
       </p>
-      <h2>6. Licensing</h2>
+      <H2>6. Licensing</H2>
       <p>
         6.1 By submitting, posting or displaying Content and/or by creating an
         Application on or through the Giant Swarm Service you give Giant Swarm a
@@ -338,7 +368,7 @@ const TermsOfService = () => (
         the Giant Swarm Service is governed by an individual open source
         license, which constitutes a separate written agreement.
       </p>
-      <h2>7. Property Rights</h2>
+      <H2>7. Property Rights</H2>
       <p>
         7.1 With the exception of your Content and/or Application(s) submitted
         to the Giant Swarm Service, you acknowledge and agree that all legal
@@ -347,7 +377,7 @@ const TermsOfService = () => (
         rights, is either owned by or licensed to Giant Swarm.
       </p>
       <p>7.2 All rights not expressly granted are reserved.</p>
-      <h2>8. Links</h2>
+      <H2>8. Links</H2>
       <p>
         8.1 Giant Swarm Service may include hyperlinks to other websites,
         content or other resources not owned or controlled by Giant Swarm. Giant
@@ -369,7 +399,7 @@ const TermsOfService = () => (
         completeness, accuracy or existence of any advertising, products or
         other materials on, or available from, such websites or resources.
       </p>
-      <h2>9. Termination</h2>
+      <H2>9. Termination</H2>
       <p>
         9.1 You may terminate your Account by canceling at any time. You will
         not receive any refunds if you cancel your Account.
@@ -401,7 +431,7 @@ const TermsOfService = () => (
         provide you a reasonable opportunity to retrieve your Content and
         Application.
       </p>
-      <h2>10. Warranties</h2>
+      <H2>10. Warranties</H2>
       <p>
         10.1 The Giant Swarm Service is provided &quot;as is&quot; and &quot;as
         available&quot; and your use of Giant Swarm Service is at your sole
@@ -436,7 +466,7 @@ const TermsOfService = () => (
         with description) apply to the Giant Swarm Service except to the extent
         that they are expressly set out in these Terms.
       </p>
-      <h2>11. Liability</h2>
+      <H2>11. Liability</H2>
       <p>
         11.1 Giant Swarm shall be liable under these Terms only in accordance
         with the provisions set out under Clauses 11.1.1 to 11.1.6.
@@ -483,7 +513,7 @@ const TermsOfService = () => (
         11.1.6 Any more extensive liability of Giant Swarm is excluded on the
         merits.
       </p>
-      <h2>12. Idemnification</h2>
+      <H2>12. Idemnification</H2>
       <p>
         12.1 To the fullest extent permitted by applicable law, you agree to
         indemnify and hold Giant Swarm, its subsidiaries, legal representatives
@@ -501,7 +531,7 @@ const TermsOfService = () => (
         party and will cooperate reasonably with you to resolve the third
         party&lsquo;s allegation and proceedings.
       </p>
-      <h2>13. Final Provisions</h2>
+      <H2>13. Final Provisions</H2>
       <p>
         13.1 These Terms set out all terms agreed between you and Giant Swarm
         and govern your use of the Giant Swarm Services, except any services
@@ -537,9 +567,9 @@ const TermsOfService = () => (
         provision which most approximates the economic purpose of the invalid
         provision. The same applies in case of a gap.
       </p>
-    </div>
+    </TOSText>
 
-    <div className='toslink'>
+    <div>
       <a
         href='https://giantswarm.io/terms/'
         rel='noopener noreferrer'
@@ -550,7 +580,7 @@ const TermsOfService = () => (
       <br />
       <small>(link opens in new window/tab)</small>
     </div>
-  </div>
+  </Container>
 );
 
 export default TermsOfService;
