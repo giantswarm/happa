@@ -34,14 +34,21 @@ const Truncated: React.FC<ITruncatedProps> = ({
   // Safe because we're using defaultProps in case these aren't defined
   str = truncate(str, replacer as string, numStart as number, numEnd as number);
 
+  // Skip the tooltip if the content was not truncated
+  const skipTooltip = str === children;
+
   return (
     <Wrapper {...rest}>
-      <OverlayTrigger
-        overlay={<Tooltip id='tooltip'>{children}</Tooltip>}
-        placement='top'
-      >
+      {skipTooltip ? (
         <Label {...labelProps}>{str}</Label>
-      </OverlayTrigger>
+      ) : (
+        <OverlayTrigger
+          overlay={<Tooltip id='tooltip'>{children}</Tooltip>}
+          placement='top'
+        >
+          <Label {...labelProps}>{str}</Label>
+        </OverlayTrigger>
+      )}
     </Wrapper>
   );
 };
