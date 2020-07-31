@@ -225,9 +225,7 @@ class UpgradeClusterModal extends React.Component {
         this.props.clusterActions
           .clusterPatch(
             this.props.cluster,
-            {
-              release_version: targetReleaseVersion,
-            },
+            { release_version: targetReleaseVersion },
             true
           )
           .then(() => {
