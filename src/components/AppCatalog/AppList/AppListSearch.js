@@ -18,8 +18,8 @@ const SearchIcon = styled('i')`
   position: relative;
   top: 6px;
   margin-right: 4px;
-  color: #b9c1c8;
-`
+  color: ${(props) => props.theme.colors.white3};
+`;
 
 const Input = styled('input')`
   padding: 8px 10px !important;
