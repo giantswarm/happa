@@ -6,12 +6,10 @@ import Well from 'UI/Well';
 
 import CatalogRepo from './CatalogRepo';
 
-const Wrapper = styled.div`
-  h1 {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.shade5};
-    padding-bottom: 10px;
-    margin-bottom: 25px;
-  }
+const Title = styled.h1`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.shade5};
+  padding-bottom: 10px;
+  margin-bottom: 25px;
 `;
 
 const CatalogList = (props) => {
@@ -64,8 +62,8 @@ const CatalogList = (props) => {
 
   return (
     <DocumentTitle title='App Catalogs'>
-      <Wrapper>
-        <h1>App Catalogs</h1>
+      <>
+        <Title>App Catalogs</Title>
         <p>Pick an App Catalog to browse all the Apps in it.</p>
         {Object.keys(props.catalogs.items).length === 0 ? (
           <Well>
@@ -84,7 +82,7 @@ const CatalogList = (props) => {
               <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
             ))
         )}
-      </Wrapper>
+      </>
     </DocumentTitle>
   );
 };
