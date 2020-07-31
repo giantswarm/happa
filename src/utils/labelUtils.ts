@@ -152,5 +152,12 @@ export const validateLabelKey: IValidationFunction = (key) => {
     };
   }
 
+  if (strKey.toLowerCase() === 'cluster.x-k8s.io/cluster-name') {
+    return {
+      isValid: false,
+      validationError: `Key cannot be 'cluster.x-k8s.io/cluster-name'`,
+    };
+  }
+
   return isQualifiedName(strKey);
 };
