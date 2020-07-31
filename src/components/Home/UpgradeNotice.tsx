@@ -2,12 +2,14 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { IState } from 'reducers/types';
 import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
 
 const UpgradeWrapperDiv = styled.div`
   display: inline-block;
   color: ${(props) => props.theme.colors.gold};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
+
   span {
     white-space: normal !important;
     display: unset;
@@ -19,6 +21,7 @@ const UpgradeWrapperDiv = styled.div`
       }};
     }
   }
+
   i {
     color: ${(props) => props.theme.colors.yellow1};
     padding: 0 2px;
@@ -27,8 +30,8 @@ const UpgradeWrapperDiv = styled.div`
 
 interface IUpgradeNoticeProps {
   canClusterUpgrade: boolean;
-  className: string;
   clusterId: string;
+  className?: string;
   onClick?: () => void;
 }
 
@@ -46,7 +49,7 @@ function UpgradeNotice({
     <UpgradeWrapperDiv
       id={`upgrade-notice-${clusterId}`}
       className={className}
-      onClick={onClick ? onClick : undefined}
+      onClick={onClick}
     >
       <i className='fa fa-warning' />
       <span>Upgrade Available</span>
@@ -55,21 +58,16 @@ function UpgradeNotice({
 }
 
 UpgradeNotice.propTypes = {
-  clusterId: PropTypes.string,
-  canClusterUpgrade: PropTypes.bool,
+  clusterId: PropTypes.string.isRequired,
+  canClusterUpgrade: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   className: PropTypes.string,
 };
 
-function mapStateToProps(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: Record<string, any>,
-  props: IUpgradeNoticeProps
-) {
+function mapStateToProps(state: IState, props: IUpgradeNoticeProps) {
   return {
     canClusterUpgrade: selectCanClusterUpgrade(state, props.clusterId),
   };
 }
 
-// @ts-ignore
 export default connect(mapStateToProps)(UpgradeNotice);
