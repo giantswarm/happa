@@ -14,7 +14,7 @@ const UpgradeWrapperDiv = styled.div<{
   isHyperlink: boolean;
 }>`
   display: inline-block;
-  color: ${({ theme }) => theme.colors.gold};
+  color: ${({ theme }) => theme.colors.yellow1};
   opacity: ${({ disabled }) => disabled && labelDisabledOpacity};
   cursor: ${({ isHyperlink }) => isHyperlink && 'pointer'};
 
@@ -30,7 +30,7 @@ const UpgradeWrapperDiv = styled.div<{
   }
 
   i {
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.yellow1};
     padding: 0 2px;
   }
 `;
