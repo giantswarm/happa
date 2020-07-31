@@ -294,7 +294,7 @@ export function clusterLoadDetails(
   };
 }
 
-function clusterLoadStatus(clusterId, { withLoadingFlags }) {
+export function clusterLoadStatus(clusterId, { withLoadingFlags }) {
   return function (dispatch) {
     // Does it  makes sense to leave it here just for let loadingReducer set/unset a flag?
     if (withLoadingFlags)
