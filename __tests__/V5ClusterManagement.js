@@ -9,7 +9,7 @@ import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
-import { Constants, StatusCodes } from 'shared/constants';
+import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
@@ -33,6 +33,7 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { filterLabels, getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
+import { validateLabelKey } from 'utils/labelUtils';
 
 describe('V5ClusterManagement', () => {
   // Responses to requests
@@ -584,9 +585,7 @@ scales node pools correctly`, async () => {
     await findByText('Labels:');
 
     for (const [key, value] of Object.entries(v5ClusterResponse.labels)) {
-      if (
-        key.includes(Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING) === false
-      ) {
+      if (validateLabelKey(key).isValid) {
         expect(getByText(key)).toBeInTheDocument();
         expect(getByText(value)).toBeInTheDocument();
       } else {

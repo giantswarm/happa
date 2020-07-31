@@ -1,6 +1,7 @@
 import { getMinHAMastersVersion } from 'selectors/featureSelectors';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
+import { validateLabelKey } from 'utils/labelUtils';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
@@ -221,9 +222,7 @@ export const filterLabels = (labels) => {
   const filteredLabels = {};
 
   for (const key of Object.keys(labels)) {
-    if (
-      key.includes(Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING) === false
-    ) {
+    if (validateLabelKey(key).isValid) {
       filteredLabels[key] = labels[key];
     }
   }
