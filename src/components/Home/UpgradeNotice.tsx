@@ -12,7 +12,6 @@ const labelDisabledOpacity = 0.7;
 const UpgradeWrapperDiv = styled.div<{
   disabled: boolean;
   isHyperlink: boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }>`
   display: inline-block;
   color: ${({ theme }) => theme.colors.gold};
@@ -55,6 +54,13 @@ function UpgradeNotice({
 }: IUpgradeNoticeProps) {
   if (!canClusterUpgrade && !isClusterUpgrading) return null;
 
+  const handleUpgrade = () => {
+    if (isClusterUpgrading) return;
+
+    // eslint-disable-next-line no-unused-expressions
+    onClick?.();
+  };
+
   const iconClassName = isClusterUpgrading
     ? 'fa fa-version-upgrade'
     : 'fa fa-warning';
@@ -66,7 +72,7 @@ function UpgradeNotice({
     <UpgradeWrapperDiv
       id={`upgrade-notice-${clusterId}`}
       className={className}
-      onClick={onClick}
+      onClick={handleUpgrade}
       disabled={isClusterUpgrading}
       isHyperlink={Boolean(onClick) && !isClusterUpgrading}
     >
