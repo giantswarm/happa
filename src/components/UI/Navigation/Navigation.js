@@ -72,6 +72,38 @@ const OuterNav = styled.nav`
   }
 `;
 
+const BreadcrumbWrapper = styled.div`
+  line-height: 20px;
+  background-color: ${({ theme }) => theme.colors.shade3};
+  padding: 7px;
+  border-bottom: ${({ theme }) => theme.colors.shade6} 1px solid;
+  border-top: ${({ theme }) => theme.colors.shade1} 1px solid;
+  font-size: 11px;
+  clear: both;
+
+  ${mq(CSSBreakpoints.Large)} {
+    display: none;
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.darkBlueLighter6};
+  }
+
+  .breadcrumbs {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0px 10px;
+  }
+
+  .breadcrumbs__separator {
+    margin: 0px 4px;
+  }
+
+  .breadcrumbs__crumb--active {
+    color: ${({ theme }) => theme.colors.darkBlueLighter9};
+  }
+`;
+
 // eslint-disable-next-line react/prefer-stateless-function
 class Navigation extends React.Component {
   render() {
@@ -97,11 +129,9 @@ class Navigation extends React.Component {
           </div>
         </div>
 
-        <div className='breadcrumb-wrapper'>
-          <div className='main'>
-            <Breadcrumbs />
-          </div>
-        </div>
+        <BreadcrumbWrapper>
+          <Breadcrumbs />
+        </BreadcrumbWrapper>
       </OuterNav>
     );
   }
