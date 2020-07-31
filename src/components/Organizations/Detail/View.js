@@ -19,6 +19,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Ellipsis } from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import Section from 'UI/Section';
+import { isClusterUpdating } from 'utils/clusterUtils';
 
 import Credentials from './Credentials';
 
@@ -264,10 +265,14 @@ function upgradeNoticeIcon(_, cluster, orgId) {
     }
   );
 
+  const message = isClusterUpdating(cluster)
+    ? 'Upgrade in progress…'
+    : 'Upgrade Available';
+
   return (
     <Link to={clusterDetailPath}>
       <OverlayTrigger
-        overlay={<Tooltip id='tooltip'>Upgrade Available</Tooltip>}
+        overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
         placement='top'
       >
         <UpgradeNoticeWrapperDiv>
