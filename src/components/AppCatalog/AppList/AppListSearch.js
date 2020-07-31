@@ -1,18 +1,55 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const Form = styled('form')`
+  width: 300px;
+  font-size: 14px;
+  position: relative;
+`;
+
+const InputWithIcon = styled('div')`
+  display: flex;
+  align-items: stretch;
+`;
+
+const SearchIcon = styled('i')`
+  font-size: 24px;
+  position: relative;
+  top: 6px;
+  margin-right: 4px;
+  color: ${(props) => props.theme.colors.white3};
+`;
+
+const Input = styled('input')`
+  padding: 8px 10px !important;
+  margin-bottom: 0px !important;
+`;
+
+const ClearLink = styled('a')`
+  position: absolute;
+  right: 10px;
+  top: -1px;
+`;
+
+const ClearIcon = styled('i')`
+  color: ${(props) => props.theme.colors.white1};
+  font-size: 13px;
+  font-weight: 800;
+`;
+
 const AppListSearch = ({ value, ...props }) => (
-  <form>
-    <div className='input-with-icon'>
-      <i className='fa fa-search' />
-      <input onChange={props.onChange} type='text' value={value} />
+  <Form>
+    <InputWithIcon>
+      <SearchIcon className='fa fa-search' />
+      <Input onChange={props.onChange} type='text' value={value} />
       {value && (
-        <a className='clearQuery' onClick={props.onReset}>
-          <i className='fa fa-close' />
-        </a>
+        <ClearLink onClick={props.onReset}>
+          <ClearIcon className='fa fa-close' />
+        </ClearLink>
       )}
-    </div>
-  </form>
+    </InputWithIcon>
+  </Form>
 );
 
 AppListSearch.propTypes = {

@@ -48,7 +48,7 @@ const AppList = ({
     >
       <DocumentTitle title='Apps'>
         <>
-          <Link className='back-link' to={AppCatalogRoutes.Home}>
+          <Link to={AppCatalogRoutes.Home}>
             <i aria-hidden='true' className='fa fa-chevron-left' />
             Back to all catalogs
           </Link>
