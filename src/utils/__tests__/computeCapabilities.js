@@ -71,11 +71,25 @@ describe('computeCapabilities', () => {
     });
 
     describe('on kvm', () => {
-      it('is false for KVM at any version', () => {
+      it('is false for KVM below 12.2.0', () => {
         const capabilities = computeCapabilities(
           getEmptyStateWithProvider('kvm')
-        )('8.0.0', 'kvm');
+        )('11.0.0', 'kvm');
         expect(capabilities.hasOptionalIngress).toBe(false);
+      });
+
+      it('is true for KVM at 12.2.0', () => {
+        const capabilities = computeCapabilities(
+          getEmptyStateWithProvider('kvm')
+        )('12.2.0', 'kvm');
+        expect(capabilities.hasOptionalIngress).toBe(true);
+      });
+
+      it('is true for KVM above 12.2.0', () => {
+        const capabilities = computeCapabilities(
+          getEmptyStateWithProvider('kvm')
+        )('13.0.0', 'kvm');
+        expect(capabilities.hasOptionalIngress).toBe(true);
       });
     });
   });

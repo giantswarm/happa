@@ -200,6 +200,11 @@ export const computeCapabilities = (state) => (releaseVersion, provider) => {
       hasOptionalIngress = cmp(releaseVersion, '12.0.0') >= 0;
 
       break;
+
+    case Providers.KVM:
+      hasOptionalIngress = cmp(releaseVersion, '12.2.0') >= 0;
+
+      break;
   }
 
   return {
