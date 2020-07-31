@@ -223,9 +223,13 @@ class UpgradeClusterModal extends React.Component {
         const targetReleaseVersion = this.props.targetRelease.version;
 
         this.props.clusterActions
-          .clusterPatch(this.props.cluster, {
-            release_version: targetReleaseVersion,
-          })
+          .clusterPatch(
+            this.props.cluster,
+            {
+              release_version: targetReleaseVersion,
+            },
+            true
+          )
           .then(() => {
             new FlashMessage(
               'Cluster upgrade initiated.',

@@ -160,13 +160,8 @@ export const batchedRefreshClusterDetailView = (
           withLoadingFlags: false,
         })
       );
-    } else {
-      await dispatch(
-        clusterActions.clusterLoadStatus(clusterId, {
-          withLoadingFlags: false,
-        })
-      );
     }
+
     // If cluster is an empty object, it means that it has been removed.
     // We don't want to load apps in this scenario.
     if (Object.keys(cluster).length > 0) {
