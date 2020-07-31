@@ -81,7 +81,7 @@ const BreadcrumbWrapper = styled.div`
   font-size: 11px;
   clear: both;
 
-  @media only screen and (max-width: 1024px) {
+  ${mq(CSSBreakpoints.Large)} {
     display: none;
   }
 
