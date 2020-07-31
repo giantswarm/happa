@@ -189,3 +189,10 @@ export const selectCanClusterUpgrade = (state, clusterID) => {
     state.main.info.general.provider
   );
 };
+
+export const selectIsClusterUpgrading = (state, clusterID) => {
+  const cluster = state.entities.clusters.items[clusterID];
+  if (!cluster) return false;
+
+  return isClusterUpdating(cluster);
+};
