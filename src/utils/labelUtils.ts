@@ -152,6 +152,10 @@ export const validateLabelKey: IValidationFunction = (key) => {
     };
   }
 
+  /**
+   * Hide CAPI cluster name label, because we don't allow editing it at this time.
+   * https://github.com/giantswarm/giantswarm/issues/12431
+   */
   if (strKey.toLowerCase() === 'cluster.x-k8s.io/cluster-name') {
     return {
       isValid: false,
