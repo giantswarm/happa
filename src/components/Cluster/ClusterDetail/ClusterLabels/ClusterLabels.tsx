@@ -55,6 +55,8 @@ const ErrorText = styled(BottomAreaText)`
 
 const NoLabels = styled.div`
   grid-area: labels;
+  display: flex;
+  align-items: center;
 `;
 
 const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
