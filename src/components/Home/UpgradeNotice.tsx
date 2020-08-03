@@ -8,14 +8,13 @@ import {
   selectIsClusterUpgrading,
 } from 'selectors/clusterSelectors';
 
-const labelDisabledOpacity = 0.7;
 const UpgradeWrapperDiv = styled.div<{
   disabled: boolean;
   isHyperlink: boolean;
 }>`
   display: inline-block;
   color: ${({ theme }) => theme.colors.yellow1};
-  opacity: ${({ disabled }) => disabled && labelDisabledOpacity};
+  opacity: ${({ theme, disabled }) => disabled && theme.disabledOpacity};
   cursor: ${({ isHyperlink }) => isHyperlink && 'pointer'};
 
   span {

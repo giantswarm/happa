@@ -64,6 +64,7 @@ export interface ITheme {
   fontFamilies: IThemeFonts;
   border: string;
   spacingPx: number;
+  disabledOpacity: number;
 }
 
 /***** BASE STYLES ****/
