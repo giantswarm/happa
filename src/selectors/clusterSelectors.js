@@ -8,6 +8,8 @@ import {
   getNumberOfNodePoolsNodes,
   getNumberOfNodes,
   getStorageTotal,
+  isClusterCreating,
+  isClusterUpdating,
 } from 'utils/clusterUtils';
 
 import { createDeepEqualSelector, typeWithoutSuffix } from './selectorUtils';
@@ -173,15 +175,24 @@ export const selectTargetRelease = (state, cluster) => {
 
 export const selectCanClusterUpgrade = (state, clusterID) => {
   const cluster = state.entities.clusters.items[clusterID];
-
   if (!cluster) return false;
+
+  if (isClusterCreating(cluster) || isClusterUpdating(cluster)) {
+    return false;
+  }
 
   const targetVersion = selectTargetRelease(state, cluster);
 
-  // eslint-disable-next-line consistent-return
   return canClusterUpgrade(
     cluster.release_version,
     targetVersion,
     state.main.info.general.provider
   );
+};
+
+export const selectIsClusterUpgrading = (state, clusterID) => {
+  const cluster = state.entities.clusters.items[clusterID];
+  if (!cluster) return false;
+
+  return isClusterUpdating(cluster);
 };

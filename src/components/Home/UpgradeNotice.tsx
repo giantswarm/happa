@@ -2,33 +2,43 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
+import { IState } from 'reducers/types';
+import {
+  selectCanClusterUpgrade,
+  selectIsClusterUpgrading,
+} from 'selectors/clusterSelectors';
 
-const UpgradeWrapperDiv = styled.div`
+const UpgradeWrapperDiv = styled.div<{
+  disabled: boolean;
+  isHyperlink: boolean;
+}>`
   display: inline-block;
-  color: ${(props) => props.theme.colors.gold};
-  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
+  color: ${({ theme }) => theme.colors.yellow1};
+  opacity: ${({ theme, disabled }) => disabled && theme.disabledOpacity};
+  cursor: ${({ isHyperlink }) => isHyperlink && 'pointer'};
+
   span {
     white-space: normal !important;
     display: unset;
     font-size: 16px;
     font-weight: 300;
+
     &:hover {
-      text-decoration: ${({ onClick }) => {
-        return onClick ? 'underline' : 'inherit';
-      }};
+      text-decoration: ${({ isHyperlink }) => isHyperlink && 'underline'};
     }
   }
+
   i {
-    color: ${(props) => props.theme.colors.yellow1};
+    color: ${({ theme }) => theme.colors.yellow1};
     padding: 0 2px;
   }
 `;
 
 interface IUpgradeNoticeProps {
   canClusterUpgrade: boolean;
-  className: string;
+  isClusterUpgrading: boolean;
   clusterId: string;
+  className?: string;
   onClick?: () => void;
 }
 
@@ -36,40 +46,56 @@ interface IUpgradeNoticeProps {
 // in case it is, outputs an upgrade notice,
 function UpgradeNotice({
   canClusterUpgrade,
-  onClick,
-  className,
+  isClusterUpgrading,
   clusterId,
+  className,
+  onClick,
 }: IUpgradeNoticeProps) {
-  if (!canClusterUpgrade) return null;
+  if (!canClusterUpgrade && !isClusterUpgrading) return null;
+
+  const handleUpgrade = () => {
+    if (isClusterUpgrading) return;
+
+    // eslint-disable-next-line no-unused-expressions
+    onClick?.();
+  };
+
+  const iconClassName = isClusterUpgrading
+    ? 'fa fa-version-upgrade'
+    : 'fa fa-warning';
+  const message = isClusterUpgrading
+    ? 'Upgrade in progress…'
+    : 'Upgrade Available';
 
   return (
     <UpgradeWrapperDiv
       id={`upgrade-notice-${clusterId}`}
       className={className}
-      onClick={onClick ? onClick : undefined}
+      onClick={handleUpgrade}
+      disabled={isClusterUpgrading}
+      isHyperlink={Boolean(onClick) && !isClusterUpgrading}
     >
-      <i className='fa fa-warning' />
-      <span>Upgrade Available</span>
+      <i className={iconClassName} />
+      <span>{message}</span>
     </UpgradeWrapperDiv>
   );
 }
 
 UpgradeNotice.propTypes = {
-  clusterId: PropTypes.string,
-  canClusterUpgrade: PropTypes.bool,
+  clusterId: PropTypes.string.isRequired,
+  canClusterUpgrade: PropTypes.bool.isRequired,
+  isClusterUpgrading: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   className: PropTypes.string,
 };
 
-function mapStateToProps(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: Record<string, any>,
-  props: IUpgradeNoticeProps
-) {
+function mapStateToProps(state: IState, props: IUpgradeNoticeProps) {
+  const { clusterId } = props;
+
   return {
-    canClusterUpgrade: selectCanClusterUpgrade(state, props.clusterId),
+    canClusterUpgrade: selectCanClusterUpgrade(state, clusterId),
+    isClusterUpgrading: selectIsClusterUpgrading(state, clusterId),
   };
 }
 
-// @ts-ignore
 export default connect(mapStateToProps)(UpgradeNotice);

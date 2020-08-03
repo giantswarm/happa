@@ -75,6 +75,7 @@ const theme: ITheme = {
     console: 'Inconsolata, monospace',
   },
   border: '1px solid #3A5F7B',
+  disabledOpacity: 0.7,
 };
 
 export default theme;
