@@ -1608,10 +1608,10 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-datepicker@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@types/react-datepicker/-/react-datepicker-3.1.0.tgz#e55d23224479346cc0405fbe1215017413243419"
-  integrity sha512-NhI001C2W5Sx6aOxKC1P1bvl8WB3PwxGOJ0bTimf7GcjPY2qIfhtFaSnCHZ+rLUQjG7O75UDXpMc0fEEej11dw==
+"@types/react-datepicker@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@types/react-datepicker/-/react-datepicker-3.1.1.tgz#bbb5e4561f657ca8e3d6829dd99b91a98c0bb74c"
+  integrity sha512-vwNrgaIMJThvvwmtnA8jSVVJZ0FNgljQrq1jDA4MtYJIDmVmd9NNrFaXf9u2JqR2nS+8Kvi8OVs/tnAbUqZhHw==
   dependencies:
     "@types/react" "*"
     date-fns "^2.0.1"
