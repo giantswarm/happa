@@ -183,6 +183,8 @@ class UpgradeClusterModal extends React.Component {
   };
 
   inspectChangesPage = () => {
+    const { loading } = this.state;
+
     return (
       <div>
         <BootstrapModal.Header closeButton>
@@ -195,14 +197,18 @@ class UpgradeClusterModal extends React.Component {
         <BootstrapModal.Footer>
           <Button
             bsStyle='primary'
-            loading={this.state.loading}
+            loading={loading}
             onClick={this.submit}
+            loadingTimeout={0}
           >
             Start Upgrade
           </Button>
-          <Button bsStyle='link' onClick={this.close}>
-            Cancel
-          </Button>
+
+          {!loading && (
+            <Button bsStyle='link' onClick={this.close}>
+              Cancel
+            </Button>
+          )}
         </BootstrapModal.Footer>
       </div>
     );
@@ -212,15 +218,16 @@ class UpgradeClusterModal extends React.Component {
     this.setState(
       {
         loading: true,
-        page: 'closing',
       },
       () => {
         const targetReleaseVersion = this.props.targetRelease.version;
 
         this.props.clusterActions
-          .clusterPatch(this.props.cluster, {
-            release_version: targetReleaseVersion,
-          })
+          .clusterPatch(
+            this.props.cluster,
+            { release_version: targetReleaseVersion },
+            true
+          )
           .then(() => {
             new FlashMessage(
               'Cluster upgrade initiated.',

@@ -161,9 +161,10 @@ export const batchedRefreshClusterDetailView = (
         })
       );
     }
+
     // If cluster is an empty object, it means that it has been removed.
     // We don't want to load apps in this scenario.
-    if (!Object.keys(cluster).length === 0) {
+    if (Object.keys(cluster).length > 0) {
       dispatch(loadClusterApps({ clusterId: clusterId }));
     }
   } catch (err) {

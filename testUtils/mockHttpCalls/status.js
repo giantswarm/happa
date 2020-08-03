@@ -1,4 +1,5 @@
 import { Providers } from 'shared/constants';
+
 import { V4_CLUSTER } from './constantsAndHelpers';
 
 export const v4AWSClusterStatusResponse = {
@@ -19,7 +20,7 @@ export const v4AWSClusterStatusResponse = {
       {
         lastTransitionTime: '2019-11-15T15:54:05.711696992Z',
         status: 'True',
-        type: 'Creating',
+        type: 'Created',
       },
     ],
     network: { cidr: '10.1.2.0/24' },
