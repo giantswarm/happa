@@ -1,7 +1,6 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
-import cmp from 'semver-compare';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 import { IReleaseActionResponse } from './types';
@@ -14,7 +13,6 @@ export const loadReleases = createAsynchronousAction<
   actionTypePrefix: 'RELEASES_LOAD',
   perform: async (state) => {
     const releases: IReleases = {};
-    let sortedReleaseVersions: string[] = [];
 
     const api = new GiantSwarm.ReleasesApi();
     const response = await api.getReleases();
@@ -35,11 +33,9 @@ export const loadReleases = createAsynchronousAction<
       }
     }
 
-    sortedReleaseVersions = Object.keys(releases).sort(cmp).reverse();
-
     const userIsAdmin = state.main.loggedInUser.isAdmin;
 
-    if (sortedReleaseVersions.length === 0 && !userIsAdmin) {
+    if (Object.keys(releases).length === 0 && !userIsAdmin) {
       new FlashMessage(
         'No active releases available at the moment.',
         messageType.INFO,
@@ -48,7 +44,7 @@ export const loadReleases = createAsynchronousAction<
       );
     }
 
-    return { releases, sortedReleaseVersions };
+    return { releases };
   },
   shouldPerform: () => true,
   throwOnError: false,
