@@ -127,7 +127,7 @@
     "validate.js": "0.13.1"
   },
   "devDependencies": {
-    "@babel/core": "7.10.5",
+    "@babel/core": "7.11.0",
     "@babel/preset-env": "7.10.4",
     "@babel/preset-react": "7.10.4",
     "@babel/preset-typescript": "^7.10.4",
@@ -212,7 +212,7 @@
     "stylelint-processor-styled-components": "1.10.0",
     "typescript": "^3.9.7",
     "url-loader": "4.1.0",
-    "webpack": "4.43.0",
+    "webpack": "4.44.1",
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.0.9"
