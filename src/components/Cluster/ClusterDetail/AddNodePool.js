@@ -482,12 +482,6 @@ class AddNodePool extends Component {
             100 - this.state.aws.instanceDistribution.spotInstancePercentage;
         }
 
-        // Add scaling setup.
-        nodePoolDefinition.scaling = {
-          min: scaling.min,
-          max: scaling.max,
-        };
-
         break;
       }
 
@@ -498,6 +492,12 @@ class AddNodePool extends Component {
 
         break;
     }
+
+    // Add scaling setup.
+    nodePoolDefinition.scaling = {
+      min: scaling.min,
+      max: scaling.max,
+    };
 
     const isValid = this.validate();
 
@@ -751,19 +751,17 @@ class AddNodePool extends Component {
           </Section>
         )}
 
-        {provider === Providers.AWS && (
-          <Section className='scaling-range'>
-            <StyledInput labelId={`scaling-range-${id}`} label='Scaling range'>
-              <NodeCountSelector
-                autoscalingEnabled={true}
-                label={{ max: 'MAX', min: 'MIN' }}
-                onChange={this.updateScaling}
-                readOnly={false}
-                scaling={this.state.scaling}
-              />
-            </StyledInput>
-          </Section>
-        )}
+        <Section className='scaling-range'>
+          <StyledInput labelId={`scaling-range-${id}`} label='Scaling range'>
+            <NodeCountSelector
+              autoscalingEnabled={provider === Providers.AWS}
+              label={{ max: 'MAX', min: 'MIN' }}
+              onChange={this.updateScaling}
+              readOnly={false}
+              scaling={this.state.scaling}
+            />
+          </StyledInput>
+        </Section>
       </>
     );
   }
