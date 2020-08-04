@@ -231,15 +231,22 @@ export const filterLabels = (labels) => {
 };
 
 /**
- * Check whether the given condition is a cluster's latest condition.
+ * Get a cluster's latest condition
  * @param cluster {Object} - The cluster object.
- * @param conditionToCheck {string} - The name of the condition to check for.
- * @returns {boolean}
+ * @returns {string | undefined}
  */
-export function hasClusterLatestCondition(cluster, conditionToCheck) {
-  if (!cluster.conditions || cluster.conditions.length === 0) return false;
+export function getClusterLatestCondition(cluster) {
+  // It's a V5 cluster.
+  if (cluster.conditions?.length > 0) {
+    return cluster.conditions[0].condition;
+  }
 
-  return cluster.conditions[0].condition === conditionToCheck;
+  // It's a V4 cluster.
+  if (cluster.status?.cluster.conditions?.length > 0) {
+    return cluster.status.cluster.conditions[0].type;
+  }
+
+  return undefined;
 }
 
 /**
@@ -248,11 +255,10 @@ export function hasClusterLatestCondition(cluster, conditionToCheck) {
  * @returns {boolean}
  */
 export function isClusterCreating(cluster) {
-  if (!cluster.conditions || cluster.conditions.length === 0) return true;
+  const latestCondition = getClusterLatestCondition(cluster);
+  if (!latestCondition) return true;
 
-  const conditionToCheck = 'Creating';
-
-  return hasClusterLatestCondition(cluster, conditionToCheck);
+  return latestCondition === 'Creating';
 }
 
 /**
@@ -261,9 +267,9 @@ export function isClusterCreating(cluster) {
  * @returns {boolean}
  */
 export function isClusterUpdating(cluster) {
-  const conditionToCheck = 'Updating';
+  const latestCondition = getClusterLatestCondition(cluster);
 
-  return hasClusterLatestCondition(cluster, conditionToCheck);
+  return latestCondition === 'Updating';
 }
 
 /**
@@ -272,9 +278,9 @@ export function isClusterUpdating(cluster) {
  * @returns {boolean}
  */
 export function isClusterDeleting(cluster) {
-  const conditionToCheck = 'Deleting';
+  const latestCondition = getClusterLatestCondition(cluster);
 
-  return hasClusterLatestCondition(cluster, conditionToCheck);
+  return latestCondition === 'Deleting';
 }
 
 /**
