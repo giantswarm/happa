@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import * as Providers from 'shared/constants/providers';
 import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
 
 const NodePoolDropdownMenu = ({
@@ -44,21 +43,17 @@ const NodePoolDropdownMenu = ({
                   Rename
                 </Link>
               </li>
-
-              {provider === Providers.AWS && (
-                <li>
-                  <Link
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      showNodePoolScalingModal(nodePool);
-                    }}
-                  >
-                    Edit scaling limits
-                  </Link>
-                </li>
-              )}
-
+              <li>
+                <Link
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showNodePoolScalingModal(nodePool);
+                  }}
+                >
+                  Edit scaling limits
+                </Link>
+              </li>
               <li>
                 <Link
                   href='#'
