@@ -281,23 +281,27 @@ class AddNodePool extends Component {
   static getDerivedStateFromProps(newProps, prevState) {
     // Set scaling defaults.
     if (prevState.scaling.max === null && prevState.scaling.min === null) {
-      const newScaling = { ...prevState.scaling };
+      const statePatch = {
+        scaling: {
+          ...prevState.scaling,
+        },
+      };
 
       switch (newProps.provider) {
         case Providers.AWS:
-          newScaling.min = Constants.NP_DEFAULT_MIN_SCALING_AWS;
-          newScaling.max = Constants.NP_DEFAULT_MAX_SCALING_AWS;
+          statePatch.scaling.min = Constants.NP_DEFAULT_MIN_SCALING_AWS;
+          statePatch.scaling.max = Constants.NP_DEFAULT_MAX_SCALING_AWS;
 
           break;
 
         case Providers.AZURE:
-          newScaling.min = Constants.NP_DEFAULT_MIN_SCALING_AZURE;
-          newScaling.max = Constants.NP_DEFAULT_MAX_SCALING_AZURE;
+          statePatch.scaling.min = Constants.NP_DEFAULT_MIN_SCALING_AZURE;
+          statePatch.scaling.max = Constants.NP_DEFAULT_MAX_SCALING_AZURE;
 
           break;
       }
 
-      return { scaling: newScaling };
+      return statePatch;
     }
 
     return null;
