@@ -1,4 +1,5 @@
 import { IState } from 'reducers/types';
+import cmp from 'semver-compare';
 
 import { createDeepEqualSelector } from './selectorUtils';
 
@@ -7,9 +8,6 @@ export const getReleasesIsFetching = (state: IState): boolean =>
 
 export const getAllReleases = (state: IState): IReleases =>
   state.entities.releases.items;
-
-export const getSortedReleaseVersions = (state: IState): string[] =>
-  state.entities.releases.sortedVersions;
 
 export const getReleasesError = (state: IState): Error | null =>
   state.entities.releases.error;
@@ -32,4 +30,9 @@ export const getReleases = createDeepEqualSelector(
 
     return activeReleases;
   }
+);
+
+export const getSortedReleaseVersions = createDeepEqualSelector(
+  [getReleases],
+  (releases) => Object.keys(releases).sort(cmp).reverse()
 );
