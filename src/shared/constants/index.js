@@ -40,7 +40,7 @@ export const Constants = {
     'Lower end of the scaling range for the cluster autoscaler',
   MAX_NODES_EXPLANATION:
     'Upper end of the scaling range for the cluster autoscaler',
-  SPOT_NODES_EXPLNANATION: 'Current number of spot instances in this node pool',
+  SPOT_NODES_EXPLANATION: 'Current number of spot instances in this node pool',
 
   KEYPAIR_DEFAULT_TTL: 24, // A day, In hours
   // eslint-disable-next-line no-magic-numbers

@@ -78,7 +78,7 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
         <OverlayTrigger
           overlay={
             <Tooltip id='spot-tooltip'>
-              {Constants.SPOT_NODES_EXPLNANATION}
+              {Constants.SPOT_NODES_EXPLANATION}
             </Tooltip>
           }
           placement='top'
