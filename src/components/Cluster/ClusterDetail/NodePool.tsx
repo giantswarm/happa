@@ -10,7 +10,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Providers } from 'shared';
-import { INodePool } from 'shared/types';
+import { INodePool, PropertiesOf } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
 import ViewAndEditName from 'UI/ViewEditName';
 
@@ -82,7 +82,7 @@ interface IDispatchProps extends DispatchProp {
 interface INodePoolsProps extends IStateProps, IDispatchProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cluster: any;
-  provider: string;
+  provider: PropertiesOf<typeof Providers>;
 }
 
 interface INodePoolsState {
@@ -248,9 +248,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <div>
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
-            {provider === Providers.AWS && (
-              <NodePoolScaling nodePool={nodePool} provider={provider} />
-            )}
+            <NodePoolScaling nodePool={nodePool} provider={provider} />
             <StyledNodePoolDropdownMenu
               provider={provider}
               clusterId={cluster.id}

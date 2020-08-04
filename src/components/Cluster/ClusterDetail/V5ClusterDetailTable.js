@@ -91,12 +91,12 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: 5 / span 5;
+    grid-column: ${({ compact }) => (compact ? '5 / span 2' : '5 / span 5')};
     font-size: 12px;
     position: relative;
     width: 100%;
     text-align: center;
-    transform: translateX(0.8vw);
+    transform: ${({ compact }) => !compact && 'translateX(0.8vw)'};
     span {
       display: inline-block;
       padding: 0 10px;
@@ -429,13 +429,11 @@ class V5ClusterDetailTable extends React.Component {
           <h2>Node Pools</h2>
           {!zeroNodePools && !loadingNodePools && (
             <>
-              {provider === Providers.AWS && (
-                <GridRowNodePoolsNodes>
-                  <div>
-                    <span>NODES</span>
-                  </div>
-                </GridRowNodePoolsNodes>
-              )}
+              <GridRowNodePoolsNodes compact={provider === Providers.AZURE}>
+                <div>
+                  <span>NODES</span>
+                </div>
+              </GridRowNodePoolsNodes>
               <GridRowNodePoolsHeaders>
                 <NodePoolsColumnHeader>Id</NodePoolsColumnHeader>
                 <NodePoolsNameColumn>Name</NodePoolsNameColumn>
@@ -443,11 +441,7 @@ class V5ClusterDetailTable extends React.Component {
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
-
-                {provider === Providers.AWS && (
-                  <V5ClusterDetailTableNodePoolScaling />
-                )}
-
+                <V5ClusterDetailTableNodePoolScaling provider={provider} />
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
