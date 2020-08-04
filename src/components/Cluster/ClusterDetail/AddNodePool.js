@@ -518,6 +518,9 @@ class AddNodePool extends Component {
 
     const machineType = this.getMachineType();
 
+    const scalingLabel =
+      provider === Providers.AWS ? 'Scaling range' : 'Node count';
+
     return (
       <>
         <Section>
@@ -752,7 +755,7 @@ class AddNodePool extends Component {
         )}
 
         <Section className='scaling-range'>
-          <StyledInput labelId={`scaling-range-${id}`} label='Scaling range'>
+          <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
               autoscalingEnabled={provider === Providers.AWS}
               label={{ max: 'MAX', min: 'MIN' }}
