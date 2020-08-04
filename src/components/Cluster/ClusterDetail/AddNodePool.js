@@ -241,10 +241,9 @@ class AddNodePool extends Component {
     // Labels or Input? Initially set to false, so the input is shown
     hasAZLabels: false,
     scaling: {
-      automatic: false,
-      min: 3,
+      min: null,
       minValid: true,
-      max: 10,
+      max: null,
       maxValid: true,
     },
     // eslint-disable-next-line react/no-unused-state
@@ -268,6 +267,41 @@ class AddNodePool extends Component {
     allowSpotInstances: false,
     allowAlikeInstances: false,
   };
+
+  static isScalingAutomatic(provider) {
+    switch (provider) {
+      case Providers.AWS:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  static getDerivedStateFromProps(newProps, prevState) {
+    // Set scaling defaults.
+    if (prevState.scaling.max === null && prevState.scaling.min === null) {
+      const newScaling = { ...prevState.scaling };
+
+      switch (newProps.provider) {
+        case Providers.AWS:
+          newScaling.min = Constants.NP_DEFAULT_MIN_SCALING_AWS;
+          newScaling.max = Constants.NP_DEFAULT_MAX_SCALING_AWS;
+
+          break;
+
+        case Providers.AZURE:
+          newScaling.min = Constants.NP_DEFAULT_MIN_SCALING_AZURE;
+          newScaling.max = Constants.NP_DEFAULT_MAX_SCALING_AZURE;
+
+          break;
+      }
+
+      return { scaling: newScaling };
+    }
+
+    return null;
+  }
 
   componentDidMount() {
     this.setState({
@@ -395,9 +429,6 @@ class AddNodePool extends Component {
     this.setState({ scaling: nodeCountSelector.scaling });
   };
 
-  // Always true?
-  isScalingAutomatic = () => true;
-
   validate() {
     const {
       availabilityZonesPicker,
@@ -406,16 +437,11 @@ class AddNodePool extends Component {
       scaling,
       name,
     } = this.state;
-    const { provider } = this.props;
-
     if (!name.valid) {
       return false;
     }
 
-    if (
-      provider === Providers.AWS &&
-      (!scaling.minValid || !scaling.maxValid)
-    ) {
+    if (!scaling.minValid || !scaling.maxValid) {
       return false;
     }
 
@@ -518,8 +544,8 @@ class AddNodePool extends Component {
 
     const machineType = this.getMachineType();
 
-    const scalingLabel =
-      provider === Providers.AWS ? 'Scaling range' : 'Node count';
+    const isScalingAuto = AddNodePool.isScalingAutomatic(provider);
+    const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
 
     return (
       <>
@@ -757,7 +783,7 @@ class AddNodePool extends Component {
         <Section className='scaling-range'>
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
-              autoscalingEnabled={provider === Providers.AWS}
+              autoscalingEnabled={isScalingAuto}
               label={{ max: 'MAX', min: 'MIN' }}
               onChange={this.updateScaling}
               readOnly={false}
