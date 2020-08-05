@@ -171,7 +171,7 @@ export const selectTargetRelease = (state, cluster) => {
   return null;
 };
 
-export const selectCanClusterUpgrade = (state, clusterID) => {
+export const selectCanClusterUpgrade = (clusterID) => (state) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 
@@ -188,7 +188,7 @@ export const selectCanClusterUpgrade = (state, clusterID) => {
   );
 };
 
-export const selectIsClusterUpgrading = (state, clusterID) => {
+export const selectIsClusterUpgrading = (clusterID) => (state) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 
