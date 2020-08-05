@@ -40,7 +40,7 @@ describe('InstallIngressButton', () => {
     renderWithStore(
       InstallIngressButton,
       {
-        cluster: { ...v4AWSClusterResponse /* , apps: [] */ },
+        cluster: { ...v4AWSClusterResponse },
       },
       catalogsState
     );
@@ -82,7 +82,7 @@ describe('InstallIngressButton', () => {
     renderWithStore(
       InstallIngressButton,
       {
-        cluster: { ...v4AWSClusterResponse /*, apps: []  */ },
+        cluster: { ...v4AWSClusterResponse },
       },
       catalogsState
     );
@@ -106,6 +106,9 @@ describe('InstallIngressButton', () => {
 
     expect(await screen.findByText(/this will install/i)).toBeInTheDocument();
     expect(
+      screen.getByText(/nginx ingress controller app \d\.\d\.\d/i)
+    ).toBeInTheDocument();
+    expect(
       screen.getByRole('progressbar', {
         hidden: true,
       })
@@ -128,7 +131,7 @@ describe('InstallIngressButton', () => {
     const { rerender } = renderWithStore(
       InstallIngressButton,
       {
-        cluster: { ...v4AWSClusterResponse, apps: [] },
+        cluster: { ...v4AWSClusterResponse },
       },
       catalogsState
     );
