@@ -3,6 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
+import DetailItem from 'UI/DetailList';
 
 import GenericModal from '../../Modals/GenericModal';
 import CertificateOrgsLabel from './CertificateOrgsLabel';
@@ -44,78 +45,53 @@ class KeyPairDetailsModal extends React.Component {
 
     return (
       <GenericModal
-        className='keypairdetails'
         onClose={this.props.onClose}
         title='Key Pair Details'
         visible={this.props.visible}
       >
-        <>
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>ID</div>
-            <div className='labelvaluepair--value code'>
-              <Copyable copyText={this.props.keyPair.id}>
-                <span>{this.props.keyPair.id}</span>
-              </Copyable>
-            </div>
-          </div>
+        <DetailItem title='ID' className='code'>
+          <Copyable copyText={this.props.keyPair.id}>
+            <span>{this.props.keyPair.id}</span>
+          </Copyable>
+        </DetailItem>
 
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>Common Name (CN)</div>
-            <div className='labelvaluepair--value code breaking'>
-              {this.props.keyPair.common_name === '' ? (
-                <span>n/</span>
-              ) : (
-                <Copyable copyText={this.props.keyPair.common_name}>
-                  <span>{this.props.keyPair.common_name}</span>
-                </Copyable>
-              )}
-            </div>
-          </div>
+        <DetailItem title='Common Name (CN)' className='code breaking'>
+          {this.props.keyPair.common_name === '' ? (
+            <span>n/a</span>
+          ) : (
+            <Copyable copyText={this.props.keyPair.common_name}>
+              <span>{this.props.keyPair.common_name}</span>
+            </Copyable>
+          )}
+        </DetailItem>
 
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>
-              Certificate Organizations (O)
-            </div>
-            <div className='labelvaluepair--value'>
-              {this.props.keyPair.certificate_organizations === '' ? (
-                <span>n/a</span>
-              ) : (
-                <Copyable
-                  copyText={this.props.keyPair.certificate_organizations}
-                >
-                  <CertificateOrgsLabel
-                    value={this.props.keyPair.certificate_organizations}
-                  />
-                </Copyable>
-              )}
-            </div>
-          </div>
+        <DetailItem title='Certificate Organizations (O)'>
+          {this.props.keyPair.certificate_organizations === '' ? (
+            <span>n/a</span>
+          ) : (
+            <Copyable copyText={this.props.keyPair.certificate_organizations}>
+              <CertificateOrgsLabel
+                value={this.props.keyPair.certificate_organizations}
+              />
+            </Copyable>
+          )}
+        </DetailItem>
 
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>Created</div>
-            <div className='labelvaluepair--value'>
-              {KeyPairDetailsModal.createDate(this.props.keyPair.create_date)}
-            </div>
-          </div>
+        <DetailItem title='Created'>
+          {KeyPairDetailsModal.createDate(this.props.keyPair.create_date)}
+        </DetailItem>
 
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>Expiry</div>
-            <div className='labelvaluepair--value'>
-              {KeyPairDetailsModal.expireDate(this.props.keyPair.expire_date)}
-            </div>
-          </div>
+        <DetailItem title='Expiry'>
+          {KeyPairDetailsModal.expireDate(this.props.keyPair.expire_date)}
+        </DetailItem>
 
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>Description</div>
-            <div className='labelvaluepair--value'>
-              {this.props.keyPair.description === '' ? (
-                <span>n/a</span>
-              ) : (
-                this.props.keyPair.description
-              )}
-            </div>
-          </div>
-        </>
+        <DetailItem title='Description'>
+          {this.props.keyPair.description === '' ? (
+            <span>n/a</span>
+          ) : (
+            this.props.keyPair.description
+          )}
+        </DetailItem>
       </GenericModal>
     );
   }
