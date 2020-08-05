@@ -53,6 +53,8 @@ class UpgradeClusterModal extends React.Component {
       loading: false,
       modalVisible: false,
     });
+
+    this.props.cancelSetTargetRelease();
   };
 
   goToPage = (page) => () => {
