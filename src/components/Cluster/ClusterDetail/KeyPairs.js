@@ -22,6 +22,26 @@ const Disclaimer = styled.p`
   line-height: 1.2;
 `;
 
+const Wrapper = styled.div`
+  .loader {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 25px;
+  }
+
+  .react-bootstrap-table table {
+    table-layout: auto;
+  }
+
+  .certificate-orgs-column {
+    max-width: 350px;
+    white-space: wrap;
+    display: table-cell;
+    overflow-wrap: normal;
+    word-break: break-all;
+  }
+`;
+
 class KeyPairs extends React.Component {
   static createdCellFormatter(_cell, row) {
     return <small>{relativeDate(row.create_date)}</small>;
@@ -171,7 +191,7 @@ class KeyPairs extends React.Component {
 
   render() {
     return (
-      <div className='cluster_key_pairs'>
+      <Wrapper>
         <Disclaimer>
           Key pairs consist of an RSA private key and certificate, signed by the
           certificate authority (CA) belonging to this cluster. They are used
@@ -228,7 +248,7 @@ class KeyPairs extends React.Component {
           onClose={this.hideKeyPairModal}
           visible={this.state.keyPairDetailsModal.visible}
         />
-      </div>
+      </Wrapper>
     );
   }
 }

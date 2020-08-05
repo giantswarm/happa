@@ -290,7 +290,6 @@ const AppDetailsModal = (props) => {
       onClose={onClose}
       title={modalTitle}
       visible={props.visible}
-      className='appdetails'
     >
       {modalBody}
     </GenericModal>
