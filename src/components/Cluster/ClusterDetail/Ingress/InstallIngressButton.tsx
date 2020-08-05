@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { catalogLoadIndex } from 'actions/catalogActions';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -10,10 +9,14 @@ import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
+import { selectIngressAppToInstall } from 'selectors/ingressTabSelectors';
 import { Constants } from 'shared';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import {
+  installLatestIngress,
+  prepareIngressTabData,
+} from 'stores/appcatalog/actions';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { installApp, loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -42,39 +45,20 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   cluster,
   ...rest
 }) => {
-  const [isInstalling, setIsInstalling] = useState(false);
   const [isNew, setIsNew] = useState(true);
 
-  const isLoadingApps: boolean | null = useSelector((state) =>
-    selectLoadingFlagByAction(state, loadClusterApps().types.request)
+  const isInstalling: boolean | null = useSelector((state) =>
+    selectLoadingFlagByAction(state, installLatestIngress().types.request)
   );
-  const ingressApp:
+  const isPreparingIngressTabData: boolean | null = useSelector((state) =>
+    selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
+  );
+  const installedIngressApp:
     | Record<string, never>
     | undefined = selectIngressAppFromCluster(cluster);
 
-  const gsCatalog = useSelector(
-    (state: IState) =>
-      state.entities.catalogs.items[
-        Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME
-      ]
-  );
-
-  const catalogLoadGetState = useMemo(
-    () => () => ({
-      entities: {
-        catalogs: {
-          items: {
-            [Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME]: gsCatalog,
-          },
-        },
-      },
-    }),
-    [gsCatalog]
-  );
-
-  const ingressAppToInstall = useMemo(
-    () => gsCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0],
-    [gsCatalog]
+  const ingressAppToInstall: Record<string, never> | undefined = useSelector(
+    selectIngressAppToInstall
   );
 
   const ingressAppDetailPath = useMemo(() => {
@@ -92,59 +76,33 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   }, [ingressAppToInstall]);
 
   const isLoading =
-    isLoadingApps ||
-    isInstalling ||
-    isNew ||
-    !gsCatalog.apps ||
-    !ingressAppToInstall;
-  const clusterID: string = cluster.id;
+    isNew === true ||
+    isPreparingIngressTabData === true ||
+    isInstalling === true;
+
+  const clusterId: string = cluster.id;
 
   const dispatch: IAsynchronousDispatch<IState> = useDispatch();
 
   useEffect(() => {
-    const tryToLoadApps = async () => {
+    const prepare = async () => {
       try {
-        await Promise.all([
-          catalogLoadIndex(gsCatalog)(dispatch, catalogLoadGetState),
-          dispatch(loadClusterApps({ clusterId: clusterID })),
-        ]);
+        await dispatch(prepareIngressTabData({ clusterId }));
         setIsNew(false);
       } catch (error) {
         // Do nothing, flash message is shown in action.
       }
     };
 
-    tryToLoadApps();
-  }, [dispatch, clusterID, gsCatalog, catalogLoadGetState]);
+    prepare();
+  }, [dispatch, clusterId]);
 
-  const installIngressController = async () => {
-    try {
-      setIsInstalling(true);
-
-      const { name, version } = ingressAppToInstall;
-
-      const appToInstall = {
-        name,
-        chartName: name,
-        version,
-        catalog: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
-        namespace: 'kube-system',
-        valuesYAML: '',
-        secretsYAML: '',
-      };
-
-      await dispatch(installApp({ app: appToInstall, clusterId: clusterID }));
-      dispatch(loadClusterApps({ clusterId: clusterID }));
-    } catch {
-      // Do nothing, flash message is shown in actions.
-    } finally {
-      setIsInstalling(false);
-    }
-  };
+  const installIngressController = () =>
+    dispatch(installLatestIngress({ clusterId }));
 
   return (
     <Wrapper {...rest}>
-      {!ingressApp && (
+      {!installedIngressApp && (
         <Button
           loading={isLoading}
           bsStyle='primary'
@@ -158,15 +116,15 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
       {!isLoading && (
         <Text>
-          {ingressApp ? (
+          {installedIngressApp ? (
             '🎉 Ingress controller installed. Please continue to the next step.'
           ) : (
             <>
               This will install the{' '}
               <StyledLink to={ingressAppDetailPath} href={ingressAppDetailPath}>
-                NGINX Ingress Controller app {ingressAppToInstall.version}
+                NGINX Ingress Controller app {ingressAppToInstall?.version}
               </StyledLink>{' '}
-              on cluster <ClusterIDLabel clusterID={clusterID} />
+              on cluster <ClusterIDLabel clusterID={clusterId} />
             </>
           )}
         </Text>

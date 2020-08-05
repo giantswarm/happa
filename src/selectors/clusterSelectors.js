@@ -1,4 +1,5 @@
 import cmp from 'semver-compare';
+import { Constants } from 'shared';
 import {
   canClusterUpgrade,
   getCpusTotal,
@@ -23,7 +24,7 @@ export const selectIngressAppFromCluster = (cluster) => {
   const apps = cluster.apps || [];
 
   const ingressApp = apps.find((app) => {
-    return app.spec.name === 'nginx-ingress-controller-app';
+    return app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME;
   });
 
   return ingressApp;
