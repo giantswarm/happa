@@ -24,6 +24,7 @@ import ReleaseRow from './ReleaseRow';
 interface IReleaseSelector {
   selectRelease(releaseVersion: string): void;
   selectedRelease: string;
+  collapsible?: boolean;
 }
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
@@ -34,6 +35,7 @@ const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
 const ReleaseSelector: FC<IReleaseSelector> = ({
   selectRelease,
   selectedRelease,
+  collapsible,
 }) => {
   const releases = useSelector(getReleases);
   const sortedReleaseVersions = useSelector(getSortedReleaseVersions);
@@ -53,7 +55,13 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
     }
   }, [selectRelease, sortedReleaseVersions]);
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(collapsible as boolean);
+
+  const handleCollapse = () => {
+    if (collapsible) {
+      setCollapsed(!collapsed);
+    }
+  };
 
   if (releasesError) {
     return (
@@ -90,8 +98,14 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
         </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ListToggler role='button' onClick={() => setCollapsed(!collapsed)}>
-          <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
+        <ListToggler
+          role='button'
+          onClick={handleCollapse}
+          collapsible={collapsible as boolean}
+        >
+          {collapsible && (
+            <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
+          )}
           Available releases
         </ListToggler>
       </div>
@@ -134,6 +148,11 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
 ReleaseSelector.propTypes = {
   selectRelease: PropTypes.func.isRequired,
   selectedRelease: PropTypes.string.isRequired,
+  collapsible: PropTypes.bool,
+};
+
+ReleaseSelector.defaultProps = {
+  collapsible: true,
 };
 
 export default ReleaseSelector;
