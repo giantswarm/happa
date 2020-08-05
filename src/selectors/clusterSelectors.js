@@ -147,11 +147,9 @@ export const selectTargetRelease = (state, cluster) => {
   const releases = state.entities.releases.items;
   let availableVersions = Object.keys(releases).sort(cmp);
 
-  if (!state.main.loggedInUser.isAdmin) {
-    availableVersions = availableVersions.filter(
-      (release) => releases[release].active
-    );
-  }
+  availableVersions = availableVersions.filter(
+    (release) => releases[release].active
+  );
 
   // Guard against the release version of this cluster not being in the /v4/releases/
   // response.
