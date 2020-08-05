@@ -25,6 +25,7 @@ interface IReleaseSelector {
   selectRelease(releaseVersion: string): void;
   selectedRelease: string;
   collapsible?: boolean;
+  autoSelectLatest?: boolean;
 }
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
@@ -36,6 +37,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   selectRelease,
   selectedRelease,
   collapsible,
+  autoSelectLatest,
 }) => {
   const releases = useSelector(getReleases);
   const sortedReleaseVersions = useSelector(getSortedReleaseVersions);
@@ -50,10 +52,10 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   );
 
   useEffect(() => {
-    if (sortedReleaseVersions.length !== 0) {
+    if (autoSelectLatest && sortedReleaseVersions.length !== 0) {
       selectRelease(sortedReleaseVersions[0]);
     }
-  }, [selectRelease, sortedReleaseVersions]);
+  }, [selectRelease, sortedReleaseVersions, autoSelectLatest]);
 
   const [collapsed, setCollapsed] = useState(collapsible as boolean);
 
@@ -149,10 +151,12 @@ ReleaseSelector.propTypes = {
   selectRelease: PropTypes.func.isRequired,
   selectedRelease: PropTypes.string.isRequired,
   collapsible: PropTypes.bool,
+  autoSelectLatest: PropTypes.bool,
 };
 
 ReleaseSelector.defaultProps = {
   collapsible: true,
+  autoSelectLatest: true,
 };
 
 export default ReleaseSelector;
