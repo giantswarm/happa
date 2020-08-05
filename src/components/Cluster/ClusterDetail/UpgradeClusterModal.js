@@ -61,6 +61,11 @@ class UpgradeClusterModal extends React.Component {
     });
   };
 
+  cancelReleaseVersionChange = () => {
+    this.props.cancelSetTargetRelease();
+    this.goToPage(Pages.InspectChanges)();
+  };
+
   changedComponents = () => {
     const { release } = this.props;
     let currentComponents = [];
@@ -282,9 +287,10 @@ class UpgradeClusterModal extends React.Component {
           <UpgradeClusterModalVersionChanger
             closeModal={this.close}
             onSubmit={this.goToPage(Pages.InspectChanges)}
-            onCancel={this.goToPage(Pages.InspectChanges)}
-            onChangeRelease={() => {}}
+            onCancel={this.cancelReleaseVersionChange}
+            onChangeRelease={this.props.setTargetRelease}
             releaseVersion={this.props.targetRelease.version}
+            isAdmin={this.props.isAdmin}
           />
         );
 
@@ -307,6 +313,9 @@ UpgradeClusterModal.propTypes = {
   clusterActions: PropTypes.object,
   release: PropTypes.object,
   targetRelease: PropTypes.object,
+  setTargetRelease: PropTypes.func,
+  cancelSetTargetRelease: PropTypes.func,
+  isAdmin: PropTypes.bool,
 };
 
 function mapDispatchToProps(dispatch) {

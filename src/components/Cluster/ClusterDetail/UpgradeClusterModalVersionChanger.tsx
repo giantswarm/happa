@@ -30,11 +30,6 @@ const UpgradeClusterModalVersionChanger: React.FC<IUpgradeClusterModalVersionCha
     return null;
   }
 
-  const handleOnVersionChange = (newRelease: string) => {
-    onChangeRelease(newRelease);
-    onSubmit();
-  };
-
   return (
     <div {...rest}>
       <BootstrapModal.Header closeButton>
@@ -53,15 +48,12 @@ const UpgradeClusterModalVersionChanger: React.FC<IUpgradeClusterModalVersionCha
             selectRelease={onChangeRelease}
             selectedRelease={releaseVersion}
             collapsible={false}
+            autoSelectLatest={false}
           />
         </StyledInput>
       </BootstrapModal.Body>
       <BootstrapModal.Footer>
-        <Button
-          bsStyle='primary'
-          onClick={handleOnVersionChange}
-          loadingTimeout={0}
-        >
+        <Button bsStyle='primary' onClick={onSubmit} loadingTimeout={0}>
           Select version
         </Button>
         <Button bsStyle='link' onClick={onCancel}>
@@ -79,6 +71,10 @@ UpgradeClusterModalVersionChanger.propTypes = {
   onChangeRelease: PropTypes.func.isRequired,
   releaseVersion: PropTypes.string.isRequired,
   isAdmin: PropTypes.bool,
+};
+
+UpgradeClusterModalVersionChanger.defaultProps = {
+  isAdmin: false,
 };
 
 export default UpgradeClusterModalVersionChanger;

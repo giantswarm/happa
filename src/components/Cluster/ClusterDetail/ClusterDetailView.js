@@ -238,10 +238,13 @@ class ClusterDetailView extends React.Component {
       provider,
       release,
       targetRelease,
+      setTargetRelease,
+      cancelSetTargetRelease,
       region,
       genericLoadingCluster,
       loadingNodePools,
       loadingCluster,
+      isAdmin,
     } = this.props;
 
     const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
@@ -359,6 +362,9 @@ class ClusterDetailView extends React.Component {
                 }}
                 release={release}
                 targetRelease={targetRelease}
+                setTargetRelease={setTargetRelease}
+                cancelSetTargetRelease={cancelSetTargetRelease}
+                isAdmin={isAdmin}
               />
             </div>
           </DocumentTitle>
@@ -388,9 +394,12 @@ ClusterDetailView.propTypes = {
   region: PropTypes.string,
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
+  setTargetRelease: PropTypes.func,
+  cancelSetTargetRelease: PropTypes.func,
   loadingCluster: PropTypes.bool,
   genericLoadingCluster: PropTypes.bool,
   loadingNodePools: PropTypes.bool,
+  isAdmin: PropTypes.bool,
 };
 
 function mapStateToProps(state, props) {

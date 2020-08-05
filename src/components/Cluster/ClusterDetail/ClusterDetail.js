@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -22,28 +22,34 @@ const ClusterDetail = () => {
   const orgID = match.params.orgId;
 
   const cluster = useSelector((state) => selectClusterById(state, clusterID));
-  const release = useSelector((state) => {
-    const releases = getAllReleases(state) || {};
-    const releaseVersion = cluster?.release_version;
-
-    if (!releaseVersion) return null;
-
-    return releases[releaseVersion] ?? null;
-  });
+  const allReleases = useSelector((state) => getAllReleases(state) || {});
+  const release = allReleases[cluster?.release_version] ?? null;
   const isV5Cluster = useSelector((state) =>
     state.entities.clusters.v5Clusters.includes(clusterID)
   );
-  const targetRelease = useSelector((state) => {
-    const targetReleaseVersion = selectTargetRelease(state, cluster);
-
-    return state.entities.releases.items[targetReleaseVersion] ?? null;
-  });
   const credentials = useSelector((state) => state.entities.credentials);
   const catalogs = useSelector((state) => state.entities.catalogs);
   const nodePools = useSelector((state) => state.entities.nodePools.items);
   const provider = useSelector((state) => state.main.info.general.provider);
   const user = useSelector((state) => state.main.loggedInUser);
   const region = useSelector((state) => state.main.info.general.datacenter);
+  const isAdmin = useSelector((state) => state.main.loggedInUser.isAdmin);
+
+  const defaultTargetRelease = useSelector((state) => {
+    const targetReleaseVersion = selectTargetRelease(state, cluster);
+
+    return state.entities.releases.items[targetReleaseVersion] ?? null;
+  });
+  const [targetRelease, setTargetRelease] = useState(defaultTargetRelease);
+  const handleChangeTargetRelease = (newReleaseVersion) => {
+    const newRelease = allReleases[newReleaseVersion];
+    if (newRelease) {
+      setTargetRelease(newRelease);
+    }
+  };
+  const cancelChangeTargetRelease = () => {
+    setTargetRelease(defaultTargetRelease);
+  };
 
   useEffect(() => {
     if (!cluster) {
@@ -80,6 +86,8 @@ const ClusterDetail = () => {
               isV5Cluster={isV5Cluster}
               organizationId={orgID}
               targetRelease={targetRelease}
+              setTargetRelease={handleChangeTargetRelease}
+              cancelSetTargetRelease={cancelChangeTargetRelease}
               release={release}
               clusterId={clusterID}
               credentials={credentials}
@@ -88,6 +96,7 @@ const ClusterDetail = () => {
               provider={provider}
               user={user}
               region={region}
+              isAdmin={isAdmin}
             />
           )}
         />
