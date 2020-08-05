@@ -17,8 +17,6 @@ const OrgLabelSpan = styled.span`
   padding: 3px 5px;
   margin-right: 3px;
   margin-bottom: 3px;
-  color: #c7c5bd;
-  background-color: darken($darkblue, 5%);
   white-space: nowrap;
   display: inline-block;
 `;
