@@ -5,7 +5,7 @@ import React from 'react';
 const Label = styled.div`
   font-size: 12px;
   text-transform: uppercase;
-  color: #ccc;
+  color: ${(props) => props.theme.colors.gray};
   font-weight: unset;
   line-height: unset;
 `;
