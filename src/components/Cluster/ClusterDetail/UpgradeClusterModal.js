@@ -11,6 +11,11 @@ import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
 
+const Pages = {
+  AboutUpgrading: 'about-upgrading',
+  InspectChanges: 'inspect-changes',
+};
+
 class UpgradeClusterModal extends React.Component {
   static getMasterNodesInfo(cluster) {
     if (
@@ -26,13 +31,13 @@ class UpgradeClusterModal extends React.Component {
   state = {
     loading: false,
     modalVisible: false,
-    page: 'about-upgrading',
+    page: Pages.AboutUpgrading,
   };
 
   show = () => {
     this.setState({
       modalVisible: true,
-      page: 'about-upgrading',
+      page: Pages.AboutUpgrading,
     });
   };
 
@@ -45,7 +50,7 @@ class UpgradeClusterModal extends React.Component {
 
   inspectChanges = () => {
     this.setState({
-      page: 'inspect-changes',
+      page: Pages.InspectChanges,
     });
   };
 
@@ -248,9 +253,9 @@ class UpgradeClusterModal extends React.Component {
   };
 
   currentPage = () => {
-    if (this.state.page === 'about-upgrading') {
+    if (this.state.page === Pages.AboutUpgrading) {
       return this.aboutUpgradingPage();
-    } else if (this.state.page === 'inspect-changes') {
+    } else if (this.state.page === Pages.InspectChanges) {
       return this.inspectChangesPage();
     }
 
