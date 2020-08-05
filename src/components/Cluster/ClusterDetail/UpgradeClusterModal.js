@@ -211,13 +211,15 @@ class UpgradeClusterModal extends React.Component {
           <BootstrapModal.Title>
             Inspect changes from version {this.props.cluster.release_version} to{' '}
             {this.props.targetRelease.version}
-            <ChangeVersionButton
-              bsStyle='default'
-              bsSize='sm'
-              onClick={this.goToPage(Pages.ChangeVersion)}
-            >
-              Change version
-            </ChangeVersionButton>
+            {this.props.isAdmin && (
+              <ChangeVersionButton
+                bsStyle='default'
+                bsSize='sm'
+                onClick={this.goToPage(Pages.ChangeVersion)}
+              >
+                Change version
+              </ChangeVersionButton>
+            )}
           </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>{this.changedComponents()}</BootstrapModal.Body>
