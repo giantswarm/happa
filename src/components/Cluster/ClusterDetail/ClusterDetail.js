@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { getUserIsAdmin } from 'selectors/authSelectors';
 import {
   selectClusterById,
   selectTargetRelease,
@@ -33,10 +34,13 @@ const ClusterDetail = () => {
   const provider = useSelector((state) => state.main.info.general.provider);
   const user = useSelector((state) => state.main.loggedInUser);
   const region = useSelector((state) => state.main.info.general.datacenter);
-  const isAdmin = useSelector((state) => state.main.loggedInUser.isAdmin);
+  const isAdmin = useSelector(getUserIsAdmin);
 
   const defaultTargetRelease = useSelector((state) => {
-    const targetReleaseVersion = selectTargetRelease(state, cluster);
+    let targetReleaseVersion = selectTargetRelease(state, cluster);
+    if (isAdmin && !targetReleaseVersion) {
+      targetReleaseVersion = selectTargetRelease(state, cluster, true);
+    }
 
     return state.entities.releases.items[targetReleaseVersion] ?? null;
   });

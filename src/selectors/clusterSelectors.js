@@ -1,3 +1,4 @@
+import { getUserIsAdmin } from 'selectors/authSelectors';
 import cmp from 'semver-compare';
 import {
   canClusterUpgrade,
@@ -140,16 +141,22 @@ export const selectResourcesV5 = () =>
     }
   );
 
-export const selectTargetRelease = (state, cluster) => {
+export const selectTargetRelease = (
+  state,
+  cluster,
+  includeInactive = false
+) => {
   if (!cluster || Object.keys(state.entities.releases.items).length === 0)
     return null;
 
   const releases = state.entities.releases.items;
   let availableVersions = Object.keys(releases).sort(cmp);
 
-  availableVersions = availableVersions.filter(
-    (release) => releases[release].active
-  );
+  if (!includeInactive) {
+    availableVersions = availableVersions.filter(
+      (release) => releases[release].active
+    );
+  }
 
   // Guard against the release version of this cluster not being in the /v4/releases/
   // response.
@@ -179,7 +186,8 @@ export const selectCanClusterUpgrade = (clusterID) => (state) => {
     return false;
   }
 
-  const targetVersion = selectTargetRelease(state, cluster);
+  const isAdmin = getUserIsAdmin(state);
+  const targetVersion = selectTargetRelease(state, cluster, isAdmin);
 
   return canClusterUpgrade(
     cluster.release_version,
