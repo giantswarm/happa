@@ -43,7 +43,11 @@ interface IUpgradeNoticeProps {
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
-function UpgradeNotice({ clusterId, className, onClick }: IUpgradeNoticeProps) {
+const UpgradeNotice: React.FC<IUpgradeNoticeProps> = ({
+  clusterId,
+  className,
+  onClick,
+}) => {
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
   const isClusterUpgrading = useSelector(selectIsClusterUpgrading(clusterId));
 
@@ -75,7 +79,7 @@ function UpgradeNotice({ clusterId, className, onClick }: IUpgradeNoticeProps) {
       <span>{message}</span>
     </UpgradeWrapperDiv>
   );
-}
+};
 
 UpgradeNotice.propTypes = {
   clusterId: PropTypes.string.isRequired,
