@@ -1887,10 +1887,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/underscore@^1.10.14":
-  version "1.10.18"
-  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.10.18.tgz#be1b11ef09c6f2a41ff1d804096e47949ba2077b"
-  integrity sha512-3HHBv2O2MU1i2V89/oZvqRopdmukyjfcOBCShClBRZlPqhFMghzF9GdMyV42XHmfEQFoe4UPy0dSTL7stI5m/A==
+"@types/underscore@^1.10.20":
+  version "1.10.20"
+  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.10.20.tgz#4685206bcb2c9e2338fa6d89d678a8b916315f7f"
+  integrity sha512-UiLhTLijxQ6sKP2aQbextgPVovrrxqXFP+UO/l90o1Ytguc85UWtbHcmnZDRe8hQ2MHeA+BJglgbYsgtll/zyw==
 
 "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.3"
