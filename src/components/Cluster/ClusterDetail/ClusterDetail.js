@@ -37,10 +37,7 @@ const ClusterDetail = () => {
   const isAdmin = useSelector(getUserIsAdmin);
 
   const defaultTargetRelease = useSelector((state) => {
-    let targetReleaseVersion = selectTargetRelease(state, cluster);
-    if (isAdmin && !targetReleaseVersion) {
-      targetReleaseVersion = selectTargetRelease(state, cluster, true);
-    }
+    const targetReleaseVersion = selectTargetRelease(state, cluster);
 
     return state.entities.releases.items[targetReleaseVersion] ?? null;
   });
