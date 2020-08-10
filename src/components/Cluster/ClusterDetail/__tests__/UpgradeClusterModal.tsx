@@ -153,7 +153,7 @@ describe('UpgradeClusterModal', () => {
     expect(setTargetReleaseMockFn).toBeCalledWith('3.0.1');
   });
 
-  it('can cancel the upgrade release version change and revert to the original upgrade release version', () => {
+  it('cancels the upgrade release version change and revert to the original upgrade release version', () => {
     const setTargetReleaseMockFn = jest.fn();
     const cancelSetTargetReleaseMockFn = jest.fn();
 
@@ -203,6 +203,59 @@ describe('UpgradeClusterModal', () => {
     // Pick the latest version.
     fireEvent.click(screen.getByText(/3.0.1/i));
     fireEvent.click(screen.getByText(/Cancel/i));
+    expect(cancelSetTargetReleaseMockFn).toBeCalled();
+  });
+
+  it('cancels the upgrade release version change and revert to the original version if the modal is closed', () => {
+    const setTargetReleaseMockFn = jest.fn();
+    const cancelSetTargetReleaseMockFn = jest.fn();
+
+    const cluster = Object.assign({}, v5ClusterResponse, {
+      capabilities: {},
+      release_version: '2.0.2',
+    });
+    const targetRelease = {
+      version: '3.0.0',
+      timestamp: '2020-06-11T12:34:56Z',
+      components: [{ name: 'kubernetes', version: '1.16.3' }],
+      changelog: [{ component: 'dummy', description: 'dummy' }],
+      active: true,
+      kubernetesVersion: '1.16.3',
+      releaseNotesURL: 'dummy',
+    };
+    const initialState = createInitialState(
+      {
+        '1.0.0': createRelease('1.0.0', true),
+        '2.0.0': createRelease('2.0.0', false),
+        '2.0.1': createRelease('2.0.1', false),
+        '2.0.2': createRelease('2.0.2', true),
+        '3.0.0': createRelease('3.0.0', true),
+        '3.0.1': createRelease('3.0.1', false),
+        '4.0.0': createRelease('4.0.0', true),
+      },
+      true
+    );
+    renderAndOpen(
+      {
+        cluster: cluster,
+        targetRelease,
+        isAdmin: true,
+        setTargetRelease: setTargetReleaseMockFn,
+        cancelSetTargetRelease: cancelSetTargetReleaseMockFn,
+      },
+      initialState
+    );
+
+    fireEvent.click(screen.getByText(/inspect changes/i));
+    expect(
+      screen.getByText(/inspect changes from version 2.0.2 to 3.0.0/i)
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText(/change version/i));
+
+    // Pick the latest version.
+    fireEvent.click(screen.getByText(/3.0.1/i));
+    fireEvent.click(screen.getByText(/×/i));
     expect(cancelSetTargetReleaseMockFn).toBeCalled();
   });
 });
