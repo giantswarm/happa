@@ -57,7 +57,7 @@ class UpgradeClusterModal extends React.Component {
     this.props.cancelSetTargetRelease();
   };
 
-  goToPage = (page) => () => {
+  goToPage = (page) => {
     this.setState({
       page,
     });
@@ -65,7 +65,7 @@ class UpgradeClusterModal extends React.Component {
 
   cancelReleaseVersionChange = () => {
     this.props.cancelSetTargetRelease();
-    this.goToPage(Pages.InspectChanges)();
+    this.goToPage(Pages.InspectChanges);
   };
 
   changedComponents = () => {
@@ -192,7 +192,7 @@ class UpgradeClusterModal extends React.Component {
         <BootstrapModal.Footer>
           <Button
             bsStyle='primary'
-            onClick={this.goToPage(Pages.InspectChanges)}
+            onClick={() => this.goToPage(Pages.InspectChanges)}
           >
             Inspect Changes
           </Button>
@@ -217,7 +217,7 @@ class UpgradeClusterModal extends React.Component {
               <ChangeVersionButton
                 bsStyle='default'
                 bsSize='sm'
-                onClick={this.goToPage(Pages.ChangeVersion)}
+                onClick={() => this.goToPage(Pages.ChangeVersion)}
               >
                 Change version
               </ChangeVersionButton>
@@ -290,7 +290,7 @@ class UpgradeClusterModal extends React.Component {
         return (
           <UpgradeClusterModalVersionChanger
             closeModal={this.close}
-            onSubmit={this.goToPage(Pages.InspectChanges)}
+            onSubmit={() => this.goToPage(Pages.InspectChanges)}
             onCancel={this.cancelReleaseVersionChange}
             onChangeRelease={this.props.setTargetRelease}
             releaseVersion={this.props.targetRelease.version}
