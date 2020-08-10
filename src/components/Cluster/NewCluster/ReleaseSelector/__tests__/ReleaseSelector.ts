@@ -235,4 +235,16 @@ describe('ReleaseSelector', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('has the caret hidden if the selector is not collapsible', () => {
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps, collapsible: false },
+      { ...defaultStoreState }
+    );
+
+    expect(
+      screen.getByText(/available releases/i).previousElementSibling
+    ).toBeNull();
+  });
 });
