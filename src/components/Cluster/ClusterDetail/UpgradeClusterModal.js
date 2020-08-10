@@ -126,6 +126,7 @@ class UpgradeClusterModal extends React.Component {
                 <ReleaseComponentLabel
                   isAdded
                   name={component.name}
+                  key={component.name}
                   version={component.version}
                 />
               );
@@ -138,6 +139,7 @@ class UpgradeClusterModal extends React.Component {
                 <ReleaseComponentLabel
                   isRemoved
                   name={component.name}
+                  key={component.name}
                   version={component.version}
                 />
               );
