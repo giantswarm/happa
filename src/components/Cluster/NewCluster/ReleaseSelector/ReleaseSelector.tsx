@@ -26,6 +26,7 @@ interface IReleaseSelector {
   selectedRelease: string;
   collapsible?: boolean;
   autoSelectLatest?: boolean;
+  versionFilter?: (version: string) => boolean;
 }
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
@@ -38,13 +39,25 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   selectedRelease,
   collapsible,
   autoSelectLatest,
+  versionFilter,
 }) => {
-  const releases = useSelector(getReleases);
-  const sortedReleaseVersions = useSelector(getSortedReleaseVersions);
+  let releases = useSelector(getReleases);
+  let sortedReleaseVersions = useSelector(getSortedReleaseVersions);
   const releasesIsFetching = useSelector(getReleasesIsFetching);
   const releasesError = useSelector(getReleasesError);
 
   const isAdmin = useSelector(getUserIsAdmin);
+
+  if (versionFilter) {
+    releases = Object.keys(releases)
+      .filter(versionFilter)
+      .reduce((acc: typeof releases, releaseVersion: string) => {
+        acc[releaseVersion] = releases[releaseVersion];
+
+        return acc;
+      }, {});
+    sortedReleaseVersions = sortedReleaseVersions.filter(versionFilter);
+  }
 
   const selectedKubernetesVersion = useMemo(
     () => releases[selectedRelease]?.kubernetesVersion,
@@ -173,6 +186,7 @@ ReleaseSelector.propTypes = {
   selectedRelease: PropTypes.string.isRequired,
   collapsible: PropTypes.bool,
   autoSelectLatest: PropTypes.bool,
+  versionFilter: PropTypes.func,
 };
 
 ReleaseSelector.defaultProps = {

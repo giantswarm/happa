@@ -120,7 +120,6 @@ describe('ReleaseSelector', () => {
   it('renders expanded once clicked', () => {
     const { container } = renderWithStore(
       ReleaseSelector,
-      // @ts-ignore
       { ...defaultProps },
       { ...defaultStoreState }
     );
@@ -156,7 +155,6 @@ describe('ReleaseSelector', () => {
   it('renders expanded components once clicked', () => {
     renderWithStore(
       ReleaseSelector,
-      // @ts-ignore
       { ...defaultProps },
       { ...defaultStoreState }
     );
@@ -180,7 +178,6 @@ describe('ReleaseSelector', () => {
 
     const { rerender } = renderWithStore(
       ReleaseSelector,
-      // @ts-ignore
       { ...defaultProps, selectRelease: selectReleaseCallbackMock },
       { ...defaultStoreState }
     );
@@ -252,5 +249,26 @@ describe('ReleaseSelector', () => {
       )
     );
     expect(screen.queryByLabelText(/toggle/i)).not.toBeInTheDocument();
+  });
+
+  it('can filter releases based on a provided filter function', () => {
+    const filterFn = jest.fn((currentRelease) => {
+      return currentRelease === mockSortedReleaseVersions[0];
+    });
+
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps, versionFilter: filterFn, collapsible: false },
+      { ...defaultStoreState }
+    );
+
+    expect(filterFn).toBeCalled();
+
+    // Skip the first version.
+    for (let i = 1; i < mockSortedReleaseVersions.length; i++) {
+      expect(
+        screen.queryByText(mockSortedReleaseVersions[i])
+      ).not.toBeInTheDocument();
+    }
   });
 });
