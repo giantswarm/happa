@@ -31,7 +31,6 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
-      // eslint-disable-next-line no-unused-expressions
       callback?.();
     };
   };

@@ -103,7 +103,6 @@ export const checkForUpdates = (
     } catch {
       // Do nothing
     } finally {
-      // eslint-disable-next-line no-unused-expressions
       callback?.();
     }
   };

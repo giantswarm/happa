@@ -137,7 +137,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   triggerEditName = () => {
-    // eslint-disable-next-line no-unused-expressions
     this.viewEditNameRef?.activateEditMode();
   };
 
@@ -166,11 +165,8 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   showNodePoolScalingModal = (nodePool: INodePool): void => {
-    // eslint-disable-next-line no-unused-expressions
     this.scaleNodePoolModal?.reset();
-    // eslint-disable-next-line no-unused-expressions
     this.scaleNodePoolModal?.show();
-    // eslint-disable-next-line no-unused-expressions
     this.scaleNodePoolModal?.setNodePool(nodePool);
   };
 

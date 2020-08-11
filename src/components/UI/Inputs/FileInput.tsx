@@ -5,7 +5,6 @@ import Input, { IInput, InputElement } from './Input';
 
 const FileInput: FC<IInput<FileList>> = (props) => {
   const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
-    // eslint-disable-next-line no-unused-expressions
     props.onChange?.(e.target.files);
   };
 
