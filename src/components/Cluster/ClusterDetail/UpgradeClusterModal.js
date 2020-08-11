@@ -1,4 +1,6 @@
+import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
+import UpgradeClusterModalVersionChanger from 'Cluster/ClusterDetail/UpgradeClusterModalVersionChanger';
 import diff from 'deep-diff';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
@@ -6,10 +8,21 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Providers } from 'shared/constants';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
+
+const Pages = {
+  AboutUpgrading: 'about-upgrading',
+  InspectChanges: 'inspect-changes',
+  ChangeVersion: 'change-version',
+};
+
+const ChangeVersionButton = styled(Button)`
+  margin-left: ${({ theme }) => 2 * theme.spacingPx}px;
+`;
 
 class UpgradeClusterModal extends React.Component {
   static getMasterNodesInfo(cluster) {
@@ -26,13 +39,13 @@ class UpgradeClusterModal extends React.Component {
   state = {
     loading: false,
     modalVisible: false,
-    page: 'about-upgrading',
+    page: Pages.AboutUpgrading,
   };
 
   show = () => {
     this.setState({
       modalVisible: true,
-      page: 'about-upgrading',
+      page: Pages.AboutUpgrading,
     });
   };
 
@@ -41,12 +54,19 @@ class UpgradeClusterModal extends React.Component {
       loading: false,
       modalVisible: false,
     });
+
+    this.props.cancelSetTargetRelease();
   };
 
-  inspectChanges = () => {
+  goToPage = (page) => {
     this.setState({
-      page: 'inspect-changes',
+      page,
     });
+  };
+
+  cancelReleaseVersionChange = () => {
+    this.props.cancelSetTargetRelease();
+    this.goToPage(Pages.InspectChanges);
   };
 
   changedComponents = () => {
@@ -107,6 +127,7 @@ class UpgradeClusterModal extends React.Component {
                 <ReleaseComponentLabel
                   isAdded
                   name={component.name}
+                  key={component.name}
                   version={component.version}
                 />
               );
@@ -119,6 +140,7 @@ class UpgradeClusterModal extends React.Component {
                 <ReleaseComponentLabel
                   isRemoved
                   name={component.name}
+                  key={component.name}
                   version={component.version}
                 />
               );
@@ -171,7 +193,10 @@ class UpgradeClusterModal extends React.Component {
           </ul>
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
-          <Button bsStyle='primary' onClick={this.inspectChanges}>
+          <Button
+            bsStyle='primary'
+            onClick={() => this.goToPage(Pages.InspectChanges)}
+          >
             Inspect Changes
           </Button>
           <Button bsStyle='link' onClick={this.close}>
@@ -191,6 +216,15 @@ class UpgradeClusterModal extends React.Component {
           <BootstrapModal.Title>
             Inspect changes from version {this.props.cluster.release_version} to{' '}
             {this.props.targetRelease.version}
+            {this.props.isAdmin && (
+              <ChangeVersionButton
+                bsStyle='default'
+                bsSize='sm'
+                onClick={() => this.goToPage(Pages.ChangeVersion)}
+              >
+                Change version
+              </ChangeVersionButton>
+            )}
           </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>{this.changedComponents()}</BootstrapModal.Body>
@@ -238,7 +272,7 @@ class UpgradeClusterModal extends React.Component {
 
             this.close();
           })
-          .catch((_error) => {
+          .catch(() => {
             this.setState({
               loading: false,
             });
@@ -248,13 +282,30 @@ class UpgradeClusterModal extends React.Component {
   };
 
   currentPage = () => {
-    if (this.state.page === 'about-upgrading') {
-      return this.aboutUpgradingPage();
-    } else if (this.state.page === 'inspect-changes') {
-      return this.inspectChangesPage();
-    }
+    switch (this.state.page) {
+      case Pages.AboutUpgrading:
+        return this.aboutUpgradingPage();
 
-    return null;
+      case Pages.InspectChanges:
+        return this.inspectChangesPage();
+
+      case Pages.ChangeVersion:
+        return (
+          <UpgradeClusterModalVersionChanger
+            closeModal={this.close}
+            onSubmit={() => this.goToPage(Pages.InspectChanges)}
+            onCancel={this.cancelReleaseVersionChange}
+            onChangeRelease={this.props.setTargetRelease}
+            releaseVersion={this.props.targetRelease.version}
+            currentReleaseVersion={this.props.cluster.release_version}
+            isAdmin={this.props.isAdmin}
+            provider={this.props.provider}
+          />
+        );
+
+      default:
+        return null;
+    }
   };
 
   render() {
@@ -268,9 +319,13 @@ class UpgradeClusterModal extends React.Component {
 
 UpgradeClusterModal.propTypes = {
   cluster: PropTypes.object,
+  provider: PropTypes.oneOf(Object.values(Providers)),
   clusterActions: PropTypes.object,
   release: PropTypes.object,
   targetRelease: PropTypes.object,
+  setTargetRelease: PropTypes.func,
+  cancelSetTargetRelease: PropTypes.func,
+  isAdmin: PropTypes.bool,
 };
 
 function mapDispatchToProps(dispatch) {

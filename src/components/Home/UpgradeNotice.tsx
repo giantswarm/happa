@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
-import { IState } from 'reducers/types';
+import { useSelector } from 'react-redux';
 import {
   selectCanClusterUpgrade,
   selectIsClusterUpgrading,
@@ -44,13 +43,14 @@ interface IUpgradeNoticeProps {
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
-function UpgradeNotice({
-  canClusterUpgrade,
-  isClusterUpgrading,
+const UpgradeNotice: React.FC<IUpgradeNoticeProps> = ({
   clusterId,
   className,
   onClick,
-}: IUpgradeNoticeProps) {
+}) => {
+  const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
+  const isClusterUpgrading = useSelector(selectIsClusterUpgrading(clusterId));
+
   if (!canClusterUpgrade && !isClusterUpgrading) return null;
 
   const handleUpgrade = () => {
@@ -79,23 +79,12 @@ function UpgradeNotice({
       <span>{message}</span>
     </UpgradeWrapperDiv>
   );
-}
+};
 
 UpgradeNotice.propTypes = {
   clusterId: PropTypes.string.isRequired,
-  canClusterUpgrade: PropTypes.bool.isRequired,
-  isClusterUpgrading: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
   className: PropTypes.string,
 };
 
-function mapStateToProps(state: IState, props: IUpgradeNoticeProps) {
-  const { clusterId } = props;
-
-  return {
-    canClusterUpgrade: selectCanClusterUpgrade(state, clusterId),
-    isClusterUpgrading: selectIsClusterUpgrading(state, clusterId),
-  };
-}
-
-export default connect(mapStateToProps)(UpgradeNotice);
+export default UpgradeNotice;
