@@ -3,7 +3,7 @@ import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
-import { OrganizationsRoutes } from 'shared/constants/routes';
+import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
 
 const OrganizationDropdownTrigger = styled(DropdownTrigger)`
@@ -203,8 +203,8 @@ const OrganizationDropdown = ({
                       {sortedOrganizations.map((org) => (
                         <li role='presentation' key={org}>
                           <MenuItem
-                            href='#'
-                            to='#'
+                            href={AppRoutes.Home}
+                            to={AppRoutes.Home}
                             activeClassName=''
                             onClick={() => {
                               onSelectOrganization(org);
