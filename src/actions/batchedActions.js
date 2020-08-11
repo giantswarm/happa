@@ -185,6 +185,7 @@ export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
 export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
   try {
     await dispatch(organizationActions.organizationSelect(orgId));
+    dispatch(push(AppRoutes.Home));
     dispatch(
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
@@ -197,7 +198,6 @@ export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
         withLoadingFlags: true,
       })
     );
-    dispatch(push(AppRoutes.Home));
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
   }
