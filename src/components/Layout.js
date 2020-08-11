@@ -53,10 +53,10 @@ class Layout extends React.Component {
     }
   }
 
-  selectOrganization = (orgId) => {
+  selectOrganization = async (orgId) => {
     const { dispatch } = this.props;
 
-    dispatch(batchedOrganizationSelect(orgId));
+    await dispatch(batchedOrganizationSelect(orgId));
     dispatch(push(AppRoutes.Home));
   };
 
