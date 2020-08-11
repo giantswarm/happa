@@ -21,14 +21,14 @@ export const SelectedWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
-export const ListToggler = styled(TextBase)`
-  cursor: pointer;
+export const ListToggler = styled(TextBase)<{ collapsible?: boolean }>`
+  cursor: ${({ collapsible }) => (collapsible ? 'pointer' : 'default')};
   font-weight: 300;
   padding: ${({ theme }) => theme.spacingPx * 2}px 0;
   color: ${({ theme }) => theme.colors.white4};
   user-select: none;
   &:hover {
-    text-decoration: underline;
+    text-decoration: ${({ collapsible }) => collapsible && 'underline'};
   }
   i {
     margin-right: ${({ theme }) => theme.spacingPx}px;

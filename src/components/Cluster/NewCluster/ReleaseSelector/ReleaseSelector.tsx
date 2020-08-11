@@ -24,6 +24,9 @@ import ReleaseRow from './ReleaseRow';
 interface IReleaseSelector {
   selectRelease(releaseVersion: string): void;
   selectedRelease: string;
+  collapsible?: boolean;
+  autoSelectLatest?: boolean;
+  versionFilter?: (version: string) => boolean;
 }
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
@@ -34,26 +37,56 @@ const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
 const ReleaseSelector: FC<IReleaseSelector> = ({
   selectRelease,
   selectedRelease,
+  collapsible,
+  autoSelectLatest,
+  versionFilter,
 }) => {
-  const releases = useSelector(getReleases);
-  const sortedReleaseVersions = useSelector(getSortedReleaseVersions);
+  const allReleases = useSelector(getReleases);
+  let sortedReleaseVersions = useSelector(getSortedReleaseVersions);
   const releasesIsFetching = useSelector(getReleasesIsFetching);
   const releasesError = useSelector(getReleasesError);
 
   const isAdmin = useSelector(getUserIsAdmin);
 
+  let releases = allReleases;
+  if (versionFilter) {
+    releases = Object.keys(releases)
+      .filter(versionFilter)
+      .reduce((acc: typeof releases, releaseVersion: string) => {
+        acc[releaseVersion] = releases[releaseVersion];
+
+        return acc;
+      }, {});
+
+    sortedReleaseVersions = sortedReleaseVersions.filter(versionFilter);
+  }
+
   const selectedKubernetesVersion = useMemo(
-    () => releases[selectedRelease]?.kubernetesVersion,
-    [releases, selectedRelease]
+    () => allReleases[selectedRelease]?.kubernetesVersion,
+    [allReleases, selectedRelease]
   );
 
   useEffect(() => {
-    if (sortedReleaseVersions.length !== 0) {
+    if (autoSelectLatest && sortedReleaseVersions.length !== 0) {
       selectRelease(sortedReleaseVersions[0]);
     }
-  }, [selectRelease, sortedReleaseVersions]);
+  }, [selectRelease, sortedReleaseVersions, autoSelectLatest]);
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(collapsible as boolean);
+
+  const handleCollapse = () => {
+    if (collapsible) {
+      setCollapsed(!collapsed);
+    }
+  };
+
+  const handleTabSelect = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    // Handle tapping the space bar.
+    if (e.key === ' ') {
+      e.preventDefault();
+      handleCollapse();
+    }
+  };
 
   if (releasesError) {
     return (
@@ -90,8 +123,23 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
         </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ListToggler role='button' onClick={() => setCollapsed(!collapsed)}>
-          <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
+        <ListToggler
+          role='button'
+          id='release-selector__toggler'
+          aria-expanded={!collapsed}
+          tabIndex={0}
+          onClick={handleCollapse}
+          collapsible={collapsible as boolean}
+          onKeyDown={handleTabSelect}
+        >
+          {collapsible && (
+            <i
+              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+              aria-hidden='true'
+              aria-label='Toggle'
+              role='presentation'
+            />
+          )}
           Available releases
         </ListToggler>
       </div>
@@ -114,7 +162,11 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
                 <th>Notes</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody
+              role='radiogroup'
+              tabIndex={-1}
+              aria-labelledby='release-selector__toggler'
+            >
               {sortedReleaseVersions.map((version) => (
                 <ReleaseRow
                   key={version}
@@ -134,6 +186,14 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
 ReleaseSelector.propTypes = {
   selectRelease: PropTypes.func.isRequired,
   selectedRelease: PropTypes.string.isRequired,
+  collapsible: PropTypes.bool,
+  autoSelectLatest: PropTypes.bool,
+  versionFilter: PropTypes.func,
+};
+
+ReleaseSelector.defaultProps = {
+  collapsible: true,
+  autoSelectLatest: true,
 };
 
 export default ReleaseSelector;
