@@ -27,7 +27,7 @@ import {
   selectLoadingFlagByIdAndAction,
   selectTargetRelease,
 } from 'selectors/clusterSelectors';
-import { getAllReleases } from 'selectors/releaseSelectors';
+import { getReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
@@ -432,7 +432,7 @@ function mapStateToProps(state, props) {
   const defaultTargetReleaseVersion = selectTargetRelease(state, props.cluster);
 
   return {
-    releases: getAllReleases(state) || {},
+    releases: getReleases(state),
     defaultTargetRelease:
       state.entities.releases.items[defaultTargetReleaseVersion] ?? null,
     isV5Cluster: state.entities.clusters.v5Clusters.includes(clusterID),
