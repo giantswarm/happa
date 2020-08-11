@@ -65,6 +65,14 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
     }
   };
 
+  const handleTabSelect = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    // Handle tapping the space bar.
+    if (e.key === ' ') {
+      e.preventDefault();
+      handleCollapse();
+    }
+  };
+
   if (releasesError) {
     return (
       <div>
@@ -102,11 +110,20 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
       <div>
         <ListToggler
           role='button'
+          id='release-selector__toggler'
+          aria-expanded={!collapsed}
+          tabIndex={0}
           onClick={handleCollapse}
           collapsible={collapsible as boolean}
+          onKeyDown={handleTabSelect}
         >
           {collapsible && (
-            <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
+            <i
+              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+              aria-hidden='true'
+              aria-label='Toggle'
+              role='presentation'
+            />
           )}
           Available releases
         </ListToggler>
@@ -130,7 +147,11 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
                 <th>Notes</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody
+              role='radiogroup'
+              tabIndex={-1}
+              aria-labelledby='release-selector__toggler'
+            >
               {sortedReleaseVersions.map((version) => (
                 <ReleaseRow
                   key={version}
