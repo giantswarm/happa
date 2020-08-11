@@ -197,6 +197,7 @@ export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
         withLoadingFlags: true,
       })
     );
+    dispatch(push(AppRoutes.Home));
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
   }
