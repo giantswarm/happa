@@ -21,10 +21,13 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
+import { getUserIsAdmin } from 'selectors/authSelectors';
 import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
+  selectTargetRelease,
 } from 'selectors/clusterSelectors';
+import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
@@ -50,6 +53,21 @@ const Disclaimer = styled.p`
 `;
 
 class ClusterDetailView extends React.Component {
+  state = {
+    targetRelease: null,
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      prevState.targetRelease === null &&
+      nextProps.defaultTargetRelease !== null
+    ) {
+      return { targetRelease: nextProps.defaultTargetRelease };
+    }
+
+    return null;
+  }
+
   loadDataInterval = null;
 
   componentDidMount() {
@@ -74,14 +92,15 @@ class ClusterDetailView extends React.Component {
 
   // It is not in user orgs or it has been deleted.
   doesNotExist = (isDeleted) => {
-    const { clusterId, dispatch } = this.props;
+    const { cluster, dispatch } = this.props;
+    const clusterID = cluster?.id ?? '';
 
     const text = isDeleted
       ? 'This cluster has been deleted'
       : 'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.';
 
     new FlashMessage(
-      `Cluster <code>${clusterId}</code> not found`,
+      `Cluster <code>${clusterID}</code> not found`,
       messageType.ERROR,
       messageTTL.FOREVER,
       text
@@ -93,7 +112,7 @@ class ClusterDetailView extends React.Component {
   };
 
   loadDetails = () => {
-    const { cluster, dispatch, organizationId } = this.props;
+    const { cluster, dispatch } = this.props;
 
     if (typeof cluster === 'undefined' || cluster.delete_date) {
       this.doesNotExist(Boolean(cluster?.delete_date));
@@ -102,7 +121,7 @@ class ClusterDetailView extends React.Component {
     if (cluster) {
       dispatch(
         batchedClusterDetailView(
-          organizationId,
+          cluster.owner,
           cluster.id,
           this.props.isV5Cluster
         )
@@ -228,6 +247,17 @@ class ClusterDetailView extends React.Component {
     return result;
   });
 
+  setTargetRelease = (newReleaseVersion) => {
+    const newRelease = this.props.releases[newReleaseVersion];
+    if (newRelease) {
+      this.setState({ targetRelease: newRelease });
+    }
+  };
+
+  cancelSetTargetRelease = () => {
+    this.setTargetRelease(this.props.defaultTargetRelease);
+  };
+
   render() {
     const {
       canClusterUpgrade,
@@ -236,10 +266,7 @@ class ClusterDetailView extends React.Component {
       dispatch,
       isV5Cluster,
       provider,
-      release,
-      targetRelease,
-      setTargetRelease,
-      cancelSetTargetRelease,
+      releases,
       region,
       genericLoadingCluster,
       loadingNodePools,
@@ -250,7 +277,8 @@ class ClusterDetailView extends React.Component {
     const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
 
     if (!cluster) return null;
-    const { id, owner } = cluster;
+    const { id, owner, release_version } = cluster;
+    const release = releases[release_version] ?? null;
     const tabsPaths = this.getPathsForTabs(id, owner);
 
     return (
@@ -261,7 +289,7 @@ class ClusterDetailView extends React.Component {
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <div data-testid='cluster-details-view'>
               <h1>
-                <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
+                <ClusterIDLabel clusterID={id} copyEnabled />{' '}
                 <ViewAndEditName
                   value={cluster.name}
                   typeLabel='cluster'
@@ -323,7 +351,7 @@ class ClusterDetailView extends React.Component {
                 </Tab>
                 <Tab eventKey={tabsPaths.Apps} title='Apps'>
                   <ClusterApps
-                    clusterId={this.props.clusterId}
+                    clusterId={id}
                     dispatch={dispatch}
                     installedApps={cluster.apps}
                     release={release}
@@ -361,9 +389,9 @@ class ClusterDetailView extends React.Component {
                   this.upgradeClusterModal = s;
                 }}
                 release={release}
-                targetRelease={targetRelease}
-                setTargetRelease={setTargetRelease}
-                cancelSetTargetRelease={cancelSetTargetRelease}
+                targetRelease={this.state.targetRelease}
+                setTargetRelease={this.setTargetRelease}
+                cancelSetTargetRelease={this.cancelSetTargetRelease}
                 isAdmin={isAdmin}
               />
             </div>
@@ -379,23 +407,20 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  cluster: PropTypes.object,
+
   canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
-  cluster: PropTypes.object,
-  clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
-  organizationId: PropTypes.string,
-  release: PropTypes.object,
+  releases: PropTypes.object,
+  defaultTargetRelease: PropTypes.object,
   provider: PropTypes.string,
   region: PropTypes.string,
   setInterval: PropTypes.func,
-  targetRelease: PropTypes.object,
-  setTargetRelease: PropTypes.func,
-  cancelSetTargetRelease: PropTypes.func,
   loadingCluster: PropTypes.bool,
   genericLoadingCluster: PropTypes.bool,
   loadingNodePools: PropTypes.bool,
@@ -403,7 +428,21 @@ ClusterDetailView.propTypes = {
 };
 
 function mapStateToProps(state, props) {
+  const clusterID = props.cluster?.id;
+  const defaultTargetReleaseVersion = selectTargetRelease(state, props.cluster);
+
   return {
+    releases: getAllReleases(state) || {},
+    defaultTargetRelease:
+      state.entities.releases.items[defaultTargetReleaseVersion] ?? null,
+    isV5Cluster: state.entities.clusters.v5Clusters.includes(clusterID),
+    credentials: state.entities.credentials,
+    catalogs: state.entities.catalogs,
+    nodePools: state.entities.nodePools.items,
+    provider: state.main.info.general.provider,
+    user: state.main.loggedInUser,
+    region: state.main.info.general.datacenter,
+    isAdmin: getUserIsAdmin(state),
     // We are using this genericLoadingCluster because we are setting
     // loadingFlags.CLUSTER_LOAD_DETAILS_REQUEST to true in Organizations/Detail
     // componentDidMount() just in case of accessing cluster details of a non
