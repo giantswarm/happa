@@ -25,6 +25,8 @@ export const batchedLayout = () => async (dispatch) => {
     );
     dispatch(push(AppRoutes.Login));
     ErrorReporter.getInstance().notify(err);
+
+    return;
   }
 
   try {
