@@ -1,9 +1,13 @@
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import cmp from 'semver-compare';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
+import { canClusterUpgrade } from 'utils/clusterUtils';
 
 interface IUpgradeClusterModalVersionChangerProps
   extends React.ComponentPropsWithoutRef<'div'> {
@@ -12,6 +16,8 @@ interface IUpgradeClusterModalVersionChangerProps
   onCancel: () => void;
   onChangeRelease: (newRelease: string) => void;
   releaseVersion: string;
+  currentReleaseVersion: string;
+  provider: PropertiesOf<typeof Providers>;
   isAdmin?: boolean;
 }
 
@@ -21,9 +27,23 @@ const UpgradeClusterModalVersionChanger: React.FC<IUpgradeClusterModalVersionCha
   onCancel,
   onChangeRelease,
   releaseVersion,
+  currentReleaseVersion,
+  provider,
   isAdmin,
   ...rest
 }) => {
+  const versionFilter = useMemo(
+    () => (version: string): boolean => {
+      if (cmp(currentReleaseVersion, version) >= 0) return false;
+
+      if (!canClusterUpgrade(currentReleaseVersion, version, provider))
+        return false;
+
+      return true;
+    },
+    [currentReleaseVersion, provider]
+  );
+
   if (!isAdmin) {
     onCancel();
 
@@ -49,6 +69,7 @@ const UpgradeClusterModalVersionChanger: React.FC<IUpgradeClusterModalVersionCha
             selectedRelease={releaseVersion}
             collapsible={false}
             autoSelectLatest={false}
+            versionFilter={versionFilter}
           />
         </StyledInput>
       </BootstrapModal.Body>
@@ -70,6 +91,8 @@ UpgradeClusterModalVersionChanger.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onChangeRelease: PropTypes.func.isRequired,
   releaseVersion: PropTypes.string.isRequired,
+  currentReleaseVersion: PropTypes.string.isRequired,
+  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
   isAdmin: PropTypes.bool,
 };
 

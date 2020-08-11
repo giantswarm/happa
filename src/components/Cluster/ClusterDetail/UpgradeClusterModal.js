@@ -8,6 +8,7 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Providers } from 'shared/constants';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
@@ -296,7 +297,9 @@ class UpgradeClusterModal extends React.Component {
             onCancel={this.cancelReleaseVersionChange}
             onChangeRelease={this.props.setTargetRelease}
             releaseVersion={this.props.targetRelease.version}
+            currentReleaseVersion={this.props.cluster.release_version}
             isAdmin={this.props.isAdmin}
+            provider={this.props.provider}
           />
         );
 
@@ -316,6 +319,7 @@ class UpgradeClusterModal extends React.Component {
 
 UpgradeClusterModal.propTypes = {
   cluster: PropTypes.object,
+  provider: PropTypes.oneOf(Object.values(Providers)),
   clusterActions: PropTypes.object,
   release: PropTypes.object,
   targetRelease: PropTypes.object,

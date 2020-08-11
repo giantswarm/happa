@@ -41,13 +41,14 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   autoSelectLatest,
   versionFilter,
 }) => {
-  let releases = useSelector(getReleases);
+  const allReleases = useSelector(getReleases);
   let sortedReleaseVersions = useSelector(getSortedReleaseVersions);
   const releasesIsFetching = useSelector(getReleasesIsFetching);
   const releasesError = useSelector(getReleasesError);
 
   const isAdmin = useSelector(getUserIsAdmin);
 
+  let releases = allReleases;
   if (versionFilter) {
     releases = Object.keys(releases)
       .filter(versionFilter)
@@ -56,12 +57,13 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
 
         return acc;
       }, {});
+
     sortedReleaseVersions = sortedReleaseVersions.filter(versionFilter);
   }
 
   const selectedKubernetesVersion = useMemo(
-    () => releases[selectedRelease]?.kubernetesVersion,
-    [releases, selectedRelease]
+    () => allReleases[selectedRelease]?.kubernetesVersion,
+    [allReleases, selectedRelease]
   );
 
   useEffect(() => {
