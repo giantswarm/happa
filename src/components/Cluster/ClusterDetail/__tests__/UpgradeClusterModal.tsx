@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import UpgradeClusterModal from 'Cluster/ClusterDetail/UpgradeClusterModal';
 import React from 'react';
 import { IState } from 'reducers/types';
+import { Providers } from 'shared/constants';
 import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
 import { renderWithStore } from 'testUtils/renderUtils';
 
@@ -59,7 +60,8 @@ describe('UpgradeClusterModal', () => {
       capabilities: {},
     });
     renderAndOpen({
-      cluster: cluster,
+      cluster,
+      provider: Providers.AWS,
     });
   });
 
@@ -68,7 +70,8 @@ describe('UpgradeClusterModal', () => {
       capabilities: {},
     });
     renderAndOpen({
-      cluster: cluster,
+      cluster,
+      provider: Providers.AWS,
     });
 
     expect(
@@ -90,7 +93,8 @@ describe('UpgradeClusterModal', () => {
       releaseNotesURL: 'dummy',
     };
     renderAndOpen({
-      cluster: cluster,
+      cluster,
+      provider: Providers.AWS,
       targetRelease,
       isAdmin: false,
     });
@@ -131,7 +135,8 @@ describe('UpgradeClusterModal', () => {
     );
     renderAndOpen(
       {
-        cluster: cluster,
+        cluster,
+        provider: Providers.AWS,
         targetRelease,
         isAdmin: true,
         setTargetRelease: setTargetReleaseMockFn,
@@ -184,7 +189,8 @@ describe('UpgradeClusterModal', () => {
     );
     renderAndOpen(
       {
-        cluster: cluster,
+        cluster,
+        provider: Providers.AWS,
         targetRelease,
         isAdmin: true,
         setTargetRelease: setTargetReleaseMockFn,
@@ -237,7 +243,8 @@ describe('UpgradeClusterModal', () => {
     );
     renderAndOpen(
       {
-        cluster: cluster,
+        cluster,
+        provider: Providers.AWS,
         targetRelease,
         isAdmin: true,
         setTargetRelease: setTargetReleaseMockFn,
@@ -257,5 +264,62 @@ describe('UpgradeClusterModal', () => {
     fireEvent.click(screen.getByText(/3.0.1/i));
     fireEvent.click(screen.getByText(/×/i));
     expect(cancelSetTargetReleaseMockFn).toBeCalled();
+  });
+
+  it('only displays the versions that are supported by the current cluster', () => {
+    const setTargetReleaseMockFn = jest.fn();
+    const cancelSetTargetReleaseMockFn = jest.fn();
+
+    const cluster = Object.assign({}, v5ClusterResponse, {
+      capabilities: {},
+      release_version: '2.0.2',
+    });
+    const targetRelease = {
+      version: '3.0.0',
+      timestamp: '2020-06-11T12:34:56Z',
+      components: [{ name: 'kubernetes', version: '1.16.3' }],
+      changelog: [{ component: 'dummy', description: 'dummy' }],
+      active: true,
+      kubernetesVersion: '1.16.3',
+      releaseNotesURL: 'dummy',
+    };
+    const initialState = createInitialState(
+      {
+        '1.0.0': createRelease('1.0.0', true),
+        '2.0.0': createRelease('2.0.0', false),
+        '2.0.1': createRelease('2.0.1', false),
+        '2.0.2': createRelease('2.0.2', true),
+        '3.0.0': createRelease('3.0.0', true),
+        '3.0.1': createRelease('3.0.1', false),
+        '4.0.0': createRelease('4.0.0', true),
+      },
+      true
+    );
+    renderAndOpen(
+      {
+        cluster,
+        provider: Providers.AWS,
+        targetRelease,
+        isAdmin: true,
+        setTargetRelease: setTargetReleaseMockFn,
+        cancelSetTargetRelease: cancelSetTargetReleaseMockFn,
+      },
+      initialState
+    );
+
+    fireEvent.click(screen.getByText(/inspect changes/i));
+    fireEvent.click(screen.getByText(/change version/i));
+
+    const releaseVersions = Object.keys(initialState.entities.releases.items);
+    const currentVersionIdx = releaseVersions.indexOf(cluster.release_version);
+    for (let i = 0; i < releaseVersions.length; i++) {
+      if (i > currentVersionIdx) {
+        expect(screen.getAllByText(releaseVersions[i]).length).toBeGreaterThan(
+          0
+        );
+      } else {
+        expect(screen.queryAllByText(releaseVersions[i]).length).toBe(0);
+      }
+    }
   });
 });
