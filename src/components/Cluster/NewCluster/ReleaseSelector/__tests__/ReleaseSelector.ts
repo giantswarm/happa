@@ -236,15 +236,21 @@ describe('ReleaseSelector', () => {
     ).toBeInTheDocument();
   });
 
-  it('has the caret hidden if the selector is not collapsible', () => {
-    renderWithStore(
+  it('has a caret icon if the selector is collapsible', () => {
+    const { rerender } = renderWithStore(
       ReleaseSelector,
-      { ...defaultProps, collapsible: false },
+      { ...defaultProps, collapsible: true },
       { ...defaultStoreState }
     );
+    expect(screen.getByLabelText(/toggle/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/available releases/i).previousElementSibling
-    ).toBeNull();
+    rerender(
+      getComponentWithStore(
+        ReleaseSelector,
+        { ...defaultProps, collapsible: false },
+        { ...defaultStoreState }
+      )
+    );
+    expect(screen.queryByLabelText(/toggle/i)).not.toBeInTheDocument();
   });
 });
