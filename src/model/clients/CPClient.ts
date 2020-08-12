@@ -9,7 +9,7 @@ export class CPClient extends HttpClient {
    */
   constructor(authToken: string, authType: string) {
     // Get the base Control Plane API URL from the GS API URL.
-    const baseURL = window.config.apiEndpoint.replace('api', 'proxy');
+    const baseURL = CPClient.getBaseURLFromAPIURL(window.config.apiEndpoint);
 
     super({
       baseURL,
@@ -17,6 +17,10 @@ export class CPClient extends HttpClient {
 
     this.setHeader('Accept', 'application/json');
     this.setAuthorizationToken(authType, authToken);
+  }
+
+  private static getBaseURLFromAPIURL(apiURL: string): string {
+    return apiURL.replace('api', 'proxy');
   }
 }
 
