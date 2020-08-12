@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Aside from 'UI/Aside';
 import Button from 'UI/Button';
 
 import { CodeBlock, Prompt } from '../CodeBlock';
@@ -282,14 +283,12 @@ class ConfigKubeCtl extends React.Component {
           </Prompt>
         </CodeBlock>
 
-        <div className='aside'>
-          <p>
-            <i className='fa fa-info' title='For learners' /> To save some time
-            in the future, add the command above to a terminal profile, e. g.{' '}
-            <code>~/.bash_profile</code> to have it available in all new shell
-            sessions.
-          </p>
-        </div>
+        <Aside>
+          <i className='fa fa-info' title='For learners' /> To save some time in
+          the future, add the command above to a terminal profile, e. g.{' '}
+          <code>~/.bash_profile</code> to have it available in all new shell
+          sessions.
+        </Aside>
 
         <p>
           The above config file also sets the current context to
