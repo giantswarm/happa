@@ -28,6 +28,7 @@ const cpAuthReducer = produce((draft: ICPAuthState, action: CPAuthActions) => {
       break;
 
     case actions.loadUser().types.error:
+      draft.user = null;
       draft.isFetching = false;
 
       break;
