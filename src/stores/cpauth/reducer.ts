@@ -14,35 +14,32 @@ const initialState: ICPAuthState = {
   isFetching: false,
 };
 
-const cpAuthReducer = produce(
-  (draft: Partial<ICPAuthState>, action: CPAuthActions) => {
-    switch (action.type) {
-      case actions.loadUser().types.request:
-        draft.isFetching = true;
+const cpAuthReducer = produce((draft: ICPAuthState, action: CPAuthActions) => {
+  switch (action.type) {
+    case actions.loadUser().types.request:
+      draft.isFetching = true;
 
-        break;
+      break;
 
-      case actions.loadUser().types.success as typeof CPAUTH_USER_LOAD_SUCCESS:
-        draft.user = action.response;
-        draft.isFetching = false;
+    case actions.loadUser().types.success as typeof CPAUTH_USER_LOAD_SUCCESS:
+      draft.user = action.response;
+      draft.isFetching = false;
 
-        break;
+      break;
 
-      case actions.loadUser().types.error:
-        draft.isFetching = false;
+    case actions.loadUser().types.error:
+      draft.isFetching = false;
 
-        break;
+      break;
 
-      case CPAUTH_USER_SESSION_TERMINATED:
-      case CPAUTH_USER_SIGNED_OUT:
-      case CPAUTH_USER_EXPIRED:
-        draft.user = null;
-        draft.isFetching = false;
+    case CPAUTH_USER_SESSION_TERMINATED:
+    case CPAUTH_USER_SIGNED_OUT:
+    case CPAUTH_USER_EXPIRED:
+      draft.user = null;
+      draft.isFetching = false;
 
-        break;
-    }
-  },
-  initialState
-);
+      break;
+  }
+}, initialState);
 
 export default cpAuthReducer;

@@ -26,14 +26,14 @@ export default function configureStore(
   history: History<History.LocationState>,
   cpAuth?: CPAuth
 ) {
-  let middleware: Middleware[] = [
+  const middleware: Middleware[] = [
     routerMiddleware(history),
     thunk,
     callAPIMiddleware,
   ];
 
   if (FeatureFlags.FEATURE_CP_ACCESS && cpAuth) {
-    middleware = [cpAuthMiddleware(cpAuth), ...middleware];
+    middleware.push(cpAuthMiddleware(cpAuth));
   }
 
   store = createStore(

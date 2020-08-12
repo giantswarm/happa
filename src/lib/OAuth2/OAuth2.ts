@@ -108,8 +108,13 @@ class OAuth2 {
   }
 
   public async getLoggedInUser(): Promise<OAuth2UserImpl | null> {
-    const origUser = await this.userManager.getUser();
+    let origUser = await this.userManager.getUser();
     if (!origUser) return null;
+
+    // If user is already expired, renew his authentication.
+    if (origUser.expired) {
+      origUser = await this.userManager.signinSilent();
+    }
 
     this.userManager.events.load(origUser);
     const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
