@@ -23,7 +23,6 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   onChange,
 }) => {
   const handleChange = (isHA: boolean) => () => {
-    // eslint-disable-next-line no-unused-expressions
     onChange?.(isHA);
   };
 

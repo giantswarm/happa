@@ -101,7 +101,6 @@ export function forceRemoveAll() {
   clearQueues();
 
   const notificationWrapper = document.querySelector('.noty_layout');
-  // eslint-disable-next-line no-unused-expressions
   notificationWrapper?.remove();
 }
 

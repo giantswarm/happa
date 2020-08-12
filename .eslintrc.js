@@ -111,7 +111,7 @@ module.exports = {
     'no-sequences': 2,
     'no-throw-literal': 2,
     'no-unmodified-loop-condition': 2,
-    'no-unused-expressions': 2,
+    'no-unused-expressions': 0,
     'no-unused-labels': 2,
     'no-useless-call': 2,
     'no-useless-catch': 1,
@@ -222,6 +222,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/no-use-before-define': [2, { functions: false }],
     '@typescript-eslint/unbound-method': 0,
+    '@typescript-eslint/no-unused-expressions': 2,
   },
   extends: [
     'eslint:recommended',

@@ -63,7 +63,6 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    // eslint-disable-next-line no-unused-expressions
     onConvert?.();
   };
 

@@ -125,7 +125,6 @@ class ViewAndEditName extends Component<
     });
 
     const { onToggleEditingState } = this.props;
-    // eslint-disable-next-line no-unused-expressions
     onToggleEditingState?.(state);
   }
 
@@ -152,7 +151,6 @@ class ViewAndEditName extends Component<
   };
 
   handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
-    // eslint-disable-next-line no-unused-expressions
     e?.preventDefault();
 
     const { value } = this.state;

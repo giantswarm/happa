@@ -56,7 +56,6 @@ const UpgradeNotice: React.FC<IUpgradeNoticeProps> = ({
   const handleUpgrade = () => {
     if (isClusterUpgrading) return;
 
-    // eslint-disable-next-line no-unused-expressions
     onClick?.();
   };
 
