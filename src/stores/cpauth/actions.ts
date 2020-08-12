@@ -67,7 +67,7 @@ export const loadUser = createAsynchronousAction<
 >({
   actionTypePrefix: CPAUTH_USER_LOAD,
 
-  perform: async (_, cpAuth?: CPAuth): Promise<IOAuth2User | null> => {
+  perform: async (_, _d, cpAuth?: CPAuth): Promise<IOAuth2User | null> => {
     if (!cpAuth) return null;
 
     const user = await cpAuth.getLoggedInUser();
@@ -76,4 +76,5 @@ export const loadUser = createAsynchronousAction<
     return user.serialize();
   },
   shouldPerform: () => true,
+  throwOnError: true,
 });

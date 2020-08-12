@@ -5,27 +5,24 @@ import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatal
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import FeatureFlags from 'shared/FeatureFlags';
-import { IAppCatalogsState, IStoredAppCatalog } from 'stores/appcatalog/types';
+import { IAppCatalogsMap, IStoredAppCatalog } from 'stores/appcatalog/types';
+import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
 export const listCatalogs = createAsynchronousAction<
   undefined,
   IState,
-  IAppCatalogsState
+  IAppCatalogsMap
 >({
   actionTypePrefix: 'LIST_CATALOGS',
 
-  perform: async (_currentState: IState): Promise<IAppCatalogsState> => {
+  perform: async (currentState: IState): Promise<IAppCatalogsMap> => {
     let catalogs: IAppCatalog[] = [];
 
     let cpAuthUser: IOAuth2User | null = null;
     if (FeatureFlags.FEATURE_CP_ACCESS) {
-      // cpAuthUser = getCPAuthUser(currentState);
-      cpAuthUser = {
-        idToken: '',
-        authorizationType: 'Bearer',
-      } as IOAuth2User;
+      cpAuthUser = getCPAuthUser(currentState);
     }
 
     if (cpAuthUser) {
@@ -43,11 +40,10 @@ export const listCatalogs = createAsynchronousAction<
 
     // Turn the array response into a hash where the keys are the catalog names.
     const catalogsHash = catalogs.reduce(
-      (agg: IAppCatalogsState, currCatalog) => {
-        const catalog: IStoredAppCatalog = currCatalog as IStoredAppCatalog;
-        catalog.isFetchingIndex = false;
+      (agg: IAppCatalogsMap, currCatalog: IAppCatalog) => {
+        (currCatalog as IStoredAppCatalog).isFetchingIndex = false;
 
-        agg[currCatalog.metadata.name] = catalog;
+        agg[currCatalog.metadata.name] = currCatalog as IStoredAppCatalog;
 
         return agg;
       },
@@ -57,4 +53,5 @@ export const listCatalogs = createAsynchronousAction<
     return catalogsHash;
   },
   shouldPerform: () => true,
+  throwOnError: false,
 });

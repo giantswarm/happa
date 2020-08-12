@@ -6,8 +6,16 @@ export interface IApplicationVersion {
 
 export interface IStoredAppCatalog extends IAppCatalog {
   isFetchingIndex: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  apps?: any;
+}
+
+export interface IAppCatalogsMap {
+  [key: string]: IStoredAppCatalog;
 }
 
 export interface IAppCatalogsState {
-  [key: string]: IStoredAppCatalog;
+  lastUpdated: number;
+  isFetching: boolean;
+  items: IAppCatalogsMap;
 }

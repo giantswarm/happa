@@ -11,7 +11,6 @@ const ClusterPickerWrapper = styled.div`
 `;
 
 const ClusterList = styled.div`
-  flex-grow: 1px;
   overflow: auto;
 `;
 

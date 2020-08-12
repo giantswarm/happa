@@ -4,6 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Providers } from 'shared/constants';
 import AWSAccountID from 'UI/AWSAccountID';
+import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
+import Section from 'UI/ClusterCreation/Section';
 
 class ProviderCredentials extends React.Component {
   componentDidMount() {
@@ -56,12 +58,12 @@ class ProviderCredentials extends React.Component {
 
     if (showInfo) {
       return (
-        <div className='row section'>
-          <div className='col-3'>
-            <h3 className='table-label'>Provider Credentials</h3>
-          </div>
-          <div className='col-9'>{details}</div>
-        </div>
+        <Section style={{ marginTop: '25px' }}>
+          <ClusterCreationLabelSpan>
+            Provider Credentials
+          </ClusterCreationLabelSpan>
+          {details}
+        </Section>
       );
     }
 
@@ -73,7 +75,6 @@ ProviderCredentials.propTypes = {
   dispatch: PropTypes.func,
   provider: PropTypes.string,
   organizationName: PropTypes.string,
-  actions: PropTypes.object,
   credentials: PropTypes.object,
 };
 

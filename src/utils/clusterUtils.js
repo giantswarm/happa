@@ -1,7 +1,7 @@
-import moment from 'moment';
+import { getMinHAMastersVersion } from 'selectors/featureSelectors';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
-import FeatureFlags from 'shared/FeatureFlags';
+import { validateLabelKey } from 'utils/labelUtils';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
@@ -93,11 +93,15 @@ export function getNumberOfNodePoolsNodes(nodePools = []) {
 }
 
 export function getMemoryTotalNodePools(nodePools = []) {
-  if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
+  const provider = guessProviderFromNodePools(nodePools);
+  if (provider === null) {
     return 0;
   }
 
-  const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+  const instanceTypes = getInstanceTypesForProvider(provider);
+  if (instanceTypes === null) {
+    return 0;
+  }
 
   // Here we are returning (and accumulating) for each node pool the number
   // of RAM each instance has multiplied by the number of nodes the node pool has.
@@ -106,23 +110,42 @@ export function getMemoryTotalNodePools(nodePools = []) {
   // of instances, and this method will have to be modified
   const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
     let instanceTypeRAM = 0;
-    if (awsInstanceTypes[nodePool.node_spec.aws.instance_type]) {
-      instanceTypeRAM =
-        awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+    let currInstanceType = '';
+
+    switch (provider) {
+      case Providers.AWS:
+        currInstanceType = nodePool.node_spec.aws.instance_type;
+        instanceTypeRAM = instanceTypes[currInstanceType]?.memory_size_gb ?? 0;
+
+        break;
+
+      case Providers.AZURE:
+        currInstanceType = nodePool.node_spec.azure.vm_size;
+        instanceTypeRAM = instanceTypes[currInstanceType]?.memoryInMb ?? 0;
+        // eslint-disable-next-line no-magic-numbers
+        instanceTypeRAM = (instanceTypeRAM / 1000).toFixed(1);
+
+        break;
     }
 
-    return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
+    instanceTypeRAM = instanceTypeRAM * nodePool.status.nodes_ready;
+
+    return accumulator + instanceTypeRAM;
   }, 0);
 
   return TotalRAM;
 }
 
 export function getCpusTotalNodePools(nodePools = []) {
-  if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
+  const provider = guessProviderFromNodePools(nodePools);
+  if (provider === null) {
     return 0;
   }
 
-  const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+  const instanceTypes = getInstanceTypesForProvider(provider);
+  if (instanceTypes === null) {
+    return 0;
+  }
 
   // Here we are returning (and accumulating) for each node pool the number
   // of CPUs each instance has multiplied by the number of nodes the node pool has.
@@ -131,12 +154,25 @@ export function getCpusTotalNodePools(nodePools = []) {
   // of instances, and this method will have to be modified
   const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
     let instanceTypeCPUs = 0;
-    if (awsInstanceTypes[nodePool.node_spec.aws.instance_type]) {
-      instanceTypeCPUs =
-        awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
+    let currInstanceType = '';
+
+    switch (provider) {
+      case Providers.AWS:
+        currInstanceType = nodePool.node_spec.aws.instance_type;
+        instanceTypeCPUs = instanceTypes[currInstanceType]?.cpu_cores ?? 0;
+
+        break;
+
+      case Providers.AZURE:
+        currInstanceType = nodePool.node_spec.azure.vm_size;
+        instanceTypeCPUs = instanceTypes[currInstanceType]?.numberOfCores ?? 0;
+
+        break;
     }
 
-    return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
+    instanceTypeCPUs = instanceTypeCPUs * nodePool.status.nodes_ready;
+
+    return accumulator + instanceTypeCPUs;
   }, 0);
 
   return TotalCPUs;
@@ -145,20 +181,29 @@ export function getCpusTotalNodePools(nodePools = []) {
 /**
  * This function takes a release version and provider and returns a
  * capabilities object with the features that this cluster supports.
- * @param releaseVersion {string} - The cluster's release version.
- * @param provider {"aws"|"azure"|"kvm"} - Possible service providers.
- * @returns {{supportsHAMasters: boolean, hasOptionalIngress: boolean}}
+ * @param state {IState} - The app's global state.
+ * @returns {function (string, string): {hasOptionalIngress: boolean, supportsHAMasters: boolean}}
  */
-export function computeCapabilities(releaseVersion, provider) {
+export const computeCapabilities = (state) => (releaseVersion, provider) => {
   let hasOptionalIngress = false;
   let supportsHAMasters = false;
+
+  const minHAMastersVersion = getMinHAMastersVersion(state);
 
   switch (provider) {
     case Providers.AWS:
       hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
-      supportsHAMasters =
-        FeatureFlags.FEATURE_HA_MASTERS &&
-        cmp(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
+      supportsHAMasters = cmp(releaseVersion, minHAMastersVersion) >= 0;
+
+      break;
+
+    case Providers.AZURE:
+      hasOptionalIngress = cmp(releaseVersion, '12.0.0') >= 0;
+
+      break;
+
+    case Providers.KVM:
+      hasOptionalIngress = cmp(releaseVersion, '12.2.0') >= 0;
 
       break;
   }
@@ -167,12 +212,6 @@ export function computeCapabilities(releaseVersion, provider) {
     hasOptionalIngress,
     supportsHAMasters,
   };
-}
-
-export const isClusterYoungerThanOneHour = (createDate) => {
-  const creationPlusOneHour = moment(createDate).add(1, 'hour');
-
-  return moment().utc().isBefore(creationPlusOneHour);
 };
 
 export const filterLabels = (labels) => {
@@ -183,9 +222,7 @@ export const filterLabels = (labels) => {
   const filteredLabels = {};
 
   for (const key of Object.keys(labels)) {
-    if (
-      key.includes(Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING) === false
-    ) {
+    if (validateLabelKey(key).isValid) {
       filteredLabels[key] = labels[key];
     }
   }
@@ -194,15 +231,22 @@ export const filterLabels = (labels) => {
 };
 
 /**
- * Check whether the given condition is a cluster's latest condition.
+ * Get a cluster's latest condition
  * @param cluster {Object} - The cluster object.
- * @param conditionToCheck {string} - The name of the condition to check for.
- * @returns {boolean}
+ * @returns {string | undefined}
  */
-export function hasClusterLatestCondition(cluster, conditionToCheck) {
-  if (!cluster.conditions || cluster.conditions.length === 0) return false;
+export function getClusterLatestCondition(cluster) {
+  // It's a V5 cluster.
+  if (cluster.conditions?.length > 0) {
+    return cluster.conditions[0].condition;
+  }
 
-  return cluster.conditions[0].condition === conditionToCheck;
+  // It's a V4 cluster.
+  if (cluster.status?.cluster.conditions?.length > 0) {
+    return cluster.status.cluster.conditions[0].type;
+  }
+
+  return undefined;
 }
 
 /**
@@ -211,11 +255,10 @@ export function hasClusterLatestCondition(cluster, conditionToCheck) {
  * @returns {boolean}
  */
 export function isClusterCreating(cluster) {
-  if (!cluster.conditions || cluster.conditions.length === 0) return true;
+  const latestCondition = getClusterLatestCondition(cluster);
+  if (!latestCondition) return true;
 
-  const conditionToCheck = 'Creating';
-
-  return hasClusterLatestCondition(cluster, conditionToCheck);
+  return latestCondition === 'Creating';
 }
 
 /**
@@ -224,9 +267,9 @@ export function isClusterCreating(cluster) {
  * @returns {boolean}
  */
 export function isClusterUpdating(cluster) {
-  const conditionToCheck = 'Updating';
+  const latestCondition = getClusterLatestCondition(cluster);
 
-  return hasClusterLatestCondition(cluster, conditionToCheck);
+  return latestCondition === 'Updating';
 }
 
 /**
@@ -235,7 +278,52 @@ export function isClusterUpdating(cluster) {
  * @returns {boolean}
  */
 export function isClusterDeleting(cluster) {
-  const conditionToCheck = 'Deleting';
+  const latestCondition = getClusterLatestCondition(cluster);
 
-  return hasClusterLatestCondition(cluster, conditionToCheck);
+  return latestCondition === 'Deleting';
+}
+
+/**
+ * Try to guess the current provider from a list of node pools.
+ * @param nodePools
+ * @return {string|null}
+ */
+export function guessProviderFromNodePools(nodePools) {
+  if (nodePools.length === 0) {
+    return null;
+  }
+
+  if (nodePools[0].node_spec.aws) {
+    return Providers.AWS;
+  } else if (nodePools[0].node_spec.azure) {
+    return Providers.AZURE;
+  }
+
+  return null;
+}
+
+/**
+ * Get instance types for an existing provider.
+ * @param provider
+ * @return {null|Record<string,any>}
+ */
+export function getInstanceTypesForProvider(provider) {
+  switch (provider) {
+    case Providers.AWS:
+      if (!window.config.awsCapabilitiesJSON) {
+        return null;
+      }
+
+      return JSON.parse(window.config.awsCapabilitiesJSON);
+
+    case Providers.AZURE:
+      if (!window.config.azureCapabilitiesJSON) {
+        return null;
+      }
+
+      return JSON.parse(window.config.azureCapabilitiesJSON);
+
+    default:
+      return null;
+  }
 }

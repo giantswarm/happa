@@ -4,12 +4,11 @@ import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
+import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
@@ -18,8 +17,8 @@ import {
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
-import { Constants, CSSBreakpoints } from 'shared/constants';
-import FeatureFlags from 'shared/FeatureFlags';
+import { CSSBreakpoints } from 'shared/constants';
+import * as Providers from 'shared/constants/providers';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -92,12 +91,12 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: 5 / span 5;
+    grid-column: ${({ compact }) => (compact ? '5 / span 2' : '5 / span 5')};
     font-size: 12px;
     position: relative;
     width: 100%;
     text-align: center;
-    transform: translateX(0.8vw);
+    transform: ${({ compact }) => !compact && 'translateX(0.8vw)'};
     span {
       display: inline-block;
       padding: 0 10px;
@@ -122,7 +121,7 @@ const GridRowNodePoolsHeaders = styled.div`
   margin-bottom: 0;
 `;
 
-const NodePoolsColumnHeader = styled.span`
+export const NodePoolsColumnHeader = styled.span`
   text-align: center;
   text-transform: uppercase;
 `;
@@ -172,9 +171,6 @@ export const AddNodePoolFlexColumnDiv = styled(FlexColumn)`
         margin-bottom: 7px;
         color: ${(props) => props.theme.colors.white1};
         font-weight: 400;
-      }
-      & > div:nth-of-type(2) {
-        display: none;
       }
     }
   }
@@ -391,7 +387,7 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <NodesRunning
               workerNodesRunning={numberOfNodes}
-              createDate={create_date}
+              isClusterCreating={isClusterCreating(cluster)}
               RAM={memory}
               CPUs={cores}
               nodePools={nodePools}
@@ -399,7 +395,7 @@ class V5ClusterDetailTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
 
-        {FeatureFlags.FEATURE_HA_MASTERS && master_nodes && (
+        {master_nodes && (
           <MasterNodesRow
             isHA={master_nodes.high_availability}
             availabilityZones={master_nodes.availability_zones}
@@ -409,10 +405,7 @@ class V5ClusterDetailTable extends React.Component {
             canBeConverted={canBeConvertedToHAMasters}
           />
         )}
-
-        {FeatureFlags.FEATURE_CLUSTER_LABELS_V0 && (
-          <LabelsRow labels={labels} clusterId={cluster.id} />
-        )}
+        <LabelsRow labels={labels} clusterId={cluster.id} />
         <KubernetesURIWrapper>
           <StyledURIBlock title='Kubernetes endpoint URI:'>
             {api_endpoint}
@@ -436,7 +429,7 @@ class V5ClusterDetailTable extends React.Component {
           <h2>Node Pools</h2>
           {!zeroNodePools && !loadingNodePools && (
             <>
-              <GridRowNodePoolsNodes>
+              <GridRowNodePoolsNodes compact={provider === Providers.AZURE}>
                 <div>
                   <span>NODES</span>
                 </div>
@@ -448,57 +441,7 @@ class V5ClusterDetailTable extends React.Component {
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='min-tooltip'>
-                      {Constants.MIN_NODES_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='max-tooltip'>
-                      {Constants.MAX_NODES_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='desired-tooltip'>
-                      {Constants.DESIRED_NODES_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='current-tooltip'>
-                      {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
-                </OverlayTrigger>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='spot-tooltip'>
-                      {Constants.SPOT_NODES_EXPLNANATION}
-                    </Tooltip>
-                  }
-                  placement='top'
-                >
-                  <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
-                </OverlayTrigger>
-
+                <V5ClusterDetailTableNodePoolScaling provider={provider} />
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
@@ -526,7 +469,7 @@ class V5ClusterDetailTable extends React.Component {
                         <NodePool
                           cluster={cluster}
                           nodePool={nodePool}
-                          provider={this.props.provider}
+                          provider={provider}
                         />
                       </GridRowNodePoolsItem>
                     </BaseTransition>
@@ -622,17 +565,13 @@ class V5ClusterDetailTable extends React.Component {
 
 V5ClusterDetailTable.propTypes = {
   accessCluster: PropTypes.func,
-  canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
-  lastUpdated: PropTypes.number,
   provider: PropTypes.string,
   region: PropTypes.string,
   release: PropTypes.object,
-  setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
-  workerNodesDesired: PropTypes.number,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingNodePools: PropTypes.bool,

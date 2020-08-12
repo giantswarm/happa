@@ -111,7 +111,6 @@ details view`, async () => {
   // eslint-disable-next-line no-magic-numbers
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
   getMockCall('/v4/clusters/');
-  getMockCall('/v4/releases/', releasesResponse);
   getMockCallTimes('/v4/releases/', releasesResponse, 2);
 
   const v4ClusterCreationResponse = {
@@ -257,13 +256,20 @@ it('it does not show disabled releases in release selection modal for regular us
 
   const table = container.querySelector('table');
 
+  let numActiveReleases = 0;
+
   for (const { version, active } of releasesResponse) {
     if (active === true) {
       expect(within(table).getByText(version)).toBeInTheDocument();
+      numActiveReleases++;
     } else {
       expect(queryByText(version)).not.toBeInTheDocument();
     }
   }
+
+  const tableRows = table.querySelectorAll('tbody tr');
+
+  expect(tableRows).toHaveLength(numActiveReleases);
 });
 
 it('it displays disabled releases in release selection modal for admin users', async () => {

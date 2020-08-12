@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
@@ -48,19 +46,6 @@ describe('Apps and App Catalog', () => {
         );
         getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
         getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-
-        nock('https://catalogshost')
-          .get('/giantswarm-incubator-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-        nock('https://catalogshost')
-          .get('/giantswarm-test-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-        nock('https://catalogshost')
-          .get('/helmstable/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-        nock('https://catalogshost')
-          .get('/giantswarm-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
       });
 
       it('renders all non internal app catalogs in the app catalogs overview for non admins', async () => {
@@ -97,10 +82,6 @@ describe('Apps and App Catalog', () => {
       });
 
       it('renders all app catalogs in the app catalogs overview for admins', async () => {
-        nock('https://catalogshost')
-          .get('/giantswarm-internal-catalog/index.yaml')
-          .reply(StatusCodes.Ok, catalogIndexResponse);
-
         const adminUserInStorage = {
           user:
             '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
@@ -358,6 +339,61 @@ describe('Apps and App Catalog', () => {
       await findByText(
         /these apps and services are preinstalled on your cluster and managed by Giant Swarm./i
       );
+    });
+
+    it('displays a placeholder when trying to view apps for a catalog, and loading them fails', async () => {
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      getMockCall('/v4/user/', userResponse);
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+      getMockCall(
+        `/v4/clusters/${V4_CLUSTER.id}/status/`,
+        v4AWSClusterStatusResponse
+      );
+      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+      getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+
+      nock('https://catalogshost')
+        .get('/giantswarm-incubator-catalog/index.yaml')
+        .reply(StatusCodes.InternalServerError, 'Cannot get catalog apps.');
+
+      const appCatalogListPath = RoutePath.createUsablePath(
+        AppCatalogRoutes.AppList,
+        { catalogName: 'giantswarm-incubator' }
+      );
+      renderRouteWithStore(appCatalogListPath);
+
+      const noAppsPlaceholder = await screen.findByText(
+        /there are no apps available in this catalog/i
+      );
+      expect(noAppsPlaceholder).toBeInTheDocument();
+    });
+
+    it('displays a placeholder when the app the user searched for cannot be found', async () => {
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      getMockCall('/v4/user/', userResponse);
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+      getMockCall(
+        `/v4/clusters/${V4_CLUSTER.id}/status/`,
+        v4AWSClusterStatusResponse
+      );
+      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+      getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+
+      nock('https://catalogshost')
+        .get('/giantswarm-incubator-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
+      const searchQuery = 'something-random';
+      const appCatalogListPath = RoutePath.createUsablePath(
+        `${AppCatalogRoutes.AppList}?q=${searchQuery}`,
+        { catalogName: 'giantswarm-incubator' }
+      );
+      renderRouteWithStore(appCatalogListPath);
+
+      const noAppsPlaceholder = await screen.findByText(
+        new RegExp(`no apps matched your search query: "${searchQuery}"`, 'i')
+      );
+      expect(noAppsPlaceholder).toBeInTheDocument();
     });
   });
 

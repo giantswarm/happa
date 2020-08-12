@@ -65,7 +65,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   }, [isUpdateReady, newVersion]);
 
   return (
-    <footer className='col-9' {...props}>
+    <footer {...props}>
       <FooterGroup>Happa</FooterGroup>
       <FooterGroup>
         <OverlayTrigger

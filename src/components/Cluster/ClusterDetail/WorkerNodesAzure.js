@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
-import { Code, FallbackSpan } from 'styles';
-import theme from 'styles/theme';
+import { FallbackSpan } from 'styles';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
+import InstanceType from 'UI/InstanceType';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 export const WrapperDiv = styled.div`
   font-size: 16px;
@@ -31,7 +30,7 @@ export const ScalingNodeCounter = styled(RefreshableLabel)`
 
 function WorkerNodesAzure({
   az,
-  createDate,
+  isClusterCreating,
   instanceType,
   nodes,
   showScalingModal,
@@ -54,9 +53,7 @@ function WorkerNodesAzure({
       </LineDiv>
       <LineDiv>
         <div>VM size</div>
-        <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
-          {instanceType && instanceType.name}
-        </Code>
+        <InstanceType>{instanceType?.name ?? 'n/a'}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>
@@ -64,7 +61,7 @@ function WorkerNodesAzure({
       <LineDiv>
         <div>Nodes</div>
         <ScalingNodeCounter value={nodeCount}>
-          {nodeCount === 0 && isClusterYoungerThanOneHour(createDate) ? (
+          {nodeCount === 0 && isClusterCreating ? (
             <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
           ) : (
             nodeCount
@@ -78,7 +75,7 @@ function WorkerNodesAzure({
 
 WorkerNodesAzure.propTypes = {
   az: PropTypes.array,
-  createDate: PropTypes.string,
+  isClusterCreating: PropTypes.bool,
   instanceType: PropTypes.object,
   nodes: PropTypes.number,
   showScalingModal: PropTypes.func,

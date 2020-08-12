@@ -1,4 +1,3 @@
-import { installApp } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
 import RoutePath from 'lib/routePath';
@@ -7,6 +6,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { installApp } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -184,8 +184,8 @@ const InstallAppModal = (props) => {
 
     props
       .dispatch(
-        installApp(
-          {
+        installApp({
+          app: {
             name: name,
             catalog: props.app.catalog,
             chartName: props.app.name,
@@ -194,8 +194,8 @@ const InstallAppModal = (props) => {
             valuesYAML: valuesYAML,
             secretsYAML: secretsYAML,
           },
-          clusterID
-        )
+          clusterId: clusterID,
+        })
       )
       .then(() => {
         const installedApp = props.clusters.find((c) => c.id === clusterID);
@@ -227,14 +227,9 @@ const InstallAppModal = (props) => {
               <GenericModal
                 {...props}
                 footer={
-                  <>
-                    <Button bsStyle='primary' onClick={next}>
-                      Next
-                    </Button>
-                    <Button bsStyle='link' onClick={onClose}>
-                      Cancel
-                    </Button>
-                  </>
+                  <Button bsStyle='link' onClick={onClose}>
+                    Cancel
+                  </Button>
                 }
                 onClose={onClose}
                 title={`Install ${props.app.name}: Pick a cluster`}

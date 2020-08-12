@@ -34,15 +34,13 @@ const OuterNav = styled.nav`
 
   .main-nav {
     margin: auto;
+    padding: 0px 10px;
+    display: flex;
 
     @media only screen and (max-width: ${(props) =>
         props.theme.breakpoints.large}px) and (min-width: ${(props) =>
         props.theme.breakpoints.med}px) {
       min-width: 800px;
-    }
-
-    & > a {
-      float: left;
     }
 
     .nav-toggle {
@@ -58,10 +56,7 @@ const OuterNav = styled.nav`
   }
 
   .subactions {
-    float: right;
-    ${mq(CSSBreakpoints.Large)} {
-      margin-right: 10px;
-    }
+    margin-left: auto;
 
     a:last-child {
       margin-right: 0px;
@@ -74,9 +69,38 @@ const OuterNav = styled.nav`
     vertical-align: middle;
     position: relative;
     top: -1px;
-    ${mq(CSSBreakpoints.Medium)} {
-      margin-left: 10px;
-    }
+  }
+`;
+
+const BreadcrumbWrapper = styled.div`
+  line-height: 20px;
+  background-color: ${({ theme }) => theme.colors.shade3};
+  padding: 7px;
+  border-bottom: ${({ theme }) => theme.colors.shade6} 1px solid;
+  border-top: ${({ theme }) => theme.colors.shade1} 1px solid;
+  font-size: 11px;
+  clear: both;
+
+  ${mq(CSSBreakpoints.Large)} {
+    display: none;
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.darkBlueLighter6};
+  }
+
+  .breadcrumbs {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0px 10px;
+  }
+
+  .breadcrumbs__separator {
+    margin: 0px 4px;
+  }
+
+  .breadcrumbs__crumb--active {
+    color: ${({ theme }) => theme.colors.darkBlueLighter9};
   }
 `;
 
@@ -85,7 +109,7 @@ class Navigation extends React.Component {
   render() {
     return (
       <OuterNav>
-        <div className='main-nav col-9'>
+        <div className='main-nav'>
           <Link to={AppRoutes.Home}>
             <img className='logo' src={logo} />
           </Link>
@@ -105,11 +129,9 @@ class Navigation extends React.Component {
           </div>
         </div>
 
-        <div className='breadcrumb-wrapper'>
-          <div className='main col-9'>
-            <Breadcrumbs />
-          </div>
-        </div>
+        <BreadcrumbWrapper>
+          <Breadcrumbs />
+        </BreadcrumbWrapper>
       </OuterNav>
     );
   }

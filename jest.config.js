@@ -25,12 +25,11 @@ module.exports = {
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
-    FEATURE_CLUSTER_LABELS_V0: true,
-    FEATURE_HA_MASTERS: true,
     FEATURE_CP_ACCESS: false,
     // window.config object will now be available in all tests
     config: {
       apiEndpoint: 'http://1.2.3.4',
+      audience: 'http://1.2.3.4',
       passageEndpoint: 'http://5.6.7.8',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',

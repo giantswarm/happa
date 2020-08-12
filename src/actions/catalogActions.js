@@ -125,8 +125,6 @@ export function catalogLoadIndex(catalog) {
           catalogName: catalog.metadata.name,
           id: catalog.metadata.name,
         });
-
-        throw error;
       });
   };
 }

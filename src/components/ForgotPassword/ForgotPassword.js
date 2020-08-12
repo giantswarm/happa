@@ -116,7 +116,7 @@ class ForgotPassword extends React.Component {
 
   form = () => {
     return (
-      <div>
+      <>
         <h1>Forgot your password?</h1>
         <p>
           Enter the email you used to sign-up and submit the form. We&apos;ll
@@ -146,13 +146,13 @@ class ForgotPassword extends React.Component {
           </Button>
           <Link to={AppRoutes.Login}>Back to login form</Link>
         </form>
-      </div>
+      </>
     );
   };
 
   render() {
     return (
-      <div>
+      <>
         <div className='login_form--mask' />
 
         <SlideTransition in={true} appear={true} direction='down'>
@@ -160,20 +160,18 @@ class ForgotPassword extends React.Component {
             {this.state.tokenRequested ? this.success() : this.form()}
           </LoginFormContainer>
         </SlideTransition>
-      </div>
+      </>
     );
   }
 }
 
 ForgotPassword.propTypes = {
   actions: PropTypes.object,
-  dispatch: PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(forgotPasswordActions, dispatch),
-    dispatch: dispatch,
   };
 }
 

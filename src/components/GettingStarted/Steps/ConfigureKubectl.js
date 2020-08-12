@@ -33,7 +33,7 @@ class ConfigKubeCtl extends React.Component {
     switch (this.state.selectedPlatform) {
       case 'Windows':
         return (
-          <div>
+          <>
             <p>
               <a href='http://scoop.sh/' rel='noopener noreferrer'>
                 scoop
@@ -67,11 +67,11 @@ class ConfigKubeCtl extends React.Component {
               , unpack the binary and move it to a location covered by your{' '}
               <code>PATH</code> environment variable.
             </p>
-          </div>
+          </>
         );
       case 'Mac':
         return (
-          <div>
+          <>
             <p>
               Homebrew provides the most convenient way to install gsctl and
               keep it up to date. To install, use this command:
@@ -99,23 +99,21 @@ class ConfigKubeCtl extends React.Component {
               , unpack the binary and move it to a location covered by your{' '}
               <code>PATH</code> environment variable.
             </p>
-          </div>
+          </>
         );
       case 'Linux':
         return (
-          <div>
-            <p>
-              Download the latest release{' '}
-              <a
-                href='https://github.com/giantswarm/gsctl/releases'
-                rel='noopener noreferrer'
-              >
-                from GitHub
-              </a>
-              , unpack the binary and move it to a location covered by your{' '}
-              <code>PATH</code> environment variable.
-            </p>
-          </div>
+          <p>
+            Download the latest release{' '}
+            <a
+              href='https://github.com/giantswarm/gsctl/releases'
+              rel='noopener noreferrer'
+            >
+              from GitHub
+            </a>
+            , unpack the binary and move it to a location covered by your{' '}
+            <code>PATH</code> environment variable.
+          </p>
         );
       default:
         return <p>Shouldn&apos;t be here</p>;
@@ -159,7 +157,7 @@ class ConfigKubeCtl extends React.Component {
           pathname: clusterGuideConfigurationPath,
         }}
       >
-        <div className='centered col-9'>
+        <div className='centered'>
           <h1>
             Configure kubectl for cluster: {this.props.selectedCluster.name}{' '}
             <ClusterIDLabel clusterID={this.props.selectedCluster.id} />
@@ -344,9 +342,6 @@ class ConfigKubeCtl extends React.Component {
 
 ConfigKubeCtl.propTypes = {
   actions: PropTypes.object,
-  clusters: PropTypes.object,
-  dispatch: PropTypes.func,
-  goToSlide: PropTypes.func,
   match: PropTypes.object,
   selectedCluster: PropTypes.object,
   user: PropTypes.object,
@@ -368,7 +363,6 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
   };
 }
 

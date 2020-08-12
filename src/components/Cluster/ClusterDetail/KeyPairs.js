@@ -22,6 +22,26 @@ const Disclaimer = styled.p`
   line-height: 1.2;
 `;
 
+const Wrapper = styled.div`
+  .loader {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 25px;
+  }
+
+  .react-bootstrap-table table {
+    table-layout: auto;
+  }
+
+  .certificate-orgs-column {
+    max-width: 350px;
+    white-space: wrap;
+    display: table-cell;
+    overflow-wrap: normal;
+    word-break: break-all;
+  }
+`;
+
 class KeyPairs extends React.Component {
   static createdCellFormatter(_cell, row) {
     return <small>{relativeDate(row.create_date)}</small>;
@@ -171,78 +191,64 @@ class KeyPairs extends React.Component {
 
   render() {
     return (
-      <div className='row cluster_key_pairs col-12'>
-        <div className='row'>
-          <Disclaimer>
-            Key pairs consist of an RSA private key and certificate, signed by
-            the certificate authority (CA) belonging to this cluster. They are
-            used for access to the cluster via the Kubernetes API.
-          </Disclaimer>
-        </div>
+      <Wrapper>
+        <Disclaimer>
+          Key pairs consist of an RSA private key and certificate, signed by the
+          certificate authority (CA) belonging to this cluster. They are used
+          for access to the cluster via the Kubernetes API.
+        </Disclaimer>
 
-        <div className='row'>
-          <div className='col-12'>
-            {(() => {
-              if (this.props.loadingKeyPairs) {
-                return (
-                  <p>
-                    <img className='loader' src={spinner} />
-                  </p>
-                );
-              } else if (!this.props.cluster.keyPairs) {
-                return (
-                  <div>
-                    <div className='flash-messages--flash-message flash-messages--danger'>
-                      Something went wrong while trying to load the list of key
-                      pairs.
-                    </div>
-                    <Button onClick={this.loadKeyPairs}>
-                      Try loading key pairs again.
-                    </Button>
-                  </div>
-                );
-              } else if (
-                this.props.cluster.keyPairs &&
-                this.props.cluster.keyPairs.length === 0
-              ) {
-                return (
-                  <div>
-                    <p>
-                      No key pairs yet. Why don&apos;t you create your first?
-                    </p>
-                  </div>
-                );
-              }
-
-              return (
-                <div>
-                  <BootstrapTable
-                    bordered={false}
-                    columns={this.getKeypairsTableColumnsConfig()}
-                    data={this.props.cluster.keyPairs}
-                    defaultSortDirection='asc'
-                    defaultSorted={[
-                      { dataField: 'create_date', order: 'desc' },
-                    ]}
-                    keyField='id'
-                  />
+        {(() => {
+          if (this.props.loadingKeyPairs) {
+            return (
+              <p>
+                <img className='loader' src={spinner} />
+              </p>
+            );
+          } else if (!this.props.cluster.keyPairs) {
+            return (
+              <>
+                <div className='flash-messages--flash-message flash-messages--danger'>
+                  Something went wrong while trying to load the list of key
+                  pairs.
                 </div>
-              );
-            })()}
-            <KeypairCreateModal
-              actions={this.props.actions}
-              cluster={this.props.cluster}
-              provider={this.props.provider}
-              user={this.props.user}
+                <Button onClick={this.loadKeyPairs}>
+                  Try loading key pairs again.
+                </Button>
+              </>
+            );
+          } else if (
+            this.props.cluster.keyPairs &&
+            this.props.cluster.keyPairs.length === 0
+          ) {
+            return (
+              <p>No key pairs yet. Why don&apos;t you create your first?</p>
+            );
+          }
+
+          return (
+            <BootstrapTable
+              bordered={false}
+              columns={this.getKeypairsTableColumnsConfig()}
+              data={this.props.cluster.keyPairs}
+              defaultSortDirection='asc'
+              defaultSorted={[{ dataField: 'create_date', order: 'desc' }]}
+              keyField='id'
             />
-            <KeyPairDetailsModal
-              keyPair={this.state.keyPairDetailsModal.keyPair}
-              onClose={this.hideKeyPairModal}
-              visible={this.state.keyPairDetailsModal.visible}
-            />
-          </div>
-        </div>
-      </div>
+          );
+        })()}
+        <KeypairCreateModal
+          actions={this.props.actions}
+          cluster={this.props.cluster}
+          provider={this.props.provider}
+          user={this.props.user}
+        />
+        <KeyPairDetailsModal
+          keyPair={this.state.keyPairDetailsModal.keyPair}
+          onClose={this.hideKeyPairModal}
+          visible={this.state.keyPairDetailsModal.visible}
+        />
+      </Wrapper>
     );
   }
 }
@@ -252,7 +258,6 @@ KeyPairs.propTypes = {
   actions: PropTypes.object,
   provider: PropTypes.string,
   cluster: PropTypes.object,
-  dispatch: PropTypes.func,
   loadingKeyPairs: PropTypes.bool,
 };
 
@@ -271,7 +276,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
   };
 }
 

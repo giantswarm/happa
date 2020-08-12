@@ -15,8 +15,8 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     adaptWidthToElement: null,
   };
 
-  static setWidth(props) {
-    const { adaptWidthToElement, width } = props;
+  static setWidth(params) {
+    const { adaptWidthToElement, width } = params;
     let widthToSet = 0;
 
     if (adaptWidthToElement === null) {
@@ -76,10 +76,11 @@ class VirtualizedScrollableGrid extends React.PureComponent {
   }
 
   updateResponsiveFeatures = debounce(() => {
+    const { theme, columnCount, adaptWidthToElement, width } = this.props;
     const newState = Object.assign(
       {},
-      VirtualizedScrollableGrid.setColumnCount(this.props),
-      VirtualizedScrollableGrid.setWidth(this.props)
+      VirtualizedScrollableGrid.setColumnCount({ theme, columnCount }),
+      VirtualizedScrollableGrid.setWidth({ adaptWidthToElement, width })
     );
 
     if (this.componentMounted) {
@@ -87,8 +88,8 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     }
   }, RESPONSIVE_FEATURES_UPDATE_TIME);
 
-  static setColumnCount(props) {
-    const { theme, columnCount } = props;
+  static setColumnCount(params) {
+    const { theme, columnCount } = params;
 
     let columnCountToSet = MIN_COLUMN_COUNT;
 

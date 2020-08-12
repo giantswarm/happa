@@ -47,7 +47,7 @@ const StyleGuide = () => {
   };
 
   return (
-    <Wrapper className='main col-9'>
+    <Wrapper className='main'>
       <h1>Style Guide</h1>
 
       <hr />

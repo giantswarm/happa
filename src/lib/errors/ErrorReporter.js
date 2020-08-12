@@ -32,7 +32,6 @@ export class ErrorReporter {
    * @param {string | Object} error - The error to report
    */
   notify(error) {
-    // eslint-disable-next-line no-unused-expressions
     this.notifier?.notify(error);
   }
 }

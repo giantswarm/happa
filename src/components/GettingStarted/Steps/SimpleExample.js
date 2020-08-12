@@ -1,4 +1,3 @@
-import * as clusterActions from 'actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import RoutePath from 'lib/routePath';
@@ -7,7 +6,6 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import { CodeBlock, Output, Prompt } from '../CodeBlock';
@@ -97,7 +95,7 @@ class SimpleExample extends React.Component {
           pathname: clusterGuideExamplePath,
         }}
       >
-        <div className='centered col-9'>
+        <>
           <h1>Let&apos;s create an example application</h1>
           <p>
             To check if every part of your cluster is running as it should,
@@ -320,17 +318,14 @@ class SimpleExample extends React.Component {
               </button>
             </Link>
           </div>
-        </div>
+        </>
       </Breadcrumb>
     );
   }
 }
 
 SimpleExample.propTypes = {
-  actions: PropTypes.object,
   cluster: PropTypes.object,
-  dispatch: PropTypes.func,
-  goToSlide: PropTypes.func,
   match: PropTypes.object,
   steps: PropTypes.array,
   stepIndex: PropTypes.number,
@@ -345,11 +340,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SimpleExample);
+export default connect(mapStateToProps)(SimpleExample);

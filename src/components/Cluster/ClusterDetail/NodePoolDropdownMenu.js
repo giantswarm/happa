@@ -1,10 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import DropdownMenu from 'UI/DropdownMenu';
+import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
 
-const NodePoolDropdownMenu = (props) => {
+const NodePoolDropdownMenu = ({
+  triggerEditName,
+  deleteNodePool,
+  nodePool,
+  showNodePoolScalingModal,
+  provider,
+  ...rest
+}) => {
   return (
     <DropdownMenu
+      {...rest}
       render={({
         isOpen,
         onClickHandler,
@@ -13,52 +21,51 @@ const NodePoolDropdownMenu = (props) => {
         onKeyDownHandler,
       }) => (
         <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
-          <button
+          <DropdownTrigger
             aria-expanded={isOpen}
             aria-haspopup='true'
-            className='dropdown-trigger'
             onClick={onClickHandler}
             onKeyDown={onKeyDownHandler}
             type='button'
           >
             •••
-          </button>
+          </DropdownTrigger>
           {isOpen && (
-            <ul aria-labelledby='node_pools_dropdown' role='menu'>
+            <List aria-labelledby='node_pools_dropdown' role='menu'>
               <li>
-                <a
+                <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.triggerEditName();
+                    triggerEditName();
                   }}
                 >
                   Rename
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.showNodePoolScalingModal(props.nodePool);
+                    showNodePoolScalingModal(nodePool);
                   }}
                 >
                   Edit scaling limits
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href='#'
                   onClick={(e) => {
                     e.preventDefault();
-                    props.deleteNodePool();
+                    deleteNodePool();
                   }}
                 >
                   Delete
-                </a>
+                </Link>
               </li>
-            </ul>
+            </List>
           )}
         </div>
       )}
@@ -68,6 +75,7 @@ const NodePoolDropdownMenu = (props) => {
 
 NodePoolDropdownMenu.propTypes = {
   clusterId: PropTypes.string,
+  provider: PropTypes.string,
   nodePool: PropTypes.object,
   deleteNodePool: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,

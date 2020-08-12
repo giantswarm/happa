@@ -56,9 +56,7 @@ const V4AvailabilityZonesSelector = ({
             Selection of availability zones is only possible for release version{' '}
             {requiredReleaseVersion} or greater.
           </PickerLabel>
-          <div className='col-3'>
-            <NumberPicker readOnly={true} value={1} />
-          </div>
+          <NumberPicker readOnly={true} value={1} />
         </>
       )}
     </Section>

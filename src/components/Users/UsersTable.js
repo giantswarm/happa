@@ -20,10 +20,10 @@ const getStatusCellFormatter = (status, row) => {
   const subText = invitedBy ? `Invited by ${invitedBy}` : null;
 
   return (
-    <div>
+    <>
       <small>{formatStatus(status)}</small>
       <small>{subText}</small>
-    </div>
+    </>
   );
 };
 

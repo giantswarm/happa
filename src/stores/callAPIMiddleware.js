@@ -1,6 +1,6 @@
 export function callAPIMiddleware({ dispatch, getState }) {
   return (next) => (action) => {
-    const { types, doPerform } = action;
+    const { types, doPerform, throwOnError } = action;
 
     if (!types) {
       // Normal action: pass it on
@@ -19,18 +19,30 @@ export function callAPIMiddleware({ dispatch, getState }) {
       type: types.request,
     });
 
-    return doPerform(getState())
+    return doPerform(getState(), dispatch)
       .then((response) => {
         dispatch({
           response,
           type: types.success,
         });
+
+        return response;
       })
       .catch((error) => {
         dispatch({
-          error,
+          error: error.message,
           type: types.error,
         });
+
+        if (throwOnError) {
+          throw error;
+        }
+
+        // TODO: Remove this, this supports a pattern we want to factor out
+        // eventually.
+        return {
+          error: error.message,
+        };
       });
   };
 }

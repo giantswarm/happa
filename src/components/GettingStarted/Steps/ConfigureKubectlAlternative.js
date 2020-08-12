@@ -219,7 +219,7 @@ class ConfigKubeCtl extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <p>
           Generate and download a cluster configuration file for{' '}
           <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster,
@@ -315,7 +315,7 @@ class ConfigKubeCtl extends React.Component {
             can save your future self some time by creating an alias.
           </p>
         </div>
-      </div>
+      </>
     );
   }
 }
@@ -323,14 +323,12 @@ class ConfigKubeCtl extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
   };
 }
 
 ConfigKubeCtl.propTypes = {
   user: PropTypes.object,
   cluster: PropTypes.object,
-  dispatch: PropTypes.func,
   actions: PropTypes.object,
 };
 

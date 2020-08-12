@@ -9,7 +9,6 @@ import {
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { ErrorReporter } from 'lib/errors';
@@ -22,16 +21,20 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
+import { getUserIsAdmin } from 'selectors/authSelectors';
 import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
+  selectTargetRelease,
 } from 'selectors/clusterSelectors';
+import { getReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
+import Section from 'UI/Section';
 import ViewAndEditName from 'UI/ViewEditName';
 import { memoize } from 'underscore';
 import { getNumberOfNodes } from 'utils/clusterUtils';
@@ -44,20 +47,27 @@ import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
 
-const WrapperDiv = styled.div`
-  h2 {
-    font-weight: 400;
-    font-size: 22px;
-    margin: 0 0 15px;
-  }
-`;
-
 const Disclaimer = styled.p`
   margin: 0 0 20px;
   line-height: 1.2;
 `;
 
 class ClusterDetailView extends React.Component {
+  state = {
+    targetRelease: null,
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      prevState.targetRelease === null &&
+      nextProps.defaultTargetRelease !== null
+    ) {
+      return { targetRelease: nextProps.defaultTargetRelease };
+    }
+
+    return null;
+  }
+
   loadDataInterval = null;
 
   componentDidMount() {
@@ -82,14 +92,15 @@ class ClusterDetailView extends React.Component {
 
   // It is not in user orgs or it has been deleted.
   doesNotExist = (isDeleted) => {
-    const { clusterId, dispatch } = this.props;
+    const { cluster, dispatch } = this.props;
+    const clusterID = cluster?.id ?? '';
 
     const text = isDeleted
       ? 'This cluster has been deleted'
       : 'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.';
 
     new FlashMessage(
-      `Cluster <code>${clusterId}</code> not found`,
+      `Cluster <code>${clusterID}</code> not found`,
       messageType.ERROR,
       messageTTL.FOREVER,
       text
@@ -101,19 +112,21 @@ class ClusterDetailView extends React.Component {
   };
 
   loadDetails = () => {
-    const { cluster, dispatch, organizationId } = this.props;
+    const { cluster, dispatch } = this.props;
 
     if (typeof cluster === 'undefined' || cluster.delete_date) {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
-    dispatch(
-      batchedClusterDetailView(
-        organizationId,
-        cluster.id,
-        this.props.isV5Cluster
-      )
-    );
+    if (cluster) {
+      dispatch(
+        batchedClusterDetailView(
+          cluster.owner,
+          cluster.id,
+          this.props.isV5Cluster
+        )
+      );
+    }
   };
 
   refreshClusterData = () => {
@@ -123,7 +136,9 @@ class ClusterDetailView extends React.Component {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
-    dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+    if (cluster) {
+      dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+    }
   };
 
   handleVisibilityChange = () => {
@@ -232,6 +247,17 @@ class ClusterDetailView extends React.Component {
     return result;
   });
 
+  setTargetRelease = (newReleaseVersion) => {
+    const newRelease = this.props.releases[newReleaseVersion];
+    if (newRelease) {
+      this.setState({ targetRelease: newRelease });
+    }
+  };
+
+  cancelSetTargetRelease = () => {
+    this.setTargetRelease(this.props.defaultTargetRelease);
+  };
+
   render() {
     const {
       canClusterUpgrade,
@@ -240,17 +266,19 @@ class ClusterDetailView extends React.Component {
       dispatch,
       isV5Cluster,
       provider,
-      release,
-      targetRelease,
+      releases,
       region,
       genericLoadingCluster,
       loadingNodePools,
       loadingCluster,
+      isAdmin,
     } = this.props;
 
     const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
 
-    const { id, owner } = cluster;
+    if (!cluster) return null;
+    const { id, owner, release_version } = cluster;
+    const release = releases[release_version] ?? null;
     const tabsPaths = this.getPathsForTabs(id, owner);
 
     return (
@@ -259,105 +287,90 @@ class ClusterDetailView extends React.Component {
 
         {!loading && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
-            <WrapperDiv
-              className='cluster-details'
-              data-testid='cluster-details-view'
-            >
-              <div className='row' style={{ marginBottom: '30px' }}>
-                <div className='col-sm-12 col-md-7 col-9'>
-                  <h1 style={{ marginLeft: '-10px' }}>
-                    <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
-                    <ViewAndEditName
-                      value={cluster.name}
-                      typeLabel='cluster'
-                      onSave={this.editClusterName}
-                    />{' '}
-                  </h1>
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-12'>
-                  <Tabs useRoutes={true}>
-                    <Tab eventKey={tabsPaths.Home} title='General'>
-                      {isV5Cluster ? (
-                        <V5ClusterDetailTable
-                          accessCluster={this.accessCluster}
-                          canClusterUpgrade={canClusterUpgrade}
-                          cluster={cluster}
-                          credentials={credentials}
-                          provider={provider}
-                          release={release}
-                          region={region}
-                          showUpgradeModal={this.showUpgradeModal}
-                          workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        />
-                      ) : (
-                        <V4ClusterDetailTable
-                          accessCluster={this.accessCluster}
-                          canClusterUpgrade={canClusterUpgrade}
-                          cluster={cluster}
-                          credentials={credentials}
-                          provider={provider}
-                          release={release}
-                          region={region}
-                          showScalingModal={this.showScalingModal}
-                          showUpgradeModal={this.showUpgradeModal}
-                          workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        />
-                      )}
+            <div data-testid='cluster-details-view'>
+              <h1>
+                <ClusterIDLabel clusterID={id} copyEnabled />{' '}
+                <ViewAndEditName
+                  value={cluster.name}
+                  typeLabel='cluster'
+                  onSave={this.editClusterName}
+                />{' '}
+              </h1>
+              <Tabs useRoutes={true}>
+                <Tab eventKey={tabsPaths.Home} title='General'>
+                  {isV5Cluster ? (
+                    <V5ClusterDetailTable
+                      accessCluster={this.accessCluster}
+                      canClusterUpgrade={canClusterUpgrade}
+                      cluster={cluster}
+                      credentials={credentials}
+                      provider={provider}
+                      release={release}
+                      region={region}
+                      showUpgradeModal={this.showUpgradeModal}
+                      workerNodesDesired={this.getDesiredNumberOfNodes()}
+                    />
+                  ) : (
+                    <V4ClusterDetailTable
+                      accessCluster={this.accessCluster}
+                      canClusterUpgrade={canClusterUpgrade}
+                      cluster={cluster}
+                      credentials={credentials}
+                      provider={provider}
+                      release={release}
+                      region={region}
+                      showScalingModal={this.showScalingModal}
+                      showUpgradeModal={this.showUpgradeModal}
+                      workerNodesDesired={this.getDesiredNumberOfNodes()}
+                    />
+                  )}
 
-                      <div className='row section cluster_delete col-12'>
-                        <div className='row'>
-                          <h3 className='table-label'>Delete This Cluster</h3>
-                        </div>
-                        <div className='row'>
-                          <Disclaimer>
-                            All workloads on this cluster will be terminated.
-                            Data stored on the worker nodes will be lost. There
-                            is no way to undo this action.
-                          </Disclaimer>
-                          <Button
-                            bsStyle='danger'
-                            onClick={this.showDeleteClusterModal.bind(
-                              this,
-                              cluster
-                            )}
-                          >
-                            <i className='fa fa-delete' /> Delete Cluster
-                          </Button>
-                        </div>
-                      </div>
-                    </Tab>
-                    <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
-                      <LoadingOverlay loading={this.props.loadingCluster}>
-                        <KeyPairs cluster={cluster} />
-                      </LoadingOverlay>
-                    </Tab>
-                    <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                      <ClusterApps
-                        clusterId={this.props.clusterId}
-                        dispatch={dispatch}
-                        installedApps={cluster.apps}
-                        release={release}
-                        showInstalledAppsBlock={
-                          Object.keys(this.props.catalogs.items).length > 0
-                        }
-                        hasOptionalIngress={
-                          cluster.capabilities.hasOptionalIngress
-                        }
-                      />
-                    </Tab>
-                    <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                      <Ingress
-                        provider={provider}
-                        k8sEndpoint={cluster.api_endpoint}
-                        kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                        kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
-                      />
-                    </Tab>
-                  </Tabs>
-                </div>
-              </div>
+                  <Section title='Delete This Cluster' flat>
+                    <>
+                      <Disclaimer>
+                        All workloads on this cluster will be terminated. Data
+                        stored on the worker nodes will be lost. There is no way
+                        to undo this action.
+                      </Disclaimer>
+                      <Button
+                        bsStyle='danger'
+                        onClick={this.showDeleteClusterModal.bind(
+                          this,
+                          cluster
+                        )}
+                      >
+                        <i className='fa fa-delete' /> Delete Cluster
+                      </Button>
+                    </>
+                  </Section>
+                </Tab>
+                <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
+                  <LoadingOverlay loading={this.props.loadingCluster}>
+                    <KeyPairs cluster={cluster} />
+                  </LoadingOverlay>
+                </Tab>
+                <Tab eventKey={tabsPaths.Apps} title='Apps'>
+                  <ClusterApps
+                    clusterId={id}
+                    dispatch={dispatch}
+                    installedApps={cluster.apps}
+                    release={release}
+                    showInstalledAppsBlock={
+                      Object.keys(this.props.catalogs.items).length > 0
+                    }
+                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                  />
+                </Tab>
+                <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
+                  <Ingress
+                    cluster={cluster}
+                    provider={provider}
+                    k8sEndpoint={cluster.api_endpoint}
+                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                  />
+                </Tab>
+              </Tabs>
               {!isV5Cluster && (
                 <ScaleClusterModal
                   cluster={cluster}
@@ -375,10 +388,14 @@ class ClusterDetailView extends React.Component {
                 ref={(s) => {
                   this.upgradeClusterModal = s;
                 }}
+                provider={provider}
                 release={release}
-                targetRelease={targetRelease}
+                targetRelease={this.state.targetRelease}
+                setTargetRelease={this.setTargetRelease}
+                cancelSetTargetRelease={this.cancelSetTargetRelease}
+                isAdmin={isAdmin}
               />
-            </WrapperDiv>
+            </div>
           </DocumentTitle>
         )}
       </>
@@ -391,31 +408,42 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  cluster: PropTypes.object,
+
   canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
-  cluster: PropTypes.object,
-  clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
-  nodePools: PropTypes.object,
-  organizationId: PropTypes.string,
-  releaseActions: PropTypes.object,
-  release: PropTypes.object,
+  releases: PropTypes.object,
+  defaultTargetRelease: PropTypes.object,
   provider: PropTypes.string,
   region: PropTypes.string,
   setInterval: PropTypes.func,
-  targetRelease: PropTypes.object,
-  user: PropTypes.object,
   loadingCluster: PropTypes.bool,
   genericLoadingCluster: PropTypes.bool,
   loadingNodePools: PropTypes.bool,
+  isAdmin: PropTypes.bool,
 };
 
 function mapStateToProps(state, props) {
+  const clusterID = props.cluster?.id;
+  const defaultTargetReleaseVersion = selectTargetRelease(state, props.cluster);
+
   return {
+    releases: getReleases(state),
+    defaultTargetRelease:
+      state.entities.releases.items[defaultTargetReleaseVersion] ?? null,
+    isV5Cluster: state.entities.clusters.v5Clusters.includes(clusterID),
+    credentials: state.entities.credentials,
+    catalogs: state.entities.catalogs,
+    nodePools: state.entities.nodePools.items,
+    provider: state.main.info.general.provider,
+    user: state.main.loggedInUser,
+    region: state.main.info.general.datacenter,
+    isAdmin: getUserIsAdmin(state),
     // We are using this genericLoadingCluster because we are setting
     // loadingFlags.CLUSTER_LOAD_DETAILS_REQUEST to true in Organizations/Detail
     // componentDidMount() just in case of accessing cluster details of a non
@@ -428,7 +456,7 @@ function mapStateToProps(state, props) {
     // This looks for this specific cluster to be loaded.
     loadingCluster: selectLoadingFlagByIdAndAction(
       state,
-      props.cluster.id,
+      props.cluster?.id,
       CLUSTER_LOAD_DETAILS_REQUEST
     ),
   };
@@ -437,7 +465,6 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
-    releaseActions: bindActionCreators(releaseActions, dispatch),
     nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };

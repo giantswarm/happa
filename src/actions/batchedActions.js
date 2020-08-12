@@ -1,18 +1,19 @@
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import { ErrorReporter } from 'lib/errors';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
-import { OrganizationsRoutes } from 'shared/constants/routes';
+import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
+import { loadReleases } from 'stores/releases/actions';
 
-import * as appActions from './appActions';
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
-import * as releaseActions from './releaseActions';
 import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
@@ -24,9 +25,22 @@ export const batchedLayout = () => async (dispatch) => {
     }
 
     await dispatch(userActions.getInfo());
+  } catch (err) {
+    new FlashMessage(
+      'Please log in again, as your previously saved credentials appear to be invalid.',
+      messageType.WARNING,
+      messageTTL.MEDIUM
+    );
+    dispatch(push(AppRoutes.Login));
+    ErrorReporter.getInstance().notify(err);
+
+    return;
+  }
+
+  try {
     await dispatch(organizationActions.organizationsLoad());
     dispatch(listCatalogs());
-    dispatch(releaseActions.loadReleases());
+    dispatch(loadReleases());
     await dispatch(
       clusterActions.clustersList({
         withLoadingFlags: true,
@@ -127,8 +141,8 @@ export const batchedClusterDetailView = (
           clusterId
         )
       ),
-      dispatch(releaseActions.loadReleases()),
-      dispatch(appActions.loadApps(clusterId)),
+      dispatch(loadReleases()),
+      dispatch(loadClusterApps({ clusterId: clusterId })),
       dispatch(clusterActions.clusterLoadKeyPairs(clusterId)),
     ]);
 
@@ -169,10 +183,11 @@ export const batchedRefreshClusterDetailView = (
         })
       );
     }
+
     // If cluster is an empty object, it means that it has been removed.
     // We don't want to load apps in this scenario.
-    if (!Object.keys(cluster).length === 0) {
-      dispatch(appActions.loadApps(clusterId));
+    if (Object.keys(cluster).length > 0) {
+      dispatch(loadClusterApps({ clusterId: clusterId }));
     }
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
@@ -181,15 +196,8 @@ export const batchedRefreshClusterDetailView = (
 
 export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
   try {
-    const organizationDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Detail,
-      {
-        orgId: cluster.owner,
-      }
-    );
-
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
-    dispatch(push(organizationDetailPath));
+    dispatch(push(AppRoutes.Home));
     dispatch(modalActions.modalHide());
   } catch (err) {
     ErrorReporter.getInstance().notify(err);

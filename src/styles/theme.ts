@@ -30,6 +30,8 @@ const theme: ITheme = {
     darkBlueLighter8: '#d0d8dd',
     darkBlueLighter9: '#e7ebee',
 
+    darkBlueMuted: '#020a29',
+
     shade1: '#1E4156',
     shade2: '#224A61',
     shade3: '#234D65',
@@ -57,6 +59,7 @@ const theme: ITheme = {
     loadingForeground: '#507184',
 
     foreground: '#375b70',
+    dropdownBackground: '#2a5874',
 
     redOld: '#f56262',
     greenNew: '#24A524',
@@ -66,12 +69,13 @@ const theme: ITheme = {
   breakpoints: {
     [CSSBreakpoints.Small]: 540,
     [CSSBreakpoints.Medium]: 825,
-    [CSSBreakpoints.Large]: 1200,
+    [CSSBreakpoints.Large]: 1024,
   },
   fontFamilies: {
     console: 'Inconsolata, monospace',
   },
   border: '1px solid #3A5F7B',
+  disabledOpacity: 0.7,
 };
 
 export default theme;

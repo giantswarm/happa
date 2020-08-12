@@ -22,6 +22,7 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import RefreshableLabel from 'UI/RefreshableLabel';
+import { isClusterCreating } from 'utils/clusterUtils';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
@@ -46,7 +47,7 @@ const WrapperStyles = (props) => css`
   display: flex;
   background-color: ${props.theme.colors.foreground};
   border-radius: 5px;
-  border: 0px;
+  border: 0;
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
@@ -144,6 +145,8 @@ function ClusterDashboardItem({
   // If the cluster has been deleted using gsctl, Happa doesn't know yet.
   if (!cluster) return null;
 
+  const isCreating = isClusterCreating(cluster);
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -216,7 +219,7 @@ function ClusterDashboardItem({
           </Link>
         </TitleWrapper>
 
-        <div>
+        <>
           <RefreshableLabel value={cluster.release_version}>
             <span>
               <i className='fa fa-version-tag' title='Release version' />{' '}
@@ -225,7 +228,7 @@ function ClusterDashboardItem({
           </RefreshableLabel>
           <Dot style={{ paddingLeft: 0 }} />
           Created {relativeDate(cluster.create_date)}
-        </div>
+        </>
 
         {/* Cluster resources */}
         <ErrorFallback error={nodePoolsLoadError}>
@@ -234,9 +237,13 @@ function ClusterDashboardItem({
               <ClusterDashboardResourcesV5
                 cluster={cluster}
                 nodePools={nodePools}
+                isClusterCreating={isCreating}
               />
             ) : (
-              <ClusterDashboardResourcesV4 cluster={cluster} />
+              <ClusterDashboardResourcesV4
+                cluster={cluster}
+                isClusterCreating={isCreating}
+              />
             )}
           </ClusterDetailsDiv>
         </ErrorFallback>
@@ -260,11 +267,7 @@ function ClusterDashboardItem({
 
 ClusterDashboardItem.propTypes = {
   cluster: PropTypes.object,
-  actions: PropTypes.object,
-  className: PropTypes.string,
-  children: PropTypes.array,
   selectedOrganization: PropTypes.string,
-  animate: PropTypes.bool,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,

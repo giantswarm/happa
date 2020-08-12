@@ -1,27 +1,35 @@
+import styled from '@emotion/styled';
 import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Button from 'UI/Button';
+import DetailItem from 'UI/DetailList';
 import Truncated from 'UI/Truncated';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import YAMLFileUpload from './YamlFileUpload';
 
+const Upper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+
+  > div {
+    width: 50%;
+  }
+`;
+
 const InitialPane = (props) => {
   return (
     <div data-testid='app-details-modal'>
-      <div className='appdetails--upperlabels'>
-        <div className='labelvaluepair'>
-          <div className='labelvaluepair--label'>CATALOG</div>
-          <div className='labelvaluepair--value code'>
-            <span>{props.app.spec.catalog}</span>
-          </div>
-        </div>
+      <Upper>
+        <DetailItem title='CATALOG' className='code'>
+          <span>{props.app.spec.catalog}</span>
+        </DetailItem>
 
-        <div className='labelvaluepair'>
-          <div className='labelvaluepair--label'>CHART VERSION</div>
+        <DetailItem title='CHART VERSION'>
           {/* If we have a catalog, but we're still loading the appVersions
               then show a loading spinner.
            */}
@@ -56,121 +64,95 @@ const InitialPane = (props) => {
               onChange={props.showEditChartVersionPane}
             />
           )}
-        </div>
+        </DetailItem>
 
-        <div className='labelvaluepair'>
-          <div className='labelvaluepair--label'>NAMESPACE</div>
-          <div className='labelvaluepair--value code'>
-            <span>{props.app.spec.namespace}</span>
-          </div>
-        </div>
+        <DetailItem title='NAMESPACE' className='code'>
+          <span>{props.app.spec.namespace}</span>
+        </DetailItem>
 
-        <div className='labelvaluepair'>
-          <div className='labelvaluepair--label'>APP VERSION</div>
-          <div className='labelvaluepair--value code'>
-            {props.app.status.app_version === '' ? (
-              <span>Information pending...</span>
-            ) : (
-              <Truncated as='span'>{props.app.status.app_version}</Truncated>
-            )}
-          </div>
-        </div>
-
-        <div className='labelvaluepair' />
-
-        <div className='labelvaluepair'>
-          <div className='labelvaluepair--label'>RELEASE STATUS</div>
-          <div className='labelvaluepair--value code'>
-            {props.app.status?.release?.status ? (
-              <Truncated as='span'>{props.app.status.release.status}</Truncated>
-            ) : (
-              <span>Information pending...</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className='labelvaluepair'>
-        <div className='labelvaluepair--label'>user level config values</div>
-
-        <div className='appdetails--userconfiguration'>
-          {props.app.spec.user_config.configmap.name !== '' ? (
-            <>
-              <span>User level config values have been set</span>
-
-              <div className='actions'>
-                <YAMLFileUpload
-                  buttonText='Replace values'
-                  onInputChange={props.dispatchUpdateAppConfig}
-                />
-
-                <Button
-                  bsStyle='danger'
-                  onClick={props.showDeleteAppConfigPane}
-                >
-                  <i className='fa fa-delete' /> Delete
-                </Button>
-              </div>
-            </>
+        <DetailItem title='APP VERSION' className='code'>
+          {props.app.status.app_version === '' ? (
+            <span>Information pending...</span>
           ) : (
-            <>
-              <span>No user level config values</span>
-
-              <div className='actions'>
-                <YAMLFileUpload
-                  buttonText='Upload user level config values'
-                  onInputChange={props.dispatchCreateAppConfig}
-                />
-              </div>
-            </>
+            <Truncated as='span'>{props.app.status.app_version}</Truncated>
           )}
-        </div>
-      </div>
+        </DetailItem>
 
-      <div className='labelvaluepair'>
-        <div className='labelvaluepair--label'>user level secret values</div>
-
-        <div className='appdetails--userconfiguration'>
-          {props.app.spec.user_config.secret.name !== '' ? (
-            <>
-              <span>User level secret values have been set</span>
-
-              <div className='actions'>
-                <YAMLFileUpload
-                  buttonText='Replace user level secret values'
-                  onInputChange={props.dispatchUpdateAppSecret}
-                />
-
-                <Button
-                  bsStyle='danger'
-                  onClick={props.showDeleteAppSecretPane}
-                >
-                  <i className='fa fa-delete' /> Delete
-                </Button>
-              </div>
-            </>
+        <DetailItem title='RELEASE STATUS' className='code'>
+          {props.app.status?.release?.status ? (
+            <span>{props.app.status.release.status}</span>
           ) : (
-            <>
-              <span>No user level secret values</span>
-
-              <div className='actions'>
-                <YAMLFileUpload
-                  buttonText='Upload user level secret values'
-                  onInputChange={props.dispatchCreateAppSecret}
-                />
-              </div>
-            </>
+            <span>Information pending...</span>
           )}
-        </div>
-      </div>
+        </DetailItem>
+      </Upper>
 
-      <div className='labelvaluepair'>
-        <div className='labelvaluepair--label delete-app'>Delete This App</div>
+      <DetailItem title='user level config values' className='well'>
+        {props.app.spec.user_config.configmap.name !== '' ? (
+          <>
+            <span>User level config values have been set</span>
+
+            <div className='actions'>
+              <YAMLFileUpload
+                buttonText='Replace values'
+                onInputChange={props.dispatchUpdateAppConfig}
+              />
+
+              <Button bsStyle='danger' onClick={props.showDeleteAppConfigPane}>
+                <i className='fa fa-delete' /> Delete
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <span>No user level config values</span>
+
+            <div className='actions'>
+              <YAMLFileUpload
+                buttonText='Upload user level config values'
+                onInputChange={props.dispatchCreateAppConfig}
+              />
+            </div>
+          </>
+        )}
+      </DetailItem>
+
+      <DetailItem title='user level secret values' className='well'>
+        {props.app.spec.user_config.secret.name !== '' ? (
+          <>
+            <span>User level secret values have been set</span>
+
+            <div className='actions'>
+              <YAMLFileUpload
+                buttonText='Replace user level secret values'
+                onInputChange={props.dispatchUpdateAppSecret}
+              />
+
+              <Button bsStyle='danger' onClick={props.showDeleteAppSecretPane}>
+                <i className='fa fa-delete' /> Delete
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <span>No user level secret values</span>
+
+            <div className='actions'>
+              <YAMLFileUpload
+                buttonText='Upload user level secret values'
+                onInputChange={props.dispatchCreateAppSecret}
+              />
+            </div>
+          </>
+        )}
+      </DetailItem>
+
+      <DetailItem title='Delete This App'>
         <Button bsStyle='danger' onClick={props.showDeleteAppPane}>
           <i className='fa fa-delete' />
           Delete App
         </Button>
-      </div>
+      </DetailItem>
     </div>
   );
 };

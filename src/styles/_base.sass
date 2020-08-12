@@ -37,19 +37,30 @@ html
 	display: flex
 	flex-direction: column
 	min-height: 100vh
-	@media only screen and (max-width: $breakpoint-med)
-		padding: 0px 10px
+	justify-content: center
+	max-width: 1200px
+	margin: auto
+	padding: 0px 10px
 
 main
 	flex: 1 0 auto
 	padding-top: 120px
-	@media only screen and (max-width: $breakpoint-large)
+
+	// When the breadcrumbs disapear, move the rest of the site "UP"
+	@media only screen and (max-width: 1024px)
 		padding-top: 68px
 
+.main-nav
+	max-width: 1200px
+
+.main
+	max-width: 1200px
+	margin: auto
+	position: relative
+	z-index: 0
 
 footer
 	flex-shrink: 0
-	margin: auto
 	font-size: 12px
 	color: #8FBCD6
 	padding: 30px 0px 15px 0px
@@ -83,14 +94,6 @@ p
 p, small, ul
 .centered
 	margin: auto
-
-.main
-	margin: auto
-	position: relative
-	z-index: 0
-
-	@media only screen and (max-width: $breakpoint-large) and (min-width: $breakpoint-med)
-		min-width: 800px
 
 a
 	color: #f7f7f7

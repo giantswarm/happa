@@ -1,20 +1,20 @@
-import { RELEASES_LOAD_REQUEST } from 'actions/actionTypes';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import useValidatingInternalValue from 'hooks/useValidatingInternalValue';
 import { hasAppropriateLength } from 'lib/helpers';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
+import { RouteComponentProps } from 'react-router-dom';
 import {
   getFirstNodePoolsRelease,
   getProvider,
 } from 'selectors/mainInfoSelectors';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Headline from 'UI/ClusterCreation/Headline';
 import NameInput from 'UI/ClusterCreation/NameInput';
 import Section from 'UI/ClusterCreation/Section';
@@ -41,26 +41,14 @@ const clusterNameLengthValidator: IValidationFunction = (value) => {
   };
 };
 
-interface INewClusterWrapper {
-  activeSortedReleases: string[];
-  breadcrumbPathname: string;
-  releases: IReleases;
-  selectableReleases: IRelease[];
-  selectedOrganization: string;
-}
+interface INewClusterWrapperProps extends RouteComponentProps<{}> {}
 
-const NewClusterWrapper: FC<INewClusterWrapper> = ({
-  activeSortedReleases,
-  breadcrumbPathname,
-  releases,
-  selectableReleases,
-  selectedOrganization,
+const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
+  location,
+  match,
 }) => {
   const provider = useSelector(getProvider);
   const firstNodePoolsRelease = useSelector(getFirstNodePoolsRelease);
-  const releasesLoadError = useSelector((state) =>
-    selectErrorByAction(state, RELEASES_LOAD_REQUEST)
-  );
 
   const [
     {
@@ -70,27 +58,37 @@ const NewClusterWrapper: FC<INewClusterWrapper> = ({
     },
     setClusterName,
   ] = useValidatingInternalValue('Unnamed cluster', clusterNameLengthValidator);
-  const [selectedRelease, setSelectedRelease] = useState(
-    activeSortedReleases[0]
-  );
+  const [selectedRelease, setSelectedRelease] = useState('');
+  const makeCapabilities = useSelector(computeCapabilities);
 
   const CreationForm = useMemo(() => {
-    let semVerCompare = -1;
-    if (selectedRelease && firstNodePoolsRelease) {
-      semVerCompare = cmp(selectedRelease, firstNodePoolsRelease);
+    if (provider === Providers.KVM) {
+      return CreateRegularCluster;
     }
 
-    return semVerCompare < 0 ||
-      provider === Providers.AZURE ||
-      provider === Providers.KVM
-      ? CreateRegularCluster // new v4 form
-      : CreateNodePoolsCluster; // new v5 form
+    if (
+      firstNodePoolsRelease !== '' &&
+      cmp(selectedRelease, firstNodePoolsRelease) >= 0
+    ) {
+      return CreateNodePoolsCluster;
+    }
+
+    return CreateRegularCluster;
   }, [provider, firstNodePoolsRelease, selectedRelease]);
 
   const creationCapabilities = useMemo(
-    () => computeCapabilities(selectedRelease, provider),
-    [selectedRelease, provider]
+    () => makeCapabilities(selectedRelease, provider),
+    [selectedRelease, provider, makeCapabilities]
   );
+
+  const selectedOrganization = useMemo(() => {
+    const route = RoutePath.parseWithTemplate(
+      OrganizationsRoutes.Clusters.New,
+      location.pathname
+    );
+
+    return route.params.orgId;
+  }, [location.pathname]);
 
   const dispatch = useDispatch();
 
@@ -102,7 +100,7 @@ const NewClusterWrapper: FC<INewClusterWrapper> = ({
     <Breadcrumb
       data={{
         title: 'CREATE CLUSTER',
-        pathname: breadcrumbPathname,
+        pathname: match.url,
       }}
     >
       <DocumentTitle title={`Create Cluster | ${selectedOrganization}`}>
@@ -127,13 +125,10 @@ const NewClusterWrapper: FC<INewClusterWrapper> = ({
                 label='Release version'
                 // "breaking space" hides the hint
                 hint={<>&#32;</>}
-                validationError={releasesLoadError}
               >
                 <ReleaseSelector
                   selectRelease={setSelectedRelease}
                   selectedRelease={selectedRelease}
-                  selectableReleases={selectableReleases}
-                  releases={releases}
                 />
               </StyledInput>
             </Section>
@@ -142,7 +137,6 @@ const NewClusterWrapper: FC<INewClusterWrapper> = ({
             allowSubmit={clusterNameIsValid}
             selectedOrganization={selectedOrganization}
             selectedRelease={selectedRelease}
-            releases={releases}
             clusterName={clusterName}
             capabilities={creationCapabilities}
             closeForm={closeForm}
@@ -154,30 +148,10 @@ const NewClusterWrapper: FC<INewClusterWrapper> = ({
 };
 
 NewClusterWrapper.propTypes = {
-  breadcrumbPathname: PropTypes.string.isRequired,
-  selectedOrganization: PropTypes.string.isRequired,
-  activeSortedReleases: PropTypes.arrayOf(PropTypes.string.isRequired)
-    .isRequired,
   // @ts-ignore
-  releases: PropTypes.object.isRequired,
-  selectableReleases: PropTypes.arrayOf(
-    PropTypes.shape({
-      version: PropTypes.string.isRequired,
-      timestamp: PropTypes.string.isRequired,
-      changelog: PropTypes.arrayOf(
-        PropTypes.shape({
-          component: PropTypes.string.isRequired,
-          description: PropTypes.string.isRequired,
-        }).isRequired
-      ).isRequired,
-      components: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          version: PropTypes.string.isRequired,
-        }).isRequired
-      ).isRequired,
-    }).isRequired
-  ).isRequired,
+  location: PropTypes.object.isRequired,
+  // @ts-ignore
+  match: PropTypes.object.isRequired,
 };
 
 export default NewClusterWrapper;

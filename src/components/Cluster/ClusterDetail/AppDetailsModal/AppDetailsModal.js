@@ -1,13 +1,4 @@
 import {
-  CLUSTER_UPDATE_APP_ERROR,
-  CLUSTER_UPDATE_APP_REQUEST,
-} from 'actions/actionTypes.js';
-import {
-  deleteApp as deleteAppAction,
-  loadApps as loadAppsAction,
-  updateApp as updateAppAction,
-} from 'actions/appActions';
-import {
   createAppConfig as createAppConfigAction,
   deleteAppConfig as deleteAppConfigAction,
   updateAppConfig as updateAppConfigAction,
@@ -24,6 +15,11 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import {
+  deleteClusterApp as deleteAppAction,
+  updateClusterApp as updateAppAction,
+} from 'stores/clusterapps/actions';
+import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -42,7 +38,9 @@ const modalPanes = {
 const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
-  const { clear: clearUpdateAppError } = useError(CLUSTER_UPDATE_APP_ERROR);
+  const { clear: clearUpdateAppError } = useError(
+    updateAppAction().types.error
+  );
 
   const { app, catalog, dispatch } = props;
 
@@ -78,13 +76,12 @@ const AppDetailsModal = (props) => {
 
   async function loadAppsAndClose() {
     onClose();
-    await props.dispatch(loadAppsAction(clusterId));
+    await props.dispatch(loadClusterApps({ clusterId: clusterId }));
   }
 
   async function editChartVersion() {
-    const changes = { spec: { version: desiredVersion } };
     const { error } = await props.dispatch(
-      updateAppAction(appName, clusterId, changes)
+      updateAppAction({ appName, clusterId, version: desiredVersion })
     );
 
     if (error) {
@@ -105,32 +102,44 @@ const AppDetailsModal = (props) => {
   }
 
   async function deleteApp() {
-    await props.dispatch(deleteAppAction(appName, clusterId));
+    await props.dispatch(deleteAppAction({ appName, clusterId }));
     await loadAppsAndClose();
   }
 
   async function createAppConfig(values, done) {
-    await props.dispatch(createAppConfigAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(createAppConfigAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function updateAppConfig(values, done) {
-    await props.dispatch(updateAppConfigAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(updateAppConfigAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function createAppSecret(values, done) {
-    await props.dispatch(createAppSecretAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(createAppSecretAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   async function updateAppSecret(values, done) {
-    await props.dispatch(updateAppSecretAction(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
+    try {
+      await props.dispatch(updateAppSecretAction(appName, clusterId, values));
+      await loadAppsAndClose();
+    } finally {
+      done();
+    }
   }
 
   // eslint-disable-next-line react/no-multi-comp
@@ -281,7 +290,6 @@ const AppDetailsModal = (props) => {
       onClose={onClose}
       title={modalTitle}
       visible={props.visible}
-      className='appdetails'
     >
       {modalBody}
     </GenericModal>
@@ -303,7 +311,7 @@ function mapStateToProps(state, ownProps) {
   return {
     clusterUpdateRequestPending: selectLoadingFlagByAction(
       state,
-      CLUSTER_UPDATE_APP_REQUEST
+      updateAppAction().types.request
     ),
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:

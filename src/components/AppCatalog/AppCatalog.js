@@ -23,33 +23,26 @@ class AppCatalog extends React.Component {
           pathname: AppCatalogRoutes.Home,
         }}
       >
-        <div className='app-catalog'>
-          <Switch>
-            <Route
-              exact
-              path={AppCatalogRoutes.AppDetail}
-              render={(props) => (
-                <Detail {...props} catalogLoadIndex={this.catalogLoadIndex} />
-              )}
-            />
-            <Route
-              exact
-              path={AppCatalogRoutes.AppList}
-              render={(props) => (
-                <AppList {...props} catalogLoadIndex={this.catalogLoadIndex} />
-              )}
-            />
-            <Route
-              path={AppCatalogRoutes.Home}
-              render={() => (
-                <CatalogList
-                  {...this.props}
-                  catalogLoadIndex={this.catalogLoadIndex}
-                />
-              )}
-            />
-          </Switch>
-        </div>
+        <Switch>
+          <Route
+            exact
+            path={AppCatalogRoutes.AppDetail}
+            render={(props) => (
+              <Detail {...props} catalogLoadIndex={this.catalogLoadIndex} />
+            )}
+          />
+          <Route
+            exact
+            path={AppCatalogRoutes.AppList}
+            render={(props) => (
+              <AppList {...props} catalogLoadIndex={this.catalogLoadIndex} />
+            )}
+          />
+          <Route
+            path={AppCatalogRoutes.Home}
+            render={() => <CatalogList {...this.props} />}
+          />
+        </Switch>
       </Breadcrumb>
     );
   }

@@ -21,8 +21,6 @@ import { parseErrorMessages } from './parseErrorMessages';
 interface IStateProps {
   // For now, until we have a type for it
   user: Record<string, never>;
-  // For now, until we have a type for it
-  flashMessages: Record<string, never>;
 }
 
 // The props coming from injected actions (AKA: `mapDispatchToProps`)
@@ -47,8 +45,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
      */
     // @ts-ignore
     dispatch: PropTypes.func,
-    // @ts-ignore
-    flashMessages: PropTypes.object,
     // @ts-ignore
     actions: PropTypes.object,
   };
@@ -136,11 +132,11 @@ class Login extends React.Component<ILoginProps, ILoginState> {
   //TODO: turn progressbutton into a component
   public render(): ReactNode {
     return (
-      <div>
+      <>
         <div className='login_form--mask' />
 
         <SlideTransition appear={true} in={true} direction='down'>
-          <div className='login_form--container col-4'>
+          <div className='login_form--container'>
             <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
               <div className='textfield'>
@@ -195,7 +191,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             </div>
           </div>
         </SlideTransition>
-      </div>
+      </>
     );
   }
 }
@@ -208,7 +204,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 function mapStateToProps(state: Record<string, any>): IStateProps {
   return {
     user: state.main.loggedInUser,
-    flashMessages: state.flashMessages,
   };
 }
 

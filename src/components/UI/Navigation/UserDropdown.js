@@ -24,6 +24,8 @@ const Wrapper = styled.div`
 
   .react-gravatar {
     margin-right: 8px;
+    width: 1.6em;
+    height: 1.6em;
   }
 
   display: inline;

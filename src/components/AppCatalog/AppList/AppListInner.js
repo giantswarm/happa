@@ -12,9 +12,25 @@ const SEARCH_URL_PARAM = 'q';
 
 const StyledCatalogTypeLabel = styled(CatalogTypeLabel)`
   position: relative;
-  top: -4px;
+  margin-bottom: 0px;
   margin-left: 10px;
   margin-right: 0px;
+  line-height: 16px;
+`;
+
+const TitleRow = styled('h1')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.shade5};
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+`;
+
+const TitleAndIcons = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 class AppListInner extends React.Component {
@@ -68,6 +84,10 @@ class AppListInner extends React.Component {
   }
 
   getAppsWithOrderedVersions = memoize((allApps) => {
+    if (!allApps) {
+      return [];
+    }
+
     const apps = Object.values(allApps);
 
     apps.map(this.sortVersionsByCreationDateDESC);
@@ -121,39 +141,41 @@ class AppListInner extends React.Component {
 
     return (
       <>
-        <h1>
-          {catalog.spec.title}
+        <TitleRow>
+          <TitleAndIcons>
+            <div>{catalog.spec.title}</div>
 
-          <StyledCatalogTypeLabel
-            catalogType={
-              catalog.metadata.labels['application.giantswarm.io/catalog-type']
-            }
-          />
+            <StyledCatalogTypeLabel
+              catalogType={
+                catalog.metadata.labels[
+                  'application.giantswarm.io/catalog-type'
+                ]
+              }
+            />
 
-          <StyledCatalogTypeLabel
-            catalogType={
-              catalog.metadata.labels[
-                'application.giantswarm.io/catalog-visibility'
-              ]
-            }
-          />
+            <StyledCatalogTypeLabel
+              catalogType={
+                catalog.metadata.labels[
+                  'application.giantswarm.io/catalog-visibility'
+                ]
+              }
+            />
+          </TitleAndIcons>
 
           <AppListSearch
             value={searchQuery}
             onChange={this.updateSearchParams}
             onReset={this.resetFilters}
           />
-        </h1>
-        <div className='app-catalog-overview'>
-          <AppListItems
-            apps={filteredApps}
-            catalog={catalog}
-            searchQuery={searchQuery}
-            iconErrors={this.iconErrors}
-            onImgError={this.onImgError}
-            scrollToApp={this.state.scrollToApp}
-          />
-        </div>
+        </TitleRow>
+        <AppListItems
+          apps={filteredApps}
+          catalog={catalog}
+          searchQuery={searchQuery}
+          iconErrors={this.iconErrors}
+          onImgError={this.onImgError}
+          scrollToApp={this.state.scrollToApp}
+        />
       </>
     );
   }
@@ -163,8 +185,6 @@ AppListInner.propTypes = {
   catalog: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
-  loading: PropTypes.bool,
-  match: PropTypes.object,
 };
 
 export default AppListInner;

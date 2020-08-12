@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.8.17
+  architect: giantswarm/architect@0.10.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -19,6 +19,8 @@ whitelist: &whitelist
     - dist/*
     - node_modules/*
     - VERSION
+
+image_name: &image_name quay.io/giantswarm/happa
 
 workflows:
   version: 2
@@ -59,7 +61,7 @@ workflows:
       - architect/push-to-docker:
           name: push-happa-to-quay
           context: architect
-          image: "quay.io/giantswarm/happa"
+          image: *image_name
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
           requires:
@@ -253,51 +255,45 @@ jobs:
           <<: *whitelist
 
   build-container:
-    machine:
-      image: ubuntu-1604:201903-01
+    executor: architect/architect
 
     working_directory: ~/happa
     steps:
       - checkout
 
+      - setup_remote_docker
+
       - attach_workspace:
           at: ~/happa
 
       - run:
+          environment:
+            IMAGE_NAME: *image_name
+          name: Generate container image tag
+          command: |
+            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name
+
+      - run:
           name: Build Docker image
           command: |
-            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-            chmod +x ./architect
-            ./architect build
+            docker build -t "$(cat .docker_image_name)" .
 
       - run:
           name: Launch container for tests
           command: |
-            docker run --name happa-branch -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+            set -x
+            docker run --name happa-branch \
+              -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
+              -e AUDIENCE=test \
+              -e API_ENDPOINT=test \
+              -e PASSAGE_ENDPOINT=test \
+              -e INGRESS_BASE_DOMAIN=test \
+              -e AWS_CAPABILITIES_JSON={} \
+              -e AZURE_CAPABILITIES_JSON={} \
+              -e ENVIRONMENT=test-in-ci \
+              -p 8000:8000 \
+              -d \
+              "$(cat .docker_image_name)"
             sleep 2
-            CURL_OUTPUT=$(curl -s http://localhost:8000)
+            CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep Happa
-
-  deploy-to-testing:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - deploy:
-          name: Deploy with architect to testing envs
-          command: |
-            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-            chmod +x ./architect
-            ./architect deploy --group=testing
-
-  deploy-to-all:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - deploy:
-          name: Deploy with architect to all envs
-          command: |
-            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-            chmod +x ./architect
-            ./architect deploy

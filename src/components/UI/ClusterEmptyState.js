@@ -86,7 +86,6 @@ class ClusterEmptyState extends React.Component {
 
 ClusterEmptyState.propTypes = {
   errorLoadingClusters: PropTypes.bool,
-  organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
 };
 

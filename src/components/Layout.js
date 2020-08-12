@@ -3,7 +3,6 @@ import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
-import * as UserActions from 'actions/userActions';
 import CPAuthProvider from 'Auth/CP/CPAuthProvider';
 import CPLoginPage from 'Auth/CP/CPLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
@@ -14,7 +13,6 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
   AccountSettingsRoutes,
@@ -60,9 +58,7 @@ class Layout extends React.Component {
 
   selectOrganization = (orgId) => {
     const { dispatch } = this.props;
-
     dispatch(batchedOrganizationSelect(orgId));
-    dispatch(push(AppRoutes.Home));
   };
 
   render() {
@@ -81,10 +77,10 @@ class Layout extends React.Component {
           {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
 
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
-            <div className='main col-9'>
+            <div className='main'>
               <Switch>
                 {/*prettier-ignore*/}
-                <Route component={Home} exact path={AppRoutes.Home}/>
+                <Route component={Home} exact path={AppRoutes.Home} />
                 <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
                 <Route component={Users} exact path={UsersRoutes.Home} />
                 <Route
@@ -117,17 +113,10 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  location: PropTypes.object,
-  children: PropTypes.object,
-  routes: PropTypes.array,
-  params: PropTypes.object,
-  match: PropTypes.object,
   user: PropTypes.object,
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
-  firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
-  actions: PropTypes.object,
   catalogs: PropTypes.object,
   loadingClustersList: PropTypes.bool,
 };
@@ -147,7 +136,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(UserActions, dispatch),
     dispatch: dispatch,
   };
 }

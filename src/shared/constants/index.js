@@ -20,7 +20,10 @@ export const Constants = {
   METADATA_UPDATE_LABEL: 'Update happa now',
 
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
+  AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4_v3',
   AWS_V5_VERSION: '10.0.0',
+  AZURE_V5_VERSION: '40.0.0',
+
   AZURE_MULTI_AZ_VERSION: '11.1.0',
   AWS_ONDEMAND_INSTANCES_VERSION: '11.2.0',
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.2.0',
@@ -30,13 +33,14 @@ export const Constants = {
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
     'Current number of worker nodes in the node pool',
+  NODES_COUNT_EXPLANATION: 'Desired number of worker nodes in the node pool',
   DESIRED_NODES_EXPLANATION:
     'Autoscaler’s idea of how many nodes would be required for the workloads',
   MIN_NODES_EXPLANATION:
     'Lower end of the scaling range for the cluster autoscaler',
   MAX_NODES_EXPLANATION:
     'Upper end of the scaling range for the cluster autoscaler',
-  SPOT_NODES_EXPLNANATION: 'Current number of spot instances in this node pool',
+  SPOT_NODES_EXPLANATION: 'Current number of spot instances in this node pool',
 
   KEYPAIR_DEFAULT_TTL: 24, // A day, In hours
   // eslint-disable-next-line no-magic-numbers
@@ -54,4 +58,14 @@ export const Constants = {
   // Cluster & node pool name length restrictions
   MIN_NAME_LENGTH: 3,
   MAX_NAME_LENGTH: 100,
+
+  NP_DEFAULT_MIN_SCALING_AWS: 3,
+  NP_DEFAULT_MAX_SCALING_AWS: 10,
+  NP_DEFAULT_MIN_SCALING_AZURE: 3,
+  NP_DEFAULT_MAX_SCALING_AZURE: 3,
+
+  // App name of the 'nginx-ingress-controller-app'
+  INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',
+  // App catalog name containing the 'nginx-ingress-controller-app'
+  INSTALL_INGRESS_TAB_APP_CATALOG_NAME: 'giantswarm',
 };

@@ -156,7 +156,6 @@ describe('', () => {
         findByText,
         getByText,
         findByTestId,
-        queryByTestId,
         getByTitle,
       } = renderRouteWithStore(organizationDetailsPath);
 
@@ -180,15 +179,10 @@ describe('', () => {
       );
       expect(organizationMember.textContent).toBe(orgResponse.members[0].email);
 
-      await waitFor(() => {
-        expect(queryByTestId('Loading credentials')).not.toBeInTheDocument();
-      });
-
-      expect(
-        getByText(
-          'No credentials set. Clusters of this organization will be created in the default tenant cluster account of this installation.'
-        )
-      ).toBeInTheDocument();
+      const noOrgsMessage = await findByText(
+        `No credentials set. Clusters of this organization will be created in the default tenant cluster account of this installation.`
+      );
+      expect(noOrgsMessage).toBeInTheDocument();
     });
 
     it('allows to add an user to an organization', async () => {

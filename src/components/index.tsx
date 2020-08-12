@@ -30,6 +30,7 @@ enum GlobalEnvironment {
 
 interface IGlobalConfig {
   apiEndpoint: string;
+  audience: string;
   passageEndpoint: string;
   environment: GlobalEnvironment;
   ingressBaseDomain: string;

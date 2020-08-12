@@ -241,8 +241,8 @@ export class HttpClient {
       res.status = 400;
       res.message = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
 
-      // We got a non-2xx status code
-      if (err.hasOwnProperty('response')) {
+      // We got a non-2xx status code.
+      if (err.response) {
         res.status = err.response.status;
         res.message = err.code;
         res.headers = err.response.headers;

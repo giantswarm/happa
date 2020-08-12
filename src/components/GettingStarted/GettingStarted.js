@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -12,6 +13,11 @@ import InstallIngress from './Steps/InstallIngress';
 import NextSteps from './Steps/NextSteps';
 import Overview from './Steps/Overview';
 import SimpleExample from './Steps/SimpleExample';
+
+const Wrapper = styled.div`
+  max-width: 800px;
+  margin: auto;
+`;
 
 const GettingStarted = (props) => {
   const pathParams = {
@@ -94,7 +100,7 @@ const GettingStarted = (props) => {
           ),
         }}
       >
-        <div>
+        <Wrapper>
           <Switch>
             <Route
               render={() => <Overview steps={steps} {...props} />}
@@ -116,7 +122,7 @@ const GettingStarted = (props) => {
               to={OrganizationsRoutes.Clusters.GettingStarted.Overview}
             />
           </Switch>
-        </div>
+        </Wrapper>
       </Breadcrumb>
     </DocumentTitle>
   );

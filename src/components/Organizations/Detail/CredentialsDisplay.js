@@ -129,7 +129,6 @@ const CredentialsDisplay = (props) => {
 };
 
 CredentialsDisplay.propTypes = {
-  organizationName: PropTypes.string,
   credentials: PropTypes.object,
   provider: PropTypes.string,
   onShowForm: PropTypes.func,

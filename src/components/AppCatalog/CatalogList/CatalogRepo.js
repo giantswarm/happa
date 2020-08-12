@@ -1,13 +1,24 @@
 import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import ImgWithFallback from 'shared/ImgWithFallback';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
+import CachingColorHash from 'utils/cachingColorHash';
 
 import CatalogExternalLink from './CatalogExternalLink';
+
+const colorHash = new CachingColorHash();
+
+function acronymize(text) {
+  const matches = text.match(/\b(\w)/g); // ['J','S','O','N']
+  const acronym = matches.join(''); // JSON
+
+  return acronym;
+}
 
 const Repo = styled(Link)`
   flex: 0 0;
@@ -41,25 +52,26 @@ const Description = styled.div`
   line-height: 12px;
 `;
 
-const Image = styled.img`
+const Image = styled(ImgWithFallback)`
   width: 100px;
   height: 100px;
-  background-color: ${({ theme }) => theme.colors.white1};
   flex-shrink: 0;
   border-radius: 5px;
+  background-color: ${({ theme }) => theme.colors.white1};
+  color: ${({ theme }) => theme.colors.white1};
+  display: flex;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const markdownRenderers = {
   link: CatalogExternalLink,
 };
 
-const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
+const CatalogRepo = ({ catalog }) => {
   const { name, labels } = catalog.metadata;
   const { logoURL, title, description } = catalog.spec;
-
-  useEffect(() => {
-    catalogLoadIndex(catalog);
-  }, [name, catalog, catalogLoadIndex]);
 
   const appCatalogListPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppList,
@@ -68,7 +80,15 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
 
   return (
     <Repo to={appCatalogListPath}>
-      <Image src={logoURL} alt={name} />
+      <Image
+        src={logoURL}
+        alt={title}
+        fallback={{
+          label: acronymize(title),
+          backgroundColor: colorHash.calculateColor(name),
+        }}
+        title={title}
+      />
       <Description>
         <Title>{title}</Title>
         <CatalogTypeLabel
@@ -87,7 +107,6 @@ const CatalogRepo = ({ catalog, catalogLoadIndex }) => {
 
 CatalogRepo.propTypes = {
   catalog: PropTypes.object,
-  catalogLoadIndex: PropTypes.func,
 };
 
 export default CatalogRepo;

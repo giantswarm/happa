@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
+import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { spinner } from 'images';
 import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
@@ -8,7 +9,8 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { INodePool } from 'shared/types';
+import { Providers } from 'shared';
+import { INodePool, PropertiesOf } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
 import ViewAndEditName from 'UI/ViewEditName';
 
@@ -29,17 +31,6 @@ const NPViewAndEditNameStyled = styled(ViewAndEditName)`
     font-size: 13px;
     padding: 4px 10px;
   }
-`;
-
-const NodesWrapper = styled.div<{ highlight?: boolean }>`
-  width: 36px;
-  height: 30px;
-  line-height: 31px;
-  text-align: center;
-  border-radius: 3px;
-  white-space: nowrap;
-  background-color: ${({ theme, highlight }) =>
-    highlight && theme.colors.goldBackground};
 `;
 
 const NameWrapperDiv = styled.div`
@@ -71,6 +62,10 @@ const MixedInstanceType = styled(Code)`
   background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
+const StyledNodePoolDropdownMenu = styled(NodePoolDropdownMenu)`
+  grid-column: 10/10;
+`;
+
 interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
 }
@@ -87,7 +82,7 @@ interface IDispatchProps extends DispatchProp {
 interface INodePoolsProps extends IStateProps, IDispatchProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cluster: any;
-  provider: string;
+  provider: PropertiesOf<typeof Providers>;
 }
 
 interface INodePoolsState {
@@ -142,7 +137,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   triggerEditName = () => {
-    // eslint-disable-next-line no-unused-expressions
     this.viewEditNameRef?.activateEditMode();
   };
 
@@ -171,45 +165,27 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   showNodePoolScalingModal = (nodePool: INodePool): void => {
-    // eslint-disable-next-line no-unused-expressions
     this.scaleNodePoolModal?.reset();
-    // eslint-disable-next-line no-unused-expressions
     this.scaleNodePoolModal?.show();
-    // eslint-disable-next-line no-unused-expressions
     this.scaleNodePoolModal?.setNodePool(nodePool);
-  };
-
-  formatInstanceDistribution = () => {
-    const { instance_distribution } = this.props.nodePool.node_spec.aws;
-
-    const baseCapacity = instance_distribution?.on_demand_base_capacity ?? '-';
-    const spotPercentage =
-      /* eslint-disable-next-line no-magic-numbers */
-      100 - instance_distribution?.on_demand_percentage_above_base_capacity ??
-      '-';
-
-    return (
-      <>
-        On-demand base capacity: {baseCapacity}
-        <br />
-        Spot instance percentage: {spotPercentage}
-      </>
-    );
   };
 
   formatInstanceTypes = () => {
     const {
       id,
       status: { instance_types },
-      node_spec: {
-        aws: { use_alike_instance_types, instance_type },
-      },
+      node_spec: { aws, azure },
     } = this.props.nodePool;
 
-    if (!use_alike_instance_types) {
-      return <Code>{instance_type}</Code>;
+    if (aws && !aws.use_alike_instance_types) {
+      return <Code>{aws.instance_type}</Code>;
     }
 
+    if (azure) {
+      return <Code>{azure.vm_size}</Code>;
+    }
+
+    // Spot instances.
     const instanceTypesAvailable = Boolean(instance_types);
 
     return (
@@ -226,7 +202,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         placement='top'
       >
         <InstanceTypesWrapperDiv>
-          <MixedInstanceType>{instance_type}</MixedInstanceType>
+          <MixedInstanceType>{aws?.instance_type ?? ''}</MixedInstanceType>
           {instanceTypesAvailable && instance_types.length > 1 && (
             <small>+{instance_types.length - 1}</small>
           )}
@@ -239,9 +215,9 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
     }
-    const { cluster, nodePool } = this.props;
-    const { id, scaling, availability_zones, status } = nodePool;
-    const { nodes_ready: current, nodes: desired, spot_instances } = status;
+    const { cluster, nodePool, provider } = this.props;
+    const { id, availability_zones, status } = nodePool;
+    const { nodes_ready: current, nodes: desired } = status;
     const { isNameBeingEdited } = this.state;
 
     return (
@@ -268,25 +244,9 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <div>
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
-            <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
-            <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
-            <NodesWrapper>{desired}</NodesWrapper>
-            <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
-            {typeof spot_instances === 'number' ? (
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id={`${id}-spot-distribution-tooltip`}>
-                    {this.formatInstanceDistribution()}
-                  </Tooltip>
-                }
-                placement='top'
-              >
-                <NodesWrapper>{spot_instances}</NodesWrapper>
-              </OverlayTrigger>
-            ) : (
-              <NodesWrapper />
-            )}
-            <NodePoolDropdownMenu
+            <NodePoolScaling nodePool={nodePool} provider={provider} />
+            <StyledNodePoolDropdownMenu
+              provider={provider}
               clusterId={cluster.id}
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}
@@ -298,7 +258,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         <ScaleNodePoolModal
           cluster={cluster}
           nodePool={nodePool}
-          provider={this.props.provider}
+          provider={provider}
           ref={(s: IScaleNodePoolModal): void => {
             this.scaleNodePoolModal = s;
           }}

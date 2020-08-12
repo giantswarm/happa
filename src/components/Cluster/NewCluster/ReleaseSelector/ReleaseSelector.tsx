@@ -1,89 +1,106 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getUserIsAdmin } from 'selectors/authSelectors';
+import {
+  getReleases,
+  getReleasesError,
+  getReleasesIsFetching,
+  getSortedReleaseVersions,
+} from 'selectors/releaseSelectors';
+import {
+  ListToggler,
+  SelectedDescription,
+  SelectedItem,
+  SelectedWrapper,
+  Table,
+} from 'UI/ExpandableSelector/Selector';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 import ReleaseRow from './ReleaseRow';
 
 interface IReleaseSelector {
-  releases: IReleases;
   selectRelease(releaseVersion: string): void;
-  selectableReleases: IRelease[];
   selectedRelease: string;
+  collapsible?: boolean;
+  autoSelectLatest?: boolean;
+  versionFilter?: (version: string) => boolean;
 }
-
-const extractKubernetesVersion: (
-  selectedRelease: string,
-  releases: IReleases
-) => string | undefined = (selectedRelease, releases) => {
-  return releases[selectedRelease]?.components.find(
-    (component) => component.name === 'kubernetes'
-  )?.version;
-};
-
-const TextBase = styled.span`
-  font-size: 14px;
-  i {
-    font-size: 16px;
-  }
-`;
-
-const SelectedReleaseVersion = styled(TextBase)`
-  margin-right: ${({ theme }) => theme.spacingPx * 9}px;
-`;
-
-const SelectedK8sVersion = styled(TextBase)`
-  font-weight: 300;
-`;
-
-const SelectedWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
-`;
-
-const ReleaseListToggler = styled(TextBase)`
-  cursor: pointer;
-  font-weight: 300;
-  padding: ${({ theme }) => theme.spacingPx * 2}px 0;
-  color: ${({ theme }) => theme.colors.white4};
-  user-select: none;
-  &:hover {
-    text-decoration: underline;
-  }
-  i {
-    margin-right: ${({ theme }) => theme.spacingPx}px;
-    width: 14px;
-  }
-`;
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
   margin-left: ${({ theme }) => theme.spacingPx}px;
   margin-bottom: 0;
 `;
 
-const Table = styled.table`
-  font-weight: 300;
-  th {
-    font-weight: 300;
-    color: ${({ theme }) => theme.colors.white4};
-    text-align: center;
-  }
-`;
-
 const ReleaseSelector: FC<IReleaseSelector> = ({
-  releases,
   selectRelease,
-  selectableReleases,
   selectedRelease,
+  collapsible,
+  autoSelectLatest,
+  versionFilter,
 }) => {
-  const selectedKubernetesVersion = useMemo(
-    () => extractKubernetesVersion(selectedRelease, releases),
-    [selectedRelease, releases]
-  );
-  const [collapsed, setCollapsed] = useState(true);
+  const allReleases = useSelector(getReleases);
+  let sortedReleaseVersions = useSelector(getSortedReleaseVersions);
+  const releasesIsFetching = useSelector(getReleasesIsFetching);
+  const releasesError = useSelector(getReleasesError);
 
-  if (!selectedKubernetesVersion) {
+  const isAdmin = useSelector(getUserIsAdmin);
+
+  let releases = allReleases;
+  if (versionFilter) {
+    releases = Object.keys(releases)
+      .filter(versionFilter)
+      .reduce((acc: typeof releases, releaseVersion: string) => {
+        acc[releaseVersion] = releases[releaseVersion];
+
+        return acc;
+      }, {});
+
+    sortedReleaseVersions = sortedReleaseVersions.filter(versionFilter);
+  }
+
+  const selectedKubernetesVersion = useMemo(
+    () => allReleases[selectedRelease]?.kubernetesVersion,
+    [allReleases, selectedRelease]
+  );
+
+  useEffect(() => {
+    if (autoSelectLatest && sortedReleaseVersions.length !== 0) {
+      selectRelease(sortedReleaseVersions[0]);
+    }
+  }, [selectRelease, sortedReleaseVersions, autoSelectLatest]);
+
+  const [collapsed, setCollapsed] = useState(collapsible as boolean);
+
+  const handleCollapse = () => {
+    if (collapsible) {
+      setCollapsed(!collapsed);
+    }
+  };
+
+  const handleTabSelect = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    // Handle tapping the space bar.
+    if (e.key === ' ') {
+      e.preventDefault();
+      handleCollapse();
+    }
+  };
+
+  if (releasesError) {
+    return (
+      <div>
+        <p>
+          There was an error loading releases.
+          <br />
+          {releasesError.toString()}
+          <br />
+          Please try again later or contact support: support@giantswarm.io
+        </p>
+      </div>
+    );
+  } else if (!selectedKubernetesVersion) {
     return (
       <div>
         <p>There is no active release currently available for this platform.</p>
@@ -92,30 +109,48 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   }
 
   return (
-    <>
+    <LoadingOverlay loading={releasesIsFetching}>
       <SelectedWrapper>
-        <SelectedReleaseVersion>
+        <SelectedItem>
           <i className='fa fa-version-tag' /> {selectedRelease}
-        </SelectedReleaseVersion>
-        <SelectedK8sVersion>
+        </SelectedItem>
+        <SelectedDescription>
           This release contains:
           <K8sReleaseComponentLabel
             name='kubernetes'
             version={selectedKubernetesVersion}
           />
-        </SelectedK8sVersion>
+        </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ReleaseListToggler
+        <ListToggler
           role='button'
-          onClick={() => setCollapsed(!collapsed)}
+          id='release-selector__toggler'
+          aria-expanded={!collapsed}
+          tabIndex={0}
+          onClick={handleCollapse}
+          collapsible={collapsible as boolean}
+          onKeyDown={handleTabSelect}
         >
-          <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
+          {collapsible && (
+            <i
+              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+              aria-hidden='true'
+              aria-label='Toggle'
+              role='presentation'
+            />
+          )}
           Available releases
-        </ReleaseListToggler>
+        </ListToggler>
       </div>
       {!collapsed && (
-        <div>
+        <>
+          {isAdmin && (
+            <p>
+              <i className='fa fa-warning' /> Light font color indicates an
+              inactive or wip release only available to Giant Swarm staff
+            </p>
+          )}
           <Table>
             <thead>
               <tr>
@@ -127,47 +162,38 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
                 <th>Notes</th>
               </tr>
             </thead>
-            <tbody>
-              {selectableReleases.map((release) => (
+            <tbody
+              role='radiogroup'
+              tabIndex={-1}
+              aria-labelledby='release-selector__toggler'
+            >
+              {sortedReleaseVersions.map((version) => (
                 <ReleaseRow
-                  key={release.version}
-                  {...release}
-                  isSelected={release.version === selectedRelease}
+                  key={version}
+                  {...releases[version]}
+                  isSelected={version === selectedRelease}
                   selectRelease={selectRelease}
                 />
               ))}
             </tbody>
           </Table>
-        </div>
+        </>
       )}
-    </>
+    </LoadingOverlay>
   );
 };
 
 ReleaseSelector.propTypes = {
-  // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
-  // @ts-ignore
-  releases: PropTypes.object.isRequired,
   selectRelease: PropTypes.func.isRequired,
-  selectableReleases: PropTypes.arrayOf(
-    PropTypes.shape({
-      version: PropTypes.string.isRequired,
-      timestamp: PropTypes.string.isRequired,
-      changelog: PropTypes.arrayOf(
-        PropTypes.shape({
-          component: PropTypes.string.isRequired,
-          description: PropTypes.string.isRequired,
-        }).isRequired
-      ).isRequired,
-      components: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          version: PropTypes.string.isRequired,
-        }).isRequired
-      ).isRequired,
-    }).isRequired
-  ).isRequired,
   selectedRelease: PropTypes.string.isRequired,
+  collapsible: PropTypes.bool,
+  autoSelectLatest: PropTypes.bool,
+  versionFilter: PropTypes.func,
+};
+
+ReleaseSelector.defaultProps = {
+  collapsible: true,
+  autoSelectLatest: true,
 };
 
 export default ReleaseSelector;

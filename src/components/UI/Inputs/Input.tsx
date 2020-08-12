@@ -76,7 +76,6 @@ export interface IInput<T> {
 
 const Input: FC<IInput<string | FileList>> = (props) => {
   const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
-    // eslint-disable-next-line no-unused-expressions
     props.onChange?.(e.target.value);
   };
 
