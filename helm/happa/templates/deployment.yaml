@@ -23,83 +23,88 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                  - key: k8s-app
-                    operator: In
-                    values:
-                    - happa
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: k8s-app
+                      operator: In
+                      values:
+                        - happa
+                topologyKey: kubernetes.io/hostname
       serviceAccountName: {{ .Values.name }}
       securityContext:
         runAsUser: {{ .Values.userID }}
         runAsGroup: {{ .Values.groupID }}
       containers:
-      - name: happa
-        image: {{ .Values.Installation.V1.Registry.Domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
-        env:
-        - name: AWS_CAPABILITIES_JSON
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: aws-capabilities-json
-        - name: AZURE_CAPABILITIES_JSON
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: azure-capabilities-json
-        - name: PASSAGE_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: passage-endpoint
-        - name: API_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: api-endpoint
-        - name: INGRESS_BASE_DOMAIN
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: ingress-base-domain
-        - name: DEFAULT_REQUEST_TIMEOUT_SECONDS
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: default-request-timeout-seconds
-        - name: ENVIRONMENT
-          value: kubernetes
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8000
-            scheme: HTTP
-          initialDelaySeconds: 10
-          timeoutSeconds: 1
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8000
-            scheme: HTTP
-          initialDelaySeconds: 10
-          timeoutSeconds: 1
-        resources:
-          requests:
-            cpu: 100m
-            memory: 20Mi
-          limits:
-            cpu: 250m
-            memory: 250Mi
-        volumeMounts:
-        - mountPath: /tmp
-          name: nginx-tmpfs
+        - name: happa
+          image: {{ .Values.Installation.V1.Registry.Domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          env:
+            - name: AWS_CAPABILITIES_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: aws-capabilities-json
+            - name: AZURE_CAPABILITIES_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: azure-capabilities-json
+            - name: PASSAGE_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: passage-endpoint
+            - name: API_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: api-endpoint
+            - name: AUDIENCE
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: audience
+            - name: INGRESS_BASE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: ingress-base-domain
+            - name: DEFAULT_REQUEST_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: happa-configmap
+                  key: default-request-timeout-seconds
+            - name: ENVIRONMENT
+              value: kubernetes
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 20Mi
+            limits:
+              cpu: 250m
+              memory: 250Mi
+          volumeMounts:
+            - mountPath: /tmp
+              name: nginx-tmpfs
       imagePullSecrets:
-      - name: happa-pull-secret
+        - name: happa-pull-secret
       volumes:
-      - name: nginx-tmpfs
-        emptyDir:
-          medium: Memory
-          sizeLimit: 200Mi
+        - name: nginx-tmpfs
+          emptyDir:
+            medium: Memory
+            sizeLimit: 200Mi
