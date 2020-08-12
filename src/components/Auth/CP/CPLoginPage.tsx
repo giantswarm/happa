@@ -11,8 +11,7 @@ import DocumentTitle from 'shared/DocumentTitle';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 const CPStatus = styled.div`
-  margin-top: 32px;
-  max-width: 1024px;
+  margin-top: ${({ theme }) => theme.spacingPx * 8}px;
   display: flex;
   align-items: center;
 `;

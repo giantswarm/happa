@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 
 const Text = styled.div<{ loggedIn: boolean }>`
-  margin-right: 14px;
+  margin-right: ${({ theme }) => theme.spacingPx * 4}px;
   color: ${({ loggedIn, theme }) =>
     loggedIn ? theme.colors.white3 : theme.colors.error};
 `;
