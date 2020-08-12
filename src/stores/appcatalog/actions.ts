@@ -25,6 +25,11 @@ export const listCatalogs = createAsynchronousAction<
       cpAuthUser = getCPAuthUser(currentState);
     }
 
+    cpAuthUser = {
+      idToken: '',
+      authorizationType: 'Bearer',
+    } as IOAuth2User;
+
     if (cpAuthUser) {
       const client = new CPClient(
         cpAuthUser.idToken,
