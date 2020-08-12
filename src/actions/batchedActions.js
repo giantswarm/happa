@@ -19,11 +19,6 @@ import * as userActions from './userActions';
 export const batchedLayout = () => async (dispatch) => {
   try {
     await dispatch(userActions.refreshUserInfo());
-
-    if (FeatureFlags.FEATURE_CP_ACCESS) {
-      await dispatch(loadUser(CPAuth.getInstance()));
-    }
-
     await dispatch(userActions.getInfo());
   } catch (err) {
     new FlashMessage(
@@ -35,6 +30,14 @@ export const batchedLayout = () => async (dispatch) => {
     ErrorReporter.getInstance().notify(err);
 
     return;
+  }
+
+  if (FeatureFlags.FEATURE_CP_ACCESS) {
+    try {
+      await dispatch(loadUser(CPAuth.getInstance()));
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   try {
