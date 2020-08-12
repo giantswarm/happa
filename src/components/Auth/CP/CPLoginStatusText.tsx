@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 
 const Text = styled.div<{ loggedIn: boolean }>`
   margin-right: 14px;
@@ -18,11 +18,11 @@ const CPLoginStatusText: React.FC<ICPLoginStatusTextProps> = ({ email }) => {
   return (
     <Text loggedIn={isLoggedIn}>
       {isLoggedIn ? (
-        <>
+        <Fragment key='login-state'>
           You are logged in as <code>{email}</code>
-        </>
+        </Fragment>
       ) : (
-        <>You are not logged in.</>
+        <Fragment key='login-state'>You are not logged in.</Fragment>
       )}
     </Text>
   );
