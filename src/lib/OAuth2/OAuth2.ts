@@ -135,22 +135,14 @@ class OAuth2 {
     T extends OAuth2Events,
     U extends IOAuth2EventCallbacks[T]
   >(event: T, cb: U) {
-    this.eventEmitter.addEventListener(
-      event,
-      (cb as unknown) as EventListener,
-      false
-    );
+    this.eventEmitter.addEventListener(event, cb as EventListener, false);
   }
 
   public removeEventListener<
     T extends OAuth2Events,
     U extends IOAuth2EventCallbacks[T]
   >(event: T, fn: U) {
-    this.eventEmitter.removeEventListener(
-      event,
-      (fn as unknown) as EventListener,
-      false
-    );
+    this.eventEmitter.removeEventListener(event, fn as EventListener, false);
   }
 
   public unregisterInternalEvents() {
