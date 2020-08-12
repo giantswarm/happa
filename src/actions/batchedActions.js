@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router';
 import { ErrorReporter } from 'lib/errors';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
@@ -16,6 +17,19 @@ export const batchedLayout = () => async (dispatch) => {
   try {
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());
+  } catch (err) {
+    new FlashMessage(
+      'Please log in again, as your previously saved credentials appear to be invalid.',
+      messageType.WARNING,
+      messageTTL.MEDIUM
+    );
+    dispatch(push(AppRoutes.Login));
+    ErrorReporter.getInstance().notify(err);
+
+    return;
+  }
+
+  try {
     await dispatch(organizationActions.organizationsLoad());
     dispatch(listCatalogs());
     dispatch(loadReleases());
