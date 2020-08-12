@@ -5,7 +5,6 @@ import App from 'App';
 import auth0 from 'auth0-js';
 import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
-import CPAuth from 'lib/CPAuth/CPAuth';
 import * as helpers from 'lib/helpers';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
@@ -85,7 +84,7 @@ const renderRouteWithStore = (
     initialIndex: 0,
   });
 
-  store = configureStore(state, history, CPAuth.getInstance());
+  store = configureStore(state, history);
 
   const app = render(<App {...{ store, theme, history }} />);
 

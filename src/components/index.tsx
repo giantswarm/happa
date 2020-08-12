@@ -15,7 +15,9 @@ import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
+import { IState } from 'reducers/types';
 import { Store } from 'redux';
+import FeatureFlags from 'shared/FeatureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import theme from 'styles/theme';
@@ -47,8 +49,14 @@ declare global {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/init-declarations
+let cpAccess: CPAuth | undefined;
+if (FeatureFlags.FEATURE_CP_ACCESS) {
+  cpAccess = CPAuth.getInstance();
+}
+
 // Configure the redux store.
-const store: Store = configureStore({}, history, CPAuth.getInstance());
+const store: Store = configureStore({} as IState, history, cpAccess);
 
 // Patch the Giant Swarm client so it has access to the store and can dispatch
 // redux actions. This is needed because admin tokens expire after 5 minutes.
