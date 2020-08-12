@@ -227,14 +227,9 @@ const InstallAppModal = (props) => {
               <GenericModal
                 {...props}
                 footer={
-                  <>
-                    <Button bsStyle='primary' onClick={next}>
-                      Next
-                    </Button>
-                    <Button bsStyle='link' onClick={onClose}>
-                      Cancel
-                    </Button>
-                  </>
+                  <Button bsStyle='link' onClick={onClose}>
+                    Cancel
+                  </Button>
                 }
                 onClose={onClose}
                 title={`Install ${props.app.name}: Pick a cluster`}
