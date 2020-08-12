@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const Wrapper = styled.div`
-  border-left: 6px solid #2a5874;
+  border-left: 6px solid ${({ theme }) => theme.colors.dropdownBackground};
   padding: 0px 25px;
   font-style: normal;
   margin: 25px 0px;
-  color: #a5b3bb;
+  color: ${({ theme }) => theme.colors.darkBlueLighter6};
 `;
 
 const Aside = ({ children }) => {
