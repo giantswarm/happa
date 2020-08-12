@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.10.0
+  architect: giantswarm/architect@0.8.17
 
 defaults: &defaults
   working_directory: ~/happa
@@ -19,8 +19,6 @@ whitelist: &whitelist
     - dist/*
     - node_modules/*
     - VERSION
-
-image_name: &image_name quay.io/giantswarm/happa
 
 workflows:
   version: 2
@@ -61,7 +59,7 @@ workflows:
       - architect/push-to-docker:
           name: push-happa-to-quay
           context: architect
-          image: *image_name
+          image: "quay.io/giantswarm/happa"
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
           requires:
@@ -150,14 +148,15 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-npm-deps-{{ checksum "yarn.lock" }}
-            - v1-npm-deps-
+          - v1-npm-deps-{{ checksum "yarn.lock" }}
+          - v1-npm-deps-
 
       - run:
           name: Print version information
           command: |
             node --version
             yarn --version
+
       - run:
           name: Install Dependencies
           command: yarn install --frozen-lockfile
@@ -248,48 +247,57 @@ jobs:
             else
               git tag --points-at HEAD | tr '\n' ' ' > VERSION
             fi
+
       - persist_to_workspace:
           root: ~/happa
           <<: *whitelist
 
   build-container:
-    executor: architect/architect
+    machine:
+      image: ubuntu-1604:201903-01
 
     working_directory: ~/happa
     steps:
       - checkout
 
-      - setup_remote_docker
-
       - attach_workspace:
           at: ~/happa
 
       - run:
-          environment:
-            IMAGE_NAME: *image_name
-          name: Generate container image tag
-          command: |
-            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name
-      - run:
           name: Build Docker image
           command: |
-            docker build -t "$(cat .docker_image_name)" .
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
+            ./architect build
+
       - run:
           name: Launch container for tests
           command: |
-            set -x
-            docker run --name happa-branch \
-              -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
-              -e AUDIENCE=test \
-              -e API_ENDPOINT=test \
-              -e PASSAGE_ENDPOINT=test \
-              -e INGRESS_BASE_DOMAIN=test \
-              -e AWS_CAPABILITIES_JSON={} \
-              -e AZURE_CAPABILITIES_JSON={} \
-              -e ENVIRONMENT=test-in-ci \
-              -p 8000:8000 \
-              -d \
-              "$(cat .docker_image_name)"
+            docker run --name happa-branch -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
             sleep 2
-            CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
+            CURL_OUTPUT=$(curl -s http://localhost:8000)
             echo "${CURL_OUTPUT}" | grep Happa
+
+  deploy-to-testing:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - deploy:
+          name: Deploy with architect to testing envs
+          command: |
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
+            ./architect deploy --group=testing
+
+  deploy-to-all:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - deploy:
+          name: Deploy with architect to all envs
+          command: |
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
+            ./architect deploy
