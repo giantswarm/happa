@@ -6,7 +6,6 @@ import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import FeatureFlags from 'shared/FeatureFlags';
 import { IAppCatalogsState, IStoredAppCatalog } from 'stores/appcatalog/types';
-import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
@@ -17,18 +16,17 @@ export const listCatalogs = createAsynchronousAction<
 >({
   actionTypePrefix: 'LIST_CATALOGS',
 
-  perform: async (currentState: IState): Promise<IAppCatalogsState> => {
+  perform: async (_currentState: IState): Promise<IAppCatalogsState> => {
     let catalogs: IAppCatalog[] = [];
 
     let cpAuthUser: IOAuth2User | null = null;
     if (FeatureFlags.FEATURE_CP_ACCESS) {
-      cpAuthUser = getCPAuthUser(currentState);
+      // cpAuthUser = getCPAuthUser(currentState);
+      cpAuthUser = {
+        idToken: '',
+        authorizationType: 'Bearer',
+      } as IOAuth2User;
     }
-
-    cpAuthUser = {
-      idToken: '',
-      authorizationType: 'Bearer',
-    } as IOAuth2User;
 
     if (cpAuthUser) {
       const client = new CPClient(
