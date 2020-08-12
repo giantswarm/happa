@@ -33,6 +33,9 @@ export function cpAuthMiddleware(cpAuth: CPAuth): Middleware {
 
       return next(action);
     } catch (err) {
+      // Delete all stale storage.
+      await cpAuth.logout();
+
       return next(loadUserError(err.toString()));
     }
   };
