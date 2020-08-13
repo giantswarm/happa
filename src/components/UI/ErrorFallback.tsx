@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 const ErrorWrapperSpan = styled.span`
   color: ${(props) => props.theme.colors.error};
@@ -9,7 +9,7 @@ const ErrorWrapperSpan = styled.span`
 
 interface IErrorFallbackProps {
   children?: ReactElement;
-  error?: string;
+  error?: string | ReactNode;
   className?: string;
 }
 
