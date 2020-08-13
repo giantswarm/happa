@@ -59,7 +59,8 @@ const Hint = styled.span`
   font-size: 12px;
 `;
 
-export interface IInput<T> {
+export interface IInput<T>
+  extends Omit<React.ComponentPropsWithoutRef<'input'>, 'onChange' | 'value'> {
   children?: ReactNode;
   className?: string;
   description?: ReactNode;
@@ -74,43 +75,55 @@ export interface IInput<T> {
   value?: T;
 }
 
-const Input: FC<IInput<string | FileList>> = (props) => {
-  const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
-    props.onChange?.(e.target.value);
+const Input: FC<IInput<string | FileList>> = ({
+  onChange,
+  className,
+  label,
+  inputId,
+  description,
+  icon,
+  children,
+  value,
+  readOnly,
+  placeholder,
+  hint,
+  validationError,
+  ...rest
+}) => {
+  const handleOnChange = (e: ChangeEvent<ElementRef<'input'>>) => {
+    onChange?.(e.target.value);
   };
 
   return (
-    <Wrapper className={props.className}>
+    <Wrapper className={className}>
       <Text>
-        {props.label && (
-          <label
-            className='input-field-label'
-            htmlFor={props.inputId ?? props.label}
-          >
-            {props.label}
+        {label && (
+          <label className='input-field-label' htmlFor={inputId ?? label}>
+            {label}
           </label>
         )}
-        {props.description && <p>{props.description}</p>}
+        {description && <p>{description}</p>}
       </Text>
-      <InputWrapper flexCenter={Boolean(props.icon)}>
-        {props.icon && <Icon className={`fa fa-${props.icon}`} />}
-        {props.children ?? (
+      <InputWrapper flexCenter={Boolean(icon)}>
+        {icon && <Icon className={`fa fa-${icon}`} />}
+        {children ?? (
           <InputElement
-            id={props.inputId ?? props.label}
-            onChange={onChange}
+            {...rest}
+            id={inputId ?? label}
+            onChange={handleOnChange}
             type='text'
-            value={props.value as string}
-            readOnly={props.readOnly}
-            placeholder={props.placeholder}
+            value={value as string}
+            readOnly={readOnly}
+            placeholder={placeholder}
           />
         )}
       </InputWrapper>
-      {props.validationError ? (
+      {validationError ? (
         <ValidationError>
-          <i className='fa fa-warning' /> {props.validationError}
+          <i className='fa fa-warning' /> {validationError}
         </ValidationError>
       ) : (
-        <Hint>{props.hint ?? <>&nbsp;</>}</Hint>
+        <Hint>{hint ?? <>&nbsp;</>}</Hint>
       )}
     </Wrapper>
   );
