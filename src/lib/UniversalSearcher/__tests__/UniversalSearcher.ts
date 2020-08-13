@@ -99,23 +99,18 @@ function registerClusterSearcherFilter(searcher: IUniversalSearcher) {
     state: ITestState,
     term: string
   ): Iterator<ITestCluster> {
-    if (term.length < 1) {
-      return state.clusters.items;
+    const termLowerCased = term.toLowerCase();
+
+    let containsTermInID = false;
+    let containsTermInName = false;
+    for (const item of state.clusters.items) {
+      containsTermInID = item.id.toLowerCase().includes(termLowerCased);
+      containsTermInName = item.name.toLowerCase().includes(termLowerCased);
+
+      if (containsTermInID || containsTermInName) {
+        yield item;
+      }
     }
-
-    yield* state.clusters.items.filter((currValue: ITestCluster): boolean => {
-      const termLowerCased = term.toLowerCase();
-      const containsTermInID = currValue.id
-        .toLowerCase()
-        .includes(termLowerCased);
-      const containsTermInName = currValue.name
-        .toLowerCase()
-        .includes(termLowerCased);
-
-      return containsTermInID || containsTermInName;
-    });
-
-    return undefined;
   }
 
   searcher.registerFilter({
@@ -127,17 +122,13 @@ function registerClusterSearcherFilter(searcher: IUniversalSearcher) {
 
 function registerAppSearcherFilter(searcher: IUniversalSearcher) {
   function* searcherFn(state: ITestState, term: string): Iterator<ITestApp> {
-    if (term.length < 1) {
-      return state.clusters.items;
+    const termLowerCased = term.toLowerCase();
+
+    for (const item of state.apps.items) {
+      if (item.name.toLowerCase().includes(termLowerCased)) {
+        yield item;
+      }
     }
-
-    yield* state.apps.items.filter((currValue: ITestApp): boolean => {
-      const termLowerCased = term.toLowerCase();
-
-      return currValue.name.toLowerCase().includes(termLowerCased);
-    });
-
-    return undefined;
   }
 
   searcher.registerFilter({
