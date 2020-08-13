@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
 import platform from 'lib/platform';
 import RoutePath from 'lib/routePath';
@@ -8,10 +9,26 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import Aside from 'UI/Aside';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 import { CodeBlock, Prompt } from '../CodeBlock';
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
+
+const ToggleAlternativeButton = styled.div`
+  cursor: pointer;
+  margin-bottom: 25px;
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+
+  i {
+    font-size: 22px;
+    position: relative;
+    top: 2px;
+  }
+`;
 
 class ConfigKubeCtl extends React.Component {
   state = {
@@ -265,30 +282,24 @@ class ConfigKubeCtl extends React.Component {
             </li>
           </ul>
 
-          <div className='aside'>
-            <p>
-              <i className='fa fa-info' title='For learners' />{' '}
-              <code>--certificate-organizations</code> is a flag that sets what
-              group you belong to when authenticating against the Kubernetes
-              API. The default superadmin group on RBAC (Role Based Access
-              Control) enabled clusters is <code>system:masters</code> . All
-              clusters on AWS have RBAC enabled, some of our on-prem (KVM)
-              clusters do not.
-            </p>
-          </div>
+          <Aside>
+            <i className='fa fa-info' title='For learners' />{' '}
+            <code>--certificate-organizations</code> is a flag that sets what
+            group you belong to when authenticating against the Kubernetes API.
+            The default superadmin group on RBAC (Role Based Access Control)
+            enabled clusters is <code>system:masters</code> . All clusters on
+            AWS have RBAC enabled, some of our on-prem (KVM) clusters do not.
+          </Aside>
 
           <div className='well' id='alternative'>
-            <div
-              className='toggle-alternative'
-              onClick={this.toggleAlternative}
-            >
+            <ToggleAlternativeButton onClick={this.toggleAlternative}>
               {this.state.alternativeOpen ? (
                 <i className='fa fa-chevron-down' />
               ) : (
                 <i className='fa fa-chevron-right' />
               )}
               &nbsp; Show alternative method to configure kubectl without gsctl
-            </div>
+            </ToggleAlternativeButton>
             {this.state.alternativeOpen ? (
               <ConfigureKubeCtlAlternative
                 cluster={this.props.selectedCluster}

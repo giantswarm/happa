@@ -7,6 +7,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import Aside from 'UI/Aside';
 
 import { CodeBlock, Output, Prompt } from '../CodeBlock';
 
@@ -108,19 +109,17 @@ class SimpleExample extends React.Component {
             ingress resource from a manifest hosted on GitHub.
           </p>
 
-          <div className='aside'>
-            <p>
-              <i className='fa fa-info' title='For learners' /> If you&apos;re
-              new to Kubernetes: A manifest describes things to create in
-              Kubernetes. In this case the manifest describes two different
-              things, a service and a deployment. The service is there to expose
-              containers (here: the ones with the label app: helloworld) inside
-              your cluster via a certain hostname and port. The deployment
-              describes your helloworld deployment. It manages a replica set,
-              which ensures that a number of pods (two, actually) containing
-              Docker containers from a certain image are running.
-            </p>
-          </div>
+          <Aside>
+            <i className='fa fa-info' title='For learners' /> If you&apos;re new
+            to Kubernetes: A manifest describes things to create in Kubernetes.
+            In this case the manifest describes two different things, a service
+            and a deployment. The service is there to expose containers (here:
+            the ones with the label app: helloworld) inside your cluster via a
+            certain hostname and port. The deployment describes your helloworld
+            deployment. It manages a replica set, which ensures that a number of
+            pods (two, actually) containing Docker containers from a certain
+            image are running.
+          </Aside>
 
           <p>First we download the manifest:</p>
           <CodeBlock>
@@ -243,15 +242,13 @@ class SimpleExample extends React.Component {
             </Output>
           </CodeBlock>
 
-          <div className='aside'>
-            <p>
-              <i className='fa fa-info' title='For learners' /> The exact pod
-              names vary in each case, the first suffix functions a bit like a
-              version number for your deployment, this changes with updates to
-              the deployment. The last part of the pod name is used by
-              Kubernetes to disambiguate the name using a unique suffixes.
-            </p>
-          </div>
+          <Aside>
+            <i className='fa fa-info' title='For learners' /> The exact pod
+            names vary in each case, the first suffix functions a bit like a
+            version number for your deployment, this changes with updates to the
+            deployment. The last part of the pod name is used by Kubernetes to
+            disambiguate the name using a unique suffixes.
+          </Aside>
 
           <p>
             To investigate a bit closer what our containers are doing inside
