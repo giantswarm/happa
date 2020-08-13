@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import { mq } from 'styles';
+import UniversalSearch from 'UniversalSearch/UniversalSearch';
 
 import MainMenu from './MainMenu';
 import OrganizationDropdown from './OrganizationDropdown';
 import UserDropdown from './UserDropdown';
 
 const OuterNav = styled.nav`
-  height: 50px;
+  height: 130px;
   line-height: 50px;
   font-size: 14px;
   position: fixed;
@@ -22,6 +23,10 @@ const OuterNav = styled.nav`
   right: 0;
   z-index: 1;
   background-color: ${(props) => props.theme.colors.shade1};
+
+  ${mq(CSSBreakpoints.Large)} {
+    height: 108px;
+  }
 
   a {
     text-decoration: none;
@@ -104,6 +109,8 @@ class Navigation extends React.Component {
   render() {
     return (
       <OuterNav>
+        <UniversalSearch />
+
         <div className='main-nav'>
           <Link to={AppRoutes.Home}>
             <img className='logo' src={logo} alt='Giant Swarm' />
