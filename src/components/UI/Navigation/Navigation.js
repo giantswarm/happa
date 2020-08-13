@@ -17,9 +17,9 @@ const OuterNav = styled.nav`
   line-height: 50px;
   font-size: 14px;
   position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1;
   background-color: ${(props) => props.theme.colors.shade1};
 
@@ -27,14 +27,9 @@ const OuterNav = styled.nav`
     text-decoration: none;
   }
 
-  .currentuser {
-    color: #97a8b2;
-    margin-right: 18px;
-  }
-
   .main-nav {
     margin: auto;
-    padding: 0px 10px;
+    padding: 0 10px;
     display: flex;
 
     @media only screen and (max-width: ${(props) =>
@@ -59,7 +54,7 @@ const OuterNav = styled.nav`
     margin-left: auto;
 
     a:last-child {
-      margin-right: 0px;
+      margin-right: 0;
     }
   }
 
@@ -92,11 +87,11 @@ const BreadcrumbWrapper = styled.div`
   .breadcrumbs {
     max-width: 1200px;
     margin: auto;
-    padding: 0px 10px;
+    padding: 0 10px;
   }
 
   .breadcrumbs__separator {
-    margin: 0px 4px;
+    margin: 0 4px;
   }
 
   .breadcrumbs__crumb--active {
@@ -111,7 +106,7 @@ class Navigation extends React.Component {
       <OuterNav>
         <div className='main-nav'>
           <Link to={AppRoutes.Home}>
-            <img className='logo' src={logo} />
+            <img className='logo' src={logo} alt='Giant Swarm' />
           </Link>
           <MainMenu
             showAppCatalog={this.props.showAppCatalog}
