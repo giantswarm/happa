@@ -4,9 +4,12 @@ Installation:
       API:
         Address: ""
       Happa:
+        Address: ""
         DefaultRequestTimeoutSeconds: ""
         Host: ""
         Letsencrypt: ""
+        API:
+          Letsencrypt: ""
       Passage:
         Address: ""
     Guest:
