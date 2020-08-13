@@ -28,6 +28,12 @@ export function cpAuthMiddleware(cpAuth: CPAuth): Middleware {
     try {
       const user = await cpAuth.getLoggedInUser();
       if (user?.isExpired()) {
+        /**
+         * If we're getting here, it means that the renewal failed,
+         * so we need to clear the user data to prevent infinite loops.
+         */
+        await cpAuth.logout();
+
         return next(userExpired());
       }
 
