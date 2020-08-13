@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,6 +8,20 @@ import Button from 'UI/Button';
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
 import { formatStatus, isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
+
+const TableWrapper = styled.div`
+  .react-bootstrap-table table {
+    table-layout: auto;
+  }
+
+  .status {
+    width: 90px;
+  }
+
+  .actions {
+    width: 100px;
+  }
+`;
 
 const tableDefaultSorting = [
   {
@@ -130,7 +145,7 @@ const UsersTable = ({
   }
 
   return (
-    <div className='users-table'>
+    <TableWrapper>
       <BootstrapTable
         bordered={false}
         columns={getTableColumnsConfig(onRemoveExpiration, onDelete)}
@@ -139,7 +154,7 @@ const UsersTable = ({
         defaultSorted={tableDefaultSorting}
         keyField='email'
       />
-    </div>
+    </TableWrapper>
   );
 };
 
