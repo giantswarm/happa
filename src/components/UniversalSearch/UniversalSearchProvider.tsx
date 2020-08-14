@@ -41,12 +41,12 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState(initialContextValue.searchTerm);
   const [results, setResults] = useState(initialContextValue.searchResults);
-  const globalState = useSelector((state) => state);
   const debouncedResults = useDebounce(results, UPDATE_DEBOUNCE_DELAY_MS);
+  const globalState = useSelector((state) => state);
 
   const search = (term: string, type?: string) => {
     setSearchTerm(term);
-    setResults(controller.search(searchTerm, globalState, type as string));
+    setResults(controller.search(term, globalState, type as string));
   };
 
   const contextValue: IUniversalSearchContextValue = {
