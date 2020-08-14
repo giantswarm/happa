@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import * as React from 'react';
 import Input from 'UI/Inputs/Input';
+import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSeachSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
 
 const SearchWrapper = styled.div`
@@ -22,25 +23,33 @@ const StyledInput = styled(Input)`
 
 interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
 
-const UniversalSearch: React.FC<IUniversalSearchProps> = ({ ...rest }) => {
-  return (
-    <SearchWrapper {...rest}>
-      <StyledInput
-        icon='search'
-        hint={<>&#32;</>}
-        placeholder={`I'm looking for...`}
-        autoComplete='off'
-        autoCapitalize='off'
-        spellCheck='false'
-        role='combobox'
-        aria-haspopup='true'
-        aria-autocomplete='list'
-        aria-activedescendant='opt1'
-      />
-      <UniversalSeachSuggestionList />
-    </SearchWrapper>
-  );
-};
+const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
+  ({ ...rest }) => {
+    const { searchTerm, search, searchResults } = useUniversalSearch();
+
+    console.log(searchResults);
+
+    return (
+      <SearchWrapper {...rest}>
+        <StyledInput
+          icon='search'
+          hint={<>&#32;</>}
+          onChange={search}
+          value={searchTerm}
+          placeholder={`I'm looking for...`}
+          autoComplete='off'
+          autoCapitalize='off'
+          spellCheck='false'
+          role='combobox'
+          aria-haspopup='true'
+          aria-autocomplete='list'
+          aria-activedescendant='opt1'
+        />
+        <UniversalSeachSuggestionList />
+      </SearchWrapper>
+    );
+  }
+);
 
 UniversalSearch.propTypes = {};
 
