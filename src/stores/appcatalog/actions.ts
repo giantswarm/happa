@@ -54,12 +54,10 @@ export const installLatestIngress = createAsynchronousAction<
         secretsYAML: '',
       };
 
-      /* eslint-disable @typescript-eslint/await-thenable */
       await dispatch(
         installApp({ app: appToInstall, clusterId: payload.clusterId })
       );
       await dispatch(loadClusterApps({ clusterId: payload.clusterId }));
-      /* eslint-enable @typescript-eslint/await-thenable */
     }
   },
   shouldPerform: (state) => {
