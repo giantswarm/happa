@@ -1,11 +1,11 @@
-import { getAuthorityURLFromGSApiURL } from 'lib/CPAuth/util';
 import { IOAuth2Config } from 'lib/OAuth2/OAuth2';
 import { AppRoutes } from 'shared/constants/routes';
 
-const authority = getAuthorityURLFromGSApiURL(window.config.apiEndpoint);
+const authority = window.config.cpAudience;
+const issuer = window.config.audience.replace('api', 'dex');
 
 export const defaultConfig: IOAuth2Config = {
-  authority: authority,
+  authority,
   clientId: 'fFlz7lckhWA0kIaW3fLIl8chFSs2wvW6',
   clientSecret:
     'PoioOqWKUndxVnbcRzlv59EgvwPVJQIdIlved143Uko0SjGJ7OprnecZQbab3WhH',
@@ -22,4 +22,11 @@ export const defaultConfig: IOAuth2Config = {
   filterProtocolClaims: true,
   validateSubOnSilentRenew: true,
   persistenceMethod: localStorage,
+  customMetadata: {
+    issuer,
+    authorizationEndpoint: `${authority}/auth`,
+    tokenEndpoint: `${authority}/token`,
+    jwksUri: `${authority}/keys`,
+    userInfoEndpoint: `${authority}/userinfo`,
+  },
 };
