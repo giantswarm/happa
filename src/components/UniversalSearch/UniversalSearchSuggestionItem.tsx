@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearcher';
+import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,24 +14,34 @@ const SuggestionItemLink = styled(Link)`
 `;
 
 interface IUniversalSearchSuggestionItemProps
-  extends React.ComponentPropsWithoutRef<'div'> {}
+  extends React.ComponentPropsWithoutRef<'li'> {
+  searchResult: IUniversalSearcherResult<unknown>;
+}
 
-const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProps> = () => {
+const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProps> = ({
+  searchResult,
+  ...rest
+}) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const name = `${searchResult.type}: ${(searchResult.result as any).name}`;
+
   return (
-    <SuggestionItem>
+    <SuggestionItem {...rest}>
       <SuggestionItemLink
         to=''
         role='option'
         tabIndex={-1}
-        id='opt2'
         aria-selected='true'
       >
-        cluster: Some option
+        {name}
       </SuggestionItemLink>
     </SuggestionItem>
   );
 };
 
-UniversalSearchSuggestionItem.propTypes = {};
+UniversalSearchSuggestionItem.propTypes = {
+  // @ts-ignore
+  searchResult: PropTypes.object.isRequired,
+};
 
 export default UniversalSearchSuggestionItem;

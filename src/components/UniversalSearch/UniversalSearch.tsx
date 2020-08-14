@@ -27,8 +27,6 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
   ({ ...rest }) => {
     const { searchTerm, search, searchResults } = useUniversalSearch();
 
-    console.log(searchResults);
-
     return (
       <SearchWrapper {...rest}>
         <StyledInput
@@ -43,9 +41,8 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           role='combobox'
           aria-haspopup='true'
           aria-autocomplete='list'
-          aria-activedescendant='opt1'
         />
-        <UniversalSeachSuggestionList />
+        <UniversalSeachSuggestionList searchResults={searchResults} />
       </SearchWrapper>
     );
   }

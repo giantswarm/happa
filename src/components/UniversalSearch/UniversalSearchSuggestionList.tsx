@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearcher';
+import PropTypes from 'prop-types';
 import * as React from 'react';
 import UniversalSearchSuggestionItem from 'UniversalSearch/UniversalSearchSuggestionItem';
 
@@ -20,21 +22,38 @@ const SuggestionsList = styled.ul`
 `;
 
 interface IUniversalSearchSuggestionListProps
-  extends React.ComponentPropsWithoutRef<'div'> {}
+  extends React.ComponentPropsWithoutRef<'div'> {
+  searchResults: IUniversalSearcherResult<unknown>[];
+}
 
-const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProps> = () => {
+const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProps> = ({
+  searchResults,
+  ...rest
+}) => {
   return (
-    <SuggestionsWrapper>
+    <SuggestionsWrapper {...rest}>
       <SuggestionsList role='listbox'>
-        <UniversalSearchSuggestionItem />
-        <UniversalSearchSuggestionItem />
-        <UniversalSearchSuggestionItem />
-        <UniversalSearchSuggestionItem />
+        {searchResults.map((result, index) => (
+          <UniversalSearchSuggestionItem
+            key={getKeyFromResult(result, index)}
+            id={getKeyFromResult(result, index)}
+            searchResult={result}
+          />
+        ))}
       </SuggestionsList>
     </SuggestionsWrapper>
   );
 };
 
-UniversalSearchSuggestionList.propTypes = {};
+UniversalSearchSuggestionList.propTypes = {
+  searchResults: PropTypes.array.isRequired,
+};
+
+function getKeyFromResult(
+  result: IUniversalSearcherResult<unknown>,
+  index: number
+): string {
+  return `${result.type}-${index}`;
+}
 
 export default UniversalSearchSuggestionList;
