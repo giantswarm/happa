@@ -1,11 +1,6 @@
 import { IUniversalSearcherFilter } from 'lib/UniversalSearcher/UniversalSearcher';
 import { IState } from 'reducers/types';
-
-// FIXME: Create proper cluster type.
-interface ICluster {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+import ClusterFilterRenderer from 'UniversalSearch/filters/ClusterFilterRenderer';
 
 function* searcherFn(state: IState, term: string): Iterator<ICluster> {
   const termLowerCased = term.toLowerCase();
@@ -27,7 +22,8 @@ function* searcherFn(state: IState, term: string): Iterator<ICluster> {
 const ClusterFilter: IUniversalSearcherFilter<ICluster, IState> = {
   type: 'cluster',
   searcher: searcherFn,
-  renderer: () => null,
+  renderer: (element, searchTerm, type) =>
+    ClusterFilterRenderer({ element, searchTerm, type }),
 };
 
 export default ClusterFilter;

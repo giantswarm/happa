@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearcher';
+import {
+  IUniversalSearcherResult,
+  UniversalSearchFilterMap,
+} from 'lib/UniversalSearcher/UniversalSearcher';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import UniversalSearchSuggestionItem from 'UniversalSearch/UniversalSearchSuggestionItem';
@@ -24,10 +27,14 @@ const SuggestionsList = styled.ul`
 interface IUniversalSearchSuggestionListProps
   extends React.ComponentPropsWithoutRef<'div'> {
   searchResults: IUniversalSearcherResult<unknown>[];
+  searchTerm: string;
+  filters: UniversalSearchFilterMap;
 }
 
 const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProps> = ({
   searchResults,
+  searchTerm,
+  filters,
   ...rest
 }) => {
   return (
@@ -38,6 +45,8 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
             key={getKeyFromResult(result, index)}
             id={getKeyFromResult(result, index)}
             searchResult={result}
+            searchTerm={searchTerm}
+            renderer={filters[result.type].renderer}
           />
         ))}
       </SuggestionsList>
@@ -47,6 +56,9 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
 
 UniversalSearchSuggestionList.propTypes = {
   searchResults: PropTypes.array.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  // @ts-ignore
+  filters: PropTypes.object.isRequired,
 };
 
 function getKeyFromResult(

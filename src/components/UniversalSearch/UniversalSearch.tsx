@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import useDebounce from 'lib/effects/useDebounce';
 import * as React from 'react';
 import Input from 'UI/Inputs/Input';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
-import UniversalSeachSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
+import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
+
+const UPDATE_DEBOUNCE_DELAY_MS = 250;
 
 const SearchWrapper = styled.div`
   width: 100%;
@@ -25,7 +28,16 @@ interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
   ({ ...rest }) => {
-    const { searchTerm, search, searchResults } = useUniversalSearch();
+    const { searchTerm, search, searchResults, filters } = useUniversalSearch();
+
+    const debouncedSearchTerm = useDebounce(
+      searchTerm,
+      UPDATE_DEBOUNCE_DELAY_MS
+    );
+    const debouncedResults = useDebounce(
+      searchResults,
+      UPDATE_DEBOUNCE_DELAY_MS
+    );
 
     return (
       <SearchWrapper {...rest}>
@@ -42,7 +54,11 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           aria-haspopup='true'
           aria-autocomplete='list'
         />
-        <UniversalSeachSuggestionList searchResults={searchResults} />
+        <UniversalSearchSuggestionList
+          searchResults={debouncedResults}
+          searchTerm={debouncedSearchTerm}
+          filters={filters}
+        />
       </SearchWrapper>
     );
   }

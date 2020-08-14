@@ -4,6 +4,7 @@ type UniversalSearcherFilterName = string;
 
 export interface IUniversalSearcher {
   registerFilter<T, S>(filter: IUniversalSearcherFilter<T, S>): void;
+  getFilters(): UniversalSearchFilterMap;
   search<S>(term: string, state: S): IUniversalSearcherResult<unknown>[];
   search<T, S>(
     term: string,
@@ -19,9 +20,15 @@ export interface IUniversalSearcherResult<T> {
 
 export interface IUniversalSearcherFilter<T, S> {
   type: UniversalSearcherFilterName;
-  renderer: (element: T) => ReactNode;
+  renderer: UniversalSearcherRenderer<T>;
   searcher: (state: S, term: string) => Iterator<T>;
 }
+
+export type UniversalSearcherRenderer<T> = (
+  element: T,
+  searchTerm: string,
+  type: string
+) => ReactNode;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UniversalSearchFilterMap<T = unknown, S = any> = Record<
@@ -38,6 +45,10 @@ class UniversalSearcherImpl implements IUniversalSearcher {
       T | unknown,
       S
     >;
+  }
+
+  public getFilters() {
+    return Object.assign({}, this.knownFilters);
   }
 
   public search<S>(term: string, state: S): IUniversalSearcherResult<unknown>[];

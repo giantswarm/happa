@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearcher';
+import {
+  IUniversalSearcherResult,
+  UniversalSearcherRenderer,
+} from 'lib/UniversalSearcher/UniversalSearcher';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -16,15 +19,16 @@ const SuggestionItemLink = styled(Link)`
 interface IUniversalSearchSuggestionItemProps
   extends React.ComponentPropsWithoutRef<'li'> {
   searchResult: IUniversalSearcherResult<unknown>;
+  searchTerm: string;
+  renderer: UniversalSearcherRenderer<unknown>;
 }
 
 const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProps> = ({
   searchResult,
+  searchTerm,
+  renderer,
   ...rest
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const name = `${searchResult.type}: ${(searchResult.result as any).name}`;
-
   return (
     <SuggestionItem {...rest}>
       <SuggestionItemLink
@@ -33,7 +37,7 @@ const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProp
         tabIndex={-1}
         aria-selected='true'
       >
-        {name}
+        {renderer(searchResult.result, searchTerm, searchResult.type)}
       </SuggestionItemLink>
     </SuggestionItem>
   );
@@ -42,6 +46,8 @@ const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProp
 UniversalSearchSuggestionItem.propTypes = {
   // @ts-ignore
   searchResult: PropTypes.object.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  renderer: PropTypes.func.isRequired,
 };
 
 export default UniversalSearchSuggestionItem;
