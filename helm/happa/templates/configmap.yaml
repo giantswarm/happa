@@ -8,6 +8,7 @@ metadata:
 data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
+  cp-api-endpoint: {{ .Values.Installation.V1.GiantSwarm.Happa.API.Address }}
   audience: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
   ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
   aws-capabilities-json: '{{ .Values.Installation.V1.Provider.AWS.EC2.Instance.Capabilities | toJson }}'

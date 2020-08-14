@@ -286,6 +286,7 @@ jobs:
               -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
               -e AUDIENCE=test \
               -e API_ENDPOINT=test \
+              -e CP_API_ENDPOINT=test \
               -e PASSAGE_ENDPOINT=test \
               -e INGRESS_BASE_DOMAIN=test \
               -e AWS_CAPABILITIES_JSON={} \

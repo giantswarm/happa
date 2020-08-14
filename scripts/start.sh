@@ -8,6 +8,10 @@ if [ -n "$API_ENDPOINT" ]; then
   sed -i "s|apiEndpoint: .*|apiEndpoint: '$API_ENDPOINT',|" /www/index.html
 fi
 
+if [ -n "$CP_API_ENDPOINT" ]; then
+  sed -i "s|cpApiEndpoint: .*|cpApiEndpoint: '$CP_API_ENDPOINT',|" /www/index.html
+fi
+
 if [ -n "$AUDIENCE" ]; then
   sed -i "s|audience: .*|audience: '$AUDIENCE',|" /www/index.html
 fi

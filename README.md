@@ -50,6 +50,7 @@ Use environment variables to adjust the behavior of this application in producti
 | Variable Name           | Description                                                                                                                                           | Default                |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | API_ENDPOINT            | URL to Giant Swarm's API.                                                                                                                             | http://localhost:8000  |
+| CP_API_ENDPOINT         | URL to Giant Swarm's K8s Control Plane API.                                                                                                                             | http://localhost:8000  |
 | AUDIENCE                | The Audience claim that our oauth library will use when requesting a token.                                                                           | API_ENDPOINT           |
 | PASSAGE_ENDPOINT        | URL to Passage, which helps users when they lose their password or have been invited to create an account.                                            | http://localhost:5001  |
 | INGRESS_BASE_DOMAIN     | The ingress base domain of the installation that Happa is on. This affects the getting started guide.                                                 | k8s.sample.io          |
