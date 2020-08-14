@@ -83,7 +83,7 @@ export const prepareIngressTabData = createAsynchronousAction<
 
       await Promise.all([
         dispatch(loadClusterApps({ clusterId: payload.clusterId })),
-        catalogLoadIndex(gsCatalog)(dispatch, () => state),
+        dispatch(catalogLoadIndex(gsCatalog)),
       ]);
     }
   },
