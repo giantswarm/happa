@@ -1,11 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { ReactElement, ReactNode } from 'react';
-
-const ErrorWrapperSpan = styled.span`
-  color: ${(props) => props.theme.colors.error};
-  font-weight: 300;
-`;
+import ErrorText from 'UI/ErrorText';
 
 interface IErrorFallbackProps {
   children?: ReactElement;
@@ -23,7 +18,7 @@ const ErrorFallback: React.FC<IErrorFallbackProps> = ({
   className,
 }) => {
   if (error) {
-    return <ErrorWrapperSpan className={className}>{error}</ErrorWrapperSpan>;
+    return <ErrorText className={className}>{error}</ErrorText>;
   } else if (children) {
     return children;
   }

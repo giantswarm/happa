@@ -22,6 +22,7 @@ import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
+import ErrorText from 'UI/ErrorText';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import { isClusterCreating } from 'utils/clusterUtils';
 
@@ -216,14 +217,10 @@ function ClusterDashboardItem({
               </RefreshableLabel>
             </TitleWrapper>
             <ClusterDetailsDiv>
-              <ErrorFallback
-                error={
-                  <>
-                    <i className='fa fa-warning' /> Error while loading cluster
-                    details. We have been notified.
-                  </>
-                }
-              />
+              <ErrorText>
+                <i className='fa fa-warning' /> Error while loading cluster
+                details. We have been notified.
+              </ErrorText>
             </ClusterDetailsDiv>
           </ContentWrapper>
         </Wrapper>
