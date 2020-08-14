@@ -6,6 +6,8 @@ import {
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
+import ClusterFilter from 'lib/UniversalSearcher/filters/ClusterFilter';
+import UniversalSearcherImpl from 'lib/UniversalSearcher/UniversalSearcher';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -20,6 +22,8 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import { memoize } from 'underscore';
+import UniversalSearchProvider from 'UniversalSearch/UniversalSearchProvider';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
@@ -40,6 +44,14 @@ const defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
 
 class Layout extends React.Component {
+  static makeUniversalSearchController = memoize(() => {
+    const controller = new UniversalSearcherImpl();
+
+    controller.registerFilter(ClusterFilter);
+
+    return controller;
+  });
+
   componentDidMount() {
     if (this.props.user) {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
@@ -62,39 +74,43 @@ class Layout extends React.Component {
     return (
       <DocumentTitle>
         <LoadingOverlay loading={this.props.loadingClustersList}>
-          <Modals />
-          <Navigation
-            onSelectOrganization={this.selectOrganization}
-            organizations={this.props.organizations}
-            selectedOrganization={this.props.selectedOrganization}
-            showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
-            user={this.props.user}
-          />
-          <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
-            <div className='main'>
-              <Switch>
-                {/*prettier-ignore*/}
-                <Route component={Home} exact path={AppRoutes.Home} />
-                <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
-                <Route component={Users} exact path={UsersRoutes.Home} />
-                <Route
-                  component={Organizations}
-                  path={OrganizationsRoutes.Home}
-                />
-                <Route
-                  component={AccountSettings}
-                  exact
-                  path={AccountSettingsRoutes.Home}
-                />
-                <Route
-                  component={ExceptionNotificationTest}
-                  exact
-                  path={ExceptionNotificationTestRoutes.Home}
-                />
-                <Redirect path='*' to={AppRoutes.Home} />
-              </Switch>
-            </div>
-          </Breadcrumb>
+          <UniversalSearchProvider
+            controller={Layout.makeUniversalSearchController()}
+          >
+            <Modals />
+            <Navigation
+              onSelectOrganization={this.selectOrganization}
+              organizations={this.props.organizations}
+              selectedOrganization={this.props.selectedOrganization}
+              showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
+              user={this.props.user}
+            />
+            <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
+              <div className='main'>
+                <Switch>
+                  {/*prettier-ignore*/}
+                  <Route component={Home} exact path={AppRoutes.Home} />
+                  <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
+                  <Route component={Users} exact path={UsersRoutes.Home} />
+                  <Route
+                    component={Organizations}
+                    path={OrganizationsRoutes.Home}
+                  />
+                  <Route
+                    component={AccountSettings}
+                    exact
+                    path={AccountSettingsRoutes.Home}
+                  />
+                  <Route
+                    component={ExceptionNotificationTest}
+                    exact
+                    path={ExceptionNotificationTestRoutes.Home}
+                  />
+                  <Redirect path='*' to={AppRoutes.Home} />
+                </Switch>
+              </div>
+            </Breadcrumb>
+          </UniversalSearchProvider>
         </LoadingOverlay>
       </DocumentTitle>
     );
