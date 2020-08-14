@@ -17,8 +17,6 @@ function* searcherFn(state: IState, term: string): Iterator<ICluster> {
         // Ignore, we don't need to show deleted clusters.
         break;
       case cluster.id?.toLowerCase().includes(termLowerCased):
-        yield cluster;
-        break;
       case cluster.name?.toLowerCase().includes(termLowerCased):
         yield cluster;
         break;
