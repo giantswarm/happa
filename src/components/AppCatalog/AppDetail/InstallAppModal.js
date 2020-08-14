@@ -140,6 +140,13 @@ const InstallAppModal = (props) => {
   };
 
   const updateValuesYAML = (files) => {
+    if (files.length < 1) {
+      setValuesYAML({});
+      setValuesYAMLError('');
+
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -156,6 +163,13 @@ const InstallAppModal = (props) => {
   };
 
   const updateSecretsYAML = (files) => {
+    if (files.length < 1) {
+      setSecretsYAML({});
+      setSecretsYAMLError('');
+
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
