@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
@@ -28,8 +28,11 @@ const icApp = {
 };
 
 describe('InstallIngressButton', () => {
-  it.skip('renders without crashing', () => {
-    renderWithStore(InstallIngressButton, { cluster: defaultCluster });
+  it('renders without crashing', async () => {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    await act(async () => {
+      renderWithStore(InstallIngressButton, { cluster: defaultCluster });
+    });
   });
 
   it('displays an install button if there is no IC installed', async () => {
