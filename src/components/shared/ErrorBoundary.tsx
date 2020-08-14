@@ -30,10 +30,9 @@ export default class ErrorBoundary extends Component<
     return { hasError: true };
   }
 
-  constructor(props: IErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
+  public readonly state: IErrorBoundaryState = {
+    hasError: false,
+  };
 
   componentDidCatch(error: Error) {
     if (this.props.reportError) {
