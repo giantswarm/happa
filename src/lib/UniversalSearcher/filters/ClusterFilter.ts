@@ -12,16 +12,16 @@ function* searcherFn(state: IState, term: string): Iterator<ICluster> {
   const clusterList = Object.values<ICluster>(state.entities.clusters.items);
 
   for (const cluster of clusterList) {
-    if (cluster.delete_date) {
-      continue;
-    }
-
-    if (cluster.id?.toLowerCase().includes(termLowerCased)) {
-      yield cluster;
-    }
-
-    if (cluster.name?.toLowerCase().includes(termLowerCased)) {
-      yield cluster;
+    switch (true) {
+      case typeof cluster.delete_date !== 'undefined':
+        // Ignore, we don't need to show deleted clusters.
+        break;
+      case cluster.id?.toLowerCase().includes(termLowerCased):
+        yield cluster;
+        break;
+      case cluster.name?.toLowerCase().includes(termLowerCased):
+        yield cluster;
+        break;
     }
   }
 }
