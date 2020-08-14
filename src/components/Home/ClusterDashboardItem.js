@@ -258,10 +258,8 @@ function ClusterDashboardItem({
           </>
 
           {/* Cluster resources */}
-
           <ErrorFallback error={nodePoolsLoadError}>
             <ClusterDetailsDiv>
-              {/*<ErrorBoundary>*/}
               {isV5Cluster ? (
                 <ClusterDashboardResourcesV5
                   cluster={cluster}
@@ -274,7 +272,6 @@ function ClusterDashboardItem({
                   isClusterCreating={isCreating}
                 />
               )}
-              {/*</ErrorBoundary>*/}
             </ClusterDetailsDiv>
           </ErrorFallback>
         </ContentWrapper>
