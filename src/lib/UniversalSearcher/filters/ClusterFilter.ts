@@ -11,15 +11,16 @@ function* searcherFn(state: IState, term: string): Iterator<ICluster> {
   const termLowerCased = term.toLowerCase();
   const clusterList = Object.values<ICluster>(state.entities.clusters.items);
 
-  let containsTermInID = false;
-  let containsTermInName = false;
   for (const cluster of clusterList) {
-    containsTermInID =
-      cluster.id?.toLowerCase().includes(termLowerCased) ?? false;
-    containsTermInName =
-      cluster.name?.toLowerCase().includes(termLowerCased) ?? false;
+    if (cluster.delete_date) {
+      continue;
+    }
 
-    if (containsTermInID || containsTermInName) {
+    if (cluster.id?.toLowerCase().includes(termLowerCased)) {
+      yield cluster;
+    }
+
+    if (cluster.name?.toLowerCase().includes(termLowerCased)) {
       yield cluster;
     }
   }
