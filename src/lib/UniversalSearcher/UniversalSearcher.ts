@@ -5,10 +5,15 @@ type UniversalSearcherFilterName = string;
 export interface IUniversalSearcher {
   registerFilter<T, S>(filter: IUniversalSearcherFilter<T, S>): void;
   getFilters(): UniversalSearchFilterMap;
-  search<S>(term: string, state: S): IUniversalSearcherResult<unknown>[];
+  search<S>(
+    term: string,
+    state: S,
+    limit: number
+  ): IUniversalSearcherResult<unknown>[];
   search<T, S>(
     term: string,
     state: S,
+    limit: number,
     type: UniversalSearcherFilterName
   ): IUniversalSearcherResult<T>[];
 }
@@ -37,9 +42,6 @@ export type UniversalSearchFilterMap<T = unknown, S = any> = Record<
 >;
 
 class UniversalSearcherImpl implements IUniversalSearcher {
-  // eslint-disable-next-line no-magic-numbers
-  public static readonly searchItemsLimit = 10;
-
   public registerFilter<T, S>(filter: IUniversalSearcherFilter<T, S>) {
     this.knownFilters[filter.type] = filter as IUniversalSearcherFilter<
       T | unknown,
@@ -51,15 +53,21 @@ class UniversalSearcherImpl implements IUniversalSearcher {
     return Object.assign({}, this.knownFilters);
   }
 
-  public search<S>(term: string, state: S): IUniversalSearcherResult<unknown>[];
+  public search<S>(
+    term: string,
+    state: S,
+    limit: number
+  ): IUniversalSearcherResult<unknown>[];
   public search<T, S>(
     term: string,
     state: S,
+    limit: number,
     type: UniversalSearcherFilterName
   ): IUniversalSearcherResult<T>[];
   public search<T, S>(
     term: string,
     state: S,
+    limit: number,
     type?: UniversalSearcherFilterName
   ): IUniversalSearcherResult<T | unknown>[] {
     const result: IUniversalSearcherResult<T | unknown>[] = [];
@@ -84,10 +92,7 @@ class UniversalSearcherImpl implements IUniversalSearcher {
       );
 
       let current = iterator.next();
-      while (
-        !current.done &&
-        currentIndex < UniversalSearcherImpl.searchItemsLimit
-      ) {
+      while (!current.done && currentIndex < limit) {
         result.push(current.value);
 
         current = iterator.next();

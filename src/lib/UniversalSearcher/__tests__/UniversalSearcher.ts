@@ -25,6 +25,7 @@ interface ITestState {
 
 describe('UniversalSearcher', () => {
   it('can search for different terms, with multiple registered types', () => {
+    const limit = 10;
     const stateToSearch: ITestState = {
       clusters: {
         items: [
@@ -80,16 +81,16 @@ describe('UniversalSearcher', () => {
     registerClusterSearcherFilter(us);
     registerAppSearcherFilter(us);
 
-    let result = us.search('some', stateToSearch);
+    let result = us.search('some', stateToSearch, limit);
     expect(result.length).toBe(2);
 
-    result = us.search('amazing', stateToSearch);
+    result = us.search('amazing', stateToSearch, limit);
     expect(result.length).toBe(1);
 
-    result = us.search('random', stateToSearch);
+    result = us.search('random', stateToSearch, limit);
     expect(result.length).toBe(1);
 
-    result = us.search('crazy', stateToSearch);
+    result = us.search('crazy', stateToSearch, limit);
     expect(result.length).toBe(0);
   });
 });

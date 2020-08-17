@@ -15,6 +15,8 @@ interface IUniversalSearchContextValue {
   filters: UniversalSearchFilterMap;
 }
 
+const SEARCH_ITEMS_LIMIT = 10;
+
 const initialContextValue: IUniversalSearchContextValue = {
   searchTerm: '',
   search: () => {},
@@ -46,7 +48,9 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
 
   const search = (term: string, type?: string) => {
     setSearchTerm(term);
-    setResults(controller.search(term, globalState, type as string));
+    setResults(
+      controller.search(term, globalState, SEARCH_ITEMS_LIMIT, type as string)
+    );
   };
 
   const contextValue: IUniversalSearchContextValue = {
