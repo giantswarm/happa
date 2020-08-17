@@ -20,8 +20,7 @@ const SuggestionItemLink = styled(Link)`
   background-color: ${({ theme }) => theme.colors.darkBlueDarker4};
   transition: 0.075s ease-out;
 
-  &[aria-selected='true'],
-  &:hover {
+  &[aria-selected='true'] {
     background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
   }
 
