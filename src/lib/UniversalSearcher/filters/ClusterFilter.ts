@@ -11,8 +11,8 @@ function* searcherFn(state: IState, term: string): Iterator<ICluster> {
       case typeof cluster.delete_date !== 'undefined':
         // Ignore, we don't need to show deleted clusters.
         break;
-      case cluster.id?.toLowerCase().includes(termLowerCased):
-      case cluster.name?.toLowerCase().includes(termLowerCased):
+      case cluster.id.toLowerCase().includes(termLowerCased):
+      case cluster.name.toLowerCase().includes(termLowerCased):
         yield cluster;
         break;
     }
