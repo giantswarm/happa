@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 interface IUniversalSearchContextValue {
   searchTerm: string;
   search(newTerm: string): void;
-  search<T = unknown>(newTerm: string, type: string): void;
+  search<T>(newTerm: string, type: string): void;
   searchResults: IUniversalSearcherResult<unknown>[];
   filters: UniversalSearchFilterMap;
 }
@@ -42,8 +42,9 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
   controller,
 }) => {
   const [searchTerm, setSearchTerm] = useState(initialContextValue.searchTerm);
-  const [results, setResults] = useState(initialContextValue.searchResults);
+
   const globalState = useSelector((state) => state);
+  const results = useRef(initialContextValue.searchResults);
   const filters = useRef(controller.getFilters());
 
   const search = (term: string, type?: string) => {
@@ -57,12 +58,12 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
         type as string
       );
     }
-    setResults(newResults);
+    results.current = newResults;
   };
 
   const contextValue: IUniversalSearchContextValue = {
     searchTerm,
-    searchResults: results,
+    searchResults: results.current,
     search,
     filters: filters.current,
   };
