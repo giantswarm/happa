@@ -36,5 +36,22 @@ export const defaultConfig: IOAuth2Config = {
     tokenEndpoint: `${authority}/token`,
     jwksUri: `${authority}/keys`,
     userInfoEndpoint: `${authority}/userinfo`,
+
+    idTokenSigningAlgValuesSupported: ['RS256'],
+    tokenEndpointAuthMethodsSupported: ['client_secret_basic'],
+    scopesSupported: ['openid', 'email', 'groups', 'profile', 'offline_access'],
+    responseTypesSupported: ['code', 'id_token', 'token'],
+    subjectTypesSupported: ['public'],
+    claimsSupported: [
+      'aud',
+      'email',
+      'email_verified',
+      'exp',
+      'iat',
+      'iss',
+      'locale',
+      'name',
+      'sub',
+    ],
   },
 };
