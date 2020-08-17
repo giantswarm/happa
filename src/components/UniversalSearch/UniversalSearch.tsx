@@ -120,12 +120,14 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
         case 'ArrowUp':
           if (selectedIndex > 0) {
             e.preventDefault();
+
             setSelectedIndex(selectedIndex - 1);
           }
           break;
         case 'ArrowDown':
           if (selectedIndex < debouncedResults.length - 1) {
             e.preventDefault();
+
             setSelectedIndex(selectedIndex + 1);
           }
           break;
