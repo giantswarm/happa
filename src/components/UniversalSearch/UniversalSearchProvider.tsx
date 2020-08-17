@@ -48,9 +48,16 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
 
   const search = (term: string, type?: string) => {
     setSearchTerm(term);
-    setResults(
-      controller.search(term, globalState, SEARCH_ITEMS_LIMIT, type as string)
-    );
+    let newResults = initialContextValue.searchResults;
+    if (term.length > 0) {
+      newResults = controller.search(
+        term,
+        globalState,
+        SEARCH_ITEMS_LIMIT,
+        type as string
+      );
+    }
+    setResults(newResults);
   };
 
   const contextValue: IUniversalSearchContextValue = {
