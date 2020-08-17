@@ -22,7 +22,6 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
-import { memoize } from 'underscore';
 import UniversalSearchProvider from 'UniversalSearch/UniversalSearchProvider';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -43,15 +42,10 @@ defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
 const defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
 
+const searchController = new UniversalSearcherImpl();
+searchController.registerFilter(ClusterFilter);
+
 class Layout extends React.Component {
-  static makeUniversalSearchController = memoize(() => {
-    const controller = new UniversalSearcherImpl();
-
-    controller.registerFilter(ClusterFilter);
-
-    return controller;
-  });
-
   componentDidMount() {
     if (this.props.user) {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;

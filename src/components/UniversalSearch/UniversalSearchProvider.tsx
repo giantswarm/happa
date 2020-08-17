@@ -16,6 +16,7 @@ interface IUniversalSearchContextValue {
 }
 
 const SEARCH_ITEMS_LIMIT = 10;
+const searchTermRegex = /^\S+$/;
 
 const initialContextValue: IUniversalSearchContextValue = {
   searchTerm: '',
@@ -46,12 +47,11 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
   const globalState = useSelector((state) => state);
   const results = useRef(initialContextValue.searchResults);
   const filters = useRef(controller.getFilters());
-  const searchTermRegex = useRef(/^\S+$/);
 
   const search = (term: string, type?: string) => {
     setSearchTerm(term);
     let newResults = initialContextValue.searchResults;
-    if (searchTermRegex.current.test(term)) {
+    if (searchTermRegex.test(term)) {
       newResults = controller.search(
         term,
         globalState,
