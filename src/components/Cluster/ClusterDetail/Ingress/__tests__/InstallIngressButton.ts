@@ -90,12 +90,12 @@ describe('InstallIngressButton', () => {
       catalogsState
     );
 
-    // expect(
-    //   screen.queryByText(/ingress controller installed/i)
-    // ).not.toBeInTheDocument();
-    // expect(
-    //   screen.queryByText(/this will install the nginx ingress controller app/i)
-    // ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/ingress controller installed/i)
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/this will install the nginx ingress controller app/i)
+    ).not.toBeInTheDocument();
 
     const button = screen.getByRole('button', {
       name: /install ingress controller/i,
