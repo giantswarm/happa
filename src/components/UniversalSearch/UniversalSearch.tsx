@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import useDebounce from 'lib/effects/useDebounce';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Input from 'UI/Inputs/Input';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
@@ -71,18 +71,17 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
     );
 
     const [isFocused, setIsFocused] = useState(false);
+    const [isOpened, setIsOpened] = useState(false);
 
-    const getIsOpened = () => {
+    useEffect(() => {
       if (debouncedSearchTerm.length > 0 && isFocused) {
-        return true;
+        setIsOpened(true);
       }
 
       if (debouncedSearchTerm.length < 1 || !isFocused) {
-        return false;
+        setIsOpened(false);
       }
-
-      return false;
-    };
+    }, [debouncedSearchTerm, isFocused]);
 
     const handleBlur = () => {
       setTimeout(() => {
@@ -90,11 +89,15 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       }, UPDATE_DEBOUNCE_DELAY_MS);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Escape') {
+        setIsOpened(false);
+      }
+    };
+
     const handleClear = () => {
       search('');
     };
-
-    const isOpened = getIsOpened();
 
     return (
       <SearchWrapper {...rest}>
@@ -113,6 +116,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
             aria-autocomplete='list'
             onFocus={() => setIsFocused(true)}
             onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
           />
           <ClearButton
             role='button'
