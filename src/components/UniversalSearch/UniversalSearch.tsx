@@ -14,7 +14,6 @@ const SearchWrapper = styled.div`
   justify-content: center;
   align-items: center;
   padding: 12px;
-  box-sizing: border-box;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
   position: relative;
   line-height: initial;

@@ -20,7 +20,6 @@ const SuggestionsWrapper = styled.div<{ isOpened?: boolean }>`
   z-index: 99;
   border-radius: ${({ theme }) =>
     `0 0 ${theme.border_radius} ${theme.border_radius}`};
-  padding-top: 8px;
   user-select: none;
   opacity: ${({ isOpened }) => (isOpened ? 1 : 0)};
   visibility: ${({ isOpened }) => (isOpened ? 'visible' : 'hidden')};
@@ -29,7 +28,9 @@ const SuggestionsWrapper = styled.div<{ isOpened?: boolean }>`
 
 const SuggestionsList = styled.ul`
   list-style: none;
-  padding-left: 0;
+  padding: ${({ theme }) =>
+    `${theme.spacingPx * 2}px ${theme.spacingPx * 3}px`};
+  margin-bottom: 0;
 `;
 
 interface IUniversalSearchSuggestionListProps

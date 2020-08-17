@@ -8,12 +8,15 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-const SuggestionItem = styled.li``;
+const SuggestionItem = styled.li`
+  & + & {
+    margin-top: ${({ theme }) => theme.spacingPx * 2}px;
+  }
+`;
 
 const SuggestionItemLink = styled(Link)`
-  box-sizing: border-box;
-  line-height: initial;
   display: block;
+  border-radius: ${({ theme }) => theme.border_radius};
   background-color: ${({ theme }) => theme.colors.darkBlueDarker4};
   transition: 0.075s ease-out;
 
