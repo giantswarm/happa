@@ -10,11 +10,11 @@ import { Link } from 'react-router-dom';
 const SuggestionItem = styled.li``;
 
 const SuggestionItemLink = styled(Link)`
-  padding: 16px;
   box-sizing: border-box;
   line-height: initial;
   display: block;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker4};
+  transition: 0.075s ease-out;
 
   &[aria-selected='true'],
   &:hover {
@@ -22,7 +22,7 @@ const SuggestionItemLink = styled(Link)`
   }
 
   &:active {
-    background-color: ${({ theme }) => theme.colors.darkBlueDarker1};
+    background-color: ${({ theme }) => theme.colors.darkBlueDarker5};
   }
 `;
 

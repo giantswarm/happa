@@ -5,6 +5,7 @@ import * as React from 'react';
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  padding: ${({ theme }) => theme.spacingPx * 4}px;
 `;
 
 const ElementWrapper = styled.div`
@@ -25,7 +26,7 @@ const Type = styled.span`
 `;
 
 interface IRendererWrapperProps extends React.ComponentPropsWithoutRef<'div'> {
-  type: string;
+  type?: string;
 }
 
 const RendererWrapper: React.FC<IRendererWrapperProps> = ({
@@ -36,16 +37,19 @@ const RendererWrapper: React.FC<IRendererWrapperProps> = ({
   return (
     <Wrapper {...rest}>
       <ElementWrapper>{children}</ElementWrapper>
-      <TypeWrapper>
-        <Type>{type}</Type>
-      </TypeWrapper>
+
+      {type && (
+        <TypeWrapper>
+          <Type>{type}</Type>
+        </TypeWrapper>
+      )}
     </Wrapper>
   );
 };
 
 RendererWrapper.propTypes = {
-  type: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  type: PropTypes.string,
 };
 
 export default RendererWrapper;

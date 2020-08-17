@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import UniversalSearchSuggestionItem from 'UniversalSearch/UniversalSearchSuggestionItem';
+import UniversalSearchSuggestionItemPlaceholder from 'UniversalSearch/UniversalSearchSuggestionItemPlaceholder';
 
 const SuggestionsWrapper = styled.div<{ isOpened?: boolean }>`
   position: absolute;
@@ -49,6 +50,10 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
   return (
     <SuggestionsWrapper isOpened={isOpened} {...rest}>
       <SuggestionsList role='listbox'>
+        {searchResults.length < 1 && (
+          <UniversalSearchSuggestionItemPlaceholder />
+        )}
+
         {searchResults.map((result, index) => (
           <UniversalSearchSuggestionItem
             key={getKeyFromResult(result, index)}

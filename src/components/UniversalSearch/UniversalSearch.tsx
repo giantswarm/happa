@@ -17,12 +17,44 @@ const SearchWrapper = styled.div`
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
   position: relative;
+  line-height: initial;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 800px;
 `;
 
 const StyledInput = styled(Input)`
   width: 100%;
-  max-width: 800px;
   margin-bottom: 0;
+`;
+
+const ClearButton = styled.div<{ isVisible?: boolean }>`
+  position: absolute;
+  z-index: 9;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  padding: ${({ theme }) => theme.spacingPx * 2}px;
+  display: flex;
+  align-items: center;
+  font-size: ${({ theme }) => theme.spacingPx * 5}px;
+  user-select: none;
+  opacity: ${({ isVisible, theme }) => (isVisible ? theme.disabledOpacity : 0)};
+  pointer-events: ${({ isVisible }) => (isVisible ? 'all' : 'none')};
+  transition: opacity 0.115s ease-out;
+  will-change: opacity;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:active {
+    opacity: 0.4;
+  }
 `;
 
 interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
@@ -57,23 +89,36 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       }
     }, [isOpened, debouncedSearchTerm]);
 
+    const handleClear = () => {
+      search('');
+    };
+
     return (
       <SearchWrapper {...rest}>
-        <StyledInput
-          icon='search'
-          hint={<>&#32;</>}
-          onChange={search}
-          value={searchTerm}
-          placeholder={`I'm looking for...`}
-          autoComplete='off'
-          autoCapitalize='off'
-          spellCheck='false'
-          role='combobox'
-          aria-haspopup={isOpened ? 'true' : 'false'}
-          aria-autocomplete='list'
-          onFocus={handleFocus}
-          onBlur={() => setIsOpened(false)}
-        />
+        <InputWrapper>
+          <StyledInput
+            icon='search'
+            hint={<>&#32;</>}
+            onChange={search}
+            value={searchTerm}
+            placeholder={`I'm looking for...`}
+            autoComplete='off'
+            autoCapitalize='off'
+            spellCheck='false'
+            role='combobox'
+            aria-haspopup={isOpened ? 'true' : 'false'}
+            aria-autocomplete='list'
+            onFocus={handleFocus}
+            onBlur={() => setIsOpened(false)}
+          />
+          <ClearButton
+            role='button'
+            onClick={handleClear}
+            isVisible={searchTerm.length > 0}
+          >
+            <i className='fa fa-close' />
+          </ClearButton>
+        </InputWrapper>
         <UniversalSearchSuggestionList
           searchResults={debouncedResults}
           searchTerm={debouncedSearchTerm}
