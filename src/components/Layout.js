@@ -68,9 +68,7 @@ class Layout extends React.Component {
     return (
       <DocumentTitle>
         <LoadingOverlay loading={this.props.loadingClustersList}>
-          <UniversalSearchProvider
-            controller={Layout.makeUniversalSearchController()}
-          >
+          <UniversalSearchProvider controller={searchController}>
             <Modals />
             <Navigation
               onSelectOrganization={this.selectOrganization}
