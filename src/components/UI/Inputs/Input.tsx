@@ -60,7 +60,7 @@ const Hint = styled.span`
 `;
 
 export interface IInput<T>
-  extends Omit<React.ComponentPropsWithoutRef<'input'>, 'onChange' | 'value'> {
+  extends Omit<React.ComponentPropsWithRef<'input'>, 'onChange' | 'value'> {
   children?: ReactNode;
   className?: string;
   description?: ReactNode;
@@ -75,59 +75,65 @@ export interface IInput<T>
   value?: T;
 }
 
-const Input: FC<IInput<string | FileList>> = ({
-  onChange,
-  className,
-  label,
-  inputId,
-  description,
-  icon,
-  children,
-  value,
-  readOnly,
-  placeholder,
-  hint,
-  validationError,
-  ...rest
-}) => {
-  const handleOnChange = (e: ChangeEvent<ElementRef<'input'>>) => {
-    onChange?.(e.target.value);
-  };
+const Input: FC<IInput<string | FileList>> = React.forwardRef(
+  (
+    {
+      onChange,
+      className,
+      label,
+      inputId,
+      description,
+      icon,
+      children,
+      value,
+      readOnly,
+      placeholder,
+      hint,
+      validationError,
+      ...rest
+    },
+    ref
+  ) => {
+    const handleOnChange = (e: ChangeEvent<ElementRef<'input'>>) => {
+      onChange?.(e.target.value);
+    };
 
-  return (
-    <Wrapper className={className}>
-      <Text>
-        {label && (
-          <label className='input-field-label' htmlFor={inputId ?? label}>
-            {label}
-          </label>
+    return (
+      <Wrapper className={className}>
+        <Text>
+          {label && (
+            <label className='input-field-label' htmlFor={inputId ?? label}>
+              {label}
+            </label>
+          )}
+          {description && <p>{description}</p>}
+        </Text>
+        <InputWrapper flexCenter={Boolean(icon)}>
+          {icon && <Icon className={`fa fa-${icon}`} />}
+          {children ?? (
+            <InputElement
+              {...rest}
+              ref={ref}
+              id={inputId ?? label}
+              onChange={handleOnChange}
+              type='text'
+              value={value as string}
+              readOnly={readOnly}
+              placeholder={placeholder}
+            />
+          )}
+        </InputWrapper>
+        {validationError ? (
+          <ValidationError>
+            <i className='fa fa-warning' /> {validationError}
+          </ValidationError>
+        ) : (
+          <Hint>{hint ?? <>&nbsp;</>}</Hint>
         )}
-        {description && <p>{description}</p>}
-      </Text>
-      <InputWrapper flexCenter={Boolean(icon)}>
-        {icon && <Icon className={`fa fa-${icon}`} />}
-        {children ?? (
-          <InputElement
-            {...rest}
-            id={inputId ?? label}
-            onChange={handleOnChange}
-            type='text'
-            value={value as string}
-            readOnly={readOnly}
-            placeholder={placeholder}
-          />
-        )}
-      </InputWrapper>
-      {validationError ? (
-        <ValidationError>
-          <i className='fa fa-warning' /> {validationError}
-        </ValidationError>
-      ) : (
-        <Hint>{hint ?? <>&nbsp;</>}</Hint>
-      )}
-    </Wrapper>
-  );
-};
+      </Wrapper>
+    );
+  }
+);
 
 Input.propTypes = {
   children: PropTypes.node,

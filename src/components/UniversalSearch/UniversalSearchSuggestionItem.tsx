@@ -37,6 +37,7 @@ interface IUniversalSearchSuggestionItemProps
   renderer: UniversalSearcherRenderer<unknown>;
   urlFactory: UniversalSearchURLFactory<unknown>;
   onClick?: () => void;
+  onHover?: () => void;
   isSelected?: boolean;
 }
 
@@ -46,6 +47,7 @@ const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProp
   renderer,
   urlFactory,
   onClick,
+  onHover,
   isSelected,
   ...rest
 }) => {
@@ -57,6 +59,8 @@ const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProp
         tabIndex={-1}
         aria-selected={isSelected}
         onClick={onClick}
+        onMouseEnter={onHover}
+        onMouseLeave={onHover}
       >
         {renderer(searchResult.result, searchTerm, searchResult.type)}
       </SuggestionItemLink>
@@ -71,6 +75,7 @@ UniversalSearchSuggestionItem.propTypes = {
   renderer: PropTypes.func.isRequired,
   urlFactory: PropTypes.func.isRequired,
   onClick: PropTypes.func,
+  onHover: PropTypes.func,
   isSelected: PropTypes.bool,
 };
 

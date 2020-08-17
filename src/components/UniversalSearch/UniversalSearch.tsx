@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
+import { push } from 'connected-react-router';
 import useDebounce from 'lib/effects/useDebounce';
+import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearcher';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Input from 'UI/Inputs/Input';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
@@ -61,17 +64,22 @@ interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
 const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
   ({ ...rest }) => {
     const { searchTerm, search, searchResults, filters } = useUniversalSearch();
-    const debouncedSearchTerm = useDebounce(
+    const debouncedSearchTerm: string = useDebounce(
       searchTerm,
       UPDATE_DEBOUNCE_DELAY_MS
     );
-    const debouncedResults = useDebounce(
+    const debouncedResults: IUniversalSearcherResult<unknown>[] = useDebounce(
       searchResults,
       UPDATE_DEBOUNCE_DELAY_MS
     );
 
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
     const [isFocused, setIsFocused] = useState(false);
     const [isOpened, setIsOpened] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
       if (debouncedSearchTerm.length > 0 && isFocused) {
@@ -81,6 +89,8 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       if (debouncedSearchTerm.length < 1 || !isFocused) {
         setIsOpened(false);
       }
+
+      setSelectedIndex(-1);
     }, [debouncedSearchTerm, isFocused]);
 
     const handleBlur = () => {
@@ -89,20 +99,61 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       }, UPDATE_DEBOUNCE_DELAY_MS);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Escape') {
-        setIsOpened(false);
-      }
-    };
-
     const handleClear = () => {
       search('');
+    };
+
+    const handleResultHover = (index: number) => {
+      setSelectedIndex(index === selectedIndex ? -1 : index);
+    };
+
+    const handleResultClick = () => {
+      handleClear();
+      searchInputRef.current?.blur();
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      switch (e.key) {
+        case 'Escape':
+          setIsOpened(false);
+          break;
+        case 'ArrowUp':
+          if (selectedIndex > 0) {
+            e.preventDefault();
+            setSelectedIndex(selectedIndex - 1);
+          }
+          break;
+        case 'ArrowDown':
+          if (selectedIndex < debouncedResults.length) {
+            e.preventDefault();
+            setSelectedIndex(selectedIndex + 1);
+          }
+          break;
+        case 'Enter':
+          if (selectedIndex > 0 && selectedIndex < debouncedResults.length) {
+            e.preventDefault();
+
+            const activeResult = debouncedResults[selectedIndex];
+            if (!activeResult) break;
+
+            const activeFilter = filters[activeResult.type];
+            const url = activeFilter.urlFactory(
+              activeResult.result,
+              debouncedSearchTerm
+            );
+
+            dispatch(push(url));
+            handleResultClick();
+          }
+          break;
+      }
     };
 
     return (
       <SearchWrapper {...rest}>
         <InputWrapper>
           <StyledInput
+            ref={searchInputRef}
             icon='search'
             hint={<>&#32;</>}
             onChange={search}
@@ -131,7 +182,9 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           searchTerm={debouncedSearchTerm}
           filters={filters}
           isOpened={isOpened}
-          onResultClick={handleClear}
+          onResultClick={handleResultClick}
+          onResultHover={handleResultHover}
+          selectedIndex={selectedIndex}
         />
       </SearchWrapper>
     );

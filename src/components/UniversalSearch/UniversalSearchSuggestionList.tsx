@@ -38,7 +38,9 @@ interface IUniversalSearchSuggestionListProps
   searchResults: IUniversalSearcherResult<unknown>[];
   searchTerm: string;
   filters: UniversalSearchFilterMap;
+  selectedIndex?: number;
   onResultClick?: () => void;
+  onResultHover?: (index: number) => void;
   isOpened?: boolean;
 }
 
@@ -46,7 +48,9 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
   searchResults,
   searchTerm,
   filters,
+  selectedIndex,
   onResultClick,
+  onResultHover,
   isOpened,
   ...rest
 }) => {
@@ -62,14 +66,15 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
 
           return (
             <UniversalSearchSuggestionItem
-              key={getKeyFromResult(result, index)}
-              id={getKeyFromResult(result, index)}
+              key={`${result.type}-${index}`}
               searchResult={result}
               searchTerm={searchTerm}
               renderer={currFilter.renderer}
               urlFactory={currFilter.urlFactory}
-              isSelected={false}
+              isSelected={selectedIndex === index}
               onClick={onResultClick}
+              onMouseEnter={() => onResultHover?.(index)}
+              onMouseLeave={() => onResultHover?.(index)}
             />
           );
         })}
@@ -83,19 +88,15 @@ UniversalSearchSuggestionList.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   // @ts-ignore
   filters: PropTypes.object.isRequired,
+  selectedIndex: PropTypes.number,
   onResultClick: PropTypes.func,
+  onResultHover: PropTypes.func,
   isOpened: PropTypes.bool,
 };
 
 UniversalSearchSuggestionList.defaultProps = {
+  selectedIndex: -1,
   isOpened: false,
 };
-
-function getKeyFromResult(
-  result: IUniversalSearcherResult<unknown>,
-  index: number
-): string {
-  return `${result.type}-${index}`;
-}
 
 export default UniversalSearchSuggestionList;
