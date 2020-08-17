@@ -93,6 +93,7 @@ class UniversalSearcherImpl implements IUniversalSearcher {
         current = iterator.next();
         currentIndex++;
       }
+      iterator.return?.(null);
     }
 
     return result;
