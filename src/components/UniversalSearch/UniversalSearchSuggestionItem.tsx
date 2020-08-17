@@ -14,6 +14,16 @@ const SuggestionItemLink = styled(Link)`
   box-sizing: border-box;
   line-height: initial;
   display: block;
+  background-color: ${({ theme }) => theme.colors.darkBlueDarker4};
+
+  &[aria-selected='true'],
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
+  }
+
+  &:active {
+    background-color: ${({ theme }) => theme.colors.darkBlueDarker1};
+  }
 `;
 
 interface IUniversalSearchSuggestionItemProps
@@ -21,12 +31,14 @@ interface IUniversalSearchSuggestionItemProps
   searchResult: IUniversalSearcherResult<unknown>;
   searchTerm: string;
   renderer: UniversalSearcherRenderer<unknown>;
+  isSelected?: boolean;
 }
 
 const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProps> = ({
   searchResult,
   searchTerm,
   renderer,
+  isSelected,
   ...rest
 }) => {
   return (
@@ -35,7 +47,7 @@ const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProp
         to=''
         role='option'
         tabIndex={-1}
-        aria-selected='true'
+        aria-selected={isSelected}
       >
         {renderer(searchResult.result, searchTerm, searchResult.type)}
       </SuggestionItemLink>
@@ -48,6 +60,11 @@ UniversalSearchSuggestionItem.propTypes = {
   searchResult: PropTypes.object.isRequired,
   searchTerm: PropTypes.string.isRequired,
   renderer: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool,
+};
+
+UniversalSearchSuggestionItem.defaultProps = {
+  isSelected: false,
 };
 
 export default UniversalSearchSuggestionItem;

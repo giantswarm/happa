@@ -7,9 +7,12 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import UniversalSearchSuggestionItem from 'UniversalSearch/UniversalSearchSuggestionItem';
 
-const SuggestionsWrapper = styled.div`
+const SuggestionsWrapper = styled.div<{ isOpened?: boolean }>`
   position: absolute;
   top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   width: 100%;
   max-width: 800px;
   background: ${({ theme }) => theme.colors.darkBlueDarker4};
@@ -17,6 +20,10 @@ const SuggestionsWrapper = styled.div`
   border-radius: ${({ theme }) =>
     `0 0 ${theme.border_radius} ${theme.border_radius}`};
   padding-top: 8px;
+  user-select: none;
+  opacity: ${({ isOpened }) => (isOpened ? 1 : 0)};
+  visibility: ${({ isOpened }) => (isOpened ? 'visible' : 'hidden')};
+  pointer-events: ${({ isOpened }) => (isOpened ? 'all' : 'none')};
 `;
 
 const SuggestionsList = styled.ul`
@@ -29,16 +36,18 @@ interface IUniversalSearchSuggestionListProps
   searchResults: IUniversalSearcherResult<unknown>[];
   searchTerm: string;
   filters: UniversalSearchFilterMap;
+  isOpened?: boolean;
 }
 
 const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProps> = ({
   searchResults,
   searchTerm,
   filters,
+  isOpened,
   ...rest
 }) => {
   return (
-    <SuggestionsWrapper {...rest}>
+    <SuggestionsWrapper isOpened={isOpened} {...rest}>
       <SuggestionsList role='listbox'>
         {searchResults.map((result, index) => (
           <UniversalSearchSuggestionItem
@@ -47,6 +56,7 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
             searchResult={result}
             searchTerm={searchTerm}
             renderer={filters[result.type].renderer}
+            isSelected={false}
           />
         ))}
       </SuggestionsList>
@@ -59,6 +69,11 @@ UniversalSearchSuggestionList.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   // @ts-ignore
   filters: PropTypes.object.isRequired,
+  isOpened: PropTypes.bool,
+};
+
+UniversalSearchSuggestionList.defaultProps = {
+  isOpened: false,
 };
 
 function getKeyFromResult(

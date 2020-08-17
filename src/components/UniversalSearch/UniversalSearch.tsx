@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import useDebounce from 'lib/effects/useDebounce';
 import * as React from 'react';
+import { useState } from 'react';
 import Input from 'UI/Inputs/Input';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
@@ -29,7 +30,6 @@ interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
 const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
   ({ ...rest }) => {
     const { searchTerm, search, searchResults, filters } = useUniversalSearch();
-
     const debouncedSearchTerm = useDebounce(
       searchTerm,
       UPDATE_DEBOUNCE_DELAY_MS
@@ -38,6 +38,8 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       searchResults,
       UPDATE_DEBOUNCE_DELAY_MS
     );
+
+    const [isOpened, setIsOpened] = useState(false);
 
     return (
       <SearchWrapper {...rest}>
@@ -51,13 +53,16 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           autoCapitalize='off'
           spellCheck='false'
           role='combobox'
-          aria-haspopup='true'
+          aria-haspopup={isOpened ? 'true' : 'false'}
           aria-autocomplete='list'
+          onFocus={() => setIsOpened(true)}
+          onBlur={() => setIsOpened(false)}
         />
         <UniversalSearchSuggestionList
           searchResults={debouncedResults}
           searchTerm={debouncedSearchTerm}
           filters={filters}
+          isOpened={isOpened}
         />
       </SearchWrapper>
     );
