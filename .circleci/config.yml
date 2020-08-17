@@ -285,6 +285,7 @@ jobs:
             docker run --name happa-branch \
               -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
               -e AUDIENCE=test \
+              -e CP_AUDIENCE=test \
               -e API_ENDPOINT=test \
               -e CP_API_ENDPOINT=test \
               -e PASSAGE_ENDPOINT=test \

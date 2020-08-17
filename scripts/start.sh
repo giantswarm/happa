@@ -16,6 +16,10 @@ if [ -n "$AUDIENCE" ]; then
   sed -i "s|audience: .*|audience: '$AUDIENCE',|" /www/index.html
 fi
 
+if [ -n "$CP_AUDIENCE" ]; then
+  sed -i "s|cpAudience: .*|cpAudience: '$CP_AUDIENCE',|" /www/index.html
+fi
+
 if [ -n "$PASSAGE_ENDPOINT" ]; then
   sed -i "s|passageEndpoint: .*|passageEndpoint: '$PASSAGE_ENDPOINT',|" /www/index.html
 fi

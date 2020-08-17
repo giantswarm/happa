@@ -70,6 +70,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: audience
+        - name: AUDIENCE
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: cp-audience
         - name: INGRESS_BASE_DOMAIN
           valueFrom:
             configMapKeyRef:

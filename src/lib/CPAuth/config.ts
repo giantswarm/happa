@@ -2,7 +2,15 @@ import { IOAuth2Config } from 'lib/OAuth2/OAuth2';
 import { AppRoutes } from 'shared/constants/routes';
 
 const authority = window.config.cpAudience;
-const issuer = window.config.audience.replace('api', 'dex');
+/**
+ * This is derived from the audience because it is verified by the
+ * OIDC plugin, and it must be the same as the production, non-proxied
+ * authentication provider.
+ */
+let issuer = authority;
+if (issuer.includes('localhost')) {
+  issuer = window.config.audience.replace('api', 'dex');
+}
 
 export const defaultConfig: IOAuth2Config = {
   authority,
