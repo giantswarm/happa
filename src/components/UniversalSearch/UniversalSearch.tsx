@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import useDebounce from 'lib/effects/useDebounce';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Input from 'UI/Inputs/Input';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
@@ -41,6 +41,22 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
 
     const [isOpened, setIsOpened] = useState(false);
 
+    const handleFocus = () => {
+      if (searchTerm.length > 0) {
+        setIsOpened(true);
+      }
+    };
+
+    useEffect(() => {
+      if (debouncedSearchTerm.length > 0 && !isOpened) {
+        setIsOpened(true);
+      }
+
+      if (debouncedSearchTerm.length < 1 && isOpened) {
+        setIsOpened(false);
+      }
+    }, [isOpened, debouncedSearchTerm]);
+
     return (
       <SearchWrapper {...rest}>
         <StyledInput
@@ -55,7 +71,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           role='combobox'
           aria-haspopup={isOpened ? 'true' : 'false'}
           aria-autocomplete='list'
-          onFocus={() => setIsOpened(true)}
+          onFocus={handleFocus}
           onBlur={() => setIsOpened(false)}
         />
         <UniversalSearchSuggestionList
