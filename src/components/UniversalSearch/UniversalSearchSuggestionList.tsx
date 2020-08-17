@@ -37,6 +37,7 @@ interface IUniversalSearchSuggestionListProps
   searchResults: IUniversalSearcherResult<unknown>[];
   searchTerm: string;
   filters: UniversalSearchFilterMap;
+  onResultClick?: () => void;
   isOpened?: boolean;
 }
 
@@ -44,6 +45,7 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
   searchResults,
   searchTerm,
   filters,
+  onResultClick,
   isOpened,
   ...rest
 }) => {
@@ -54,16 +56,22 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
           <UniversalSearchSuggestionItemPlaceholder />
         )}
 
-        {searchResults.map((result, index) => (
-          <UniversalSearchSuggestionItem
-            key={getKeyFromResult(result, index)}
-            id={getKeyFromResult(result, index)}
-            searchResult={result}
-            searchTerm={searchTerm}
-            renderer={filters[result.type].renderer}
-            isSelected={false}
-          />
-        ))}
+        {searchResults.map((result, index) => {
+          const currFilter = filters[result.type];
+
+          return (
+            <UniversalSearchSuggestionItem
+              key={getKeyFromResult(result, index)}
+              id={getKeyFromResult(result, index)}
+              searchResult={result}
+              searchTerm={searchTerm}
+              renderer={currFilter.renderer}
+              urlFactory={currFilter.urlFactory}
+              isSelected={false}
+              onClick={onResultClick}
+            />
+          );
+        })}
       </SuggestionsList>
     </SuggestionsWrapper>
   );
@@ -74,6 +82,7 @@ UniversalSearchSuggestionList.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   // @ts-ignore
   filters: PropTypes.object.isRequired,
+  onResultClick: PropTypes.func,
   isOpened: PropTypes.bool,
 };
 

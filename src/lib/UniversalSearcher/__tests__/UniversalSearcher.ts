@@ -117,6 +117,7 @@ function registerClusterSearcherFilter(searcher: IUniversalSearcher) {
   searcher.registerFilter({
     type: 'cluster',
     renderer: () => null,
+    urlFactory: () => '',
     searcher: searcherFn,
   });
 }
@@ -135,6 +136,7 @@ function registerAppSearcherFilter(searcher: IUniversalSearcher) {
   searcher.registerFilter({
     type: 'app',
     renderer: () => null,
+    urlFactory: () => '',
     searcher: searcherFn,
   });
 }

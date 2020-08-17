@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import {
   IUniversalSearcherResult,
   UniversalSearcherRenderer,
+  UniversalSearchURLFactory,
 } from 'lib/UniversalSearcher/UniversalSearcher';
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -31,6 +32,8 @@ interface IUniversalSearchSuggestionItemProps
   searchResult: IUniversalSearcherResult<unknown>;
   searchTerm: string;
   renderer: UniversalSearcherRenderer<unknown>;
+  urlFactory: UniversalSearchURLFactory<unknown>;
+  onClick?: () => void;
   isSelected?: boolean;
 }
 
@@ -38,16 +41,19 @@ const UniversalSearchSuggestionItem: React.FC<IUniversalSearchSuggestionItemProp
   searchResult,
   searchTerm,
   renderer,
+  urlFactory,
+  onClick,
   isSelected,
   ...rest
 }) => {
   return (
     <SuggestionItem {...rest}>
       <SuggestionItemLink
-        to=''
+        to={urlFactory(searchResult.result, searchTerm)}
         role='option'
         tabIndex={-1}
         aria-selected={isSelected}
+        onClick={onClick}
       >
         {renderer(searchResult.result, searchTerm, searchResult.type)}
       </SuggestionItemLink>
@@ -60,6 +66,8 @@ UniversalSearchSuggestionItem.propTypes = {
   searchResult: PropTypes.object.isRequired,
   searchTerm: PropTypes.string.isRequired,
   renderer: PropTypes.func.isRequired,
+  urlFactory: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   isSelected: PropTypes.bool,
 };
 

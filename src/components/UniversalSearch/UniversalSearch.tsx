@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import useDebounce from 'lib/effects/useDebounce';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Input from 'UI/Inputs/Input';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
@@ -71,27 +71,31 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       UPDATE_DEBOUNCE_DELAY_MS
     );
 
-    const [isOpened, setIsOpened] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
-    const handleFocus = () => {
-      if (searchTerm.length > 0) {
-        setIsOpened(true);
+    const getIsOpened = () => {
+      if (debouncedSearchTerm.length > 0 && isFocused) {
+        return true;
       }
+
+      if (debouncedSearchTerm.length < 1 || !isFocused) {
+        return false;
+      }
+
+      return false;
     };
 
-    useEffect(() => {
-      if (debouncedSearchTerm.length > 0 && !isOpened) {
-        setIsOpened(true);
-      }
-
-      if (debouncedSearchTerm.length < 1 && isOpened) {
-        setIsOpened(false);
-      }
-    }, [isOpened, debouncedSearchTerm]);
+    const handleBlur = () => {
+      setTimeout(() => {
+        setIsFocused(false);
+      }, UPDATE_DEBOUNCE_DELAY_MS);
+    };
 
     const handleClear = () => {
       search('');
     };
+
+    const isOpened = getIsOpened();
 
     return (
       <SearchWrapper {...rest}>
@@ -108,8 +112,8 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
             role='combobox'
             aria-haspopup={isOpened ? 'true' : 'false'}
             aria-autocomplete='list'
-            onFocus={handleFocus}
-            onBlur={() => setIsOpened(false)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={handleBlur}
           />
           <ClearButton
             role='button'
@@ -124,6 +128,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           searchTerm={debouncedSearchTerm}
           filters={filters}
           isOpened={isOpened}
+          onResultClick={handleClear}
         />
       </SearchWrapper>
     );

@@ -27,6 +27,7 @@ export interface IUniversalSearcherFilter<T, S> {
   type: UniversalSearcherFilterName;
   renderer: UniversalSearcherRenderer<T>;
   searcher: (state: S, term: string) => Iterator<T>;
+  urlFactory: UniversalSearchURLFactory<T>;
 }
 
 export type UniversalSearcherRenderer<T> = (
@@ -34,6 +35,8 @@ export type UniversalSearcherRenderer<T> = (
   searchTerm: string,
   type: string
 ) => ReactNode;
+
+export type UniversalSearchURLFactory<T> = (result: T, term: string) => string;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UniversalSearchFilterMap<T = unknown, S = any> = Record<

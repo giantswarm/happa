@@ -1,5 +1,7 @@
+import RoutePath from 'lib/routePath';
 import { IUniversalSearcherFilter } from 'lib/UniversalSearcher/UniversalSearcher';
 import { IState } from 'reducers/types';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import ClusterFilterRenderer from 'UniversalSearch/filters/ClusterFilterRenderer';
 
 function* searcherFn(state: IState, term: string): Iterator<ICluster> {
@@ -24,6 +26,15 @@ const ClusterFilter: IUniversalSearcherFilter<ICluster, IState> = {
   searcher: searcherFn,
   renderer: (element, searchTerm, type) =>
     ClusterFilterRenderer({ element, searchTerm, type }),
+  urlFactory: (result) => {
+    return RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.Home,
+      {
+        orgId: result.owner,
+        clusterId: result.id,
+      }
+    );
+  },
 };
 
 export default ClusterFilter;
