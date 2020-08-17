@@ -46,11 +46,12 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
   const globalState = useSelector((state) => state);
   const results = useRef(initialContextValue.searchResults);
   const filters = useRef(controller.getFilters());
+  const searchTermRegex = useRef(/^\S+$/);
 
   const search = (term: string, type?: string) => {
     setSearchTerm(term);
     let newResults = initialContextValue.searchResults;
-    if (term.length > 0) {
+    if (searchTermRegex.current.test(term)) {
       newResults = controller.search(
         term,
         globalState,
