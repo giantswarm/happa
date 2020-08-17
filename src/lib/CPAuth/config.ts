@@ -1,7 +1,10 @@
 import { IOAuth2Config } from 'lib/OAuth2/OAuth2';
 import { AppRoutes } from 'shared/constants/routes';
 
-const authority = window.config.cpAudience;
+let authority = window.config.cpAudience;
+if (!/http(s)?:\/\//.test(authority)) {
+  authority = `https://${authority}`;
+}
 /**
  * This is derived from the audience because it is verified by the
  * OIDC plugin, and it must be the same as the production, non-proxied

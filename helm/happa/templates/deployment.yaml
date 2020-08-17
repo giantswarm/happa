@@ -70,7 +70,7 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: audience
-        - name: AUDIENCE
+        - name: CP_AUDIENCE
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
