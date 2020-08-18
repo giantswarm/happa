@@ -5,7 +5,7 @@ import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearche
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Input from 'UI/Inputs/Input';
+import UniversalSearchInput from 'UniversalSearch/UniversalSearchInput';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
 
@@ -20,43 +20,6 @@ const SearchWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
   position: relative;
   line-height: initial;
-`;
-
-const InputWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-`;
-
-const StyledInput = styled(Input)`
-  width: 100%;
-  margin-bottom: 0;
-`;
-
-const ClearButton = styled.div<{ isVisible?: boolean }>`
-  position: absolute;
-  z-index: 9;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  padding: ${({ theme }) => theme.spacingPx * 2}px;
-  display: flex;
-  align-items: center;
-  font-size: ${({ theme }) => theme.spacingPx * 5}px;
-  user-select: none;
-  opacity: ${({ isVisible, theme }) => (isVisible ? theme.disabledOpacity : 0)};
-  pointer-events: ${({ isVisible }) => (isVisible ? 'all' : 'none')};
-  transition: opacity 0.115s ease-out;
-  will-change: opacity;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &:active {
-    opacity: 0.4;
-  }
 `;
 
 interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
@@ -170,32 +133,17 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
 
     return (
       <SearchWrapper {...rest}>
-        <InputWrapper>
-          <StyledInput
-            ref={searchInputRef}
-            icon='search'
-            hint={<>&#32;</>}
-            onChange={search}
-            value={searchTerm}
-            placeholder={`I'm looking for...`}
-            autoComplete='off'
-            autoCapitalize='off'
-            spellCheck='false'
-            role='combobox'
-            aria-haspopup={isOpened ? 'true' : 'false'}
-            aria-autocomplete='list'
-            onFocus={() => setIsFocused(true)}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-          />
-          <ClearButton
-            role='button'
-            onClick={handleClear}
-            isVisible={searchTerm.length > 0}
-          >
-            <i className='fa fa-close' />
-          </ClearButton>
-        </InputWrapper>
+        <UniversalSearchInput
+          ref={searchInputRef}
+          isOpened={isOpened}
+          searchTerm={searchTerm}
+          onFocus={() => setIsFocused(true)}
+          onChange={search}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          onClear={handleClear}
+          inputId='universal-search'
+        />
         <UniversalSearchSuggestionList
           searchResults={debouncedResults}
           searchTerm={debouncedSearchTerm}
@@ -204,6 +152,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
           onResultClick={handleResultClick}
           onResultHover={handleResultHover}
           selectedIndex={selectedIndex}
+          aria-labelledby='universal-search'
         />
       </SearchWrapper>
     );

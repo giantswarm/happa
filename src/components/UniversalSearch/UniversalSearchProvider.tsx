@@ -15,7 +15,7 @@ interface IUniversalSearchContextValue {
   filters: UniversalSearchFilterMap;
 }
 
-const SEARCH_ITEMS_LIMIT = 10;
+const SEARCH_ITEMS_LIMIT = 5;
 const searchTermRegex = /^\S+$/;
 
 const initialContextValue: IUniversalSearchContextValue = {
