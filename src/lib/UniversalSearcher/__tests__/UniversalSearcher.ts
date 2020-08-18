@@ -31,7 +31,7 @@ describe('UniversalSearcher', () => {
     registerAppSearcherFilter(us);
 
     const filters = us.getFilters();
-    expect(Object.entries(filters).length).toBe(2);
+    expect(Object.entries(filters)).toHaveLength(2);
     expect(filters.cluster.type).toBe('cluster');
     expect(filters.app.type).toBe('app');
   });
@@ -69,16 +69,16 @@ describe('UniversalSearcher', () => {
     registerClusterSearcherFilter(us);
 
     let result = us.search('some', stateToSearch, limit);
-    expect(result.length).toBe(2);
+    expect(result).toHaveLength(2);
 
     result = us.search('amazing', stateToSearch, limit);
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
 
     result = us.search('random', stateToSearch, limit);
-    expect(result.length).toBe(1);
+    expect(result).toHaveLength(1);
 
     result = us.search('crazy', stateToSearch, limit);
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
   });
 
   it('can search for different terms, with multiple registered types', () => {
@@ -139,16 +139,16 @@ describe('UniversalSearcher', () => {
     registerAppSearcherFilter(us);
 
     let result = us.search('some', stateToSearch, limit);
-    expect(result.length).toBe(2);
+    expect(result).toHaveLength(2);
 
     result = us.search('amazing', stateToSearch, limit);
-    expect(result.length).toBe(1);
+    expect(result).toHaveLength(1);
 
     result = us.search('random', stateToSearch, limit);
-    expect(result.length).toBe(1);
+    expect(result).toHaveLength(1);
 
     result = us.search('crazy', stateToSearch, limit);
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
   });
 
   it('can search for different terms, with multiple registered types, and single filter selected', () => {
@@ -209,16 +209,16 @@ describe('UniversalSearcher', () => {
     registerAppSearcherFilter(us);
 
     let result = us.search('some', stateToSearch, limit, 'app');
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
 
     result = us.search('amazing', stateToSearch, limit, 'app');
-    expect(result.length).toBe(1);
+    expect(result).toHaveLength(1);
 
     result = us.search('random', stateToSearch, limit, 'app');
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
 
     result = us.search('crazy', stateToSearch, limit, 'app');
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
   });
 
   it('limits the number of search results to the given value', () => {
@@ -253,13 +253,13 @@ describe('UniversalSearcher', () => {
     registerClusterSearcherFilter(us);
 
     let result = us.search('random', stateToSearch, 2);
-    expect(result.length).toBe(2);
+    expect(result).toHaveLength(2);
 
     result = us.search('random', stateToSearch, 3);
-    expect(result.length).toBe(3);
+    expect(result).toHaveLength(3);
 
     result = us.search('random', stateToSearch, 9);
-    expect(result.length).toBe(4);
+    expect(result).toHaveLength(4);
   });
 
   it('cannot use a filter that is not registered', () => {
