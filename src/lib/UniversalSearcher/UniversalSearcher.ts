@@ -1,7 +1,5 @@
 import { ReactNode } from 'react';
 
-type UniversalSearcherFilterName = string;
-
 export interface IUniversalSearcher {
   registerFilter<T, S>(filter: IUniversalSearcherFilter<T, S>): void;
   getFilters(): UniversalSearchFilterMap;
@@ -14,17 +12,17 @@ export interface IUniversalSearcher {
     term: string,
     state: S,
     limit: number,
-    type: UniversalSearcherFilterName
+    type: string
   ): IUniversalSearcherResult<T>[];
 }
 
 export interface IUniversalSearcherResult<T> {
-  type: UniversalSearcherFilterName;
+  type: string;
   result: T;
 }
 
 export interface IUniversalSearcherFilter<T, S> {
-  type: UniversalSearcherFilterName;
+  type: string;
   renderer: UniversalSearcherRenderer<T>;
   searcher: (state: S, term: string) => Iterator<T>;
   urlFactory: UniversalSearchURLFactory<T>;
@@ -40,7 +38,7 @@ export type UniversalSearchURLFactory<T> = (result: T, term: string) => string;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UniversalSearchFilterMap<T = unknown, S = any> = Record<
-  UniversalSearcherFilterName,
+  string,
   IUniversalSearcherFilter<T, S>
 >;
 
@@ -65,13 +63,13 @@ class UniversalSearcherImpl implements IUniversalSearcher {
     term: string,
     state: S,
     limit: number,
-    type: UniversalSearcherFilterName
+    type: string
   ): IUniversalSearcherResult<T>[];
   public search<T, S>(
     term: string,
     state: S,
     limit: number,
-    type?: UniversalSearcherFilterName
+    type?: string
   ): IUniversalSearcherResult<T | unknown>[] {
     const result: IUniversalSearcherResult<T | unknown>[] = [];
     let filters: IUniversalSearcherFilter<T | unknown, S>[] = [];
