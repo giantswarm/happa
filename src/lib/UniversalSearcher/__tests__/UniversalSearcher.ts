@@ -261,6 +261,68 @@ describe('UniversalSearcher', () => {
     result = us.search('random', stateToSearch, 9);
     expect(result.length).toBe(4);
   });
+
+  it('cannot use a filter that is not registered', () => {
+    const limit = 10;
+    const stateToSearch: ITestState = {
+      clusters: {
+        items: [
+          {
+            id: '1sd1f',
+            name: 'Random cluster',
+            creationDate: 123313120,
+          },
+          {
+            id: '19sd1',
+            name: 'Some weird cluster',
+            creationDate: 4301234123,
+          },
+          {
+            id: '23sa1',
+            name: 'Some awesome cluster',
+            creationDate: 12312030123,
+          },
+          {
+            id: '1230ad',
+            name: `A cluster. That's it`,
+            creationDate: 15440450400,
+          },
+        ],
+      },
+      apps: {
+        items: [
+          {
+            name: 'A cool app',
+            creationDate: 12321312,
+            catalog: 'random-catalog',
+          },
+          {
+            name: 'A not so cool app',
+            creationDate: 1234312365,
+            catalog: 'not-so-random-catalog',
+          },
+          {
+            name: 'An amazing app',
+            creationDate: 12549054,
+            catalog: 'random-catalog',
+          },
+          {
+            name: 'Aaaaa...aaapp',
+            creationDate: 12435055,
+            catalog: 'some-catalog',
+          },
+        ],
+      },
+    };
+    const us = new UniversalSearcherImpl();
+
+    registerClusterSearcherFilter(us);
+    registerAppSearcherFilter(us);
+
+    expect(() => {
+      us.search('test', stateToSearch, limit, 'random');
+    }).toThrow('Unknown filter type');
+  });
 });
 
 function registerClusterSearcherFilter(searcher: IUniversalSearcher) {
