@@ -116,23 +116,39 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
       switch (e.key) {
         case 'Escape':
           setIsOpened(false);
-          break;
-        case 'ArrowUp':
-          if (selectedIndex > 0) {
-            e.preventDefault();
 
+          break;
+
+        case 'ArrowUp':
+          if (isOpened && selectedIndex > 0) {
+            e.preventDefault();
             setSelectedIndex(selectedIndex - 1);
           }
+
           break;
+
         case 'ArrowDown':
+          if (!isOpened) {
+            e.preventDefault();
+            setIsOpened(true);
+
+            break;
+          }
+
           if (selectedIndex < debouncedResults.length - 1) {
             e.preventDefault();
 
             setSelectedIndex(selectedIndex + 1);
           }
+
           break;
+
         case 'Enter':
-          if (selectedIndex > -1 && selectedIndex < debouncedResults.length) {
+          if (
+            isOpened &&
+            selectedIndex > -1 &&
+            selectedIndex < debouncedResults.length
+          ) {
             e.preventDefault();
 
             const activeResult = debouncedResults[selectedIndex];
@@ -147,6 +163,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
             dispatch(push(url));
             handleResultClick();
           }
+
           break;
       }
     };
