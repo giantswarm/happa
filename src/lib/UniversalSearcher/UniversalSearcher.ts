@@ -29,7 +29,7 @@ export interface IUniversalSearcherFilter<T, S> {
 }
 
 export type UniversalSearcherRenderer<T> = (
-  element: T,
+  result: T,
   searchTerm: string,
   type: string
 ) => ReactNode;

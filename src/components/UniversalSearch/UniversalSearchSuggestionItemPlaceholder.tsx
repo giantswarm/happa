@@ -1,8 +1,5 @@
-import styled from '@emotion/styled';
 import * as React from 'react';
 import RendererWrapper from 'UniversalSearch/filters/RendererWrapper';
-
-const Placeholder = styled.li``;
 
 interface IUniversalSearchSuggestionItemPlaceholderProps
   extends React.ComponentPropsWithoutRef<'li'> {}
@@ -11,9 +8,9 @@ const UniversalSearchSuggestionItemPlaceholder: React.FC<IUniversalSearchSuggest
   ...rest
 }) => {
   return (
-    <Placeholder {...rest}>
+    <li {...rest}>
       <RendererWrapper>No results found for your query.</RendererWrapper>
-    </Placeholder>
+    </li>
   );
 };
 

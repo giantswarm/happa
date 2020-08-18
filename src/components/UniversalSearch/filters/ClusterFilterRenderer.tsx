@@ -14,20 +14,20 @@ interface IClusterFilterRendererProps
   extends IGenericFilterRendererProps<ICluster> {}
 
 const ClusterFilterRenderer: React.FC<IClusterFilterRendererProps> = ({
-  element,
+  result,
   type,
 }) => {
   return (
     <RendererWrapper type={type}>
-      <ClusterIDLabel clusterID={element.id} copyEnabled={false} />
-      <ClusterName>{element.name}</ClusterName>
+      <ClusterIDLabel clusterID={result.id} copyEnabled={false} />
+      <ClusterName>{result.name}</ClusterName>
     </RendererWrapper>
   );
 };
 
 ClusterFilterRenderer.propTypes = {
   // @ts-ignore
-  element: PropTypes.object.isRequired,
+  result: PropTypes.object.isRequired,
   type: PropTypes.string.isRequired,
 };
 

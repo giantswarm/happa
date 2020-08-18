@@ -28,8 +28,8 @@ function* searcherFn(state: IState, term: string): Iterator<ICluster> {
 const ClusterFilter: IUniversalSearcherFilter<ICluster, IState> = {
   type: 'cluster',
   searcher: searcherFn,
-  renderer: (element, searchTerm, type) =>
-    ClusterFilterRenderer({ element, searchTerm, type }),
+  renderer: (result, searchTerm, type) =>
+    ClusterFilterRenderer({ result, searchTerm, type }),
   urlFactory: (result) => {
     return RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Home,
