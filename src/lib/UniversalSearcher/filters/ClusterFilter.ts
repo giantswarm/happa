@@ -7,15 +7,11 @@ import ClusterFilterRenderer from 'UniversalSearch/filters/ClusterFilterRenderer
 function* searcherFn(state: IState, term: string): Iterator<ICluster> {
   const termLowerCased = term.toLowerCase();
   const clusterList = Object.values<ICluster>(state.entities.clusters.items);
-  const currentOrg = state.main.selectedOrganization;
 
   for (const cluster of clusterList) {
     switch (true) {
       case typeof cluster.delete_date !== 'undefined':
         // Ignore, we don't need to show deleted clusters.
-        break;
-      case currentOrg !== cluster.owner:
-        // Ignore, we only want clusters from the current organization.
         break;
       case cluster.id.toLowerCase().includes(termLowerCased):
       case cluster.name.toLowerCase().includes(termLowerCased):
