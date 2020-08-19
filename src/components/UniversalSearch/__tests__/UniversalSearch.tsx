@@ -1,7 +1,6 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import ClusterFilter from 'lib/UniversalSearcher/filters/ClusterFilter';
 import {
   IUniversalSearcher,
   IUniversalSearcherFilter,
@@ -11,6 +10,7 @@ import {
 import * as React from 'react';
 import { IState } from 'reducers/types';
 import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
+import ClusterFilterRenderer from 'UniversalSearch/filters/ClusterFilterRenderer';
 import UniversalSearch from 'UniversalSearch/UniversalSearch';
 import UniversalSearchProvider from 'UniversalSearch/UniversalSearchProvider';
 
@@ -366,7 +366,8 @@ function createTestSearchController() {
 
   const filter: IUniversalSearcherFilter<ICluster, IState> = {
     type: 'cluster',
-    renderer: ClusterFilter.renderer,
+    renderer: (result, searchTerm, type) =>
+      ClusterFilterRenderer({ result, searchTerm, type }),
     urlFactory: urlFactory,
     searcher: searcherFn,
   };
