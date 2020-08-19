@@ -79,7 +79,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const isLoading =
     isNew === true ||
     isPreparingIngressTabData === true ||
-    isInstalling === true;
+    isInstalling === true ||
+    !ingressAppToInstall?.version;
 
   const clusterId: string = cluster.id;
 
@@ -87,12 +88,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
   useEffect(() => {
     const prepare = async () => {
-      try {
-        await dispatch(prepareIngressTabData({ clusterId }));
-        setIsNew(false);
-      } catch (error) {
-        // Do nothing, flash message is shown in action.
-      }
+      await dispatch(prepareIngressTabData({ clusterId }));
+      setIsNew(false);
     };
 
     prepare();
@@ -123,7 +120,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
             <>
               This will install the{' '}
               <StyledLink to={ingressAppDetailPath} href={ingressAppDetailPath}>
-                NGINX Ingress Controller app {ingressAppToInstall?.version}
+                NGINX Ingress Controller app {ingressAppToInstall.version}
               </StyledLink>{' '}
               on cluster <ClusterIDLabel clusterID={clusterId} />
             </>
