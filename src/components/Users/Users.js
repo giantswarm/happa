@@ -69,6 +69,7 @@ class Users extends React.Component {
   confirmRemoveExpiration = (email) => {
     this.setState({
       modal: {
+        template: UserModalTypes.Unexpire,
         visible: true,
         loading: true,
       },
