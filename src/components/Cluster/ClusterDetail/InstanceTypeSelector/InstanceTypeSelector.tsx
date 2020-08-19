@@ -53,7 +53,11 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ListToggler role='button' onClick={() => setCollapsed(!collapsed)}>
+        <ListToggler
+          role='button'
+          onClick={() => setCollapsed(!collapsed)}
+          collapsible={true}
+        >
           <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
           Available {plural}
         </ListToggler>

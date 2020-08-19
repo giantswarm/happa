@@ -17,10 +17,12 @@ import {
 } from 'selectors/clusterSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import ErrorBoundary from 'shared/ErrorBoundary';
 import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
+import ErrorText from 'UI/ErrorText';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import { isClusterCreating } from 'utils/clusterUtils';
 
@@ -202,66 +204,89 @@ function ClusterDashboardItem({
   }
 
   return (
-    <Wrapper>
-      <LabelWrapper>
-        <Link to={linkToCluster}>
-          <ClusterIDLabel clusterID={clusterId} copyEnabled />
-        </Link>
-      </LabelWrapper>
-
-      <ContentWrapper>
-        <TitleWrapper>
+    <ErrorBoundary
+      fallback={
+        <Wrapper>
+          <LabelWrapper>
+            <ClusterIDLabel clusterID={clusterId} copyEnabled />
+          </LabelWrapper>
+          <ContentWrapper>
+            <TitleWrapper>
+              <RefreshableLabel value={cluster.name}>
+                <NameWrapper>{cluster.name}</NameWrapper>
+              </RefreshableLabel>
+            </TitleWrapper>
+            <ClusterDetailsDiv>
+              <ErrorText>
+                <i className='fa fa-warning' /> Error while loading cluster
+                details. We have been notified.
+              </ErrorText>
+            </ClusterDetailsDiv>
+          </ContentWrapper>
+        </Wrapper>
+      }
+    >
+      <Wrapper>
+        <LabelWrapper>
           <Link to={linkToCluster}>
-            <RefreshableLabel value={cluster.name}>
-              <NameWrapper>{cluster.name}</NameWrapper>
-            </RefreshableLabel>
-            <UpgradeNotice clusterId={clusterId} />
+            <ClusterIDLabel clusterID={clusterId} copyEnabled />
           </Link>
-        </TitleWrapper>
+        </LabelWrapper>
 
-        <>
-          <RefreshableLabel value={cluster.release_version}>
-            <span>
-              <i className='fa fa-version-tag' title='Release version' />{' '}
-              {cluster.release_version}
-            </span>
-          </RefreshableLabel>
-          <Dot style={{ paddingLeft: 0 }} />
-          Created {relativeDate(cluster.create_date)}
-        </>
+        <ContentWrapper>
+          <TitleWrapper>
+            <Link to={linkToCluster}>
+              <RefreshableLabel value={cluster.name}>
+                <NameWrapper>{cluster.name}</NameWrapper>
+              </RefreshableLabel>
+              <UpgradeNotice clusterId={clusterId} />
+            </Link>
+          </TitleWrapper>
 
-        {/* Cluster resources */}
-        <ErrorFallback error={nodePoolsLoadError}>
-          <ClusterDetailsDiv>
-            {isV5Cluster ? (
-              <ClusterDashboardResourcesV5
-                cluster={cluster}
-                nodePools={nodePools}
-                isClusterCreating={isCreating}
-              />
-            ) : (
-              <ClusterDashboardResourcesV4
-                cluster={cluster}
-                isClusterCreating={isCreating}
-              />
-            )}
-          </ClusterDetailsDiv>
-        </ErrorFallback>
-      </ContentWrapper>
+          <>
+            <RefreshableLabel value={cluster.release_version}>
+              <span>
+                <i className='fa fa-version-tag' title='Release version' />{' '}
+                {cluster.release_version}
+              </span>
+            </RefreshableLabel>
+            <Dot style={{ paddingLeft: 0 }} />
+            Created {relativeDate(cluster.create_date)}
+          </>
 
-      <ButtonsWrapper>
-        {clusterYoungerThan30Days() ? (
-          <ButtonGroup>
-            <GetStartedButton onClick={accessCluster}>
-              <i className='fa fa-start' />
-              Get Started
-            </GetStartedButton>
-          </ButtonGroup>
-        ) : (
-          ''
-        )}
-      </ButtonsWrapper>
-    </Wrapper>
+          {/* Cluster resources */}
+          <ErrorFallback error={nodePoolsLoadError}>
+            <ClusterDetailsDiv>
+              {isV5Cluster ? (
+                <ClusterDashboardResourcesV5
+                  cluster={cluster}
+                  nodePools={nodePools}
+                  isClusterCreating={isCreating}
+                />
+              ) : (
+                <ClusterDashboardResourcesV4
+                  cluster={cluster}
+                  isClusterCreating={isCreating}
+                />
+              )}
+            </ClusterDetailsDiv>
+          </ErrorFallback>
+        </ContentWrapper>
+
+        <ButtonsWrapper>
+          {clusterYoungerThan30Days() ? (
+            <ButtonGroup>
+              <GetStartedButton onClick={accessCluster}>
+                <i className='fa fa-start' />
+                Get Started
+              </GetStartedButton>
+            </ButtonGroup>
+          ) : (
+            ''
+          )}
+        </ButtonsWrapper>
+      </Wrapper>
+    </ErrorBoundary>
   );
 }
 

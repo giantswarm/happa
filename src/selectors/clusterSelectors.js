@@ -1,3 +1,4 @@
+import { getUserIsAdmin } from 'selectors/authSelectors';
 import cmp from 'semver-compare';
 import { Constants } from 'shared';
 import {
@@ -145,36 +146,44 @@ export const selectTargetRelease = (state, cluster) => {
   if (!cluster || Object.keys(state.entities.releases.items).length === 0)
     return null;
 
-  const releases = state.entities.releases.items;
-  let availableVersions = Object.keys(releases).sort(cmp);
-
-  if (!state.main.loggedInUser.isAdmin) {
-    availableVersions = availableVersions.filter(
-      (release) => releases[release].active
-    );
-  }
+  const releases = Object.assign({}, state.entities.releases.items);
+  const clusterReleaseVersion = cluster.release_version;
+  const isAdmin = getUserIsAdmin(state);
 
   // Guard against the release version of this cluster not being in the /v4/releases/
   // response.
   // This will ensure that Happa can calculate the target version for upgrade
   // correctly.
-  if (!availableVersions.includes(cluster.release_version)) {
-    availableVersions.push(cluster.release_version);
-    availableVersions.sort(cmp);
+  if (!releases[clusterReleaseVersion]) {
+    releases[clusterReleaseVersion] = null;
+  }
+  const availableVersions = Object.keys(releases).sort(cmp);
+
+  let nextVersion = null;
+  let currVersionFound = false;
+  for (let i = 0; i < availableVersions.length; i++) {
+    if (availableVersions[i] === clusterReleaseVersion) {
+      currVersionFound = true;
+
+      continue;
+    }
+    if (!currVersionFound) continue;
+
+    if (releases[availableVersions[i]]?.active) {
+      nextVersion = availableVersions[i];
+
+      break;
+    }
+
+    if (isAdmin && !nextVersion) {
+      nextVersion = availableVersions[i];
+    }
   }
 
-  const indexCurrentVersion = availableVersions.indexOf(
-    cluster.release_version
-  );
-
-  if (availableVersions.length > indexCurrentVersion) {
-    return availableVersions[indexCurrentVersion + 1];
-  }
-
-  return null;
+  return nextVersion;
 };
 
-export const selectCanClusterUpgrade = (state, clusterID) => {
+export const selectCanClusterUpgrade = (clusterID) => (state) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 
@@ -191,7 +200,7 @@ export const selectCanClusterUpgrade = (state, clusterID) => {
   );
 };
 
-export const selectIsClusterUpgrading = (state, clusterID) => {
+export const selectIsClusterUpgrading = (clusterID) => (state) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 

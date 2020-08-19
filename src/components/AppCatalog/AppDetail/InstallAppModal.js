@@ -140,6 +140,13 @@ const InstallAppModal = (props) => {
   };
 
   const updateValuesYAML = (files) => {
+    if (files.length < 1) {
+      setValuesYAML({});
+      setValuesYAMLError('');
+
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -156,6 +163,13 @@ const InstallAppModal = (props) => {
   };
 
   const updateSecretsYAML = (files) => {
+    if (files.length < 1) {
+      setSecretsYAML({});
+      setSecretsYAMLError('');
+
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -227,14 +241,9 @@ const InstallAppModal = (props) => {
               <GenericModal
                 {...props}
                 footer={
-                  <>
-                    <Button bsStyle='primary' onClick={next}>
-                      Next
-                    </Button>
-                    <Button bsStyle='link' onClick={onClose}>
-                      Cancel
-                    </Button>
-                  </>
+                  <Button bsStyle='link' onClick={onClose}>
+                    Cancel
+                  </Button>
                 }
                 onClose={onClose}
                 title={`Install ${props.app.name}: Pick a cluster`}

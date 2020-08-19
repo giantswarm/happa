@@ -29,11 +29,23 @@ const ReleaseRow: FC<IReleaseRow> = ({
 }) => {
   const [collapsed, setCollapsed] = useState(true);
 
+  const handleTabSelect = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
+    // Handle tapping the space bar.
+    if (e.key === ' ') {
+      e.preventDefault();
+      selectRelease(version);
+    }
+  };
+
   return (
     <>
       <Tr
+        tabIndex={isSelected ? -1 : 0}
+        role='radio'
+        aria-checked={isSelected}
         isSelected={isSelected}
         onClick={() => selectRelease(version)}
+        onKeyDown={handleTabSelect}
         toneDown={!active}
       >
         <CursorPointerCell>
@@ -82,6 +94,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
           <td colSpan={6}>
             <ComponentsWrapper data-testid={`components-${version}`}>
               {components
+                .slice()
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((component) => (
                   <ReleaseComponentLabel
