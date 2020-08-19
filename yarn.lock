@@ -7862,10 +7862,10 @@ jest@26.4.0:
     import-local "^3.0.2"
     jest-cli "^26.4.0"
 
-js-base64@3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.2.4.tgz#1c311821ec3871ced6091808409f8401e30684a6"
-  integrity sha512-WFh/G3UxDU/3gWsJPtT1Ee8smRd9d6Z9k1/1aIg5ajGdYUeZg+ZRFTY6LxBqNArU3qjHKhrxu1pjr921DILu3w==
+js-base64@3.4.5:
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.4.5.tgz#6d1921e65a172cfd924604e1416dfaff45752c3e"
+  integrity sha512-Ub/AANierdcT8nm4ndBn3KzpZQ3MdHX4a+bwoVdjgeHCZ0ZEcP+UB4nmR4Z5lR6SH3Y+qAPmgVR0RxKJNHNHEg==
 
 js-base64@^2.1.8:
   version "2.6.2"
