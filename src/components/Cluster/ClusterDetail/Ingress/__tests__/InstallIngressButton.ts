@@ -61,10 +61,17 @@ describe('InstallIngressButton', () => {
 
   it('displays a message if an IC is already installed', async () => {
     getMockCall(`/v4/clusters/${v4AWSClusterResponse.id}/apps/`, [icApp]);
+    nock('https://catalogshost')
+      .get('/giantswarm-catalog/index.yaml')
+      .reply(StatusCodes.Ok, catalogIndexResponse);
 
-    renderWithStore(InstallIngressButton, {
-      cluster: { ...v4AWSClusterResponse, apps: [icApp] },
-    });
+    renderWithStore(
+      InstallIngressButton,
+      {
+        cluster: { ...v4AWSClusterResponse, apps: [icApp] },
+      },
+      catalogsState
+    );
 
     expect(
       await screen.findByText(/ingress controller installed/i)
@@ -122,6 +129,7 @@ describe('InstallIngressButton', () => {
     getMockCall(`/v4/clusters/${v4AWSClusterResponse.id}/apps/`, []);
     nock('https://catalogshost')
       .get('/giantswarm-catalog/index.yaml')
+      .times(2)
       .reply(StatusCodes.Ok, catalogIndexResponse);
     nock(API_ENDPOINT)
       .intercept(
