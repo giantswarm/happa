@@ -1,4 +1,3 @@
-import useDebounce from 'lib/effects/useDebounce';
 import {
   IUniversalSearcher,
   IUniversalSearcherResult,
@@ -8,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { ReactNode, useContext, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Constants } from 'shared';
+import { debounce } from 'underscore';
 
 interface IUniversalSearchContextValue {
   searchTerm: string;
@@ -50,13 +50,7 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
   const globalState = useSelector((state) => state);
   const filters = useRef(controller.getFilters());
 
-  const debouncedResults = useDebounce(
-    results,
-    Constants.UNIVERSAL_SEARCH_UPDATE_DELAY_MS
-  );
-
-  const search = (term: string, type?: string) => {
-    setSearchTerm(term);
+  const handleSearchForTerm = debounce((term: string, type?: string) => {
     let newResults = initialContextValue.searchResults;
     if (searchTermRegex.test(term)) {
       newResults = controller.search(
@@ -67,11 +61,16 @@ const UniversalSearchProvider: React.FC<IUniversalSearchProviderProps> = ({
       );
     }
     setResults(newResults);
+  }, Constants.UNIVERSAL_SEARCH_UPDATE_DELAY_MS);
+
+  const search = (term: string, type?: string) => {
+    setSearchTerm(term);
+    handleSearchForTerm(term, type);
   };
 
   const contextValue: IUniversalSearchContextValue = {
     searchTerm,
-    searchResults: debouncedResults,
+    searchResults: results,
     search,
     filters: filters.current,
   };
