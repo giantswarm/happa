@@ -82,6 +82,11 @@ describe('UniversalSearch', () => {
     });
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 'cluster' } });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
     const options = await screen.findAllByRole('option');
     expect(options).toHaveLength(2);
   });
@@ -141,6 +146,11 @@ describe('UniversalSearch', () => {
     });
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 'cluster' } });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
     const options = await screen.findAllByRole('option');
     fireEvent.click(options[0]);
 
@@ -214,6 +224,10 @@ describe('UniversalSearch', () => {
     });
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 'cluster' } });
+
+    act(() => {
+      jest.runAllTimers();
+    });
 
     const options = await screen.findAllByRole('option');
     fireEvent.mouseEnter(options[0]);
