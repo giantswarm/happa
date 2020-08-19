@@ -33,6 +33,10 @@ const SuggestionsList = styled.ul`
   margin-bottom: 0;
 `;
 
+const AccessibilityHint = styled.div`
+  display: none;
+`;
+
 interface IUniversalSearchSuggestionListProps
   extends React.ComponentPropsWithoutRef<'div'> {
   searchResults: IUniversalSearcherResult<unknown>[];
@@ -54,12 +58,16 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
   isOpened,
   ...rest
 }) => {
+  const numOfResults = searchResults.length;
+
   return (
-    <SuggestionsWrapper isOpened={isOpened} {...rest}>
+    <SuggestionsWrapper
+      isOpened={isOpened}
+      aria-hidden={isOpened ? 'false' : 'true'}
+      {...rest}
+    >
       <SuggestionsList role='listbox'>
-        {searchResults.length < 1 && (
-          <UniversalSearchSuggestionItemPlaceholder />
-        )}
+        {numOfResults < 1 && <UniversalSearchSuggestionItemPlaceholder />}
 
         {searchResults.map((result, index) => {
           const currFilter = filters[result.type];
@@ -78,6 +86,10 @@ const UniversalSearchSuggestionList: React.FC<IUniversalSearchSuggestionListProp
             />
           );
         })}
+
+        <AccessibilityHint aria-live='polite' role='status'>
+          {numOfResults} results available.
+        </AccessibilityHint>
       </SuggestionsList>
     </SuggestionsWrapper>
   );
