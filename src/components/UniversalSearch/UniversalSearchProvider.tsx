@@ -29,9 +29,9 @@ const UniversalSearchContext = React.createContext<
   IUniversalSearchContextValue
 >(initialContextValue);
 
-export function useUniversalSearch() {
+export const useUniversalSearch = () => {
   return useContext(UniversalSearchContext);
-}
+};
 
 interface IUniversalSearchProviderProps {
   controller: IUniversalSearcher;

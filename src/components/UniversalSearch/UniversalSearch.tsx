@@ -24,140 +24,138 @@ const SearchWrapper = styled.div`
 
 interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
 
-const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo(
-  ({ ...rest }) => {
-    const { searchTerm, search, searchResults, filters } = useUniversalSearch();
-    const debouncedSearchTerm: string = useDebounce(
-      searchTerm,
-      UPDATE_DEBOUNCE_DELAY_MS
-    );
-    const debouncedResults: IUniversalSearcherResult<unknown>[] = useDebounce(
-      searchResults,
-      UPDATE_DEBOUNCE_DELAY_MS
-    );
+const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo((props) => {
+  const { searchTerm, search, searchResults, filters } = useUniversalSearch();
+  const debouncedSearchTerm: string = useDebounce(
+    searchTerm,
+    UPDATE_DEBOUNCE_DELAY_MS
+  );
+  const debouncedResults: IUniversalSearcherResult<unknown>[] = useDebounce(
+    searchResults,
+    UPDATE_DEBOUNCE_DELAY_MS
+  );
 
-    const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-    const [isFocused, setIsFocused] = useState(false);
-    const [isOpened, setIsOpened] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-      if (debouncedSearchTerm.length > 0 && isFocused) {
-        setIsOpened(true);
-      }
+  useEffect(() => {
+    if (debouncedSearchTerm.length > 0 && isFocused) {
+      setIsOpened(true);
+    }
 
-      if (debouncedSearchTerm.length < 1 || !isFocused) {
+    if (debouncedSearchTerm.length < 1 || !isFocused) {
+      setIsOpened(false);
+    }
+
+    setSelectedIndex(-1);
+  }, [debouncedSearchTerm, isFocused]);
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      setIsFocused(false);
+    }, UPDATE_DEBOUNCE_DELAY_MS);
+  };
+
+  const handleClear = () => {
+    search('');
+  };
+
+  const handleResultHover = (index: number) => {
+    setSelectedIndex(index === selectedIndex ? -1 : index);
+  };
+
+  const handleResultClick = () => {
+    handleClear();
+    searchInputRef.current?.blur();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case 'Escape':
         setIsOpened(false);
-      }
 
-      setSelectedIndex(-1);
-    }, [debouncedSearchTerm, isFocused]);
+        break;
 
-    const handleBlur = () => {
-      setTimeout(() => {
-        setIsFocused(false);
-      }, UPDATE_DEBOUNCE_DELAY_MS);
-    };
+      case 'ArrowUp':
+        if (isOpened && selectedIndex > 0) {
+          e.preventDefault();
+          setSelectedIndex(selectedIndex - 1);
+        }
 
-    const handleClear = () => {
-      search('');
-    };
+        break;
 
-    const handleResultHover = (index: number) => {
-      setSelectedIndex(index === selectedIndex ? -1 : index);
-    };
-
-    const handleResultClick = () => {
-      handleClear();
-      searchInputRef.current?.blur();
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      switch (e.key) {
-        case 'Escape':
-          setIsOpened(false);
+      case 'ArrowDown':
+        if (!isOpened) {
+          e.preventDefault();
+          setIsOpened(true);
 
           break;
+        }
 
-        case 'ArrowUp':
-          if (isOpened && selectedIndex > 0) {
-            e.preventDefault();
-            setSelectedIndex(selectedIndex - 1);
-          }
+        if (selectedIndex < debouncedResults.length - 1) {
+          e.preventDefault();
 
-          break;
+          setSelectedIndex(selectedIndex + 1);
+        }
 
-        case 'ArrowDown':
-          if (!isOpened) {
-            e.preventDefault();
-            setIsOpened(true);
+        break;
 
-            break;
-          }
+      case 'Enter':
+        if (
+          isOpened &&
+          selectedIndex > -1 &&
+          selectedIndex < debouncedResults.length
+        ) {
+          e.preventDefault();
 
-          if (selectedIndex < debouncedResults.length - 1) {
-            e.preventDefault();
+          const activeResult = debouncedResults[selectedIndex];
+          if (!activeResult) break;
 
-            setSelectedIndex(selectedIndex + 1);
-          }
+          const activeFilter = filters[activeResult.type];
+          const url = activeFilter.urlFactory(
+            activeResult.result,
+            debouncedSearchTerm
+          );
 
-          break;
+          dispatch(push(url));
+          handleResultClick();
+        }
 
-        case 'Enter':
-          if (
-            isOpened &&
-            selectedIndex > -1 &&
-            selectedIndex < debouncedResults.length
-          ) {
-            e.preventDefault();
+        break;
+    }
+  };
 
-            const activeResult = debouncedResults[selectedIndex];
-            if (!activeResult) break;
-
-            const activeFilter = filters[activeResult.type];
-            const url = activeFilter.urlFactory(
-              activeResult.result,
-              debouncedSearchTerm
-            );
-
-            dispatch(push(url));
-            handleResultClick();
-          }
-
-          break;
-      }
-    };
-
-    return (
-      <SearchWrapper {...rest}>
-        <UniversalSearchInput
-          ref={searchInputRef}
-          isOpened={isOpened}
-          searchTerm={searchTerm}
-          onFocus={() => setIsFocused(true)}
-          onChange={search}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          onClear={handleClear}
-          inputId='universal-search'
-        />
-        <UniversalSearchSuggestionList
-          searchResults={debouncedResults}
-          searchTerm={debouncedSearchTerm}
-          filters={filters}
-          isOpened={isOpened}
-          onResultClick={handleResultClick}
-          onResultHover={handleResultHover}
-          selectedIndex={selectedIndex}
-          aria-labelledby='universal-search'
-        />
-      </SearchWrapper>
-    );
-  }
-);
+  return (
+    <SearchWrapper {...props}>
+      <UniversalSearchInput
+        ref={searchInputRef}
+        isOpened={isOpened}
+        searchTerm={searchTerm}
+        onFocus={() => setIsFocused(true)}
+        onChange={search}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        onClear={handleClear}
+        inputId='universal-search'
+      />
+      <UniversalSearchSuggestionList
+        searchResults={debouncedResults}
+        searchTerm={debouncedSearchTerm}
+        filters={filters}
+        isOpened={isOpened}
+        onResultClick={handleResultClick}
+        onResultHover={handleResultHover}
+        selectedIndex={selectedIndex}
+        aria-labelledby='universal-search'
+      />
+    </SearchWrapper>
+  );
+});
 
 UniversalSearch.propTypes = {};
 
