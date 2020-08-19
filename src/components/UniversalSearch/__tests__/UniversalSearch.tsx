@@ -227,6 +227,8 @@ describe('UniversalSearch', () => {
     const options = await screen.findAllByRole('option');
     fireEvent.mouseEnter(options[0]);
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
+    fireEvent.mouseLeave(options[0]);
+    expect(options[0]).toHaveAttribute('aria-selected', 'false');
   });
 
   it('can be controlled using the keyboard', async () => {
