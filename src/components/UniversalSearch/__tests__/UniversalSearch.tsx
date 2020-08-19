@@ -2,7 +2,12 @@ import { act, fireEvent, screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import ClusterFilter from 'lib/UniversalSearcher/filters/ClusterFilter';
-import UniversalSearcherImpl from 'lib/UniversalSearcher/UniversalSearcher';
+import {
+  IUniversalSearcher,
+  IUniversalSearcherFilter,
+  IUniversalSearcherResult,
+  UniversalSearchFilterMap,
+} from 'lib/UniversalSearcher/UniversalSearcher';
 import * as React from 'react';
 import { IState } from 'reducers/types';
 import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
@@ -11,9 +16,7 @@ import UniversalSearchProvider from 'UniversalSearch/UniversalSearchProvider';
 
 describe('UniversalSearch', () => {
   const memoryHistory = createMemoryHistory();
-
-  const searchController = new UniversalSearcherImpl();
-  searchController.registerFilter(ClusterFilter);
+  const searchController = createTestSearchController();
 
   function renderUniversalSearch(state: IState = {}) {
     const provider = getComponentWithStore(
@@ -43,40 +46,36 @@ describe('UniversalSearch', () => {
   });
 
   it('searches for a given input', async () => {
-    renderUniversalSearch({
-      entities: {
-        clusters: {
-          items: [
-            {
-              id: '1sd1f',
-              name: 'Random cluster',
-              owner: 'test',
-              create_date: 123313120,
-              delete_date: 12312312,
-            },
-            {
-              id: '19sd1',
-              name: 'Some weird cluster',
-              owner: 'test',
-              create_date: 4301234123,
-            },
-            {
-              id: '23sa1',
-              name: 'Some awesome cluster',
-              owner: 'test2',
-              create_date: 12312030123,
-            },
-            {
-              id: '1230ad',
-              name: `A cluster. That's it`,
-              owner: 'test',
-              create_date: 15440450400,
-              delete_date: 12312312,
-            },
-          ],
+    renderUniversalSearch(
+      createStateWithClusters([
+        {
+          id: '1sd1f',
+          name: 'Random cluster',
+          owner: 'test',
+          create_date: 123313120,
+          delete_date: 12312312,
         },
-      },
-    });
+        {
+          id: '19sd1',
+          name: 'Some weird cluster',
+          owner: 'test',
+          create_date: 4301234123,
+        },
+        {
+          id: '23sa1',
+          name: 'Some awesome cluster',
+          owner: 'test2',
+          create_date: 12312030123,
+        },
+        {
+          id: '1230ad',
+          name: `A cluster. That's it`,
+          owner: 'test',
+          create_date: 15440450400,
+          delete_date: 12312312,
+        },
+      ])
+    );
 
     const input = screen.getByRole('textbox', {
       name: `I'm looking for…`,
@@ -88,7 +87,7 @@ describe('UniversalSearch', () => {
   });
 
   it('displays a placeholder if no results are found', async () => {
-    renderUniversalSearch();
+    renderUniversalSearch(createStateWithClusters([]));
 
     const input = screen.getByRole('textbox', {
       name: `I'm looking for…`,
@@ -106,40 +105,36 @@ describe('UniversalSearch', () => {
   });
 
   it(`clicking on a search result navigates to the result's page`, async () => {
-    renderUniversalSearch({
-      entities: {
-        clusters: {
-          items: [
-            {
-              id: '1sd1f',
-              name: 'Random cluster',
-              create_date: 123313120,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-            {
-              id: '19sd1',
-              name: 'Some weird cluster',
-              owner: 'test',
-              create_date: 4301234123,
-            },
-            {
-              id: '23sa1',
-              name: 'Some awesome cluster',
-              owner: 'test2',
-              create_date: 12312030123,
-            },
-            {
-              id: '1230ad',
-              name: `A cluster. That's it`,
-              create_date: 15440450400,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-          ],
+    renderUniversalSearch(
+      createStateWithClusters([
+        {
+          id: '1sd1f',
+          name: 'Random cluster',
+          create_date: 123313120,
+          owner: 'test',
+          delete_date: 12312312,
         },
-      },
-    });
+        {
+          id: '19sd1',
+          name: 'Some weird cluster',
+          owner: 'test',
+          create_date: 4301234123,
+        },
+        {
+          id: '23sa1',
+          name: 'Some awesome cluster',
+          owner: 'test2',
+          create_date: 12312030123,
+        },
+        {
+          id: '1230ad',
+          name: `A cluster. That's it`,
+          create_date: 15440450400,
+          owner: 'test',
+          delete_date: 12312312,
+        },
+      ])
+    );
 
     const input = screen.getByRole('textbox', {
       name: `I'm looking for…`,
@@ -158,7 +153,7 @@ describe('UniversalSearch', () => {
   });
 
   it('has a clear button, that clears the search bar content', () => {
-    renderUniversalSearch();
+    renderUniversalSearch(createStateWithClusters([]));
 
     const input = screen.getByRole('textbox', {
       name: /I'm looking for…/i,
@@ -183,40 +178,36 @@ describe('UniversalSearch', () => {
   });
 
   it('highlights results on hover', async () => {
-    renderUniversalSearch({
-      entities: {
-        clusters: {
-          items: [
-            {
-              id: '1sd1f',
-              name: 'Random cluster',
-              create_date: 123313120,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-            {
-              id: '19sd1',
-              name: 'Some weird cluster',
-              owner: 'test',
-              create_date: 4301234123,
-            },
-            {
-              id: '23sa1',
-              name: 'Some awesome cluster',
-              owner: 'test2',
-              create_date: 12312030123,
-            },
-            {
-              id: '1230ad',
-              name: `A cluster. That's it`,
-              create_date: 15440450400,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-          ],
+    renderUniversalSearch(
+      createStateWithClusters([
+        {
+          id: '1sd1f',
+          name: 'Random cluster',
+          create_date: 123313120,
+          owner: 'test',
+          delete_date: 12312312,
         },
-      },
-    });
+        {
+          id: '19sd1',
+          name: 'Some weird cluster',
+          owner: 'test',
+          create_date: 4301234123,
+        },
+        {
+          id: '23sa1',
+          name: 'Some awesome cluster',
+          owner: 'test2',
+          create_date: 12312030123,
+        },
+        {
+          id: '1230ad',
+          name: `A cluster. That's it`,
+          create_date: 15440450400,
+          owner: 'test',
+          delete_date: 12312312,
+        },
+      ])
+    );
 
     const input = screen.getByRole('textbox', {
       name: `I'm looking for…`,
@@ -232,40 +223,36 @@ describe('UniversalSearch', () => {
   });
 
   it('can be controlled using the keyboard', async () => {
-    renderUniversalSearch({
-      entities: {
-        clusters: {
-          items: [
-            {
-              id: '1sd1f',
-              name: 'Random cluster',
-              create_date: 123313120,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-            {
-              id: '19sd1',
-              name: 'Some weird cluster',
-              owner: 'test',
-              create_date: 4301234123,
-            },
-            {
-              id: '23sa1',
-              name: 'Some awesome cluster',
-              owner: 'test2',
-              create_date: 12312030123,
-            },
-            {
-              id: '1230ad',
-              name: `A cluster. That's it`,
-              create_date: 15440450400,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-          ],
+    renderUniversalSearch(
+      createStateWithClusters([
+        {
+          id: '1sd1f',
+          name: 'Random cluster',
+          create_date: 123313120,
+          owner: 'test',
+          delete_date: 12312312,
         },
-      },
-    });
+        {
+          id: '19sd1',
+          name: 'Some weird cluster',
+          owner: 'test',
+          create_date: 4301234123,
+        },
+        {
+          id: '23sa1',
+          name: 'Some awesome cluster',
+          owner: 'test2',
+          create_date: 12312030123,
+        },
+        {
+          id: '1230ad',
+          name: `A cluster. That's it`,
+          create_date: 15440450400,
+          owner: 'test',
+          delete_date: 12312312,
+        },
+      ])
+    );
 
     const input = screen.getByRole('textbox', {
       name: `I'm looking for…`,
@@ -302,40 +289,36 @@ describe('UniversalSearch', () => {
   });
 
   it('has a hidden accessibility hint about the number of results found', async () => {
-    renderUniversalSearch({
-      entities: {
-        clusters: {
-          items: [
-            {
-              id: '1sd1f',
-              name: 'Random cluster',
-              create_date: 123313120,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-            {
-              id: '19sd1',
-              name: 'Some weird cluster',
-              owner: 'test',
-              create_date: 4301234123,
-            },
-            {
-              id: '23sa1',
-              name: 'Some awesome cluster',
-              owner: 'test2',
-              create_date: 12312030123,
-            },
-            {
-              id: '1230ad',
-              name: `A cluster. That's it`,
-              create_date: 15440450400,
-              owner: 'test',
-              delete_date: 12312312,
-            },
-          ],
+    renderUniversalSearch(
+      createStateWithClusters([
+        {
+          id: '1sd1f',
+          name: 'Random cluster',
+          create_date: 123313120,
+          owner: 'test',
+          delete_date: 12312312,
         },
-      },
-    });
+        {
+          id: '19sd1',
+          name: 'Some weird cluster',
+          owner: 'test',
+          create_date: 4301234123,
+        },
+        {
+          id: '23sa1',
+          name: 'Some awesome cluster',
+          owner: 'test2',
+          create_date: 12312030123,
+        },
+        {
+          id: '1230ad',
+          name: `A cluster. That's it`,
+          create_date: 15440450400,
+          owner: 'test',
+          delete_date: 12312312,
+        },
+      ])
+    );
 
     const input = screen.getByRole('textbox', {
       name: `I'm looking for…`,
@@ -349,3 +332,73 @@ describe('UniversalSearch', () => {
     expect(hint).toHaveAttribute('role', 'status');
   });
 });
+
+function createStateWithClusters(clusters: ICluster[]) {
+  return {
+    entities: {
+      clusters: {
+        items: clusters,
+      },
+    },
+  };
+}
+
+function createTestSearchController() {
+  function urlFactory(result: ICluster): string {
+    return `/organizations/${result.owner}/clusters/${result.id}`;
+  }
+
+  function* searcherFn(state: IState, term: string): Iterator<ICluster> {
+    const termLowerCased = term.toLowerCase();
+
+    for (const cluster of state.entities.clusters.items) {
+      switch (true) {
+        case typeof cluster.delete_date !== 'undefined':
+          // Ignore, we don't need to show deleted clusters.
+          break;
+        case cluster.id.toLowerCase().includes(termLowerCased):
+        case cluster.name.toLowerCase().includes(termLowerCased):
+          yield cluster;
+          break;
+      }
+    }
+  }
+
+  const filter: IUniversalSearcherFilter<ICluster, IState> = {
+    type: 'cluster',
+    renderer: ClusterFilter.renderer,
+    urlFactory: urlFactory,
+    searcher: searcherFn,
+  };
+
+  const searchController: IUniversalSearcher = {
+    getFilters(): UniversalSearchFilterMap {
+      return { cluster: filter } as UniversalSearchFilterMap;
+    },
+    registerFilter<T, S>() {},
+    search<S>(
+      searchTerm: string,
+      state: S,
+      limit: number
+    ): IUniversalSearcherResult<ICluster>[] {
+      const result: IUniversalSearcherResult<ICluster>[] = [];
+
+      let currentIndex = 0;
+      const iterator = filter.searcher(state, searchTerm);
+      let current = iterator.next();
+      while (!current.done && currentIndex < limit) {
+        result.push({
+          type: filter.type,
+          result: current.value,
+        });
+
+        current = iterator.next();
+        currentIndex++;
+      }
+
+      return result;
+    },
+  };
+
+  return searchController;
+}
