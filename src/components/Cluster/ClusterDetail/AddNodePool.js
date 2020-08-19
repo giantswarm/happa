@@ -528,6 +528,10 @@ class AddNodePool extends Component {
         nodePoolDefinition.availability_zones.zones =
           availabilityZonesLabels.zonesArray;
         break;
+
+      case AvailabilityZoneSelection.None:
+        nodePoolDefinition.availability_zones.number = -1;
+        break;
     }
 
     switch (provider) {
