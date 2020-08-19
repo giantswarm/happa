@@ -26,6 +26,7 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.darkBlueLighter1};
   border-radius: ${({ theme }) => theme.border_radius};
   padding: ${({ theme }) => theme.spacingPx * 5}px;
+  height: 90px;
 `;
 
 const Text = styled.span`
