@@ -64,6 +64,8 @@ export const Constants = {
   NP_DEFAULT_MIN_SCALING_AZURE: 3,
   NP_DEFAULT_MAX_SCALING_AZURE: 3,
 
+  UNIVERSAL_SEARCH_UPDATE_DELAY_MS: 250,
+
   // App name of the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',
   // App catalog name containing the 'nginx-ingress-controller-app'

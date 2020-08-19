@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import { push } from 'connected-react-router';
 import useDebounce from 'lib/effects/useDebounce';
-import { IUniversalSearcherResult } from 'lib/UniversalSearcher/UniversalSearcher';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Constants } from 'shared';
 import UniversalSearchInput from 'UniversalSearch/UniversalSearchInput';
 import { useUniversalSearch } from 'UniversalSearch/UniversalSearchProvider';
 import UniversalSearchSuggestionList from 'UniversalSearch/UniversalSearchSuggestionList';
 
-const UPDATE_DEBOUNCE_DELAY_MS = 250;
+const DELAY_BEFORE_CLOSE_MS = 250;
 
 const SearchWrapper = styled.div`
   width: 100%;
@@ -26,20 +26,17 @@ interface IUniversalSearchProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo((props) => {
   const { searchTerm, search, searchResults, filters } = useUniversalSearch();
-  const debouncedSearchTerm: string = useDebounce(
-    searchTerm,
-    UPDATE_DEBOUNCE_DELAY_MS
-  );
-  const debouncedResults: IUniversalSearcherResult<unknown>[] = useDebounce(
-    searchResults,
-    UPDATE_DEBOUNCE_DELAY_MS
-  );
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const debouncedSearchTerm = useDebounce(
+    searchTerm,
+    Constants.UNIVERSAL_SEARCH_UPDATE_DELAY_MS
+  );
 
   const dispatch = useDispatch();
 
@@ -58,7 +55,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo((props) => {
   const handleBlur = () => {
     setTimeout(() => {
       setIsFocused(false);
-    }, UPDATE_DEBOUNCE_DELAY_MS);
+    }, DELAY_BEFORE_CLOSE_MS);
   };
 
   const handleClear = () => {
@@ -97,7 +94,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo((props) => {
           break;
         }
 
-        if (selectedIndex < debouncedResults.length - 1) {
+        if (selectedIndex < searchResults.length - 1) {
           e.preventDefault();
 
           setSelectedIndex(selectedIndex + 1);
@@ -109,11 +106,11 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo((props) => {
         if (
           isOpened &&
           selectedIndex > -1 &&
-          selectedIndex < debouncedResults.length
+          selectedIndex < searchResults.length
         ) {
           e.preventDefault();
 
-          const activeResult = debouncedResults[selectedIndex];
+          const activeResult = searchResults[selectedIndex];
           if (!activeResult) break;
 
           const activeFilter = filters[activeResult.type];
@@ -144,7 +141,7 @@ const UniversalSearch: React.FC<IUniversalSearchProps> = React.memo((props) => {
         inputId='universal-search'
       />
       <UniversalSearchSuggestionList
-        searchResults={debouncedResults}
+        searchResults={searchResults}
         searchTerm={debouncedSearchTerm}
         filters={filters}
         isOpened={isOpened}
