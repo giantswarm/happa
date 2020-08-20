@@ -1,7 +1,11 @@
 import { screen, within } from '@testing-library/react';
+import nock from 'nock';
+import { StatusCodes } from 'shared';
 import { Providers } from 'shared/constants';
+import { catalogsState } from 'testUtils/ingressCatalogStateMocks';
 import {
   appResponseWithCustomConfig,
+  catalogIndexResponse,
   getMockCall,
   v5ClusterResponse,
 } from 'testUtils/mockHttpCalls';
@@ -99,10 +103,15 @@ describe('Ingress', () => {
     ).toBeInTheDocument();
   });
 
-  it.skip('displays ingress controller installation instructions, in case no ingress controller is installed', async () => {
+  it('displays ingress controller installation instructions, in case no ingress controller is installed', async () => {
     getMockCall(`/v4/clusters/${v5ClusterResponse.id}/apps/`, []);
-    const cluster = { ...v5ClusterResponse, apps: [] };
-    renderWithStore(Ingress, { cluster });
+
+    nock('https://catalogshost')
+      .get('/giantswarm-catalog/index.yaml')
+      .reply(StatusCodes.Ok, catalogIndexResponse);
+
+    const cluster = { ...v5ClusterResponse };
+    renderWithStore(Ingress, { cluster }, catalogsState);
 
     expect(
       await screen.findByText(
@@ -110,10 +119,9 @@ describe('Ingress', () => {
       )
     ).toBeInTheDocument();
 
+    expect(await screen.findByText(/this will install/i)).toBeInTheDocument();
     expect(
-      await screen.findByText(
-        /this will install the nginx ingress controller app on cluster/i
-      )
+      screen.getByText(/nginx ingress controller app \d\.\d\.\d/i)
     ).toBeInTheDocument();
   });
 });

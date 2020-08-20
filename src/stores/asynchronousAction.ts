@@ -2,9 +2,11 @@ import { IState } from 'reducers/types';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-export interface IAsynchronousDispatch<S> {
+export interface IAsynchronousDispatch<S>
+  extends ThunkDispatch<S, void, AnyAction> {
   <R>(action: IAsynchronousAction<S, R>): Promise<R>;
 }
+
 export interface IActionTypeCollection {
   request: string;
   success: string;
@@ -19,7 +21,7 @@ export interface IAsynchronousAction<S, R> {
   types: IActionTypeCollection;
   doPerform: (
     state: S,
-    dispatch: ThunkDispatch<IState, void, AnyAction>
+    dispatch: IAsynchronousDispatch<S>
   ) => Promise<R> | void;
 }
 
@@ -27,7 +29,7 @@ export interface IAsynchronousActionParams<P, S, R> {
   actionTypePrefix: string;
   perform: (
     state: S,
-    dispatch: ThunkDispatch<IState, void, AnyAction>,
+    dispatch: IAsynchronousDispatch<S>,
     payload?: P
   ) => Promise<R>;
   shouldPerform: (state: S) => boolean;
