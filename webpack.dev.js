@@ -37,8 +37,16 @@ module.exports = merge(common, {
         localPort: 8000,
       },
       {
+        service: 'happaapi',
+        localPort: 8888,
+      },
+      {
         service: 'passage',
         localPort: 5001,
+      },
+      {
+        service: 'oidc_issuer',
+        localPort: 9999,
       },
     ]),
   ],

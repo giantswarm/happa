@@ -117,7 +117,13 @@ class ProxyPlugin {
 
       req
         .pipe(
-          request(cleanProxyUrl + req.url).on('response', (response) => {
+          request({
+            url: cleanProxyUrl + req.url,
+            rejectUnauthorized: false,
+            followAllRedirects: false,
+            followRedirect: false,
+            followOriginalHttpMethod: true,
+          }).on('response', (response) => {
             // In order to avoid https://github.com/expressjs/cors/issues/134
             const accessControlAllowOriginHeader =
               response.headers['access-control-allow-origin'];
