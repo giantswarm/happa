@@ -310,10 +310,23 @@ class ClusterApps extends React.Component {
       return [];
     }
 
-    return apps.filter(
-      (app) =>
-        app.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
-    );
+    const { hasOptionalIngress } = this.props;
+    const filteredApps = apps.filter((app) => {
+      const isManagedByClusterOperator =
+        app.metadata.labels['giantswarm.io/managed-by'] === 'cluster-operator';
+
+      switch (true) {
+        case hasOptionalIngress &&
+          app.metadata.name === 'nginx-ingress-controller':
+          return true;
+        case isManagedByClusterOperator:
+          return false;
+        default:
+          return true;
+      }
+    });
+
+    return filteredApps;
   };
 
   render() {
