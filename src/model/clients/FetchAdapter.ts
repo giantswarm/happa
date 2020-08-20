@@ -57,7 +57,7 @@ class FetchAdapter<T extends HttpClient = HttpClient> {
 
   public async fetch(
     input: RequestInfo,
-    init?: RequestInit,
+    init?: RequestInit
   ): Promise<Response> {
     this.configureFromRequestInfo(input);
     this.configureFromRequestInit(init);
