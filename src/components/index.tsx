@@ -14,6 +14,7 @@ import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
+import { IState } from 'reducers/types';
 import { Store } from 'redux';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
@@ -47,7 +48,7 @@ declare global {
 }
 
 // Configure the redux store.
-const store: Store = configureStore({}, history);
+const store: Store = configureStore({} as IState, history);
 
 // Patch the Giant Swarm client so it has access to the store and can dispatch
 // redux actions. This is needed because admin tokens expire after 5 minutes.
