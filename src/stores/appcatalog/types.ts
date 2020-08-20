@@ -19,3 +19,7 @@ export interface IAppCatalogsState {
   isFetching: boolean;
   items: IAppCatalogsMap;
 }
+
+export interface IInstallIngress {
+  clusterId: string;
+}
