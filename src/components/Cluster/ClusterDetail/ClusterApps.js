@@ -317,7 +317,7 @@ class ClusterApps extends React.Component {
 
       switch (true) {
         case hasOptionalIngress &&
-          app.metadata.name === 'nginx-ingress-controller':
+          app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
           return true;
         case isManagedByClusterOperator:
           return false;
