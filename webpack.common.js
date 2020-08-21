@@ -103,6 +103,7 @@ module.exports = {
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
     filename: 'assets/[name].[chunkhash:12].js',
+    chunkFilename: '[name].bundle.js',
   },
   module: {
     rules: [
