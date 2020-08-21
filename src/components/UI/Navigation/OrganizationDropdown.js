@@ -179,6 +179,7 @@ const OrganizationDropdown = ({
                         href={organizationDetailPath}
                         to={organizationDetailPath}
                         activeClassName=''
+                        onClick={onClickHandler}
                       >
                         Details for {selectedOrganization}
                       </MenuItem>
@@ -191,6 +192,7 @@ const OrganizationDropdown = ({
                     href={OrganizationsRoutes.List}
                     to={OrganizationsRoutes.List}
                     activeClassName=''
+                    onClick={onClickHandler}
                   >
                     Manage organizations
                   </MenuItem>
