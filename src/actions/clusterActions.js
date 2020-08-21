@@ -253,12 +253,6 @@ export function clusterLoadDetails(
       return cluster;
     } catch (error) {
       if (error.response?.status === StatusCodes.NotFound) {
-        new FlashMessage(
-          `Cluster <code>${clusterId}</code> no longer exists.`,
-          messageType.INFO,
-          messageTTL.MEDIUM
-        );
-
         // Delete the cluster in the store.
         dispatch({
           type: types.CLUSTER_REMOVE_FROM_STORE,
