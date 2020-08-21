@@ -16,6 +16,7 @@ RUN find /www \
   -exec gzip -9 -k '{}' \;
 
 RUN chown -R nginx:nginx /www
+RUN chmod -R u=rwx /www
 
 USER nginx
 
