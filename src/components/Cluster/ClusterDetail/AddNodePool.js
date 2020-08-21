@@ -5,6 +5,8 @@ import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
@@ -798,7 +800,22 @@ class AddNodePool extends Component {
                 }
                 tabIndex='0'
               />
-              <label htmlFor={`none-${id}`}>None</label>
+              <label htmlFor={`none-${id}`}>
+                None{' '}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='tooltip'>
+                      To increase the chances of finding available GPU
+                      instances, this option allows not setting a specific
+                      availability zone.
+                    </Tooltip>
+                  }
+                  placement='top'
+                  animation={false}
+                >
+                  <i className='fa fa-help' />
+                </OverlayTrigger>
+              </label>
             </RadioWrapperDiv>
           )}
         </AZWrapper>
