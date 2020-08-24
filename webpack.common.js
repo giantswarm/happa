@@ -97,7 +97,7 @@ const makeEndpoints = () => {
 
 const makeFeatureFlags = () => {
   const defaults = {
-    FEATURE_CP_ACCESS: true,
+    FEATURE_CP_ACCESS: false,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
