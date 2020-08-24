@@ -259,31 +259,24 @@ class SimpleExample extends React.Component {
           </p>
 
           <CodeBlock>
-            <Prompt>{`kubectl logs helloworld-<version>-<suffix>`}</Prompt>
+            <Prompt>kubectl logs --selector app=helloworld</Prompt>
             <Output>
               {`
-                  2016/05/20 10:00:00 Starting up at :8080
-                  2016/05/20 10:03:19 GET /
-                `}
-            </Output>
-          </CodeBlock>
-
-          <CodeBlock>
-            <Prompt>{`kubectl logs <helloworld-<version>-<suffix>`}</Prompt>
-            <Output>
-              {`
-                  2016/05/20 10:00:07 Starting up at :8080
-                  2016/05/20 10:03:19 GET /giantswarm_logo_standard_white.svg
-                  2016/05/20 10:03:19 GET /blue-bg.jpg
+                  2014/07/01 09:57:30 Starting up at :8080
+                  2014/07/01 09:57:40 GET /giant-swarm-logo.svg
+                  2014/07/01 09:57:41 GET /favicon32.ico
+                  2014/07/01 09:57:30 Starting up at :8080
+                  2014/07/01 09:57:40 GET /
+                  2014/07/01 09:57:40 GET /blue-bg.jpg
                 `}
             </Output>
           </CodeBlock>
 
           <p>
             You should see in the log entries that the requests for the HTML
-            page, the logo, and the background images have been distributed over
-            both running pods and their respective containers pretty much
-            randomly.
+            page, the logo, the favicon, and the background images have been
+            distributed over both running pods and their respective containers
+            pretty much randomly.
           </p>
           <p>
             To clean things up, we use the <code>kubectl delete</code> command
