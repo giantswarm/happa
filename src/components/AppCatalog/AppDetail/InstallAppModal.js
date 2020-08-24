@@ -1,3 +1,4 @@
+import { validateAppName } from 'AppCatalog/AppDetail/InstallAppModalUtils';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
 import RoutePath from 'lib/routePath';
@@ -52,10 +53,6 @@ const InstallAppModal = (props) => {
     }
   };
 
-  const maxLength = 63;
-  const validateCharacters = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
-  const validateStartEnd = /^[a-z0-9](.*[a-z0-9])?$/;
-
   const onClose = () => {
     setVisible(false);
   };
@@ -104,25 +101,9 @@ const InstallAppModal = (props) => {
       });
   }
 
-  const validate = (str) => {
-    if (str.length > maxLength) {
-      return 'must not be longer than 253 characters';
-    }
-
-    if (!str.match(validateStartEnd)) {
-      return 'must start and end with lower case alphanumeric characters';
-    }
-
-    if (!str.match(validateCharacters)) {
-      return `must consist of lower case alphanumeric characters, '-' or '.'`;
-    }
-
-    return '';
-  };
-
   const updateNamespace = (ns) => {
     setNamespace(ns);
-    setNamespaceError(validate(ns));
+    setNamespaceError(validateAppName(ns).messsage);
   };
 
   const updateName = (newName) => {
@@ -132,7 +113,7 @@ const InstallAppModal = (props) => {
     }
     setName(newName);
 
-    setNameError(validate(newName));
+    setNameError(validateAppName(newName).messsage);
   };
 
   const updateVersion = (newVersion) => {
