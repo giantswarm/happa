@@ -3,6 +3,7 @@ import App from 'App';
 import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { AppRoutes } from 'shared/constants/routes';
@@ -17,13 +18,16 @@ export const initialStorage = {
 /**
  * This function will render the whole app with a mocked store in the route
  * provided.
- * @param {String} route.
- * @param {HTMLElement} container An HTMLElement.
+ * @param {String} initialRoute - The route to load.
+ * @param {Object} state - The initial store state.
+ * @param {Object} storage - The initial local storage state.
+ * @param {CPAuth} cpAuth Control Plane API handler.
  */
 export function renderRouteWithStore(
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage
+  storage = initialStorage,
+  cpAuth = CPAuth.getInstance()
 ) {
   localStorage.replaceWith(storage);
 
@@ -32,7 +36,7 @@ export function renderRouteWithStore(
     initialIndex: 0,
   });
 
-  const store = configureStore(state, history);
+  const store = configureStore(state, history, cpAuth);
 
   const app = render(<App {...{ store, theme, history }} />);
 
@@ -80,17 +84,19 @@ export function renderWithStore(component, props, state, options) {
  * @param {Record<string, any>} state Current Store state
  * @param {Record<string, any>} storage Current LocalStorage value
  * @param {History<any>} history Current Browser history
+ * @param {CPAuth} cpAuth Control Plane API handler.
  */
 export function getComponentWithStore(
   Component,
   props = {},
   state = {},
   storage = initialStorage,
-  history = createMemoryHistory()
+  history = createMemoryHistory(),
+  cpAuth = CPAuth.getInstance()
 ) {
   localStorage.replaceWith(storage);
 
-  const store = configureStore(state, history);
+  const store = configureStore(state, history, cpAuth);
 
   const app = (
     <Provider store={store}>
