@@ -204,12 +204,17 @@ module.exports = {
     '@typescript-eslint/consistent-type-definitions': 1,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-member-accessibility': 0, // for now
-    '@typescript-eslint/interface-name-prefix': [2, 'always'],
     '@typescript-eslint/no-explicit-any': 2,
     '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-inferrable-types': 0,
     '@typescript-eslint/ban-ts-ignore': 0,
+    '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-misused-promises': 0,
+    '@typescript-eslint/no-unsafe-assignment': 0,
+    '@typescript-eslint/no-unsafe-call': 0,
+    '@typescript-eslint/no-unsafe-member-access': 0,
+    '@typescript-eslint/no-unsafe-return': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-unused-vars': [
       2,
       {
@@ -223,7 +228,21 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': [2, { functions: false }],
     '@typescript-eslint/unbound-method': 0,
     '@typescript-eslint/no-unused-expressions': 2,
+    '@typescript-eslint/no-floating-promises': 0,
+    '@typescript-eslint/ban-types': 0,
+    '@typescript-eslint/restrict-template-expressions': 0,
   },
+  overrides: [
+    {
+      files: ['*.js', '*.jsx'],
+      rules: {
+        '@typescript-eslint/no-unsafe-member-access': 0,
+        '@typescript-eslint/explicit-module-boundary-types': 0,
+        '@typescript-eslint/restrict-template-expressions': 0,
+        '@typescript-eslint/restrict-plus-operands': 0,
+      },
+    },
+  ],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
