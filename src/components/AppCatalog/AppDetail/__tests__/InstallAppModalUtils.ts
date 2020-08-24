@@ -69,6 +69,21 @@ describe('InstallAppModalUtils', () => {
       result = validateAppName(appName);
       expect(result.valid).toBeTruthy();
       expect(result.message).toBe('');
+
+      appName = 'cool.app.bro';
+      result = validateAppName(appName);
+      expect(result.valid).toBeTruthy();
+      expect(result.message).toBe('');
+
+      appName = 'cool-app-bro-3.2.1';
+      result = validateAppName(appName);
+      expect(result.valid).toBeTruthy();
+      expect(result.message).toBe('');
+
+      appName = 'cool-app-bro-35.2.11';
+      result = validateAppName(appName);
+      expect(result.valid).toBeTruthy();
+      expect(result.message).toBe('');
     });
   });
 });
