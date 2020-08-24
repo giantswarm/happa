@@ -21,7 +21,7 @@ const AppListPlaceholder: React.FC<IAppListPlaceholderProps> = ({
 }) => {
   const getMessage = () => {
     if ((searchQuery as string).length > 0) {
-      return `No apps matched your search query: "${searchQuery}"`;
+      return `No apps matched your search query: "${searchQuery as string}"`;
     }
 
     return 'There are no apps available in this catalog, please try again in a few moments and if the problem persists, contact support: support@giantswarm.io';
