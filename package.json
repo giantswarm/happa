@@ -69,7 +69,7 @@
   "mainOutput": "main",
   "dependencies": {
     "@airbrake/browser": "1.4.0",
-    "@emotion/core": "10.0.34",
+    "@emotion/core": "10.0.35",
     "@emotion/styled": "10.0.27",
     "@hot-loader/react-dom": "16.13.0",
     "@khanacademy/react-multi-select": "0.3.3",
