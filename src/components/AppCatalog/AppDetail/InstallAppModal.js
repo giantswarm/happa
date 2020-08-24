@@ -103,7 +103,7 @@ const InstallAppModal = (props) => {
 
   const updateNamespace = (ns) => {
     setNamespace(ns);
-    setNamespaceError(validateAppName(ns).messsage);
+    setNamespaceError(validateAppName(ns).message);
   };
 
   const updateName = (newName) => {
@@ -113,7 +113,7 @@ const InstallAppModal = (props) => {
     }
     setName(newName);
 
-    setNameError(validateAppName(newName).messsage);
+    setNameError(validateAppName(newName).message);
   };
 
   const updateVersion = (newVersion) => {
