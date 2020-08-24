@@ -45,26 +45,25 @@ const NodePoolsWrapper = styled.div`
     margin: 0;
   }
   /* Manual */
-  .np-enter,
-  .np-appear {
+  .np-enter {
     opacity: 0.01;
     transform: translateX(20px);
   }
-  .np-enter.np-enter-active,
-  .np-appear.np-appear-active {
+  .np-enter.np-enter-active {
     opacity: 1;
     transform: translateX(0px);
-    transition: opacity 200ms, transform 300ms;
-    transition-delay: 300ms, 300ms;
+    transition: opacity 0.2s, transform 0.3s;
+    transition-timing-function: ease-out, ease-out;
+    transition-delay: 0.1s, 0.1s;
   }
   .np-exit {
     opacity: 1;
   }
   .np-exit.np-exit-active {
     opacity: 0.01;
-    transform: translateX(0px);
-    transition: all 100ms ease-in;
-    transition-delay: 0ms;
+    transform: translateX(20px);
+    transition: all 0.2s ease-out;
+    transition-delay: 0.1s;
   }
 `;
 
@@ -459,11 +458,9 @@ class V5ClusterDetailTable extends React.Component {
                   })
                   .map((nodePool) => (
                     <BaseTransition
-                      key={nodePool.id || Date.now()}
-                      appear={true}
-                      exit={false}
+                      key={nodePool.id}
                       classNames='np'
-                      timeout={{ enter: 500, appear: 500 }}
+                      timeout={{ enter: 400, exit: 400 }}
                     >
                       <GridRowNodePoolsItem data-testid={nodePool.id}>
                         <NodePool
