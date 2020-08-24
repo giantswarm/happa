@@ -8,7 +8,7 @@ describe('InstallAppModalUtils', () => {
       let appName = generateRandomString(500);
       let result = validateAppName(appName);
       expect(result.valid).toBeFalsy();
-      expect(result.message).toBe('must not be longer than 253 characters');
+      expect(result.message).toBe('must not be longer than 63 characters');
 
       appName = '';
       result = validateAppName(appName);
