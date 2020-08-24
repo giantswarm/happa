@@ -28,6 +28,20 @@ module.exports = merge(common, {
     port: 7000,
     host: 'localhost',
     historyApiFallback: true,
+    // used for app catalogs proxy /catalogs?url=
+    proxy: {
+      '/catalogs': {
+        target: 'https://cors-anywhere.herokuapp.com/',
+        changeOrigin: true,
+        onProxyReq: (proxyReq) => {
+          const wantedUrl = proxyReq.path.substr(
+            proxyReq.path.indexOf('?url=') + 5
+          );
+          proxyReq.path = `/${wantedUrl}`;
+          proxyReq.setHeader('origin', 'http://localhost:7000');
+        },
+      },
+    },
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

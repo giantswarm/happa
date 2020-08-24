@@ -5,37 +5,27 @@ import { StatusCodes } from 'shared/constants';
 import * as types from './actionTypes';
 
 // loadCatalog takes a catalog object and tries to load further data.
-function loadCatalogIndex(catalog) {
-  return fetch(`${catalog.spec.storage.URL}index.yaml`, { mode: 'cors' })
-    .catch(() => {
-      return fetch(
-        `https://cors-anywhere.herokuapp.com/${catalog.spec.storage.URL}index.yaml`,
-        { mode: 'cors' }
-      );
-    })
-    .catch((error) => {
-      throw error;
-    })
-    .then((response) => {
-      if (response.status === StatusCodes.Ok) {
-        return response.text();
-      }
+async function loadCatalogIndex(catalog) {
+  let indexURL = `${catalog.spec.storage.URL}index.yaml`;
 
-      throw new Error(
-        `Could not fetch index.yaml at ${catalog.spec.storage.URL}`
-      );
-    })
-    .then((body) => {
-      const rawCatalog = yaml.safeLoad(body);
-      const catalogWithApps = Object.assign({}, catalog, {
-        apps: rawCatalog.entries,
-      });
+  if (indexURL.includes('kubernetes-charts.storage.googleapis.com')) {
+    indexURL = `/catalogs?url=${indexURL}`;
+  }
 
-      return catalogWithApps;
-    })
-    .catch((error) => {
-      throw error;
-    });
+  const response = await fetch(indexURL, { mode: 'cors' });
+
+  if (response.status !== StatusCodes.Ok) {
+    throw new Error(`Could not fetch index.yaml at ${indexURL}`);
+  }
+
+  const responseText = await response.text();
+
+  const rawCatalog = yaml.safeLoad(responseText);
+  const catalogWithApps = Object.assign({}, catalog, {
+    apps: rawCatalog.entries,
+  });
+
+  return catalogWithApps;
 }
 
 // catalogsLoad
