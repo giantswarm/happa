@@ -186,7 +186,7 @@ it(`redirects the user to clusters to list and shows flash message when cluster 
 
   const flashMessage = document.querySelector('#noty_layout__topRight');
   expect(flashMessage).toContainHTML(
-    `Cluster <code>f4ke1</code> doesn't exist.`
+    `Cluster <code>f4ke1</code> no longer exists.`
   );
 });
 

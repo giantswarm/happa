@@ -12,6 +12,8 @@ Installation:
           Letsencrypt: ""
       Passage:
         Address: ""
+      OIDC:
+        IssuerAddress: ""
     Guest:
       Kubernetes:
         IngressController:

@@ -17,19 +17,19 @@ const ClusterDetail = () => {
   const clusterID = match.params.clusterId;
 
   const cluster = useSelector((state) => selectClusterById(state, clusterID));
+  const clusterExists = typeof cluster !== 'undefined' && cluster !== null;
 
   useEffect(() => {
-    if (!cluster) {
+    if (!clusterExists) {
       new FlashMessage(
-        `Cluster <code>${clusterID}</code> doesn't exist.`,
+        `Cluster <code>${clusterID}</code> no longer exists.`,
         messageType.INFO,
         messageTTL.MEDIUM
       );
 
       dispatch(push(AppRoutes.Home));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [clusterExists, clusterID, dispatch]);
 
   return (
     <Breadcrumb

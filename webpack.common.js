@@ -48,30 +48,57 @@ const determineAudienceURL = () => {
   return apiAudienceUrl;
 };
 
+function makeCPApiEndpointURL(currentValue, apiEndpoint) {
+  if (!apiEndpoint.includes('localhost')) {
+    return apiEndpoint.replace('api', 'happaapi');
+  }
+
+  return currentValue;
+}
+
+function makeCPApiAudienceURL(currentValue, cpApiEndpoint) {
+  if (!cpApiEndpoint.includes('localhost')) {
+    return cpApiEndpoint.replace('happaapi', 'dex');
+  }
+
+  return currentValue;
+}
+
 const makeEndpoints = () => {
   const defaults = {
     HAPPA_API_ENDPOINT: 'http://localhost:8000',
+    HAPPA_CP_API_ENDPOINT: 'http://localhost:8888',
     HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
   };
 
-  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = Object.assign(
-    {},
-    defaults,
-    envFileVars,
-    process.env
+  const values = Object.assign({}, defaults, envFileVars, process.env);
+  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = values;
+
+  let { HAPPA_CP_API_ENDPOINT } = values;
+  HAPPA_CP_API_ENDPOINT = makeCPApiEndpointURL(
+    HAPPA_CP_API_ENDPOINT,
+    HAPPA_API_ENDPOINT
   );
 
   const apiAudienceUrl = determineAudienceURL();
+  const cpAudience = makeCPApiAudienceURL(
+    'http://localhost:9999',
+    HAPPA_CP_API_ENDPOINT
+  );
 
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,
+    cpApiEndpoint: HAPPA_CP_API_ENDPOINT,
     audience: apiAudienceUrl || HAPPA_API_ENDPOINT,
+    cpAudience,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };
 
 const makeFeatureFlags = () => {
-  const defaults = {};
+  const defaults = {
+    FEATURE_CP_ACCESS: false,
+  };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
 

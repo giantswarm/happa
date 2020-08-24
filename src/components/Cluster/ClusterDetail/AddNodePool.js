@@ -5,6 +5,8 @@ import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
@@ -21,6 +23,12 @@ import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
 
 import AvailabilityZonesParser from './AvailabilityZonesParser';
+
+const AvailabilityZoneSelection = {
+  Automatic: 0,
+  Manual: 1,
+  None: 3,
+};
 
 // Availability Zones styles
 const Emphasized = css`
@@ -107,19 +115,30 @@ const RadioWrapperDiv = styled.div`
   }
 `;
 
+const AZWrapper = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
+  width: 100%;
+`;
+
 const AZLabel = styled.label`
-  height: 238px;
+  height: 110px;
+  width: 100%;
   justify-content: flex-start !important;
   position: relative;
   transition: height 0.3s;
-  transition-delay: 0s;
-  /* Same margin-bottom as <Section /> */
-  margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
+  transition-delay: 0.4s;
+  margin-bottom: 0;
+
   &.with-labels {
-    transition: height 0.3s;
     transition-delay: 0.4s;
     height: 170px;
   }
+
+  &.automatic {
+    height: 238px;
+    transition-delay: 0s;
+  }
+
   div label {
     justify-content: flex-start;
   }
@@ -238,8 +257,7 @@ class AddNodePool extends Component {
       zonesArray: [],
       valid: false,
     },
-    // Labels or Input? Initially set to false, so the input is shown
-    hasAZLabels: false,
+    azSelection: AvailabilityZoneSelection.Automatic,
     scaling: {
       min: null,
       minValid: true,
@@ -379,9 +397,9 @@ class AddNodePool extends Component {
     }
   };
 
-  toggleAZSelector = (isLabels) => {
+  toggleAZSelector = (azSelection) => {
     this.setState({
-      hasAZLabels: isLabels,
+      azSelection,
     });
   };
 
@@ -422,11 +440,22 @@ class AddNodePool extends Component {
   };
 
   updateAZ = (payload) => {
-    if (this.state.hasAZLabels) {
-      this.setState({ availabilityZonesLabels: payload });
-    } else {
-      this.setState({ availabilityZonesPicker: payload });
-    }
+    this.setState((prevState) => {
+      switch (prevState.azSelection) {
+        case AvailabilityZoneSelection.Automatic:
+          return {
+            availabilityZonesPicker: payload,
+          };
+
+        case AvailabilityZoneSelection.Manual:
+          return {
+            availabilityZonesLabels: payload,
+          };
+
+        default:
+          return null;
+      }
+    });
   };
 
   updateScaling = (nodeCountSelector) => {
@@ -437,7 +466,7 @@ class AddNodePool extends Component {
     const {
       availabilityZonesPicker,
       availabilityZonesLabels,
-      hasAZLabels,
+      azSelection,
       scaling,
       name,
     } = this.state;
@@ -449,10 +478,16 @@ class AddNodePool extends Component {
       return false;
     }
 
-    if (hasAZLabels && !availabilityZonesLabels.valid) {
+    if (
+      azSelection === AvailabilityZoneSelection.Manual &&
+      !availabilityZonesLabels.valid
+    ) {
       return false;
     }
-    if (!hasAZLabels && !availabilityZonesPicker.valid) {
+    if (
+      azSelection === AvailabilityZoneSelection.Automatic &&
+      !availabilityZonesPicker.valid
+    ) {
       return false;
     }
 
@@ -465,7 +500,7 @@ class AddNodePool extends Component {
     const {
       availabilityZonesPicker,
       availabilityZonesLabels,
-      hasAZLabels,
+      azSelection,
       scaling,
       name,
       spotInstancesEnabled,
@@ -484,13 +519,21 @@ class AddNodePool extends Component {
       nodePoolDefinition.name = name.value;
     }
 
-    // Set availability zones.
-    if (hasAZLabels) {
-      nodePoolDefinition.availability_zones.zones =
-        availabilityZonesLabels.zonesArray;
-    } else {
-      nodePoolDefinition.availability_zones.number =
-        availabilityZonesPicker.value;
+    // Set Availability zones.
+    switch (azSelection) {
+      case AvailabilityZoneSelection.Automatic:
+        nodePoolDefinition.availability_zones.number =
+          availabilityZonesPicker.value;
+        break;
+
+      case AvailabilityZoneSelection.Manual:
+        nodePoolDefinition.availability_zones.zones =
+          availabilityZonesLabels.zonesArray;
+        break;
+
+      case AvailabilityZoneSelection.None:
+        nodePoolDefinition.availability_zones.number = -1;
+        break;
     }
 
     switch (provider) {
@@ -543,13 +586,20 @@ class AddNodePool extends Component {
 
   render() {
     const { zonesArray } = this.state.availabilityZonesLabels;
-    const { hasAZLabels, name } = this.state;
+    const { azSelection, name } = this.state;
     const { minAZ, maxAZ, defaultAZ, provider, id } = this.props;
 
     const machineType = this.getMachineType();
 
     const isScalingAuto = AddNodePool.isScalingAutomatic(provider);
     const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
+
+    let azLabelClassName = '';
+    if (azSelection === AvailabilityZoneSelection.Manual) {
+      azLabelClassName = 'with-labels';
+    } else if (azSelection === AvailabilityZoneSelection.Automatic) {
+      azLabelClassName = 'automatic';
+    }
 
     return (
       <>
@@ -585,136 +635,191 @@ class AddNodePool extends Component {
             </CheckboxWrapper>
           )}
         </Section>
-        <AZLabel
-          htmlFor='availability-zones'
-          className={hasAZLabels && 'with-labels'}
-        >
-          <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
-          <RadioWrapperDiv>
-            {/* Automatically */}
 
-            <div className='fake-radio'>
-              <div
-                className={`fake-radio-checked ${
-                  hasAZLabels === false && 'visible'
-                }`}
-              />
-            </div>
-            <input
-              type='radio'
-              id={`automatically-${id}`}
-              value={false}
-              checked={hasAZLabels === false}
-              onChange={() => this.toggleAZSelector(false)}
-              tabIndex='0'
-            />
-            <label
-              htmlFor='automatically'
-              onClick={() => this.toggleAZSelector(false)}
-            >
-              Automatic
-            </label>
-          </RadioWrapperDiv>
-          <BaseTransition
-            in={!hasAZLabels}
-            timeout={{
-              enter: 500,
-              exit: 300,
-            }}
-            classNames='az-automatic'
-          >
-            <div key='az-automatic'>
-              <FlexWrapperAZDiv>
-                <p className='emphasized'>
-                  Number of availability zones to use:
-                </p>
-                <AvailabilityZonesParser
-                  min={minAZ}
-                  max={maxAZ}
-                  defaultValue={defaultAZ}
-                  zones={this.props.availabilityZones}
-                  updateAZValuesInParent={this.updateAZ}
-                  isLabels={hasAZLabels}
+        <AZWrapper>
+          <AZLabel htmlFor='availability-zones' className={azLabelClassName}>
+            <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
+            <RadioWrapperDiv>
+              {/* Automatically */}
+
+              <div className='fake-radio'>
+                <div
+                  className={`fake-radio-checked ${
+                    azSelection === AvailabilityZoneSelection.Automatic &&
+                    'visible'
+                  }`}
                 />
-              </FlexWrapperAZDiv>
-              <FlexWrapperAZDiv>
-                <p className='indented' style={{ marginTop: '8px' }}>
-                  {this.state.availabilityZonesPicker.value < 2
-                    ? `Covering one availability zone, the worker nodes of this node pool
+              </div>
+              <input
+                type='radio'
+                id={`automatically-${id}`}
+                value={false}
+                checked={azSelection === AvailabilityZoneSelection.Automatic}
+                onChange={() =>
+                  this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
+                }
+                tabIndex='0'
+              />
+              <label
+                htmlFor='automatically'
+                onClick={() =>
+                  this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
+                }
+              >
+                Automatic
+              </label>
+            </RadioWrapperDiv>
+            <BaseTransition
+              in={azSelection === AvailabilityZoneSelection.Automatic}
+              timeout={{
+                enter: 500,
+                exit: 300,
+              }}
+              classNames='az-automatic'
+            >
+              <div key='az-automatic'>
+                <FlexWrapperAZDiv>
+                  <p className='emphasized'>
+                    Number of availability zones to use:
+                  </p>
+                  <AvailabilityZonesParser
+                    min={minAZ}
+                    max={maxAZ}
+                    defaultValue={defaultAZ}
+                    zones={this.props.availabilityZones}
+                    updateAZValuesInParent={this.updateAZ}
+                    isLabels={azSelection === AvailabilityZoneSelection.Manual}
+                  />
+                </FlexWrapperAZDiv>
+                <FlexWrapperAZDiv>
+                  <p className='indented' style={{ marginTop: '8px' }}>
+                    {this.state.availabilityZonesPicker.value < 2
+                      ? `Covering one availability zone, the worker nodes of this node pool
                       will be placed in the same availability zone as the
                       cluster's master node.`
-                    : `Availability zones will be selected randomly.`}
-                </p>
-              </FlexWrapperAZDiv>
-            </div>
-          </BaseTransition>
-          {/* Manual */}
-          <RadioWrapperDiv
-            className={`manual-radio-input ${!hasAZLabels ? 'down' : null}`}
-          >
-            <div className='fake-radio'>
-              <div
-                className={`fake-radio-checked ${
-                  hasAZLabels === true && 'visible'
-                }`}
-              />
-            </div>
-            <input
-              type='radio'
-              id={`manually-${id}`}
-              value={true}
-              checked={hasAZLabels === true}
-              tabIndex='0'
-              onChange={() => this.toggleAZSelector(true)}
-            />
-            <label
-              htmlFor='manually'
-              onClick={() => this.toggleAZSelector(true)}
-            >
-              Manual
-            </label>
-
-            <BaseTransition
-              in={hasAZLabels}
-              appear={true}
-              timeout={{
-                appear: 500,
-                enter: 500,
-                exit: 100,
-              }}
-              classNames='az-manual'
-            >
-              <div key='az-manual'>
-                <FlexColumnAZDiv>
-                  <p className='indented'>
-                    You can select up to {maxAZ} availability zones to make use
-                    of.
+                      : `Availability zones will be selected randomly.`}
                   </p>
-                  <FlexWrapperAZDiv className='indented'>
-                    <AvailabilityZonesParser
-                      min={minAZ}
-                      max={maxAZ}
-                      defaultValue={2}
-                      zones={this.props.availabilityZones}
-                      updateAZValuesInParent={this.updateAZ}
-                      isLabels={hasAZLabels}
-                    />
-                    {/* Validation messages */}
-                    {zonesArray.length < 1 && (
-                      <p className='danger'>Please select at least one.</p>
-                    )}
-                    {zonesArray.length > maxAZ && (
-                      <p className='danger'>
-                        {maxAZ} is the maximum you can have. Please uncheck at
-                        least {zonesArray.length - maxAZ} of them.
-                      </p>
-                    )}
-                  </FlexWrapperAZDiv>
-                </FlexColumnAZDiv>
+                </FlexWrapperAZDiv>
               </div>
             </BaseTransition>
-          </RadioWrapperDiv>
-        </AZLabel>
+            {/* Manual */}
+            <RadioWrapperDiv
+              className={`manual-radio-input ${
+                azSelection === AvailabilityZoneSelection.Automatic
+                  ? 'down'
+                  : null
+              }`}
+            >
+              <div className='fake-radio'>
+                <div
+                  className={`fake-radio-checked ${
+                    azSelection === AvailabilityZoneSelection.Manual &&
+                    'visible'
+                  }`}
+                />
+              </div>
+              <input
+                type='radio'
+                id={`manually-${id}`}
+                value={true}
+                checked={azSelection === AvailabilityZoneSelection.Manual}
+                tabIndex='0'
+                onChange={() =>
+                  this.toggleAZSelector(AvailabilityZoneSelection.Manual)
+                }
+              />
+              <label
+                htmlFor='manually'
+                onClick={() =>
+                  this.toggleAZSelector(AvailabilityZoneSelection.Manual)
+                }
+              >
+                Manual
+              </label>
+
+              <BaseTransition
+                in={azSelection === AvailabilityZoneSelection.Manual}
+                appear={true}
+                timeout={{
+                  appear: 500,
+                  enter: 500,
+                  exit: 100,
+                }}
+                classNames='az-manual'
+              >
+                <div key='az-manual'>
+                  <FlexColumnAZDiv>
+                    <p className='indented'>
+                      You can select up to {maxAZ} availability zones to make
+                      use of.
+                    </p>
+                    <FlexWrapperAZDiv className='indented'>
+                      <AvailabilityZonesParser
+                        min={minAZ}
+                        max={maxAZ}
+                        defaultValue={2}
+                        zones={this.props.availabilityZones}
+                        updateAZValuesInParent={this.updateAZ}
+                        isLabels={
+                          azSelection === AvailabilityZoneSelection.Manual
+                        }
+                      />
+                      {/* Validation messages */}
+                      {zonesArray.length < 1 && (
+                        <p className='danger'>Please select at least one.</p>
+                      )}
+                      {zonesArray.length > maxAZ && (
+                        <p className='danger'>
+                          {maxAZ} is the maximum you can have. Please uncheck at
+                          least {zonesArray.length - maxAZ} of them.
+                        </p>
+                      )}
+                    </FlexWrapperAZDiv>
+                  </FlexColumnAZDiv>
+                </div>
+              </BaseTransition>
+            </RadioWrapperDiv>
+          </AZLabel>
+
+          {provider === Providers.AZURE && (
+            <RadioWrapperDiv>
+              <div className='fake-radio'>
+                <div
+                  className={`fake-radio-checked ${
+                    azSelection === AvailabilityZoneSelection.None && 'visible'
+                  }`}
+                />
+              </div>
+              <input
+                type='radio'
+                id={`none-${id}`}
+                value={false}
+                checked={azSelection === AvailabilityZoneSelection.None}
+                onChange={() =>
+                  this.toggleAZSelector(AvailabilityZoneSelection.None)
+                }
+                tabIndex='0'
+              />
+              <label htmlFor={`none-${id}`}>
+                None{' '}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='tooltip'>
+                      To increase the chances of finding available GPU
+                      instances, this option allows not setting a specific
+                      availability zone.
+                    </Tooltip>
+                  }
+                  placement='top'
+                  animation={false}
+                >
+                  <i className='fa fa-help' />
+                </OverlayTrigger>
+              </label>
+            </RadioWrapperDiv>
+          )}
+        </AZWrapper>
+
         {this.state.allowSpotInstances && (
           <Section>
             <StyledInput
