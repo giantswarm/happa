@@ -64,7 +64,7 @@ export const loadUser = createAsynchronousAction<
   CPAuth,
   IState,
   IOAuth2User | null
-  >({
+>({
   actionTypePrefix: CPAUTH_USER_LOAD,
 
   perform: async (_, _d, cpAuth?: CPAuth): Promise<IOAuth2User | null> => {
