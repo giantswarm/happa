@@ -24,7 +24,7 @@ const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
   return (
     <StyledInput
       {...rest}
-      inputId={`machine-type-${id}`}
+      inputId={`machine-type-${id as string}`}
       label={label}
       // regular space, hides hint ;)
       hint={<>&#32;</>}

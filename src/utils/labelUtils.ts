@@ -8,7 +8,6 @@ import { Constants } from 'shared';
 // check functions IsValidLabelValue for label values
 //               & IsQualifiedName for label keys
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IisDNS1123Subdomain {
   (value: string): boolean;
 }
