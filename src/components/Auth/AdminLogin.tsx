@@ -87,7 +87,7 @@ AdminLogin.propTypes = {
   user: PropTypes.object,
 };
 
-function mapStateToProps(state: IState) {
+function mapStateToProps(state: IState): IStateProps {
   return {
     user: state.main.loggedInUser,
   };
@@ -99,7 +99,4 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   };
 }
 
-export default connect<IStateProps, IDispatchProps>(
-  mapStateToProps,
-  mapDispatchToProps
-)(AdminLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLogin);
