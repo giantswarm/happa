@@ -24,6 +24,7 @@ Icon
 .tmp
 /secrets.env
 /dist
+tsconfig.tsbuildinfo
 
 # Test Coverage (Jest)
 /coverage
