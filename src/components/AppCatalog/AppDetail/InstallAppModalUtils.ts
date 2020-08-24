@@ -1,4 +1,4 @@
-const maxLength = 253;
+const maxLength = 63;
 const validateStartEnd = /^[a-z0-9](.*[a-z0-9])?$/;
 const validateCharacters = /^[-.a-z0-9]*$/;
 
@@ -18,7 +18,7 @@ export function validateAppName(version: string): IAppValidationResult {
     case version.length > maxLength:
       return {
         valid: false,
-        message: 'must not be longer than 253 characters',
+        message: 'must not be longer than 63 characters',
       };
 
     case !validateStartEnd.test(version):
