@@ -10,6 +10,11 @@ describe('InstallAppModalUtils', () => {
       expect(result.valid).toBeFalsy();
       expect(result.message).toBe('must not be longer than 253 characters');
 
+      appName = '';
+      result = validateAppName(appName);
+      expect(result.valid).toBeFalsy();
+      expect(result.message).toBe('must not be empty');
+
       // eslint-disable-next-line no-magic-numbers
       appName = generateRandomString(50);
       result = validateAppName(appName);

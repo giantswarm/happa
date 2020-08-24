@@ -9,6 +9,12 @@ interface IAppValidationResult {
 
 export function validateAppName(version: string): IAppValidationResult {
   switch (true) {
+    case version.length < 1:
+      return {
+        valid: false,
+        message: 'must not be empty',
+      };
+
     case version.length > maxLength:
       return {
         valid: false,
