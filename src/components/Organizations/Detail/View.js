@@ -8,8 +8,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/lib/Button';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -19,21 +17,12 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Ellipsis } from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import Section from 'UI/Section';
-import { isClusterUpdating } from 'utils/clusterUtils';
 
 import Credentials from './Credentials';
 
 const MembersTable = styled.div`
   .member-email {
     ${Ellipsis}
-  }
-`;
-
-const ClusterStatusWrapper = styled.div`
-  cursor: pointer;
-  width: 22px;
-  span {
-    display: none !important;
   }
 `;
 
@@ -86,6 +75,8 @@ class OrganizationDetail extends React.Component {
         dataField: 'name',
         text: 'Name',
         sort: true,
+        formatter: (cell, row) =>
+          formatClusterName(cell, row, this.props.organization.id),
       },
       {
         dataField: 'release_version',
@@ -98,23 +89,6 @@ class OrganizationDetail extends React.Component {
 
           return cmp(a, b);
         },
-        headerStyle: () => ({
-          textAlign: 'right',
-          paddingRight: 0,
-          transform: 'translateX(15px)',
-        }),
-        align: 'right',
-        style: { paddingRight: 0 },
-      },
-      // Using path just because if we use 'id', that is what we need, we will get
-      // duplicated keys.
-      {
-        dataField: 'path',
-        text: '',
-        formatter: (cell, row) =>
-          clusterStatusIcon(cell, row, this.props.organization.id),
-        headerStyle: () => ({ width: '40px', paddingLeft: 0 }),
-        style: { paddingLeft: 0 },
       },
       {
         dataField: 'create_date',
@@ -256,7 +230,7 @@ function clusterIDCellFormatter(cell) {
 }
 
 // eslint-disable-next-line react/no-multi-comp
-function clusterStatusIcon(_, cluster, orgId) {
+function formatClusterName(_, cluster, orgId) {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail.Home,
     {
@@ -265,21 +239,13 @@ function clusterStatusIcon(_, cluster, orgId) {
     }
   );
 
-  const message = isClusterUpdating(cluster)
-    ? 'Upgrade in progress…'
-    : 'Upgrade Available';
-
   return (
-    <Link to={clusterDetailPath}>
-      <OverlayTrigger
-        overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
-        placement='top'
-      >
-        <ClusterStatusWrapper>
-          <ClusterStatus clusterId={cluster.id} />
-        </ClusterStatusWrapper>
-      </OverlayTrigger>
-    </Link>
+    <>
+      {cluster.name}{' '}
+      <Link to={clusterDetailPath}>
+        <ClusterStatus clusterId={cluster.id} hideText={true} />
+      </Link>
+    </>
   );
 }
 
