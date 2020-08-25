@@ -15,7 +15,9 @@ async function loadCatalogIndex(catalog) {
   const response = await fetch(indexURL, { mode: 'cors' });
 
   if (response.status !== StatusCodes.Ok) {
-    throw new Error(`Could not fetch ${indexURL}. Status ${response.status}`);
+    throw new Error(
+      `Could not fetch ${indexURL}. (Host '${catalog.spec.storage.URL}' Status ${response.status}`
+    );
   }
 
   const responseText = await response.text();
