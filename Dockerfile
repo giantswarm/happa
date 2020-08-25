@@ -16,7 +16,7 @@ RUN find /www \
   -exec gzip -9 -k '{}' \;
 
 RUN chown -R nginx:nginx /www
-RUN chmod -R u=rx /www
+RUN chmod u=rwx /www
 RUN touch /etc/nginx/config/resolvers.conf && chown nginx:nginx /etc/nginx/config/resolvers.conf
 
 USER nginx
