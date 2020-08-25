@@ -297,6 +297,5 @@ jobs:
               -d \
               "$(cat .docker_image_name)"
             sleep 2
-            docker logs happa-branch
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep Happa
