@@ -8,7 +8,10 @@ import * as types from './actionTypes';
 async function loadCatalogIndex(catalog) {
   let indexURL = `${catalog.spec.storage.URL}index.yaml`;
 
-  if (indexURL.includes('kubernetes-charts.storage.googleapis.com')) {
+  if (
+    catalog.spec.storage.URL ===
+    'https://kubernetes-charts.storage.googleapis.com/'
+  ) {
     indexURL = `/catalogs?url=${indexURL}`;
   }
 
