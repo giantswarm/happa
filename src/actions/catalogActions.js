@@ -15,7 +15,7 @@ async function loadCatalogIndex(catalog) {
   const response = await fetch(indexURL, { mode: 'cors' });
 
   if (response.status !== StatusCodes.Ok) {
-    throw new Error(`Could not fetch index.yaml at ${indexURL}`);
+    throw new Error(`Could not fetch ${indexURL}. Status ${response.status}`);
   }
 
   const responseText = await response.text();
