@@ -60,7 +60,7 @@ gzip -f -9 -k /www/metadata.json
 
 # Create file to include into nginx config to use
 # the pods nameserver as resolver
-echo resolver $(awk 'BEGIN{ORS=" "} $1=="nameserver" {print $2}' /etc/resolv.conf) ";" > /etc/nginx/config/resolvers.conf
+echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/config/resolvers.conf
 
 echo ""
 echo "--- Starting Happa nginx server ---"
