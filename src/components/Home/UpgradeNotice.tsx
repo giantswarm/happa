@@ -34,8 +34,6 @@ const UpgradeWrapperDiv = styled.div<{
 `;
 
 interface IUpgradeNoticeProps {
-  canClusterUpgrade: boolean;
-  isClusterUpgrading: boolean;
   clusterId: string;
   className?: string;
   onClick?: () => void;
