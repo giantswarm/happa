@@ -73,13 +73,19 @@ const ClusterStatus: React.FC<IUpgradeNoticeProps> = ({
     case isClusterDeleting(cluster as Record<string, unknown>):
       return null;
 
+    case canClusterUpgrade:
+      iconClassName = 'fa fa-warning';
+      message = 'Upgrade Available';
+      isButtonDisabled = false;
+      tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
+      break;
+
     case isClusterCreating(cluster as Record<string, unknown>):
       color = theme.colors.gray;
       iconClassName = 'fa fa-crane';
       message = 'Cluster creating…';
       tooltip =
         'The cluster is currently creating. This step usually takes about 30 minutes.';
-
       break;
 
     case isClusterUpdating(cluster as Record<string, unknown>):
@@ -87,13 +93,6 @@ const ClusterStatus: React.FC<IUpgradeNoticeProps> = ({
       message = 'Upgrade in progress…';
       tooltip =
         'The cluster is currently upgrading. This step usually takes about 30 minutes.';
-      break;
-
-    case canClusterUpgrade:
-      iconClassName = 'fa fa-warning';
-      message = 'Upgrade Available';
-      isButtonDisabled = false;
-      tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
       break;
 
     default:
@@ -118,8 +117,9 @@ const ClusterStatus: React.FC<IUpgradeNoticeProps> = ({
         isHyperlink={Boolean(onClick) && !isButtonDisabled}
         color={color}
         aria-label={message}
+        role='document'
       >
-        <i className={iconClassName} />
+        <i className={iconClassName} role='presentation' aria-hidden='true' />
 
         {!hideText && <span>{message}</span>}
       </Wrapper>
