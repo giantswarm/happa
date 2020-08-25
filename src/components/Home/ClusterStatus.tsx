@@ -40,7 +40,7 @@ const Wrapper = styled.div<{
   }
 `;
 
-interface IUpgradeNoticeProps extends React.ComponentPropsWithoutRef<'div'> {
+interface IClusterStatusProps extends React.ComponentPropsWithoutRef<'div'> {
   clusterId: string;
   hideText?: boolean;
   onClick?: () => void;
@@ -48,7 +48,7 @@ interface IUpgradeNoticeProps extends React.ComponentPropsWithoutRef<'div'> {
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
-const ClusterStatus: React.FC<IUpgradeNoticeProps> = ({
+const ClusterStatus: React.FC<IClusterStatusProps> = ({
   clusterId,
   hideText,
   onClick,
