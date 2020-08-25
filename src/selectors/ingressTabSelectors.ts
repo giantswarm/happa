@@ -1,7 +1,8 @@
 import { IState } from 'reducers/types';
 import { Constants } from 'shared';
+import { IStoredAppCatalog } from 'stores/appcatalog/types';
 
-export const selectIngressCatalog: (state: IState) => Record<string, never> = (
+export const selectIngressCatalog: (state: IState) => IStoredAppCatalog = (
   state
 ) =>
   state.entities?.catalogs?.items?.[

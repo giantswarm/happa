@@ -8,7 +8,7 @@ import { renderWithStore } from 'testUtils/renderUtils';
 
 function renderAndOpen(
   props: React.ComponentPropsWithoutRef<typeof UpgradeClusterModal> = {},
-  state: IState = {}
+  state: Partial<IState> = {}
 ) {
   interface IComponent {
     show: () => void;
@@ -39,13 +39,13 @@ function createRelease(version: string, active: boolean): IRelease {
 function createInitialState(
   releases: Record<string, IRelease>,
   isAdmin: boolean = false
-) {
+): Partial<IState> {
   return {
-    entities: {
+    entities: ({
       releases: {
         items: releases,
       },
-    },
+    } as unknown) as IState['entities'],
     main: {
       loggedInUser: {
         isAdmin,
@@ -310,7 +310,9 @@ describe('UpgradeClusterModal', () => {
     fireEvent.click(screen.getByText(/inspect changes/i));
     fireEvent.click(screen.getByText(/change version/i));
 
-    const releaseVersions = Object.keys(initialState.entities.releases.items);
+    const releaseVersions = Object.keys(
+      (initialState as IState).entities.releases.items
+    );
     const currentVersionIdx = releaseVersions.indexOf(cluster.release_version);
     for (let i = 0; i < releaseVersions.length; i++) {
       if (i > currentVersionIdx) {

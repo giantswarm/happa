@@ -145,6 +145,7 @@ describe('Footer', () => {
 
   it('toggles on update if clicking on the update button', async () => {
     const originalLocation = window.location;
+    // @ts-expect-error
     delete window.location;
     window.location = ({
       reload: jest.fn(),
