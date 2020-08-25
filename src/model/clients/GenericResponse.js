@@ -85,8 +85,8 @@ export class GenericResponse {
 
   /**
    * Set a response header
-   * @param {number} key - Header name
-   * @param {number} [value=""] - Header Value
+   * @param {string} key - Header name
+   * @param {string} [value=""] - Header Value
    */
   setHeader(key, value = '') {
     this.config.headers[key] = value;
@@ -102,5 +102,27 @@ export class GenericResponse {
 
   get headers() {
     return Object.assign({}, this.config.headers);
+  }
+
+  /**
+   * Convert the object to a `Response` object returned by the fetch command.
+   * @returns {Response}
+   */
+  convertToFetchResponse() {
+    // Set headers.
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(this.headers)) {
+      headers.append(key, value);
+    }
+
+    const data = JSON.stringify(this.data);
+
+    const resultingResponse = new Response(data, {
+      headers: headers,
+      status: this.status,
+      statusText: this.message,
+    });
+
+    return resultingResponse;
   }
 }

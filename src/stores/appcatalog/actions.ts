@@ -2,29 +2,42 @@ import { catalogLoadIndex } from 'actions/catalogActions';
 import GiantSwarm from 'giantswarm';
 import { ErrorReporter } from 'lib/errors';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import { selectIngressCatalog } from 'selectors/ingressTabSelectors';
 import { Constants } from 'shared';
-import { IInstallIngress } from 'stores/appcatalog/types';
+import {
+  IAppCatalogsMap,
+  IInstallIngress,
+  IStoredAppCatalog,
+} from 'stores/appcatalog/types';
 import { installApp, loadClusterApps } from 'stores/clusterapps/actions';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const listCatalogs = createAsynchronousAction<any, any, any>({
+export const listCatalogs = createAsynchronousAction<
+  undefined,
+  IState,
+  IAppCatalogsMap
+>({
   actionTypePrefix: 'LIST_CATALOGS',
 
-  perform: async (_state) => {
+  perform: async (): Promise<IAppCatalogsMap> => {
     const appsApi = new GiantSwarm.AppsApi();
-    const catalogs = await appsApi.getAppCatalogs(); // Use model layer?
+    const catalogsIterable = await appsApi.getAppCatalogs(); // Use model layer?
+    const catalogs: IAppCatalog[] = Array.from(catalogsIterable);
 
     // Turn the array response into a hash where the keys are the catalog names.
-    const catalogsHash = Array.from(catalogs).reduce((agg, currCatalog) => {
-      currCatalog.isFetchingIndex = false;
-      agg[currCatalog.metadata.name] = currCatalog;
+    const catalogsHash = catalogs.reduce(
+      (agg: IAppCatalogsMap, currCatalog: IAppCatalog) => {
+        (currCatalog as IStoredAppCatalog).isFetchingIndex = false;
 
-      return agg;
-    }, {});
+        agg[currCatalog.metadata.name] = currCatalog as IStoredAppCatalog;
+
+        return agg;
+      },
+      {}
+    );
 
     return catalogsHash;
   },

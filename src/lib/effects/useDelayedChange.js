@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 /**
  * Delay variable change to make updates that happen too fast, **happen** slower :)
  * @param {Any} value Variable to track
- * @param {Number} limit Delay between changes
+ * @param {Number} delay Delay between changes
  */
 function useDelayedChange(value, delay) {
   const [delayedValue, setDelayedValue] = useState(value);

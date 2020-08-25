@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom/extend-expect';
-
+import { IState } from 'reducers/types';
+import { IAppCatalogsMap } from 'stores/appcatalog/types';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { appCatalogsResponse, getMockCall } from 'testUtils/mockHttpCalls';
 
@@ -10,7 +10,10 @@ describe('listCatalogs', () => {
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
     const dispatch: IAsynchronousDispatch<{}> = ((() => {}) as unknown) as IAsynchronousDispatch<{}>;
-    const response = await listCatalogs().doPerform({}, dispatch);
+    const response = (await listCatalogs().doPerform(
+      {} as IState,
+      dispatch
+    )) as IAppCatalogsMap;
 
     expect(response['giantswarm-incubator'].metadata.name).toEqual(
       'giantswarm-incubator'
