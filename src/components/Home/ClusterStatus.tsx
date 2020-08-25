@@ -7,7 +7,7 @@ import {
   selectIsClusterUpgrading,
 } from 'selectors/clusterSelectors';
 
-const UpgradeWrapperDiv = styled.div<{
+const Wrapper = styled.div<{
   disabled: boolean;
   isHyperlink: boolean;
 }>`
@@ -33,18 +33,17 @@ const UpgradeWrapperDiv = styled.div<{
   }
 `;
 
-interface IUpgradeNoticeProps {
+interface IUpgradeNoticeProps extends React.ComponentPropsWithoutRef<'div'> {
   clusterId: string;
-  className?: string;
   onClick?: () => void;
 }
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
-const UpgradeNotice: React.FC<IUpgradeNoticeProps> = ({
+const ClusterStatus: React.FC<IUpgradeNoticeProps> = ({
   clusterId,
-  className,
   onClick,
+  ...rest
 }) => {
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
   const isClusterUpgrading = useSelector(selectIsClusterUpgrading(clusterId));
@@ -65,23 +64,21 @@ const UpgradeNotice: React.FC<IUpgradeNoticeProps> = ({
     : 'Upgrade Available';
 
   return (
-    <UpgradeWrapperDiv
-      id={`upgrade-notice-${clusterId}`}
-      className={className}
+    <Wrapper
+      {...rest}
       onClick={handleUpgrade}
       disabled={isClusterUpgrading}
       isHyperlink={Boolean(onClick) && !isClusterUpgrading}
     >
       <i className={iconClassName} />
       <span>{message}</span>
-    </UpgradeWrapperDiv>
+    </Wrapper>
   );
 };
 
-UpgradeNotice.propTypes = {
+ClusterStatus.propTypes = {
   clusterId: PropTypes.string.isRequired,
   onClick: PropTypes.func,
-  className: PropTypes.string,
 };
 
-export default UpgradeNotice;
+export default ClusterStatus;

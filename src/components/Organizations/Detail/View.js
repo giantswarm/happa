@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import UpgradeNotice from 'Home/UpgradeNotice';
+import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -29,7 +29,7 @@ const MembersTable = styled.div`
   }
 `;
 
-const UpgradeNoticeWrapperDiv = styled.div`
+const ClusterStatusWrapper = styled.div`
   cursor: pointer;
   width: 22px;
   span {
@@ -112,7 +112,7 @@ class OrganizationDetail extends React.Component {
         dataField: 'path',
         text: '',
         formatter: (cell, row) =>
-          upgradeNoticeIcon(cell, row, this.props.organization.id),
+          clusterStatusIcon(cell, row, this.props.organization.id),
         headerStyle: () => ({ width: '40px', paddingLeft: 0 }),
         style: { paddingLeft: 0 },
       },
@@ -256,7 +256,7 @@ function clusterIDCellFormatter(cell) {
 }
 
 // eslint-disable-next-line react/no-multi-comp
-function upgradeNoticeIcon(_, cluster, orgId) {
+function clusterStatusIcon(_, cluster, orgId) {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail.Home,
     {
@@ -275,9 +275,9 @@ function upgradeNoticeIcon(_, cluster, orgId) {
         overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
         placement='top'
       >
-        <UpgradeNoticeWrapperDiv>
-          <UpgradeNotice clusterId={cluster.id} />
-        </UpgradeNoticeWrapperDiv>
+        <ClusterStatusWrapper>
+          <ClusterStatus clusterId={cluster.id} />
+        </ClusterStatusWrapper>
       </OverlayTrigger>
     </Link>
   );
