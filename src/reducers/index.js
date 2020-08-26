@@ -1,7 +1,9 @@
 import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
+import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
+import cpAuth from 'stores/cpauth/reducer';
 import releases from 'stores/releases/reducer';
 
 import clusters from '../stores/cluster/reducer';
@@ -31,6 +33,7 @@ const entities = combineReducers({
 
 const rootReducer = (history) =>
   combineReducers({
+    cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
     router: connectRouter(history),
     main: makeMainReducer(),
     entities,

@@ -1,10 +1,13 @@
 import { push } from 'connected-react-router';
+import CPAuth from 'lib/CPAuth/CPAuth';
 import { ErrorReporter } from 'lib/errors';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
+import { loadUser } from 'stores/cpauth/actions';
 import { loadReleases } from 'stores/releases/actions';
 
 import * as clusterActions from './clusterActions';
@@ -27,6 +30,14 @@ export const batchedLayout = () => async (dispatch) => {
     ErrorReporter.getInstance().notify(err);
 
     return;
+  }
+
+  if (FeatureFlags.FEATURE_CP_ACCESS) {
+    try {
+      await dispatch(loadUser(CPAuth.getInstance()));
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   try {
