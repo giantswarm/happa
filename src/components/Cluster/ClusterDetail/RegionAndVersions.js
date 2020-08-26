@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import UpgradeNotice from 'Home/UpgradeNotice';
+import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal';
 import PropTypes from 'prop-types';
@@ -82,7 +82,7 @@ function RegionAndVersions({
             <i className='fa fa-kubernetes' /> + k8sVersion}
         </ReleaseDetail>
       </div>
-      <UpgradeNotice clusterId={clusterId} onClick={showUpgradeModal} />
+      <ClusterStatus clusterId={clusterId} onClick={showUpgradeModal} />
       {release && (
         <ReleaseDetailsModal ref={releaseDetailsModal} releases={[release]} />
       )}

@@ -270,16 +270,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   }
 }
 
-function mapStateToProps(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: Record<string, any>,
-  ownProps: INodePoolsProps
-) {
-  return {
-    nodePool: state.entities.nodePools.items[ownProps.nodePool.id],
-  };
-}
-
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   return {
     // @ts-ignore
@@ -289,4 +279,4 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
 }
 
 // @ts-ignore
-export default connect(mapStateToProps, mapDispatchToProps)(NodePool);
+export default connect(null, mapDispatchToProps)(NodePool);

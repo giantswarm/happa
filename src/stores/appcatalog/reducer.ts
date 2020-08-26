@@ -7,7 +7,7 @@ import { IApplicationVersion } from './types';
 const initialState = {
   lastUpdated: 0,
   isFetching: false,
-  items: [],
+  items: {},
 };
 
 const catalogReducer = produce((draft, action) => {

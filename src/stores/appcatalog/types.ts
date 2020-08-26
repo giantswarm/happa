@@ -6,6 +6,7 @@ export interface IApplicationVersion {
 
 export interface IStoredAppCatalog extends IAppCatalog {
   isFetchingIndex: boolean;
+  // FIXME(axbarsan): Write proper type.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   apps?: any;
 }

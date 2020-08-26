@@ -34,6 +34,7 @@ const entities = combineReducers({
 
 const rootReducer = (history) =>
   combineReducers({
+    cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
     router: connectRouter(history),
     main: makeMainReducer(),
     entities,
