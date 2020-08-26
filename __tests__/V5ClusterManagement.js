@@ -10,6 +10,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm';
 import { getConfiguration } from 'model/services/metadata';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
+import { Constants } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
@@ -182,7 +183,10 @@ scales node pools correctly`, async () => {
     getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
 
     // TODO default values from constants file
-    const defaultScaling = { min: 3, max: 10 };
+    const defaultScaling = {
+      min: Constants.NP_DEFAULT_MIN_SCALING_AWS,
+      max: Constants.NP_DEFAULT_MAX_SCALING_AWS,
+    };
     const increaseValue = 1;
     const newScaling = {
       min: defaultScaling.min + increaseValue,
