@@ -1,3 +1,4 @@
+import CPAuthProvider from 'Auth/CP/CPAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import Footer from 'Footer/Footer';
@@ -7,6 +8,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
+import FeatureFlags from 'shared/FeatureFlags';
 import { ITheme } from 'styles';
 
 import Routes from './Routes';
@@ -21,6 +23,8 @@ const App: React.FC<IAppProps> = ({ store, theme, history }) => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <ConnectedRouter history={history}>
+        {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
+
         <main>
           <Routes />
         </main>

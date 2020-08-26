@@ -3,7 +3,6 @@ import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
-import CPAuthProvider from 'Auth/CP/CPAuthProvider';
 import CPLoginPage from 'Auth/CP/CPLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
@@ -73,9 +72,6 @@ class Layout extends React.Component {
             showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
             user={this.props.user}
           />
-
-          {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
-
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
             <div className='main'>
               <Switch>
