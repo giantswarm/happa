@@ -28,7 +28,7 @@ import { isClusterCreating } from 'utils/clusterUtils';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
-import UpgradeNotice from './UpgradeNotice';
+import ClusterStatus from './ClusterStatus';
 
 const LabelWrapper = styled.div`
   width: 90px;
@@ -239,7 +239,7 @@ function ClusterDashboardItem({
               <RefreshableLabel value={cluster.name}>
                 <NameWrapper>{cluster.name}</NameWrapper>
               </RefreshableLabel>
-              <UpgradeNotice clusterId={clusterId} />
+              <ClusterStatus clusterId={clusterId} />
             </Link>
           </TitleWrapper>
 
