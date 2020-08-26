@@ -182,7 +182,6 @@ describe('V5ClusterManagement', () => {
 scales node pools correctly`, async () => {
     getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
 
-    // TODO default values from constants file
     const defaultScaling = {
       min: Constants.NP_DEFAULT_MIN_SCALING_AWS,
       max: Constants.NP_DEFAULT_MAX_SCALING_AWS,
