@@ -129,7 +129,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
   };
 
-  //TODO: turn progressbutton into a component
   public render(): ReactNode {
     return (
       <>
