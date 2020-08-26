@@ -62,7 +62,10 @@ export function getNumberOfNodes(cluster) {
 export function getMemoryTotal(workers, memorySizeGB) {
   if (!workers || workers.length === 0) return 0;
 
-  return (workers * memorySizeGB).toFixed(2);
+  // eslint-disable-next-line no-magic-numbers
+  const memory = Math.ceil(workers * memorySizeGB * 100) / 100;
+
+  return memory;
 }
 
 export function getStorageTotal(cluster) {
@@ -70,9 +73,12 @@ export function getStorageTotal(cluster) {
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }
-  const s = workers * cluster.workers[0].storage.size_gb;
 
-  return s.toFixed(2);
+  // eslint-disable-next-line no-magic-numbers
+  const storage =
+    Math.ceil(workers * cluster.workers[0].storage.size_gb * 100) / 100;
+
+  return storage;
 }
 
 export function getCpusTotal(numberOfNodes, workers) {
