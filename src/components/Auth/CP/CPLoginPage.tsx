@@ -21,37 +21,28 @@ interface ICPLoginPageProps {}
 const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
   const dispatch = useDispatch();
 
-  const handleLogin = useCallback(
+  const user = useSelector(getCPAuthUser);
+  const isLoggedIn = user !== null;
+
+  const handleClick = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
       try {
         const auth = CPAuth.getInstance();
-        await auth.attemptLogin();
+        if (isLoggedIn) {
+          await auth.logout();
+          // Force a reload, so we could re-run the batched actions.
+          window.location.href = AppRoutes.Home;
+        } else {
+          await auth.attemptLogin();
+        }
       } catch (err) {
         new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
       }
     },
-    []
-  );
-
-  const handleLogout = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      try {
-        const auth = CPAuth.getInstance();
-        await auth.logout();
-
-        // Force a reload, so we could re-run the batched actions.
-        window.location.href = AppRoutes.Home;
-      } catch (err) {
-        new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
-      }
-    },
-    []
+    [isLoggedIn]
   );
 
   useEffect(() => {
@@ -74,10 +65,6 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
     }
   }, [dispatch]);
 
-  const user = useSelector(getCPAuthUser);
-  const isLoggedIn = user !== null;
-  const loginButtonCallback = isLoggedIn ? handleLogout : handleLogin;
-
   return (
     <Breadcrumb
       data={{
@@ -93,10 +80,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         </p>
         <CPStatus>
           <CPLoginStatusText email={user?.email} />
-          <CPLoginButton
-            isLoggedIn={isLoggedIn}
-            onClick={loginButtonCallback}
-          />
+          <CPLoginButton isLoggedIn={isLoggedIn} onClick={handleClick} />
         </CPStatus>
       </DocumentTitle>
     </Breadcrumb>
