@@ -77,7 +77,7 @@ export function getStorageTotal(cluster) {
 
 export function getCpusTotal(numberOfNodes, workers) {
   if (!numberOfNodes || !workers || workers.length === 0) {
-    return null; // TODO refactor this and return 0 instead, this is a function that should return a total
+    return 0;
   }
 
   return numberOfNodes * workers[0].cpu.cores;
