@@ -138,39 +138,33 @@ class CreateRegularCluster extends React.Component {
   createCluster = () => {
     this.setState({ submitting: true });
 
-    let i = 0;
-    let workers = [];
-
-    // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern that
-    // will spread throughout the codebase if we are not careful. I am waiting
-    // for the 'third' cluster type that we support to be able to make decisions
-    // about a meaningful abstraction. For now, going with a easy solution.
-
-    if (this.props.provider === Providers.AWS) {
-      for (i = 0; i < this.state.scaling.min; i++) {
-        workers.push({
+    let worker = {};
+    switch (this.props.provider) {
+      case Providers.AWS:
+        worker = {
           aws: {
             instance_type: this.state.aws.instanceType,
           },
-        });
-      }
-    } else if (this.props.provider === Providers.AZURE) {
-      for (i = 0; i < this.state.scaling.min; i++) {
-        workers.push({
+        };
+        break;
+
+      case Providers.AZURE:
+        worker = {
           azure: {
             vm_size: this.state.azure.vmSize,
           },
-        });
-      }
-    } else {
-      for (i = 0; i < this.state.scaling.min; i++) {
-        workers.push({
+        };
+        break;
+
+      case Providers.KVM:
+        worker = {
           memory: { size_gb: this.state.kvm.memorySize.value },
           storage: { size_gb: this.state.kvm.diskSize.value },
           cpu: { cores: this.state.kvm.cpuCores.value },
-        });
-      }
+        };
+        break;
     }
+    let workers = new Array(this.state.scaling.min).map(() => worker);
 
     // Adjust final workers array when cluster uses auto scaling. This is currently
     // only in AWS and from release 6.1.0 onwards.
@@ -182,9 +176,7 @@ class CreateRegularCluster extends React.Component {
       workers.length > 1
     ) {
       // Only one worker is allowed to be present when auto scaling is enabled.
-      const firstWorker = workers[0];
-      workers = [];
-      workers.push(firstWorker);
+      workers = [worker];
     }
 
     this.props.dispatch(
@@ -197,7 +189,7 @@ class CreateRegularCluster extends React.Component {
         name: this.props.clusterName,
         owner: this.props.selectedOrganization,
         release_version: this.props.selectedRelease,
-        workers: workers,
+        workers,
       })
     );
   };
