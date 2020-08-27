@@ -221,6 +221,13 @@ export function isJwtExpired(token) {
   return now > expire;
 }
 
+/**
+ * Validate if a string is within a given interval of
+ * number of letters.
+ * @param str - The string to check.
+ * @param min - The minimum permitted length.
+ * @param max - The maximum permitted length.
+ */
 export function hasAppropriateLength(
   str: string,
   min: number,
@@ -228,23 +235,20 @@ export function hasAppropriateLength(
 ): {
   isValid: boolean;
   message: string;
-  belowMin: boolean;
-  aboveMax: boolean;
 } {
-  const belowMin = str.trim().length < min;
-  const aboveMax = str.length > max;
-  const isValid = !belowMin && !aboveMax;
-
+  let isValid = false;
   let message = '';
-  if (belowMin) {
+  if (str.trim().length < min) {
     if (min > 0) {
       message = `Name must not contain less than ${min} characters`;
     } else {
       message = 'Name must not be empty';
     }
-  } else if (aboveMax) {
+  } else if (str.length > max) {
     message = `Name must not contain more than ${max} characters`;
+  } else {
+    isValid = true;
   }
 
-  return { isValid, message, belowMin, aboveMax };
+  return { isValid, message };
 }
