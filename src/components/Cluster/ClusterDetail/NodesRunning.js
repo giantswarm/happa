@@ -43,9 +43,8 @@ const NodesRunning = ({
 NodesRunning.propTypes = {
   isClusterCreating: PropTypes.bool,
   workerNodesRunning: PropTypes.number,
-  // TODO Change this when cluster_utils functions are refactored
-  RAM: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  CPUs: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  RAM: PropTypes.number,
+  CPUs: PropTypes.number,
   nodePools: PropTypes.array,
 };
 

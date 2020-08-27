@@ -213,11 +213,6 @@ export function unauthorized() {
     // requests.
     clearQueues();
 
-    // Let the user know he has been logged out due to a probably expired
-    // or deleted token.
-    // TODO: Avoid this message firing multiple times from different queries,
-    // maybe by using a custom queue with length 1.
-    // See https://ned.im/noty/#/api?id=api-static-methods
     new FlashMessage(
       'Not authorized for API requests.',
       messageType.ERROR,

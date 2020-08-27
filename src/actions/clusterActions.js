@@ -305,9 +305,6 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
         return status; // used in clusterLoadDetails!
       })
       .catch((error) => {
-        // TODO: Find a better way to deal with status endpoint errors in dev:
-        // https://github.com/giantswarm/giantswarm/issues/6757
-
         if (error.status === StatusCodes.NotFound) {
           dispatch({ type: types.CLUSTER_LOAD_STATUS_NOT_FOUND, clusterId });
         } else {
