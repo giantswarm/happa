@@ -86,26 +86,36 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
   };
 }
 
-// validateOrRaise
-// ----------------
-// Helper method that validates an object based on constraints.
-// Raises a TypeError with helpful message if the validation fails.
-//
-export function validateOrRaise(validatable, constraints) {
-  const validationErrors = validate(validatable, constraints, {
-    fullMessages: false,
-  });
+/**
+ * Helper method that validates an object based on constraints.
+ * @param validatable - The object to validate.
+ * @param constraints - The `validate.js` constraints.
+ * @throws {TypeError} Error with a helpful message if the validation fails.
+ */
+export function validateOrRaise<T>(
+  validatable: T,
+  constraints: Record<keyof T, Record<string, unknown>>
+) {
+  const validationErrors: Record<string, string[]> = validate(
+    validatable,
+    constraints,
+    {
+      fullMessages: false,
+    }
+  );
+  if (!validationErrors) return;
 
-  if (validationErrors) {
-    // If there are validation errors, throw a TypeError that has readable
-    // information about what went wrong.
-    const messages = Object.entries(validationErrors).map(
-      ([field, errorMessages]) => {
-        return `${field}: ${errorMessages.join(', ')}`;
-      }
-    );
-    throw new TypeError(messages.join('\n'));
-  }
+  /**
+   * If there are validation errors, throw a TypeError that
+   * has readable information about what went wrong.
+   */
+  const messages = Object.entries(validationErrors).map(
+    ([field, errorMessages]) => {
+      return `${field}: ${errorMessages.join(', ')}`;
+    }
+  );
+
+  throw new TypeError(messages.join('\n'));
 }
 
 /**
