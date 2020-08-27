@@ -1,43 +1,40 @@
-/**
- * @typedef  {Object} HttpReponseConfig
- * @property {number} status
- * @property {string} message
- * @property {?Record<string, any>} data
- * @property {?Record<string, string>} headers
- * @property {?import('./HttpClient').HttpClientConfig} requestConfig
- */
+interface IHttpResponseConfig {
+  status: number;
+  message: string;
+  data: Record<string, unknown>;
+  headers: Record<string, string>;
+  requestConfig: Record<string, unknown>;
+}
 
 /**
- * A helper class for encapsulating HTTP responses
+ * A helper class for encapsulating HTTP responses.
  */
 export class GenericResponse {
   /**
-   * The response's configuration
-   * @readonly
-   * @type {HttpReponseConfig}
+   * The response's configuration.
    */
-  config = {
+  protected readonly config: IHttpResponseConfig = {
     status: 200,
     message: 'Request successful!',
-    data: null,
-    headers: null,
-    requestConfig: null,
+    data: {},
+    headers: {},
+    requestConfig: {},
   };
 
   /**
-   * Create a HTTP Response
-   * @param {?number} status [status=200] - Status Code
-   * @param {?Record<string, any>} [data=null] - Response data
+   * Create a HTTP Response.
+   * @param status - Status Code
+   * @param data - Response data
    */
   // eslint-disable-next-line no-magic-numbers
-  constructor(status = 200, data = null) {
+  constructor(status: number = 200, data: Record<string, unknown> = {}) {
     this.status = status;
     this.data = data;
   }
 
   /**
-   * The response message
-   * @param {string} message
+   * The response message.
+   * @param message
    */
   set message(message) {
     this.config.message = message;
@@ -48,8 +45,8 @@ export class GenericResponse {
   }
 
   /**
-   * The response body
-   * @param {?Record<string, any>} data
+   * The response body.
+   * @param data
    */
   set data(data) {
     this.config.data = data;
@@ -60,8 +57,8 @@ export class GenericResponse {
   }
 
   /**
-   * The response status code
-   * @param {number} status
+   * The response status code.
+   * @param status
    */
   set status(status) {
     this.config.status = status;
@@ -72,8 +69,8 @@ export class GenericResponse {
   }
 
   /**
-   * The configuration of the request that got this response
-   * @param {import('./HttpClient').HttpClientConfig} requestConfig
+   * The configuration of the request that got this response.
+   * @param requestConfig
    */
   set requestConfig(requestConfig) {
     this.config.requestConfig = requestConfig;
@@ -85,16 +82,16 @@ export class GenericResponse {
 
   /**
    * Set a response header
-   * @param {string} key - Header name
-   * @param {string} [value=""] - Header Value
+   * @param key - Header name
+   * @param value - Header Value
    */
-  setHeader(key, value = '') {
+  setHeader(key: string, value = '') {
     this.config.headers[key] = value;
   }
 
   /**
-   * The response headers
-   * @param {Record<string, string>} headers
+   * The response headers.
+   * @param headers
    */
   set headers(headers) {
     this.config.headers = Object.assign({}, headers);
@@ -106,7 +103,6 @@ export class GenericResponse {
 
   /**
    * Convert the object to a `Response` object returned by the fetch command.
-   * @returns {Response}
    */
   convertToFetchResponse() {
     // Set headers.
