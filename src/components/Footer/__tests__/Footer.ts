@@ -1,5 +1,5 @@
 import { fireEvent, within } from '@testing-library/react';
-import { getConfiguration } from 'model/services/metadata';
+import { getConfiguration } from 'model/services/metadata/configuration';
 import { act } from 'react-dom/test-utils';
 import * as AllConstants from 'shared/constants';
 import { mockAPIResponse } from 'testUtils/mockHttpCalls';

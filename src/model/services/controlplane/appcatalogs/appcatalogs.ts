@@ -1,4 +1,4 @@
-import { HttpClient } from 'model/clients';
+import { IHttpClient } from 'model/clients/HttpClient';
 import {
   IAppCatalog,
   IMetaData,
@@ -12,7 +12,7 @@ import { getBaseConfiguration } from 'model/services/controlplane/base';
  * @param client - The HTTP client.
  */
 export async function getAppCatalogs(
-  client: HttpClient
+  client: IHttpClient
 ): Promise<IAppCatalog[]> {
   const { ApplicationGiantswarmIoV1alpha1Api } = await import(
     'giantswarm-cp-client'

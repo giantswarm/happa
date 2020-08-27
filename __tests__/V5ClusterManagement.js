@@ -6,8 +6,8 @@ import {
 } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm';
-import { getConfiguration } from 'model/services/metadata';
+import { getInstallationInfo } from 'model/services/giantSwarm/info';
+import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';

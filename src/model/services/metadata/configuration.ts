@@ -1,14 +1,13 @@
-import { HttpRequestMethods } from 'model/clients';
-import { SelfClient } from 'model/clients/SelfClient';
+import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 
 import { GenericResponse } from '../../clients/GenericResponse';
-import { MetadataPaths } from './';
+import { MetadataPaths } from './types';
 
 /**
- * Get the application metadata configuration
+ * Get the application metadata configuration.
  */
 export function getConfiguration(
-  httpClient: SelfClient
+  httpClient: IHttpClient
 ): Promise<GenericResponse> {
   httpClient.setRequestMethod(HttpRequestMethods.GET);
   httpClient.setURL(MetadataPaths.Configuration);

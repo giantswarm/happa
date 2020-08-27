@@ -8,8 +8,8 @@ describe('GiantSwarmClient', () => {
     const token = generateRandomString(15);
     const client = new GiantSwarmClient(token, 'giantswarm');
 
-    expect(client.requestConfig.baseURL).toBe(global.config.apiEndpoint);
-    expect(client.requestConfig.headers).toStrictEqual({
+    expect(client.getRequestConfig().baseURL).toBe(window.config.apiEndpoint);
+    expect(client.getRequestConfig().headers).toStrictEqual({
       Accept: 'application/json',
       Authorization: `giantswarm ${token}`,
     });

@@ -1,11 +1,15 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
-import { HttpClient } from 'model/clients/HttpClient';
+import {
+  HttpClientImpl,
+  HttpRequestMethods,
+  IHttpClient,
+} from 'model/clients/HttpClient';
 
 /**
  * This is an adapter for using an HttpClient with the same
  * interface as the global `fetch` function.
  */
-class FetchAdapter<T extends HttpClient = HttpClient> {
+class FetchAdapter<T extends IHttpClient = HttpClientImpl> {
   public readonly baseClient: T;
 
   constructor(baseClient: T) {
@@ -25,7 +29,7 @@ class FetchAdapter<T extends HttpClient = HttpClient> {
     }
 
     // Copy request method.
-    this.baseClient.setRequestMethod(reqInfo.method);
+    this.baseClient.setRequestMethod(reqInfo.method as HttpRequestMethods);
 
     // Copy the request body.
     this.baseClient.setBody(JSON.stringify(reqInfo.body) as never);
@@ -46,7 +50,7 @@ class FetchAdapter<T extends HttpClient = HttpClient> {
 
     if (method) {
       // Copy request method.
-      this.baseClient.setRequestMethod(method);
+      this.baseClient.setRequestMethod(method as HttpRequestMethods);
     }
 
     if (body) {

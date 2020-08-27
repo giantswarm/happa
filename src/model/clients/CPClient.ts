@@ -1,9 +1,9 @@
-import { HttpClient } from './HttpClient';
+import { HttpClientImpl } from './HttpClient';
 
 /**
  * The client used to access the Control Plane API.
  */
-export class CPClient extends HttpClient {
+export class CPClient extends HttpClientImpl {
   /**
    * Create a new Control Plane API client.
    */
