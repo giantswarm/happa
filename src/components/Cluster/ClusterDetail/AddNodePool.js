@@ -354,7 +354,7 @@ class AddNodePool extends Component {
   };
 
   updateName = (name) => {
-    const [isValid, message] = hasAppropriateLength(
+    const { isValid, message } = hasAppropriateLength(
       name,
       Constants.MIN_NAME_LENGTH,
       Constants.MAX_NAME_LENGTH

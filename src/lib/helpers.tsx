@@ -29,7 +29,7 @@ export function dedent(strings, ...values) {
   // now strip indentation
   const lines = result.split('\n');
   let mindent = null;
-  lines.forEach((l) => {
+  lines.forEach(l => {
     const m = /^(\s+)\S+/.exec(l);
     if (m) {
       const indent = m[1].length;
@@ -44,7 +44,7 @@ export function dedent(strings, ...values) {
 
   if (mindent !== null) {
     result = lines
-      .map((l) => (l.startsWith(' ') ? l.slice(mindent) : l))
+      .map(l => (l.startsWith(' ') ? l.slice(mindent) : l))
       .join('\n');
   }
 
@@ -132,7 +132,7 @@ export function relativeDate(ISO8601DateString) {
 
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-  return str.replace(/\w\S*/g, (txt) => {
+  return str.replace(/\w\S*/g, txt => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
@@ -204,7 +204,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
 // that are owned by that orgId
 export function clustersForOrg(orgId, allClusters) {
   return allClusters
-    ? Object.values(allClusters).filter((cluster) => cluster.owner === orgId)
+    ? Object.values(allClusters).filter(cluster => cluster.owner === orgId)
     : [];
 }
 
@@ -221,19 +221,30 @@ export function isJwtExpired(token) {
   return now > expire;
 }
 
-export function hasAppropriateLength(string, min, max) {
-  const belowMin = string.trim().length < min;
-  const aboveMax = string.length > max;
+export function hasAppropriateLength(
+  str: string,
+  min: number,
+  max: number
+): {
+  isValid: boolean;
+  message: string;
+  belowMin: boolean;
+  aboveMax: boolean;
+} {
+  const belowMin = str.trim().length < min;
+  const aboveMax = str.length > max;
   const isValid = !belowMin && !aboveMax;
 
-  const message =
-    belowMin && min === 0
-      ? 'Name must not be empty'
-      : belowMin && min !== 0
-      ? `Name must not contain less than ${min} characters`
-      : aboveMax
-      ? `Name must not contain more than ${max} characters`
-      : '';
+  let message = '';
+  if (belowMin) {
+    if (min > 0) {
+      message = `Name must not contain less than ${min} characters`;
+    } else {
+      message = 'Name must not be empty';
+    }
+  } else if (aboveMax) {
+    message = `Name must not contain more than ${max} characters`;
+  }
 
-  return [isValid, message, belowMin, aboveMax];
+  return { isValid, message, belowMin, aboveMax };
 }
