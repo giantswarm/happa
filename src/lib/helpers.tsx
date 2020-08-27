@@ -3,6 +3,7 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import validate from 'validate.js';
+import { IKeyPair } from 'shared/types';
 
 export function dedent(strings, ...values) {
   let raw = [];
@@ -162,12 +163,21 @@ export function truncate(str, replacer, numStartChars, numEndChars) {
   return result.join('');
 }
 
-export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
-  let apiEndpoint = cluster.api_endpoint;
+/**
+ * Generate a kubeconfig YAML file.
+ * @param cluster
+ * @param keyPair
+ * @param useInternalAPI
+ */
+// FIXME(axbarsan): Use proper cluster type.
+export function makeKubeConfigTextFile(cluster: Record<string, unknown>, keyPair: IKeyPair, useInternalAPI: boolean) {
+  let apiEndpoint: string = cluster.api_endpoint as string;
 
-  // Change something like: https://api.j7j4c.g8s.fra-1.giantswarm.io
-  // into: https://internal-api.j7j4c.g8s.fra-1.giantswarm.io
-  // if useInternalAPI is true.
+  /**
+   * Change something like: https://api.j7j4c.g8s.fra-1.giantswarm.io
+   * into: https://internal-api.j7j4c.g8s.fra-1.giantswarm.io
+   * if `useInternalAPI` is true.
+   */
   if (useInternalAPI) {
     apiEndpoint = apiEndpoint.replace('api', 'internal-api');
   }
@@ -182,7 +192,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
     clusters:
     - cluster:
         certificate-authority-data: ${btoa(
-          keyPairResult.certificate_authority_data
+          keyPair.certificate_authority_data
         )}
         server: ${apiEndpoint}
       name: ${namePrefix}
@@ -195,21 +205,31 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
     users:
     - name: ${currentUser}
       user:
-        client-certificate-data: ${btoa(keyPairResult.client_certificate_data)}
-        client-key-data: ${btoa(keyPairResult.client_key_data)}
+        client-certificate-data: ${btoa(keyPair.client_certificate_data)}
+        client-key-data: ${btoa(keyPair.client_key_data)}
     `;
 }
 
-// clustersForOrg takes a orgId and a list of clusters and returns just the clusters
-// that are owned by that orgId
-export function clustersForOrg(orgId, allClusters) {
-  return allClusters
-    ? Object.values(allClusters).filter(cluster => cluster.owner === orgId)
-    : [];
+/**
+ * Get all the clusters owned by a given organization.
+ * @param orgId
+ * @param allClusters
+ */
+export function clustersForOrg(
+  orgId: string,
+  // FIXME(axbarsan): Use proper cluster type.
+  allClusters: Record<string, Record<string, unknown>>
+): Record<string, unknown>[] {
+  if (!allClusters) return [];
+
+  return Object.values(allClusters).filter(cluster => cluster.owner === orgId);
 }
 
-// isJwtExpired expired takes a JWT token and will return true if it is expired.
-export function isJwtExpired(token) {
+/**
+ * Check if a JWT token is expired or not.
+ * @param token
+ */
+export function isJwtExpired(token: string): boolean {
   const msToS = 1000;
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
