@@ -1,4 +1,4 @@
-import { IHttpClient } from 'model/clients';
+import { IHttpClient } from 'model/clients/HttpClient';
 
 import { getInstallationInfo } from '../info';
 

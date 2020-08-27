@@ -1,5 +1,5 @@
-import { IHttpClient } from 'model/clients';
 import FetchAdapter from 'model/clients/FetchAdapter';
+import { IHttpClient } from 'model/clients/HttpClient';
 
 type Configuration = import('giantswarm-cp-client').Configuration;
 

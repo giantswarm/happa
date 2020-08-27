@@ -7,7 +7,7 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { GiantSwarmClient } from 'model/clients';
+import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { selectAuthToken } from 'selectors/authSelectors';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';

@@ -1,4 +1,4 @@
-import { IHttpClientConfig } from 'model/clients';
+import { IHttpClientConfig } from 'model/clients/HttpClient';
 
 import { GenericResponse } from '../GenericResponse';
 

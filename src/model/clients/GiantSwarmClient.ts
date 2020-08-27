@@ -1,13 +1,13 @@
 import { HttpClientImpl } from './HttpClient';
 
 /**
- * The client used to access the Giant Swarm API
+ * The client used to access the Giant Swarm API.
  */
 export class GiantSwarmClient extends HttpClientImpl {
   /**
-   * Create a new Giant Swarm API Client
-   * @param authToken - The token used for authorization
-   * @param authType - The authorization scheme
+   * Create a new Giant Swarm API Client.
+   * @param authToken - The token used for authorization.
+   * @param authType - The authorization scheme.
    */
   constructor(authToken: string, authType: string) {
     super({

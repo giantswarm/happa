@@ -1,10 +1,10 @@
-import { HttpRequestMethods, IHttpClient } from 'model/clients';
+import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 
 import { GenericResponse } from '../../clients/GenericResponse';
 import { MetadataPaths } from './types';
 
 /**
- * Get the application metadata configuration
+ * Get the application metadata configuration.
  */
 export function getConfiguration(
   httpClient: IHttpClient
