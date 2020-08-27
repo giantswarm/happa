@@ -210,7 +210,7 @@
     "nock": "13.0.3",
     "node-sass": "4.14.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
-    "prettier": "2.0.5",
+    "prettier": "2.1.1",
     "react-hot-loader": "4.12.21",
     "redux-immutable-state-invariant": "2.1.0",
     "redux-mock-store": "^1.5.4",
