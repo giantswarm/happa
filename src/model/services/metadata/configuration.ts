@@ -1,7 +1,7 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients';
 
 import { GenericResponse } from '../../clients/GenericResponse';
-import { MetadataPaths } from './';
+import { MetadataPaths } from './types';
 
 /**
  * Get the application metadata configuration

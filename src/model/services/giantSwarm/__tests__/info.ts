@@ -1,3 +1,5 @@
+import { IHttpClient } from 'model/clients';
+
 import { getInstallationInfo } from '../info';
 
 describe('GiantSwarmService::info', () => {
@@ -5,10 +7,18 @@ describe('GiantSwarmService::info', () => {
   const setURLMock = jest.fn();
   const executeMock = jest.fn();
 
-  const mockClient = {
+  const skipFnImplMock = jest.fn();
+
+  const mockClient: IHttpClient = {
     setRequestMethod: setRequestMethodMock,
     setURL: setURLMock,
     execute: executeMock,
+
+    getRequestConfig: skipFnImplMock,
+    setAuthorizationToken: skipFnImplMock,
+    setBody: skipFnImplMock,
+    setHeader: skipFnImplMock,
+    setRequestConfig: skipFnImplMock,
   };
 
   it('configures the client correctly', async () => {
