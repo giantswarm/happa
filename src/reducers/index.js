@@ -20,6 +20,7 @@ import organizations from './organizationReducer';
 import users from './userReducer';
 
 const entities = combineReducers({
+  cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
   catalogs,
   clusterLabels,
   clusters,

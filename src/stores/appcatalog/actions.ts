@@ -2,16 +2,21 @@ import { catalogLoadIndex } from 'actions/catalogActions';
 import GiantSwarm from 'giantswarm';
 import { ErrorReporter } from 'lib/errors';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
+import CPClient from 'model/clients/CPClient';
+import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import { selectIngressCatalog } from 'selectors/ingressTabSelectors';
 import { Constants } from 'shared';
+import FeatureFlags from 'shared/FeatureFlags';
 import {
   IAppCatalogsMap,
   IInstallIngress,
   IStoredAppCatalog,
 } from 'stores/appcatalog/types';
 import { installApp, loadClusterApps } from 'stores/clusterapps/actions';
+import { getCPAuthUser } from 'stores/cpauth/selectors';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
@@ -22,10 +27,26 @@ export const listCatalogs = createAsynchronousAction<
 >({
   actionTypePrefix: 'LIST_CATALOGS',
 
-  perform: async (): Promise<IAppCatalogsMap> => {
-    const appsApi = new GiantSwarm.AppsApi();
-    const catalogsIterable = await appsApi.getAppCatalogs(); // Use model layer?
-    const catalogs: IAppCatalog[] = Array.from(catalogsIterable);
+  perform: async (currentState: IState): Promise<IAppCatalogsMap> => {
+    let catalogs: IAppCatalog[] = [];
+
+    let cpAuthUser: IOAuth2User | null = null;
+    if (FeatureFlags.FEATURE_CP_ACCESS) {
+      cpAuthUser = getCPAuthUser(currentState);
+    }
+
+    if (cpAuthUser) {
+      const client = new CPClient(
+        cpAuthUser.idToken,
+        cpAuthUser.authorizationType
+      );
+
+      catalogs = await getAppCatalogs(client);
+    } else {
+      const appsApi = new GiantSwarm.AppsApi();
+      const catalogsIterable = await appsApi.getAppCatalogs(); // Use model layer?
+      catalogs = Array.from(catalogsIterable);
+    }
 
     // Turn the array response into a hash where the keys are the catalog names.
     const catalogsHash = catalogs.reduce(

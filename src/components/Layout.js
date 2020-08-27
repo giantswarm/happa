@@ -3,6 +3,7 @@ import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
+import CPLoginPage from 'Auth/CP/CPLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
@@ -20,6 +21,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import FeatureFlags from 'shared/FeatureFlags';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
@@ -91,6 +93,11 @@ class Layout extends React.Component {
                   exact
                   path={ExceptionNotificationTestRoutes.Home}
                 />
+
+                {FeatureFlags.FEATURE_CP_ACCESS && (
+                  <Route component={CPLoginPage} path={AppRoutes.CPAccess} />
+                )}
+
                 <Redirect path='*' to={AppRoutes.Home} />
               </Switch>
             </div>

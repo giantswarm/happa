@@ -1,6 +1,8 @@
 import * as userActions from 'actions/userActions';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
+import CPAuth from 'lib/CPAuth/CPAuth';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -10,7 +12,17 @@ import { AppRoutes } from 'shared/constants/routes';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
 class Logout extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
+    try {
+      await CPAuth.getInstance().logout();
+    } catch (err) {
+      new FlashMessage(
+        `Control Plane logout couldn't be executed: ${err}`,
+        messageType.WARNING,
+        messageTTL.MEDIUM
+      );
+    }
+
     if (
       this.props.user &&
       this.props.user.auth &&
