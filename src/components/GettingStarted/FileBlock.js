@@ -1,5 +1,5 @@
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import { dedent } from 'lib/helpers';
+import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import BaseTransition from 'styles/transitions/BaseTransition';

@@ -1,4 +1,4 @@
-import useDelayedChange from 'lib/effects/useDelayedChange';
+import useDelayedChange from 'lib/hooks/useDelayedChange';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';

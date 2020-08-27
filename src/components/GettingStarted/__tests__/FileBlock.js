@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, render } from '@testing-library/react';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
 
 import FileBlock from '../FileBlock';
 
-jest.mock('lib/effects/useCopyToClipboard');
+jest.mock('lib/hooks/useCopyToClipboard');
 global.URL.createObjectURL = jest.fn();
 
 const testContent = 'This is a test';

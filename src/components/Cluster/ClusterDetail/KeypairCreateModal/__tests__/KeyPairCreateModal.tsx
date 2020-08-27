@@ -1,6 +1,6 @@
 import { fireEvent, render, RenderResult } from '@testing-library/react';
 import KeyPairCreateModal from 'Cluster/ClusterDetail/KeypairCreateModal/KeyPairCreateModal';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Providers, StatusCodes } from 'shared';
@@ -11,7 +11,7 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
 
-jest.mock('lib/effects/useCopyToClipboard');
+jest.mock('lib/hooks/useCopyToClipboard');
 
 const mockUser = {
   email: USER_EMAIL,

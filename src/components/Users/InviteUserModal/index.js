@@ -1,4 +1,4 @@
-import usePrevious from 'lib/effects/usePrevious';
+import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
