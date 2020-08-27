@@ -1,13 +1,8 @@
-FROM nginx:1.16-alpine
+FROM quay.io/giantswarm/alpine:3.12 AS compress
 
-RUN apk --no-cache add findutils gzip && \
-  rm -r /etc/nginx/conf.d && \
-  mkdir -p /etc/nginx/config
+RUN apk --no-cache add findutils gzip
 
-COPY nginx.conf /etc/nginx/config
-COPY scripts/start.sh /
 COPY dist /www
-COPY VERSION /
 
 RUN find /www \
   -type f -regextype posix-extended \
@@ -15,9 +10,15 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-RUN chown -R nginx:nginx /www
+FROM quay.io/giantswarm/nginx:1.18-alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --chown=nginx scripts/start.sh /
+COPY --from=compress --chown=nginx /www /www
+COPY --chown=nginx VERSION /
+
 RUN chmod u=rwx /www
-RUN touch /etc/nginx/config/resolvers.conf && chown nginx:nginx /etc/nginx/config/resolvers.conf
+RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 
 USER nginx
 
