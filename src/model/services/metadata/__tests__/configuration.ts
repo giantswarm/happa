@@ -7,11 +7,19 @@ describe('MetadataService::configuration', () => {
   const setURLMock = jest.fn();
   const executeMock = jest.fn();
 
-  const mockClient: IHttpClient = ({
+  const skipFnImplMock = jest.fn();
+
+  const mockClient: IHttpClient = {
     setRequestMethod: setRequestMethodMock,
     setURL: setURLMock,
     execute: executeMock,
-  } as unknown) as IHttpClient;
+
+    getRequestConfig: skipFnImplMock,
+    setAuthorizationToken: skipFnImplMock,
+    setBody: skipFnImplMock,
+    setHeader: skipFnImplMock,
+    setRequestConfig: skipFnImplMock,
+  };
 
   describe('getInstallationInfo', () => {
     it('configures the client correctly', async () => {
