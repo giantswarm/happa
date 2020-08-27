@@ -2,6 +2,8 @@ import { IHttpClient } from 'model/clients';
 
 import { getInstallationInfo } from '../info';
 
+jest.unmock('model/services/giantSwarm/info');
+
 describe('GiantSwarmService::info', () => {
   const setRequestMethodMock = jest.fn();
   const setURLMock = jest.fn();

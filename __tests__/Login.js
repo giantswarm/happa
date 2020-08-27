@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
-import { getInstallationInfo } from 'model/services/giantSwarm';
-import { getConfiguration } from 'model/services/metadata';
+import { getInstallationInfo } from 'model/services/giantSwarm/info';
+import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';

@@ -2,6 +2,8 @@ import { IHttpClient } from 'model/clients';
 
 import { getConfiguration } from '../configuration';
 
+jest.unmock('model/services/metadata/configuration');
+
 describe('MetadataService::configuration', () => {
   const setRequestMethodMock = jest.fn();
   const setURLMock = jest.fn();

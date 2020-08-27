@@ -1,5 +1,5 @@
-import { getInstallationInfo } from 'model/services/giantSwarm';
-import { getConfiguration } from 'model/services/metadata';
+import { getInstallationInfo } from 'model/services/giantSwarm/info';
+import { getConfiguration } from 'model/services/metadata/configuration';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,

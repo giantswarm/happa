@@ -1,8 +1,6 @@
 import { SelfClient } from 'model/clients/SelfClient';
-import {
-  getConfiguration,
-  IMetadataConfiguration,
-} from 'model/services/metadata';
+import { getConfiguration } from 'model/services/metadata/configuration';
+import { IMetadataConfiguration } from 'model/services/metadata/types';
 import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
