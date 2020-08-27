@@ -7,7 +7,7 @@ jest.mock('copy-to-clipboard');
 
 describe('useCopyToClipboard hook', () => {
   beforeEach(() => {
-    copy.mockClear();
+    (copy as jest.Mock).mockClear();
   });
 
   it('has no content in the clipboard initially', () => {
