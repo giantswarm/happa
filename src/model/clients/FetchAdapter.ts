@@ -1,11 +1,15 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
-import { HttpClient, HttpRequestMethods } from 'model/clients/HttpClient';
+import {
+  HttpClientImpl,
+  HttpRequestMethods,
+  IHttpClient,
+} from 'model/clients/HttpClient';
 
 /**
  * This is an adapter for using an HttpClient with the same
  * interface as the global `fetch` function.
  */
-class FetchAdapter<T extends HttpClient = HttpClient> {
+class FetchAdapter<T extends IHttpClient = HttpClientImpl> {
   public readonly baseClient: T;
 
   constructor(baseClient: T) {

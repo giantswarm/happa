@@ -1,10 +1,9 @@
-import { HttpClient } from './HttpClient';
+import { HttpClientImpl } from './HttpClient';
 
 /**
  * The client used to access the Giant Swarm API
- * @extends {HttpClient}
  */
-export class GiantSwarmClient extends HttpClient {
+export class GiantSwarmClient extends HttpClientImpl {
   /**
    * Create a new Giant Swarm API Client
    * @param authToken - The token used for authorization

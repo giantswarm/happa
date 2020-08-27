@@ -19,10 +19,59 @@ export interface IHttpClientConfig {
   baseURL?: string;
 }
 
+export interface IHttpClient {
+  /**
+   * Set the client's configuration manually.
+   * @param config - The client's configuration.
+   */
+  setRequestConfig(config: Partial<IHttpClientConfig>): IHttpClient;
+  /**
+   * Get the existing configuration.
+   */
+  getRequestConfig(): IHttpClientConfig;
+  /**
+   * Set a request header.
+   * @param key
+   * @param value
+   */
+  setHeader(key: string, value?: string): IHttpClient;
+  /**
+   * Set an authentication header.
+   * @param authType - Authorization Scheme.
+   * @param token - Authorization token.
+   */
+  setAuthorizationToken(authType: string, token: string): IHttpClient;
+  /**
+   * Set the request method.
+   * @param method
+   */
+  setRequestMethod(method: HttpRequestMethods): IHttpClient;
+  /**
+   * Set the request body contents.
+   * @param body
+   */
+  setBody(body: Record<string, unknown>): IHttpClient;
+  /**
+   * Set the request target URL.
+   * @param url
+   */
+  setURL(url: string): IHttpClient;
+  /**
+   * Execute the client's request.
+   * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
+   */
+  execute(): Promise<GenericResponse>;
+  /**
+   * Override this function to run a custom hook before each request.
+   * @param reqConfig - The client's configuration.
+   */
+  onBeforeRequest?(reqConfig: IHttpClientConfig): Promise<void>;
+}
+
 /**
  * A helper class for creating HTTP requests.
  */
-export class HttpClient {
+export class HttpClientImpl implements IHttpClient {
   /**
    * Shorthand function to execute a `GET` request.
    * @param url - The target URL.
@@ -34,7 +83,7 @@ export class HttpClient {
       url,
       method: HttpRequestMethods.GET,
     });
-    const newClient = new HttpClient(boundConfig);
+    const newClient = new HttpClientImpl(boundConfig);
 
     return newClient.execute();
   }
@@ -50,7 +99,7 @@ export class HttpClient {
       url,
       method: HttpRequestMethods.POST,
     });
-    const newClient = new HttpClient(boundConfig);
+    const newClient = new HttpClientImpl(boundConfig);
 
     return newClient.execute();
   }
@@ -66,7 +115,7 @@ export class HttpClient {
       url,
       method: HttpRequestMethods.PUT,
     });
-    const newClient = new HttpClient(boundConfig);
+    const newClient = new HttpClientImpl(boundConfig);
 
     return newClient.execute();
   }
@@ -82,7 +131,7 @@ export class HttpClient {
       url,
       method: HttpRequestMethods.PATCH,
     });
-    const newClient = new HttpClient(boundConfig);
+    const newClient = new HttpClientImpl(boundConfig);
 
     return newClient.execute();
   }
@@ -98,7 +147,7 @@ export class HttpClient {
       url,
       method: HttpRequestMethods.DELETE,
     });
-    const newClient = new HttpClient(boundConfig);
+    const newClient = new HttpClientImpl(boundConfig);
 
     return newClient.execute();
   }
@@ -115,7 +164,7 @@ export class HttpClient {
    */
   protected requestConfig: IHttpClientConfig = Object.assign(
     {},
-    HttpClient.defaultConfig
+    HttpClientImpl.defaultConfig
   );
 
   /**
@@ -128,12 +177,12 @@ export class HttpClient {
     }
   }
 
-  /**
-   * Set the client's configuration manually.
-   * @param config - The client's configuration.
-   */
   setRequestConfig(config: Partial<IHttpClientConfig>) {
-    this.requestConfig = Object.assign({}, HttpClient.defaultConfig, config);
+    this.requestConfig = Object.assign(
+      {},
+      HttpClientImpl.defaultConfig,
+      config
+    );
 
     if (config.headers) {
       this.requestConfig.headers = Object.assign({}, config.headers);
@@ -146,52 +195,30 @@ export class HttpClient {
     return Object.assign({}, this.requestConfig);
   }
 
-  /**
-   * Set a request header.
-   * @param key
-   * @param value
-   */
   setHeader(key: string, value = '') {
     this.requestConfig.headers[key] = value;
 
     return this;
   }
 
-  /**
-   * Set an authentication header.
-   * @param authType - Authorization Scheme.
-   * @param token - Authorization token.
-   */
   setAuthorizationToken(authType: string, token: string) {
     this.setHeader('Authorization', `${authType} ${token}`);
 
     return this;
   }
 
-  /**
-   * Set the request method.
-   * @param method
-   */
   setRequestMethod(method: HttpRequestMethods) {
     this.requestConfig.method = method;
 
     return this;
   }
 
-  /**
-   * Set the request body contents.
-   * @param body
-   */
   setBody(body: Record<string, unknown>) {
     this.requestConfig.data = body;
 
     return this;
   }
 
-  /**
-   * Set the request target URL.
-   * @param url
-   */
   setURL(url: string) {
     this.requestConfig.url = url;
 
@@ -205,10 +232,6 @@ export class HttpClient {
   // eslint-disable-next-line class-methods-use-this, no-empty-function
   async onBeforeRequest(_reqConfig: IHttpClientConfig): Promise<void> {}
 
-  /**
-   * Execute the client's request.
-   * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
-   */
   async execute() {
     const currRequestConfig = this.getRequestConfig();
     const { baseURL, timeout, headers, url, method, data } = currRequestConfig;

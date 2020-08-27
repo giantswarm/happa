@@ -1,4 +1,4 @@
-import { SelfClient } from 'model/clients/SelfClient';
+import { IHttpClient } from 'model/clients';
 
 import { getConfiguration } from '../configuration';
 
@@ -7,15 +7,15 @@ describe('MetadataService::configuration', () => {
   const setURLMock = jest.fn();
   const executeMock = jest.fn();
 
-  const mockClient = {
+  const mockClient: IHttpClient = ({
     setRequestMethod: setRequestMethodMock,
     setURL: setURLMock,
     execute: executeMock,
-  };
+  } as unknown) as IHttpClient;
 
   describe('getInstallationInfo', () => {
     it('configures the client correctly', async () => {
-      await getConfiguration((mockClient as unknown) as SelfClient);
+      await getConfiguration(mockClient);
 
       expect(setRequestMethodMock).toBeCalledWith('GET');
       expect(setURLMock).toBeCalledWith('/metadata.json');
