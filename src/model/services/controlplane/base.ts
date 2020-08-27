@@ -14,7 +14,7 @@ export async function getBaseConfiguration(
   const fetchAdapter = new FetchAdapter(client);
 
   const configBuilder = new Configuration({
-    basePath: client.requestConfig.baseURL,
+    basePath: client.getRequestConfig().baseURL,
     fetchApi: fetchAdapter.fetch.bind(fetchAdapter),
   });
 

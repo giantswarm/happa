@@ -4,8 +4,8 @@ describe('SelfClient', () => {
   it('has a correct default configuration', () => {
     const client = new SelfClient();
 
-    expect(client.requestConfig.baseURL).toBe(window.location.origin);
-    expect(client.requestConfig.headers).toStrictEqual({
+    expect(client.getRequestConfig().baseURL).toBe(window.location.origin);
+    expect(client.getRequestConfig().headers).toStrictEqual({
       Accept: 'application/json',
     });
   });

@@ -1,3 +1,5 @@
+import { IHttpClientConfig } from 'model/clients';
+
 import { GenericResponse } from '../GenericResponse';
 
 describe('GenericResponse', () => {
@@ -30,7 +32,7 @@ describe('GenericResponse', () => {
 
     res.requestConfig = {
       url: '/v4/test',
-    };
+    } as IHttpClientConfig;
 
     res.setHeader('someOtherHeader');
     res.setHeader('someOtherHeader2', 'someOtherValue');

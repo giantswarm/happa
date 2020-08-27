@@ -1,9 +1,11 @@
+import { IHttpClientConfig } from 'model/clients/HttpClient';
+
 interface IHttpResponseConfig {
   status: number;
   message: string;
   data: Record<string, unknown>;
   headers: Record<string, string>;
-  requestConfig: Record<string, unknown>;
+  requestConfig: IHttpClientConfig | null;
 }
 
 /**
@@ -18,7 +20,7 @@ export class GenericResponse {
     message: 'Request successful!',
     data: {},
     headers: {},
-    requestConfig: {},
+    requestConfig: null,
   };
 
   /**

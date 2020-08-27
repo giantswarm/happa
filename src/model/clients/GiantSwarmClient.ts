@@ -1,6 +1,3 @@
-import { AuthorizationTypes } from 'shared';
-import { PropertiesOf } from 'shared/types';
-
 import { HttpClient } from './HttpClient';
 
 /**
@@ -13,10 +10,7 @@ export class GiantSwarmClient extends HttpClient {
    * @param authToken - The token used for authorization
    * @param authType - The authorization scheme
    */
-  constructor(
-    authToken: string,
-    authType: PropertiesOf<typeof AuthorizationTypes>
-  ) {
+  constructor(authToken: string, authType: string) {
     super({
       baseURL: window.config.apiEndpoint,
     });

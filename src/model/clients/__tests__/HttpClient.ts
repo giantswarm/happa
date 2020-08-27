@@ -2,7 +2,11 @@ import axios from 'axios';
 import nock from 'nock';
 import { generateRandomString } from 'testUtils/mockHttpCalls';
 
-import { HttpClient } from '../HttpClient';
+import {
+  HttpClient,
+  HttpRequestMethods,
+  IHttpClientConfig,
+} from '../HttpClient';
 
 describe('HttpClient', () => {
   beforeAll(() => {
@@ -14,21 +18,21 @@ describe('HttpClient', () => {
     const client = new HttpClient();
 
     // Has defaults
-    expect(client.requestConfig).toStrictEqual({
+    expect(client.getRequestConfig()).toStrictEqual({
       url: '',
       method: 'GET',
       timeout: 10000,
       headers: {},
     });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
         'Test header': 'test value',
       },
       url: '/api/test',
-      method: 'POST',
+      method: HttpRequestMethods.POST,
       data: {
         test: 'test',
       },
@@ -37,13 +41,13 @@ describe('HttpClient', () => {
     // Can be set manually
     client.setRequestConfig(config);
 
-    expect(client.requestConfig).toStrictEqual(config);
+    expect(client.getRequestConfig()).toStrictEqual(config);
   });
 
   it('can be configured with various setters', () => {
     // eslint-disable-next-line no-magic-numbers
     const token = generateRandomString(15);
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -53,7 +57,7 @@ describe('HttpClient', () => {
         Authorization: `testScheme ${token}`,
       },
       url: '/api/test',
-      method: 'POST',
+      method: HttpRequestMethods.POST,
       data: {
         test: 'test',
       },
@@ -66,16 +70,22 @@ describe('HttpClient', () => {
 
     client
       .setHeader('TestHeader')
-      .setHeader('TestHeader2', config.headers.TestHeader2)
-      .setHeader('TestHeader3', config.headers.TestHeader3)
+      .setHeader(
+        'TestHeader2',
+        (config.headers as IHttpClientConfig['headers']).TestHeader2
+      )
+      .setHeader(
+        'TestHeader3',
+        (config.headers as IHttpClientConfig['headers']).TestHeader3
+      )
       .setAuthorizationToken('testScheme', token)
-      .setRequestMethod('POST')
+      .setRequestMethod(HttpRequestMethods.POST)
       .setBody({
         test: 'test',
       })
       .setURL('/api/test');
 
-    expect(client.requestConfig).toStrictEqual(config);
+    expect(client.getRequestConfig()).toStrictEqual(config);
   });
 
   it('executes a request with the given config', async () => {
@@ -88,7 +98,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -97,7 +107,7 @@ describe('HttpClient', () => {
         TestHeader3: 'test value',
       },
       url: '/api/test',
-      method: 'POST',
+      method: HttpRequestMethods.POST,
       data: {
         test: 'test',
       },
@@ -118,7 +128,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -127,7 +137,7 @@ describe('HttpClient', () => {
         TestHeader3: 'test value',
       },
       url: '/api/test',
-      method: 'GET',
+      method: HttpRequestMethods.GET,
     };
     const client = new HttpClient(config);
 
@@ -152,7 +162,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -178,7 +188,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -207,7 +217,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -236,7 +246,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -263,7 +273,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -287,7 +297,7 @@ describe('HttpClient', () => {
         testResponse: 'test value',
       });
 
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -307,7 +317,7 @@ describe('HttpClient', () => {
   });
 
   it('provides an error if the request is misconfigured', async () => {
-    const config = {
+    const config: Partial<IHttpClientConfig> = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -318,7 +328,7 @@ describe('HttpClient', () => {
     };
 
     try {
-      await HttpClient.get({ url: '/api/test' }, config);
+      await HttpClient.get(({ url: '/api/test' } as unknown) as string, config);
     } catch (err) {
       expect(err.message).toStrictEqual(
         `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`
