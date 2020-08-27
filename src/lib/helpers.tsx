@@ -1,9 +1,9 @@
 import moment from 'moment';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import validate from 'validate.js';
 import { IKeyPair } from 'shared/types';
+import validate from 'validate.js';
 
 export function dedent(strings, ...values) {
   let raw = [];
@@ -108,18 +108,28 @@ export function validateOrRaise(validatable, constraints) {
   }
 }
 
-export function formatDate(ISO8601DateString) {
-  // http://momentjs.com/docs/#/displaying/
-  return moment.utc(ISO8601DateString).format('D MMM YYYY, HH:mm z');
+/**
+ * Format a date into a pretty way.
+ * @param date - The date in the `ISO8601DateString` format.
+ * @source http://momentjs.com/docs/#/displaying/
+ */
+export function formatDate(date: string): string {
+  return moment.utc(date).format('D MMM YYYY, HH:mm z');
 }
 
-export function relativeDate(ISO8601DateString) {
-  if (!ISO8601DateString) {
+/**
+ * Get a component containing a formatted given date, relative
+ * from now (e.g. 2 days ago).
+ * @param date - The date in the `ISO8601DateString` format.
+ */
+// TODO(axbarsan): Refactor this into a UI component.
+export function relativeDate(date: string): ReactElement {
+  if (!date) {
     return <span>n/a</span>;
   }
 
-  const formattedDate = formatDate(ISO8601DateString);
-  const relDate = moment.utc(ISO8601DateString).fromNow();
+  const formattedDate = formatDate(date);
+  const relDate = moment.utc(date).fromNow();
 
   return (
     <OverlayTrigger
@@ -131,23 +141,30 @@ export function relativeDate(ISO8601DateString) {
   );
 }
 
-export function toTitleCase(str) {
-  // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+/**
+ * Convert a string to title case (e.g. `A Title Cased Example`).
+ * @param str
+ * @source http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+ */
+export function toTitleCase(str: string): string {
   return str.replace(/\w\S*/g, txt => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
 
 /**
- * Truncate a string in a smart way
- *
- * @param {string} str - String to truncate
- * @param {string} replacer - The symbol displayed between the start chars and the end chars
- * @param {number} numStartChars - Chars to keep unmangled in the beginning
- * @param {number} numEndChars - Chars to keep unmangled in the end
- * @returns {string}
+ * Truncate a string in a smart way.
+ * @param str - String to truncate.
+ * @param replacer - The symbol displayed between the start chars and the end chars.
+ * @param numStartChars - Count of chars to keep unmangled in the beginning.
+ * @param numEndChars - Count of chars to keep unmangled in the end.
  */
-export function truncate(str, replacer, numStartChars, numEndChars) {
+export function truncate(
+  str: string,
+  replacer: string,
+  numStartChars: number,
+  numEndChars: number
+): string {
   const maxLength = numStartChars + numEndChars + replacer.length;
 
   if (str.length <= maxLength || numEndChars === 0 || numEndChars === 0) {
@@ -170,7 +187,11 @@ export function truncate(str, replacer, numStartChars, numEndChars) {
  * @param useInternalAPI
  */
 // FIXME(axbarsan): Use proper cluster type.
-export function makeKubeConfigTextFile(cluster: Record<string, unknown>, keyPair: IKeyPair, useInternalAPI: boolean) {
+export function makeKubeConfigTextFile(
+  cluster: Record<string, unknown>,
+  keyPair: IKeyPair,
+  useInternalAPI: boolean
+): string {
   let apiEndpoint: string = cluster.api_endpoint as string;
 
   /**
@@ -191,9 +212,7 @@ export function makeKubeConfigTextFile(cluster: Record<string, unknown>, keyPair
     kind: Config
     clusters:
     - cluster:
-        certificate-authority-data: ${btoa(
-          keyPair.certificate_authority_data
-        )}
+        certificate-authority-data: ${btoa(keyPair.certificate_authority_data)}
         server: ${apiEndpoint}
       name: ${namePrefix}
     contexts:
