@@ -2,9 +2,9 @@ import { act, renderHook } from '@testing-library/react-hooks';
 
 import useDocumentTitle from '../useDocumentTitle';
 
-let initialTitle = '';
+describe('useDocumentTitle', () => {
+  let initialTitle = '';
 
-describe('useDocumentTitle hook', () => {
   beforeAll(() => {
     initialTitle = document.title;
   });
