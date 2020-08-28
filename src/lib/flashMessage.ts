@@ -1,7 +1,10 @@
 import QueueImpl from 'lib/Queue';
 import Noty from 'noty';
+import { PropertiesOf } from 'shared/types';
 
-// messageType affects the visual markup to distinguish severity
+/**
+ * Message severity.
+ */
 export const messageType = {
   ERROR: 'error',
   INFO: 'info',
@@ -9,11 +12,11 @@ export const messageType = {
   WARNING: 'warning',
 };
 
-// Display duration for a message.
-// bool false means forever.
-// integers are a duration in milliseconds.
+/**
+ * Duration of a message.
+ */
 export const messageTTL = {
-  FOREVER: false,
+  FOREVER: false as const,
   SHORT: 1500,
   MEDIUM: 3000,
   LONG: 10000,
@@ -23,15 +26,27 @@ export const messageTTL = {
 export class FlashMessage {
   /**
    * The messages waiting to be displayed.
-   * @type {IQueue<string>}
    */
-  static queue = new QueueImpl();
+  public static queue = new QueueImpl();
 
-  static hashQueueItem(type, text) {
+  public static hashQueueItem(
+    type: PropertiesOf<typeof messageType>,
+    text: string
+  ) {
     return `${type}:${text}`;
   }
 
-  constructor(text, type, ttl, subtext, onClose) {
+  private readonly noty: Noty;
+  private readonly text: string;
+  private readonly timeout: number | false = false;
+
+  constructor(
+    text: string,
+    type: PropertiesOf<typeof messageType>,
+    ttl?: number | false,
+    subtext?: string,
+    onClose?: () => void
+  ) {
     const hash = FlashMessage.hashQueueItem(type, text);
 
     // make sure to only pass escaped HTML to this.text!
@@ -40,13 +55,12 @@ export class FlashMessage {
       this.text += `<p>${escapeHTML(subtext)}</p>`;
     }
 
-    this.timeout = false;
     if (ttl) {
       this.timeout = ttl;
     }
 
     this.noty = new Noty({
-      type: type,
+      type: type as Noty.Type,
       text: this.text,
       timeout: this.timeout,
       callbacks: {
@@ -56,7 +70,6 @@ export class FlashMessage {
       },
       theme: 'bootstrap-v3',
       layout: 'topRight',
-      visibilityControl: true,
       closeWith: ['click', 'button'],
       animation: {
         close: 'flash_message_close',
@@ -68,11 +81,11 @@ export class FlashMessage {
     }
   }
 
-  onBeforeShow = (hash) => () => {
+  onBeforeShow = (hash: string) => () => {
     FlashMessage.queue.add(hash);
   };
 
-  onAfterClose = (hash) => () => {
+  onAfterClose = (hash: string) => () => {
     FlashMessage.queue.remove(hash);
   };
 }
@@ -88,14 +101,14 @@ export function clearQueues() {
 /**
  * Remove all messages from the given queue and close the displayed ones.
  */
-export function clearQueue(queueName) {
+export function clearQueue(queueName: string) {
   Noty.closeAll(queueName);
   FlashMessage.queue.clear();
 }
 
 /**
  * Remove all messages from all queues without waiting for the animation
- * to finish
+ * to finish.
  */
 export function forceRemoveAll() {
   clearQueues();
@@ -111,10 +124,9 @@ export function forceRemoveAll() {
  *
  *   <code>...</code>
  *
- * @param {string} unsafe
- * @returns {string}
+ * @param unsafe - Input HTML code.
  */
-function escapeHTML(unsafe) {
+function escapeHTML(unsafe: string): string {
   let safe = unsafe
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
