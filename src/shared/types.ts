@@ -51,6 +51,9 @@ export interface IKeyPair {
   cn_prefix: string;
   description: string;
   ttl_hours: number;
+  certificate_authority_data: string;
+  client_certificate_data: string;
+  client_key_data: string;
 }
 
 export type PropertiesOf<T> = T[keyof T];
