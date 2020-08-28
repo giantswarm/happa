@@ -1,8 +1,8 @@
-// This file is a edited version of
-// https://github.com/airbrake/airbrake-js/blob/master/packages/browser/src/http_req/fetch.ts
-
-// Airbrake doesn't expose a easy interface for setting custom headers for each
-// request. We need to set headers for authentication against our API.
+/**
+ * Airbrake doesn't expose a easy interface for setting custom headers for each
+ * request. We need to set headers for authentication against our API.
+ * @source https://github.com/airbrake/airbrake-js/blob/master/packages/browser/src/http_req/fetch.ts
+ */
 import {
   IHttpRequest,
   IHttpResponse,
