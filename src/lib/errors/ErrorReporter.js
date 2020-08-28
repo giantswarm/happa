@@ -2,7 +2,7 @@
  * A singleton helper to report errors to a
  * 3rd party provider
  */
-export class ErrorReporter {
+class ErrorReporter {
   /**
    * Singleton instance
    * @type {ErrorReporter | null}
@@ -35,3 +35,5 @@ export class ErrorReporter {
     this.notifier?.notify(error);
   }
 }
+
+export default ErrorReporter;

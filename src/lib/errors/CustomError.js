@@ -1,4 +1,4 @@
-import { ErrorReporter } from 'lib/errors';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import StackTraceGPS from 'stacktrace-gps';
 import StackTrace from 'stacktrace-js';
 
@@ -13,7 +13,7 @@ import StackTrace from 'stacktrace-js';
  * A custom error object that can create custom stack traces
  * (and even really detailed ones)
  */
-export class CustomError extends Error {
+class CustomError extends Error {
   /**
    * Create a custom error object from previously
    * serialized custom error
@@ -180,3 +180,5 @@ ${this.stack}`;
     return this.stack;
   }
 }
+
+export default CustomError;

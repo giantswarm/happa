@@ -10,7 +10,7 @@ import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
 import CPAuth from 'lib/CPAuth/CPAuth';
-import { ErrorReporter } from 'lib/errors';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
