@@ -5,59 +5,93 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { IKeyPair } from 'shared/types';
 import validate from 'validate.js';
 
-export function dedent(strings, ...values) {
-  let raw = [];
+/**
+ * Format code in a user-friendly way.
+ * Note: Newline backticks need to be escaped.
+ * @example `kubectl version \\
+ *       long \\
+ *       command`
+ * @param str
+ */
+export function dedent(str: string): string {
+  const raw = str;
 
-  if (typeof strings === 'string') {
-    // dedent can be used as a plain function
-    raw = [strings];
-  } else {
-    raw = strings.raw;
-  }
+  // First, perform interpolation.
+  const escapeBackticksRegexp = /\\`/g;
+  let result = Array.from(raw).reduce((agg: string, char: string) => {
+    return agg + char.replace(escapeBackticksRegexp, '`');
+  }, '');
 
-  // first, perform interpolation
-  let result = '';
-  for (let i = 0; i < raw.length; i++) {
-    result += raw[i]
-      // handle escaped backticks
-      .replace(/\\`/g, '`');
-
-    if (i < values.length) {
-      result += values[i];
-    }
-  }
-
-  // now strip indentation
+  // Now strip indentation.
   const lines = result.split('\n');
-  let mindent = null;
-  lines.forEach(l => {
-    const m = /^(\s+)\S+/.exec(l);
-    if (m) {
-      const indent = m[1].length;
-      if (!mindent) {
-        // this is the first indented line
-        mindent = indent;
-      } else {
-        mindent = Math.min(mindent, indent);
-      }
-    }
-  });
+  const spacesRegexp = /^(\s+)\S+/;
+  let minIndent: number | null = null;
+  for (const line of lines) {
+    const m = spacesRegexp.exec(line);
+    if (!m) continue;
 
-  if (mindent !== null) {
+    const indent = m[1].length;
+    if (!minIndent) {
+      // This is the first indented line.
+      minIndent = indent;
+    } else {
+      minIndent = Math.min(minIndent, indent);
+    }
+  }
+
+  if (minIndent !== null) {
     result = lines
-      .map(l => (l.startsWith(' ') ? l.slice(mindent) : l))
+      .map((l) => (l.startsWith(' ') ? l.slice(minIndent as number) : l))
       .join('\n');
   }
 
-  // dedent eats leading and trailing whitespace too
+  // Dedent eats leading and trailing whitespace, too.
   result = result.trim();
 
-  // handle escaped newlines at the end to ensure they don't get stripped too
+  // Handle escaped newlines at the end to ensure they don't get stripped too.
   return result.replace(/\\n/g, '\n');
 }
 
-export function humanFileSize(bytes, si = true, decimals = 1) {
-  // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+type FileSizeUnitSI =
+  | 'B'
+  | 'kB'
+  | 'MB'
+  | 'GB'
+  | 'TB'
+  | 'PB'
+  | 'EB'
+  | 'ZB'
+  | 'YB';
+type FileSizeUnitNonSI =
+  | 'B'
+  | 'KiB'
+  | 'MiB'
+  | 'GiB'
+  | 'TiB'
+  | 'PiB'
+  | 'EiB'
+  | 'ZiB'
+  | 'YiB';
+type FileSizeUnit<T> = T extends true ? FileSizeUnitSI : FileSizeUnitNonSI;
+
+interface IHumanFileSizeValue<T extends boolean> {
+  value: string;
+  unit: FileSizeUnit<T>;
+}
+/**
+ * Print a file size into a user-friendly way (e.g. GB/GiB)
+ * @param bytes
+ * @param si - Whether to use the international system of notation, or not
+ * In SI, units like `GB` or `MB` will be used. Without it,
+ * units like `GiB` or `MiB` will be used.
+ * @param decimals
+ * @source http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+ */
+export function humanFileSize<T extends boolean = true>(
+  bytes: number,
+  si: T = true as T,
+  decimals = 1
+): IHumanFileSizeValue<T> {
   // eslint-disable-next-line no-magic-numbers
   const thresh = si ? 1000 : 1024;
   let newBytes = bytes;
@@ -65,7 +99,7 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
   if (Math.abs(newBytes) < thresh) {
     return {
       value: newBytes.toFixed(decimals),
-      unit: 'B',
+      unit: 'B' as FileSizeUnit<T>,
     };
   }
 
@@ -74,7 +108,6 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
     : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
 
   let u = -1;
-
   do {
     newBytes /= thresh;
     ++u;
@@ -82,7 +115,7 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
 
   return {
     value: newBytes.toFixed(decimals),
-    unit: units[u],
+    unit: units[u] as FileSizeUnit<T>,
   };
 }
 
@@ -95,7 +128,7 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
 export function validateOrRaise<T>(
   validatable: T,
   constraints: Record<keyof T, Record<string, unknown>>
-) {
+): void {
   const validationErrors: Record<string, string[]> = validate(
     validatable,
     constraints,
@@ -132,7 +165,7 @@ export function formatDate(date: string): string {
  * from now (e.g. 2 days ago).
  * @param date - The date in the `ISO8601DateString` format.
  */
-// TODO(axbarsan): Refactor this into a UI component.
+// TODO(axbarsan): Refactor a part of this into a UI component.
 export function relativeDate(date: string): ReactElement {
   if (!date) {
     return <span>n/a</span>;
@@ -157,7 +190,7 @@ export function relativeDate(date: string): ReactElement {
  * @source http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
  */
 export function toTitleCase(str: string): string {
-  return str.replace(/\w\S*/g, txt => {
+  return str.replace(/\w\S*/g, (txt) => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
@@ -251,7 +284,9 @@ export function clustersForOrg(
 ): Record<string, unknown>[] {
   if (!allClusters) return [];
 
-  return Object.values(allClusters).filter(cluster => cluster.owner === orgId);
+  return Object.values(allClusters).filter(
+    (cluster) => cluster.owner === orgId
+  );
 }
 
 /**
