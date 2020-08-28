@@ -36,10 +36,6 @@ export class FlashMessage {
     return `${type}:${text}`;
   }
 
-  private readonly noty: Noty;
-  private readonly text: string;
-  private readonly timeout: number | false = false;
-
   constructor(
     text: string,
     type: PropertiesOf<typeof messageType>,
@@ -88,6 +84,10 @@ export class FlashMessage {
   onAfterClose = (hash: string) => () => {
     FlashMessage.queue.remove(hash);
   };
+
+  protected readonly noty: Noty;
+  protected readonly text: string;
+  protected readonly timeout: number | false = false;
 }
 
 /**
