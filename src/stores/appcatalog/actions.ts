@@ -8,7 +8,7 @@ import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatal
 import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import { selectIngressCatalog } from 'selectors/ingressTabSelectors';
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 import FeatureFlags from 'shared/FeatureFlags';
 import {
   IAppCatalogsMap,

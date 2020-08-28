@@ -1,7 +1,7 @@
 import ExpiryHoursPicker from 'Cluster/ClusterDetail/ExpiryHoursPicker';
 import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
-import { Constants, Providers } from 'shared';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
 

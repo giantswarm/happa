@@ -10,7 +10,7 @@ import {
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
 import { selectIngressAppToInstall } from 'selectors/ingressTabSelectors';
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
   installLatestIngress,

@@ -1,4 +1,4 @@
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 import { appCatalogsResponse } from 'testUtils/mockHttpCalls';
 
 const ingressCatalog = appCatalogsResponse.find(

@@ -3,7 +3,7 @@ import KeyPairCreateModal from 'Cluster/ClusterDetail/KeypairCreateModal/KeyPair
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { Providers, StatusCodes } from 'shared';
+import { Providers, StatusCodes } from 'shared/constants';
 import {
   USER_EMAIL,
   v4AWSClusterResponse,

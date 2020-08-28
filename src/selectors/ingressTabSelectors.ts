@@ -1,5 +1,5 @@
 import { IState } from 'reducers/types';
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 import { IStoredAppCatalog } from 'stores/appcatalog/types';
 
 export const selectIngressCatalog: (state: IState) => IStoredAppCatalog = (
