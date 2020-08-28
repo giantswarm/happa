@@ -1,5 +1,5 @@
 export interface IErrorReporterNotifier {
-  notify(error: Error | string): void;
+  notify(error: Error | string | Record<string, unknown>): Promise<unknown>;
 }
 
 /**
@@ -33,8 +33,8 @@ class ErrorReporter {
    * Report an error.
    * error - The error to report.
    */
-  notify(error: Error | string) {
-    this.notifier?.notify(error);
+  async notify(error: Error | string | Record<string, unknown>): Promise<void> {
+    await this.notifier?.notify(error);
   }
 }
 

@@ -2,25 +2,39 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import StackTraceGPS from 'stacktrace-gps';
 import StackTrace from 'stacktrace-js';
 
-/**
- * @typedef {Object} ICustomError
- * @property {string} name - Error name
- * @property {string} message - Error message
- * @property {string} stack - Pretty-printed stack trace
- */
+export interface ICustomError {
+  name: string;
+  message: string;
+  // Pretty-printed stack trace.
+  stack: string;
+}
+
+export interface IStackFrame {
+  toString: () => string;
+  isConstructor?: boolean;
+  isEval?: boolean;
+  isNative?: boolean;
+  isTopLevel?: boolean;
+  columnNumber?: number;
+  lineNumber?: number;
+  fileName?: string;
+  functionName?: string;
+  source?: string;
+  args?: unknown[];
+  evalOrigin?: IStackFrame;
+}
 
 /**
  * A custom error object that can create custom stack traces
- * (and even really detailed ones)
+ * (and even really detailed ones).
  */
-class CustomError extends Error {
+class CustomError extends Error implements ICustomError {
   /**
    * Create a custom error object from previously
-   * serialized custom error
-   * @param {ICustomError} obj - Serialized custom error
-   * @return {CustomError}
+   * serialized custom error.
+   * @param obj - Serialized custom error.
    */
-  static createFromObject(obj) {
+  public static createFromObject(obj: ICustomError): CustomError {
     const newError = new CustomError();
     newError.deserialize(obj);
 
@@ -29,26 +43,31 @@ class CustomError extends Error {
 
   /**
    * Create a custom error object from a regular
-   * error object
-   * @param {Error} error - Regular error
-   * @param {string} [customName] - The error name (defaults to the error constructor name)
-   * @return {CustomError}
+   * error object.
+   * @param error - Regular error.
+   * @param [customName] - The error name (defaults to the error constructor name).
    */
-  static createFromError(error, customName = error.name) {
+  public static createFromError(
+    error: Error,
+    customName = error.name
+  ): CustomError {
     const newError = new CustomError(customName, error.message);
 
     return newError;
   }
 
   /**
-   * Pretty-print the stack trace
-   * @param {string} name - Error name
-   * @param {string} message - Error message
-   * @param {StackTrace.StackFrame[]} stackFrames - Error stack frames
-   * @return {string}
+   * Pretty-print the stack trace.
+   * @param name - Error name.
+   * @param message - Error message.
+   * @param stackFrames - Error stack frames.
    */
-  static stringifyStack(name, message, stackFrames) {
-    // Stringify error in the same way the native Error would be stringified
+  public static stringifyStack(
+    name: string,
+    message: string,
+    stackFrames: IStackFrame[]
+  ): string {
+    // Stringify error in the same way the native Error would be stringified.
     // {Error name}: {Error message}
     let output = `${name}: ${message}\n`;
     // *tab* at {File}:{Line} *newline*
@@ -57,27 +76,26 @@ class CustomError extends Error {
     return output;
   }
 
+  public stack: string = '';
+
   /**
    * Resolver that finds sourcemaps and resolves
-   * function names, line numbers, file names
-   * @private
+   * function names, line numbers, file names.
    */
-  resolver = new StackTraceGPS();
+  public resolver = new StackTraceGPS();
 
   /**
    * Reporter that "reports" the error to a
-   * 3rd party error notifier
-   * @private
-   * @type {ErrorReporter}
+   * 3rd party error notifier.
    */
-  reporter = ErrorReporter.getInstance();
+  public reporter = ErrorReporter.getInstance();
 
   /**
-   * Create new Custom error object
-   * @param {string} name - Error name
-   * @param {string} message - Error message
+   * Create new Custom error object.
+   * @param name - Error name.
+   * @param message - Error message.
    */
-  constructor(name, message) {
+  constructor(name = '', message = '') {
     super(message);
 
     this.name = name;
@@ -86,9 +104,9 @@ class CustomError extends Error {
 
   /**
    * Generate the error stack, starting from the current
-   * execution point
+   * execution point.
    */
-  generateStack() {
+  public generateStack() {
     const stackFrames = StackTrace.getSync();
     const stack = CustomError.stringifyStack(
       this.name,
@@ -102,10 +120,9 @@ class CustomError extends Error {
   /**
    * Generate a more detailed error stack, starting from the current
    * execution point. This also includes resolved sourcemaps and
-   * guessed names for anonymous functions
-   * @return {Promise<void>}
+   * guessed names for anonymous functions.
    */
-  async generateDetailedStack() {
+  public async generateDetailedStack(): Promise<void> {
     let stack = '';
 
     try {
@@ -130,11 +147,10 @@ ${this.stack}`;
   }
 
   /**
-   * Send a report to the error reporter endpoint
-   * @return {Promise<void>}
+   * Send a report to the error reporter endpoint.
    */
-  report() {
-    this.reporter.notify({
+  public report(): Promise<void> {
+    return this.reporter.notify({
       error: this.serialize(),
       context: { severity: 'error' },
     });
@@ -142,10 +158,9 @@ ${this.stack}`;
 
   /**
    * Return an easier to store variant
-   * of the error
-   * @return {ICustomError}
+   * of the error.
    */
-  serialize() {
+  public serialize(): ICustomError {
     return {
       name: this.name,
       message: this.message,
@@ -155,28 +170,26 @@ ${this.stack}`;
 
   /**
    * Deserialize an already serialized variant
-   * of the error
-   * @param {ICustomError} obj - An already serialized error
+   * of the error.
+   * @param obj - An already serialized error.
    */
-  deserialize(obj) {
+  public deserialize(obj: ICustomError) {
     this.name = obj.name;
     this.message = obj.message;
     this.stack = obj.stack;
   }
 
   /**
-   * This dictates the output of `JSON.stringify()`
-   * @return {ICustomError}
+   * This dictates the output of `JSON.stringify()`.
    */
-  toJSON() {
+  public toJSON(): ICustomError {
     return this.serialize();
   }
 
   /**
-   * Return the pretty-printed error stack
-   * @return {string}
+   * Return the pretty-printed error stack.
    */
-  toString() {
+  public toString() {
     return this.stack;
   }
 }
