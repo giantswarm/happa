@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
  * @param delay - The time that should pass before the value
  * is updated (in ms).
  */
-export default function useDebounce<T>(value: T, delay: number) {
+function useDebounce<T>(value: T, delay: number) {
   // State and setters for debounced value.
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -44,3 +44,5 @@ export default function useDebounce<T>(value: T, delay: number) {
 
   return debouncedValue;
 }
+
+export default useDebounce;

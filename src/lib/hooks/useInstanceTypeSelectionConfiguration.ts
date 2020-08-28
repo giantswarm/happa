@@ -6,14 +6,10 @@ import {
 } from 'selectors/mainInfoSelectors';
 import { Providers } from 'shared/constants';
 
-interface IUseInstanceTypeSelectionLabels {
-  (): {
-    singular: string;
-    plural: string;
-  };
-}
-
-export const useInstanceTypeSelectionLabels: IUseInstanceTypeSelectionLabels = () => {
+export function useInstanceTypeSelectionLabels(): {
+  singular: string;
+  plural: string;
+} {
   const provider = useSelector(getProvider);
 
   return useMemo(() => {
@@ -28,12 +24,23 @@ export const useInstanceTypeSelectionLabels: IUseInstanceTypeSelectionLabels = (
           singular: 'VM size',
           plural: 'VM sizes',
         };
+      default:
+        return { singular: '', plural: '' };
     }
-
-    // make typescript & eslint happy
-    return { singular: '', plural: '' };
   }, [provider]);
-};
+}
+
+interface IRawInstanceType {
+  description: string;
+}
+interface IRawAWSInstanceType extends IRawInstanceType {
+  cpu_cores: number;
+  memory_size_gb: number;
+}
+interface IRawAzureInstanceType extends IRawInstanceType {
+  numberOfCores: number;
+  memoryInMb: number;
+}
 
 export interface IInstanceType {
   cpu: string;
@@ -42,66 +49,55 @@ export interface IInstanceType {
   name: string;
 }
 
-interface IInstanceTypes {
-  [instanceType: string]: IInstanceType;
-}
-
-interface IUseNormalizedCapabilities {
-  (): IInstanceTypes;
-}
-
-const useNormalizedCapabilities: IUseNormalizedCapabilities = () => {
+function useNormalizedCapabilities(): Record<string, IInstanceType> {
   const provider = useSelector(getProvider);
 
   return useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let rawCaps: any = {};
-    const normalizedCapabilities: IInstanceTypes = {};
+    let rawCaps: Record<string, IRawInstanceType> = {};
+    const normalizedCapabilities: Record<string, IInstanceType> = {};
     switch (provider) {
       case Providers.AWS:
         rawCaps = JSON.parse(window.config.awsCapabilitiesJSON);
-        for (const instanceType of Object.keys(rawCaps)) {
-          const instance = rawCaps[instanceType];
-
+        for (const [instanceType, instanceProperties] of Object.entries(
+          rawCaps as Record<string, IRawAWSInstanceType>
+        )) {
           normalizedCapabilities[instanceType] = {
-            cpu: instance.cpu_cores.toFixed(0),
-            ram: instance.memory_size_gb.toFixed(0),
-            description: instance.description,
+            cpu: instanceProperties.cpu_cores.toFixed(0),
+            ram: instanceProperties.memory_size_gb.toFixed(0),
+            description: instanceProperties.description,
             name: instanceType,
           };
         }
+
         break;
+
       case Providers.AZURE:
         rawCaps = JSON.parse(window.config.azureCapabilitiesJSON);
-        for (const instanceType of Object.keys(rawCaps)) {
-          const instance = rawCaps[instanceType];
-
+        for (const [instanceType, instanceProperties] of Object.entries(
+          rawCaps as Record<string, IRawAzureInstanceType>
+        )) {
           normalizedCapabilities[instanceType] = {
-            cpu: instance.numberOfCores.toFixed(0),
+            cpu: instanceProperties.numberOfCores.toFixed(0),
             // eslint-disable-next-line no-magic-numbers
-            ram: (instance.memoryInMb / 1000).toFixed(2),
-            description: instance.description,
+            ram: (instanceProperties.memoryInMb / 1000).toFixed(2),
+            description: instanceProperties.description,
             name: instanceType,
           };
         }
+
         break;
     }
 
-    // make typescript & eslint happy
     return normalizedCapabilities;
   }, [provider]);
-};
-
-interface IUseInstanceTypeCapabilities {
-  (instanceType: string): {
-    cpu: string;
-    ram: string;
-  };
 }
 
-export const useInstanceTypeCapabilities: IUseInstanceTypeCapabilities = (
-  instanceType
-) => {
+export function useInstanceTypeCapabilities(
+  instanceType: string
+): {
+  cpu: string;
+  ram: string;
+} {
   const capabilities = useNormalizedCapabilities();
 
   return useMemo(() => {
@@ -111,13 +107,9 @@ export const useInstanceTypeCapabilities: IUseInstanceTypeCapabilities = (
 
     return { cpu: 'n/a', ram: 'n/a' };
   }, [capabilities, instanceType]);
-};
-
-interface IUseAllowedInstanceTypes {
-  (): IInstanceType[];
 }
 
-export const useAllowedInstanceTypes: IUseAllowedInstanceTypes = () => {
+export function useAllowedInstanceTypes(): IInstanceType[] {
   const allowedInstanceTypeNames = useSelector(getAllowedInstanceTypeNames);
   const capabilities = useNormalizedCapabilities();
 
@@ -137,4 +129,4 @@ export const useAllowedInstanceTypes: IUseAllowedInstanceTypes = () => {
 
     return allowedInstanceTypes;
   }, [allowedInstanceTypeNames, capabilities]);
-};
+}
