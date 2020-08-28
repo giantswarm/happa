@@ -1,22 +1,17 @@
-import auth0 from 'auth0-js';
+import auth0, { Auth0DecodedHash, Auth0Error } from 'auth0-js';
 
-export default class Auth {
-  static _instance = null;
+export interface IAuthResult {
+  accessToken: string;
+  idTokenPayload: {
+    email: string;
+    'https://giantswarm.io/groups': string;
+  };
+}
 
-  auth0 = new auth0.WebAuth({
-    domain: 'giantswarm.eu.auth0.com',
-    clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
-    redirectUri: `${location.protocol}//${window.location.host}/oauth/callback`,
-    prompt: 'none',
-    audience: window.config.audience,
-    responseType: 'id_token token',
-    scope: 'openid email profile user_metadata https://giantswarm.io',
-    connectionScopes: {
-      github: ['read:org'],
-    },
-  });
+class Auth {
+  private static _instance: Auth | null = null;
 
-  static getInstance() {
+  public static getInstance() {
     if (!Auth._instance) {
       Auth._instance = new Auth();
     }
@@ -24,17 +19,33 @@ export default class Auth {
     return Auth._instance;
   }
 
-  login = () => {
-    return this.auth0.authorize();
-  };
+  private auth0 = new auth0.WebAuth({
+    domain: 'giantswarm.eu.auth0.com',
+    clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
+    redirectUri: `${location.protocol}//${window.location.host}/oauth/callback`,
+    audience: window.config.audience,
+    responseType: 'id_token token',
+    scope: 'openid email profile user_metadata https://giantswarm.io',
+  });
 
-  handleAuthentication = (callback) => {
+  public login() {
+    return this.auth0.authorize({
+      prompt: 'none',
+    });
+  }
+
+  public handleAuthentication(
+    callback: (
+      err: Auth0Error | null,
+      authResult: Auth0DecodedHash | null
+    ) => void
+  ) {
     this.auth0.parseHash((err, authResult) => {
       callback(err, authResult);
     });
-  };
+  }
 
-  renewToken() {
+  public renewToken(): Promise<IAuthResult> {
     return new Promise((resolve, reject) => {
       const renewTimeout = 10000;
 
@@ -52,3 +63,5 @@ export default class Auth {
     });
   }
 }
+
+export default Auth;
