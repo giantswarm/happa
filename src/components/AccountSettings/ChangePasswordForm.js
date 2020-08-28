@@ -1,6 +1,9 @@
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
-import { validatePassword } from 'lib/passwordValidation';
+import {
+  PasswordStatusMessage,
+  validatePassword,
+} from 'lib/passwordValidation';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -23,20 +26,22 @@ class ChangePassword extends React.Component {
 
     const validationResult = validatePassword(password);
 
-    if (validationResult.statusMessage === 'password_too_short') {
-      validationResult.statusMessage = 'Your new password is too short';
-    } else if (validationResult.statusMessage === 'password_not_just_numbers') {
-      validationResult.statusMessage =
-        'Please pick a new password that is not just numbers';
-    } else if (validationResult.statusMessage === 'password_not_just_letters') {
-      validationResult.statusMessage =
+    let validationMessage = '';
+    if (validationResult.statusMessage === PasswordStatusMessage.TooShort) {
+      validationMessage = 'Your new password is too short';
+    } else if (
+      validationResult.statusMessage === PasswordStatusMessage.JustNumbers
+    ) {
+      validationMessage = 'Please pick a new password that is not just numbers';
+    } else if (
+      validationResult.statusMessage === PasswordStatusMessage.JustLetters
+    ) {
+      validationMessage =
         'Please pick a new password that is not just upper case / lower case letters';
-    } else if (validationResult.statusMessage === 'password_ok') {
-      validationResult.statusMessage = '';
     }
 
     this.setState({
-      newPasswordValidationMessage: validationResult.statusMessage,
+      newPasswordValidationMessage: validationMessage,
     });
 
     return validationResult.valid;
