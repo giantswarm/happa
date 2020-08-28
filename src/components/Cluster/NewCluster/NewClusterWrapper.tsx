@@ -1,7 +1,7 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
-import useValidatingInternalValue from 'hooks/useValidatingInternalValue';
 import { hasAppropriateLength } from 'lib/helpers';
+import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';

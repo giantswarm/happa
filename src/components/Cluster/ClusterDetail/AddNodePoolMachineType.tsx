@@ -1,5 +1,5 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
-import { useInstanceTypeSelectionLabels } from 'hooks/useInstanceTypeSelectionConfiguration';
+import { useInstanceTypeSelectionLabels } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React from 'react';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
