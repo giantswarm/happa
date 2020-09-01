@@ -83,7 +83,7 @@
     "@hot-loader/react-dom": "16.13.0",
     "@khanacademy/react-multi-select": "0.3.3",
     "auth0-js": "9.13.4",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "bluebird": "3.7.2",
     "bootstrap": "3.4.1",
     "classnames": "2.2.6",
