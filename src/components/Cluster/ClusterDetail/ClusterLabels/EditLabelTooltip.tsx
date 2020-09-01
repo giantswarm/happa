@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import useValidatingInternalValue from 'hooks/useValidatingInternalValue';
+import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import Button from 'react-bootstrap/lib/Button';

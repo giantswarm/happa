@@ -10,7 +10,7 @@ import {
 } from 'actions/appSecretActions';
 import { catalogLoadIndex } from 'actions/catalogActions';
 import GenericModal from 'components/Modals/GenericModal';
-import { useError } from 'hooks/errors';
+import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';

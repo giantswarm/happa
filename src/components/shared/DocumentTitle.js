@@ -1,4 +1,4 @@
-import useDocumentTitle from 'lib/effects/useDocumentTitle';
+import useDocumentTitle from 'lib/hooks/useDocumentTitle';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 

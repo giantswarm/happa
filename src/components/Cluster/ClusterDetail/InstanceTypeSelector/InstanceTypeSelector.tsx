@@ -3,7 +3,7 @@ import {
   useAllowedInstanceTypes,
   useInstanceTypeCapabilities,
   useInstanceTypeSelectionLabels,
-} from 'hooks/useInstanceTypeSelectionConfiguration';
+} from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import {
