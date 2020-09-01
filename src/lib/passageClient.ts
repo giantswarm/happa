@@ -1,4 +1,4 @@
-import * as request from 'superagent-bluebird-promise';
+import { HttpClientImpl } from 'model/clients/HttpClient';
 
 import * as helpers from './helpers';
 
@@ -40,85 +40,74 @@ class Passage {
    * Check if a invitation token is valid.
    * @param params
    */
-  public checkInvite(params: { token: string }) {
+  public async checkInvite(params: { token: string }) {
     const constraints = {
       token: { presence: true },
     };
+    try {
+      helpers.validateOrRaise(params, constraints);
+    } catch {
+      return Promise.reject(new Error('InvalidToken'));
+    }
 
     const url = `${this.config.endpoint}/invite/${params.token}`;
-
-    const promise = new Promise((resolve) => {
-      helpers.validateOrRaise(params, constraints);
-      resolve(request.get(url).timeout(this.config.timeout_ms));
-    }).then((x) => {
-      if (x.body.is_valid) {
-        return x.body;
-      }
-      throw Error('InvalidToken');
+    const res = await HttpClientImpl.get(url, {
+      timeout: this.config.timeout_ms,
     });
+    if (!res.data.is_valid) {
+      return Promise.reject(new Error('InvalidToken'));
+    }
 
-    return promise;
+    return res.data;
   }
 
-  public createAccount(params: { inviteToken: string; password: string }) {
+  public async createAccount(params: {
+    inviteToken: string;
+    password: string;
+  }) {
     const constraints = {
       inviteToken: { presence: true },
       password: { presence: true },
     };
+    helpers.validateOrRaise(params, constraints);
 
     const url = `${this.config.endpoint}/accounts/`;
-
-    // Passage is not expecting camelcase properties in its request body.
-    const payload = {
-      invite_token: params.inviteToken,
-      password: params.password,
-    };
-
-    const promise = new Promise((resolve) => {
-      helpers.validateOrRaise(params, constraints);
-      resolve(
-        request
-          .post(url)
-          .timeout(this.config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json')
-      );
-    }).then((x) => {
-      return x.body;
+    const res = await HttpClientImpl.post(url, {
+      timeout: this.config.timeout_ms,
+      data: {
+        invite_token: params.inviteToken,
+        password: params.password,
+      },
+      headers: {
+        ContentType: 'application/json',
+      },
     });
 
-    return promise;
+    return res.data;
   }
 
   /**
    * Request a password recovery token, which passage will send to the user's email.
    * @param params
    */
-  public requestPasswordRecoveryToken(params: { email: string }) {
+  public async requestPasswordRecoveryToken(params: { email: string }) {
     const constraints = {
       email: { presence: true, email: true },
     };
+    helpers.validateOrRaise(params, constraints);
 
     const url = `${this.config.endpoint}/recovery/`;
-
-    const payload = {
-      email: params.email,
-    };
-
-    const promise = new Promise((resolve) => {
-      helpers.validateOrRaise(params, constraints);
-      resolve(
-        request
-          .post(url)
-          .timeout(this.config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json')
-      );
-    }).then((x) => {
-      return x.body;
+    const res = await HttpClientImpl.post(url, {
+      timeout: this.config.timeout_ms,
+      data: {
+        email: params.email,
+      },
+      headers: {
+        ContentType: 'application/json',
+      },
     });
 
-    return promise;
+    return res.data;
   }
 
   /**
@@ -127,35 +116,35 @@ class Passage {
    * rejected.
    * @param params
    */
-  public verifyPasswordRecoveryToken(params: { email: string; token: string }) {
+  public async verifyPasswordRecoveryToken(params: {
+    email: string;
+    token: string;
+  }) {
     const constraints = {
       email: { presence: true, email: true },
       token: { presence: true },
     };
+    try {
+      helpers.validateOrRaise(params, constraints);
+    } catch {
+      return Promise.reject(new Error('InvalidToken'));
+    }
 
     const url = `${this.config.endpoint}/recovery/${params.token}/`;
-
-    const payload = {
-      email: params.email,
-    };
-
-    const promise = new Promise((resolve) => {
-      helpers.validateOrRaise(params, constraints);
-      resolve(
-        request
-          .post(url)
-          .timeout(this.config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json')
-      );
-    }).then((x) => {
-      if (x.body.is_valid) {
-        return x.body;
-      }
-      throw new Error('Invalid Token');
+    const res = await HttpClientImpl.post(url, {
+      timeout: this.config.timeout_ms,
+      data: {
+        email: params.email,
+      },
+      headers: {
+        ContentType: 'application/json',
+      },
     });
+    if (!res.data.is_valid) {
+      throw new Error('InvalidToken');
+    }
 
-    return promise;
+    return res.data;
   }
 
   /**
@@ -164,7 +153,7 @@ class Passage {
    * rejected.
    * @param params
    */
-  public setNewPassword(params: {
+  public async setNewPassword(params: {
     email: string;
     token: string;
     password: string;
@@ -174,28 +163,21 @@ class Passage {
       token: { presence: true },
       password: { presence: true },
     };
+    helpers.validateOrRaise(params, constraints);
 
     const url = `${this.config.endpoint}/recovery/${params.token}/password/`;
-
-    const payload = {
-      email: params.email,
-      password: params.password,
-    };
-
-    const promise = new Promise((resolve) => {
-      helpers.validateOrRaise(params, constraints);
-      resolve(
-        request
-          .post(url)
-          .timeout(this.config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json')
-      );
-    }).then((x) => {
-      return x.body;
+    const res = await HttpClientImpl.post(url, {
+      timeout: this.config.timeout_ms,
+      data: {
+        email: params.email,
+        password: params.password,
+      },
+      headers: {
+        ContentType: 'application/json',
+      },
     });
 
-    return promise;
+    return res.data;
   }
 
   /**
@@ -203,22 +185,17 @@ class Passage {
    * Requires a valid admin JWT token.
    * @param authToken
    */
-  public getInvitations(authToken: string) {
+  public async getInvitations(authToken: string) {
     const url = `${this.config.endpoint}/invites/`;
-
-    const promise = new Promise((resolve) => {
-      resolve(
-        request
-          .get(url)
-          .timeout(this.config.timeout_ms)
-          .set('ContentType', 'application/json')
-          .set('Authorization', `Bearer ${authToken}`)
-      );
-    }).then((x) => {
-      return x.body;
+    const res = await HttpClientImpl.get(url, {
+      timeout: this.config.timeout_ms,
+      headers: {
+        ContentType: 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
-    return promise;
+    return res.data;
   }
 
   /**
@@ -228,36 +205,32 @@ class Passage {
    * @param authToken
    * @param invitation
    */
-  public createInvitation(authToken: string, invitation: IPassageInvitation) {
-    const url = `${this.config.endpoint}/invite/`;
-
+  public async createInvitation(
+    authToken: string,
+    invitation: IPassageInvitation
+  ) {
     const constraints = {
       email: { presence: true, email: true },
       organizations: { presence: { allowEmpty: false } },
       sendEmail: { presence: true },
     };
+    helpers.validateOrRaise(invitation, constraints);
 
-    const payload = {
-      email: invitation.email,
-      organizations: invitation.organizations,
-      send_email: invitation.sendEmail,
-    };
-
-    const promise = new Promise((resolve) => {
-      helpers.validateOrRaise(invitation, constraints);
-      resolve(
-        request
-          .post(url)
-          .timeout(this.config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json')
-          .set('Authorization', `Bearer ${authToken}`)
-      );
-    }).then((x) => {
-      return x.body;
+    const url = `${this.config.endpoint}/invite/`;
+    const res = await HttpClientImpl.post(url, {
+      timeout: this.config.timeout_ms,
+      data: {
+        email: invitation.email,
+        organizations: invitation.organizations,
+        send_email: invitation.sendEmail,
+      },
+      headers: {
+        ContentType: 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
-    return promise;
+    return res.data;
   }
 
   protected config: IPassageConfig;
