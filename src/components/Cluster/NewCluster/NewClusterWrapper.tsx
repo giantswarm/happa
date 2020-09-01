@@ -29,15 +29,15 @@ import CreateRegularCluster from './CreateRegularCluster';
 import ReleaseSelector from './ReleaseSelector/ReleaseSelector';
 
 const clusterNameLengthValidator: IValidationFunction = (value) => {
-  const [isValid, validationError] = hasAppropriateLength(
+  const { isValid, message } = hasAppropriateLength(
     value,
     Constants.MIN_NAME_LENGTH,
     Constants.MAX_NAME_LENGTH
   );
 
   return {
-    isValid: isValid as boolean,
-    validationError: validationError as string,
+    isValid,
+    validationError: message,
   };
 };
 

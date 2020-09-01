@@ -90,15 +90,15 @@ class ViewAndEditName extends Component<
   };
 
   static validate(value: string): { valid: boolean; error: string } {
-    const [valid, error] = hasAppropriateLength(
+    const { isValid, message } = hasAppropriateLength(
       value,
       Constants.MIN_NAME_LENGTH,
       Constants.MAX_NAME_LENGTH
     );
 
     return {
-      valid: valid as boolean,
-      error: error as string,
+      valid: isValid,
+      error: message,
     };
   }
 
