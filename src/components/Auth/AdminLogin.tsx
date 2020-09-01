@@ -42,7 +42,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
             } catch {
               // Unable to refresh token silently, so send the down the auth0
               // flow.
-              await auth.login();
+              auth.login();
             }
           } else {
             // Token isn't expired yet, so just redirect the user to the dashboard.
@@ -51,7 +51,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
         } else {
           // User doesn't have any previous token at all, send them to auth0 so
           // they can get one.
-          await auth.login();
+          auth.login();
         }
       } catch (err) {
         // NOOP

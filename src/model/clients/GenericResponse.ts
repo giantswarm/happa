@@ -1,9 +1,9 @@
 import { IHttpClientConfig } from 'model/clients/HttpClient';
 
-interface IHttpResponseConfig {
+interface IHttpResponseConfig<T> {
   status: number;
   message: string;
-  data: Record<string, unknown>;
+  data: T;
   headers: Record<string, string>;
   requestConfig: IHttpClientConfig | null;
 }
@@ -11,14 +11,14 @@ interface IHttpResponseConfig {
 /**
  * A helper class for encapsulating HTTP responses.
  */
-export class GenericResponse {
+export class GenericResponse<T = Record<string, unknown>> {
   /**
    * The response's configuration.
    */
-  protected readonly config: IHttpResponseConfig = {
+  protected readonly config: IHttpResponseConfig<T> = {
     status: 200,
     message: 'Request successful!',
-    data: {},
+    data: {} as T,
     headers: {},
     requestConfig: null,
   };
@@ -29,7 +29,7 @@ export class GenericResponse {
    * @param data - Response data
    */
   // eslint-disable-next-line no-magic-numbers
-  constructor(status: number = 200, data: Record<string, unknown> = {}) {
+  constructor(status: number = 200, data: T = {} as T) {
     this.status = status;
     this.data = data;
   }

@@ -1,4 +1,5 @@
 import { spinner } from 'images';
+import { PasswordStatusMessage } from 'lib/passwordValidation';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -36,17 +37,19 @@ class StatusMessage extends React.Component {
           Creating account... <span className='error'>FAILED!</span>
         </span>
       ),
-      password_too_short: <span>Please use at least 8 characters</span>,
-      password_not_just_numbers: (
+      [PasswordStatusMessage.TooShort]: (
+        <span>Please use at least 8 characters</span>
+      ),
+      [PasswordStatusMessage.JustNumbers]: (
         <span>Please add something else than only numbers</span>
       ),
-      password_not_just_letters: (
+      [PasswordStatusMessage.JustLetters]: (
         <span>Please add some more diverse characters.</span>
       ),
       password_confirmation_mismatch: (
         <span>Password confirmation does not match.</span>
       ),
-      password_ok: <span>Password looks good.</span>,
+      [PasswordStatusMessage.Ok]: <span>Password looks good.</span>,
       password_confirmation_ok: <span>Perfect match, nice!</span>,
       tos_intro: <span>Waiting for you to check that mark...</span>,
       tos_ok: <span>Thanks for accepting the TOS</span>,

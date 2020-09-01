@@ -127,7 +127,7 @@ export function humanFileSize<T extends boolean = true>(
  */
 export function validateOrRaise<T>(
   validatable: T,
-  constraints: Record<keyof T, Record<string, unknown>>
+  constraints: Partial<Record<keyof T, Record<string, unknown>>>
 ): void {
   const validationErrors: Record<string, string[]> = validate(
     validatable,
