@@ -60,7 +60,7 @@ export interface IHttpClient {
    * Execute the client's request.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  execute(): Promise<GenericResponse>;
+  execute<T>(): Promise<GenericResponse<T>>;
   /**
    * Override this function to run a custom hook before each request.
    * @param reqConfig - The client's configuration.
