@@ -1,4 +1,4 @@
-import { ErrorReporter } from 'lib/errors';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import React, { ReactNode } from 'react';
 import Button from 'UI/Button';
 

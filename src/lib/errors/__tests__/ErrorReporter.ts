@@ -1,6 +1,6 @@
-import { ErrorReporter } from '../ErrorReporter';
+import ErrorReporter, { IErrorReporterNotifier } from '../ErrorReporter';
 
-const testNotifier = {
+const testNotifier: IErrorReporterNotifier = {
   notify: jest.fn(),
 };
 

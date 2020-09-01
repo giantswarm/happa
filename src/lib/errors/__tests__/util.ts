@@ -1,4 +1,4 @@
-import { CustomError } from '../CustomError';
+import CustomError from '../CustomError';
 import { is } from '../util';
 
 describe('error utils', () => {

@@ -1,4 +1,4 @@
-import { ErrorReporter } from 'lib/errors';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { Component, ReactNode } from 'react';
 
