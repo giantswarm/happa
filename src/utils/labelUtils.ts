@@ -1,4 +1,4 @@
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 
 // contains validation for kubernetes labels
 // regular expressions & logic mostly copied from

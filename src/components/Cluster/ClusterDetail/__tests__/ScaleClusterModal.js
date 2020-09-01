@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import nock from 'nock';
 import React from 'react';
-import { Providers } from 'shared';
+import { Providers } from 'shared/constants';
 import { StatusCodes } from 'shared/constants';
 import {
   API_ENDPOINT,

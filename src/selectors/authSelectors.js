@@ -1,7 +1,7 @@
 import * as userActions from 'actions/userActions';
 import Auth from 'lib/auth0';
 import { isJwtExpired } from 'lib/helpers';
-import { AuthorizationTypes, StatusCodes } from 'shared';
+import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 
 /**
  * @typedef {Object} SSOError

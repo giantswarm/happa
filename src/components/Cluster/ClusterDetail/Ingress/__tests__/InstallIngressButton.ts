@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import nock from 'nock';
-import { StatusCodes } from 'shared';
+import { StatusCodes } from 'shared/constants';
 import { catalogsState } from 'testUtils/ingressCatalogStateMocks';
 import {
   API_ENDPOINT,

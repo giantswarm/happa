@@ -1,5 +1,5 @@
 import GiantSwarm from 'giantswarm';
-import { AuthorizationTypes } from 'shared';
+import { AuthorizationTypes } from 'shared/constants';
 
 export const removeUserFromStorage = () => localStorage.removeItem('user');
 

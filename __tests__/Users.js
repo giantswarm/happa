@@ -4,7 +4,7 @@ import { fireEvent, waitFor, within } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared';
+import { StatusCodes } from 'shared/constants';
 import { UsersRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,

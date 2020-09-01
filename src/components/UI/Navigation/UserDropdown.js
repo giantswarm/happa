@@ -5,7 +5,7 @@ import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
-import { AuthorizationTypes } from 'shared';
+import { AuthorizationTypes } from 'shared/constants';
 import { AccountSettingsRoutes, AppRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { Constants, Providers } from 'shared';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 
 interface IV5ClusterDetailTableNodePoolScalingProps {
