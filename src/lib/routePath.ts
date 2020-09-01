@@ -1,14 +1,18 @@
+type ParameterValue = string | number;
+
 /**
- * An easy to use manager for in-app routes
+ * An easy to use manager for in-app routes.
  */
 class RoutePath {
   /**
-   * Generate route path with parameters
-   * @param {String} template
-   * @param {Record<String, String|Number>} parameters
-   * @returns {RoutePath}
+   * Generate route path with parameters.
+   * @param template
+   * @param parameters
    */
-  static create(template, parameters = {}) {
+  public static create(
+    template: string,
+    parameters: Record<string, ParameterValue> = {}
+  ): RoutePath {
     const newRoute = new RoutePath(template);
     newRoute.params = parameters;
 
@@ -16,31 +20,34 @@ class RoutePath {
   }
 
   /**
-   * Generate a usable string path with parameters
-   * @param {String} template
-   * @param {Record<String, String|Number>} parameters
-   * @returns {String}
+   * Generate a usable string path with parameters.
+   * @param template
+   * @param parameters
    */
-  static createUsablePath(template, parameters) {
+  public static createUsablePath(
+    template: string,
+    parameters: Record<string, ParameterValue> = {}
+  ) {
     return RoutePath.create(template, parameters).value;
   }
 
   /**
-   * Get a parameter map based on a known path
-   * @param {String} template
-   * @returns {Record<String, String|Number>}
+   * Get a parameter map based on a known path.
+   * @param template
    */
-  static getParametersFromPath(template) {
+  public static getParametersFromPath(
+    template: string
+  ): Record<string, ParameterValue> {
     let currentParamName = '';
     let currentMatch = null;
 
     /**
      * Allows a name that starts with `/:',
      * and which can contain uppercase/lowercase
-     * letters, `-`, and `_`
+     * letters, `-`, and `_`.
      */
     const validationRegex = /\/:([a-zA-Z_\-]*)(\/)?/g;
-    const params = {};
+    const params: Record<string, ParameterValue> = {};
 
     do {
       currentMatch = validationRegex.exec(template);
@@ -56,41 +63,45 @@ class RoutePath {
   }
 
   /**
-   * Rplace a known parameter in a path with a value
-   * @param {String} inPath Path to use
-   * @param {String} paramName
-   * @param {String|Number} paramValue
-   * @returns {String}
+   * Replace a known parameter in a path with a value
+   * @param inPath - Path to use.
+   * @param paramName
+   * @param paramValue
    */
-  static replaceParamValue(inPath, paramName, paramValue) {
+  public static replaceParamValue(
+    inPath: string,
+    paramName: string,
+    paramValue: ParameterValue
+  ) {
     const paramNameRegex = new RegExp(`:${paramName}`, 'g');
-    const newPath = inPath.replace(paramNameRegex, paramValue);
+    const value =
+      typeof paramValue === 'string' ? paramValue : String(paramValue);
+    const newPath = inPath.replace(paramNameRegex, value);
 
     return newPath;
   }
 
   /**
    * Convert a known path to an editable path,
-   * by providing the template that it implements
+   * by providing the template that it implements.
    *
    * Useful for finding parameter values inside
-   * stringified paths
-   * @param {String} pathTemplate
-   * @param {String} path
-   * @returns {RoutePath}
+   * stringified paths.
+   * @param pathTemplate
+   * @param path
    */
-  static parseWithTemplate(pathTemplate, path) {
+  public static parseWithTemplate(pathTemplate: string, path: string) {
     /**
      * Allows a name that starts with `:',
      * and which can contain uppercase/lowercase
-     * letters, `-`, and `_`
+     * letters, `-`, and `_`.
      */
     const paramValidationRegex = /:([a-zA-Z_\-]*)(\/)?/g;
 
     const templateParts = pathTemplate.split('/');
     const pathParts = path.split('/');
 
-    const params = {};
+    const params: Record<string, ParameterValue> = {};
 
     for (let i = 0; i < templateParts.length; i++) {
       const currentTemplatePart = templateParts[i];
@@ -99,7 +110,7 @@ class RoutePath {
       if (currentMatch === null) continue;
 
       const currentParamName = currentMatch[1];
-      let valueInPath = pathParts[i];
+      let valueInPath: ParameterValue = pathParts[i];
 
       if (typeof valueInPath !== 'undefined') {
         const valueAsNumber = Number(valueInPath);
@@ -116,37 +127,7 @@ class RoutePath {
   }
 
   /**
-   * Original path template used on instantiation
-   * @private
-   * @type {String}
-   */
-  _originalTemplate = '';
-
-  /**
-   * Original params derived from
-   * the template used on instantiation
-   * @private
-   * @type {Record<String, String|Number>}
-   */
-  _originalParams = {};
-
-  /**
-   * Formatted value
-   * @private
-   * @type {String}
-   */
-  _value = '';
-
-  /**
-   * Map of current parameters
-   * @private
-   * @type {Record<String, String|Number>}
-   */
-  _params = {};
-
-  /**
-   * Get the parameters used in the current path
-   * @returns {Record<String, String|Number>}
+   * Get the parameters used in the current path.
    */
   get params() {
     return this._params;
@@ -154,7 +135,7 @@ class RoutePath {
 
   /**
    * Set the current path parameters
-   * @param parametersMap {Record<String, String|Number>}
+   * @param parametersMap
    */
   set params(parametersMap) {
     let newValue = this.originalTemplate;
@@ -180,8 +161,7 @@ class RoutePath {
   }
 
   /**
-   * Get the original path used for instantiating the route
-   * @returns {String}
+   * Get the original path used for instantiating the route.
    */
   get originalTemplate() {
     return this._originalTemplate;
@@ -189,12 +169,11 @@ class RoutePath {
 
   // eslint-disable-next-line class-methods-use-this
   set originalTemplate(_newPath) {
-    // No-op
+    // No-op.
   }
 
   /**
-   * Current formatted value
-   * @returns {String}
+   * Current formatted value.
    */
   get value() {
     return this._value;
@@ -202,14 +181,14 @@ class RoutePath {
 
   // eslint-disable-next-line class-methods-use-this
   set value(_newValue) {
-    // No-op
+    // No-op.
   }
 
   /**
    * Create a route path to easily manage your application routing
-   * @param {String} path
+   * @param path
    */
-  constructor(path) {
+  constructor(path: string) {
     this._originalTemplate = path;
     this._originalParams = RoutePath.getParametersFromPath(
       this._originalTemplate
@@ -219,12 +198,11 @@ class RoutePath {
   }
 
   /**
-   * Set the value of a known path parameter
-   * @param {String} newParamName
-   * @param {String|Number} newParamValue
-   * @returns {RoutePath}
+   * Set the value of a known path parameter.
+   * @param newParamName
+   * @param newParamValue
    */
-  setParameter(newParamName, newParamValue = 0) {
+  public setParameter(newParamName: string, newParamValue: ParameterValue = 0) {
     this.params = Object.assign({}, this.params, {
       [newParamName]: newParamValue,
     });
@@ -233,25 +211,44 @@ class RoutePath {
   }
 
   /**
-   * Create another route with the same path, but with different parameters
-   * @param {Record<String, String|Number} withParameters Parameter map
-   * @returns {RoutePath}
+   * Create another route with the same path, but with different parameters.
+   * @param withParameters - Parameter map.
    */
-  clone(withParameters = {}) {
+  public clone(withParameters: Record<string, ParameterValue> = {}) {
     const newRoute = RoutePath.create(this._originalTemplate, withParameters);
 
     return newRoute;
   }
 
   /**
-   * Reset the parameters of the current route
-   * @returns {RoutePath}
+   * Reset the parameters of the current route.
    */
-  clear() {
+  public clear() {
     this.params = {};
 
     return this;
   }
+
+  /**
+   * Original path template used on instantiation.
+   */
+  protected _originalTemplate = '';
+
+  /**
+   * Original params derived from
+   * the template used on instantiation.
+   */
+  protected _originalParams: Record<string, ParameterValue> = {};
+
+  /**
+   * Formatted value.
+   */
+  protected _value = '';
+
+  /**
+   * Map of current parameters.
+   */
+  protected _params: Record<string, ParameterValue> = {};
 }
 
 export default RoutePath;
