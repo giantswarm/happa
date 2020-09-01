@@ -78,7 +78,10 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static get(url: string, config: Partial<IHttpClientConfig>) {
+  static get<T = Record<string, unknown>>(
+    url: string,
+    config: Partial<IHttpClientConfig>
+  ): Promise<GenericResponse<T>> {
     const boundConfig = Object.assign({}, config, {
       url,
       method: HttpRequestMethods.GET,
@@ -94,7 +97,10 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static post(url: string, config: Partial<IHttpClientConfig>) {
+  static post<T = Record<string, unknown>>(
+    url: string,
+    config: Partial<IHttpClientConfig>
+  ): Promise<GenericResponse<T>> {
     const boundConfig = Object.assign({}, config, {
       url,
       method: HttpRequestMethods.POST,
@@ -110,7 +116,10 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static put(url: string, config: Partial<IHttpClientConfig>) {
+  static put<T = Record<string, unknown>>(
+    url: string,
+    config: Partial<IHttpClientConfig>
+  ): Promise<GenericResponse<T>> {
     const boundConfig = Object.assign({}, config, {
       url,
       method: HttpRequestMethods.PUT,
@@ -126,7 +135,10 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static patch(url: string, config: Partial<IHttpClientConfig>) {
+  static patch<T = Record<string, unknown>>(
+    url: string,
+    config: Partial<IHttpClientConfig>
+  ): Promise<GenericResponse<T>> {
     const boundConfig = Object.assign({}, config, {
       url,
       method: HttpRequestMethods.PATCH,
@@ -142,7 +154,10 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static delete(url: string, config: Partial<IHttpClientConfig>) {
+  static delete<T = Record<string, unknown>>(
+    url: string,
+    config: Partial<IHttpClientConfig>
+  ): Promise<GenericResponse<T>> {
     const boundConfig = Object.assign({}, config, {
       url,
       method: HttpRequestMethods.DELETE,
@@ -232,11 +247,11 @@ export class HttpClientImpl implements IHttpClient {
   // eslint-disable-next-line class-methods-use-this, no-empty-function
   async onBeforeRequest(_reqConfig: IHttpClientConfig): Promise<void> {}
 
-  async execute() {
+  async execute<T = Record<string, unknown>>(): Promise<GenericResponse<T>> {
     const currRequestConfig = this.getRequestConfig();
     const { baseURL, timeout, headers, url, method, data } = currRequestConfig;
 
-    const res = new GenericResponse();
+    const res = new GenericResponse<T>();
 
     try {
       await this.onBeforeRequest(currRequestConfig);
