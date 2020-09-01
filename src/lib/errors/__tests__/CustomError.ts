@@ -1,15 +1,17 @@
-import { CustomError } from '..';
+import CustomError, { IStackFrame } from 'lib/errors/CustomError';
+import ErrorReporter from 'lib/errors/ErrorReporter';
+import { IStackTraceGPS } from 'stacktrace-gps';
 
-const mockResolver = {
+const mockResolver: IStackTraceGPS = ({
   pinpoint: jest.fn(),
-};
+} as unknown) as IStackTraceGPS;
 
 const mockStackFrame = ({
   functionName,
   fileName,
   lineNumber,
   columnNumber,
-}) => {
+}: Partial<IStackFrame>): IStackFrame => {
   return {
     functionName,
     fileName,
@@ -21,14 +23,15 @@ const mockStackFrame = ({
   };
 };
 
-const mockReporter = {
+const mockReporter: ErrorReporter = ({
   notify: jest.fn(),
-};
+} as unknown) as ErrorReporter;
 
 describe('CustomError', () => {
   afterEach(() => {
-    mockResolver.pinpoint.mockClear();
+    (mockResolver.pinpoint as jest.Mock).mockClear();
 
+    // @ts-expect-error
     window.navigator.onLine = false;
   });
 
@@ -94,9 +97,10 @@ describe('CustomError', () => {
   });
 
   it('generates a detailed stack trace if the client is online', async () => {
+    // @ts-expect-error
     window.navigator.onLine = true;
 
-    mockResolver.pinpoint.mockResolvedValue(
+    (mockResolver.pinpoint as jest.Mock).mockResolvedValue(
       mockStackFrame({
         functionName: 'testFn',
         fileName: 'some/path/to/a/file.js',
@@ -135,9 +139,12 @@ describe('CustomError', () => {
   });
 
   it('generates the original stack with a warning if trying to generate detailed stack fails', async () => {
+    // @ts-expect-error
     window.navigator.onLine = true;
 
-    mockResolver.pinpoint.mockRejectedValue(new Error('YOU FAILED!'));
+    (mockResolver.pinpoint as jest.Mock).mockRejectedValue(
+      new Error('YOU FAILED!')
+    );
 
     const error = new CustomError('Custom type', 'Oops!');
     error.resolver = mockResolver;
