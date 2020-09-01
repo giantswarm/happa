@@ -1,6 +1,6 @@
 import { CATALOG_LOAD_INDEX_REQUEST } from 'actions/actionTypes';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import usePrevious from 'lib/effects/usePrevious';
+import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';

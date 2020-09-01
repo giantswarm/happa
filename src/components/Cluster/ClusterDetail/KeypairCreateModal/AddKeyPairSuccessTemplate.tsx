@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import DownloadKubeconfigButton from 'Cluster/ClusterDetail/KeypairCreateModal/DownloadKubeconfigButton';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';

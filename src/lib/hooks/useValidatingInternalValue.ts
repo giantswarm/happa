@@ -4,24 +4,20 @@ interface IReducerState extends IValidation {
   internalValue: string;
 }
 
-interface ISetInternalValue {
-  (newInternalValue: string): void;
-}
-
-interface IUseValidatingInternalValue {
-  (initialValue: string, validationFunction: IValidationFunction): [
-    IReducerState,
-    ISetInternalValue
-  ];
-}
-
-// this hook can be used for mutation and validation of a string with a given
-// validation function. Example usage in src/components/UI/EditableValueLabel.tsx
-
-const useValidatingInternalValue: IUseValidatingInternalValue = (
-  initialValue,
-  validationFunction
-) => {
+/**
+ * This hook can be used for mutation and validation of
+ * a string with a given validation function.
+ * @example Usage in {src/components/UI/EditableValueLabel.tsx}.
+ * @param initialValue
+ * @param validationFunction
+ */
+function useValidatingInternalValue(
+  initialValue: string,
+  validationFunction: IValidationFunction
+): [
+  reducerState: IReducerState,
+  setInternalValue: (newInternalValue: string) => void
+] {
   const initialReducerValue = {
     internalValue: initialValue,
     ...validationFunction(initialValue),
@@ -40,6 +36,6 @@ const useValidatingInternalValue: IUseValidatingInternalValue = (
   ] = useReducer<Reducer<IReducerState, string>>(reducer, initialReducerValue);
 
   return [{ internalValue, isValid, validationError }, setInternalValue];
-};
+}
 
 export default useValidatingInternalValue;

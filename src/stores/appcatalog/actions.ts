@@ -1,6 +1,6 @@
 import { catalogLoadIndex } from 'actions/catalogActions';
 import GiantSwarm from 'giantswarm';
-import { ErrorReporter } from 'lib/errors';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import CPClient from 'model/clients/CPClient';

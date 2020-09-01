@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
