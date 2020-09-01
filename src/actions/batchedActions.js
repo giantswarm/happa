@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
-import { ErrorReporter } from 'lib/errors';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';

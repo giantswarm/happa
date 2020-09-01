@@ -1,6 +1,6 @@
 import { getUserIsAdmin } from 'selectors/authSelectors';
 import cmp from 'semver-compare';
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 import {
   canClusterUpgrade,
   getCpusTotal,

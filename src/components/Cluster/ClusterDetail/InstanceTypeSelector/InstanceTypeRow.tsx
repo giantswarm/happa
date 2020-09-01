@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { IInstanceType } from 'hooks/useInstanceTypeSelectionConfiguration';
+import { IInstanceType } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import { CursorPointerCell, Tr } from 'UI/ExpandableSelector/Items';

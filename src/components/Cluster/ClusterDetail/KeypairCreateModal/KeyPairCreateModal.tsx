@@ -12,12 +12,12 @@ import {
   MODAL_CHANGE_TIMEOUT,
   VALIDATION_DEBOUNCE_RATE,
 } from 'Cluster/ClusterDetail/KeypairCreateModal/Utils';
-import useDebounce from 'lib/effects/useDebounce';
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
+import useDebounce from 'lib/hooks/useDebounce';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { Providers, StatusCodes } from 'shared';
+import { Providers, StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import Button from 'UI/Button';

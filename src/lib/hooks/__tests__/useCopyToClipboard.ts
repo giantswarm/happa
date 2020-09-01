@@ -5,9 +5,9 @@ import useCopyToClipboard from '../useCopyToClipboard';
 
 jest.mock('copy-to-clipboard');
 
-describe('useCopyToClipboard hook', () => {
+describe('useCopyToClipboard', () => {
   beforeEach(() => {
-    copy.mockClear();
+    (copy as jest.Mock).mockClear();
   });
 
   it('has no content in the clipboard initially', () => {

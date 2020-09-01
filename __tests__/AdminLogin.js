@@ -9,7 +9,7 @@ import * as helpers from 'lib/helpers';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import React from 'react';
-import { AuthorizationTypes } from 'shared';
+import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';

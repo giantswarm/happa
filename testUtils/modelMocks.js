@@ -1,5 +1,5 @@
 import * as authSelectors from 'selectors/authSelectors';
-import { AuthorizationTypes } from 'shared';
+import { AuthorizationTypes } from 'shared/constants';
 
 jest.mock('model/services/giantSwarm/info');
 jest.mock('model/services/metadata/configuration');

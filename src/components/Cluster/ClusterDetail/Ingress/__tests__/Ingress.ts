@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import nock from 'nock';
-import { StatusCodes } from 'shared';
+import { StatusCodes } from 'shared/constants';
 import { Providers } from 'shared/constants';
 import { catalogsState } from 'testUtils/ingressCatalogStateMocks';
 import {
