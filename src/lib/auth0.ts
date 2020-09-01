@@ -29,9 +29,7 @@ class Auth {
   });
 
   public login() {
-    return this.auth0.authorize({
-      prompt: 'none',
-    });
+    return this.auth0.authorize();
   }
 
   public handleAuthentication(
