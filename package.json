@@ -132,7 +132,7 @@
     "semver-compare": "1.0.0",
     "serialize-javascript": "4.0.0",
     "stacktrace-js": "^2.0.2",
-    "superagent": "6.0.0",
+    "superagent": "6.1.0",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.10.2",
     "validate.js": "0.13.1"
