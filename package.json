@@ -100,7 +100,7 @@
     "immutable": "3.8.2",
     "js-base64": "3.4.5",
     "js-yaml": "^3.14.0",
-    "lunr": "^2.3.6",
+    "lunr": "^2.3.9",
     "moment": "2.27.0",
     "normalize.css": "8.0.1",
     "noty": "^3.1.4",
