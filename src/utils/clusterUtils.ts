@@ -399,3 +399,19 @@ export function getInstanceTypesForProvider(
       return null;
   }
 }
+
+export function v4orV5(
+  v4func: Function,
+  v5func: Function,
+  clusterId: string,
+  state: IState
+) {
+  const v5Clusters = state.entities.clusters.v5Clusters;
+  const isV5Cluster = v5Clusters.includes(clusterId);
+
+  if (isV5Cluster) {
+    return v5func;
+  }
+
+  return v4func;
+}

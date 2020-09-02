@@ -4,7 +4,7 @@ import GiantSwarm, { V4App } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
 import { StatusCodes } from 'shared/constants';
-import { v4orV5 } from 'utils/v4orV5';
+import { v4orV5 } from 'utils/clusterUtils';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
