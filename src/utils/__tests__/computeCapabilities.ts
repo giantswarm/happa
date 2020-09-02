@@ -1,12 +1,13 @@
+import { IState } from 'reducers/types';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import preloginState from 'testUtils/preloginState';
 
 import { computeCapabilities } from '../clusterUtils';
 
-/**
- * @param provider
- * @returns {IState}
- */
-function getEmptyStateWithProvider(provider) {
+function getEmptyStateWithProvider(
+  provider: PropertiesOf<typeof Providers>
+): IState {
   return {
     ...preloginState,
     main: {

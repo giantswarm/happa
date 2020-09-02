@@ -37,10 +37,14 @@ export default {
     },
   },
   entities: {
+    cpAuth: {
+      user: null,
+      isFetching: false,
+    },
     catalogs: {
       lastUpdated: 0,
       isFetching: false,
-      items: [],
+      items: {},
     },
     clusters: {
       lastUpdated: null,
