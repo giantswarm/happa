@@ -18,6 +18,8 @@ interface IBaseCluster {
   capabilities?: IClusterCapabilities;
   keyPairs?: import('shared/types').IKeyPair[];
   lastUpdated?: number;
+  // FIXME(axbarsan): Write proper app type.
+  apps?: Record<string, unknown>[];
 }
 
 interface IRawInstanceType {

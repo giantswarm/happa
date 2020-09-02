@@ -126,7 +126,6 @@ declare namespace V4 {
     aws?: IClusterAWS;
     availability_zones?: string[];
     scaling?: IClusterScaling;
-    apps?: Record<string, unknown>[];
     masters?: IClusterMaster[];
     workers?: IClusterWorker[];
 
