@@ -30,18 +30,6 @@ export function useInstanceTypeSelectionLabels(): {
   }, [provider]);
 }
 
-interface IRawInstanceType {
-  description: string;
-}
-interface IRawAWSInstanceType extends IRawInstanceType {
-  cpu_cores: number;
-  memory_size_gb: number;
-}
-interface IRawAzureInstanceType extends IRawInstanceType {
-  numberOfCores: number;
-  memoryInMb: number;
-}
-
 export interface IInstanceType {
   cpu: string;
   ram: string;
