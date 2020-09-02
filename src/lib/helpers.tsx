@@ -229,13 +229,12 @@ export function truncate(
  * @param keyPair
  * @param useInternalAPI
  */
-// FIXME(axbarsan): Use proper cluster type.
 export function makeKubeConfigTextFile(
-  cluster: Record<string, unknown>,
+  cluster: V4.ICluster | V5.ICluster,
   keyPair: IKeyPair,
   useInternalAPI: boolean
 ): string {
-  let apiEndpoint: string = cluster.api_endpoint as string;
+  let apiEndpoint: string = cluster.api_endpoint;
 
   /**
    * Change something like: https://api.j7j4c.g8s.fra-1.giantswarm.io
@@ -279,9 +278,8 @@ export function makeKubeConfigTextFile(
  */
 export function clustersForOrg(
   orgId: string,
-  // FIXME(axbarsan): Use proper cluster type.
-  allClusters: Record<string, Record<string, unknown>>
-): Record<string, unknown>[] {
+  allClusters: Record<string, V4.ICluster | V5.ICluster>
+): (V4.ICluster | V5.ICluster)[] {
   if (!allClusters) return [];
 
   return Object.values(allClusters).filter(

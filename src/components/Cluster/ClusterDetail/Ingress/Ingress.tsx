@@ -12,7 +12,7 @@ import { Text } from './Components';
 const IngressWrapper = styled.div``;
 
 interface IIngressProps extends React.ComponentPropsWithoutRef<'div'> {
-  cluster: Record<string, never>;
+  cluster: V4.ICluster | V5.ICluster;
   provider?: PropertiesOf<typeof Providers>;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;

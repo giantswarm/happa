@@ -36,8 +36,8 @@ const StyledModal = styled(BootstrapModal)`
 
 interface IKeyPairCreateModalProps {
   user: Record<string, never>;
-  actions: Record<string, (...args: never[]) => Promise<never>>;
-  cluster: Record<string, never>;
+  actions: Record<string, (...args: unknown[]) => Promise<never>>;
+  cluster: V4.ICluster | V5.ICluster;
   provider: PropertiesOf<typeof Providers>;
 }
 
@@ -82,7 +82,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
           cn_prefix: cnPrefix,
           description: description,
           ttl_hours: expireTTL,
-        } as never
+        }
       );
       setKubeconfig(
         dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
