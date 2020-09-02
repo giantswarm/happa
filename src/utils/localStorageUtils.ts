@@ -1,0 +1,54 @@
+import GiantSwarm from 'giantswarm';
+import { AuthorizationTypes } from 'shared/constants';
+
+export function removeUserFromStorage() {
+  localStorage.removeItem('user');
+}
+
+export function fetchSelectedOrganizationFromStorage() {
+  return localStorage.getItem('app.selectedOrganization');
+}
+
+export function fetchUserFromStorage() {
+  let user = {} as IUser;
+
+  try {
+    user = JSON.parse(String(localStorage.getItem('user')));
+  } catch (e) {
+    user = {
+      auth: {
+        scheme: AuthorizationTypes.GS,
+        token: '',
+      },
+      email: '',
+      isAdmin: false,
+    };
+  }
+
+  /**
+   * User was logged in pre-jwt auth being available.
+   * Migrate it.
+   */
+  if (user?.authToken) {
+    user.auth = {
+      scheme: AuthorizationTypes.GS,
+      token: user.authToken,
+    };
+  }
+
+  return user;
+}
+
+export function setUserToStorage(userData: IUser) {
+  localStorage.setItem('user', JSON.stringify(userData));
+
+  const defaultClient = GiantSwarm.ApiClient.instance;
+  const defaultClientAuth =
+    defaultClient.authentications.AuthorizationHeaderToken;
+  defaultClientAuth.apiKey = userData.auth.token;
+  defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
+}
+
+export const setOrganizationToStorage = (organizationId: string) => {
+  localStorage.setItem('app.selectedOrganization', organizationId);
+};
