@@ -24,7 +24,7 @@ describe('ClusterStatus', () => {
         release_version: nodePoolRelease.version,
         conditions: [
           {
-            last_transition_time: 123,
+            last_transition_time: '123',
             condition: 'Created',
           },
         ],
@@ -65,7 +65,7 @@ describe('ClusterStatus', () => {
         release_version: nodePoolRelease.version,
         conditions: [
           {
-            last_transition_time: 123,
+            last_transition_time: '123',
             condition: 'Creating',
           },
         ],
@@ -105,7 +105,7 @@ describe('ClusterStatus', () => {
         release_version: nodePoolRelease.version,
         conditions: [
           {
-            last_transition_time: 123,
+            last_transition_time: '123',
             condition: 'Updating',
           },
         ],
@@ -145,7 +145,7 @@ describe('ClusterStatus', () => {
         release_version: nodePoolRelease.version,
         conditions: [
           {
-            last_transition_time: 123,
+            last_transition_time: '123',
             condition: 'Deleting',
           },
         ],
@@ -163,7 +163,7 @@ describe('ClusterStatus', () => {
       {
         id: 'as129',
         release_version: nodePoolRelease.version,
-        delete_date: 123123,
+        delete_date: '123123',
       },
       {
         [nodePoolRelease.version]: nodePoolRelease as IRelease,
@@ -194,7 +194,7 @@ describe('ClusterStatus', () => {
         release_version: nodePoolRelease.version,
         conditions: [
           {
-            last_transition_time: 123,
+            last_transition_time: '123',
             condition: 'Updating',
           },
         ],
@@ -214,7 +214,7 @@ describe('ClusterStatus', () => {
 });
 
 function makeState(
-  cluster: Record<string, unknown>,
+  cluster: Partial<V4.ICluster | V5.ICluster>,
   releases: IReleases
 ): IState {
   return {

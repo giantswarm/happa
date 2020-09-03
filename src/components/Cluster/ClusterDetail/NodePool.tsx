@@ -80,8 +80,7 @@ interface IDispatchProps extends DispatchProp {
 }
 
 interface INodePoolsProps extends IStateProps, IDispatchProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cluster: any;
+  cluster: V4.ICluster | V5.ICluster;
   provider: PropertiesOf<typeof Providers>;
 }
 

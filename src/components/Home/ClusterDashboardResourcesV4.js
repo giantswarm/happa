@@ -38,7 +38,7 @@ function ClusterDashboardResourcesV4({
         <span>
           <Dot style={{ paddingLeft: 0 }} />
           <RefreshableLabel value={storage}>
-            <span>{storage ? storage : '0'} GB storage</span>
+            <span>{storage} GB storage</span>
           </RefreshableLabel>
         </span>
       )}

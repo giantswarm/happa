@@ -57,7 +57,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   const theme = useTheme<ITheme>();
 
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
-  const cluster = useSelector<IState, Record<string, unknown> | undefined>(
+  const cluster = useSelector<IState, V4.ICluster | V5.ICluster>(
     (state) => state.entities.clusters.items[clusterId]
   );
 
@@ -68,9 +68,9 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   let tooltip = '';
   switch (true) {
     case typeof cluster === 'undefined':
-    case typeof (cluster as Record<string, unknown>).delete_date !==
-      'undefined':
-    case isClusterDeleting(cluster as Record<string, unknown>):
+    case typeof cluster.delete_date !== 'undefined':
+    case cluster.delete_date === null:
+    case isClusterDeleting(cluster):
       return null;
 
     case canClusterUpgrade:
@@ -80,7 +80,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
       break;
 
-    case isClusterCreating(cluster as Record<string, unknown>):
+    case isClusterCreating(cluster):
       color = theme.colors.gray;
       iconClassName = 'fa fa-crane';
       message = 'Cluster creating…';
@@ -88,7 +88,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
         'The cluster is currently creating. This step usually takes about 30 minutes.';
       break;
 
-    case isClusterUpdating(cluster as Record<string, unknown>):
+    case isClusterUpdating(cluster):
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade in progress…';
       tooltip =
