@@ -28,6 +28,11 @@ import {
 
 describe('clusterUtils', () => {
   describe('canClusterUpgrade', () => {
+    it('returns false if the provided versions are empty', () => {
+      expect(canClusterUpgrade(undefined, '1', 'aws')).toBeFalsy();
+      expect(canClusterUpgrade('1', undefined, 'aws')).toBeFalsy();
+    });
+
     describe('on azure', () => {
       it('is true for any version', () => {
         const can = canClusterUpgrade('8.1.0', '9.0.0', 'azure');
@@ -403,6 +408,10 @@ describe('clusterUtils', () => {
     });
 
     it('returns 0 if there are no instance types', () => {
+      const initialInstanceTypes = window.config.azureCapabilitiesJSON;
+      // @ts-expect-error
+      delete window.config.azureCapabilitiesJSON;
+
       const nodePools: INodePool[] = [
         {
           node_spec: {
@@ -433,6 +442,8 @@ describe('clusterUtils', () => {
       ];
 
       expect(getMemoryTotalNodePools(nodePools)).toBe(0);
+
+      window.config.azureCapabilitiesJSON = initialInstanceTypes;
     });
 
     it('returns 0 if there are no node pools', () => {
@@ -579,6 +590,10 @@ describe('clusterUtils', () => {
     });
 
     it('returns 0 if there are no instance types', () => {
+      const initialInstanceTypes = window.config.azureCapabilitiesJSON;
+      // @ts-expect-error
+      delete window.config.azureCapabilitiesJSON;
+
       const nodePools: INodePool[] = [
         {
           node_spec: {
@@ -609,6 +624,8 @@ describe('clusterUtils', () => {
       ];
 
       expect(getCpusTotalNodePools(nodePools)).toBe(0);
+
+      window.config.azureCapabilitiesJSON = initialInstanceTypes;
     });
 
     it('returns 0 if there are no node pools', () => {

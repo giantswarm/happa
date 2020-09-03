@@ -179,7 +179,7 @@ describe('labelUtils', () => {
 
       result = validateLabelKey(
         // eslint-disable-next-line no-magic-numbers
-        `dogs.frog$cats.com/great-thing${generateRandomString(250)}`
+        `dogs.frog$cats.com/great-thing${generateRandomString(300)}`
       );
       expect(result.isValid).toBeFalsy();
       expect(result.validationError).toBe(errorMessage);
