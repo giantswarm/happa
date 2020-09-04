@@ -9,27 +9,20 @@ export function fetchSelectedOrganizationFromStorage() {
   return localStorage.getItem('app.selectedOrganization');
 }
 
-export function fetchUserFromStorage() {
-  let user = {} as IUser;
-
+export function fetchUserFromStorage(): IUser | null {
+  let user: IUser | null = null;
   try {
     user = JSON.parse(String(localStorage.getItem('user')));
-  } catch (e) {
-    user = {
-      auth: {
-        scheme: AuthorizationTypes.GS,
-        token: '',
-      },
-      email: '',
-      isAdmin: false,
-    };
+  } catch {
+    // Ignore error.
   }
+  if (!user) return null;
 
   /**
    * User was logged in pre-jwt auth being available.
    * Migrate it.
    */
-  if (user?.authToken) {
+  if (user.authToken) {
     user.auth = {
       scheme: AuthorizationTypes.GS,
       token: user.authToken,

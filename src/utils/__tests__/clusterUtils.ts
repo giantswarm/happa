@@ -1,20 +1,754 @@
+import { IState } from 'reducers/types';
 import { Providers } from 'shared/constants';
-import { INodePool, PropertiesOf } from 'shared/types';
+import { INodePool, INodePoolStatus, PropertiesOf } from 'shared/types';
 import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v5ClusterResponse,
 } from 'testUtils/mockHttpCalls';
+import preloginState from 'testUtils/preloginState';
 import {
+  canClusterUpgrade,
+  computeCapabilities,
   getClusterLatestCondition,
+  getCpusTotal,
+  getCpusTotalNodePools,
   getInstanceTypesForProvider,
+  getMemoryTotal,
+  getMemoryTotalNodePools,
+  getNumberOfNodePoolsNodes,
+  getNumberOfNodes,
+  getStorageTotal,
   guessProviderFromNodePools,
   isClusterCreating,
   isClusterDeleting,
   isClusterUpdating,
+  v4orV5,
 } from 'utils/clusterUtils';
 
 describe('clusterUtils', () => {
+  describe('canClusterUpgrade', () => {
+    it('returns false if the provided versions are empty', () => {
+      expect(canClusterUpgrade(undefined, '1', 'aws')).toBeFalsy();
+      expect(canClusterUpgrade('1', undefined, 'aws')).toBeFalsy();
+    });
+
+    describe('on azure', () => {
+      it('is true for any version', () => {
+        const can = canClusterUpgrade('8.1.0', '9.0.0', 'azure');
+        expect(can).toBe(true);
+      });
+    });
+
+    describe('on aws', () => {
+      it('is true when going from <10.0.0 to <10.0.0', () => {
+        const can = canClusterUpgrade('8.1.0', '9.0.0', 'aws');
+        expect(can).toBe(true);
+      });
+
+      it('is true when going from >10.0.0 to >10.0.0', () => {
+        const can = canClusterUpgrade('10.1.0', '11.0.0', 'aws');
+        expect(can).toBe(true);
+      });
+
+      it('is false when going from <10.0.0 to >10.0.0', () => {
+        const can = canClusterUpgrade('9.1.0', '11.0.0', 'aws');
+        expect(can).toBe(false);
+      });
+    });
+
+    describe('on kvm', () => {
+      it('is true for any version', () => {
+        const can = canClusterUpgrade('8.0.0', '11.0.0', 'kvm');
+        expect(can).toBe(true);
+      });
+    });
+  });
+
+  describe('getNumberOfNodes', () => {
+    it('returns 0 worker nodes if the cluster status is not loaded yet', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+      };
+
+      expect(getNumberOfNodes(cluster)).toBe(0);
+    });
+
+    it('returns 0 if there are no nodes', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+      };
+      expect(getNumberOfNodes(cluster)).toBe(0);
+
+      (cluster.status as V4.IClusterStatus).cluster.nodes = null;
+      expect(getNumberOfNodes(cluster)).toBe(0);
+    });
+
+    it('returns the number of total worker nodes, discarding master nodes', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  role: 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                labels: {},
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+      };
+
+      expect(getNumberOfNodes(cluster)).toBe(2);
+    });
+  });
+
+  describe('getMemoryTotal', () => {
+    it('returns the right memory for a given number of worker nodes', () => {
+      // eslint-disable-next-line no-magic-numbers
+      expect(getMemoryTotal(3, 1.337)).toBe(4.02);
+    });
+
+    it('returns 0 for no workers', () => {
+      // eslint-disable-next-line no-magic-numbers
+      expect(getMemoryTotal(0, 1.337)).toBe(0);
+    });
+  });
+
+  describe('getStorageTotal', () => {
+    it('returns the right storage amount for a given number of worker nodes', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+        workers: [
+          ({
+            storage: {
+              size_gb: 1.337,
+            },
+          } as unknown) as V4.IClusterWorker,
+        ],
+      };
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(getStorageTotal(cluster)).toBe(2.68);
+    });
+
+    it('returns 0 for no workers', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+        workers: [],
+      };
+      expect(getStorageTotal(cluster)).toBe(0);
+
+      cluster.workers = undefined;
+      expect(getStorageTotal(cluster)).toBe(0);
+
+      (cluster.status as V4.IClusterStatus).cluster.nodes = null;
+      expect(getStorageTotal(cluster)).toBe(0);
+    });
+  });
+
+  describe('getCpusTotal', () => {
+    it('returns the right number of CPUs for a given list of workers', () => {
+      const workers: V4.IClusterWorker[] = [
+        {
+          cpu: {
+            cores: 3,
+          },
+        } as V4.IClusterWorker,
+      ];
+
+      expect(getCpusTotal(3, workers)).toBe(9);
+    });
+
+    it('returns 0 for no workers', () => {
+      const workers: V4.IClusterWorker[] = [
+        {
+          cpu: {
+            cores: 3,
+          },
+        } as V4.IClusterWorker,
+      ];
+      expect(getCpusTotal(0, workers)).toBe(0);
+
+      expect(getCpusTotal(3, undefined)).toBe(0);
+
+      expect(getCpusTotal(3, [])).toBe(0);
+    });
+  });
+
+  describe('getNumberOfNodePoolsNodes', () => {
+    it('returns the right total number of nodes in a given list of node pools', () => {
+      const nodePools: INodePool[] = [
+        {
+          status: {
+            nodes: 3,
+          } as INodePoolStatus,
+        } as INodePool,
+        {
+          status: {
+            nodes: 5,
+          } as INodePoolStatus,
+        } as INodePool,
+      ];
+
+      expect(getNumberOfNodePoolsNodes(nodePools)).toBe(8);
+    });
+
+    it('returns 0 for no node pools', () => {
+      expect(getNumberOfNodePoolsNodes([])).toBe(0);
+    });
+  });
+
+  describe('getMemoryTotalNodePools', () => {
+    it('returns the right amount of total memory in a given list of node pools, on AWS', () => {
+      const initialInstanceTypes = window.config.awsCapabilitiesJSON;
+      window.config.awsCapabilitiesJSON = JSON.stringify({
+        gigantic: {
+          memory_size_gb: 3.138,
+        },
+      });
+
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {
+            aws: {
+              instance_type: 'gigantic',
+            },
+          },
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            aws: {
+              instance_type: 'nonexistent',
+            },
+          },
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+      ];
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(getMemoryTotalNodePools(nodePools)).toBe(9.42);
+
+      window.config.awsCapabilitiesJSON = initialInstanceTypes;
+    });
+
+    it('returns the right amount of total memory in a given list of node pools, on Azure', () => {
+      const initialInstanceTypes = window.config.azureCapabilitiesJSON;
+      window.config.azureCapabilitiesJSON = JSON.stringify({
+        gigantic: {
+          memoryInMb: 3773,
+        },
+      });
+
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'gigantic',
+            },
+          },
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'nonexistent',
+            },
+          },
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+      ];
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(getMemoryTotalNodePools(nodePools)).toBe(11.4);
+
+      window.config.azureCapabilitiesJSON = initialInstanceTypes;
+    });
+
+    it('returns 0 if the provider cannot be determined', () => {
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+      ];
+
+      expect(getMemoryTotalNodePools(nodePools)).toBe(0);
+    });
+
+    it('returns 0 if there are no instance types', () => {
+      const initialInstanceTypes = window.config.azureCapabilitiesJSON;
+      // @ts-expect-error
+      delete window.config.azureCapabilitiesJSON;
+
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'gigantic',
+            },
+          },
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'nonexistent',
+            },
+          },
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+      ];
+
+      expect(getMemoryTotalNodePools(nodePools)).toBe(0);
+
+      window.config.azureCapabilitiesJSON = initialInstanceTypes;
+    });
+
+    it('returns 0 if there are no node pools', () => {
+      expect(getMemoryTotalNodePools([])).toBe(0);
+    });
+  });
+
+  describe('getCpusTotalNodePools', () => {
+    it('returns the right total number of CPUs in a given list of node pools, on AWS', () => {
+      const initialInstanceTypes = window.config.awsCapabilitiesJSON;
+      window.config.awsCapabilitiesJSON = JSON.stringify({
+        gigantic: {
+          cpu_cores: 3,
+        },
+        cool: {
+          cpu_cores: 5,
+        },
+      });
+
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {
+            aws: {
+              instance_type: 'gigantic',
+            },
+          },
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            aws: {
+              instance_type: 'nonexistent',
+            },
+          },
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            aws: {
+              instance_type: 'cool',
+            },
+          },
+          status: {
+            nodes_ready: 4,
+          },
+        } as INodePool,
+      ];
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(getCpusTotalNodePools(nodePools)).toBe(29);
+
+      window.config.awsCapabilitiesJSON = initialInstanceTypes;
+    });
+
+    it('returns the right total number of CPUs in a given list of node pools, on Azure', () => {
+      const initialInstanceTypes = window.config.azureCapabilitiesJSON;
+      window.config.azureCapabilitiesJSON = JSON.stringify({
+        gigantic: {
+          numberOfCores: 3,
+        },
+        cool: {
+          numberOfCores: 5,
+        },
+      });
+
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'gigantic',
+            },
+          },
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'nonexistent',
+            },
+          },
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'cool',
+            },
+          },
+          status: {
+            nodes_ready: 4,
+          },
+        } as INodePool,
+      ];
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(getCpusTotalNodePools(nodePools)).toBe(29);
+
+      window.config.azureCapabilitiesJSON = initialInstanceTypes;
+    });
+
+    it('returns 0 if the provider cannot be determined', () => {
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+      ];
+
+      expect(getCpusTotalNodePools(nodePools)).toBe(0);
+    });
+
+    it('returns 0 if there are no instance types', () => {
+      const initialInstanceTypes = window.config.azureCapabilitiesJSON;
+      // @ts-expect-error
+      delete window.config.azureCapabilitiesJSON;
+
+      const nodePools: INodePool[] = [
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'gigantic',
+            },
+          },
+          status: {
+            nodes_ready: 3,
+          },
+        } as INodePool,
+        {
+          node_spec: {},
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+        {
+          node_spec: {
+            azure: {
+              vm_size: 'nonexistent',
+            },
+          },
+          status: {
+            nodes_ready: 5,
+          },
+        } as INodePool,
+      ];
+
+      expect(getCpusTotalNodePools(nodePools)).toBe(0);
+
+      window.config.azureCapabilitiesJSON = initialInstanceTypes;
+    });
+
+    it('returns 0 if there are no node pools', () => {
+      expect(getCpusTotalNodePools([])).toBe(0);
+    });
+  });
+
+  describe('computeCapabilities', () => {
+    describe('hasOptionalIngress', () => {
+      describe('on azure', () => {
+        it('is false for Azure below 12.0.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('azure')
+          )('11.0.0', 'azure');
+          expect(capabilities.hasOptionalIngress).toBe(false);
+        });
+
+        it('is true for Azure at 12.0.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('azure')
+          )('12.0.0', 'azure');
+          expect(capabilities.hasOptionalIngress).toBe(true);
+        });
+
+        it('is true for Azure above 12.0.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('azure')
+          )('13.0.0', 'azure');
+          expect(capabilities.hasOptionalIngress).toBe(true);
+        });
+      });
+
+      describe('on aws', () => {
+        it('is false for AWS below 10.1.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('aws')
+          )('9.0.0', 'aws');
+          expect(capabilities.hasOptionalIngress).toBe(false);
+        });
+
+        it('is true for AWS at 10.1.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('aws')
+          )('10.1.0', 'aws');
+          expect(capabilities.hasOptionalIngress).toBe(true);
+        });
+
+        it('is true for AWS above 10.1.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('aws')
+          )('11.1.0', 'aws');
+          expect(capabilities.hasOptionalIngress).toBe(true);
+        });
+      });
+
+      describe('on kvm', () => {
+        it('is false for KVM below 12.2.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('kvm')
+          )('11.0.0', 'kvm');
+          expect(capabilities.hasOptionalIngress).toBe(false);
+        });
+
+        it('is true for KVM at 12.2.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('kvm')
+          )('12.2.0', 'kvm');
+          expect(capabilities.hasOptionalIngress).toBe(true);
+        });
+
+        it('is true for KVM above 12.2.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('kvm')
+          )('13.0.0', 'kvm');
+          expect(capabilities.hasOptionalIngress).toBe(true);
+        });
+      });
+    });
+
+    describe('supportsHAMasters', () => {
+      describe('on azure', () => {
+        it('is false for Azure at any version', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('azure')
+          )('8.1.0', 'azure');
+          expect(capabilities.supportsHAMasters).toBe(false);
+        });
+      });
+
+      describe('on aws', () => {
+        it('is false for AWS below 9.0.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('aws')
+          )('9.0.0', 'aws');
+          expect(capabilities.supportsHAMasters).toBe(false);
+        });
+
+        it('is true for AWS at 11.4.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('aws')
+          )('11.4.0', 'aws');
+          expect(capabilities.supportsHAMasters).toBe(true);
+        });
+
+        it('is true for AWS above 13.0.0', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('aws')
+          )('13.0.0', 'aws');
+          expect(capabilities.supportsHAMasters).toBe(true);
+        });
+      });
+
+      describe('on kvm', () => {
+        it('is false for KVM at any version', () => {
+          const capabilities = computeCapabilities(
+            getEmptyStateWithProvider('kvm')
+          )('8.0.0', 'kvm');
+          expect(capabilities.supportsHAMasters).toBe(false);
+        });
+      });
+    });
+  });
+
   describe('getClusterLatestCondition', () => {
     it('gets the latest cluster condition, on a v5 cluster', () => {
       const cluster = (Object.assign(
@@ -256,5 +990,54 @@ describe('clusterUtils', () => {
       );
       expect(instanceTypes).toBeNull();
     });
+
+    it(`returns 'null' if the capabilities are mis-configured for the current provider`, () => {
+      // @ts-expect-error
+      delete window.config.awsCapabilitiesJSON;
+      // @ts-expect-error
+      delete window.config.azureCapabilitiesJSON;
+
+      expect(getInstanceTypesForProvider('aws')).toBeNull();
+      expect(getInstanceTypesForProvider('azure')).toBeNull();
+    });
+  });
+
+  describe('v4orV5', () => {
+    const state: IState = ({
+      entities: {
+        clusters: {
+          v5Clusters: ['123sd', 'fas10', '349aa'],
+        },
+      },
+    } as unknown) as IState;
+
+    const v4Fn = jest.fn();
+    const v5Fn = jest.fn();
+
+    it(`runs the 'v4' func if the cluster is not a v5 cluster`, () => {
+      expect(v4orV5(v4Fn, v5Fn, '240aa', state)).toBe(v4Fn);
+    });
+
+    it(`runs the 'v5' func if the cluster is a v5 cluster`, () => {
+      expect(v4orV5(v4Fn, v5Fn, 'fas10', state)).toBe(v5Fn);
+    });
   });
 });
+
+function getEmptyStateWithProvider(
+  provider: PropertiesOf<typeof Providers>
+): IState {
+  return {
+    ...preloginState,
+    main: {
+      ...preloginState.main,
+      info: {
+        ...preloginState.main.info,
+        general: {
+          ...preloginState.main.info.general,
+          provider,
+        },
+      },
+    },
+  };
+}

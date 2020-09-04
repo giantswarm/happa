@@ -12,8 +12,8 @@ import { validateLabelKey } from 'utils/labelUtils';
  * @param provider
  */
 export function canClusterUpgrade(
-  currentVersion: string,
-  targetVersion: string,
+  currentVersion: string | undefined,
+  targetVersion: string | undefined,
   provider: PropertiesOf<typeof Providers>
 ): boolean {
   // Cluster must have a release_version.
@@ -47,12 +47,12 @@ export function getNumberOfNodes(cluster: V4.ICluster): number {
 
   const nodes = cluster.status.cluster.nodes;
 
-  let workerNodes = nodes.reduce((accumulator, node) => {
+  const workerNodes = nodes.reduce((accumulator, node) => {
     let newAccumulator = accumulator;
 
     if (
       node.labels?.role !== 'master' &&
-      node.labels['kubernetes.io/role'] !== 'master'
+      node.labels?.['kubernetes.io/role'] !== 'master'
     ) {
       newAccumulator++;
     }
@@ -60,16 +60,10 @@ export function getNumberOfNodes(cluster: V4.ICluster): number {
     return newAccumulator;
   }, 0);
 
-  if (workerNodes === 0) {
-    /**
-     * No node labels available? Fallback to assumption that one of the
-     * nodes is master and rest are workers.
-     */
-    workerNodes = nodes.length - 1;
-  }
-
   return workerNodes;
 }
+
+// TODO(axbarsan): Refactor these memory/storage/cpu helpers to have the same interface.
 
 /**
  * Get the total memory of all the worker nodes in a cluster.
@@ -112,7 +106,7 @@ export function getStorageTotal(cluster: V4.ICluster): number {
  */
 export function getCpusTotal(
   numOfWorkers: number,
-  workers: V4.IClusterWorker[]
+  workers?: V4.IClusterWorker[]
 ): number {
   if (!numOfWorkers || !workers || workers.length === 0) {
     return 0;
@@ -186,7 +180,8 @@ export function getMemoryTotalNodePools(nodePools: INodePool[]): number {
     return accumulator + instanceTypeRAM;
   }, 0);
 
-  return totalRAM;
+  // eslint-disable-next-line no-magic-numbers
+  return Math.ceil(totalRAM * 100) / 100;
 }
 
 /**
@@ -314,7 +309,8 @@ export function getClusterLatestCondition(
   if (
     'status' in cluster &&
     cluster.status &&
-    cluster.status.cluster.conditions?.length > 0
+    cluster.status.cluster.conditions &&
+    cluster.status.cluster.conditions.length > 0
   ) {
     return cluster.status.cluster.conditions[0].type;
   }

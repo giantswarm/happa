@@ -72,19 +72,19 @@ declare namespace V4 {
   }
 
   export interface IClusterStatusCluster {
-    conditions: IClusterStatusCondition[];
+    conditions: IClusterStatusCondition[] | null;
     network: IClusterStatusNetwork;
-    nodes: IClusterStatusNode[];
+    nodes: IClusterStatusNode[] | null;
     scaling: IClusterStatusScaling;
-    resources: IClusterStatusResource[];
-    versions: IClusterStatusVersion[];
+    resources: IClusterStatusResource[] | null;
+    versions: IClusterStatusVersion[] | null;
   }
 
   export interface IClusterStatusNode {
-    labels: IClusterLabelMap;
     lastTransitionTime: string | null;
     name: string;
     version: string;
+    labels?: IClusterLabelMap;
   }
 
   export interface IClusterStatusNetwork {
