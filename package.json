@@ -232,7 +232,8 @@
     "**/crypto-js": "^3.2.1",
     "kind-of": "^6.0.3",
     "lodash": "^4.17.19",
-    "serialize-javascript": "^4.0.0"
+    "serialize-javascript": "^4.0.0",
+    "http-proxy": "^1.18.1"
   },
   "husky": {
     "hooks": {
