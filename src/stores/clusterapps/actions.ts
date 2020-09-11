@@ -41,7 +41,7 @@ export const updateClusterApp = createAsynchronousAction<
     );
 
     try {
-      await modifyApp(clusterId, appName, { body: { spec: version } });
+      await modifyApp(clusterId, appName, { body: { spec: { version } } });
 
       new FlashMessage(
         `App <code>${appName}</code> on <code>${clusterId}</code> has been updated. Changes might take some time to take effect.`,
