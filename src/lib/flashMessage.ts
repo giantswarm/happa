@@ -99,14 +99,6 @@ export function clearQueues() {
 }
 
 /**
- * Remove all messages from the given queue and close the displayed ones.
- */
-export function clearQueue(queueName: string) {
-  Noty.closeAll(queueName);
-  FlashMessage.queue.clear();
-}
-
-/**
  * Remove all messages from all queues without waiting for the animation
  * to finish.
  */
