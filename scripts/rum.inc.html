@@ -1,0 +1,27 @@
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D0QNZ9NDTH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D0QNZ9NDTH');
+    </script>
+    <!-- / end Global site tag (gtag.js) - Google Analytics -->
+    <!-- Datadog RUM -->
+    <script
+      src="https://www.datadoghq-browser-agent.com/datadog-rum.js"
+      type="text/javascript">
+    </script>
+    <script>
+      window.DD_RUM && window.DD_RUM.init({
+        applicationId: '1aaf28fb-766c-48a6-8f2a-b465bf70f7bb',
+        clientToken: 'puba0d341e56f85e51523dc332776d36411',
+        site: 'datadoghq.eu',
+        sampleRate: 100,
+        trackInteractions: true,
+        service: 'happa',
+        env: 'development',
+        version: 'development'
+      });
+    </script>
+    <!-- / end Datadog RUM -->
