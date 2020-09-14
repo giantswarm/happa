@@ -16,5 +16,7 @@ data:
   azure-capabilities-json: '{{ .Values.Installation.V1.Provider.Azure.VM.VmSize.Capabilities | toJson }}'
   default-request-timeout-seconds: '{{ .Values.Installation.V1.GiantSwarm.Happa.DefaultRequestTimeoutSeconds }}'
 
+  {{ if .Values.Installation.V1.Infra.TestingEnvironment }}
   # Enables real user monitoring (RUM)
-  enable-rum: {{ .Values.Installation.V1.Infra.TestingEnvironment }}
+  enable-rum: 'TRUE'
+  {{ end }}
