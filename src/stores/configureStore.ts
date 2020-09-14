@@ -1,5 +1,5 @@
 import { routerMiddleware } from 'connected-react-router';
-import { History } from 'history';
+import { BrowserHistory } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import rootReducer from 'reducers';
 import { IState } from 'reducers/types';
@@ -23,7 +23,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default function configureStore(
   initialState: IState,
-  history: History<History.LocationState>,
+  history: BrowserHistory,
   cpAuth?: CPAuth
 ) {
   const middleware: Middleware[] = [
