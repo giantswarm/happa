@@ -166,7 +166,7 @@ export function formatDate(date: string): string {
  * @param date - The date in the `ISO8601DateString` format.
  */
 // TODO(axbarsan): Refactor a part of this into a UI component.
-export function relativeDate(date: string): ReactElement {
+export function relativeDate(date?: string): ReactElement {
   if (!date) {
     return <span>n/a</span>;
   }
@@ -278,7 +278,7 @@ export function makeKubeConfigTextFile(
  */
 export function clustersForOrg(
   orgId: string,
-  allClusters: Record<string, V4.ICluster | V5.ICluster>
+  allClusters?: Record<string, V4.ICluster | V5.ICluster>
 ): (V4.ICluster | V5.ICluster)[] {
   if (!allClusters) return [];
 
@@ -293,12 +293,15 @@ export function clustersForOrg(
  */
 export function isJwtExpired(token: string): boolean {
   const msToS = 1000;
-  const base64Url = token.split('.')[1];
+  const tokenParts = token.split('.');
+  if (tokenParts.length < 2) return true;
+
+  const base64Url = tokenParts[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const parsedToken = JSON.parse(window.atob(base64));
 
   const now = Math.round(Date.now() / msToS); // Browsers have millisecond precision, which we don't need.
-  const expire = parsedToken.exp;
+  const expire = parsedToken.exp ?? 0;
 
   return now > expire;
 }
@@ -320,8 +323,9 @@ export function hasAppropriateLength(
 } {
   let isValid = false;
   let message = '';
-  if (str.trim().length < min) {
-    if (min > 0) {
+  const trimmedStr = str.trim();
+  if (trimmedStr.length < min) {
+    if (trimmedStr.length > 0) {
       message = `Name must not contain less than ${min} characters`;
     } else {
       message = 'Name must not be empty';

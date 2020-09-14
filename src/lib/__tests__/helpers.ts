@@ -1,4 +1,23 @@
-import { dedent, humanFileSize, truncate } from 'lib/helpers';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import {
+  clustersForOrg,
+  dedent,
+  formatDate,
+  hasAppropriateLength,
+  humanFileSize,
+  isJwtExpired,
+  makeKubeConfigTextFile,
+  relativeDate,
+  toTitleCase,
+  truncate,
+  validateOrRaise,
+} from 'lib/helpers';
+import { IKeyPair } from 'shared/types';
 
 describe('helpers', () => {
   describe('dedent', () => {
@@ -201,6 +220,76 @@ cool`);
     });
   });
 
+  describe('validateOrRaise', () => {
+    it('validates a certain object, with validate.js constraints', () => {
+      const obj: { email: string; token?: string } = {
+        email: '@@google.com',
+      };
+
+      const constraints = {
+        email: {
+          presence: true,
+          email: true,
+          length: {
+            minimum: 15,
+          },
+        },
+        token: { presence: true },
+      };
+
+      expect(() => {
+        validateOrRaise(obj, constraints);
+      }).toThrowError(
+        new Error(`email: is not a valid email, is too short (minimum is 15 characters)
+token: can't be blank`)
+      );
+
+      obj.email = 'test@someemail.com';
+      obj.token = 'some-token';
+
+      validateOrRaise(obj, constraints);
+    });
+  });
+
+  describe('formatDate', () => {
+    it('formats the date in a user-friendly way', () => {
+      const date = new Date('05 January 1973 15:34 GMT+5').toISOString();
+      expect(formatDate(date)).toEqual('5 Jan 1973, 10:34 UTC');
+    });
+  });
+
+  describe('relativeDate', () => {
+    it('renders a placeholder if the date is empty', () => {
+      render(relativeDate());
+
+      expect(screen.getByText(/n\/a/)).toBeInTheDocument();
+    });
+
+    it('renders a date relative from now', async () => {
+      // eslint-disable-next-line no-magic-numbers
+      const date = new Date(Date.now() - 50000).toISOString();
+      render(relativeDate(date));
+
+      const label = screen.getByText(/a minute ago/i);
+      expect(label).toBeInTheDocument();
+
+      const formattedDate = formatDate(date);
+      fireEvent.mouseEnter(label);
+      expect(screen.getByText(formattedDate)).toBeInTheDocument();
+      fireEvent.mouseLeave(label);
+      await waitForElementToBeRemoved(() => screen.getByText(formattedDate));
+    });
+  });
+
+  describe('toTitleCase', () => {
+    it('capitalizes every word in a sentence', () => {
+      const input = 'A wild frog jumps over the lazy dog.';
+      expect(toTitleCase(input)).toEqual(
+        'A Wild Frog Jumps Over The Lazy Dog.'
+      );
+    });
+  });
+
   describe('truncate', () => {
     it('leaves string untouched if it is too short to be replaced', () => {
       const initial = 'someString';
@@ -231,6 +320,229 @@ cool`);
       const result = truncate(initial, 'NotReallyHelpful', 10, 8);
 
       expect(result).toBe('someReallyNotReallyHelpfulTruncate');
+    });
+  });
+
+  describe('makeKubeConfigTextFile', () => {
+    const cluster: V5.ICluster = {
+      id: '1sa1s',
+      api_endpoint: 'https://api.somek8s.bestk8s.io',
+      create_date: null,
+      owner: 'giantswarm',
+      name: 'My amazing cluster',
+      release_version: '5.0.0',
+      delete_date: null,
+      labels: {},
+      master: {
+        availability_zone: '',
+      },
+      masterNodes: null,
+    };
+
+    const keyPair: IKeyPair = {
+      certificate_organizations: '',
+      cn_prefix: '',
+      description: '',
+      ttl_hours: 1,
+      certificate_authority_data: 'somecert',
+      client_certificate_data: 'someothercert',
+      client_key_data: 'somekey',
+    };
+
+    it('generates a kubectl configuration file using the given input', () => {
+      const expectedResult = `
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority-data: ${btoa(keyPair.certificate_authority_data)}
+        server: https://api.somek8s.bestk8s.io
+      name: giantswarm-1sa1s
+    contexts:
+    - context:
+        cluster: giantswarm-1sa1s
+        user: giantswarm-1sa1s-user
+      name: giantswarm-1sa1s-context
+    current-context: giantswarm-1sa1s-context
+    users:
+    - name: giantswarm-1sa1s-user
+      user:
+        client-certificate-data: ${btoa(keyPair.client_certificate_data)}
+        client-key-data: ${btoa(keyPair.client_key_data)}
+    `;
+
+      expect(makeKubeConfigTextFile(cluster, keyPair, false)).toEqual(
+        expectedResult
+      );
+    });
+
+    it('generates a kubectl configuration file using the given input, if using the internal api is desired', () => {
+      const expectedResult = `
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority-data: ${btoa(keyPair.certificate_authority_data)}
+        server: https://internal-api.somek8s.bestk8s.io
+      name: giantswarm-1sa1s
+    contexts:
+    - context:
+        cluster: giantswarm-1sa1s
+        user: giantswarm-1sa1s-user
+      name: giantswarm-1sa1s-context
+    current-context: giantswarm-1sa1s-context
+    users:
+    - name: giantswarm-1sa1s-user
+      user:
+        client-certificate-data: ${btoa(keyPair.client_certificate_data)}
+        client-key-data: ${btoa(keyPair.client_key_data)}
+    `;
+
+      expect(makeKubeConfigTextFile(cluster, keyPair, true)).toEqual(
+        expectedResult
+      );
+    });
+  });
+
+  describe('clustersForOrg', () => {
+    it('filters all clusters for a given organization', () => {
+      const clusters: Record<string, V4.ICluster | V5.ICluster> = {
+        '1sa1s': {
+          id: '1sa1s',
+          api_endpoint: 'https://api.somek8s.bestk8s.io',
+          create_date: null,
+          owner: 'giantswarm',
+          name: 'My amazing cluster',
+          release_version: '5.0.0',
+          delete_date: null,
+          labels: {},
+          master: {
+            availability_zone: '',
+          },
+          masterNodes: null,
+        },
+        v2sad: {
+          id: 'v2sad',
+          api_endpoint: 'https://api.somek8s.bestk8s.io',
+          create_date: null,
+          owner: 'giantswarm',
+          name: 'My amazing cluster',
+          release_version: '5.0.0',
+          delete_date: null,
+          labels: {},
+          master: {
+            availability_zone: '',
+          },
+          masterNodes: null,
+        },
+        v5as0: {
+          id: 'v5as0',
+          api_endpoint: 'https://api.somek8s.bestk8s.io',
+          create_date: null,
+          owner: 'smallswarm',
+          name: 'My amazing cluster',
+          release_version: '5.0.0',
+          delete_date: null,
+          labels: {},
+          master: {
+            availability_zone: '',
+          },
+          masterNodes: null,
+        },
+        sd01s: {
+          id: 'sd01s',
+          api_endpoint: 'https://api.somek8s.bestk8s.io',
+          create_date: null,
+          owner: 'giantswarm',
+          name: 'My amazing cluster',
+          release_version: '5.0.0',
+          credential_id: 'some-credential',
+        },
+        fas2q: {
+          id: 'fas2q',
+          api_endpoint: 'https://api.somek8s.bestk8s.io',
+          create_date: null,
+          owner: 'mediumswarm',
+          name: 'My amazing cluster',
+          release_version: '5.0.0',
+          credential_id: 'some-credential',
+        },
+      };
+      expect(clustersForOrg('giantswarm', clusters)).toHaveLength(3);
+      expect(clustersForOrg('mediumswarm', clusters)).toHaveLength(1);
+      expect(clustersForOrg('smallswarm', clusters)).toHaveLength(1);
+      expect(clustersForOrg('random', clusters)).toHaveLength(0);
+    });
+
+    it('returns an empty list of clusters, if there are no clusters provided', () => {
+      expect(clustersForOrg('giantswarm')).toHaveLength(0);
+    });
+  });
+
+  describe('isJwtExpired', () => {
+    it('checks if a token is expired or not', () => {
+      let jwt = makeJWT({
+        sub: '1231234',
+        // eslint-disable-next-line no-magic-numbers
+        exp: Date.now() / 1000 + 30,
+        name: 'John Doe',
+        email: 'someone@somewhere.com',
+      });
+      expect(isJwtExpired(jwt)).toBeFalsy();
+
+      jwt = makeJWT({
+        sub: '1231234',
+        // eslint-disable-next-line no-magic-numbers
+        exp: Date.now() / 1000 - 1000,
+        name: 'John Doe',
+        email: 'someone@somewhere.com',
+      });
+      expect(isJwtExpired(jwt)).toBeTruthy();
+    });
+
+    it('returns false if a token is invalid', () => {
+      expect(isJwtExpired('not a token')).toBeTruthy();
+    });
+
+    function makeJWT(payload: Record<string, unknown>): string {
+      const header = {
+        alg: 'HS256',
+        typ: 'JWT',
+      };
+      const encodedHeader = btoa(JSON.stringify(header));
+      const encodedPayload = btoa(JSON.stringify(payload));
+
+      const encodedJWT = `${encodedHeader}.${encodedPayload}`
+        .replace('/', '_')
+        .replace('+', '-');
+
+      return encodedJWT;
+    }
+  });
+
+  describe('hasAppropriateLength', () => {
+    it('validates if a string has the length within the given cosntraints', () => {
+      expect(hasAppropriateLength('', 3, 5)).toStrictEqual({
+        isValid: false,
+        message: 'Name must not be empty',
+      });
+
+      expect(hasAppropriateLength('hi', 3, 5)).toStrictEqual({
+        isValid: false,
+        message: 'Name must not contain less than 3 characters',
+      });
+
+      expect(
+        hasAppropriateLength('Hello sir, welcome to the club!', 3, 5)
+      ).toStrictEqual({
+        isValid: false,
+        message: 'Name must not contain more than 5 characters',
+      });
+
+      expect(hasAppropriateLength('dogs', 3, 5)).toStrictEqual({
+        isValid: true,
+        message: '',
+      });
     });
   });
 });
