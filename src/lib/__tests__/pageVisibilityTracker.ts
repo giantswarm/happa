@@ -11,7 +11,7 @@ describe('pageVisibilityTracker', () => {
     expect(handler).toHaveBeenCalled();
 
     tracker.removeEventListener(handler);
-    handler.mockReset();
+    handler.mockClear();
 
     fireEvent(document, new Event('visibilitychange'));
     expect(handler).not.toHaveBeenCalled();
