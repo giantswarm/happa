@@ -56,9 +56,9 @@ sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
 sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
 
 # Add real user monitoring (RUM) scripts to testing installations only
-if [ -n "$ENABLE_RUM"]; then
+if [ -n "$ENABLE_RUM" ]; then
   INC=$(cat rum.inc.html)
-  sed -i "s|    <!-- PLACEHOLDER_RUM -->|${INC}|"
+  sed -i "s|    <!-- PLACEHOLDER_RUM -->|${INC}|" /www/index.html
 
   if [ -n "$ENVIRONMENT" ]; then
     sed -i "s|env: 'development',|env: '$ENVIRONMENT',|" /www/index.html
@@ -69,7 +69,7 @@ if [ -n "$ENABLE_RUM"]; then
   # Set version in Datadog code
   sed -i "s|version: 'development'|version: '${VERSION}'|" /www/index.html
 else
-  sed -i "s|    <!-- PLACEHOLDER_RUM -->||"
+  sed -i "s|    <!-- PLACEHOLDER_RUM -->||" /www/index.html
 fi
 
 # gzip index.html again because we changed it
