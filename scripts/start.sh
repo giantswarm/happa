@@ -56,9 +56,10 @@ sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
 sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
 
 # Add real user monitoring (RUM) scripts to testing installations only
-if [ -n "$ENABLE_RUM" ]; then
+if [ "$ENABLE_RUM" = "TRUE" ]; then
   INC=$(cat rum.inc.html)
-  sed -i "s|    <!-- PLACEHOLDER_RUM -->|${INC}|" /www/index.html
+  awk -v var="${INC}" '{sub(/%%PLACEHOLDER_RUM%%/,var)}1' /www/index.html > /www/tmp.html
+  mv /www/tmp.html /www/index.html
 
   if [ -n "$ENVIRONMENT" ]; then
     sed -i "s|env: 'development',|env: '$ENVIRONMENT',|" /www/index.html
