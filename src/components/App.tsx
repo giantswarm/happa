@@ -1,8 +1,8 @@
 import CPAuthProvider from 'Auth/CP/CPAuthProvider';
-import { ConnectedRouter } from 'connected-react-router';
+import { ConnectedRouter } from 'connected-react-router/immutable';
 import { ThemeProvider } from 'emotion-theming';
 import Footer from 'Footer/Footer';
-import { BrowserHistory } from 'history';
+import { History, LocationState } from 'history';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { hot } from 'react-hot-loader';
@@ -16,7 +16,7 @@ import Routes from './Routes';
 interface IAppProps {
   store: Store;
   theme: ITheme;
-  history: BrowserHistory;
+  history: History<LocationState>;
 }
 
 const App: React.FC<IAppProps> = ({ store, theme, history }) => (
