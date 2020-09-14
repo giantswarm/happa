@@ -50,8 +50,27 @@ fi
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
+# Set version in config object
 sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
+# Set version in metadata.json
 sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
+
+# Add real user monitoring (RUM) scripts to testing installations only
+if [ -n "$ENABLE_RUM"]; then
+  INC=$(cat rum.inc.html)
+  sed -i "s|    <!-- PLACEHOLDER_RUM -->|${INC}|"
+
+  if [ -n "$ENVIRONMENT" ]; then
+    sed -i "s|env: 'development',|env: '$ENVIRONMENT',|" /www/index.html
+  else
+    sed -i "s|env: 'development',|env: 'docker-container',|" /www/index.html
+  fi
+
+  # Set version in Datadog code
+  sed -i "s|version: 'development'|version: '${VERSION}'|" /www/index.html
+else
+  sed -i "s|    <!-- PLACEHOLDER_RUM -->||"
+fi
 
 # gzip index.html again because we changed it
 gzip -f -9 -k /www/index.html
