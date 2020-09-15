@@ -90,6 +90,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: default-request-timeout-seconds
+        - name: PROVIDER
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: provider
         - name: ENABLE_RUM
           valueFrom:
             configMapKeyRef:
