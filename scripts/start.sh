@@ -78,8 +78,8 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
   # Set version in Datadog code
   INC=$(echo $INC | sed -e "s|version: 'development'|version: '${VERSION}'|")
 
-  # Replace %%PLACEHOLDER_RUM%% with include
-  awk -v var="${INC}" '{sub(/%%PLACEHOLDER_RUM%%/,var)}1' /www/index.html > /www/tmp.html
+  # Replace <PLACEHOLDER_RUM/> with include
+  awk -v var="${INC}" '{sub(/<PLACEHOLDER_RUM\/>/,var)}1' /www/index.html > /www/tmp.html
   mv /www/tmp.html /www/index.html
 
   # Unescape ampersand
@@ -91,7 +91,7 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
 
 else
   # Remove placeholder
-  sed -i "s|%%PLACEHOLDER_RUM%%||" /www/index.html
+  sed -i "s|<PLACEHOLDER_RUM/>||" /www/index.html
 fi
 
 # gzip index.html again because we changed it
