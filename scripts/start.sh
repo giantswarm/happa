@@ -57,20 +57,38 @@ sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
 
 # Add real user monitoring (RUM) scripts to testing installations only
 if [ "$ENABLE_RUM" = "TRUE" ]; then
-  INC=$(cat rum.inc.html)
-  awk -v var="${INC}" '{sub(/%%PLACEHOLDER_RUM%%/,var)}1' /www/index.html > /www/tmp.html
-  mv /www/tmp.html /www/index.html
+  echo "RUM is enabled. Preparing code."
 
+  # Get RUM include
+  INC=$(cat rum.inc.html)
+
+  # Escape the ampersand (special awk character)
+  INC=$(echo $INC | sed -e 's|&|\\\\&|g')
+
+  # Set environment in Datadog code
   if [ -n "$ENVIRONMENT" ]; then
-    sed -i "s|env: 'development',|env: '$ENVIRONMENT',|" /www/index.html
+    INC=$(echo $INC | sed -e "s|env: 'development',|env: '${ENVIRONMENT}',|")
   else
-    sed -i "s|env: 'development',|env: 'docker-container',|" /www/index.html
+    INC=$(echo $INC | sed -e "s|env: 'development',|env: 'docker-container',|")
   fi
 
   # Set version in Datadog code
-  sed -i "s|version: 'development'|version: '${VERSION}'|" /www/index.html
+  INC=$(echo $INC | sed -e "s|version: 'development'|version: '${VERSION}'|")
+
+  # Replace %%PLACEHOLDER_RUM%% with include
+  awk -v var="${INC}" '{sub(/%%PLACEHOLDER_RUM%%/,var)}1' /www/index.html > /www/tmp.html
+  mv /www/tmp.html /www/index.html
+
+  # Unescape ampersand
+  sed -i 's|\\&|&|g' /www/index.html
+
+  echo "/www/index.html"
+  cat /www/index.html
+  echo ""
+
 else
-  sed -i "s|    <!-- PLACEHOLDER_RUM -->||" /www/index.html
+  # Remove placeholder
+  sed -i "s|<PLACEHOLDER_RUM/>||" /www/index.html
 fi
 
 # gzip index.html again because we changed it
