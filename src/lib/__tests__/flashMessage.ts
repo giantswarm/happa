@@ -19,9 +19,11 @@ describe('FlashMessage', () => {
       '.noty_layout'
     ) as HTMLElement;
     expect(notificationWrapper.children).toHaveLength(1);
+    expect(FlashMessage.queue).toHaveLength(1);
 
     forceRemoveAll();
 
+    expect(FlashMessage.queue).toHaveLength(0);
     new FlashMessage(
       `Yo! Something went wrong.`,
       messageType.ERROR,
@@ -46,5 +48,6 @@ describe('FlashMessage', () => {
 
     notificationWrapper = document.querySelector('.noty_layout') as HTMLElement;
     expect(notificationWrapper.children).toHaveLength(2);
+    expect(FlashMessage.queue).toHaveLength(2);
   });
 });
