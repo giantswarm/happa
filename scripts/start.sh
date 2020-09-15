@@ -93,7 +93,7 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
 
 else
   # Remove placeholder
-  sed -i "s|<PLACEHOLDER_RUM/>||" /www/index.html
+  sed -i "s|%%PLACEHOLDER_RUM%%||" /www/index.html
 fi
 
 # gzip index.html again because we changed it
