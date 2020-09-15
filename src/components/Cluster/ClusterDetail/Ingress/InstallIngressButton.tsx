@@ -19,6 +19,7 @@ import {
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,6 +99,9 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const installIngressController = () =>
     dispatch(installLatestIngress({ clusterId }));
 
+  const clusterIsCreating = isClusterCreating(cluster);
+  const clusterIsNotReady = clusterIsCreating || isClusterUpdating(cluster);
+
   return (
     <Wrapper {...rest}>
       {!installedIngressApp && (
@@ -107,6 +111,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           bsSize='lg'
           loadingTimeout={0}
           onClick={installIngressController}
+          disabled={clusterIsNotReady}
         >
           Install Ingress Controller
         </Button>
@@ -116,6 +121,12 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
         <Text>
           {installedIngressApp ? (
             '🎉 Ingress controller installed. Please continue to the next step.'
+          ) : clusterIsNotReady ? (
+            <>
+              Please wait for cluster{' '}
+              {clusterIsCreating ? 'creation' : 'upgrade'} to be completed
+              before installing the Ingress Controller app.
+            </>
           ) : (
             <>
               This will install the{' '}
