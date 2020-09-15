@@ -20,6 +20,7 @@ Installation:
           BaseDomain: ""
     Infra:
       TestingEnvironment: true
+    Name: ""
     Provider:
       AWS:
         EC2:

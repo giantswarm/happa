@@ -72,6 +72,11 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
     INC=$(echo $INC | sed -e "s|env: 'development',|env: 'docker-container',|")
   fi
 
+  # Set installation name in Datadog code
+  if [ -n "$INSTALLATION_NAME" ]; then
+    INC=$(echo $INC | sed -e "s|service: 'happa',|service: '${INSTALLATION_NAME}',|")
+  fi
+
   # Set version in Datadog code
   INC=$(echo $INC | sed -e "s|version: 'development'|version: '${VERSION}'|")
 
