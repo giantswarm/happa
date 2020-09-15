@@ -49,6 +49,7 @@ function monkeyPatchGiantSwarmClient(store: Store) {
         await (store.dispatch as ThunkDispatch<IState, void, AnyAction>)(
           auth0Login(result)
         );
+
         // Ensure the second attempt uses the new token.
         headerParams[
           'Authorization'

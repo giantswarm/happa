@@ -1,5 +1,7 @@
 import auth0, { Auth0DecodedHash, Auth0Error } from 'auth0-js';
 
+const renewTimeout = 10000;
+
 export interface IAuthResult {
   accessToken: string;
   idTokenPayload: {
@@ -45,8 +47,6 @@ class Auth {
 
   public renewToken(): Promise<IAuthResult> {
     return new Promise((resolve, reject) => {
-      const renewTimeout = 10000;
-
       setTimeout(() => {
         reject(new Error('timeout while trying to renew your session'));
       }, renewTimeout);
