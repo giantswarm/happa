@@ -289,10 +289,13 @@ jobs:
               -e API_ENDPOINT=test \
               -e CP_API_ENDPOINT=test \
               -e PASSAGE_ENDPOINT=test \
+              -e PROVIDER=development \
               -e INGRESS_BASE_DOMAIN=test \
+              -e INSTALLATION_NAME=test \
               -e AWS_CAPABILITIES_JSON={} \
               -e AZURE_CAPABILITIES_JSON={} \
               -e ENVIRONMENT=test-in-ci \
+              -e ENABLE_RUM=TRUE \
               -p 8000:8000 \
               -d \
               "$(cat .docker_image_name)"

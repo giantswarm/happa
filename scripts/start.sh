@@ -50,8 +50,49 @@ fi
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
+# Set version in config object
 sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
+# Set version in metadata.json
 sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
+
+# Add real user monitoring (RUM) scripts to testing installations only
+if [ "$ENABLE_RUM" = "TRUE" ]; then
+  echo "RUM is enabled. Preparing code."
+
+  # Get RUM include
+  INC=$(cat rum.inc.html)
+
+  # Escape the ampersand (special awk character)
+  INC=$(echo $INC | sed -e 's|&|\\\\&|g')
+
+  # Set env in Datadog code to provider
+  if [ -n "$PROVIDER" ]; then
+    INC=$(echo $INC | sed -e "s|env: 'development',|env: '${PROVIDER}',|")
+  fi
+
+  # Set installation name in Datadog code
+  if [ -n "$INSTALLATION_NAME" ]; then
+    INC=$(echo $INC | sed -e "s|service: 'happa',|service: '${INSTALLATION_NAME}',|")
+  fi
+
+  # Set version in Datadog code
+  INC=$(echo $INC | sed -e "s|version: 'development'|version: '${VERSION}'|")
+
+  # Replace <PLACEHOLDER_RUM/> with include
+  awk -v var="${INC}" '{sub(/<placeholder_rum\/>/,var)}1' /www/index.html > /www/tmp.html
+  mv /www/tmp.html /www/index.html
+
+  # Unescape ampersand
+  sed -i 's|\\&|&|g' /www/index.html
+
+  echo "/www/index.html"
+  cat /www/index.html
+  echo ""
+
+else
+  # Remove placeholder
+  sed -i "s|<placeholder_rum/>||" /www/index.html
+fi
 
 # gzip index.html again because we changed it
 gzip -f -9 -k /www/index.html
