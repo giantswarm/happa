@@ -63,6 +63,7 @@ const NotReadyNotice = styled(Well)`
     theme.colors.flashMessages.info.background};
   color: ${({ theme }) => theme.colors.flashMessages.info.text};
   border: 1px solid ${({ theme }) => theme.colors.flashMessages.info.border};
+  margin: ${({ theme }) => theme.spacingPx * 6}px 0;
 `;
 
 class ClusterDetailView extends React.Component {
