@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
+import ClusterStatus from 'Home/ClusterStatus';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { FC } from 'react';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import Input from 'UI/Inputs/Input';
 
@@ -26,14 +27,21 @@ const Cluster = styled.div`
   &.selected {
     background-color: ${(props) => props.theme.colors.shade4};
   }
+  &.disabled:hover {
+    cursor: default;
+    background-color: unset;
+  }
 `;
 
 const ClusterTitle = styled.div`
   color: ${(props) => props.theme.colors.white2};
-  flex-grow: 1;
   font-size: 16px;
   font-weight: 800;
   margin: 0px 15px;
+`;
+
+const ClusterNotice = styled.div`
+  flex-grow: 1;
 `;
 
 const Organisation = styled.div`
@@ -47,9 +55,24 @@ const NoSearchResults = styled.div`
   margin-top: 50px;
 `;
 
-const ClusterPicker = (props) => {
-  const onSelectCluster = (e) => {
-    if (props.onSelectCluster) {
+interface IClusterPickerCluster
+  extends Pick<IBaseCluster, 'id' | 'name' | 'owner'> {
+  isAvailable: boolean;
+}
+
+interface IClusterPicker {
+  clusters: IClusterPickerCluster[];
+  onChangeQuery: (query: string) => void;
+  onSelectCluster: (clusterId: string) => void;
+  query: string;
+  selectedClusterID?: string;
+}
+
+const ClusterPicker: FC<IClusterPicker> = (props) => {
+  const onSelectCluster: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => void = (e) => {
+    if (e.currentTarget.dataset.clusterid) {
       props.onSelectCluster(e.currentTarget.dataset.clusterid);
     }
   };
@@ -60,26 +83,36 @@ const ClusterPicker = (props) => {
       <ClusterList>
         {props.clusters.length === 0 && (
           <NoSearchResults>
-            No clusters matched your search query: &quot;{props.query}&quot;{' '}
-            <br />
-            <small>
-              Perhaps you have no clusters that support app installation.
-            </small>
+            {props.query.trim() !== '' ? (
+              <>
+                No clusters matched your search query: &quot;{props.query}&quot;{' '}
+                <br />
+                <small>
+                  Perhaps you have no clusters that support app installation.
+                </small>
+              </>
+            ) : (
+              <>No clusters available for app installation.</>
+            )}
           </NoSearchResults>
         )}
 
         {props.clusters.map((cluster) => {
           return (
             <Cluster
-              className={
-                cluster.id === props.selectedClusterID ? 'selected' : ''
-              }
+              className={[
+                cluster.id === props.selectedClusterID ? 'selected' : '',
+                !cluster.isAvailable ? 'disabled' : '',
+              ].join(' ')}
               data-clusterid={cluster.id}
               key={cluster.id}
-              onClick={onSelectCluster}
+              onClick={cluster.isAvailable ? onSelectCluster : undefined}
             >
               <ClusterIDLabel clusterID={cluster.id} />
               <ClusterTitle>{cluster.name}</ClusterTitle>
+              <ClusterNotice>
+                <ClusterStatus clusterId={cluster.id} />
+              </ClusterNotice>
               <Organisation>{cluster.owner}</Organisation>
             </Cluster>
           );
@@ -90,11 +123,11 @@ const ClusterPicker = (props) => {
 };
 
 ClusterPicker.propTypes = {
-  clusters: PropTypes.array,
+  clusters: PropTypes.array.isRequired,
+  onChangeQuery: PropTypes.func.isRequired,
+  onSelectCluster: PropTypes.func.isRequired,
+  query: PropTypes.string.isRequired,
   selectedClusterID: PropTypes.string,
-  query: PropTypes.string,
-  onChangeQuery: PropTypes.func,
-  onSelectCluster: PropTypes.func,
 };
 
 export default ClusterPicker;

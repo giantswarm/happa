@@ -10,6 +10,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { installApp } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import GenericModal from '../../Modals/GenericModal';
 import ClusterPicker from './ClusterPicker';
@@ -309,16 +310,21 @@ InstallAppModal.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const clusters = Object.keys(state.entities.clusters.items).map(
-    (clusterID) => {
+  const clusters = Object.keys(state.entities.clusters.items)
+    .map((clusterID) => {
+      const cluster = state.entities.clusters.items[clusterID];
+
       return {
         id: clusterID,
-        name: state.entities.clusters.items[clusterID].name,
-        owner: state.entities.clusters.items[clusterID].owner,
-        capabilities: state.entities.clusters.items[clusterID].capabilities,
+        name: cluster.name,
+        owner: cluster.owner,
+        isAvailable:
+          !cluster.status ||
+          (!isClusterUpdating(cluster) && !isClusterCreating(cluster)),
+        isDeleted: Boolean(cluster.delete_date),
       };
-    }
-  );
+    })
+    .filter(({ isDeleted }) => !isDeleted);
 
   return { clusters };
 }

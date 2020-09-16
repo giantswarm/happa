@@ -76,7 +76,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
     case canClusterUpgrade:
       iconClassName = 'fa fa-warning';
       message = 'Upgrade Available';
-      isButtonDisabled = false;
+      isButtonDisabled = typeof onClick === 'undefined';
       tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
       break;
 
