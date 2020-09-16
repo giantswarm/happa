@@ -106,6 +106,7 @@ class V4ClusterDetailTable extends React.Component {
 
     const { create_date, release_version, api_endpoint } = cluster;
     const { numberOfNodes, memory, cores } = resources;
+    const firstWorker = cluster.workers?.[0];
 
     const isCreating = isClusterCreating(cluster);
 
@@ -158,9 +159,7 @@ class V4ClusterDetailTable extends React.Component {
             <WorkerNodesAzure
               az={cluster.availability_zones}
               isClusterCreating={isCreating}
-              instanceType={
-                this.state.azureVMSizes[cluster.workers[0]?.azure.vm_size]
-              }
+              instanceType={this.state.azureVMSizes[firstWorker?.azure.vm_size]}
               nodes={numberOfNodes}
               showScalingModal={this.props.showScalingModal}
             />
@@ -168,7 +167,7 @@ class V4ClusterDetailTable extends React.Component {
         {provider === Providers.KVM && (
           <WorkerNodesKVM
             isClusterCreating={isCreating}
-            worker={cluster.workers[0]}
+            worker={firstWorker}
             nodes={numberOfNodes}
             showScalingModal={this.props.showScalingModal}
           />
@@ -178,11 +177,9 @@ class V4ClusterDetailTable extends React.Component {
             <WorkerNodesAWS
               az={cluster.availability_zones}
               isClusterCreating={isCreating}
-              instanceName={cluster.workers[0]?.aws.instance_type}
+              instanceName={firstWorker?.aws.instance_type}
               instanceType={
-                this.state.awsInstanceTypes[
-                  cluster.workers[0]?.aws.instance_type
-                ]
+                this.state.awsInstanceTypes[firstWorker?.aws.instance_type]
               }
               scaling={cluster.scaling}
               showScalingModal={this.props.showScalingModal}
