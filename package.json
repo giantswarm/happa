@@ -209,7 +209,7 @@
     "mini-css-extract-plugin": "0.10.0",
     "nock": "13.0.4",
     "node-sass": "4.14.1",
-    "optimize-css-assets-webpack-plugin": "5.0.3",
+    "optimize-css-assets-webpack-plugin": "5.0.4",
     "prettier": "2.1.1",
     "react-hot-loader": "4.12.21",
     "redux-immutable-state-invariant": "2.1.0",
