@@ -73,8 +73,8 @@ export function getMemoryTotal(cluster: V4.ICluster): number {
     return 0;
   }
 
-  // eslint-disable-next-line no-magic-numbers
   const memory =
+    // eslint-disable-next-line no-magic-numbers
     Math.ceil(numOfWorkers * cluster.workers[0].memory.size_gb * 100) / 100;
 
   return memory;
