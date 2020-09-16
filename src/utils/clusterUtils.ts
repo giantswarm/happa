@@ -63,21 +63,19 @@ export function getNumberOfNodes(cluster: V4.ICluster): number {
   return workerNodes;
 }
 
-// TODO(axbarsan): Refactor these memory/storage/cpu helpers to have the same interface.
-
 /**
  * Get the total memory of all the worker nodes in a cluster.
- * @param numOfWorkers
- * @param memorySizeGB - Gigabytes of memory in each worker.
+ * @param cluster
  */
-export function getMemoryTotal(
-  numOfWorkers: number,
-  memorySizeGB: number
-): number {
-  if (numOfWorkers < 1) return 0;
+export function getMemoryTotal(cluster: V4.ICluster): number {
+  const numOfWorkers = getNumberOfNodes(cluster);
+  if (!numOfWorkers || !cluster.workers || cluster.workers.length === 0) {
+    return 0;
+  }
 
   // eslint-disable-next-line no-magic-numbers
-  const memory = Math.ceil(numOfWorkers * memorySizeGB * 100) / 100;
+  const memory =
+    Math.ceil(numOfWorkers * cluster.workers[0].memory.size_gb * 100) / 100;
 
   return memory;
 }
@@ -87,32 +85,29 @@ export function getMemoryTotal(
  * @param cluster
  */
 export function getStorageTotal(cluster: V4.ICluster): number {
-  const workers = getNumberOfNodes(cluster);
-  if (!workers || !cluster.workers || cluster.workers.length === 0) {
+  const numOfWorkers = getNumberOfNodes(cluster);
+  if (!numOfWorkers || !cluster.workers || cluster.workers.length === 0) {
     return 0;
   }
 
   const storage =
     // eslint-disable-next-line no-magic-numbers
-    Math.ceil(workers * cluster.workers[0].storage.size_gb * 100) / 100;
+    Math.ceil(numOfWorkers * cluster.workers[0].storage.size_gb * 100) / 100;
 
   return storage;
 }
 
 /**
  * Get total number of CPUs in all the worker nodes of a cluster.
- * @param numOfWorkers
- * @param workers
+ * @param cluster
  */
-export function getCpusTotal(
-  numOfWorkers: number,
-  workers?: V4.IClusterWorker[]
-): number {
-  if (!numOfWorkers || !workers || workers.length === 0) {
+export function getCpusTotal(cluster: V4.ICluster): number {
+  const numOfWorkers = getNumberOfNodes(cluster);
+  if (!numOfWorkers || !cluster.workers || cluster.workers.length === 0) {
     return 0;
   }
 
-  return numOfWorkers * workers[0].cpu.cores;
+  return numOfWorkers * cluster.workers[0].cpu.cores;
 }
 
 /**

@@ -145,13 +145,83 @@ describe('clusterUtils', () => {
 
   describe('getMemoryTotal', () => {
     it('returns the right memory for a given number of worker nodes', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+        workers: [
+          ({
+            memory: {
+              size_gb: 1.337,
+            },
+          } as unknown) as V4.IClusterWorker,
+        ],
+      };
       // eslint-disable-next-line no-magic-numbers
-      expect(getMemoryTotal(3, 1.337)).toBe(4.02);
+      expect(getMemoryTotal(cluster)).toBe(2.68);
     });
 
     it('returns 0 for no workers', () => {
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+        workers: [],
+      };
       // eslint-disable-next-line no-magic-numbers
-      expect(getMemoryTotal(0, 1.337)).toBe(0);
+      expect(getMemoryTotal(cluster)).toBe(0);
     });
   });
 
@@ -245,30 +315,82 @@ describe('clusterUtils', () => {
 
   describe('getCpusTotal', () => {
     it('returns the right number of CPUs for a given list of workers', () => {
-      const workers: V4.IClusterWorker[] = [
-        {
-          cpu: {
-            cores: 3,
-          },
-        } as V4.IClusterWorker,
-      ];
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+        workers: [
+          ({
+            cpu: {
+              cores: 2,
+            },
+          } as unknown) as V4.IClusterWorker,
+        ],
+      };
 
-      expect(getCpusTotal(3, workers)).toBe(9);
+      expect(getCpusTotal(cluster)).toBe(4);
     });
 
     it('returns 0 for no workers', () => {
-      const workers: V4.IClusterWorker[] = [
-        {
-          cpu: {
-            cores: 3,
-          },
-        } as V4.IClusterWorker,
-      ];
-      expect(getCpusTotal(0, workers)).toBe(0);
-
-      expect(getCpusTotal(3, undefined)).toBe(0);
-
-      expect(getCpusTotal(3, [])).toBe(0);
+      const cluster: V4.ICluster = {
+        api_endpoint: '',
+        create_date: null,
+        credential_id: '',
+        id: '',
+        owner: '',
+        status: {
+          cluster: ({
+            nodes: [
+              {
+                labels: {
+                  'kubernetes.io/role': 'master',
+                },
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+              {
+                name: '',
+                version: '',
+                lastTransitionTime: null,
+              },
+            ],
+          } as unknown) as V4.IClusterStatusCluster,
+        } as V4.IClusterStatus,
+        workers: [],
+      };
+      expect(getCpusTotal(cluster)).toBe(0);
     });
   });
 
