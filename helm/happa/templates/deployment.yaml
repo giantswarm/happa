@@ -80,11 +80,26 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: ingress-base-domain
+        - name: INSTALLATION_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: installation-name
         - name: DEFAULT_REQUEST_TIMEOUT_SECONDS
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
               key: default-request-timeout-seconds
+        - name: PROVIDER
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: provider
+        - name: ENABLE_RUM
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: enable-rum
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:

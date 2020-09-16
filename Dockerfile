@@ -14,6 +14,7 @@ FROM quay.io/giantswarm/nginx:1.18-alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx scripts/start.sh /
+COPY --chown=nginx scripts/rum.inc.html /
 COPY --from=compress --chown=nginx /www /www
 COPY --chown=nginx VERSION /
 
