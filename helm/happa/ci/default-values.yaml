@@ -18,6 +18,9 @@ Installation:
       Kubernetes:
         IngressController:
           BaseDomain: ""
+    Infra:
+      TestingEnvironment: true
+    Name: ""
     Provider:
       AWS:
         EC2:

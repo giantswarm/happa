@@ -164,7 +164,7 @@ class CreateRegularCluster extends React.Component {
         };
         break;
     }
-    let workers = new Array(this.state.scaling.min).map(() => worker);
+    let workers = new Array(this.state.scaling.min).fill(worker);
 
     // Adjust final workers array when cluster uses auto scaling. This is currently
     // only in AWS and from release 6.1.0 onwards.
