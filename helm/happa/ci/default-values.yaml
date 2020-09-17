@@ -10,6 +10,7 @@ Installation:
         Letsencrypt: ""
         API:
           Letsencrypt: ""
+        EnableUserMonitoring: false
       Passage:
         Address: ""
       OIDC:

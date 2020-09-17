@@ -18,7 +18,9 @@ data:
   default-request-timeout-seconds: '{{ .Values.Installation.V1.GiantSwarm.Happa.DefaultRequestTimeoutSeconds }}'
   provider: {{ .Values.Installation.V1.Provider.Kind }}
 
-  {{ if .Values.Installation.V1.Infra.TestingEnvironment }}
   # Enables real user monitoring (RUM)
+  {{ if eq .Values.Installation.V1.GiantSwarm.Happa.EnableUserMonitoring true }}
   enable-rum: 'TRUE'
+  {{ else }}
+  enable-rum: 'FALSE'
   {{ end }}
