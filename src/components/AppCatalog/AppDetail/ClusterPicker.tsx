@@ -28,7 +28,7 @@ const Cluster = styled.div`
     background-color: ${(props) => props.theme.colors.shade4};
   }
   &.disabled {
-    opacity: 0.5;
+    opacity: ${(props) => props.theme.disabledOpacity};
 
     &:hover {
       cursor: default;
