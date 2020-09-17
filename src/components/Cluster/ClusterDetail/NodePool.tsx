@@ -63,10 +63,6 @@ const MixedInstanceType = styled(Code)`
   background-color: ${({ theme }) => theme.colors.shade9};
 `;
 
-const StyledNodePoolDropdownMenu = styled(NodePoolDropdownMenu)`
-  grid-column: 10/10;
-`;
-
 interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
 }
@@ -258,7 +254,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
             <NodePoolScaling nodePool={nodePool} provider={provider} />
-            <StyledNodePoolDropdownMenu
+            <NodePoolDropdownMenu
               provider={provider}
               clusterId={cluster.id}
               nodePool={nodePool}

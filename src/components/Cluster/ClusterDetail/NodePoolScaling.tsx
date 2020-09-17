@@ -59,7 +59,7 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
       <NodesWrapper>{desired}</NodesWrapper>
       <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
 
-      {provider === Providers.AWS ? (
+      {provider === Providers.AWS && (
         <OverlayTrigger
           overlay={
             <Tooltip id={`${id}-spot-distribution-tooltip`}>
@@ -70,8 +70,6 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
         >
           <NodesWrapper>{spot_instances}</NodesWrapper>
         </OverlayTrigger>
-      ) : (
-        <NodesWrapper />
       )}
     </>
   );

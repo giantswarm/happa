@@ -67,12 +67,15 @@ const NodePoolsWrapper = styled.div`
   }
 `;
 
-const GridRowNodePoolsBase = css`
+const GridRowNodePoolsBase = (hasSpotInstances) => css`
   ${Row};
   display: grid;
   grid-gap: 0 10px;
   grid-template-columns:
-    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(5, 2fr)
+    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(
+      ${hasSpotInstances ? 5 : 4},
+      2fr
+    )
     1fr;
   grid-template-rows: 30px;
   justify-content: space-between;
@@ -81,7 +84,7 @@ const GridRowNodePoolsBase = css`
 `;
 
 const GridRowNodePoolsNodes = styled.div`
-  ${GridRowNodePoolsBase};
+  ${({ hasSpotInstances }) => GridRowNodePoolsBase(hasSpotInstances)};
   margin-bottom: 0;
   margin-top: -12px;
   min-height: 25px;
@@ -90,7 +93,8 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: ${({ compact }) => (compact ? '5 / span 4' : '5 / span 5')};
+    grid-column: ${({ hasSpotInstances }) =>
+      hasSpotInstances ? '5 / span 5' : '5 / span 4'};
     font-size: 12px;
     position: relative;
     width: 100%;
@@ -116,7 +120,7 @@ const GridRowNodePoolsNodes = styled.div`
 `;
 
 const GridRowNodePoolsHeaders = styled.div`
-  ${GridRowNodePoolsBase};
+  ${({ hasSpotInstances }) => GridRowNodePoolsBase(hasSpotInstances)};
   margin-bottom: 0;
 `;
 
@@ -134,7 +138,7 @@ const NodePoolsNameColumn = styled.span`
 `;
 
 const GridRowNodePoolsItem = styled.div`
-  ${GridRowNodePoolsBase};
+  ${({ hasSpotInstances }) => GridRowNodePoolsBase(hasSpotInstances)};
   background-color: ${({ theme }) => theme.colors.foreground};
 `;
 
@@ -372,6 +376,8 @@ class V5ClusterDetailTable extends React.Component {
     const machineTypeLabel =
       provider === Providers.AWS ? 'Instance type' : 'VM Size';
 
+    const hasSpotInstances = provider === Providers.AWS;
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
@@ -431,12 +437,12 @@ class V5ClusterDetailTable extends React.Component {
           <h2>Node Pools</h2>
           {!zeroNodePools && !loadingNodePools && (
             <>
-              <GridRowNodePoolsNodes compact={provider === Providers.AZURE}>
+              <GridRowNodePoolsNodes hasSpotInstances={hasSpotInstances}>
                 <div>
                   <span>NODES</span>
                 </div>
               </GridRowNodePoolsNodes>
-              <GridRowNodePoolsHeaders>
+              <GridRowNodePoolsHeaders hasSpotInstances={hasSpotInstances}>
                 <NodePoolsColumnHeader>Id</NodePoolsColumnHeader>
                 <NodePoolsNameColumn>Name</NodePoolsNameColumn>
                 <NodePoolsColumnHeader>
@@ -467,7 +473,10 @@ class V5ClusterDetailTable extends React.Component {
                       classNames='np'
                       timeout={{ enter: 400, exit: 400 }}
                     >
-                      <GridRowNodePoolsItem data-testid={nodePool.id}>
+                      <GridRowNodePoolsItem
+                        hasSpotInstances={hasSpotInstances}
+                        data-testid={nodePool.id}
+                      >
                         <NodePool
                           cluster={cluster}
                           nodePool={nodePool}
