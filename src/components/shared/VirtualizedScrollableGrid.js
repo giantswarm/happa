@@ -6,7 +6,7 @@ import { FixedSizeGrid as List } from 'react-window';
 import { debounce } from 'underscore';
 
 const MIN_COLUMN_COUNT = 1;
-const RESPONSIVE_FEATURES_UPDATE_TIME = 300;
+const RESPONSIVE_FEATURES_UPDATE_TIME = 200;
 
 class VirtualizedScrollableGrid extends React.PureComponent {
   static defaultProps = {
