@@ -295,6 +295,8 @@ class ClusterDetailView extends React.Component {
     const release = releases[release_version] ?? null;
     const tabsPaths = this.getPathsForTabs(id, owner);
 
+    const clusterIsCreating = isClusterCreating(cluster);
+
     return (
       <>
         <LoadingOverlay loading={loading} />
@@ -310,13 +312,13 @@ class ClusterDetailView extends React.Component {
                   onSave={this.editClusterName}
                 />{' '}
               </h1>
-              {(isClusterUpdating(cluster) || isClusterCreating(cluster)) && (
+              {(isClusterUpdating(cluster) || clusterIsCreating) && (
                 <SlideTransition in={true} appear={true} direction='down'>
                   <NotReadyNotice>
                     <i className='fa fa-info' /> This cluster is currently{' '}
-                    {isClusterCreating(cluster) ? 'creating' : 'updating'}.
-                    During this time, some operations are disabled or may not
-                    work as expected.
+                    {clusterIsCreating ? 'creating' : 'updating'}. During this
+                    time, some operations are disabled or may not work as
+                    expected.
                   </NotReadyNotice>
                 </SlideTransition>
               )}

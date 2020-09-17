@@ -314,13 +314,14 @@ function mapStateToProps(state) {
     .map((clusterID) => {
       const cluster = state.entities.clusters.items[clusterID];
 
+      const isCreatingOrUpdating =
+        isClusterUpdating(cluster) || isClusterCreating(cluster);
+
       return {
         id: clusterID,
         name: cluster.name,
         owner: cluster.owner,
-        isAvailable:
-          !cluster.status ||
-          (!isClusterUpdating(cluster) && !isClusterCreating(cluster)),
+        isAvailable: !cluster.status || !isCreatingOrUpdating,
         isDeleted: Boolean(cluster.delete_date),
       };
     })
