@@ -102,6 +102,38 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const clusterIsCreating = isClusterCreating(cluster);
   const clusterIsNotReady = clusterIsCreating || isClusterUpdating(cluster);
 
+  const additionalText = useMemo(() => {
+    if (installedIngressApp) {
+      return '🎉 Ingress controller installed. Please continue to the next step.';
+    }
+
+    if (clusterIsNotReady) {
+      return `Please wait for cluster ${
+        clusterIsCreating ? 'creation' : 'upgrade'
+      } to be completed before installing the Ingress Controller app.`;
+    }
+
+    if (ingressAppToInstall) {
+      return (
+        <>
+          This will install the{' '}
+          <StyledLink to={ingressAppDetailPath} href={ingressAppDetailPath}>
+            NGINX Ingress Controller app {ingressAppToInstall.version}
+          </StyledLink>{' '}
+          on cluster <ClusterIDLabel clusterID={clusterId} />
+        </>
+      );
+    }
+
+    return '';
+  }, [
+    installedIngressApp,
+    clusterIsNotReady,
+    ingressAppToInstall,
+    ingressAppDetailPath,
+    clusterId,
+  ]);
+
   return (
     <Wrapper {...rest}>
       {!installedIngressApp && (
@@ -117,27 +149,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
         </Button>
       )}
 
-      {!isLoading && (
-        <Text>
-          {installedIngressApp ? (
-            '🎉 Ingress controller installed. Please continue to the next step.'
-          ) : clusterIsNotReady ? (
-            <>
-              Please wait for cluster{' '}
-              {clusterIsCreating ? 'creation' : 'upgrade'} to be completed
-              before installing the Ingress Controller app.
-            </>
-          ) : (
-            <>
-              This will install the{' '}
-              <StyledLink to={ingressAppDetailPath} href={ingressAppDetailPath}>
-                NGINX Ingress Controller app {ingressAppToInstall.version}
-              </StyledLink>{' '}
-              on cluster <ClusterIDLabel clusterID={clusterId} />
-            </>
-          )}
-        </Text>
-      )}
+      {!isLoading && <Text>{additionalText}</Text>}
     </Wrapper>
   );
 };
