@@ -369,6 +369,9 @@ class V5ClusterDetailTable extends React.Component {
       !isClusterCreating(cluster) &&
       !isClusterUpdating(cluster);
 
+    const machineTypeLabel =
+      provider === Providers.AWS ? 'Instance type' : 'VM Size';
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
@@ -436,7 +439,9 @@ class V5ClusterDetailTable extends React.Component {
               <GridRowNodePoolsHeaders>
                 <NodePoolsColumnHeader>Id</NodePoolsColumnHeader>
                 <NodePoolsNameColumn>Name</NodePoolsNameColumn>
-                <NodePoolsColumnHeader>Instance Type</NodePoolsColumnHeader>
+                <NodePoolsColumnHeader>
+                  {machineTypeLabel}
+                </NodePoolsColumnHeader>
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
