@@ -5,13 +5,17 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectErrorByIdAndAction } from 'selectors/clusterSelectors';
+import {
+  selectClusterById,
+  selectErrorByIdAndAction,
+} from 'selectors/clusterSelectors';
 import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
+import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
@@ -123,9 +127,15 @@ const SmallHeading = styled.h6`
   letter-spacing: 2px;
 `;
 
+const BrowseButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: ${({ theme }) => theme.spacingPx}px 0
+    ${({ theme }) => theme.spacingPx * 2}px;
+`;
+
 const BrowseButton = styled(Button)`
-  margin-top: 5px;
-  margin-bottom: 10px;
+  margin: 0;
 `;
 
 const Disclaimer = styled.p`
@@ -330,7 +340,12 @@ class ClusterApps extends React.Component {
   };
 
   render() {
-    const { appsLoadError, installedApps } = this.props;
+    const {
+      appsLoadError,
+      installedApps,
+      clusterIsCreating,
+      clusterIsUpdating,
+    } = this.props;
     const userInstalledApps = this.getUserInstalledApps(installedApps);
     const preinstalledApps = this.preinstalledApps();
 
@@ -342,10 +357,22 @@ class ClusterApps extends React.Component {
             error={appsLoadError}
             onShowDetail={this.showAppDetail}
           >
-            <BrowseButton onClick={this.openAppCatalog}>
-              <i className='fa fa-add-circle' />
-              Install App
-            </BrowseButton>
+            <BrowseButtonContainer>
+              <BrowseButton
+                onClick={this.openAppCatalog}
+                disabled={clusterIsCreating || clusterIsUpdating}
+              >
+                <i className='fa fa-add-circle' />
+                Install App
+              </BrowseButton>
+              {(clusterIsCreating || clusterIsUpdating) && (
+                <span>
+                  Please wait for cluster{' '}
+                  {clusterIsCreating ? 'creation' : 'upgrade'} to be completed
+                  before installing any app.
+                </span>
+              )}
+            </BrowseButtonContainer>
           </UserInstalledApps>
         )}
 
@@ -447,9 +474,13 @@ ClusterApps.propTypes = {
   clusterId: PropTypes.string,
   release: PropTypes.object,
   hasOptionalIngress: PropTypes.bool,
+  clusterIsUpdating: PropTypes.bool,
+  clusterIsCreating: PropTypes.bool,
 };
 
 function mapStateToProps(state, props) {
+  const cluster = selectClusterById(state, props.clusterId);
+
   return {
     loadingApps: state.loadingFlags.CLUSTER_LOAD_APPS,
     appsLoadError: selectErrorByIdAndAction(
@@ -457,6 +488,8 @@ function mapStateToProps(state, props) {
       props.clusterId,
       loadClusterApps().types.request
     ),
+    clusterIsUpdating: cluster ? isClusterUpdating(cluster) : false,
+    clusterIsCreating: cluster ? isClusterCreating(cluster) : false,
   };
 }
 
