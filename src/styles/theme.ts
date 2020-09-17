@@ -63,6 +63,15 @@ const theme: ITheme = {
 
     redOld: '#f56262',
     greenNew: '#24A524',
+
+    flashMessages: {
+      // TODO move the other colors into here
+      info: {
+        background: '#d9edf7',
+        border: '#bce8f1',
+        text: '#31708f',
+      },
+    },
   },
   border_radius: '4px',
   spacingPx: 4,

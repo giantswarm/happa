@@ -31,13 +31,19 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import Section from 'UI/Section';
 import ViewAndEditName from 'UI/ViewEditName';
+import Well from 'UI/Well';
 import { memoize } from 'underscore';
-import { getNumberOfNodes } from 'utils/clusterUtils';
+import {
+  getNumberOfNodes,
+  isClusterCreating,
+  isClusterUpdating,
+} from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
 import Ingress from './Ingress/Ingress';
@@ -50,6 +56,14 @@ import V5ClusterDetailTable from './V5ClusterDetailTable';
 const Disclaimer = styled.p`
   margin: 0 0 20px;
   line-height: 1.2;
+`;
+
+const NotReadyNotice = styled(Well)`
+  background-color: ${({ theme }) =>
+    theme.colors.flashMessages.info.background};
+  color: ${({ theme }) => theme.colors.flashMessages.info.text};
+  border: 1px solid ${({ theme }) => theme.colors.flashMessages.info.border};
+  margin: ${({ theme }) => theme.spacingPx * 6}px 0;
 `;
 
 class ClusterDetailView extends React.Component {
@@ -281,6 +295,8 @@ class ClusterDetailView extends React.Component {
     const release = releases[release_version] ?? null;
     const tabsPaths = this.getPathsForTabs(id, owner);
 
+    const clusterIsCreating = isClusterCreating(cluster);
+
     return (
       <>
         <LoadingOverlay loading={loading} />
@@ -296,6 +312,16 @@ class ClusterDetailView extends React.Component {
                   onSave={this.editClusterName}
                 />{' '}
               </h1>
+              {(isClusterUpdating(cluster) || clusterIsCreating) && (
+                <SlideTransition in={true} appear={true} direction='down'>
+                  <NotReadyNotice>
+                    <i className='fa fa-info' /> This cluster is currently being{' '}
+                    {clusterIsCreating ? 'created' : 'updated'}. During this
+                    time, some operations are disabled or may not work as
+                    expected.
+                  </NotReadyNotice>
+                </SlideTransition>
+              )}
               <Tabs useRoutes={true}>
                 <Tab eventKey={tabsPaths.Home} title='General'>
                   {isV5Cluster ? (

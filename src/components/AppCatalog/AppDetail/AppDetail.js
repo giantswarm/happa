@@ -20,6 +20,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
+import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import InstallAppModal from './InstallAppModal';
 
@@ -181,11 +182,22 @@ function mapStateToProps(state, ownProps) {
     (appVersion) => appVersion.version === version
   );
 
+  let selectedClusterID = state.main.selectedClusterID;
+  const selectedCluster = state.entities.clusters.items[selectedClusterID];
+
+  if (
+    !selectedCluster ||
+    isClusterCreating(selectedCluster) ||
+    isClusterUpdating(selectedCluster)
+  ) {
+    selectedClusterID = undefined;
+  }
+
   return {
     appVersions: appVersions,
     selectedAppVersion: selectedAppVersion || appVersions[0],
     catalog: state.entities.catalogs.items[catalogName],
-    selectedClusterID: state.main.selectedClusterID,
+    selectedClusterID,
     loadingCatalogs: selectLoadingFlagByAction(
       state,
       listCatalogs().types.request
