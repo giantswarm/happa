@@ -13,9 +13,14 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class ScaleNodePoolModal extends React.Component {
   static supportsAutoscaling(provider) {
-    if (provider !== Providers.AWS) return false;
+    switch (provider) {
+      case Providers.AWS:
+      case Providers.AZURE:
+        return true;
 
-    return true;
+      default:
+        return false;
+    }
   }
 
   // eslint-disable-next-line no-magic-numbers

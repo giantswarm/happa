@@ -15,54 +15,32 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
 }) => {
   return (
     <>
-      {provider === Providers.AWS && (
-        <>
-          <OverlayTrigger
-            overlay={
-              <Tooltip id='min-tooltip'>
-                {Constants.MIN_NODES_EXPLANATION}
-              </Tooltip>
-            }
-            placement='top'
-          >
-            <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
-          </OverlayTrigger>
-          <OverlayTrigger
-            overlay={
-              <Tooltip id='max-tooltip'>
-                {Constants.MAX_NODES_EXPLANATION}
-              </Tooltip>
-            }
-            placement='top'
-          >
-            <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
-          </OverlayTrigger>
-          <OverlayTrigger
-            overlay={
-              <Tooltip id='desired-tooltip'>
-                {Constants.DESIRED_NODES_EXPLANATION}
-              </Tooltip>
-            }
-            placement='top'
-          >
-            <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
-          </OverlayTrigger>
-        </>
-      )}
-
-      {provider === Providers.AZURE && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id='min-tooltip'>
-              {Constants.NODES_COUNT_EXPLANATION}
-            </Tooltip>
-          }
-          placement='top'
-        >
-          <NodePoolsColumnHeader>Count</NodePoolsColumnHeader>
-        </OverlayTrigger>
-      )}
-
+      <OverlayTrigger
+        overlay={
+          <Tooltip id='min-tooltip'>{Constants.MIN_NODES_EXPLANATION}</Tooltip>
+        }
+        placement='top'
+      >
+        <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
+      </OverlayTrigger>
+      <OverlayTrigger
+        overlay={
+          <Tooltip id='max-tooltip'>{Constants.MAX_NODES_EXPLANATION}</Tooltip>
+        }
+        placement='top'
+      >
+        <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
+      </OverlayTrigger>
+      <OverlayTrigger
+        overlay={
+          <Tooltip id='desired-tooltip'>
+            {Constants.DESIRED_NODES_EXPLANATION}
+          </Tooltip>
+        }
+        placement='top'
+      >
+        <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
+      </OverlayTrigger>
       <OverlayTrigger
         overlay={
           <Tooltip id='current-tooltip'>

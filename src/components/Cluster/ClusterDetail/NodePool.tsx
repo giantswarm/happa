@@ -3,6 +3,7 @@ import * as nodePoolActions from 'actions/nodePoolActions';
 import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -60,10 +61,6 @@ const InstanceTypesWrapperDiv = styled.div`
 
 const MixedInstanceType = styled(Code)`
   background-color: ${({ theme }) => theme.colors.shade9};
-`;
-
-const StyledNodePoolDropdownMenu = styled(NodePoolDropdownMenu)`
-  grid-column: 10/10;
 `;
 
 interface INPViewAndEditName extends HTMLSpanElement {
@@ -148,6 +145,19 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name })
       );
     } catch (err) {
+      let errorMessage = `Something went wrong while trying to update the node pool's name.`;
+      if (err.response?.message || err.message) {
+        errorMessage = `There was a problem updating the node pool's name: ${
+          err.response?.message ?? err.message
+        }`;
+      }
+      new FlashMessage(
+        errorMessage,
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
       ErrorReporter.getInstance().notify(err);
     }
   };
@@ -244,7 +254,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
             <NodePoolScaling nodePool={nodePool} provider={provider} />
-            <StyledNodePoolDropdownMenu
+            <NodePoolDropdownMenu
               provider={provider}
               clusterId={cluster.id}
               nodePool={nodePool}
