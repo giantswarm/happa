@@ -90,12 +90,12 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: ${({ compact }) => (compact ? '5 / span 2' : '5 / span 5')};
+    grid-column: ${({ compact }) => (compact ? '5 / span 4' : '5 / span 5')};
     font-size: 12px;
     position: relative;
     width: 100%;
     text-align: center;
-    transform: ${({ compact }) => !compact && 'translateX(0.8vw)'};
+    transform: translateX(0.8vw);
     span {
       display: inline-block;
       padding: 0 10px;

@@ -54,14 +54,9 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
 
   return (
     <>
-      {provider === Providers.AWS && (
-        <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
-      )}
-
+      <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
       <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
-
-      {provider === Providers.AWS && <NodesWrapper>{desired}</NodesWrapper>}
-
+      <NodesWrapper>{desired}</NodesWrapper>
       <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
 
       {provider === Providers.AWS ? (
