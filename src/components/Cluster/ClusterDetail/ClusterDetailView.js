@@ -316,7 +316,7 @@ class ClusterDetailView extends React.Component {
                 <SlideTransition in={true} appear={true} direction='down'>
                   <NotReadyNotice>
                     <i className='fa fa-info' /> This cluster is currently being{' '}
-                    {clusterIsCreating ? 'creating' : 'updating'}. During this
+                    {clusterIsCreating ? 'created' : 'updated'}. During this
                     time, some operations are disabled or may not work as
                     expected.
                   </NotReadyNotice>
