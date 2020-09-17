@@ -4,6 +4,16 @@ import { CSSBreakpoints } from 'shared/constants';
 
 import theme from './theme';
 
+export interface IFlashMessage {
+  background: string;
+  border: string;
+  text: string;
+}
+
+export interface IFlashMessages {
+  info: IFlashMessage;
+}
+
 export interface IColorMap {
   darkBlue: string;
   darkBlueDarker1: string;
@@ -51,6 +61,7 @@ export interface IColorMap {
   foreground: string;
   redOld: string;
   greenNew: string;
+  flashMessages: IFlashMessages;
 }
 
 export interface IThemeFonts {

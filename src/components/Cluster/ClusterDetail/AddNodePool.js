@@ -289,6 +289,7 @@ class AddNodePool extends Component {
   static isScalingAutomatic(provider) {
     switch (provider) {
       case Providers.AWS:
+      case Providers.AZURE:
         return true;
 
       default:

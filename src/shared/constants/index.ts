@@ -33,7 +33,6 @@ export const Constants = {
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
     'Current number of worker nodes in the node pool',
-  NODES_COUNT_EXPLANATION: 'Desired number of worker nodes in the node pool',
   DESIRED_NODES_EXPLANATION:
     'Autoscaler’s idea of how many nodes would be required for the workloads',
   MIN_NODES_EXPLANATION:
@@ -62,7 +61,7 @@ export const Constants = {
   NP_DEFAULT_MIN_SCALING_AWS: 3,
   NP_DEFAULT_MAX_SCALING_AWS: 10,
   NP_DEFAULT_MIN_SCALING_AZURE: 3,
-  NP_DEFAULT_MAX_SCALING_AZURE: 3,
+  NP_DEFAULT_MAX_SCALING_AZURE: 10,
 
   // App name of the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',

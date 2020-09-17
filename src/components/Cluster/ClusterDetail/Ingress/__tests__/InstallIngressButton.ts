@@ -43,7 +43,10 @@ describe('InstallIngressButton', () => {
     renderWithStore(
       InstallIngressButton,
       {
-        cluster: { ...v4AWSClusterResponse },
+        cluster: {
+          ...v4AWSClusterResponse,
+          conditions: [{ condition: 'Ready' }],
+        },
       },
       catalogsState
     );
@@ -92,7 +95,10 @@ describe('InstallIngressButton', () => {
     renderWithStore(
       InstallIngressButton,
       {
-        cluster: { ...v4AWSClusterResponse },
+        cluster: {
+          ...v4AWSClusterResponse,
+          conditions: [{ condition: 'Ready' }],
+        },
       },
       catalogsState
     );
@@ -142,7 +148,10 @@ describe('InstallIngressButton', () => {
     const { rerender } = renderWithStore(
       InstallIngressButton,
       {
-        cluster: { ...v4AWSClusterResponse },
+        cluster: {
+          ...v4AWSClusterResponse,
+          conditions: [{ condition: 'Ready' }],
+        },
       },
       catalogsState
     );
