@@ -182,14 +182,16 @@ function mapStateToProps(state, ownProps) {
     (appVersion) => appVersion.version === version
   );
 
-  const selectedCluster =
-    state.entities.clusters.items[state.main.selectedClusterID];
-  const selectedClusterID =
-    selectedCluster &&
-    !isClusterCreating(selectedCluster) &&
-    !isClusterUpdating(selectedCluster)
-      ? state.main.selectedClusterID
-      : undefined;
+  let selectedClusterID = state.main.selectedClusterID;
+  const selectedCluster = state.entities.clusters.items[selectedClusterID];
+
+  if (
+    !selectedCluster ||
+    isClusterCreating(selectedCluster) ||
+    isClusterUpdating(selectedCluster)
+  ) {
+    selectedClusterID = undefined;
+  }
 
   return {
     appVersions: appVersions,
