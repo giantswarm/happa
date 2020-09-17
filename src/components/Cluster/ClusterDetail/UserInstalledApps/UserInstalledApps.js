@@ -74,7 +74,7 @@ const UserInstalledApps = ({
           <p className='well' data-testid='no-apps-found' id='no-apps-found'>
             <b>No apps installed on this cluster</b>
             <br />
-            Browse the app catalog below and pick an app to install.
+            Browse the App Catalogs to find any apps to install.
           </p>
         )}
 
