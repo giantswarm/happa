@@ -31,7 +31,6 @@ const entities = combineReducers({
   organizations,
   releases,
   users,
-  metadata,
 });
 
 const rootReducer = (history) =>
@@ -39,6 +38,7 @@ const rootReducer = (history) =>
     cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
     router: connectRouter(history),
     main: makeMainReducer(),
+    metadata,
     entities,
     modal,
     loadingFlags,

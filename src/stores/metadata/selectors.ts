@@ -1,17 +1,17 @@
 import { IState } from 'reducers/types';
 
 export function getMetadataCurrentVersion(state: IState): string {
-  return state.entities.metadata.version.current;
+  return state.metadata.version.current;
 }
 
 export function getMetadataNewVersion(state: IState): string | null {
-  return state.entities.metadata.version.new;
+  return state.metadata.version.new;
 }
 
 export function getMetadataIsUpdating(state: IState): boolean {
-  return state.entities.metadata.version.isUpdating;
+  return state.metadata.version.isUpdating;
 }
 
 export function getMetadataUpdateTimer(state: IState): number {
-  return state.entities.metadata.version.timer;
+  return state.metadata.version.timer;
 }

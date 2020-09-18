@@ -7,11 +7,11 @@ export interface IState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 
+  metadata: IMetadataState;
   entities: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
     cpAuth: ICPAuthState;
     catalogs: IAppCatalogsState;
-    metadata: IMetadataState;
   };
 }
