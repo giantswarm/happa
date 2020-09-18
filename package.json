@@ -235,6 +235,7 @@
     "serialize-javascript": "^4.0.0",
     "http-proxy": "^1.18.1",
     "node-fetch": "^2.6.1"
+    "ua-parser-js": "^0.7.22"
   },
   "husky": {
     "hooks": {

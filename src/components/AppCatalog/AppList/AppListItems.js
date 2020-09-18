@@ -43,40 +43,40 @@ class AppListItems extends React.Component {
       this.props.scrollToApp
     );
 
-    if (apps.length < 1) {
-      return <AppListPlaceholder searchQuery={searchQuery} />;
-    }
-
     return (
       <StyledAppsWrapper ref={this.appsListRef}>
-        <StyledVirtualizedGrid
-          columnCount={{
-            small: 1,
-            med: 3,
-            large: 4,
-          }}
-          rowHeight={APP_CONTAINER_HEIGHT}
-          data={apps}
-          adaptWidthToElement={this.appsListRef.current}
-          scrollToItemIndex={scrollToAppIndex}
-        >
-          {(style, content) => {
-            const newContent = [].concat(content);
+        {apps.length < 1 ? (
+          <AppListPlaceholder searchQuery={searchQuery} />
+        ) : (
+          <StyledVirtualizedGrid
+            columnCount={{
+              small: 1,
+              med: 3,
+              large: 4,
+            }}
+            rowHeight={APP_CONTAINER_HEIGHT}
+            data={apps}
+            adaptWidthToElement={this.appsListRef.current}
+            scrollToItemIndex={scrollToAppIndex}
+          >
+            {(style, content) => {
+              const newContent = [].concat(content);
 
-            return (
-              <AppContainer
-                style={style}
-                appVersions={newContent}
-                catalog={this.props.catalog}
-                hasIconError={this.props.iconErrors.hasOwnProperty(
-                  newContent[0].icon
-                )}
-                onImgError={this.props.onImgError}
-                searchQuery={searchQuery}
-              />
-            );
-          }}
-        </StyledVirtualizedGrid>
+              return (
+                <AppContainer
+                  style={style}
+                  appVersions={newContent}
+                  catalog={this.props.catalog}
+                  hasIconError={this.props.iconErrors.hasOwnProperty(
+                    newContent[0].icon
+                  )}
+                  onImgError={this.props.onImgError}
+                  searchQuery={searchQuery}
+                />
+              );
+            }}
+          </StyledVirtualizedGrid>
+        )}
       </StyledAppsWrapper>
     );
   }
