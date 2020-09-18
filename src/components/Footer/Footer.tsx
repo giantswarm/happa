@@ -11,10 +11,11 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import * as metadataActions from 'stores/metadata/actions';
+import { METADATA_UPDATE_EXECUTE_REQUEST } from 'stores/metadata/constants';
 import {
   getMetadataCurrentVersion,
-  getMetadataIsUpdating,
   getMetadataNewVersion,
 } from 'stores/metadata/selectors';
 
@@ -31,7 +32,9 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
 
   const currentVersion: string = useSelector(getMetadataCurrentVersion);
   const newVersion: string | null = useSelector(getMetadataNewVersion);
-  const isUpdating: boolean = useSelector(getMetadataIsUpdating);
+  const isUpdating: boolean | null = useSelector((state) =>
+    selectLoadingFlagByAction(state, METADATA_UPDATE_EXECUTE_REQUEST)
+  );
 
   const isToastVisible: React.MutableRefObject<boolean> = useRef<boolean>(
     false
@@ -40,7 +43,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   const tooltipMessage: string = getVersionTooltipMessage(
     currentVersion,
     newVersion,
-    isUpdating
+    Boolean(isUpdating)
   );
   const releaseURL: string = getReleaseURL(currentVersion);
   const isUpdateReady: boolean = hasUpdateReady(currentVersion, newVersion);
@@ -85,7 +88,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
       <FooterGroup>
         <FooterUpdateButton
           hasUpdateReady={isUpdateReady}
-          isUpdating={isUpdating}
+          isUpdating={Boolean(isUpdating)}
           releaseURL={releaseURL}
           onClick={handleUpdate}
         />

@@ -1,16 +1,17 @@
 import { SelfClient } from 'model/clients/SelfClient';
 import { getConfiguration } from 'model/services/metadata/configuration';
-import { IMetadataConfiguration } from 'model/services/metadata/types';
 import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { Constants } from 'shared/constants';
+import { createAsynchronousAction } from 'stores/asynchronousAction';
 import {
   METADATA_UPDATE_CHECK,
   METADATA_UPDATE_EXECUTE,
   METADATA_UPDATE_SCHEDULE,
   METADATA_UPDATE_SET_TIMER,
   METADATA_UPDATE_SET_VERSION,
+  METADATA_UPDATE_START_CHECK,
 } from 'stores/metadata/constants';
 import {
   getMetadataCurrentVersion,
@@ -19,57 +20,41 @@ import {
 } from 'stores/metadata/selectors';
 import { MetadataAction } from 'stores/metadata/types';
 
-export const setInitialVersion = (): ThunkAction<
-  Promise<void>,
+export const setInitialVersion = createAsynchronousAction<
+  undefined,
   IState,
-  void,
-  MetadataAction
-> => {
-  return async (dispatch: Dispatch<MetadataAction>): Promise<void> => {
-    let version: string = 'VERSION';
+  string
+>({
+  actionTypePrefix: METADATA_UPDATE_SET_VERSION,
+  perform: async (_, _d): Promise<string> => {
+    const httpClient = new SelfClient();
+    const configurationRes = await getConfiguration(httpClient);
 
-    try {
-      const httpClient = new SelfClient();
-      const configurationRes = await getConfiguration(httpClient);
-      // Casting as correct type until the model layer is rewritten in TypeScript
-      version = ((configurationRes.data as unknown) as IMetadataConfiguration)
-        .version;
-    } catch {
-      // Do nothing
-    } finally {
-      dispatch({
-        type: METADATA_UPDATE_SET_VERSION,
-        version,
-      });
-    }
-  };
-};
+    return configurationRes.data.version;
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
 
 /**
- * Check if there's a new version of the app available
- * @param callback - Callback to execute after the check has been made
+ * Check if there's a new version of the app available.
+ * @param callback - Callback to execute after the check has been made.
  */
-export const checkForUpdates = (
-  callback?: () => void
-): ThunkAction<Promise<void>, IState, void, MetadataAction> => {
-  return async (
-    dispatch: Dispatch<MetadataAction>,
-    getState: () => IState
-  ): Promise<void> => {
+const checkForUpdates = createAsynchronousAction<() => void, IState, void>({
+  actionTypePrefix: METADATA_UPDATE_START_CHECK,
+  perform: async (state, dispatch, callback): Promise<void> => {
     dispatch({
       type: METADATA_UPDATE_CHECK,
       timestamp: Date.now(),
     });
 
     try {
-      const currentVersion: string = getMetadataCurrentVersion(getState());
-      const scheduledVersion: string | null = getMetadataNewVersion(getState());
+      const currentVersion: string = getMetadataCurrentVersion(state);
+      const scheduledVersion: string | null = getMetadataNewVersion(state);
+
       const httpClient = new SelfClient();
       const configurationRes = await getConfiguration(httpClient);
-
-      // Casting as correct type until the model layer is rewritten in TypeScript
-      const newVersion = ((configurationRes.data as unknown) as IMetadataConfiguration)
-        .version;
+      const newVersion = configurationRes.data.version;
 
       if (newVersion !== scheduledVersion && newVersion !== currentVersion) {
         dispatch({
@@ -82,12 +67,14 @@ export const checkForUpdates = (
     } finally {
       callback?.();
     }
-  };
-};
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
 
 /**
- * Register a checker that will permanently check if the app has been updated
- * @param timeout - Time to wait in between checks
+ * Register a checker that will permanently check if the app has been updated.
+ * @param timeout - Time to wait in between checks.
  */
 export const registerUpdateChecker = (
   timeout: number = Constants.DEFAULT_METADATA_CHECK_PERIOD
@@ -108,19 +95,18 @@ export const registerUpdateChecker = (
 };
 
 /**
- * Schedule an app update
+ * Schedule an app update.
  * Give a few seconds of breathing room, to be able to display
- * that there is an update in progress in the UI
- * @param timeout - The timeout between the update gets executed
+ * that there is an update in progress in the UI.
+ * @param timeout - The timeout between the update gets executed.
  */
-export const executeUpdate = (
-  timeout: number = Constants.DEFAULT_METADATA_UPDATE_TIMEOUT
-): ThunkAction<Promise<void>, IState, void, MetadataAction> => {
-  return async (dispatch: Dispatch<MetadataAction>): Promise<void> => {
-    dispatch({
-      type: METADATA_UPDATE_EXECUTE,
-    });
-
+export const executeUpdate = createAsynchronousAction<number, IState, number>({
+  actionTypePrefix: METADATA_UPDATE_EXECUTE,
+  perform: (
+    _,
+    _d,
+    timeout: number = Constants.DEFAULT_METADATA_UPDATE_TIMEOUT
+  ): Promise<number> => {
     return new Promise((resolve: () => void) => {
       window.setTimeout(() => {
         resolve();
@@ -128,5 +114,7 @@ export const executeUpdate = (
         window.location.reload();
       }, timeout);
     });
-  };
-};
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});

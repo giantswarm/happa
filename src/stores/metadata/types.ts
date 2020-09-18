@@ -3,13 +3,12 @@ import {
   METADATA_UPDATE_EXECUTE,
   METADATA_UPDATE_SCHEDULE,
   METADATA_UPDATE_SET_TIMER,
-  METADATA_UPDATE_SET_VERSION,
+  METADATA_UPDATE_SET_VERSION_SUCCESS,
 } from 'stores/metadata/constants';
 
 export interface IMetadataVersion {
   current: string;
   new: string | null;
-  isUpdating: boolean;
   lastCheck: number;
   timer: number;
 }
@@ -23,9 +22,9 @@ export interface IMetadataSetTimerAction {
   timer: number;
 }
 
-export interface IMetadataSetVersionAction {
-  type: typeof METADATA_UPDATE_SET_VERSION;
-  version: string;
+export interface IMetadataSetVersionSuccessAction {
+  type: typeof METADATA_UPDATE_SET_VERSION_SUCCESS;
+  response: string;
 }
 
 export interface IMetadataCheckForUpdatesAction {
@@ -44,7 +43,7 @@ export interface IMetadataExecuteUpdateAction {
 
 export type MetadataAction =
   | IMetadataSetTimerAction
-  | IMetadataSetVersionAction
+  | IMetadataSetVersionSuccessAction
   | IMetadataCheckForUpdatesAction
   | IMetadataScheduleUpdateAction
   | IMetadataExecuteUpdateAction;

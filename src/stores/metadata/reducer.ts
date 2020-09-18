@@ -1,10 +1,10 @@
 import produce from 'immer';
+import * as actions from 'stores/metadata/actions';
 import {
   METADATA_UPDATE_CHECK,
-  METADATA_UPDATE_EXECUTE,
   METADATA_UPDATE_SCHEDULE,
   METADATA_UPDATE_SET_TIMER,
-  METADATA_UPDATE_SET_VERSION,
+  METADATA_UPDATE_SET_VERSION_SUCCESS,
 } from 'stores/metadata/constants';
 import { IMetadataState, MetadataAction } from 'stores/metadata/types';
 
@@ -12,7 +12,6 @@ const initialState: IMetadataState = {
   version: {
     current: 'VERSION',
     new: null,
-    isUpdating: false,
     lastCheck: 0,
     timer: 0,
   },
@@ -26,8 +25,9 @@ const metadataReducer = produce(
 
         break;
 
-      case METADATA_UPDATE_SET_VERSION:
-        draft.version.current = action.version;
+      case actions.setInitialVersion().types
+        .success as typeof METADATA_UPDATE_SET_VERSION_SUCCESS:
+        draft.version.current = action.response;
 
         break;
 
@@ -38,11 +38,6 @@ const metadataReducer = produce(
 
       case METADATA_UPDATE_SCHEDULE:
         draft.version.new = action.version;
-
-        break;
-
-      case METADATA_UPDATE_EXECUTE:
-        draft.version.isUpdating = true;
 
         break;
     }

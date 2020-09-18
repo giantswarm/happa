@@ -31,7 +31,6 @@ export default {
     version: {
       current: 'VERSION',
       new: null,
-      isUpdating: false,
       lastCheck: 0,
       timer: 0,
     },
