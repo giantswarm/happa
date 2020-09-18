@@ -5,47 +5,27 @@ import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { Constants } from 'shared/constants';
-
-import * as actionTypes from './actionTypes';
-
-interface IMetadataSetTimerAction {
-  type: typeof actionTypes.METADATA_UPDATE_SET_TIMER;
-  timer: number;
-}
-
-interface IMetadataSetVersionAction {
-  type: typeof actionTypes.METADATA_UPDATE_SET_VERSION;
-  version: string;
-}
-
-interface IMetadataCheckForUpdatesAction {
-  type: typeof actionTypes.METADATA_UPDATE_CHECK;
-  timestamp: number;
-}
-
-interface IMetadataScheduleUpdateAction {
-  type: typeof actionTypes.METADATA_UPDATE_SCHEDULE;
-  version: string;
-}
-
-interface IMetadataExecuteUpdateAction {
-  type: typeof actionTypes.METADATA_UPDATE_EXECUTE;
-}
-
-type MetadataActions =
-  | IMetadataSetTimerAction
-  | IMetadataSetVersionAction
-  | IMetadataCheckForUpdatesAction
-  | IMetadataScheduleUpdateAction
-  | IMetadataExecuteUpdateAction;
+import {
+  METADATA_UPDATE_CHECK,
+  METADATA_UPDATE_EXECUTE,
+  METADATA_UPDATE_SCHEDULE,
+  METADATA_UPDATE_SET_TIMER,
+  METADATA_UPDATE_SET_VERSION,
+} from 'stores/metadata/constants';
+import {
+  getMetadataCurrentVersion,
+  getMetadataNewVersion,
+  getMetadataUpdateTimer,
+} from 'stores/metadata/selectors';
+import { MetadataAction } from 'stores/metadata/types';
 
 export const setInitialVersion = (): ThunkAction<
   Promise<void>,
   IState,
   void,
-  MetadataActions
+  MetadataAction
 > => {
-  return async (dispatch: Dispatch<MetadataActions>): Promise<void> => {
+  return async (dispatch: Dispatch<MetadataAction>): Promise<void> => {
     let version: string = 'VERSION';
 
     try {
@@ -58,7 +38,7 @@ export const setInitialVersion = (): ThunkAction<
       // Do nothing
     } finally {
       dispatch({
-        type: actionTypes.METADATA_UPDATE_SET_VERSION,
+        type: METADATA_UPDATE_SET_VERSION,
         version,
       });
     }
@@ -71,20 +51,19 @@ export const setInitialVersion = (): ThunkAction<
  */
 export const checkForUpdates = (
   callback?: () => void
-): ThunkAction<Promise<void>, IState, void, MetadataActions> => {
+): ThunkAction<Promise<void>, IState, void, MetadataAction> => {
   return async (
-    dispatch: Dispatch<MetadataActions>,
+    dispatch: Dispatch<MetadataAction>,
     getState: () => IState
   ): Promise<void> => {
     dispatch({
-      type: actionTypes.METADATA_UPDATE_CHECK,
+      type: METADATA_UPDATE_CHECK,
       timestamp: Date.now(),
     });
 
     try {
-      const currentVersion: string = getState().main.metadata.version.current;
-      const scheduledVersion: string | null = getState().main.metadata.version
-        .new;
+      const currentVersion: string = getMetadataCurrentVersion(getState());
+      const scheduledVersion: string | null = getMetadataNewVersion(getState());
       const httpClient = new SelfClient();
       const configurationRes = await getConfiguration(httpClient);
 
@@ -94,7 +73,7 @@ export const checkForUpdates = (
 
       if (newVersion !== scheduledVersion && newVersion !== currentVersion) {
         dispatch({
-          type: actionTypes.METADATA_UPDATE_SCHEDULE,
+          type: METADATA_UPDATE_SCHEDULE,
           version: newVersion,
         });
       }
@@ -112,17 +91,14 @@ export const checkForUpdates = (
  */
 export const registerUpdateChecker = (
   timeout: number = Constants.DEFAULT_METADATA_CHECK_PERIOD
-): ThunkAction<void, IState, void, MetadataActions> => {
-  return (
-    dispatch: Dispatch<MetadataActions>,
-    getState: () => IState
-  ): void => {
-    const existingTimeout: number = getState().main.metadata.version.timer;
+): ThunkAction<void, IState, void, MetadataAction> => {
+  return (dispatch: Dispatch<MetadataAction>, getState: () => IState): void => {
+    const existingTimeout: number = getMetadataUpdateTimer(getState());
     window.clearTimeout(existingTimeout);
 
     const callback = () => {
       dispatch({
-        type: actionTypes.METADATA_UPDATE_SET_TIMER,
+        type: METADATA_UPDATE_SET_TIMER,
         timer: window.setTimeout(dispatch, timeout, checkForUpdates(callback)),
       });
     };
@@ -139,10 +115,10 @@ export const registerUpdateChecker = (
  */
 export const executeUpdate = (
   timeout: number = Constants.DEFAULT_METADATA_UPDATE_TIMEOUT
-): ThunkAction<Promise<void>, IState, void, MetadataActions> => {
-  return async (dispatch: Dispatch<MetadataActions>): Promise<void> => {
+): ThunkAction<Promise<void>, IState, void, MetadataAction> => {
+  return async (dispatch: Dispatch<MetadataAction>): Promise<void> => {
     dispatch({
-      type: actionTypes.METADATA_UPDATE_EXECUTE,
+      type: METADATA_UPDATE_EXECUTE,
     });
 
     return new Promise((resolve: () => void) => {

@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import * as metadataActions from 'actions/metadataActions';
-import { executeUpdate } from 'actions/metadataActions';
 import FooterUpdateButton from 'Footer/FooterUpdateButton';
 import {
   getReleaseURL,
@@ -13,11 +11,12 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
+import * as metadataActions from 'stores/metadata/actions';
 import {
   getMetadataCurrentVersion,
   getMetadataIsUpdating,
   getMetadataNewVersion,
-} from 'selectors/metadataSelectors';
+} from 'stores/metadata/selectors';
 
 const FooterGroup = styled.span`
   & + & {
@@ -47,7 +46,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   const isUpdateReady: boolean = hasUpdateReady(currentVersion, newVersion);
 
   const handleUpdate = useCallback(() => {
-    dispatch(executeUpdate());
+    dispatch(metadataActions.executeUpdate());
   }, [dispatch]);
 
   useEffect(() => {

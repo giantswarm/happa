@@ -12,15 +12,6 @@ const initialState = () => ({
   selectedClusterID: undefined,
   firstLoadComplete: false,
   loggedInUser: fetchUserFromStorage(),
-  metadata: {
-    version: {
-      current: 'VERSION',
-      new: null,
-      isUpdating: false,
-      lastCheck: 0,
-      timer: 0,
-    },
-  },
   info: {
     general: {
       availability_zones: {
@@ -84,31 +75,6 @@ const makeAppReducer = () => {
 
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
-
-        break;
-
-      case types.METADATA_UPDATE_SET_TIMER:
-        draft.metadata.version.timer = action.timer;
-
-        break;
-
-      case types.METADATA_UPDATE_SET_VERSION:
-        draft.metadata.version.current = action.version;
-
-        break;
-
-      case types.METADATA_UPDATE_CHECK:
-        draft.metadata.version.lastCheck = action.timestamp;
-
-        break;
-
-      case types.METADATA_UPDATE_SCHEDULE:
-        draft.metadata.version.new = action.version;
-
-        break;
-
-      case types.METADATA_UPDATE_EXECUTE:
-        draft.metadata.version.isUpdating = true;
 
         break;
     }

@@ -1,5 +1,6 @@
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { ICPAuthState } from 'stores/cpauth/types';
+import { IMetadataState } from 'stores/metadata/types';
 
 // Giving state a generic type for now, until whole state is typed.
 export interface IState {
@@ -11,5 +12,6 @@ export interface IState {
     [key: string]: any;
     cpAuth: ICPAuthState;
     catalogs: IAppCatalogsState;
+    metadata: IMetadataState;
   };
 }

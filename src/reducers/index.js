@@ -2,11 +2,12 @@ import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
+import clusters from 'stores/cluster/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
+import metadata from 'stores/metadata/reducer';
 import releases from 'stores/releases/reducer';
 
-import clusters from '../stores/cluster/reducer';
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
 import loadingFlagsByEntity from './entityLoadingReducer';
@@ -30,6 +31,7 @@ const entities = combineReducers({
   organizations,
   releases,
   users,
+  metadata,
 });
 
 const rootReducer = (history) =>

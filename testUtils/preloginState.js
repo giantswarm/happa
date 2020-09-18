@@ -78,6 +78,15 @@ export default {
     nodePools: {
       items: {},
     },
+    metadata: {
+      version: {
+        current: 'VERSION',
+        new: null,
+        isUpdating: false,
+        lastCheck: 0,
+        timer: 0,
+      },
+    },
   },
   modal: {
     visible: false,
