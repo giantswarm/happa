@@ -112,12 +112,8 @@ export const selectResourcesV4 = () =>
     }
 
     const numberOfNodes = getNumberOfNodes(cluster);
-    const memory = getMemoryTotal(
-      numberOfNodes,
-      cluster.workers[0].memory.size_gb // workers are not stored yet
-    );
-    const cores = getCpusTotal(numberOfNodes, cluster.workers);
-    // Filter for just KVM in components
+    const memory = getMemoryTotal(cluster);
+    const cores = getCpusTotal(cluster);
     const storage = getStorageTotal(cluster);
 
     return { numberOfNodes, memory, cores, storage };
