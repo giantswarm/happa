@@ -10,6 +10,7 @@ import {
   nodePoolRelease,
   nodePoolWithFlatcarRelease,
 } from 'testUtils/mockHttpCalls';
+import preloginState from 'testUtils/preloginState';
 import { renderWithStore } from 'testUtils/renderUtils';
 
 describe('ClusterStatus', () => {
@@ -218,6 +219,7 @@ function makeState(
   releases: IReleases
 ): IState {
   return {
+    ...preloginState,
     main: {
       loggedInUser: {
         isAdmin: false,

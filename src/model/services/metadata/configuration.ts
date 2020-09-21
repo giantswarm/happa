@@ -1,14 +1,14 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 
 import { GenericResponse } from '../../clients/GenericResponse';
-import { MetadataPaths } from './types';
+import { IMetadataConfiguration, MetadataPaths } from './types';
 
 /**
  * Get the application metadata configuration.
  */
 export function getConfiguration(
   httpClient: IHttpClient
-): Promise<GenericResponse> {
+): Promise<GenericResponse<IMetadataConfiguration>> {
   httpClient.setRequestMethod(HttpRequestMethods.GET);
   httpClient.setURL(MetadataPaths.Configuration);
 
