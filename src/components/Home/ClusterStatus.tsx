@@ -82,7 +82,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
 
     case isClusterCreating(cluster):
       color = theme.colors.gray;
-      iconClassName = 'fa fa-crane';
+      iconClassName = 'fa fa-change-in-progress';
       message = 'Cluster creating…';
       tooltip =
         'The cluster is currently creating. This step usually takes about 30 minutes.';
