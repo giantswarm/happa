@@ -173,7 +173,7 @@
     "@types/semver-compare": "^1.0.1",
     "@types/serialize-javascript": "^4.0.0",
     "@types/superagent": "^4.1.10",
-    "@types/underscore": "^1.10.22",
+    "@types/underscore": "^1.10.23",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "babel-cli": "6.26.0",
