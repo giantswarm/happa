@@ -5,9 +5,9 @@ import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/Ins
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import { selectErrorByAction } from 'stores/error/selectors';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import Section from 'UI/ClusterCreation/Section';

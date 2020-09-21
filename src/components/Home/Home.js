@@ -11,11 +11,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import {
-  selectClustersList,
-  selectErrorByAction,
-} from 'selectors/clusterSelectors';
+import { selectClustersList } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { selectErrorByAction } from 'stores/error/selectors';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
 import { memoize } from 'underscore';
