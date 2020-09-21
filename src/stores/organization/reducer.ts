@@ -1,19 +1,24 @@
 import produce from 'immer';
+import { IState } from 'reducers/types';
 import {
   ORGANIZATION_CREDENTIALS_SET,
   ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST,
   ORGANIZATION_CREDENTIALS_SET_DISCARD,
-  ORGANIZATION_CREDENTIALS_SET_ERROR, ORGANIZATION_CREDENTIALS_SET_SUCCESS,
+  ORGANIZATION_CREDENTIALS_SET_ERROR,
+  ORGANIZATION_CREDENTIALS_SET_SUCCESS,
   ORGANIZATION_DELETE_ERROR,
   ORGANIZATION_DELETE_SUCCESS,
   ORGANIZATIONS_LOAD_ERROR,
   ORGANIZATIONS_LOAD_REQUEST,
   ORGANIZATIONS_LOAD_SUCCESS,
 } from 'stores/organization/constants';
-import { IState } from 'reducers/types';
 import { IOrganizationState } from 'stores/organization/types';
 
-const initialState: IOrganizationState = { lastUpdated: 0, isFetching: false, items: {} };
+const initialState: IOrganizationState = {
+  lastUpdated: 0,
+  isFetching: false,
+  items: {},
+};
 
 const organizationReducer = produce((draft: IState, action) => {
   switch (action.type) {

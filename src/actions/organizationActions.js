@@ -3,6 +3,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
+import { determineSelectedOrganization } from 'utils/organizationUtils';
 
 import * as types from './actionTypes';
 import { modalHide } from './modalActions';
@@ -40,26 +41,6 @@ export function organizationsLoadSuccess(organizations, selectedOrganization) {
     selectedOrganization,
   };
 }
-
-// determineSelectedOrganization takes a current list of organizations and the
-// users selectedOrganization (which could be stale, i.e. deleted by someone
-// else)
-//
-// Using this information, it ensures we always have a valid organization selected.
-const determineSelectedOrganization = (organizations, selectedOrganization) => {
-  const organizationStillExists = organizations.includes(selectedOrganization);
-
-  if (selectedOrganization && organizationStillExists) {
-    // The user had an organization selected, and it still exists.
-    // So we stay on it.
-    return selectedOrganization;
-  }
-  // The user didn't have an organization selected yet, or the one
-  // they selected is gone. Switch to the first organization in the list.
-  const firstOrganization = organizations[0];
-
-  return firstOrganization;
-};
 
 /**
  * This action does various requests to the Giant Swarm API
