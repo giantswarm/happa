@@ -1,5 +1,9 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
+import {
+  NODEPOOL_DELETE,
+  NODEPOOL_DELETE_CONFIRMED_REQUEST,
+} from 'stores/nodepool/constants';
 
 const initialState = { visible: false };
 
@@ -109,7 +113,7 @@ const modalReducer = produce((draft, action) => {
 
       break;
 
-    case types.NODEPOOL_DELETE:
+    case NODEPOOL_DELETE:
       draft.visible = true;
       draft.templateValues = {
         clusterId: action.clusterId,
@@ -120,7 +124,7 @@ const modalReducer = produce((draft, action) => {
 
       break;
 
-    case types.NODEPOOL_DELETE_CONFIRMED_REQUEST:
+    case NODEPOOL_DELETE_CONFIRMED_REQUEST:
       draft.visible = true;
       draft.templateValues = {
         clusterId: action.clusterId,

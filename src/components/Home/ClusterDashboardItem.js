@@ -1,6 +1,5 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
@@ -17,6 +16,7 @@ import {
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ErrorBoundary from 'shared/ErrorBoundary';
+import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
 import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
@@ -307,7 +307,7 @@ function mapStateToProps(state, props) {
     nodePoolsLoadError: selectErrorByIdAndAction(
       state,
       props.clusterId,
-      actionTypes.CLUSTER_NODEPOOLS_LOAD_REQUEST
+      CLUSTER_NODEPOOLS_LOAD_REQUEST
     ),
   };
 }

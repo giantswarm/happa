@@ -3,6 +3,7 @@ import produce from 'immer';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import {
+  CLUSTER_NODEPOOLS_LOAD_SUCCESS,
   NODEPOOL_CREATE_SUCCESS,
   NODEPOOL_DELETE_SUCCESS,
 } from 'stores/nodepool/constants';
@@ -47,7 +48,7 @@ const clusterReducer = produce((draft, action) => {
       return;
     }
 
-    case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+    case CLUSTER_NODEPOOLS_LOAD_SUCCESS:
       draft.items[action.id].nodePools = action.nodePoolsIds;
 
       return;

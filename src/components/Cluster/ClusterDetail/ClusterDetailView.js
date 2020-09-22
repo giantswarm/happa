@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  CLUSTER_LOAD_DETAILS_REQUEST,
-  NODEPOOLS_LOAD_REQUEST,
-} from 'actions/actionTypes';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'actions/actionTypes';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -31,6 +28,7 @@ import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import * as nodePoolActions from 'stores/nodepool/actions';
+import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -479,7 +477,10 @@ function mapStateToProps(state, props) {
       state,
       CLUSTER_LOAD_DETAILS_REQUEST
     ),
-    loadingNodePools: selectLoadingFlagByAction(state, NODEPOOLS_LOAD_REQUEST),
+    loadingNodePools: selectLoadingFlagByAction(
+      state,
+      NODEPOOL_MULTIPLE_LOAD_REQUEST
+    ),
     // This looks for this specific cluster to be loaded.
     loadingCluster: selectLoadingFlagByIdAndAction(
       state,
