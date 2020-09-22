@@ -122,7 +122,7 @@ EmailField.propTypes = {
   onStartTyping: PropTypes.func,
   name: PropTypes.string,
   label: PropTypes.string,
-  errorMessage: PropTypes.object,
+  errorMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
 export default EmailField;
