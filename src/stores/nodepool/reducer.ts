@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { IState } from 'reducers/types';
 import {
   CLUSTER_NODEPOOLS_LOAD_SUCCESS,
   NODEPOOL_CREATE_ERROR,
@@ -15,38 +14,41 @@ const initialState: INodePoolState = {
   isFetching: false,
 };
 
-const nodePoolReducer = produce((draft: IState, action: NodePoolActions) => {
-  switch (action.type) {
-    case CLUSTER_NODEPOOLS_LOAD_SUCCESS:
-      for (const np of action.nodePools) {
-        draft.items[np.id] = np;
-      }
+const nodePoolReducer = produce(
+  (draft: INodePoolState, action: NodePoolActions) => {
+    switch (action.type) {
+      case CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+        for (const np of action.nodePools) {
+          draft.items[np.id] = np;
+        }
 
-      break;
+        break;
 
-    case NODEPOOL_PATCH:
-      draft.items[action.nodePool.id] = Object.assign(
-        {},
-        action.nodePool,
-        action.payload
-      );
+      case NODEPOOL_PATCH:
+        draft.items[action.nodePool.id] = Object.assign(
+          {},
+          action.nodePool,
+          action.payload
+        );
 
-      break;
+        break;
 
-    case NODEPOOL_PATCH_ERROR:
-      draft.items[action.nodePool.id] = action.nodePool;
+      case NODEPOOL_PATCH_ERROR:
+        draft.items[action.nodePool.id] = action.nodePool;
 
-      return;
+        return;
 
-    case NODEPOOL_DELETE_SUCCESS:
-    case NODEPOOL_CREATE_ERROR:
-      delete draft.items[action.nodePool.id];
+      case NODEPOOL_DELETE_SUCCESS:
+      case NODEPOOL_CREATE_ERROR:
+        delete draft.items[action.nodePool.id];
 
-      return;
+        return;
 
-    case NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.nodePool.id] = action.nodePool;
-  }
-}, initialState);
+      case NODEPOOL_CREATE_SUCCESS:
+        draft.items[action.nodePool.id] = action.nodePool;
+    }
+  },
+  initialState
+);
 
 export default nodePoolReducer;

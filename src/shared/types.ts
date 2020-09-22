@@ -43,7 +43,8 @@ export interface INodePool {
   subnet: string;
   node_spec: INodePoolNodeSpec | null;
   scaling: INodePoolScaling | null;
-  status: INodePoolStatus | null;
+  // When a node pool is created, this field is not in the server response.
+  status?: INodePoolStatus | null;
 }
 
 export interface IKeyPair {
