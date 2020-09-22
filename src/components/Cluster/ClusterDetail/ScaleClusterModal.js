@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -368,11 +369,11 @@ class ScaleClusterModal extends React.Component {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your cluster:</p>
-          <div className='flash-messages--flash-message flash-messages--danger'>
+          <FlashMessageComponent type='danger'>
             {this.state.error.body && this.state.error.body.message
               ? this.state.error.body.message
               : this.state.error.message}
-          </div>
+          </FlashMessageComponent>
         </BootstrapModal.Body>
       );
       footer = (

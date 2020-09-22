@@ -47,11 +47,7 @@ const AddKeyPairErrorTemplate: React.FC<IAddKeyPairErrorProps> = ({
 }) => {
   return (
     <SlideTransition direction='down' in={children !== null}>
-      <StyledFlashMessage
-        dismissible={false}
-        class='danger'
-        {...(rest as never)}
-      >
+      <StyledFlashMessage type='danger' {...(rest as never)}>
         {getErrorMarkup(children as PropertiesOf<typeof StatusCodes>)}
       </StyledFlashMessage>
     </SlideTransition>

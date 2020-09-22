@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { CLUSTER_CREATE_REQUEST } from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
+import FlashMessage from 'FlashMessages/FlashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -196,7 +197,7 @@ class CreateRegularCluster extends React.Component {
 
   errorState() {
     return (
-      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+      <FlashMessage type='danger'>
         <b>Something went wrong while trying to create your cluster.</b>
         <br />
         Perhaps our servers are down, please try again later or contact support:
@@ -205,7 +206,7 @@ class CreateRegularCluster extends React.Component {
         {this.state.errorMessage !== '' ? (
           <pre>{this.state.errorMessage}</pre>
         ) : undefined}
-      </div>
+      </FlashMessage>
     );
   }
 

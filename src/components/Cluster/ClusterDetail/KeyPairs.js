@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
+import FlashMessage from 'FlashMessages/FlashMessage';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
 import moment from 'moment';
@@ -208,10 +209,10 @@ class KeyPairs extends React.Component {
           } else if (!this.props.cluster.keyPairs) {
             return (
               <>
-                <div className='flash-messages--flash-message flash-messages--danger'>
+                <FlashMessage type='danger'>
                   Something went wrong while trying to load the list of key
                   pairs.
-                </div>
+                </FlashMessage>
                 <Button onClick={this.loadKeyPairs}>
                   Try loading key pairs again.
                 </Button>

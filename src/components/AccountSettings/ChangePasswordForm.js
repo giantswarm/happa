@@ -1,3 +1,4 @@
+import FlashMessage from 'FlashMessages/FlashMessage';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import {
@@ -234,9 +235,9 @@ class ChangePassword extends React.Component {
               </SlideTransition>
 
               <SlideTransition in={this.state.error}>
-                <div className='flash-messages--flash-message flash-messages--danger'>
+                <FlashMessage type='danger'>
                   {this.state.errorMessage}
-                </div>
+                </FlashMessage>
               </SlideTransition>
             </div>
           </form>

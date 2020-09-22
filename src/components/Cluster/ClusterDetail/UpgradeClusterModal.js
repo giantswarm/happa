@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
 import UpgradeClusterModalVersionChanger from 'Cluster/ClusterDetail/UpgradeClusterModalVersionChanger';
 import diff from 'deep-diff';
+import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -96,11 +97,11 @@ class UpgradeClusterModal extends React.Component {
     return (
       <div>
         {typeof release === 'undefined' ? (
-          <div className='flash-messages--flash-message flash-messages--info'>
+          <FlashMessageComponent type='info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />
             Unable to show you an exact diff.
-          </div>
+          </FlashMessageComponent>
         ) : undefined}
         <p>
           <b>Component Changes</b>

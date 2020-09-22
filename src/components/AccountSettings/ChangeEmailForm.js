@@ -1,3 +1,4 @@
+import FlashMessage from 'FlashMessages/FlashMessage';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -155,9 +156,9 @@ class ChangeEmailForm extends React.Component {
             </SlideTransition>
 
             <SlideTransition in={this.state.error}>
-              <div className='flash-messages--flash-message flash-messages--danger'>
+              <FlashMessage type='danger'>
                 {this.state.errorMessage}
-              </div>
+              </FlashMessage>
             </SlideTransition>
           </div>
         </form>

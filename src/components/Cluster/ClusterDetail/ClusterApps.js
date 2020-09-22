@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
+import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -441,10 +442,10 @@ class ClusterApps extends React.Component {
               </div>
             </PreinstalledApps>
           ) : (
-            <div className='flash-messages--flash-message flash-messages--danger'>
+            <FlashMessageComponent type='danger'>
               Unable to load the list of preinstalled apps. Please try again
               later or contact support: support@giantswarm.io
-            </div>
+            </FlashMessageComponent>
           )}
         </div>
 

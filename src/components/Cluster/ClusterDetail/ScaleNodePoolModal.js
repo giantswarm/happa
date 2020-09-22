@@ -1,4 +1,5 @@
 import * as nodePoolActions from 'actions/nodePoolActions';
+import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -336,11 +337,11 @@ class ScaleNodePoolModal extends React.Component {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your node pool:</p>
-          <div className='flash-messages--flash-message flash-messages--danger'>
+          <FlashMessageComponent type='danger'>
             {error.body && error.body.message
               ? error.body.message
               : error.message}
-          </div>
+          </FlashMessageComponent>
         </BootstrapModal.Body>
       );
       footer = (

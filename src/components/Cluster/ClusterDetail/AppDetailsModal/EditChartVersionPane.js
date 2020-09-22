@@ -1,3 +1,4 @@
+import FlashMessage from 'FlashMessages/FlashMessage';
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -23,9 +24,7 @@ const EditChartVersionPane = (props) => {
           Something went wrong while trying to set the chart version:
           <br />
           <br />
-          <div className='flash-messages--flash-message flash-messages--danger'>
-            {errorMessage}
-          </div>
+          <FlashMessage type='danger'>{errorMessage}</FlashMessage>
         </>
       )}
     </div>

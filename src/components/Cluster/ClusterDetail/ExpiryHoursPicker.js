@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import FlashMessage from 'FlashMessages/FlashMessage';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -270,9 +271,7 @@ class ExpiryHoursPicker extends React.Component {
         </li>
         <li>
           <SlideTransition in={hasError}>
-            <div className='flash-messages--flash-message flash-messages--warning'>
-              {error}
-            </div>
+            <FlashMessage type='warning'>{error}</FlashMessage>
           </SlideTransition>
         </li>
       </List>
