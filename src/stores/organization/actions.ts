@@ -329,14 +329,13 @@ export function organizationAddMemberConfirmed(
       );
 
       await dispatch(organizationsLoad());
+      dispatch(modalHide());
     } catch {
       dispatch({
         type: ORGANIZATION_ADD_MEMBER_ERROR,
         orgId,
         errorMessage: `Could not add ${email} to organization ${orgId}.`,
       });
-    } finally {
-      dispatch(modalHide());
     }
   };
 }
