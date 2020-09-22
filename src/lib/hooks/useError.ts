@@ -1,7 +1,7 @@
-import { SINGLE_ERROR_CLEAR } from 'actions/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
-import { typeWithoutSuffix } from 'selectors/selectorUtils';
+import { IState } from 'reducers/types';
+import { clearError } from 'stores/error/actions';
+import { selectErrorByAction } from 'stores/error/selectors';
 
 /**
  * Select an error message by a given type.
@@ -11,15 +11,13 @@ function useError(
   errorType: string
 ): { errorMessage: string; clear: () => void } {
   const dispatch = useDispatch();
-  const errorMessage = useSelector((state) =>
-    selectErrorByAction(state, errorType)
-  );
+  const errorMessage =
+    useSelector<IState, string | null>((state) =>
+      selectErrorByAction(state, errorType)
+    ) ?? '';
 
   const clear = () => {
-    dispatch({
-      type: SINGLE_ERROR_CLEAR,
-      errorType: typeWithoutSuffix(errorType),
-    });
+    dispatch(clearError(errorType));
   };
 
   return { errorMessage, clear };

@@ -4,7 +4,6 @@ import {
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'actions/actionTypes';
 import { loadAppReadme } from 'actions/appActions';
-import { clearError } from 'actions/errorActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -12,12 +11,13 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import {
-  selectErrorByAction,
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
 } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { clearError } from 'stores/error/actions';
+import { selectErrorByAction } from 'stores/error/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
