@@ -48,7 +48,7 @@ export function clusterNodePoolsLoad(
         type: CLUSTER_NODEPOOLS_LOAD_SUCCESS,
         id: clusterID,
         nodePools,
-        nodePoolsIds: nodePoolIDs,
+        nodePoolIDs,
       });
     } catch (err) {
       if (err.response?.status === StatusCodes.NotFound) {
@@ -124,8 +124,8 @@ export function nodePoolsLoad(opts?: {
 
     if (filteredClusters.length > 0) {
       await Promise.all(
-        filteredClusters.map((clusterId) =>
-          dispatch(clusterNodePoolsLoad(clusterId, { withLoadingFlags: true }))
+        filteredClusters.map((clusterID) =>
+          dispatch(clusterNodePoolsLoad(clusterID, { withLoadingFlags: true }))
         )
       );
     }
@@ -175,7 +175,7 @@ export function nodePoolDeleteConfirmed(
     try {
       dispatch({
         type: NODEPOOL_DELETE_CONFIRMED_REQUEST,
-        clusterId: clusterID,
+        clusterID,
         nodePool,
       });
 
@@ -185,7 +185,7 @@ export function nodePoolDeleteConfirmed(
       dispatch({
         type: NODEPOOL_DELETE_SUCCESS,
         nodePool,
-        clusterId: clusterID,
+        clusterID,
       });
 
       // TODO(axbarsan): Remove type cast once modal actions have been typed.
@@ -209,7 +209,7 @@ export function nodePoolDeleteConfirmed(
 
       dispatch({
         type: NODEPOOL_DELETE_ERROR,
-        nodePoolId: nodePool.id,
+        nodePoolID: nodePool.id,
         error: err,
       });
     }
@@ -246,7 +246,7 @@ function makeNodePoolCreator(
 
       dispatch({
         type: NODEPOOL_CREATE_SUCCESS,
-        clusterId: clusterID,
+        clusterID,
         nodePool: newNodePool,
       });
 
@@ -263,7 +263,7 @@ function makeNodePoolCreator(
       dispatch({
         type: NODEPOOL_CREATE_ERROR,
         error: err,
-        clusterId: clusterID,
+        clusterID,
         nodePool,
       });
 
@@ -305,10 +305,10 @@ export function nodePoolsCreate(
 }
 
 export const nodePoolDelete = (
-  clusterId: string,
+  clusterID: string,
   nodePool: INodePool
 ): NodePoolActions => ({
   type: NODEPOOL_DELETE,
-  clusterId,
+  clusterID,
   nodePool,
 });

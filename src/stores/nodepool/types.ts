@@ -30,7 +30,9 @@ export interface INodePoolForClusterLoadRequestAction {
 
 export interface INodePoolForClusterLoadSuccessAction {
   type: typeof CLUSTER_NODEPOOLS_LOAD_SUCCESS;
+  id: string;
   nodePools: INodePool[];
+  nodePoolIDs: string[];
 }
 
 export interface INodePoolForClusterLoadErrorAction {
@@ -58,25 +60,25 @@ export interface INodePoolPatchErrorAction {
 
 export interface INodePoolDeleteAction {
   type: typeof NODEPOOL_DELETE;
-  clusterId: string;
+  clusterID: string;
   nodePool: INodePool;
 }
 
 export interface INodePoolDeleteSuccessAction {
   type: typeof NODEPOOL_DELETE_SUCCESS;
-  clusterId: string;
+  clusterID: string;
   nodePool: INodePool;
 }
 
 export interface INodePoolDeleteErrorAction {
   type: typeof NODEPOOL_DELETE_ERROR;
   error: string;
-  nodePoolId: string;
+  nodePoolID: string;
 }
 
 export interface INodePoolDeleteConfirmedAction {
   type: typeof NODEPOOL_DELETE_CONFIRMED_REQUEST;
-  clusterId: string;
+  clusterID: string;
   nodePool: INodePool;
 }
 
@@ -102,14 +104,14 @@ export interface INodePoolCreateRequestAction {
 
 export interface INodePoolCreateSuccessAction {
   type: typeof NODEPOOL_CREATE_SUCCESS;
-  clusterId: string;
+  clusterID: string;
   nodePool: INodePool;
 }
 
 export interface INodePoolCreateErrorAction {
   type: typeof NODEPOOL_CREATE_ERROR;
   error: string;
-  clusterId: string;
+  clusterID: string;
   nodePool: INodePool;
 }
 

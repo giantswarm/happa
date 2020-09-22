@@ -49,7 +49,7 @@ const clusterReducer = produce((draft, action) => {
     }
 
     case CLUSTER_NODEPOOLS_LOAD_SUCCESS:
-      draft.items[action.id].nodePools = action.nodePoolsIds;
+      draft.items[action.id].nodePools = action.nodePoolIDs;
 
       return;
 
@@ -114,15 +114,15 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     case NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
+      draft.items[action.clusterID].nodePools.push(action.nodePool.id);
 
       return;
 
     case NODEPOOL_DELETE_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].nodePools = draft.items[
-          action.clusterId
-        ].nodePools.filter((np: string) => np !== action.nodePoolId);
+      if (draft.items[action.clusterID]) {
+        draft.items[action.clusterID].nodePools = draft.items[
+          action.clusterID
+        ].nodePools.filter((np: string) => np !== action.nodePoolID);
       }
 
       return;
