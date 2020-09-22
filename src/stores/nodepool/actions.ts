@@ -30,7 +30,7 @@ import {
 
 export function clusterNodePoolsLoad(
   clusterId: string,
-  opts?: { withLoadingFlags: boolean }
+  opts?: { withLoadingFlags?: boolean }
 ): ThunkAction<void, IState, void, NodePoolActions> {
   return function (dispatch) {
     if (opts?.withLoadingFlags) {
@@ -98,8 +98,8 @@ export function clusterNodePoolsLoad(
 }
 
 export function nodePoolsLoad(opts?: {
-  filterBySelectedOrganization: boolean;
-  withLoadingFlags: boolean;
+  filterBySelectedOrganization?: boolean;
+  withLoadingFlags?: boolean;
 }): ThunkAction<void, IState, void, NodePoolActions> {
   return async function (dispatch, getState) {
     if (opts?.withLoadingFlags)
@@ -228,7 +228,7 @@ export function nodePoolDeleteConfirmed(
 export function nodePoolsCreate(
   clusterId: string,
   nodePools: INodePool[],
-  opts?: { withFlashMessages: boolean }
+  opts?: { withFlashMessages?: boolean }
 ): ThunkAction<void, IState, void, NodePoolActions> {
   return async function (dispatch) {
     dispatch({ type: NODEPOOL_MULTIPLE_CREATE_REQUEST });

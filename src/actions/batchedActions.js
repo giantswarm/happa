@@ -8,11 +8,15 @@ import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
+import {
+  clusterNodePoolsLoad,
+  nodePoolsCreate,
+  nodePoolsLoad,
+} from 'stores/nodepool/actions';
 import { loadReleases } from 'stores/releases/actions';
 
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
-import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
 import * as userActions from './userActions';
 
@@ -57,7 +61,7 @@ export const batchedLayout = () => async (dispatch) => {
       })
     );
     await dispatch(
-      nodePoolActions.nodePoolsLoad({
+      nodePoolsLoad({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
       })
@@ -78,7 +82,7 @@ export const batchedRefreshClusters = () => async (dispatch) => {
       })
     );
     dispatch(
-      nodePoolActions.nodePoolsLoad({
+      nodePoolsLoad({
         filterBySelectedOrganization: true,
         withLoadingFlags: false,
       })
@@ -115,9 +119,9 @@ export const batchedClusterCreate = (
 
     if (isV5Cluster) {
       // Check nodePools instead?
-      await dispatch(nodePoolActions.nodePoolsCreate(clusterId, nodePools));
+      await dispatch(nodePoolsCreate(clusterId, nodePools));
       await dispatch(
-        nodePoolActions.clusterNodePoolsLoad(clusterId, {
+        clusterNodePoolsLoad(clusterId, {
           withLoadingFlags: true,
         })
       );
@@ -158,7 +162,7 @@ export const batchedClusterDetailView = (
 
     if (isV5Cluster) {
       await dispatch(
-        nodePoolActions.clusterNodePoolsLoad(clusterId, {
+        clusterNodePoolsLoad(clusterId, {
           withLoadingFlags: true,
         })
       );
@@ -181,7 +185,7 @@ export const batchedRefreshClusterDetailView = (
     );
     if (isV5Cluster) {
       await dispatch(
-        nodePoolActions.clusterNodePoolsLoad(clusterId, {
+        clusterNodePoolsLoad(clusterId, {
           withLoadingFlags: false,
         })
       );
@@ -217,7 +221,7 @@ export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
       })
     );
     await dispatch(
-      nodePoolActions.nodePoolsLoad({
+      nodePoolsLoad({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
       })

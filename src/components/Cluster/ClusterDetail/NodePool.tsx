@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as nodePoolActions from 'actions/nodePoolActions';
 import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -12,6 +11,7 @@ import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
+import * as nodePoolActions from 'stores/nodepool/actions';
 import { Code, Ellipsis } from 'styles/';
 import ViewAndEditName from 'UI/ViewEditName';
 

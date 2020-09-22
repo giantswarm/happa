@@ -1,4 +1,3 @@
-import * as nodePoolActions from 'actions/nodePoolActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,6 +7,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import * as nodePoolActions from 'stores/nodepool/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

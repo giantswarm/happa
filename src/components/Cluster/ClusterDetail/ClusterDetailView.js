@@ -8,7 +8,6 @@ import {
   batchedRefreshClusterDetailView,
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
-import * as nodePoolActions from 'actions/nodePoolActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -31,6 +30,7 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import * as nodePoolActions from 'stores/nodepool/actions';
 import { selectNodePools } from 'stores/nodepool/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
