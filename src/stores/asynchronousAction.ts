@@ -7,6 +7,11 @@ export interface IAsynchronousDispatch<S>
   <R>(action: IAsynchronousAction<S, R>): Promise<R>;
 }
 
+/**
+ * Refactor to support template string types once
+ * TypeScript 4.1 is released.
+ * https://github.com/microsoft/TypeScript/pull/40336
+ */
 export interface IActionTypeCollection {
   request: string;
   success: string;

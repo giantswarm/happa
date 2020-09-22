@@ -3,12 +3,13 @@ import { replace } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
-import { memoize } from 'underscore';
+import { memoize, throttle } from 'underscore';
 
 import AppListItems from './AppListItems';
 import AppListSearch from './AppListSearch';
 
 const SEARCH_URL_PARAM = 'q';
+const SEARCH_THROTTLE_RATE_MS = 100;
 
 const StyledCatalogTypeLabel = styled(CatalogTypeLabel)`
   position: relative;
@@ -34,7 +35,7 @@ const TitleAndIcons = styled('div')`
 `;
 
 class AppListInner extends React.Component {
-  static filterApps(searchQuery, allApps) {
+  static filterApps = throttle((searchQuery, allApps) => {
     const fieldsToCheck = ['name', 'description', 'keywords'];
     const trimmedSearchQuery = searchQuery.trim().toLowerCase();
 
@@ -58,7 +59,7 @@ class AppListInner extends React.Component {
     });
 
     return filteredApps;
-  }
+  }, SEARCH_THROTTLE_RATE_MS);
 
   static getSearchQueryFromLocation(location) {
     const searchParams = new URLSearchParams(location.search);

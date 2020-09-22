@@ -17,15 +17,6 @@ export default {
     selectedOrganization: null,
     firstLoadComplete: false,
     loggedInUser: null,
-    metadata: {
-      version: {
-        current: 'VERSION',
-        new: null,
-        isUpdating: false,
-        lastCheck: 0,
-        timer: 0,
-      },
-    },
     info: {
       general: {
         availability_zones: {
@@ -34,6 +25,15 @@ export default {
         },
         provider: '',
       },
+    },
+  },
+  errors: {},
+  metadata: {
+    version: {
+      current: 'VERSION',
+      new: null,
+      lastCheck: 0,
+      timer: 0,
     },
   },
   entities: {

@@ -20,6 +20,7 @@ import {
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
+import preloginState from 'testUtils/preloginState';
 import { initialStorage } from 'testUtils/renderUtils';
 
 const mockUserData = {
@@ -60,17 +61,6 @@ jest.mock('lib/helpers');
 helpers.isJwtExpired = jest.fn();
 // eslint-disable-next-line no-import-assign
 helpers.validateOrRaise = jest.fn();
-
-// Mock metadata
-const metadataStateMock = {
-  version: {
-    current: 'VERSION',
-    new: null,
-    isUpdating: false,
-    lastCheck: 0,
-    timer: 0,
-  },
-};
 
 const renderRouteWithStore = (
   initialRoute = AppRoutes.Home,
@@ -138,7 +128,8 @@ describe('AdminLogin', () => {
     helpers.isJwtExpired.mockReturnValue(false);
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
+      ...preloginState,
+      main: { loggedInUser: mockUserData },
     });
 
     // Check if the user has been redirected to the homepage
@@ -171,7 +162,8 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
+      ...preloginState,
+      main: { loggedInUser: mockUserData },
     });
 
     // Check if the user has been redirected to the homepage
@@ -226,7 +218,8 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
+      ...preloginState,
+      main: { loggedInUser: mockUserData },
     });
 
     await findByText(

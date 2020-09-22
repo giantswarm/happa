@@ -129,9 +129,9 @@ module.exports = {
     'no-delete-var': 2,
     'no-label-var': 2,
     'no-restricted-globals': 2,
-    'no-shadow': 2,
+    'no-shadow': 0,
     'no-shadow-restricted-names': 2,
-    'no-undef': 2,
+    'no-undef': 0,
     'no-undef-init': 2,
     'no-use-before-define': 0,
     'constructor-super': 2,
@@ -231,6 +231,7 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': 0,
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
+    '@typescript-eslint/no-shadow': 2,
   },
   overrides: [
     {
