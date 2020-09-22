@@ -26,13 +26,13 @@ import {
   ORGANIZATION_DELETE_ERROR,
   ORGANIZATION_DELETE_REQUEST,
   ORGANIZATION_DELETE_SUCCESS,
+  ORGANIZATION_LOAD_ERROR,
+  ORGANIZATION_LOAD_REQUEST,
+  ORGANIZATION_LOAD_SUCCESS,
   ORGANIZATION_REMOVE_MEMBER,
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
   ORGANIZATION_REMOVE_MEMBER_ERROR,
   ORGANIZATION_SELECT,
-  ORGANIZATIONS_LOAD_ERROR,
-  ORGANIZATIONS_LOAD_REQUEST,
-  ORGANIZATIONS_LOAD_SUCCESS,
 } from 'stores/organization/constants';
 import { OrganizationActions } from 'stores/organization/types';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
@@ -70,7 +70,7 @@ export function organizationsLoadSuccess(
   selectedOrganization: string | null
 ): OrganizationActions {
   return {
-    type: ORGANIZATIONS_LOAD_SUCCESS,
+    type: ORGANIZATION_LOAD_SUCCESS,
     organizations,
     selectedOrganization,
   };
@@ -95,7 +95,7 @@ export function organizationsLoad(): ThunkAction<
         return;
       }
 
-      dispatch({ type: ORGANIZATIONS_LOAD_REQUEST });
+      dispatch({ type: ORGANIZATION_LOAD_REQUEST });
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();
       const organizations = await organizationsApi.getOrganizations();
@@ -140,7 +140,7 @@ export function organizationsLoad(): ThunkAction<
       );
 
       dispatch({
-        type: ORGANIZATIONS_LOAD_ERROR,
+        type: ORGANIZATION_LOAD_ERROR,
       });
     }
   };

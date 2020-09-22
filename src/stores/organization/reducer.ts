@@ -7,9 +7,9 @@ import {
   ORGANIZATION_CREDENTIALS_SET_SUCCESS,
   ORGANIZATION_DELETE_ERROR,
   ORGANIZATION_DELETE_SUCCESS,
-  ORGANIZATIONS_LOAD_ERROR,
-  ORGANIZATIONS_LOAD_REQUEST,
-  ORGANIZATIONS_LOAD_SUCCESS,
+  ORGANIZATION_LOAD_ERROR,
+  ORGANIZATION_LOAD_REQUEST,
+  ORGANIZATION_LOAD_SUCCESS,
 } from 'stores/organization/constants';
 import {
   IOrganizationState,
@@ -26,19 +26,19 @@ const initialState: IOrganizationState = {
 const organizationReducer = produce(
   (draft: IOrganizationState, action: OrganizationActions) => {
     switch (action.type) {
-      case ORGANIZATIONS_LOAD_REQUEST:
+      case ORGANIZATION_LOAD_REQUEST:
         draft.isFetching = true;
 
         break;
 
-      case ORGANIZATIONS_LOAD_SUCCESS:
+      case ORGANIZATION_LOAD_SUCCESS:
         draft.lastUpdated = Date.now();
         draft.isFetching = false;
         draft.items = action.organizations;
 
         break;
 
-      case ORGANIZATIONS_LOAD_ERROR:
+      case ORGANIZATION_LOAD_ERROR:
         draft.isFetching = false;
 
         break;

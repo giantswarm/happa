@@ -19,13 +19,13 @@ import {
   ORGANIZATION_DELETE_ERROR,
   ORGANIZATION_DELETE_REQUEST,
   ORGANIZATION_DELETE_SUCCESS,
+  ORGANIZATION_LOAD_ERROR,
+  ORGANIZATION_LOAD_REQUEST,
+  ORGANIZATION_LOAD_SUCCESS,
   ORGANIZATION_REMOVE_MEMBER,
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
   ORGANIZATION_REMOVE_MEMBER_ERROR,
   ORGANIZATION_SELECT,
-  ORGANIZATIONS_LOAD_ERROR,
-  ORGANIZATIONS_LOAD_REQUEST,
-  ORGANIZATIONS_LOAD_SUCCESS,
 } from 'stores/organization/constants';
 
 export interface IOrganizationState {
@@ -41,17 +41,17 @@ export interface IOrganizationSelectAction {
 }
 
 export interface IOrganizationLoadRequestAction {
-  type: typeof ORGANIZATIONS_LOAD_REQUEST;
+  type: typeof ORGANIZATION_LOAD_REQUEST;
 }
 
 export interface IOrganizationLoadSuccessAction {
-  type: typeof ORGANIZATIONS_LOAD_SUCCESS;
+  type: typeof ORGANIZATION_LOAD_SUCCESS;
   organizations: Record<string, IOrganization>;
   selectedOrganization: string | null;
 }
 
 export interface IOrganizationLoadErrorAction {
-  type: typeof ORGANIZATIONS_LOAD_ERROR;
+  type: typeof ORGANIZATION_LOAD_ERROR;
 }
 
 export interface IOrganizationCreateRequestAction {

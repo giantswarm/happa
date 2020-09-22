@@ -1,8 +1,8 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import {
+  ORGANIZATION_LOAD_SUCCESS,
   ORGANIZATION_SELECT,
-  ORGANIZATIONS_LOAD_SUCCESS,
 } from 'stores/organization/constants';
 import {
   fetchSelectedOrganizationFromStorage,
@@ -72,7 +72,7 @@ const makeAppReducer = () => {
 
         break;
 
-      case ORGANIZATIONS_LOAD_SUCCESS:
+      case ORGANIZATION_LOAD_SUCCESS:
         draft.selectedOrganization = action.selectedOrganization;
 
         break;
