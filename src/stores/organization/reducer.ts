@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { IState } from 'reducers/types';
 import {
   ORGANIZATION_CREDENTIALS_SET,
   ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST,
@@ -12,54 +11,63 @@ import {
   ORGANIZATIONS_LOAD_REQUEST,
   ORGANIZATIONS_LOAD_SUCCESS,
 } from 'stores/organization/constants';
-import { IOrganizationState } from 'stores/organization/types';
+import {
+  IOrganizationState,
+  OrganizationActions,
+} from 'stores/organization/types';
 
 const initialState: IOrganizationState = {
   lastUpdated: 0,
   isFetching: false,
   items: {},
+  showCredentialsForm: false,
 };
 
-const organizationReducer = produce((draft: IState, action) => {
-  switch (action.type) {
-    case ORGANIZATIONS_LOAD_REQUEST:
-      draft.isFetching = true;
+const organizationReducer = produce(
+  (draft: IOrganizationState, action: OrganizationActions) => {
+    switch (action.type) {
+      case ORGANIZATIONS_LOAD_REQUEST:
+        draft.isFetching = true;
 
-      return;
+        break;
 
-    case ORGANIZATIONS_LOAD_SUCCESS:
-      draft.lastUpdated = Date.now();
-      draft.isFetching = false;
-      draft.items = action.organizations;
+      case ORGANIZATIONS_LOAD_SUCCESS:
+        draft.lastUpdated = Date.now();
+        draft.isFetching = false;
+        draft.items = action.organizations;
 
-      return;
+        break;
 
-    case ORGANIZATIONS_LOAD_ERROR:
-      draft.isFetching = false;
+      case ORGANIZATIONS_LOAD_ERROR:
+        draft.isFetching = false;
 
-      return;
+        break;
 
-    case ORGANIZATION_DELETE_SUCCESS:
-      delete draft.items[action.orgId];
+      case ORGANIZATION_DELETE_SUCCESS:
+        delete draft.items[action.orgId];
 
-      return;
+        break;
 
-    case ORGANIZATION_DELETE_ERROR:
-      draft.isFetching = false;
+      case ORGANIZATION_DELETE_ERROR:
+        draft.isFetching = false;
 
-      return;
+        break;
 
-    case ORGANIZATION_CREDENTIALS_SET:
-    case ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST:
-    case ORGANIZATION_CREDENTIALS_SET_ERROR:
-      draft.showCredentialsForm = true;
+      case ORGANIZATION_CREDENTIALS_SET:
+      case ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST:
+      case ORGANIZATION_CREDENTIALS_SET_ERROR:
+        draft.showCredentialsForm = true;
 
-      return;
+        break;
 
-    case ORGANIZATION_CREDENTIALS_SET_DISCARD:
-    case ORGANIZATION_CREDENTIALS_SET_SUCCESS:
-      draft.showCredentialsForm = false;
-  }
-}, initialState);
+      case ORGANIZATION_CREDENTIALS_SET_DISCARD:
+      case ORGANIZATION_CREDENTIALS_SET_SUCCESS:
+        draft.showCredentialsForm = false;
+
+        break;
+    }
+  },
+  initialState
+);
 
 export default organizationReducer;

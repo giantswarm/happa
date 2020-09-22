@@ -2,7 +2,6 @@ import { modalHide } from 'actions/modalActions';
 import GiantSwarm, { V4Organization } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
-import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -35,7 +34,7 @@ import {
   ORGANIZATIONS_LOAD_REQUEST,
   ORGANIZATIONS_LOAD_SUCCESS,
 } from 'stores/organization/constants';
-import { IOrganizationSelectAction } from 'stores/organization/types';
+import { OrganizationActions } from 'stores/organization/types';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import { determineSelectedOrganization } from 'utils/organizationUtils';
 
@@ -48,7 +47,7 @@ import { determineSelectedOrganization } from 'utils/organizationUtils';
  */
 export function organizationSelect(
   orgId: string
-): ThunkAction<void, IState, void, IOrganizationSelectAction> {
+): ThunkAction<void, IState, void, OrganizationActions> {
   return (dispatch) => {
     setOrganizationToStorage(orgId);
 
@@ -59,7 +58,7 @@ export function organizationSelect(
   };
 }
 
-export function organizationDeleteSuccess(orgId: string) {
+export function organizationDeleteSuccess(orgId: string): OrganizationActions {
   return {
     type: ORGANIZATION_DELETE_SUCCESS,
     orgId,
@@ -69,7 +68,7 @@ export function organizationDeleteSuccess(orgId: string) {
 export function organizationsLoadSuccess(
   organizations: Record<string, IOrganization>,
   selectedOrganization: string | null
-) {
+): OrganizationActions {
   return {
     type: ORGANIZATIONS_LOAD_SUCCESS,
     organizations,
@@ -86,7 +85,7 @@ export function organizationsLoad(): ThunkAction<
   Promise<void>,
   IState,
   void,
-  AnyAction
+  OrganizationActions
 > {
   return async (dispatch, getState) => {
     try {
@@ -180,7 +179,7 @@ async function updateOrganizationDetailsForID(
 
 export function organizationDeleteConfirmed(
   orgId: string
-): ThunkAction<Promise<void>, IState, void, AnyAction> {
+): ThunkAction<Promise<void>, IState, void, OrganizationActions> {
   return async (dispatch) => {
     try {
       dispatch({ type: ORGANIZATION_DELETE_CONFIRMED, orgId });
@@ -208,25 +207,26 @@ export function organizationDeleteConfirmed(
         type: ORGANIZATION_DELETE_ERROR,
       });
     } finally {
-      dispatch(modalHide());
+      // TODO(axbarsan): Remove type cast once modal actions have been typed.
+      dispatch(modalHide() as OrganizationActions);
     }
   };
 }
 
-export function organizationDelete(orgId: string) {
+export function organizationDelete(orgId: string): OrganizationActions {
   return {
     type: ORGANIZATION_DELETE_REQUEST,
     orgId,
   };
 }
 
-export function organizationCreate() {
+export function organizationCreate(): OrganizationActions {
   return { type: ORGANIZATION_CREATE_REQUEST };
 }
 
 export function organizationCreateConfirmed(
   orgId: string
-): ThunkAction<void, IState, void, AnyAction> {
+): ThunkAction<void, IState, void, OrganizationActions> {
   return async (dispatch, getState) => {
     try {
       dispatch({ type: ORGANIZATION_CREATE_CONFIRMED });
@@ -269,19 +269,22 @@ export function organizationCreateConfirmed(
         type: ORGANIZATION_CREATE_ERROR,
       });
     } finally {
-      dispatch(modalHide());
+      // TODO(axbarsan): Remove type cast once modal actions have been typed.
+      dispatch(modalHide() as OrganizationActions);
     }
   };
 }
 
-export function organizationAddMember(orgId: string) {
+export function organizationAddMember(orgId: string): OrganizationActions {
   return {
     type: ORGANIZATION_ADD_MEMBER_REQUEST,
     orgId,
   };
 }
 
-export function organizationAddMemberTyping(orgId: string) {
+export function organizationAddMemberTyping(
+  orgId: string
+): OrganizationActions {
   return {
     type: ORGANIZATION_ADD_MEMBER_TYPING,
     orgId,
@@ -291,7 +294,7 @@ export function organizationAddMemberTyping(orgId: string) {
 export function organizationAddMemberConfirmed(
   orgId: string,
   email: string
-): ThunkAction<void, IState, void, AnyAction> {
+): ThunkAction<void, IState, void, OrganizationActions> {
   return async (dispatch, getState) => {
     try {
       dispatch({
@@ -329,7 +332,8 @@ export function organizationAddMemberConfirmed(
       );
 
       await dispatch(organizationsLoad());
-      dispatch(modalHide());
+      // TODO(axbarsan): Remove type cast once modal actions have been typed.
+      dispatch(modalHide() as OrganizationActions);
     } catch {
       dispatch({
         type: ORGANIZATION_ADD_MEMBER_ERROR,
@@ -343,7 +347,7 @@ export function organizationAddMemberConfirmed(
 export function organizationRemoveMemberConfirmed(
   orgId: string,
   email: string
-): ThunkAction<void, IState, void, AnyAction> {
+): ThunkAction<void, IState, void, OrganizationActions> {
   return async (dispatch) => {
     try {
       dispatch({
@@ -378,12 +382,16 @@ export function organizationRemoveMemberConfirmed(
         type: ORGANIZATION_REMOVE_MEMBER_ERROR,
       });
     } finally {
-      dispatch(modalHide());
+      // TODO(axbarsan): Remove type cast once modal actions have been typed.
+      dispatch(modalHide() as OrganizationActions);
     }
   };
 }
 
-export function organizationRemoveMember(orgId: string, email: string) {
+export function organizationRemoveMember(
+  orgId: string,
+  email: string
+): OrganizationActions {
   return {
     type: ORGANIZATION_REMOVE_MEMBER,
     orgId,
@@ -393,7 +401,7 @@ export function organizationRemoveMember(orgId: string, email: string) {
 
 export function organizationCredentialsLoad(
   orgId: string
-): ThunkAction<Promise<void>, IState, void, AnyAction> {
+): ThunkAction<Promise<void>, IState, void, OrganizationActions> {
   return async (dispatch) => {
     try {
       dispatch({
@@ -425,7 +433,7 @@ export function organizationCredentialsSet(): ThunkAction<
   void,
   IState,
   void,
-  AnyAction
+  OrganizationActions
 > {
   return (dispatch) => {
     dispatch({
@@ -434,7 +442,7 @@ export function organizationCredentialsSet(): ThunkAction<
   };
 }
 
-export function organizationCredentialsDiscard() {
+export function organizationCredentialsDiscard(): OrganizationActions {
   return {
     type: ORGANIZATION_CREDENTIALS_SET_DISCARD,
   };
@@ -454,7 +462,7 @@ export function organizationCredentialsSetConfirmed(
   provider: PropertiesOf<typeof Providers>,
   orgId: string,
   data: IOrganizationCredentialsData
-): ThunkAction<void, IState, void, AnyAction> {
+): ThunkAction<void, IState, void, OrganizationActions> {
   return async (dispatch) => {
     try {
       dispatch({ type: ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST });
