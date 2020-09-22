@@ -6,6 +6,7 @@ import clusters from 'stores/cluster/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
 import metadata from 'stores/metadata/reducer';
+import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
 
 import credentials from './credentialReducer';
@@ -17,7 +18,6 @@ import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 import modal from './modalReducer';
 import nodePools from './nodePoolReducer';
-import organizations from './organizationReducer';
 import users from './userReducer';
 
 const entities = combineReducers({

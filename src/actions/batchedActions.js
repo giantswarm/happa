@@ -8,12 +8,16 @@ import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
+import {
+  organizationCredentialsLoad,
+  organizationSelect,
+  organizationsLoad,
+} from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
 
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
-import * as organizationActions from './organizationActions';
 import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
@@ -41,7 +45,7 @@ export const batchedLayout = () => async (dispatch) => {
   }
 
   try {
-    await dispatch(organizationActions.organizationsLoad());
+    await dispatch(organizationsLoad());
     dispatch(listCatalogs());
     dispatch(loadReleases());
     await dispatch(
@@ -138,12 +142,7 @@ export const batchedClusterDetailView = (
     // Lets use Promise.all when we have a series of async calls that not depend
     // on each another. It's faster and it's best from an error handling perspective.
     await Promise.all([
-      dispatch(
-        organizationActions.organizationCredentialsLoad(
-          organizationId,
-          clusterId
-        )
-      ),
+      dispatch(organizationCredentialsLoad(organizationId)),
       dispatch(loadReleases()),
       dispatch(loadClusterApps({ clusterId: clusterId })),
       dispatch(clusterActions.clusterLoadKeyPairs(clusterId)),
@@ -209,7 +208,7 @@ export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
 
 export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
   try {
-    await dispatch(organizationActions.organizationSelect(orgId));
+    await dispatch(organizationSelect(orgId));
     dispatch(
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,

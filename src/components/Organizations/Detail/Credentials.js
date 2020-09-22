@@ -1,12 +1,12 @@
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
 import {
   organizationCredentialsDiscard,
   organizationCredentialsLoad,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
-} from 'actions/organizationActions';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
+} from 'stores/organization/actions';
 
 import CredentialsDisplay from './CredentialsDisplay';
 import CredentialsForm from './CredentialsForm';

@@ -1,7 +1,3 @@
-import {
-  organizationCreate,
-  organizationDelete,
-} from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -9,6 +5,10 @@ import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import {
+  organizationCreate,
+  organizationDelete,
+} from 'stores/organization/actions';
 import EmptyStateDisplay from 'UI/EmptyStateDisplay';
 import OrganizationList from 'UI/OrganizationList/OrganizationList';
 

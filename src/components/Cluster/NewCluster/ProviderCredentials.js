@@ -1,8 +1,8 @@
-import { organizationCredentialsLoad } from 'actions/organizationActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Providers } from 'shared/constants';
+import { organizationCredentialsLoad } from 'stores/organization/actions';
 import AWSAccountID from 'UI/AWSAccountID';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import Section from 'UI/ClusterCreation/Section';
