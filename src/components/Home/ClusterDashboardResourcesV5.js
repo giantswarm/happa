@@ -2,10 +2,8 @@ import * as actionTypes from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  selectLoadingFlagByAction,
-  selectResourcesV5,
-} from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { makeV5ResourcesSelector } from 'stores/nodepool/selectors';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
@@ -74,7 +72,7 @@ ClusterDashboardResourcesV5.propTypes = {
 
 const makeMapStateToProps = () => {
   const mapStateToProps = (state, props) => {
-    const resources = selectResourcesV5();
+    const resources = makeV5ResourcesSelector();
 
     return {
       resources: resources(state, props),

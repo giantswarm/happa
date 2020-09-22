@@ -31,6 +31,7 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import { selectNodePools } from 'stores/nodepool/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -465,7 +466,7 @@ function mapStateToProps(state, props) {
     isV5Cluster: state.entities.clusters.v5Clusters.includes(clusterID),
     credentials: state.entities.credentials,
     catalogs: state.entities.catalogs,
-    nodePools: state.entities.nodePools.items,
+    nodePools: selectNodePools(state),
     provider: state.main.info.general.provider,
     user: state.main.loggedInUser,
     region: state.main.info.general.datacenter,

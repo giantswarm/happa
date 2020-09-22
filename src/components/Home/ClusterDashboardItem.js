@@ -12,12 +12,12 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   selectClusterById,
-  selectClusterNodePools,
   selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ErrorBoundary from 'shared/ErrorBoundary';
+import { selectClusterNodePools } from 'stores/nodepool/selectors';
 import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
