@@ -2,7 +2,7 @@ import { modalHide } from 'actions/modalActions';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
-import { ThunkAction } from 'redux-thunk';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
 import { INodePool } from 'shared/types';
 import {
@@ -29,71 +29,65 @@ import {
 } from 'stores/nodepool/types';
 
 export function clusterNodePoolsLoad(
-  clusterId: string,
+  clusterID: string,
   opts?: { withLoadingFlags?: boolean }
 ): ThunkAction<void, IState, void, NodePoolActions> {
-  return function (dispatch) {
-    if (opts?.withLoadingFlags) {
-      dispatch({ type: CLUSTER_NODEPOOLS_LOAD_REQUEST, id: clusterId });
+  return async (dispatch) => {
+    try {
+      if (opts?.withLoadingFlags) {
+        dispatch({ type: CLUSTER_NODEPOOLS_LOAD_REQUEST, id: clusterID });
+      }
+      const nodePoolsApi = new GiantSwarm.NodePoolsApi();
+
+      const response = await nodePoolsApi.getNodePools(clusterID);
+      // The response received has an `ArrayLike` data type.
+      const nodePools = Array.from(response);
+      const nodePoolIDs = nodePools.map((np) => np.id);
+
+      dispatch({
+        type: CLUSTER_NODEPOOLS_LOAD_SUCCESS,
+        id: clusterID,
+        nodePools,
+        nodePoolsIds: nodePoolIDs,
+      });
+    } catch (err) {
+      if (err.response?.status === StatusCodes.NotFound) {
+        /**
+         * If the status code is 404, it means that the cluster
+         * has been deleted. We want to just log the errors
+         * silently, because the cluster load action is already
+         * displaying an error message.
+         */
+        dispatch({
+          type: CLUSTER_NODEPOOLS_LOAD_ERROR,
+          id: clusterID,
+          error: 'Node pools not found',
+        });
+
+        return;
+      }
+
+      dispatch({
+        type: CLUSTER_NODEPOOLS_LOAD_ERROR,
+        id: clusterID,
+        error: err.message,
+      });
+
+      let errorMessage =
+        'Something went wrong while trying to load node pools on this cluster.';
+      if (err.response?.message || err.message) {
+        errorMessage = `There was a problem loading node pools: ${
+          err.response?.message ?? err.message
+        }`;
+      }
+
+      new FlashMessage(
+        errorMessage,
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
     }
-    const nodePoolsApi = new GiantSwarm.NodePoolsApi();
-
-    return (
-      nodePoolsApi
-        .getNodePools(clusterId)
-        .then((data) => {
-          // Receiving an array-like with weird prototype from API call,
-          // so converting it to an array.
-          const nodePoolsArray = Array.from(data) || [];
-
-          // Dispatch action for populating nodePools key inside cluster
-          dispatch({
-            type: CLUSTER_NODEPOOLS_LOAD_SUCCESS,
-            id: clusterId,
-            nodePools: nodePoolsArray, // nodePools
-            nodePoolsIds: nodePoolsArray.map((np) => np.id), // array of ids to store in cluster
-          });
-
-          return nodePoolsArray;
-        })
-        // here error.response.status -> delete node pools
-        .catch((error) => {
-          if (error.response?.status === StatusCodes.NotFound) {
-            // If 404, it means that the cluster has been deleted.
-            // We want to just log the errors silently, because cluster load
-            //action is already triggering an error message so the user knows
-            //what's going on.
-            dispatch({
-              type: CLUSTER_NODEPOOLS_LOAD_ERROR,
-              id: clusterId,
-              error: 'Node pools not found',
-            });
-
-            return;
-          }
-
-          dispatch({
-            type: CLUSTER_NODEPOOLS_LOAD_ERROR,
-            id: clusterId,
-            error: error.message,
-          });
-
-          let errorMessage =
-            'Something went wrong while trying to load node pools on this cluster.';
-          if (error.response?.message || error.message) {
-            errorMessage = `There was a problem loading node pools: ${
-              error.response?.message ?? error.message
-            }`;
-          }
-
-          new FlashMessage(
-            errorMessage,
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
-        })
-    );
   };
 }
 
@@ -101,7 +95,7 @@ export function nodePoolsLoad(opts?: {
   filterBySelectedOrganization?: boolean;
   withLoadingFlags?: boolean;
 }): ThunkAction<void, IState, void, NodePoolActions> {
-  return async function (dispatch, getState) {
+  return async (dispatch, getState) => {
     if (opts?.withLoadingFlags)
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
 
@@ -142,161 +136,171 @@ export function nodePoolsLoad(opts?: {
 }
 
 export function nodePoolPatch(
-  clusterId: string,
+  clusterID: string,
   nodePool: INodePool,
   payload: INodePoolPatchActionPayload
 ): ThunkAction<void, IState, void, NodePoolActions> {
-  return function (dispatch) {
-    dispatch({
-      type: NODEPOOL_PATCH,
-      nodePool,
-      payload,
-    });
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: NODEPOOL_PATCH,
+        nodePool,
+        payload,
+      });
 
-    const nodePoolsApi = new GiantSwarm.NodePoolsApi();
-
-    return nodePoolsApi
-      .modifyNodePool(
-        clusterId,
+      const nodePoolsApi = new GiantSwarm.NodePoolsApi();
+      await nodePoolsApi.modifyNodePool(
+        clusterID,
         nodePool.id,
         payload as GiantSwarm.V5ModifyNodePoolRequest
-      )
-      .catch((error) => {
-        // Undo update to store if the API call fails.
-        dispatch({
-          type: NODEPOOL_PATCH_ERROR,
-          error,
-          nodePool,
-        });
-
-        throw error;
+      );
+    } catch (err) {
+      // Undo update to store if the API call fails.
+      dispatch({
+        type: NODEPOOL_PATCH_ERROR,
+        error: err,
+        nodePool,
       });
+
+      throw err;
+    }
   };
 }
 
 export function nodePoolDeleteConfirmed(
-  clusterId: string,
+  clusterID: string,
   nodePool: INodePool
 ): ThunkAction<void, IState, void, NodePoolActions> {
-  return function (dispatch) {
-    dispatch({
-      type: NODEPOOL_DELETE_CONFIRMED_REQUEST,
-      clusterId,
-      nodePool,
-    });
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: NODEPOOL_DELETE_CONFIRMED_REQUEST,
+        clusterId: clusterID,
+        nodePool,
+      });
 
-    const nodePoolsApi = new GiantSwarm.NodePoolsApi();
+      const nodePoolsApi = new GiantSwarm.NodePoolsApi();
+      await nodePoolsApi.deleteNodePool(clusterID, nodePool.id);
 
-    return nodePoolsApi
-      .deleteNodePool(clusterId, nodePool.id)
-      .then(() => {
-        dispatch({
-          type: NODEPOOL_DELETE_SUCCESS,
-          nodePool,
-          clusterId,
-        });
+      dispatch({
+        type: NODEPOOL_DELETE_SUCCESS,
+        nodePool,
+        clusterId: clusterID,
+      });
 
-        // TODO(axbarsan): Remove type cast once modal actions have been typed.
-        dispatch(modalHide() as NodePoolActions);
+      // TODO(axbarsan): Remove type cast once modal actions have been typed.
+      dispatch(modalHide() as NodePoolActions);
 
+      new FlashMessage(
+        `Node Pool <code>${nodePool.id}</code> will be deleted`,
+        messageType.INFO,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      // TODO(axbarsan): Remove type cast once modal actions have been typed.
+      dispatch(modalHide() as NodePoolActions);
+
+      new FlashMessage(
+        `An error occurred when trying to delete node pool <code>${nodePool.id}</code>.`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      dispatch({
+        type: NODEPOOL_DELETE_ERROR,
+        nodePoolId: nodePool.id,
+        error: err,
+      });
+    }
+  };
+}
+
+function makeNodePoolCreator(
+  nodePoolsApi: GiantSwarm.NodePoolsApi,
+  dispatch: ThunkDispatch<IState, void, NodePoolActions>,
+  clusterID: string,
+  emitFlashMessage: boolean
+) {
+  const defaults: Partial<INodePool> = {
+    status: {
+      nodes_ready: 0,
+      nodes: 0,
+      spot_instances: 0,
+      instance_types: null,
+    },
+  };
+
+  return async (nodePool: INodePool) => {
+    try {
+      dispatch({ type: NODEPOOL_CREATE_REQUEST });
+
+      const response = await nodePoolsApi.addNodePool(
+        clusterID,
+        (nodePool as unknown) as GiantSwarm.V5AddNodePoolRequest
+      );
+      const newNodePool: INodePool = {
+        ...response,
+        ...defaults,
+      };
+
+      dispatch({
+        type: NODEPOOL_CREATE_SUCCESS,
+        clusterId: clusterID,
+        nodePool: newNodePool,
+      });
+
+      if (emitFlashMessage) {
         new FlashMessage(
-          `Node Pool <code>${nodePool.id}</code> will be deleted`,
-          messageType.INFO,
-          messageTTL.SHORT
+          `Your new node pool with ID <code>${newNodePool.id}</code> is being created.`,
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
         );
-      })
-      .catch((error) => {
-        // TODO(axbarsan): Remove type cast once modal actions have been typed.
-        dispatch(modalHide() as NodePoolActions);
+      }
 
+      return nodePool;
+    } catch (err) {
+      dispatch({
+        type: NODEPOOL_CREATE_ERROR,
+        error: err,
+        clusterId: clusterID,
+        nodePool,
+      });
+
+      if (emitFlashMessage) {
         new FlashMessage(
-          `An error occurred when trying to delete node pool <code>${nodePool.id}</code>.`,
+          'Something went wrong while trying to create the node pool',
           messageType.ERROR,
-          messageTTL.LONG,
+          messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'
         );
+      }
 
-        return dispatch({
-          type: NODEPOOL_DELETE_ERROR,
-          nodePoolId: nodePool.id,
-          error,
-        });
-      });
+      throw err;
+    }
   };
 }
 
 export function nodePoolsCreate(
-  clusterId: string,
+  clusterID: string,
   nodePools: INodePool[],
   opts?: { withFlashMessages?: boolean }
 ): ThunkAction<void, IState, void, NodePoolActions> {
-  return async function (dispatch) {
+  return async (dispatch) => {
     dispatch({ type: NODEPOOL_MULTIPLE_CREATE_REQUEST });
 
     const nodePoolsApi = new GiantSwarm.NodePoolsApi();
-
-    const allNodePools = await Promise.all(
-      nodePools.map((nodePool) => {
-        return nodePoolsApi
-          .addNodePool(
-            clusterId,
-            (nodePool as unknown) as GiantSwarm.V5AddNodePoolRequest
-          )
-          .then((newNodePool) => {
-            dispatch({ type: NODEPOOL_CREATE_REQUEST });
-
-            // When created, there is no status in the response
-            const nodePoolWithStatus: INodePool = {
-              ...newNodePool,
-              status: {
-                nodes_ready: 0,
-                nodes: 0,
-                spot_instances: 0,
-                instance_types: null,
-              },
-            };
-
-            dispatch({
-              type: NODEPOOL_CREATE_SUCCESS,
-              clusterId,
-              nodePool: nodePoolWithStatus,
-            });
-
-            if (opts?.withFlashMessages) {
-              new FlashMessage(
-                `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
-                messageType.SUCCESS,
-                messageTTL.MEDIUM
-              );
-            }
-
-            return nodePoolWithStatus;
-          })
-          .catch((error) => {
-            dispatch({
-              type: NODEPOOL_CREATE_ERROR,
-              error,
-              clusterId,
-              nodePool,
-            });
-
-            if (opts?.withFlashMessages) {
-              new FlashMessage(
-                'Something went wrong while trying to create the node pool',
-                messageType.ERROR,
-                messageTTL.MEDIUM,
-                'Please try again later or contact support: support@giantswarm.io'
-              );
-            }
-
-            throw error;
-          });
-      })
+    const requests = nodePools.map(
+      makeNodePoolCreator(
+        nodePoolsApi,
+        dispatch,
+        clusterID,
+        opts?.withFlashMessages ?? false
+      )
     );
+    await Promise.all(requests);
 
     dispatch({ type: NODEPOOL_MULTIPLE_CREATE_FINISHED });
-
-    return allNodePools;
   };
 }
 
