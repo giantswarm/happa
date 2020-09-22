@@ -132,6 +132,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     ingressAppToInstall,
     ingressAppDetailPath,
     clusterId,
+    clusterIsCreating,
   ]);
 
   return (
