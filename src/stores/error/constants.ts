@@ -1,0 +1,3 @@
+export const ERROR_CLEAR_FOR_TYPE = 'ERROR_CLEAR_FOR_TYPE';
+export const ERROR_SUFFIX = 'ERROR';
+export const ERROR_SUCCESS_SUFFIX = 'SUCCESS';

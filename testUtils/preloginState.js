@@ -27,6 +27,7 @@ export default {
       },
     },
   },
+  errors: {},
   metadata: {
     version: {
       current: 'VERSION',
