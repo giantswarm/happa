@@ -36,16 +36,18 @@ const nodePoolReducer = produce(
       case NODEPOOL_PATCH_ERROR:
         draft.items[action.nodePool.id] = action.nodePool;
 
-        return;
+        break;
 
       case NODEPOOL_DELETE_SUCCESS:
       case NODEPOOL_CREATE_ERROR:
         delete draft.items[action.nodePool.id];
 
-        return;
+        break;
 
       case NODEPOOL_CREATE_SUCCESS:
         draft.items[action.nodePool.id] = action.nodePool;
+
+        break;
     }
   },
   initialState

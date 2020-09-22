@@ -116,7 +116,7 @@ const modalReducer = produce((draft, action) => {
     case NODEPOOL_DELETE:
       draft.visible = true;
       draft.templateValues = {
-        clusterId: action.clusterId,
+        clusterId: action.clusterID,
         nodePool: action.nodePool,
         loading: false,
       };
@@ -127,7 +127,7 @@ const modalReducer = produce((draft, action) => {
     case NODEPOOL_DELETE_CONFIRMED_REQUEST:
       draft.visible = true;
       draft.templateValues = {
-        clusterId: action.clusterId,
+        clusterId: action.clusterID,
         nodePool: action.nodePool,
         loading: true,
       };

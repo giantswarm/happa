@@ -184,8 +184,8 @@ export function nodePoolDeleteConfirmed(
 
       dispatch({
         type: NODEPOOL_DELETE_SUCCESS,
-        nodePool,
         clusterID,
+        nodePool,
       });
 
       // TODO(axbarsan): Remove type cast once modal actions have been typed.

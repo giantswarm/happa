@@ -122,7 +122,7 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterID]) {
         draft.items[action.clusterID].nodePools = draft.items[
           action.clusterID
-        ].nodePools.filter((np: string) => np !== action.nodePoolID);
+        ].nodePools.filter((np: string) => np !== action.nodePool.id);
       }
 
       return;
