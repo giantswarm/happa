@@ -166,7 +166,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
       .then(() => {
         dispatch({
           type: types.NODEPOOL_DELETE_SUCCESS,
-          nodePoolId: nodePool.id,
+          nodePool,
           clusterId,
         });
 

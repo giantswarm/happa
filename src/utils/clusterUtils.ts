@@ -118,7 +118,11 @@ export function getNumberOfNodePoolsNodes(nodePools: INodePool[]) {
   if (nodePools.length === 0) return 0;
 
   return nodePools.reduce((accumulator, current) => {
-    return accumulator + current.status.nodes;
+    if (current.status) {
+      return accumulator + current.status.nodes;
+    }
+
+    return accumulator;
   }, 0);
 }
 
@@ -150,7 +154,7 @@ export function getMemoryTotalNodePools(nodePools: INodePool[]): number {
 
     switch (provider) {
       case Providers.AWS:
-        currInstanceType = nodePool.node_spec.aws?.instance_type ?? '';
+        currInstanceType = nodePool.node_spec?.aws?.instance_type ?? '';
         instanceTypeRAM =
           (instanceTypes as Record<string, IRawAWSInstanceType>)[
             currInstanceType
@@ -159,7 +163,7 @@ export function getMemoryTotalNodePools(nodePools: INodePool[]): number {
         break;
 
       case Providers.AZURE:
-        currInstanceType = nodePool.node_spec.azure?.vm_size ?? '';
+        currInstanceType = nodePool.node_spec?.azure?.vm_size ?? '';
         instanceTypeRAM =
           (instanceTypes as Record<string, IRawAzureInstanceType>)[
             currInstanceType
@@ -170,7 +174,7 @@ export function getMemoryTotalNodePools(nodePools: INodePool[]): number {
         break;
     }
 
-    instanceTypeRAM = instanceTypeRAM * nodePool.status.nodes_ready;
+    instanceTypeRAM = instanceTypeRAM * (nodePool.status?.nodes_ready ?? 0);
 
     return accumulator + instanceTypeRAM;
   }, 0);
@@ -207,7 +211,7 @@ export function getCpusTotalNodePools(nodePools: INodePool[]) {
 
     switch (provider) {
       case Providers.AWS:
-        currInstanceType = nodePool.node_spec.aws?.instance_type ?? '';
+        currInstanceType = nodePool.node_spec?.aws?.instance_type ?? '';
         instanceTypeCPUs =
           (instanceTypes as Record<string, IRawAWSInstanceType>)[
             currInstanceType
@@ -216,7 +220,7 @@ export function getCpusTotalNodePools(nodePools: INodePool[]) {
         break;
 
       case Providers.AZURE:
-        currInstanceType = nodePool.node_spec.azure?.vm_size ?? '';
+        currInstanceType = nodePool.node_spec?.azure?.vm_size ?? '';
         instanceTypeCPUs =
           (instanceTypes as Record<string, IRawAzureInstanceType>)[
             currInstanceType
@@ -225,7 +229,7 @@ export function getCpusTotalNodePools(nodePools: INodePool[]) {
         break;
     }
 
-    instanceTypeCPUs = instanceTypeCPUs * nodePool.status.nodes_ready;
+    instanceTypeCPUs = instanceTypeCPUs * (nodePool.status?.nodes_ready ?? 0);
 
     return accumulator + instanceTypeCPUs;
   }, 0);
@@ -355,9 +359,9 @@ export function guessProviderFromNodePools(
     return null;
   }
 
-  if (nodePools[0].node_spec.aws) {
+  if (nodePools[0].node_spec?.aws) {
     return Providers.AWS;
-  } else if (nodePools[0].node_spec.azure) {
+  } else if (nodePools[0].node_spec?.azure) {
     return Providers.AZURE;
   }
 

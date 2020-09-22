@@ -27,10 +27,12 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
   provider,
 }) => {
   const { id, scaling, status } = nodePool;
-  const { nodes_ready: current, nodes: desired, spot_instances } = status;
+  const current = status?.nodes_ready ?? 0;
+  const desired = status?.nodes ?? 0;
+  const spot_instances = status?.spot_instances ?? 0;
 
   const formatInstanceDistribution = () => {
-    const { aws } = nodePool.node_spec;
+    const aws = nodePool.node_spec?.aws;
 
     let baseCapacity = '-';
     let spotPercentage = '-';
@@ -54,8 +56,8 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
 
   return (
     <>
-      <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
-      <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
+      <NodesWrapper data-testid='scaling-min'>{scaling?.min ?? 0}</NodesWrapper>
+      <NodesWrapper data-testid='scaling-max'>{scaling?.max ?? 0}</NodesWrapper>
       <NodesWrapper>{desired}</NodesWrapper>
       <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
 
