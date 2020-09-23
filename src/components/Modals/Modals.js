@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { batchedClusterDeleteConfirmed } from 'actions/batchedActions';
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { modalHide } from 'actions/modalActions';
-import { nodePoolDeleteConfirmed } from 'actions/nodePoolActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
@@ -16,6 +15,7 @@ import {
   organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'stores/organization/actions';
+import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

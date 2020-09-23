@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import FlashMessage from 'UI/FlashMessage';
 import Section from 'UI/Section';
 
 import PasswordField from '../SignUp/PasswordField';
@@ -234,9 +235,9 @@ class ChangePassword extends React.Component {
               </SlideTransition>
 
               <SlideTransition in={this.state.error}>
-                <div className='flash-messages--flash-message flash-messages--danger'>
+                <FlashMessage type='danger'>
                   {this.state.errorMessage}
-                </div>
+                </FlashMessage>
               </SlideTransition>
             </div>
           </form>

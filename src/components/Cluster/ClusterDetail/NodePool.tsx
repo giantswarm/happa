@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as nodePoolActions from 'actions/nodePoolActions';
 import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -12,6 +11,7 @@ import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
+import * as nodePoolActions from 'stores/nodepool/actions';
 import { Code, Ellipsis } from 'styles/';
 import ViewAndEditName from 'UI/ViewEditName';
 
@@ -180,22 +180,18 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   formatInstanceTypes = () => {
-    const {
-      id,
-      status: { instance_types },
-      node_spec: { aws, azure },
-    } = this.props.nodePool;
+    const { id, status, node_spec } = this.props.nodePool;
 
-    if (aws && !aws.use_alike_instance_types) {
-      return <Code>{aws.instance_type}</Code>;
+    if (node_spec?.aws && !node_spec.aws.use_alike_instance_types) {
+      return <Code>{node_spec.aws.instance_type}</Code>;
     }
 
-    if (azure) {
-      return <Code>{azure.vm_size}</Code>;
+    if (node_spec?.azure) {
+      return <Code>{node_spec.azure.vm_size}</Code>;
     }
 
     // Spot instances.
-    const instanceTypesAvailable = Boolean(instance_types);
+    const instanceTypes = status?.instance_types ?? null;
 
     return (
       <OverlayTrigger
@@ -203,17 +199,19 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           <Tooltip id={`${id}-instance-types`}>
             Similar instances enabled.
             <br />
-            {instanceTypesAvailable
-              ? `Currently used: ${instance_types.join(', ')}`
+            {instanceTypes
+              ? `Currently used: ${instanceTypes.join(', ')}`
               : 'Unable to display used instance types'}
           </Tooltip>
         }
         placement='top'
       >
         <InstanceTypesWrapperDiv>
-          <MixedInstanceType>{aws?.instance_type ?? ''}</MixedInstanceType>
-          {instanceTypesAvailable && instance_types.length > 1 && (
-            <small>+{instance_types.length - 1}</small>
+          <MixedInstanceType>
+            {node_spec?.aws?.instance_type ?? ''}
+          </MixedInstanceType>
+          {instanceTypes && instanceTypes.length > 1 && (
+            <small>+{instanceTypes.length - 1}</small>
           )}
         </InstanceTypesWrapperDiv>
       </OverlayTrigger>
@@ -222,12 +220,14 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
 
   render() {
     if (!this.props.nodePool) {
-      return <img className='loader' src={spinner} />;
+      return <img className='loader' src={spinner} alt='' />;
     }
     const { cluster, nodePool, provider } = this.props;
     const { id, availability_zones, status } = nodePool;
-    const { nodes_ready: current, nodes: desired } = status;
     const { isNameBeingEdited } = this.state;
+
+    const current = status?.nodes_ready ?? 0;
+    const desired = status?.nodes ?? 0;
 
     return (
       <>

@@ -107,12 +107,6 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
       return '🎉 Ingress controller installed. Please continue to the next step.';
     }
 
-    if (clusterIsNotReady) {
-      return `Please wait for cluster ${
-        clusterIsCreating ? 'creation' : 'upgrade'
-      } to be completed before installing the Ingress Controller app.`;
-    }
-
     if (ingressAppToInstall) {
       return (
         <>
@@ -121,6 +115,13 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
             NGINX Ingress Controller app {ingressAppToInstall.version}
           </StyledLink>{' '}
           on cluster <ClusterIDLabel clusterID={clusterId} />
+          {clusterIsNotReady && (
+            <>
+              {' '}
+              once cluster {clusterIsCreating ? 'creation' : 'upgrade'} has
+              finished
+            </>
+          )}
         </>
       );
     }
@@ -144,7 +145,6 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           bsSize='lg'
           loadingTimeout={0}
           onClick={installIngressController}
-          disabled={clusterIsNotReady}
         >
           Install Ingress Controller
         </Button>

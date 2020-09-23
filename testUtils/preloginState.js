@@ -78,6 +78,7 @@ export default {
     },
     nodePools: {
       items: {},
+      isFetching: false,
     },
   },
   modal: {

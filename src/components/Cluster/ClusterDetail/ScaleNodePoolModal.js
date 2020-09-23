@@ -1,4 +1,3 @@
-import * as nodePoolActions from 'actions/nodePoolActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,8 +7,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import * as nodePoolActions from 'stores/nodepool/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import FlashMessageComponent from 'UI/FlashMessage';
 
 class ScaleNodePoolModal extends React.Component {
   static supportsAutoscaling(provider) {
@@ -336,11 +337,11 @@ class ScaleNodePoolModal extends React.Component {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your node pool:</p>
-          <div className='flash-messages--flash-message flash-messages--danger'>
+          <FlashMessageComponent type='danger'>
             {error.body && error.body.message
               ? error.body.message
               : error.message}
-          </div>
+          </FlashMessageComponent>
         </BootstrapModal.Body>
       );
       footer = (

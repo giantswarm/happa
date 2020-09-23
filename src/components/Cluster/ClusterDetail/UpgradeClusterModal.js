@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
+import FlashMessageComponent from 'UI/FlashMessage';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
 
@@ -96,11 +97,11 @@ class UpgradeClusterModal extends React.Component {
     return (
       <div>
         {typeof release === 'undefined' ? (
-          <div className='flash-messages--flash-message flash-messages--info'>
+          <FlashMessageComponent type='info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />
             Unable to show you an exact diff.
-          </div>
+          </FlashMessageComponent>
         ) : undefined}
         <p>
           <b>Component Changes</b>

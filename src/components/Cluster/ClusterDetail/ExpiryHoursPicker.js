@@ -5,6 +5,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Constants } from 'shared/constants';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import FlashMessage from 'UI/FlashMessage';
 
 const List = styled.ul`
   & > li + li {
@@ -270,9 +271,7 @@ class ExpiryHoursPicker extends React.Component {
         </li>
         <li>
           <SlideTransition in={hasError}>
-            <div className='flash-messages--flash-message flash-messages--warning'>
-              {error}
-            </div>
+            <FlashMessage type='warning'>{error}</FlashMessage>
           </SlideTransition>
         </li>
       </List>

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
@@ -7,11 +8,23 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Aside from 'UI/Aside';
 import Button from 'UI/Button';
+import FlashMessageComponent from 'UI/FlashMessage';
 
 import { CodeBlock, Prompt } from '../CodeBlock';
 import FileBlock from '../FileBlock';
 
 const Modernizr = window.Modernizr;
+
+const KeyPairError = styled.div`
+  height: 20px;
+  font-size: 14px;
+`;
+
+const KeyPairFlashMessage = styled(FlashMessageComponent)`
+  display: inline;
+  position: relative;
+  top: 10px;
+`;
 
 class ConfigKubeCtl extends React.Component {
   state = {
@@ -243,13 +256,13 @@ class ConfigKubeCtl extends React.Component {
                 This will create a configuration file containing a new key pair
               </strong>
             </p>
-            <div className='key-pair-error'>
+            <KeyPairError>
               {this.state.keyPair.error ? (
-                <div className='flash-messages--flash-message flash-messages--danger'>
+                <KeyPairFlashMessage type='danger'>
                   Request failed. Please try again later or contact support
-                </div>
+                </KeyPairFlashMessage>
               ) : null}
-            </div>
+            </KeyPairError>
           </div>
         )}
 
