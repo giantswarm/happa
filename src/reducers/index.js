@@ -7,8 +7,8 @@ import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
 import errorReducer from 'stores/error/reducer';
 import metadata from 'stores/metadata/reducer';
-import organizations from 'stores/organization/reducer';
 import nodePools from 'stores/nodepool/reducer';
+import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
 
 import credentials from './credentialReducer';

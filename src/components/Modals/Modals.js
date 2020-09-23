@@ -8,6 +8,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import EmailField from 'shared/EmailField';
 import InputField from 'shared/InputField';
+import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import {
   organizationAddMemberConfirmed,
   organizationAddMemberTyping,
@@ -15,7 +16,6 @@ import {
   organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'stores/organization/actions';
-import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

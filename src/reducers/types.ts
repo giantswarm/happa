@@ -2,8 +2,8 @@ import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { ICPAuthState } from 'stores/cpauth/types';
 import { IErrorState } from 'stores/error/types';
 import { IMetadataState } from 'stores/metadata/types';
-import { IOrganizationState } from 'stores/organization/types';
 import { INodePoolState } from 'stores/nodepool/types';
+import { IOrganizationState } from 'stores/organization/types';
 
 // Giving state a generic type for now, until whole state is typed.
 export interface IState {

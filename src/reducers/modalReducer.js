@@ -1,6 +1,10 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import {
+  NODEPOOL_DELETE,
+  NODEPOOL_DELETE_CONFIRMED_REQUEST,
+} from 'stores/nodepool/constants';
+import {
   ORGANIZATION_ADD_MEMBER_CONFIRMED,
   ORGANIZATION_ADD_MEMBER_ERROR,
   ORGANIZATION_ADD_MEMBER_REQUEST,
@@ -12,10 +16,6 @@ import {
   ORGANIZATION_REMOVE_MEMBER,
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
 } from 'stores/organization/constants';
-import {
-  NODEPOOL_DELETE,
-  NODEPOOL_DELETE_CONFIRMED_REQUEST,
-} from 'stores/nodepool/constants';
 
 const initialState = { visible: false };
 
