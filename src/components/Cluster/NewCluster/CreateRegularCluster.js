@@ -13,6 +13,7 @@ import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import Section from 'UI/ClusterCreation/Section';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
+import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 
 import ClusterCreationDuration from './ClusterCreationDuration';
@@ -196,7 +197,7 @@ class CreateRegularCluster extends React.Component {
 
   errorState() {
     return (
-      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+      <FlashMessage type='danger'>
         <b>Something went wrong while trying to create your cluster.</b>
         <br />
         Perhaps our servers are down, please try again later or contact support:
@@ -205,7 +206,7 @@ class CreateRegularCluster extends React.Component {
         {this.state.errorMessage !== '' ? (
           <pre>{this.state.errorMessage}</pre>
         ) : undefined}
-      </div>
+      </FlashMessage>
     );
   }
 

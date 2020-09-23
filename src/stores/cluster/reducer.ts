@@ -2,6 +2,11 @@ import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
+import {
+  CLUSTER_NODEPOOLS_LOAD_SUCCESS,
+  NODEPOOL_CREATE_SUCCESS,
+  NODEPOOL_DELETE_SUCCESS,
+} from 'stores/nodepool/constants';
 
 const initialState = {
   lastUpdated: null,
@@ -43,8 +48,8 @@ const clusterReducer = produce((draft, action) => {
       return;
     }
 
-    case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
-      draft.items[action.id].nodePools = action.nodePoolsIds;
+    case CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+      draft.items[action.id].nodePools = action.nodePoolIDs;
 
       return;
 
@@ -108,16 +113,16 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
+    case NODEPOOL_CREATE_SUCCESS:
+      draft.items[action.clusterID].nodePools.push(action.nodePool.id);
 
       return;
 
-    case types.NODEPOOL_DELETE_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].nodePools = draft.items[
-          action.clusterId
-        ].nodePools.filter((np: string) => np !== action.nodePoolId);
+    case NODEPOOL_DELETE_SUCCESS:
+      if (draft.items[action.clusterID]) {
+        draft.items[action.clusterID].nodePools = draft.items[
+          action.clusterID
+        ].nodePools.filter((np: string) => np !== action.nodePool.id);
       }
 
       return;

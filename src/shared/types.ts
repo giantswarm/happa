@@ -21,10 +21,10 @@ export interface INodePoolNodeSpecVolumeSizesGB {
 export interface INodePoolNodeSpec {
   aws: INodePoolNodeSpecAWS | null;
   azure: INodePoolNodeSpecAzure | null;
-  volume_sizes_gb: INodePoolNodeSpecVolumeSizesGB;
+  volume_sizes_gb: INodePoolNodeSpecVolumeSizesGB | null;
 }
 
-export interface IScaling {
+export interface INodePoolScaling {
   min: number;
   max: number;
 }
@@ -33,17 +33,18 @@ export interface INodePoolStatus {
   nodes: number;
   nodes_ready: number;
   spot_instances: number;
-  instance_types: string[];
+  instance_types: string[] | null;
 }
 
 export interface INodePool {
-  availability_zones: string[];
+  availability_zones: string[] | null;
   id: string;
   name: string;
   subnet: string;
-  node_spec: INodePoolNodeSpec;
-  scaling: IScaling;
-  status: INodePoolStatus;
+  node_spec: INodePoolNodeSpec | null;
+  scaling: INodePoolScaling | null;
+  // When a node pool is created, this field is not in the server response.
+  status?: INodePoolStatus | null;
 }
 
 export interface IKeyPair {

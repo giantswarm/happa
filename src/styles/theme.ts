@@ -65,11 +65,25 @@ const theme: ITheme = {
     greenNew: '#24A524',
 
     flashMessages: {
-      // TODO move the other colors into here
       info: {
         background: '#d9edf7',
         border: '#bce8f1',
         text: '#31708f',
+      },
+      danger: {
+        background: '#f2dede',
+        border: '#ebccd1',
+        text: '#a94442',
+      },
+      success: {
+        background: '#dff0d8',
+        border: '#d6e9c6',
+        text: '#3c763d',
+      },
+      warning: {
+        background: '#fcf8e3',
+        border: '#faebcc',
+        text: '#8a6d3b',
       },
     },
   },

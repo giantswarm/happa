@@ -4,10 +4,7 @@ import { Constants } from 'shared/constants';
 import {
   canClusterUpgrade,
   getCpusTotal,
-  getCpusTotalNodePools,
   getMemoryTotal,
-  getMemoryTotalNodePools,
-  getNumberOfNodePoolsNodes,
   getNumberOfNodes,
   getStorageTotal,
   isClusterCreating,
@@ -38,24 +35,6 @@ const selectOrganizationClusterNames = (state) => {
   return clusterIds
     .filter((id) => clusters[id].owner === state.main.selectedOrganization)
     .sort((a, b) => (clusters[a].name > clusters[b].name ? 1 : -1));
-};
-
-const selectNodePools = (state) => state.entities.nodePools.items;
-
-const selectClusterNodePoolsIds = (state, props) => {
-  return state.entities.clusters.items[props.cluster.id].nodePools;
-};
-
-export const selectClusterNodePools = (state, clusterId) => {
-  const clusterNodePoolsIds =
-    state.entities.clusters.items[clusterId]?.nodePools ?? [];
-
-  // Return an empty array for v4 clusters
-  if (!clusterNodePoolsIds) return [];
-
-  const nodePools = state.entities.nodePools.items;
-
-  return clusterNodePoolsIds.map((nodePoolId) => nodePools[nodePoolId]) || [];
 };
 
 export const selectErrorByIdAndAction = (state, id, actionType) => {
@@ -104,25 +83,6 @@ export const selectResourcesV4 = () =>
 
     return { numberOfNodes, memory, cores, storage };
   });
-
-export const selectResourcesV5 = () =>
-  createDeepEqualSelector(
-    [selectNodePools, selectClusterNodePoolsIds],
-    (nodePools, clusterNodePoolsIds) => {
-      // TODO This is not being memoized correctly, investigate further
-      const clusterNodePools =
-        // nodePools &&
-        Object.entries(nodePools).length !== 0 && clusterNodePoolsIds
-          ? clusterNodePoolsIds.map((np) => nodePools[np])
-          : [];
-
-      const numberOfNodes = getNumberOfNodePoolsNodes(clusterNodePools);
-      const memory = getMemoryTotalNodePools(clusterNodePools);
-      const cores = getCpusTotalNodePools(clusterNodePools);
-
-      return { numberOfNodes, memory, cores };
-    }
-  );
 
 export const selectTargetRelease = (state, cluster) => {
   if (!cluster || Object.keys(state.entities.releases.items).length === 0)
