@@ -42,6 +42,9 @@ export function setUserToStorage(userData: ILoggedInUser) {
   defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
 }
 
-export const setOrganizationToStorage = (organizationId: string) => {
-  localStorage.setItem('app.selectedOrganization', organizationId);
+export const setOrganizationToStorage = (organizationId: string | null) => {
+  localStorage.setItem(
+    'app.selectedOrganization',
+    organizationId ?? String(organizationId)
+  );
 };

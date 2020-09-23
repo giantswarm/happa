@@ -1,6 +1,10 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import {
+  ORGANIZATION_LOAD_SUCCESS,
+  ORGANIZATION_SELECT,
+} from 'stores/organization/constants';
+import {
   INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
@@ -70,12 +74,12 @@ const makeAppReducer = () => {
 
         break;
 
-      case types.ORGANIZATION_SELECT:
+      case ORGANIZATION_SELECT:
         draft.selectedOrganization = action.orgId;
 
         break;
 
-      case types.ORGANIZATIONS_LOAD_SUCCESS:
+      case ORGANIZATION_LOAD_SUCCESS:
         draft.selectedOrganization = action.selectedOrganization;
 
         break;

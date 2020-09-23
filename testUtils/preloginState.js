@@ -66,6 +66,7 @@ export default {
       lastUpdated: 0,
       isFetching: false,
       items: {},
+      showCredentialsForm: false,
     },
     releases: {
       items: {},

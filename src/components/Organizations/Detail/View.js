@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
@@ -14,6 +13,7 @@ import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import * as organizationActions from 'stores/organization/actions';
 import { Ellipsis } from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import Section from 'UI/Section';
@@ -289,7 +289,7 @@ function memberActionsCellFormatter(_cell, row) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(OrganizationActions, dispatch),
+    actions: bindActionCreators(organizationActions, dispatch),
   };
 }
 
