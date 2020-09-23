@@ -281,13 +281,12 @@ class ClusterDetailView extends React.Component {
       provider,
       releases,
       region,
-      genericLoadingCluster,
       loadingNodePools,
       loadingCluster,
       isAdmin,
     } = this.props;
 
-    const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
+    const loading = loadingNodePools || loadingCluster;
 
     if (!cluster) return null;
     const { id, owner, release_version } = cluster;
@@ -297,133 +296,125 @@ class ClusterDetailView extends React.Component {
     const clusterIsCreating = isClusterCreating(cluster);
 
     return (
-      <>
-        <LoadingOverlay loading={loading} />
-
-        {!loading && (
-          <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
-            <div data-testid='cluster-details-view'>
-              <h1>
-                <ClusterIDLabel clusterID={id} copyEnabled />{' '}
-                <ViewAndEditName
-                  value={cluster.name}
-                  typeLabel='cluster'
-                  onSave={this.editClusterName}
-                />{' '}
-              </h1>
-              {(isClusterUpdating(cluster) || clusterIsCreating) && (
-                <SlideTransition in={true} appear={true} direction='down'>
-                  <NotReadyNotice>
-                    <i className='fa fa-info' /> This cluster is currently being{' '}
-                    {clusterIsCreating ? 'created' : 'updated'}. During this
-                    time, some operations are disabled or may not work as
-                    expected.
-                  </NotReadyNotice>
-                </SlideTransition>
-              )}
-              <Tabs useRoutes={true}>
-                <Tab eventKey={tabsPaths.Home} title='General'>
-                  {isV5Cluster ? (
-                    <V5ClusterDetailTable
-                      accessCluster={this.accessCluster}
-                      canClusterUpgrade={canClusterUpgrade}
-                      cluster={cluster}
-                      credentials={credentials}
-                      provider={provider}
-                      release={release}
-                      region={region}
-                      showUpgradeModal={this.showUpgradeModal}
-                      workerNodesDesired={this.getDesiredNumberOfNodes()}
-                    />
-                  ) : (
-                    <V4ClusterDetailTable
-                      accessCluster={this.accessCluster}
-                      canClusterUpgrade={canClusterUpgrade}
-                      cluster={cluster}
-                      credentials={credentials}
-                      provider={provider}
-                      release={release}
-                      region={region}
-                      showScalingModal={this.showScalingModal}
-                      showUpgradeModal={this.showUpgradeModal}
-                      workerNodesDesired={this.getDesiredNumberOfNodes()}
-                    />
-                  )}
-
-                  <Section title='Delete This Cluster' flat>
-                    <>
-                      <Disclaimer>
-                        All workloads on this cluster will be terminated. Data
-                        stored on the worker nodes will be lost. There is no way
-                        to undo this action.
-                      </Disclaimer>
-                      <Button
-                        bsStyle='danger'
-                        onClick={this.showDeleteClusterModal.bind(
-                          this,
-                          cluster
-                        )}
-                      >
-                        <i className='fa fa-delete' /> Delete Cluster
-                      </Button>
-                    </>
-                  </Section>
-                </Tab>
-                <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
-                  <LoadingOverlay loading={this.props.loadingCluster}>
-                    <KeyPairs cluster={cluster} />
-                  </LoadingOverlay>
-                </Tab>
-                <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                  <ClusterApps
-                    clusterId={id}
-                    dispatch={dispatch}
-                    installedApps={cluster.apps}
-                    release={release}
-                    showInstalledAppsBlock={
-                      Object.keys(this.props.catalogs.items).length > 0
-                    }
-                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
-                  />
-                </Tab>
-                <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                  <Ingress
+      <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
+        <LoadingOverlay loading={loading}>
+          <div data-testid='cluster-details-view'>
+            <h1>
+              <ClusterIDLabel clusterID={id} copyEnabled />{' '}
+              <ViewAndEditName
+                value={cluster.name}
+                typeLabel='cluster'
+                onSave={this.editClusterName}
+              />{' '}
+            </h1>
+            {(isClusterUpdating(cluster) || clusterIsCreating) && (
+              <SlideTransition in={true} appear={true} direction='down'>
+                <NotReadyNotice>
+                  <i className='fa fa-info' /> This cluster is currently being{' '}
+                  {clusterIsCreating ? 'created' : 'updated'}. During this time,
+                  some operations are disabled or may not work as expected.
+                </NotReadyNotice>
+              </SlideTransition>
+            )}
+            <Tabs useRoutes={true}>
+              <Tab eventKey={tabsPaths.Home} title='General'>
+                {isV5Cluster ? (
+                  <V5ClusterDetailTable
+                    accessCluster={this.accessCluster}
+                    canClusterUpgrade={canClusterUpgrade}
                     cluster={cluster}
+                    credentials={credentials}
                     provider={provider}
-                    k8sEndpoint={cluster.api_endpoint}
-                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                    release={release}
+                    region={region}
+                    showUpgradeModal={this.showUpgradeModal}
+                    workerNodesDesired={this.getDesiredNumberOfNodes()}
                   />
-                </Tab>
-              </Tabs>
-              {!isV5Cluster && (
-                <ScaleClusterModal
+                ) : (
+                  <V4ClusterDetailTable
+                    accessCluster={this.accessCluster}
+                    canClusterUpgrade={canClusterUpgrade}
+                    cluster={cluster}
+                    credentials={credentials}
+                    provider={provider}
+                    release={release}
+                    region={region}
+                    showScalingModal={this.showScalingModal}
+                    showUpgradeModal={this.showUpgradeModal}
+                    workerNodesDesired={this.getDesiredNumberOfNodes()}
+                  />
+                )}
+
+                <Section title='Delete This Cluster' flat>
+                  <>
+                    <Disclaimer>
+                      All workloads on this cluster will be terminated. Data
+                      stored on the worker nodes will be lost. There is no way
+                      to undo this action.
+                    </Disclaimer>
+                    <Button
+                      bsStyle='danger'
+                      onClick={this.showDeleteClusterModal.bind(this, cluster)}
+                    >
+                      <i className='fa fa-delete' /> Delete Cluster
+                    </Button>
+                  </>
+                </Section>
+              </Tab>
+              <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
+                <LoadingOverlay loading={this.props.loadingCluster}>
+                  <KeyPairs cluster={cluster} />
+                </LoadingOverlay>
+              </Tab>
+              <Tab eventKey={tabsPaths.Apps} title='Apps'>
+                <ClusterApps
+                  clusterId={id}
+                  dispatch={dispatch}
+                  installedApps={cluster.apps}
+                  release={release}
+                  showInstalledAppsBlock={
+                    Object.keys(this.props.catalogs.items).length > 0
+                  }
+                  hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                />
+              </Tab>
+              <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
+                <Ingress
                   cluster={cluster}
                   provider={provider}
-                  ref={(s) => {
-                    this.scaleClusterModal = s;
-                  }}
-                  workerNodesDesired={this.getDesiredNumberOfNodes()}
-                  workerNodesRunning={getNumberOfNodes(cluster)}
+                  k8sEndpoint={cluster.api_endpoint}
+                  kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                  kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
                 />
-              )}
-
-              <UpgradeClusterModal
+              </Tab>
+            </Tabs>
+            {!isV5Cluster && (
+              <ScaleClusterModal
                 cluster={cluster}
-                ref={(s) => {
-                  this.upgradeClusterModal = s;
-                }}
                 provider={provider}
-                release={release}
-                targetRelease={this.state.targetRelease}
-                setTargetRelease={this.setTargetRelease}
-                cancelSetTargetRelease={this.cancelSetTargetRelease}
-                isAdmin={isAdmin}
+                ref={(s) => {
+                  this.scaleClusterModal = s;
+                }}
+                workerNodesDesired={this.getDesiredNumberOfNodes()}
+                workerNodesRunning={getNumberOfNodes(cluster)}
               />
-            </div>
-          </DocumentTitle>
-        )}
-      </>
+            )}
+
+            <UpgradeClusterModal
+              cluster={cluster}
+              ref={(s) => {
+                this.upgradeClusterModal = s;
+              }}
+              provider={provider}
+              release={release}
+              targetRelease={this.state.targetRelease}
+              setTargetRelease={this.setTargetRelease}
+              cancelSetTargetRelease={this.cancelSetTargetRelease}
+              isAdmin={isAdmin}
+            />
+          </div>
+        </LoadingOverlay>
+      </DocumentTitle>
     );
   }
 }
@@ -448,7 +439,6 @@ ClusterDetailView.propTypes = {
   region: PropTypes.string,
   setInterval: PropTypes.func,
   loadingCluster: PropTypes.bool,
-  genericLoadingCluster: PropTypes.bool,
   loadingNodePools: PropTypes.bool,
   isAdmin: PropTypes.bool,
 };
@@ -469,14 +459,6 @@ function mapStateToProps(state, props) {
     user: state.main.loggedInUser,
     region: state.main.info.general.datacenter,
     isAdmin: getUserIsAdmin(state),
-    // We are using this genericLoadingCluster because we are setting
-    // loadingFlags.CLUSTER_LOAD_DETAILS_REQUEST to true in Organizations/Detail
-    // componentDidMount() just in case of accessing cluster details of a non
-    // selected organization from there.
-    genericLoadingCluster: selectLoadingFlagByAction(
-      state,
-      CLUSTER_LOAD_DETAILS_REQUEST
-    ),
     loadingNodePools: selectLoadingFlagByAction(
       state,
       NODEPOOL_MULTIPLE_LOAD_REQUEST

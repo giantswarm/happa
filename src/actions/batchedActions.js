@@ -1,3 +1,4 @@
+import * as types from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -157,6 +158,11 @@ export const batchedClusterDetailView = (
   isV5Cluster
 ) => async (dispatch) => {
   try {
+    dispatch({
+      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+      id: clusterId,
+    });
+
     // Lets use Promise.all when we have a series of async calls that not depend
     // on each another. It's faster and it's best from an error handling perspective.
     await Promise.all([

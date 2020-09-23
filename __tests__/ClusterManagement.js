@@ -87,9 +87,12 @@ it('creates a v5 cluster and redirect to details view', async () => {
     OrganizationsRoutes.Clusters.New,
     { orgId: ORGANIZATION }
   );
-  const { getAllByText, getByText, getByTestId } = renderRouteWithStore(
-    newClusterPath
-  );
+  const {
+    getAllByText,
+    findAllByText,
+    getByText,
+    getByTestId,
+  } = renderRouteWithStore(newClusterPath);
 
   await waitFor(() => {
     getByText('Create Cluster');
@@ -103,7 +106,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
   // Expect we have been redirected to the cluster details view
   expect(getByTestId('cluster-details-view')).toBeInTheDocument();
   expect(getAllByText(v5ClusterResponse.id));
-  expect(getAllByText(nodePoolCreationResponse.id));
+  expect(await findAllByText(nodePoolCreationResponse.id));
 });
 
 it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
@@ -216,6 +219,10 @@ it('Cluster list shows all clusters, each one with its details, for the selected
   expect(getByText(V5_CLUSTER.id)).toBeInTheDocument();
   expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   expect(getByText(V5_CLUSTER.releaseVersion)).toBeInTheDocument();
+
+  await waitFor(() =>
+    expect(getAllByTestId('cluster-resources').length).toBe(2)
+  );
 
   // Expect resources to be in the view.
   // If we refactor resources selector this will break.
