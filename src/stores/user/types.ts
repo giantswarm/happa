@@ -121,6 +121,7 @@ export interface IUserInfoLoadSuccessAction {
 
 export interface IUserInfoLoadErrorAction {
   type: typeof INFO_LOAD_ERROR;
+  error: string;
 }
 
 export type UserActions =

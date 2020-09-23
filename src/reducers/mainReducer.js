@@ -47,7 +47,7 @@ const makeAppReducer = () => {
 
         draft.loggedInUser = newUser;
 
-        return;
+        break;
       }
 
       case INFO_LOAD_SUCCESS:

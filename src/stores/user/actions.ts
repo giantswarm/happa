@@ -3,6 +3,7 @@ import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { IState } from 'reducers/types';
@@ -74,7 +75,7 @@ export function refreshUserInfo(): ThunkAction<
         error: 'No logged in user to refresh.',
       });
 
-      throw new Error('No logged in user to refresh.');
+      return Promise.reject(new Error('No logged in user to refresh.'));
     }
 
     try {
@@ -86,6 +87,8 @@ export function refreshUserInfo(): ThunkAction<
         type: REFRESH_USER_INFO_SUCCESS,
         email: response.email,
       });
+
+      return Promise.resolve();
     } catch (err) {
       if (err.status === StatusCodes.Unauthorized) {
         new FlashMessage(
@@ -111,6 +114,8 @@ export function refreshUserInfo(): ThunkAction<
         type: REFRESH_USER_INFO_ERROR,
         error: err,
       });
+
+      return Promise.resolve();
     }
   };
 }
@@ -177,12 +182,14 @@ export function giantswarmLogin(
 
       localStorage.setItem('user', JSON.stringify(userData));
       dispatch(loginSuccess(userData));
+
+      return Promise.resolve();
     } catch (err) {
       const message = (err as Error).message ?? (err as string);
       dispatch(loginError(message));
       dispatch(push(AppRoutes.Login));
 
-      throw err;
+      return Promise.reject(err);
     }
   };
 }
@@ -202,11 +209,13 @@ export function giantswarmLogout(): ThunkAction<
 
       dispatch(push(AppRoutes.Login));
       dispatch(logoutSuccess());
+
+      return Promise.resolve();
     } catch (err) {
       dispatch(push(AppRoutes.Login));
       dispatch(logoutError(err));
 
-      throw err;
+      return Promise.reject(err);
     }
   };
 }
@@ -231,13 +240,15 @@ export function getInfo(): ThunkAction<
         type: INFO_LOAD_SUCCESS,
         info: infoRes.data,
       });
-    } catch (error) {
+
+      return Promise.resolve();
+    } catch (err: unknown) {
       dispatch({
         type: INFO_LOAD_ERROR,
-        error: error.data,
+        error: (err as GenericResponse<string>).data,
       });
 
-      throw error;
+      return Promise.reject(err);
     }
   };
 }
@@ -249,12 +260,12 @@ export function usersLoad(): ThunkAction<
   UserActions
 > {
   return async (dispatch, getState) => {
-    try {
-      const alreadyFetching = getState().entities.users.isFetching;
-      if (alreadyFetching) {
-        return;
-      }
+    const alreadyFetching = getState().entities.users.isFetching;
+    if (alreadyFetching) {
+      return Promise.resolve();
+    }
 
+    try {
       dispatch({ type: USERS_LOAD_REQUEST });
 
       const usersApi = new GiantSwarm.UsersApi();
@@ -276,6 +287,8 @@ export function usersLoad(): ThunkAction<
         type: USERS_LOAD_SUCCESS,
         users,
       });
+
+      return Promise.resolve();
     } catch {
       new FlashMessage(
         'Something went wrong while trying to load all users',
@@ -287,6 +300,8 @@ export function usersLoad(): ThunkAction<
       dispatch({
         type: USERS_LOAD_ERROR,
       });
+
+      return Promise.resolve();
     }
   };
 }

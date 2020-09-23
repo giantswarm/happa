@@ -1,4 +1,3 @@
-import { CLUSTERS_LIST_REQUEST } from 'actions/actionTypes';
 import {
   batchedLayout,
   batchedOrganizationSelect,
@@ -22,6 +21,7 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
+import { GLOBAL_LOAD_REQUEST } from 'stores/global/constants';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
@@ -122,10 +122,7 @@ function mapStateToProps(state) {
     organizations: state.entities.organizations,
     user: state.main.loggedInUser,
     selectedOrganization: state.main.selectedOrganization,
-    loadingClustersList: selectLoadingFlagByAction(
-      state,
-      CLUSTERS_LIST_REQUEST
-    ),
+    loadingClustersList: selectLoadingFlagByAction(state, GLOBAL_LOAD_REQUEST),
     catalogs: state.entities.catalogs,
   };
 }

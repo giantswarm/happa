@@ -9,6 +9,11 @@ import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
 import {
+  globalLoadError,
+  globalLoadFinish,
+  globalLoadStart,
+} from 'stores/global/actions';
+import {
   clusterNodePoolsLoad,
   nodePoolsCreate,
   nodePoolsLoad,
@@ -25,10 +30,14 @@ import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 
 export const batchedLayout = () => async (dispatch) => {
+  dispatch(globalLoadStart());
+
   try {
     await dispatch(refreshUserInfo());
     await dispatch(getInfo());
   } catch (err) {
+    dispatch(globalLoadError());
+
     new FlashMessage(
       'Please log in again, as your previously saved credentials appear to be invalid.',
       messageType.WARNING,
@@ -44,6 +53,7 @@ export const batchedLayout = () => async (dispatch) => {
     try {
       await dispatch(loadUser(CPAuth.getInstance()));
     } catch (err) {
+      dispatch(globalLoadError());
       ErrorReporter.getInstance().notify(err);
     }
   }
@@ -57,6 +67,9 @@ export const batchedLayout = () => async (dispatch) => {
         withLoadingFlags: true,
       })
     );
+
+    dispatch(globalLoadFinish());
+
     await dispatch(
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
@@ -71,6 +84,7 @@ export const batchedLayout = () => async (dispatch) => {
       })
     );
   } catch (err) {
+    dispatch(globalLoadError());
     ErrorReporter.getInstance().notify(err);
   }
 };
