@@ -4,6 +4,7 @@ import React from 'react';
 import update from 'react-addons-update';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import FlashMessage from 'UI/FlashMessage';
 
 class ChangeEmailForm extends React.Component {
   state = {
@@ -155,9 +156,9 @@ class ChangeEmailForm extends React.Component {
             </SlideTransition>
 
             <SlideTransition in={this.state.error}>
-              <div className='flash-messages--flash-message flash-messages--danger'>
+              <FlashMessage type='danger'>
                 {this.state.errorMessage}
-              </div>
+              </FlashMessage>
             </SlideTransition>
           </div>
         </form>

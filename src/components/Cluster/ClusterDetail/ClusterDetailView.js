@@ -1,14 +1,10 @@
 import styled from '@emotion/styled';
-import {
-  CLUSTER_LOAD_DETAILS_REQUEST,
-  NODEPOOLS_LOAD_REQUEST,
-} from 'actions/actionTypes';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'actions/actionTypes';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
-import * as nodePoolActions from 'actions/nodePoolActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -30,6 +26,9 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import * as nodePoolActions from 'stores/nodepool/actions';
+import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
+import { selectNodePools } from 'stores/nodepool/selectors';
 import { getUserIsAdmin } from 'stores/user/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -465,7 +464,7 @@ function mapStateToProps(state, props) {
     isV5Cluster: state.entities.clusters.v5Clusters.includes(clusterID),
     credentials: state.entities.credentials,
     catalogs: state.entities.catalogs,
-    nodePools: state.entities.nodePools.items,
+    nodePools: selectNodePools(state),
     provider: state.main.info.general.provider,
     user: state.main.loggedInUser,
     region: state.main.info.general.datacenter,
@@ -478,7 +477,10 @@ function mapStateToProps(state, props) {
       state,
       CLUSTER_LOAD_DETAILS_REQUEST
     ),
-    loadingNodePools: selectLoadingFlagByAction(state, NODEPOOLS_LOAD_REQUEST),
+    loadingNodePools: selectLoadingFlagByAction(
+      state,
+      NODEPOOL_MULTIPLE_LOAD_REQUEST
+    ),
     // This looks for this specific cluster to be loaded.
     loadingCluster: selectLoadingFlagByIdAndAction(
       state,

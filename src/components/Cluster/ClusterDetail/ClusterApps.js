@@ -15,6 +15,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
+import FlashMessageComponent from 'UI/FlashMessage';
 import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
@@ -441,10 +442,10 @@ class ClusterApps extends React.Component {
               </div>
             </PreinstalledApps>
           ) : (
-            <div className='flash-messages--flash-message flash-messages--danger'>
+            <FlashMessageComponent type='danger'>
               Unable to load the list of preinstalled apps. Please try again
               later or contact support: support@giantswarm.io
-            </div>
+            </FlashMessageComponent>
           )}
         </div>
 

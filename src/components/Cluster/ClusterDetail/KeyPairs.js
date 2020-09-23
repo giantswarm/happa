@@ -12,6 +12,7 @@ import { bindActionCreators } from 'redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Copyable from 'shared/Copyable';
 import Button from 'UI/Button';
+import FlashMessage from 'UI/FlashMessage';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';
@@ -208,10 +209,10 @@ class KeyPairs extends React.Component {
           } else if (!this.props.cluster.keyPairs) {
             return (
               <>
-                <div className='flash-messages--flash-message flash-messages--danger'>
+                <FlashMessage type='danger'>
                   Something went wrong while trying to load the list of key
                   pairs.
-                </div>
+                </FlashMessage>
                 <Button onClick={this.loadKeyPairs}>
                   Try loading key pairs again.
                 </Button>

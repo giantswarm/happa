@@ -4,7 +4,7 @@ const initialState = {
   CLUSTERS_LIST: true,
   CLUSTER_LOAD_DETAILS: true,
   CLUSTER_NODEPOOLS_LOAD: true,
-  NODEPOOLS_LOAD: true, // all node pools
+  NODEPOOL_MULTIPLE_LOAD: true,
   CLUSTERS_DETAILS: true, // all clusters
   CLUSTER_LOAD_STATUS: false,
 };
