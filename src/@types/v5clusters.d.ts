@@ -27,5 +27,8 @@ declare namespace V5 {
 
     conditions?: IClusterCondition[];
     versions?: IClusterVersion[];
+
+    // Injected by client-side.
+    nodePools?: string[];
   }
 }

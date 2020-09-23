@@ -1,8 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import produce from 'immer';
@@ -12,13 +10,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
-import {
-  selectClusterNodePools,
-  selectLoadingFlagByIdAndAction,
-  selectResourcesV5,
-} from 'selectors/clusterSelectors';
+import { selectLoadingFlagByIdAndAction } from 'selectors/clusterSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
+import { nodePoolsCreate } from 'stores/nodepool/actions';
+import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
+import {
+  makeV5ResourcesSelector,
+  selectClusterNodePools,
+} from 'stores/nodepool/selectors';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -591,7 +591,7 @@ V5ClusterDetailTable.propTypes = {
 // We use this wrapper function because we want different references for each cluster
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 const makeMapStateToProps = () => {
-  const resourcesV5 = selectResourcesV5();
+  const resourcesV5 = makeV5ResourcesSelector();
   const mapStateToProps = (state, props) => {
     return {
       nodePools: selectClusterNodePools(state, props.cluster.id),
