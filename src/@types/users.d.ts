@@ -17,4 +17,5 @@ interface IUser {
   created: string;
   email: string;
   expiry: string;
+  emaildomain: string;
 }

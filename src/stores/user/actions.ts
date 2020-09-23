@@ -1,6 +1,13 @@
-import { push } from 'connected-react-router';
+import {
+  INFO_LOAD_ERROR,
+  INFO_LOAD_REQUEST,
+  INFO_LOAD_SUCCESS,
+  UNAUTHORIZED,
+} from 'actions/actionTypes';
+import { CallHistoryMethodAction, push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
+import { IAuthResult } from 'lib/auth0';
 import {
   clearQueues,
   FlashMessage,
@@ -9,62 +16,86 @@ import {
 } from 'lib/flashMessage';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
+import { IState } from 'reducers/types';
+import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
+import {
+  LOGIN_ERROR,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT_ERROR,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+  REFRESH_USER_INFO_ERROR,
+  REFRESH_USER_INFO_REQUEST,
+  REFRESH_USER_INFO_SUCCESS,
+  USERS_DELETE_ERROR,
+  USERS_DELETE_REQUEST,
+  USERS_DELETE_SUCCESS,
+  USERS_LOAD_ERROR,
+  USERS_LOAD_REQUEST,
+  USERS_LOAD_SUCCESS,
+  USERS_REMOVE_EXPIRATION_ERROR,
+  USERS_REMOVE_EXPIRATION_REQUEST,
+  USERS_REMOVE_EXPIRATION_SUCCESS,
+} from 'stores/user/constants';
 import { selectAuthToken } from 'stores/user/selectors';
+import { UserActions } from 'stores/user/types';
 
-import * as types from './actionTypes';
-
-export function loginSuccess(userData) {
+export function loginSuccess(userData: ILoggedInUser): UserActions {
   return {
-    type: types.LOGIN_SUCCESS,
+    type: LOGIN_SUCCESS,
     userData,
   };
 }
 
-export function loginError(errorMessage) {
+export function loginError(errorMessage: string): UserActions {
   return {
-    type: types.LOGIN_ERROR,
+    type: LOGIN_ERROR,
     errorMessage,
   };
 }
 
-export function logoutSuccess() {
-  return {
-    type: types.LOGOUT_SUCCESS,
-  };
+export function logoutSuccess(): UserActions {
+  return { type: LOGOUT_SUCCESS };
 }
 
-export function logoutError(errorMessage) {
+export function logoutError(errorMessage: string): UserActions {
   return {
-    type: types.LOGOUT_ERROR,
+    type: LOGOUT_ERROR,
     errorMessage,
   };
 }
 
 // refreshUserInfo performs the /v4/user/ call and updates what Happa knows
 // about the user based on the response.
-export function refreshUserInfo() {
-  return function (dispatch, getState) {
+export function refreshUserInfo(): ThunkAction<
+  void,
+  IState,
+  void,
+  UserActions | CallHistoryMethodAction
+> {
+  return (dispatch, getState) => {
     const usersApi = new GiantSwarm.UsersApi();
     const loggedInUser = getState().main.loggedInUser;
 
     if (!loggedInUser) {
       dispatch({
-        type: types.REFRESH_USER_INFO_ERROR,
+        type: REFRESH_USER_INFO_ERROR,
         error: 'No logged in user to refresh.',
       });
 
       throw new Error('No logged in user to refresh.');
     }
 
-    dispatch({ type: types.REFRESH_USER_INFO_REQUEST });
+    dispatch({ type: REFRESH_USER_INFO_REQUEST });
 
     return usersApi
       .getCurrentUser()
       .then((data) => {
         dispatch({
-          type: types.REFRESH_USER_INFO_SUCCESS,
+          type: REFRESH_USER_INFO_SUCCESS,
           email: data.email,
         });
       })
@@ -90,7 +121,7 @@ export function refreshUserInfo() {
         }
 
         dispatch({
-          type: types.REFRESH_USER_INFO_ERROR,
+          type: REFRESH_USER_INFO_ERROR,
           error: error,
         });
       });
@@ -100,8 +131,10 @@ export function refreshUserInfo() {
 // auth0login is called when we have a callback result from auth0.
 // It then dispatches loginSuccess with the users token and email
 // the userReducer takes care of storing this in state.
-export function auth0Login(authResult) {
-  return function (dispatch) {
+export function auth0Login(
+  authResult: IAuthResult
+): ThunkAction<void, IState, void, UserActions> {
+  return (dispatch) => {
     return new Promise((resolve) => {
       let isAdmin = false;
       if (
@@ -111,13 +144,13 @@ export function auth0Login(authResult) {
         isAdmin = true;
       }
 
-      const userData = {
+      const userData: ILoggedInUser = {
         email: authResult.idTokenPayload.email,
         auth: {
           scheme: AuthorizationTypes.BEARER,
           token: authResult.accessToken,
         },
-        isAdmin: isAdmin,
+        isAdmin,
       };
 
       localStorage.setItem('user', JSON.stringify(userData));
@@ -131,12 +164,15 @@ export function auth0Login(authResult) {
 // we actually know the email (user used it to log in)
 // It then dispatches loginSuccess with the users token and email
 // the userReducer takes care of storing this in state.
-export function giantswarmLogin(email, password) {
+export function giantswarmLogin(
+  email: string,
+  password: string
+): ThunkAction<void, IState, void, UserActions | CallHistoryMethodAction> {
   return function (dispatch) {
     const authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
-      type: types.LOGIN_REQUEST,
+      type: LOGIN_REQUEST,
       email: email,
     });
 
@@ -157,8 +193,12 @@ export function giantswarmLogin(email, password) {
         return userData;
       })
       .then((userData) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        dispatch(loginSuccess(userData));
+        const user: ILoggedInUser = {
+          ...(userData as ILoggedInUser),
+          isAdmin: false,
+        };
+        localStorage.setItem('user', JSON.stringify(user));
+        dispatch(loginSuccess(user));
 
         return userData;
       })
@@ -174,20 +214,19 @@ export function giantswarmLogin(email, password) {
 // giantswarmLogout attempts to delete the user's giantswarm auth token.
 // it then dispatches logoutSuccess, which will 'shutdown' happa, and return
 // it to the login screen.
-export function giantswarmLogout() {
-  return function (dispatch, getState) {
-    let authToken = null;
-
-    if (getState().main.loggedInUser) {
-      authToken = getState().main.loggedInUser.auth.token;
-    }
-
+export function giantswarmLogout(): ThunkAction<
+  void,
+  IState,
+  void,
+  UserActions | CallHistoryMethodAction
+> {
+  return function (dispatch) {
     const authTokensApi = new GiantSwarm.AuthTokensApi();
 
-    dispatch({ type: types.LOGOUT_REQUEST });
+    dispatch({ type: LOGOUT_REQUEST });
 
     return authTokensApi
-      .deleteAuthToken(`giantswarm ${authToken}`)
+      .deleteAuthToken()
       .then(() => {
         dispatch(push(AppRoutes.Login));
 
@@ -207,7 +246,12 @@ export function giantswarmLogout() {
  * It will dispatch the UNAUTHORIZED action, as well as add a
  * flash message to let the user know we couldn't authenticate them.
  */
-export function unauthorized() {
+export function unauthorized(): ThunkAction<
+  void,
+  IState,
+  void,
+  UserActions | CallHistoryMethodAction
+> {
   return function (dispatch) {
     // Clear any lingering flash messages that would pop up due to failed
     // requests.
@@ -220,10 +264,7 @@ export function unauthorized() {
       'Seems like you have been logged out. Please log in again.'
     );
 
-    dispatch({
-      type: types.UNAUTHORIZED,
-    });
-
+    dispatch({ type: UNAUTHORIZED });
     dispatch(push(AppRoutes.Login));
 
     return null;
@@ -232,9 +273,9 @@ export function unauthorized() {
 
 // getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
 // the resulting info into the state.
-export function getInfo() {
+export function getInfo(): ThunkAction<void, IState, void, UserActions> {
   return async function (dispatch, getState) {
-    dispatch({ type: types.INFO_LOAD_REQUEST });
+    dispatch({ type: INFO_LOAD_REQUEST });
 
     try {
       const [authToken, authScheme] = await selectAuthToken(dispatch)(
@@ -244,12 +285,12 @@ export function getInfo() {
       const infoRes = await getInstallationInfo(httpClient);
 
       dispatch({
-        type: types.INFO_LOAD_SUCCESS,
+        type: INFO_LOAD_SUCCESS,
         info: infoRes.data,
       });
     } catch (error) {
       dispatch({
-        type: types.INFO_LOAD_ERROR,
+        type: INFO_LOAD_ERROR,
         error: error.data,
       });
 
@@ -262,7 +303,7 @@ export function getInfo() {
 // -----------------
 // Loads all users from the Giant Swarm API into state.
 // /v4/users/
-export function usersLoad() {
+export function usersLoad(): ThunkAction<void, IState, void, UserActions> {
   return function (dispatch, getState) {
     const usersApi = new GiantSwarm.UsersApi();
 
@@ -274,20 +315,22 @@ export function usersLoad() {
       });
     }
 
-    dispatch({ type: types.USERS_LOAD_REQUEST });
+    dispatch({ type: USERS_LOAD_REQUEST });
 
     return usersApi
       .getUsers()
       .then((usersArray) => {
-        const users = {};
+        const users: Record<string, IUser> = {};
 
         for (const user of usersArray) {
-          user.emaildomain = user.email.split('@')[1];
-          users[user.email] = user;
+          users[user.email] = {
+            ...user,
+            emaildomain: user.email.split('@')[1],
+          };
         }
 
         dispatch({
-          type: types.USERS_LOAD_SUCCESS,
+          type: USERS_LOAD_SUCCESS,
           users,
         });
       })
@@ -300,7 +343,7 @@ export function usersLoad() {
         );
 
         dispatch({
-          type: types.USERS_LOAD_ERROR,
+          type: USERS_LOAD_ERROR,
         });
       });
   };
@@ -309,20 +352,29 @@ export function usersLoad() {
 // userRemoveExpiration
 // ----------------
 // Removes the expiration date from a given user.
-export function userRemoveExpiration(email) {
+export function userRemoveExpiration(
+  email: string
+): ThunkAction<void, IState, void, UserActions> {
   return function (dispatch) {
     const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
     const usersApi = new GiantSwarm.UsersApi();
 
-    dispatch({ type: types.USERS_REMOVE_EXPIRATION_REQUEST });
+    dispatch({ type: USERS_REMOVE_EXPIRATION_REQUEST });
 
     return usersApi
-      .modifyUser(email, { expiry: NEVER_EXPIRES })
+      .modifyUser(email, {
+        expiry: NEVER_EXPIRES,
+      } as GiantSwarm.V4ModifyUserRequest)
       .then((user) => {
+        const newUser: IUser = {
+          ...user,
+          emaildomain: user.email.split('@')[1],
+        };
+
         dispatch({
-          type: types.USERS_REMOVE_EXPIRATION_SUCCESS,
-          user,
+          type: USERS_REMOVE_EXPIRATION_SUCCESS,
+          user: newUser,
         });
       })
       .catch(() => {
@@ -333,7 +385,7 @@ export function userRemoveExpiration(email) {
         );
 
         dispatch({
-          type: types.USERS_REMOVE_EXPIRATION_ERROR,
+          type: USERS_REMOVE_EXPIRATION_ERROR,
         });
       });
   };
@@ -342,17 +394,19 @@ export function userRemoveExpiration(email) {
 // userDelete
 // ----------------
 // Deletes the given user.
-export function userDelete(email) {
+export function userDelete(
+  email: string
+): ThunkAction<void, IState, void, UserActions> {
   return function (dispatch) {
     const usersApi = new GiantSwarm.UsersApi();
 
-    dispatch({ type: types.USERS_DELETE_REQUEST });
+    dispatch({ type: USERS_DELETE_REQUEST });
 
     return usersApi
       .deleteUser(email)
       .then(() => {
         dispatch({
-          type: types.USERS_DELETE_SUCCESS,
+          type: USERS_DELETE_SUCCESS,
           email,
         });
       })
@@ -365,7 +419,7 @@ export function userDelete(email) {
         );
 
         dispatch({
-          type: types.USERS_DELETE_ERROR,
+          type: USERS_DELETE_ERROR,
         });
       });
   };

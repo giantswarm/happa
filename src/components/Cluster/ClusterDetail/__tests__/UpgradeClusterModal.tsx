@@ -40,18 +40,18 @@ function createInitialState(
   releases: Record<string, IRelease>,
   isAdmin: boolean = false
 ): Partial<IState> {
-  return {
-    entities: ({
+  return ({
+    entities: {
       releases: {
         items: releases,
       },
-    } as unknown) as IState['entities'],
+    },
     main: {
       loggedInUser: {
         isAdmin,
       },
     },
-  };
+  } as unknown) as Partial<IState>;
 }
 
 describe('UpgradeClusterModal', () => {

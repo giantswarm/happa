@@ -1,11 +1,11 @@
-import * as authSelectors from 'selectors/authSelectors';
 import { AuthorizationTypes } from 'shared/constants';
+import * as userSelectors from 'stores/user/selectors';
 
 jest.mock('model/services/giantSwarm/info');
 jest.mock('model/services/metadata/configuration');
-jest.mock('selectors/authSelectors');
+jest.mock('stores/user/selectors');
 
 // eslint-disable-next-line no-import-assign
-authSelectors.selectAuthToken = jest.fn((_, state) => {
+userSelectors.selectAuthToken = jest.fn(() => (state) => {
   return [state.main.loggedInUser.auth.token, AuthorizationTypes.GS];
 });

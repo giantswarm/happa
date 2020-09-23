@@ -1,5 +1,8 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
-import { GiantSwarmPaths } from 'model/services/giantSwarm/types';
+import {
+  GiantSwarmPaths,
+  IInstallationInfo,
+} from 'model/services/giantSwarm/types';
 
 /**
  * Get the info of an installation.
@@ -9,5 +12,5 @@ export function getInstallationInfo(httpClient: IHttpClient) {
   httpClient.setRequestMethod(HttpRequestMethods.GET);
   httpClient.setURL(GiantSwarmPaths.Info);
 
-  return httpClient.execute();
+  return httpClient.execute<IInstallationInfo>();
 }

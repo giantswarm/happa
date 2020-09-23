@@ -14,7 +14,7 @@ import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 
 interface IStateProps {
-  user?: Record<string, Record<string, never> | never>;
+  user?: ILoggedInUser;
 }
 
 interface IDispatchProps {

@@ -218,7 +218,7 @@ function makeState(
   cluster: Partial<V4.ICluster | V5.ICluster>,
   releases: IReleases
 ): IState {
-  return {
+  return ({
     ...preloginState,
     main: {
       loggedInUser: {
@@ -230,13 +230,13 @@ function makeState(
         },
       },
     },
-    entities: ({
+    entities: {
       releases: {
         items: releases,
       },
       clusters: {
         items: { [cluster.id as string]: cluster },
       },
-    } as unknown) as IState['entities'],
-  };
+    },
+  } as unknown) as IState;
 }
