@@ -5,10 +5,10 @@ import { CSSBreakpoints } from 'shared/constants';
 import theme from './theme';
 
 export enum FlashMessageType {
-  danger = 'danger',
-  success = 'success',
-  warning = 'warning',
-  info = 'info',
+  Danger = 'danger',
+  Success = 'success',
+  Warning = 'warning',
+  Info = 'info',
 }
 
 export interface IFlashMessage {

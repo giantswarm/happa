@@ -57,8 +57,7 @@ const FlashMessage: FC<IFlashMessageProps> = ({
 };
 
 FlashMessage.propTypes = {
-  // @ts-expect-error
-  type: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(Object.values(FlashMessageType)).isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
 };
