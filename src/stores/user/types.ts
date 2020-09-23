@@ -1,11 +1,8 @@
+import { IInstallationInfo } from 'model/services/giantSwarm/types';
 import {
   INFO_LOAD_ERROR,
   INFO_LOAD_REQUEST,
   INFO_LOAD_SUCCESS,
-  UNAUTHORIZED,
-} from 'actions/actionTypes';
-import { IInstallationInfo } from 'model/services/giantSwarm/types';
-import {
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -15,6 +12,7 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
+  UNAUTHORIZED,
   USERS_DELETE_ERROR,
   USERS_DELETE_REQUEST,
   USERS_DELETE_SUCCESS,

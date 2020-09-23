@@ -1,6 +1,16 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import {
+  INFO_LOAD_SUCCESS,
+  LOGIN_ERROR,
+  LOGIN_SUCCESS,
+  LOGOUT_ERROR,
+  LOGOUT_SUCCESS,
+  REFRESH_USER_INFO_ERROR,
+  REFRESH_USER_INFO_SUCCESS,
+  UNAUTHORIZED,
+} from 'stores/user/constants';
+import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
   removeUserFromStorage,
@@ -26,7 +36,7 @@ const initialState = () => ({
 const makeAppReducer = () => {
   return produce((draft, action) => {
     switch (action.type) {
-      case types.REFRESH_USER_INFO_SUCCESS: {
+      case REFRESH_USER_INFO_SUCCESS: {
         const newUser = Object.assign({}, draft.loggedInUser, {
           email: action.email,
         });
@@ -37,12 +47,12 @@ const makeAppReducer = () => {
         return;
       }
 
-      case types.INFO_LOAD_SUCCESS:
+      case INFO_LOAD_SUCCESS:
         draft.info = action.info;
 
         break;
 
-      case types.LOGIN_SUCCESS: {
+      case LOGIN_SUCCESS: {
         setUserToStorage(action.userData);
 
         draft.loggedInUser = action.userData;
@@ -50,11 +60,11 @@ const makeAppReducer = () => {
         break;
       }
 
-      case types.REFRESH_USER_INFO_ERROR:
-      case types.LOGIN_ERROR:
-      case types.LOGOUT_SUCCESS:
-      case types.LOGOUT_ERROR:
-      case types.UNAUTHORIZED: {
+      case REFRESH_USER_INFO_ERROR:
+      case LOGIN_ERROR:
+      case LOGOUT_SUCCESS:
+      case LOGOUT_ERROR:
+      case UNAUTHORIZED: {
         removeUserFromStorage();
 
         draft.loggedInUser = {};

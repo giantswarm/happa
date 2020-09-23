@@ -1,5 +1,4 @@
 import * as forgotPasswordActions from 'actions/forgotPasswordActions';
-import { giantswarmLogin } from 'actions/userActions';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import {
@@ -15,6 +14,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
+import { giantswarmLogin } from 'stores/user/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';

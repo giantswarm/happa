@@ -1,4 +1,3 @@
-import * as userActions from 'actions/userActions';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import Auth from 'lib/auth0';
@@ -8,6 +7,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
+import * as userActions from 'stores/user/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 const OAuthCallback = ({ location, dispatch, actions }) => {

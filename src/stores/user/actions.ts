@@ -1,9 +1,3 @@
-import {
-  INFO_LOAD_ERROR,
-  INFO_LOAD_REQUEST,
-  INFO_LOAD_SUCCESS,
-  UNAUTHORIZED,
-} from 'actions/actionTypes';
 import { CallHistoryMethodAction, push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
@@ -21,6 +15,9 @@ import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import {
+  INFO_LOAD_ERROR,
+  INFO_LOAD_REQUEST,
+  INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -30,6 +27,7 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
+  UNAUTHORIZED,
   USERS_DELETE_ERROR,
   USERS_DELETE_REQUEST,
   USERS_DELETE_SUCCESS,
@@ -133,8 +131,8 @@ export function refreshUserInfo(): ThunkAction<
 // the userReducer takes care of storing this in state.
 export function auth0Login(
   authResult: IAuthResult
-): ThunkAction<void, IState, void, UserActions> {
-  return (dispatch) => {
+): ThunkAction<Promise<void>, IState, void, UserActions> {
+  return async (dispatch) => {
     return new Promise((resolve) => {
       let isAdmin = false;
       if (
@@ -154,7 +152,9 @@ export function auth0Login(
       };
 
       localStorage.setItem('user', JSON.stringify(userData));
-      resolve(dispatch(loginSuccess(userData)));
+      dispatch(loginSuccess(userData));
+
+      resolve();
     });
   };
 }

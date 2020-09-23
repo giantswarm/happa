@@ -1,4 +1,3 @@
-import { auth0Login } from 'actions/userActions';
 import GiantSwarm from 'giantswarm';
 import Auth from 'lib/auth0';
 import { isJwtExpired } from 'lib/helpers';
@@ -6,6 +5,7 @@ import { IState } from 'reducers/types';
 import { AnyAction, Store } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
+import { auth0Login } from 'stores/user/actions';
 
 /**
  * This class patches the client's callApi function to check

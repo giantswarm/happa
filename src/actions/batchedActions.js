@@ -9,17 +9,17 @@ import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
 import { loadReleases } from 'stores/releases/actions';
+import { getInfo, refreshUserInfo } from 'stores/user/actions';
 
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
-import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
   try {
-    await dispatch(userActions.refreshUserInfo());
-    await dispatch(userActions.getInfo());
+    await dispatch(refreshUserInfo());
+    await dispatch(getInfo());
   } catch (err) {
     new FlashMessage(
       'Please log in again, as your previously saved credentials appear to be invalid.',
