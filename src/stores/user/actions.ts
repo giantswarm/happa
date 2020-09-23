@@ -2,12 +2,7 @@ import { CallHistoryMethodAction, push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
-import {
-  clearQueues,
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from 'lib/flashMessage';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { IState } from 'reducers/types';
@@ -27,7 +22,6 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
-  UNAUTHORIZED,
   USERS_DELETE_ERROR,
   USERS_DELETE_REQUEST,
   USERS_DELETE_SUCCESS,
@@ -66,18 +60,14 @@ export function logoutError(errorMessage: string): UserActions {
   };
 }
 
-// refreshUserInfo performs the /v4/user/ call and updates what Happa knows
-// about the user based on the response.
 export function refreshUserInfo(): ThunkAction<
-  void,
+  Promise<void>,
   IState,
   void,
   UserActions | CallHistoryMethodAction
 > {
-  return (dispatch, getState) => {
-    const usersApi = new GiantSwarm.UsersApi();
+  return async (dispatch, getState) => {
     const loggedInUser = getState().main.loggedInUser;
-
     if (!loggedInUser) {
       dispatch({
         type: REFRESH_USER_INFO_ERROR,
@@ -87,48 +77,44 @@ export function refreshUserInfo(): ThunkAction<
       throw new Error('No logged in user to refresh.');
     }
 
-    dispatch({ type: REFRESH_USER_INFO_REQUEST });
+    try {
+      dispatch({ type: REFRESH_USER_INFO_REQUEST });
+      const usersApi = new GiantSwarm.UsersApi();
+      const response = await usersApi.getCurrentUser();
 
-    return usersApi
-      .getCurrentUser()
-      .then((data) => {
-        dispatch({
-          type: REFRESH_USER_INFO_SUCCESS,
-          email: data.email,
-        });
-      })
-      .catch((error) => {
-        if (error.status === StatusCodes.Unauthorized) {
-          new FlashMessage(
-            'Please log in again, as your previously saved credentials appear to be invalid.',
-            messageType.WARNING,
-            messageTTL.MEDIUM
-          );
-          const redirectPath = loggedInUser.isAdmin
-            ? AppRoutes.AdminLogin
-            : AppRoutes.Login;
-
-          dispatch(push(redirectPath));
-        } else {
-          new FlashMessage(
-            'Something went wrong while trying to load user and organization information.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again in a moment or contact support: support@giantswarm.io'
-          );
-        }
-
-        dispatch({
-          type: REFRESH_USER_INFO_ERROR,
-          error: error,
-        });
+      dispatch({
+        type: REFRESH_USER_INFO_SUCCESS,
+        email: response.email,
       });
+    } catch (err) {
+      if (err.status === StatusCodes.Unauthorized) {
+        new FlashMessage(
+          'Please log in again, as your previously saved credentials appear to be invalid.',
+          messageType.WARNING,
+          messageTTL.MEDIUM
+        );
+        const redirectPath = loggedInUser.isAdmin
+          ? AppRoutes.AdminLogin
+          : AppRoutes.Login;
+
+        dispatch(push(redirectPath));
+      } else {
+        new FlashMessage(
+          'Something went wrong while trying to load user and organization information.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again in a moment or contact support: support@giantswarm.io'
+        );
+      }
+
+      dispatch({
+        type: REFRESH_USER_INFO_ERROR,
+        error: err,
+      });
+    }
   };
 }
 
-// auth0login is called when we have a callback result from auth0.
-// It then dispatches loginSuccess with the users token and email
-// the userReducer takes care of storing this in state.
 export function auth0Login(
   authResult: IAuthResult
 ): ThunkAction<Promise<void>, IState, void, UserActions> {
@@ -159,122 +145,79 @@ export function auth0Login(
   };
 }
 
-// giantswarmLogin attempts to log the user in using email and password.
-// It then calls /v4/user/ to get user details. This step could be skipped since
-// we actually know the email (user used it to log in)
-// It then dispatches loginSuccess with the users token and email
-// the userReducer takes care of storing this in state.
 export function giantswarmLogin(
   email: string,
   password: string
-): ThunkAction<void, IState, void, UserActions | CallHistoryMethodAction> {
-  return function (dispatch) {
-    const authTokensApi = new GiantSwarm.AuthTokensApi();
-
-    dispatch({
-      type: LOGIN_REQUEST,
-      email: email,
-    });
-
-    return authTokensApi
-      .createAuthToken({
+): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  UserActions | CallHistoryMethodAction
+> {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: LOGIN_REQUEST,
         email: email,
+      });
+
+      const authTokensApi = new GiantSwarm.AuthTokensApi();
+      const response = await authTokensApi.createAuthToken({
+        email,
         password_base64: Base64.encode(password),
-      })
-      .then((response) => {
-        const userData = {
-          email: email,
-          auth: {
-            scheme: 'giantswarm',
-            token: response.auth_token,
-          },
-        };
-
-        return userData;
-      })
-      .then((userData) => {
-        const user: ILoggedInUser = {
-          ...(userData as ILoggedInUser),
-          isAdmin: false,
-        };
-        localStorage.setItem('user', JSON.stringify(user));
-        dispatch(loginSuccess(user));
-
-        return userData;
-      })
-      .catch((error) => {
-        dispatch(loginError(error));
-        dispatch(push(AppRoutes.Login));
-
-        throw error;
       });
+      const userData: ILoggedInUser = {
+        email,
+        auth: {
+          scheme: AuthorizationTypes.GS,
+          token: response.auth_token,
+        },
+        isAdmin: false,
+      };
+
+      localStorage.setItem('user', JSON.stringify(userData));
+      dispatch(loginSuccess(userData));
+    } catch (err) {
+      const message = (err as Error).message ?? (err as string);
+      dispatch(loginError(message));
+      dispatch(push(AppRoutes.Login));
+
+      throw err;
+    }
   };
 }
 
-// giantswarmLogout attempts to delete the user's giantswarm auth token.
-// it then dispatches logoutSuccess, which will 'shutdown' happa, and return
-// it to the login screen.
 export function giantswarmLogout(): ThunkAction<
-  void,
+  Promise<void>,
   IState,
   void,
   UserActions | CallHistoryMethodAction
 > {
-  return function (dispatch) {
-    const authTokensApi = new GiantSwarm.AuthTokensApi();
+  return async (dispatch) => {
+    try {
+      dispatch({ type: LOGOUT_REQUEST });
 
-    dispatch({ type: LOGOUT_REQUEST });
+      const authTokensApi = new GiantSwarm.AuthTokensApi();
+      await authTokensApi.deleteAuthToken();
 
-    return authTokensApi
-      .deleteAuthToken()
-      .then(() => {
-        dispatch(push(AppRoutes.Login));
+      dispatch(push(AppRoutes.Login));
+      dispatch(logoutSuccess());
+    } catch (err) {
+      dispatch(push(AppRoutes.Login));
+      dispatch(logoutError(err));
 
-        return dispatch(logoutSuccess());
-      })
-      .catch((error) => {
-        dispatch(push(AppRoutes.Login));
-        dispatch(logoutError(error));
-        throw error;
-      });
+      throw err;
+    }
   };
 }
 
-/**
- * To be called whenever a API call results in a "401 Unauthorized" error.
- *
- * It will dispatch the UNAUTHORIZED action, as well as add a
- * flash message to let the user know we couldn't authenticate them.
- */
-export function unauthorized(): ThunkAction<
-  void,
+export function getInfo(): ThunkAction<
+  Promise<void>,
   IState,
   void,
-  UserActions | CallHistoryMethodAction
+  UserActions
 > {
-  return function (dispatch) {
-    // Clear any lingering flash messages that would pop up due to failed
-    // requests.
-    clearQueues();
-
-    new FlashMessage(
-      'Not authorized for API requests.',
-      messageType.ERROR,
-      messageTTL.MEDIUM,
-      'Seems like you have been logged out. Please log in again.'
-    );
-
-    dispatch({ type: UNAUTHORIZED });
-    dispatch(push(AppRoutes.Login));
-
-    return null;
-  };
-}
-
-// getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
-// the resulting info into the state.
-export function getInfo(): ThunkAction<void, IState, void, UserActions> {
-  return async function (dispatch, getState) {
+  return async (dispatch, getState) => {
     dispatch({ type: INFO_LOAD_REQUEST });
 
     try {
@@ -299,128 +242,116 @@ export function getInfo(): ThunkAction<void, IState, void, UserActions> {
   };
 }
 
-// usersLoad
-// -----------------
-// Loads all users from the Giant Swarm API into state.
-// /v4/users/
-export function usersLoad(): ThunkAction<void, IState, void, UserActions> {
-  return function (dispatch, getState) {
-    const usersApi = new GiantSwarm.UsersApi();
+export function usersLoad(): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  UserActions
+> {
+  return async (dispatch, getState) => {
+    try {
+      const alreadyFetching = getState().entities.users.isFetching;
+      if (alreadyFetching) {
+        return;
+      }
 
-    const alreadyFetching = getState().entities.users.isFetching;
+      dispatch({ type: USERS_LOAD_REQUEST });
 
-    if (alreadyFetching) {
-      return new Promise((resolve) => {
-        resolve();
+      const usersApi = new GiantSwarm.UsersApi();
+      const response = await usersApi.getUsers();
+
+      const users = Array.from(response).reduce(
+        (agg: Record<string, IUser>, curr: GiantSwarm.V4UserListItem) => {
+          agg[curr.email] = {
+            ...curr,
+            emaildomain: curr.email.split('@')[1],
+          };
+
+          return agg;
+        },
+        {}
+      );
+
+      dispatch({
+        type: USERS_LOAD_SUCCESS,
+        users,
+      });
+    } catch {
+      new FlashMessage(
+        'Something went wrong while trying to load all users',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again.'
+      );
+
+      dispatch({
+        type: USERS_LOAD_ERROR,
       });
     }
-
-    dispatch({ type: USERS_LOAD_REQUEST });
-
-    return usersApi
-      .getUsers()
-      .then((usersArray) => {
-        const users: Record<string, IUser> = {};
-
-        for (const user of usersArray) {
-          users[user.email] = {
-            ...user,
-            emaildomain: user.email.split('@')[1],
-          };
-        }
-
-        dispatch({
-          type: USERS_LOAD_SUCCESS,
-          users,
-        });
-      })
-      .catch(() => {
-        new FlashMessage(
-          'Something went wrong while trying to load all users',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again.'
-        );
-
-        dispatch({
-          type: USERS_LOAD_ERROR,
-        });
-      });
   };
 }
 
-// userRemoveExpiration
-// ----------------
-// Removes the expiration date from a given user.
 export function userRemoveExpiration(
   email: string
-): ThunkAction<void, IState, void, UserActions> {
-  return function (dispatch) {
-    const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
+): ThunkAction<Promise<void>, IState, void, UserActions> {
+  return async (dispatch) => {
+    try {
+      const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
-    const usersApi = new GiantSwarm.UsersApi();
-
-    dispatch({ type: USERS_REMOVE_EXPIRATION_REQUEST });
-
-    return usersApi
-      .modifyUser(email, {
+      dispatch({ type: USERS_REMOVE_EXPIRATION_REQUEST });
+      const usersApi = new GiantSwarm.UsersApi();
+      const response = await usersApi.modifyUser(email, {
         expiry: NEVER_EXPIRES,
-      } as GiantSwarm.V4ModifyUserRequest)
-      .then((user) => {
-        const newUser: IUser = {
-          ...user,
-          emaildomain: user.email.split('@')[1],
-        };
+      } as GiantSwarm.V4ModifyUserRequest);
 
-        dispatch({
-          type: USERS_REMOVE_EXPIRATION_SUCCESS,
-          user: newUser,
-        });
-      })
-      .catch(() => {
-        new FlashMessage(
-          'Something went wrong while trying to remove expiration from this user',
-          messageType.ERROR,
-          messageTTL.MEDIUM
-        );
+      const user: IUser = {
+        ...response,
+        emaildomain: response.email.split('@')[1],
+      };
 
-        dispatch({
-          type: USERS_REMOVE_EXPIRATION_ERROR,
-        });
+      dispatch({
+        type: USERS_REMOVE_EXPIRATION_SUCCESS,
+        user,
       });
+    } catch {
+      new FlashMessage(
+        'Something went wrong while trying to remove expiration from this user',
+        messageType.ERROR,
+        messageTTL.MEDIUM
+      );
+
+      dispatch({
+        type: USERS_REMOVE_EXPIRATION_ERROR,
+      });
+    }
   };
 }
 
-// userDelete
-// ----------------
-// Deletes the given user.
 export function userDelete(
   email: string
-): ThunkAction<void, IState, void, UserActions> {
-  return function (dispatch) {
-    const usersApi = new GiantSwarm.UsersApi();
+): ThunkAction<Promise<void>, IState, void, UserActions> {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: USERS_DELETE_REQUEST });
 
-    dispatch({ type: USERS_DELETE_REQUEST });
+      const usersApi = new GiantSwarm.UsersApi();
+      await usersApi.deleteUser(email);
 
-    return usersApi
-      .deleteUser(email)
-      .then(() => {
-        dispatch({
-          type: USERS_DELETE_SUCCESS,
-          email,
-        });
-      })
-      .catch(() => {
-        new FlashMessage(
-          'Something went wrong while trying to delete this user',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        dispatch({
-          type: USERS_DELETE_ERROR,
-        });
+      dispatch({
+        type: USERS_DELETE_SUCCESS,
+        email,
       });
+    } catch {
+      new FlashMessage(
+        'Something went wrong while trying to delete this user',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      dispatch({
+        type: USERS_DELETE_ERROR,
+      });
+    }
   };
 }

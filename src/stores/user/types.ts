@@ -12,7 +12,6 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
-  UNAUTHORIZED,
   USERS_DELETE_ERROR,
   USERS_DELETE_REQUEST,
   USERS_DELETE_SUCCESS,
@@ -111,10 +110,6 @@ export interface IUserRemoveExpirationErrorAction {
   type: typeof USERS_REMOVE_EXPIRATION_ERROR;
 }
 
-export interface IUserUnauthorizedAction {
-  type: typeof UNAUTHORIZED;
-}
-
 export interface IUserInfoLoadRequestAction {
   type: typeof INFO_LOAD_REQUEST;
 }
@@ -147,7 +142,6 @@ export type UserActions =
   | IUserDeleteRequestAction
   | IUserDeleteSuccessAction
   | IUserDeleteErrorAction
-  | IUserUnauthorizedAction
   | IUserInfoLoadRequestAction
   | IUserInfoLoadSuccessAction
   | IUserInfoLoadErrorAction;

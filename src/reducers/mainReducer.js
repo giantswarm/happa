@@ -8,7 +8,6 @@ import {
   LOGOUT_SUCCESS,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_SUCCESS,
-  UNAUTHORIZED,
 } from 'stores/user/constants';
 import {
   fetchSelectedOrganizationFromStorage,
@@ -64,14 +63,12 @@ const makeAppReducer = () => {
       case LOGIN_ERROR:
       case LOGOUT_SUCCESS:
       case LOGOUT_ERROR:
-      case UNAUTHORIZED: {
         removeUserFromStorage();
 
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;
 
         break;
-      }
 
       case types.ORGANIZATION_SELECT:
         draft.selectedOrganization = action.orgId;
