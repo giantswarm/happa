@@ -1,8 +1,8 @@
-import FlashMessage from 'FlashMessages/FlashMessage';
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { updateClusterApp } from 'stores/clusterapps/actions';
+import FlashMessage from 'UI/FlashMessage';
 
 const EditChartVersionPane = (props) => {
   const { errorMessage } = useError(updateClusterApp().types.error);

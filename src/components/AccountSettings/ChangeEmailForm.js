@@ -1,10 +1,10 @@
-import FlashMessage from 'FlashMessages/FlashMessage';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
 import update from 'react-addons-update';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import FlashMessage from 'UI/FlashMessage';
 
 class ChangeEmailForm extends React.Component {
   state = {

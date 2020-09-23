@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
-import FlashMessage from 'FlashMessages/FlashMessage';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
 import moment from 'moment';
@@ -13,6 +12,7 @@ import { bindActionCreators } from 'redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Copyable from 'shared/Copyable';
 import Button from 'UI/Button';
+import FlashMessage from 'UI/FlashMessage';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';

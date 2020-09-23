@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import AddKeyPairGenericError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairGenericError';
 import AddKeyPairServiceUnavailableError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairServiceUnavailableError';
-import FlashMessage from 'FlashMessages/FlashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import FlashMessage from 'UI/FlashMessage';
 
 const StyledFlashMessage = styled(FlashMessage)`
   i.fa + span {

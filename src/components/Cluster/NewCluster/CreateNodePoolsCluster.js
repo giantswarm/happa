@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
-import FlashMessage from 'FlashMessages/FlashMessage';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -15,6 +14,7 @@ import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
+import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 import RadioInput from 'UI/Inputs/RadioInput';
 

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
 import UpgradeClusterModalVersionChanger from 'Cluster/ClusterDetail/UpgradeClusterModalVersionChanger';
 import diff from 'deep-diff';
-import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
+import FlashMessageComponent from 'UI/FlashMessage';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
 

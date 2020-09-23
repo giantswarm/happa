@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
-import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
@@ -9,6 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Aside from 'UI/Aside';
 import Button from 'UI/Button';
+import FlashMessageComponent from 'UI/FlashMessage';
 
 import { CodeBlock, Prompt } from '../CodeBlock';
 import FileBlock from '../FileBlock';

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { CLUSTER_CREATE_REQUEST } from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
-import FlashMessage from 'FlashMessages/FlashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,6 +13,7 @@ import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import Section from 'UI/ClusterCreation/Section';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
+import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 
 import ClusterCreationDuration from './ClusterCreationDuration';

@@ -1,5 +1,4 @@
 import * as clusterActions from 'actions/clusterActions';
-import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,6 +11,7 @@ import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import FlashMessageComponent from 'UI/FlashMessage';
 
 class ScaleClusterModal extends React.Component {
   // eslint-disable-next-line no-magic-numbers

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
-import FlashMessage from 'FlashMessages/FlashMessage';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Constants } from 'shared/constants';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import FlashMessage from 'UI/FlashMessage';
 
 const List = styled.ul`
   & > li + li {

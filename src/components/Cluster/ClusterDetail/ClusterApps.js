@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
-import FlashMessageComponent from 'FlashMessages/FlashMessage';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -16,6 +15,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
+import FlashMessageComponent from 'UI/FlashMessage';
 import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
