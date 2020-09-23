@@ -4,6 +4,18 @@ import {
   NODEPOOL_DELETE,
   NODEPOOL_DELETE_CONFIRMED_REQUEST,
 } from 'stores/nodepool/constants';
+import {
+  ORGANIZATION_ADD_MEMBER_CONFIRMED,
+  ORGANIZATION_ADD_MEMBER_ERROR,
+  ORGANIZATION_ADD_MEMBER_REQUEST,
+  ORGANIZATION_ADD_MEMBER_TYPING,
+  ORGANIZATION_CREATE_CONFIRMED,
+  ORGANIZATION_CREATE_REQUEST,
+  ORGANIZATION_DELETE_CONFIRMED,
+  ORGANIZATION_DELETE_REQUEST,
+  ORGANIZATION_REMOVE_MEMBER,
+  ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
+} from 'stores/organization/constants';
 
 const initialState = { visible: false };
 
@@ -35,56 +47,56 @@ const modalReducer = produce((draft, action) => {
 
       break;
 
-    case types.ORGANIZATION_DELETE_REQUEST:
+    case ORGANIZATION_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: false };
       draft.template = 'organizationDelete';
 
       break;
 
-    case types.ORGANIZATION_DELETE_CONFIRMED:
+    case ORGANIZATION_DELETE_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: true };
       draft.template = 'organizationDelete';
 
       break;
 
-    case types.ORGANIZATION_CREATE_REQUEST:
+    case ORGANIZATION_CREATE_REQUEST:
       draft.visible = true;
       draft.templateValues = { loading: false };
       draft.template = 'organizationCreate';
 
       break;
 
-    case types.ORGANIZATION_CREATE_CONFIRMED:
+    case ORGANIZATION_CREATE_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { loading: true };
       draft.template = 'organizationCreate';
 
       break;
 
-    case types.ORGANIZATION_ADD_MEMBER_REQUEST:
+    case ORGANIZATION_ADD_MEMBER_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId };
       draft.template = 'organizationAddMember';
 
       break;
 
-    case types.ORGANIZATION_ADD_MEMBER_TYPING:
+    case ORGANIZATION_ADD_MEMBER_TYPING:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: false };
       draft.template = 'organizationAddMember';
 
       break;
 
-    case types.ORGANIZATION_ADD_MEMBER_CONFIRMED:
+    case ORGANIZATION_ADD_MEMBER_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: true };
       draft.template = 'organizationAddMember';
 
       break;
 
-    case types.ORGANIZATION_ADD_MEMBER_ERROR:
+    case ORGANIZATION_ADD_MEMBER_ERROR:
       draft.visible = true;
       draft.templateValues = {
         orgId: action.orgId,
@@ -95,14 +107,14 @@ const modalReducer = produce((draft, action) => {
 
       break;
 
-    case types.ORGANIZATION_REMOVE_MEMBER:
+    case ORGANIZATION_REMOVE_MEMBER:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, email: action.email };
       draft.template = 'organizationRemoveMember';
 
       break;
 
-    case types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST:
+    case ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST:
       draft.visible = true;
       draft.templateValues = {
         orgId: action.orgId,

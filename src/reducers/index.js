@@ -8,6 +8,7 @@ import cpAuth from 'stores/cpauth/reducer';
 import errorReducer from 'stores/error/reducer';
 import metadata from 'stores/metadata/reducer';
 import nodePools from 'stores/nodepool/reducer';
+import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
 
 import credentials from './credentialReducer';
@@ -17,7 +18,6 @@ import invitations from './invitationReducer';
 import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 import modal from './modalReducer';
-import organizations from './organizationReducer';
 import users from './userReducer';
 
 const entities = combineReducers({

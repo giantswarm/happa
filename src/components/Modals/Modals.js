@@ -2,13 +2,6 @@ import styled from '@emotion/styled';
 import { batchedClusterDeleteConfirmed } from 'actions/batchedActions';
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { modalHide } from 'actions/modalActions';
-import {
-  organizationAddMemberConfirmed,
-  organizationAddMemberTyping,
-  organizationCreateConfirmed,
-  organizationDeleteConfirmed,
-  organizationRemoveMemberConfirmed,
-} from 'actions/organizationActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
@@ -16,6 +9,13 @@ import { connect } from 'react-redux';
 import EmailField from 'shared/EmailField';
 import InputField from 'shared/InputField';
 import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
+import {
+  organizationAddMemberConfirmed,
+  organizationAddMemberTyping,
+  organizationCreateConfirmed,
+  organizationDeleteConfirmed,
+  organizationRemoveMemberConfirmed,
+} from 'stores/organization/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

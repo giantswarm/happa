@@ -1,5 +1,9 @@
-import * as types from 'actions/actionTypes';
 import produce from 'immer';
+import {
+  ORGANIZATION_CREDENTIALS_LOAD_ERROR,
+  ORGANIZATION_CREDENTIALS_LOAD_REQUEST,
+  ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
+} from 'stores/organization/constants';
 
 const initialState = {
   lastUpdated: 0,
@@ -9,19 +13,19 @@ const initialState = {
 
 const credentialReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.ORGANIZATION_CREDENTIALS_LOAD_REQUEST:
+    case ORGANIZATION_CREDENTIALS_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;
 
-    case types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS:
+    case ORGANIZATION_CREDENTIALS_LOAD_SUCCESS:
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
       draft.items = action.credentials;
 
       return;
 
-    case types.ORGANIZATION_CREDENTIALS_LOAD_ERROR:
+    case ORGANIZATION_CREDENTIALS_LOAD_ERROR:
       draft.isFetching = false;
   }
 }, initialState);

@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { IState } from 'reducers/types';
 import {
   ERROR_CLEAR_FOR_TYPE,
   ERROR_SUCCESS_SUFFIX,
@@ -18,7 +17,7 @@ const errorActionTypeRegexp = new RegExp(
 
 const initialState: IErrorState = {};
 
-const errorReducer = produce((draft: IState, action: ErrorActions) => {
+const errorReducer = produce((draft: IErrorState, action: ErrorActions) => {
   if (action.type === ERROR_CLEAR_FOR_TYPE) {
     delete draft[(action as IErrorClearByTypeAction).errorType];
 
