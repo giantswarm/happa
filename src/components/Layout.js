@@ -11,7 +11,6 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
   AccountSettingsRoutes,
   AppCatalogRoutes,
@@ -21,7 +20,6 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
-import { GLOBAL_LOAD_REQUEST } from 'stores/global/constants';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
@@ -63,7 +61,7 @@ class Layout extends React.Component {
   render() {
     return (
       <DocumentTitle>
-        <LoadingOverlay loading={this.props.loadingClustersList}>
+        <LoadingOverlay loading={!this.props.firstLoadComplete}>
           <Modals />
           <Navigation
             onSelectOrganization={this.selectOrganization}
@@ -114,7 +112,7 @@ Layout.propTypes = {
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
   catalogs: PropTypes.object,
-  loadingClustersList: PropTypes.bool,
+  firstLoadComplete: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -122,8 +120,8 @@ function mapStateToProps(state) {
     organizations: state.entities.organizations,
     user: state.main.loggedInUser,
     selectedOrganization: state.main.selectedOrganization,
-    loadingClustersList: selectLoadingFlagByAction(state, GLOBAL_LOAD_REQUEST),
     catalogs: state.entities.catalogs,
+    firstLoadComplete: state.main.firstLoadComplete,
   };
 }
 

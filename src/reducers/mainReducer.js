@@ -1,6 +1,10 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import {
+  GLOBAL_LOAD_ERROR,
+  GLOBAL_LOAD_SUCCESS,
+} from 'stores/global/constants';
+import {
   ORGANIZATION_LOAD_SUCCESS,
   ORGANIZATION_SELECT,
 } from 'stores/organization/constants';
@@ -71,6 +75,12 @@ const makeAppReducer = () => {
 
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;
+
+        break;
+
+      case GLOBAL_LOAD_ERROR:
+      case GLOBAL_LOAD_SUCCESS:
+        draft.firstLoadComplete = true;
 
         break;
 
