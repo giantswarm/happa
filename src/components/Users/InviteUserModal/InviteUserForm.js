@@ -1,6 +1,7 @@
 import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
+import FlashMessage from 'UI/FlashMessage';
 import { sortBy } from 'underscore';
 
 import { getInitialState } from '.';
@@ -64,11 +65,7 @@ const InviteUserForm = ({
         </div>
       </div>
 
-      {inviteForm.error && (
-        <div className='flash-messages--flash-message flash-messages--danger'>
-          {inviteForm.error}
-        </div>
-      )}
+      <FlashMessage type='danger'>{inviteForm.error}</FlashMessage>
     </form>
   );
 };

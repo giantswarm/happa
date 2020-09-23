@@ -4,14 +4,17 @@ import { CSSBreakpoints } from 'shared/constants';
 
 import theme from './theme';
 
+export enum FlashMessageType {
+  Danger = 'danger',
+  Success = 'success',
+  Warning = 'warning',
+  Info = 'info',
+}
+
 export interface IFlashMessage {
   background: string;
   border: string;
   text: string;
-}
-
-export interface IFlashMessages {
-  info: IFlashMessage;
 }
 
 export interface IColorMap {
@@ -61,7 +64,7 @@ export interface IColorMap {
   foreground: string;
   redOld: string;
   greenNew: string;
-  flashMessages: IFlashMessages;
+  flashMessages: Record<FlashMessageType, IFlashMessage>;
 }
 
 export interface IThemeFonts {

@@ -2,6 +2,7 @@ import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { updateClusterApp } from 'stores/clusterapps/actions';
+import FlashMessage from 'UI/FlashMessage';
 
 const EditChartVersionPane = (props) => {
   const { errorMessage } = useError(updateClusterApp().types.error);
@@ -23,9 +24,7 @@ const EditChartVersionPane = (props) => {
           Something went wrong while trying to set the chart version:
           <br />
           <br />
-          <div className='flash-messages--flash-message flash-messages--danger'>
-            {errorMessage}
-          </div>
+          <FlashMessage type='danger'>{errorMessage}</FlashMessage>
         </>
       )}
     </div>

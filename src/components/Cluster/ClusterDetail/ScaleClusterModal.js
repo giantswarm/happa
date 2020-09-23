@@ -11,6 +11,7 @@ import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import FlashMessageComponent from 'UI/FlashMessage';
 
 class ScaleClusterModal extends React.Component {
   // eslint-disable-next-line no-magic-numbers
@@ -368,11 +369,11 @@ class ScaleClusterModal extends React.Component {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your cluster:</p>
-          <div className='flash-messages--flash-message flash-messages--danger'>
+          <FlashMessageComponent type='danger'>
             {this.state.error.body && this.state.error.body.message
               ? this.state.error.body.message
               : this.state.error.message}
-          </div>
+          </FlashMessageComponent>
         </BootstrapModal.Body>
       );
       footer = (

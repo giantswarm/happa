@@ -14,6 +14,7 @@ import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
 import ErrorFallback from 'UI/ErrorFallback';
+import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -86,12 +87,12 @@ const defaultNodePool = () => ({
 class CreateNodePoolsCluster extends Component {
   static errorState() {
     return (
-      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+      <FlashMessage type='danger'>
         <b>Something went wrong while trying to create your cluster.</b>
         <br />
         Perhaps our servers are down, please try again later or contact support:
         support@giantswarm.io
-      </div>
+      </FlashMessage>
     );
   }
 

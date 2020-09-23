@@ -10,6 +10,7 @@ import NodeCountSelector from 'shared/NodeCountSelector';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import FlashMessageComponent from 'UI/FlashMessage';
 
 class ScaleNodePoolModal extends React.Component {
   static supportsAutoscaling(provider) {
@@ -336,11 +337,11 @@ class ScaleNodePoolModal extends React.Component {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your node pool:</p>
-          <div className='flash-messages--flash-message flash-messages--danger'>
+          <FlashMessageComponent type='danger'>
             {error.body && error.body.message
               ? error.body.message
               : error.message}
-          </div>
+          </FlashMessageComponent>
         </BootstrapModal.Body>
       );
       footer = (
