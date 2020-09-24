@@ -7,6 +7,7 @@ import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
 import errorReducer from 'stores/error/reducer';
 import metadata from 'stores/metadata/reducer';
+import modal from 'stores/modal/reducer';
 import nodePools from 'stores/nodepool/reducer';
 import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
@@ -17,7 +18,6 @@ import errorsByEntity from './entityErrorReducer';
 import loadingFlagsByEntity from './entityLoadingReducer';
 import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
-import modal from './modalReducer';
 
 const entities = combineReducers({
   cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,

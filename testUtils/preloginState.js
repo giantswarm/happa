@@ -88,5 +88,7 @@ export default {
   },
   modal: {
     visible: false,
+    templateValues: {},
+    template: '',
   },
 };
