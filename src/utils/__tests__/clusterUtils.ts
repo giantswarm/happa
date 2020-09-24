@@ -1149,7 +1149,7 @@ describe('clusterUtils', () => {
 function getEmptyStateWithProvider(
   provider: PropertiesOf<typeof Providers>
 ): IState {
-  return {
+  return ({
     ...preloginState,
     main: {
       ...preloginState.main,
@@ -1161,5 +1161,5 @@ function getEmptyStateWithProvider(
         },
       },
     },
-  };
+  } as unknown) as IState;
 }

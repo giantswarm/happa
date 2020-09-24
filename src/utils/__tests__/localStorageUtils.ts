@@ -3,7 +3,7 @@ import { fetchUserFromStorage } from 'utils/localStorageUtils';
 describe('localStorageUtils', () => {
   describe('fetchUserFromStorage', () => {
     it('retrieves the user from storage', () => {
-      const user: IUser = {
+      const user: ILoggedInUser = {
         auth: {
           scheme: 'giantswarm',
           token: '',
@@ -26,7 +26,7 @@ describe('localStorageUtils', () => {
     });
 
     it('migrates user logged in before introducing JWT tokens', () => {
-      const user: IUser = {
+      const user: ILoggedInUser = {
         auth: {
           scheme: 'giantswarm',
           token: '',

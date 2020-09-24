@@ -1,4 +1,3 @@
-import * as userActions from 'actions/userActions';
 import { push } from 'connected-react-router';
 import {
   clearQueues,
@@ -12,6 +11,7 @@ import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
+import * as userActions from 'stores/user/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 

@@ -26,7 +26,7 @@ function createRelease(version: string, active: boolean): IRelease {
   } as IRelease;
 }
 
-jest.unmock('selectors/authSelectors');
+jest.unmock('stores/user/selectors');
 
 describe('clusterSelectors', () => {
   describe('selectTargetRelease', () => {

@@ -1,4 +1,3 @@
-import * as types from 'actions/actionTypes';
 import Cluster from 'Cluster/Cluster';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -25,25 +24,7 @@ class DetailIndex extends React.Component {
       );
 
       dispatch(push(OrganizationsRoutes.Home));
-
-      return;
     }
-
-    // Reset loading flag to true just in case we are accessing cluster details of a
-    // cluster owned by a non selected organization. In those cases we want nothing
-    // to be rendered until cluster details are fetched
-    // If we don't set this here, and do this in batchedActions, there's a fraction
-    // of a second during which the flag is false, and therefore errors are triggered
-    this.props.dispatch({
-      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
-    });
-  }
-
-  componentWillUnmount() {
-    // Set loading flag to false.
-    this.props.dispatch({
-      type: types.CLUSTER_LOAD_DETAILS_FINISHED,
-    });
   }
 
   render() {

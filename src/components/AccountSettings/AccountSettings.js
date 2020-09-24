@@ -1,4 +1,3 @@
-import * as UserActions from 'actions/userActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,6 +5,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
+import * as userActions from 'stores/user/actions';
 import Section from 'UI/Section';
 
 import ChangeEmailForm from './ChangeEmailForm';
@@ -67,7 +67,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(UserActions, dispatch),
+    actions: bindActionCreators(userActions, dispatch),
     dispatch: dispatch,
   };
 }

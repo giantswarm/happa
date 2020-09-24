@@ -2,13 +2,13 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserIsAdmin } from 'selectors/authSelectors';
 import {
   getReleases,
   getReleasesError,
   getReleasesIsFetching,
   getSortedReleaseVersions,
 } from 'selectors/releaseSelectors';
+import { getUserIsAdmin } from 'stores/user/selectors';
 import {
   ListToggler,
   SelectedDescription,

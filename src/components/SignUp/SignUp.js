@@ -1,4 +1,3 @@
-import * as userActions from 'actions/userActions';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage from 'lib/passageClient';
@@ -9,6 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
+import * as userActions from 'stores/user/actions';
 import Button from 'UI/Button';
 
 import PasswordField from './PasswordField';

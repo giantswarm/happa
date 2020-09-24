@@ -1,5 +1,4 @@
-import * as userActions from 'actions/userActions';
-import { push } from 'connected-react-router';
+import { CallHistoryMethodAction, push } from 'connected-react-router';
 import { spinner } from 'images';
 import Auth from 'lib/auth0';
 import { clearQueues } from 'lib/flashMessage';
@@ -8,17 +7,19 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { IState } from 'reducers/types';
-import { AnyAction, Dispatch } from 'redux';
+import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
+import * as userActions from 'stores/user/actions';
+import { UserActions } from 'stores/user/types';
 
 interface IStateProps {
-  user?: Record<string, Record<string, never> | never>;
+  user?: ILoggedInUser;
 }
 
 interface IDispatchProps {
-  dispatch: ThunkDispatch<IState, null, AnyAction>;
+  dispatch: ThunkDispatch<IState, void, UserActions | CallHistoryMethodAction>;
 }
 
 interface IAdminLoginProps extends IStateProps, IDispatchProps {}

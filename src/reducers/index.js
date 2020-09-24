@@ -10,6 +10,7 @@ import metadata from 'stores/metadata/reducer';
 import nodePools from 'stores/nodepool/reducer';
 import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
+import users from 'stores/user/reducer';
 
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
@@ -18,7 +19,6 @@ import invitations from './invitationReducer';
 import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 import modal from './modalReducer';
-import users from './userReducer';
 
 const entities = combineReducers({
   cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,

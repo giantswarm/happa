@@ -1,3 +1,4 @@
+import * as types from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -9,6 +10,11 @@ import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
 import {
+  globalLoadError,
+  globalLoadFinish,
+  globalLoadStart,
+} from 'stores/global/actions';
+import {
   clusterNodePoolsLoad,
   nodePoolsCreate,
   nodePoolsLoad,
@@ -19,16 +25,20 @@ import {
   organizationsLoad,
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
+import { getInfo, refreshUserInfo } from 'stores/user/actions';
 
 import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
-import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
+  dispatch(globalLoadStart());
+
   try {
-    await dispatch(userActions.refreshUserInfo());
-    await dispatch(userActions.getInfo());
+    await dispatch(refreshUserInfo());
+    await dispatch(getInfo());
   } catch (err) {
+    dispatch(globalLoadError());
+
     new FlashMessage(
       'Please log in again, as your previously saved credentials appear to be invalid.',
       messageType.WARNING,
@@ -44,6 +54,7 @@ export const batchedLayout = () => async (dispatch) => {
     try {
       await dispatch(loadUser(CPAuth.getInstance()));
     } catch (err) {
+      dispatch(globalLoadError());
       ErrorReporter.getInstance().notify(err);
     }
   }
@@ -57,6 +68,9 @@ export const batchedLayout = () => async (dispatch) => {
         withLoadingFlags: true,
       })
     );
+
+    dispatch(globalLoadFinish());
+
     await dispatch(
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
@@ -71,6 +85,7 @@ export const batchedLayout = () => async (dispatch) => {
       })
     );
   } catch (err) {
+    dispatch(globalLoadError());
     ErrorReporter.getInstance().notify(err);
   }
 };
@@ -143,6 +158,11 @@ export const batchedClusterDetailView = (
   isV5Cluster
 ) => async (dispatch) => {
   try {
+    dispatch({
+      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+      id: clusterId,
+    });
+
     // Lets use Promise.all when we have a series of async calls that not depend
     // on each another. It's faster and it's best from an error handling perspective.
     await Promise.all([

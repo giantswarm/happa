@@ -1,10 +1,5 @@
 import styled from '@emotion/styled';
 import { invitationCreate, invitationsLoad } from 'actions/invitationActions';
-import {
-  userDelete,
-  userRemoveExpiration,
-  usersLoad,
-} from 'actions/userActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
@@ -12,6 +7,11 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { AppRoutes, UsersRoutes } from 'shared/constants/routes';
+import {
+  userDelete,
+  userRemoveExpiration,
+  usersLoad,
+} from 'stores/user/actions';
 import Button from 'UI/Button';
 
 import DeleteUserModal from './DeleteUserModal';

@@ -19,9 +19,8 @@ export const getFirstNodePoolsRelease = (state: IState): string => {
       break;
   }
 
-  if (state.main.info.features) {
-    releaseVersion =
-      state.main.info.features.nodepools?.release_version_minimum;
+  if (state.main.info.features?.nodepools) {
+    releaseVersion = state.main.info.features.nodepools.release_version_minimum;
   }
 
   return releaseVersion;
@@ -30,9 +29,9 @@ export const getFirstNodePoolsRelease = (state: IState): string => {
 export const getAllowedInstanceTypeNames = (state: IState): string[] => {
   switch (state.main.info.general.provider) {
     case Providers.AWS:
-      return state.main.info.workers.instance_type.options;
+      return state.main.info.workers.instance_type?.options ?? [];
     case Providers.AZURE:
-      return state.main.info.workers.vm_size.options;
+      return state.main.info.workers.vm_size?.options ?? [];
     default:
       return [];
   }

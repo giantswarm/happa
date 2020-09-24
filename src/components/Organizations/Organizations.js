@@ -32,10 +32,8 @@ Organizations.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const loadingClustersDetails = selectLoadingFlagByAction(
-    state,
-    CLUSTERS_DETAILS_REQUEST
-  );
+  const loadingClustersDetails =
+    selectLoadingFlagByAction(state, CLUSTERS_DETAILS_REQUEST) ?? true;
 
   return {
     loadingClustersDetails,

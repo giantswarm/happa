@@ -9,8 +9,8 @@ export function fetchSelectedOrganizationFromStorage() {
   return localStorage.getItem('app.selectedOrganization');
 }
 
-export function fetchUserFromStorage(): IUser | null {
-  let user: IUser | null = null;
+export function fetchUserFromStorage(): ILoggedInUser | null {
+  let user: ILoggedInUser | null = null;
   try {
     user = JSON.parse(String(localStorage.getItem('user')));
   } catch {
@@ -32,7 +32,7 @@ export function fetchUserFromStorage(): IUser | null {
   return user;
 }
 
-export function setUserToStorage(userData: IUser) {
+export function setUserToStorage(userData: ILoggedInUser) {
   localStorage.setItem('user', JSON.stringify(userData));
 
   const defaultClient = GiantSwarm.ApiClient.instance;
