@@ -75,6 +75,11 @@ export default {
       lastUpdated: 0,
       isFetching: false,
       items: {},
+      invitations: {
+        lastUpdated: 0,
+        isFetching: false,
+        items: {},
+      },
     },
     nodePools: {
       items: {},

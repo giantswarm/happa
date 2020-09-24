@@ -3,6 +3,12 @@ import {
   INFO_LOAD_ERROR,
   INFO_LOAD_REQUEST,
   INFO_LOAD_SUCCESS,
+  INVITATION_CREATE_ERROR,
+  INVITATION_CREATE_REQUEST,
+  INVITATION_CREATE_SUCCESS,
+  INVITATIONS_LOAD_ERROR,
+  INVITATIONS_LOAD_REQUEST,
+  INVITATIONS_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -30,6 +36,11 @@ export interface IUserState {
   lastUpdated: number;
   isFetching: boolean;
   items: Record<string, IUser>;
+  invitations: {
+    lastUpdated: number;
+    isFetching: boolean;
+    items: Record<string, IInvitation>;
+  };
 }
 
 export interface IUserLoginRequestAction {
@@ -139,6 +150,31 @@ export interface IUserSetNewPasswordAction {
   type: typeof SET_NEW_PASSWORD;
 }
 
+export interface IUserLoadInvitationsRequestAction {
+  type: typeof INVITATIONS_LOAD_REQUEST;
+}
+
+export interface IUserLoadInvitationsSuccessAction {
+  type: typeof INVITATIONS_LOAD_SUCCESS;
+  invites: Record<string, IInvitation>;
+}
+
+export interface IUserLoadInvitationsErrorAction {
+  type: typeof INVITATIONS_LOAD_ERROR;
+}
+
+export interface IUserCreateInvitationRequestAction {
+  type: typeof INVITATION_CREATE_REQUEST;
+}
+
+export interface IUserCreateInvitationSuccessAction {
+  type: typeof INVITATION_CREATE_SUCCESS;
+}
+
+export interface IUserCreateInvitatioErrorAction {
+  type: typeof INVITATION_CREATE_ERROR;
+}
+
 export type UserActions =
   | IUserLoginRequestAction
   | IUserLoginSuccessAction
@@ -163,4 +199,10 @@ export type UserActions =
   | IUserInfoLoadErrorAction
   | IUserRequestPasswordRecoveryTokenAction
   | IUserVerifyPasswordRecoveryTokenAction
-  | IUserSetNewPasswordAction;
+  | IUserSetNewPasswordAction
+  | IUserLoadInvitationsRequestAction
+  | IUserLoadInvitationsSuccessAction
+  | IUserLoadInvitationsErrorAction
+  | IUserCreateInvitationRequestAction
+  | IUserCreateInvitationSuccessAction
+  | IUserCreateInvitatioErrorAction;

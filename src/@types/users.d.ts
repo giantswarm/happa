@@ -19,3 +19,13 @@ interface IUser {
   expiry: string;
   emaildomain: string;
 }
+
+interface IInvitation {
+  created: string;
+  email: string;
+  emaildomain: string;
+  expiry: string;
+  invited_by: string;
+  organizations: string;
+  status: string;
+}
