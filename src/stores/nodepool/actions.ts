@@ -1,10 +1,11 @@
-import { modalHide } from 'actions/modalActions';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
 import { INodePool } from 'shared/types';
+import { modalHide } from 'stores/modal/actions';
+import { ModalActions } from 'stores/modal/types';
 import {
   CLUSTER_NODEPOOLS_LOAD_ERROR,
   CLUSTER_NODEPOOLS_LOAD_REQUEST,
@@ -170,7 +171,7 @@ export function nodePoolPatch(
 export function nodePoolDeleteConfirmed(
   clusterID: string,
   nodePool: INodePool
-): ThunkAction<void, IState, void, NodePoolActions> {
+): ThunkAction<void, IState, void, NodePoolActions | ModalActions> {
   return async (dispatch) => {
     try {
       dispatch({
@@ -188,8 +189,7 @@ export function nodePoolDeleteConfirmed(
         nodePool,
       });
 
-      // TODO(axbarsan): Remove type cast once modal actions have been typed.
-      dispatch(modalHide() as NodePoolActions);
+      dispatch(modalHide());
 
       new FlashMessage(
         `Node Pool <code>${nodePool.id}</code> will be deleted`,
@@ -197,8 +197,7 @@ export function nodePoolDeleteConfirmed(
         messageTTL.SHORT
       );
     } catch (err) {
-      // TODO(axbarsan): Remove type cast once modal actions have been typed.
-      dispatch(modalHide() as NodePoolActions);
+      dispatch(modalHide());
 
       new FlashMessage(
         `An error occurred when trying to delete node pool <code>${nodePool.id}</code>.`,
