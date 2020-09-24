@@ -12,6 +12,8 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
+  REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
+  SET_NEW_PASSWORD,
   USERS_DELETE_ERROR,
   USERS_DELETE_REQUEST,
   USERS_DELETE_SUCCESS,
@@ -21,6 +23,7 @@ import {
   USERS_REMOVE_EXPIRATION_ERROR,
   USERS_REMOVE_EXPIRATION_REQUEST,
   USERS_REMOVE_EXPIRATION_SUCCESS,
+  VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/user/constants';
 
 export interface IUserState {
@@ -124,6 +127,18 @@ export interface IUserInfoLoadErrorAction {
   error: string;
 }
 
+export interface IUserRequestPasswordRecoveryTokenAction {
+  type: typeof REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST;
+}
+
+export interface IUserVerifyPasswordRecoveryTokenAction {
+  type: typeof VERIFY_PASSWORD_RECOVERY_TOKEN;
+}
+
+export interface IUserSetNewPasswordAction {
+  type: typeof SET_NEW_PASSWORD;
+}
+
 export type UserActions =
   | IUserLoginRequestAction
   | IUserLoginSuccessAction
@@ -145,4 +160,7 @@ export type UserActions =
   | IUserDeleteErrorAction
   | IUserInfoLoadRequestAction
   | IUserInfoLoadSuccessAction
-  | IUserInfoLoadErrorAction;
+  | IUserInfoLoadErrorAction
+  | IUserRequestPasswordRecoveryTokenAction
+  | IUserVerifyPasswordRecoveryTokenAction
+  | IUserSetNewPasswordAction;

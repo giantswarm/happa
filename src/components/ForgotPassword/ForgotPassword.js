@@ -1,4 +1,3 @@
-import * as forgotPasswordActions from 'actions/forgotPasswordActions';
 import {
   clearQueues,
   FlashMessage,
@@ -11,6 +10,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
+import * as userActions from 'stores/user/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import LoginFormContainer from 'UI/LoginFormContainer';
@@ -171,7 +171,7 @@ ForgotPassword.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(forgotPasswordActions, dispatch),
+    actions: bindActionCreators(userActions, dispatch),
   };
 }
 

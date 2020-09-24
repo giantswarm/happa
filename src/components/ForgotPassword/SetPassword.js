@@ -1,4 +1,3 @@
-import * as forgotPasswordActions from 'actions/forgotPasswordActions';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import {
@@ -14,7 +13,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
-import { giantswarmLogin } from 'stores/user/actions';
+import * as userActions from 'stores/user/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
@@ -374,10 +373,7 @@ SetPassword.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(
-      { ...forgotPasswordActions, giantswarmLogin },
-      dispatch
-    ),
+    actions: bindActionCreators(userActions, dispatch),
     dispatch: dispatch,
   };
 }

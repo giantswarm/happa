@@ -3,6 +3,11 @@ import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import Passage, {
+  IRequestPasswordRecoveryTokenResponse,
+  ISetNewPasswordResponse,
+  IVerifyPasswordRecoveryTokenResponse,
+} from 'lib/passageClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
@@ -23,6 +28,8 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
+  REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
+  SET_NEW_PASSWORD,
   USERS_DELETE_ERROR,
   USERS_DELETE_REQUEST,
   USERS_DELETE_SUCCESS,
@@ -32,6 +39,7 @@ import {
   USERS_REMOVE_EXPIRATION_ERROR,
   USERS_REMOVE_EXPIRATION_REQUEST,
   USERS_REMOVE_EXPIRATION_SUCCESS,
+  VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/user/constants';
 import { selectAuthToken } from 'stores/user/selectors';
 import { UserActions } from 'stores/user/types';
@@ -368,5 +376,60 @@ export function userDelete(
         type: USERS_DELETE_ERROR,
       });
     }
+  };
+}
+
+export function requestPasswordRecoveryToken(
+  email: string
+): ThunkAction<
+  Promise<IRequestPasswordRecoveryTokenResponse>,
+  IState,
+  void,
+  UserActions
+> {
+  return (dispatch) => {
+    dispatch({
+      type: REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
+    });
+
+    const passage = new Passage({ endpoint: window.config.passageEndpoint });
+
+    return passage.requestPasswordRecoveryToken({ email });
+  };
+}
+
+export function verifyPasswordRecoveryToken(
+  email: string,
+  token: string
+): ThunkAction<
+  Promise<IVerifyPasswordRecoveryTokenResponse>,
+  IState,
+  void,
+  UserActions
+> {
+  return (dispatch) => {
+    dispatch({
+      type: VERIFY_PASSWORD_RECOVERY_TOKEN,
+    });
+
+    const passage = new Passage({ endpoint: window.config.passageEndpoint });
+
+    return passage.verifyPasswordRecoveryToken({ email, token });
+  };
+}
+
+export function setNewPassword(
+  email: string,
+  token: string,
+  password: string
+): ThunkAction<Promise<ISetNewPasswordResponse>, IState, void, UserActions> {
+  return (dispatch) => {
+    dispatch({
+      type: SET_NEW_PASSWORD,
+    });
+
+    const passage = new Passage({ endpoint: window.config.passageEndpoint });
+
+    return passage.setNewPassword({ email, token, password });
   };
 }
