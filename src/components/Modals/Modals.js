@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { batchedClusterDeleteConfirmed } from 'actions/batchedActions';
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
-import { modalHide } from 'actions/modalActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import EmailField from 'shared/EmailField';
 import InputField from 'shared/InputField';
+import { modalHide } from 'stores/modal/actions';
 import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import {
   organizationAddMemberConfirmed,

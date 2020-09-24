@@ -3,6 +3,7 @@ import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { ICPAuthState } from 'stores/cpauth/types';
 import { IErrorState } from 'stores/error/types';
 import { IMetadataState } from 'stores/metadata/types';
+import { IModalState } from 'stores/modal/types';
 import { INodePoolState } from 'stores/nodepool/types';
 import { IOrganizationState } from 'stores/organization/types';
 
@@ -20,9 +21,9 @@ export interface IState {
     firstLoadComplete: boolean;
     selectedClusterID?: string;
   };
-
   errors: IErrorState;
   metadata: IMetadataState;
+  modal: IModalState;
   entities: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;

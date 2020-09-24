@@ -14,6 +14,7 @@ import {
   globalLoadFinish,
   globalLoadStart,
 } from 'stores/global/actions';
+import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
   nodePoolsCreate,
@@ -28,7 +29,6 @@ import { loadReleases } from 'stores/releases/actions';
 import { getInfo, refreshUserInfo } from 'stores/user/actions';
 
 import * as clusterActions from './clusterActions';
-import * as modalActions from './modalActions';
 
 export const batchedLayout = () => async (dispatch) => {
   dispatch(globalLoadStart());
@@ -224,7 +224,7 @@ export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
   try {
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
     dispatch(push(AppRoutes.Home));
-    dispatch(modalActions.modalHide());
+    dispatch(modalHide());
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
   }
