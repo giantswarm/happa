@@ -44,3 +44,8 @@ interface IAppCatalog {
   isFetchingIndex?: boolean;
   apps?: IAppCatalogAppMap;
 }
+
+interface IAppCatalogYAML {
+  apiVersion: string;
+  entries: IAppCatalogAppMap;
+}

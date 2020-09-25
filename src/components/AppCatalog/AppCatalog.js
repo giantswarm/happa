@@ -1,10 +1,10 @@
-import { catalogLoadIndex } from 'actions/catalogActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import { catalogLoadIndex } from 'stores/appcatalog/actions';
 
 import Detail from './AppDetail/AppDetail';
 import AppList from './AppList/AppList';

@@ -1,5 +1,4 @@
 import {
-  CATALOG_LOAD_INDEX_REQUEST,
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'actions/actionTypes';
@@ -16,6 +15,7 @@ import {
 } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';

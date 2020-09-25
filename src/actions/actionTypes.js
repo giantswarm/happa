@@ -32,16 +32,6 @@
  * NOUN can also represent the nesting of resources.
  */
 
-// Catalogs - Loading all the catalogs from the k8s api
-export const CATALOGS_LOAD_REQUEST = 'CATALOGS_LOAD_REQUEST';
-export const CATALOGS_LOAD_SUCCESS = 'CATALOGS_LOAD_SUCCESS';
-export const CATALOGS_LOAD_ERROR = 'CATALOGS_LOAD_ERROR';
-
-// Catalog - Loading an individual catalog's index.yaml
-export const CATALOG_LOAD_INDEX_REQUEST = 'CATALOG_LOAD_INDEX_REQUEST';
-export const CATALOG_LOAD_INDEX_SUCCESS = 'CATALOG_LOAD_INDEX_SUCCESS';
-export const CATALOG_LOAD_INDEX_ERROR = 'CATALOG_LOAD_INDEX_ERROR';
-
 // Cluster Select
 // This action is for setting a Cluster ID in the state.
 // It is used for example for keeping context when moving from the cluster detail page.

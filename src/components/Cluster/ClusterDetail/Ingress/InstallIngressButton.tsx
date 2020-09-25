@@ -9,13 +9,13 @@ import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
-import { selectIngressAppToInstall } from 'selectors/ingressTabSelectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
 } from 'stores/appcatalog/actions';
+import { selectIngressAppToInstall } from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
