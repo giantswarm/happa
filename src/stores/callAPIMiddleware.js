@@ -20,7 +20,12 @@ export function callAPIMiddleware({ dispatch, getState }) {
     });
 
     try {
-      const response = await doPerform(getState(), dispatch);
+      const request = doPerform(getState(), dispatch);
+      if (!request) {
+        return Promise.resolve(next(action));
+      }
+
+      const response = await request;
       dispatch({
         response,
         type: types.success,
