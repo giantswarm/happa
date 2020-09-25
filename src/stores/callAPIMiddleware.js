@@ -1,5 +1,5 @@
 export function callAPIMiddleware({ dispatch, getState }) {
-  return (next) => (action) => {
+  return (next) => async (action) => {
     const { types, doPerform, throwOnError } = action;
 
     if (!types) {
@@ -19,30 +19,29 @@ export function callAPIMiddleware({ dispatch, getState }) {
       type: types.request,
     });
 
-    return doPerform(getState(), dispatch)
-      .then((response) => {
-        dispatch({
-          response,
-          type: types.success,
-        });
-
-        return response;
-      })
-      .catch((error) => {
-        dispatch({
-          error: error.message,
-          type: types.error,
-        });
-
-        if (throwOnError) {
-          throw error;
-        }
-
-        // TODO: Remove this, this supports a pattern we want to factor out
-        // eventually.
-        return {
-          error: error.message,
-        };
+    try {
+      const response = await doPerform(getState(), dispatch);
+      dispatch({
+        response,
+        type: types.success,
       });
+
+      return response;
+    } catch (err) {
+      dispatch({
+        error: err.message,
+        type: types.error,
+      });
+
+      if (throwOnError) {
+        throw err;
+      }
+
+      // TODO: Remove this, this supports a pattern we want to factor out
+      // eventually.
+      return {
+        error: err.message,
+      };
+    }
   };
 }

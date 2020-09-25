@@ -55,6 +55,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const isPreparingIngressTabData: boolean | null = useSelector((state) =>
     selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
   );
+  // TODO(axbarsan): Use proper app type.
   const installedIngressApp:
     | Record<string, never>
     | undefined = selectIngressAppFromCluster(cluster);

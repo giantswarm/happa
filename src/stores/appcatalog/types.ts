@@ -26,7 +26,7 @@ export interface IAppCatalogsState {
   items: IAppCatalogsMap;
 }
 
-export interface IInstallIngress {
+export interface IInstallIngressActionPayload {
   clusterId: string;
 }
 
