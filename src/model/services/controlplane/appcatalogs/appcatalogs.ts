@@ -1,10 +1,4 @@
 import { IHttpClient } from 'model/clients/HttpClient';
-import {
-  IAppCatalog,
-  IMetaData,
-  ISpec,
-  IStorage,
-} from 'model/services/controlplane/appcatalogs/types';
 import { getBaseConfiguration } from 'model/services/controlplane/base';
 
 /**
@@ -31,17 +25,17 @@ export async function getAppCatalogs(
 function convertAppCatalogCRToCatalog(
   catalog: import('giantswarm-cp-client').ComGithubGiantswarmApiextensionsPkgApisApplicationV1alpha1AppCatalog
 ): IAppCatalog {
-  const metadata: IMetaData = {
+  const metadata: IAppCatalogMetaData = {
     name: catalog.metadata.name ?? '',
     labels: catalog.metadata.labels ?? {},
   };
 
-  const storage: IStorage = {
+  const storage: IAppCatalogStorage = {
     type: catalog.spec.storage.type,
     URL: catalog.spec.storage.uRL,
   };
 
-  const spec: ISpec = {
+  const spec: IAppCatalogSpec = {
     title: catalog.spec.title,
     description: catalog.spec.description,
     logoURL: catalog.spec.logoURL,

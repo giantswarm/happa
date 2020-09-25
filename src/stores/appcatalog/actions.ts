@@ -5,16 +5,11 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import CPClient from 'model/clients/CPClient';
 import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
-import { IAppCatalog } from 'model/services/controlplane/appcatalogs/types';
 import { IState } from 'reducers/types';
 import { selectIngressCatalog } from 'selectors/ingressTabSelectors';
 import { Constants } from 'shared/constants';
 import FeatureFlags from 'shared/FeatureFlags';
-import {
-  IAppCatalogsMap,
-  IInstallIngress,
-  IStoredAppCatalog,
-} from 'stores/appcatalog/types';
+import { IAppCatalogsMap, IInstallIngress } from 'stores/appcatalog/types';
 import { installApp, loadClusterApps } from 'stores/clusterapps/actions';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
 
@@ -51,9 +46,9 @@ export const listCatalogs = createAsynchronousAction<
     // Turn the array response into a hash where the keys are the catalog names.
     const catalogsHash = catalogs.reduce(
       (agg: IAppCatalogsMap, currCatalog: IAppCatalog) => {
-        (currCatalog as IStoredAppCatalog).isFetchingIndex = false;
+        currCatalog.isFetchingIndex = false;
 
-        agg[currCatalog.metadata.name] = currCatalog as IStoredAppCatalog;
+        agg[currCatalog.metadata.name] = currCatalog;
 
         return agg;
       },
@@ -75,8 +70,7 @@ export const installLatestIngress = createAsynchronousAction<
   perform: async (state, dispatch, payload) => {
     if (payload?.clusterId) {
       try {
-        const gsCatalog = selectIngressCatalog(state);
-
+        const gsCatalog = selectIngressCatalog(state) as IAppCatalog;
         const { name, version } = gsCatalog.apps[
           Constants.INSTALL_INGRESS_TAB_APP_NAME
         ][0];
