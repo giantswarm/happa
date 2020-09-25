@@ -2,37 +2,37 @@ import * as types from 'actions/actionTypes';
 import produce from 'immer';
 
 import * as actions from './actions';
-import { IApplicationVersion } from './types';
+import { IAppCatalogsState } from './types';
 
-const initialState = {
+const initialState: IAppCatalogsState = {
   lastUpdated: 0,
   isFetching: false,
   items: {},
 };
 
-const catalogReducer = produce((draft, action) => {
+const catalogReducer = produce((draft: IAppCatalogsState, action) => {
   switch (action.type) {
     case actions.listCatalogs().types.request:
       draft.isFetching = true;
 
-      return;
+      break;
 
     case actions.listCatalogs().types.success:
       draft.items = action.response;
       draft.isFetching = false;
       draft.lastUpdated = Date.now();
 
-      return;
+      break;
 
     case actions.listCatalogs().types.error:
       draft.isFetching = false;
 
-      return;
+      break;
 
     case types.CATALOG_LOAD_INDEX_REQUEST:
       draft.items[action.catalogName].isFetchingIndex = true;
 
-      return;
+      break;
 
     case types.CATALOG_LOAD_INDEX_SUCCESS:
       draft.items[action.catalog.metadata.name] = action.catalog;
@@ -40,20 +40,27 @@ const catalogReducer = produce((draft, action) => {
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
 
-      return;
+      break;
 
     case types.CATALOG_LOAD_INDEX_ERROR:
       draft.items[action.catalogName].isFetchingIndex = false;
 
-      return;
+      break;
 
-    case types.CLUSTER_LOAD_APP_README_SUCCESS:
-      if (!draft.items[action.catalogName]) return;
-      if (!draft.items[action.catalogName].apps[action.appVersion.name]) return;
+    case types.CLUSTER_LOAD_APP_README_SUCCESS: {
+      const appList =
+        draft.items[action.catalogName]?.apps?.[action.appVersion.name];
+      if (!appList) break;
 
-      draft.items[action.catalogName].apps[action.appVersion.name].find(
-        (av: IApplicationVersion) => av.version === action.appVersion.version
-      ).readme = action.readmeText;
+      const currentAppVersion = appList.find(
+        (app) => app.version === action.appVersion.version
+      );
+      if (!currentAppVersion) break;
+
+      currentAppVersion.readme = action.readmeText;
+
+      break;
+    }
   }
 }, initialState);
 

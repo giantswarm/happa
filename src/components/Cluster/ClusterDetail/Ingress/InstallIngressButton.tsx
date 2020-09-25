@@ -59,9 +59,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     | Record<string, never>
     | undefined = selectIngressAppFromCluster(cluster);
 
-  const ingressAppToInstall: Record<string, never> | undefined = useSelector(
-    selectIngressAppToInstall
-  );
+  const ingressAppToInstall = useSelector(selectIngressAppToInstall);
 
   const ingressAppDetailPath = useMemo(() => {
     if (ingressAppToInstall) {

@@ -1,7 +1,3 @@
-export interface IApplicationVersion {
-  version: string;
-}
-
 export interface IAppCatalogsMap {
   [key: string]: IAppCatalog;
 }

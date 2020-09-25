@@ -70,8 +70,9 @@ export const installLatestIngress = createAsynchronousAction<
   perform: async (state, dispatch, payload) => {
     if (payload?.clusterId) {
       try {
+        // These type casts are safe due to the checks in `shouldPerform()`.
         const gsCatalog = selectIngressCatalog(state) as IAppCatalog;
-        const { name, version } = gsCatalog.apps[
+        const { name, version } = (gsCatalog.apps as IAppCatalogAppMap)[
           Constants.INSTALL_INGRESS_TAB_APP_NAME
         ][0];
 
@@ -112,13 +113,12 @@ export const installLatestIngress = createAsynchronousAction<
       }
     }
   },
-  shouldPerform: (state) => {
+  shouldPerform: (state): boolean => {
     // only allow performing if we have loaded the catalog and have a version
     const gsCatalog = selectIngressCatalog(state);
-
     const app = gsCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0];
 
-    return gsCatalog && app;
+    return typeof gsCatalog !== 'undefined' && typeof app !== 'undefined';
   },
   throwOnError: false,
 });
