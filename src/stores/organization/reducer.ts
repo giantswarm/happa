@@ -1,5 +1,8 @@
 import produce from 'immer';
 import {
+  ORGANIZATION_CREDENTIALS_LOAD_ERROR,
+  ORGANIZATION_CREDENTIALS_LOAD_REQUEST,
+  ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
   ORGANIZATION_CREDENTIALS_SET,
   ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST,
   ORGANIZATION_CREDENTIALS_SET_DISCARD,
@@ -20,7 +23,12 @@ const initialState: IOrganizationState = {
   lastUpdated: 0,
   isFetching: false,
   items: {},
-  showCredentialsForm: false,
+  credentials: {
+    lastUpdated: 0,
+    isFetching: false,
+    items: [],
+    showForm: false,
+  },
 };
 
 const organizationReducer = produce(
@@ -56,13 +64,30 @@ const organizationReducer = produce(
       case ORGANIZATION_CREDENTIALS_SET:
       case ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST:
       case ORGANIZATION_CREDENTIALS_SET_ERROR:
-        draft.showCredentialsForm = true;
+        draft.credentials.showForm = true;
 
         break;
 
       case ORGANIZATION_CREDENTIALS_SET_DISCARD:
       case ORGANIZATION_CREDENTIALS_SET_SUCCESS:
-        draft.showCredentialsForm = false;
+        draft.credentials.showForm = false;
+
+        break;
+
+      case ORGANIZATION_CREDENTIALS_LOAD_REQUEST:
+        draft.credentials.isFetching = true;
+
+        break;
+
+      case ORGANIZATION_CREDENTIALS_LOAD_SUCCESS:
+        draft.credentials.lastUpdated = Date.now();
+        draft.credentials.isFetching = false;
+        draft.credentials.items = action.credentials;
+
+        break;
+
+      case ORGANIZATION_CREDENTIALS_LOAD_ERROR:
+        draft.isFetching = false;
 
         break;
     }

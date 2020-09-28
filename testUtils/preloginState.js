@@ -52,11 +52,6 @@ export default {
       items: {},
       v5Clusters: [],
     },
-    credentials: {
-      lastUpdated: 0,
-      isFetching: false,
-      items: [],
-    },
     invitations: {
       lastUpdated: 0,
       isFetching: false,
@@ -66,7 +61,12 @@ export default {
       lastUpdated: 0,
       isFetching: false,
       items: {},
-      showCredentialsForm: false,
+      credentials: {
+        lastUpdated: 0,
+        isFetching: false,
+        items: [],
+        showForm: false,
+      },
     },
     releases: {
       items: {},
