@@ -7,7 +7,6 @@
 - Changing existing functionality
 
   - `kind/change`
-  - `kind/refactor`
   - `kind/ux-enhancement`
 
 - Soon-to-be removed features
@@ -29,3 +28,4 @@
 
 - `dependencies` (Updating dependencies)
 - `kind/dev-change` (Changing development commands, file structure, etc.)
+- `kind/refactor` (Improving the implementation of a specific part of the codebase, without changing its functionality)
