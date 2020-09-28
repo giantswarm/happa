@@ -4,6 +4,8 @@ import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage, {
+  IPassageCreateInvitationResponse,
+  IPassageInvitation,
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
@@ -19,6 +21,12 @@ import {
   INFO_LOAD_ERROR,
   INFO_LOAD_REQUEST,
   INFO_LOAD_SUCCESS,
+  INVITATION_CREATE_ERROR,
+  INVITATION_CREATE_REQUEST,
+  INVITATION_CREATE_SUCCESS,
+  INVITATIONS_LOAD_ERROR,
+  INVITATIONS_LOAD_REQUEST,
+  INVITATIONS_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -250,7 +258,7 @@ export function getInfo(): ThunkAction<
       });
 
       return Promise.resolve();
-    } catch (err: unknown) {
+    } catch (err) {
       dispatch({
         type: INFO_LOAD_ERROR,
         error: (err as GenericResponse<string>).data,
@@ -431,5 +439,101 @@ export function setNewPassword(
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
     return passage.setNewPassword({ email, token, password });
+  };
+}
+
+export function invitationsLoad(): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  UserActions
+> {
+  return async (dispatch, getState) => {
+    try {
+      const alreadyFetching = getState().entities.users.invitations.isFetching;
+      if (alreadyFetching) {
+        return Promise.resolve();
+      }
+
+      dispatch({ type: INVITATIONS_LOAD_REQUEST });
+
+      const passage = new Passage({ endpoint: window.config.passageEndpoint });
+      const token = getState().main.loggedInUser.auth.token;
+
+      const response = await passage.getInvitations(token);
+      const invites = response.reduce(
+        (agg: Record<string, IInvitation>, curr: IPassageInvitation) => {
+          agg[curr.email] = {
+            ...curr,
+            emaildomain: curr.email.split('@')[1],
+          };
+
+          return agg;
+        },
+        {}
+      );
+
+      dispatch({
+        type: INVITATIONS_LOAD_SUCCESS,
+        invites,
+      });
+
+      return Promise.resolve();
+    } catch (err) {
+      new FlashMessage(
+        'Something went wrong while trying to load invitations',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      dispatch({
+        type: INVITATIONS_LOAD_ERROR,
+      });
+
+      return Promise.reject(err);
+    }
+  };
+}
+
+export function invitationCreate(invitation: {
+  email: string;
+  organizations: string;
+  sendEmail: boolean;
+}): ThunkAction<
+  Promise<IPassageCreateInvitationResponse>,
+  IState,
+  void,
+  UserActions
+> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: INVITATION_CREATE_REQUEST });
+
+      const passage = new Passage({ endpoint: window.config.passageEndpoint });
+      const token = getState().main.loggedInUser.auth.token;
+      const response = await passage.createInvitation(token, invitation);
+
+      dispatch({
+        type: INVITATION_CREATE_SUCCESS,
+      });
+
+      await dispatch(invitationsLoad());
+
+      return response;
+    } catch (err) {
+      new FlashMessage(
+        'Something went wrong while trying to create your invitation.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      dispatch({
+        type: INVITATION_CREATE_ERROR,
+      });
+
+      return Promise.reject(err);
+    }
   };
 }

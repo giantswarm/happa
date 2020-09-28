@@ -6,6 +6,7 @@ import { IMetadataState } from 'stores/metadata/types';
 import { IModalState } from 'stores/modal/types';
 import { INodePoolState } from 'stores/nodepool/types';
 import { IOrganizationState } from 'stores/organization/types';
+import { IUserState } from 'stores/user/types';
 
 // Giving state a generic type for now, until whole state is typed.
 export interface IState {
@@ -31,5 +32,6 @@ export interface IState {
     catalogs: IAppCatalogsState;
     organizations: IOrganizationState;
     nodePools: INodePoolState;
+    users: IUserState;
   };
 }

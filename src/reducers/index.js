@@ -16,7 +16,6 @@ import users from 'stores/user/reducer';
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
 import loadingFlagsByEntity from './entityLoadingReducer';
-import invitations from './invitationReducer';
 import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 
@@ -26,7 +25,6 @@ const entities = combineReducers({
   clusterLabels,
   clusters,
   credentials,
-  invitations,
   nodePools,
   organizations,
   releases,
