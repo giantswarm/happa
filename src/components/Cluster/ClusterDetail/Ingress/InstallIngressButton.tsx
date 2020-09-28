@@ -5,17 +5,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { IState } from 'reducers/types';
-import {
-  selectIngressAppFromCluster,
-  selectLoadingFlagByAction,
-} from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
 } from 'stores/appcatalog/actions';
-import { selectIngressAppToInstall } from 'stores/appcatalog/selectors';
+import {
+  selectIngressAppFromCluster,
+  selectIngressAppToInstall,
+} from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
