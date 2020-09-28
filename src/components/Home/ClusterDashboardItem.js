@@ -254,10 +254,10 @@ function ClusterDashboardItem({
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel value={release.kubernetesVersion}>
+            <RefreshableLabel value={release?.kubernetesVersion}>
               <span>
                 <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
-                {release.kubernetesVersion}
+                {release?.kubernetesVersion ?? 'n/a'}
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
