@@ -396,6 +396,9 @@ export type AppCatalogActions =
   | IAppCatalogUpdateClusterAppRequestAction
   | IAppCatalogUpdateClusterAppSuccessAction
   | IAppCatalogUpdateClusterAppErrorAction
+  | IAppCatalogDeleteClusterAppRequestAction
+  | IAppCatalogDeleteClusterAppSuccessAction
+  | IAppCatalogDeleteClusterAppErrorAction
   | IAppCatalogLoadClusterAppRequestAction
   | IAppCatalogLoadClusterAppSuccessAction
   | IAppCatalogLoadClusterAppErrorAction
