@@ -66,7 +66,14 @@ function RegionAndVersions({
             <>
               <Dot />
               <i className='fa fa-kubernetes' />
-              {release.kubernetesVersion}
+              {(() => {
+                const kubernetes = release.components.find(
+                  (component) => component.name === 'kubernetes'
+                );
+                if (kubernetes) return kubernetes.version;
+
+                return null;
+              })()}
             </>
           )}
           {!release &&
