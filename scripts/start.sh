@@ -65,14 +65,9 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
   # Escape the ampersand (special awk character)
   INC=$(echo $INC | sed -e 's|&|\\\\&|g')
 
-  # Set env in Datadog code to provider
-  if [ -n "$PROVIDER" ]; then
-    INC=$(echo $INC | sed -e "s|env: 'development',|env: '${PROVIDER}',|")
-  fi
-
-  # Set installation name in Datadog code
-  if [ -n "$INSTALLATION_NAME" ]; then
-    INC=$(echo $INC | sed -e "s|service: 'happa',|service: '${INSTALLATION_NAME}',|")
+  # Set env in Datadog code to provider/installation
+  if [ -n "$PROVIDER" && -n "$INSTALLATION_NAME" ]; then
+    INC=$(echo $INC | sed -e "s|env: 'development',|env: '${PROVIDER}/${INSTALLATION_NAME}',|")
   fi
 
   # Set version in Datadog code
