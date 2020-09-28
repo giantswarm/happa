@@ -254,19 +254,10 @@ function ClusterDashboardItem({
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel value={cluster.kubernetes_version}>
+            <RefreshableLabel value={release.kubernetesVersion}>
               <span>
                 <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
-                <span>
-                  {(() => {
-                    const kubernetes = release.components.find(
-                      (component) => component.name === 'kubernetes'
-                    );
-                    if (kubernetes) return kubernetes.version;
-
-                    return null;
-                  })()}
-                </span>
+                {release.kubernetesVersion}
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
