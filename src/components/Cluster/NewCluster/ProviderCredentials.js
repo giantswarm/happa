@@ -80,7 +80,7 @@ ProviderCredentials.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    credentials: state.entities.credentials,
+    credentials: state.entities.organizations.credentials,
   };
 }
 
