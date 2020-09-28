@@ -13,6 +13,7 @@ import {
   selectClusterById,
   selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
+import { getAllReleases } from 'selectors/releaseSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ErrorBoundary from 'shared/ErrorBoundary';
@@ -143,10 +144,12 @@ function ClusterDashboardItem({
   dispatch,
   nodePoolsLoadError,
   clusterId,
+  releases,
 }) {
   // If the cluster has been deleted using gsctl, Happa doesn't know yet.
   if (!cluster) return null;
 
+  const release = releases[cluster.release_version] ?? null;
   const isCreating = isClusterCreating(cluster);
 
   /**
@@ -251,6 +254,13 @@ function ClusterDashboardItem({
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
+            <RefreshableLabel value={release?.kubernetesVersion}>
+              <span>
+                <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
+                {release?.kubernetesVersion ?? 'n/a'}
+              </span>
+            </RefreshableLabel>
+            <Dot style={{ paddingLeft: 0 }} />
             Created {relativeDate(cluster.create_date)}
           </>
 
@@ -298,6 +308,7 @@ ClusterDashboardItem.propTypes = {
   nodePools: PropTypes.array,
   nodePoolsLoadError: PropTypes.string,
   clusterId: PropTypes.string,
+  releases: PropTypes.object,
 };
 
 function mapStateToProps(state, props) {
@@ -309,6 +320,7 @@ function mapStateToProps(state, props) {
       props.clusterId,
       CLUSTER_NODEPOOLS_LOAD_REQUEST
     ),
+    releases: getAllReleases(state),
   };
 }
 
