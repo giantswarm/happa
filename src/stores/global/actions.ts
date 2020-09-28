@@ -1,4 +1,5 @@
 import {
+  CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
   GLOBAL_LOAD_SUCCESS,
@@ -15,4 +16,11 @@ export function globalLoadFinish(): GlobalActions {
 
 export function globalLoadError(): GlobalActions {
   return { type: GLOBAL_LOAD_ERROR };
+}
+
+export function selectCluster(clusterID: string): GlobalActions {
+  return {
+    type: CLUSTER_SELECT,
+    clusterID,
+  };
 }

@@ -8,6 +8,9 @@ import {
   CATALOGS_LOAD_ERROR,
   CATALOGS_LOAD_REQUEST,
   CATALOGS_LOAD_SUCCESS,
+  CLUSTER_LOAD_APP_README_ERROR,
+  CLUSTER_LOAD_APP_README_REQUEST,
+  CLUSTER_LOAD_APP_README_SUCCESS,
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
@@ -102,6 +105,26 @@ export interface IAppCatalogPrepareIngressTabDataErrorAction {
   error: string;
 }
 
+export interface IAppCatalogLoadAppReadmeRequestAction {
+  type: typeof CLUSTER_LOAD_APP_README_REQUEST;
+  catalogName: string;
+  appVersion: IAppCatalogApp;
+}
+
+export interface IAppCatalogLoadAppReadmeSuccessAction {
+  type: typeof CLUSTER_LOAD_APP_README_SUCCESS;
+  catalogName: string;
+  appVersion: IAppCatalogApp;
+  readmeText: string;
+}
+
+export interface IAppCatalogLoadAppReadmeErrorAction {
+  type: typeof CLUSTER_LOAD_APP_README_ERROR;
+  catalogName: string;
+  appVersion: IAppCatalogApp;
+  error: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -117,4 +140,7 @@ export type AppCatalogActions =
   | IAppCatalogInstallLatestIngressErrorAction
   | IAppCatalogPrepareIngressTabDataRequestAction
   | IAppCatalogPrepareIngressTabDataSuccessAction
-  | IAppCatalogPrepareIngressTabDataErrorAction;
+  | IAppCatalogPrepareIngressTabDataErrorAction
+  | IAppCatalogLoadAppReadmeRequestAction
+  | IAppCatalogLoadAppReadmeSuccessAction
+  | IAppCatalogLoadAppReadmeErrorAction;

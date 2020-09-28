@@ -17,6 +17,9 @@ import {
   CATALOGS_LOAD_ERROR,
   CATALOGS_LOAD_REQUEST,
   CATALOGS_LOAD_SUCCESS,
+  CLUSTER_LOAD_APP_README_ERROR,
+  CLUSTER_LOAD_APP_README_REQUEST,
+  CLUSTER_LOAD_APP_README_SUCCESS,
   INSTALL_INGRESS_APP,
   PREPARE_INGRESS_TAB_DATA,
 } from 'stores/appcatalog/constants';
@@ -314,4 +317,98 @@ async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
   });
 
   return catalogWithApps;
+}
+
+/**
+ * Takes a catalogName and an appVersion (which is a complex object, and must have a sources field)
+ * and attempts to fetch the README it finds in the sources field.
+ *
+ * @param {string} catalogName The name of the catalog that the appVersion can be found in (Reducer needs to know this to update the store correctly)
+ * @param {Object} appVersion An appVersion object, which is a single entry in the apps field of a catalog, referencing a specific version of an app.
+ * @param {String[]} appVersion.sources[] A URL, ending in README.md
+ */
+export function loadAppReadme(
+  catalogName: string,
+  appVersion: IAppCatalogApp
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch) => {
+    dispatch({
+      type: CLUSTER_LOAD_APP_README_REQUEST,
+      catalogName,
+      appVersion,
+    });
+
+    if (!appVersion.sources) {
+      dispatch({
+        type: CLUSTER_LOAD_APP_README_ERROR,
+        catalogName,
+        appVersion,
+        error: 'No list of sources to check for a README.',
+      });
+
+      return Promise.resolve();
+    }
+
+    let readmeURL = appVersion.sources.find((url) => url.endsWith('README.md'));
+    if (!readmeURL) {
+      dispatch({
+        type: CLUSTER_LOAD_APP_README_ERROR,
+        catalogName,
+        appVersion,
+        error: 'This app does not reference a README file.',
+      });
+
+      return Promise.resolve();
+    }
+    readmeURL = fixTestAppReadmeURLs(readmeURL);
+
+    try {
+      const response = await fetch(readmeURL, { mode: 'cors' });
+      if (response.status !== StatusCodes.Ok) {
+        throw new Error(
+          `Error fetching Readme. Response Status: ${response.status}`
+        );
+      }
+      const readmeText = await response.text();
+
+      dispatch({
+        type: CLUSTER_LOAD_APP_README_SUCCESS,
+        catalogName,
+        appVersion,
+        readmeText,
+      });
+
+      return Promise.resolve();
+    } catch (error) {
+      const errorMessage = 'Whoops';
+      dispatch({
+        type: CLUSTER_LOAD_APP_README_ERROR,
+        catalogName,
+        appVersion,
+        error: errorMessage,
+      });
+
+      return Promise.resolve();
+    }
+  };
+}
+
+/**
+ * Looks at a readme URL and attempts to correct URLs
+ * which are known not to work. Test apps have a version which is not yet
+ * tagged in the git repo, but the path includes the commit sha, so we can
+ * still get to the file at that commit.
+ * @param readmeURL - A URL that may or may not point to a README of a test app.
+ */
+function fixTestAppReadmeURLs(readmeURL: string): string {
+  /**
+   * Test app urls will have a semver version followed by a hyphen followed by
+   * a long commit sha. We need to remove the version part. If the regex
+   * doesn't match, then the string is returned as is.
+   * https://regex101.com/r/K2dxdN/1
+   */
+  const regexMatcher = /^(.*)\/v?[0-9]+\.[0-9]+\.[0-9]+-(.*)\/README\.md$/;
+  const fixedReadmeURL = readmeURL.replace(regexMatcher, '$1/$2/README.md');
+
+  return fixedReadmeURL;
 }

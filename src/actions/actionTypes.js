@@ -36,7 +36,6 @@
 // This action is for setting a Cluster ID in the state.
 // It is used for example for keeping context when moving from the cluster detail page.
 // To the  app catalog.
-export const CLUSTER_SELECT = 'CLUSTER_SELECT';
 
 // Clusters
 export const CLUSTERS_LIST_REQUEST = 'CLUSTERS_LIST_REQUEST';
@@ -73,13 +72,6 @@ export const CLUSTER_REMOVE_FROM_STORE = 'CLUSTER_REMOVE_FROM_STORE';
 
 export const CLUSTER_PATCH = 'CLUSTER_PATCH';
 export const CLUSTER_PATCH_ERROR = 'CLUSTER_PATCH_ERROR';
-
-// Clusters - Apps
-export const CLUSTER_LOAD_APP_README_REQUEST =
-  'CLUSTER_LOAD_APP_README_REQUEST';
-export const CLUSTER_LOAD_APP_README_SUCCESS =
-  'CLUSTER_LOAD_APP_README_SUCCESS';
-export const CLUSTER_LOAD_APP_README_ERROR = 'CLUSTER_LOAD_APP_README_ERROR';
 
 // Clusters - App Configs
 export const CLUSTER_CREATE_APP_CONFIG_REQUEST =
