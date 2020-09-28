@@ -32,7 +32,12 @@ export interface IOrganizationState {
   lastUpdated: number;
   isFetching: boolean;
   items: Record<string, IOrganization>;
-  showCredentialsForm: boolean;
+  credentials: {
+    lastUpdated: number;
+    isFetching: boolean;
+    items: ICredential[];
+    showForm: boolean;
+  };
 }
 
 export interface IOrganizationSelectAction {

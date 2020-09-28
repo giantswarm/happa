@@ -452,7 +452,7 @@ function mapStateToProps(state, props) {
     defaultTargetRelease:
       state.entities.releases.items[defaultTargetReleaseVersion] ?? null,
     isV5Cluster: state.entities.clusters.v5Clusters.includes(clusterID),
-    credentials: state.entities.credentials,
+    credentials: state.entities.organizations.credentials,
     catalogs: state.entities.catalogs,
     nodePools: selectNodePools(state),
     provider: state.main.info.general.provider,
