@@ -104,7 +104,7 @@ class V4ClusterDetailTable extends React.Component {
       resources,
     } = this.props;
 
-    const { create_date, release_version, api_endpoint } = cluster;
+    const { create_date, api_endpoint } = cluster;
     const { numberOfNodes, memory, cores } = resources;
     const firstWorker = cluster.workers?.[0];
 
@@ -116,9 +116,7 @@ class V4ClusterDetailTable extends React.Component {
           <div>
             <RegionAndVersions
               createDate={create_date}
-              releaseVersion={release_version}
               release={release}
-              k8sVersion={cluster.kubernetes_version}
               clusterId={cluster.id}
               showUpgradeModal={this.props.showUpgradeModal}
               region={region}
