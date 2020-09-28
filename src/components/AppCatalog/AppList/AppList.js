@@ -1,4 +1,3 @@
-import { CATALOG_LOAD_INDEX_REQUEST } from 'actions/actionTypes';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
@@ -12,6 +11,7 @@ import {
 } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import AppListInner from './AppListInner';

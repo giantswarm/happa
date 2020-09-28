@@ -35,7 +35,7 @@ const StyledModal = styled(BootstrapModal)`
 `;
 
 interface IKeyPairCreateModalProps {
-  user: Record<string, never>;
+  user: IUser;
   actions: Record<string, (...args: unknown[]) => Promise<never>>;
   cluster: V4.ICluster | V5.ICluster;
   provider: PropertiesOf<typeof Providers>;

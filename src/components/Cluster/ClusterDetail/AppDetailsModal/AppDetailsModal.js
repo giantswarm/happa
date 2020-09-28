@@ -8,13 +8,13 @@ import {
   deleteAppSecret as deleteAppSecretAction,
   updateAppSecret as updateAppSecretAction,
 } from 'actions/appSecretActions';
-import { catalogLoadIndex } from 'actions/catalogActions';
 import GenericModal from 'components/Modals/GenericModal';
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import {
   deleteClusterApp as deleteAppAction,
   updateClusterApp as updateAppAction,

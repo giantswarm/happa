@@ -19,8 +19,7 @@ import { parseErrorMessages } from './parseErrorMessages';
 
 // The props coming from the global state (AKA: `mapStateToProps`)
 interface IStateProps {
-  // For now, until we have a type for it
-  user: Record<string, never>;
+  user: IUser;
 }
 
 // The props coming from injected actions (AKA: `mapDispatchToProps`)
