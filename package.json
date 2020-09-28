@@ -130,7 +130,7 @@
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
     "semver-compare": "1.0.0",
-    "serialize-javascript": "4.0.0",
+    "serialize-javascript": "5.0.1",
     "stacktrace-js": "^2.0.2",
     "superagent": "6.1.0",
     "underscore": "1.10.2",
