@@ -151,7 +151,7 @@
     "@types/color-hash": "^1.0.0",
     "@types/deep-diff": "^1.0.0",
     "@types/history": "^4.7.8",
-    "@types/jest": "^26.0.13",
+    "@types/jest": "^26.0.14",
     "@types/js-yaml": "^3.12.5",
     "@types/lunr": "^2.3.3",
     "@types/node": "^14.6.2",
