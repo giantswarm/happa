@@ -17,9 +17,18 @@ import {
   CATALOGS_LOAD_ERROR,
   CATALOGS_LOAD_REQUEST,
   CATALOGS_LOAD_SUCCESS,
+  CLUSTER_CREATE_APP_CONFIG_ERROR,
+  CLUSTER_CREATE_APP_CONFIG_REQUEST,
+  CLUSTER_CREATE_APP_CONFIG_SUCCESS,
+  CLUSTER_DELETE_APP_CONFIG_ERROR,
+  CLUSTER_DELETE_APP_CONFIG_REQUEST,
+  CLUSTER_DELETE_APP_CONFIG_SUCCESS,
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
   CLUSTER_LOAD_APP_README_SUCCESS,
+  CLUSTER_UPDATE_APP_CONFIG_ERROR,
+  CLUSTER_UPDATE_APP_CONFIG_REQUEST,
+  CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
   INSTALL_INGRESS_APP,
   PREPARE_INGRESS_TAB_DATA,
 } from 'stores/appcatalog/constants';
@@ -411,4 +420,220 @@ function fixTestAppReadmeURLs(readmeURL: string): string {
   const fixedReadmeURL = readmeURL.replace(regexMatcher, '$1/$2/README.md');
 
   return fixedReadmeURL;
+}
+
+export function updateAppConfig(
+  appName: string,
+  clusterID: string,
+  values: string
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLUSTER_UPDATE_APP_CONFIG_REQUEST,
+        clusterID,
+        appName,
+      });
+
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(clusterID);
+
+      const appConfigsApi = new GiantSwarm.AppConfigsApi();
+      let updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV4.bind(
+        appConfigsApi
+      );
+      if (isV5Cluster) {
+        updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV5.bind(
+          appConfigsApi
+        );
+      }
+
+      await updateClusterAppConfig(clusterID, appName, {
+        body: values,
+      });
+      dispatch({
+        type: CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
+        clusterID,
+        appName,
+      });
+
+      new FlashMessage(
+        `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      dispatch({
+        type: CLUSTER_UPDATE_APP_CONFIG_ERROR,
+        clusterID,
+        appName,
+      });
+
+      if (err.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          `Could not find an app or ConfigMap containing user level config values to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (err.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to update the ConfigMap containing user level config values. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+    }
+  };
+}
+
+export function createAppConfig(
+  appName: string,
+  clusterID: string,
+  values: string
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch, getState) => {
+    try {
+      if (Object.keys(values).length === 0) {
+        // Skip creating an empty app config.
+        return Promise.resolve();
+      }
+
+      dispatch({
+        type: CLUSTER_CREATE_APP_CONFIG_REQUEST,
+        clusterID,
+        appName,
+      });
+
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(clusterID);
+
+      const appConfigsApi = new GiantSwarm.AppConfigsApi();
+      let createClusterAppConfig = appConfigsApi.createClusterAppConfigV4.bind(
+        appConfigsApi
+      );
+      if (isV5Cluster) {
+        createClusterAppConfig = appConfigsApi.createClusterAppConfigV5.bind(
+          appConfigsApi
+        );
+      }
+
+      await createClusterAppConfig(clusterID, appName, {
+        body: values,
+      });
+      dispatch({
+        type: CLUSTER_CREATE_APP_CONFIG_SUCCESS,
+        clusterID,
+        appName,
+      });
+
+      new FlashMessage(
+        `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return Promise.resolve();
+    } catch (err) {
+      dispatch({
+        type: CLUSTER_CREATE_APP_CONFIG_ERROR,
+        clusterID,
+        appName,
+      });
+
+      if (err.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          `Could not find app <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (err.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to create a ConfigMap to store your values. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+
+      return Promise.reject(err);
+    }
+  };
+}
+
+export function deleteAppConfig(
+  appName: string,
+  clusterID: string
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLUSTER_DELETE_APP_CONFIG_REQUEST,
+        clusterID,
+        appName,
+      });
+
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(clusterID);
+
+      const appConfigsApi = new GiantSwarm.AppConfigsApi();
+      let deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV4.bind(
+        appConfigsApi
+      );
+      if (isV5Cluster) {
+        deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV5.bind(
+          appConfigsApi
+        );
+      }
+
+      await deleteClusterAppConfig(clusterID, appName);
+      dispatch({
+        type: CLUSTER_DELETE_APP_CONFIG_SUCCESS,
+        clusterID,
+        appName,
+      });
+
+      new FlashMessage(
+        `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
+    } catch (err) {
+      dispatch({
+        type: CLUSTER_DELETE_APP_CONFIG_ERROR,
+        clusterID,
+        appName,
+      });
+
+      if (err.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          `Could not find the ConfigMap containing user level config values for the app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (err.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to delete the ConfigMap containing your values. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+    }
+  };
 }

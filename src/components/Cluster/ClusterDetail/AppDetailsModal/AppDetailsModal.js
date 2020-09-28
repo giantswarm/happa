@@ -1,9 +1,4 @@
 import {
-  createAppConfig as createAppConfigAction,
-  deleteAppConfig as deleteAppConfigAction,
-  updateAppConfig as updateAppConfigAction,
-} from 'actions/appConfigActions';
-import {
   createAppSecret as createAppSecretAction,
   deleteAppSecret as deleteAppSecretAction,
   updateAppSecret as updateAppSecretAction,
@@ -14,6 +9,11 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import {
+  createAppConfig as createAppConfigAction,
+  deleteAppConfig as deleteAppConfigAction,
+  updateAppConfig as updateAppConfigAction,
+} from 'stores/appcatalog/actions';
 import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import {
   deleteClusterApp as deleteAppAction,

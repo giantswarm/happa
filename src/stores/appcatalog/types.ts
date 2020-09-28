@@ -8,9 +8,18 @@ import {
   CATALOGS_LOAD_ERROR,
   CATALOGS_LOAD_REQUEST,
   CATALOGS_LOAD_SUCCESS,
+  CLUSTER_CREATE_APP_CONFIG_ERROR,
+  CLUSTER_CREATE_APP_CONFIG_REQUEST,
+  CLUSTER_CREATE_APP_CONFIG_SUCCESS,
+  CLUSTER_DELETE_APP_CONFIG_ERROR,
+  CLUSTER_DELETE_APP_CONFIG_REQUEST,
+  CLUSTER_DELETE_APP_CONFIG_SUCCESS,
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
   CLUSTER_LOAD_APP_README_SUCCESS,
+  CLUSTER_UPDATE_APP_CONFIG_ERROR,
+  CLUSTER_UPDATE_APP_CONFIG_REQUEST,
+  CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
@@ -125,6 +134,60 @@ export interface IAppCatalogLoadAppReadmeErrorAction {
   error: string;
 }
 
+export interface IAppCatalogCreateInstalledAppConfigRequestAction {
+  type: typeof CLUSTER_CREATE_APP_CONFIG_REQUEST;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogCreateInstalledAppConfigSuccessAction {
+  type: typeof CLUSTER_CREATE_APP_CONFIG_SUCCESS;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogCreateInstalledAppConfigErrorAction {
+  type: typeof CLUSTER_CREATE_APP_CONFIG_ERROR;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogUpdateInstalledAppConfigRequestAction {
+  type: typeof CLUSTER_UPDATE_APP_CONFIG_REQUEST;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogUpdateInstalledAppConfigSuccessAction {
+  type: typeof CLUSTER_UPDATE_APP_CONFIG_SUCCESS;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogUpdateInstalledAppConfigErrorAction {
+  type: typeof CLUSTER_UPDATE_APP_CONFIG_ERROR;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogDeleteInstalledAppConfigRequestAction {
+  type: typeof CLUSTER_DELETE_APP_CONFIG_REQUEST;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogDeleteInstalledAppConfigSuccessAction {
+  type: typeof CLUSTER_DELETE_APP_CONFIG_SUCCESS;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogDeleteInstalledAppConfigErrorAction {
+  type: typeof CLUSTER_DELETE_APP_CONFIG_ERROR;
+  clusterID: string;
+  appName: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -143,4 +206,13 @@ export type AppCatalogActions =
   | IAppCatalogPrepareIngressTabDataErrorAction
   | IAppCatalogLoadAppReadmeRequestAction
   | IAppCatalogLoadAppReadmeSuccessAction
-  | IAppCatalogLoadAppReadmeErrorAction;
+  | IAppCatalogLoadAppReadmeErrorAction
+  | IAppCatalogCreateInstalledAppConfigRequestAction
+  | IAppCatalogCreateInstalledAppConfigSuccessAction
+  | IAppCatalogCreateInstalledAppConfigErrorAction
+  | IAppCatalogUpdateInstalledAppConfigRequestAction
+  | IAppCatalogUpdateInstalledAppConfigSuccessAction
+  | IAppCatalogUpdateInstalledAppConfigErrorAction
+  | IAppCatalogDeleteInstalledAppConfigRequestAction
+  | IAppCatalogDeleteInstalledAppConfigSuccessAction
+  | IAppCatalogDeleteInstalledAppConfigErrorAction;
