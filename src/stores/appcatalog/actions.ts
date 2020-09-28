@@ -38,6 +38,7 @@ import {
   CLUSTER_UPDATE_APP_SECRET_ERROR,
   CLUSTER_UPDATE_APP_SECRET_REQUEST,
   CLUSTER_UPDATE_APP_SECRET_SUCCESS,
+  DELETE_CLUSTER_APP,
   INSTALL_APP,
   INSTALL_INGRESS_APP,
   LOAD_CLUSTER_APPS,
@@ -47,6 +48,8 @@ import {
 import { selectIngressCatalog } from 'stores/appcatalog/selectors';
 import {
   AppCatalogActions,
+  IAppCatalogDeleteClusterAppActionPayload,
+  IAppCatalogDeleteClusterAppActionResponse,
   IAppCatalogInstallAppActionPayload,
   IAppCatalogInstallAppActionResponse,
   IAppCatalogLoadClusterAppsActionPayload,
@@ -758,7 +761,9 @@ export const updateClusterApp = createAsynchronousAction<
   actionTypePrefix: UPDATE_CLUSTER_APP,
   perform: async (state, _dispatch, payload) => {
     if (!payload) {
-      throw new TypeError('request payload cannot be undefined');
+      return Promise.reject(
+        new TypeError('request payload cannot be undefined')
+      );
     }
 
     const { appName, clusterId, version } = payload;
@@ -796,6 +801,54 @@ export const updateClusterApp = createAsynchronousAction<
   throwOnError: false,
 });
 
+export const deleteClusterApp = createAsynchronousAction<
+  IAppCatalogDeleteClusterAppActionPayload,
+  IState,
+  IAppCatalogDeleteClusterAppActionResponse
+>({
+  actionTypePrefix: DELETE_CLUSTER_APP,
+  perform: async (state, _dispatch, payload) => {
+    if (!payload) {
+      return Promise.reject(
+        new TypeError('request payload cannot be undefined')
+      );
+    }
+
+    const { appName, clusterId } = payload;
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const deleteApp = v4orV5(
+      appsApi.deleteClusterAppV4.bind(appsApi),
+      appsApi.deleteClusterAppV5.bind(appsApi),
+      clusterId,
+      state
+    );
+
+    try {
+      await deleteApp(clusterId, appName);
+
+      new FlashMessage(
+        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterId}</code>. This may take a couple of minutes.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return { appName, clusterId };
+    } catch (error) {
+      new FlashMessage(
+        `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+        messageType.ERROR,
+        messageTTL.LONG
+      );
+
+      return Promise.reject(error);
+    }
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
+
 export const loadClusterApps = createAsynchronousAction<
   IAppCatalogLoadClusterAppsActionPayload,
   IState,
@@ -805,8 +858,10 @@ export const loadClusterApps = createAsynchronousAction<
 
   perform: async (state, _dispatch, payload) => {
     if (!payload || !payload.clusterId) {
-      throw new TypeError(
-        'request payload cannot be undefined and must contain a clusterId'
+      return Promise.reject(
+        new TypeError(
+          'request payload cannot be undefined and must contain a clusterId'
+        )
       );
     }
 
@@ -851,7 +906,7 @@ export const installApp = createAsynchronousAction<
 
   perform: async (state, dispatch, payload) => {
     if (!payload) {
-      throw new TypeError('action payload cannot be empty');
+      return Promise.reject(new TypeError('action payload cannot be empty'));
     }
 
     const {

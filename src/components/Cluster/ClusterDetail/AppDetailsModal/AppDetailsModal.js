@@ -5,17 +5,15 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
+  catalogLoadIndex,
   createAppConfig as createAppConfigAction,
   createAppSecret as createAppSecretAction,
   deleteAppConfig as deleteAppConfigAction,
   deleteAppSecret as deleteAppSecretAction,
+  deleteClusterApp as deleteAppAction,
   loadClusterApps,
   updateAppConfig as updateAppConfigAction,
   updateAppSecret as updateAppSecretAction,
-} from 'stores/appcatalog/actions';
-import { catalogLoadIndex } from 'stores/appcatalog/actions';
-import {
-  deleteClusterApp as deleteAppAction,
   updateClusterApp as updateAppAction,
 } from 'stores/appcatalog/actions';
 import Button from 'UI/Button';

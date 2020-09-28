@@ -29,6 +29,9 @@ import {
   CLUSTER_UPDATE_APP_SECRET_ERROR,
   CLUSTER_UPDATE_APP_SECRET_REQUEST,
   CLUSTER_UPDATE_APP_SECRET_SUCCESS,
+  DELETE_CLUSTER_APP_ERROR,
+  DELETE_CLUSTER_APP_REQUEST,
+  DELETE_CLUSTER_APP_SUCCESS,
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
@@ -252,6 +255,30 @@ export interface IAppCatalogUpdateClusterAppSuccessAction {
 
 export interface IAppCatalogUpdateClusterAppErrorAction {
   type: typeof UPDATE_CLUSTER_APP_ERROR;
+  error: string;
+}
+
+export interface IAppCatalogDeleteClusterAppActionPayload {
+  appName: string;
+  clusterId: string;
+}
+
+export interface IAppCatalogDeleteClusterAppActionResponse {
+  appName: string;
+  clusterId: string;
+}
+
+export interface IAppCatalogDeleteClusterAppRequestAction {
+  type: typeof DELETE_CLUSTER_APP_REQUEST;
+}
+
+export interface IAppCatalogDeleteClusterAppSuccessAction {
+  type: typeof DELETE_CLUSTER_APP_SUCCESS;
+  response: IAppCatalogDeleteClusterAppActionResponse;
+}
+
+export interface IAppCatalogDeleteClusterAppErrorAction {
+  type: typeof DELETE_CLUSTER_APP_ERROR;
   error: string;
 }
 
