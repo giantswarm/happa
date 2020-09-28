@@ -9,13 +9,13 @@ import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
-import { selectIngressAppToInstall } from 'selectors/ingressTabSelectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
 } from 'stores/appcatalog/actions';
+import { selectIngressAppToInstall } from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -55,13 +55,12 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const isPreparingIngressTabData: boolean | null = useSelector((state) =>
     selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
   );
+  // TODO(axbarsan): Use proper app type.
   const installedIngressApp:
     | Record<string, never>
     | undefined = selectIngressAppFromCluster(cluster);
 
-  const ingressAppToInstall: Record<string, never> | undefined = useSelector(
-    selectIngressAppToInstall
-  );
+  const ingressAppToInstall = useSelector(selectIngressAppToInstall);
 
   const ingressAppDetailPath = useMemo(() => {
     if (ingressAppToInstall) {
