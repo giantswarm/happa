@@ -50,7 +50,7 @@ class Credentials extends React.Component {
   };
 
   render() {
-    if (this.props.organizations.showCredentialsForm) {
+    if (this.props.showCredentialsForm) {
       return (
         <CredentialsForm
           credentials={this.props.credentials}
@@ -79,15 +79,13 @@ Credentials.propTypes = {
   dispatch: PropTypes.func,
   organizationName: PropTypes.string,
   showCredentialsForm: PropTypes.bool,
-  organizations: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
     info: state.main.info,
-    credentials: state.entities.credentials,
-    showCredentialsForm: state.showCredentialsForm,
-    organizations: state.entities.organizations,
+    credentials: state.entities.organizations.credentials,
+    showCredentialsForm: state.entities.organizations.credentials.showForm,
   };
 }
 
