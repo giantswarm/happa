@@ -32,9 +32,15 @@ import {
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
+  LOAD_CLUSTER_APPS_ERROR,
+  LOAD_CLUSTER_APPS_REQUEST,
+  LOAD_CLUSTER_APPS_SUCCESS,
   PREPARE_INGRESS_TAB_DATA_ERROR,
   PREPARE_INGRESS_TAB_DATA_REQUEST,
   PREPARE_INGRESS_TAB_DATA_SUCCESS,
+  UPDATE_CLUSTER_APP_ERROR,
+  UPDATE_CLUSTER_APP_REQUEST,
+  UPDATE_CLUSTER_APP_SUCCESS,
 } from 'stores/appcatalog/constants';
 
 export interface IAppCatalogsMap {
@@ -94,32 +100,6 @@ export interface IAppCatalogLoadSuccessAction {
 
 export interface IAppCatalogLoadErrorAction {
   type: typeof CATALOGS_LOAD_ERROR;
-  error: string;
-}
-
-export interface IAppCatalogInstallLatestIngressRequestAction {
-  type: typeof INSTALL_INGRESS_APP_REQUEST;
-}
-
-export interface IAppCatalogInstallLatestIngressSuccessAction {
-  type: typeof INSTALL_INGRESS_APP_SUCCESS;
-}
-
-export interface IAppCatalogInstallLatestIngressErrorAction {
-  type: typeof INSTALL_INGRESS_APP_ERROR;
-  error: string;
-}
-
-export interface IAppCatalogPrepareIngressTabDataRequestAction {
-  type: typeof PREPARE_INGRESS_TAB_DATA_REQUEST;
-}
-
-export interface IAppCatalogPrepareIngressTabDataSuccessAction {
-  type: typeof PREPARE_INGRESS_TAB_DATA_SUCCESS;
-}
-
-export interface IAppCatalogPrepareIngressTabDataErrorAction {
-  type: typeof PREPARE_INGRESS_TAB_DATA_ERROR;
   error: string;
 }
 
@@ -251,6 +231,110 @@ export interface IAppCatalogDeleteInstalledAppSecretErrorAction {
   appName: string;
 }
 
+export interface IAppCatalogUpdateClusterAppActionPayload {
+  appName: string;
+  clusterId: string;
+  version: string;
+}
+
+export interface IAppCatalogUpdateClusterAppActionResponse {
+  error: string;
+}
+
+export interface IAppCatalogUpdateClusterAppRequestAction {
+  type: typeof UPDATE_CLUSTER_APP_REQUEST;
+}
+
+export interface IAppCatalogUpdateClusterAppSuccessAction {
+  type: typeof UPDATE_CLUSTER_APP_SUCCESS;
+  response: IAppCatalogUpdateClusterAppActionResponse;
+}
+
+export interface IAppCatalogUpdateClusterAppErrorAction {
+  type: typeof UPDATE_CLUSTER_APP_ERROR;
+  error: string;
+}
+
+export interface IAppCatalogLoadClusterAppsActionPayload {
+  clusterId: string;
+}
+
+export interface IAppCatalogLoadClusterAppsActionResponse {
+  apps: IInstalledApp[];
+  clusterId: string;
+}
+
+export interface IAppCatalogLoadClusterAppRequestAction {
+  type: typeof LOAD_CLUSTER_APPS_REQUEST;
+}
+
+export interface IAppCatalogLoadClusterAppSuccessAction {
+  type: typeof LOAD_CLUSTER_APPS_SUCCESS;
+  response: IAppCatalogLoadClusterAppsActionResponse;
+}
+
+export interface IAppCatalogLoadClusterAppErrorAction {
+  type: typeof LOAD_CLUSTER_APPS_ERROR;
+  error: string;
+}
+
+export interface IAppCatalogInstallAppActionPayload {
+  clusterId: string;
+  app: {
+    name: string;
+    catalog: string;
+    namespace: string;
+    version: string;
+    chartName: string;
+    valuesYAML: string;
+    secretsYAML: string;
+  };
+}
+
+export interface IAppCatalogInstallAppActionResponse {
+  clusterId: string;
+}
+
+export interface IAppCatalogInstallAppRequestAction {
+  type: typeof INSTALL_INGRESS_APP_REQUEST;
+}
+
+export interface IAppCatalogInstallAppSuccessAction {
+  type: typeof INSTALL_INGRESS_APP_SUCCESS;
+  response: IAppCatalogInstallAppActionResponse;
+}
+
+export interface IAppCatalogInstallAppErrorAction {
+  type: typeof INSTALL_INGRESS_APP_ERROR;
+  error: string;
+}
+
+export interface IAppCatalogInstallLatestIngressRequestAction {
+  type: typeof INSTALL_INGRESS_APP_REQUEST;
+}
+
+export interface IAppCatalogInstallLatestIngressSuccessAction {
+  type: typeof INSTALL_INGRESS_APP_SUCCESS;
+}
+
+export interface IAppCatalogInstallLatestIngressErrorAction {
+  type: typeof INSTALL_INGRESS_APP_ERROR;
+  error: string;
+}
+
+export interface IAppCatalogPrepareIngressTabDataRequestAction {
+  type: typeof PREPARE_INGRESS_TAB_DATA_REQUEST;
+}
+
+export interface IAppCatalogPrepareIngressTabDataSuccessAction {
+  type: typeof PREPARE_INGRESS_TAB_DATA_SUCCESS;
+}
+
+export interface IAppCatalogPrepareIngressTabDataErrorAction {
+  type: typeof PREPARE_INGRESS_TAB_DATA_ERROR;
+  error: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -261,12 +345,6 @@ export type AppCatalogActions =
   | IAppCatalogLoadRequestAction
   | IAppCatalogLoadSuccessAction
   | IAppCatalogLoadErrorAction
-  | IAppCatalogInstallLatestIngressRequestAction
-  | IAppCatalogInstallLatestIngressSuccessAction
-  | IAppCatalogInstallLatestIngressErrorAction
-  | IAppCatalogPrepareIngressTabDataRequestAction
-  | IAppCatalogPrepareIngressTabDataSuccessAction
-  | IAppCatalogPrepareIngressTabDataErrorAction
   | IAppCatalogLoadAppReadmeRequestAction
   | IAppCatalogLoadAppReadmeSuccessAction
   | IAppCatalogLoadAppReadmeErrorAction
@@ -287,4 +365,19 @@ export type AppCatalogActions =
   | IAppCatalogUpdateInstalledAppSecretErrorAction
   | IAppCatalogDeleteInstalledAppSecretRequestAction
   | IAppCatalogDeleteInstalledAppSecretSuccessAction
-  | IAppCatalogDeleteInstalledAppSecretErrorAction;
+  | IAppCatalogDeleteInstalledAppSecretErrorAction
+  | IAppCatalogUpdateClusterAppRequestAction
+  | IAppCatalogUpdateClusterAppSuccessAction
+  | IAppCatalogUpdateClusterAppErrorAction
+  | IAppCatalogLoadClusterAppRequestAction
+  | IAppCatalogLoadClusterAppSuccessAction
+  | IAppCatalogLoadClusterAppErrorAction
+  | IAppCatalogInstallAppRequestAction
+  | IAppCatalogInstallAppSuccessAction
+  | IAppCatalogInstallAppErrorAction
+  | IAppCatalogInstallLatestIngressRequestAction
+  | IAppCatalogInstallLatestIngressSuccessAction
+  | IAppCatalogInstallLatestIngressErrorAction
+  | IAppCatalogPrepareIngressTabDataRequestAction
+  | IAppCatalogPrepareIngressTabDataSuccessAction
+  | IAppCatalogPrepareIngressTabDataErrorAction;

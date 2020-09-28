@@ -38,17 +38,26 @@ import {
   CLUSTER_UPDATE_APP_SECRET_ERROR,
   CLUSTER_UPDATE_APP_SECRET_REQUEST,
   CLUSTER_UPDATE_APP_SECRET_SUCCESS,
+  INSTALL_APP,
   INSTALL_INGRESS_APP,
+  LOAD_CLUSTER_APPS,
   PREPARE_INGRESS_TAB_DATA,
+  UPDATE_CLUSTER_APP,
 } from 'stores/appcatalog/constants';
 import { selectIngressCatalog } from 'stores/appcatalog/selectors';
 import {
   AppCatalogActions,
+  IAppCatalogInstallAppActionPayload,
+  IAppCatalogInstallAppActionResponse,
+  IAppCatalogLoadClusterAppsActionPayload,
+  IAppCatalogLoadClusterAppsActionResponse,
   IAppCatalogsMap,
+  IAppCatalogUpdateClusterAppActionPayload,
+  IAppCatalogUpdateClusterAppActionResponse,
   IInstallIngressActionPayload,
 } from 'stores/appcatalog/types';
-import { installApp, loadClusterApps } from 'stores/clusterapps/actions';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
+import { v4orV5 } from 'utils/clusterUtils';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
@@ -95,130 +104,6 @@ export const listCatalogs = createAsynchronousAction<
     return catalogsHash;
   },
   shouldPerform: () => true,
-  throwOnError: false,
-});
-
-export const installLatestIngress = createAsynchronousAction<
-  IInstallIngressActionPayload,
-  IState,
-  void
->({
-  actionTypePrefix: INSTALL_INGRESS_APP,
-  perform: async (state, dispatch, payload) => {
-    if (!payload?.clusterId) {
-      return Promise.reject(
-        new TypeError('request payload cannot be undefined')
-      );
-    }
-
-    try {
-      // These type casts are safe due to the checks in `shouldPerform()`.
-      const gsCatalog = selectIngressCatalog(state) as IAppCatalog;
-      const { name, version } = (gsCatalog.apps as IAppCatalogAppMap)[
-        Constants.INSTALL_INGRESS_TAB_APP_NAME
-      ][0];
-
-      const appToInstall = {
-        name,
-        chartName: name,
-        version,
-        catalog: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
-        namespace: 'kube-system',
-        valuesYAML: '',
-        secretsYAML: '',
-      };
-
-      await dispatch(
-        installApp({ app: appToInstall, clusterId: payload.clusterId })
-      );
-      await dispatch(loadClusterApps({ clusterId: payload.clusterId }));
-
-      return Promise.resolve();
-    } catch (e) {
-      // report the error
-      const errorReporter = ErrorReporter.getInstance();
-      errorReporter.notify(e);
-
-      // show error
-      let errorMessage =
-        'Something went wrong while trying to install Ingress Controller App.';
-      if (e.response?.message || e.message) {
-        errorMessage = `There was a problem trying to install Ingress Controller App: ${
-          e.response?.message ?? e.message
-        }`;
-      }
-
-      new FlashMessage(
-        errorMessage,
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-
-      return Promise.reject(e);
-    }
-  },
-  shouldPerform: (state): boolean => {
-    // only allow performing if we have loaded the catalog and have a version
-    const gsCatalog = selectIngressCatalog(state);
-    const app = gsCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0];
-
-    return typeof gsCatalog !== 'undefined' && typeof app !== 'undefined';
-  },
-  throwOnError: false,
-});
-
-export const prepareIngressTabData = createAsynchronousAction<
-  IInstallIngressActionPayload,
-  IState,
-  void
->({
-  actionTypePrefix: PREPARE_INGRESS_TAB_DATA,
-  perform: async (state, dispatch, payload) => {
-    if (!payload?.clusterId) {
-      return Promise.reject(
-        new TypeError('request payload cannot be undefined')
-      );
-    }
-
-    try {
-      const gsCatalog = selectIngressCatalog(state) as IAppCatalog;
-
-      await Promise.all([
-        dispatch(loadClusterApps({ clusterId: payload.clusterId })),
-        dispatch(catalogLoadIndex(gsCatalog)),
-      ]);
-
-      return Promise.resolve();
-    } catch (e) {
-      // report the error
-      const errorReporter = ErrorReporter.getInstance();
-      errorReporter.notify(e);
-
-      // show error
-      let errorMessage =
-        'Something went wrong while preparing data for Ingress Controller App installation.';
-      if (e.response?.message || e.message) {
-        errorMessage = `There was a problem preparing data for Ingress Controller App installation: ${
-          e.response?.message ?? e.message
-        }`;
-      }
-
-      new FlashMessage(
-        errorMessage,
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-
-      return Promise.reject(e);
-    }
-  },
-  shouldPerform: (state: IState): boolean => {
-    const gsCatalog = selectIngressCatalog(state);
-
-    return typeof gsCatalog !== 'undefined';
-  },
   throwOnError: false,
 });
 
@@ -864,3 +749,312 @@ export function deleteAppSecret(
     }
   };
 }
+
+export const updateClusterApp = createAsynchronousAction<
+  IAppCatalogUpdateClusterAppActionPayload,
+  IState,
+  IAppCatalogUpdateClusterAppActionResponse
+>({
+  actionTypePrefix: UPDATE_CLUSTER_APP,
+  perform: async (state, _dispatch, payload) => {
+    if (!payload) {
+      throw new TypeError('request payload cannot be undefined');
+    }
+
+    const { appName, clusterId, version } = payload;
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const modifyApp = v4orV5(
+      appsApi.modifyClusterAppV4.bind(appsApi),
+      appsApi.modifyClusterAppV5.bind(appsApi),
+      clusterId,
+      state
+    );
+
+    try {
+      await modifyApp(clusterId, appName, { body: { spec: { version } } });
+
+      new FlashMessage(
+        `App <code>${appName}</code> on <code>${clusterId}</code> has been updated. Changes might take some time to take effect.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return {
+        error: '',
+      };
+    } catch (error) {
+      const errorMessage =
+        error?.message ||
+        'Something went wrong while trying to update your app. Please try again later or contact support.';
+
+      return Promise.reject(new Error(errorMessage));
+    }
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
+
+export const loadClusterApps = createAsynchronousAction<
+  IAppCatalogLoadClusterAppsActionPayload,
+  IState,
+  IAppCatalogLoadClusterAppsActionResponse
+>({
+  actionTypePrefix: LOAD_CLUSTER_APPS,
+
+  perform: async (state, _dispatch, payload) => {
+    if (!payload || !payload.clusterId) {
+      throw new TypeError(
+        'request payload cannot be undefined and must contain a clusterId'
+      );
+    }
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const getClusterApps = v4orV5(
+      appsApi.getClusterAppsV4.bind(appsApi),
+      appsApi.getClusterAppsV5.bind(appsApi),
+      payload.clusterId,
+      state
+    );
+
+    try {
+      let apps = await getClusterApps(payload.clusterId);
+      apps = Array.from(apps);
+
+      return {
+        apps: apps,
+        clusterId: payload.clusterId,
+      };
+    } catch (error) {
+      new FlashMessage(
+        'Something went wrong while trying to load apps installed on this cluster.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      return Promise.reject(error);
+    }
+  },
+  shouldPerform: () => true,
+  throwOnError: false,
+});
+
+export const installApp = createAsynchronousAction<
+  IAppCatalogInstallAppActionPayload,
+  IState,
+  IAppCatalogInstallAppActionResponse
+>({
+  actionTypePrefix: INSTALL_APP,
+
+  perform: async (state, dispatch, payload) => {
+    if (!payload) {
+      throw new TypeError('action payload cannot be empty');
+    }
+
+    const {
+      name,
+      valuesYAML,
+      secretsYAML,
+      catalog,
+      chartName,
+      namespace,
+      version,
+    } = payload.app;
+
+    const clusterId = payload.clusterId;
+
+    await dispatch(createAppConfig(name, clusterId, valuesYAML));
+    await dispatch(createAppSecret(name, clusterId, secretsYAML));
+
+    const request = {
+      body: {
+        spec: {
+          catalog: catalog,
+          name: chartName,
+          namespace: namespace,
+          version: version,
+        },
+      },
+    };
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const createApp = v4orV5(
+      appsApi.createClusterAppV4.bind(appsApi),
+      appsApi.createClusterAppV5.bind(appsApi),
+      payload.clusterId,
+      state
+    );
+
+    try {
+      await createApp(clusterId, name, request);
+    } catch (error) {
+      if (error.status === StatusCodes.Conflict) {
+        new FlashMessage(
+          `An app called <code>${name}</code> already exists on cluster <code>${clusterId}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (error.status === StatusCodes.ServiceUnavailable) {
+        new FlashMessage(
+          `The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (error.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+
+      return Promise.reject(error);
+    }
+
+    new FlashMessage(
+      `Your app <code>${name}</code> is being installed on <code>${clusterId}</code>`,
+      messageType.SUCCESS,
+      messageTTL.MEDIUM
+    );
+
+    return Promise.resolve({
+      clusterId: clusterId,
+    });
+  },
+  shouldPerform: () => true,
+  throwOnError: true,
+});
+
+export const installLatestIngress = createAsynchronousAction<
+  IInstallIngressActionPayload,
+  IState,
+  void
+>({
+  actionTypePrefix: INSTALL_INGRESS_APP,
+  perform: async (state, dispatch, payload) => {
+    if (!payload?.clusterId) {
+      return Promise.reject(
+        new TypeError('request payload cannot be undefined')
+      );
+    }
+
+    try {
+      // These type casts are safe due to the checks in `shouldPerform()`.
+      const gsCatalog = selectIngressCatalog(state) as IAppCatalog;
+      const { name, version } = (gsCatalog.apps as IAppCatalogAppMap)[
+        Constants.INSTALL_INGRESS_TAB_APP_NAME
+      ][0];
+
+      const appToInstall = {
+        name,
+        chartName: name,
+        version,
+        catalog: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        namespace: 'kube-system',
+        valuesYAML: '',
+        secretsYAML: '',
+      };
+
+      await dispatch(
+        installApp({ app: appToInstall, clusterId: payload.clusterId })
+      );
+      await dispatch(loadClusterApps({ clusterId: payload.clusterId }));
+
+      return Promise.resolve();
+    } catch (e) {
+      // report the error
+      const errorReporter = ErrorReporter.getInstance();
+      errorReporter.notify(e);
+
+      // show error
+      let errorMessage =
+        'Something went wrong while trying to install Ingress Controller App.';
+      if (e.response?.message || e.message) {
+        errorMessage = `There was a problem trying to install Ingress Controller App: ${
+          e.response?.message ?? e.message
+        }`;
+      }
+
+      new FlashMessage(
+        errorMessage,
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      return Promise.reject(e);
+    }
+  },
+  shouldPerform: (state): boolean => {
+    // only allow performing if we have loaded the catalog and have a version
+    const gsCatalog = selectIngressCatalog(state);
+    const app = gsCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0];
+
+    return typeof gsCatalog !== 'undefined' && typeof app !== 'undefined';
+  },
+  throwOnError: false,
+});
+
+export const prepareIngressTabData = createAsynchronousAction<
+  IInstallIngressActionPayload,
+  IState,
+  void
+>({
+  actionTypePrefix: PREPARE_INGRESS_TAB_DATA,
+  perform: async (state, dispatch, payload) => {
+    if (!payload?.clusterId) {
+      return Promise.reject(
+        new TypeError('request payload cannot be undefined')
+      );
+    }
+
+    try {
+      const gsCatalog = selectIngressCatalog(state) as IAppCatalog;
+
+      await Promise.all([
+        dispatch(loadClusterApps({ clusterId: payload.clusterId })),
+        dispatch(catalogLoadIndex(gsCatalog)),
+      ]);
+
+      return Promise.resolve();
+    } catch (e) {
+      // report the error
+      const errorReporter = ErrorReporter.getInstance();
+      errorReporter.notify(e);
+
+      // show error
+      let errorMessage =
+        'Something went wrong while preparing data for Ingress Controller App installation.';
+      if (e.response?.message || e.message) {
+        errorMessage = `There was a problem preparing data for Ingress Controller App installation: ${
+          e.response?.message ?? e.message
+        }`;
+      }
+
+      new FlashMessage(
+        errorMessage,
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      return Promise.reject(e);
+    }
+  },
+  shouldPerform: (state: IState): boolean => {
+    const gsCatalog = selectIngressCatalog(state);
+
+    return typeof gsCatalog !== 'undefined';
+  },
+  throwOnError: false,
+});

@@ -9,6 +9,7 @@ import {
   createAppSecret as createAppSecretAction,
   deleteAppConfig as deleteAppConfigAction,
   deleteAppSecret as deleteAppSecretAction,
+  loadClusterApps,
   updateAppConfig as updateAppConfigAction,
   updateAppSecret as updateAppSecretAction,
 } from 'stores/appcatalog/actions';
@@ -16,8 +17,7 @@ import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import {
   deleteClusterApp as deleteAppAction,
   updateClusterApp as updateAppAction,
-} from 'stores/clusterapps/actions';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+} from 'stores/appcatalog/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

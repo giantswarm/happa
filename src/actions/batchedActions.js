@@ -7,7 +7,7 @@ import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+import { loadClusterApps } from 'stores/appcatalog/actions';
 import { loadUser } from 'stores/cpauth/actions';
 import {
   globalLoadError,

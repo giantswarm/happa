@@ -11,7 +11,7 @@ import {
 import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+import { loadClusterApps } from 'stores/appcatalog/actions';
 import { selectCluster } from 'stores/global/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
