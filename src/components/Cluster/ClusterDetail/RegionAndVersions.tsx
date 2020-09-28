@@ -9,12 +9,12 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Code, Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
-interface IRegionAndVersions {
-  createDate?: string;
-  release?: IRelease;
+interface IRegionAndVersionsProps {
   clusterId: string;
-  showUpgradeModal?(): void;
+  createDate?: string;
   region?: string;
+  release?: IRelease;
+  showUpgradeModal?(): void;
 }
 
 const ReleaseDetail = styled.span`
@@ -36,12 +36,12 @@ const showReleaseDetailsModal = (
 };
 
 // Versions data and icons at the top of cluster details view.
-const RegionAndVersions: FC<IRegionAndVersions> = ({
-  createDate,
-  release,
+const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
   clusterId,
-  showUpgradeModal,
+  createDate,
   region,
+  release,
+  showUpgradeModal,
 }) => {
   const releaseDetailsModal = useRef<ReleaseDetailsModal | null>(null);
   const onReleaseDetailClick = showReleaseDetailsModal(releaseDetailsModal);
@@ -62,13 +62,11 @@ const RegionAndVersions: FC<IRegionAndVersions> = ({
           <>
             <span>
               <RefreshableLabel value={release.version}>
-                <>
-                  <Dot style={{ paddingRight: 0 }} />
-                  <ReleaseDetail onClick={onReleaseDetailClick}>
-                    <i className='fa fa-version-tag' />
-                    {release.version}
-                  </ReleaseDetail>
-                </>
+                <Dot style={{ paddingRight: 0 }} />
+                <ReleaseDetail onClick={onReleaseDetailClick}>
+                  <i className='fa fa-version-tag' />
+                  {release.version}
+                </ReleaseDetail>
               </RefreshableLabel>
             </span>
             <ReleaseDetail onClick={onReleaseDetailClick}>
@@ -90,7 +88,9 @@ const RegionAndVersions: FC<IRegionAndVersions> = ({
 };
 
 RegionAndVersions.propTypes = {
+  clusterId: PropTypes.string.isRequired,
   createDate: PropTypes.string,
+  region: PropTypes.string,
   release: PropTypes.shape({
     active: PropTypes.bool.isRequired,
     changelog: PropTypes.arrayOf(
@@ -110,9 +110,7 @@ RegionAndVersions.propTypes = {
     timestamp: PropTypes.string.isRequired,
     version: PropTypes.string.isRequired,
   }),
-  clusterId: PropTypes.string.isRequired,
   showUpgradeModal: PropTypes.func,
-  region: PropTypes.string,
 };
 
 export default RegionAndVersions;
