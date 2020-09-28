@@ -384,9 +384,7 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <RegionAndVersions
               createDate={create_date}
-              releaseVersion={release_version}
               release={release}
-              k8sVersion={cluster.kubernetes_version}
               clusterId={cluster.id}
               showUpgradeModal={this.props.showUpgradeModal}
               region={region}
