@@ -203,7 +203,7 @@
     "file-loader": "6.1.0",
     "fstream": "1.0.12",
     "html-webpack-plugin": "4.4.1",
-    "husky": "4.2.5",
+    "husky": "4.3.0",
     "jest": "26.4.2",
     "json-loader": "0.5.7",
     "lint-staged": "10.3.0",
