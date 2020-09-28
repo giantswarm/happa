@@ -11,15 +11,24 @@ import {
   CLUSTER_CREATE_APP_CONFIG_ERROR,
   CLUSTER_CREATE_APP_CONFIG_REQUEST,
   CLUSTER_CREATE_APP_CONFIG_SUCCESS,
+  CLUSTER_CREATE_APP_SECRET_ERROR,
+  CLUSTER_CREATE_APP_SECRET_REQUEST,
+  CLUSTER_CREATE_APP_SECRET_SUCCESS,
   CLUSTER_DELETE_APP_CONFIG_ERROR,
   CLUSTER_DELETE_APP_CONFIG_REQUEST,
   CLUSTER_DELETE_APP_CONFIG_SUCCESS,
+  CLUSTER_DELETE_APP_SECRET_ERROR,
+  CLUSTER_DELETE_APP_SECRET_REQUEST,
+  CLUSTER_DELETE_APP_SECRET_SUCCESS,
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
   CLUSTER_LOAD_APP_README_SUCCESS,
   CLUSTER_UPDATE_APP_CONFIG_ERROR,
   CLUSTER_UPDATE_APP_CONFIG_REQUEST,
   CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
+  CLUSTER_UPDATE_APP_SECRET_ERROR,
+  CLUSTER_UPDATE_APP_SECRET_REQUEST,
+  CLUSTER_UPDATE_APP_SECRET_SUCCESS,
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
@@ -188,6 +197,60 @@ export interface IAppCatalogDeleteInstalledAppConfigErrorAction {
   appName: string;
 }
 
+export interface IAppCatalogUpdateInstalledAppSecretRequestAction {
+  type: typeof CLUSTER_UPDATE_APP_SECRET_REQUEST;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogUpdateInstalledAppSecretSuccessAction {
+  type: typeof CLUSTER_UPDATE_APP_SECRET_SUCCESS;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogUpdateInstalledAppSecretErrorAction {
+  type: typeof CLUSTER_UPDATE_APP_SECRET_ERROR;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogCreateInstalledAppSecretRequestAction {
+  type: typeof CLUSTER_CREATE_APP_SECRET_REQUEST;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogCreateInstalledAppSecretSuccessAction {
+  type: typeof CLUSTER_CREATE_APP_SECRET_SUCCESS;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogCreateInstalledAppSecretErrorAction {
+  type: typeof CLUSTER_CREATE_APP_SECRET_ERROR;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogDeleteInstalledAppSecretRequestAction {
+  type: typeof CLUSTER_DELETE_APP_SECRET_REQUEST;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogDeleteInstalledAppSecretSuccessAction {
+  type: typeof CLUSTER_DELETE_APP_SECRET_SUCCESS;
+  clusterID: string;
+  appName: string;
+}
+
+export interface IAppCatalogDeleteInstalledAppSecretErrorAction {
+  type: typeof CLUSTER_DELETE_APP_SECRET_ERROR;
+  clusterID: string;
+  appName: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -215,4 +278,13 @@ export type AppCatalogActions =
   | IAppCatalogUpdateInstalledAppConfigErrorAction
   | IAppCatalogDeleteInstalledAppConfigRequestAction
   | IAppCatalogDeleteInstalledAppConfigSuccessAction
-  | IAppCatalogDeleteInstalledAppConfigErrorAction;
+  | IAppCatalogDeleteInstalledAppConfigErrorAction
+  | IAppCatalogCreateInstalledAppSecretRequestAction
+  | IAppCatalogCreateInstalledAppSecretSuccessAction
+  | IAppCatalogCreateInstalledAppSecretErrorAction
+  | IAppCatalogUpdateInstalledAppSecretRequestAction
+  | IAppCatalogUpdateInstalledAppSecretSuccessAction
+  | IAppCatalogUpdateInstalledAppSecretErrorAction
+  | IAppCatalogDeleteInstalledAppSecretRequestAction
+  | IAppCatalogDeleteInstalledAppSecretSuccessAction
+  | IAppCatalogDeleteInstalledAppSecretErrorAction;

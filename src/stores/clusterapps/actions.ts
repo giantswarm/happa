@@ -1,9 +1,8 @@
-import { createAppSecret } from 'actions/appSecretActions';
 import GiantSwarm, { V4App } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
 import { StatusCodes } from 'shared/constants';
-import { createAppConfig } from 'stores/appcatalog/actions';
+import { createAppConfig, createAppSecret } from 'stores/appcatalog/actions';
 import { v4orV5 } from 'utils/clusterUtils';
 
 import { createAsynchronousAction } from '../asynchronousAction';

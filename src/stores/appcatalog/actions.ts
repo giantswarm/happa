@@ -20,15 +20,24 @@ import {
   CLUSTER_CREATE_APP_CONFIG_ERROR,
   CLUSTER_CREATE_APP_CONFIG_REQUEST,
   CLUSTER_CREATE_APP_CONFIG_SUCCESS,
+  CLUSTER_CREATE_APP_SECRET_ERROR,
+  CLUSTER_CREATE_APP_SECRET_REQUEST,
+  CLUSTER_CREATE_APP_SECRET_SUCCESS,
   CLUSTER_DELETE_APP_CONFIG_ERROR,
   CLUSTER_DELETE_APP_CONFIG_REQUEST,
   CLUSTER_DELETE_APP_CONFIG_SUCCESS,
+  CLUSTER_DELETE_APP_SECRET_ERROR,
+  CLUSTER_DELETE_APP_SECRET_REQUEST,
+  CLUSTER_DELETE_APP_SECRET_SUCCESS,
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
   CLUSTER_LOAD_APP_README_SUCCESS,
   CLUSTER_UPDATE_APP_CONFIG_ERROR,
   CLUSTER_UPDATE_APP_CONFIG_REQUEST,
   CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
+  CLUSTER_UPDATE_APP_SECRET_ERROR,
+  CLUSTER_UPDATE_APP_SECRET_REQUEST,
+  CLUSTER_UPDATE_APP_SECRET_SUCCESS,
   INSTALL_INGRESS_APP,
   PREPARE_INGRESS_TAB_DATA,
 } from 'stores/appcatalog/constants';
@@ -630,6 +639,224 @@ export function deleteAppConfig(
       } else {
         new FlashMessage(
           `Something went wrong while trying to delete the ConfigMap containing your values. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+    }
+  };
+}
+
+export function updateAppSecret(
+  appName: string,
+  clusterID: string,
+  values: string
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLUSTER_UPDATE_APP_SECRET_REQUEST,
+        clusterID,
+        appName,
+      });
+
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(clusterID);
+
+      const appSecretsApi = new GiantSwarm.AppSecretsApi();
+      let updateClusterAppSecret = appSecretsApi.modifyClusterAppSecretV4.bind(
+        appSecretsApi
+      );
+      if (isV5Cluster) {
+        updateClusterAppSecret = appSecretsApi.modifyClusterAppSecretV5.bind(
+          appSecretsApi
+        );
+      }
+
+      await updateClusterAppSecret(clusterID, appName, {
+        body: values,
+      });
+      dispatch({
+        type: CLUSTER_UPDATE_APP_SECRET_SUCCESS,
+        clusterID,
+        appName,
+      });
+
+      new FlashMessage(
+        `The Secret containing user level secret values of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return Promise.resolve();
+    } catch (err) {
+      dispatch({
+        type: CLUSTER_UPDATE_APP_SECRET_ERROR,
+        clusterID,
+        appName,
+      });
+
+      if (err.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          `Could not find an app or Secret containing user level secret values to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (err.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to update the Secret containing user level secret values. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+
+      return Promise.reject(err);
+    }
+  };
+}
+
+export function createAppSecret(
+  appName: string,
+  clusterID: string,
+  values: string
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch, getState) => {
+    try {
+      if (Object.keys(values).length === 0) {
+        // Skip creating an empty app secret.
+        return Promise.resolve();
+      }
+
+      dispatch({
+        type: CLUSTER_CREATE_APP_SECRET_REQUEST,
+        clusterID,
+        appName,
+      });
+
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(clusterID);
+
+      const appSecretsApi = new GiantSwarm.AppSecretsApi();
+      let createClusterAppSecret = appSecretsApi.createClusterAppSecretV4.bind(
+        appSecretsApi
+      );
+      if (isV5Cluster) {
+        createClusterAppSecret = appSecretsApi.createClusterAppSecretV5.bind(
+          appSecretsApi
+        );
+      }
+
+      await createClusterAppSecret(clusterID, appName, { body: values });
+      dispatch({
+        type: CLUSTER_CREATE_APP_SECRET_SUCCESS,
+        clusterID,
+        appName,
+      });
+
+      new FlashMessage(
+        `A Secret containing user level secret values for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+
+      return Promise.resolve();
+    } catch (err) {
+      dispatch({
+        type: CLUSTER_CREATE_APP_SECRET_ERROR,
+        clusterID,
+        appName,
+      });
+
+      if (err.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          `Could not find <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (err.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to create the Secret containing your values. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      }
+
+      return Promise.resolve();
+    }
+  };
+}
+
+export function deleteAppSecret(
+  appName: string,
+  clusterID: string
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLUSTER_DELETE_APP_SECRET_REQUEST,
+        clusterID,
+        appName,
+      });
+
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(clusterID);
+
+      const appSecretsApi = new GiantSwarm.AppSecretsApi();
+      let deleteClusterAppSecret = appSecretsApi.deleteClusterAppSecretV4.bind(
+        appSecretsApi
+      );
+      if (isV5Cluster) {
+        deleteClusterAppSecret = appSecretsApi.deleteClusterAppSecretV5.bind(
+          appSecretsApi
+        );
+      }
+
+      await deleteClusterAppSecret(clusterID, appName);
+      dispatch({
+        type: CLUSTER_DELETE_APP_SECRET_SUCCESS,
+        clusterID,
+        appName,
+      });
+
+      new FlashMessage(
+        `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
+    } catch (err) {
+      dispatch({
+        type: CLUSTER_DELETE_APP_SECRET_ERROR,
+        clusterID,
+        appName,
+      });
+
+      if (err.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          `Could not find the Secret containing user level secret values for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else if (err.status === StatusCodes.BadRequest) {
+        new FlashMessage(
+          `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          `Something went wrong while trying to delete the Secret. Please try again later or contact support: support@giantswarm.io`,
           messageType.ERROR,
           messageTTL.LONG
         );

@@ -1,8 +1,3 @@
-import {
-  createAppSecret as createAppSecretAction,
-  deleteAppSecret as deleteAppSecretAction,
-  updateAppSecret as updateAppSecretAction,
-} from 'actions/appSecretActions';
 import GenericModal from 'components/Modals/GenericModal';
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
@@ -11,8 +6,11 @@ import { connect } from 'react-redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
   createAppConfig as createAppConfigAction,
+  createAppSecret as createAppSecretAction,
   deleteAppConfig as deleteAppConfigAction,
+  deleteAppSecret as deleteAppSecretAction,
   updateAppConfig as updateAppConfigAction,
+  updateAppSecret as updateAppSecretAction,
 } from 'stores/appcatalog/actions';
 import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import {
