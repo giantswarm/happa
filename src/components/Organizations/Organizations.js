@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import Detail from './Detail/Detail';
 import List from './List/List';
-import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
 
 const Organizations = (props) => {
   return (

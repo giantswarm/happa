@@ -10,13 +10,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Copyable from 'shared/Copyable';
+import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
 import Button from 'UI/Button';
 import FlashMessage from 'UI/FlashMessage';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';
 import KeyPairDetailsModal from './KeyPairDetailsModal';
-import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
 
 const Disclaimer = styled.p`
   margin: 0 0 20px;

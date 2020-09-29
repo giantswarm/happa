@@ -8,6 +8,7 @@ import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
 import {
@@ -30,7 +31,6 @@ import { loadReleases } from 'stores/releases/actions';
 import { getInfo, refreshUserInfo } from 'stores/user/actions';
 
 import * as clusterActions from './clusterActions';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 
 export const batchedLayout = () => async (dispatch) => {
   dispatch(globalLoadStart());

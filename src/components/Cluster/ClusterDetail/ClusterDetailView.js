@@ -25,6 +25,7 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
@@ -50,7 +51,6 @@ import ScaleClusterModal from './ScaleClusterModal';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 
 const Disclaimer = styled.p`
   margin: 0 0 20px;

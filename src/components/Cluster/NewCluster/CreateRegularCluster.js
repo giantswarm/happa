@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
@@ -19,7 +20,6 @@ import ClusterCreationDuration from './ClusterCreationDuration';
 import KVMWorkerConfiguration from './KVMWorkerConfiguration';
 import ProviderCredentials from './ProviderCredentials';
 import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
-import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 
 const WrapperDiv = styled.div`
   .worker-nodes {

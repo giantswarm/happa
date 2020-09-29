@@ -3,6 +3,10 @@ import {
 } from 'actions/actionTypes';
 import { LocationChangeAction } from 'connected-react-router';
 import produce from 'immer';
+import {
+  CLUSTER_DELETE_CONFIRMED,
+  CLUSTER_DELETE_REQUEST,
+} from 'stores/cluster/constants';
 import { MODAL_HIDE } from 'stores/modal/constants';
 import { IModalState, ModalActions } from 'stores/modal/types';
 import {
@@ -23,10 +27,6 @@ import {
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
 } from 'stores/organization/constants';
 import { OrganizationActions } from 'stores/organization/types';
-import {
-  CLUSTER_DELETE_CONFIRMED,
-  CLUSTER_DELETE_REQUEST,
-} from 'stores/cluster/constants';
 
 const initialState: IModalState = {
   visible: false,

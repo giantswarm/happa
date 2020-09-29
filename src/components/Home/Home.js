@@ -12,13 +12,13 @@ import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { selectClustersList } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
 import { memoize } from 'underscore';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
-import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 
 const newClusterPathMemoized = memoize(
   (orgId) =>

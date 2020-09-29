@@ -5,15 +5,15 @@ import {
   selectLoadingFlagByAction,
   selectResourcesV4,
 } from 'selectors/clusterSelectors';
+import {
+  CLUSTER_LOAD_STATUS_REQUEST,
+  CLUSTERS_DETAILS_REQUEST,
+} from 'stores/cluster/constants';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 import ClusterDashboardNodes from './ClusterDashboardNodes';
-import {
-  CLUSTER_LOAD_STATUS_REQUEST,
-  CLUSTERS_DETAILS_REQUEST,
-} from 'stores/cluster/constants';
 
 function ClusterDashboardResourcesV4({
   cluster,

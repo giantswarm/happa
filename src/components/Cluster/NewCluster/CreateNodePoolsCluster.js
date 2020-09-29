@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { Constants } from 'shared/constants';
+import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -23,7 +24,6 @@ import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
 } from '../ClusterDetail/V5ClusterDetailTable';
-import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 
 const WrapperDiv = styled.div`
   margin-top: 32px;

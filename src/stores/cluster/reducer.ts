@@ -1,11 +1,4 @@
 import produce from 'immer';
-import { loadClusterApps } from 'stores/clusterapps/actions';
-import { updateClusterLabels } from 'stores/clusterlabels/actions';
-import {
-  CLUSTER_NODEPOOLS_LOAD_SUCCESS,
-  NODEPOOL_CREATE_SUCCESS,
-  NODEPOOL_DELETE_SUCCESS,
-} from 'stores/nodepool/constants';
 import {
   CLUSTER_DELETE_SUCCESS,
   CLUSTER_LOAD_DETAILS_SUCCESS,
@@ -18,6 +11,13 @@ import {
   CLUSTERS_LIST_SUCCESS,
   V5_CLUSTER_CREATE_SUCCESS,
 } from 'stores/cluster/constants';
+import { loadClusterApps } from 'stores/clusterapps/actions';
+import { updateClusterLabels } from 'stores/clusterlabels/actions';
+import {
+  CLUSTER_NODEPOOLS_LOAD_SUCCESS,
+  NODEPOOL_CREATE_SUCCESS,
+  NODEPOOL_DELETE_SUCCESS,
+} from 'stores/nodepool/constants';
 
 const initialState = {
   lastUpdated: null,
