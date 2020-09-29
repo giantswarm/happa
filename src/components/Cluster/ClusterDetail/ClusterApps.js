@@ -12,11 +12,11 @@ import {
   selectClusterById,
   selectErrorByIdAndAction,
 } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/global/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';

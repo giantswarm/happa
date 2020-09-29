@@ -6,7 +6,7 @@ import {
   getCpusTotalNodePools,
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
-} from 'utils/clusterUtils';
+} from 'stores/cluster/utils';
 
 export function selectNodePools(state: IState): Record<string, INodePool> {
   return state.entities.nodePools.items;

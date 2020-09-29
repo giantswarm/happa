@@ -17,9 +17,9 @@ import {
 } from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 const Wrapper = styled.div`
   display: flex;

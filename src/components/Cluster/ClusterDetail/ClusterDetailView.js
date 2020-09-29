@@ -26,6 +26,11 @@ import {
   selectLoadingFlagByIdAndAction,
   selectTargetRelease,
 } from 'stores/cluster/selectors';
+import {
+  getNumberOfNodes,
+  isClusterCreating,
+  isClusterUpdating,
+} from 'stores/cluster/utils';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
@@ -38,11 +43,6 @@ import Section from 'UI/Section';
 import ViewAndEditName from 'UI/ViewEditName';
 import Well from 'UI/Well';
 import { memoize } from 'underscore';
-import {
-  getNumberOfNodes,
-  isClusterCreating,
-  isClusterUpdating,
-} from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
 import Ingress from './Ingress/Ingress';

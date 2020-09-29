@@ -13,6 +13,7 @@ import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
 import * as clusterActions from 'stores/cluster/actions';
 import { selectLoadingFlagByIdAndAction } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import {
@@ -24,7 +25,6 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AddNodePool from './AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';

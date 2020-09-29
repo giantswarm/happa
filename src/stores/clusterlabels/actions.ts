@@ -1,5 +1,5 @@
 import GiantSwarm, { V5ClusterLabelsProperty } from 'giantswarm';
-import { filterLabels } from 'utils/clusterUtils';
+import { filterLabels } from 'stores/cluster/utils';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 

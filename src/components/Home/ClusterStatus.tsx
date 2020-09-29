@@ -7,12 +7,12 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
 import { IState } from 'reducers/types';
 import { selectCanClusterUpgrade } from 'stores/cluster/selectors';
-import { ITheme } from 'styles';
 import {
   isClusterCreating,
   isClusterDeleting,
   isClusterUpdating,
-} from 'utils/clusterUtils';
+} from 'stores/cluster/utils';
+import { ITheme } from 'styles';
 
 const Wrapper = styled.div<{
   disabled: boolean;

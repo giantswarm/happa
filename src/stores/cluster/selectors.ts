@@ -4,7 +4,6 @@ import {
   typeWithoutSuffix,
 } from 'selectors/selectorUtils';
 import cmp from 'semver-compare';
-import { getUserIsAdmin } from 'stores/user/selectors';
 import {
   canClusterUpgrade,
   getCpusTotal,
@@ -13,7 +12,8 @@ import {
   getStorageTotal,
   isClusterCreating,
   isClusterUpdating,
-} from 'utils/clusterUtils';
+} from 'stores/cluster/utils';
+import { getUserIsAdmin } from 'stores/user/selectors';
 
 export function selectClusterById(
   state: IState,

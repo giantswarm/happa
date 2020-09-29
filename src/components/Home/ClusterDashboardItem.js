@@ -17,6 +17,7 @@ import {
   selectClusterById,
   selectErrorByIdAndAction,
 } from 'stores/cluster/selectors';
+import { isClusterCreating } from 'stores/cluster/utils';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
 import { Dot, mq } from 'styles';
@@ -25,7 +26,6 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import ErrorText from 'UI/ErrorText';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';

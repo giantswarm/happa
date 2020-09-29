@@ -43,7 +43,7 @@ import {
   ClusterActions,
   IClusterCreateActionResponse,
 } from 'stores/cluster/types';
-import { computeCapabilities, filterLabels } from 'utils/clusterUtils';
+import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
 import IClusterWorker = V4.IClusterWorker;
 import IClusterStatus = V4.IClusterStatus;
 

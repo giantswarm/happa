@@ -15,11 +15,11 @@ import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
 } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import InstallAppModal from './InstallAppModal';
 

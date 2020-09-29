@@ -5,9 +5,9 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { canClusterUpgrade } from 'stores/cluster/utils';
 import Button from 'UI/Button';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import { canClusterUpgrade } from 'utils/clusterUtils';
 
 interface IUpgradeClusterModalVersionChangerProps
   extends React.ComponentPropsWithoutRef<'div'> {
