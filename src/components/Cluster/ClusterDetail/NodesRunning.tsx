@@ -7,8 +7,8 @@ interface INodesRunningProps {
   CPUs: number;
   RAM: number;
   isClusterCreating: boolean;
-  numNodePools?: number;
   workerNodesRunning: number;
+  numNodePools?: number;
 }
 
 const NodesRunning: FC<INodesRunningProps> = ({
@@ -51,8 +51,8 @@ NodesRunning.propTypes = {
   CPUs: PropTypes.number.isRequired,
   RAM: PropTypes.number.isRequired,
   isClusterCreating: PropTypes.bool.isRequired,
-  numNodePools: PropTypes.number,
   workerNodesRunning: PropTypes.number.isRequired,
+  numNodePools: PropTypes.number,
 };
 
 export default NodesRunning;
