@@ -1,8 +1,3 @@
-import {
-  CLUSTER_LOAD_APP_README_ERROR,
-  CLUSTER_LOAD_APP_README_REQUEST,
-} from 'actions/actionTypes';
-import { loadAppReadme } from 'actions/appActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -14,8 +9,12 @@ import {
   selectLoadingFlagByIdAndAction,
 } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import { listCatalogs } from 'stores/appcatalog/actions';
-import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
+import { listCatalogs, loadAppReadme } from 'stores/appcatalog/actions';
+import {
+  CATALOG_LOAD_INDEX_REQUEST,
+  CLUSTER_LOAD_APP_README_ERROR,
+  CLUSTER_LOAD_APP_README_REQUEST,
+} from 'stores/appcatalog/constants';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';

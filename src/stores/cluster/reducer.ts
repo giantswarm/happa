@@ -1,6 +1,6 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+import { loadClusterApps } from 'stores/appcatalog/actions';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import {
   CLUSTER_NODEPOOLS_LOAD_SUCCESS,

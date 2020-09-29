@@ -1,5 +1,4 @@
 import cmp from 'semver-compare';
-import { Constants } from 'shared/constants';
 import { getUserIsAdmin } from 'stores/user/selectors';
 import {
   canClusterUpgrade,
@@ -16,16 +15,6 @@ import { createDeepEqualSelector, typeWithoutSuffix } from './selectorUtils';
 // Regular selectors
 export const selectClusterById = (state, id) => {
   return state.entities.clusters.items[id];
-};
-
-export const selectIngressAppFromCluster = (cluster) => {
-  const apps = cluster.apps || [];
-
-  const ingressApp = apps.find((app) => {
-    return app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME;
-  });
-
-  return ingressApp;
 };
 
 const selectOrganizationClusterNames = (state) => {
