@@ -32,8 +32,8 @@ const initialState: IClusterState = {
   v5Clusters: [],
 };
 
-// eslint-disable-next-line complexity
 const clusterReducer = produce(
+  // eslint-disable-next-line complexity
   (
     draft: IClusterState,
     action:
