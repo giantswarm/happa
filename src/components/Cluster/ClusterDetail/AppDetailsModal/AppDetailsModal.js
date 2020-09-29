@@ -13,7 +13,7 @@ import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import {
   deleteClusterApp as deleteAppAction,

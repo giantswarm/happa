@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import {
   selectClusterById,
   selectErrorByIdAndAction,
-} from 'selectors/clusterSelectors';
+} from 'stores/cluster/selectors';
 import { getAllReleases } from 'selectors/releaseSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';

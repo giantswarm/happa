@@ -69,6 +69,8 @@ export default {
       },
     },
     releases: {
+      error: null,
+      isFetching: false,
       items: {},
     },
     users: {

@@ -11,13 +11,14 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import * as metadataActions from 'stores/metadata/actions';
 import { METADATA_UPDATE_EXECUTE_REQUEST } from 'stores/metadata/constants';
 import {
   getMetadataCurrentVersion,
   getMetadataNewVersion,
 } from 'stores/metadata/selectors';
+import { IState } from 'reducers/types';
 
 const FooterGroup = styled.span`
   & + & {
@@ -32,7 +33,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
 
   const currentVersion: string = useSelector(getMetadataCurrentVersion);
   const newVersion: string | null = useSelector(getMetadataNewVersion);
-  const isUpdating: boolean | null = useSelector((state) =>
+  const isUpdating = useSelector<IState, boolean | null>((state) =>
     selectLoadingFlagByAction(state, METADATA_UPDATE_EXECUTE_REQUEST)
   );
 

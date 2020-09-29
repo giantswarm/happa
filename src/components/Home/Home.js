@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { selectClustersList } from 'selectors/clusterSelectors';
+import { selectClustersList } from 'stores/cluster/selectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';

@@ -1,5 +1,6 @@
-import { selectTargetRelease } from 'selectors/clusterSelectors';
 import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
+import { selectTargetRelease } from 'stores/cluster/selectors';
+import { IState } from 'reducers/types';
 
 function createInitialState(
   releases: Record<string, IRelease>,
@@ -16,7 +17,7 @@ function createInitialState(
         isAdmin,
       },
     },
-  };
+  } as IState;
 }
 
 function createRelease(version: string, active: boolean): IRelease {
@@ -28,10 +29,10 @@ function createRelease(version: string, active: boolean): IRelease {
 
 jest.unmock('stores/user/selectors');
 
-describe('clusterSelectors', () => {
+describe('cluster::selectors', () => {
   describe('selectTargetRelease', () => {
     it('returns null for a nullish cluster', () => {
-      const initialState = {};
+      const initialState = {} as IState;
       let releaseVersion = selectTargetRelease(initialState, null);
       expect(releaseVersion).toBeNull();
 
@@ -43,7 +44,7 @@ describe('clusterSelectors', () => {
       const initialState = createInitialState({});
       const releaseVersion = selectTargetRelease(
         initialState,
-        v5ClusterResponse
+        v5ClusterResponse as unknown as V5.ICluster
       );
       expect(releaseVersion).toBeNull();
     });
@@ -57,7 +58,7 @@ describe('clusterSelectors', () => {
       });
       const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '1.0.0',
-      });
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.1');
     });
@@ -71,7 +72,7 @@ describe('clusterSelectors', () => {
       });
       const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '3.0.0',
-      });
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBeNull();
     });
@@ -86,7 +87,7 @@ describe('clusterSelectors', () => {
       });
       const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '3.0.0',
-      });
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBeNull();
     });
@@ -99,7 +100,7 @@ describe('clusterSelectors', () => {
       });
       const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '2.0.0',
-      });
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.1');
     });
@@ -117,7 +118,7 @@ describe('clusterSelectors', () => {
       );
       const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '2.0.0',
-      });
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.2');
     });
@@ -136,7 +137,7 @@ describe('clusterSelectors', () => {
       );
       const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '3.0.0',
-      });
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('3.0.1');
     });

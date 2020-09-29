@@ -12,8 +12,8 @@ import { validateLabelKey } from 'utils/labelUtils';
  * @param provider
  */
 export function canClusterUpgrade(
-  currentVersion: string | undefined,
-  targetVersion: string | undefined,
+  currentVersion: string | undefined | null,
+  targetVersion: string | undefined | null,
   provider: PropertiesOf<typeof Providers>
 ): boolean {
   // Cluster must have a release_version.

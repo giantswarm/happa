@@ -6,7 +6,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectClusterById } from 'selectors/clusterSelectors';
+import { selectClusterById } from 'stores/cluster/selectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 const StyledInstallIngressButton = styled(InstallIngressButton)`

@@ -3,7 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectResourcesV4 } from 'selectors/clusterSelectors';
+import { selectResourcesV4 } from 'stores/cluster/selectors';
 import { CSSBreakpoints, Providers } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
 import Button from 'UI/Button';

@@ -6,7 +6,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
 import { IState } from 'reducers/types';
-import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
+import { selectCanClusterUpgrade } from 'stores/cluster/selectors';
 import { ITheme } from 'styles';
 import {
   isClusterCreating,

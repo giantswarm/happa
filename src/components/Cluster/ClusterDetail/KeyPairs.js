@@ -8,7 +8,7 @@ import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import Copyable from 'shared/Copyable';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
 import Button from 'UI/Button';

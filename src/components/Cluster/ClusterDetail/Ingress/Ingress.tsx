@@ -3,7 +3,7 @@ import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressBu
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { selectIngressAppFromCluster } from 'selectors/clusterSelectors';
+import { selectIngressAppFromCluster } from 'stores/appcatalog/selectors';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 

@@ -20,7 +20,7 @@ import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
   selectTargetRelease,
-} from 'selectors/clusterSelectors';
+} from 'stores/cluster/selectors';
 import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';

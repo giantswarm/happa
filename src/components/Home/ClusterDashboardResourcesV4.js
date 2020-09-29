@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   selectLoadingFlagByAction,
   selectResourcesV4,
-} from 'selectors/clusterSelectors';
+} from 'stores/cluster/selectors';
 import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,

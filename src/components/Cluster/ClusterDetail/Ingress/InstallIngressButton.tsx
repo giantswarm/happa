@@ -8,7 +8,7 @@ import { IState } from 'reducers/types';
 import {
   selectIngressAppFromCluster,
   selectLoadingFlagByAction,
-} from 'selectors/clusterSelectors';
+} from 'stores/cluster/selectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
@@ -49,10 +49,10 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 }) => {
   const [isNew, setIsNew] = useState(true);
 
-  const isInstalling: boolean | null = useSelector((state) =>
+  const isInstalling = useSelector<IState, boolean | null>((state) =>
     selectLoadingFlagByAction(state, installLatestIngress().types.request)
   );
-  const isPreparingIngressTabData: boolean | null = useSelector((state) =>
+  const isPreparingIngressTabData = useSelector<IState, boolean | null>((state) =>
     selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
   );
   // TODO(axbarsan): Use proper app type.

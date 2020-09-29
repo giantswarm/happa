@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
-} from 'selectors/clusterSelectors';
+} from 'stores/cluster/selectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';

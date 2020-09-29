@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import {
   selectClusterById,
   selectErrorByIdAndAction,
-} from 'selectors/clusterSelectors';
+} from 'stores/cluster/selectors';
 import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';

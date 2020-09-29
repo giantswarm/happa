@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,

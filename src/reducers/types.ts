@@ -8,6 +8,7 @@ import { IModalState } from 'stores/modal/types';
 import { INodePoolState } from 'stores/nodepool/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IUserState } from 'stores/user/types';
+import { IReleaseState } from 'stores/releases/types';
 
 // Giving state a generic type for now, until whole state is typed.
 export interface IState {
@@ -34,6 +35,7 @@ export interface IState {
     organizations: IOrganizationState;
     nodePools: INodePoolState;
     users: IUserState;
-    cluster: IClusterState;
+    clusters: IClusterState;
+    releases: IReleaseState;
   };
 }
