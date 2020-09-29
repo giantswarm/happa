@@ -1,5 +1,6 @@
 import { IInstallationInfo } from 'model/services/giantSwarm/types';
 import { IAppCatalogsState } from 'stores/appcatalog/types';
+import { IClusterState } from 'stores/cluster/types';
 import { ICPAuthState } from 'stores/cpauth/types';
 import { IErrorState } from 'stores/error/types';
 import { IMetadataState } from 'stores/metadata/types';
@@ -33,5 +34,6 @@ export interface IState {
     organizations: IOrganizationState;
     nodePools: INodePoolState;
     users: IUserState;
+    cluster: IClusterState;
   };
 }

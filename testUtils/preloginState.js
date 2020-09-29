@@ -47,7 +47,7 @@ export default {
       items: {},
     },
     clusters: {
-      lastUpdated: null,
+      lastUpdated: 0,
       isFetching: false,
       items: {},
       v5Clusters: [],
