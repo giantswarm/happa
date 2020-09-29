@@ -6,6 +6,8 @@ import { NavLink } from 'react-router-dom';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
 
+const TriggerLabelMaxLength = 15;
+
 const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   width: unset;
   height: unset;
@@ -145,6 +147,18 @@ const OrganizationDropdown = ({
       .sort((a, b) => a.localeCompare(b));
   }, [organizations.items, organizations.isFetching]);
 
+  let triggerLabel = 'No Organizations';
+
+  if (sortedOrganizations.length !== 0) {
+    if (selectedOrganization.length > TriggerLabelMaxLength) {
+      triggerLabel = (
+        <>{selectedOrganization.slice(0, TriggerLabelMaxLength)}&hellip;</>
+      );
+    } else {
+      triggerLabel = selectedOrganization;
+    }
+  }
+
   return (
     <InlineDiv>
       <OrganizationMenu
@@ -163,11 +177,7 @@ const OrganizationDropdown = ({
               onKeyDown={onKeyDownHandler}
               type='button'
             >
-              <TriggerLabel>
-                {sortedOrganizations.length !== 0
-                  ? selectedOrganization
-                  : 'No Organizations'}
-              </TriggerLabel>
+              <TriggerLabel>{triggerLabel}</TriggerLabel>
               <span className='caret' />
             </OrganizationDropdownTrigger>
             {isOpen && (
