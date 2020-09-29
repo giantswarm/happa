@@ -44,8 +44,6 @@ import {
   IClusterCreateActionResponse,
 } from 'stores/cluster/types';
 import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
-import IClusterWorker = V4.IClusterWorker;
-import IClusterStatus = V4.IClusterStatus;
 
 export function clusterDelete(cluster: Cluster): ClusterActions {
   return {
@@ -214,7 +212,7 @@ export function clusterLoadDetails(
           (cluster as V4.ICluster).workers = [];
         }
         (cluster as V4.ICluster).workers = ((cluster as V4.ICluster)
-          .workers as IClusterWorker[]).map((worker) => {
+          .workers as V4.IClusterWorker[]).map((worker) => {
           if (!worker.aws) worker.aws = { instance_type: '' };
 
           return worker;
@@ -280,7 +278,7 @@ export function clusterLoadDetails(
 function clusterLoadStatus(
   clusterId: string,
   opts: { withLoadingFlags?: boolean }
-): ThunkAction<Promise<IClusterStatus>, IState, void, ClusterActions> {
+): ThunkAction<Promise<V4.IClusterStatus>, IState, void, ClusterActions> {
   return async (dispatch) => {
     try {
       if (opts.withLoadingFlags) {
@@ -429,22 +427,22 @@ export function clusterPatch(
   reloadCluster = false
 ): ThunkAction<Promise<void>, IState, void, ClusterActions> {
   return async (dispatch, getState) => {
-    const v5Clusters = getState().entities.clusters.v5Clusters;
-    const isV5Cluster = v5Clusters.includes(cluster.id);
-
-    // Optimistic update.
-    dispatch({
-      type: CLUSTER_PATCH,
-      cluster,
-      payload,
-    });
-
-    const clustersApi = new GiantSwarm.ClustersApi();
-    const modifyCluster = isV5Cluster
-      ? clustersApi.modifyClusterV5.bind(clustersApi)
-      : clustersApi.modifyCluster.bind(clustersApi);
-
     try {
+      const v5Clusters = getState().entities.clusters.v5Clusters;
+      const isV5Cluster = v5Clusters.includes(cluster.id);
+
+      // Optimistic update.
+      dispatch({
+        type: CLUSTER_PATCH,
+        cluster,
+        payload,
+      });
+
+      const clustersApi = new GiantSwarm.ClustersApi();
+      const modifyCluster = isV5Cluster
+        ? clustersApi.modifyClusterV5.bind(clustersApi)
+        : clustersApi.modifyCluster.bind(clustersApi);
+
       await modifyCluster(cluster.id, payload as never);
 
       if (reloadCluster) {

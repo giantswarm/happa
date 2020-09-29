@@ -87,6 +87,10 @@ export default {
       items: {},
       isFetching: false,
     },
+    clusterLabels: {
+      requestInProgress: false,
+      error: null,
+    },
   },
   modal: {
     visible: false,

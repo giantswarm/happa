@@ -1,6 +1,7 @@
 import { IInstallationInfo } from 'model/services/giantSwarm/types';
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { IClusterState } from 'stores/cluster/types';
+import { IClusterLabelsState } from 'stores/clusterlabels/types';
 import { ICPAuthState } from 'stores/cpauth/types';
 import { IErrorState } from 'stores/error/types';
 import { IMetadataState } from 'stores/metadata/types';
@@ -28,8 +29,6 @@ export interface IState {
   metadata: IMetadataState;
   modal: IModalState;
   entities: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
     cpAuth: ICPAuthState;
     catalogs: IAppCatalogsState;
     organizations: IOrganizationState;
@@ -37,5 +36,6 @@ export interface IState {
     users: IUserState;
     clusters: IClusterState;
     releases: IReleaseState;
+    clusterLabels: IClusterLabelsState;
   };
 }
