@@ -1,14 +1,22 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { FC } from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { Dot, FallbackSpan } from 'styles';
 
-const NodesRunning = ({
-  isClusterCreating,
-  workerNodesRunning,
-  RAM,
+interface INodesRunningProps {
+  CPUs: number;
+  RAM: number;
+  isClusterCreating: boolean;
+  numNodePools?: number;
+  workerNodesRunning: number;
+}
+
+const NodesRunning: FC<INodesRunningProps> = ({
   CPUs,
-  nodePools,
+  RAM,
+  isClusterCreating,
+  numNodePools,
+  workerNodesRunning,
 }) => {
   if (workerNodesRunning === 0 && isClusterCreating) {
     return (
@@ -19,14 +27,13 @@ const NodesRunning = ({
   }
 
   const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
-  const npSingularPlural =
-    nodePools && nodePools.length === 1 ? ' node pool' : ' node pools';
+  const npSingularPlural = numNodePools === 1 ? ' node pool' : ' node pools';
 
   return (
     <div data-testid='nodes-running'>
       <span>
         {`${workerNodesRunning} ${nodesSingularPlural}`}
-        {nodePools && ` in ${nodePools.length} ${npSingularPlural}`}
+        {numNodePools && ` in ${numNodePools} ${npSingularPlural}`}
       </span>
       <span>
         <Dot />
@@ -41,11 +48,11 @@ const NodesRunning = ({
 };
 
 NodesRunning.propTypes = {
-  isClusterCreating: PropTypes.bool,
-  workerNodesRunning: PropTypes.number,
-  RAM: PropTypes.number,
-  CPUs: PropTypes.number,
-  nodePools: PropTypes.array,
+  CPUs: PropTypes.number.isRequired,
+  RAM: PropTypes.number.isRequired,
+  isClusterCreating: PropTypes.bool.isRequired,
+  numNodePools: PropTypes.number,
+  workerNodesRunning: PropTypes.number.isRequired,
 };
 
 export default NodesRunning;

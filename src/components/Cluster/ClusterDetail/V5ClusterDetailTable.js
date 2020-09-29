@@ -396,7 +396,7 @@ class V5ClusterDetailTable extends React.Component {
               isClusterCreating={isClusterCreating(cluster)}
               RAM={memory}
               CPUs={cores}
-              nodePools={nodePools}
+              numNodePools={nodePools.length}
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
