@@ -1,6 +1,6 @@
+import { compare } from 'lib/semver';
 import { IState } from 'reducers/types';
 import { getMinHAMastersVersion } from 'selectors/featureSelectors';
-import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
 import { validateLabelKey } from 'utils/labelUtils';
@@ -23,8 +23,8 @@ export function canClusterUpgrade(
   if (!targetVersion) return false;
 
   // We must not be trying to go from v4 to v5 on AWS.
-  const targetingV5 = cmp(targetVersion, Constants.AWS_V5_VERSION) >= 0;
-  const currentlyV4 = cmp(currentVersion, Constants.AWS_V5_VERSION) < 0;
+  const targetingV5 = compare(targetVersion, Constants.AWS_V5_VERSION) >= 0;
+  const currentlyV4 = compare(currentVersion, Constants.AWS_V5_VERSION) < 0;
   const onAWS = provider === Providers.AWS;
 
   if (onAWS && targetingV5 && currentlyV4) return false;
@@ -252,18 +252,18 @@ export const computeCapabilities = (state: IState) => (
 
   switch (provider) {
     case Providers.AWS:
-      hasOptionalIngress = cmp(releaseVersion, '10.0.99') === 1;
-      supportsHAMasters = cmp(releaseVersion, minHAMastersVersion) >= 0;
+      hasOptionalIngress = compare(releaseVersion, '10.0.99') === 1;
+      supportsHAMasters = compare(releaseVersion, minHAMastersVersion) >= 0;
 
       break;
 
     case Providers.AZURE:
-      hasOptionalIngress = cmp(releaseVersion, '12.0.0') >= 0;
+      hasOptionalIngress = compare(releaseVersion, '12.0.0') >= 0;
 
       break;
 
     case Providers.KVM:
-      hasOptionalIngress = cmp(releaseVersion, '12.2.0') >= 0;
+      hasOptionalIngress = compare(releaseVersion, '12.2.0') >= 0;
 
       break;
   }

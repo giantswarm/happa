@@ -19,9 +19,9 @@ export const getFirstNodePoolsRelease = (state: IState): string => {
       break;
   }
 
-  if (state.main.info.features?.nodepools) {
-    releaseVersion = state.main.info.features.nodepools.release_version_minimum;
-  }
+  // if (state.main.info.features?.nodepools) {
+  //   releaseVersion = state.main.info.features.nodepools.release_version_minimum;
+  // }
 
   return releaseVersion;
 };

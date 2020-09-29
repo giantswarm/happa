@@ -1,4 +1,4 @@
-import cmp from 'semver-compare';
+import { compare } from 'lib/semver';
 import { getUserIsAdmin } from 'stores/user/selectors';
 import {
   canClusterUpgrade,
@@ -88,7 +88,7 @@ export const selectTargetRelease = (state, cluster) => {
   if (!releases[clusterReleaseVersion]) {
     releases[clusterReleaseVersion] = null;
   }
-  const availableVersions = Object.keys(releases).sort(cmp);
+  const availableVersions = Object.keys(releases).sort(compare);
 
   let nextVersion = null;
   let currVersionFound = false;
