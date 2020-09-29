@@ -37,13 +37,13 @@ import {
 export interface IClusterState {
   lastUpdated: number;
   isFetching: boolean;
-  items: Record<string, V4.ICluster | V5.ICluster>;
+  items: IClusterMap;
   v5Clusters: string[];
 }
 
 export interface IClusterDeleteRequestAction {
   type: typeof CLUSTER_DELETE_REQUEST;
-  cluster: V4.ICluster | V5.ICluster;
+  cluster: Cluster;
 }
 
 export interface IClusterListRequestAction {
@@ -52,7 +52,7 @@ export interface IClusterListRequestAction {
 
 export interface IClusterListSuccessAction {
   type: typeof CLUSTERS_LIST_SUCCESS;
-  clusters: Record<string, V4.ICluster | V5.ICluster>;
+  clusters: IClusterMap;
   v5ClusterIds: string[];
 }
 

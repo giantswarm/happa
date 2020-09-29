@@ -295,7 +295,7 @@ export function filterLabels(labels?: IClusterLabelMap) {
  * @param cluster
  */
 export function getClusterLatestCondition(
-  cluster: V4.ICluster | V5.ICluster
+  cluster: Cluster
 ): string | undefined {
   if (
     'conditions' in cluster &&
@@ -321,7 +321,7 @@ export function getClusterLatestCondition(
  * Check whether a cluster is in a creation state.
  * @param cluster
  */
-export function isClusterCreating(cluster: V4.ICluster | V5.ICluster): boolean {
+export function isClusterCreating(cluster: Cluster): boolean {
   const latestCondition = getClusterLatestCondition(cluster);
   if (!latestCondition) return true;
 
@@ -332,7 +332,7 @@ export function isClusterCreating(cluster: V4.ICluster | V5.ICluster): boolean {
  * Check whether a cluster is in an updating state.
  * @param cluster
  */
-export function isClusterUpdating(cluster: V4.ICluster | V5.ICluster): boolean {
+export function isClusterUpdating(cluster: Cluster): boolean {
   const latestCondition = getClusterLatestCondition(cluster);
 
   return latestCondition === 'Updating';
@@ -342,7 +342,7 @@ export function isClusterUpdating(cluster: V4.ICluster | V5.ICluster): boolean {
  * Check whether a cluster is in a deleting state.
  * @param cluster
  */
-export function isClusterDeleting(cluster: V4.ICluster | V5.ICluster): boolean {
+export function isClusterDeleting(cluster: Cluster): boolean {
   const latestCondition = getClusterLatestCondition(cluster);
 
   return latestCondition === 'Deleting';

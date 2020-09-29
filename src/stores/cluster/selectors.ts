@@ -18,7 +18,7 @@ import {
 export function selectClusterById(
   state: IState,
   id: string
-): V5.ICluster | V4.ICluster | undefined {
+): Cluster | undefined {
   return state.entities.clusters.items[id];
 }
 
@@ -71,7 +71,7 @@ export function selectClustersList() {
 export function selectResourcesV4() {
   return createDeepEqualSelector(
     selectClusterById,
-    (cluster: V5.ICluster | V4.ICluster | undefined) => {
+    (cluster: Cluster | undefined) => {
       if (
         ((cluster as V4.ICluster | undefined)?.status?.cluster?.nodes?.length ??
           0) > 0
@@ -89,10 +89,7 @@ export function selectResourcesV4() {
   );
 }
 
-export function selectTargetRelease(
-  state: IState,
-  cluster?: V4.ICluster | V5.ICluster | null
-) {
+export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
   if (!cluster || Object.keys(state.entities.releases.items).length === 0)
     return null;
 

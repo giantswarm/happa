@@ -214,10 +214,7 @@ describe('ClusterStatus', () => {
   });
 });
 
-function makeState(
-  cluster: Partial<V4.ICluster | V5.ICluster>,
-  releases: IReleases
-): IState {
+function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
   return ({
     ...preloginState,
     main: {

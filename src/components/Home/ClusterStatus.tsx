@@ -57,7 +57,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   const theme = useTheme<ITheme>();
 
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
-  const cluster = useSelector<IState, V4.ICluster | V5.ICluster>(
+  const cluster = useSelector<IState, Cluster>(
     (state) => state.entities.clusters.items[clusterId]
   );
 

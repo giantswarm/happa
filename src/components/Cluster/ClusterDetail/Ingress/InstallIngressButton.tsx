@@ -40,7 +40,7 @@ const StyledLink = styled(Link)`
 
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  cluster: V4.ICluster | V5.ICluster;
+  cluster: Cluster;
 }
 
 const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
