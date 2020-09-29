@@ -76,19 +76,36 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
   return (
     <>
       <NavDiv>
-        <StyledNavLink activeClassName='active' exact to={AppRoutes.Home}>
+        <StyledNavLink
+          activeClassName='active'
+          exact
+          to={AppRoutes.Home}
+          data-dd-action-name='CLICK_MAINNAV_CLUSTERS'
+        >
           Clusters
         </StyledNavLink>
-        <StyledNavLink activeClassName='active' to={OrganizationsRoutes.Home}>
+        <StyledNavLink
+          activeClassName='active'
+          to={OrganizationsRoutes.Home}
+          data-dd-action-name='CLICK_MAINNAV_ORGANIZATIONS'
+        >
           Organizations
         </StyledNavLink>
         {showAppCatalog && (
-          <StyledNavLink activeClassName='active' to={AppCatalogRoutes.Home}>
+          <StyledNavLink
+            activeClassName='active'
+            to={AppCatalogRoutes.Home}
+            data-dd-action-name='CLICK_MAINNAV_APPCATALOGS'
+          >
             App Catalogs
           </StyledNavLink>
         )}
         {isUserAdmin ? (
-          <StyledNavLink activeClassName='active' to={UsersRoutes.Home}>
+          <StyledNavLink
+            activeClassName='active'
+            to={UsersRoutes.Home}
+            data-dd-action-name='CLICK_MAINNAV_USERS'
+          >
             Users
           </StyledNavLink>
         ) : undefined}
@@ -96,6 +113,7 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
           href='https://docs.giantswarm.io'
           rel='noopener noreferrer'
           target='_blank'
+          data-dd-action-name='CLICK_MAINNAV_DOCUMENTATION'
         >
           Documentation <i className='fa fa-open-in-new' />
         </a>
