@@ -3,9 +3,9 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import Detail from './Detail/Detail';

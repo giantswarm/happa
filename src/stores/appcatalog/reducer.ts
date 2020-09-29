@@ -1,10 +1,10 @@
-import { CLUSTER_LOAD_APP_README_SUCCESS } from 'actions/actionTypes';
 import produce from 'immer';
 import {
   CATALOG_LOAD_INDEX_ERROR,
   CATALOG_LOAD_INDEX_REQUEST,
   CATALOG_LOAD_INDEX_SUCCESS,
   CATALOGS_LIST_SUCCESS,
+  CLUSTER_LOAD_APP_README_SUCCESS,
 } from 'stores/appcatalog/constants';
 
 import * as actions from './actions';
@@ -54,20 +54,17 @@ const catalogReducer = produce(
 
         break;
 
-      // TODO(axbarsan): Remove type casts once we have a generic app action type.
-      case CLUSTER_LOAD_APP_README_SUCCESS as unknown: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const anyAction = action as any;
+      case CLUSTER_LOAD_APP_README_SUCCESS: {
         const appList =
-          draft.items[anyAction.catalogName]?.apps?.[anyAction.appVersion.name];
+          draft.items[action.catalogName]?.apps?.[action.appVersion.name];
         if (!appList) break;
 
         const currentAppVersion = appList.find(
-          (app) => app.version === anyAction.appVersion.version
+          (app) => app.version === action.appVersion.version
         );
         if (!currentAppVersion) break;
 
-        currentAppVersion.readme = anyAction.readmeText;
+        currentAppVersion.readme = action.readmeText;
 
         break;
       }

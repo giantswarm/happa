@@ -1,25 +1,21 @@
-import {
-  createAppConfig as createAppConfigAction,
-  deleteAppConfig as deleteAppConfigAction,
-  updateAppConfig as updateAppConfigAction,
-} from 'actions/appConfigActions';
-import {
-  createAppSecret as createAppSecretAction,
-  deleteAppSecret as deleteAppSecretAction,
-  updateAppSecret as updateAppSecretAction,
-} from 'actions/appSecretActions';
 import GenericModal from 'components/Modals/GenericModal';
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
-import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import {
+  catalogLoadIndex,
+  createAppConfig as createAppConfigAction,
+  createAppSecret as createAppSecretAction,
+  deleteAppConfig as deleteAppConfigAction,
+  deleteAppSecret as deleteAppSecretAction,
   deleteClusterApp as deleteAppAction,
+  loadClusterApps,
+  updateAppConfig as updateAppConfigAction,
+  updateAppSecret as updateAppSecretAction,
   updateClusterApp as updateAppAction,
-} from 'stores/clusterapps/actions';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+} from 'stores/appcatalog/actions';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

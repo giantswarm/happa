@@ -1,21 +1,20 @@
-import {
-  CLUSTER_LOAD_APP_README_ERROR,
-  CLUSTER_LOAD_APP_README_REQUEST,
-} from 'actions/actionTypes';
-import { loadAppReadme } from 'actions/appActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { AppCatalogRoutes } from 'shared/constants/routes';
+import { listCatalogs, loadAppReadme } from 'stores/appcatalog/actions';
+import {
+  CATALOG_LOAD_INDEX_REQUEST,
+  CLUSTER_LOAD_APP_README_ERROR,
+  CLUSTER_LOAD_APP_README_REQUEST,
+} from 'stores/appcatalog/constants';
 import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
 } from 'stores/cluster/selectors';
-import { AppCatalogRoutes } from 'shared/constants/routes';
-import { listCatalogs } from 'stores/appcatalog/actions';
-import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';

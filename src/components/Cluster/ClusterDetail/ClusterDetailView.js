@@ -16,16 +16,16 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-  selectTargetRelease,
-} from 'stores/cluster/selectors';
 import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
+import {
+  selectLoadingFlagByAction,
+  selectLoadingFlagByIdAndAction,
+  selectTargetRelease,
+} from 'stores/cluster/selectors';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';

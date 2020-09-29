@@ -10,9 +10,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
-import { selectLoadingFlagByIdAndAction } from 'stores/cluster/selectors';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
+import { selectLoadingFlagByIdAndAction } from 'stores/cluster/selectors';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import {

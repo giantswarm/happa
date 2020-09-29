@@ -1,6 +1,6 @@
-import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import {
+  CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_SUCCESS,
 } from 'stores/global/constants';
@@ -94,7 +94,7 @@ const makeAppReducer = () => {
 
         break;
 
-      case types.CLUSTER_SELECT:
+      case CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
 
         break;

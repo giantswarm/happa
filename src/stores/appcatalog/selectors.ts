@@ -14,3 +14,15 @@ export function selectIngressAppToInstall(
 
   return ingressCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0];
 }
+
+export function selectIngressAppFromCluster(
+  cluster: V4.ICluster | V5.ICluster
+) {
+  const apps = cluster.apps || [];
+
+  const ingressApp = apps.find((app) => {
+    return app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME;
+  });
+
+  return ingressApp;
+}

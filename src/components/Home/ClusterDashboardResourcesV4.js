@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectLoadingFlagByAction,
-  selectResourcesV4,
-} from 'stores/cluster/selectors';
-import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
+import {
+  selectLoadingFlagByAction,
+  selectResourcesV4,
+} from 'stores/cluster/selectors';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 

@@ -1,5 +1,3 @@
-
-
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -8,8 +6,8 @@ import RoutePath from 'lib/routePath';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
+import { loadClusterApps } from 'stores/appcatalog/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
-import { loadClusterApps } from 'stores/clusterapps/actions';
 import { loadUser } from 'stores/cpauth/actions';
 import {
   globalLoadError,

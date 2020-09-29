@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { loadClusterApps } from 'stores/appcatalog/actions';
 import {
   CLUSTER_DELETE_SUCCESS,
   CLUSTER_LOAD_DETAILS_SUCCESS,
@@ -12,7 +13,6 @@ import {
   V5_CLUSTER_CREATE_SUCCESS,
 } from 'stores/cluster/constants';
 import { IClusterState } from 'stores/cluster/types';
-import { loadClusterApps } from 'stores/clusterapps/actions';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import {
   CLUSTER_NODEPOOLS_LOAD_SUCCESS,
@@ -150,14 +150,18 @@ const clusterReducer = produce((draft: IClusterState, action) => {
     case NODEPOOL_DELETE_SUCCESS: {
       const cluster = draft.items[action.clusterID] as V5.ICluster | undefined;
       if (cluster?.nodePools) {
-        cluster.nodePools = cluster.nodePools.filter((np: string) => np !== action.nodePool.id);
+        cluster.nodePools = cluster.nodePools.filter(
+          (np: string) => np !== action.nodePool.id
+        );
       }
 
       break;
     }
 
     case updateClusterLabels().types.success: {
-      const cluster = draft.items[action.response.clusterId] as V5.ICluster | undefined;
+      const cluster = draft.items[action.response.clusterId] as
+        | V5.ICluster
+        | undefined;
       if (cluster) {
         cluster.labels = action.response.labels;
       }

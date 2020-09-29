@@ -1,3 +1,8 @@
+import { IState } from 'reducers/types';
+import {
+  createDeepEqualSelector,
+  typeWithoutSuffix,
+} from 'selectors/selectorUtils';
 import cmp from 'semver-compare';
 import { getUserIsAdmin } from 'stores/user/selectors';
 import {
@@ -9,11 +14,6 @@ import {
   isClusterCreating,
   isClusterUpdating,
 } from 'utils/clusterUtils';
-import { IState } from 'reducers/types';
-import {
-  createDeepEqualSelector,
-  typeWithoutSuffix,
-} from 'selectors/selectorUtils';
 
 export function selectClusterById(
   state: IState,
@@ -27,7 +27,7 @@ function selectOrganizationClusterNames(state: IState): string[] {
   const clusterIds = Object.keys(clusters);
 
   return clusterIds
-    .filter(id => clusters[id].owner === state.main.selectedOrganization)
+    .filter((id) => clusters[id].owner === state.main.selectedOrganization)
     .sort((a, b) =>
       (clusters[a].name as string) > (clusters[b].name as string) ? 1 : -1
     );
@@ -42,7 +42,7 @@ export function selectErrorByIdAndAction(
   return state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null;
 }
 
-export function selectLoadingFlagByIdAndAction (
+export function selectLoadingFlagByIdAndAction(
   state: IState,
   id: string,
   actionType: string
@@ -52,10 +52,7 @@ export function selectLoadingFlagByIdAndAction (
   );
 }
 
-export function selectLoadingFlagByAction (
-  state: IState,
-  actionType: string
-) {
+export function selectLoadingFlagByAction(state: IState, actionType: string) {
   return state.loadingFlags[typeWithoutSuffix(actionType)] ?? null;
 }
 
@@ -67,7 +64,7 @@ export function selectLoadingFlagByAction (
 export function selectClustersList() {
   return createDeepEqualSelector(
     selectOrganizationClusterNames,
-    clusters => clusters
+    (clusters) => clusters
   );
 }
 
@@ -75,8 +72,10 @@ export function selectResourcesV4() {
   return createDeepEqualSelector(
     selectClusterById,
     (cluster: V5.ICluster | V4.ICluster | undefined) => {
-      if (((cluster as V4.ICluster | undefined)?.status?.cluster?.nodes?.length ??
-        0) > 0) {
+      if (
+        ((cluster as V4.ICluster | undefined)?.status?.cluster?.nodes?.length ??
+          0) > 0
+      ) {
         const numberOfNodes = getNumberOfNodes(cluster as V4.ICluster);
         const memory = getMemoryTotal(cluster as V4.ICluster);
         const cores = getCpusTotal(cluster as V4.ICluster);
@@ -90,7 +89,10 @@ export function selectResourcesV4() {
   );
 }
 
-export function selectTargetRelease (state: IState, cluster?: V4.ICluster | V5.ICluster | null) {
+export function selectTargetRelease(
+  state: IState,
+  cluster?: V4.ICluster | V5.ICluster | null
+) {
   if (!cluster || Object.keys(state.entities.releases.items).length === 0)
     return null;
 
@@ -127,7 +129,9 @@ export function selectTargetRelease (state: IState, cluster?: V4.ICluster | V5.I
   return nextVersion;
 }
 
-export const selectCanClusterUpgrade = (clusterID: string) => (state: IState) => {
+export const selectCanClusterUpgrade = (clusterID: string) => (
+  state: IState
+) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 
@@ -144,7 +148,9 @@ export const selectCanClusterUpgrade = (clusterID: string) => (state: IState) =>
   );
 };
 
-export const selectIsClusterUpgrading = (clusterID: string) => (state: IState) => {
+export const selectIsClusterUpgrading = (clusterID: string) => (
+  state: IState
+) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 
