@@ -1,6 +1,5 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import * as clusterActions from 'actions/clusterActions';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import produce from 'immer';
@@ -12,6 +11,7 @@ import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
+import * as clusterActions from 'stores/cluster/actions';
 import { selectLoadingFlagByIdAndAction } from 'stores/cluster/selectors';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';

@@ -3,7 +3,6 @@ import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
 } from 'actions/batchedActions';
-import * as clusterActions from 'actions/clusterActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -20,6 +19,7 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 import {
   selectLoadingFlagByAction,

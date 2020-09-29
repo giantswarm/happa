@@ -7,6 +7,15 @@ import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import { loadClusterApps } from 'stores/appcatalog/actions';
+import {
+  clusterCreate,
+  clusterDeleteConfirmed,
+  clusterLoadDetails,
+  clusterLoadKeyPairs,
+  clustersDetails,
+  clustersList,
+  refreshClustersList,
+} from 'stores/cluster/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 import { loadUser } from 'stores/cpauth/actions';
 import {
@@ -27,8 +36,6 @@ import {
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
 import { getInfo, refreshUserInfo } from 'stores/user/actions';
-
-import * as clusterActions from './clusterActions';
 
 export const batchedLayout = () => async (dispatch) => {
   dispatch(globalLoadStart());
@@ -64,7 +71,7 @@ export const batchedLayout = () => async (dispatch) => {
     dispatch(listCatalogs());
     dispatch(loadReleases());
     await dispatch(
-      clusterActions.clustersList({
+      clustersList({
         withLoadingFlags: true,
       })
     );
@@ -72,7 +79,7 @@ export const batchedLayout = () => async (dispatch) => {
     dispatch(globalLoadFinish());
 
     await dispatch(
-      clusterActions.clustersDetails({
+      clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
         initializeNodePools: true,
@@ -92,9 +99,9 @@ export const batchedLayout = () => async (dispatch) => {
 
 export const batchedRefreshClusters = () => async (dispatch) => {
   try {
-    await dispatch(clusterActions.refreshClustersList());
+    await dispatch(refreshClustersList());
     await dispatch(
-      clusterActions.clustersDetails({
+      clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: false,
         initializeNodePools: false,
@@ -118,7 +125,7 @@ export const batchedClusterCreate = (
 ) => async (dispatch) => {
   try {
     const { clusterId, owner } = await dispatch(
-      clusterActions.clusterCreate(cluster, isV5Cluster)
+      clusterCreate(cluster, isV5Cluster)
     );
     const clusterDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Home,
@@ -130,7 +137,7 @@ export const batchedClusterCreate = (
 
     // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, {
+      clusterLoadDetails(clusterId, {
         withLoadingFlags: true,
         initializeNodePools: true,
       })
@@ -169,11 +176,11 @@ export const batchedClusterDetailView = (
       dispatch(organizationCredentialsLoad(organizationId)),
       dispatch(loadReleases()),
       dispatch(loadClusterApps({ clusterId: clusterId })),
-      dispatch(clusterActions.clusterLoadKeyPairs(clusterId)),
+      dispatch(clusterLoadKeyPairs(clusterId)),
     ]);
 
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, {
+      clusterLoadDetails(clusterId, {
         withLoadingFlags: true,
         initializeNodePools: true,
       })
@@ -197,7 +204,7 @@ export const batchedRefreshClusterDetailView = (
 ) => async (dispatch) => {
   try {
     const cluster = await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, {
+      clusterLoadDetails(clusterId, {
         withLoadingFlags: false,
         initializeNodePools: false,
       })
@@ -222,7 +229,7 @@ export const batchedRefreshClusterDetailView = (
 
 export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
   try {
-    await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
+    await dispatch(clusterDeleteConfirmed(cluster));
     dispatch(push(AppRoutes.Home));
     dispatch(modalHide());
   } catch (err) {
@@ -234,7 +241,7 @@ export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
   try {
     await dispatch(organizationSelect(orgId));
     dispatch(
-      clusterActions.clustersDetails({
+      clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
       })

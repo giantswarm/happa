@@ -1,4 +1,3 @@
-import * as clusterActions from 'actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -9,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import * as clusterActions from 'stores/cluster/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import FlashMessageComponent from 'UI/FlashMessage';

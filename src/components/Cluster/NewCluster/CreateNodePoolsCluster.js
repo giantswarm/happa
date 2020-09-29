@@ -386,10 +386,7 @@ function mapStateToProps(state) {
     minAZ,
     maxAZ,
     defaultAZ,
-    clusterCreateError: selectErrorByAction(
-      state,
-      CLUSTER_CREATE_REQUEST
-    ),
+    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
   };
 }
 

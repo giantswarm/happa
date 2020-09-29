@@ -1,6 +1,4 @@
-import {
-  ROUTER_LOCATION_CHANGE,
-} from 'actions/actionTypes';
+import { ROUTER_LOCATION_CHANGE } from 'actions/actionTypes';
 import { LocationChangeAction } from 'connected-react-router';
 import produce from 'immer';
 import {

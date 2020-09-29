@@ -1,4 +1,4 @@
-export interface IReleaseState{
+export interface IReleaseState {
   error: Error | null;
   isFetching: boolean;
   items: IReleases;
