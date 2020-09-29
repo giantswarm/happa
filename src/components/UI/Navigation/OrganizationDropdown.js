@@ -5,8 +5,7 @@ import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
-
-const TriggerLabelMaxLength = 15;
+import Truncated from 'UI/Truncated';
 
 const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   width: unset;
@@ -66,7 +65,7 @@ const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   }
 `;
 
-const TriggerLabel = styled.span`
+const TriggerLabel = styled(Truncated)`
   margin-left: 50px;
 `;
 
@@ -147,18 +146,6 @@ const OrganizationDropdown = ({
       .sort((a, b) => a.localeCompare(b));
   }, [organizations.items, organizations.isFetching]);
 
-  let triggerLabel = 'No Organizations';
-
-  if (sortedOrganizations.length !== 0) {
-    if (selectedOrganization.length > TriggerLabelMaxLength) {
-      triggerLabel = (
-        <>{selectedOrganization.slice(0, TriggerLabelMaxLength)}&hellip;</>
-      );
-    } else {
-      triggerLabel = selectedOrganization;
-    }
-  }
-
   return (
     <InlineDiv>
       <OrganizationMenu
@@ -177,7 +164,13 @@ const OrganizationDropdown = ({
               onKeyDown={onKeyDownHandler}
               type='button'
             >
-              <TriggerLabel>{triggerLabel}</TriggerLabel>
+              {sortedOrganizations.length !== 0 ? (
+                <TriggerLabel tooltipPlacement='bottom'>
+                  {selectedOrganization}
+                </TriggerLabel>
+              ) : (
+                'No Organizations'
+              )}
               <span className='caret' />
             </OrganizationDropdownTrigger>
             {isOpen && (

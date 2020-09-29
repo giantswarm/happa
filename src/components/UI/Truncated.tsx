@@ -8,11 +8,12 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 interface ITruncatedProps
   extends React.ComponentPropsWithoutRef<React.ElementType> {
   children: string | number;
-  replacer?: string;
   as?: React.ElementType;
-  numStart?: number;
-  numEnd?: number;
   labelProps?: React.ComponentPropsWithoutRef<'span'>;
+  numEnd?: number;
+  numStart?: number;
+  replacer?: string;
+  tooltipPlacement?: 'top' | 'bottom';
 }
 
 const Wrapper = styled.span``;
@@ -23,10 +24,11 @@ const Label = styled.span``;
  */
 const Truncated: React.FC<ITruncatedProps> = ({
   children,
-  replacer,
-  numStart,
-  numEnd,
   labelProps,
+  numEnd,
+  numStart,
+  replacer,
+  tooltipPlacement,
   ...rest
 }) => {
   let str = String(children);
@@ -44,7 +46,7 @@ const Truncated: React.FC<ITruncatedProps> = ({
       ) : (
         <OverlayTrigger
           overlay={<Tooltip id='tooltip'>{children}</Tooltip>}
-          placement='top'
+          placement={tooltipPlacement ?? 'top'}
         >
           <Label {...labelProps}>{str}</Label>
         </OverlayTrigger>
@@ -56,20 +58,22 @@ const Truncated: React.FC<ITruncatedProps> = ({
 Truncated.propTypes = {
   children: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
-  replacer: PropTypes.string,
   // Suppressing because there is no prop-type for HTML tag names
   // @ts-ignore
   as: PropTypes.string,
-  numStart: PropTypes.number,
-  numEnd: PropTypes.number,
   labelProps: PropTypes.object,
+  numEnd: PropTypes.number,
+  numStart: PropTypes.number,
+  replacer: PropTypes.string,
+  tooltipPlacement: PropTypes.oneOf(['top', 'bottom']),
 };
 
 Truncated.defaultProps = {
-  replacer: '...',
   as: 'span',
-  numStart: 15,
   numEnd: 5,
+  numStart: 15,
+  replacer: '...',
+  tooltipPlacement: 'top',
 };
 
 export default Truncated;
