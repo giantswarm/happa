@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
 import { batchedRefreshClusters } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
@@ -19,6 +18,7 @@ import ClusterEmptyState from 'UI/ClusterEmptyState';
 import { memoize } from 'underscore';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
+import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 
 const newClusterPathMemoized = memoize(
   (orgId) =>
@@ -200,7 +200,7 @@ const makeMapStateToProps = () => {
     const selectedOrganization = state.main.selectedOrganization;
     const errorLoadingClusters = selectErrorByAction(
       state,
-      actionTypes.CLUSTERS_LIST_REQUEST
+      CLUSTERS_LIST_REQUEST
     );
     const v5Clusters = state.entities.clusters.v5Clusters;
 

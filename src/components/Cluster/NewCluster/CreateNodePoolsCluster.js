@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import produce from 'immer';
@@ -24,6 +23,7 @@ import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
 } from '../ClusterDetail/V5ClusterDetailTable';
+import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 
 const WrapperDiv = styled.div`
   margin-top: 32px;
@@ -388,7 +388,7 @@ function mapStateToProps(state) {
     defaultAZ,
     clusterCreateError: selectErrorByAction(
       state,
-      actionTypes.CLUSTER_CREATE_REQUEST
+      CLUSTER_CREATE_REQUEST
     ),
   };
 }

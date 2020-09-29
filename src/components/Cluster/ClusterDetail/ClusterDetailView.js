@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'actions/actionTypes';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -51,6 +50,7 @@ import ScaleClusterModal from './ScaleClusterModal';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 
 const Disclaimer = styled.p`
   margin: 0 0 20px;

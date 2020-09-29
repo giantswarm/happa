@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
@@ -17,6 +16,7 @@ import FlashMessage from 'UI/FlashMessage';
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';
 import KeyPairDetailsModal from './KeyPairDetailsModal';
+import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
 
 const Disclaimer = styled.p`
   margin: 0 0 20px;

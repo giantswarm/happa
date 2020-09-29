@@ -1,4 +1,3 @@
-import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import { loadClusterApps } from 'stores/clusterapps/actions';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
@@ -7,6 +6,18 @@ import {
   NODEPOOL_CREATE_SUCCESS,
   NODEPOOL_DELETE_SUCCESS,
 } from 'stores/nodepool/constants';
+import {
+  CLUSTER_DELETE_SUCCESS,
+  CLUSTER_LOAD_DETAILS_SUCCESS,
+  CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
+  CLUSTER_LOAD_STATUS_NOT_FOUND,
+  CLUSTER_PATCH,
+  CLUSTER_PATCH_ERROR,
+  CLUSTER_REMOVE_FROM_STORE,
+  CLUSTERS_LIST_REFRESH_SUCCESS,
+  CLUSTERS_LIST_SUCCESS,
+  V5_CLUSTER_CREATE_SUCCESS,
+} from 'stores/cluster/constants';
 
 const initialState = {
   lastUpdated: null,
@@ -19,14 +30,14 @@ const initialState = {
 // eslint-disable-next-line complexity
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.CLUSTERS_LIST_SUCCESS:
+    case CLUSTERS_LIST_SUCCESS:
       draft.items = action.clusters;
       draft.v5Clusters = action.v5ClusterIds;
       draft.allIds = action.allIds;
 
       return;
 
-    case types.CLUSTERS_LIST_REFRESH_SUCCESS:
+    case CLUSTERS_LIST_REFRESH_SUCCESS:
       if (Object.keys(action.clusters).length > 0) {
         draft.items = { ...draft.items, ...action.clusters };
 
@@ -39,7 +50,7 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
+    case CLUSTER_LOAD_DETAILS_SUCCESS: {
       draft.items[action.cluster.id] = {
         ...draft.items[action.cluster.id],
         ...action.cluster,
@@ -53,7 +64,7 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
+    case CLUSTER_LOAD_STATUS_NOT_FOUND:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].status = null;
       }
@@ -67,28 +78,28 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
+    case CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].keyPairs = action.keyPairs;
       }
 
       return;
 
-    case types.V5_CLUSTER_CREATE_SUCCESS:
+    case V5_CLUSTER_CREATE_SUCCESS:
       draft.v5Clusters.push(action.clusterId);
 
       return;
 
     // This is the action that is dispatched when deletion is confirmed in the modal.
     // The cluster is not removed from the store, but it is now marked as a deleted one.
-    case types.CLUSTER_DELETE_SUCCESS:
+    case CLUSTER_DELETE_SUCCESS:
       draft.items[action.clusterId].delete_date = action.timestamp;
       draft.lastUpdated = Date.now();
 
       return;
 
     // This is the action that we dispatch in order to actually remove a cluster from the store.
-    case types.CLUSTER_REMOVE_FROM_STORE:
+    case CLUSTER_REMOVE_FROM_STORE:
       delete draft.items[action.clusterId];
       if (action.isV5Cluster) {
         draft.v5Clusters.filter((id: string) => id !== action.clusterId);
@@ -96,7 +107,7 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_PATCH:
+    case CLUSTER_PATCH:
       Object.keys(action.payload).forEach((key) => {
         if (draft.items[action.cluster.id]) {
           draft.items[action.cluster.id][key] = action.payload[key];
@@ -106,7 +117,7 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     // Undo optimistic update
-    case types.CLUSTER_PATCH_ERROR:
+    case CLUSTER_PATCH_ERROR:
       if (draft.items[action.cluster.id]) {
         draft.items[action.cluster.id] = action.cluster;
       }

@@ -1,4 +1,3 @@
-import * as actionTypes from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -10,6 +9,10 @@ import RefreshableLabel from 'UI/RefreshableLabel';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 import ClusterDashboardNodes from './ClusterDashboardNodes';
+import {
+  CLUSTER_LOAD_STATUS_REQUEST,
+  CLUSTERS_DETAILS_REQUEST,
+} from 'stores/cluster/constants';
 
 function ClusterDashboardResourcesV5({
   cluster,
@@ -79,7 +82,7 @@ const makeMapStateToProps = () => {
       resources: resources(state, props),
       loadingClusters: selectLoadingFlagByAction(
         state,
-        actionTypes.CLUSTERS_DETAILS_REQUEST
+        CLUSTERS_DETAILS_REQUEST
       ),
       loadingNodePools: selectLoadingFlagByAction(
         state,
@@ -87,7 +90,7 @@ const makeMapStateToProps = () => {
       ),
       loadingStatus: selectLoadingFlagByAction(
         state,
-        actionTypes.CLUSTER_LOAD_STATUS_REQUEST
+        CLUSTER_LOAD_STATUS_REQUEST
       ),
     };
   };

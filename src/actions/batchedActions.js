@@ -1,4 +1,5 @@
-import * as types from 'actions/actionTypes';
+
+
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -29,6 +30,7 @@ import { loadReleases } from 'stores/releases/actions';
 import { getInfo, refreshUserInfo } from 'stores/user/actions';
 
 import * as clusterActions from './clusterActions';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 
 export const batchedLayout = () => async (dispatch) => {
   dispatch(globalLoadStart());
@@ -159,7 +161,7 @@ export const batchedClusterDetailView = (
 ) => async (dispatch) => {
   try {
     dispatch({
-      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+      type: CLUSTER_LOAD_DETAILS_REQUEST,
       id: clusterId,
     });
 

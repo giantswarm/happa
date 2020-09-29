@@ -1,6 +1,4 @@
 import {
-  CLUSTER_DELETE_CONFIRMED,
-  CLUSTER_DELETE_REQUEST,
   ROUTER_LOCATION_CHANGE,
 } from 'actions/actionTypes';
 import { LocationChangeAction } from 'connected-react-router';
@@ -25,6 +23,10 @@ import {
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
 } from 'stores/organization/constants';
 import { OrganizationActions } from 'stores/organization/types';
+import {
+  CLUSTER_DELETE_CONFIRMED,
+  CLUSTER_DELETE_REQUEST,
+} from 'stores/cluster/constants';
 
 const initialState: IModalState = {
   visible: false,

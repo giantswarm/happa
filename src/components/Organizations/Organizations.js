@@ -1,4 +1,3 @@
-import { CLUSTERS_DETAILS_REQUEST } from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -10,6 +9,7 @@ import LoadingOverlay from 'UI/LoadingOverlay';
 
 import Detail from './Detail/Detail';
 import List from './List/List';
+import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
 
 const Organizations = (props) => {
   return (

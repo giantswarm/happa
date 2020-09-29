@@ -4,11 +4,44 @@ import moment from 'moment';
 import { StatusCodes } from 'shared/constants';
 import { computeCapabilities, filterLabels } from 'utils/clusterUtils';
 
-import * as types from './actionTypes';
+import {
+  CLUSTERS_LIST_REQUEST,
+  CLUSTERS_LIST_SUCCESS,
+  CLUSTERS_LIST_ERROR,
+  CLUSTERS_LIST_REFRESH_REQUEST,
+  CLUSTERS_LIST_REFRESH_SUCCESS,
+  CLUSTERS_LIST_REFRESH_ERROR,
+  CLUSTERS_DETAILS_REQUEST,
+  CLUSTERS_DETAILS_FINISHED,
+  CLUSTER_LOAD_DETAILS_REQUEST,
+  CLUSTER_LOAD_DETAILS_SUCCESS,
+  CLUSTER_LOAD_DETAILS_ERROR,
+  CLUSTER_LOAD_STATUS_REQUEST,
+  CLUSTER_LOAD_STATUS_SUCCESS,
+  CLUSTER_LOAD_STATUS_NOT_FOUND,
+  CLUSTER_LOAD_STATUS_ERROR,
+  CLUSTER_CREATE_REQUEST,
+  CLUSTER_CREATE_SUCCESS,
+  V5_CLUSTER_CREATE_SUCCESS,
+  CLUSTER_CREATE_ERROR,
+  CLUSTER_DELETE_REQUEST,
+  CLUSTER_DELETE_CONFIRMED,
+  CLUSTER_DELETE_SUCCESS,
+  CLUSTER_DELETE_ERROR,
+  CLUSTER_REMOVE_FROM_STORE,
+  CLUSTER_PATCH,
+  CLUSTER_PATCH_ERROR,
+  CLUSTER_LOAD_KEY_PAIRS_REQUEST,
+  CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
+  CLUSTER_LOAD_KEY_PAIRS_ERROR,
+  CLUSTER_CREATE_KEY_PAIR_REQUEST,
+  CLUSTER_CREATE_KEY_PAIR_SUCCESS,
+  CLUSTER_CREATE_KEY_PAIR_ERROR
+} from 'stores/cluster/constants';
 
 // Used in ClusterDetailView
 export const clusterDelete = (cluster) => ({
-  type: types.CLUSTER_DELETE_REQUEST,
+  type: CLUSTER_DELETE_REQUEST,
   cluster,
 });
 
@@ -45,7 +78,7 @@ function clustersLoadArrayToObject(clusters, provider, makeCapabilities) {
  */
 export function clustersList({ withLoadingFlags }) {
   return function (dispatch, getState) {
-    if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
+    if (withLoadingFlags) dispatch({ type: CLUSTERS_LIST_REQUEST });
 
     const provider = getState().main.info.general.provider;
     const makeCapabilities = computeCapabilities(getState());
@@ -67,7 +100,7 @@ export function clustersList({ withLoadingFlags }) {
           .map((cluster) => cluster.id);
 
         dispatch({
-          type: types.CLUSTERS_LIST_SUCCESS,
+          type: CLUSTERS_LIST_SUCCESS,
           clusters,
           v5ClusterIds,
           allIds,
@@ -75,7 +108,7 @@ export function clustersList({ withLoadingFlags }) {
       })
       .catch((error) => {
         dispatch({
-          type: types.CLUSTERS_LIST_ERROR,
+          type: CLUSTERS_LIST_ERROR,
           error: error.message,
         });
       });
@@ -87,7 +120,7 @@ export function clustersList({ withLoadingFlags }) {
  */
 export function refreshClustersList() {
   return function (dispatch, getState) {
-    dispatch({ type: types.CLUSTERS_LIST_REFRESH_REQUEST });
+    dispatch({ type: CLUSTERS_LIST_REFRESH_REQUEST });
 
     const provider = getState().main.info.general.provider;
     const clusterStoredIds = Object.keys(getState().entities.clusters.items);
@@ -121,14 +154,14 @@ export function refreshClustersList() {
         // If clusters and v5Clusters are empty, we still want to dispatch this in
         // order to set the loading flag to false.
         dispatch({
-          type: types.CLUSTERS_LIST_REFRESH_SUCCESS,
+          type: CLUSTERS_LIST_REFRESH_SUCCESS,
           clusters,
           v5ClusterIds,
         });
       })
       .catch((error) => {
         dispatch({
-          type: types.CLUSTERS_LIST_REFRESH_ERROR,
+          type: CLUSTERS_LIST_REFRESH_ERROR,
           error: error.message,
         });
       });
@@ -146,7 +179,7 @@ export function clustersDetails({
 }) {
   return async function (dispatch, getState) {
     if (withLoadingFlags) {
-      dispatch({ type: types.CLUSTERS_DETAILS_REQUEST });
+      dispatch({ type: CLUSTERS_DETAILS_REQUEST });
     }
 
     const selectedOrganization = getState().main.selectedOrganization;
@@ -173,7 +206,7 @@ export function clustersDetails({
 
     // We actually don't care if success or error, just want to set loading flag to
     // false when all the promises are resolved/rejected.
-    dispatch({ type: types.CLUSTERS_DETAILS_FINISHED });
+    dispatch({ type: CLUSTERS_DETAILS_FINISHED });
 
     return clusterDetails; // just in case we want to await it
   };
@@ -193,7 +226,7 @@ export function clusterLoadDetails(
 
     if (withLoadingFlags) {
       dispatch({
-        type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+        type: CLUSTER_LOAD_DETAILS_REQUEST,
         id: clusterId,
       });
     }
@@ -245,7 +278,7 @@ export function clusterLoadDetails(
       }
 
       dispatch({
-        type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
+        type: CLUSTER_LOAD_DETAILS_SUCCESS,
         cluster,
         id: clusterId,
       });
@@ -255,7 +288,7 @@ export function clusterLoadDetails(
       if (error.response?.status === StatusCodes.NotFound) {
         // Delete the cluster in the store.
         dispatch({
-          type: types.CLUSTER_REMOVE_FROM_STORE,
+          type: CLUSTER_REMOVE_FROM_STORE,
           clusterId,
           isV5Cluster,
         });
@@ -264,7 +297,7 @@ export function clusterLoadDetails(
       }
 
       dispatch({
-        type: types.CLUSTER_LOAD_DETAILS_ERROR,
+        type: CLUSTER_LOAD_DETAILS_ERROR,
         id: clusterId,
         error,
       });
@@ -292,7 +325,7 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
   return function (dispatch) {
     // Does it  makes sense to leave it here just for let loadingReducer set/unset a flag?
     if (withLoadingFlags)
-      dispatch({ type: types.CLUSTER_LOAD_STATUS_REQUEST, clusterId });
+      dispatch({ type: CLUSTER_LOAD_STATUS_REQUEST, clusterId });
 
     return clustersApi
       .getClusterStatusWithHttpInfo(clusterId)
@@ -300,15 +333,15 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
         return JSON.parse(data.response.text);
       })
       .then((status) => {
-        dispatch({ type: types.CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
+        dispatch({ type: CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
 
         return status; // used in clusterLoadDetails!
       })
       .catch((error) => {
         if (error.status === StatusCodes.NotFound) {
-          dispatch({ type: types.CLUSTER_LOAD_STATUS_NOT_FOUND, clusterId });
+          dispatch({ type: CLUSTER_LOAD_STATUS_NOT_FOUND, clusterId });
         } else {
-          dispatch({ type: types.CLUSTER_LOAD_STATUS_ERROR, error });
+          dispatch({ type: CLUSTER_LOAD_STATUS_ERROR, error });
 
           let errorMessage =
             'Something went wrong while trying to load the cluster status.';
@@ -339,7 +372,7 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
 export function clusterCreate(cluster, isV5Cluster) {
   return async function (dispatch) {
     try {
-      dispatch({ type: types.CLUSTER_CREATE_REQUEST });
+      dispatch({ type: CLUSTER_CREATE_REQUEST });
 
       const data = isV5Cluster
         ? await clustersApi.addClusterV5WithHttpInfo(cluster)
@@ -358,19 +391,19 @@ export function clusterCreate(cluster, isV5Cluster) {
 
       if (isV5Cluster) {
         dispatch({
-          type: types.V5_CLUSTER_CREATE_SUCCESS,
+          type: V5_CLUSTER_CREATE_SUCCESS,
           clusterId,
         });
       } else {
         dispatch({
-          type: types.CLUSTER_CREATE_SUCCESS,
+          type: CLUSTER_CREATE_SUCCESS,
           clusterId,
         });
       }
 
       return { clusterId, owner: cluster.owner };
     } catch (error) {
-      dispatch({ type: types.CLUSTER_CREATE_ERROR, error: error.message });
+      dispatch({ type: CLUSTER_CREATE_ERROR, error: error.message });
 
       new FlashMessage(
         'An error occurred when trying to create the cluster.',
@@ -393,7 +426,7 @@ export function clusterCreate(cluster, isV5Cluster) {
 export function clusterDeleteConfirmed(cluster) {
   return function (dispatch) {
     dispatch({
-      type: types.CLUSTER_DELETE_CONFIRMED,
+      type: CLUSTER_DELETE_CONFIRMED,
       cluster,
     });
 
@@ -401,7 +434,7 @@ export function clusterDeleteConfirmed(cluster) {
       .deleteCluster(cluster.id)
       .then((data) => {
         dispatch({
-          type: types.CLUSTER_DELETE_SUCCESS,
+          type: CLUSTER_DELETE_SUCCESS,
           clusterId: cluster.id,
           timestamp: Date.now(),
         });
@@ -423,7 +456,7 @@ export function clusterDeleteConfirmed(cluster) {
         );
 
         return dispatch({
-          type: types.CLUSTER_DELETE_ERROR,
+          type: CLUSTER_DELETE_ERROR,
           clusterId: cluster.id,
           error,
         });
@@ -442,7 +475,7 @@ export function clusterLoadKeyPairs(clusterId) {
   return function (dispatch) {
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 
-    dispatch({ type: types.CLUSTER_LOAD_KEY_PAIRS_REQUEST });
+    dispatch({ type: CLUSTER_LOAD_KEY_PAIRS_REQUEST });
 
     return keypairsApi
       .getKeyPairs(clusterId)
@@ -459,14 +492,14 @@ export function clusterLoadKeyPairs(clusterId) {
         );
 
         dispatch({
-          type: types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
+          type: CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
           clusterId,
           keyPairs: keyPairsWithDates,
         });
       })
       .catch(() => {
         dispatch({
-          type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
+          type: CLUSTER_LOAD_KEY_PAIRS_ERROR,
           clusterId,
         });
       });
@@ -490,7 +523,7 @@ export function clusterPatch(cluster, payload, reloadCluster = false) {
 
     // Optimistic update.
     dispatch({
-      type: types.CLUSTER_PATCH,
+      type: CLUSTER_PATCH,
       cluster,
       payload,
     });
@@ -513,7 +546,7 @@ export function clusterPatch(cluster, payload, reloadCluster = false) {
     } catch (error) {
       // Undo update to store if the API call fails.
       dispatch({
-        type: types.CLUSTER_PATCH_ERROR,
+        type: CLUSTER_PATCH_ERROR,
         error,
         cluster,
       });
@@ -541,7 +574,7 @@ export function clusterPatch(cluster, payload, reloadCluster = false) {
 export function clusterCreateKeyPair(clusterId, keypair) {
   return function (dispatch) {
     dispatch({
-      type: types.CLUSTER_CREATE_KEY_PAIR_REQUEST,
+      type: CLUSTER_CREATE_KEY_PAIR_REQUEST,
       keypair,
     });
 
@@ -551,7 +584,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
       .addKeyPair(clusterId, keypair)
       .then((pair) => {
         dispatch({
-          type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
+          type: CLUSTER_CREATE_KEY_PAIR_SUCCESS,
           pair,
         });
 
@@ -559,7 +592,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
       })
       .catch((error) => {
         dispatch({
-          type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
+          type: CLUSTER_CREATE_KEY_PAIR_ERROR,
           error,
         });
 

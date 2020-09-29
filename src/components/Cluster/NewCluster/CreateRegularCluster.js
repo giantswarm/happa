@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { CLUSTER_CREATE_REQUEST } from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import PropTypes from 'prop-types';
@@ -20,6 +19,7 @@ import ClusterCreationDuration from './ClusterCreationDuration';
 import KVMWorkerConfiguration from './KVMWorkerConfiguration';
 import ProviderCredentials from './ProviderCredentials';
 import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
+import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 
 const WrapperDiv = styled.div`
   .worker-nodes {
