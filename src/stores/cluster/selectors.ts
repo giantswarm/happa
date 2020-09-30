@@ -1,9 +1,6 @@
 import { compare } from 'lib/semver';
 import { IState } from 'reducers/types';
-import {
-  createDeepEqualSelector,
-  typeWithoutSuffix,
-} from 'selectors/selectorUtils';
+import { createDeepEqualSelector } from 'selectors/selectorUtils';
 import {
   canClusterUpgrade,
   getCpusTotal,
@@ -31,29 +28,6 @@ function selectOrganizationClusterNames(state: IState): string[] {
     .sort((a, b) =>
       (clusters[a].name as string) > (clusters[b].name as string) ? 1 : -1
     );
-}
-
-// FIXME(axbarsan): Move these actions to their correct locations, once those exist.
-export function selectErrorByIdAndAction(
-  state: IState,
-  id: string,
-  actionType: string
-) {
-  return state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null;
-}
-
-export function selectLoadingFlagByIdAndAction(
-  state: IState,
-  id: string,
-  actionType: string
-) {
-  return (
-    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? true
-  );
-}
-
-export function selectLoadingFlagByAction(state: IState, actionType: string) {
-  return state.loadingFlags[typeWithoutSuffix(actionType)] ?? null;
 }
 
 /**

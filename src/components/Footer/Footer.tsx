@@ -12,7 +12,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from 'reducers/types';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import * as metadataActions from 'stores/metadata/actions';
 import { METADATA_UPDATE_EXECUTE_REQUEST } from 'stores/metadata/constants';
 import {

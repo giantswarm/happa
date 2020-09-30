@@ -13,11 +13,9 @@ import { getAllReleases } from 'selectors/releaseSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ErrorBoundary from 'shared/ErrorBoundary';
-import {
-  selectClusterById,
-  selectErrorByIdAndAction,
-} from 'stores/cluster/selectors';
+import { selectClusterById } from 'stores/cluster/selectors';
 import { isClusterCreating } from 'stores/cluster/utils';
+import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
 import { Dot, mq } from 'styles';

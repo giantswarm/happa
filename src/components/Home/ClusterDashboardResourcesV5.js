@@ -5,7 +5,7 @@ import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { makeV5ResourcesSelector } from 'stores/nodepool/selectors';
 import { Dot } from 'styles';

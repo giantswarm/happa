@@ -15,7 +15,7 @@ import {
   updateAppSecret as updateAppSecretAction,
   updateClusterApp as updateAppAction,
 } from 'stores/appcatalog/actions';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

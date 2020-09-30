@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux';
 import Copyable from 'shared/Copyable';
 import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import Button from 'UI/Button';
 import FlashMessage from 'UI/FlashMessage';
 

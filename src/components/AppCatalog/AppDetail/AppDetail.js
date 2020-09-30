@@ -11,13 +11,11 @@ import {
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'stores/appcatalog/constants';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-} from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
