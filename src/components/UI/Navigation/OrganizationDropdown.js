@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
+import Truncated from 'UI/Truncated';
 
 const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   width: unset;
@@ -64,7 +65,7 @@ const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   }
 `;
 
-const TriggerLabel = styled.span`
+const TriggerLabel = styled(Truncated)`
   margin-left: 50px;
 `;
 
@@ -163,11 +164,13 @@ const OrganizationDropdown = ({
               onKeyDown={onKeyDownHandler}
               type='button'
             >
-              <TriggerLabel>
-                {sortedOrganizations.length !== 0
-                  ? selectedOrganization
-                  : 'No Organizations'}
-              </TriggerLabel>
+              {sortedOrganizations.length !== 0 ? (
+                <TriggerLabel tooltipPlacement='bottom'>
+                  {selectedOrganization}
+                </TriggerLabel>
+              ) : (
+                'No Organizations'
+              )}
               <span className='caret' />
             </OrganizationDropdownTrigger>
             {isOpen && (
