@@ -5,7 +5,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { auth0Login } from 'stores/user/actions';
+import { auth0Login } from 'stores/main/actions';
 
 export interface ISSOError {
   status: number;

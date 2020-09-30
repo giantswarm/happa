@@ -1,14 +1,9 @@
 import produce from 'immer';
 import { Providers } from 'shared/constants';
-import { GLOBAL_LOAD_ERROR, GLOBAL_LOAD_SUCCESS } from 'stores/main/constants';
 import { CLUSTER_SELECT } from 'stores/main/constants';
-import { IMainState, MainActions } from 'stores/main/types';
 import {
-  ORGANIZATION_LOAD_SUCCESS,
-  ORGANIZATION_SELECT,
-} from 'stores/organization/constants';
-import { OrganizationActions } from 'stores/organization/types';
-import {
+  GLOBAL_LOAD_ERROR,
+  GLOBAL_LOAD_SUCCESS,
   INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
@@ -16,8 +11,13 @@ import {
   LOGOUT_SUCCESS,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_SUCCESS,
-} from 'stores/user/constants';
-import { UserActions } from 'stores/user/types';
+} from 'stores/main/constants';
+import { IMainState, MainActions } from 'stores/main/types';
+import {
+  ORGANIZATION_LOAD_SUCCESS,
+  ORGANIZATION_SELECT,
+} from 'stores/organization/constants';
+import { OrganizationActions } from 'stores/organization/types';
 import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
@@ -50,10 +50,7 @@ const initialState = (): IMainState => ({
 
 const makeMainReducer = () => {
   return produce(
-    (
-      draft: IMainState,
-      action: MainActions | UserActions | OrganizationActions
-    ) => {
+    (draft: IMainState, action: MainActions | OrganizationActions) => {
       switch (action.type) {
         case REFRESH_USER_INFO_SUCCESS: {
           const newUser = Object.assign({}, draft.loggedInUser, {

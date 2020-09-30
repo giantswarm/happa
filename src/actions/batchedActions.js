@@ -22,6 +22,7 @@ import {
   globalLoadError,
   globalLoadFinish,
   globalLoadStart,
+  refreshUserInfo,
 } from 'stores/main/actions';
 import { getInfo } from 'stores/main/actions';
 import { modalHide } from 'stores/modal/actions';
@@ -36,7 +37,6 @@ import {
   organizationsLoad,
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
-import { refreshUserInfo } from 'stores/user/actions';
 
 export const batchedLayout = () => async (dispatch) => {
   dispatch(globalLoadStart());

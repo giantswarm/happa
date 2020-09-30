@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
-import * as userActions from 'stores/user/actions';
+import * as mainActions from 'stores/main/actions';
 import Button from 'UI/Button';
 
 import PasswordField from './PasswordField';
@@ -466,7 +466,7 @@ SignUp.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,
   };
 }
