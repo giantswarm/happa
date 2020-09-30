@@ -13,7 +13,7 @@ import {
   isClusterCreating,
   isClusterUpdating,
 } from 'stores/cluster/utils';
-import { getUserIsAdmin } from 'stores/user/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 
 export function selectClusterById(
   state: IState,

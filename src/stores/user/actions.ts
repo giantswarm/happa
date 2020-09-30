@@ -10,17 +10,11 @@ import Passage, {
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
 } from 'lib/passageClient';
-import { GenericResponse } from 'model/clients/GenericResponse';
-import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import {
-  INFO_LOAD_ERROR,
-  INFO_LOAD_REQUEST,
-  INFO_LOAD_SUCCESS,
   INVITATION_CREATE_ERROR,
   INVITATION_CREATE_REQUEST,
   INVITATION_CREATE_SUCCESS,
@@ -49,7 +43,6 @@ import {
   USERS_REMOVE_EXPIRATION_SUCCESS,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/user/constants';
-import { selectAuthToken } from 'stores/user/selectors';
 import { UserActions } from 'stores/user/types';
 
 export function loginSuccess(userData: ILoggedInUser): UserActions {
@@ -230,39 +223,6 @@ export function giantswarmLogout(): ThunkAction<
     } catch (err) {
       dispatch(push(AppRoutes.Login));
       dispatch(logoutError(err));
-
-      return Promise.reject(err);
-    }
-  };
-}
-
-export function getInfo(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  UserActions
-> {
-  return async (dispatch, getState) => {
-    dispatch({ type: INFO_LOAD_REQUEST });
-
-    try {
-      const [authToken, authScheme] = await selectAuthToken(dispatch)(
-        getState()
-      );
-      const httpClient = new GiantSwarmClient(authToken, authScheme);
-      const infoRes = await getInstallationInfo(httpClient);
-
-      dispatch({
-        type: INFO_LOAD_SUCCESS,
-        info: infoRes.data,
-      });
-
-      return Promise.resolve();
-    } catch (err) {
-      dispatch({
-        type: INFO_LOAD_ERROR,
-        error: (err as GenericResponse<string>).data,
-      });
 
       return Promise.reject(err);
     }
@@ -458,7 +418,7 @@ export function invitationsLoad(): ThunkAction<
       dispatch({ type: INVITATIONS_LOAD_REQUEST });
 
       const passage = new Passage({ endpoint: window.config.passageEndpoint });
-      const token = getState().main.loggedInUser.auth.token;
+      const token = getState().main.loggedInUser?.auth.token ?? '';
 
       const response = await passage.getInvitations(token);
       const invites = response.reduce(
@@ -511,7 +471,7 @@ export function invitationCreate(invitation: {
       dispatch({ type: INVITATION_CREATE_REQUEST });
 
       const passage = new Passage({ endpoint: window.config.passageEndpoint });
-      const token = getState().main.loggedInUser.auth.token;
+      const token = getState().main.loggedInUser?.auth.token ?? '';
       const response = await passage.createInvitation(token, invitation);
 
       dispatch({

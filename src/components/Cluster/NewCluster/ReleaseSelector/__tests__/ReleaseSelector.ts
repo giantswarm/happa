@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
-jest.unmock('stores/user/selectors');
+jest.unmock('stores/main/selectors');
 
 const mockReleases: IReleases = {
   '1000.0.0': {

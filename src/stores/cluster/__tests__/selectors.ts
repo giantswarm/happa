@@ -27,7 +27,7 @@ function createRelease(version: string, active: boolean): IRelease {
   } as IRelease;
 }
 
-jest.unmock('stores/user/selectors');
+jest.unmock('stores/main/selectors');
 
 describe('cluster::selectors', () => {
   describe('selectTargetRelease', () => {

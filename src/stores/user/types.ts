@@ -1,8 +1,4 @@
-import { IInstallationInfo } from 'model/services/giantSwarm/types';
 import {
-  INFO_LOAD_ERROR,
-  INFO_LOAD_REQUEST,
-  INFO_LOAD_SUCCESS,
   INVITATION_CREATE_ERROR,
   INVITATION_CREATE_REQUEST,
   INVITATION_CREATE_SUCCESS,
@@ -124,20 +120,6 @@ export interface IUserRemoveExpirationErrorAction {
   type: typeof USERS_REMOVE_EXPIRATION_ERROR;
 }
 
-export interface IUserInfoLoadRequestAction {
-  type: typeof INFO_LOAD_REQUEST;
-}
-
-export interface IUserInfoLoadSuccessAction {
-  type: typeof INFO_LOAD_SUCCESS;
-  info: IInstallationInfo;
-}
-
-export interface IUserInfoLoadErrorAction {
-  type: typeof INFO_LOAD_ERROR;
-  error: string;
-}
-
 export interface IUserRequestPasswordRecoveryTokenAction {
   type: typeof REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST;
 }
@@ -194,9 +176,6 @@ export type UserActions =
   | IUserDeleteRequestAction
   | IUserDeleteSuccessAction
   | IUserDeleteErrorAction
-  | IUserInfoLoadRequestAction
-  | IUserInfoLoadSuccessAction
-  | IUserInfoLoadErrorAction
   | IUserRequestPasswordRecoveryTokenAction
   | IUserVerifyPasswordRecoveryTokenAction
   | IUserSetNewPasswordAction

@@ -15,7 +15,7 @@ import * as userActions from 'stores/user/actions';
 import { UserActions } from 'stores/user/types';
 
 interface IStateProps {
-  user?: ILoggedInUser;
+  user?: ILoggedInUser | null;
 }
 
 interface IDispatchProps {

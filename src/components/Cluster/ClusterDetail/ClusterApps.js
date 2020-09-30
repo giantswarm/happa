@@ -13,7 +13,7 @@ import {
   selectErrorByIdAndAction,
 } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
-import { selectCluster } from 'stores/global/actions';
+import { selectCluster } from 'stores/main/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';

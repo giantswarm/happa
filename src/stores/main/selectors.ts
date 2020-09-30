@@ -12,7 +12,7 @@ export interface ISSOError {
 }
 
 export function getUserIsAdmin(state: IState) {
-  return state.main.loggedInUser.isAdmin;
+  return state.main.loggedInUser?.isAdmin ?? false;
 }
 
 /**
@@ -28,7 +28,10 @@ export const selectAuthToken = (
   ): Promise<
     [token: string, scheme: PropertiesOf<typeof AuthorizationTypes>]
   > => {
-    const { auth } = state.main.loggedInUser;
+    const auth = state.main.loggedInUser?.auth ?? null;
+    if (!auth) {
+      return Promise.resolve(['', AuthorizationTypes.GS]);
+    }
     const scheme = auth.scheme;
     let currentToken = auth.token;
 

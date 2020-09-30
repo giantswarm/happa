@@ -432,8 +432,9 @@ CreateRegularCluster.propTypes = {
 function mapStateToProps(state) {
   const provider = state.main.info.general.provider;
   const propsToPush = {
-    minAvailabilityZones: state.main.info.general.availability_zones.default,
-    maxAvailabilityZones: state.main.info.general.availability_zones.max,
+    minAvailabilityZones:
+      state.main.info.general.availability_zones?.default ?? 0,
+    maxAvailabilityZones: state.main.info.general.availability_zones?.max ?? 0,
     clusterCreationStats: state.main.info.stats.cluster_creation_duration,
     provider,
   };

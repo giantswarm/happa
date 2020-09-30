@@ -927,10 +927,10 @@ AddNodePool.defaultProps = {
 
 function mapStateToProps(state) {
   const { availability_zones: AZ } = state.main.info.general;
-  const availabilityZones = AZ.zones;
+  const availabilityZones = AZ?.zones ?? [];
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
-  const maxAZ = Math.min(AZ.max, 4);
+  const maxAZ = Math.min(AZ?.max ?? 0, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
   const provider = state.main.info.general.provider;
