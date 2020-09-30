@@ -1,8 +1,8 @@
 import { compare } from 'lib/semver';
 import { IState } from 'reducers/types';
-import { getMinHAMastersVersion } from 'selectors/featureSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
+import { getMinHAMastersVersion } from 'stores/main/selectors';
 import { validateLabelKey } from 'utils/labelUtils';
 
 /**

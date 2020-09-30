@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { Providers } from 'shared/constants';
 import {
   getAllowedInstanceTypeNames,
   getProvider,
-} from 'selectors/mainInfoSelectors';
-import { Providers } from 'shared/constants';
+} from 'stores/main/selectors';
 
 export function useInstanceTypeSelectionLabels(): {
   singular: string;
