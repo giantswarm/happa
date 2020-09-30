@@ -4,10 +4,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-} from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs, loadAppReadme } from 'stores/appcatalog/actions';
 import {
@@ -15,11 +11,15 @@ import {
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'stores/appcatalog/constants';
+import {
+  selectLoadingFlagByAction,
+  selectLoadingFlagByIdAndAction,
+} from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import InstallAppModal from './InstallAppModal';
 

@@ -3,11 +3,11 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectResourcesV4 } from 'selectors/clusterSelectors';
 import { CSSBreakpoints, Providers } from 'shared/constants';
+import { selectResourcesV4 } from 'stores/cluster/selectors';
+import { isClusterCreating } from 'stores/cluster/utils';
 import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
 import Button from 'UI/Button';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 import CredentialInfoRow from './CredentialInfoRow';
 import NodesRunning from './NodesRunning';

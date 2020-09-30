@@ -4,8 +4,8 @@ import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { selectClusterById } from 'selectors/clusterSelectors';
 import { AppRoutes } from 'shared/constants/routes';
+import { selectClusterById } from 'stores/cluster/selectors';
 
 import GettingStarted from '../../GettingStarted/GettingStarted';
 import ClusterDetailView from './ClusterDetailView';

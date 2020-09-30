@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
-import * as clusterActions from 'actions/clusterActions';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
 import moment from 'moment';
@@ -9,8 +7,10 @@ import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Copyable from 'shared/Copyable';
+import * as clusterActions from 'stores/cluster/actions';
+import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import Button from 'UI/Button';
 import FlashMessage from 'UI/FlashMessage';
 

@@ -1,43 +1,37 @@
 import produce from 'immer';
 
 import { loadReleases } from './actions';
-import { IReleaseActionResponse } from './types';
+import { IReleaseActionResponse, IReleaseState } from './types';
 
-interface IState {
-  error?: Error;
-  isFetching: boolean;
-  items: IReleases;
-}
-
-const initialState: IState = {
-  error: undefined,
+const initialState: IReleaseState = {
+  error: null,
   isFetching: false,
   items: {},
 };
 
 const releasesReducer = produce(
   (
-    draft: IState,
+    draft: IReleaseState,
     action: { type: string; response: IReleaseActionResponse; error?: Error }
   ) => {
     const { types } = loadReleases();
     switch (action.type) {
       case types.request:
         draft.isFetching = true;
-        draft.error = undefined;
+        draft.error = null;
 
         break;
 
       case types.success:
         draft.isFetching = false;
-        draft.error = undefined;
+        draft.error = null;
         draft.items = action.response.releases;
 
         break;
 
       case types.error:
         draft.isFetching = false;
-        draft.error = action.error;
+        draft.error = action.error ?? null;
     }
   },
   initialState

@@ -1,8 +1,11 @@
-import * as actionTypes from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import {
+  CLUSTER_LOAD_STATUS_REQUEST,
+  CLUSTERS_DETAILS_REQUEST,
+} from 'stores/cluster/constants';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { makeV5ResourcesSelector } from 'stores/nodepool/selectors';
 import { Dot } from 'styles';
@@ -79,7 +82,7 @@ const makeMapStateToProps = () => {
       resources: resources(state, props),
       loadingClusters: selectLoadingFlagByAction(
         state,
-        actionTypes.CLUSTERS_DETAILS_REQUEST
+        CLUSTERS_DETAILS_REQUEST
       ),
       loadingNodePools: selectLoadingFlagByAction(
         state,
@@ -87,7 +90,7 @@ const makeMapStateToProps = () => {
       ),
       loadingStatus: selectLoadingFlagByAction(
         state,
-        actionTypes.CLUSTER_LOAD_STATUS_REQUEST
+        CLUSTER_LOAD_STATUS_REQUEST
       ),
     };
   };

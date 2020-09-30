@@ -101,8 +101,7 @@ export function nodePoolsLoad(opts?: {
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
 
     const selectedOrganization = getState().main.selectedOrganization;
-    const allClusters: Record<string, V4.ICluster | V5.ICluster> = getState()
-      .entities.clusters.items;
+    const allClusters = getState().entities.clusters.items;
     const v5ClusterIDs: string[] =
       getState().entities.clusters.v5Clusters || [];
 

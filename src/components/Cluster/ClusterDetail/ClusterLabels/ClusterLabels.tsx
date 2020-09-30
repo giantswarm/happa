@@ -3,11 +3,11 @@ import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import {
   getClusterLabelsError,
   getClusterLabelsLoading,
-} from 'selectors/clusterLabelSelectors';
-import { updateClusterLabels } from 'stores/clusterlabels/actions';
+} from 'stores/clusterlabels/selectors';
 import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
 
 import DeleteLabelButton from './DeleteLabelButton';

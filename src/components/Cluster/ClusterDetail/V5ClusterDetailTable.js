@@ -1,6 +1,5 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import * as clusterActions from 'actions/clusterActions';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import produce from 'immer';
@@ -10,9 +9,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
-import { selectLoadingFlagByIdAndAction } from 'selectors/clusterSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
+import * as clusterActions from 'stores/cluster/actions';
+import { selectLoadingFlagByIdAndAction } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import {
@@ -24,7 +25,6 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AddNodePool from './AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';

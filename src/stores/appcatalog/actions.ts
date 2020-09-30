@@ -59,8 +59,8 @@ import {
   IAppCatalogUpdateClusterAppActionResponse,
   IInstallIngressActionPayload,
 } from 'stores/appcatalog/types';
+import { v4orV5 } from 'stores/cluster/utils';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
-import { v4orV5 } from 'utils/clusterUtils';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
