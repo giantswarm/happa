@@ -2,11 +2,11 @@ import produce from 'immer';
 import {
   ENTITYERROR_SUCCESS_SUFFIX,
   ENTITYERROR_SUFFIX,
-} from 'stores/entityError/constants';
+} from 'stores/entityerror/constants';
 import {
   EntityErrorActions,
   IEntityErrorState,
-} from 'stores/entityError/types';
+} from 'stores/entityerror/types';
 
 const errorActionTypeRegexp = new RegExp(
   `(.*)_(${ENTITYERROR_SUFFIX}|${ENTITYERROR_SUCCESS_SUFFIX})`

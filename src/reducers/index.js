@@ -5,7 +5,8 @@ import catalogs from 'stores/appcatalog/reducer';
 import clusters from 'stores/cluster/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
-import entityError from 'stores/entityError/reducer';
+import entityError from 'stores/entityerror/reducer';
+import entityLoading from 'stores/entityloading/reducer';
 import error from 'stores/error/reducer';
 import metadata from 'stores/metadata/reducer';
 import modal from 'stores/modal/reducer';
@@ -14,7 +15,6 @@ import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
 import users from 'stores/user/reducer';
 
-import loadingFlagsByEntity from './entityLoadingReducer';
 import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 
@@ -38,7 +38,7 @@ const rootReducer = (history) =>
     entities,
     modal,
     loadingFlags,
-    loadingFlagsByEntity,
+    loadingFlagsByEntity: entityLoading,
     errors: error,
     errorsByEntity: entityError,
   });
