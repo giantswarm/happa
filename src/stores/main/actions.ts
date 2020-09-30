@@ -17,6 +17,9 @@ import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import {
   CLUSTER_SELECT,
+  GLOBAL_LOAD_ERROR,
+  GLOBAL_LOAD_REQUEST,
+  GLOBAL_LOAD_SUCCESS,
   INFO_LOAD_ERROR,
   INFO_LOAD_REQUEST,
   INFO_LOAD_SUCCESS,
@@ -29,11 +32,6 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
-} from 'stores/main/constants';
-import {
-  GLOBAL_LOAD_ERROR,
-  GLOBAL_LOAD_REQUEST,
-  GLOBAL_LOAD_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
