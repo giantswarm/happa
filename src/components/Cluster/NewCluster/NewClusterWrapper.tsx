@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import { hasAppropriateLength } from 'lib/helpers';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import RoutePath from 'lib/routePath';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -12,7 +13,6 @@ import {
   getFirstNodePoolsRelease,
   getProvider,
 } from 'selectors/mainInfoSelectors';
-import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Headline from 'UI/ClusterCreation/Headline';
@@ -68,7 +68,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
 
     if (
       firstNodePoolsRelease !== '' &&
-      cmp(selectedRelease, firstNodePoolsRelease) >= 0
+      compare(selectedRelease, firstNodePoolsRelease) >= 0
     ) {
       return CreateNodePoolsCluster;
     }
