@@ -396,7 +396,7 @@ export function clusterDeleteConfirmed(
       dispatch({
         type: CLUSTER_DELETE_SUCCESS,
         clusterId: cluster.id,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
       });
 
       new FlashMessage(

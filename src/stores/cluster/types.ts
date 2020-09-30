@@ -159,7 +159,7 @@ export interface IClusterDeleteConfirmedRequestAction {
 export interface IClusterDeleteSuccessAction {
   type: typeof CLUSTER_DELETE_SUCCESS;
   clusterId: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface IClusterDeleteErrorAction {

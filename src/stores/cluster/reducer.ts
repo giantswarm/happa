@@ -118,7 +118,7 @@ const clusterReducer = produce(
       case CLUSTER_DELETE_SUCCESS: {
         const cluster = draft.items[action.clusterId];
         if (cluster) {
-          cluster.delete_date = String(action.timestamp);
+          cluster.delete_date = action.timestamp;
           draft.lastUpdated = Date.now();
         }
 
