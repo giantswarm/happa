@@ -8,6 +8,7 @@ import cpAuth from 'stores/cpauth/reducer';
 import entityError from 'stores/entityerror/reducer';
 import entityLoading from 'stores/entityloading/reducer';
 import error from 'stores/error/reducer';
+import loading from 'stores/loading/reducer';
 import metadata from 'stores/metadata/reducer';
 import modal from 'stores/modal/reducer';
 import nodePools from 'stores/nodepool/reducer';
@@ -15,7 +16,6 @@ import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
 import users from 'stores/user/reducer';
 
-import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 
 const entities = combineReducers({
@@ -37,7 +37,7 @@ const rootReducer = (history) =>
     metadata,
     entities,
     modal,
-    loadingFlags,
+    loadingFlags: loading,
     loadingFlagsByEntity: entityLoading,
     errors: error,
     errorsByEntity: entityError,
