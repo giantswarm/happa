@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
-import cmp from 'semver-compare';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import Section from 'UI/ClusterCreation/Section';
 import NumberPicker from 'UI/NumberPicker';
@@ -32,7 +32,7 @@ const V4AvailabilityZonesSelector = ({
   let isAvailable = true;
 
   if (requiredReleaseVersion && currentReleaseVersion) {
-    isAvailable = cmp(currentReleaseVersion, requiredReleaseVersion) >= 0;
+    isAvailable = compare(currentReleaseVersion, requiredReleaseVersion) >= 0;
   }
 
   return (

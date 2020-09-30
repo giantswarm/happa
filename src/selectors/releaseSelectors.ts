@@ -1,5 +1,5 @@
+import { compare } from 'lib/semver';
 import { IState } from 'reducers/types';
-import cmp from 'semver-compare';
 
 import { createDeepEqualSelector } from './selectorUtils';
 
@@ -34,5 +34,5 @@ export const getReleases = createDeepEqualSelector(
 
 export const getSortedReleaseVersions = createDeepEqualSelector(
   [getReleases],
-  (releases) => Object.keys(releases).sort(cmp).reverse()
+  (releases) => Object.keys(releases).sort(compare).reverse()
 );

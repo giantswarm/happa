@@ -1,9 +1,9 @@
+import { compare } from 'lib/semver';
 import { IState } from 'reducers/types';
 import {
   createDeepEqualSelector,
   typeWithoutSuffix,
 } from 'selectors/selectorUtils';
-import cmp from 'semver-compare';
 import {
   canClusterUpgrade,
   getCpusTotal,
@@ -100,7 +100,7 @@ export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
   if (!releases[clusterReleaseVersion]) {
     releases[clusterReleaseVersion] = {} as IRelease;
   }
-  const availableVersions = Object.keys(releases).sort(cmp);
+  const availableVersions = Object.keys(releases).sort(compare);
 
   let nextVersion = null;
   let currVersionFound = false;

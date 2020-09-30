@@ -18,7 +18,7 @@ export const List = styled.ul`
   list-style-type: none;
   margin: 2px 0 0;
   padding: 5px 0;
-  width: 180px;
+  width: max-content;
   z-index: 1;
   background-color: ${({ theme }) => theme.colors.dropdownBackground};
   border: none;

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/appcatalog/actions';
@@ -46,7 +46,7 @@ const appMetas = {
       category: 'essentials',
     };
 
-    if (cmp(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
+    if (compare(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
       component.logoUrl = '/images/app_icons/flatcar_linux@2x.png';
     }
 
