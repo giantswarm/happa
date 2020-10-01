@@ -328,8 +328,12 @@ class ClusterApps extends React.Component {
 
     const { hasOptionalIngress } = this.props;
     const filteredApps = apps.filter((app) => {
-      const isManagedByClusterOperator =
-        app.metadata.labels['giantswarm.io/managed-by'] === 'cluster-operator';
+      let isManagedByClusterOperator = false;
+      if (app.metadata.labels) {
+        isManagedByClusterOperator =
+          app.metadata.labels['giantswarm.io/managed-by'] ===
+          'cluster-operator';
+      }
 
       switch (true) {
         case hasOptionalIngress &&
