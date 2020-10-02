@@ -2,16 +2,17 @@ import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
 import { getUserIsAdmin } from 'stores/main/selectors';
+import { RELEASES_LOAD } from 'stores/releases/constants';
 
 import { createAsynchronousAction } from '../asynchronousAction';
-import { IReleaseActionResponse } from './types';
+import { IReleaseLoadActionResponse } from './types';
 
 export const loadReleases = createAsynchronousAction<
   void,
   IState,
-  IReleaseActionResponse
+  IReleaseLoadActionResponse
 >({
-  actionTypePrefix: 'RELEASES_LOAD',
+  actionTypePrefix: RELEASES_LOAD,
   perform: async (state) => {
     const releases: IReleases = {};
 
