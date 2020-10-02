@@ -115,6 +115,11 @@ const appMetas = {
     logoUrl: '/images/app_icons/external_dns@2x.png',
     category: 'essentials',
   },
+  'cert-manager': {
+    name: 'cert-manager',
+    logoUrl: '/images/app_icons/cert_manager@2x.png',
+    category: 'essentials',
+  },
 };
 
 const OptionalIngressNotice = styled.div``;
@@ -321,8 +326,12 @@ class ClusterApps extends React.Component {
 
     const { hasOptionalIngress } = this.props;
     const filteredApps = apps.filter((app) => {
-      const isManagedByClusterOperator =
-        app.metadata.labels['giantswarm.io/managed-by'] === 'cluster-operator';
+      let isManagedByClusterOperator = false;
+      if (app.metadata.labels) {
+        isManagedByClusterOperator =
+          app.metadata.labels['giantswarm.io/managed-by'] ===
+          'cluster-operator';
+      }
 
       switch (true) {
         case hasOptionalIngress &&
