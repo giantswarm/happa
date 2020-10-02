@@ -5,7 +5,6 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import CPClient from 'model/clients/CPClient';
 import { getAppCatalogs } from 'model/services/controlplane/appcatalogs/appcatalogs';
-import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
 import { Constants, StatusCodes } from 'shared/constants';
 import FeatureFlags from 'shared/FeatureFlags';
@@ -61,6 +60,7 @@ import {
 } from 'stores/appcatalog/types';
 import { v4orV5 } from 'stores/cluster/utils';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
+import { IState } from 'stores/state';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 

@@ -1,8 +1,8 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { IState } from 'reducers/types';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import { RELEASES_LOAD } from 'stores/releases/constants';
+import { IState } from 'stores/state';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 import { IReleaseLoadActionResponse } from './types';

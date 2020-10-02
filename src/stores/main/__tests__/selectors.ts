@@ -1,7 +1,7 @@
 import Auth from 'lib/auth0';
 import * as helpers from 'lib/helpers';
-import { IState } from 'reducers/types';
 import { selectAuthToken } from 'stores/main/selectors';
+import { IState } from 'stores/state';
 
 // Bypass the user selectors mock.
 jest.unmock('stores/main/selectors');

@@ -1,6 +1,5 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { IState } from 'reducers/types';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
 import { INodePool } from 'shared/types';
@@ -28,6 +27,7 @@ import {
   INodePoolPatchActionPayload,
   NodePoolActions,
 } from 'stores/nodepool/types';
+import { IState } from 'stores/state';
 
 export function clusterNodePoolsLoad(
   clusterID: string,

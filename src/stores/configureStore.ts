@@ -1,7 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';
-import { IState } from 'reducers/types';
 import {
   applyMiddleware,
   compose,
@@ -13,6 +12,7 @@ import thunk from 'redux-thunk';
 import FeatureFlags from 'shared/FeatureFlags';
 import { cpAuthMiddleware } from 'stores/cpauth/middleware';
 import rootReducer from 'stores/rootReducer';
+import { IState } from 'stores/state';
 
 import { callAPIMiddleware } from './callAPIMiddleware';
 

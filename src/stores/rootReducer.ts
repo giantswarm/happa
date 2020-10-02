@@ -1,6 +1,5 @@
 import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
-import { IState } from 'reducers/types';
 import { combineReducers, ReducersMapObject } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
@@ -17,6 +16,7 @@ import modal from 'stores/modal/reducer';
 import nodePools from 'stores/nodepool/reducer';
 import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
+import { IState } from 'stores/state';
 import users from 'stores/user/reducer';
 
 const entityReducers = {

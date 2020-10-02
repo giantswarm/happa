@@ -1,7 +1,6 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
-import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
 import { Providers, StatusCodes } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
@@ -44,6 +43,7 @@ import {
   IClusterCreateActionResponse,
 } from 'stores/cluster/types';
 import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
+import { IState } from 'stores/state';
 
 export function clusterDelete(cluster: Cluster): ClusterActions {
   return {

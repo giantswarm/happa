@@ -11,7 +11,6 @@ import Passage, {
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
-import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -38,6 +37,7 @@ import {
 } from 'stores/main/constants';
 import { selectAuthToken } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
+import { IState } from 'stores/state';
 
 export function selectCluster(clusterID: string): MainActions {
   return {

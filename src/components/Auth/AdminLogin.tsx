@@ -6,13 +6,13 @@ import { isJwtExpired } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import { MainActions } from 'stores/main/types';
+import { IState } from 'stores/state';
 
 interface IStateProps {
   user?: ILoggedInUser | null;

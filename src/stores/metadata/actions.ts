@@ -1,6 +1,5 @@
 import { SelfClient } from 'model/clients/SelfClient';
 import { getConfiguration } from 'model/services/metadata/configuration';
-import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { Constants } from 'shared/constants';
@@ -19,6 +18,7 @@ import {
   getMetadataUpdateTimer,
 } from 'stores/metadata/selectors';
 import { MetadataAction } from 'stores/metadata/types';
+import { IState } from 'stores/state';
 
 export const setInitialVersion = createAsynchronousAction<
   undefined,

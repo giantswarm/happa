@@ -5,13 +5,13 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
-import { IState } from 'reducers/types';
 import { selectCanClusterUpgrade } from 'stores/cluster/selectors';
 import {
   isClusterCreating,
   isClusterDeleting,
   isClusterUpdating,
 } from 'stores/cluster/utils';
+import { IState } from 'stores/state';
 import { ITheme } from 'styles';
 
 const Wrapper = styled.div<{

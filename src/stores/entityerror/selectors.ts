@@ -1,5 +1,5 @@
-import { IState } from 'reducers/types';
 import { typeWithoutSuffix } from 'selectors/selectorUtils';
+import { IState } from 'stores/state';
 
 export function selectErrorByIdAndAction(
   state: IState,

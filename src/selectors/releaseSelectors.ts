@@ -1,5 +1,5 @@
 import { compare } from 'lib/semver';
-import { IState } from 'reducers/types';
+import { IState } from 'stores/state';
 
 import { createDeepEqualSelector } from './selectorUtils';
 

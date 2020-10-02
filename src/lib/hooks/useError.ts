@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { IState } from 'reducers/types';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
+import { IState } from 'stores/state';
 
 /**
  * Select an error message by a given type.

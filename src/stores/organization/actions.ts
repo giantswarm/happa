@@ -1,6 +1,5 @@
 import GiantSwarm, { V4Organization } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -37,6 +36,7 @@ import {
   ORGANIZATION_SELECT,
 } from 'stores/organization/constants';
 import { OrganizationActions } from 'stores/organization/types';
+import { IState } from 'stores/state';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import { determineSelectedOrganization } from 'utils/organizationUtils';
 

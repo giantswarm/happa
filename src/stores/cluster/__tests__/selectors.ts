@@ -1,5 +1,5 @@
-import { IState } from 'reducers/types';
 import { selectTargetRelease } from 'stores/cluster/selectors';
+import { IState } from 'stores/state';
 import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
 
 function createInitialState(
