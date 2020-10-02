@@ -8,11 +8,9 @@ import { connect } from 'react-redux';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/appcatalog/actions';
-import {
-  selectClusterById,
-  selectErrorByIdAndAction,
-} from 'stores/cluster/selectors';
+import { selectClusterById } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
@@ -115,6 +113,11 @@ const appMetas = {
   'external-dns': {
     name: 'external-dns',
     logoUrl: '/images/app_icons/external_dns@2x.png',
+    category: 'essentials',
+  },
+  'cert-manager': {
+    name: 'cert-manager',
+    logoUrl: '/images/app_icons/cert_manager@2x.png',
     category: 'essentials',
   },
 };
@@ -323,8 +326,12 @@ class ClusterApps extends React.Component {
 
     const { hasOptionalIngress } = this.props;
     const filteredApps = apps.filter((app) => {
-      const isManagedByClusterOperator =
-        app.metadata.labels['giantswarm.io/managed-by'] === 'cluster-operator';
+      let isManagedByClusterOperator = false;
+      if (app.metadata.labels) {
+        isManagedByClusterOperator =
+          app.metadata.labels['giantswarm.io/managed-by'] ===
+          'cluster-operator';
+      }
 
       switch (true) {
         case hasOptionalIngress &&

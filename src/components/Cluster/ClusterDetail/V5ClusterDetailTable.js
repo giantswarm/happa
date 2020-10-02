@@ -12,8 +12,8 @@ import { TransitionGroup } from 'react-transition-group';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
 import * as clusterActions from 'stores/cluster/actions';
-import { selectLoadingFlagByIdAndAction } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import {

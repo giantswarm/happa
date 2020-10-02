@@ -5,10 +5,8 @@ import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
-import {
-  selectLoadingFlagByAction,
-  selectResourcesV4,
-} from 'stores/cluster/selectors';
+import { selectResourcesV4 } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 

@@ -2,7 +2,10 @@ import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { IClusterState } from 'stores/cluster/types';
 import { IClusterLabelsState } from 'stores/clusterlabels/types';
 import { ICPAuthState } from 'stores/cpauth/types';
+import { IEntityErrorState } from 'stores/entityerror/types';
+import { IEntityLoadingState } from 'stores/entityloading/types';
 import { IErrorState } from 'stores/error/types';
+import { ILoadingState } from 'stores/loading/types';
 import { IMainState } from 'stores/main/types';
 import { IMetadataState } from 'stores/metadata/types';
 import { IModalState } from 'stores/modal/types';
@@ -17,7 +20,10 @@ export interface IState {
   [key: string]: any;
 
   main: IMainState;
+  loadingFlags: ILoadingState;
+  loadingFlagsByEntity: IEntityLoadingState;
   errors: IErrorState;
+  errorsByEntity: IEntityErrorState;
   metadata: IMetadataState;
   modal: IModalState;
   entities: {

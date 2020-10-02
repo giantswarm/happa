@@ -1,0 +1,2 @@
+export const ENTITYERROR_SUFFIX = 'ERROR';
+export const ENTITYERROR_SUCCESS_SUFFIX = 'SUCCESS';

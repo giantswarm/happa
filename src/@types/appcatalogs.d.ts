@@ -1,6 +1,6 @@
 interface IAppCatalogMetaData {
   name: string;
-  labels: Record<string, string>;
+  labels: Record<string, string> | null;
 }
 
 interface IAppCatalogSpec {

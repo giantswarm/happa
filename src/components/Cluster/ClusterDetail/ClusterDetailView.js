@@ -21,16 +21,14 @@ import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-  selectTargetRelease,
-} from 'stores/cluster/selectors';
+import { selectTargetRelease } from 'stores/cluster/selectors';
 import {
   getNumberOfNodes,
   isClusterCreating,
   isClusterUpdating,
 } from 'stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';

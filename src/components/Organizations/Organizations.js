@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import Detail from './Detail/Detail';

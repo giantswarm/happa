@@ -16,8 +16,8 @@ import {
   selectIngressAppToInstall,
 } from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
