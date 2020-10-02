@@ -1,8 +1,4 @@
 import styled from '@emotion/styled';
-import {
-  batchedClusterDetailView,
-  batchedRefreshClusterDetailView,
-} from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -18,6 +14,10 @@ import { bindActionCreators } from 'redux';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import {
+  batchedClusterDetailView,
+  batchedRefreshClusterDetailView,
+} from 'stores/batchActions';
 import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 import { selectTargetRelease } from 'stores/cluster/selectors';

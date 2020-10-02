@@ -32,7 +32,7 @@ import { IState } from 'stores/state';
 export function clusterNodePoolsLoad(
   clusterID: string,
   opts?: { withLoadingFlags?: boolean }
-): ThunkAction<void, IState, void, NodePoolActions> {
+): ThunkAction<Promise<void>, IState, void, NodePoolActions> {
   return async (dispatch) => {
     try {
       if (opts?.withLoadingFlags) {
@@ -95,7 +95,7 @@ export function clusterNodePoolsLoad(
 export function nodePoolsLoad(opts?: {
   filterBySelectedOrganization?: boolean;
   withLoadingFlags?: boolean;
-}): ThunkAction<void, IState, void, NodePoolActions> {
+}): ThunkAction<Promise<void>, IState, void, NodePoolActions> {
   return async (dispatch, getState) => {
     if (opts?.withLoadingFlags)
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
@@ -283,7 +283,7 @@ export function nodePoolsCreate(
   clusterID: string,
   nodePools: INodePool[],
   opts?: { withFlashMessages?: boolean }
-): ThunkAction<void, IState, void, NodePoolActions> {
+): ThunkAction<Promise<void>, IState, void, NodePoolActions> {
   return async (dispatch) => {
     dispatch({ type: NODEPOOL_MULTIPLE_CREATE_REQUEST });
 

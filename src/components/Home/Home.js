@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { batchedRefreshClusters } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
@@ -11,6 +10,7 @@ import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { batchedRefreshClusters } from 'stores/batchActions';
 import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 import { selectClustersList } from 'stores/cluster/selectors';
 import { selectErrorByAction } from 'stores/error/selectors';

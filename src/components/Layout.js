@@ -1,7 +1,3 @@
-import {
-  batchedLayout,
-  batchedOrganizationSelect,
-} from 'actions/batchedActions';
 import CPLoginPage from 'Auth/CP/CPLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
@@ -20,6 +16,7 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
+import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
