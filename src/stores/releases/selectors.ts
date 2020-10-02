@@ -1,23 +1,22 @@
 import { compare } from 'lib/semver';
+import { createDeepEqualSelector } from 'selectors/selectorUtils';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 
-import { createDeepEqualSelector } from './selectorUtils';
+export function getReleasesIsFetching(state: IState): boolean {
+  return state.entities.releases.isFetching;
+}
 
-export const getReleasesIsFetching = (state: IState): boolean =>
-  state.entities.releases.isFetching;
+export function getAllReleases(state: IState): IReleases {
+  return state.entities.releases.items;
+}
 
-export const getAllReleases = (state: IState): IReleases =>
-  state.entities.releases.items;
-
-export const getReleasesError = (state: IState): Error | null =>
-  state.entities.releases.error;
+export function getReleasesError(state: IState): Error | null {
+  return state.entities.releases.error;
+}
 
 export const getReleases = createDeepEqualSelector(
-  // unsure why the `isAdmin` function cannot be `getUserIsAdmin` from user selectors
-  [
-    (state: IState) => state.main.loggedInUser?.isAdmin ?? false,
-    getAllReleases,
-  ],
+  [getUserIsAdmin, getAllReleases],
   (isAdmin, releases) => {
     if (isAdmin) {
       return releases;
