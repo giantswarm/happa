@@ -27,7 +27,7 @@ export interface IState {
   metadata: IMetadataState;
   modal: IModalState;
   entities: {
-    cpAuth: ICPAuthState;
+    cpAuth?: ICPAuthState;
     catalogs: IAppCatalogsState;
     organizations: IOrganizationState;
     nodePools: INodePoolState;

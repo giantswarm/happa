@@ -19,7 +19,7 @@ import releases from 'stores/releases/reducer';
 import { IState } from 'stores/state';
 import users from 'stores/user/reducer';
 
-const entityReducers = {
+const entityReducers: ReducersMapObject<IState['entities']> = {
   catalogs,
   clusterLabels,
   clusters,
@@ -27,7 +27,7 @@ const entityReducers = {
   organizations,
   releases,
   users,
-} as ReducersMapObject<IState['entities']>;
+};
 if (FeatureFlags.FEATURE_CP_ACCESS) {
   entityReducers.cpAuth = cpAuth;
 }
