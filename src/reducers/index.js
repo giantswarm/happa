@@ -5,7 +5,10 @@ import catalogs from 'stores/appcatalog/reducer';
 import clusters from 'stores/cluster/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
 import cpAuth from 'stores/cpauth/reducer';
-import errorReducer from 'stores/error/reducer';
+import entityError from 'stores/entityerror/reducer';
+import entityLoading from 'stores/entityloading/reducer';
+import error from 'stores/error/reducer';
+import loading from 'stores/loading/reducer';
 import metadata from 'stores/metadata/reducer';
 import modal from 'stores/modal/reducer';
 import nodePools from 'stores/nodepool/reducer';
@@ -13,9 +16,6 @@ import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
 import users from 'stores/user/reducer';
 
-import errorsByEntity from './entityErrorReducer';
-import loadingFlagsByEntity from './entityLoadingReducer';
-import loadingFlags from './loadingReducer';
 import makeMainReducer from './mainReducer';
 
 const entities = combineReducers({
@@ -37,10 +37,10 @@ const rootReducer = (history) =>
     metadata,
     entities,
     modal,
-    loadingFlags,
-    loadingFlagsByEntity,
-    errors: errorReducer,
-    errorsByEntity,
+    loadingFlags: loading,
+    loadingFlagsByEntity: entityLoading,
+    errors: error,
+    errorsByEntity: entityError,
   });
 
 export default rootReducer;
