@@ -1,4 +1,3 @@
-import { IInstallationInfo } from 'model/services/giantSwarm/types';
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { IClusterState } from 'stores/cluster/types';
 import { IClusterLabelsState } from 'stores/clusterlabels/types';
@@ -7,6 +6,7 @@ import { IEntityErrorState } from 'stores/entityerror/types';
 import { IEntityLoadingState } from 'stores/entityloading/types';
 import { IErrorState } from 'stores/error/types';
 import { ILoadingState } from 'stores/loading/types';
+import { IMainState } from 'stores/main/types';
 import { IMetadataState } from 'stores/metadata/types';
 import { IModalState } from 'stores/modal/types';
 import { INodePoolState } from 'stores/nodepool/types';
@@ -19,15 +19,7 @@ export interface IState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 
-  main: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
-    loggedInUser: ILoggedInUser;
-    info: IInstallationInfo;
-    selectedOrganization: string | null;
-    firstLoadComplete: boolean;
-    selectedClusterID?: string;
-  };
+  main: IMainState;
   loadingFlags: ILoadingState;
   loadingFlagsByEntity: IEntityLoadingState;
   errors: IErrorState;

@@ -8,7 +8,7 @@ import {
   getReleasesIsFetching,
   getSortedReleaseVersions,
 } from 'selectors/releaseSelectors';
-import { getUserIsAdmin } from 'stores/user/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import {
   ListToggler,
   SelectedDescription,

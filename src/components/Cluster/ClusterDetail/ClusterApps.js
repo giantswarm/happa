@@ -11,7 +11,7 @@ import { loadClusterApps } from 'stores/appcatalog/actions';
 import { selectClusterById } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
-import { selectCluster } from 'stores/global/actions';
+import { selectCluster } from 'stores/main/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';

@@ -29,10 +29,10 @@ import {
 } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
-import { getUserIsAdmin } from 'stores/user/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';

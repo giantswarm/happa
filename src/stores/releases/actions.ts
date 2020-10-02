@@ -1,6 +1,7 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IState } from 'reducers/types';
+import { getUserIsAdmin } from 'stores/main/selectors';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 import { IReleaseActionResponse } from './types';
@@ -33,7 +34,7 @@ export const loadReleases = createAsynchronousAction<
       }
     }
 
-    const userIsAdmin = state.main.loggedInUser.isAdmin;
+    const userIsAdmin = getUserIsAdmin(state);
 
     if (Object.keys(releases).length === 0 && !userIsAdmin) {
       new FlashMessage(

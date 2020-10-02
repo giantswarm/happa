@@ -11,15 +11,15 @@ import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
-import * as userActions from 'stores/user/actions';
-import { UserActions } from 'stores/user/types';
+import * as mainActions from 'stores/main/actions';
+import { MainActions } from 'stores/main/types';
 
 interface IStateProps {
-  user?: ILoggedInUser;
+  user?: ILoggedInUser | null;
 }
 
 interface IDispatchProps {
-  dispatch: ThunkDispatch<IState, void, UserActions | CallHistoryMethodAction>;
+  dispatch: ThunkDispatch<IState, void, MainActions | CallHistoryMethodAction>;
 }
 
 interface IAdminLoginProps extends IStateProps, IDispatchProps {}
@@ -36,7 +36,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
               // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
               const result = await auth.renewToken();
               // Update state with new token.
-              await dispatch(userActions.auth0Login(result));
+              await dispatch(mainActions.auth0Login(result));
 
               // Redirect to dashboard.
               dispatch(push(AppRoutes.Home));

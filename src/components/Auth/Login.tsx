@@ -11,7 +11,7 @@ import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
-import * as userActions from 'stores/user/actions';
+import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 
@@ -207,9 +207,9 @@ function mapStateToProps(state: Record<string, any>): IStateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   return {
-    // Skipping check as we don't have a valid type for userActions yet
+    // Skipping check as we don't have a valid type for mainActions yet
     // @ts-ignore
-    actions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,
   };
 }

@@ -22,7 +22,9 @@ import {
   globalLoadError,
   globalLoadFinish,
   globalLoadStart,
-} from 'stores/global/actions';
+  refreshUserInfo,
+} from 'stores/main/actions';
+import { getInfo } from 'stores/main/actions';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -35,7 +37,6 @@ import {
   organizationsLoad,
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
-import { getInfo, refreshUserInfo } from 'stores/user/actions';
 
 export const batchedLayout = () => async (dispatch) => {
   dispatch(globalLoadStart());

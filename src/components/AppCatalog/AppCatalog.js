@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { catalogLoadIndex } from 'stores/appcatalog/actions';
+import { getUserIsAdmin } from 'stores/main/selectors';
 
 import Detail from './AppDetail/AppDetail';
 import AppList from './AppList/AppList';
@@ -58,7 +59,7 @@ AppCatalog.propTypes = {
 function mapStateToProps(state) {
   return {
     catalogs: state.entities.catalogs,
-    isAdmin: state.main.loggedInUser.isAdmin,
+    isAdmin: getUserIsAdmin(state),
   };
 }
 

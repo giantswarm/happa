@@ -14,7 +14,10 @@ export const getReleasesError = (state: IState): Error | null =>
 
 export const getReleases = createDeepEqualSelector(
   // unsure why the `isAdmin` function cannot be `getUserIsAdmin` from user selectors
-  [(state: IState) => state.main.loggedInUser.isAdmin, getAllReleases],
+  [
+    (state: IState) => state.main.loggedInUser?.isAdmin ?? false,
+    getAllReleases,
+  ],
   (isAdmin, releases) => {
     if (isAdmin) {
       return releases;

@@ -5,7 +5,7 @@ import { IState } from 'reducers/types';
 import { AnyAction, Store } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
-import { auth0Login } from 'stores/user/actions';
+import { auth0Login } from 'stores/main/actions';
 
 /**
  * This class patches the client's callApi function to check

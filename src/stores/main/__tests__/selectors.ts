@@ -1,10 +1,10 @@
 import Auth from 'lib/auth0';
 import * as helpers from 'lib/helpers';
 import { IState } from 'reducers/types';
-import { selectAuthToken } from 'stores/user/selectors';
+import { selectAuthToken } from 'stores/main/selectors';
 
 // Bypass the user selectors mock.
-jest.unmock('stores/user/selectors');
+jest.unmock('stores/main/selectors');
 
 // Mock dispatch.
 const dispatchMock = jest.fn();
@@ -24,7 +24,7 @@ jest.mock('lib/helpers');
 // eslint-disable-next-line no-import-assign
 helpers.isJwtExpired = jest.fn();
 
-describe('user::selectors', () => {
+describe('main::selectors', () => {
   describe('selectAuthToken', () => {
     it('returns the correct auth token if the current one is not expired', async () => {
       (helpers.isJwtExpired as jest.Mock).mockReturnValue(false);

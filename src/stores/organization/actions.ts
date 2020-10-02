@@ -4,6 +4,7 @@ import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import { ModalActions } from 'stores/modal/types';
 import {
@@ -242,9 +243,10 @@ export function organizationCreateConfirmed(
        * don't actually have any user accounts in userd. So for admins,
        * we leave the members array empty.
        */
+      const state = getState();
       let members: IOrganizationMember[] = [];
-      if (!getState().main.loggedInUser.isAdmin) {
-        members = [{ email: getState().main.loggedInUser.email }];
+      if (!getUserIsAdmin(state)) {
+        members = [{ email: state.main.loggedInUser?.email ?? '' }];
       }
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();

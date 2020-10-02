@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
-import * as userActions from 'stores/user/actions';
+import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
@@ -373,7 +373,7 @@ SetPassword.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,
   };
 }
