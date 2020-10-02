@@ -5,18 +5,18 @@ import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  selectClusterById,
-  selectErrorByIdAndAction,
-} from 'selectors/clusterSelectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/appcatalog/actions';
+import {
+  selectClusterById,
+  selectErrorByIdAndAction,
+} from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/global/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
@@ -115,6 +115,11 @@ const appMetas = {
   'external-dns': {
     name: 'external-dns',
     logoUrl: '/images/app_icons/external_dns@2x.png',
+    category: 'essentials',
+  },
+  'cert-manager': {
+    name: 'cert-manager',
+    logoUrl: '/images/app_icons/cert_manager@2x.png',
     category: 'essentials',
   },
 };
@@ -323,8 +328,12 @@ class ClusterApps extends React.Component {
 
     const { hasOptionalIngress } = this.props;
     const filteredApps = apps.filter((app) => {
-      const isManagedByClusterOperator =
-        app.metadata.labels['giantswarm.io/managed-by'] === 'cluster-operator';
+      let isManagedByClusterOperator = false;
+      if (app.metadata.labels) {
+        isManagedByClusterOperator =
+          app.metadata.labels['giantswarm.io/managed-by'] ===
+          'cluster-operator';
+      }
 
       switch (true) {
         case hasOptionalIngress &&

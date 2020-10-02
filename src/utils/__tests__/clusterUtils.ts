@@ -2,12 +2,6 @@ import { IState } from 'reducers/types';
 import { Providers } from 'shared/constants';
 import { INodePool, INodePoolStatus, PropertiesOf } from 'shared/types';
 import {
-  v4AWSClusterResponse,
-  v4AWSClusterStatusResponse,
-  v5ClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import preloginState from 'testUtils/preloginState';
-import {
   canClusterUpgrade,
   computeCapabilities,
   getClusterLatestCondition,
@@ -24,7 +18,13 @@ import {
   isClusterDeleting,
   isClusterUpdating,
   v4orV5,
-} from 'utils/clusterUtils';
+} from 'stores/cluster/utils';
+import {
+  v4AWSClusterResponse,
+  v4AWSClusterStatusResponse,
+  v5ClusterResponse,
+} from 'testUtils/mockHttpCalls';
+import preloginState from 'testUtils/preloginState';
 
 describe('clusterUtils', () => {
   describe('canClusterUpgrade', () => {

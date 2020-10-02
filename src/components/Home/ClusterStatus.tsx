@@ -6,13 +6,13 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
 import { IState } from 'reducers/types';
-import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
-import { ITheme } from 'styles';
+import { selectCanClusterUpgrade } from 'stores/cluster/selectors';
 import {
   isClusterCreating,
   isClusterDeleting,
   isClusterUpdating,
-} from 'utils/clusterUtils';
+} from 'stores/cluster/utils';
+import { ITheme } from 'styles';
 
 const Wrapper = styled.div<{
   disabled: boolean;
@@ -57,7 +57,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   const theme = useTheme<ITheme>();
 
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
-  const cluster = useSelector<IState, V4.ICluster | V5.ICluster>(
+  const cluster = useSelector<IState, Cluster>(
     (state) => state.entities.clusters.items[clusterId]
   );
 

@@ -5,7 +5,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { IState } from 'reducers/types';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
@@ -17,9 +16,10 @@ import {
   selectIngressAppToInstall,
 } from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,7 +40,7 @@ const StyledLink = styled(Link)`
 
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  cluster: V4.ICluster | V5.ICluster;
+  cluster: Cluster;
 }
 
 const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
@@ -49,11 +49,12 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 }) => {
   const [isNew, setIsNew] = useState(true);
 
-  const isInstalling: boolean | null = useSelector((state) =>
+  const isInstalling = useSelector<IState, boolean | null>((state) =>
     selectLoadingFlagByAction(state, installLatestIngress().types.request)
   );
-  const isPreparingIngressTabData: boolean | null = useSelector((state) =>
-    selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
+  const isPreparingIngressTabData = useSelector<IState, boolean | null>(
+    (state) =>
+      selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
   );
 
   const installedIngressApp = selectIngressAppFromCluster(cluster);

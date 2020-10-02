@@ -7,6 +7,7 @@ import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { getNumberOfNodes } from 'stores/cluster/utils';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -26,7 +27,6 @@ import {
   v4KVMClusterStatusResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getNumberOfNodes } from 'utils/clusterUtils';
 
 const minNodesCount = 3;
 

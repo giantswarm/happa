@@ -34,3 +34,9 @@ interface IRawAzureInstanceType extends IRawInstanceType {
   numberOfCores: number;
   memoryInMb: number;
 }
+
+type Cluster = V4.ICluster | V5.ICluster;
+
+interface IClusterMap {
+  [id: string]: Cluster;
+}

@@ -15,6 +15,7 @@ import {
 } from 'selectors/mainInfoSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { computeCapabilities } from 'stores/cluster/utils';
 import Headline from 'UI/ClusterCreation/Headline';
 import NameInput from 'UI/ClusterCreation/NameInput';
 import Section from 'UI/ClusterCreation/Section';
@@ -22,7 +23,6 @@ import StyledInput, {
   AdditionalInputHint,
 } from 'UI/ClusterCreation/StyledInput';
 import { FlexColumn } from 'UI/FlexDivs';
-import { computeCapabilities } from 'utils/clusterUtils';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';

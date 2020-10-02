@@ -3,7 +3,6 @@ import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
   catalogLoadIndex,
   createAppConfig as createAppConfigAction,
@@ -16,6 +15,7 @@ import {
   updateAppSecret as updateAppSecretAction,
   updateClusterApp as updateAppAction,
 } from 'stores/appcatalog/actions';
+import { selectLoadingFlagByAction } from 'stores/cluster/selectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

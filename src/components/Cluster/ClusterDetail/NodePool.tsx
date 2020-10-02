@@ -77,7 +77,7 @@ interface IDispatchProps extends DispatchProp {
 }
 
 interface INodePoolsProps extends IStateProps, IDispatchProps {
-  cluster: V4.ICluster | V5.ICluster;
+  cluster: Cluster;
   provider: PropertiesOf<typeof Providers>;
 }
 

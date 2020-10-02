@@ -5,13 +5,13 @@ import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-} from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs } from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
+import {
+  selectLoadingFlagByAction,
+  selectLoadingFlagByIdAndAction,
+} from 'stores/cluster/selectors';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import AppListInner from './AppListInner';

@@ -9,14 +9,15 @@ import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {
-  selectClusterById,
-  selectErrorByIdAndAction,
-} from 'selectors/clusterSelectors';
 import { getAllReleases } from 'selectors/releaseSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ErrorBoundary from 'shared/ErrorBoundary';
+import {
+  selectClusterById,
+  selectErrorByIdAndAction,
+} from 'stores/cluster/selectors';
+import { isClusterCreating } from 'stores/cluster/utils';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
 import { Dot, mq } from 'styles';
@@ -25,7 +26,6 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import ErrorText from 'UI/ErrorText';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';

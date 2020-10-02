@@ -47,7 +47,7 @@ export default {
       items: {},
     },
     clusters: {
-      lastUpdated: null,
+      lastUpdated: 0,
       isFetching: false,
       items: {},
       v5Clusters: [],
@@ -69,6 +69,8 @@ export default {
       },
     },
     releases: {
+      error: null,
+      isFetching: false,
       items: {},
     },
     users: {
@@ -84,6 +86,10 @@ export default {
     nodePools: {
       items: {},
       isFetching: false,
+    },
+    clusterLabels: {
+      requestInProgress: false,
+      error: null,
     },
   },
   modal: {
