@@ -1,5 +1,5 @@
-import { typeWithoutSuffix } from 'selectors/selectorUtils';
 import { IState } from 'stores/state';
+import { typeWithoutSuffix } from 'stores/utils';
 
 export function selectErrorByIdAndAction(
   state: IState,
