@@ -206,7 +206,7 @@
     "jest": "26.4.2",
     "json-loader": "0.5.7",
     "lint-staged": "10.4.0",
-    "mini-css-extract-plugin": "0.11.2",
+    "mini-css-extract-plugin": "0.11.3",
     "nock": "13.0.4",
     "node-sass": "4.14.1",
     "optimize-css-assets-webpack-plugin": "5.0.4",
