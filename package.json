@@ -132,7 +132,7 @@
     "serialize-javascript": "5.0.1",
     "stacktrace-js": "^2.0.2",
     "superagent": "6.1.0",
-    "underscore": "1.10.2",
+    "underscore": "1.11.0",
     "validate.js": "0.13.1"
   },
   "devDependencies": {
