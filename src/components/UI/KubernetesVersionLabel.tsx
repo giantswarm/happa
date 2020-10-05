@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-
 interface IKubernetesVersionLabelProps {
   version: string;
 }
 
-const KubernetesVersionLabel = ({
-  version,
-}: IKubernetesVersionLabelProps) => {
+const KubernetesVersionLabel = ({ version }: IKubernetesVersionLabelProps) => {
   let versionLabel = 'n/a';
   if (version) {
     // only show major and minor k8s version
