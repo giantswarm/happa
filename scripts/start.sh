@@ -28,12 +28,16 @@ if [ -n "$INGRESS_BASE_DOMAIN" ]; then
   sed -i "s|ingressBaseDomain: .*|ingressBaseDomain: '$INGRESS_BASE_DOMAIN',|" /www/index.html
 fi
 
-if [ -n "$AWS_CAPABILITIES_JSON" ] && [ "$PROVIDER" = "aws" ]; then
-  sed -i "s|awsCapabilitiesJSON: .*|awsCapabilitiesJSON: '$AWS_CAPABILITIES_JSON',|" /www/index.html
+if [ "$PROVIDER" = "aws" ]; then
+  if [ -n "$AWS_CAPABILITIES_JSON" ]; then 
+    sed -i "s|awsCapabilitiesJSON: .*|awsCapabilitiesJSON: '$AWS_CAPABILITIES_JSON',|" /www/index.html
+  fi
 fi
 
-if [ -n "$AZURE_CAPABILITIES_JSON" ] && [ "$PROVIDER" = "azure" ]; then
-  sed -i "s|azureCapabilitiesJSON: .*|azureCapabilitiesJSON: '$AZURE_CAPABILITIES_JSON',|" /www/index.html
+if [ "$PROVIDER" = "azure" ]; then
+  if [ -n "$AZURE_CAPABILITIES_JSON" ]; then
+    sed -i "s|azureCapabilitiesJSON: .*|azureCapabilitiesJSON: '$AZURE_CAPABILITIES_JSON',|" /www/index.html
+  fi
 fi
 
 if [ -n "$DEFAULT_REQUEST_TIMEOUT_SECONDS" ]; then
