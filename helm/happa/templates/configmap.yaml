@@ -13,8 +13,12 @@ data:
   cp-audience: {{ .Values.Installation.V1.GiantSwarm.OIDC.IssuerAddress }}
   ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
   installation-name: {{ .Values.Installation.V1.Name }}
+  {{- if eq .Values.Installation.V1.Provider.Kind "aws" }}
   aws-capabilities-json: '{{ .Values.Installation.V1.Provider.AWS.EC2.Instance.Capabilities | toJson }}'
+  {{- end }}
+  {{- if eq .Values.Installation.V1.Provider.Kind "azure" }}
   azure-capabilities-json: '{{ .Values.Installation.V1.Provider.Azure.VM.VmSize.Capabilities | toJson }}'
+  {{- end }}
   default-request-timeout-seconds: '{{ .Values.Installation.V1.GiantSwarm.Happa.DefaultRequestTimeoutSeconds }}'
   provider: {{ .Values.Installation.V1.Provider.Kind }}
 
