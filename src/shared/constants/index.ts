@@ -20,7 +20,7 @@ export const Constants = {
   METADATA_UPDATE_LABEL: 'Update happa now',
 
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
-  AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4_v3',
+  AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AWS_V5_VERSION: '10.0.0',
   AZURE_V5_VERSION: '13.0.0-alpha',
 

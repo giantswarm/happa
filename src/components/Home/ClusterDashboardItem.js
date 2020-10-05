@@ -134,6 +134,10 @@ const ClusterDetailsDiv = styled.div`
   }
 `;
 
+const StyledErrorFallback = styled(ErrorFallback)`
+  display: block;
+`;
+
 function ClusterDashboardItem({
   cluster,
   isV5Cluster,
@@ -263,7 +267,7 @@ function ClusterDashboardItem({
           </>
 
           {/* Cluster resources */}
-          <ErrorFallback error={nodePoolsLoadError}>
+          <StyledErrorFallback error={nodePoolsLoadError}>
             <ClusterDetailsDiv>
               {isV5Cluster ? (
                 <ClusterDashboardResourcesV5
@@ -278,7 +282,7 @@ function ClusterDashboardItem({
                 />
               )}
             </ClusterDetailsDiv>
-          </ErrorFallback>
+          </StyledErrorFallback>
         </ContentWrapper>
 
         <ButtonsWrapper>
