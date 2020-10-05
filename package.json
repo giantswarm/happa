@@ -142,7 +142,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.0.4",
-    "@testing-library/react-hooks": "3.4.1",
+    "@testing-library/react-hooks": "3.4.2",
     "@types/auth0-js": "^9.14.0",
     "@types/bluebird": "^3.5.32",
     "@types/bootstrap": "^4.3.3",
