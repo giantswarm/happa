@@ -1,5 +1,5 @@
-import { IState } from 'reducers/types';
 import { Constants } from 'shared/constants';
+import { IState } from 'stores/state';
 
 export function selectIngressCatalog(state: IState): IAppCatalog | undefined {
   return state.entities.catalogs.items[

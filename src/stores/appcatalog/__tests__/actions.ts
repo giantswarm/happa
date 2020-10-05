@@ -1,5 +1,4 @@
 import nock from 'nock';
-import { IState } from 'reducers/types';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
@@ -15,6 +14,7 @@ import {
 } from 'stores/appcatalog/constants';
 import { IAppCatalogsMap } from 'stores/appcatalog/types';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { IState } from 'stores/state';
 import {
   API_ENDPOINT,
   appCatalogsResponse,

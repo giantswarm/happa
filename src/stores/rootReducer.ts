@@ -1,5 +1,6 @@
 import { connectRouter } from 'connected-react-router';
-import { combineReducers } from 'redux';
+import { History } from 'history';
+import { combineReducers, ReducersMapObject } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
 import clusters from 'stores/cluster/reducer';
@@ -15,10 +16,10 @@ import modal from 'stores/modal/reducer';
 import nodePools from 'stores/nodepool/reducer';
 import organizations from 'stores/organization/reducer';
 import releases from 'stores/releases/reducer';
+import { IState } from 'stores/state';
 import users from 'stores/user/reducer';
 
-const entities = combineReducers({
-  cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
+const entityReducers: ReducersMapObject<IState['entities']> = {
   catalogs,
   clusterLabels,
   clusters,
@@ -26,11 +27,14 @@ const entities = combineReducers({
   organizations,
   releases,
   users,
-});
+};
+if (FeatureFlags.FEATURE_CP_ACCESS) {
+  entityReducers.cpAuth = cpAuth;
+}
+const entities = combineReducers(entityReducers);
 
-const rootReducer = (history) =>
+const rootReducer = (history: History<History.LocationState>) =>
   combineReducers({
-    cpAuth: FeatureFlags.FEATURE_CP_ACCESS && cpAuth,
     router: connectRouter(history),
     main: makeMainReducer(),
     metadata,

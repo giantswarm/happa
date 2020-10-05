@@ -1,5 +1,3 @@
-import { ROUTER_LOCATION_CHANGE } from 'actions/actionTypes';
-import { LocationChangeAction } from 'connected-react-router';
 import produce from 'immer';
 import {
   CLUSTER_DELETE_CONFIRMED,
@@ -26,6 +24,8 @@ import {
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
 } from 'stores/organization/constants';
 import { OrganizationActions } from 'stores/organization/types';
+import { ROUTER_LOCATION_CHANGE } from 'stores/router/constants';
+import { RouterActions } from 'stores/router/types';
 
 const initialState: IModalState = {
   visible: false,
@@ -41,7 +41,7 @@ const modalReducer = produce(
       | OrganizationActions
       | NodePoolActions
       | ClusterActions
-      | LocationChangeAction
+      | RouterActions
   ) => {
     switch (action.type) {
       case MODAL_HIDE:

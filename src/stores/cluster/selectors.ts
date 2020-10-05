@@ -1,6 +1,4 @@
 import { compare } from 'lib/semver';
-import { IState } from 'reducers/types';
-import { createDeepEqualSelector } from 'selectors/selectorUtils';
 import {
   canClusterUpgrade,
   getCpusTotal,
@@ -11,6 +9,8 @@ import {
   isClusterUpdating,
 } from 'stores/cluster/utils';
 import { getUserIsAdmin } from 'stores/main/selectors';
+import { IState } from 'stores/state';
+import { createDeepEqualSelector } from 'stores/utils';
 
 export function selectClusterById(
   state: IState,

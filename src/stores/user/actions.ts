@@ -4,8 +4,8 @@ import Passage, {
   IPassageCreateInvitationResponse,
   IPassageInvitation,
 } from 'lib/passageClient';
-import { IState } from 'reducers/types';
 import { ThunkAction } from 'redux-thunk';
+import { IState } from 'stores/state';
 import {
   INVITATION_CREATE_ERROR,
   INVITATION_CREATE_REQUEST,

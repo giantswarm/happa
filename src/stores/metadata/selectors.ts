@@ -1,4 +1,4 @@
-import { IState } from 'reducers/types';
+import { IState } from 'stores/state';
 
 export function getMetadataCurrentVersion(state: IState): string {
   return state.metadata.version.current;

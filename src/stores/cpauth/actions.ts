@@ -1,6 +1,5 @@
 import CPAuth from 'lib/CPAuth/CPAuth';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
-import { IState } from 'reducers/types';
 import { createAsynchronousAction } from 'stores/asynchronousAction';
 import {
   CPAUTH_USER_EXPIRED,
@@ -19,6 +18,7 @@ import {
   ICPAuthUserSessionTerminatedAction,
   ICPAuthUserSignedOutAction,
 } from 'stores/cpauth/types';
+import { IState } from 'stores/state';
 
 export function userExpiring(): ICPAuthUserExpiringAction {
   return {

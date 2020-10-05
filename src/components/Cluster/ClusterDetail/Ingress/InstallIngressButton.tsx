@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { IState } from 'reducers/types';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
@@ -18,6 +17,7 @@ import {
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { IState } from 'stores/state';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

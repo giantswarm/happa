@@ -1,6 +1,5 @@
 import Auth from 'lib/auth0';
 import { isJwtExpired } from 'lib/helpers';
-import { IState } from 'reducers/types';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
@@ -11,6 +10,7 @@ import {
 } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { auth0Login } from 'stores/main/actions';
+import { IState } from 'stores/state';
 
 export interface ISSOError {
   status: number;

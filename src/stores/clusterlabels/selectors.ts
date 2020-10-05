@@ -1,4 +1,4 @@
-import { IState } from 'reducers/types';
+import { IState } from 'stores/state';
 
 export function getClusterLabelsLoading(state: IState) {
   return state.entities.clusterLabels.requestInProgress;

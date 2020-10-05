@@ -1,8 +1,4 @@
 import styled from '@emotion/styled';
-import {
-  batchedClusterDetailView,
-  batchedRefreshClusterDetailView,
-} from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -15,10 +11,13 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import {
+  batchedClusterDetailView,
+  batchedRefreshClusterDetailView,
+} from 'stores/batchActions';
 import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
 import { selectTargetRelease } from 'stores/cluster/selectors';
@@ -33,6 +32,7 @@ import { getUserIsAdmin } from 'stores/main/selectors';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
+import { getAllReleases } from 'stores/releases/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';

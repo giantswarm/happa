@@ -4,8 +4,8 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import ClusterStatus from 'Home/ClusterStatus';
-import { IState } from 'reducers/types';
 import { Providers } from 'shared/constants';
+import { IState } from 'stores/state';
 import {
   nodePoolRelease,
   nodePoolWithFlatcarRelease,

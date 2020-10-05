@@ -3,8 +3,8 @@ import { createMemoryHistory } from 'history';
 import Auth from 'lib/auth0';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { isJwtExpired } from 'lib/helpers';
-import { IState } from 'reducers/types';
 import configureStore from 'stores/configureStore';
+import { IState } from 'stores/state';
 import { USER_EMAIL } from 'testUtils/mockHttpCalls';
 
 jest.mock('lib/helpers');
