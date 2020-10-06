@@ -113,5 +113,16 @@ describe('main::selectors', () => {
       expect(authToken).toBe('a-non-jwt-token');
       expect(scheme).toBe('giantswarm');
     });
+
+    it('throws an error if the user is not logged in', async () => {
+      const state = {
+        main: {
+          loggedInUser: null,
+        },
+      } as IState;
+
+      const promise = selectAuthToken(dispatchMock)(state);
+      await expect(promise).rejects.toThrowError(/you are not logged in/i);
+    });
   });
 });
