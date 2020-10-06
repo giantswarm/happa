@@ -7,6 +7,7 @@ import React, { FC, RefObject, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Code, Dot } from 'styles';
+import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 interface IRegionAndVersionsProps {
@@ -69,11 +70,10 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
                 </ReleaseDetail>
               </RefreshableLabel>
             </span>
-            <ReleaseDetail onClick={onReleaseDetailClick}>
-              <Dot />
-              <i className='fa fa-kubernetes' />
-              {release.kubernetesVersion}
-            </ReleaseDetail>
+            <Dot />
+            <RefreshableLabel value={release?.kubernetesVersion}>
+              <KubernetesVersionLabel version={release?.kubernetesVersion} hidePatchVersion={false} />
+            </RefreshableLabel>
           </>
         )}
       </div>
