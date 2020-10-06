@@ -5,7 +5,9 @@ interface IKubernetesVersionLabelProps {
   version: string;
 }
 
-const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({ version }) => {
+const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
+  version,
+}) => {
   let versionLabel = 'n/a';
   if (version) {
     // only show major and minor k8s version
