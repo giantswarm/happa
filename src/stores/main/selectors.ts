@@ -39,7 +39,7 @@ export const selectAuthToken = (
   > => {
     const auth = state.main.loggedInUser?.auth ?? null;
     if (!auth) {
-      return Promise.resolve(['', AuthorizationTypes.GS]);
+      return Promise.reject(new Error('You are not logged in.'));
     }
     const scheme = auth.scheme;
     let currentToken = auth.token;
