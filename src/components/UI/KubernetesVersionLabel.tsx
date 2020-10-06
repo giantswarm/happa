@@ -3,16 +3,21 @@ import React from 'react';
 
 interface IKubernetesVersionLabelProps {
   version?: string;
+  hidePatchVersion?: boolean;
 }
 
 const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   version,
+  hidePatchVersion,
 }) => {
   let versionLabel = 'n/a';
+
   if (version) {
-    // only show major and minor k8s version
-    const v = version.split('.');
-    versionLabel = [v[0], v[1]].join('.');
+    versionLabel = version;
+    if (hidePatchVersion) {
+      const v = version.split('.');
+      versionLabel = [v[0], v[1]].join('.');
+    }
   }
 
   return (
@@ -25,10 +30,12 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
 
 KubernetesVersionLabel.propTypes = {
   version: PropTypes.string,
+  hidePatchVersion: PropTypes.bool,
 };
 
 KubernetesVersionLabel.defaultProps = {
   version: '',
+  hidePatchVersion: true,
 };
 
 export default KubernetesVersionLabel;
