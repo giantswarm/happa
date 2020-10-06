@@ -23,6 +23,7 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import ErrorText from 'UI/ErrorText';
+import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
@@ -257,10 +258,7 @@ function ClusterDashboardItem({
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel value={release?.kubernetesVersion}>
-              <span>
-                <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
-                {release?.kubernetesVersion ?? 'n/a'}
-              </span>
+              <KubernetesVersionLabel version={release?.kubernetesVersion} />
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
             Created {relativeDate(cluster.create_date)}
