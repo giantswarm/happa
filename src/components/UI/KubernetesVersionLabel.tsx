@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 interface IKubernetesVersionLabelProps {
-  version: string;
+  version?: string;
 }
 
 const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
