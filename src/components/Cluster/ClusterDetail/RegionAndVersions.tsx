@@ -72,7 +72,10 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
             </span>
             <Dot />
             <RefreshableLabel value={release?.kubernetesVersion}>
-              <KubernetesVersionLabel version={release?.kubernetesVersion} hidePatchVersion={false} />
+              <KubernetesVersionLabel
+                version={release?.kubernetesVersion}
+                hidePatchVersion={false}
+              />
             </RefreshableLabel>
           </>
         )}
