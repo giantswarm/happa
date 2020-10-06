@@ -5,25 +5,14 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
-import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import * as nodePoolActions from 'stores/nodepool/actions';
+import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import FlashMessageComponent from 'UI/FlashMessage';
 
 class ScaleNodePoolModal extends React.Component {
-  static supportsAutoscaling(provider) {
-    switch (provider) {
-      case Providers.AWS:
-      case Providers.AZURE:
-        return true;
-
-      default:
-        return false;
-    }
-  }
-
   // eslint-disable-next-line no-magic-numbers
   static rollupAnimationDuration = 500;
 
@@ -130,12 +119,7 @@ class ScaleNodePoolModal extends React.Component {
     const { nodePool, workerNodesDesired } = this.props;
     const { min, max } = this.state.scaling;
 
-    if (
-      !ScaleNodePoolModal.supportsAutoscaling(
-        this.props.provider,
-        nodePool.release_version
-      )
-    ) {
+    if (!supportsNodePoolAutoscaling(this.props.provider)) {
       // On non-auto-scaling clusters scaling.min == scaling.max so comparing
       // only min between props and current state works.
       return min - nodePool.scaling.min;
@@ -168,7 +152,7 @@ class ScaleNodePoolModal extends React.Component {
     // Are there any nodes already?
     const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
 
-    if (ScaleNodePoolModal.supportsAutoscaling(this.props.provider)) {
+    if (supportsNodePoolAutoscaling(this.props.provider)) {
       if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
 
@@ -241,7 +225,7 @@ class ScaleNodePoolModal extends React.Component {
     if (max < workerNodesRunning && minValid) {
       const diff = workerNodesRunning - max;
 
-      if (ScaleNodePoolModal.supportsAutoscaling(provider)) {
+      if (supportsNodePoolAutoscaling(provider)) {
         warnings.push(
           <CSSTransition
             classNames='rollup'
@@ -296,15 +280,13 @@ class ScaleNodePoolModal extends React.Component {
     let body = (
       <BootstrapModal.Body>
         <p>
-          {ScaleNodePoolModal.supportsAutoscaling(provider)
+          {supportsNodePoolAutoscaling(provider)
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
             : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
-            autoscalingEnabled={ScaleNodePoolModal.supportsAutoscaling(
-              provider
-            )}
+            autoscalingEnabled={supportsNodePoolAutoscaling(provider)}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}
