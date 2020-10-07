@@ -44,6 +44,7 @@ import {
 } from 'stores/cluster/types';
 import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
 import { IState } from 'stores/state';
+import { extractMessageFromError } from 'utils/errorUtils';
 
 export function clusterDelete(cluster: Cluster): ClusterActions {
   return {
@@ -463,11 +464,16 @@ export function clusterPatch(
         cluster,
       });
 
+      const errorBody = extractMessageFromError(
+        error,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
       new FlashMessage(
-        'Something went wrong while trying to update the cluster',
+        'Something went wrong while trying to update the cluster.',
         messageType.ERROR,
         messageTTL.MEDIUM,
-        'Please try again later or contact support: support@giantswarm.io'
+        errorBody
       );
 
       return Promise.reject(error);
