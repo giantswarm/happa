@@ -11,6 +11,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
@@ -285,17 +286,6 @@ class AddNodePool extends Component {
     allowSpotInstances: false,
     allowAlikeInstances: false,
   };
-
-  static isScalingAutomatic(provider) {
-    switch (provider) {
-      case Providers.AWS:
-      case Providers.AZURE:
-        return true;
-
-      default:
-        return false;
-    }
-  }
 
   static getDerivedStateFromProps(newProps, prevState) {
     // Set scaling defaults.
@@ -593,7 +583,7 @@ class AddNodePool extends Component {
 
     const machineType = this.getMachineType();
 
-    const isScalingAuto = AddNodePool.isScalingAutomatic(provider);
+    const isScalingAuto = supportsNodePoolAutoscaling(provider);
     const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
 
     let azLabelClassName = '';

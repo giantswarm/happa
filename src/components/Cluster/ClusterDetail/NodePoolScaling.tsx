@@ -5,6 +5,10 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import * as Providers from 'shared/constants/providers';
 import { INodePool, PropertiesOf } from 'shared/types';
+import {
+  supportsNodePoolAutoscaling,
+  supportsNodePoolSpotInstances,
+} from 'stores/nodepool/utils';
 
 const NodesWrapper = styled.div<{ highlight?: boolean }>`
   width: 36px;
@@ -26,9 +30,16 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
   nodePool,
   provider,
 }) => {
+  const supportsAutoscaling = supportsNodePoolAutoscaling(provider);
+  const supportsSpotInstances = supportsNodePoolSpotInstances(provider);
+
   const { id, scaling, status } = nodePool;
+
   const current = status?.nodes_ready ?? 0;
-  const desired = status?.nodes ?? 0;
+  let desired = status?.nodes ?? 0;
+  if (!supportsAutoscaling) {
+    desired = scaling?.max ?? 0;
+  }
   const spot_instances = status?.spot_instances ?? 0;
 
   const formatInstanceDistribution = () => {
@@ -56,12 +67,21 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
 
   return (
     <>
-      <NodesWrapper data-testid='scaling-min'>{scaling?.min ?? 0}</NodesWrapper>
-      <NodesWrapper data-testid='scaling-max'>{scaling?.max ?? 0}</NodesWrapper>
-      <NodesWrapper>{desired}</NodesWrapper>
-      <NodesWrapper highlight={current < desired}>{current}</NodesWrapper>
+      {supportsAutoscaling && (
+        <>
+          <NodesWrapper data-testid='scaling-min'>
+            {scaling?.min ?? 0}
+          </NodesWrapper>
+          <NodesWrapper data-testid='scaling-max'>
+            {scaling?.max ?? 0}
+          </NodesWrapper>
+        </>
+      )}
 
-      {provider === Providers.AWS && (
+      <NodesWrapper>{desired}</NodesWrapper>
+      <NodesWrapper highlight={current !== desired}>{current}</NodesWrapper>
+
+      {supportsSpotInstances && (
         <OverlayTrigger
           overlay={
             <Tooltip id={`${id}-spot-distribution-tooltip`}>

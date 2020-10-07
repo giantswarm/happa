@@ -59,7 +59,7 @@ function WorkerNodesAWS({
           <OverlayTrigger
             overlay={
               <Tooltip id='desired-tooltip'>
-                {Constants.DESIRED_NODES_EXPLANATION}
+                {Constants.DESIRED_NODES_EXPLANATION_AUTOSCALER}
               </Tooltip>
             }
             placement='top'

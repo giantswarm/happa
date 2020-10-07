@@ -20,6 +20,10 @@ import {
   makeV5ResourcesSelector,
   selectClusterNodePools,
 } from 'stores/nodepool/selectors';
+import {
+  supportsNodePoolAutoscaling,
+  supportsNodePoolSpotInstances,
+} from 'stores/nodepool/utils';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -67,13 +71,13 @@ const NodePoolsWrapper = styled.div`
   }
 `;
 
-const GridRowNodePoolsBase = (hasSpotInstances) => css`
+const GridRowNodePoolsBase = (additionalColumnCount) => css`
   ${Row};
   display: grid;
   grid-gap: 0 10px;
   grid-template-columns:
     minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(
-      ${hasSpotInstances ? 5 : 4},
+      ${additionalColumnCount},
       2fr
     )
     1fr;
@@ -84,7 +88,7 @@ const GridRowNodePoolsBase = (hasSpotInstances) => css`
 `;
 
 const GridRowNodePoolsNodes = styled.div`
-  ${({ hasSpotInstances }) => GridRowNodePoolsBase(hasSpotInstances)};
+  ${({ additionalColumnCount }) => GridRowNodePoolsBase(additionalColumnCount)};
   margin-bottom: 0;
   margin-top: -12px;
   min-height: 25px;
@@ -93,8 +97,8 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: ${({ hasSpotInstances }) =>
-      hasSpotInstances ? '5 / span 5' : '5 / span 4'};
+    grid-column: ${({ additionalColumnCount }) =>
+      `5 / span ${additionalColumnCount}`};
     font-size: 12px;
     position: relative;
     width: 100%;
@@ -120,7 +124,7 @@ const GridRowNodePoolsNodes = styled.div`
 `;
 
 const GridRowNodePoolsHeaders = styled.div`
-  ${({ hasSpotInstances }) => GridRowNodePoolsBase(hasSpotInstances)};
+  ${({ additionalColumnCount }) => GridRowNodePoolsBase(additionalColumnCount)};
   margin-bottom: 0;
 `;
 
@@ -138,7 +142,7 @@ const NodePoolsNameColumn = styled.span`
 `;
 
 const GridRowNodePoolsItem = styled.div`
-  ${({ hasSpotInstances }) => GridRowNodePoolsBase(hasSpotInstances)};
+  ${({ additionalColumnCount }) => GridRowNodePoolsBase(additionalColumnCount)};
   background-color: ${({ theme }) => theme.colors.foreground};
 `;
 
@@ -341,6 +345,20 @@ class V5ClusterDetailTable extends React.Component {
     });
   };
 
+  getNumberOfAdditionalColumns() {
+    const { provider } = this.props;
+
+    let additionalColumnCount = 2;
+    if (supportsNodePoolAutoscaling(provider)) {
+      additionalColumnCount += 2;
+    }
+    if (supportsNodePoolSpotInstances(provider)) {
+      additionalColumnCount++;
+    }
+
+    return additionalColumnCount;
+  }
+
   render() {
     const { nodePoolForm } = this.state;
     const {
@@ -376,7 +394,7 @@ class V5ClusterDetailTable extends React.Component {
     const machineTypeLabel =
       provider === Providers.AWS ? 'Instance type' : 'VM Size';
 
-    const hasSpotInstances = provider === Providers.AWS;
+    const additionalColumnCount = this.getNumberOfAdditionalColumns();
 
     return (
       <>
@@ -435,12 +453,16 @@ class V5ClusterDetailTable extends React.Component {
           <h2>Node Pools</h2>
           {!zeroNodePools && !loadingNodePools && (
             <>
-              <GridRowNodePoolsNodes hasSpotInstances={hasSpotInstances}>
+              <GridRowNodePoolsNodes
+                additionalColumnCount={additionalColumnCount}
+              >
                 <div>
                   <span>NODES</span>
                 </div>
               </GridRowNodePoolsNodes>
-              <GridRowNodePoolsHeaders hasSpotInstances={hasSpotInstances}>
+              <GridRowNodePoolsHeaders
+                additionalColumnCount={additionalColumnCount}
+              >
                 <NodePoolsColumnHeader>Id</NodePoolsColumnHeader>
                 <NodePoolsNameColumn>Name</NodePoolsNameColumn>
                 <NodePoolsColumnHeader>
@@ -472,7 +494,7 @@ class V5ClusterDetailTable extends React.Component {
                       timeout={{ enter: 400, exit: 400 }}
                     >
                       <GridRowNodePoolsItem
-                        hasSpotInstances={hasSpotInstances}
+                        additionalColumnCount={additionalColumnCount}
                         data-testid={nodePool.id}
                       >
                         <NodePool
