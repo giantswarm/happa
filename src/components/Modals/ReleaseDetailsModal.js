@@ -12,18 +12,20 @@ import { groupBy, sortBy } from 'underscore';
 
 class ReleaseDetailsModal extends React.Component {
   static formatComponentVersion(release, component) {
+    const { name, version } = component;
+
     if (
-      component.name === 'kubernetes' &&
+      name === 'kubernetes' &&
       release.k8sVersionEOLDate &&
-      !component.version.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
+      !version.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
     ) {
       const { isEol } = getReleaseEOLStatus(release.k8sVersionEOLDate);
       if (isEol) {
-        return `${component.version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
+        return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
       }
     }
 
-    return component.version;
+    return version;
   }
 
   state = {
