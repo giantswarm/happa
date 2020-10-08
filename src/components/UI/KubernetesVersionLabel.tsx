@@ -8,12 +8,14 @@ interface IKubernetesVersionLabelProps {
   version?: string;
   hidePatchVersion?: boolean;
   eolDate?: string;
+  hideIcon?: boolean;
 }
 
 const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   version,
   hidePatchVersion,
   eolDate,
+  hideIcon,
 }) => {
   let versionLabel = version || 'n/a';
   if (version && hidePatchVersion) {
@@ -50,7 +52,12 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
         onFocus={tryToToggleTooltip(true)}
         onBlur={tryToToggleTooltip(false)}
       >
-        <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
+        {!hideIcon && (
+          <>
+            <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
+          </>
+        )}
+
         {versionLabel}
       </span>
       <Overlay
@@ -68,12 +75,14 @@ KubernetesVersionLabel.propTypes = {
   version: PropTypes.string,
   hidePatchVersion: PropTypes.bool,
   eolDate: PropTypes.string,
+  hideIcon: PropTypes.bool,
 };
 
 KubernetesVersionLabel.defaultProps = {
   version: '',
   hidePatchVersion: true,
   eolDate: '',
+  hideIcon: false,
 };
 
 export default KubernetesVersionLabel;
