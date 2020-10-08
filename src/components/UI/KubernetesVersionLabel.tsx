@@ -18,7 +18,7 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   let versionLabel = version || 'n/a';
   if (version && hidePatchVersion) {
     const v = version.split('.');
-    versionLabel = [v[0], v[1]].join('.');
+    versionLabel = `${v[0]}.${v[1]}`;
   }
 
   const labelRef = useRef<HTMLSpanElement>(null);
