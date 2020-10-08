@@ -1,8 +1,9 @@
-import { compareDates, getRelativeDateFromNow } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { Overlay } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { Constants } from 'shared/constants';
+import { getReleaseEOLStatus } from 'stores/releases/utils';
 
 interface IKubernetesVersionLabelProps {
   version?: string;
@@ -26,11 +27,11 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   const labelRef = useRef<HTMLSpanElement>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
-  const { message: tooltipMessage, isEol } = getReleaseStatus(
+  const { message: tooltipMessage, isEol } = getReleaseEOLStatus(
     eolDate as string
   );
   if (isEol && version) {
-    versionLabel += ' (EOL)';
+    versionLabel += ` ${Constants.APP_VERSION_EOL_SUFFIX}`;
   }
 
   const tryToToggleTooltip = (open: boolean) => () => {
@@ -86,32 +87,3 @@ KubernetesVersionLabel.defaultProps = {
 };
 
 export default KubernetesVersionLabel;
-
-function getReleaseStatus(
-  eolDate: string
-): { message: string; isEol: boolean } {
-  const result = {
-    message: '',
-    isEol: false,
-  };
-
-  if (!eolDate) return result;
-
-  const now = new Date().toISOString();
-  const relativeDate = getRelativeDateFromNow(eolDate);
-  switch (compareDates(now, eolDate)) {
-    case -1:
-      result.message = `This version will reach its end of life ${relativeDate}.`;
-      break;
-    case 0:
-      result.message = 'This version reached its end of life today.';
-      result.isEol = true;
-      break;
-    case 1:
-      result.message = `This version reached its end of life ${relativeDate}.`;
-      result.isEol = true;
-      break;
-  }
-
-  return result;
-}
