@@ -258,7 +258,10 @@ function ClusterDashboardItem({
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel value={release?.kubernetesVersion}>
-              <KubernetesVersionLabel version={release?.kubernetesVersion} />
+              <KubernetesVersionLabel
+                version={release?.kubernetesVersion}
+                eolDate={release?.k8sVersionEOLDate}
+              />
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
             Created {relativeDate(cluster.create_date)}
