@@ -4,12 +4,18 @@ interface IInstallationInfoAvailabilityZones {
   zones?: string[];
 }
 
+interface IInstallationInfoKubernetesVersion {
+  minor_version: string;
+  eol_date: string;
+}
+
 interface IInstallationInfoGeneral {
   provider: import('shared/types').PropertiesOf<
     typeof import('shared/constants').Providers
   >;
   installation_name: string;
   availability_zones: IInstallationInfoAvailabilityZones | null;
+  kubernetes_versions?: IInstallationInfoKubernetesVersion[];
   datacenter?: string;
 }
 
