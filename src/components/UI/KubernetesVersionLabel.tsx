@@ -88,12 +88,7 @@ function getReleaseStatus(
 
   if (!eolDate) return result;
 
-  const date = new Date();
-  // The date today, in `RFC-3339FullDate` format.
-  const now = `${date.getUTCFullYear()}-${
-    date.getUTCMonth() + 1
-  }-${date.getUTCDate()}`;
-
+  const now = new Date().toISOString();
   const relativeDate = getRelativeDateFromNow(eolDate);
   switch (compareDates(now, eolDate)) {
     case -1:
