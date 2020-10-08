@@ -16,7 +16,6 @@ interface IRegionAndVersionsProps {
   region?: string;
   release?: IRelease;
   k8sVersionEOLDate?: string;
-
   showUpgradeModal?(): void;
 }
 

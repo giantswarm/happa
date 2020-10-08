@@ -15,7 +15,6 @@ import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 interface IReleaseRow extends IRelease {
   isSelected: boolean;
-
   selectRelease(releaseVersion: string): void;
 }
 
