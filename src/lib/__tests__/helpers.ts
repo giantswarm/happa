@@ -6,6 +6,7 @@ import {
 } from '@testing-library/react';
 import {
   clustersForOrg,
+  compareDates,
   dedent,
   formatDate,
   hasAppropriateLength,
@@ -543,6 +544,37 @@ token: can't be blank`)
         isValid: true,
         message: '',
       });
+    });
+  });
+
+  describe('compareDates', () => {
+    it('compares dates with various formats', () => {
+      const randomDate = new Date();
+      // eslint-disable-next-line no-magic-numbers
+      randomDate.setTime(90821343701982);
+
+      let dates = [
+        '2020-01-30',
+        '1930-02-30',
+        '2020-02-21T16:50:20.589772+00:00',
+        '1996-09-10',
+        // eslint-disable-next-line no-magic-numbers
+        12341231312,
+        '2999-12-18',
+        randomDate,
+      ];
+
+      dates = dates.sort(compareDates);
+      expect(dates).toStrictEqual([
+        // eslint-disable-next-line no-magic-numbers
+        12341231312,
+        '1996-09-10',
+        '2020-02-21T16:50:20.589772+00:00',
+        randomDate,
+        '1930-02-30',
+        '2020-01-30',
+        '2999-12-18',
+      ]);
     });
   });
 });

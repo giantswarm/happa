@@ -78,6 +78,7 @@ interface IHumanFileSizeValue<T extends boolean> {
   value: string;
   unit: FileSizeUnit<T>;
 }
+
 /**
  * Print a file size into a user-friendly way (e.g. GB/GiB)
  * @param bytes
@@ -168,7 +169,10 @@ export function getRelativeDateFromNow(date: string): string {
   return moment.utc(date).fromNow();
 }
 
-export function compareDates(dateA: string, dateB: string): -1 | 0 | 1 {
+export function compareDates(
+  dateA: Date | string | number,
+  dateB: Date | string | number
+): -1 | 0 | 1 {
   const a = moment.utc(dateA);
   const b = moment.utc(dateB);
 
