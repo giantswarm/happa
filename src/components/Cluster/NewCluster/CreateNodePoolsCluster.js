@@ -346,6 +346,7 @@ class CreateNodePoolsCluster extends Component {
               loading={submitting}
               onClick={this.props.closeForm}
               type='button'
+              data-dd-action-name='CREATE_CLUSTER_CANCEL'
             >
               Cancel
             </Button>
