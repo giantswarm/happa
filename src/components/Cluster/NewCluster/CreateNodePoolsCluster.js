@@ -333,6 +333,7 @@ class CreateNodePoolsCluster extends Component {
               loading={submitting}
               onClick={this.createCluster}
               type='button'
+              data-dd-action-name='CREATE_CLUSTER_SUBMIT'
             >
               Create Cluster
             </Button>
