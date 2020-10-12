@@ -1,9 +1,18 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { Overlay } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import { getReleaseEOLStatus } from 'stores/releases/utils';
+
+const EolLabel = styled.span`
+  background: ${({ theme }) => theme.colors.darkBlueDarker3};
+  color: ${({ theme }) => theme.colors.darkBlueLighter4};
+  padding: 0 ${({ theme }) => theme.spacingPx}px;
+  border-radius: ${({ theme }) => theme.border_radius};
+  margin-left: ${({ theme }) => theme.spacingPx}px;
+`;
 
 interface IKubernetesVersionLabelProps {
   version?: string;
@@ -27,15 +36,11 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   const labelRef = useRef<HTMLSpanElement>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
-  const { message: tooltipMessage, isEol } = getReleaseEOLStatus(
-    eolDate as string
-  );
-  if (isEol && version) {
-    versionLabel += ` ${Constants.APP_VERSION_EOL_SUFFIX}`;
-  }
+  const eolStatus = getReleaseEOLStatus(eolDate as string);
+  const isEol = eolStatus.isEol && Boolean(version);
 
   const tryToToggleTooltip = (open: boolean) => () => {
-    if (open && tooltipMessage) {
+    if (open && eolStatus.message) {
       setIsTooltipVisible(true);
 
       return;
@@ -60,13 +65,19 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
         )}
 
         {versionLabel}
+
+        {isEol && (
+          <EolLabel aria-label={Constants.K8s_VERSION_EOL_EXPLANATION}>
+            {Constants.K8s_VERSION_EOL_LABEL}
+          </EolLabel>
+        )}
       </span>
       <Overlay
         placement='top'
         target={labelRef.current as HTMLSpanElement}
         show={isTooltipVisible}
       >
-        <Tooltip id='tooltip'>{tooltipMessage}</Tooltip>
+        <Tooltip id='tooltip'>{eolStatus.message}</Tooltip>
       </Overlay>
     </>
   );
