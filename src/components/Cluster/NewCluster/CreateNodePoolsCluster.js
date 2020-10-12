@@ -248,6 +248,7 @@ class CreateNodePoolsCluster extends Component {
                       checked={!hasAZLabels}
                       label='Automatic'
                       onChange={() => this.toggleMasterAZSelector(false)}
+                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_AUTOMATIC'
                     />
                   </InputGroup>
                   <InputGroup>
@@ -256,6 +257,7 @@ class CreateNodePoolsCluster extends Component {
                       checked={hasAZLabels}
                       label='Manual'
                       onChange={() => this.toggleMasterAZSelector(true)}
+                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_MANUAL'
                     />
                   </InputGroup>
                 </div>
