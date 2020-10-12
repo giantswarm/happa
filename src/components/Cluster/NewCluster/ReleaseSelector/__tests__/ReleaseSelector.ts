@@ -271,4 +271,16 @@ describe('ReleaseSelector', () => {
       ).not.toBeInTheDocument();
     }
   });
+
+  it('automatically selects the newest active version when automatic selection is enabled', () => {
+    renderWithStore(
+      ReleaseSelector,
+      { ...defaultProps, collapsible: false, autoSelectLatest: true },
+      { ...defaultStoreState }
+    );
+
+    expect(
+      screen.getByLabelText(/the currently selected version is 1000\.0\.0/i)
+    ).toBeInTheDocument();
+  });
 });
