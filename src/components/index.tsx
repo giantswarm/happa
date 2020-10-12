@@ -115,7 +115,7 @@ render(<App {...{ store, theme, history }} />, appContainer);
 // Register a window resize event listener.
 const oneSecond: number = 1000;
 let resizeRecorderTimeout: number = 0;
-window.onresize = () => {
+window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
     const payload = {
@@ -129,4 +129,4 @@ window.onresize = () => {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     (window as any).DD_RUM?.addUserAction('WINDOW_RESIZE', payload);
   }, oneSecond);
-};
+});
