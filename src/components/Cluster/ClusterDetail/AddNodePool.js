@@ -721,12 +721,14 @@ class AddNodePool extends Component {
                 onChange={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Manual)
                 }
+                data-dd-action-name='SELECT_AZ_SELECTION_MANUAL'
               />
               <label
                 htmlFor='manually'
                 onClick={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Manual)
                 }
+                data-dd-action-name='SELECT_AZ_SELECTION_MANUAL'
               >
                 Manual
               </label>
