@@ -96,7 +96,7 @@ describe('ReleaseSelector', () => {
     expect(
       screen.getByText(
         mockReleases[mockReleases[mockSortedReleaseVersions[0]].version]
-          .kubernetesVersion
+          .kubernetesVersion as string
       )
     ).toBeInTheDocument();
   });

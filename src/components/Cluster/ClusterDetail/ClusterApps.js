@@ -12,6 +12,7 @@ import { selectClusterById } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
+import { getReleaseEOLStatus } from 'stores/releases/utils';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';
@@ -187,6 +188,23 @@ class ClusterApps extends React.Component {
     return null;
   }
 
+  static formatAppVersion(release, app) {
+    const { name, version } = app;
+
+    if (
+      name === 'kubernetes' &&
+      release.k8sVersionEOLDate &&
+      !version.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
+    ) {
+      const { isEol } = getReleaseEOLStatus(release.k8sVersionEOLDate);
+      if (isEol) {
+        return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
+      }
+    }
+
+    return version;
+  }
+
   isComponentMounted = false;
 
   state = {
@@ -353,6 +371,7 @@ class ClusterApps extends React.Component {
       installedApps,
       clusterIsCreating,
       clusterIsUpdating,
+      release,
     } = this.props;
     const userInstalledApps = this.getUserInstalledApps(installedApps);
     const preinstalledApps = this.preinstalledApps();
@@ -391,7 +410,7 @@ class ClusterApps extends React.Component {
             by Giant Swarm.
           </Disclaimer>
 
-          {this.props.release ? (
+          {release ? (
             <PreinstalledApps>
               <div key='essentials'>
                 <SmallHeading>essentials</SmallHeading>
@@ -399,7 +418,7 @@ class ClusterApps extends React.Component {
                   <ClusterDetailPreinstalledApp
                     logoUrl={app.logoUrl}
                     name={app.name}
-                    version={app.version}
+                    version={ClusterApps.formatAppVersion(release, app)}
                     key={app.name}
                   />
                 ))}
@@ -411,7 +430,7 @@ class ClusterApps extends React.Component {
                   <ClusterDetailPreinstalledApp
                     logoUrl={app.logoUrl}
                     name={app.name}
-                    version={app.version}
+                    version={ClusterApps.formatAppVersion(release, app)}
                     key={app.name}
                   />
                 ))}
@@ -442,7 +461,7 @@ class ClusterApps extends React.Component {
                   <ClusterDetailPreinstalledApp
                     logoUrl={app.logoUrl}
                     name={app.name}
-                    version={app.version}
+                    version={ClusterApps.formatAppVersion(release, app)}
                     key={app.name}
                   />
                 ))}

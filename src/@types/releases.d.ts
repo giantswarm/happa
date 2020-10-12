@@ -16,9 +16,10 @@ interface IRelease {
   version: string;
   active: boolean;
 
-  // additional information
-  kubernetesVersion: string;
-  releaseNotesURL: string;
+  // Injected by client-side.
+  kubernetesVersion?: string;
+  releaseNotesURL?: string;
+  k8sVersionEOLDate?: string;
 }
 
 interface IReleases {

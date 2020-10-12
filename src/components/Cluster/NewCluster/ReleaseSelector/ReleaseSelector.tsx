@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Constants } from 'shared/constants';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import {
   getReleases,
@@ -9,6 +10,7 @@ import {
   getReleasesIsFetching,
   getSortedReleaseVersions,
 } from 'stores/releases/selectors';
+import { getReleaseEOLStatus } from 'stores/releases/utils';
 import {
   ListToggler,
   SelectedDescription,
@@ -23,6 +25,7 @@ import ReleaseRow from './ReleaseRow';
 
 interface IReleaseSelector {
   selectRelease(releaseVersion: string): void;
+
   selectedRelease: string;
   collapsible?: boolean;
   autoSelectLatest?: boolean;
@@ -61,10 +64,24 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
     sortedReleaseVersions = sortedReleaseVersions.filter(versionFilter);
   }
 
-  const selectedKubernetesVersion = useMemo(
-    () => allReleases[selectedRelease]?.kubernetesVersion,
-    [allReleases, selectedRelease]
-  );
+  const selectedKubernetesVersion = useMemo(() => {
+    const currentRelease = allReleases[selectedRelease];
+    if (!currentRelease) return null;
+
+    const { kubernetesVersion, k8sVersionEOLDate } = currentRelease;
+
+    if (
+      k8sVersionEOLDate &&
+      !kubernetesVersion?.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
+    ) {
+      const { isEol } = getReleaseEOLStatus(k8sVersionEOLDate);
+      if (isEol) {
+        return `${kubernetesVersion} ${Constants.APP_VERSION_EOL_SUFFIX}`;
+      }
+    }
+
+    return kubernetesVersion;
+  }, [allReleases, selectedRelease]);
 
   useEffect(() => {
     if (autoSelectLatest && sortedReleaseVersions.length !== 0) {

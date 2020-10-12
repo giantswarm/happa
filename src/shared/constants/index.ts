@@ -69,4 +69,8 @@ export const Constants = {
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',
   // App catalog name containing the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_CATALOG_NAME: 'giantswarm',
+
+  APP_VERSION_EOL_SUFFIX: '(EOL)',
+  K8s_VERSION_EOL_LABEL: 'EOL',
+  K8s_VERSION_EOL_EXPLANATION: 'End of life',
 };

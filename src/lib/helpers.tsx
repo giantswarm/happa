@@ -78,6 +78,7 @@ interface IHumanFileSizeValue<T extends boolean> {
   value: string;
   unit: FileSizeUnit<T>;
 }
+
 /**
  * Print a file size into a user-friendly way (e.g. GB/GiB)
  * @param bytes
@@ -161,6 +162,33 @@ export function formatDate(date: string): string {
 }
 
 /**
+ * Get a formatted date structure, relative to now (e.g. 2 days ago, or 1 year ago).
+ * @param date
+ */
+export function getRelativeDateFromNow(date: string): string {
+  return moment.utc(date).fromNow();
+}
+
+export function compareDates(
+  dateA: Date | string | number,
+  dateB: Date | string | number
+): -1 | 0 | 1 {
+  const a = moment.utc(dateA);
+  const b = moment.utc(dateB);
+
+  switch (true) {
+    case a.isBefore(b):
+      return -1;
+    case a.isSame(b):
+      return 0;
+    case a.isAfter(b):
+      return 1;
+  }
+
+  return -1;
+}
+
+/**
  * Get a component containing a formatted given date, relative
  * from now (e.g. 2 days ago).
  * @param date - The date in the `ISO8601DateString` format.
@@ -172,7 +200,7 @@ export function relativeDate(date?: string): ReactElement {
   }
 
   const formattedDate = formatDate(date);
-  const relDate = moment.utc(date).fromNow();
+  const relDate = getRelativeDateFromNow(date);
 
   return (
     <OverlayTrigger
