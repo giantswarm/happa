@@ -85,7 +85,13 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
 
   useEffect(() => {
     if (autoSelectLatest && sortedReleaseVersions.length !== 0) {
-      selectRelease(sortedReleaseVersions[0]);
+      const firstActiveRelease = getLatestReleaseVersion(
+        sortedReleaseVersions,
+        allReleases
+      );
+      if (firstActiveRelease !== null) {
+        selectRelease(firstActiveRelease);
+      }
     }
   }, [selectRelease, sortedReleaseVersions, autoSelectLatest]);
 
@@ -128,7 +134,9 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   return (
     <LoadingOverlay loading={releasesIsFetching}>
       <SelectedWrapper>
-        <SelectedItem>
+        <SelectedItem
+          aria-label={`The currently selected version is ${selectedRelease}`}
+        >
           <i className='fa fa-version-tag' /> {selectedRelease}
         </SelectedItem>
         <SelectedDescription>
@@ -214,3 +222,18 @@ ReleaseSelector.defaultProps = {
 };
 
 export default ReleaseSelector;
+
+function getLatestReleaseVersion(
+  releaseVersions: string[],
+  releaseMap: IReleases
+): string | null {
+  if (releaseVersions.length < 1) return null;
+
+  for (const version of releaseVersions) {
+    if (releaseMap[version].active) {
+      return version;
+    }
+  }
+
+  return releaseVersions[0];
+}
