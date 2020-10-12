@@ -651,12 +651,14 @@ class AddNodePool extends Component {
                   this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
                 }
                 tabIndex='0'
+                data-dd-action-name='SELECT_AZ_SELECTION_AUTOMATIC'
               />
               <label
                 htmlFor='automatically'
                 onClick={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
                 }
+                data-dd-action-name='SELECT_AZ_SELECTION_AUTOMATIC'
               >
                 Automatic
               </label>
