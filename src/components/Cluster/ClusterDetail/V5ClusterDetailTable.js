@@ -559,7 +559,10 @@ class V5ClusterDetailTable extends React.Component {
                 actually run workloads.
               </p>
             )}
-            <Button onClick={this.toggleAddNodePoolForm}>
+            <Button
+              onClick={this.toggleAddNodePoolForm}
+              data-dd-action-name='ADD_NODEPOOL'
+            >
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
             {nodePools && nodePools.length === 1 && (

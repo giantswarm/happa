@@ -313,7 +313,10 @@ class CreateNodePoolsCluster extends Component {
               );
             })}
           </NodePoolsTransitionGroup>
-          <Button onClick={this.addNodePoolForm}>
+          <Button
+            onClick={this.addNodePoolForm}
+            data-dd-action-name='ADD_NODEPOOL'
+          >
             <i className='fa fa-add-circle' /> ADD NODE POOL
           </Button>
           <HorizontalLine />
