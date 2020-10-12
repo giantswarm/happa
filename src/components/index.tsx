@@ -111,3 +111,22 @@ body.classList.remove('loading');
 // Finally, render the app!
 const appContainer = document.getElementById('app');
 render(<App {...{ store, theme, history }} />, appContainer);
+
+// Register a window resize event listener.
+const oneSecond: number = 1000;
+let resizeRecorderTimeout: number = 0;
+window.addEventListener('resize', () => {
+  window.clearTimeout(resizeRecorderTimeout);
+  resizeRecorderTimeout = window.setTimeout(() => {
+    const payload = {
+      windowInnerWidth: window.innerWidth,
+      windowInnerHeight: window.innerHeight,
+      screenHeight: window.screen.height,
+      screenWidth: window.screen.width,
+      screenAvailableHeight: window.screen.availHeight,
+      screenAvailableWidth: window.screen.availWidth,
+    };
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    (window as any).DD_RUM?.addUserAction('WINDOW_RESIZE', payload);
+  }, oneSecond);
+});
