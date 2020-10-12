@@ -113,6 +113,7 @@ const appContainer = document.getElementById('app');
 render(<App {...{ store, theme, history }} />, appContainer);
 
 // Register a window resize event listener.
+const oneSecond: number = 1000;
 let resizeRecorderTimeout: number = 0;
 window.onresize = () => {
   window.clearTimeout(resizeRecorderTimeout);
@@ -126,6 +127,7 @@ window.onresize = () => {
       screenAvailableWidth: window.screen.availWidth,
     };
     console.log('resize', payload);
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     (window as any).DD_RUM?.addUserAction('window-resize', payload);
-  }, 1000);
+  }, oneSecond);
 };
