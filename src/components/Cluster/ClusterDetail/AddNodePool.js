@@ -847,6 +847,7 @@ class AddNodePool extends Component {
                     }
                     onChange={this.setSpotInstancePercentage}
                     theme='spot-number-picker'
+                    eventNameSuffix='SPOT_PERCENTAGE'
                   />
                   <SpotValuesLabelText>percent</SpotValuesLabelText>
                 </SpotValuesNumberPickerWrapper>
@@ -869,6 +870,7 @@ class AddNodePool extends Component {
                     }
                     onChange={this.setOnDemandBaseCapacity}
                     theme='spot-number-picker'
+                    eventNameSuffix='ONDEMAND_BASE_CAPACITY'
                   />
                   <SpotValuesLabelText>instances</SpotValuesLabelText>
                 </SpotValuesNumberPickerWrapper>

@@ -57,6 +57,10 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
           role='button'
           onClick={() => setCollapsed(!collapsed)}
           collapsible={true}
+          title={`Show/hide available ${plural}`}
+          data-dd-action-name={
+            collapsed ? 'EXPAND_INSTANCE_TYPES' : 'COLLAPSE_INSTANCE_TYPES'
+          }
         >
           <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
           Available {plural}

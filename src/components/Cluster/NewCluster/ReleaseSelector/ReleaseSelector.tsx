@@ -127,10 +127,15 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
           role='button'
           id='release-selector__toggler'
           aria-expanded={!collapsed}
+          aria-labelledby='available-releases-label'
           tabIndex={0}
           onClick={handleCollapse}
           collapsible={collapsible as boolean}
           onKeyDown={handleTabSelect}
+          title='Show/hide available releases'
+          data-dd-action-name={
+            collapsed ? 'EXPAND_RELEASES' : 'COLLAPSE_RELEASES'
+          }
         >
           {collapsible && (
             <i
@@ -140,7 +145,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
               role='presentation'
             />
           )}
-          Available releases
+          <span id='available-releases-label'>Available releases</span>
         </ListToggler>
       </div>
       {!collapsed && (

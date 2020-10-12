@@ -305,6 +305,7 @@ class CreateNodePoolsCluster extends Component {
                         title='Remove node pool'
                         aria-hidden='true'
                         onClick={() => this.removeNodePoolForm(npId)}
+                        data-dd-action-name='REMOVE_NODEPOOL_FORM'
                       />
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
