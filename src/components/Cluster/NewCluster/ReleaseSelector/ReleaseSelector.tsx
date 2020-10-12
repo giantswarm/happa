@@ -23,7 +23,6 @@ import ReleaseRow from './ReleaseRow';
 
 interface IReleaseSelector {
   selectRelease(releaseVersion: string): void;
-
   selectedRelease: string;
   collapsible?: boolean;
   autoSelectLatest?: boolean;
