@@ -29,7 +29,6 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
           id={`select-${name}`}
           title={`Select ${name}`}
           checked={isSelected}
-          s
           value={isSelected ? 'true' : 'false'}
           name={`select-${name}`}
           onChange={() => selectInstanceType(name)}
