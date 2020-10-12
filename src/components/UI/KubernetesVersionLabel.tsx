@@ -9,9 +9,10 @@ import { getReleaseEOLStatus } from 'stores/releases/utils';
 const EolLabel = styled.span`
   background: ${({ theme }) => theme.colors.darkBlueDarker3};
   color: ${({ theme }) => theme.colors.darkBlueLighter4};
-  padding: 0 ${({ theme }) => theme.spacingPx}px;
-  border-radius: ${({ theme }) => theme.border_radius};
-  margin-left: ${({ theme }) => theme.spacingPx}px;
+  padding: 1px ${({ theme }) => theme.spacingPx}px;
+  border-radius: 3px;
+  margin-left: 5px;
+  font-weight: 400;
 `;
 
 interface IKubernetesVersionLabelProps {
