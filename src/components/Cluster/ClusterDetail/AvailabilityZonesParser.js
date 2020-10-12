@@ -99,6 +99,7 @@ export default function AvailabilityZonesParser({
       readOnly={false}
       stepSize={1}
       value={AZPicker.value}
+      eventNameSuffix='AZS'
     />
   );
 }

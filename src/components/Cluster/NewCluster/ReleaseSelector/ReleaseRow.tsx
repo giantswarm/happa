@@ -60,6 +60,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             onChange={() => selectRelease(version)}
             rootProps={{ className: 'selection-radio' }}
             bulletProps={{ className: 'selection-bullet' }}
+            data-dd-action-name='SELECT_RELEASE'
           />
         </CursorPointerCell>
         <CursorPointerCell>{version}</CursorPointerCell>
@@ -80,6 +81,9 @@ const ReleaseRow: FC<IReleaseRow> = ({
               e.preventDefault();
               setCollapsed(!collapsed);
             }}
+            data-dd-action-name={
+              collapsed ? 'SHOW_RELEASE_DETAILS' : 'HIDE_RELEASE_DETAILS'
+            }
           >
             <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
             {collapsed ? 'Show' : 'Hide'}

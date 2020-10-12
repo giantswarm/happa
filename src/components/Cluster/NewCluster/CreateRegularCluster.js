@@ -377,6 +377,7 @@ class CreateRegularCluster extends React.Component {
               loading={this.state.submitting}
               onClick={this.createCluster}
               type='submit'
+              data-dd-action-name='CREATE_CLUSTER_SUBMIT'
             >
               Create Cluster
             </Button>
@@ -388,6 +389,7 @@ class CreateRegularCluster extends React.Component {
               loading={this.state.submitting}
               onClick={this.props.closeForm}
               type='button'
+              data-dd-action-name='CREATE_CLUSTER_CANCEL'
             >
               Cancel
             </Button>

@@ -651,12 +651,14 @@ class AddNodePool extends Component {
                   this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
                 }
                 tabIndex='0'
+                data-dd-action-name='SELECT_AZ_SELECTION_AUTOMATIC'
               />
               <label
                 htmlFor='automatically'
                 onClick={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
                 }
+                data-dd-action-name='SELECT_AZ_SELECTION_AUTOMATIC'
               >
                 Automatic
               </label>
@@ -719,12 +721,14 @@ class AddNodePool extends Component {
                 onChange={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Manual)
                 }
+                data-dd-action-name='SELECT_AZ_SELECTION_MANUAL'
               />
               <label
                 htmlFor='manually'
                 onClick={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Manual)
                 }
+                data-dd-action-name='SELECT_AZ_SELECTION_MANUAL'
               >
                 Manual
               </label>
@@ -791,6 +795,7 @@ class AddNodePool extends Component {
                   this.toggleAZSelector(AvailabilityZoneSelection.None)
                 }
                 tabIndex='0'
+                data-dd-action-name='SELECT_AZ_SELECTION_NONE'
               />
               <label htmlFor={`none-${id}`}>
                 None{' '}
@@ -847,6 +852,7 @@ class AddNodePool extends Component {
                     }
                     onChange={this.setSpotInstancePercentage}
                     theme='spot-number-picker'
+                    eventNameSuffix='SPOT_PERCENTAGE'
                   />
                   <SpotValuesLabelText>percent</SpotValuesLabelText>
                 </SpotValuesNumberPickerWrapper>
@@ -869,6 +875,7 @@ class AddNodePool extends Component {
                     }
                     onChange={this.setOnDemandBaseCapacity}
                     theme='spot-number-picker'
+                    eventNameSuffix='ONDEMAND_BASE_CAPACITY'
                   />
                   <SpotValuesLabelText>instances</SpotValuesLabelText>
                 </SpotValuesNumberPickerWrapper>

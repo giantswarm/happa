@@ -27,13 +27,14 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
       <LeftAlignedCell>
         <RadioInput
           id={`select-${name}`}
-          title={`Select TODO ${name}`}
+          title={`Select ${name}`}
           checked={isSelected}
           value={isSelected ? 'true' : 'false'}
           name={`select-${name}`}
           onChange={() => selectInstanceType(name)}
           rootProps={{ className: 'selection-radio' }}
           bulletProps={{ className: 'selection-bullet' }}
+          data-dd-action-name='SELECT_INSTANCE_TYPE'
         />
       </LeftAlignedCell>
       <CursorPointerCell>{name}</CursorPointerCell>

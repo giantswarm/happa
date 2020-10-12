@@ -45,6 +45,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       onChange={onUpdateCPUCores}
       stepSize={1}
       value={cpuCores}
+      eventNameSuffix='CPUS'
     />
     <KVMNumberPicker
       label='Memory (GB)'
@@ -54,6 +55,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       stepSize={1}
       unit='GB'
       value={memorySize}
+      eventNameSuffix='MEMORY'
     />
     <KVMNumberPicker
       label='Storage (GB)'
@@ -63,6 +65,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       stepSize={10}
       unit='GB'
       value={diskSize}
+      eventNameSuffix='STORAGE'
     />
   </>
 );

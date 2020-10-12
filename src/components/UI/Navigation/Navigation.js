@@ -110,7 +110,7 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav'>
-          <Link to={AppRoutes.Home}>
+          <Link to={AppRoutes.Home} data-dd-action-name='CLICK_MAINNAV_LOGO'>
             <img className='logo' src={logo} />
           </Link>
           <MainMenu

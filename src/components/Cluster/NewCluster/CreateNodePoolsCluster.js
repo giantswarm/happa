@@ -248,6 +248,7 @@ class CreateNodePoolsCluster extends Component {
                       checked={!hasAZLabels}
                       label='Automatic'
                       onChange={() => this.toggleMasterAZSelector(false)}
+                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_AUTOMATIC'
                     />
                   </InputGroup>
                   <InputGroup>
@@ -256,6 +257,7 @@ class CreateNodePoolsCluster extends Component {
                       checked={hasAZLabels}
                       label='Manual'
                       onChange={() => this.toggleMasterAZSelector(true)}
+                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_MANUAL'
                     />
                   </InputGroup>
                 </div>
@@ -305,6 +307,7 @@ class CreateNodePoolsCluster extends Component {
                         title='Remove node pool'
                         aria-hidden='true'
                         onClick={() => this.removeNodePoolForm(npId)}
+                        data-dd-action-name='REMOVE_NODEPOOL_FORM'
                       />
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
@@ -312,7 +315,10 @@ class CreateNodePoolsCluster extends Component {
               );
             })}
           </NodePoolsTransitionGroup>
-          <Button onClick={this.addNodePoolForm}>
+          <Button
+            onClick={this.addNodePoolForm}
+            data-dd-action-name='ADD_NODEPOOL'
+          >
             <i className='fa fa-add-circle' /> ADD NODE POOL
           </Button>
           <HorizontalLine />
@@ -329,6 +335,7 @@ class CreateNodePoolsCluster extends Component {
               loading={submitting}
               onClick={this.createCluster}
               type='button'
+              data-dd-action-name='CREATE_CLUSTER_SUBMIT'
             >
               Create Cluster
             </Button>
@@ -341,6 +348,7 @@ class CreateNodePoolsCluster extends Component {
               loading={submitting}
               onClick={this.props.closeForm}
               type='button'
+              data-dd-action-name='CREATE_CLUSTER_CANCEL'
             >
               Cancel
             </Button>
