@@ -126,8 +126,7 @@ window.onresize = () => {
       screenAvailableHeight: window.screen.availHeight,
       screenAvailableWidth: window.screen.availWidth,
     };
-    console.log('resize', payload);
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    (window as any).DD_RUM?.addUserAction('window-resize', payload);
+    (window as any).DD_RUM?.addUserAction('WINDOW_RESIZE', payload);
   }, oneSecond);
 };
