@@ -795,6 +795,7 @@ class AddNodePool extends Component {
                   this.toggleAZSelector(AvailabilityZoneSelection.None)
                 }
                 tabIndex='0'
+                data-dd-action-name='SELECT_AZ_SELECTION_NONE'
               />
               <label htmlFor={`none-${id}`}>
                 None{' '}
