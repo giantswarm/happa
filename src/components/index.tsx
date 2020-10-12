@@ -118,12 +118,12 @@ window.onresize = () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
     const payload = {
-      'windowInnerWidth': window.innerWidth,
-      'windowInnerHeight': window.innerHeight,
-      'screenHeight': window.screen.height,
-      'screenWidth': window.screen.width,
-      'screenAvailableHeight': window.screen.availHeight,
-      'screenAvailableWidth': window.screen.availWidth,
+      windowInnerWidth: window.innerWidth,
+      windowInnerHeight: window.innerHeight,
+      screenHeight: window.screen.height,
+      screenWidth: window.screen.width,
+      screenAvailableHeight: window.screen.availHeight,
+      screenAvailableWidth: window.screen.availWidth,
     };
     console.log('resize', payload);
     (window as any).DD_RUM?.addUserAction('window-resize', payload);
