@@ -77,6 +77,7 @@ class NodeCountSelector extends React.Component {
                   readOnly={readOnly}
                   stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
                   value={scaling.min}
+                  eventNameSuffix='SCALING_MIN'
                 />
               </label>
             </InnerTwoInputArea>
@@ -93,6 +94,7 @@ class NodeCountSelector extends React.Component {
                   readOnly={readOnly}
                   stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
                   value={scaling.max}
+                  eventNameSuffix='SCALING_MAX'
                 />
               </label>
             </InnerTwoInputArea>
@@ -117,6 +119,7 @@ class NodeCountSelector extends React.Component {
             readOnly={readOnly}
             stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
             value={scaling.max}
+            eventNameSuffix='WORKER_NODES'
           />
         </label>
       </form>

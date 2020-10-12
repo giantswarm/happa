@@ -234,6 +234,9 @@ class NumberPicker extends React.Component {
             <DecrementButton
               className={this.state.inputValue === this.props.min && 'disabled'}
               onClick={this.decrement}
+              data-dd-action-name={`DECREMENT_NUMBER_${
+                this.props.eventNameSuffix ? this.props.eventNameSuffix : ''
+              }`}
             >
               &ndash;
             </DecrementButton>
@@ -256,6 +259,9 @@ class NumberPicker extends React.Component {
             <IncrementButton
               className={this.props.value === this.props.max && 'disabled'}
               onClick={this.increment}
+              data-dd-action-name={`INCREMENT_NUMBER_${
+                this.props.eventNameSuffix ? this.props.eventNameSuffix : ''
+              }`}
             >
               +
             </IncrementButton>
@@ -277,6 +283,8 @@ NumberPicker.propTypes = {
   readOnly: PropTypes.bool,
   theme: PropTypes.string,
   className: PropTypes.string,
+  /** This string is appended to the user action event names recorded in Real User Monitoring. Should be UPPERCASE. */
+  eventNameSuffix: PropTypes.string,
 };
 
 function isWholeNumber(value) {

@@ -119,6 +119,7 @@ function AvailabilityZonesLabel({
       title={title}
       bgColor={color}
       onClick={toggleChecked}
+      data-dd-action-name='TOGGLE_AZ'
     >
       {label}
     </Wrapper>
