@@ -15,6 +15,7 @@ interface IRegionAndVersionsProps {
   createDate?: string;
   region?: string;
   release?: IRelease;
+  k8sVersionEOLDate?: string;
   showUpgradeModal?(): void;
 }
 
@@ -75,6 +76,7 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
               <KubernetesVersionLabel
                 version={release?.kubernetesVersion}
                 hidePatchVersion={false}
+                eolDate={release?.k8sVersionEOLDate}
               />
             </RefreshableLabel>
           </>
@@ -94,6 +96,7 @@ RegionAndVersions.propTypes = {
   clusterId: PropTypes.string.isRequired,
   createDate: PropTypes.string,
   region: PropTypes.string,
+  // @ts-expect-error
   release: PropTypes.shape({
     active: PropTypes.bool.isRequired,
     changelog: PropTypes.arrayOf(
@@ -108,10 +111,11 @@ RegionAndVersions.propTypes = {
         version: PropTypes.string.isRequired,
       }).isRequired
     ).isRequired,
-    kubernetesVersion: PropTypes.string.isRequired,
-    releaseNotesURL: PropTypes.string.isRequired,
     timestamp: PropTypes.string.isRequired,
     version: PropTypes.string.isRequired,
+    kubernetesVersion: PropTypes.string,
+    k8sVersionEOLDate: PropTypes.string,
+    releaseNotesURL: PropTypes.string,
   }),
   showUpgradeModal: PropTypes.func,
 };

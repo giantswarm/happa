@@ -1,6 +1,6 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getK8sVersionEOLDate, getUserIsAdmin } from 'stores/main/selectors';
 import { RELEASES_LOAD } from 'stores/releases/constants';
 import { IState } from 'stores/state';
 
@@ -20,19 +20,23 @@ export const loadReleases = createAsynchronousAction<
     const response = await api.getReleases();
 
     for (const release of response) {
+      const releasePatch: Partial<IRelease> = {};
+
       const kubernetesVersion = release.components.find(
         (component) => component.name === 'kubernetes'
       )?.version;
-
-      const releaseNotesURL = release.changelog[0].description;
-
       if (kubernetesVersion) {
-        releases[release.version] = {
-          ...release,
-          kubernetesVersion,
-          releaseNotesURL,
-        };
+        releasePatch.kubernetesVersion = kubernetesVersion;
+        releasePatch.k8sVersionEOLDate =
+          getK8sVersionEOLDate(kubernetesVersion)(state) ?? undefined;
       }
+
+      releasePatch.releaseNotesURL = release.changelog[0].description;
+
+      releases[release.version] = {
+        ...release,
+        ...releasePatch,
+      };
     }
 
     const userIsAdmin = getUserIsAdmin(state);

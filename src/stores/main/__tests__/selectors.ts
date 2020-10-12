@@ -1,6 +1,6 @@
 import Auth from 'lib/auth0';
 import * as helpers from 'lib/helpers';
-import { selectAuthToken } from 'stores/main/selectors';
+import { getK8sVersionEOLDate, selectAuthToken } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 
 // Bypass the user selectors mock.
@@ -123,6 +123,104 @@ describe('main::selectors', () => {
 
       const promise = selectAuthToken(dispatchMock)(state);
       await expect(promise).rejects.toThrowError(/you are not logged in/i);
+    });
+  });
+
+  describe('getK8sVersionEOLDate', () => {
+    function getStateWithK8sVersions(
+      versions?: IInstallationInfoKubernetesVersion[]
+    ) {
+      return ({
+        main: {
+          info: {
+            general: {
+              kubernetes_versions: versions,
+            },
+          },
+        },
+      } as unknown) as IState;
+    }
+
+    it('retrieves the correct version information for a given version number', () => {
+      const state = getStateWithK8sVersions([
+        {
+          minor_version: '1.00',
+          eol_date: '1960-05-20',
+        },
+        {
+          minor_version: '1.01',
+          eol_date: '2010-05-20',
+        },
+        {
+          minor_version: '2.00',
+          eol_date: '2999-01-12',
+        },
+      ]);
+
+      expect(getK8sVersionEOLDate('1.01.24')(state)).toBe('2010-05-20');
+    });
+
+    it('returns null if the version is an empty string', () => {
+      const state = getStateWithK8sVersions([
+        {
+          minor_version: '1.00',
+          eol_date: '1960-05-20',
+        },
+        {
+          minor_version: '1.01',
+          eol_date: '2010-05-20',
+        },
+        {
+          minor_version: '2.00',
+          eol_date: '2999-01-12',
+        },
+      ]);
+
+      expect(getK8sVersionEOLDate('')(state)).toBeNull();
+    });
+
+    it('returns null if there is no information about versions in the store', () => {
+      const state = getStateWithK8sVersions();
+
+      expect(getK8sVersionEOLDate('')(state)).toBeNull();
+    });
+
+    it('returns null if the given version number is not a valid semver version', () => {
+      const state = getStateWithK8sVersions([
+        {
+          minor_version: '1.00',
+          eol_date: '1960-05-20',
+        },
+        {
+          minor_version: '1.01',
+          eol_date: '2010-05-20',
+        },
+        {
+          minor_version: '2.00',
+          eol_date: '2999-01-12',
+        },
+      ]);
+
+      expect(getK8sVersionEOLDate('1')(state)).toBeNull();
+    });
+
+    it('returns null if there is no information available about the given version', () => {
+      const state = getStateWithK8sVersions([
+        {
+          minor_version: '1.00',
+          eol_date: '1960-05-20',
+        },
+        {
+          minor_version: '1.01',
+          eol_date: '2010-05-20',
+        },
+        {
+          minor_version: '2.00',
+          eol_date: '2999-01-12',
+        },
+      ]);
+
+      expect(getK8sVersionEOLDate('3.0.0')(state)).toBeNull();
     });
   });
 });

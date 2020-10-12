@@ -1,41 +1,101 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { Overlay } from 'react-bootstrap';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { Constants } from 'shared/constants';
+import { getReleaseEOLStatus } from 'stores/releases/utils';
+
+const EolLabel = styled.span`
+  background: ${({ theme }) => theme.colors.darkBlueDarker3};
+  color: ${({ theme }) => theme.colors.darkBlueLighter4};
+  padding: 1px ${({ theme }) => theme.spacingPx}px;
+  border-radius: 3px;
+  margin-left: 5px;
+  font-weight: 400;
+`;
 
 interface IKubernetesVersionLabelProps {
   version?: string;
   hidePatchVersion?: boolean;
+  eolDate?: string;
+  hideIcon?: boolean;
 }
 
 const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   version,
   hidePatchVersion,
+  eolDate,
+  hideIcon,
 }) => {
-  let versionLabel = 'n/a';
-
-  if (version) {
-    versionLabel = version;
-    if (hidePatchVersion) {
-      const v = version.split('.');
-      versionLabel = [v[0], v[1]].join('.');
-    }
+  let versionLabel = version || 'n/a';
+  if (version && hidePatchVersion) {
+    const v = version.split('.');
+    versionLabel = `${v[0]}.${v[1]}`;
   }
 
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+
+  const eolStatus = getReleaseEOLStatus(eolDate as string);
+  const isEol = eolStatus.isEol && Boolean(version);
+
+  const tryToToggleTooltip = (open: boolean) => () => {
+    if (open && eolStatus.message) {
+      setIsTooltipVisible(true);
+
+      return;
+    }
+
+    setIsTooltipVisible(false);
+  };
+
   return (
-    <span>
-      <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
-      {versionLabel}
-    </span>
+    <>
+      <span
+        ref={labelRef}
+        onMouseEnter={tryToToggleTooltip(true)}
+        onMouseLeave={tryToToggleTooltip(false)}
+        onFocus={tryToToggleTooltip(true)}
+        onBlur={tryToToggleTooltip(false)}
+      >
+        {!hideIcon && (
+          <>
+            <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
+          </>
+        )}
+
+        {versionLabel}
+
+        {isEol && (
+          <EolLabel aria-label={Constants.K8s_VERSION_EOL_EXPLANATION}>
+            {Constants.K8s_VERSION_EOL_LABEL}
+          </EolLabel>
+        )}
+      </span>
+      <Overlay
+        placement='top'
+        target={labelRef.current as HTMLSpanElement}
+        show={isTooltipVisible}
+      >
+        <Tooltip id='tooltip'>{eolStatus.message}</Tooltip>
+      </Overlay>
+    </>
   );
 };
 
 KubernetesVersionLabel.propTypes = {
   version: PropTypes.string,
   hidePatchVersion: PropTypes.bool,
+  eolDate: PropTypes.string,
+  hideIcon: PropTypes.bool,
 };
 
 KubernetesVersionLabel.defaultProps = {
   version: '',
   hidePatchVersion: true,
+  eolDate: '',
+  hideIcon: false,
 };
 
 export default KubernetesVersionLabel;

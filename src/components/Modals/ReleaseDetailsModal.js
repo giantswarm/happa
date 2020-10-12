@@ -2,6 +2,8 @@ import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { Constants } from 'shared/constants';
+import { getReleaseEOLStatus } from 'stores/releases/utils';
 import theme from 'styles/theme';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
@@ -9,6 +11,23 @@ import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
 
 class ReleaseDetailsModal extends React.Component {
+  static formatComponentVersion(release, component) {
+    const { name, version } = component;
+
+    if (
+      name === 'kubernetes' &&
+      release.k8sVersionEOLDate &&
+      !version.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
+    ) {
+      const { isEol } = getReleaseEOLStatus(release.k8sVersionEOLDate);
+      if (isEol) {
+        return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
+      }
+    }
+
+    return version;
+  }
+
   state = {
     modalVisible: false,
   };
@@ -82,7 +101,10 @@ class ReleaseDetailsModal extends React.Component {
                       <ReleaseComponentLabel
                         key={component.name}
                         name={component.name}
-                        version={component.version}
+                        version={ReleaseDetailsModal.formatComponentVersion(
+                          release,
+                          component
+                        )}
                       />
                     ))}
                   </div>

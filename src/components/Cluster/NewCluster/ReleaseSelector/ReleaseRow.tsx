@@ -10,6 +10,7 @@ import {
   Tr,
 } from 'UI/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
+import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 interface IReleaseRow extends IRelease {
@@ -22,6 +23,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
   components,
   isSelected,
   kubernetesVersion,
+  k8sVersionEOLDate,
   releaseNotesURL,
   selectRelease,
   timestamp,
@@ -62,7 +64,14 @@ const ReleaseRow: FC<IReleaseRow> = ({
         </CursorPointerCell>
         <CursorPointerCell>{version}</CursorPointerCell>
         <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
-        <CursorPointerCell>{kubernetesVersion}</CursorPointerCell>
+        <CursorPointerCell>
+          <KubernetesVersionLabel
+            version={kubernetesVersion}
+            eolDate={k8sVersionEOLDate}
+            hideIcon={true}
+            hidePatchVersion={false}
+          />
+        </CursorPointerCell>
         <CenteredCell onClick={(e) => e.stopPropagation()}>
           <TableButton
             data-testid={`show-components-${version}`}
@@ -119,12 +128,13 @@ ReleaseRow.propTypes = {
       version: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
-  kubernetesVersion: PropTypes.string.isRequired,
-  releaseNotesURL: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   selectRelease: PropTypes.func.isRequired,
   timestamp: PropTypes.string.isRequired,
   version: PropTypes.string.isRequired,
+  kubernetesVersion: PropTypes.string,
+  k8sVersionEOLDate: PropTypes.string,
+  releaseNotesURL: PropTypes.string,
 };
 
 export default ReleaseRow;
