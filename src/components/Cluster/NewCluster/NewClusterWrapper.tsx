@@ -3,18 +3,16 @@ import { push } from 'connected-react-router';
 import { hasAppropriateLength } from 'lib/helpers';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import RoutePath from 'lib/routePath';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import {
-  getFirstNodePoolsRelease,
-  getProvider,
-} from 'selectors/mainInfoSelectors';
-import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { computeCapabilities } from 'stores/cluster/utils';
+import { getFirstNodePoolsRelease, getProvider } from 'stores/main/selectors';
 import Headline from 'UI/ClusterCreation/Headline';
 import NameInput from 'UI/ClusterCreation/NameInput';
 import Section from 'UI/ClusterCreation/Section';
@@ -22,7 +20,6 @@ import StyledInput, {
   AdditionalInputHint,
 } from 'UI/ClusterCreation/StyledInput';
 import { FlexColumn } from 'UI/FlexDivs';
-import { computeCapabilities } from 'utils/clusterUtils';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
@@ -68,7 +65,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
 
     if (
       firstNodePoolsRelease !== '' &&
-      cmp(selectedRelease, firstNodePoolsRelease) >= 0
+      compare(selectedRelease, firstNodePoolsRelease) >= 0
     ) {
       return CreateNodePoolsCluster;
     }

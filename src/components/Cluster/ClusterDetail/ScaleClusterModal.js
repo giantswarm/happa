@@ -1,14 +1,14 @@
-import * as clusterActions from 'actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
-import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import * as clusterActions from 'stores/cluster/actions';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import FlashMessageComponent from 'UI/FlashMessage';
@@ -31,7 +31,7 @@ class ScaleClusterModal extends React.Component {
 
     // In order to have support for automatic scaling and therefore for scaling
     // limits, provider must be AWS and cluster release >= 6.3.0.
-    return cmp(releaseVer, '6.2.99') === 1;
+    return compare(releaseVer, '6.2.99') === 1;
   }
 
   state = {

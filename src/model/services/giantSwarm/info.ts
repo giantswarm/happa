@@ -1,8 +1,5 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
-import {
-  GiantSwarmPaths,
-  IInstallationInfo,
-} from 'model/services/giantSwarm/types';
+import { GiantSwarmPaths } from 'model/services/giantSwarm/types';
 
 /**
  * Get the info of an installation.

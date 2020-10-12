@@ -3,6 +3,7 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -10,7 +11,6 @@ import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
@@ -84,10 +84,10 @@ class OrganizationDetail extends React.Component {
         sort: true,
         sortFunc: (a, b, order) => {
           if (order === 'desc') {
-            return cmp(a, b) * -1;
+            return compare(a, b) * -1;
           }
 
-          return cmp(a, b);
+          return compare(a, b);
         },
       },
       {

@@ -583,7 +583,7 @@ describe('ScaleClusterModal', () => {
       .intercept(`/v4/clusters/${v4AWSClusterResponse.id}/`, 'PATCH')
       .reply(StatusCodes.InternalServerError, scaleResponse);
 
-    const { getByLabelText, findByText } = renderWithProps({
+    const { getByLabelText, findByText, findAllByText } = renderWithProps({
       workerNodesDesired: 4,
       workerNodesRunning: 3,
     });
@@ -603,6 +603,6 @@ describe('ScaleClusterModal', () => {
       /something went wrong while trying to scale your cluster:/i
     );
 
-    await findByText(/internal server error/i);
+    await findAllByText(/internal server error/i);
   });
 });

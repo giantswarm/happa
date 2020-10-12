@@ -20,9 +20,9 @@ export const Constants = {
   METADATA_UPDATE_LABEL: 'Update happa now',
 
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
-  AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4_v3',
+  AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AWS_V5_VERSION: '10.0.0',
-  AZURE_V5_VERSION: '40.0.0',
+  AZURE_V5_VERSION: '13.0.0-alpha',
 
   AZURE_MULTI_AZ_VERSION: '11.1.0',
   AWS_ONDEMAND_INSTANCES_VERSION: '11.2.0',
@@ -34,6 +34,8 @@ export const Constants = {
   CURRENT_NODES_INPOOL_EXPLANATION:
     'Current number of worker nodes in the node pool',
   DESIRED_NODES_EXPLANATION:
+    'The requested number of worker nodes in the node pool',
+  DESIRED_NODES_EXPLANATION_AUTOSCALER:
     'Autoscaler’s idea of how many nodes would be required for the workloads',
   MIN_NODES_EXPLANATION:
     'Lower end of the scaling range for the cluster autoscaler',
@@ -61,7 +63,7 @@ export const Constants = {
   NP_DEFAULT_MIN_SCALING_AWS: 3,
   NP_DEFAULT_MAX_SCALING_AWS: 10,
   NP_DEFAULT_MIN_SCALING_AZURE: 3,
-  NP_DEFAULT_MAX_SCALING_AZURE: 10,
+  NP_DEFAULT_MAX_SCALING_AZURE: 3,
 
   // App name of the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',

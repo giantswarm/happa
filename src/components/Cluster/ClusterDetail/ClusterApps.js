@@ -1,22 +1,20 @@
 import styled from '@emotion/styled';
-import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  selectClusterById,
-  selectErrorByIdAndAction,
-} from 'selectors/clusterSelectors';
-import cmp from 'semver-compare';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+import { loadClusterApps } from 'stores/appcatalog/actions';
+import { selectClusterById } from 'stores/cluster/selectors';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
+import { selectCluster } from 'stores/main/actions';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
@@ -46,7 +44,7 @@ const appMetas = {
       category: 'essentials',
     };
 
-    if (cmp(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
+    if (compare(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
       component.logoUrl = '/images/app_icons/flatcar_linux@2x.png';
     }
 
@@ -115,6 +113,11 @@ const appMetas = {
   'external-dns': {
     name: 'external-dns',
     logoUrl: '/images/app_icons/external_dns@2x.png',
+    category: 'essentials',
+  },
+  'cert-manager': {
+    name: 'cert-manager',
+    logoUrl: '/images/app_icons/cert_manager@2x.png',
     category: 'essentials',
   },
 };
@@ -323,8 +326,12 @@ class ClusterApps extends React.Component {
 
     const { hasOptionalIngress } = this.props;
     const filteredApps = apps.filter((app) => {
-      const isManagedByClusterOperator =
-        app.metadata.labels['giantswarm.io/managed-by'] === 'cluster-operator';
+      let isManagedByClusterOperator = false;
+      if (app.metadata.labels) {
+        isManagedByClusterOperator =
+          app.metadata.labels['giantswarm.io/managed-by'] ===
+          'cluster-operator';
+      }
 
       switch (true) {
         case hasOptionalIngress &&

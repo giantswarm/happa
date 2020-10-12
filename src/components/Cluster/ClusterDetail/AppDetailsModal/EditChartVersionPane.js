@@ -1,7 +1,7 @@
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { updateClusterApp } from 'stores/clusterapps/actions';
+import { updateClusterApp } from 'stores/appcatalog/actions';
 import FlashMessage from 'UI/FlashMessage';
 
 const EditChartVersionPane = (props) => {

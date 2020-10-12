@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
-import { CLUSTER_CREATE_REQUEST } from 'actions/actionTypes';
-import { batchedClusterCreate } from 'actions/batchedActions';
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import { batchedClusterCreate } from 'stores/batchActions';
+import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
@@ -432,8 +432,9 @@ CreateRegularCluster.propTypes = {
 function mapStateToProps(state) {
   const provider = state.main.info.general.provider;
   const propsToPush = {
-    minAvailabilityZones: state.main.info.general.availability_zones.default,
-    maxAvailabilityZones: state.main.info.general.availability_zones.max,
+    minAvailabilityZones:
+      state.main.info.general.availability_zones?.default ?? 0,
+    maxAvailabilityZones: state.main.info.general.availability_zones?.max ?? 0,
     clusterCreationStats: state.main.info.stats.cluster_creation_duration,
     provider,
   };

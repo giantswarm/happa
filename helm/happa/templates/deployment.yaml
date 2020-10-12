@@ -40,16 +40,20 @@ spec:
       - name: happa
         image: {{ .Values.Installation.V1.Registry.Domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
+        {{- if eq .Values.Installation.V1.Provider.Kind "aws" }}
         - name: AWS_CAPABILITIES_JSON
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
               key: aws-capabilities-json
+        {{- end }}
+        {{- if eq .Values.Installation.V1.Provider.Kind "azure" }}
         - name: AZURE_CAPABILITIES_JSON
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
               key: azure-capabilities-json
+        {{- end }}
         - name: PASSAGE_ENDPOINT
           valueFrom:
             configMapKeyRef:

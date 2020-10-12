@@ -5,7 +5,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
-import * as userActions from 'stores/user/actions';
+import * as mainActions from 'stores/main/actions';
 import Section from 'UI/Section';
 
 import ChangeEmailForm from './ChangeEmailForm';
@@ -67,7 +67,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,
   };
 }

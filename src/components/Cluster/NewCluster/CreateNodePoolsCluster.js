@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
-import { batchedClusterCreate } from 'actions/batchedActions';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -8,6 +6,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { Constants } from 'shared/constants';
+import { batchedClusterCreate } from 'stores/batchActions';
+import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -386,10 +386,7 @@ function mapStateToProps(state) {
     minAZ,
     maxAZ,
     defaultAZ,
-    clusterCreateError: selectErrorByAction(
-      state,
-      actionTypes.CLUSTER_CREATE_REQUEST
-    ),
+    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
   };
 }
 

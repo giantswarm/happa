@@ -18,8 +18,7 @@ interface IBaseCluster {
   capabilities?: IClusterCapabilities;
   keyPairs?: import('shared/types').IKeyPair[];
   lastUpdated?: number;
-  // FIXME(axbarsan): Write proper app type.
-  apps?: Record<string, unknown>[];
+  apps?: IInstalledApp[];
 }
 
 interface IRawInstanceType {
@@ -34,4 +33,10 @@ interface IRawAWSInstanceType extends IRawInstanceType {
 interface IRawAzureInstanceType extends IRawInstanceType {
   numberOfCores: number;
   memoryInMb: number;
+}
+
+type Cluster = V4.ICluster | V5.ICluster;
+
+interface IClusterMap {
+  [id: string]: Cluster;
 }

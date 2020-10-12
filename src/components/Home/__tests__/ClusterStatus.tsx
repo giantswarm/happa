@@ -4,8 +4,8 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import ClusterStatus from 'Home/ClusterStatus';
-import { IState } from 'reducers/types';
 import { Providers } from 'shared/constants';
+import { IState } from 'stores/state';
 import {
   nodePoolRelease,
   nodePoolWithFlatcarRelease,
@@ -214,10 +214,7 @@ describe('ClusterStatus', () => {
   });
 });
 
-function makeState(
-  cluster: Partial<V4.ICluster | V5.ICluster>,
-  releases: IReleases
-): IState {
+function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
   return ({
     ...preloginState,
     main: {

@@ -7,10 +7,10 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { installApp } from 'stores/clusterapps/actions';
+import { installApp } from 'stores/appcatalog/actions';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import GenericModal from '../../Modals/GenericModal';
 import ClusterPicker from './ClusterPicker';

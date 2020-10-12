@@ -12,6 +12,7 @@ import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { filterLabels, getNumberOfNodePoolsNodes } from 'stores/cluster/utils';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -33,7 +34,6 @@ import {
   v5ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { filterLabels, getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 import { validateLabelKey } from 'utils/labelUtils';
 
 describe('V5ClusterManagement', () => {

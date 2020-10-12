@@ -3,16 +3,16 @@ import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressBu
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { selectIngressAppFromCluster } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { selectIngressAppFromCluster } from 'stores/appcatalog/selectors';
 
 import { Text } from './Components';
 
 const IngressWrapper = styled.div``;
 
 interface IIngressProps extends React.ComponentPropsWithoutRef<'div'> {
-  cluster: V4.ICluster | V5.ICluster;
+  cluster: Cluster;
   provider?: PropertiesOf<typeof Providers>;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;

@@ -1,137 +1,197 @@
-import * as types from 'actions/actionTypes';
 import produce from 'immer';
-import { loadClusterApps } from 'stores/clusterapps/actions';
+import { loadClusterApps } from 'stores/appcatalog/actions';
+import { LOAD_CLUSTER_APPS_SUCCESS } from 'stores/appcatalog/constants';
+import { AppCatalogActions } from 'stores/appcatalog/types';
+import {
+  CLUSTER_DELETE_SUCCESS,
+  CLUSTER_LOAD_DETAILS_SUCCESS,
+  CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
+  CLUSTER_LOAD_STATUS_NOT_FOUND,
+  CLUSTER_PATCH,
+  CLUSTER_PATCH_ERROR,
+  CLUSTER_REMOVE_FROM_STORE,
+  CLUSTERS_LIST_REFRESH_SUCCESS,
+  CLUSTERS_LIST_SUCCESS,
+  V5_CLUSTER_CREATE_SUCCESS,
+} from 'stores/cluster/constants';
+import { ClusterActions, IClusterState } from 'stores/cluster/types';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
+import { UPDATE_CLUSTER_LABELS_SUCCESS } from 'stores/clusterlabels/constants';
+import { ClusterLabelsActions } from 'stores/clusterlabels/types';
 import {
   CLUSTER_NODEPOOLS_LOAD_SUCCESS,
   NODEPOOL_CREATE_SUCCESS,
   NODEPOOL_DELETE_SUCCESS,
 } from 'stores/nodepool/constants';
+import { NodePoolActions } from 'stores/nodepool/types';
 
-const initialState = {
-  lastUpdated: null,
+const initialState: IClusterState = {
+  lastUpdated: 0,
   isFetching: false,
   items: {},
   v5Clusters: [],
-  allIds: [],
 };
 
-// eslint-disable-next-line complexity
-const clusterReducer = produce((draft, action) => {
-  switch (action.type) {
-    case types.CLUSTERS_LIST_SUCCESS:
-      draft.items = action.clusters;
-      draft.v5Clusters = action.v5ClusterIds;
-      draft.allIds = action.allIds;
+const clusterReducer = produce(
+  // eslint-disable-next-line complexity
+  (
+    draft: IClusterState,
+    action:
+      | ClusterActions
+      | NodePoolActions
+      | AppCatalogActions
+      | ClusterLabelsActions
+  ) => {
+    switch (action.type) {
+      case CLUSTERS_LIST_SUCCESS:
+        draft.items = action.clusters;
+        draft.v5Clusters = action.v5ClusterIds;
 
-      return;
+        break;
 
-    case types.CLUSTERS_LIST_REFRESH_SUCCESS:
-      if (Object.keys(action.clusters).length > 0) {
-        draft.items = { ...draft.items, ...action.clusters };
+      case CLUSTERS_LIST_REFRESH_SUCCESS:
+        if (Object.keys(action.clusters).length > 0) {
+          draft.items = { ...draft.items, ...action.clusters };
 
-        if (action.v5ClusterIds.length > 0) {
-          draft.v5Clusters = Array.from(
-            new Set([...draft.v5Clusters, ...action.v5ClusterIds])
+          if (action.v5ClusterIds.length > 0) {
+            draft.v5Clusters = Array.from(
+              new Set([...draft.v5Clusters, ...action.v5ClusterIds])
+            );
+          }
+        }
+
+        break;
+
+      case CLUSTER_LOAD_DETAILS_SUCCESS: {
+        draft.items[action.cluster.id] = {
+          ...draft.items[action.cluster.id],
+          ...action.cluster,
+        };
+
+        break;
+      }
+
+      case CLUSTER_NODEPOOLS_LOAD_SUCCESS: {
+        const cluster = draft.items[action.id] as V5.ICluster | undefined;
+        if (cluster) {
+          cluster.nodePools = action.nodePoolIDs;
+        }
+
+        break;
+      }
+
+      case CLUSTER_LOAD_STATUS_NOT_FOUND: {
+        const cluster = draft.items[action.clusterId] as
+          | V4.ICluster
+          | undefined;
+        if (cluster) {
+          cluster.status = undefined;
+        }
+
+        break;
+      }
+
+      case loadClusterApps().types
+        .success as typeof LOAD_CLUSTER_APPS_SUCCESS: {
+        const cluster = draft.items[action.response.clusterId];
+        if (cluster) {
+          cluster.apps = action.response.apps;
+        }
+
+        break;
+      }
+
+      case CLUSTER_LOAD_KEY_PAIRS_SUCCESS: {
+        const cluster = draft.items[action.clusterId];
+        if (cluster) {
+          cluster.keyPairs = action.keyPairs;
+        }
+
+        break;
+      }
+
+      case V5_CLUSTER_CREATE_SUCCESS:
+        draft.v5Clusters.push(action.clusterId);
+
+        break;
+
+      case CLUSTER_DELETE_SUCCESS: {
+        const cluster = draft.items[action.clusterId];
+        if (cluster) {
+          cluster.delete_date = action.timestamp;
+          draft.lastUpdated = Date.now();
+        }
+
+        break;
+      }
+
+      case CLUSTER_REMOVE_FROM_STORE:
+        delete draft.items[action.clusterId];
+        if (action.isV5Cluster) {
+          draft.v5Clusters.filter((id: string) => id !== action.clusterId);
+        }
+
+        break;
+
+      case CLUSTER_PATCH: {
+        const cluster = draft.items[action.cluster.id];
+        if (cluster) {
+          for (const [key, value] of Object.entries(action.payload)) {
+            // @ts-expect-error
+            cluster[key] = value;
+          }
+        }
+
+        break;
+      }
+
+      // Undo optimistic update
+      case CLUSTER_PATCH_ERROR: {
+        if (draft.items[action.cluster.id]) {
+          draft.items[action.cluster.id] = action.cluster;
+        }
+
+        break;
+      }
+
+      case NODEPOOL_CREATE_SUCCESS: {
+        const cluster = draft.items[action.clusterID] as
+          | V5.ICluster
+          | undefined;
+        if (cluster) {
+          cluster.nodePools = [...cluster.nodePools, action.nodePool.id];
+        }
+
+        break;
+      }
+
+      case NODEPOOL_DELETE_SUCCESS: {
+        const cluster = draft.items[action.clusterID] as
+          | V5.ICluster
+          | undefined;
+        if (cluster?.nodePools) {
+          cluster.nodePools = cluster.nodePools.filter(
+            (np: string) => np !== action.nodePool.id
           );
         }
+
+        break;
       }
 
-      return;
-
-    case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
-      draft.items[action.cluster.id] = {
-        ...draft.items[action.cluster.id],
-        ...action.cluster,
-      };
-
-      return;
-    }
-
-    case CLUSTER_NODEPOOLS_LOAD_SUCCESS:
-      draft.items[action.id].nodePools = action.nodePoolIDs;
-
-      return;
-
-    case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].status = null;
-      }
-
-      return;
-
-    case loadClusterApps().types.success:
-      if (draft.items[action.response.clusterId]) {
-        draft.items[action.response.clusterId].apps = action.response.apps;
-      }
-
-      return;
-
-    case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].keyPairs = action.keyPairs;
-      }
-
-      return;
-
-    case types.V5_CLUSTER_CREATE_SUCCESS:
-      draft.v5Clusters.push(action.clusterId);
-
-      return;
-
-    // This is the action that is dispatched when deletion is confirmed in the modal.
-    // The cluster is not removed from the store, but it is now marked as a deleted one.
-    case types.CLUSTER_DELETE_SUCCESS:
-      draft.items[action.clusterId].delete_date = action.timestamp;
-      draft.lastUpdated = Date.now();
-
-      return;
-
-    // This is the action that we dispatch in order to actually remove a cluster from the store.
-    case types.CLUSTER_REMOVE_FROM_STORE:
-      delete draft.items[action.clusterId];
-      if (action.isV5Cluster) {
-        draft.v5Clusters.filter((id: string) => id !== action.clusterId);
-      }
-
-      return;
-
-    case types.CLUSTER_PATCH:
-      Object.keys(action.payload).forEach((key) => {
-        if (draft.items[action.cluster.id]) {
-          draft.items[action.cluster.id][key] = action.payload[key];
+      case updateClusterLabels().types
+        .success as typeof UPDATE_CLUSTER_LABELS_SUCCESS: {
+        const cluster = draft.items[action.response.clusterId] as
+          | V5.ICluster
+          | undefined;
+        if (cluster) {
+          cluster.labels = action.response.labels;
         }
-      });
 
-      return;
-
-    // Undo optimistic update
-    case types.CLUSTER_PATCH_ERROR:
-      if (draft.items[action.cluster.id]) {
-        draft.items[action.cluster.id] = action.cluster;
+        break;
       }
-
-      return;
-
-    case NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.clusterID].nodePools.push(action.nodePool.id);
-
-      return;
-
-    case NODEPOOL_DELETE_SUCCESS:
-      if (draft.items[action.clusterID]) {
-        draft.items[action.clusterID].nodePools = draft.items[
-          action.clusterID
-        ].nodePools.filter((np: string) => np !== action.nodePool.id);
-      }
-
-      return;
-
-    case updateClusterLabels().types.success:
-      if (draft.items[action.response.clusterId]) {
-        draft.items[action.response.clusterId].labels = action.response.labels;
-      }
-  }
-}, initialState);
+    }
+  },
+  initialState
+);
 
 export default clusterReducer;

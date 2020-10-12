@@ -1,6 +1,6 @@
-import { IState } from 'reducers/types';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { IState } from 'stores/state';
 
 export interface IAsynchronousDispatch<S>
   extends ThunkDispatch<S, void, AnyAction> {

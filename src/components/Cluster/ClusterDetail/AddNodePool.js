@@ -3,14 +3,15 @@ import styled from '@emotion/styled';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePoolMachineType';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
-import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
@@ -286,17 +287,6 @@ class AddNodePool extends Component {
     allowAlikeInstances: false,
   };
 
-  static isScalingAutomatic(provider) {
-    switch (provider) {
-      case Providers.AWS:
-      case Providers.AZURE:
-        return true;
-
-      default:
-        return false;
-    }
-  }
-
   static getDerivedStateFromProps(newProps, prevState) {
     // Set scaling defaults.
     if (prevState.scaling.max === null && prevState.scaling.min === null) {
@@ -347,10 +337,11 @@ class AddNodePool extends Component {
     return {
       allowSpotInstances:
         provider === Providers.AWS &&
-        cmp(Constants.AWS_ONDEMAND_INSTANCES_VERSION, selectedRelease) <= 0,
+        compare(Constants.AWS_ONDEMAND_INSTANCES_VERSION, selectedRelease) <= 0,
       allowAlikeInstances:
         provider === Providers.AWS &&
-        cmp(Constants.AWS_USE_ALIKE_INSTANCES_VERSION, selectedRelease) <= 0,
+        compare(Constants.AWS_USE_ALIKE_INSTANCES_VERSION, selectedRelease) <=
+          0,
     };
   };
 
@@ -592,7 +583,7 @@ class AddNodePool extends Component {
 
     const machineType = this.getMachineType();
 
-    const isScalingAuto = AddNodePool.isScalingAutomatic(provider);
+    const isScalingAuto = supportsNodePoolAutoscaling(provider);
     const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
 
     let azLabelClassName = '';
@@ -926,10 +917,10 @@ AddNodePool.defaultProps = {
 
 function mapStateToProps(state) {
   const { availability_zones: AZ } = state.main.info.general;
-  const availabilityZones = AZ.zones;
+  const availabilityZones = AZ?.zones ?? [];
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
-  const maxAZ = Math.min(AZ.max, 4);
+  const maxAZ = Math.min(AZ?.max ?? 0, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
   const provider = state.main.info.general.provider;

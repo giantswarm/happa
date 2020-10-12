@@ -1,8 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';
-import rootReducer from 'reducers';
-import { IState } from 'reducers/types';
 import {
   applyMiddleware,
   compose,
@@ -13,10 +11,12 @@ import {
 import thunk from 'redux-thunk';
 import FeatureFlags from 'shared/FeatureFlags';
 import { cpAuthMiddleware } from 'stores/cpauth/middleware';
+import rootReducer from 'stores/rootReducer';
+import { IState } from 'stores/state';
 
 import { callAPIMiddleware } from './callAPIMiddleware';
 
-let store: Store = {} as Store;
+let store = {} as Store<IState>;
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -4,22 +4,22 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { IState } from 'reducers/types';
-import {
-  selectIngressAppFromCluster,
-  selectLoadingFlagByAction,
-} from 'selectors/clusterSelectors';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
 } from 'stores/appcatalog/actions';
-import { selectIngressAppToInstall } from 'stores/appcatalog/selectors';
+import {
+  selectIngressAppFromCluster,
+  selectIngressAppToInstall,
+} from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { IState } from 'stores/state';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,7 +40,7 @@ const StyledLink = styled(Link)`
 
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  cluster: V4.ICluster | V5.ICluster;
+  cluster: Cluster;
 }
 
 const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
@@ -49,17 +49,15 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 }) => {
   const [isNew, setIsNew] = useState(true);
 
-  const isInstalling: boolean | null = useSelector((state) =>
+  const isInstalling = useSelector<IState, boolean | null>((state) =>
     selectLoadingFlagByAction(state, installLatestIngress().types.request)
   );
-  const isPreparingIngressTabData: boolean | null = useSelector((state) =>
-    selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
+  const isPreparingIngressTabData = useSelector<IState, boolean | null>(
+    (state) =>
+      selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
   );
-  // TODO(axbarsan): Use proper app type.
-  const installedIngressApp:
-    | Record<string, never>
-    | undefined = selectIngressAppFromCluster(cluster);
 
+  const installedIngressApp = selectIngressAppFromCluster(cluster);
   const ingressAppToInstall = useSelector(selectIngressAppToInstall);
 
   const ingressAppDetailPath = useMemo(() => {

@@ -25,7 +25,7 @@ declare namespace V4 {
   }
 
   export interface IClusterWorker {
-    labels: IClusterLabelMap;
+    labels: IClusterLabelMap | null;
     cpu: IClusterCPU;
     memory: IClusterMemory;
     storage: IClusterStorage;

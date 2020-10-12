@@ -6,8 +6,8 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectClusterById } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { selectClusterById } from 'stores/cluster/selectors';
 
 const StyledInstallIngressButton = styled(InstallIngressButton)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;

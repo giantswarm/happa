@@ -2,9 +2,9 @@ import { IHttpRequest } from '@airbrake/browser/dist/http_req/api';
 import crossFetch from 'cross-fetch';
 import { createMemoryHistory } from 'history';
 import { Requester } from 'lib/patchedAirbrakeRequester';
-import { IState } from 'reducers/types';
 import { AuthorizationTypes } from 'shared/constants';
 import configureStore from 'stores/configureStore';
+import { IState } from 'stores/state';
 import { USER_EMAIL } from 'testUtils/mockHttpCalls';
 
 jest.mock('cross-fetch');

@@ -1,10 +1,9 @@
+import produce from 'immer';
 import {
   CLUSTER_DELETE_CONFIRMED,
   CLUSTER_DELETE_REQUEST,
-  ROUTER_LOCATION_CHANGE,
-} from 'actions/actionTypes';
-import { LocationChangeAction } from 'connected-react-router';
-import produce from 'immer';
+} from 'stores/cluster/constants';
+import { ClusterActions } from 'stores/cluster/types';
 import { MODAL_HIDE } from 'stores/modal/constants';
 import { IModalState, ModalActions } from 'stores/modal/types';
 import {
@@ -25,6 +24,8 @@ import {
   ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
 } from 'stores/organization/constants';
 import { OrganizationActions } from 'stores/organization/types';
+import { ROUTER_LOCATION_CHANGE } from 'stores/router/constants';
+import { RouterActions } from 'stores/router/types';
 
 const initialState: IModalState = {
   visible: false,
@@ -39,7 +40,8 @@ const modalReducer = produce(
       | ModalActions
       | OrganizationActions
       | NodePoolActions
-      | LocationChangeAction
+      | ClusterActions
+      | RouterActions
   ) => {
     switch (action.type) {
       case MODAL_HIDE:
@@ -54,24 +56,20 @@ const modalReducer = produce(
 
         break;
 
-      // TODO(axbarsan): Remove type casts once we have a generic cluster action type.
-
-      case CLUSTER_DELETE_REQUEST as unknown:
+      case CLUSTER_DELETE_REQUEST:
         draft.visible = true;
         draft.templateValues = {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          cluster: (action as any).cluster,
+          cluster: action.cluster,
           loading: false,
         };
         draft.template = 'clusterDelete';
 
         break;
 
-      case CLUSTER_DELETE_CONFIRMED as unknown:
+      case CLUSTER_DELETE_CONFIRMED:
         draft.visible = true;
         draft.templateValues = {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          cluster: (action as any).cluster,
+          cluster: action.cluster,
           loading: true,
         };
         draft.template = 'clusterDelete';

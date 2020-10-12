@@ -1,19 +1,19 @@
 import GiantSwarm, { V5ClusterLabelsProperty } from 'giantswarm';
-import { filterLabels } from 'utils/clusterUtils';
+import { filterLabels } from 'stores/cluster/utils';
+import { UPDATE_CLUSTER_LABELS } from 'stores/clusterlabels/constants';
+import {
+  ILabelChangeActionPayload,
+  ILabelChangeActionResponse,
+} from 'stores/clusterlabels/types';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 
-interface ILabelChangeResponse {
-  clusterId: string;
-  labels: V5ClusterLabelsProperty;
-}
-
 export const updateClusterLabels = createAsynchronousAction<
-  ILabelChangeRequest,
+  ILabelChangeActionPayload,
   void,
-  void | ILabelChangeResponse
+  void | ILabelChangeActionResponse
 >({
-  actionTypePrefix: 'UPDATE_CLUSTER_LABELS',
+  actionTypePrefix: UPDATE_CLUSTER_LABELS,
   perform: async (_s, _d, payload) => {
     if (payload) {
       const labelsPayload = {

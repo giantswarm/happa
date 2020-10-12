@@ -1,6 +1,5 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { IState } from 'reducers/types';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
 import { INodePool } from 'shared/types';
@@ -28,11 +27,12 @@ import {
   INodePoolPatchActionPayload,
   NodePoolActions,
 } from 'stores/nodepool/types';
+import { IState } from 'stores/state';
 
 export function clusterNodePoolsLoad(
   clusterID: string,
   opts?: { withLoadingFlags?: boolean }
-): ThunkAction<void, IState, void, NodePoolActions> {
+): ThunkAction<Promise<void>, IState, void, NodePoolActions> {
   return async (dispatch) => {
     try {
       if (opts?.withLoadingFlags) {
@@ -95,14 +95,13 @@ export function clusterNodePoolsLoad(
 export function nodePoolsLoad(opts?: {
   filterBySelectedOrganization?: boolean;
   withLoadingFlags?: boolean;
-}): ThunkAction<void, IState, void, NodePoolActions> {
+}): ThunkAction<Promise<void>, IState, void, NodePoolActions> {
   return async (dispatch, getState) => {
     if (opts?.withLoadingFlags)
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
 
     const selectedOrganization = getState().main.selectedOrganization;
-    const allClusters: Record<string, V4.ICluster | V5.ICluster> = getState()
-      .entities.clusters.items;
+    const allClusters = getState().entities.clusters.items;
     const v5ClusterIDs: string[] =
       getState().entities.clusters.v5Clusters || [];
 
@@ -284,7 +283,7 @@ export function nodePoolsCreate(
   clusterID: string,
   nodePools: INodePool[],
   opts?: { withFlashMessages?: boolean }
-): ThunkAction<void, IState, void, NodePoolActions> {
+): ThunkAction<Promise<void>, IState, void, NodePoolActions> {
   return async (dispatch) => {
     dispatch({ type: NODEPOOL_MULTIPLE_CREATE_REQUEST });
 

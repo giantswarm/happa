@@ -230,7 +230,7 @@ export function truncate(
  * @param useInternalAPI
  */
 export function makeKubeConfigTextFile(
-  cluster: V4.ICluster | V5.ICluster,
+  cluster: Cluster,
   keyPair: IKeyPair,
   useInternalAPI: boolean
 ): string {
@@ -278,8 +278,8 @@ export function makeKubeConfigTextFile(
  */
 export function clustersForOrg(
   orgId: string,
-  allClusters?: Record<string, V4.ICluster | V5.ICluster>
-): (V4.ICluster | V5.ICluster)[] {
+  allClusters?: IClusterMap
+): Cluster[] {
   if (!allClusters) return [];
 
   return Object.values(allClusters).filter(

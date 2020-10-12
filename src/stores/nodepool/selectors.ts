@@ -1,11 +1,12 @@
-import { IState } from 'reducers/types';
-import { createDeepEqualSelector } from 'selectors/selectorUtils';
 import { INodePool } from 'shared/types';
+import { selectClusterById } from 'stores/cluster/selectors';
 import {
   getCpusTotalNodePools,
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
-} from 'utils/clusterUtils';
+} from 'stores/cluster/utils';
+import { IState } from 'stores/state';
+import { createDeepEqualSelector } from 'stores/utils';
 
 export function selectNodePools(state: IState): Record<string, INodePool> {
   return state.entities.nodePools.items;
@@ -14,29 +15,37 @@ export function selectNodePools(state: IState): Record<string, INodePool> {
 export function selectClusterNodePoolIDs(
   state: IState,
   props: { cluster: V5.ICluster }
-): string[] {
-  return state.entities.clusters.items[props.cluster.id].nodePools;
+) {
+  const cluster = selectClusterById(state, props.cluster.id);
+  if (cluster) {
+    return (cluster as V5.ICluster).nodePools;
+  }
+
+  return undefined;
 }
 
 export function selectClusterNodePools(
   state: IState,
   clusterID: string
 ): INodePool[] {
-  const clusterNodePoolsIDs: string[] | undefined =
-    state.entities.clusters.items[clusterID]?.nodePools;
+  const cluster = selectClusterById(state, clusterID) as
+    | V5.ICluster
+    | undefined;
+  const clusterNodePoolsIDs: string[] | undefined = cluster?.nodePools;
   if (!clusterNodePoolsIDs) return [];
 
   const allNodePools = selectNodePools(state);
 
-  return (
-    clusterNodePoolsIDs.map((nodePoolID) => allNodePools[nodePoolID]) ?? []
-  );
+  return clusterNodePoolsIDs.map((nodePoolID) => allNodePools[nodePoolID]);
 }
 
 export const makeV5ResourcesSelector = () =>
   createDeepEqualSelector(
     [selectNodePools, selectClusterNodePoolIDs],
-    (nodePools: Record<string, INodePool>, clusterNodePoolsIDs: string[]) => {
+    (
+      nodePools: Record<string, INodePool>,
+      clusterNodePoolsIDs: string[] | undefined
+    ) => {
       let clusterNodePools: INodePool[] = [];
       if (Object.values(nodePools).length > 0 && clusterNodePoolsIDs) {
         clusterNodePools = clusterNodePoolsIDs.map((np) => nodePools[np]);

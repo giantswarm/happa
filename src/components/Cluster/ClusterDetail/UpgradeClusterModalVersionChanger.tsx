@@ -1,13 +1,13 @@
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { canClusterUpgrade } from 'stores/cluster/utils';
 import Button from 'UI/Button';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import { canClusterUpgrade } from 'utils/clusterUtils';
 
 interface IUpgradeClusterModalVersionChangerProps
   extends React.ComponentPropsWithoutRef<'div'> {
@@ -34,7 +34,7 @@ const UpgradeClusterModalVersionChanger: React.FC<IUpgradeClusterModalVersionCha
 }) => {
   const versionFilter = useMemo(
     () => (version: string): boolean => {
-      if (cmp(currentReleaseVersion, version) >= 0) return false;
+      if (compare(currentReleaseVersion, version) >= 0) return false;
 
       if (!canClusterUpgrade(currentReleaseVersion, version, provider))
         return false;

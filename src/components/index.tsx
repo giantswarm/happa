@@ -15,11 +15,11 @@ import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
-import { IState } from 'reducers/types';
 import { Store } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
+import { IState } from 'stores/state';
 import theme from 'styles/theme';
 
 import App from './App';

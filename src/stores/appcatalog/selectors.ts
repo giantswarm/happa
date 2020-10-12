@@ -1,5 +1,5 @@
-import { IState } from 'reducers/types';
 import { Constants } from 'shared/constants';
+import { IState } from 'stores/state';
 
 export function selectIngressCatalog(state: IState): IAppCatalog | undefined {
   return state.entities.catalogs.items[
@@ -13,4 +13,14 @@ export function selectIngressAppToInstall(
   const ingressCatalog = selectIngressCatalog(state);
 
   return ingressCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0];
+}
+
+export function selectIngressAppFromCluster(cluster: Cluster) {
+  const apps = cluster.apps || [];
+
+  const ingressApp = apps.find((app) => {
+    return app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME;
+  });
+
+  return ingressApp;
 }

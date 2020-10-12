@@ -1,3 +1,4 @@
+import { Providers } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 
 // This is what the state looks like when someone brand new arrives at the site
@@ -15,15 +16,23 @@ export default {
   },
   main: {
     selectedOrganization: null,
+    selectedClusterID: undefined,
     firstLoadComplete: false,
     loggedInUser: null,
     info: {
       general: {
-        availability_zones: {
+        installation_name: '',
+        availability_zones: null,
+        provider: Providers.AWS,
+      },
+      stats: {
+        cluster_creation_duration: null,
+      },
+      workers: {
+        count_per_cluster: {
+          max: null,
           default: 0,
-          max: 0,
         },
-        provider: '',
       },
     },
   },
@@ -47,15 +56,10 @@ export default {
       items: {},
     },
     clusters: {
-      lastUpdated: null,
-      isFetching: false,
-      items: {},
-      v5Clusters: [],
-    },
-    invitations: {
       lastUpdated: 0,
       isFetching: false,
       items: {},
+      v5Clusters: [],
     },
     organizations: {
       lastUpdated: 0,
@@ -69,6 +73,8 @@ export default {
       },
     },
     releases: {
+      error: null,
+      isFetching: false,
       items: {},
     },
     users: {
@@ -84,6 +90,10 @@ export default {
     nodePools: {
       items: {},
       isFetching: false,
+    },
+    clusterLabels: {
+      requestInProgress: false,
+      error: null,
     },
   },
   modal: {

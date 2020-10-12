@@ -1,10 +1,4 @@
 import styled from '@emotion/styled';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'actions/actionTypes';
-import {
-  batchedClusterDetailView,
-  batchedRefreshClusterDetailView,
-} from 'actions/batchedActions';
-import * as clusterActions from 'actions/clusterActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -17,19 +11,28 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-  selectTargetRelease,
-} from 'selectors/clusterSelectors';
-import { getAllReleases } from 'selectors/releaseSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import {
+  batchedClusterDetailView,
+  batchedRefreshClusterDetailView,
+} from 'stores/batchActions';
+import * as clusterActions from 'stores/cluster/actions';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
+import { selectTargetRelease } from 'stores/cluster/selectors';
+import {
+  getNumberOfNodes,
+  isClusterCreating,
+  isClusterUpdating,
+} from 'stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
-import { getUserIsAdmin } from 'stores/user/selectors';
+import { getAllReleases } from 'stores/releases/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -38,11 +41,6 @@ import Section from 'UI/Section';
 import ViewAndEditName from 'UI/ViewEditName';
 import Well from 'UI/Well';
 import { memoize } from 'underscore';
-import {
-  getNumberOfNodes,
-  isClusterCreating,
-  isClusterUpdating,
-} from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
 import Ingress from './Ingress/Ingress';

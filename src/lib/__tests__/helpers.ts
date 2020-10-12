@@ -406,7 +406,7 @@ token: can't be blank`)
 
   describe('clustersForOrg', () => {
     it('filters all clusters for a given organization', () => {
-      const clusters: Record<string, V4.ICluster | V5.ICluster> = {
+      const clusters: IClusterMap = {
         '1sa1s': {
           id: '1sa1s',
           api_endpoint: 'https://api.somek8s.bestk8s.io',

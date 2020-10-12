@@ -1,26 +1,23 @@
-import {
-  CLUSTER_LOAD_APP_README_ERROR,
-  CLUSTER_LOAD_APP_README_REQUEST,
-} from 'actions/actionTypes';
-import { loadAppReadme } from 'actions/appActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import {
-  selectLoadingFlagByAction,
-  selectLoadingFlagByIdAndAction,
-} from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import { listCatalogs } from 'stores/appcatalog/actions';
-import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
+import { listCatalogs, loadAppReadme } from 'stores/appcatalog/actions';
+import {
+  CATALOG_LOAD_INDEX_REQUEST,
+  CLUSTER_LOAD_APP_README_ERROR,
+  CLUSTER_LOAD_APP_README_REQUEST,
+} from 'stores/appcatalog/constants';
+import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import { isClusterCreating, isClusterUpdating } from 'utils/clusterUtils';
 
 import InstallAppModal from './InstallAppModal';
 

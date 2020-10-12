@@ -5,6 +5,10 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import {
+  supportsNodePoolAutoscaling,
+  supportsNodePoolSpotInstances,
+} from 'stores/nodepool/utils';
 
 interface IV5ClusterDetailTableNodePoolScalingProps {
   provider: PropertiesOf<typeof Providers>;
@@ -13,29 +17,42 @@ interface IV5ClusterDetailTableNodePoolScalingProps {
 const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoolScalingProps> = ({
   provider,
 }) => {
+  const supportsAutoScaling = supportsNodePoolAutoscaling(provider);
+  const supportsSpotInstances = supportsNodePoolSpotInstances(provider);
+  const desiredCountTooltipMessage = supportsAutoScaling
+    ? Constants.DESIRED_NODES_EXPLANATION_AUTOSCALER
+    : Constants.DESIRED_NODES_EXPLANATION;
+
   return (
     <>
+      {supportsAutoScaling && (
+        <>
+          <OverlayTrigger
+            overlay={
+              <Tooltip id='min-tooltip'>
+                {Constants.MIN_NODES_EXPLANATION}
+              </Tooltip>
+            }
+            placement='top'
+          >
+            <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
+          </OverlayTrigger>
+          <OverlayTrigger
+            overlay={
+              <Tooltip id='max-tooltip'>
+                {Constants.MAX_NODES_EXPLANATION}
+              </Tooltip>
+            }
+            placement='top'
+          >
+            <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
+          </OverlayTrigger>
+        </>
+      )}
+
       <OverlayTrigger
         overlay={
-          <Tooltip id='min-tooltip'>{Constants.MIN_NODES_EXPLANATION}</Tooltip>
-        }
-        placement='top'
-      >
-        <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
-      </OverlayTrigger>
-      <OverlayTrigger
-        overlay={
-          <Tooltip id='max-tooltip'>{Constants.MAX_NODES_EXPLANATION}</Tooltip>
-        }
-        placement='top'
-      >
-        <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
-      </OverlayTrigger>
-      <OverlayTrigger
-        overlay={
-          <Tooltip id='desired-tooltip'>
-            {Constants.DESIRED_NODES_EXPLANATION}
-          </Tooltip>
+          <Tooltip id='desired-tooltip'>{desiredCountTooltipMessage}</Tooltip>
         }
         placement='top'
       >
@@ -52,7 +69,7 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
         <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
       </OverlayTrigger>
 
-      {provider === Providers.AWS && (
+      {supportsSpotInstances && (
         <OverlayTrigger
           overlay={
             <Tooltip id='spot-tooltip'>

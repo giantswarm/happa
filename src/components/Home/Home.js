@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
-import { batchedRefreshClusters } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
@@ -11,8 +9,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { selectClustersList } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { batchedRefreshClusters } from 'stores/batchActions';
+import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
+import { selectClustersList } from 'stores/cluster/selectors';
 import { selectErrorByAction } from 'stores/error/selectors';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
@@ -200,7 +200,7 @@ const makeMapStateToProps = () => {
     const selectedOrganization = state.main.selectedOrganization;
     const errorLoadingClusters = selectErrorByAction(
       state,
-      actionTypes.CLUSTERS_LIST_REQUEST
+      CLUSTERS_LIST_REQUEST
     );
     const v5Clusters = state.entities.clusters.v5Clusters;
 

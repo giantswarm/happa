@@ -9,23 +9,22 @@ import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {
-  selectClusterById,
-  selectErrorByIdAndAction,
-} from 'selectors/clusterSelectors';
-import { getAllReleases } from 'selectors/releaseSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import ErrorBoundary from 'shared/ErrorBoundary';
+import { selectClusterById } from 'stores/cluster/selectors';
+import { isClusterCreating } from 'stores/cluster/utils';
+import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
+import { getAllReleases } from 'stores/releases/selectors';
 import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import ErrorText from 'UI/ErrorText';
+import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterCreating } from 'utils/clusterUtils';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
@@ -134,6 +133,10 @@ const ClusterDetailsDiv = styled.div`
     display: inline-block;
     transform: translateY(-1px);
   }
+`;
+
+const StyledErrorFallback = styled(ErrorFallback)`
+  display: block;
 `;
 
 function ClusterDashboardItem({
@@ -255,17 +258,14 @@ function ClusterDashboardItem({
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel value={release?.kubernetesVersion}>
-              <span>
-                <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
-                {release?.kubernetesVersion ?? 'n/a'}
-              </span>
+              <KubernetesVersionLabel version={release?.kubernetesVersion} />
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
             Created {relativeDate(cluster.create_date)}
           </>
 
           {/* Cluster resources */}
-          <ErrorFallback error={nodePoolsLoadError}>
+          <StyledErrorFallback error={nodePoolsLoadError}>
             <ClusterDetailsDiv>
               {isV5Cluster ? (
                 <ClusterDashboardResourcesV5
@@ -280,7 +280,7 @@ function ClusterDashboardItem({
                 />
               )}
             </ClusterDetailsDiv>
-          </ErrorFallback>
+          </StyledErrorFallback>
         </ContentWrapper>
 
         <ButtonsWrapper>

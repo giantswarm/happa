@@ -1,11 +1,12 @@
-import * as actionTypes from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectLoadingFlagByAction,
-  selectResourcesV4,
-} from 'selectors/clusterSelectors';
+  CLUSTER_LOAD_STATUS_REQUEST,
+  CLUSTERS_DETAILS_REQUEST,
+} from 'stores/cluster/constants';
+import { selectResourcesV4 } from 'stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
@@ -62,11 +63,11 @@ const makeMapStateToProps = () => {
       resources: resources(state, props.cluster.id),
       loadingClusters: selectLoadingFlagByAction(
         state,
-        actionTypes.CLUSTERS_DETAILS_REQUEST
+        CLUSTERS_DETAILS_REQUEST
       ),
       loadingStatus: selectLoadingFlagByAction(
         state,
-        actionTypes.CLUSTER_LOAD_STATUS_REQUEST
+        CLUSTER_LOAD_STATUS_REQUEST
       ),
     };
   };
