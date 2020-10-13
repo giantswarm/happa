@@ -112,21 +112,29 @@ body.classList.remove('loading');
 const appContainer = document.getElementById('app');
 render(<App {...{ store, theme, history }} />, appContainer);
 
-// Register a window resize event listener.
+const getSizes = () => {
+  return {
+    windowInnerWidth: window.innerWidth,
+    windowInnerHeight: window.innerHeight,
+    screenHeight: window.screen.height,
+    screenWidth: window.screen.width,
+    screenAvailableHeight: window.screen.availHeight,
+    screenAvailableWidth: window.screen.availWidth,
+  };
+};
+
+// Register a window load and resize event listener
+// for window/screen size recording.
 const oneSecond: number = 1000;
 let resizeRecorderTimeout: number = 0;
 window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
-    const payload = {
-      windowInnerWidth: window.innerWidth,
-      windowInnerHeight: window.innerHeight,
-      screenHeight: window.screen.height,
-      screenWidth: window.screen.width,
-      screenAvailableHeight: window.screen.availHeight,
-      screenAvailableWidth: window.screen.availWidth,
-    };
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    (window as any).DD_RUM?.addUserAction('WINDOW_RESIZE', payload);
+    (window as any).DD_RUM?.addUserAction('WINDOW_RESIZE', getSizes());
   }, oneSecond);
+});
+window.addEventListener('load', () => {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  (window as any).DD_RUM?.addUserAction('WINDOW_LOAD', getSizes());
 });
