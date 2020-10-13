@@ -191,7 +191,7 @@
     "copy-webpack-plugin": "6.1.0",
     "cors": "^2.8.4",
     "css-loader": "4.3.0",
-    "eslint": "^7.10.0",
+    "eslint": "^7.11.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-emotion": "10.0.27",
     "eslint-plugin-import": "2.22.1",
