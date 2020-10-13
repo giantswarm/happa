@@ -18,7 +18,7 @@ const NodesRunning: FC<INodesRunningProps> = ({
   numNodePools,
   workerNodesRunning,
 }) => {
-  if (workerNodesRunning === 0 && isClusterCreating) {
+  if (isClusterCreating) {
     return (
       <div data-testid='nodes-running'>
         <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
@@ -33,7 +33,7 @@ const NodesRunning: FC<INodesRunningProps> = ({
     <div data-testid='nodes-running'>
       <span>
         {`${workerNodesRunning} ${nodesSingularPlural}`}
-        {numNodePools && ` in ${numNodePools} ${npSingularPlural}`}
+        {` in ${numNodePools} ${npSingularPlural}`}
       </span>
       <span>
         <Dot />
@@ -53,6 +53,10 @@ NodesRunning.propTypes = {
   isClusterCreating: PropTypes.bool.isRequired,
   workerNodesRunning: PropTypes.number.isRequired,
   numNodePools: PropTypes.number,
+};
+
+NodesRunning.defaultProps = {
+  numNodePools: 0,
 };
 
 export default NodesRunning;
