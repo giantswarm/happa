@@ -29,12 +29,14 @@ const NodesRunning: FC<INodesRunningProps> = ({
   const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
   const npSingularPlural = numNodePools === 1 ? ' node pool' : ' node pools';
 
+  let workerNodesStatus = `${workerNodesRunning} ${nodesSingularPlural}`;
+  if (numNodePools) {
+    workerNodesStatus += ` in ${numNodePools} ${npSingularPlural}`;
+  }
+
   return (
     <div data-testid='nodes-running'>
-      <span>
-        {`${workerNodesRunning} ${nodesSingularPlural}`}
-        {` in ${numNodePools} ${npSingularPlural}`}
-      </span>
+      <span>{workerNodesStatus}</span>
       <span>
         <Dot />
         {RAM} GB RAM
@@ -53,10 +55,6 @@ NodesRunning.propTypes = {
   isClusterCreating: PropTypes.bool.isRequired,
   workerNodesRunning: PropTypes.number.isRequired,
   numNodePools: PropTypes.number,
-};
-
-NodesRunning.defaultProps = {
-  numNodePools: 0,
 };
 
 export default NodesRunning;
