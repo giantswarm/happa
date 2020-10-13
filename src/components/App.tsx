@@ -1,5 +1,5 @@
 import CPAuthProvider from 'Auth/CP/CPAuthProvider';
-import { ConnectedRouter } from 'connected-react-router/immutable';
+import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import Footer from 'Footer/Footer';
 import { History } from 'history';
