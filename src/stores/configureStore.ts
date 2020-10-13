@@ -1,4 +1,4 @@
-import { routerMiddleware } from 'connected-react-router';
+import { routerMiddleware } from 'connected-react-router/immutable';
 import { History } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import {

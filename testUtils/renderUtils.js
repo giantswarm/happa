@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import App from 'App';
-import { ConnectedRouter } from 'connected-react-router';
+import { ConnectedRouter } from 'connected-react-router/immutable';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';

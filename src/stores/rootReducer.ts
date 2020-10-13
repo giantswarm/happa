@@ -1,4 +1,4 @@
-import { connectRouter } from 'connected-react-router';
+import { connectRouter } from 'connected-react-router/immutable';
 import { History } from 'history';
 import { combineReducers, ReducersMapObject } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
