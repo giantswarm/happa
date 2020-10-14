@@ -2,6 +2,7 @@ import { compare } from 'lib/semver';
 import { Constants, Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
 import { getMinHAMastersVersion } from 'stores/main/selectors';
+import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { validateLabelKey } from 'utils/labelUtils';
 
@@ -28,6 +29,8 @@ export function canClusterUpgrade(
   const onAWS = provider === Providers.AWS;
 
   if (onAWS && targetingV5 && currentlyV4) return false;
+
+  if (isPreRelease(targetVersion)) return false;
 
   return true;
 }

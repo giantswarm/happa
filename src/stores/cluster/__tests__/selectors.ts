@@ -77,13 +77,14 @@ describe('cluster::selectors', () => {
       expect(releaseVersion).toBeNull();
     });
 
-    it(`returns null if there's a newer active version available, but it's inactive`, () => {
+    it(`returns null if there's a newer version available, but it's inactive, or if there's a newer version, but it's a pre-release one`, () => {
       const initialState = createInitialState({
         '1.0.0': createRelease('1.0.0', true),
         '2.0.0': createRelease('2.0.0', false),
         '2.0.1': createRelease('2.0.1', true),
         '3.0.0': createRelease('3.0.0', true),
         '3.0.1': createRelease('3.0.1', false),
+        '3.0.1-beta': createRelease('3.0.1-beta', true),
       });
       const cluster = (Object.assign({}, v5ClusterResponse, {
         release_version: '3.0.0',
@@ -111,6 +112,7 @@ describe('cluster::selectors', () => {
           '1.0.0': createRelease('1.0.0', true),
           '2.0.0': createRelease('2.0.0', false),
           '2.0.1': createRelease('2.0.1', false),
+          '2.0.2-alpha': createRelease('2.0.2-alpha', true),
           '2.0.2': createRelease('2.0.2', true),
           '3.0.0': createRelease('3.0.0', true),
         },
@@ -140,6 +142,25 @@ describe('cluster::selectors', () => {
       }) as unknown) as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('3.0.1');
+    });
+
+    it('returns the next pre-release version, if the user is an admin and there is no newer active version', () => {
+      const initialState = createInitialState(
+        {
+          '1.0.0': createRelease('1.0.0', true),
+          '2.0.0': createRelease('2.0.0', false),
+          '2.0.1': createRelease('2.0.1', false),
+          '2.0.2': createRelease('2.0.2', true),
+          '3.0.0': createRelease('3.0.0', true),
+          '3.0.1-alpha': createRelease('3.0.1-alpha', true),
+        },
+        true
+      );
+      const cluster = (Object.assign({}, v5ClusterResponse, {
+        release_version: '3.0.0',
+      }) as unknown) as V5.ICluster;
+      const releaseVersion = selectTargetRelease(initialState, cluster);
+      expect(releaseVersion).toBe('3.0.1-alpha');
     });
   });
 });
