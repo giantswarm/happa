@@ -28,9 +28,23 @@ import preloginState from 'testUtils/preloginState';
 
 describe('cluster::utils', () => {
   describe('canClusterUpgrade', () => {
-    it('returns false if the provided versions are empty', () => {
-      expect(canClusterUpgrade(undefined, '1', 'aws')).toBeFalsy();
-      expect(canClusterUpgrade('1', undefined, 'aws')).toBeFalsy();
+    describe('all providers', () => {
+      it('returns false if the provided versions are empty', () => {
+        expect(canClusterUpgrade(undefined, '1', 'aws')).toBeFalsy();
+        expect(canClusterUpgrade('1', undefined, 'aws')).toBeFalsy();
+      });
+
+      it('returns false if the target version is a pre-release one', () => {
+        expect(
+          canClusterUpgrade('1.0.0', '1.0.1-alpha', Providers.AWS)
+        ).toBeFalsy();
+        expect(
+          canClusterUpgrade('1.0.0', '1.0.1-beta+somebuild', Providers.AZURE)
+        ).toBeFalsy();
+        expect(
+          canClusterUpgrade('1.0.0', '1.0.1+somebuild', Providers.KVM)
+        ).toBeFalsy();
+      });
     });
 
     describe('on azure', () => {

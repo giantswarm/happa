@@ -9,6 +9,7 @@ import {
   isClusterUpdating,
 } from 'stores/cluster/utils';
 import { getUserIsAdmin } from 'stores/main/selectors';
+import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { createDeepEqualSelector } from 'stores/utils';
 
@@ -86,7 +87,10 @@ export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
     }
     if (!currVersionFound) continue;
 
-    if (releases[availableVersions[i]].active) {
+    if (
+      releases[availableVersions[i]].active &&
+      !isPreRelease(availableVersions[i])
+    ) {
       nextVersion = availableVersions[i];
 
       break;
