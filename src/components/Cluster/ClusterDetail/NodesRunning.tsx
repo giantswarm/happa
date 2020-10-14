@@ -18,7 +18,7 @@ const NodesRunning: FC<INodesRunningProps> = ({
   numNodePools,
   workerNodesRunning,
 }) => {
-  if (workerNodesRunning === 0 && isClusterCreating) {
+  if (isClusterCreating) {
     return (
       <div data-testid='nodes-running'>
         <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
@@ -29,12 +29,14 @@ const NodesRunning: FC<INodesRunningProps> = ({
   const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
   const npSingularPlural = numNodePools === 1 ? ' node pool' : ' node pools';
 
+  let workerNodesStatus = `${workerNodesRunning} ${nodesSingularPlural}`;
+  if (numNodePools) {
+    workerNodesStatus += ` in ${numNodePools} ${npSingularPlural}`;
+  }
+
   return (
     <div data-testid='nodes-running'>
-      <span>
-        {`${workerNodesRunning} ${nodesSingularPlural}`}
-        {numNodePools && ` in ${numNodePools} ${npSingularPlural}`}
-      </span>
+      <span>{workerNodesStatus}</span>
       <span>
         <Dot />
         {RAM} GB RAM
