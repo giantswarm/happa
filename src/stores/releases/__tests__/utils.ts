@@ -1,4 +1,4 @@
-import { getReleaseEOLStatus } from 'stores/releases/utils';
+import { getReleaseEOLStatus, isPreRelease } from 'stores/releases/utils';
 
 describe('releases::utils', () => {
   describe('getReleaseEOLStatus', () => {
@@ -40,6 +40,16 @@ describe('releases::utils', () => {
 
       expect(result.isEol).toBeFalsy();
       expect(result.message).toBe('');
+    });
+  });
+
+  describe('isPreRelease', () => {
+    it('distinguishes pre-release versions from regular versions', () => {
+      expect(isPreRelease('1.0.0-alpha')).toBeTruthy();
+      expect(isPreRelease('1.0.0+metadata')).toBeTruthy();
+      expect(isPreRelease('1.0.0-beta+somemeta')).toBeTruthy();
+      expect(isPreRelease('1.0.0')).toBeFalsy();
+      expect(isPreRelease('24.12.9')).toBeFalsy();
     });
   });
 });

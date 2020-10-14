@@ -10,7 +10,7 @@ import {
   getReleasesIsFetching,
   getSortedReleaseVersions,
 } from 'stores/releases/selectors';
-import { getReleaseEOLStatus } from 'stores/releases/utils';
+import { getReleaseEOLStatus, isPreRelease } from 'stores/releases/utils';
 import {
   ListToggler,
   SelectedDescription,
@@ -93,7 +93,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
         selectRelease(firstActiveRelease);
       }
     }
-  }, [selectRelease, sortedReleaseVersions, autoSelectLatest]);
+  }, [allReleases, selectRelease, sortedReleaseVersions, autoSelectLatest]);
 
   const [collapsed, setCollapsed] = useState(collapsible as boolean);
 
@@ -235,7 +235,7 @@ function getLatestReleaseVersion(
   if (releaseVersions.length < 1) return null;
 
   for (const version of releaseVersions) {
-    if (releaseMap[version].active) {
+    if (releaseMap[version]?.active && !isPreRelease(version)) {
       return version;
     }
   }

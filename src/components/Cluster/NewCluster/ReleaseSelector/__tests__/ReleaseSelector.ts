@@ -5,6 +5,15 @@ import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 jest.unmock('stores/main/selectors');
 
 const mockReleases: IReleases = {
+  '1001.0.0-alpha': {
+    version: '1001.0.0-alpha',
+    timestamp: '2020-07-11T12:34:56Z',
+    components: [{ name: 'kubernetes', version: '1.16.3' }],
+    changelog: [{ component: 'dummy', description: 'dummy' }],
+    active: true,
+    kubernetesVersion: '1.16.3',
+    releaseNotesURL: 'dummy',
+  },
   '1000.0.0': {
     version: '1000.0.0',
     timestamp: '2020-06-11T12:34:56Z',
@@ -38,7 +47,7 @@ const mockSortedReleaseVersions = Object.keys(mockReleases);
 
 const defaultProps = {
   selectRelease: () => {},
-  selectedRelease: mockSortedReleaseVersions[0],
+  selectedRelease: mockSortedReleaseVersions[1],
 };
 
 const defaultStoreState = {
@@ -90,12 +99,12 @@ describe('ReleaseSelector', () => {
       { ...defaultStoreState }
     );
 
-    expect(screen.getByText(mockSortedReleaseVersions[0])).toBeInTheDocument();
+    expect(screen.getByText(mockSortedReleaseVersions[1])).toBeInTheDocument();
     expect(screen.getByText(/This release contains:/i)).toBeInTheDocument();
     expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
     expect(
       screen.getByText(
-        mockReleases[mockReleases[mockSortedReleaseVersions[0]].version]
+        mockReleases[mockReleases[mockSortedReleaseVersions[1]].version]
           .kubernetesVersion as string
       )
     ).toBeInTheDocument();
@@ -253,7 +262,7 @@ describe('ReleaseSelector', () => {
 
   it('can filter releases based on a provided filter function', () => {
     const filterFn = jest.fn((currentRelease) => {
-      return currentRelease === mockSortedReleaseVersions[0];
+      return currentRelease === mockSortedReleaseVersions[1];
     });
 
     renderWithStore(
@@ -264,8 +273,8 @@ describe('ReleaseSelector', () => {
 
     expect(filterFn).toBeCalled();
 
-    // Skip the first version.
-    for (let i = 1; i < mockSortedReleaseVersions.length; i++) {
+    // Skip the first 2 versions.
+    for (let i = 2; i < mockSortedReleaseVersions.length; i++) {
       expect(
         screen.queryByText(mockSortedReleaseVersions[i])
       ).not.toBeInTheDocument();
@@ -273,14 +282,22 @@ describe('ReleaseSelector', () => {
   });
 
   it('automatically selects the newest active version when automatic selection is enabled', () => {
+    const mockSelectReleaseFn = jest.fn();
+
     renderWithStore(
       ReleaseSelector,
-      { ...defaultProps, collapsible: false, autoSelectLatest: true },
+      {
+        ...defaultProps,
+        collapsible: false,
+        autoSelectLatest: true,
+        selectedRelease: '',
+        selectRelease: mockSelectReleaseFn,
+      },
       { ...defaultStoreState }
     );
 
-    expect(
-      screen.getByLabelText(/the currently selected version is 1000\.0\.0/i)
-    ).toBeInTheDocument();
+    expect(mockSelectReleaseFn).toHaveBeenCalledWith(
+      mockSortedReleaseVersions[1]
+    );
   });
 });
