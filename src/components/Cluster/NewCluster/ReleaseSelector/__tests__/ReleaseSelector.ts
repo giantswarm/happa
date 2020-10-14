@@ -273,8 +273,8 @@ describe('ReleaseSelector', () => {
 
     expect(filterFn).toBeCalled();
 
-    // Skip the first version.
-    for (let i = 1; i < mockSortedReleaseVersions.length; i++) {
+    // Skip the first 2 versions.
+    for (let i = 2; i < mockSortedReleaseVersions.length; i++) {
       expect(
         screen.queryByText(mockSortedReleaseVersions[i])
       ).not.toBeInTheDocument();
