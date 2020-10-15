@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 
 const azColors = [
   '#66c2a5',
@@ -119,7 +120,7 @@ function AvailabilityZonesLabel({
       title={title}
       bgColor={color}
       onClick={toggleChecked}
-      data-dd-action-name='TOGGLE_AZ'
+      data-dd-action-name={RealUserMonitoringEvents.ToggleAZ}
     >
       {label}
     </Wrapper>

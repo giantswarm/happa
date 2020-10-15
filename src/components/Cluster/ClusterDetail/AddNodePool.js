@@ -10,6 +10,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import BaseTransition from 'styles/transitions/BaseTransition';
@@ -651,14 +652,18 @@ class AddNodePool extends Component {
                   this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
                 }
                 tabIndex='0'
-                data-dd-action-name='SELECT_AZ_SELECTION_AUTOMATIC'
+                data-dd-action-name={
+                  RealUserMonitoringEvents.SelectAZSelectionAutomatic
+                }
               />
               <label
                 htmlFor='automatically'
                 onClick={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
                 }
-                data-dd-action-name='SELECT_AZ_SELECTION_AUTOMATIC'
+                data-dd-action-name={
+                  RealUserMonitoringEvents.SelectAZSelectionAutomatic
+                }
               >
                 Automatic
               </label>
@@ -721,14 +726,18 @@ class AddNodePool extends Component {
                 onChange={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Manual)
                 }
-                data-dd-action-name='SELECT_AZ_SELECTION_MANUAL'
+                data-dd-action-name={
+                  RealUserMonitoringEvents.SelectAZSelectionManual
+                }
               />
               <label
                 htmlFor='manually'
                 onClick={() =>
                   this.toggleAZSelector(AvailabilityZoneSelection.Manual)
                 }
-                data-dd-action-name='SELECT_AZ_SELECTION_MANUAL'
+                data-dd-action-name={
+                  RealUserMonitoringEvents.SelectAZSelectionManual
+                }
               >
                 Manual
               </label>
@@ -795,7 +804,9 @@ class AddNodePool extends Component {
                   this.toggleAZSelector(AvailabilityZoneSelection.None)
                 }
                 tabIndex='0'
-                data-dd-action-name='SELECT_AZ_SELECTION_NONE'
+                data-dd-action-name={
+                  RealUserMonitoringEvents.SelectAZSelectionNone
+                }
               />
               <label htmlFor={`none-${id}`}>
                 None{' '}

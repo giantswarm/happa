@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { Constants } from 'shared/constants';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
@@ -248,7 +249,9 @@ class CreateNodePoolsCluster extends Component {
                       checked={!hasAZLabels}
                       label='Automatic'
                       onChange={() => this.toggleMasterAZSelector(false)}
-                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_AUTOMATIC'
+                      data-dd-action-name={
+                        RealUserMonitoringEvents.SelectMasterAZSelectionAutomatic
+                      }
                     />
                   </InputGroup>
                   <InputGroup>
@@ -257,7 +260,9 @@ class CreateNodePoolsCluster extends Component {
                       checked={hasAZLabels}
                       label='Manual'
                       onChange={() => this.toggleMasterAZSelector(true)}
-                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_MANUAL'
+                      data-dd-action-name={
+                        RealUserMonitoringEvents.SelectMasterAZSelectionManual
+                      }
                     />
                   </InputGroup>
                 </div>
@@ -307,7 +312,9 @@ class CreateNodePoolsCluster extends Component {
                         title='Remove node pool'
                         aria-hidden='true'
                         onClick={() => this.removeNodePoolForm(npId)}
-                        data-dd-action-name='REMOVE_NODEPOOL_FORM'
+                        data-dd-action-name={
+                          RealUserMonitoringEvents.RemoveNodePool
+                        }
                       />
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
@@ -317,7 +324,7 @@ class CreateNodePoolsCluster extends Component {
           </NodePoolsTransitionGroup>
           <Button
             onClick={this.addNodePoolForm}
-            data-dd-action-name='ADD_NODEPOOL'
+            data-dd-action-name={RealUserMonitoringEvents.AddNodePool}
           >
             <i className='fa fa-add-circle' /> ADD NODE POOL
           </Button>
@@ -335,7 +342,7 @@ class CreateNodePoolsCluster extends Component {
               loading={submitting}
               onClick={this.createCluster}
               type='button'
-              data-dd-action-name='CREATE_CLUSTER_SUBMIT'
+              data-dd-action-name={RealUserMonitoringEvents.CreateClusterSubmit}
             >
               Create Cluster
             </Button>
@@ -348,7 +355,7 @@ class CreateNodePoolsCluster extends Component {
               loading={submitting}
               onClick={this.props.closeForm}
               type='button'
-              data-dd-action-name='CREATE_CLUSTER_CANCEL'
+              data-dd-action-name={RealUserMonitoringEvents.CreateClusterCancel}
             >
               Cancel
             </Button>

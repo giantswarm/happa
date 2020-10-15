@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Constants } from 'shared/constants';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import {
   getReleases,
@@ -159,7 +160,9 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
           onKeyDown={handleTabSelect}
           title='Show/hide available releases'
           data-dd-action-name={
-            collapsed ? 'EXPAND_RELEASES' : 'COLLAPSE_RELEASES'
+            collapsed
+              ? RealUserMonitoringEvents.ExpandReleases
+              : RealUserMonitoringEvents.CollapseReleases
           }
         >
           {collapsible && (

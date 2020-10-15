@@ -6,6 +6,7 @@ import {
 } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import {
   ListToggler,
   SelectedDescription,
@@ -59,7 +60,9 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
           collapsible={true}
           title={`Show/hide available ${plural}`}
           data-dd-action-name={
-            collapsed ? 'EXPAND_INSTANCE_TYPES' : 'COLLAPSE_INSTANCE_TYPES'
+            collapsed
+              ? RealUserMonitoringEvents.ExpandInstanceTypes
+              : RealUserMonitoringEvents.CollapseInstanceTypes
           }
         >
           <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />

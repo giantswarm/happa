@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
@@ -377,7 +378,7 @@ class CreateRegularCluster extends React.Component {
               loading={this.state.submitting}
               onClick={this.createCluster}
               type='submit'
-              data-dd-action-name='CREATE_CLUSTER_SUBMIT'
+              data-dd-action-name={RealUserMonitoringEvents.CreateClusterSubmit}
             >
               Create Cluster
             </Button>
@@ -389,7 +390,7 @@ class CreateRegularCluster extends React.Component {
               loading={this.state.submitting}
               onClick={this.props.closeForm}
               type='button'
-              data-dd-action-name='CREATE_CLUSTER_CANCEL'
+              data-dd-action-name={RealUserMonitoringEvents.CreateClusterCancel}
             >
               Cancel
             </Button>

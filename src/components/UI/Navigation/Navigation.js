@@ -5,6 +5,7 @@ import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { AppRoutes } from 'shared/constants/routes';
 import { mq } from 'styles';
 
@@ -110,7 +111,10 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav'>
-          <Link to={AppRoutes.Home} data-dd-action-name='CLICK_MAINNAV_LOGO'>
+          <Link
+            to={AppRoutes.Home}
+            data-dd-action-name={RealUserMonitoringEvents.ClickMainNavLogo}
+          >
             <img className='logo' src={logo} />
           </Link>
           <MainMenu

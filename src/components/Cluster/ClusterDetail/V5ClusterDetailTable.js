@@ -11,6 +11,7 @@ import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import * as clusterActions from 'stores/cluster/actions';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
@@ -561,7 +562,7 @@ class V5ClusterDetailTable extends React.Component {
             )}
             <Button
               onClick={this.toggleAddNodePoolForm}
-              data-dd-action-name='ADD_NODEPOOL'
+              data-dd-action-name={RealUserMonitoringEvents.AddNodePool}
             >
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>

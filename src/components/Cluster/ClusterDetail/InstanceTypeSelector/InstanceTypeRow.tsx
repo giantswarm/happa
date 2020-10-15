@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { IInstanceType } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { CursorPointerCell, Tr } from 'UI/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -34,7 +35,7 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
           onChange={() => selectInstanceType(name)}
           rootProps={{ className: 'selection-radio' }}
           bulletProps={{ className: 'selection-bullet' }}
-          data-dd-action-name='SELECT_INSTANCE_TYPE'
+          data-dd-action-name={RealUserMonitoringEvents.SelectInstanceType}
         />
       </LeftAlignedCell>
       <CursorPointerCell>{name}</CursorPointerCell>

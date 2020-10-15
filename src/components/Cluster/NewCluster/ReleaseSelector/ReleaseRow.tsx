@@ -1,6 +1,7 @@
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import {
   CenteredCell,
   ComponentsRow,
@@ -60,7 +61,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             onChange={() => selectRelease(version)}
             rootProps={{ className: 'selection-radio' }}
             bulletProps={{ className: 'selection-bullet' }}
-            data-dd-action-name='SELECT_RELEASE'
+            data-dd-action-name={RealUserMonitoringEvents.SelectRelease}
           />
         </CursorPointerCell>
         <CursorPointerCell>{version}</CursorPointerCell>
@@ -82,7 +83,9 @@ const ReleaseRow: FC<IReleaseRow> = ({
               setCollapsed(!collapsed);
             }}
             data-dd-action-name={
-              collapsed ? 'SHOW_RELEASE_DETAILS' : 'HIDE_RELEASE_DETAILS'
+              collapsed
+                ? RealUserMonitoringEvents.ShowReleaseDetails
+                : RealUserMonitoringEvents.HideReleaseDetails
             }
           >
             <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
