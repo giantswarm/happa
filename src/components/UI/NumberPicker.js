@@ -2,7 +2,9 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+import { mergeEventNames } from 'utils/realUserMonitoringUtils';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
@@ -234,9 +236,10 @@ class NumberPicker extends React.Component {
             <DecrementButton
               className={this.state.inputValue === this.props.min && 'disabled'}
               onClick={this.decrement}
-              data-dd-action-name={`DECREMENT_NUMBER_${
-                this.props.eventNameSuffix ? this.props.eventNameSuffix : ''
-              }`}
+              data-dd-action-name={mergeEventNames(
+                RealUserMonitoringEvents.DecrementNumber,
+                this.props.eventNameSuffix
+              )}
             >
               &ndash;
             </DecrementButton>
@@ -259,9 +262,10 @@ class NumberPicker extends React.Component {
             <IncrementButton
               className={this.props.value === this.props.max && 'disabled'}
               onClick={this.increment}
-              data-dd-action-name={`INCREMENT_NUMBER_${
-                this.props.eventNameSuffix ? this.props.eventNameSuffix : ''
-              }`}
+              data-dd-action-name={mergeEventNames(
+                RealUserMonitoringEvents.IncrementNumber,
+                this.props.eventNameSuffix
+              )}
             >
               +
             </IncrementButton>

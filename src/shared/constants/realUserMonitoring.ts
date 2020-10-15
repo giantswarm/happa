@@ -28,4 +28,7 @@ export enum RealUserMonitoringEvents {
 
   ExpandReleases = 'EXPAND_RELEASES',
   CollapseReleases = 'COLLAPSE_RELEASES',
+
+  IncrementNumber = 'INCREMENT_NUMBER',
+  DecrementNumber = 'DECREMENT_NUMBER',
 }
