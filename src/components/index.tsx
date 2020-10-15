@@ -130,11 +130,9 @@ let resizeRecorderTimeout: number = 0;
 window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    (window as any).DD_RUM?.addUserAction('WINDOW_RESIZE', getSizes());
+    window.DD_RUM?.addUserAction('WINDOW_RESIZE', getSizes());
   }, oneSecond);
 });
 window.addEventListener('load', () => {
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  (window as any).DD_RUM?.addUserAction('WINDOW_LOAD', getSizes());
+  window.DD_RUM?.addUserAction('WINDOW_LOAD', getSizes());
 });
