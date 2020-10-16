@@ -6,6 +6,7 @@ import {
 } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import {
   ListToggler,
@@ -20,6 +21,7 @@ import InstanceTypeRow from './InstanceTypeRow';
 
 interface IInstanceTypeSelector {
   selectInstanceType(instanceType: string): void;
+
   selectedInstanceType: string;
 }
 
@@ -54,20 +56,23 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ListToggler
-          role='button'
-          onClick={() => setCollapsed(!collapsed)}
-          collapsible={true}
-          title={`Show/hide available ${plural}`}
-          data-dd-action-name={
+        <RUMActionTarget
+          name={
             collapsed
               ? RealUserMonitoringEvents.ExpandInstanceTypes
               : RealUserMonitoringEvents.CollapseInstanceTypes
           }
         >
-          <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
-          Available {plural}
-        </ListToggler>
+          <ListToggler
+            role='button'
+            onClick={() => setCollapsed(!collapsed)}
+            collapsible={true}
+            title={`Show/hide available ${plural}`}
+          >
+            <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
+            Available {plural}
+          </ListToggler>
+        </RUMActionTarget>
       </div>
       {!collapsed && (
         <Table>

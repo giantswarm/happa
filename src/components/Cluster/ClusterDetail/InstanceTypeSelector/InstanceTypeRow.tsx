@@ -2,12 +2,14 @@ import styled from '@emotion/styled';
 import { IInstanceType } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { CursorPointerCell, Tr } from 'UI/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
 
 interface IInstanceTypeRow extends IInstanceType {
   isSelected: boolean;
+
   selectInstanceType(instanceType: string): void;
 }
 
@@ -26,17 +28,18 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
   return (
     <Tr isSelected={isSelected} onClick={() => selectInstanceType(name)}>
       <LeftAlignedCell>
-        <RadioInput
-          id={`select-${name}`}
-          title={`Select ${name}`}
-          checked={isSelected}
-          value={isSelected ? 'true' : 'false'}
-          name={`select-${name}`}
-          onChange={() => selectInstanceType(name)}
-          rootProps={{ className: 'selection-radio' }}
-          bulletProps={{ className: 'selection-bullet' }}
-          data-dd-action-name={RealUserMonitoringEvents.SelectInstanceType}
-        />
+        <RUMActionTarget name={RealUserMonitoringEvents.SelectInstanceType}>
+          <RadioInput
+            id={`select-${name}`}
+            title={`Select ${name}`}
+            checked={isSelected}
+            value={isSelected ? 'true' : 'false'}
+            name={`select-${name}`}
+            onChange={() => selectInstanceType(name)}
+            rootProps={{ className: 'selection-radio' }}
+            bulletProps={{ className: 'selection-bullet' }}
+          />
+        </RUMActionTarget>
       </LeftAlignedCell>
       <CursorPointerCell>{name}</CursorPointerCell>
       <CursorPointerCell>{cpu}</CursorPointerCell>

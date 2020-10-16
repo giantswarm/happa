@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { getUserIsAdmin } from 'stores/main/selectors';
@@ -149,32 +150,35 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
         </SelectedDescription>
       </SelectedWrapper>
       <div>
-        <ListToggler
-          role='button'
-          id='release-selector__toggler'
-          aria-expanded={!collapsed}
-          aria-labelledby='available-releases-label'
-          tabIndex={0}
-          onClick={handleCollapse}
-          collapsible={collapsible as boolean}
-          onKeyDown={handleTabSelect}
-          title='Show/hide available releases'
-          data-dd-action-name={
+        <RUMActionTarget
+          name={
             collapsed
               ? RealUserMonitoringEvents.ExpandReleases
               : RealUserMonitoringEvents.CollapseReleases
           }
         >
-          {collapsible && (
-            <i
-              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
-              aria-hidden='true'
-              aria-label='Toggle'
-              role='presentation'
-            />
-          )}
-          <span id='available-releases-label'>Available releases</span>
-        </ListToggler>
+          <ListToggler
+            role='button'
+            id='release-selector__toggler'
+            aria-expanded={!collapsed}
+            aria-labelledby='available-releases-label'
+            tabIndex={0}
+            onClick={handleCollapse}
+            collapsible={collapsible as boolean}
+            onKeyDown={handleTabSelect}
+            title='Show/hide available releases'
+          >
+            {collapsible && (
+              <i
+                className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+                aria-hidden='true'
+                aria-label='Toggle'
+                role='presentation'
+              />
+            )}
+            <span id='available-releases-label'>Available releases</span>
+          </ListToggler>
+        </RUMActionTarget>
       </div>
       {!collapsed && (
         <>

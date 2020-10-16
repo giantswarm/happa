@@ -3,6 +3,7 @@ import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/Ins
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants, Providers } from 'shared/constants';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
@@ -371,29 +372,35 @@ class CreateRegularCluster extends React.Component {
 
         <FlexRow>
           <ErrorFallback error={this.props.clusterCreateError}>
-            <Button
-              bsSize='large'
-              bsStyle='primary'
-              disabled={!this.valid()}
-              loading={this.state.submitting}
-              onClick={this.createCluster}
-              type='submit'
-              data-dd-action-name={RealUserMonitoringEvents.CreateClusterSubmit}
+            <RUMActionTarget
+              name={RealUserMonitoringEvents.CreateClusterSubmit}
             >
-              Create Cluster
-            </Button>
+              <Button
+                bsSize='large'
+                bsStyle='primary'
+                disabled={!this.valid()}
+                loading={this.state.submitting}
+                onClick={this.createCluster}
+                type='submit'
+              >
+                Create Cluster
+              </Button>
+            </RUMActionTarget>
           </ErrorFallback>
           {!this.state.submitting && (
-            <Button
-              bsSize='large'
-              bsStyle='default'
-              loading={this.state.submitting}
-              onClick={this.props.closeForm}
-              type='button'
-              data-dd-action-name={RealUserMonitoringEvents.CreateClusterCancel}
+            <RUMActionTarget
+              name={RealUserMonitoringEvents.CreateClusterCancel}
             >
-              Cancel
-            </Button>
+              <Button
+                bsSize='large'
+                bsStyle='default'
+                loading={this.state.submitting}
+                onClick={this.props.closeForm}
+                type='button'
+              >
+                Cancel
+              </Button>
+            </RUMActionTarget>
           )}
         </FlexRow>
         <FlexColumn>

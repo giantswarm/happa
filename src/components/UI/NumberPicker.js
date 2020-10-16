@@ -2,6 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
@@ -233,16 +234,21 @@ class NumberPicker extends React.Component {
 
         <Control>
           {this.props.readOnly ? undefined : (
-            <DecrementButton
-              className={this.state.inputValue === this.props.min && 'disabled'}
-              onClick={this.decrement}
-              data-dd-action-name={mergeActionNames(
+            <RUMActionTarget
+              name={mergeActionNames(
                 RealUserMonitoringEvents.DecrementNumber,
                 this.props.eventNameSuffix
               )}
             >
-              &ndash;
-            </DecrementButton>
+              <DecrementButton
+                className={
+                  this.state.inputValue === this.props.min && 'disabled'
+                }
+                onClick={this.decrement}
+              >
+                &ndash;
+              </DecrementButton>
+            </RUMActionTarget>
           )}
           <ValueSpan>
             <input
@@ -259,16 +265,19 @@ class NumberPicker extends React.Component {
             />
           </ValueSpan>
           {this.props.readOnly ? undefined : (
-            <IncrementButton
-              className={this.props.value === this.props.max && 'disabled'}
-              onClick={this.increment}
-              data-dd-action-name={mergeActionNames(
+            <RUMActionTarget
+              name={mergeActionNames(
                 RealUserMonitoringEvents.IncrementNumber,
                 this.props.eventNameSuffix
               )}
             >
-              +
-            </IncrementButton>
+              <IncrementButton
+                className={this.props.value === this.props.max && 'disabled'}
+                onClick={this.increment}
+              >
+                +
+              </IncrementButton>
+            </RUMActionTarget>
           )}
         </Control>
         <ValidationErrorMessage message={this.state.validationError} />

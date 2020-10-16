@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 
 const azColors = [
@@ -115,15 +116,16 @@ function AvailabilityZonesLabel({
   };
 
   return (
-    <Wrapper
-      className={classNames}
-      title={title}
-      bgColor={color}
-      onClick={toggleChecked}
-      data-dd-action-name={RealUserMonitoringEvents.ToggleAZ}
-    >
-      {label}
-    </Wrapper>
+    <RUMActionTarget name={RealUserMonitoringEvents.ToggleAZ}>
+      <Wrapper
+        className={classNames}
+        title={title}
+        bgColor={color}
+        onClick={toggleChecked}
+      >
+        {label}
+      </Wrapper>
+    </RUMActionTarget>
   );
 }
 

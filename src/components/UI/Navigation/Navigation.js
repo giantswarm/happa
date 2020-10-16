@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { CSSBreakpoints } from 'shared/constants';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { AppRoutes } from 'shared/constants/routes';
@@ -111,12 +112,11 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav'>
-          <Link
-            to={AppRoutes.Home}
-            data-dd-action-name={RealUserMonitoringEvents.ClickMainNavLogo}
-          >
-            <img className='logo' src={logo} />
-          </Link>
+          <RUMActionTarget name={RealUserMonitoringEvents.ClickMainNavLogo}>
+            <Link to={AppRoutes.Home}>
+              <img className='logo' src={logo} />
+            </Link>
+          </RUMActionTarget>
           <MainMenu
             showAppCatalog={this.props.showAppCatalog}
             isUserAdmin={this.props.user.isAdmin}

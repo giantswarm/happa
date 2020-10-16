@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
@@ -243,28 +244,34 @@ class CreateNodePoolsCluster extends Component {
                 hint={<>&#32;</>}
               >
                 <div>
-                  <InputGroup>
-                    <RadioInput
-                      id='automatic'
-                      checked={!hasAZLabels}
-                      label='Automatic'
-                      onChange={() => this.toggleMasterAZSelector(false)}
-                      data-dd-action-name={
-                        RealUserMonitoringEvents.SelectMasterAZSelectionAutomatic
-                      }
-                    />
-                  </InputGroup>
-                  <InputGroup>
-                    <RadioInput
-                      id='manual'
-                      checked={hasAZLabels}
-                      label='Manual'
-                      onChange={() => this.toggleMasterAZSelector(true)}
-                      data-dd-action-name={
-                        RealUserMonitoringEvents.SelectMasterAZSelectionManual
-                      }
-                    />
-                  </InputGroup>
+                  <RUMActionTarget
+                    name={
+                      RealUserMonitoringEvents.SelectMasterAZSelectionAutomatic
+                    }
+                  >
+                    <InputGroup>
+                      <RadioInput
+                        id='automatic'
+                        checked={!hasAZLabels}
+                        label='Automatic'
+                        onChange={() => this.toggleMasterAZSelector(false)}
+                      />
+                    </InputGroup>
+                  </RUMActionTarget>
+                  <RUMActionTarget
+                    name={
+                      RealUserMonitoringEvents.SelectMasterAZSelectionManual
+                    }
+                  >
+                    <InputGroup>
+                      <RadioInput
+                        id='manual'
+                        checked={hasAZLabels}
+                        label='Manual'
+                        onChange={() => this.toggleMasterAZSelector(true)}
+                      />
+                    </InputGroup>
+                  </RUMActionTarget>
                 </div>
               </MasterAZSelectionInput>
             )}
@@ -307,27 +314,27 @@ class CreateNodePoolsCluster extends Component {
                         name={nodePoolName}
                         id={npId}
                       />
-                      <i
-                        className='fa fa-close clickable'
-                        title='Remove node pool'
-                        aria-hidden='true'
-                        onClick={() => this.removeNodePoolForm(npId)}
-                        data-dd-action-name={
-                          RealUserMonitoringEvents.RemoveNodePool
-                        }
-                      />
+                      <RUMActionTarget
+                        name={RealUserMonitoringEvents.RemoveNodePool}
+                      >
+                        <i
+                          className='fa fa-close clickable'
+                          title='Remove node pool'
+                          aria-hidden='true'
+                          onClick={() => this.removeNodePoolForm(npId)}
+                        />
+                      </RUMActionTarget>
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
                 </SlideTransition>
               );
             })}
           </NodePoolsTransitionGroup>
-          <Button
-            onClick={this.addNodePoolForm}
-            data-dd-action-name={RealUserMonitoringEvents.AddNodePool}
-          >
-            <i className='fa fa-add-circle' /> ADD NODE POOL
-          </Button>
+          <RUMActionTarget name={RealUserMonitoringEvents.AddNodePool}>
+            <Button onClick={this.addNodePoolForm}>
+              <i className='fa fa-add-circle' /> ADD NODE POOL
+            </Button>
+          </RUMActionTarget>
           <HorizontalLine />
         </WrapperDiv>
 
@@ -335,30 +342,36 @@ class CreateNodePoolsCluster extends Component {
 
         <FlexRow>
           <ErrorFallback error={this.props.clusterCreateError}>
-            <Button
-              bsSize='large'
-              bsStyle='primary'
-              disabled={!this.isValid()}
-              loading={submitting}
-              onClick={this.createCluster}
-              type='button'
-              data-dd-action-name={RealUserMonitoringEvents.CreateClusterSubmit}
+            <RUMActionTarget
+              name={RealUserMonitoringEvents.CreateClusterSubmit}
             >
-              Create Cluster
-            </Button>
+              <Button
+                bsSize='large'
+                bsStyle='primary'
+                disabled={!this.isValid()}
+                loading={submitting}
+                onClick={this.createCluster}
+                type='button'
+              >
+                Create Cluster
+              </Button>
+            </RUMActionTarget>
           </ErrorFallback>
           {/* We want to hide cancel button when the Create NP button has been clicked */}
           {!submitting && (
-            <Button
-              bsSize='large'
-              bsStyle='default'
-              loading={submitting}
-              onClick={this.props.closeForm}
-              type='button'
-              data-dd-action-name={RealUserMonitoringEvents.CreateClusterCancel}
+            <RUMActionTarget
+              name={RealUserMonitoringEvents.CreateClusterCancel}
             >
-              Cancel
-            </Button>
+              <Button
+                bsSize='large'
+                bsStyle='default'
+                loading={submitting}
+                onClick={this.props.closeForm}
+                type='button'
+              >
+                Cancel
+              </Button>
+            </RUMActionTarget>
           )}
         </FlexRow>
         <FlexRow>

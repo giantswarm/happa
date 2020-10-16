@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants, Providers } from 'shared/constants';
 import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
@@ -643,30 +644,32 @@ class AddNodePool extends Component {
                   }`}
                 />
               </div>
-              <input
-                type='radio'
-                id={`automatically-${id}`}
-                value={false}
-                checked={azSelection === AvailabilityZoneSelection.Automatic}
-                onChange={() =>
-                  this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
-                }
-                tabIndex='0'
-                data-dd-action-name={
-                  RealUserMonitoringEvents.SelectAZSelectionAutomatic
-                }
-              />
-              <label
-                htmlFor='automatically'
-                onClick={() =>
-                  this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
-                }
-                data-dd-action-name={
-                  RealUserMonitoringEvents.SelectAZSelectionAutomatic
-                }
+              <RUMActionTarget
+                name={RealUserMonitoringEvents.SelectAZSelectionAutomatic}
               >
-                Automatic
-              </label>
+                <input
+                  type='radio'
+                  id={`automatically-${id}`}
+                  value={false}
+                  checked={azSelection === AvailabilityZoneSelection.Automatic}
+                  onChange={() =>
+                    this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
+                  }
+                  tabIndex='0'
+                />
+              </RUMActionTarget>
+              <RUMActionTarget
+                name={RealUserMonitoringEvents.SelectAZSelectionAutomatic}
+              >
+                <label
+                  htmlFor='automatically'
+                  onClick={() =>
+                    this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
+                  }
+                >
+                  Automatic
+                </label>
+              </RUMActionTarget>
             </RadioWrapperDiv>
             <BaseTransition
               in={azSelection === AvailabilityZoneSelection.Automatic}
@@ -717,30 +720,32 @@ class AddNodePool extends Component {
                   }`}
                 />
               </div>
-              <input
-                type='radio'
-                id={`manually-${id}`}
-                value={true}
-                checked={azSelection === AvailabilityZoneSelection.Manual}
-                tabIndex='0'
-                onChange={() =>
-                  this.toggleAZSelector(AvailabilityZoneSelection.Manual)
-                }
-                data-dd-action-name={
-                  RealUserMonitoringEvents.SelectAZSelectionManual
-                }
-              />
-              <label
-                htmlFor='manually'
-                onClick={() =>
-                  this.toggleAZSelector(AvailabilityZoneSelection.Manual)
-                }
-                data-dd-action-name={
-                  RealUserMonitoringEvents.SelectAZSelectionManual
-                }
+              <RUMActionTarget
+                name={RealUserMonitoringEvents.SelectAZSelectionManual}
               >
-                Manual
-              </label>
+                <input
+                  type='radio'
+                  id={`manually-${id}`}
+                  value={true}
+                  checked={azSelection === AvailabilityZoneSelection.Manual}
+                  tabIndex='0'
+                  onChange={() =>
+                    this.toggleAZSelector(AvailabilityZoneSelection.Manual)
+                  }
+                />
+              </RUMActionTarget>
+              <RUMActionTarget
+                name={RealUserMonitoringEvents.SelectAZSelectionManual}
+              >
+                <label
+                  htmlFor='manually'
+                  onClick={() =>
+                    this.toggleAZSelector(AvailabilityZoneSelection.Manual)
+                  }
+                >
+                  Manual
+                </label>
+              </RUMActionTarget>
 
               <BaseTransition
                 in={azSelection === AvailabilityZoneSelection.Manual}
@@ -795,35 +800,40 @@ class AddNodePool extends Component {
                   }`}
                 />
               </div>
-              <input
-                type='radio'
-                id={`none-${id}`}
-                value={false}
-                checked={azSelection === AvailabilityZoneSelection.None}
-                onChange={() =>
-                  this.toggleAZSelector(AvailabilityZoneSelection.None)
-                }
-                tabIndex='0'
-                data-dd-action-name={
-                  RealUserMonitoringEvents.SelectAZSelectionNone
-                }
-              />
-              <label htmlFor={`none-${id}`}>
-                None{' '}
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip id='tooltip'>
-                      To increase the chances of finding available GPU
-                      instances, this option allows not setting a specific
-                      availability zone.
-                    </Tooltip>
+              <RUMActionTarget
+                name={RealUserMonitoringEvents.SelectAZSelectionNone}
+              >
+                <input
+                  type='radio'
+                  id={`none-${id}`}
+                  value={false}
+                  checked={azSelection === AvailabilityZoneSelection.None}
+                  onChange={() =>
+                    this.toggleAZSelector(AvailabilityZoneSelection.None)
                   }
-                  placement='top'
-                  animation={false}
-                >
-                  <i className='fa fa-help' />
-                </OverlayTrigger>
-              </label>
+                  tabIndex='0'
+                />
+              </RUMActionTarget>
+              <RUMActionTarget
+                name={RealUserMonitoringEvents.SelectAZSelectionNone}
+              >
+                <label htmlFor={`none-${id}`}>
+                  None{' '}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id='tooltip'>
+                        To increase the chances of finding available GPU
+                        instances, this option allows not setting a specific
+                        availability zone.
+                      </Tooltip>
+                    }
+                    placement='top'
+                    animation={false}
+                  >
+                    <i className='fa fa-help' />
+                  </OverlayTrigger>
+                </label>
+              </RUMActionTarget>
             </RadioWrapperDiv>
           )}
         </AZWrapper>
