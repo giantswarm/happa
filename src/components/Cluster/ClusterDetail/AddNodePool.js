@@ -11,7 +11,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants, Providers } from 'shared/constants';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import BaseTransition from 'styles/transitions/BaseTransition';
@@ -644,9 +644,7 @@ class AddNodePool extends Component {
                   }`}
                 />
               </div>
-              <RUMActionTarget
-                name={RealUserMonitoringEvents.SelectAZSelectionAutomatic}
-              >
+              <RUMActionTarget name={RUMActions.SelectAZSelectionAutomatic}>
                 <input
                   type='radio'
                   id={`automatically-${id}`}
@@ -658,9 +656,7 @@ class AddNodePool extends Component {
                   tabIndex='0'
                 />
               </RUMActionTarget>
-              <RUMActionTarget
-                name={RealUserMonitoringEvents.SelectAZSelectionAutomatic}
-              >
+              <RUMActionTarget name={RUMActions.SelectAZSelectionAutomatic}>
                 <label
                   htmlFor='automatically'
                   onClick={() =>
@@ -720,9 +716,7 @@ class AddNodePool extends Component {
                   }`}
                 />
               </div>
-              <RUMActionTarget
-                name={RealUserMonitoringEvents.SelectAZSelectionManual}
-              >
+              <RUMActionTarget name={RUMActions.SelectAZSelectionManual}>
                 <input
                   type='radio'
                   id={`manually-${id}`}
@@ -734,9 +728,7 @@ class AddNodePool extends Component {
                   }
                 />
               </RUMActionTarget>
-              <RUMActionTarget
-                name={RealUserMonitoringEvents.SelectAZSelectionManual}
-              >
+              <RUMActionTarget name={RUMActions.SelectAZSelectionManual}>
                 <label
                   htmlFor='manually'
                   onClick={() =>
@@ -800,9 +792,7 @@ class AddNodePool extends Component {
                   }`}
                 />
               </div>
-              <RUMActionTarget
-                name={RealUserMonitoringEvents.SelectAZSelectionNone}
-              >
+              <RUMActionTarget name={RUMActions.SelectAZSelectionNone}>
                 <input
                   type='radio'
                   id={`none-${id}`}
@@ -814,9 +804,7 @@ class AddNodePool extends Component {
                   tabIndex='0'
                 />
               </RUMActionTarget>
-              <RUMActionTarget
-                name={RealUserMonitoringEvents.SelectAZSelectionNone}
-              >
+              <RUMActionTarget name={RUMActions.SelectAZSelectionNone}>
                 <label htmlFor={`none-${id}`}>
                   None{' '}
                   <OverlayTrigger

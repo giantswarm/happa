@@ -3,7 +3,7 @@ import { IInstanceType } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { CursorPointerCell, Tr } from 'UI/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -28,7 +28,7 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
   return (
     <Tr isSelected={isSelected} onClick={() => selectInstanceType(name)}>
       <LeftAlignedCell>
-        <RUMActionTarget name={RealUserMonitoringEvents.SelectInstanceType}>
+        <RUMActionTarget name={RUMActions.SelectInstanceType}>
           <RadioInput
             id={`select-${name}`}
             title={`Select ${name}`}

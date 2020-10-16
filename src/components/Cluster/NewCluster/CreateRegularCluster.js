@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants, Providers } from 'shared/constants';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
@@ -372,9 +372,7 @@ class CreateRegularCluster extends React.Component {
 
         <FlexRow>
           <ErrorFallback error={this.props.clusterCreateError}>
-            <RUMActionTarget
-              name={RealUserMonitoringEvents.CreateClusterSubmit}
-            >
+            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
               <Button
                 bsSize='large'
                 bsStyle='primary'
@@ -388,9 +386,7 @@ class CreateRegularCluster extends React.Component {
             </RUMActionTarget>
           </ErrorFallback>
           {!this.state.submitting && (
-            <RUMActionTarget
-              name={RealUserMonitoringEvents.CreateClusterCancel}
-            >
+            <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
                 bsSize='large'
                 bsStyle='default'

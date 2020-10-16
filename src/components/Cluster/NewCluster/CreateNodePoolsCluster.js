@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
@@ -245,9 +245,7 @@ class CreateNodePoolsCluster extends Component {
               >
                 <div>
                   <RUMActionTarget
-                    name={
-                      RealUserMonitoringEvents.SelectMasterAZSelectionAutomatic
-                    }
+                    name={RUMActions.SelectMasterAZSelectionAutomatic}
                   >
                     <InputGroup>
                       <RadioInput
@@ -259,9 +257,7 @@ class CreateNodePoolsCluster extends Component {
                     </InputGroup>
                   </RUMActionTarget>
                   <RUMActionTarget
-                    name={
-                      RealUserMonitoringEvents.SelectMasterAZSelectionManual
-                    }
+                    name={RUMActions.SelectMasterAZSelectionManual}
                   >
                     <InputGroup>
                       <RadioInput
@@ -314,9 +310,7 @@ class CreateNodePoolsCluster extends Component {
                         name={nodePoolName}
                         id={npId}
                       />
-                      <RUMActionTarget
-                        name={RealUserMonitoringEvents.RemoveNodePool}
-                      >
+                      <RUMActionTarget name={RUMActions.RemoveNodePool}>
                         <i
                           className='fa fa-close clickable'
                           title='Remove node pool'
@@ -330,7 +324,7 @@ class CreateNodePoolsCluster extends Component {
               );
             })}
           </NodePoolsTransitionGroup>
-          <RUMActionTarget name={RealUserMonitoringEvents.AddNodePool}>
+          <RUMActionTarget name={RUMActions.AddNodePool}>
             <Button onClick={this.addNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
@@ -342,9 +336,7 @@ class CreateNodePoolsCluster extends Component {
 
         <FlexRow>
           <ErrorFallback error={this.props.clusterCreateError}>
-            <RUMActionTarget
-              name={RealUserMonitoringEvents.CreateClusterSubmit}
-            >
+            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
               <Button
                 bsSize='large'
                 bsStyle='primary'
@@ -359,9 +351,7 @@ class CreateNodePoolsCluster extends Component {
           </ErrorFallback>
           {/* We want to hide cancel button when the Create NP button has been clicked */}
           {!submitting && (
-            <RUMActionTarget
-              name={RealUserMonitoringEvents.CreateClusterCancel}
-            >
+            <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
                 bsSize='large'
                 bsStyle='default'

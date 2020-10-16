@@ -1,4 +1,4 @@
-export enum RealUserMonitoringEvents {
+export enum RUMActions {
   ClickMainNavLogo = 'CLICK_MAINNAV_LOGO',
 
   SelectRelease = 'SELECT_RELEASE',

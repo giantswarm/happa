@@ -4,7 +4,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import {
   getReleases,
@@ -152,9 +152,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
       <div>
         <RUMActionTarget
           name={
-            collapsed
-              ? RealUserMonitoringEvents.ExpandReleases
-              : RealUserMonitoringEvents.CollapseReleases
+            collapsed ? RUMActions.ExpandReleases : RUMActions.CollapseReleases
           }
         >
           <ListToggler

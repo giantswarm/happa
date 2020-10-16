@@ -2,7 +2,7 @@ import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import {
   CenteredCell,
   ComponentsRow,
@@ -54,7 +54,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         toneDown={!active}
       >
         <CursorPointerCell>
-          <RUMActionTarget name={RealUserMonitoringEvents.SelectRelease}>
+          <RUMActionTarget name={RUMActions.SelectRelease}>
             <RadioInput
               id={`select-${version}`}
               title={`Select release ${version}`}
@@ -81,8 +81,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
           <RUMActionTarget
             name={
               collapsed
-                ? RealUserMonitoringEvents.ShowReleaseDetails
-                : RealUserMonitoringEvents.HideReleaseDetails
+                ? RUMActions.ShowReleaseDetails
+                : RUMActions.HideReleaseDetails
             }
           >
             <TableButton

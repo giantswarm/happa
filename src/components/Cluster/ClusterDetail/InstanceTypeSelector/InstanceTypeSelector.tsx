@@ -7,7 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import {
   ListToggler,
   SelectedDescription,
@@ -59,8 +59,8 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         <RUMActionTarget
           name={
             collapsed
-              ? RealUserMonitoringEvents.ExpandInstanceTypes
-              : RealUserMonitoringEvents.CollapseInstanceTypes
+              ? RUMActions.ExpandInstanceTypes
+              : RUMActions.CollapseInstanceTypes
           }
         >
           <ListToggler

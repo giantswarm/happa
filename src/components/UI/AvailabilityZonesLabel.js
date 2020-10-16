@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 
 const azColors = [
   '#66c2a5',
@@ -116,7 +116,7 @@ function AvailabilityZonesLabel({
   };
 
   return (
-    <RUMActionTarget name={RealUserMonitoringEvents.ToggleAZ}>
+    <RUMActionTarget name={RUMActions.ToggleAZ}>
       <Wrapper
         className={classNames}
         title={title}

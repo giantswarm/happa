@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
@@ -236,7 +236,7 @@ class NumberPicker extends React.Component {
           {this.props.readOnly ? undefined : (
             <RUMActionTarget
               name={mergeActionNames(
-                RealUserMonitoringEvents.DecrementNumber,
+                RUMActions.DecrementNumber,
                 this.props.eventNameSuffix
               )}
             >
@@ -267,7 +267,7 @@ class NumberPicker extends React.Component {
           {this.props.readOnly ? undefined : (
             <RUMActionTarget
               name={mergeActionNames(
-                RealUserMonitoringEvents.IncrementNumber,
+                RUMActions.IncrementNumber,
                 this.props.eventNameSuffix
               )}
             >

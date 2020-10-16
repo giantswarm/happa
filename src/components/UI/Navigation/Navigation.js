@@ -6,7 +6,7 @@ import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { CSSBreakpoints } from 'shared/constants';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { AppRoutes } from 'shared/constants/routes';
 import { mq } from 'styles';
 
@@ -112,7 +112,7 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav'>
-          <RUMActionTarget name={RealUserMonitoringEvents.ClickMainNavLogo}>
+          <RUMActionTarget name={RUMActions.ClickMainNavLogo}>
             <Link to={AppRoutes.Home}>
               <img className='logo' src={logo} />
             </Link>

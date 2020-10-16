@@ -12,7 +12,7 @@ import { TransitionGroup } from 'react-transition-group';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
-import { RealUserMonitoringEvents } from 'shared/constants/realUserMonitoring';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import * as clusterActions from 'stores/cluster/actions';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
@@ -561,7 +561,7 @@ class V5ClusterDetailTable extends React.Component {
                 actually run workloads.
               </p>
             )}
-            <RUMActionTarget name={RealUserMonitoringEvents.AddNodePool}>
+            <RUMActionTarget name={RUMActions.AddNodePool}>
               <Button onClick={this.toggleAddNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>
