@@ -1,5 +1,5 @@
 const eventNameSeparator = '_';
 
-export function mergeEventNames(...parts: string[]): string {
+export function mergeActionNames(...parts: string[]): string {
   return parts.join(eventNameSeparator).toUpperCase();
 }

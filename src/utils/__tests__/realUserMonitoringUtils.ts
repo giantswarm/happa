@@ -1,10 +1,10 @@
-import { mergeEventNames } from 'utils/realUserMonitoringUtils';
+import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
 describe('realUserMonitoringUtils', () => {
-  describe('mergeEventNames', () => {
+  describe('mergeActionNames', () => {
     it('merges given event parts into a single uppercase string', () => {
       expect(
-        mergeEventNames(
+        mergeActionNames(
           'TEST_EVENT',
           'WITH_OTHER_STUFF',
           'seriously',
