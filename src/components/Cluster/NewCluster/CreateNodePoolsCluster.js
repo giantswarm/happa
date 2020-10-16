@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectErrorByAction } from 'stores/error/selectors';
@@ -242,24 +244,30 @@ class CreateNodePoolsCluster extends Component {
                 hint={<>&#32;</>}
               >
                 <div>
-                  <InputGroup>
-                    <RadioInput
-                      id='automatic'
-                      checked={!hasAZLabels}
-                      label='Automatic'
-                      onChange={() => this.toggleMasterAZSelector(false)}
-                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_AUTOMATIC'
-                    />
-                  </InputGroup>
-                  <InputGroup>
-                    <RadioInput
-                      id='manual'
-                      checked={hasAZLabels}
-                      label='Manual'
-                      onChange={() => this.toggleMasterAZSelector(true)}
-                      data-dd-action-name='SELECT_MASTER_AZ_SELECTION_MANUAL'
-                    />
-                  </InputGroup>
+                  <RUMActionTarget
+                    name={RUMActions.SelectMasterAZSelectionAutomatic}
+                  >
+                    <InputGroup>
+                      <RadioInput
+                        id='automatic'
+                        checked={!hasAZLabels}
+                        label='Automatic'
+                        onChange={() => this.toggleMasterAZSelector(false)}
+                      />
+                    </InputGroup>
+                  </RUMActionTarget>
+                  <RUMActionTarget
+                    name={RUMActions.SelectMasterAZSelectionManual}
+                  >
+                    <InputGroup>
+                      <RadioInput
+                        id='manual'
+                        checked={hasAZLabels}
+                        label='Manual'
+                        onChange={() => this.toggleMasterAZSelector(true)}
+                      />
+                    </InputGroup>
+                  </RUMActionTarget>
                 </div>
               </MasterAZSelectionInput>
             )}
@@ -302,25 +310,25 @@ class CreateNodePoolsCluster extends Component {
                         name={nodePoolName}
                         id={npId}
                       />
-                      <i
-                        className='fa fa-close clickable'
-                        title='Remove node pool'
-                        aria-hidden='true'
-                        onClick={() => this.removeNodePoolForm(npId)}
-                        data-dd-action-name='REMOVE_NODEPOOL_FORM'
-                      />
+                      <RUMActionTarget name={RUMActions.RemoveNodePool}>
+                        <i
+                          className='fa fa-close clickable'
+                          title='Remove node pool'
+                          aria-hidden='true'
+                          onClick={() => this.removeNodePoolForm(npId)}
+                        />
+                      </RUMActionTarget>
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
                 </SlideTransition>
               );
             })}
           </NodePoolsTransitionGroup>
-          <Button
-            onClick={this.addNodePoolForm}
-            data-dd-action-name='ADD_NODEPOOL'
-          >
-            <i className='fa fa-add-circle' /> ADD NODE POOL
-          </Button>
+          <RUMActionTarget name={RUMActions.AddNodePool}>
+            <Button onClick={this.addNodePoolForm}>
+              <i className='fa fa-add-circle' /> ADD NODE POOL
+            </Button>
+          </RUMActionTarget>
           <HorizontalLine />
         </WrapperDiv>
 
@@ -328,30 +336,32 @@ class CreateNodePoolsCluster extends Component {
 
         <FlexRow>
           <ErrorFallback error={this.props.clusterCreateError}>
-            <Button
-              bsSize='large'
-              bsStyle='primary'
-              disabled={!this.isValid()}
-              loading={submitting}
-              onClick={this.createCluster}
-              type='button'
-              data-dd-action-name='CREATE_CLUSTER_SUBMIT'
-            >
-              Create Cluster
-            </Button>
+            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
+              <Button
+                bsSize='large'
+                bsStyle='primary'
+                disabled={!this.isValid()}
+                loading={submitting}
+                onClick={this.createCluster}
+                type='button'
+              >
+                Create Cluster
+              </Button>
+            </RUMActionTarget>
           </ErrorFallback>
           {/* We want to hide cancel button when the Create NP button has been clicked */}
           {!submitting && (
-            <Button
-              bsSize='large'
-              bsStyle='default'
-              loading={submitting}
-              onClick={this.props.closeForm}
-              type='button'
-              data-dd-action-name='CREATE_CLUSTER_CANCEL'
-            >
-              Cancel
-            </Button>
+            <RUMActionTarget name={RUMActions.CreateClusterCancel}>
+              <Button
+                bsSize='large'
+                bsStyle='default'
+                loading={submitting}
+                onClick={this.props.closeForm}
+                type='button'
+              >
+                Cancel
+              </Button>
+            </RUMActionTarget>
           )}
         </FlexRow>
         <FlexRow>

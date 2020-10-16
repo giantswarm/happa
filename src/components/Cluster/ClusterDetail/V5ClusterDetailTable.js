@@ -9,8 +9,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
+import RUMActionTarget from 'RUM/RUMActionTarget';
 import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import * as clusterActions from 'stores/cluster/actions';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
@@ -559,12 +561,11 @@ class V5ClusterDetailTable extends React.Component {
                 actually run workloads.
               </p>
             )}
-            <Button
-              onClick={this.toggleAddNodePoolForm}
-              data-dd-action-name='ADD_NODEPOOL'
-            >
-              <i className='fa fa-add-circle' /> ADD NODE POOL
-            </Button>
+            <RUMActionTarget name={RUMActions.AddNodePool}>
+              <Button onClick={this.toggleAddNodePoolForm}>
+                <i className='fa fa-add-circle' /> ADD NODE POOL
+              </Button>
+            </RUMActionTarget>
             {nodePools && nodePools.length === 1 && (
               <p>
                 With additional node pools, you can add different types of
