@@ -1,6 +1,8 @@
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
+import RUMActionTarget from 'RUM/RUMActionTarget';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import {
   CenteredCell,
   ComponentsRow,
@@ -15,6 +17,7 @@ import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 interface IReleaseRow extends IRelease {
   isSelected: boolean;
+
   selectRelease(releaseVersion: string): void;
 }
 
@@ -51,17 +54,18 @@ const ReleaseRow: FC<IReleaseRow> = ({
         toneDown={!active}
       >
         <CursorPointerCell>
-          <RadioInput
-            id={`select-${version}`}
-            title={`Select release ${version}`}
-            checked={isSelected}
-            value={isSelected ? 'true' : 'false'}
-            name={`select-${version}`}
-            onChange={() => selectRelease(version)}
-            rootProps={{ className: 'selection-radio' }}
-            bulletProps={{ className: 'selection-bullet' }}
-            data-dd-action-name='SELECT_RELEASE'
-          />
+          <RUMActionTarget name={RUMActions.SelectRelease}>
+            <RadioInput
+              id={`select-${version}`}
+              title={`Select release ${version}`}
+              checked={isSelected}
+              value={isSelected ? 'true' : 'false'}
+              name={`select-${version}`}
+              onChange={() => selectRelease(version)}
+              rootProps={{ className: 'selection-radio' }}
+              bulletProps={{ className: 'selection-bullet' }}
+            />
+          </RUMActionTarget>
         </CursorPointerCell>
         <CursorPointerCell>{version}</CursorPointerCell>
         <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
@@ -74,20 +78,25 @@ const ReleaseRow: FC<IReleaseRow> = ({
           />
         </CursorPointerCell>
         <CenteredCell onClick={(e) => e.stopPropagation()}>
-          <TableButton
-            data-testid={`show-components-${version}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setCollapsed(!collapsed);
-            }}
-            data-dd-action-name={
-              collapsed ? 'SHOW_RELEASE_DETAILS' : 'HIDE_RELEASE_DETAILS'
+          <RUMActionTarget
+            name={
+              collapsed
+                ? RUMActions.ShowReleaseDetails
+                : RUMActions.HideReleaseDetails
             }
           >
-            <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
-            {collapsed ? 'Show' : 'Hide'}
-          </TableButton>
+            <TableButton
+              data-testid={`show-components-${version}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setCollapsed(!collapsed);
+              }}
+            >
+              <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
+              {collapsed ? 'Show' : 'Hide'}
+            </TableButton>
+          </RUMActionTarget>
         </CenteredCell>
         <CenteredCell onClick={(e) => e.stopPropagation()}>
           <TableButton
