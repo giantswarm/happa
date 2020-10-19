@@ -155,9 +155,7 @@ describe('ClusterStatus', () => {
         [nodePoolRelease.version]: nodePoolRelease as IRelease,
       }
     );
-    state.entities.clusters.idsAwaitingUpgrade = {
-      as129: true,
-    };
+    state.entities.clusters.idsAwaitingUpgrade.as129 = true;
 
     const onClickMockFn = jest.fn();
     renderWithStore(
@@ -277,6 +275,7 @@ function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
       },
       clusters: {
         items: { [cluster.id as string]: cluster },
+        idsAwaitingUpgrade: {},
       },
     },
   } as unknown) as IState;
