@@ -1,4 +1,7 @@
-import { selectTargetRelease } from 'stores/cluster/selectors';
+import {
+  selectIsClusterAwaitingUpgrade,
+  selectTargetRelease,
+} from 'stores/cluster/selectors';
 import { IState } from 'stores/state';
 import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
 
@@ -161,6 +164,26 @@ describe('cluster::selectors', () => {
       }) as unknown) as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('3.0.1-alpha');
+    });
+  });
+
+  describe('selectIsClusterAwaitingUpgrade', () => {
+    it('returns true if a cluster ID is in the list', () => {
+      const state = ({
+        entities: {
+          clusters: {
+            idsAwaitingUpgrade: {
+              as12d: true,
+              '435sd': true,
+            },
+          },
+        },
+      } as unknown) as IState;
+
+      expect(selectIsClusterAwaitingUpgrade('as12d')(state)).toBeTruthy();
+      expect(selectIsClusterAwaitingUpgrade('435sd')(state)).toBeTruthy();
+      expect(selectIsClusterAwaitingUpgrade('s3as1')(state)).toBeFalsy();
+      expect(selectIsClusterAwaitingUpgrade('asda1')(state)).toBeFalsy();
     });
   });
 });
