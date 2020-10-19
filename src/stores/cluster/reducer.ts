@@ -30,6 +30,7 @@ const initialState: IClusterState = {
   isFetching: false,
   items: {},
   v5Clusters: [],
+  idsAwaitingUpgrade: {},
 };
 
 const clusterReducer = produce(

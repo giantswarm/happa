@@ -39,6 +39,7 @@ export interface IClusterState {
   isFetching: boolean;
   items: IClusterMap;
   v5Clusters: string[];
+  idsAwaitingUpgrade: Record<string, true>;
 }
 
 export interface IClusterDeleteRequestAction {

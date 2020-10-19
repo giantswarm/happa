@@ -131,3 +131,9 @@ export const selectIsClusterUpgrading = (clusterID: string) => (
 
   return isClusterUpdating(cluster);
 };
+
+export const selectIsClusterAwaitingUpgrade = (clusterID: string) => (
+  state: IState
+) => {
+  return Boolean(state.entities.clusters.idsAwaitingUpgrade[clusterID]);
+};

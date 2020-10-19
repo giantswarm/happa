@@ -56,6 +56,7 @@ export default {
       isFetching: false,
       items: {},
       v5Clusters: [],
+      idsAwaitingUpgrade: {},
     },
     organizations: {
       lastUpdated: 0,
