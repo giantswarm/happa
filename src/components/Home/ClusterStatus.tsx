@@ -5,7 +5,10 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
-import { selectCanClusterUpgrade } from 'stores/cluster/selectors';
+import {
+  selectCanClusterUpgrade,
+  selectIsClusterAwaitingUpgrade,
+} from 'stores/cluster/selectors';
 import {
   isClusterCreating,
   isClusterDeleting,
@@ -57,6 +60,9 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   const theme = useTheme<ITheme>();
 
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
+  const isClusterAwaitingUpgrade = useSelector(
+    selectIsClusterAwaitingUpgrade(clusterId)
+  );
   const cluster = useSelector<IState, Cluster>(
     (state) => state.entities.clusters.items[clusterId]
   );
@@ -93,6 +99,12 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       message = 'Upgrade in progress…';
       tooltip =
         'The cluster is currently upgrading. This step usually takes about 30 minutes.';
+      break;
+
+    case isClusterAwaitingUpgrade:
+      iconClassName = 'fa fa-version-upgrade';
+      message = 'Awaiting upgrade…';
+      tooltip = 'The cluster is about to start an upgrade.';
       break;
 
     default:

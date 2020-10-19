@@ -139,6 +139,50 @@ describe('ClusterStatus', () => {
     );
   });
 
+  it('shows that a cluster is in awaiting upgrade state', async () => {
+    const state = makeState(
+      {
+        id: 'as129',
+        release_version: nodePoolRelease.version,
+        conditions: [
+          {
+            last_transition_time: '123',
+            condition: 'Created',
+          },
+        ],
+      },
+      {
+        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+      }
+    );
+    state.entities.clusters.idsAwaitingUpgrade = {
+      as129: true,
+    };
+
+    const onClickMockFn = jest.fn();
+    renderWithStore(
+      ClusterStatus,
+      { clusterId: 'as129', onClick: onClickMockFn },
+      state
+    );
+
+    const statusLabel = screen.getByRole('document', {
+      name: 'Awaiting upgrade…',
+    });
+    expect(statusLabel).toBeInTheDocument();
+
+    fireEvent.click(statusLabel);
+    expect(onClickMockFn).not.toHaveBeenCalled();
+
+    const hoverMessageRegex = /The cluster is about to start an upgrade\./i;
+    fireEvent.mouseEnter(statusLabel);
+    expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
+    fireEvent.mouseLeave(statusLabel);
+    await waitForElementToBeRemoved(() =>
+      screen.queryByText(hoverMessageRegex)
+    );
+  });
+
   it('renders an empty output if the cluster has a deleting condition', () => {
     const state = makeState(
       {
