@@ -20,7 +20,10 @@ import {
 } from 'stores/batchActions';
 import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
-import { selectTargetRelease } from 'stores/cluster/selectors';
+import {
+  selectIsClusterAwaitingUpgrade,
+  selectTargetRelease,
+} from 'stores/cluster/selectors';
 import {
   getNumberOfNodes,
   isClusterCreating,
@@ -282,6 +285,7 @@ class ClusterDetailView extends React.Component {
       loadingNodePools,
       loadingCluster,
       isAdmin,
+      clusterIsAwaitingUpgrade,
     } = this.props;
 
     const loading = loadingNodePools || loadingCluster;
@@ -292,6 +296,8 @@ class ClusterDetailView extends React.Component {
     const tabsPaths = this.getPathsForTabs(id, owner);
 
     const clusterIsCreating = isClusterCreating(cluster);
+    const clusterIsUpdating =
+      isClusterUpdating(cluster) || clusterIsAwaitingUpgrade;
 
     return (
       <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
@@ -305,7 +311,7 @@ class ClusterDetailView extends React.Component {
                 onSave={this.editClusterName}
               />{' '}
             </h1>
-            {(isClusterUpdating(cluster) || clusterIsCreating) && (
+            {(clusterIsUpdating || clusterIsCreating) && (
               <SlideTransition in={true} appear={true} direction='down'>
                 <NotReadyNotice>
                   <i className='fa fa-info' /> This cluster is currently being{' '}
@@ -327,6 +333,8 @@ class ClusterDetailView extends React.Component {
                     region={region}
                     showUpgradeModal={this.showUpgradeModal}
                     workerNodesDesired={this.getDesiredNumberOfNodes()}
+                    clusterIsCreating={clusterIsCreating}
+                    clusterIsUpdating={clusterIsUpdating}
                   />
                 ) : (
                   <V4ClusterDetailTable
@@ -439,6 +447,7 @@ ClusterDetailView.propTypes = {
   loadingCluster: PropTypes.bool,
   loadingNodePools: PropTypes.bool,
   isAdmin: PropTypes.bool,
+  clusterIsAwaitingUpgrade: PropTypes.bool,
 };
 
 function mapStateToProps(state, props) {
@@ -457,6 +466,9 @@ function mapStateToProps(state, props) {
     user: state.main.loggedInUser,
     region: state.main.info.general.datacenter,
     isAdmin: getUserIsAdmin(state),
+    clusterIsAwaitingUpgrade: selectIsClusterAwaitingUpgrade(clusterID ?? '')(
+      state
+    ),
     loadingNodePools: selectLoadingFlagByAction(
       state,
       NODEPOOL_MULTIPLE_LOAD_REQUEST

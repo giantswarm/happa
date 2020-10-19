@@ -8,7 +8,10 @@ import { connect } from 'react-redux';
 import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/appcatalog/actions';
-import { selectClusterById } from 'stores/cluster/selectors';
+import {
+  selectClusterById,
+  selectIsClusterAwaitingUpgrade,
+} from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
@@ -371,10 +374,14 @@ class ClusterApps extends React.Component {
       installedApps,
       clusterIsCreating,
       clusterIsUpdating,
+      clusterIsAwaitingUpgrade,
       release,
     } = this.props;
     const userInstalledApps = this.getUserInstalledApps(installedApps);
     const preinstalledApps = this.preinstalledApps();
+
+    const isUpdating = clusterIsUpdating || clusterIsAwaitingUpgrade;
+    const isUpdatingOrCreating = clusterIsCreating || isUpdating;
 
     return (
       <>
@@ -387,12 +394,12 @@ class ClusterApps extends React.Component {
             <BrowseButtonContainer>
               <BrowseButton
                 onClick={this.openAppCatalog}
-                disabled={clusterIsCreating || clusterIsUpdating}
+                disabled={isUpdatingOrCreating}
               >
                 <i className='fa fa-add-circle' />
                 Install App
               </BrowseButton>
-              {(clusterIsCreating || clusterIsUpdating) && (
+              {isUpdatingOrCreating && (
                 <span>
                   Please wait for cluster{' '}
                   {clusterIsCreating ? 'creation' : 'upgrade'} to be completed
@@ -502,6 +509,7 @@ ClusterApps.propTypes = {
   release: PropTypes.object,
   hasOptionalIngress: PropTypes.bool,
   clusterIsUpdating: PropTypes.bool,
+  clusterIsAwaitingUpgrade: PropTypes.bool,
   clusterIsCreating: PropTypes.bool,
 };
 
@@ -516,6 +524,9 @@ function mapStateToProps(state, props) {
       loadClusterApps().types.request
     ),
     clusterIsUpdating: cluster ? isClusterUpdating(cluster) : false,
+    clusterIsAwaitingUpgrade: selectIsClusterAwaitingUpgrade(props.clusterId)(
+      state
+    ),
     clusterIsCreating: cluster ? isClusterCreating(cluster) : false,
   };
 }

@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { installApp } from 'stores/appcatalog/actions';
+import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -314,8 +315,10 @@ function mapStateToProps(state) {
     .map((clusterID) => {
       const cluster = state.entities.clusters.items[clusterID];
 
-      const isCreatingOrUpdating =
-        isClusterUpdating(cluster) || isClusterCreating(cluster);
+      const isUpdating =
+        isClusterUpdating(cluster) ||
+        selectIsClusterAwaitingUpgrade(clusterID)(state);
+      const isCreatingOrUpdating = isClusterCreating(cluster) || isUpdating;
 
       return {
         id: clusterID,

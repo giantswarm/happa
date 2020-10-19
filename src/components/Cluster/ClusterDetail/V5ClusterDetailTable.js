@@ -14,7 +14,7 @@ import { CSSBreakpoints } from 'shared/constants';
 import * as Providers from 'shared/constants/providers';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import * as clusterActions from 'stores/cluster/actions';
-import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { isClusterCreating } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
@@ -373,6 +373,8 @@ class V5ClusterDetailTable extends React.Component {
       release,
       resources,
       loadingNodePools,
+      clusterIsCreating,
+      clusterIsUpdating,
     } = this.props;
 
     const {
@@ -390,8 +392,8 @@ class V5ClusterDetailTable extends React.Component {
       master_nodes &&
       !master_nodes.high_availability &&
       cluster.capabilities.supportsHAMasters &&
-      !isClusterCreating(cluster) &&
-      !isClusterUpdating(cluster);
+      !clusterIsCreating &&
+      !clusterIsUpdating;
 
     const machineTypeLabel =
       provider === Providers.AWS ? 'Instance type' : 'VM Size';
@@ -610,6 +612,8 @@ V5ClusterDetailTable.propTypes = {
   nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingNodePools: PropTypes.bool,
+  clusterIsCreating: PropTypes.bool,
+  clusterIsUpdating: PropTypes.bool,
 };
 
 // We use this wrapper function because we want different references for each cluster
