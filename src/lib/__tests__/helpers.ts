@@ -337,7 +337,7 @@ token: can't be blank`)
       master: {
         availability_zone: '',
       },
-      masterNodes: null,
+      master_nodes: null,
     };
 
     const keyPair: IKeyPair = {
@@ -420,7 +420,7 @@ token: can't be blank`)
           master: {
             availability_zone: '',
           },
-          masterNodes: null,
+          master_nodes: null,
         },
         v2sad: {
           id: 'v2sad',
@@ -434,7 +434,7 @@ token: can't be blank`)
           master: {
             availability_zone: '',
           },
-          masterNodes: null,
+          master_nodes: null,
         },
         v5as0: {
           id: 'v5as0',
@@ -448,7 +448,7 @@ token: can't be blank`)
           master: {
             availability_zone: '',
           },
-          masterNodes: null,
+          master_nodes: null,
         },
         sd01s: {
           id: 'sd01s',
