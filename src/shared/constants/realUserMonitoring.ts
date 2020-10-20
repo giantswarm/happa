@@ -5,6 +5,7 @@ export enum RUMActions {
 
   ToggleAZ = 'TOGGLE_AZ',
 
+  SelectAZSelection = 'SELECT_AZ_SELECTION',
   SelectAZSelectionAutomatic = 'SELECT_AZ_SELECTION_AUTOMATIC',
   SelectAZSelectionManual = 'SELECT_AZ_SELECTION_MANUAL',
   SelectAZSelectionNone = 'SELECT_AZ_SELECTION_NONE',
