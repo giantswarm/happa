@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
 import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 
 const AZSelectionLabel = styled(ClusterCreationLabelSpan)`
@@ -25,17 +27,17 @@ const StyledPanelCollapse = styled(PanelCollapse)`
   opacity: 0;
   transform: translate3d(0, 30px, 0);
   will-change: opacity, height, transform;
-  transition: opacity 0.1s ease-in-out 0s,
-    height 0.25s cubic-bezier(0.48, 0.28, 0.36, 1.02),
-    transform 0.25s cubic-bezier(0.48, 0.28, 0.36, 1.02);
+  transition: opacity 0.1s ease-in-out,
+    height 0.2s cubic-bezier(0.48, 0.28, 0.36, 1.02),
+    transform 0.2s cubic-bezier(0.48, 0.28, 0.36, 1.02);
 
   &.in {
     margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
     opacity: 1;
     transform: translate3d(0, 0, 0);
-    transition: opacity 0.25s ease-in-out 0.05s,
-      height 0.25s cubic-bezier(0.48, 0.28, 0.36, 1.02),
-      transform 0.25s cubic-bezier(0.48, 0.28, 0.36, 1.02);
+    transition: opacity 0.15s ease-in-out,
+      height 0.2s cubic-bezier(0.48, 0.28, 0.36, 1.02),
+      transform 0.15s cubic-bezier(0.48, 0.28, 0.36, 1.02);
   }
 `;
 
@@ -56,13 +58,15 @@ const ManualAZSelector = styled.div`
   font-size: 16px;
 `;
 
-interface IAddNodePoolAZSelectionProps {
+interface IAddNodePoolAZSelectionProps
+  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   onUpdateZones: (payload: { value: number; valid: boolean }) => void;
 
   // Common.
   value?: AvailabilityZoneSelection;
   npID?: string;
+  provider?: PropertiesOf<typeof Providers>;
 
   // Manual and automatic modes.
   allZones?: string[];
@@ -82,12 +86,14 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
   onUpdateZones,
   value,
   npID,
+  provider,
   allZones,
   minNumOfZones,
   maxNumOfZones,
   defaultNumOfZones,
   numOfZones,
   selectedZones,
+  ...rest
 }) => {
   /**
    * The `onToggle` prop is required because otherwise, the `Panel` component
@@ -113,7 +119,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
   }
 
   return (
-    <div>
+    <div {...rest}>
       <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
       <StyledPanel
         expanded={value === AvailabilityZoneSelection.Automatic}
@@ -173,23 +179,26 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           </AZSelectorWrapper>
         </StyledPanelCollapse>
       </StyledPanel>
-      <StyledPanel
-        expanded={value === AvailabilityZoneSelection.None}
-        onToggle={onToggleFakeCallback}
-      >
-        <AddNodePoolAZSelectionCheckbox
-          onChange={onChange}
-          value={value}
-          npID={npID}
-          type={AvailabilityZoneSelection.None}
-        />
-        <StyledPanelCollapse>
-          <p>
-            To increase the chances of finding available GPU instances, this
-            option allows not setting a specific availability zone.
-          </p>
-        </StyledPanelCollapse>
-      </StyledPanel>
+
+      {provider === Providers.AZURE && (
+        <StyledPanel
+          expanded={value === AvailabilityZoneSelection.None}
+          onToggle={onToggleFakeCallback}
+        >
+          <AddNodePoolAZSelectionCheckbox
+            onChange={onChange}
+            value={value}
+            npID={npID}
+            type={AvailabilityZoneSelection.None}
+          />
+          <StyledPanelCollapse>
+            <p>
+              To increase the chances of finding available GPU instances, this
+              option allows not setting a specific availability zone.
+            </p>
+          </StyledPanelCollapse>
+        </StyledPanel>
+      )}
     </div>
   );
 };
@@ -199,6 +208,7 @@ AddNodePoolAZSelection.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number,
   npID: PropTypes.string,
+  provider: PropTypes.oneOf(Object.values(Providers)),
   allZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   minNumOfZones: PropTypes.number,
   maxNumOfZones: PropTypes.number,
@@ -210,6 +220,7 @@ AddNodePoolAZSelection.propTypes = {
 AddNodePoolAZSelection.defaultProps = {
   value: AvailabilityZoneSelection.Automatic,
   npID: '',
+  provider: Providers.AWS,
   allZones: [],
   minNumOfZones: 0,
   maxNumOfZones: 0,

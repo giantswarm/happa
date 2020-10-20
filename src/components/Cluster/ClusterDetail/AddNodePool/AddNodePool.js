@@ -439,6 +439,7 @@ class AddNodePool extends Component {
         <StyledAddNodePoolAZSelection
           npID={id}
           value={azSelection}
+          provider={provider}
           onChange={this.toggleAZSelector}
           minNumOfZones={minAZ}
           maxNumOfZones={maxAZ}
