@@ -246,23 +246,20 @@ class AddNodePool extends Component {
     }
   };
 
-  updateAZ = (payload) => {
-    this.setState((prevState) => {
-      switch (prevState.azSelection) {
-        case AvailabilityZoneSelection.Automatic:
-          return {
-            availabilityZonesPicker: payload,
-          };
+  updateAZ = (azSelection) => (payload) => {
+    switch (azSelection) {
+      case AvailabilityZoneSelection.Automatic:
+        this.setState({
+          availabilityZonesPicker: payload,
+        });
+        break;
 
-        case AvailabilityZoneSelection.Manual:
-          return {
-            availabilityZonesLabels: payload,
-          };
-
-        default:
-          return null;
-      }
-    });
+      case AvailabilityZoneSelection.Manual:
+        this.setState({
+          availabilityZonesLabels: payload,
+        });
+        break;
+    }
   };
 
   updateScaling = (nodeCountSelector) => {

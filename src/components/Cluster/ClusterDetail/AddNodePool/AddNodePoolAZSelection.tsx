@@ -58,10 +58,24 @@ const ManualAZSelector = styled.div`
   font-size: 16px;
 `;
 
+interface IUpdateZonePickerPayload {
+  value: number;
+  valid: boolean;
+}
+
+interface IUpdateZoneLabelsPayload {
+  number: number;
+  zonesString: string;
+  zonesArray: string[];
+  valid: boolean;
+}
+
 interface IAddNodePoolAZSelectionProps
   extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
-  onUpdateZones: (payload: { value: number; valid: boolean }) => void;
+  onUpdateZones: (
+    azSelection: AvailabilityZoneSelection
+  ) => (payload: IUpdateZonePickerPayload | IUpdateZoneLabelsPayload) => void;
 
   // Common.
   value?: AvailabilityZoneSelection;
@@ -140,7 +154,9 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
               max={maxNumOfZones}
               defaultValue={defaultNumOfZones}
               zones={allZones}
-              updateAZValuesInParent={onUpdateZones}
+              updateAZValuesInParent={onUpdateZones(
+                AvailabilityZoneSelection.Automatic
+              )}
               isLabels={false}
             />
           </AZSelectorWrapper>
@@ -170,7 +186,9 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
                 max={maxNumOfZones}
                 defaultValue={2}
                 zones={allZones}
-                updateAZValuesInParent={onUpdateZones}
+                updateAZValuesInParent={onUpdateZones(
+                  AvailabilityZoneSelection.Manual
+                )}
                 isLabels={true}
               />
             </ManualAZSelector>
