@@ -35,7 +35,6 @@ const AddNodePoolAZSelectionCheckbox: React.FC<IAddNodePoolAZSelectionCheckboxPr
         id={id}
         checked={value === type}
         onChange={() => onChange(type as AvailabilityZoneSelection)}
-        label={typeName}
         tabIndex={0}
         {...rest}
       />

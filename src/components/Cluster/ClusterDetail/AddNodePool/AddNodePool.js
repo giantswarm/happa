@@ -338,7 +338,7 @@ class AddNodePool extends Component {
           availabilityZonesLabels.zonesArray;
         break;
 
-      case AvailabilityZoneSelection.None:
+      case AvailabilityZoneSelection.NotSpecified:
         nodePoolDefinition.availability_zones.number = -1;
         break;
     }

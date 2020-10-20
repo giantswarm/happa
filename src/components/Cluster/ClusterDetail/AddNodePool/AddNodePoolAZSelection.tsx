@@ -129,6 +129,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           onChange={onChange}
           value={value}
           npID={npID}
+          label='Automatic'
           type={AvailabilityZoneSelection.Automatic}
         />
         <StyledPanelCollapse>
@@ -154,6 +155,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           onChange={onChange}
           value={value}
           npID={npID}
+          label='Manual'
           type={AvailabilityZoneSelection.Manual}
         />
         <StyledPanelCollapse>
@@ -182,19 +184,21 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
 
       {provider === Providers.AZURE && (
         <StyledPanel
-          expanded={value === AvailabilityZoneSelection.None}
+          expanded={value === AvailabilityZoneSelection.NotSpecified}
           onToggle={onToggleFakeCallback}
         >
           <AddNodePoolAZSelectionCheckbox
             onChange={onChange}
             value={value}
             npID={npID}
-            type={AvailabilityZoneSelection.None}
+            label='Not specified'
+            type={AvailabilityZoneSelection.NotSpecified}
           />
           <StyledPanelCollapse>
             <p>
-              To increase the chances of finding available GPU instances, this
-              option allows not setting a specific availability zone.
+              By not specifying an availability zone, Azure will pick a zone
+              where the requested VM size is available. This is especially
+              useful for GPU instances, which are not available in all regions.
             </p>
           </StyledPanelCollapse>
         </StyledPanel>
