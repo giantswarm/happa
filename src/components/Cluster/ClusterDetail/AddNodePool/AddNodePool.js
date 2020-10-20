@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePoolMachineType';
+import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import { compare } from 'lib/semver';
