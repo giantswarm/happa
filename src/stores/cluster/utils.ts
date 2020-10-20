@@ -1,6 +1,7 @@
 import { compare } from 'lib/semver';
 import { Constants, Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
+import { IIDsAwaitingUpgradeMap } from 'stores/cluster/types';
 import { getMinHAMastersVersion } from 'stores/main/selectors';
 import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
@@ -412,4 +413,28 @@ export function v4orV5(
   }
 
   return v4func;
+}
+
+export function reconcileClustersAwaitingUpgrade(
+  allClusters: IClusterMap,
+  idsAwaitingUpgrade: IIDsAwaitingUpgradeMap
+): IIDsAwaitingUpgradeMap {
+  const awaitingUpgrade: IIDsAwaitingUpgradeMap = {};
+
+  for (const clusterID of Object.keys(idsAwaitingUpgrade)) {
+    const cluster = allClusters[clusterID];
+
+    switch (true) {
+      case typeof cluster === 'undefined':
+      case Boolean(cluster.delete_date):
+      case isClusterUpdating(cluster):
+      case isClusterDeleting(cluster):
+        continue;
+
+      default:
+        awaitingUpgrade[clusterID] = true;
+    }
+  }
+
+  return awaitingUpgrade;
 }

@@ -11,6 +11,7 @@ import {
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'stores/appcatalog/constants';
+import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { clearError } from 'stores/error/actions';
@@ -185,7 +186,8 @@ function mapStateToProps(state, ownProps) {
   if (
     !selectedCluster ||
     isClusterCreating(selectedCluster) ||
-    isClusterUpdating(selectedCluster)
+    isClusterUpdating(selectedCluster) ||
+    selectIsClusterAwaitingUpgrade(selectedClusterID)
   ) {
     selectedClusterID = undefined;
   }

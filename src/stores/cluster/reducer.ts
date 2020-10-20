@@ -15,6 +15,7 @@ import {
   V5_CLUSTER_CREATE_SUCCESS,
 } from 'stores/cluster/constants';
 import { ClusterActions, IClusterState } from 'stores/cluster/types';
+import { reconcileClustersAwaitingUpgrade } from 'stores/cluster/utils';
 import { updateClusterLabels } from 'stores/clusterlabels/actions';
 import { UPDATE_CLUSTER_LABELS_SUCCESS } from 'stores/clusterlabels/constants';
 import { ClusterLabelsActions } from 'stores/clusterlabels/types';
@@ -30,6 +31,7 @@ const initialState: IClusterState = {
   isFetching: false,
   items: {},
   v5Clusters: [],
+  idsAwaitingUpgrade: {},
 };
 
 const clusterReducer = produce(
@@ -46,6 +48,10 @@ const clusterReducer = produce(
       case CLUSTERS_LIST_SUCCESS:
         draft.items = action.clusters;
         draft.v5Clusters = action.v5ClusterIds;
+        draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
+          draft.items,
+          draft.idsAwaitingUpgrade
+        );
 
         break;
 
@@ -58,6 +64,11 @@ const clusterReducer = produce(
               new Set([...draft.v5Clusters, ...action.v5ClusterIds])
             );
           }
+
+          draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
+            draft.items,
+            draft.idsAwaitingUpgrade
+          );
         }
 
         break;
@@ -67,6 +78,11 @@ const clusterReducer = produce(
           ...draft.items[action.cluster.id],
           ...action.cluster,
         };
+
+        draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
+          draft.items,
+          draft.idsAwaitingUpgrade
+        );
 
         break;
       }
@@ -121,6 +137,10 @@ const clusterReducer = produce(
           cluster.delete_date = action.timestamp;
           draft.lastUpdated = Date.now();
         }
+        draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
+          draft.items,
+          draft.idsAwaitingUpgrade
+        );
 
         break;
       }
@@ -130,6 +150,10 @@ const clusterReducer = produce(
         if (action.isV5Cluster) {
           draft.v5Clusters.filter((id: string) => id !== action.clusterId);
         }
+        draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
+          draft.items,
+          draft.idsAwaitingUpgrade
+        );
 
         break;
 
@@ -137,6 +161,11 @@ const clusterReducer = produce(
         const cluster = draft.items[action.cluster.id];
         if (cluster) {
           for (const [key, value] of Object.entries(action.payload)) {
+            // The cluster is waiting for the upgrade process to start.
+            if (key === 'release_version' && cluster[key] !== value) {
+              draft.idsAwaitingUpgrade[cluster.id] = true;
+            }
+
             // @ts-expect-error
             cluster[key] = value;
           }
@@ -149,6 +178,10 @@ const clusterReducer = produce(
       case CLUSTER_PATCH_ERROR: {
         if (draft.items[action.cluster.id]) {
           draft.items[action.cluster.id] = action.cluster;
+          draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
+            draft.items,
+            draft.idsAwaitingUpgrade
+          );
         }
 
         break;

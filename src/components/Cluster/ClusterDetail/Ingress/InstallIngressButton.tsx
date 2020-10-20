@@ -15,6 +15,7 @@ import {
   selectIngressAppToInstall,
 } from 'stores/appcatalog/selectors';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { IState } from 'stores/state';
@@ -97,7 +98,10 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     dispatch(installLatestIngress({ clusterId }));
 
   const clusterIsCreating = isClusterCreating(cluster);
-  const clusterIsNotReady = clusterIsCreating || isClusterUpdating(cluster);
+  const clusterIsUpdating =
+    useSelector(selectIsClusterAwaitingUpgrade(clusterId)) ||
+    isClusterUpdating(cluster);
+  const clusterIsNotReady = clusterIsCreating || clusterIsUpdating;
 
   const additionalText = useMemo(() => {
     if (installedIngressApp) {

@@ -140,6 +140,7 @@ export const v5ClusterResponse = {
   master_nodes: {
     high_availability: false,
     availability_zones: ['b'],
+    num_ready: 0,
   },
   name: V5_CLUSTER.name,
   owner: ORGANIZATION,

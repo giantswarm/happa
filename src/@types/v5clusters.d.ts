@@ -21,8 +21,7 @@ declare namespace V5 {
 
   export interface ICluster extends IBaseCluster {
     master: IClusterMaster;
-    masterNodes: IClusterMasterNodes | null;
-    delete_date: string | null;
+    master_nodes: IClusterMasterNodes | null;
 
     labels?: IClusterLabelMap;
     conditions?: IClusterCondition[];

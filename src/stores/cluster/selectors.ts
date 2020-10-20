@@ -104,13 +104,23 @@ export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
   return nextVersion;
 }
 
+export const selectIsClusterAwaitingUpgrade = (clusterID: string) => (
+  state: IState
+) => {
+  return Boolean(state.entities.clusters.idsAwaitingUpgrade[clusterID]);
+};
+
 export const selectCanClusterUpgrade = (clusterID: string) => (
   state: IState
 ) => {
   const cluster = state.entities.clusters.items[clusterID];
   if (!cluster) return false;
 
-  if (isClusterCreating(cluster) || isClusterUpdating(cluster)) {
+  if (
+    isClusterCreating(cluster) ||
+    isClusterUpdating(cluster) ||
+    selectIsClusterAwaitingUpgrade(clusterID)(state)
+  ) {
     return false;
   }
 

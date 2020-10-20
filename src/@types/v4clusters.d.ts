@@ -29,8 +29,8 @@ declare namespace V4 {
     cpu: IClusterCPU;
     memory: IClusterMemory;
     storage: IClusterStorage;
-    aws: IClusterWorkerAWS;
-    azure: IClusterWorkerAzure;
+    aws?: IClusterWorkerAWS;
+    azure?: IClusterWorkerAzure;
   }
 
   export interface IClusterMaster {
