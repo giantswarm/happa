@@ -1,20 +1,16 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import AddNodePoolAZSelection from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolAZSelection';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
+import { AvailabilityZoneSelection } from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolUtils';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants, Providers } from 'shared/constants';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import NameInput from 'UI/ClusterCreation/NameInput';
@@ -22,194 +18,7 @@ import Section from 'UI/ClusterCreation/Section';
 import StyledInput, {
   AdditionalInputHint,
 } from 'UI/ClusterCreation/StyledInput';
-import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 import NumberPicker from 'UI/NumberPicker';
-
-import AvailabilityZonesParser from './AvailabilityZonesParser';
-
-const AvailabilityZoneSelection = {
-  Automatic: 0,
-  Manual: 1,
-  None: 3,
-};
-
-// Availability Zones styles
-const Emphasized = css`
-  .emphasized {
-    font-size: 14px;
-    line-height: 1.4;
-    margin: 0 18px 0 28px;
-    transform: translateY(-4px);
-  }
-  .indented {
-    margin-left: 28px;
-  }
-`;
-
-export const FlexWrapperAZDiv = styled(FlexWrapperDiv)`
-  margin-bottom: 2px;
-  ${Emphasized};
-  .indented {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  .danger {
-    font-weight: 400;
-    margin: 0 0 0 15px;
-    color: ${(props) => props.theme.colors.error};
-  }
-`;
-
-const FlexColumnAZDiv = styled(FlexColumn)`
-  flex-flow: column nowrap;
-  margin: 0;
-  p {
-    font-size: 14px;
-    margin: 0 0 14px 0;
-    &:nth-of-type(2) {
-      margin: 12px 0 25px;
-    }
-  }
-  div {
-    margin-bottom: 20px;
-  }
-  ${Emphasized};
-`;
-
-const RadioWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  position: relative;
-  label {
-    font-size: 14px;
-    font-weight: 300;
-    margin-bottom: 0;
-    cursor: pointer;
-  }
-  input {
-    max-width: 28px;
-    cursor: pointer;
-    margin-right: 14px;
-  }
-  input[type='radio'] {
-    opacity: 0;
-  }
-  .fake-radio {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    top: 4px;
-    border: ${({ theme }) => theme.border};
-    background: ${({ theme }) => theme.colors.white1};
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    &-checked {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: ${({ theme }) => theme.colors.white1};
-      transition: background-color 0.2s;
-      &.visible {
-        background-color: ${({ theme }) => theme.colors.shade2};
-      }
-    }
-  }
-`;
-
-const AZWrapper = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
-  width: 100%;
-`;
-
-const AZLabel = styled.label`
-  height: 110px;
-  width: 100%;
-  justify-content: flex-start !important;
-  position: relative;
-  transition: height 0.3s;
-  transition-delay: 0.4s;
-  margin-bottom: 0;
-
-  &.with-labels {
-    transition-delay: 0.4s;
-    height: 170px;
-  }
-
-  &.automatic {
-    height: 238px;
-    transition-delay: 0s;
-  }
-
-  div label {
-    justify-content: flex-start;
-  }
-  /* Automatic */
-  .az-automatic-enter {
-    opacity: 0.01;
-    transform: translateY(-8px);
-  }
-  .az-automatic-enter.az-automatic-enter-active {
-    opacity: 1;
-    transform: translateY(0px);
-    transition: all 500ms;
-    transition-delay: 300ms;
-  }
-  .az-automatic-exit {
-    transform: translateY(0px);
-    opacity: 1;
-  }
-  .az-automatic-exit.az-automatic-exit-active {
-    opacity: 0.01;
-    transform: translateY(0px);
-    transition: all 500ms;
-  }
-
-  /* Manual */
-  .az-manual-enter,
-  .az-manual-appear {
-    opacity: 0.01;
-    transform: translateY(20px);
-  }
-  .az-manual-enter.az-manual-enter-active,
-  .az-manual-appear.az-manual-appear-active {
-    opacity: 1;
-    transform: translateY(0px);
-    transition: opacity 200ms, transform 300ms;
-    transition-delay: 300ms, 300ms;
-  }
-  .az-manual-exit {
-    opacity: 1;
-  }
-  .az-manual-exit.az-manual-exit-active {
-    opacity: 0.01;
-    transform: translateY(0px);
-    transition: all 100ms ease-in;
-    transition-delay: 0ms;
-  }
-
-  /* Manual Radio Input */
-  .manual-radio-input {
-    position: absolute;
-    top: 75px;
-    width: 100%;
-    transition: transform 300ms;
-    transition-delay: 200ms;
-    &.down {
-      transform: translateY(125px);
-      transition: transform 200ms;
-      transition-delay: 0.2s;
-    }
-  }
-  span input {
-    font-weight: 400;
-  }
-`;
-
-const AZSelectionLabel = styled(ClusterCreationLabelSpan)`
-  display: block;
-`;
 
 const SpotValuesLabelText = styled.span`
   font-weight: 300;
@@ -241,6 +50,10 @@ const CheckboxWrapper = styled.div`
     font-size: 16px;
     font-weight: normal;
   }
+`;
+
+const StyledAddNodePoolAZSelection = styled(AddNodePoolAZSelection)`
+  margin-bottom: ${({ theme }) => theme.spacingPx * 4}px;
 `;
 
 class AddNodePool extends Component {
@@ -588,13 +401,6 @@ class AddNodePool extends Component {
     const isScalingAuto = supportsNodePoolAutoscaling(provider);
     const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
 
-    let azLabelClassName = '';
-    if (azSelection === AvailabilityZoneSelection.Manual) {
-      azLabelClassName = 'with-labels';
-    } else if (azSelection === AvailabilityZoneSelection.Automatic) {
-      azLabelClassName = 'automatic';
-    }
-
     return (
       <>
         <Section>
@@ -630,201 +436,18 @@ class AddNodePool extends Component {
           )}
         </Section>
 
-        <AZWrapper>
-          <AZLabel htmlFor='availability-zones' className={azLabelClassName}>
-            <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
-            <RadioWrapperDiv>
-              {/* Automatically */}
-
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    azSelection === AvailabilityZoneSelection.Automatic &&
-                    'visible'
-                  }`}
-                />
-              </div>
-              <RUMActionTarget name={RUMActions.SelectAZSelectionAutomatic}>
-                <input
-                  type='radio'
-                  id={`automatically-${id}`}
-                  value={false}
-                  checked={azSelection === AvailabilityZoneSelection.Automatic}
-                  onChange={() =>
-                    this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
-                  }
-                  tabIndex='0'
-                />
-              </RUMActionTarget>
-              <RUMActionTarget name={RUMActions.SelectAZSelectionAutomatic}>
-                <label
-                  htmlFor='automatically'
-                  onClick={() =>
-                    this.toggleAZSelector(AvailabilityZoneSelection.Automatic)
-                  }
-                >
-                  Automatic
-                </label>
-              </RUMActionTarget>
-            </RadioWrapperDiv>
-            <BaseTransition
-              in={azSelection === AvailabilityZoneSelection.Automatic}
-              timeout={{
-                enter: 500,
-                exit: 300,
-              }}
-              classNames='az-automatic'
-            >
-              <div key='az-automatic'>
-                <FlexWrapperAZDiv>
-                  <p className='emphasized'>
-                    Number of availability zones to use:
-                  </p>
-                  <AvailabilityZonesParser
-                    min={minAZ}
-                    max={maxAZ}
-                    defaultValue={defaultAZ}
-                    zones={this.props.availabilityZones}
-                    updateAZValuesInParent={this.updateAZ}
-                    isLabels={azSelection === AvailabilityZoneSelection.Manual}
-                  />
-                </FlexWrapperAZDiv>
-                <FlexWrapperAZDiv>
-                  <p className='indented' style={{ marginTop: '8px' }}>
-                    {this.state.availabilityZonesPicker.value < 2
-                      ? `Covering one availability zone, the worker nodes of this node pool
-                      will be placed in the same availability zone as the
-                      cluster's master node.`
-                      : `Availability zones will be selected randomly.`}
-                  </p>
-                </FlexWrapperAZDiv>
-              </div>
-            </BaseTransition>
-            {/* Manual */}
-            <RadioWrapperDiv
-              className={`manual-radio-input ${
-                azSelection === AvailabilityZoneSelection.Automatic
-                  ? 'down'
-                  : null
-              }`}
-            >
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    azSelection === AvailabilityZoneSelection.Manual &&
-                    'visible'
-                  }`}
-                />
-              </div>
-              <RUMActionTarget name={RUMActions.SelectAZSelectionManual}>
-                <input
-                  type='radio'
-                  id={`manually-${id}`}
-                  value={true}
-                  checked={azSelection === AvailabilityZoneSelection.Manual}
-                  tabIndex='0'
-                  onChange={() =>
-                    this.toggleAZSelector(AvailabilityZoneSelection.Manual)
-                  }
-                />
-              </RUMActionTarget>
-              <RUMActionTarget name={RUMActions.SelectAZSelectionManual}>
-                <label
-                  htmlFor='manually'
-                  onClick={() =>
-                    this.toggleAZSelector(AvailabilityZoneSelection.Manual)
-                  }
-                >
-                  Manual
-                </label>
-              </RUMActionTarget>
-
-              <BaseTransition
-                in={azSelection === AvailabilityZoneSelection.Manual}
-                appear={true}
-                timeout={{
-                  appear: 500,
-                  enter: 500,
-                  exit: 100,
-                }}
-                classNames='az-manual'
-              >
-                <div key='az-manual'>
-                  <FlexColumnAZDiv>
-                    <p className='indented'>
-                      You can select up to {maxAZ} availability zones to make
-                      use of.
-                    </p>
-                    <FlexWrapperAZDiv className='indented'>
-                      <AvailabilityZonesParser
-                        min={minAZ}
-                        max={maxAZ}
-                        defaultValue={2}
-                        zones={this.props.availabilityZones}
-                        updateAZValuesInParent={this.updateAZ}
-                        isLabels={
-                          azSelection === AvailabilityZoneSelection.Manual
-                        }
-                      />
-                      {/* Validation messages */}
-                      {zonesArray.length < 1 && (
-                        <p className='danger'>Please select at least one.</p>
-                      )}
-                      {zonesArray.length > maxAZ && (
-                        <p className='danger'>
-                          {maxAZ} is the maximum you can have. Please uncheck at
-                          least {zonesArray.length - maxAZ} of them.
-                        </p>
-                      )}
-                    </FlexWrapperAZDiv>
-                  </FlexColumnAZDiv>
-                </div>
-              </BaseTransition>
-            </RadioWrapperDiv>
-          </AZLabel>
-
-          {provider === Providers.AZURE && (
-            <RadioWrapperDiv>
-              <div className='fake-radio'>
-                <div
-                  className={`fake-radio-checked ${
-                    azSelection === AvailabilityZoneSelection.None && 'visible'
-                  }`}
-                />
-              </div>
-              <RUMActionTarget name={RUMActions.SelectAZSelectionNone}>
-                <input
-                  type='radio'
-                  id={`none-${id}`}
-                  value={false}
-                  checked={azSelection === AvailabilityZoneSelection.None}
-                  onChange={() =>
-                    this.toggleAZSelector(AvailabilityZoneSelection.None)
-                  }
-                  tabIndex='0'
-                />
-              </RUMActionTarget>
-              <RUMActionTarget name={RUMActions.SelectAZSelectionNone}>
-                <label htmlFor={`none-${id}`}>
-                  None{' '}
-                  <OverlayTrigger
-                    overlay={
-                      <Tooltip id='tooltip'>
-                        To increase the chances of finding available GPU
-                        instances, this option allows not setting a specific
-                        availability zone.
-                      </Tooltip>
-                    }
-                    placement='top'
-                    animation={false}
-                  >
-                    <i className='fa fa-help' />
-                  </OverlayTrigger>
-                </label>
-              </RUMActionTarget>
-            </RadioWrapperDiv>
-          )}
-        </AZWrapper>
+        <StyledAddNodePoolAZSelection
+          npID={id}
+          value={azSelection}
+          onChange={this.toggleAZSelector}
+          minNumOfZones={minAZ}
+          maxNumOfZones={maxAZ}
+          defaultNumOfZones={defaultAZ}
+          allZones={this.props.availabilityZones}
+          numOfZones={this.state.availabilityZonesPicker.value}
+          selectedZones={zonesArray}
+          onUpdateZones={this.updateAZ}
+        />
 
         {this.state.allowSpotInstances && (
           <Section>
