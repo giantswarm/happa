@@ -20,7 +20,7 @@ import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 import RadioInput from 'UI/Inputs/RadioInput';
 
-import AddNodePool from '../ClusterDetail/AddNodePool';
+import AddNodePool from '../ClusterDetail/AddNodePool/AddNodePool';
 import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
 import {
   AddNodePoolFlexColumnDiv,

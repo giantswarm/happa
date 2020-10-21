@@ -32,7 +32,7 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
 
-import AddNodePool from './AddNodePool';
+import AddNodePool from './AddNodePool/AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';
 import CredentialInfoRow from './CredentialInfoRow';
 import NodePool from './NodePool';
