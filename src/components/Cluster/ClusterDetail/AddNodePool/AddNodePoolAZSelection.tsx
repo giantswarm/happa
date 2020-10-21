@@ -214,9 +214,10 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           />
           <StyledPanelCollapse>
             <p>
-              By not specifying an availability zone, Azure will pick a zone
-              where the requested VM size is available. This is especially
-              useful for GPU instances, which are not available in all regions.
+              By not specifying an availability zone, Azure will select a zone
+              by itself, where the requested VM size has the best availability.
+              This is especially useful for GPU instances, which are not
+              available in all regions.
             </p>
           </StyledPanelCollapse>
         </StyledPanel>
