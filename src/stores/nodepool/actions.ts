@@ -28,6 +28,7 @@ import {
   NodePoolActions,
 } from 'stores/nodepool/types';
 import { IState } from 'stores/state';
+import { extractMessageFromError } from 'utils/errorUtils';
 
 export function clusterNodePoolsLoad(
   clusterID: string,
@@ -266,11 +267,16 @@ function makeNodePoolCreator(
       });
 
       if (emitFlashMessage) {
+        const errorBody = extractMessageFromError(
+          err,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
         new FlashMessage(
-          'Something went wrong while trying to create the node pool',
+          'Something went wrong while trying to create the node pool.',
           messageType.ERROR,
           messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
+          errorBody
         );
       }
 
