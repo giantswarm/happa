@@ -43,6 +43,7 @@ import {
   IClusterCreateActionResponse,
 } from 'stores/cluster/types';
 import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
+import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
 
@@ -141,17 +142,21 @@ export function clustersDetails(opts: {
       dispatch({ type: CLUSTERS_DETAILS_REQUEST });
     }
 
-    const selectedOrganization = getState().main.selectedOrganization;
-    const allClusters = getState().entities.clusters.items;
+    const selectedOrganization =
+      getState().main.selectedOrganization?.toLowerCase() ?? '';
+    const organizationID =
+      selectOrganizationByID(selectedOrganization)(getState())?.id ??
+      selectedOrganization;
 
-    // Remove deleted clusters from clusters array
+    const allClusters = getState().entities.clusters.items;
+    // Remove deleted clusters from clusters array.
     const allActiveClustersIds = Object.keys(allClusters).filter(
       (id) => !allClusters[id].delete_date
     );
 
     const clustersIds = opts.filterBySelectedOrganization
       ? allActiveClustersIds.filter(
-          (id) => allClusters[id].owner === selectedOrganization
+          (id) => allClusters[id].owner === organizationID
         )
       : allActiveClustersIds;
 
@@ -331,7 +336,7 @@ export function clusterCreate(
   void,
   ClusterActions
 > {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       dispatch({ type: CLUSTER_CREATE_REQUEST });
 
@@ -365,7 +370,10 @@ export function clusterCreate(
         });
       }
 
-      return { clusterId, owner: cluster.owner };
+      const organizationID =
+        selectOrganizationByID(cluster.owner)(getState())?.id ?? cluster.owner;
+
+      return { clusterId, owner: organizationID };
     } catch (error) {
       dispatch({ type: CLUSTER_CREATE_ERROR, error: error.message });
 

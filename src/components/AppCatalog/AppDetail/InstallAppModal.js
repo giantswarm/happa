@@ -10,6 +10,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { installApp } from 'stores/appcatalog/actions';
 import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import { selectOrganizationByID } from 'stores/organization/selectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -320,10 +321,13 @@ function mapStateToProps(state) {
         selectIsClusterAwaitingUpgrade(clusterID)(state);
       const isCreatingOrUpdating = isClusterCreating(cluster) || isUpdating;
 
+      const organizationID =
+        selectOrganizationByID(cluster.owner)(state)?.id ?? cluster.owner;
+
       return {
         id: clusterID,
         name: cluster.name,
-        owner: cluster.owner,
+        owner: organizationID,
         isAvailable: !cluster.status || !isCreatingOrUpdating,
         isDeleted: Boolean(cluster.delete_date),
       };

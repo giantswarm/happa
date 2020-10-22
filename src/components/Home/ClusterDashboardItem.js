@@ -17,6 +17,7 @@ import { isClusterCreating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
+import { selectOrganizationByID } from 'stores/organization/selectors';
 import { getAllReleases } from 'stores/releases/selectors';
 import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
@@ -141,6 +142,7 @@ const StyledErrorFallback = styled(ErrorFallback)`
 
 function ClusterDashboardItem({
   cluster,
+  organizationID,
   isV5Cluster,
   selectedOrganization,
   nodePools,
@@ -174,7 +176,7 @@ function ClusterDashboardItem({
     const clusterGuidePath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.Overview,
       {
-        orgId: cluster.owner,
+        orgId: organizationID,
         clusterId,
       }
     );
@@ -305,6 +307,7 @@ function ClusterDashboardItem({
 
 ClusterDashboardItem.propTypes = {
   cluster: PropTypes.object,
+  organizationID: PropTypes.string,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
@@ -315,8 +318,16 @@ ClusterDashboardItem.propTypes = {
 };
 
 function mapStateToProps(state, props) {
+  const cluster = selectClusterById(state, props.clusterId);
+  let organizationID = '';
+  if (cluster) {
+    organizationID =
+      selectOrganizationByID(cluster.owner)(state)?.id ?? cluster.owner;
+  }
+
   return {
-    cluster: selectClusterById(state, props.clusterId),
+    cluster,
+    organizationID,
     nodePools: selectClusterNodePools(state, props.clusterId),
     nodePoolsLoadError: selectErrorByIdAndAction(
       state,

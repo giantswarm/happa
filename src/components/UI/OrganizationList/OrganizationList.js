@@ -33,7 +33,11 @@ const OrganizationList = ({ provider, ...props }) => {
           return (
             <Row
               key={organization.id}
-              clusters={clustersForOrg(organization.id, props.clusters)}
+              clusters={clustersForOrg(
+                organization.id,
+                props.organizations,
+                props.clusters
+              )}
               getViewURL={props.getViewURL}
               onDelete={props.deleteOrganization}
               organization={organization}
