@@ -9,6 +9,7 @@ import {
   isClusterUpdating,
 } from 'stores/cluster/utils';
 import { getUserIsAdmin } from 'stores/main/selectors';
+import { selectOrganizationByID } from 'stores/organization/selectors';
 import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { createDeepEqualSelector } from 'stores/utils';
@@ -23,9 +24,14 @@ export function selectClusterById(
 function selectOrganizationClusterNames(state: IState): string[] {
   const clusters = state.entities.clusters.items;
   const clusterIds = Object.keys(clusters);
+  const selectedOrganization =
+    state.main.selectedOrganization?.toLowerCase() ?? '';
+  const organizationID =
+    selectOrganizationByID(selectedOrganization)(state)?.id ??
+    selectedOrganization;
 
   return clusterIds
-    .filter((id) => clusters[id].owner === state.main.selectedOrganization)
+    .filter((id) => clusters[id].owner === organizationID)
     .sort((a, b) =>
       (clusters[a].name as string) > (clusters[b].name as string) ? 1 : -1
     );

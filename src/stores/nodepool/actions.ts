@@ -27,6 +27,7 @@ import {
   INodePoolPatchActionPayload,
   NodePoolActions,
 } from 'stores/nodepool/types';
+import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
 
@@ -101,7 +102,12 @@ export function nodePoolsLoad(opts?: {
     if (opts?.withLoadingFlags)
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
 
-    const selectedOrganization = getState().main.selectedOrganization;
+    const selectedOrganization =
+      getState().main.selectedOrganization?.toLowerCase() ?? '';
+    const organizationID =
+      selectOrganizationByID(selectedOrganization)(getState())?.id ??
+      selectedOrganization;
+
     const allClusters = getState().entities.clusters.items;
     const v5ClusterIDs: string[] =
       getState().entities.clusters.v5Clusters || [];
@@ -115,7 +121,7 @@ export function nodePoolsLoad(opts?: {
 
       if (
         opts?.filterBySelectedOrganization &&
-        cluster.owner !== selectedOrganization
+        cluster.owner !== organizationID
       ) {
         return false;
       }

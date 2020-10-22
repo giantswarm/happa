@@ -406,6 +406,12 @@ token: can't be blank`)
   });
 
   describe('clustersForOrg', () => {
+    const organizations: IOrganization[] = [
+      { id: 'giantswarm' },
+      { id: 'smallswarm' },
+      { id: 'mediumswarm' },
+    ];
+
     it('filters all clusters for a given organization', () => {
       const clusters: IClusterMap = {
         '1sa1s': {
@@ -469,14 +475,20 @@ token: can't be blank`)
           credential_id: 'some-credential',
         },
       };
-      expect(clustersForOrg('giantswarm', clusters)).toHaveLength(3);
-      expect(clustersForOrg('mediumswarm', clusters)).toHaveLength(1);
-      expect(clustersForOrg('smallswarm', clusters)).toHaveLength(1);
-      expect(clustersForOrg('random', clusters)).toHaveLength(0);
+      expect(
+        clustersForOrg('giantswarm', organizations, clusters)
+      ).toHaveLength(3);
+      expect(
+        clustersForOrg('mediumswarm', organizations, clusters)
+      ).toHaveLength(1);
+      expect(
+        clustersForOrg('smallswarm', organizations, clusters)
+      ).toHaveLength(1);
+      expect(clustersForOrg('random', organizations, clusters)).toHaveLength(0);
     });
 
     it('returns an empty list of clusters, if there are no clusters provided', () => {
-      expect(clustersForOrg('giantswarm')).toHaveLength(0);
+      expect(clustersForOrg('giantswarm', organizations)).toHaveLength(0);
     });
   });
 

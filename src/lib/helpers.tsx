@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { IKeyPair } from 'shared/types';
+import { getOrganizationByID } from 'stores/organization/utils';
 import validate from 'validate.js';
 
 /**
@@ -302,16 +303,20 @@ export function makeKubeConfigTextFile(
 /**
  * Get all the clusters owned by a given organization.
  * @param orgId
+ * @param organizations
  * @param allClusters
  */
 export function clustersForOrg(
   orgId: string,
+  organizations: IOrganization[],
   allClusters?: IClusterMap
 ): Cluster[] {
   if (!allClusters) return [];
 
+  const organizationID = getOrganizationByID(orgId, organizations)?.id;
+
   return Object.values(allClusters).filter(
-    (cluster) => cluster.owner === orgId
+    (cluster) => cluster.owner === organizationID
   );
 }
 
