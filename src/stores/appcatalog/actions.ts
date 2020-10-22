@@ -44,7 +44,10 @@ import {
   PREPARE_INGRESS_TAB_DATA,
   UPDATE_CLUSTER_APP,
 } from 'stores/appcatalog/constants';
-import { selectIngressCatalog } from 'stores/appcatalog/selectors';
+import {
+  selectIngressCatalog,
+  selectReadmeURL,
+} from 'stores/appcatalog/selectors';
 import {
   AppCatalogActions,
   IAppCatalogDeleteClusterAppActionPayload,
@@ -255,7 +258,7 @@ export function loadAppReadme(
       return Promise.resolve();
     }
 
-    let readmeURL = appVersion.sources.find((url) => url.endsWith('README.md'));
+    let readmeURL = selectReadmeURL(appVersion);
     if (!readmeURL) {
       dispatch({
         type: CLUSTER_LOAD_APP_README_ERROR,
