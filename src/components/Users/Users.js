@@ -221,7 +221,6 @@ class Users extends React.Component {
             <Section title='User accounts'>
               <UsersTable
                 users={users}
-                //invitationsAndUsers={invitationsAndUsers}
                 onRemoveExpiration={this.removeExpiration}
                 onDelete={this.deleteUser}
               />
