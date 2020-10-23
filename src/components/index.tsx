@@ -21,6 +21,7 @@ import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
 import theme from 'styles/theme';
+import { getCLS, getFID, getLCP } from 'web-vitals';
 
 import App from './App';
 
@@ -136,3 +137,24 @@ window.addEventListener('resize', () => {
 window.addEventListener('load', () => {
   window.DD_RUM?.addUserAction('WINDOW_LOAD', getSizes());
 });
+
+// Log core web vitals.
+
+interface IWebVitalsReportHandler {
+  name: string;
+  id: string;
+  value: number;
+  delta: number;
+  isFinal: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  entries: any;
+}
+
+function handleReport(rh: IWebVitalsReportHandler) {
+  // eslint-disable-next-line no-console
+  console.log(rh.name, rh);
+}
+
+getCLS(handleReport);
+getFID(handleReport);
+getLCP(handleReport);
