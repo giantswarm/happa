@@ -150,14 +150,18 @@ interface IWebVitalsReportHandler {
   entries: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const recorded: any = {};
+
 function handleReport(rh: IWebVitalsReportHandler) {
   // eslint-disable-next-line no-console
   console.log(rh.name, rh);
-  const valueName: string = `webVitals${rh.name}`;
-  // eslint-disable-next-line prefer-const,@typescript-eslint/no-explicit-any
-  let values: any = {};
-  values[valueName] = rh.value;
-  if (rh.isFinal) {
+  if (!(rh.id in recorded)) {
+    recorded[rh.id] = true;
+    const valueName: string = `webVitals${rh.name}`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const values: any = {};
+    values[valueName] = rh.value;
     window.DD_RUM?.addUserAction(`WEB_VITALS_${rh.name}`, values);
   }
 }
