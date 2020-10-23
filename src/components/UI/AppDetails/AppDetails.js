@@ -168,11 +168,12 @@ function HeadingRenderer(headingProps) {
 // urlFor(url) turns relative links from the readme into absolute links that will
 // work, and leaves absolute links alone.
 function urlFor(href, readmeBaseURL) {
-  if (href.startsWith('./')) {
-    return readmeBaseURL + href;
+  const absoluteURLMatch = /^https?:\/\/|^\/\//i;
+  if (absoluteURLMatch.test(href)) {
+    return href;
   }
 
-  return href;
+  return readmeBaseURL + href;
 }
 
 const AppDetails = (props) => {
