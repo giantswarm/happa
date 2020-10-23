@@ -153,6 +153,13 @@ interface IWebVitalsReportHandler {
 function handleReport(rh: IWebVitalsReportHandler) {
   // eslint-disable-next-line no-console
   console.log(rh.name, rh);
+  const valueName: string = `webVitals${rh.name}`;
+  // eslint-disable-next-line prefer-const,@typescript-eslint/no-explicit-any
+  let values: any = {};
+  values[valueName] = rh.value;
+  if (rh.isFinal) {
+    window.DD_RUM?.addUserAction(`WEB_VITALS_${rh.name}`, values);
+  }
 }
 
 getCLS(handleReport);
