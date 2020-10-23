@@ -147,19 +147,19 @@ interface IWebVitalsReportHandler {
   delta: number;
   isFinal: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  entries: any;
+  entries: any[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const recorded: any = {};
+const recorded: Record<string, boolean> = {};
+
+interface IWebVitalsValues {
+  web_vitals: Record<string, number>;
+}
 
 function handleReport(rh: IWebVitalsReportHandler) {
-  // eslint-disable-next-line no-console
-  console.log(rh.name, rh);
   if (!(rh.id in recorded)) {
     recorded[rh.id] = true;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const values: any = { web_vitals: {} };
+    const values: IWebVitalsValues = { web_vitals: {} };
     values.web_vitals[rh.name.toLowerCase()] = rh.value;
     window.DD_RUM?.addUserAction(`WEB_VITALS_${rh.name}`, values);
   }
