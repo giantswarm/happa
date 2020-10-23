@@ -62,7 +62,7 @@ describe('Users', () => {
     const { findByText } = renderRouteWithStore(UsersRoutes.Home);
 
     const usersTitle = await findByText(
-      /This is the list of user accounts on/i
+      /This page lists the user accounts and account invites for/i
     );
     expect(usersTitle).toBeInTheDocument();
   });
@@ -96,7 +96,7 @@ describe('Users', () => {
     expect(inviteButton).toBeInTheDocument();
     fireEvent.click(inviteButton);
 
-    const emailInput = getByLabelText(/email/i);
+    const emailInput = getByLabelText(/Email:/);
     fireEvent.change(emailInput, {
       target: { value: 'someemail@somedomain.com' },
     });
