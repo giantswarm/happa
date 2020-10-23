@@ -28,5 +28,5 @@ export function selectIngressAppFromCluster(cluster: Cluster) {
 export function selectReadmeURL(
   appVersion: IAppCatalogApp
 ): string | undefined {
-  return appVersion.sources.find((url) => url.endsWith('README.md'));
+  return appVersion.sources?.find((url) => url.endsWith('README.md'));
 }
