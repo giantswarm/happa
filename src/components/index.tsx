@@ -16,12 +16,14 @@ import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import FeatureFlags from 'shared/FeatureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
 import theme from 'styles/theme';
-import { getCLS, getFID, getLCP } from 'web-vitals';
+import { mergeActionNames } from 'utils/realUserMonitoringUtils';
+import { getCLS, getFID, getLCP, Metric } from 'web-vitals';
 
 import App from './App';
 
@@ -131,38 +133,28 @@ let resizeRecorderTimeout: number = 0;
 window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
-    window.DD_RUM?.addUserAction('WINDOW_RESIZE', getSizes());
+    window.DD_RUM?.addUserAction(RUMActions.WindowResize, getSizes());
   }, oneSecond);
 });
 window.addEventListener('load', () => {
-  window.DD_RUM?.addUserAction('WINDOW_LOAD', getSizes());
+  window.DD_RUM?.addUserAction(RUMActions.WindowLoad, getSizes());
 });
 
 // Log core web vitals.
-
-interface IWebVitalsReportHandler {
-  name: string;
-  id: string;
-  value: number;
-  delta: number;
-  isFinal: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  entries: any[];
-}
-
 const recorded: Record<string, boolean> = {};
 
-interface IWebVitalsValues {
-  web_vitals: Record<string, number>;
-}
-
-function handleReport(rh: IWebVitalsReportHandler) {
-  if (!(rh.id in recorded)) {
-    recorded[rh.id] = true;
-    const values: IWebVitalsValues = { web_vitals: {} };
-    values.web_vitals[rh.name.toLowerCase()] = rh.value;
-    window.DD_RUM?.addUserAction(`WEB_VITALS_${rh.name}`, values);
+function handleReport(rh: Metric) {
+  if (rh.id in recorded) {
+    return;
   }
+
+  recorded[rh.id] = true;
+
+  const values = {
+    web_vitals: { [rh.name.toLowerCase()]: rh.value },
+  };
+  const actionName = mergeActionNames(RUMActions.WebVitals, rh.name);
+  window.DD_RUM?.addUserAction(actionName, values);
 }
 
 getCLS(handleReport);
