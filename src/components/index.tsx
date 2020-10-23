@@ -158,10 +158,9 @@ function handleReport(rh: IWebVitalsReportHandler) {
   console.log(rh.name, rh);
   if (!(rh.id in recorded)) {
     recorded[rh.id] = true;
-    const valueName: string = `webVitals${rh.name}`;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const values: any = {};
-    values[valueName] = rh.value;
+    const values: any = {web_vitals: {}};
+    values.web_vitals[rh.name.toLowerCase()] = rh.value;
     window.DD_RUM?.addUserAction(`WEB_VITALS_${rh.name}`, values);
   }
 }
