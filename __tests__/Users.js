@@ -186,7 +186,7 @@ describe('Users', () => {
     });
   });
 
-  it(`unexpires an user's invitation`, async () => {
+  it(`unexpires a user account`, async () => {
     const desiredEmail = 'developer3@giantswarm.io';
     const encodedEmail = encodeURIComponent(desiredEmail);
 
