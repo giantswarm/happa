@@ -16,11 +16,14 @@ import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import FeatureFlags from 'shared/FeatureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
 import theme from 'styles/theme';
+import { mergeActionNames } from 'utils/realUserMonitoringUtils';
+import { getCLS, getFID, getLCP, Metric } from 'web-vitals';
 
 import App from './App';
 
@@ -130,9 +133,30 @@ let resizeRecorderTimeout: number = 0;
 window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
-    window.DD_RUM?.addUserAction('WINDOW_RESIZE', getSizes());
+    window.DD_RUM?.addUserAction(RUMActions.WindowResize, getSizes());
   }, oneSecond);
 });
 window.addEventListener('load', () => {
-  window.DD_RUM?.addUserAction('WINDOW_LOAD', getSizes());
+  window.DD_RUM?.addUserAction(RUMActions.WindowLoad, getSizes());
 });
+
+// Log core web vitals.
+const recorded: Record<string, boolean> = {};
+
+function handleReport(rh: Metric) {
+  if (rh.id in recorded) {
+    return;
+  }
+
+  recorded[rh.id] = true;
+
+  const values = {
+    web_vitals: { [rh.name.toLowerCase()]: rh.value },
+  };
+  const actionName = mergeActionNames(RUMActions.WebVitals, rh.name);
+  window.DD_RUM?.addUserAction(actionName, values);
+}
+
+getCLS(handleReport);
+getFID(handleReport);
+getLCP(handleReport);
