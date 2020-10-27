@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
+import axios from 'axios';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
@@ -23,6 +24,7 @@ import history from 'stores/history';
 import { IState } from 'stores/state';
 import theme from 'styles/theme';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
+import { v4 as uuidv4 } from 'uuid';
 import { getCLS, getFID, getLCP, Metric } from 'web-vitals';
 
 import App from './App';
@@ -61,6 +63,9 @@ if (FeatureFlags.FEATURE_CP_ACCESS) {
 
 // Configure the redux store.
 const store: Store = configureStore({} as IState, history, cpAccess);
+
+// Generate session ID for real user monitoring.
+const sessionID: string = uuidv4();
 
 // Patch the Giant Swarm client so it has access to the store and can dispatch
 // redux actions. This is needed because admin tokens expire after 5 minutes.
@@ -126,6 +131,24 @@ const getSizes = () => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function submitCustomRUM(payloadType: string, payloadSchemaVersion: number, payload: any) {
+  const url: string = `${window.config.apiEndpoint}/v5/analytics/`;
+
+  try {
+    await axios.post(url, {
+      app_id: 'happa',
+      session_id: sessionID,
+      payload_type: payloadType,
+      payload_schema_version: payloadSchemaVersion,
+      payload: payload,
+    });
+  } catch (exception) {
+    // eslint-disable-next-line no-console
+    console.log(`ERROR received from ${url}: ${exception}\n`);
+  }
+}
+
 // Register a window load and resize event listener
 // for window/screen size recording.
 const oneSecond: number = 1000;
@@ -133,11 +156,15 @@ let resizeRecorderTimeout: number = 0;
 window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
-    window.DD_RUM?.addUserAction(RUMActions.WindowResize, getSizes());
+    const sizes = getSizes();
+    window.DD_RUM?.addUserAction(RUMActions.WindowResize, sizes);
+    submitCustomRUM(RUMActions.WindowResize, 1, sizes);
   }, oneSecond);
 });
 window.addEventListener('load', () => {
-  window.DD_RUM?.addUserAction(RUMActions.WindowLoad, getSizes());
+  const sizes = getSizes();
+  window.DD_RUM?.addUserAction(RUMActions.WindowLoad, sizes);
+  submitCustomRUM(RUMActions.WindowLoad, 1, sizes);
 });
 
 // Log core web vitals.
@@ -154,7 +181,9 @@ function handleReport(rh: Metric) {
     web_vitals: { [rh.name.toLowerCase()]: rh.value },
   };
   const actionName = mergeActionNames(RUMActions.WebVitals, rh.name);
-  window.DD_RUM?.addUserAction(actionName, values);
+  window.DD_RUM?.addUserAction(actionName, values.web_vitals);
+
+  submitCustomRUM(actionName, 1, values);
 }
 
 getCLS(handleReport);
