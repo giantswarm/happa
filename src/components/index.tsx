@@ -10,6 +10,7 @@ import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
+import * as Bowser from "bowser";
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
@@ -142,6 +143,7 @@ async function submitCustomRUM(payloadType: string, payloadSchemaVersion: number
       payload_type: payloadType,
       payload_schema_version: payloadSchemaVersion,
       payload: payload,
+      uri_path: location.pathname,
     });
   } catch (exception) {
     // eslint-disable-next-line no-console
@@ -153,6 +155,7 @@ async function submitCustomRUM(payloadType: string, payloadSchemaVersion: number
 // for window/screen size recording.
 const oneSecond: number = 1000;
 let resizeRecorderTimeout: number = 0;
+
 window.addEventListener('resize', () => {
   window.clearTimeout(resizeRecorderTimeout);
   resizeRecorderTimeout = window.setTimeout(() => {
@@ -161,10 +164,15 @@ window.addEventListener('resize', () => {
     submitCustomRUM(RUMActions.WindowResize, 1, sizes);
   }, oneSecond);
 });
+
 window.addEventListener('load', () => {
   const sizes = getSizes();
   window.DD_RUM?.addUserAction(RUMActions.WindowLoad, sizes);
   submitCustomRUM(RUMActions.WindowLoad, 1, sizes);
+
+  // Client information
+  const clientInfo = Bowser.parse(window.navigator.userAgent);
+  submitCustomRUM(RUMActions.ClientInfo, 1, clientInfo);
 });
 
 // Log core web vitals.
@@ -175,15 +183,20 @@ function handleReport(rh: Metric) {
     return;
   }
 
+  // eslint-disable-next-line no-console
+  console.log(rh);
+
   recorded[rh.id] = true;
 
   const values = {
     web_vitals: { [rh.name.toLowerCase()]: rh.value },
   };
   const actionName = mergeActionNames(RUMActions.WebVitals, rh.name);
-  window.DD_RUM?.addUserAction(actionName, values.web_vitals);
 
-  submitCustomRUM(actionName, 1, values);
+  // Submit data to Datadog RUM
+  window.DD_RUM?.addUserAction(actionName, values);
+  // Submit data to Giant Swarm API
+  submitCustomRUM(actionName, 1, values.web_vitals);
 }
 
 getCLS(handleReport);
