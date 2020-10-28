@@ -132,10 +132,10 @@ const getSizes = () => {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function submitCustomRUM(
   payloadType: string,
   payloadSchemaVersion: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 ) {
   const url: string = `${window.config.apiEndpoint}/v5/analytics/`;
