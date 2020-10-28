@@ -10,7 +10,7 @@ import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
-import * as Bowser from "bowser";
+import * as Bowser from 'bowser';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
@@ -133,7 +133,11 @@ const getSizes = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function submitCustomRUM(payloadType: string, payloadSchemaVersion: number, payload: any) {
+async function submitCustomRUM(
+  payloadType: string,
+  payloadSchemaVersion: number,
+  payload: any
+) {
   const url: string = `${window.config.apiEndpoint}/v5/analytics/`;
 
   try {
