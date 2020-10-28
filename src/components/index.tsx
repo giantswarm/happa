@@ -25,7 +25,7 @@ import { IState } from 'stores/state';
 import theme from 'styles/theme';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { getCLS, getFID, getLCP, Metric } from 'web-vitals';
+import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric } from 'web-vitals';
 
 import App from './App';
 
@@ -188,4 +188,6 @@ function handleReport(rh: Metric) {
 
 getCLS(handleReport);
 getFID(handleReport);
+getFCP(handleReport);
 getLCP(handleReport);
+getTTFB(handleReport);
