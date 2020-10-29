@@ -187,7 +187,7 @@ describe('Users', () => {
   });
 
   it(`unexpires a user account`, async () => {
-    const desiredEmail = 'developer3@giantswarm.io';
+    const desiredEmail = 'expires-in-a-year@giantswarm.io';
     const encodedEmail = encodeURIComponent(desiredEmail);
 
     nock(API_ENDPOINT)
@@ -198,7 +198,7 @@ describe('Users', () => {
 
     const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
     const expiryDate = within(selectedEmailCell.parentNode).getByText(
-      /in 2 days/i
+      /in a year/i
     );
     expect(expiryDate).toBeInTheDocument();
 
