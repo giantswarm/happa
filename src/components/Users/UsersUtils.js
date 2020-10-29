@@ -21,19 +21,3 @@ export const isExpired = (timestamp) => {
 
   return expirySeconds < 0;
 };
-
-export const formatStatus = (user) => {
-  if (user.invited_by) {
-    return 'PENDING';
-  }
-
-  if (isExpired(user.expiry)) {
-    return 'EXPIRED';
-  }
-
-  if (isExpiringSoon(user.expiry)) {
-    return 'EXPIRING SOON';
-  }
-
-  return 'ACTIVE';
-};

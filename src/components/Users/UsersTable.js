@@ -7,7 +7,7 @@ import Button from 'UI/Button';
 
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
-import { formatStatus, isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
+import { isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
 
 const TableWrapper = styled.div`
   .react-bootstrap-table table {
@@ -30,22 +30,10 @@ const tableDefaultSorting = [
   },
 ];
 
-const getStatusCellFormatter = (status, row) => {
-  const { invited_by: invitedBy } = row;
-  const subText = invitedBy ? `Invited by ${invitedBy}` : null;
-
-  return (
-    <>
-      <small>{formatStatus(status)}</small>
-      <small>{subText}</small>
-    </>
-  );
-};
-
 // eslint-disable-next-line react/no-multi-comp
 const getExpiryCellFormatter = (cell, row, removeExpiration) => {
   if (cell === NEVER_EXPIRES) {
-    return '';
+    return <span>never</span>;
   }
 
   const expiryClass = isExpiringSoon(cell) ? 'expiring' : null;
@@ -103,17 +91,10 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
     {
       classes: 'expiry',
       dataField: 'expiry',
-      text: 'Expiry',
+      text: 'EXPIRES',
       sort: true,
       formatter: (cell, row) =>
         getExpiryCellFormatter(cell, row, onRemoveExpiration),
-    },
-    {
-      classes: 'status',
-      dataField: 'status',
-      text: 'STATUS',
-      sort: true,
-      formatter: getStatusCellFormatter,
     },
     {
       classes: 'actions',
@@ -127,20 +108,12 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
 };
 
 // eslint-disable-next-line react/no-multi-comp
-const UsersTable = ({
-  onRemoveExpiration,
-  onDelete,
-  invitationsAndUsers,
-  users,
-  invitations,
-}) => {
-  const invitesAndUsers = Object.values(invitationsAndUsers);
+const UsersTable = ({ onRemoveExpiration, onDelete, users }) => {
   const hasUsers = users && Object.values(users.items).length;
-  const hasInvitations = Object.values(invitations).length;
 
   if (!users || (users.isFetching && !hasUsers)) {
     return <UsersLoader />;
-  } else if (!hasUsers && !hasInvitations) {
+  } else if (!hasUsers) {
     return <UsersPlaceholder />;
   }
 
@@ -149,7 +122,7 @@ const UsersTable = ({
       <BootstrapTable
         bordered={false}
         columns={getTableColumnsConfig(onRemoveExpiration, onDelete)}
-        data={invitesAndUsers}
+        data={Object.values(users.items)}
         defaultSortDirection='asc'
         defaultSorted={tableDefaultSorting}
         keyField='email'
@@ -160,8 +133,6 @@ const UsersTable = ({
 
 UsersTable.defaultProps = {
   users: {},
-  invitationsAndUsers: {},
-  invitations: {},
   // eslint-disable-next-line no-empty-function
   onRemoveExpiration: () => {},
   // eslint-disable-next-line no-empty-function
@@ -170,8 +141,6 @@ UsersTable.defaultProps = {
 
 UsersTable.propTypes = {
   users: PropTypes.object,
-  invitationsAndUsers: PropTypes.array,
-  invitations: PropTypes.object,
   onRemoveExpiration: PropTypes.func,
   onDelete: PropTypes.func,
 };
