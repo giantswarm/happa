@@ -133,7 +133,8 @@
     "stacktrace-js": "^2.0.2",
     "superagent": "6.1.0",
     "underscore": "1.11.0",
-    "validate.js": "0.13.1"
+    "validate.js": "0.13.1",
+    "web-vitals": "^0.2.4"
   },
   "devDependencies": {
     "@babel/core": "7.11.6",
@@ -231,7 +232,7 @@
   "resolutions": {
     "**/crypto-js": "^3.2.1",
     "kind-of": "^6.0.3",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "serialize-javascript": "^4.0.0",
     "http-proxy": "^1.18.1",
     "node-fetch": "^2.6.1",
