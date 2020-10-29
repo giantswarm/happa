@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs, loadAppReadme } from 'stores/appcatalog/actions';
 import {
@@ -11,6 +12,7 @@ import {
   CLUSTER_LOAD_APP_README_ERROR,
   CLUSTER_LOAD_APP_README_REQUEST,
 } from 'stores/appcatalog/constants';
+import { selectReadmeURL } from 'stores/appcatalog/selectors';
 import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
@@ -27,7 +29,7 @@ function hasReadmeSource(appVersion) {
     return false;
   }
 
-  return appVersion.sources.some((url) => url.endsWith('README.md'));
+  return appVersion.sources.some((url) => url.endsWith(Constants.README_FILE));
 }
 
 class AppDetail extends React.Component {
@@ -90,6 +92,34 @@ class AppDetail extends React.Component {
     dispatch(loadAppReadme(catalog.metadata.name, selectedAppVersion));
   }
 
+  // Generates a working base url for relative links in the readmes.
+  readmeBaseURL() {
+    if (!this.props.selectedAppVersion) return undefined;
+
+    // https://raw.githubusercontent.com/giantswarm/efk-stack-app/v0.3.2/README.md
+    let readmeURL = selectReadmeURL(this.props.selectedAppVersion);
+
+    if (!readmeURL) return undefined;
+
+    // https://github.com/giantswarm/efk-stack-app/v0.3.2/README.md
+    readmeURL = readmeURL.replace(
+      'https://raw.githubusercontent.com/',
+      'https://github.com/'
+    );
+
+    const l = Constants.README_FILE.length;
+
+    // https://github.com/giantswarm/efk-stack-app/v0.3.2/
+    readmeURL = readmeURL.substring(0, readmeURL.length - l);
+
+    // https://github.com/giantswarm/efk-stack-app/blob/v0.3.2/
+    const readmeURLParts = readmeURL.split('/');
+    const insertPoint = -2;
+    readmeURLParts.splice(insertPoint, 0, 'blob');
+
+    return readmeURLParts.join('/');
+  }
+
   render() {
     const { catalog } = this.props;
     const appListPath = RoutePath.createUsablePath(AppCatalogRoutes.AppList, {
@@ -118,6 +148,7 @@ class AppDetail extends React.Component {
                 {catalog && (
                   <AppDetails
                     app={this.props.selectedAppVersion}
+                    readmeBaseURL={this.readmeBaseURL()}
                     appVersions={this.props.appVersions}
                     imgError={this.imgError}
                     imgErrorFlag={this.state.imgError}

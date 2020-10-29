@@ -73,4 +73,7 @@ export const Constants = {
   APP_VERSION_EOL_SUFFIX: '(EOL)',
   K8s_VERSION_EOL_LABEL: 'EOL',
   K8s_VERSION_EOL_EXPLANATION: 'End of life',
+
+  // README FILE - What we expect the name of a README file to be.
+  README_FILE: 'README.md',
 };

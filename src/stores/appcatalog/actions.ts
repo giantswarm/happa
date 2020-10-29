@@ -44,7 +44,10 @@ import {
   PREPARE_INGRESS_TAB_DATA,
   UPDATE_CLUSTER_APP,
 } from 'stores/appcatalog/constants';
-import { selectIngressCatalog } from 'stores/appcatalog/selectors';
+import {
+  selectIngressCatalog,
+  selectReadmeURL,
+} from 'stores/appcatalog/selectors';
 import {
   AppCatalogActions,
   IAppCatalogDeleteClusterAppActionPayload,
@@ -255,7 +258,7 @@ export function loadAppReadme(
       return Promise.resolve();
     }
 
-    let readmeURL = appVersion.sources.find((url) => url.endsWith('README.md'));
+    let readmeURL = selectReadmeURL(appVersion);
     if (!readmeURL) {
       dispatch({
         type: CLUSTER_LOAD_APP_README_ERROR,
@@ -313,8 +316,15 @@ function fixTestAppReadmeURLs(readmeURL: string): string {
    * doesn't match, then the string is returned as is.
    * https://regex101.com/r/K2dxdN/1
    */
-  const regexMatcher = /^(.*)\/v?[0-9]+\.[0-9]+\.[0-9]+-(.*)\/README\.md$/;
-  const fixedReadmeURL = readmeURL.replace(regexMatcher, '$1/$2/README.md');
+
+  const escapedReadmeFile = Constants.README_FILE.replace('.', '\\.');
+  const regexMatcher = new RegExp(
+    `^(.*)\/v?[0-9]+\.[0-9]+\.[0-9]+-(.*)\/${escapedReadmeFile}$`
+  );
+  const fixedReadmeURL = readmeURL.replace(
+    regexMatcher,
+    `$1/$2/${Constants.README_FILE}`
+  );
 
   return fixedReadmeURL;
 }
