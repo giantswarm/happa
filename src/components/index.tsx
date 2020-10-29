@@ -151,7 +151,7 @@ async function submitCustomRUM(
     });
   } catch (exception) {
     // eslint-disable-next-line no-console
-    console.log(`ERROR received from ${url}: ${exception}\n`);
+    console.log('Could not submit usage data', exception);
   }
 }
 
@@ -186,9 +186,6 @@ function handleReport(rh: Metric) {
   if (rh.id in recorded) {
     return;
   }
-
-  // eslint-disable-next-line no-console
-  console.log(rh);
 
   recorded[rh.id] = true;
 
