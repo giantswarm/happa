@@ -172,11 +172,13 @@ window.addEventListener('resize', () => {
 window.addEventListener('load', () => {
   const sizes = getSizes();
   window.DD_RUM?.addUserAction(RUMActions.WindowLoad, sizes);
-  submitCustomRUM(RUMActions.WindowLoad, 1, sizes);
 
   // Client information
   const clientInfo = Bowser.parse(window.navigator.userAgent);
-  submitCustomRUM(RUMActions.ClientInfo, 1, clientInfo);
+  submitCustomRUM(RUMActions.WindowLoad, 2, {
+    sizes: sizes,
+    client: clientInfo,
+  });
 });
 
 // Log core web vitals.
