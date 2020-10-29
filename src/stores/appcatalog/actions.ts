@@ -317,7 +317,7 @@ function fixTestAppReadmeURLs(readmeURL: string): string {
    * https://regex101.com/r/K2dxdN/1
    */
 
-  const escapedReadmeFile = Constants.README_FILE.replace('.', '.');
+  const escapedReadmeFile = Constants.README_FILE.replace('.', '\.');
   const regexMatcher = new RegExp(
     `^(.*)\/v?[0-9]+\.[0-9]+\.[0-9]+-(.*)\/${escapedReadmeFile}$`
   );
