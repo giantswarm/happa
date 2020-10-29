@@ -165,6 +165,17 @@ function HeadingRenderer(headingProps) {
   );
 }
 
+// urlFor(url) turns relative links from the readme into absolute links that will
+// work, and leaves absolute links alone.
+function urlFor(href, readmeBaseURL) {
+  const absoluteURLMatch = /^https?:\/\/|^\/\//i;
+  if (absoluteURLMatch.test(href)) {
+    return href;
+  }
+
+  return readmeBaseURL + href;
+}
+
 const AppDetails = (props) => {
   const {
     app,
@@ -175,6 +186,7 @@ const AppDetails = (props) => {
     imgError,
     catalog,
     children,
+    readmeBaseURL,
   } = props;
 
   const {
@@ -241,7 +253,18 @@ const AppDetails = (props) => {
                 <small style={{ fontWeight: 'bold' }}>Readme</small>
                 <ReactMarkdown
                   className='markdown'
-                  renderers={{ heading: HeadingRenderer }}
+                  renderers={{
+                    heading: HeadingRenderer,
+                    link: (p) => (
+                      <a
+                        href={urlFor(p.href, readmeBaseURL)}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        {p.children}
+                      </a>
+                    ),
+                  }}
                 >
                   {readme}
                 </ReactMarkdown>
@@ -275,6 +298,7 @@ AppDetails.propTypes = {
   imgError: PropTypes.func,
   catalog: PropTypes.object,
   children: PropTypes.any,
+  readmeBaseURL: PropTypes.string,
 };
 
 export default AppDetails;
