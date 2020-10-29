@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { Constants } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import { listCatalogs, loadAppReadme } from 'stores/appcatalog/actions';
 import {
@@ -28,7 +29,7 @@ function hasReadmeSource(appVersion) {
     return false;
   }
 
-  return appVersion.sources.some((url) => url.endsWith('README.md'));
+  return appVersion.sources.some((url) => url.endsWith(Constants.README_FILE));
 }
 
 class AppDetail extends React.Component {
@@ -106,7 +107,7 @@ class AppDetail extends React.Component {
       'https://github.com/'
     );
 
-    const l = 'README.md'.length;
+    const l = Constants.README_FILE.length;
 
     // https://github.com/giantswarm/efk-stack-app/v0.3.2/
     readmeURL = readmeURL.substring(0, readmeURL.length - l);
