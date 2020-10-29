@@ -59,10 +59,10 @@ const getTableColumnsConfig = () => {
 
 // eslint-disable-next-line react/no-multi-comp
 const InvitesTable = ({ invitations }) => {
-  const hasInvitations = Object.values(invitations).length;
+  const hasInvitations = Object.values(invitations.items).length;
 
   if (!hasInvitations) {
-    return <p>No open invitations</p>;
+    return <p>No open invites</p>;
   }
 
   return (
