@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
@@ -14,20 +13,13 @@ import {
   usersLoad,
 } from 'stores/user/actions';
 import Button from 'UI/Button';
+import Section from 'UI/Section';
 
 import DeleteUserModal from './DeleteUserModal';
+import InvitesTable from './InvitesTable';
 import InviteUserModal from './InviteUserModal';
 import UnexpireUserModal from './UnexpireUserModal';
 import UsersTable from './UsersTable';
-import { formatStatus } from './UsersUtils';
-
-const Heading = styled.div`
-  display: flex;
-
-  div {
-    margin-left: auto;
-  }
-`;
 
 const UserModalTypes = {
   Unexpire: 'unexpire',
@@ -209,12 +201,7 @@ class Users extends React.Component {
   }
 
   render() {
-    const {
-      users,
-      invitations,
-      installation_name,
-      invitationsAndUsers,
-    } = this.props;
+    const { users, invitations, installation_name } = this.props;
 
     const installationNameLabel = installation_name || 'unknown installation';
 
@@ -222,31 +209,35 @@ class Users extends React.Component {
       <Breadcrumb data={{ title: 'USERS', pathname: UsersRoutes.Home }}>
         <DocumentTitle title='Users'>
           <>
-            <Heading>
-              <h1>Users</h1>
-
-              <Button onClick={this.inviteUser}>
-                <i className='fa fa-add-circle' /> INVITE USER
-              </Button>
-            </Heading>
-            <p>
-              This is the list of user accounts on{' '}
-              <code>{installationNameLabel}</code>
-            </p>
-            <br />
-            <h5>What about SSO users?</h5>
-            <p>
-              SSO users don&apos;t have user objects. They are defined by
-              whatever is in the JWT token being used by that user.
-            </p>
-            <br />
-            <UsersTable
-              users={users}
-              invitationsAndUsers={invitationsAndUsers}
-              onRemoveExpiration={this.removeExpiration}
-              onDelete={this.deleteUser}
-              invitations={invitations}
-            />
+            <h1>Users</h1>
+            <Section title='Open invites'>
+              <>
+                <InvitesTable invitations={invitations} />
+                <Button onClick={this.inviteUser}>
+                  <i className='fa fa-add-circle' /> INVITE USER
+                </Button>
+              </>
+            </Section>
+            <Section title='User accounts'>
+              <UsersTable
+                users={users}
+                onRemoveExpiration={this.removeExpiration}
+                onDelete={this.deleteUser}
+              />
+            </Section>
+            <Section title='Additional information'>
+              <>
+                <p>
+                  This page lists the user accounts and account invites for
+                  installation <code>{installationNameLabel}</code>. Only Giant
+                  Swarm staff can access this page.
+                </p>
+                <p>
+                  Giant Swarm staff members normally do not require user
+                  accounts, as they log in via Single Sign-On (SSO).
+                </p>
+              </>
+            </Section>
             {this.renderModalComponent()}
           </>
         </DocumentTitle>
@@ -260,43 +251,16 @@ Users.propTypes = {
   currentUser: PropTypes.object,
   users: PropTypes.object,
   organizations: PropTypes.object,
-  invitationsAndUsers: PropTypes.array,
   initialSelectedOrganizations: PropTypes.array,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const users = Object.entries(state.entities.users.items).map(([, user]) => {
-    return {
-      email: user.email,
-      emaildomain: user.emaildomain,
-      created: user.created,
-      expiry: user.expiry,
-      status: formatStatus(user),
-    };
-  });
-
-  const invitations = Object.entries(
-    state.entities.users.invitations.items
-  ).map(([, invitation]) => {
-    return {
-      email: invitation.email,
-      emaildomain: invitation.emaildomain,
-      created: invitation.created,
-      expiry: invitation.expiry,
-      invited_by: invitation.invited_by,
-      status: formatStatus(invitation),
-    };
-  });
-
-  const invitationsAndUsers = users.concat(invitations);
-
   return {
     currentUser: state.main.loggedInUser,
     users: state.entities.users,
     invitations: state.entities.users.invitations,
-    invitationsAndUsers: invitationsAndUsers,
     organizations: state.entities.organizations,
     initialSelectedOrganizations: [state.main.selectedOrganization],
     installation_name: state.main.info.general.installation_name,

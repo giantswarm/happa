@@ -62,7 +62,7 @@ describe('Users', () => {
     const { findByText } = renderRouteWithStore(UsersRoutes.Home);
 
     const usersTitle = await findByText(
-      /This is the list of user accounts on/i
+      /This page lists the user accounts and account invites for/i
     );
     expect(usersTitle).toBeInTheDocument();
   });
@@ -96,7 +96,7 @@ describe('Users', () => {
     expect(inviteButton).toBeInTheDocument();
     fireEvent.click(inviteButton);
 
-    const emailInput = getByLabelText(/email/i);
+    const emailInput = getByLabelText(/Email:/);
     fireEvent.change(emailInput, {
       target: { value: 'someemail@somedomain.com' },
     });
@@ -186,8 +186,8 @@ describe('Users', () => {
     });
   });
 
-  it(`unexpires an user's invitation`, async () => {
-    const desiredEmail = 'developer3@giantswarm.io';
+  it(`unexpires a user account`, async () => {
+    const desiredEmail = 'expires-in-a-year@giantswarm.io';
     const encodedEmail = encodeURIComponent(desiredEmail);
 
     nock(API_ENDPOINT)
@@ -198,7 +198,7 @@ describe('Users', () => {
 
     const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
     const expiryDate = within(selectedEmailCell.parentNode).getByText(
-      /in 2 days/i
+      /in a year/i
     );
     expect(expiryDate).toBeInTheDocument();
 

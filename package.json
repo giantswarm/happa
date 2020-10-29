@@ -153,7 +153,7 @@
     "@types/color-hash": "^1.0.0",
     "@types/deep-diff": "^1.0.0",
     "@types/history": "^4.7.8",
-    "@types/jest": "^26.0.14",
+    "@types/jest": "^26.0.15",
     "@types/js-yaml": "^3.12.5",
     "@types/lunr": "^2.3.3",
     "@types/node": "^14.11.8",
@@ -235,7 +235,7 @@
   "resolutions": {
     "**/crypto-js": "^3.2.1",
     "kind-of": "^6.0.3",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "serialize-javascript": "^4.0.0",
     "http-proxy": "^1.18.1",
     "node-fetch": "^2.6.1",
