@@ -97,6 +97,7 @@ const StyledAppImage = styled.div`
 
   &.${IMG_NO_SRC_CLASSNAME}, &.${IMG_FAILED_LOADING_CLASSNAME} {
     opacity: 0;
+    z-index: -1;
   }
 
   &.${IMG_NO_SRC_CLASSNAME} {
