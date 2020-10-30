@@ -41,6 +41,12 @@ workflows:
           requires:
             - checkout
           <<: *job_filters
+      - build-container:
+          requires:
+            - test
+            - typecheck
+            - build
+          <<: *job_filters
 
       - architect/push-to-docker:
           name: push-happa-to-quay
@@ -49,9 +55,8 @@ workflows:
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
           requires:
-            - test
-            - typecheck
-            - build
+            - build-container
+          # Needed to trigger job also on git tag.
           filters:
             tags:
               only: /^v.*/
@@ -63,9 +68,7 @@ workflows:
           username_envar: "ALIYUN_USERNAME"
           password_envar: "ALIYUN_PASSWORD"
           requires:
-            - test
-            - typecheck
-            - build
+            - build-container
           # Needed to trigger job only on git tag.
           filters:
             branches:
@@ -201,8 +204,6 @@ jobs:
     steps:
       - checkout
 
-      - setup_remote_docker
-
       - attach_workspace:
           at: ~/happa
 
@@ -220,6 +221,22 @@ jobs:
             else
               git tag --points-at HEAD | tr '\n' ' ' > VERSION
             fi
+
+      - persist_to_workspace:
+          root: ~/happa
+          <<: *whitelist
+
+  build-container:
+    executor: architect/architect
+
+    working_directory: ~/happa
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - attach_workspace:
+          at: ~/happa
 
       - run:
           environment:
@@ -257,12 +274,3 @@ jobs:
             sleep 2
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep Happa
-
-      - persist_to_workspace:
-          root: ~/happa
-          <<: *whitelist      
-
-      - attach_workspace:
-          at: ~/happa
-
-      
