@@ -204,7 +204,8 @@ async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
   let indexURL = `${catalog.spec.storage.URL}index.yaml`;
 
   // If we are trying to reach the Helm Stable catalog at it's old location,
-  // this URL hack helps us get it properly.
+  // route the request through a proxy in Happa's container which adds necessary
+  // CORS headers.
   if (
     catalog.spec.storage.URL ===
     'https://kubernetes-charts.storage.googleapis.com/'
@@ -216,7 +217,6 @@ async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
   // it's url structure is a bit different.
   // We need to remove /packages/ from the URL before adding /index.yaml.
   if (catalog.spec.storage.URL === 'https://charts.helm.sh/stable/packages/') {
-    console.log('bingo bongo');
     indexURL = 'https://charts.helm.sh/stable/index.yaml';
   }
 
