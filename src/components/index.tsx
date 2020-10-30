@@ -38,16 +38,17 @@ enum GlobalEnvironment {
 
 interface IGlobalConfig {
   apiEndpoint: string;
-  cpApiEndpoint: string;
   audience: string;
-  cpAudience: string;
-  passageEndpoint: string;
-  environment: GlobalEnvironment;
-  ingressBaseDomain: string;
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
-  happaVersion: string;
+  cpApiEndpoint: string;
+  cpAudience: string;
   defaultRequestTimeoutSeconds: number;
+  enableRealUserMonitoring: boolean;
+  environment: GlobalEnvironment;
+  happaVersion: string;
+  ingressBaseDomain: string;
+  passageEndpoint: string;
 }
 
 declare global {
@@ -138,6 +139,11 @@ async function submitCustomRUM(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 ) {
+  if (!window.config.enableRealUserMonitoring) {
+    // RUM is disabled.
+    return;
+  }
+
   const url: string = `${window.config.apiEndpoint}/v5/analytics/`;
 
   try {
