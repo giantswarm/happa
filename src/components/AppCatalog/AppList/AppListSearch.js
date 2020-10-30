@@ -39,7 +39,7 @@ const ClearIcon = styled('i')`
 `;
 
 const AppListSearch = ({ value, ...props }) => (
-  <Form>
+  <Form onSubmit={(e) => e.preventDefault()}>
     <InputWithIcon>
       <SearchIcon className='fa fa-search' />
       <Input onChange={props.onChange} type='text' value={value} />
