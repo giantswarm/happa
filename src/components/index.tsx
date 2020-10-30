@@ -136,7 +136,6 @@ const getSizes = () => {
 async function submitCustomRUM(
   payloadType: string,
   payloadSchemaVersion: number,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: Record<string, string | number | object>
 ) {
   if (!window.config.enableRealUserMonitoring) {
