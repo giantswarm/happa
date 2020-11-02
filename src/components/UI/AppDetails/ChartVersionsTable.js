@@ -37,13 +37,18 @@ const ChartVersionsTable = (props) => {
   const { appVersions } = props;
 
   const groupedAppVersions = appVersions.reduce((groups, obj) => {
+    let av = 'unknown';
+    if (obj.appVersion) {
+      av = obj.appVersion;
+    }
+
     // Create a group if there isn't one yet.
-    if (!groups.hasOwnProperty(obj.appVersion)) {
-      groups[obj.appVersion] = [];
+    if (!groups.hasOwnProperty(av)) {
+      groups[av] = [];
     }
 
     // Push the appVersion to the group.
-    groups[obj.appVersion].push(obj);
+    groups[av].push(obj);
 
     // Pass the object on to the next loop
     return groups;
