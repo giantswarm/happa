@@ -147,6 +147,15 @@ const Readme = styled.div`
   }
 `;
 
+const SmallLabel = styled.span`
+  padding-left: 20px;
+  padding-right: 10px;
+
+  :nth-of-type(1) {
+    padding-left: 0;
+  }
+`;
+
 function flatten(text, child) {
   return typeof child === 'string'
     ? text + child
@@ -235,10 +244,18 @@ const AppDetails = (props) => {
           </div>
 
           <div className='version'>
-            <small>Version</small>&nbsp;
-            <Truncated as='code'>{version}</Truncated> <small>Provides</small>
-            &nbsp;
-            <code className='appVersion'>{appVersion}</code>
+            <SmallLabel>
+              <small>Version</small>
+            </SmallLabel>
+            <Truncated as='code'>{version}</Truncated>
+            {appVersion && (
+              <>
+                <SmallLabel>
+                  <small>Provides</small>
+                </SmallLabel>
+                <code className='appVersion'>{appVersion}</code>
+              </>
+            )}
           </div>
         </Title>
 
