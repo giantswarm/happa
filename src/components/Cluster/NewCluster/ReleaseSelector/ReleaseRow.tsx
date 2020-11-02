@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
@@ -14,6 +15,14 @@ import {
 import RadioInput from 'UI/Inputs/RadioInput';
 import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+
+const FixedWidthTableButton = styled(TableButton)`
+  width: 100px;
+`;
+
+const MinWidthCursorPointerCell = styled(CursorPointerCell)`
+  min-width: 120px;
+`;
 
 interface IReleaseRow extends IRelease {
   isSelected: boolean;
@@ -67,8 +76,10 @@ const ReleaseRow: FC<IReleaseRow> = ({
             />
           </RUMActionTarget>
         </CursorPointerCell>
-        <CursorPointerCell>{version}</CursorPointerCell>
-        <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
+        <MinWidthCursorPointerCell>{version}</MinWidthCursorPointerCell>
+        <MinWidthCursorPointerCell>
+          {relativeDate(timestamp)}
+        </MinWidthCursorPointerCell>
         <CursorPointerCell>
           <KubernetesVersionLabel
             version={kubernetesVersion}
@@ -85,7 +96,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
                 : RUMActions.HideReleaseDetails
             }
           >
-            <TableButton
+            <FixedWidthTableButton
               data-testid={`show-components-${version}`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -95,7 +106,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             >
               <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
               {collapsed ? 'Show' : 'Hide'}
-            </TableButton>
+            </FixedWidthTableButton>
           </RUMActionTarget>
         </CenteredCell>
         <CenteredCell onClick={(e) => e.stopPropagation()}>
