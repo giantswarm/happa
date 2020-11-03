@@ -63,6 +63,8 @@ sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
 if [ "$ENABLE_RUM" = "TRUE" ]; then
   echo "RUM is enabled. Preparing code."
 
+  sed -i "s|enableRealUserMonitoring: .*|enableRealUserMonitoring: true,|" /www/index.html
+
   # Get RUM include
   INC=$(cat rum.inc.html)
 
@@ -96,6 +98,8 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
 else
   # Remove placeholder
   sed -i "s|<placeholder_rum/>||" /www/index.html
+
+  sed -i "s|enableRealUserMonitoring: .*|enableRealUserMonitoring: false,|" /www/index.html
 fi
 
 # gzip index.html again because we changed it
