@@ -20,8 +20,8 @@ describe('releases::utils', () => {
       const result = getReleaseEOLStatus(date);
 
       expect(result.isEol).toBeTruthy();
-      expect(result.message).toBe(
-        'This version reached its end of life today.'
+      expect(result.message).toMatch(
+        /This version reached its end of life (today|a few seconds ago)\./
       );
     });
 
