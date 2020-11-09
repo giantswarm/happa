@@ -75,7 +75,7 @@ describe('UpgradeClusterModal', () => {
     });
 
     expect(
-      screen.getByText(/Before upgrading please acknowledge the following/i)
+      screen.getByText(/Please read our/i)
     ).toBeInTheDocument();
   });
 
@@ -147,7 +147,7 @@ describe('UpgradeClusterModal', () => {
 
     fireEvent.click(screen.getByText(/inspect changes/i));
     expect(
-      screen.getByText(/inspect changes from version 2.0.2 to 3.0.0/i)
+      screen.getByText(/changes from v2.0.2 to v3.0.0/i)
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/change version/i));
@@ -201,7 +201,7 @@ describe('UpgradeClusterModal', () => {
 
     fireEvent.click(screen.getByText(/inspect changes/i));
     expect(
-      screen.getByText(/inspect changes from version 2.0.2 to 3.0.0/i)
+      screen.getByText(/changes from v2.0.2 to v3.0.0/i)
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/change version/i));
@@ -255,7 +255,7 @@ describe('UpgradeClusterModal', () => {
 
     fireEvent.click(screen.getByText(/inspect changes/i));
     expect(
-      screen.getByText(/inspect changes from version 2.0.2 to 3.0.0/i)
+      screen.getByText(/changes from v2.0.2 to v3.0.0/i)
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/change version/i));

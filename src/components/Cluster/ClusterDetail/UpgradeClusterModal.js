@@ -302,7 +302,7 @@ class UpgradeClusterModal extends React.Component {
   currentPage = () => {
     switch (this.state.page) {
       case Pages.AboutUpgrading:
-        return this.aboutUpgradingPage(this.props.targetRelease.version);
+        return this.aboutUpgradingPage(this.props.targetRelease?.version);
 
       case Pages.InspectChanges:
         return this.inspectChangesPage();
