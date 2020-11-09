@@ -219,7 +219,7 @@ class UpgradeClusterModal extends React.Component {
       <div>
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>
-            Inspect changes from version {this.props.cluster.release_version} to{' '}
+            Changes from v{this.props.cluster.release_version} to v
             {this.props.targetRelease.version}
             {this.props.isAdmin && (
               <ChangeVersionButton
