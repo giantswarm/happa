@@ -191,20 +191,11 @@ class UpgradeClusterModal extends React.Component {
           </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-          <p>Before upgrading please acknowledge the following</p>
-          <ul>
-            <li>
-              Worker nodes will be drained and then terminated one after another
-              to be replaced by new ones.
-            </li>
-            <li>
-              To be able to run all workloads with one worker node missing,
-              please make sure to have enough workers before upgrading.
-            </li>
-            <li>
-              {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
-            </li>
-          </ul>
+          <p>
+            Please read our checklist for cluster upgrades to ensure the cluster
+            and workloads are <strong>prepared for an upgrade</strong>.
+          </p>
+          {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
           <Button
