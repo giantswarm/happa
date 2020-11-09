@@ -25,6 +25,10 @@ const ChangeVersionButton = styled(Button)`
   margin-left: ${({ theme }) => 2 * theme.spacingPx}px;
 `;
 
+const DetailsHeadline = styled.p`
+  margin-top: 10px;
+`;
+
 class UpgradeClusterModal extends React.Component {
   static getMasterNodesInfo(cluster) {
     if (
@@ -42,8 +46,8 @@ class UpgradeClusterModal extends React.Component {
     return (
       <p>
         As this cluster has one master node, the{' '}
-        <strong>Kubernetes API will be unavailable for a few minutes</strong>{' '}
-        during the upgrade.
+        <b>Kubernetes API will be unavailable for a few minutes</b> during the
+        upgrade.
       </p>
     );
   }
@@ -162,9 +166,9 @@ class UpgradeClusterModal extends React.Component {
           })}
         </div>
 
-        <p>
-          <b>Changes</b>
-        </p>
+        <DetailsHeadline>
+          <b>Details</b>
+        </DetailsHeadline>
         <dl>
           {changedComponentNames.map((componentName, index) => {
             return (
@@ -192,8 +196,17 @@ class UpgradeClusterModal extends React.Component {
         </BootstrapModal.Header>
         <BootstrapModal.Body>
           <p>
-            Please read our checklist for cluster upgrades to ensure the cluster
-            and workloads are <strong>prepared for an upgrade</strong>.
+            Please read our{' '}
+            <a
+              href='https://docs.giantswarm.io/reference/cluster-upgrades/#checklist'
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              checklist for cluster upgrades&nbsp;
+              <i className='fa fa-open-in-new' />
+            </a>{' '}
+            to ensure the cluster and workloads are{' '}
+            <b>prepared for an upgrade</b>.
           </p>
           {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
         </BootstrapModal.Body>
