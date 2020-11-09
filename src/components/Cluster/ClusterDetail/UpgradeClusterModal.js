@@ -182,11 +182,13 @@ class UpgradeClusterModal extends React.Component {
     );
   };
 
-  aboutUpgradingPage = () => {
+  aboutUpgradingPage = (targetRelease) => {
     return (
       <div>
         <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>About Upgrading</BootstrapModal.Title>
+          <BootstrapModal.Title>
+            Upgrade to v{targetRelease}
+          </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
           <p>Before upgrading please acknowledge the following</p>
