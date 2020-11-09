@@ -74,9 +74,7 @@ describe('UpgradeClusterModal', () => {
       provider: Providers.AWS,
     });
 
-    expect(
-      screen.getByText(/Please read our/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Please read our/i)).toBeInTheDocument();
   });
 
   it(`can't change the upgrade release version if the user is not an admin`, () => {
