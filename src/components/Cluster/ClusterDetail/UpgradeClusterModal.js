@@ -31,10 +31,21 @@ class UpgradeClusterModal extends React.Component {
       cluster.capabilities.supportsHAMasters &&
       cluster.master_nodes?.high_availability
     ) {
-      return 'The master nodes will be terminated one by one. The Kubernetes API may be briefly unavailable during this process due to the etcd leader election process.';
+      return (
+        <p>
+          Since this is cluster provides high-availability Kubernetes masters,
+          the Kubernetes API will be available during the upgrade.
+        </p>
+      );
     }
 
-    return 'The master node will be terminated and replaced by a new one. The Kubernetes API will be unavailable during this time.';
+    return (
+      <p>
+        As this cluster has one master node, the{' '}
+        <strong>Kubernetes API will be unavailable for a few minutes</strong>{' '}
+        during the upgrade.
+      </p>
+    );
   }
 
   state = {
