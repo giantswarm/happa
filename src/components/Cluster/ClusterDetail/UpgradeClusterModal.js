@@ -37,8 +37,8 @@ class UpgradeClusterModal extends React.Component {
     ) {
       return (
         <p>
-          Since this cluster provides high-availability Kubernetes masters,
-          the Kubernetes API will be available during the upgrade.
+          Since this cluster provides high-availability Kubernetes masters, the
+          Kubernetes API will be available during the upgrade.
         </p>
       );
     }
