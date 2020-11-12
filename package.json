@@ -197,7 +197,7 @@
     "css-loader": "4.3.0",
     "eslint": "^7.11.0",
     "eslint-loader": "4.0.2",
-    "eslint-plugin-emotion": "10.0.27",
+    "eslint-plugin-emotion": "11.0.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.1.2",
