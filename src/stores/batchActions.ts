@@ -287,7 +287,8 @@ export function batchedClusterDeleteConfirmed(
 }
 
 export function batchedOrganizationSelect(
-  orgId: string
+  orgId: string,
+  withLoadingFlags: boolean
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
   return async (dispatch) => {
     try {
@@ -295,13 +296,13 @@ export function batchedOrganizationSelect(
       dispatch(
         clustersDetails({
           filterBySelectedOrganization: true,
-          withLoadingFlags: true,
+          withLoadingFlags: withLoadingFlags,
         })
       );
       await dispatch(
         nodePoolsLoad({
           filterBySelectedOrganization: true,
-          withLoadingFlags: true,
+          withLoadingFlags: withLoadingFlags,
         })
       );
     } catch (err) {

@@ -115,21 +115,22 @@ export interface IClusterRemoveFromStoreAction {
 
 export interface IClusterLoadStatusRequestAction {
   type: typeof CLUSTER_LOAD_STATUS_REQUEST;
-  clusterId: string;
+  id: string;
 }
 
 export interface IClusterLoadStatusSuccessAction {
   type: typeof CLUSTER_LOAD_STATUS_SUCCESS;
-  clusterId: string;
+  id: string;
 }
 
 export interface IClusterLoadStatusNotFoundAction {
   type: typeof CLUSTER_LOAD_STATUS_NOT_FOUND;
-  clusterId: string;
+  id: string;
 }
 
 export interface IClusterLoadStatusErrorAction {
   type: typeof CLUSTER_LOAD_STATUS_ERROR;
+  id: string;
   error: string;
 }
 

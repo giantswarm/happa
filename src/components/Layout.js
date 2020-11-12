@@ -52,7 +52,7 @@ class Layout extends React.Component {
 
   selectOrganization = (orgId) => {
     const { dispatch } = this.props;
-    dispatch(batchedOrganizationSelect(orgId));
+    dispatch(batchedOrganizationSelect(orgId, true));
   };
 
   render() {

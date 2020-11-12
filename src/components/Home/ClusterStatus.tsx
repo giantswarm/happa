@@ -5,6 +5,7 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
+import { CLUSTER_LOAD_STATUS_REQUEST } from 'stores/cluster/constants';
 import {
   selectCanClusterUpgrade,
   selectIsClusterAwaitingUpgrade,
@@ -14,6 +15,7 @@ import {
   isClusterDeleting,
   isClusterUpdating,
 } from 'stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { IState } from 'stores/state';
 import { ITheme } from 'styles';
 
@@ -60,6 +62,13 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   const theme = useTheme<ITheme>();
 
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
+  const isStatusLoading = useSelector<IState, boolean>((state) =>
+    selectLoadingFlagByIdAndAction(
+      state,
+      clusterId,
+      CLUSTER_LOAD_STATUS_REQUEST
+    )
+  );
   const isClusterAwaitingUpgrade = useSelector(
     selectIsClusterAwaitingUpgrade(clusterId)
   );
@@ -74,8 +83,14 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   let tooltip = '';
   switch (true) {
     case typeof cluster === 'undefined':
+      return null;
+
     case typeof cluster.delete_date !== 'undefined':
+      return null;
+
     case cluster.delete_date === null:
+      return null;
+
     case isClusterDeleting(cluster):
       return null;
 
@@ -84,14 +99,6 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       message = 'Upgrade Available';
       isButtonDisabled = typeof onClick === 'undefined';
       tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
-      break;
-
-    case isClusterCreating(cluster):
-      color = theme.colors.gray;
-      iconClassName = 'fa fa-change-in-progress';
-      message = 'Cluster creating…';
-      tooltip =
-        'The cluster is currently creating. This step usually takes about 30 minutes.';
       break;
 
     case isClusterUpdating(cluster):
@@ -105,6 +112,21 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       iconClassName = 'fa fa-version-upgrade';
       message = 'Awaiting upgrade…';
       tooltip = 'The cluster is about to start an upgrade.';
+      break;
+
+    case isStatusLoading:
+      iconClassName = 'fa fa-ellipsis-h';
+      message = 'Cluster status is loading';
+      isButtonDisabled = typeof onClick === 'undefined';
+      tooltip = `The status of this cluster is being loaded.`;
+      break;
+
+    case isClusterCreating(cluster):
+      color = theme.colors.gray;
+      iconClassName = 'fa fa-change-in-progress';
+      message = 'Cluster creating…';
+      tooltip =
+        'The cluster is currently creating. This step usually takes about 30 minutes.';
       break;
 
     default:
