@@ -143,6 +143,8 @@ export function batchedClusterCreate(
   nodePools: INodePool[] = []
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
   return async (dispatch) => {
+    let redirectPath = '';
+
     try {
       const creationResponse = await dispatch(
         clusterCreate(cluster, isV5Cluster)
@@ -152,14 +154,6 @@ export function batchedClusterCreate(
       }
       const { clusterId, owner } = creationResponse;
 
-      const clusterDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.Detail.Home,
-        {
-          orgId: owner,
-          clusterId,
-        }
-      );
-
       // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
       await dispatch(
         clusterLoadDetails(clusterId, {
@@ -168,9 +162,19 @@ export function batchedClusterCreate(
         })
       );
 
+      redirectPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail.Home,
+        {
+          orgId: owner,
+          clusterId,
+        }
+      );
+
       if (isV5Cluster) {
         // Check nodePools instead?
-        await dispatch(nodePoolsCreate(clusterId, nodePools));
+        await dispatch(
+          nodePoolsCreate(clusterId, nodePools, { withFlashMessages: true })
+        );
         await dispatch(
           clusterNodePoolsLoad(clusterId, {
             withLoadingFlags: true,
@@ -178,13 +182,15 @@ export function batchedClusterCreate(
         );
       }
 
-      dispatch(push(clusterDetailPath));
-
       return Promise.resolve();
     } catch (err) {
       ErrorReporter.getInstance().notify(err);
 
       return Promise.resolve();
+    } finally {
+      if (redirectPath) {
+        dispatch(push(redirectPath));
+      }
     }
   };
 }
