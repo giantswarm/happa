@@ -15,7 +15,6 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -86,16 +85,7 @@ const defaultNodePool = () => ({
 });
 
 class CreateNodePoolsCluster extends Component {
-  static errorState() {
-    return (
-      <FlashMessage type='danger'>
-        <b>Something went wrong while trying to create your cluster.</b>
-        <br />
-        Perhaps our servers are down, please try again later or contact support:
-        support@giantswarm.io
-      </FlashMessage>
-    );
-  }
+  isComponentMounted = false;
 
   state = {
     submitting: false,
@@ -118,6 +108,14 @@ class CreateNodePoolsCluster extends Component {
       isHighAvailability: true,
     },
   };
+
+  componentDidMount() {
+    this.isComponentMounted = true;
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
+  }
 
   isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
@@ -171,7 +169,9 @@ class CreateNodePoolsCluster extends Component {
       )
     );
 
-    this.setState({ submitting: false });
+    if (this.isComponentMounted) {
+      this.setState({ submitting: false });
+    }
   };
 
   toggleMasterAZSelector = () => {

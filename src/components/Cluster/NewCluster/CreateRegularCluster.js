@@ -77,6 +77,8 @@ class CreateRegularCluster extends React.Component {
     return null;
   }
 
+  isComponentMounted = false;
+
   state = {
     availabilityZonesPicker: {
       value: 1,
@@ -116,6 +118,14 @@ class CreateRegularCluster extends React.Component {
       },
     },
   };
+
+  componentDidMount() {
+    this.isComponentMounted = true;
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
+  }
 
   updateAvailabilityZonesPicker = (n) => {
     this.setState({
@@ -195,7 +205,9 @@ class CreateRegularCluster extends React.Component {
       })
     );
 
-    this.setState({ submitting: false });
+    if (this.isComponentMounted) {
+      this.setState({ submitting: false });
+    }
   };
 
   errorState() {
