@@ -10,7 +10,7 @@ import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
-import { selectErrorByAction } from 'stores/error/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
@@ -85,10 +85,7 @@ const defaultNodePool = () => ({
 });
 
 class CreateNodePoolsCluster extends Component {
-  isComponentMounted = false;
-
   state = {
-    submitting: false,
     error: false,
     availabilityZonesLabels: {
       // Manually select AZs
@@ -108,14 +105,6 @@ class CreateNodePoolsCluster extends Component {
       isHighAvailability: true,
     },
   };
-
-  componentDidMount() {
-    this.isComponentMounted = true;
-  }
-
-  componentWillUnmount() {
-    this.isComponentMounted = false;
-  }
 
   isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
@@ -137,8 +126,6 @@ class CreateNodePoolsCluster extends Component {
   };
 
   createCluster = async () => {
-    this.setState({ submitting: true });
-
     const nodePools = Object.values(this.state.nodePoolsForms.nodePools).map(
       (np) => np.data
     );
@@ -168,10 +155,6 @@ class CreateNodePoolsCluster extends Component {
         nodePools
       )
     );
-
-    if (this.isComponentMounted) {
-      this.setState({ submitting: false });
-    }
   };
 
   toggleMasterAZSelector = () => {
@@ -223,10 +206,10 @@ class CreateNodePoolsCluster extends Component {
   };
 
   render() {
-    const { hasAZLabels, submitting, masterNodes } = this.state;
+    const { hasAZLabels, masterNodes } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { nodePools } = this.state.nodePoolsForms;
-    const { minAZ, maxAZ, defaultAZ } = this.props;
+    const { minAZ, maxAZ, defaultAZ, isClusterCreating } = this.props;
 
     return (
       <>
@@ -338,7 +321,7 @@ class CreateNodePoolsCluster extends Component {
               bsSize='large'
               bsStyle='primary'
               disabled={!this.isValid()}
-              loading={submitting}
+              loading={isClusterCreating}
               onClick={this.createCluster}
               type='button'
             >
@@ -346,12 +329,12 @@ class CreateNodePoolsCluster extends Component {
             </Button>
           </RUMActionTarget>
           {/* We want to hide cancel button when the Create NP button has been clicked */}
-          {!submitting && (
+          {!isClusterCreating && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
                 bsSize='large'
                 bsStyle='default'
-                loading={submitting}
+                loading={isClusterCreating}
                 onClick={this.props.closeForm}
                 type='button'
               >
@@ -376,7 +359,7 @@ CreateNodePoolsCluster.propTypes = {
   availabilityZones: PropTypes.array,
   capabilities: PropTypes.object,
   closeForm: PropTypes.func,
-  clusterCreateError: PropTypes.string,
+  isClusterCreating: PropTypes.bool,
   clusterName: PropTypes.string,
   defaultAZ: PropTypes.number,
   dispatch: PropTypes.func,
@@ -400,7 +383,7 @@ function mapStateToProps(state) {
     minAZ,
     maxAZ,
     defaultAZ,
-    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
+    isClusterCreating: selectLoadingFlagByAction(state, CLUSTER_CREATE_REQUEST),
   };
 }
 
