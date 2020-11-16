@@ -377,11 +377,16 @@ export function clusterCreate(
     } catch (error) {
       dispatch({ type: CLUSTER_CREATE_ERROR, error: error.message });
 
-      new FlashMessage(
-        'An error occurred when trying to create the cluster.',
-        messageType.ERROR,
-        messageTTL.LONG,
+      const errorBody = extractMessageFromError(
+        error,
         'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      new FlashMessage(
+        'Something went wrong while trying to create the cluster.',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        errorBody
       );
     }
 

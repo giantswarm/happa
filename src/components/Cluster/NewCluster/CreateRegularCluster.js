@@ -14,7 +14,6 @@ import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import Section from 'UI/ClusterCreation/Section';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import ErrorFallback from 'UI/ErrorFallback';
 import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 
@@ -138,7 +137,7 @@ class CreateRegularCluster extends React.Component {
     });
   };
 
-  createCluster = () => {
+  createCluster = async () => {
     this.setState({ submitting: true });
 
     let worker = {};
@@ -182,7 +181,7 @@ class CreateRegularCluster extends React.Component {
       workers = [worker];
     }
 
-    this.props.dispatch(
+    await this.props.dispatch(
       batchedClusterCreate({
         availability_zones: this.state.availabilityZonesPicker.value,
         scaling: {
@@ -195,6 +194,8 @@ class CreateRegularCluster extends React.Component {
         workers,
       })
     );
+
+    this.setState({ submitting: false });
   };
 
   errorState() {
@@ -371,20 +372,18 @@ class CreateRegularCluster extends React.Component {
         <HorizontalLine />
 
         <FlexRow>
-          <ErrorFallback error={this.props.clusterCreateError}>
-            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                disabled={!this.valid()}
-                loading={this.state.submitting}
-                onClick={this.createCluster}
-                type='submit'
-              >
-                Create Cluster
-              </Button>
-            </RUMActionTarget>
-          </ErrorFallback>
+          <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
+            <Button
+              bsSize='large'
+              bsStyle='primary'
+              disabled={!this.valid()}
+              loading={this.state.submitting}
+              onClick={this.createCluster}
+              type='submit'
+            >
+              Create Cluster
+            </Button>
+          </RUMActionTarget>
           {!this.state.submitting && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button

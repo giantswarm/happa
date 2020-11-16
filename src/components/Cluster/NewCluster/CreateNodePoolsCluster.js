@@ -10,12 +10,12 @@ import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
+import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import ErrorFallback from 'UI/ErrorFallback';
 import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 import RadioInput from 'UI/Inputs/RadioInput';
@@ -120,6 +120,10 @@ class CreateNodePoolsCluster extends Component {
     },
   };
 
+  componentWillUnmount() {
+    this.props.dispatch(clearError(CLUSTER_CREATE_REQUEST));
+  }
+
   isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
@@ -171,6 +175,8 @@ class CreateNodePoolsCluster extends Component {
         nodePools
       )
     );
+
+    this.setState({ submitting: false });
   };
 
   toggleMasterAZSelector = () => {
@@ -331,24 +337,19 @@ class CreateNodePoolsCluster extends Component {
           </RUMActionTarget>
           <HorizontalLine />
         </WrapperDiv>
-
-        {this.state.error && CreateNodePoolsCluster.errorState()}
-
         <FlexRow>
-          <ErrorFallback error={this.props.clusterCreateError}>
-            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                disabled={!this.isValid()}
-                loading={submitting}
-                onClick={this.createCluster}
-                type='button'
-              >
-                Create Cluster
-              </Button>
-            </RUMActionTarget>
-          </ErrorFallback>
+          <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
+            <Button
+              bsSize='large'
+              bsStyle='primary'
+              disabled={!this.isValid()}
+              loading={submitting}
+              onClick={this.createCluster}
+              type='button'
+            >
+              Create Cluster
+            </Button>
+          </RUMActionTarget>
           {/* We want to hide cancel button when the Create NP button has been clicked */}
           {!submitting && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
