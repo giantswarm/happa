@@ -10,7 +10,6 @@ import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
-import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -119,10 +118,6 @@ class CreateNodePoolsCluster extends Component {
       isHighAvailability: true,
     },
   };
-
-  componentWillUnmount() {
-    this.props.dispatch(clearError(CLUSTER_CREATE_REQUEST));
-  }
 
   isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
