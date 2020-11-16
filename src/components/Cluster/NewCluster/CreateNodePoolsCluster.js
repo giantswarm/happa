@@ -10,13 +10,11 @@ import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
-import { selectErrorByAction } from 'stores/error/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import ErrorFallback from 'UI/ErrorFallback';
-import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -87,19 +85,7 @@ const defaultNodePool = () => ({
 });
 
 class CreateNodePoolsCluster extends Component {
-  static errorState() {
-    return (
-      <FlashMessage type='danger'>
-        <b>Something went wrong while trying to create your cluster.</b>
-        <br />
-        Perhaps our servers are down, please try again later or contact support:
-        support@giantswarm.io
-      </FlashMessage>
-    );
-  }
-
   state = {
-    submitting: false,
     error: false,
     availabilityZonesLabels: {
       // Manually select AZs
@@ -140,8 +126,6 @@ class CreateNodePoolsCluster extends Component {
   };
 
   createCluster = async () => {
-    this.setState({ submitting: true });
-
     const nodePools = Object.values(this.state.nodePoolsForms.nodePools).map(
       (np) => np.data
     );
@@ -222,10 +206,10 @@ class CreateNodePoolsCluster extends Component {
   };
 
   render() {
-    const { hasAZLabels, submitting, masterNodes } = this.state;
+    const { hasAZLabels, masterNodes } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { nodePools } = this.state.nodePoolsForms;
-    const { minAZ, maxAZ, defaultAZ } = this.props;
+    const { minAZ, maxAZ, defaultAZ, isClusterCreating } = this.props;
 
     return (
       <>
@@ -331,31 +315,26 @@ class CreateNodePoolsCluster extends Component {
           </RUMActionTarget>
           <HorizontalLine />
         </WrapperDiv>
-
-        {this.state.error && CreateNodePoolsCluster.errorState()}
-
         <FlexRow>
-          <ErrorFallback error={this.props.clusterCreateError}>
-            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                disabled={!this.isValid()}
-                loading={submitting}
-                onClick={this.createCluster}
-                type='button'
-              >
-                Create Cluster
-              </Button>
-            </RUMActionTarget>
-          </ErrorFallback>
+          <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
+            <Button
+              bsSize='large'
+              bsStyle='primary'
+              disabled={!this.isValid()}
+              loading={isClusterCreating}
+              onClick={this.createCluster}
+              type='button'
+            >
+              Create Cluster
+            </Button>
+          </RUMActionTarget>
           {/* We want to hide cancel button when the Create NP button has been clicked */}
-          {!submitting && (
+          {!isClusterCreating && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
                 bsSize='large'
                 bsStyle='default'
-                loading={submitting}
+                loading={isClusterCreating}
                 onClick={this.props.closeForm}
                 type='button'
               >
@@ -380,7 +359,7 @@ CreateNodePoolsCluster.propTypes = {
   availabilityZones: PropTypes.array,
   capabilities: PropTypes.object,
   closeForm: PropTypes.func,
-  clusterCreateError: PropTypes.string,
+  isClusterCreating: PropTypes.bool,
   clusterName: PropTypes.string,
   defaultAZ: PropTypes.number,
   dispatch: PropTypes.func,
@@ -404,7 +383,7 @@ function mapStateToProps(state) {
     minAZ,
     maxAZ,
     defaultAZ,
-    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
+    isClusterCreating: selectLoadingFlagByAction(state, CLUSTER_CREATE_REQUEST),
   };
 }
 
