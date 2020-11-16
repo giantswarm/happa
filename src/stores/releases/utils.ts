@@ -29,7 +29,7 @@ export function getReleaseEOLStatus(
   return result;
 }
 
-const preReleaseRegexp = /([0-9]*)\.([0-9]*)\.([0-9]*)([-+].*)/;
+const preReleaseRegexp = /([0-9]*)\.([0-9]*)\.([0-9]*)([-+]alpha.*)/;
 
 /**
  * Check if a version number is a pre-release Semver version.
