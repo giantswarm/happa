@@ -385,7 +385,7 @@ export function clusterCreate(
       new FlashMessage(
         'Something went wrong while trying to create the cluster.',
         messageType.ERROR,
-        messageTTL.MEDIUM,
+        messageTTL.LONG,
         errorBody
       );
     }
