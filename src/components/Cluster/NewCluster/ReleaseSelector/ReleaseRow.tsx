@@ -20,10 +20,6 @@ const FixedWidthTableButton = styled(TableButton)`
   width: 100px;
 `;
 
-const MinWidthCursorPointerCell = styled(CursorPointerCell)`
-  min-width: 120px;
-`;
-
 interface IReleaseRow extends IRelease {
   isSelected: boolean;
 
@@ -76,10 +72,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
             />
           </RUMActionTarget>
         </CursorPointerCell>
-        <MinWidthCursorPointerCell>{version}</MinWidthCursorPointerCell>
-        <MinWidthCursorPointerCell>
-          {relativeDate(timestamp)}
-        </MinWidthCursorPointerCell>
+        <CursorPointerCell>{version}</CursorPointerCell>
+        <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
         <CursorPointerCell>
           <KubernetesVersionLabel
             version={kubernetesVersion}
