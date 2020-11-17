@@ -46,8 +46,8 @@ class UpgradeClusterModal extends React.Component {
     return (
       <p>
         As this cluster has one master node, the{' '}
-        <b>Kubernetes API will be unavailable for a few minutes</b> during the
-        upgrade.
+        <strong>Kubernetes API will be unavailable for a few minutes</strong>{' '}
+        during the upgrade.
       </p>
     );
   }
@@ -206,7 +206,7 @@ class UpgradeClusterModal extends React.Component {
               <i className='fa fa-open-in-new' />
             </a>{' '}
             to ensure the cluster and workloads are{' '}
-            <b>prepared for an upgrade</b>.
+            <strong>prepared for an upgrade</strong>.
           </p>
           {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
         </BootstrapModal.Body>
