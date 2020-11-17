@@ -327,7 +327,6 @@ export function getClusterLatestCondition(
  */
 export function isClusterCreating(cluster: Cluster): boolean {
   const latestCondition = getClusterLatestCondition(cluster);
-  if (!latestCondition) return true;
 
   return latestCondition === 'Creating';
 }

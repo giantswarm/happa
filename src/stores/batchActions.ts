@@ -123,6 +123,7 @@ export function batchedRefreshClusters(): ThunkAction<
           filterBySelectedOrganization: true,
           withLoadingFlags: false,
           initializeNodePools: false,
+          refreshPaths: true,
         })
       );
       dispatch(
@@ -237,16 +238,20 @@ export function batchedClusterDetailView(
 }
 
 export function batchedRefreshClusterDetailView(
-  clusterId: string,
-  isV5Cluster: boolean
+  clusterId: string
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       const cluster = await dispatch(
         clusterLoadDetails(clusterId, {
           withLoadingFlags: false,
           initializeNodePools: false,
+          refreshPath: true,
         })
+      );
+
+      const isV5Cluster = getState().entities.clusters.v5Clusters.includes(
+        clusterId
       );
       if (isV5Cluster) {
         await dispatch(
