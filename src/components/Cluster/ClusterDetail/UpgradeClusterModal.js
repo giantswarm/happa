@@ -25,16 +25,31 @@ const ChangeVersionButton = styled(Button)`
   margin-left: ${({ theme }) => 2 * theme.spacingPx}px;
 `;
 
+const DetailsHeadline = styled.p`
+  margin-top: 10px;
+`;
+
 class UpgradeClusterModal extends React.Component {
   static getMasterNodesInfo(cluster) {
     if (
       cluster.capabilities.supportsHAMasters &&
       cluster.master_nodes?.high_availability
     ) {
-      return 'The master nodes will be terminated one by one. The Kubernetes API may be briefly unavailable during this process due to the etcd leader election process.';
+      return (
+        <p>
+          Since this cluster provides high-availability Kubernetes masters, the
+          Kubernetes API will be available during the upgrade.
+        </p>
+      );
     }
 
-    return 'The master node will be terminated and replaced by a new one. The Kubernetes API will be unavailable during this time.';
+    return (
+      <p>
+        As this cluster has one master node, the{' '}
+        <strong>Kubernetes API will be unavailable for a few minutes</strong>{' '}
+        during the upgrade.
+      </p>
+    );
   }
 
   state = {
@@ -151,9 +166,9 @@ class UpgradeClusterModal extends React.Component {
           })}
         </div>
 
-        <p>
-          <b>Changes</b>
-        </p>
+        <DetailsHeadline>
+          <b>Details</b>
+        </DetailsHeadline>
         <dl>
           {changedComponentNames.map((componentName, index) => {
             return (
@@ -171,27 +186,29 @@ class UpgradeClusterModal extends React.Component {
     );
   };
 
-  aboutUpgradingPage = () => {
+  aboutUpgradingPage = (targetRelease) => {
     return (
       <div>
         <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>About Upgrading</BootstrapModal.Title>
+          <BootstrapModal.Title>
+            Upgrade to v{targetRelease}
+          </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-          <p>Before upgrading please acknowledge the following</p>
-          <ul>
-            <li>
-              Worker nodes will be drained and then terminated one after another
-              to be replaced by new ones.
-            </li>
-            <li>
-              To be able to run all workloads with one worker node missing,
-              please make sure to have enough workers before upgrading.
-            </li>
-            <li>
-              {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
-            </li>
-          </ul>
+          <p>
+            Please read our{' '}
+            <a
+              href='https://docs.giantswarm.io/reference/cluster-upgrades/#checklist'
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              checklist for cluster upgrades&nbsp;
+              <i className='fa fa-open-in-new' />
+            </a>{' '}
+            to ensure the cluster and workloads are{' '}
+            <strong>prepared for an upgrade</strong>.
+          </p>
+          {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
           <Button
@@ -215,7 +232,7 @@ class UpgradeClusterModal extends React.Component {
       <div>
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>
-            Inspect changes from version {this.props.cluster.release_version} to{' '}
+            Changes from v{this.props.cluster.release_version} to v
             {this.props.targetRelease.version}
             {this.props.isAdmin && (
               <ChangeVersionButton
@@ -285,7 +302,7 @@ class UpgradeClusterModal extends React.Component {
   currentPage = () => {
     switch (this.state.page) {
       case Pages.AboutUpgrading:
-        return this.aboutUpgradingPage();
+        return this.aboutUpgradingPage(this.props.targetRelease?.version);
 
       case Pages.InspectChanges:
         return this.inspectChangesPage();

@@ -9,12 +9,11 @@ import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
-import { selectErrorByAction } from 'stores/error/selectors';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
 import Section from 'UI/ClusterCreation/Section';
 import StyledInput from 'UI/ClusterCreation/StyledInput';
-import ErrorFallback from 'UI/ErrorFallback';
 import FlashMessage from 'UI/FlashMessage';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
 
@@ -92,7 +91,6 @@ class CreateRegularCluster extends React.Component {
       max: 3,
       maxValid: true,
     },
-    submitting: false,
     // eslint-disable-next-line react/no-unused-state
     valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
     error: false,
@@ -138,9 +136,7 @@ class CreateRegularCluster extends React.Component {
     });
   };
 
-  createCluster = () => {
-    this.setState({ submitting: true });
-
+  createCluster = async () => {
     let worker = {};
     switch (this.props.provider) {
       case Providers.AWS:
@@ -182,7 +178,7 @@ class CreateRegularCluster extends React.Component {
       workers = [worker];
     }
 
-    this.props.dispatch(
+    await this.props.dispatch(
       batchedClusterCreate({
         availability_zones: this.state.availabilityZonesPicker.value,
         scaling: {
@@ -290,6 +286,7 @@ class CreateRegularCluster extends React.Component {
 
   render() {
     const { provider } = this.props;
+    const { isClusterCreating } = this.state;
 
     const multiAZSelectorProps = CreateRegularCluster.getMultiAZSelectorProps(
       provider,
@@ -371,26 +368,24 @@ class CreateRegularCluster extends React.Component {
         <HorizontalLine />
 
         <FlexRow>
-          <ErrorFallback error={this.props.clusterCreateError}>
-            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                disabled={!this.valid()}
-                loading={this.state.submitting}
-                onClick={this.createCluster}
-                type='submit'
-              >
-                Create Cluster
-              </Button>
-            </RUMActionTarget>
-          </ErrorFallback>
-          {!this.state.submitting && (
+          <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
+            <Button
+              bsSize='large'
+              bsStyle='primary'
+              disabled={!this.valid()}
+              loading={isClusterCreating}
+              onClick={this.createCluster}
+              type='submit'
+            >
+              Create Cluster
+            </Button>
+          </RUMActionTarget>
+          {!isClusterCreating && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
                 bsSize='large'
                 bsStyle='default'
-                loading={this.state.submitting}
+                loading={isClusterCreating}
                 onClick={this.props.closeForm}
                 type='button'
               >
@@ -431,8 +426,8 @@ CreateRegularCluster.propTypes = {
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
   closeForm: PropTypes.func,
+  isClusterCreating: PropTypes.bool,
   clusterCreationStats: PropTypes.object,
-  clusterCreateError: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -467,7 +462,7 @@ function mapStateToProps(state) {
 
   return {
     ...propsToPush,
-    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
+    isClusterCreating: selectLoadingFlagByAction(state, CLUSTER_CREATE_REQUEST),
   };
 }
 
