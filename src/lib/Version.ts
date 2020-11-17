@@ -105,11 +105,13 @@ export class VersionImpl implements IVersion {
 
   protected parseFromString(from: string): void {
     const groups = semverRegexp.exec(from)?.groups;
-    if (!groups) return;
+    if (!groups || !groups.major || !groups.minor || !groups.patch) {
+      throw new Error('Invalid version provided.');
+    }
 
-    this.major = groups.major ?? '0';
-    this.minor = groups.minor ?? '0';
-    this.patch = groups.patch ?? '0';
+    this.major = groups.major;
+    this.minor = groups.minor;
+    this.patch = groups.patch;
     this.preRelease = groups.prerelease ?? '';
     this.metadata = groups.metadata ?? '';
   }
