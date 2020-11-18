@@ -11,7 +11,6 @@ const StyledTableDataCell = styled.td`
 const OrganizationListRow = ({
   clusters,
   organization,
-  onDelete,
   getViewURL,
   provider,
 }) => {
@@ -32,7 +31,7 @@ const OrganizationListRow = ({
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
       </StyledTableDataCell>
 
-      {provider !== Providers.KVM && (
+      {(provider === Providers.AWS || provider === Providers.AZURE) && (
         <StyledTableDataCell centered={true}>
           {hasCredentials && (
             <Link to={organizationDetailURL}>
@@ -41,25 +40,12 @@ const OrganizationListRow = ({
           )}
         </StyledTableDataCell>
       )}
-
-      <StyledTableDataCell>
-        <div className='contextual'>
-          <i
-            className='fa fa-delete clickable'
-            data-orgid={orgID}
-            onClick={onDelete}
-            title='Delete this organization'
-            data-testid={`${orgID}-delete`}
-          />
-        </div>
-      </StyledTableDataCell>
     </tr>
   );
 };
 
 OrganizationListRow.propTypes = {
   getViewURL: PropTypes.func.isRequired,
-  onDelete: PropTypes.func,
   organization: PropTypes.object,
   clusters: PropTypes.array,
   provider: PropTypes.string,

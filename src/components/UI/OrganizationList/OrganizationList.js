@@ -19,13 +19,11 @@ const OrganizationList = ({ provider, ...props }) => {
           <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
           <StyledTableHeader centered={true}>Members</StyledTableHeader>
 
-          {provider !== Providers.KVM && (
+          {(provider === Providers.AWS || provider === Providers.AZURE) && (
             <StyledTableHeader centered={true}>
               Provider Credentials
             </StyledTableHeader>
           )}
-
-          <StyledTableHeader />
         </tr>
       </thead>
       <tbody>
@@ -39,7 +37,6 @@ const OrganizationList = ({ provider, ...props }) => {
                 props.clusters
               )}
               getViewURL={props.getViewURL}
-              onDelete={props.deleteOrganization}
               organization={organization}
               provider={provider}
             />
@@ -52,7 +49,6 @@ const OrganizationList = ({ provider, ...props }) => {
 
 OrganizationList.propTypes = {
   getViewURL: PropTypes.func.isRequired,
-  deleteOrganization: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
   provider: PropTypes.string,

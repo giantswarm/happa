@@ -91,7 +91,6 @@ describe('', () => {
       expect(getByTestId(`${orgResponse.id}-clusters`).textContent).toBe(
         clusters
       );
-      expect(getByTestId(`${orgResponse.id}-delete`)).toBeInTheDocument();
       expect(getByText(/create new organization/i)).toBeInTheDocument();
     });
 

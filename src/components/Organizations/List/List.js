@@ -5,10 +5,7 @@ import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import {
-  organizationCreate,
-  organizationDelete,
-} from 'stores/organization/actions';
+import { organizationCreate } from 'stores/organization/actions';
 import EmptyStateDisplay from 'UI/EmptyStateDisplay';
 import OrganizationList from 'UI/OrganizationList/OrganizationList';
 
@@ -20,11 +17,6 @@ class OrganizationListWrapper extends React.Component {
     );
 
     return organizationDetailPath;
-  };
-
-  deleteOrganization = (e) => {
-    const orgID = e.currentTarget.getAttribute('data-orgID');
-    this.props.dispatch(organizationDelete(orgID));
   };
 
   createOrganization = () => {
@@ -47,7 +39,6 @@ class OrganizationListWrapper extends React.Component {
               provider={this.props.provider}
               clusters={this.props.clusters}
               getViewURL={this.getOrganizationURL}
-              deleteOrganization={this.deleteOrganization}
               organizations={this.props.organizations}
             />
           </EmptyStateDisplay>
