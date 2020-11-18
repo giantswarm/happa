@@ -26,6 +26,11 @@ const MembersTable = styled.div`
   }
 `;
 
+const Disclaimer = styled.p`
+  margin: 0 0 20px;
+  line-height: 1.2;
+`;
+
 const clusterTableDefaultSorting = [
   {
     dataField: 'id',
@@ -58,6 +63,10 @@ class OrganizationDetail extends React.Component {
       this.props.organization.id,
       email
     );
+  };
+
+  deleteOrganization = () => {
+    this.props.actions.organizationDelete(this.props.organization.id);
   };
 
   // Provides the configuraiton for the clusters table
@@ -196,6 +205,16 @@ class OrganizationDetail extends React.Component {
             <Credentials organizationName={organization.id} />
           </Section>
         )}
+
+        <Section title='Delete This Organization' flat>
+          <Disclaimer>
+            All information related to this organization will be deleted. There
+            is no way to undo this action.
+          </Disclaimer>
+          <Button bsStyle='danger' onClick={this.deleteOrganization}>
+            <i className='fa fa-delete' /> Delete Organization
+          </Button>
+        </Section>
       </DocumentTitle>
     );
   }
