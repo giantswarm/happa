@@ -41,6 +41,14 @@ const memberTableDefaultSorting = [
 ];
 
 class OrganizationDetail extends React.Component {
+  static supportsBYOC(provider) {
+    if (provider === Providers.AWS || provider === Providers.AZURE) {
+      return true;
+    }
+
+    return false;
+  }
+
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
   };
@@ -50,16 +58,6 @@ class OrganizationDetail extends React.Component {
       this.props.organization.id,
       email
     );
-  };
-
-  // determine whether the component should deal with BYOC credentials
-  // (not relevant on KVM)
-  canCredentials = (provider) => {
-    if (provider === Providers.AWS || provider === Providers.AZURE) {
-      return true;
-    }
-
-    return false;
   };
 
   // Provides the configuraiton for the clusters table
@@ -139,79 +137,67 @@ class OrganizationDetail extends React.Component {
   };
 
   render() {
-    let credentialsSection = null;
+    const { clusters, organization } = this.props;
+    if (!organization) return null;
+
+    const { provider } = this.props.app.info.general;
+    const supportsBYOC = OrganizationDetail.supportsBYOC(provider);
+
     const newClusterPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.New,
-      {
-        orgId: this.props.organization.id,
-      }
+      { orgId: organization.id }
     );
 
-    if (this.canCredentials(this.props.app.info.general.provider)) {
-      credentialsSection = (
-        <Section title='Provider credentials'>
-          <Credentials organizationName={this.props.match.params.orgId} />
+    return (
+      <DocumentTitle title={`Organization Details | ${organization.id}`}>
+        <h1>Organization: {organization.id}</h1>
+        <Section title='Clusters'>
+          {clusters.length === 0 ? (
+            <p>This organization doesn&apos;t have any clusters.</p>
+          ) : (
+            <BootstrapTable
+              bordered={false}
+              columns={this.getClusterTableColumnsConfig()}
+              data={clusters}
+              defaultSortDirection='asc'
+              defaultSorted={clusterTableDefaultSorting}
+              keyField='id'
+            />
+          )}
+          <Link to={newClusterPath}>
+            <Button bsStyle='default'>
+              <i className='fa fa-add-circle' /> Create Cluster
+            </Button>
+          </Link>
         </Section>
-      );
-    }
 
-    if (this.props.organization) {
-      return (
-        <DocumentTitle
-          title={`Organization Details | ${this.props.organization.id}`}
-        >
-          <>
-            <h1>Organization: {this.props.match.params.orgId}</h1>
-            <Section title='Clusters'>
-              <>
-                {this.props.clusters.length === 0 ? (
-                  <p>This organization doesn&apos;t have any clusters.</p>
-                ) : (
-                  <BootstrapTable
-                    bordered={false}
-                    columns={this.getClusterTableColumnsConfig()}
-                    data={this.props.clusters}
-                    defaultSortDirection='asc'
-                    defaultSorted={clusterTableDefaultSorting}
-                    keyField='id'
-                  />
-                )}
-                <Link to={newClusterPath}>
-                  <Button bsStyle='default'>
-                    <i className='fa fa-add-circle' /> Create Cluster
-                  </Button>
-                </Link>
-              </>
-            </Section>
+        <Section title='Members'>
+          <MembersTable>
+            {organization.members.length === 0 ? (
+              <p>This organization has no members</p>
+            ) : (
+              <BootstrapTable
+                bordered={false}
+                columns={this.getMemberTableColumnsConfig()}
+                data={this.props.membersForTable}
+                defaultSortDirection='asc'
+                defaultSorted={memberTableDefaultSorting}
+                keyField='email'
+              />
+            )}
+            <Button bsStyle='default' onClick={this.addMember}>
+              <i className='fa fa-add-circle' /> Add Member
+            </Button>
+          </MembersTable>
+        </Section>
 
-            <Section title='Members'>
-              <MembersTable>
-                {this.props.organization.members.length === 0 ? (
-                  <p>This organization has no members</p>
-                ) : (
-                  <BootstrapTable
-                    bordered={false}
-                    columns={this.getMemberTableColumnsConfig()}
-                    data={this.props.membersForTable}
-                    defaultSortDirection='asc'
-                    defaultSorted={memberTableDefaultSorting}
-                    keyField='email'
-                  />
-                )}
-                <Button bsStyle='default' onClick={this.addMember}>
-                  <i className='fa fa-add-circle' /> Add Member
-                </Button>
-              </MembersTable>
-            </Section>
-
-            {credentialsSection}
-          </>
-        </DocumentTitle>
-      );
-    }
-
-    // 404 or fetching
-    return <h1>404 or fetching</h1>;
+        {supportsBYOC && (
+          <Section title='Provider credentials'>
+            <Credentials organizationName={organization.id} />
+          </Section>
+        )}
+      </DocumentTitle>
+    );
   }
 }
 
@@ -219,7 +205,6 @@ OrganizationDetail.propTypes = {
   actions: PropTypes.object,
   clusters: PropTypes.array,
   organization: PropTypes.object,
-  match: PropTypes.object,
   app: PropTypes.object,
   membersForTable: PropTypes.array,
 };
