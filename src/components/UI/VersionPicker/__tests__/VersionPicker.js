@@ -47,29 +47,6 @@ it('lets me click a toggle switch to show test versions', () => {
   expect(within(menu).getByText('1.0.4-test')).toBeInTheDocument();
 });
 
-it('the selectedVersion gets highlighted', () => {
-  const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
-    selectedVersion: '1.0.5',
-    versions: [
-      { version: '1.0.5', test: false },
-      { version: '1.0.4-test', test: true },
-      { version: '1.0.3', test: false },
-    ],
-  });
-
-  fireEvent.click(getByText('1.0.5'));
-
-  const menu = getByTestId('menu');
-
-  expect(within(menu).getByText('1.0.5').classList.contains('selected')).toBe(
-    true
-  );
-
-  expect(within(menu).getByText('1.0.3').classList.contains('selected')).toBe(
-    false
-  );
-});
-
 it('clicking a version calls the onChange prop', () => {
   const mockCallback = jest.fn((x) => `Got version: ${x}`);
 
