@@ -74,14 +74,8 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   let tooltip = '';
   switch (true) {
     case typeof cluster === 'undefined':
-      return null;
-
     case typeof cluster.delete_date !== 'undefined':
-      return null;
-
     case cluster.delete_date === null:
-      return null;
-
     case isClusterDeleting(cluster):
       return null;
 
@@ -90,6 +84,14 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       message = 'Upgrade Available';
       isButtonDisabled = typeof onClick === 'undefined';
       tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
+      break;
+
+    case isClusterCreating(cluster):
+      color = theme.colors.gray;
+      iconClassName = 'fa fa-change-in-progress';
+      message = 'Cluster creating…';
+      tooltip =
+        'The cluster is currently creating. This step usually takes about 30 minutes.';
       break;
 
     case isClusterUpdating(cluster):
@@ -103,14 +105,6 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       iconClassName = 'fa fa-version-upgrade';
       message = 'Awaiting upgrade…';
       tooltip = 'The cluster is about to start an upgrade.';
-      break;
-
-    case isClusterCreating(cluster):
-      color = theme.colors.gray;
-      iconClassName = 'fa fa-change-in-progress';
-      message = 'Cluster creating…';
-      tooltip =
-        'The cluster is currently creating. This step usually takes about 30 minutes.';
       break;
 
     default:
