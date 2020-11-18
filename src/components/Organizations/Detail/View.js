@@ -54,6 +54,10 @@ class OrganizationDetail extends React.Component {
     return false;
   }
 
+  componentDidMount() {
+    this.props.actions.organizationCredentialsLoad(this.props.organization.id);
+  }
+
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
   };
@@ -145,12 +149,50 @@ class OrganizationDetail extends React.Component {
     ];
   };
 
+  supportsDeletion() {
+    const { clusters, credentials, loadingCredentials } = this.props;
+    const { provider } = this.props.app.info.general;
+    const supportsBYOC = OrganizationDetail.supportsBYOC(provider);
+
+    const result = {
+      status: true,
+      message:
+        'All information related to this organization will be deleted. There is no way to undo this action.',
+    };
+
+    if (clusters.length > 0) {
+      result.status = false;
+      result.message =
+        'This organization cannot be deleted because it contains clusters. Please delete all clusters in order to be able to delete the organization.';
+    }
+
+    if (loadingCredentials) {
+      return false;
+    }
+
+    if (supportsBYOC && credentials.length > 0) {
+      result.status = false;
+      result.message =
+        'This organization cannot be deleted because it has BYOC credentials. Please remove them in order to be able to delete the organization.';
+    }
+
+    return result;
+  }
+
   render() {
-    const { clusters, organization } = this.props;
+    const {
+      clusters,
+      organization,
+      credentials,
+      showCredentialsForm,
+      loadingCredentials,
+    } = this.props;
     if (!organization) return null;
 
     const { provider } = this.props.app.info.general;
     const supportsBYOC = OrganizationDetail.supportsBYOC(provider);
+
+    const supportsDeletion = this.supportsDeletion();
 
     const newClusterPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.New,
@@ -202,16 +244,23 @@ class OrganizationDetail extends React.Component {
 
         {supportsBYOC && (
           <Section title='Provider credentials'>
-            <Credentials organizationName={organization.id} />
+            <Credentials
+              organizationName={organization.id}
+              credentials={credentials}
+              showCredentialsForm={showCredentialsForm}
+              provider={provider}
+              loadingCredentials={loadingCredentials}
+            />
           </Section>
         )}
 
         <Section title='Delete This Organization' flat>
-          <Disclaimer>
-            All information related to this organization will be deleted. There
-            is no way to undo this action.
-          </Disclaimer>
-          <Button bsStyle='danger' onClick={this.deleteOrganization}>
+          <Disclaimer>{supportsDeletion.message}</Disclaimer>
+          <Button
+            bsStyle='danger'
+            onClick={this.deleteOrganization}
+            disabled={!supportsDeletion.status}
+          >
             <i className='fa fa-delete' /> Delete Organization
           </Button>
         </Section>
@@ -224,6 +273,9 @@ OrganizationDetail.propTypes = {
   actions: PropTypes.object,
   clusters: PropTypes.array,
   organization: PropTypes.object,
+  credentials: PropTypes.array,
+  loadingCredentials: PropTypes.bool,
+  showCredentialsForm: PropTypes.bool,
   app: PropTypes.object,
   membersForTable: PropTypes.array,
 };

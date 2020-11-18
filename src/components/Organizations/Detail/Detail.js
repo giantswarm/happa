@@ -7,6 +7,8 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 
 import DetailView from './View';
@@ -62,6 +64,9 @@ DetailIndex.propTypes = {
   clusters: PropTypes.array,
   app: PropTypes.object,
   membersForTable: PropTypes.array,
+  credentials: PropTypes.array,
+  loadingCredentials: PropTypes.bool,
+  showCredentialsForm: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -86,6 +91,12 @@ function mapStateToProps(state, ownProps) {
     membersForTable,
     app: state.main,
     clusters,
+    credentials: state.entities.organizations.credentials.items,
+    loadingCredentials: selectLoadingFlagByAction(
+      state,
+      ORGANIZATION_CREDENTIALS_LOAD_REQUEST
+    ),
+    showCredentialsForm: state.entities.organizations.credentials.showForm,
   };
 }
 

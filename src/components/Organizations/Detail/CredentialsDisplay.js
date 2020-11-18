@@ -6,7 +6,7 @@ import AWSAccountID from 'UI/AWSAccountID';
 import Button from 'UI/Button';
 
 const CredentialsDisplay = (props) => {
-  if (props.credentials.isFetching) {
+  if (props.loading) {
     return (
       <span>
         <img className='loader' height='20px' src={spinner} width='20px' />{' '}
@@ -14,7 +14,7 @@ const CredentialsDisplay = (props) => {
       </span>
     );
   }
-  if (props.credentials.items.length === 0) {
+  if (props.credentials.length === 0) {
     const button = (
       <Button bsStyle='default' className='small' onClick={props.onShowForm}>
         Set Credentials
@@ -50,7 +50,7 @@ const CredentialsDisplay = (props) => {
    */
 
   let providerWarning = null;
-  if (typeof props.credentials.items[0][props.provider] === 'undefined') {
+  if (typeof props.credentials[0][props.provider] === 'undefined') {
     providerWarning = (
       <p>
         Credentials details not matching expectations for provider{' '}
@@ -60,33 +60,33 @@ const CredentialsDisplay = (props) => {
   }
 
   // AWS credential
-  if (typeof props.credentials.items[0].aws !== 'undefined') {
+  if (typeof props.credentials[0].aws !== 'undefined') {
     return (
       <div>
         {providerWarning}
         <table
           className='table resource-details'
-          id={`credential-${props.credentials.items[0].id}`}
+          id={`credential-${props.credentials[0].id}`}
         >
           <tbody>
             <tr key='account_id'>
               <td>AWS account ID</td>
               <td className='value code'>
                 <AWSAccountID
-                  roleARN={props.credentials.items[0].aws.roles.awsoperator}
+                  roleARN={props.credentials[0].aws.roles.awsoperator}
                 />
               </td>
             </tr>
             <tr key='admin_role'>
               <td>Admin role ARN</td>
               <td className='value code'>
-                {props.credentials.items[0].aws.roles.admin}
+                {props.credentials[0].aws.roles.admin}
               </td>
             </tr>
             <tr key='awsoperator_role'>
               <td>AWS Operator role ARN</td>
               <td className='value code'>
-                {props.credentials.items[0].aws.roles.awsoperator}
+                {props.credentials[0].aws.roles.awsoperator}
               </td>
             </tr>
           </tbody>
@@ -95,7 +95,7 @@ const CredentialsDisplay = (props) => {
     );
 
     // Azure credential
-  } else if (typeof props.credentials.items[0].azure !== 'undefined') {
+  } else if (typeof props.credentials[0].azure !== 'undefined') {
     return (
       <div>
         {providerWarning}
@@ -104,19 +104,19 @@ const CredentialsDisplay = (props) => {
             <tr key='account_id'>
               <td>Azure subscription ID</td>
               <td className='value code'>
-                {props.credentials.items[0].azure.credential.subscription_id}
+                {props.credentials[0].azure.credential.subscription_id}
               </td>
             </tr>
             <tr key='awsoperator_role'>
               <td>Azure tenant ID</td>
               <td className='value code'>
-                {props.credentials.items[0].azure.credential.tenant_id}
+                {props.credentials[0].azure.credential.tenant_id}
               </td>
             </tr>
             <tr key='admin_role'>
               <td>Service principal client ID</td>
               <td className='value code'>
-                {props.credentials.items[0].azure.credential.client_id}
+                {props.credentials[0].azure.credential.client_id}
               </td>
             </tr>
           </tbody>
@@ -129,7 +129,8 @@ const CredentialsDisplay = (props) => {
 };
 
 CredentialsDisplay.propTypes = {
-  credentials: PropTypes.object,
+  credentials: PropTypes.array,
+  loading: PropTypes.bool,
   provider: PropTypes.string,
   onShowForm: PropTypes.func,
 };
