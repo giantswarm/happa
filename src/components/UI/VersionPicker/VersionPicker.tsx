@@ -1,7 +1,14 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
+import Truncated from 'UI/Truncated';
+
+import {
+  checkIfContainsTestVersions,
+  filterVersions,
+  IVersion,
+} from './VersionPickerUtils';
 
 const INNER_PADDING = '5px 15px';
 const WIDTH = '250px';
@@ -92,20 +99,11 @@ const VersionPickerItem = styled.li`
   cursor: pointer;
 `;
 
-const VersionPickerLink = styled(Link)`
+const VersionPickerLink = styled(Link)<{ selected: boolean }>`
   padding: 10px 15px;
-  &.selected {
-    font-weight: bold;
-  }
+
+  font-weight: ${({ selected }) => selected && 'bold'};
 `;
-
-interface IVersion {
-  // The version
-  version: string;
-
-  // Whether or not this version is a test version.
-  test: boolean;
-}
 
 interface IVersionPickerProps {
   // An array of versions to pick from.
@@ -133,20 +131,35 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
     false
   );
 
+  const containsTestVersions = useMemo(
+    () => checkIfContainsTestVersions(versions),
+    [versions]
+  );
+
+  const filteredVersions = useMemo(
+    () => filterVersions(includeTestVersions, versions),
+    [includeTestVersions, versions]
+  );
+
   const handleSetIncludeTestVersions = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setIncludeTestVersions(event.target.checked);
   };
 
-  const handleOnChange = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleOnChange = (version: string) => (
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => {
     event.preventDefault();
-    if (onChange) {
-      onChange(event.currentTarget.dataset.version);
-    }
+
+    onChange?.(version);
   };
 
-  const toggleIncludeTestVersions = () => {
+  const toggleIncludeTestVersions = (
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    event.preventDefault();
+
     setIncludeTestVersions(!includeTestVersions);
   };
 
@@ -168,7 +181,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
               onKeyDown={onKeyDownHandler}
               type='button'
             >
-              {selectedVersion}
+              <Truncated as='span'>{selectedVersion as string}</Truncated>
               <span className='caret' />
             </VersionPickerDropdownTrigger>
             {isOpen && (
@@ -176,7 +189,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                 <Header>
                   <h5>Switch Chart Version</h5>
 
-                  {versions?.some((v) => v.test) && (
+                  {containsTestVersions && (
                     <label>
                       <input
                         name='includeTestVersions'
@@ -184,13 +197,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                         checked={includeTestVersions}
                         onChange={handleSetIncludeTestVersions}
                       />
-                      <a
-                        href='#'
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleIncludeTestVersions();
-                        }}
-                      >
+                      <a href='#' onClick={toggleIncludeTestVersions}>
                         Include test versions
                       </a>
                     </label>
@@ -199,31 +206,20 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
 
                 <Body role='menu' data-testid='menu'>
                   <VersionPickerList>
-                    {versions
-                      ?.filter((version) => {
-                        return includeTestVersions ? true : !version.test;
-                      })
-                      .map((version) => {
-                        return (
-                          <VersionPickerItem key={version.version}>
-                            <VersionPickerLink
-                              className={
-                                version.version === selectedVersion
-                                  ? 'selected'
-                                  : ''
-                              }
-                              href='#'
-                              onClick={(e) => {
-                                handleOnChange(e);
-                              }}
-                              data-version={version.version}
-                              role='menuitem'
-                            >
-                              {version.version}
-                            </VersionPickerLink>
-                          </VersionPickerItem>
-                        );
-                      })}
+                    {filteredVersions.map((version) => {
+                      return (
+                        <VersionPickerItem key={version.version}>
+                          <VersionPickerLink
+                            selected={version.version === selectedVersion}
+                            href='#'
+                            onClick={handleOnChange(version.version)}
+                            role='menuitem'
+                          >
+                            <Truncated as='span'>{version.version}</Truncated>
+                          </VersionPickerLink>
+                        </VersionPickerItem>
+                      );
+                    })}
                   </VersionPickerList>
                 </Body>
               </Menu>
