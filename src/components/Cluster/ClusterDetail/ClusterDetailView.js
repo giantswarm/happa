@@ -144,14 +144,14 @@ class ClusterDetailView extends React.Component {
   };
 
   refreshClusterData = () => {
-    const { cluster, dispatch, isV5Cluster } = this.props;
+    const { cluster, dispatch } = this.props;
 
     if (typeof cluster === 'undefined' || cluster.delete_date) {
       this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
     if (cluster) {
-      dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
+      dispatch(batchedRefreshClusterDetailView(cluster.id));
     }
   };
 
