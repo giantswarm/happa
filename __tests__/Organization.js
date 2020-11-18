@@ -306,81 +306,63 @@ describe('Organization deletion', () => {
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
-
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
       v4AWSClusterStatusResponse
     );
 
-    const organizationToDeleteId = generateRandomString();
-
+    const organizationID = generateRandomString();
     getMockCall('/v4/organizations/', [
       ...orgsResponse,
-      { id: organizationToDeleteId },
+      { id: organizationID },
     ]);
-
     getMockCall('/v4/organizations/', orgsResponse);
-
-    getMockCall(`/v4/organizations/${organizationToDeleteId}/`, {
-      id: organizationToDeleteId,
+    getMockCall(`/v4/organizations/${organizationID}/`, {
+      id: organizationID,
       members: [],
       credentials: [],
     });
-
-    getMockCall(`/v4/organizations/${organizationToDeleteId}/credentials/`);
+    getMockCall(`/v4/organizations/${organizationID}/credentials/`);
 
     nock(API_ENDPOINT)
-      .intercept(`/v4/organizations/${organizationToDeleteId}/`, 'DELETE')
+      .intercept(`/v4/organizations/${organizationID}/`, 'DELETE')
       .reply(StatusCodes.Ok, {
         code: 'RESOURCE_DELETED',
-        message: `The organization with ID \`${organizationToDeleteId}\` has been deleted.`,
+        message: `The organization with ID '${organizationID}' has been deleted.`,
       });
 
-    const {
-      getByText,
-      findByText,
-      findByTestId,
-      getByTestId,
-      queryByTestId,
-    } = renderRouteWithStore(OrganizationsRoutes.Home);
-
-    const expectedElement = await findByTestId(
-      `${organizationToDeleteId}-name`
+    const organizationDetailsPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      { orgId: organizationID }
     );
-    expect(expectedElement).toBeInTheDocument();
+    const { findByText, getAllByText, findAllByText } = renderRouteWithStore(
+      organizationDetailsPath
+    );
 
-    fireEvent.click(getByTestId(`${organizationToDeleteId}-delete`));
+    let deleteButton = await findByText('Delete Organization');
+    fireEvent.click(deleteButton);
 
-    expect(
-      await findByText(
-        (_, element) =>
-          element.textContent ===
-          `Are you sure you want to delete ${organizationToDeleteId}?`
-      )
-    ).toBeInTheDocument();
-    expect(getByText('There is no undo')).toBeInTheDocument();
-
-    fireEvent.click(getByText('Delete Organization'));
-
-    expect(
-      await findByText(
-        (_, element) =>
-          element.innerHTML ===
-          `Organization <code>${organizationToDeleteId}</code> deleted`
-      )
-    ).toBeInTheDocument();
-
-    expect(await findByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(
-        queryByTestId(`${organizationToDeleteId}-name`)
-      ).not.toBeInTheDocument();
+    const modalTitle = await findByText((_, element) => {
+      return (
+        element.textContent ===
+        `Are you sure you want to delete ${organizationID}?`
+      );
     });
+    expect(modalTitle).toBeInTheDocument();
+    expect(modalTitle.textContent.includes(organizationID)).toBeTruthy();
 
-    await waitFor(() => {
-      expect(nock.isDone()).toBe(true);
+    deleteButton = getAllByText('Delete Organization')[1];
+    fireEvent.click(deleteButton);
+
+    const flashMessages = await findAllByText((_, element) => {
+      return element.textContent === `Organization ${organizationID} deleted`;
     });
+    for (const message of flashMessages) {
+      expect(message).toBeInTheDocument();
+    }
+
+    // Was redirected to the organizations home.
+    expect(await findByText('Organizations')).toBeInTheDocument();
   });
 });
