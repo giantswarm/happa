@@ -29,13 +29,12 @@ export function getReleaseURL(version: string): string {
 }
 
 export function getVersionTooltipMessage(
-  currentVersion: string,
-  newVersion: string | null,
+  isUpdateReady: boolean,
   isUpdating: boolean
 ): string {
   let updateMessage: string = 'Using latest version.';
 
-  if (hasUpdateReady(currentVersion, newVersion)) {
+  if (isUpdateReady) {
     updateMessage = 'Update available!';
   }
 
@@ -65,8 +64,11 @@ export function getUpdateButtonMessage(
 
 export function hasUpdateReady(
   currentVersion: string,
-  newVersion: string | null
+  newVersion: string | null,
+  isLoggedIn: boolean
 ): boolean {
+  if (!isLoggedIn) return false;
+
   return newVersion !== null && currentVersion !== newVersion;
 }
 
