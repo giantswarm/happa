@@ -41,13 +41,18 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
     false
   );
 
-  const tooltipMessage: string = getVersionTooltipMessage(
+  const releaseURL: string = getReleaseURL(currentVersion);
+  const isLoggedIn: boolean =
+    useSelector<IState>((state) => state.main.loggedInUser) !== null;
+  const isUpdateReady: boolean = hasUpdateReady(
     currentVersion,
     newVersion,
+    isLoggedIn
+  );
+  const tooltipMessage: string = getVersionTooltipMessage(
+    isUpdateReady,
     Boolean(isUpdating)
   );
-  const releaseURL: string = getReleaseURL(currentVersion);
-  const isUpdateReady: boolean = hasUpdateReady(currentVersion, newVersion);
 
   const handleUpdate = useCallback(() => {
     dispatch(metadataActions.executeUpdate());
