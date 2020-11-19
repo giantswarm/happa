@@ -46,8 +46,8 @@ export class ReleaseHelper {
   /**
    * Get the next release version that the current version can upgrade to.
    */
-  public getNextVersion(): string | null {
-    return this.versionsForUpgrade[0]?.toString() ?? null;
+  public getNextVersion(): IVersion | null {
+    return this.versionsForUpgrade[0] ?? null;
   }
 
   /**
@@ -92,8 +92,8 @@ export class ReleaseHelper {
   /**
    * Get all the versions that the current version can upgrade to.
    */
-  public getSupportedUpgradeVersions(): string[] {
-    return this.versionsForUpgrade.map((v) => v.toString());
+  public getSupportedUpgradeVersions(): IVersion[] {
+    return this.versionsForUpgrade.slice();
   }
 
   protected computeSupportedUpgradeVersions(): void {

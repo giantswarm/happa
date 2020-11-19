@@ -97,7 +97,7 @@ describe('ReleaseHelper', () => {
         isAdmin,
       });
 
-      expect(helper.getNextVersion()).toBe(expected);
+      expect(helper.getNextVersion()?.toString() ?? null).toBe(expected);
     }
   );
 
@@ -134,7 +134,8 @@ describe('ReleaseHelper', () => {
         isAdmin,
       });
 
-      expect(helper.getSupportedUpgradeVersions()).toStrictEqual(expected);
+      const supportedUpgradeVersions = helper.getSupportedUpgradeVersions().map(v => v.toString());
+      expect(supportedUpgradeVersions).toStrictEqual(expected);
     }
   );
 });
