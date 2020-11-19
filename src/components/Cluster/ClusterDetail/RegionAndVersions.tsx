@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
-import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal';
+import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal/ReleaseDetailsModal';
 import PropTypes from 'prop-types';
 import React, { FC, RefObject, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -86,7 +86,7 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
         <ClusterStatus clusterId={clusterId} onClick={showUpgradeModal} />
       )}
       {release && (
-        <ReleaseDetailsModal ref={releaseDetailsModal} releases={[release]} />
+        <ReleaseDetailsModal ref={releaseDetailsModal} release={release} />
       )}
     </>
   );
