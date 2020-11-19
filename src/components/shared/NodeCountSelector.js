@@ -5,7 +5,7 @@ import NumberPicker from 'UI/NumberPicker';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
 
 const DEFAULT_VALUE_CONSTRAINTS = {
-  min: 1,
+  min: 0,
   max: 999,
   stepSize: 1,
 };

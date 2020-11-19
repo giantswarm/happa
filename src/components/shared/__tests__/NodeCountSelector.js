@@ -168,7 +168,7 @@ describe('NodeCountSelector', () => {
 
     expect(onChangeCallback).toBeCalledWith({
       scaling: {
-        min: 1,
+        min: 0,
         minValid: true,
         max: targetMaxValue,
         maxValid: true,
