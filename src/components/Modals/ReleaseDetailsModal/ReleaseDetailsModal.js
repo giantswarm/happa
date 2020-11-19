@@ -2,7 +2,7 @@ import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { Constants } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { getReleaseEOLStatus } from 'stores/releases/utils';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
@@ -10,6 +10,7 @@ import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
 
 import ReleaseDetailsModalSection from './ReleaseDetailsModalSection';
+import ReleaseDetailsModalUpgradeOptions from './ReleaseDetailsModalUpgradeOptions';
 
 class ReleaseDetailsModal extends React.Component {
   static formatComponentVersion(release, component) {
@@ -46,7 +47,7 @@ class ReleaseDetailsModal extends React.Component {
   };
 
   render() {
-    const { release } = this.props;
+    const { release, isAdmin, releases, provider } = this.props;
 
     const changes = groupBy(release.changelog, (item) => {
       return item.component;
@@ -103,6 +104,13 @@ class ReleaseDetailsModal extends React.Component {
                 })}
               </dl>
             </ReleaseDetailsModalSection>
+
+            <ReleaseDetailsModalUpgradeOptions
+              isAdmin={isAdmin}
+              currentVersion={release.version}
+              releases={releases}
+              provider={provider}
+            />
           </div>
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
@@ -115,6 +123,9 @@ class ReleaseDetailsModal extends React.Component {
 
 ReleaseDetailsModal.propTypes = {
   release: PropTypes.object,
+  isAdmin: PropTypes.bool,
+  releases: PropTypes.object,
+  provider: PropTypes.oneOf(Object.values(Providers)),
 };
 
 export default ReleaseDetailsModal;

@@ -6,12 +6,17 @@ import PropTypes from 'prop-types';
 import React, { FC, RefObject, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import { Code, Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 interface IRegionAndVersionsProps {
   clusterId: string;
+  isAdmin: boolean;
+  releases: IReleases;
+  provider: PropertiesOf<typeof Providers>;
   createDate?: string;
   region?: string;
   release?: IRelease;
@@ -44,6 +49,9 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
   region,
   release,
   showUpgradeModal,
+  isAdmin,
+  releases,
+  provider,
 }) => {
   const releaseDetailsModal = useRef<ReleaseDetailsModal | null>(null);
   const onReleaseDetailClick = showReleaseDetailsModal(releaseDetailsModal);
@@ -86,7 +94,13 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
         <ClusterStatus clusterId={clusterId} onClick={showUpgradeModal} />
       )}
       {release && (
-        <ReleaseDetailsModal ref={releaseDetailsModal} release={release} />
+        <ReleaseDetailsModal
+          ref={releaseDetailsModal}
+          release={release}
+          isAdmin={isAdmin}
+          releases={releases}
+          provider={provider}
+        />
       )}
     </>
   );
@@ -94,6 +108,10 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
 
 RegionAndVersions.propTypes = {
   clusterId: PropTypes.string.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+  // @ts-expect-error
+  releases: PropTypes.object.isRequired,
+  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
   createDate: PropTypes.string,
   region: PropTypes.string,
   // @ts-expect-error

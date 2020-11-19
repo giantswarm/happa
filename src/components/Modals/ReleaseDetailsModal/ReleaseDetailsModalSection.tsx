@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 
 const Wrapper = styled.div`
-  margin-top: ${({ theme }) => theme.spacingPx * 3}px;
+  margin-top: ${({ theme }) => theme.spacingPx * 4}px;
 `;
 
 interface IReleaseDetailsModalSectionProps
