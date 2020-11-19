@@ -27,7 +27,7 @@ export class ReleaseHelper {
   }
 
   /**
-   *
+   * A helper class for validating release-specific logic.
    * @param config
    * @throws
    */
@@ -43,10 +43,17 @@ export class ReleaseHelper {
     this.computeSupportedUpgradeVersions();
   }
 
+  /**
+   * Get the next release version that the current version can upgrade to.
+   */
   public getNextVersion(): string | null {
     return this.versionsForUpgrade[0]?.toString() ?? null;
   }
 
+  /**
+   * Check if the current version allows an upgrade to a given version.
+   * @param toVersion
+   */
   public supportsUpgrade(toVersion: string): boolean {
     try {
       const targetVersion = new VersionImpl(toVersion);
@@ -82,6 +89,9 @@ export class ReleaseHelper {
     }
   }
 
+  /**
+   * Get all the versions that the current version can upgrade to.
+   */
   public getSupportedUpgradeVersions(): string[] {
     return this.versionsForUpgrade.map((v) => v.toString());
   }
