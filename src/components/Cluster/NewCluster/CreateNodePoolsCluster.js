@@ -80,9 +80,9 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const MASTER_AZ_MODE_AUTO = "auto";
-const MASTER_AZ_MODE_MANUAL = "manual";
-const MASTER_AZ_MODE_NOT_SPECIFIED = "";
+const MASTER_AZ_MODE_AUTO = 'auto';
+const MASTER_AZ_MODE_MANUAL = 'manual';
+const MASTER_AZ_MODE_NOT_SPECIFIED = '';
 
 const defaultNodePool = () => ({
   data: { name: Constants.DEFAULT_NODEPOOL_NAME },
@@ -164,7 +164,7 @@ class CreateNodePoolsCluster extends Component {
   };
 
   setMasterAZMode = (mode) => {
-    this.setState((state) => ({
+    this.setState(() => ({
       masterAZMode: mode,
     }));
   };
