@@ -136,6 +136,7 @@ export function clustersDetails(opts: {
   filterBySelectedOrganization?: boolean;
   withLoadingFlags?: boolean;
   initializeNodePools?: boolean;
+  refreshPaths?: boolean;
 }): ThunkAction<Promise<void>, IState, void, ClusterActions> {
   return async (dispatch, getState) => {
     if (opts.withLoadingFlags) {
@@ -166,6 +167,7 @@ export function clustersDetails(opts: {
           clusterLoadDetails(id, {
             withLoadingFlags: opts.withLoadingFlags,
             initializeNodePools: opts.initializeNodePools,
+            refreshPath: opts.refreshPaths,
           })
         )
       )
@@ -177,11 +179,15 @@ export function clustersDetails(opts: {
 
 export function clusterLoadDetails(
   clusterId: string,
-  opts: { withLoadingFlags?: boolean; initializeNodePools?: boolean }
+  opts: {
+    withLoadingFlags?: boolean;
+    initializeNodePools?: boolean;
+    refreshPath?: boolean;
+  }
 ): ThunkAction<Promise<Cluster>, IState, void, ClusterActions> {
   return async (dispatch, getState) => {
     const v5Clusters = getState().entities.clusters.v5Clusters;
-    const isV5Cluster = v5Clusters.includes(clusterId);
+    let isV5Cluster = v5Clusters.includes(clusterId);
 
     try {
       if (opts.withLoadingFlags) {
@@ -191,6 +197,12 @@ export function clusterLoadDetails(
         });
       }
 
+      let newPath = '';
+      if (opts.refreshPath) {
+        newPath = await getLatestClusterPath(clusterId);
+        isV5Cluster = newPath.startsWith('/v5');
+      }
+
       const clustersApi = new GiantSwarm.ClustersApi();
       const getClusterDetails = isV5Cluster
         ? clustersApi.getClusterV5.bind(clustersApi)
@@ -198,6 +210,10 @@ export function clusterLoadDetails(
       const cluster = ((await getClusterDetails(
         clusterId
       )) as unknown) as Cluster;
+
+      if (newPath) {
+        cluster.path = newPath;
+      }
 
       // We don't want this action to overwrite nodepools except on initialization.
       if (isV5Cluster && opts.initializeNodePools)
@@ -240,7 +256,8 @@ export function clusterLoadDetails(
       dispatch({
         type: CLUSTER_LOAD_DETAILS_SUCCESS,
         cluster,
-        id: clusterId,
+        id: cluster.id,
+        isV5Cluster,
       });
 
       return (cluster as unknown) as Cluster;
@@ -567,19 +584,32 @@ function reduceClustersIntoMap(
   ) => IClusterCapabilities
 ): IClusterMap {
   return clusters.reduce((agg: IClusterMap, curr: Cluster) => {
-    const newCluster = {
+    const newCluster: Cluster = {
       ...curr,
       lastUpdated: Date.now(),
       keyPairs: curr.keyPairs || [],
       capabilities: makeCapabilities(curr.release_version ?? '', provider),
     };
 
-    if ((curr as V5.ICluster).labels) {
-      (curr as V5.ICluster).labels = filterLabels((curr as V5.ICluster).labels);
+    if ((newCluster as V5.ICluster).labels) {
+      (newCluster as V5.ICluster).labels = filterLabels(
+        (newCluster as V5.ICluster).labels
+      );
     }
 
     agg[newCluster.id] = newCluster;
 
     return agg;
   }, {});
+}
+
+export async function getLatestClusterPath(clusterID: string): Promise<string> {
+  const clustersApi = new GiantSwarm.ClustersApi();
+  const response = await clustersApi.getClusters();
+
+  for (const cluster of response) {
+    if (cluster.id === clusterID) return cluster.path;
+  }
+
+  return '';
 }

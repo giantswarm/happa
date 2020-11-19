@@ -11,6 +11,7 @@ interface IBaseCluster {
   name: string;
   release_version: string;
 
+  path?: string;
   credential_id?: string;
   delete_date?: string | null;
 

@@ -98,6 +98,7 @@ export interface IClusterLoadClusterDetailsSuccessAction {
   type: typeof CLUSTER_LOAD_DETAILS_SUCCESS;
   cluster: Cluster;
   id: string;
+  isV5Cluster: boolean;
 }
 
 export interface IClusterLoadClusterDetailsErrorAction {

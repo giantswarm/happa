@@ -74,10 +74,20 @@ const clusterReducer = produce(
         break;
 
       case CLUSTER_LOAD_DETAILS_SUCCESS: {
-        draft.items[action.cluster.id] = {
-          ...draft.items[action.cluster.id],
+        const clusterID = action.cluster.id;
+
+        draft.items[clusterID] = {
+          ...draft.items[clusterID],
           ...action.cluster,
         };
+
+        if (action.isV5Cluster) {
+          if (!draft.v5Clusters.includes(clusterID)) {
+            draft.v5Clusters.push(clusterID);
+          }
+        } else {
+          draft.v5Clusters = draft.v5Clusters.filter((id) => id !== clusterID);
+        }
 
         draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
           draft.items,
