@@ -55,6 +55,8 @@ class OrganizationDetail extends React.Component {
   }
 
   componentDidMount() {
+    if (!this.props.organization) return;
+
     this.props.actions.organizationCredentialsLoad(this.props.organization.id);
   }
 
@@ -159,21 +161,22 @@ class OrganizationDetail extends React.Component {
       message:
         'All information related to this organization will be deleted. There is no way to undo this action.',
     };
+    switch (true) {
+      case clusters.length > 0:
+        result.status = false;
+        result.message =
+          'This organization cannot be deleted because it contains clusters. Please delete all clusters in order to be able to delete the organization.';
+        break;
 
-    if (clusters.length > 0) {
-      result.status = false;
-      result.message =
-        'This organization cannot be deleted because it contains clusters. Please delete all clusters in order to be able to delete the organization.';
-    }
+      case loadingCredentials:
+        result.status = false;
+        break;
 
-    if (loadingCredentials) {
-      return false;
-    }
-
-    if (supportsBYOC && credentials.length > 0) {
-      result.status = false;
-      result.message =
-        'This organization cannot be deleted because it has BYOC credentials. Please remove them in order to be able to delete the organization.';
+      case supportsBYOC && credentials.length > 0:
+        result.status = false;
+        result.message =
+          'This organization cannot be deleted because it has BYOC credentials. Please remove them in order to be able to delete the organization.';
+        break;
     }
 
     return result;
@@ -224,7 +227,7 @@ class OrganizationDetail extends React.Component {
 
         <Section title='Members'>
           <MembersTable>
-            {organization.members.length === 0 ? (
+            {!organization.members || organization.members.length === 0 ? (
               <p>This organization has no members</p>
             ) : (
               <BootstrapTable
@@ -260,6 +263,7 @@ class OrganizationDetail extends React.Component {
             bsStyle='danger'
             onClick={this.deleteOrganization}
             disabled={!supportsDeletion.status}
+            aria-label='Delete organization'
           >
             <i className='fa fa-delete' /> Delete Organization
           </Button>
