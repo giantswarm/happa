@@ -18,9 +18,9 @@ const ReleaseDetailsModalSection: React.FC<IReleaseDetailsModalSectionProps> = (
   return (
     <Wrapper>
       {title && (
-        <p>
+        <h5>
           <strong>{title}</strong>
-        </p>
+        </h5>
       )}
       {children}
     </Wrapper>
