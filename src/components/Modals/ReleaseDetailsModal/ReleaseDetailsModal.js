@@ -47,7 +47,14 @@ class ReleaseDetailsModal extends React.Component {
   };
 
   render() {
-    const { release, isAdmin, releases, provider } = this.props;
+    const {
+      release,
+      isAdmin,
+      releases,
+      provider,
+      showUpgradeModal,
+      setUpgradeVersion,
+    } = this.props;
 
     const changes = groupBy(release.changelog, (item) => {
       return item.component;
@@ -110,6 +117,9 @@ class ReleaseDetailsModal extends React.Component {
               currentVersion={release.version}
               releases={releases}
               provider={provider}
+              showUpgradeModal={showUpgradeModal}
+              setUpgradeVersion={setUpgradeVersion}
+              closeModal={this.close}
             />
           </div>
         </BootstrapModal.Body>
@@ -126,6 +136,8 @@ ReleaseDetailsModal.propTypes = {
   isAdmin: PropTypes.bool,
   releases: PropTypes.object,
   provider: PropTypes.oneOf(Object.values(Providers)),
+  showUpgradeModal: PropTypes.func,
+  setUpgradeVersion: PropTypes.func,
 };
 
 export default ReleaseDetailsModal;

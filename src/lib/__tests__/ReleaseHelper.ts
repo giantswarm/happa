@@ -134,7 +134,9 @@ describe('ReleaseHelper', () => {
         isAdmin,
       });
 
-      const supportedUpgradeVersions = helper.getSupportedUpgradeVersions().map(v => v.toString());
+      const supportedUpgradeVersions = helper
+        .getSupportedUpgradeVersions()
+        .map((v) => v.toString());
       expect(supportedUpgradeVersions).toStrictEqual(expected);
     }
   );

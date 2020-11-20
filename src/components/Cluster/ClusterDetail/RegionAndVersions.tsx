@@ -17,11 +17,12 @@ interface IRegionAndVersionsProps {
   isAdmin: boolean;
   releases: IReleases;
   provider: PropertiesOf<typeof Providers>;
+  showUpgradeModal: () => void;
+  setUpgradeVersion: (newVersion: string) => void;
   createDate?: string;
   region?: string;
   release?: IRelease;
   k8sVersionEOLDate?: string;
-  showUpgradeModal?(): void;
 }
 
 const ReleaseDetail = styled.span`
@@ -49,6 +50,7 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
   region,
   release,
   showUpgradeModal,
+  setUpgradeVersion,
   isAdmin,
   releases,
   provider,
@@ -90,9 +92,8 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
           </>
         )}
       </div>
-      {showUpgradeModal && (
-        <ClusterStatus clusterId={clusterId} onClick={showUpgradeModal} />
-      )}
+      <ClusterStatus clusterId={clusterId} onClick={showUpgradeModal} />
+
       {release && (
         <ReleaseDetailsModal
           ref={releaseDetailsModal}
@@ -100,6 +101,8 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
           isAdmin={isAdmin}
           releases={releases}
           provider={provider}
+          showUpgradeModal={showUpgradeModal}
+          setUpgradeVersion={setUpgradeVersion}
         />
       )}
     </>
@@ -112,6 +115,8 @@ RegionAndVersions.propTypes = {
   // @ts-expect-error
   releases: PropTypes.object.isRequired,
   provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
+  showUpgradeModal: PropTypes.func.isRequired,
+  setUpgradeVersion: PropTypes.func.isRequired,
   createDate: PropTypes.string,
   region: PropTypes.string,
   // @ts-expect-error
@@ -135,7 +140,6 @@ RegionAndVersions.propTypes = {
     k8sVersionEOLDate: PropTypes.string,
     releaseNotesURL: PropTypes.string,
   }),
-  showUpgradeModal: PropTypes.func,
 };
 
 export default RegionAndVersions;

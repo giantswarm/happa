@@ -32,6 +32,9 @@ interface IReleaseDetailsModalUpgradeOptionsProps
   releases: IReleases;
   provider: PropertiesOf<typeof Providers>;
   currentVersion: string;
+  showUpgradeModal: () => void;
+  setUpgradeVersion: (newVersion: string) => void;
+  closeModal: () => void;
 }
 
 const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOptionsProps> = ({
@@ -39,6 +42,9 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
   releases,
   provider,
   currentVersion,
+  showUpgradeModal,
+  setUpgradeVersion,
+  closeModal,
   ...rest
 }) => {
   const availableReleases = useMemo(() => {
@@ -69,6 +75,16 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
     return availableReleases.some((r) => r.isBeta);
   }, [availableReleases]);
 
+  const onVersionClick = (version: string) => (
+    e: React.MouseEvent<HTMLElement>
+  ) => {
+    e.preventDefault();
+
+    setUpgradeVersion(version);
+    closeModal();
+    showUpgradeModal();
+  };
+
   if (availableReleases.length < 1) return null;
 
   return (
@@ -81,6 +97,7 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
               <ReleaseDetailsModalUpgradeOptionsVersion
                 version={release.version}
                 isBeta={release.isBeta}
+                onClick={onVersionClick(release.version)}
               />
             </VersionWrapper>
           ))}
@@ -91,6 +108,7 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
           <ReleaseDetailsModalUpgradeOptionsVersion
             version={availableReleases[0].version}
             isBeta={availableReleases[0].isBeta}
+            onClick={onVersionClick(availableReleases[0].version)}
           />{' '}
           .
         </p>
@@ -107,6 +125,9 @@ ReleaseDetailsModalUpgradeOptions.propTypes = {
   releases: PropTypes.object.isRequired,
   provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
   currentVersion: PropTypes.string.isRequired,
+  showUpgradeModal: PropTypes.func.isRequired,
+  setUpgradeVersion: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default ReleaseDetailsModalUpgradeOptions;
