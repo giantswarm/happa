@@ -59,11 +59,13 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
     const releasesForUpgrade = releaseHelper.getSupportedUpgradeVersions();
     const supportedUpgradeReleases: ISupportedUpgradeRelease[] = releasesForUpgrade.map(
       (release) => {
+        const preReleaseInfo = release.getPreRelease();
+
         return {
           version: release.toString(),
-          isBeta: ReleaseHelper.isPreReleaseUpgradableTo(
-            release.getPreRelease()
-          ),
+          isBeta:
+            preReleaseInfo.length > 0 &&
+            ReleaseHelper.isPreReleaseUpgradableTo(preReleaseInfo),
         };
       }
     );
