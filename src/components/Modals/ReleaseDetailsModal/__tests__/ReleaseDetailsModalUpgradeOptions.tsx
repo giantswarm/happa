@@ -53,7 +53,7 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
     expect(
       screen.getByText(/This cluster can be upgraded to/)
     ).toBeInTheDocument();
-    const releaseButton = screen.getByRole('button', { name: '10.1.0' });
+    const releaseButton = screen.getByRole('button', { name: 'v10.1.0' });
     expect(releaseButton).toBeInTheDocument();
 
     fireEvent.click(releaseButton);
@@ -87,7 +87,7 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
       screen.getByText(/This cluster can be upgraded to/)
     ).toBeInTheDocument();
     const releaseButton = screen.getByRole('button', {
-      name: '9.2.4-beta4 (BETA)',
+      name: 'v9.2.4-beta4 (BETA)',
     });
     expect(releaseButton).toBeInTheDocument();
 
@@ -124,7 +124,7 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
 
     const versions = ['9.0.1', '9.0.2', '9.0.3'];
     for (const version of versions) {
-      const releaseButton = screen.getByRole('button', { name: version });
+      const releaseButton = screen.getByRole('button', { name: `v${version}` });
       expect(releaseButton).toBeInTheDocument();
 
       fireEvent.click(releaseButton);
@@ -162,7 +162,7 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
     const versions = ['9.2.4-beta3', '9.2.4-beta4'];
     for (const version of versions) {
       const releaseButton = screen.getByRole('button', {
-        name: `${version} (BETA)`,
+        name: `v${version} (BETA)`,
       });
       expect(releaseButton).toBeInTheDocument();
 

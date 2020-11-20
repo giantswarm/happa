@@ -70,7 +70,7 @@ class ReleaseDetailsModal extends React.Component {
       >
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>
-            Details for release {release.version}
+            Details for release v{release.version}
           </BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>

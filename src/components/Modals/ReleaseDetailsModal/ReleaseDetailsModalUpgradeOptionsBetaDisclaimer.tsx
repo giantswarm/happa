@@ -9,6 +9,10 @@ const Wrapper = styled.span`
   color: ${({ theme }) => theme.colors.white3};
 `;
 
+const Text = styled.div`
+  line-height: 1.4;
+`;
+
 interface IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps
   extends React.ComponentPropsWithoutRef<'div'> {}
 
@@ -20,10 +24,10 @@ const ReleaseDetailsModalUpgradeOptionsBetaDisclaimer: React.FC<IReleaseDetailsM
       <div>
         <ReleaseDetailsModalUpgradeOptionsBetaLabel />
       </div>
-      <div>
+      <Text>
         Beta releases are not recommended for production use. Upgrading to newer
         beta and non-beta releases is possible.
-      </div>
+      </Text>
     </Wrapper>
   );
 };

@@ -11,7 +11,7 @@ import ReleaseDetailsModalUpgradeOptionsVersion from './ReleaseDetailsModalUpgra
 
 const VersionWrapper = styled.div`
   & + & {
-    margin-top: ${({ theme }) => theme.spacingPx * 2}px;
+    margin-top: ${({ theme }) => theme.spacingPx}px;
   }
 `;
 
