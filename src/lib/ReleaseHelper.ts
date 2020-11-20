@@ -61,8 +61,6 @@ export class ReleaseHelper {
       return Boolean(
         this.versionsForUpgrade.find((v) => v.compare(targetVersion) === 0)
       );
-
-      return false;
     } catch {
       // Couldn't parse the given version.
       return false;
@@ -76,7 +74,6 @@ export class ReleaseHelper {
     return this.versionsForUpgrade.slice();
   }
 
-  // eslint-disable-next-line complexity
   protected computeSupportedUpgradeVersions(): void {
     const currentPreReleaseInfo = this.currentVersion.getPreRelease();
     if (!ReleaseHelper.isPreReleaseUpgradable(currentPreReleaseInfo)) {
@@ -136,6 +133,7 @@ export class ReleaseHelper {
           (firstVersion.getMajor() !== version.getMajor() ||
             firstVersion.getMinor() !== version.getMinor())
         ) {
+          // Tried to skip release. We only allow a maximum of 1 minor or major change.
           return false;
         }
 

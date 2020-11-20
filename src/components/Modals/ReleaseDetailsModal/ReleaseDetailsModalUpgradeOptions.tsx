@@ -48,29 +48,33 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
   ...rest
 }) => {
   const availableReleases = useMemo(() => {
-    const releaseHelper = new ReleaseHelper({
-      availableReleases: releases,
-      provider,
-      currentReleaseVersion: currentVersion,
-      isAdmin,
-      ignorePreReleases: false,
-    });
+    try {
+      const releaseHelper = new ReleaseHelper({
+        availableReleases: releases,
+        provider,
+        currentReleaseVersion: currentVersion,
+        isAdmin,
+        ignorePreReleases: false,
+      });
 
-    const releasesForUpgrade = releaseHelper.getSupportedUpgradeVersions();
-    const supportedUpgradeReleases: ISupportedUpgradeRelease[] = releasesForUpgrade.map(
-      (release) => {
-        const preReleaseInfo = release.getPreRelease();
+      const releasesForUpgrade = releaseHelper.getSupportedUpgradeVersions();
+      const supportedUpgradeReleases: ISupportedUpgradeRelease[] = releasesForUpgrade.map(
+        (release) => {
+          const preReleaseInfo = release.getPreRelease();
 
-        return {
-          version: release.toString(),
-          isBeta:
-            preReleaseInfo.length > 0 &&
-            ReleaseHelper.isPreReleaseUpgradableTo(preReleaseInfo),
-        };
-      }
-    );
+          return {
+            version: release.toString(),
+            isBeta:
+              preReleaseInfo.length > 0 &&
+              ReleaseHelper.isPreReleaseUpgradableTo(preReleaseInfo),
+          };
+        }
+      );
 
-    return supportedUpgradeReleases;
+      return supportedUpgradeReleases;
+    } catch {
+      return [];
+    }
   }, [releases, currentVersion, provider, isAdmin]);
 
   const containsBetaReleases = useMemo(() => {
