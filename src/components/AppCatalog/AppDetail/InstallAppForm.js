@@ -63,23 +63,22 @@ const InstallAppForm = ({
 
   const [formAbilities, setFormAbilities] = useState({
     hasFixedNamespace: false,
-    fixedNamespace: '',
+    appNamespace: '',
   });
 
   useEffect(() => {
-    let hasFixedNamespace = false;
-    let fixedNamespace = '';
+    const hasFixedNamespace = false;
+    let appNamespace = '';
 
     // Some apps have special rules about what namespace they are allowed to be in.
     if (appName === 'nginx-ingress-controller-app') {
-      hasFixedNamespace = true;
-      fixedNamespace = 'kube-system';
-      updateNamespace(fixedNamespace);
+      appNamespace = 'kube-system';
+      updateNamespace(appNamespace);
     }
 
     setFormAbilities({
       hasFixedNamespace,
-      fixedNamespace,
+      appNamespace,
     });
   }, [appName, updateNamespace]);
 
@@ -119,7 +118,7 @@ const InstallAppForm = ({
           label='Namespace:'
           onChange={updateNamespace}
           validationError={namespaceError}
-          value={namespace}
+          value={formAbilities.appNamespace || namespace}
         />
       )}
 

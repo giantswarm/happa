@@ -15,11 +15,11 @@ it('renders a normal namespace field usually', () => {
   expect(namespaceField).not.toHaveAttribute('read-only');
 });
 
-it('renders a readonly namespace field for nginx-ingress-controller-app', () => {
+it('use kube-system as default namespace for nginx-ingress-controller-app', () => {
   const { getByLabelText } = renderWithTheme(InstallAppForm, {
     appName: 'nginx-ingress-controller-app',
   });
 
   const namespaceField = getByLabelText('Namespace:');
-  expect(namespaceField).toHaveAttribute('readOnly');
+  expect(namespaceField).toHaveValue('kube-system');
 });
