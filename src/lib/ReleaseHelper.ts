@@ -57,30 +57,10 @@ export class ReleaseHelper {
   public supportsUpgrade(toVersion: string): boolean {
     try {
       const targetVersion = new VersionImpl(toVersion);
-      if (this.currentVersion.compare(targetVersion) >= 0) {
-        // This is the same version as the current one, or an older one.
-        return false;
-      }
 
-      for (const version of this.versionsForUpgrade) {
-        if (
-          version.compare(targetVersion) < 0 &&
-          (this.currentVersion.getMajor() !== version.getMajor() ||
-            this.currentVersion.getMinor() !== version.getMinor() ||
-            this.currentVersion.getPreRelease() !== version.getPreRelease()) &&
-          (targetVersion.getMajor() !== version.getMajor() ||
-            targetVersion.getMinor() !== version.getMinor() ||
-            targetVersion.getPreRelease() !== version.getPreRelease())
-        ) {
-          // We only support a maximum of 1 sequential minor changed.
-          return false;
-        }
-
-        if (version.compare(targetVersion) === 0) {
-          // Version is newer than our target version, all good.
-          return true;
-        }
-      }
+      return Boolean(
+        this.versionsForUpgrade.find((v) => v.compare(targetVersion) === 0)
+      );
 
       return false;
     } catch {
@@ -96,6 +76,7 @@ export class ReleaseHelper {
     return this.versionsForUpgrade.slice();
   }
 
+  // eslint-disable-next-line complexity
   protected computeSupportedUpgradeVersions(): void {
     const currentPreReleaseInfo = this.currentVersion.getPreRelease();
     if (!ReleaseHelper.isPreReleaseUpgradable(currentPreReleaseInfo)) {
@@ -107,15 +88,14 @@ export class ReleaseHelper {
 
     const awsV5Version = new VersionImpl(Constants.AWS_V5_VERSION);
 
-    const upgradeVersions: IVersion[] = [];
-
     let currVersionFound = false;
-    for (const version of this.versions) {
+    let upgradeVersions: IVersion[] = this.versions.filter((version) => {
       if (version === this.currentVersion) {
         currVersionFound = true;
-        continue;
+
+        return false;
       } else if (!currVersionFound) {
-        continue;
+        return false;
       }
 
       if (
@@ -124,26 +104,43 @@ export class ReleaseHelper {
         version.compare(awsV5Version) >= 1
       ) {
         // AWS does not allow upgrading from a pre-NP to a NP version.
-        continue;
+        return false;
       }
 
       const versionNumber = version.toString();
       if (!this.availableReleases[versionNumber].active && !this.isAdmin) {
         // Admins can upgrade to inactive versions, but regular users don't.
-        continue;
+        return false;
       }
 
       const preReleaseInfo = version.getPreRelease();
       if (this.ignorePreReleases && preReleaseInfo) {
         // Pre-releases are configured to be invalid, but the version is a pre-release.
-        continue;
+        return false;
       }
       if (!ReleaseHelper.isPreReleaseUpgradableTo(preReleaseInfo)) {
         // This is not a pre-release that we can upgrade to.
-        continue;
+        return false;
       }
 
-      upgradeVersions.push(version);
+      return true;
+    });
+
+    if (upgradeVersions.length > 0) {
+      const firstVersion = upgradeVersions[0];
+
+      upgradeVersions = upgradeVersions.filter((version) => {
+        if (
+          (this.currentVersion.getMajor() !== version.getMajor() ||
+            this.currentVersion.getMinor() !== version.getMinor()) &&
+          (firstVersion.getMajor() !== version.getMajor() ||
+            firstVersion.getMinor() !== version.getMinor())
+        ) {
+          return false;
+        }
+
+        return true;
+      });
     }
 
     this.versionsForUpgrade = upgradeVersions;
