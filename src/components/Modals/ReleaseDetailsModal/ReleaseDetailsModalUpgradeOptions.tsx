@@ -53,7 +53,7 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
         availableReleases: releases,
         provider,
         currentReleaseVersion: currentVersion,
-        isAdmin: false,
+        isAdmin,
         ignorePreReleases: false,
       });
 
