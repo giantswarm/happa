@@ -16,7 +16,11 @@ interface IReleaseDetailsModalUpgradeOptionsBetaLabelProps
 const ReleaseDetailsModalUpgradeOptionsBetaLabel: React.FC<IReleaseDetailsModalUpgradeOptionsBetaLabelProps> = (
   props
 ) => {
-  return <BetaLabel {...props}>BETA</BetaLabel>;
+  return (
+    <BetaLabel role='presentation' {...props}>
+      BETA
+    </BetaLabel>
+  );
 };
 
 ReleaseDetailsModalUpgradeOptionsBetaLabel.propTypes = {};

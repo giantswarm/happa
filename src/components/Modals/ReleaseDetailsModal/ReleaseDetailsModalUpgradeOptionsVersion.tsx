@@ -27,8 +27,13 @@ const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<IReleaseDetailsModalUpg
   isBeta,
   ...rest
 }) => {
+  let label = version;
+  if (isBeta) {
+    label += ' (BETA)';
+  }
+
   return (
-    <span role='button' aria-label={version} {...rest}>
+    <span role='button' aria-label={label} {...rest}>
       <Version>{version}</Version>{' '}
       {isBeta && <ReleaseDetailsModalUpgradeOptionsBetaLabel />}
     </span>

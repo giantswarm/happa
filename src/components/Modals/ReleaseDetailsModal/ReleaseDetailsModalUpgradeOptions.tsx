@@ -111,7 +111,7 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
             version={availableReleases[0].version}
             isBeta={availableReleases[0].isBeta}
             onClick={onVersionClick(availableReleases[0].version)}
-          />{' '}
+          />
           .
         </p>
       )}
