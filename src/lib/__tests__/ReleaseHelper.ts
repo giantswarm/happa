@@ -76,7 +76,6 @@ describe('ReleaseHelper', () => {
     ${'9.2.3'}         | ${'aws'}   | ${false}          | ${false} | ${'9.2.4-beta3'}
     ${'9.2.4-beta3'}   | ${'aws'}   | ${true}           | ${false} | ${'9.3.0'}
     ${'9.2.4-beta3'}   | ${'aws'}   | ${false}          | ${false} | ${'9.2.4-beta4'}
-    ${'9.2.4-beta3'}   | ${'aws'}   | ${true}           | ${false} | ${'9.3.0'}
     ${'10.1.0'}        | ${'aws'}   | ${true}           | ${false} | ${null}
     ${'9.3.0'}         | ${'aws'}   | ${true}           | ${false} | ${null}
     ${'9.3.0'}         | ${'aws'}   | ${true}           | ${true}  | ${'10.0.0'}
@@ -114,7 +113,6 @@ describe('ReleaseHelper', () => {
     ${'9.2.3'}         | ${'aws'}   | ${false}          | ${false} | ${['9.2.4-beta3', '9.2.4-beta4']}
     ${'9.2.4-beta3'}   | ${'aws'}   | ${true}           | ${false} | ${['9.3.0']}
     ${'9.2.4-beta3'}   | ${'aws'}   | ${false}          | ${false} | ${['9.2.4-beta4']}
-    ${'9.2.4-beta3'}   | ${'aws'}   | ${true}           | ${false} | ${['9.3.0']}
     ${'10.1.0'}        | ${'aws'}   | ${true}           | ${false} | ${[]}
     ${'9.3.0'}         | ${'aws'}   | ${true}           | ${false} | ${[]}
     ${'9.3.0'}         | ${'aws'}   | ${true}           | ${true}  | ${['10.0.0']}
