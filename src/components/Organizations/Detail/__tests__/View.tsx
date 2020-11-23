@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { AWSInfoResponse, v5ClustersResponse } from 'testUtils/mockHttpCalls';
+import { v5ClustersResponse } from 'testUtils/mockHttpCalls';
 import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
 import View from '../View';
@@ -16,14 +16,12 @@ describe('View', () => {
 
     renderWithStore(View, {
       organization,
-      app: {
-        info: AWSInfoResponse.data,
-      },
       clusters: [],
       credentials: [],
       loadingCredentials: false,
       showCredentialsForm: false,
       membersForTable: [],
+      supportsBYOC: true,
     });
 
     expect(
@@ -45,12 +43,12 @@ describe('View', () => {
 
     renderWithStore(View, {
       organization,
-      app: { info: AWSInfoResponse.data },
       clusters: v5ClustersResponse,
       credentials: [],
       loadingCredentials: false,
       showCredentialsForm: false,
       membersForTable: [],
+      supportsBYOC: true,
     });
 
     expect(
@@ -72,12 +70,12 @@ describe('View', () => {
 
     const { rerender } = renderWithStore(View, {
       organization,
-      app: { info: AWSInfoResponse.data },
       clusters: [],
       credentials: [],
       loadingCredentials: true,
       showCredentialsForm: false,
       membersForTable: [],
+      supportsBYOC: true,
     });
 
     expect(
@@ -100,12 +98,12 @@ describe('View', () => {
     rerender(
       getComponentWithStore(View, {
         organization,
-        app: { info: AWSInfoResponse.data },
         clusters: [],
         credentials,
         loadingCredentials: false,
         showCredentialsForm: false,
         membersForTable: [],
+        supportsBYOC: true,
       })
     );
 
