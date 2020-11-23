@@ -102,6 +102,10 @@ class V4ClusterDetailTable extends React.Component {
       release,
       region,
       resources,
+      isAdmin,
+      releases,
+      showUpgradeModal,
+      setUpgradeVersion,
     } = this.props;
 
     const { create_date, api_endpoint } = cluster;
@@ -117,8 +121,12 @@ class V4ClusterDetailTable extends React.Component {
             <RegionAndVersions
               createDate={create_date}
               release={release}
+              isAdmin={isAdmin}
+              releases={releases}
+              provider={provider}
               clusterId={cluster.id}
-              showUpgradeModal={this.props.showUpgradeModal}
+              showUpgradeModal={showUpgradeModal}
+              setUpgradeVersion={setUpgradeVersion}
               region={region}
             />
           </div>
@@ -208,8 +216,11 @@ V4ClusterDetailTable.propTypes = {
   region: PropTypes.string,
   showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
+  setUpgradeVersion: PropTypes.func.isRequired,
   workerNodesDesired: PropTypes.number,
   resources: PropTypes.object,
+  isAdmin: PropTypes.bool,
+  releases: PropTypes.object,
 };
 
 // We use this wrapper function because we want different references for each cluster

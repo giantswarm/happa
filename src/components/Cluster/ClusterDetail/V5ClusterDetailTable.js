@@ -375,6 +375,10 @@ class V5ClusterDetailTable extends React.Component {
       loadingNodePools,
       clusterIsCreating,
       clusterIsUpdating,
+      isAdmin,
+      releases,
+      showUpgradeModal,
+      setUpgradeVersion,
     } = this.props;
 
     const {
@@ -407,9 +411,13 @@ class V5ClusterDetailTable extends React.Component {
             <RegionAndVersions
               createDate={create_date}
               release={release}
+              provider={provider}
               clusterId={cluster.id}
-              showUpgradeModal={this.props.showUpgradeModal}
+              showUpgradeModal={showUpgradeModal}
+              setUpgradeVersion={setUpgradeVersion}
               region={region}
+              isAdmin={isAdmin}
+              releases={releases}
             />
           </div>
           <div>
@@ -609,11 +617,14 @@ V5ClusterDetailTable.propTypes = {
   region: PropTypes.string,
   release: PropTypes.object,
   showUpgradeModal: PropTypes.func,
+  setUpgradeVersion: PropTypes.func,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingNodePools: PropTypes.bool,
   clusterIsCreating: PropTypes.bool,
   clusterIsUpdating: PropTypes.bool,
+  isAdmin: PropTypes.bool,
+  releases: PropTypes.object,
 };
 
 // We use this wrapper function because we want different references for each cluster
