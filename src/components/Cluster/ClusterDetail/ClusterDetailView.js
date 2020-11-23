@@ -331,7 +331,10 @@ class ClusterDetailView extends React.Component {
                     provider={provider}
                     release={release}
                     region={region}
+                    isAdmin={isAdmin}
+                    releases={releases}
                     showUpgradeModal={this.showUpgradeModal}
+                    setUpgradeVersion={this.setTargetRelease}
                     workerNodesDesired={this.getDesiredNumberOfNodes()}
                     clusterIsCreating={clusterIsCreating}
                     clusterIsUpdating={clusterIsUpdating}
@@ -345,7 +348,10 @@ class ClusterDetailView extends React.Component {
                     provider={provider}
                     release={release}
                     region={region}
+                    isAdmin={isAdmin}
+                    releases={releases}
                     showScalingModal={this.showScalingModal}
+                    setUpgradeVersion={this.setTargetRelease}
                     showUpgradeModal={this.showUpgradeModal}
                     workerNodesDesired={this.getDesiredNumberOfNodes()}
                   />

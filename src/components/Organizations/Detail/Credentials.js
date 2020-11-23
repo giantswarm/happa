@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Providers } from 'shared/constants';
 import {
   organizationCredentialsDiscard,
-  organizationCredentialsLoad,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
 } from 'stores/organization/actions';
@@ -15,12 +15,6 @@ class Credentials extends React.Component {
   state = {
     formData: {},
   };
-
-  componentDidMount() {
-    this.props.dispatch(
-      organizationCredentialsLoad(this.props.organizationName)
-    );
-  }
 
   // eslint-disable-next-line class-methods-use-this
   componentWillUnmount() {
@@ -42,7 +36,7 @@ class Credentials extends React.Component {
     this.setState({ formData: data });
     this.props.dispatch(
       organizationCredentialsSetConfirmed(
-        this.props.info.general.provider,
+        this.props.provider,
         this.props.organizationName,
         data
       )
@@ -53,11 +47,10 @@ class Credentials extends React.Component {
     if (this.props.showCredentialsForm) {
       return (
         <CredentialsForm
-          credentials={this.props.credentials}
           formData={this.state.formData}
           onSubmit={this.handleFormSubmit}
           organizationName={this.props.organizationName}
-          provider={this.props.info.general.provider}
+          provider={this.props.provider}
         />
       );
     }
@@ -65,28 +58,22 @@ class Credentials extends React.Component {
     return (
       <CredentialsDisplay
         credentials={this.props.credentials}
+        loading={this.props.loadingCredentials}
         onShowForm={this.handleShowForm}
         organizationName={this.props.organizationName}
-        provider={this.props.info.general.provider}
+        provider={this.props.provider}
       />
     );
   }
 }
 
 Credentials.propTypes = {
-  info: PropTypes.object,
-  credentials: PropTypes.object,
+  provider: PropTypes.oneOf(Object.values(Providers)),
+  credentials: PropTypes.array,
   dispatch: PropTypes.func,
   organizationName: PropTypes.string,
   showCredentialsForm: PropTypes.bool,
+  loadingCredentials: PropTypes.bool,
 };
 
-function mapStateToProps(state) {
-  return {
-    info: state.main.info,
-    credentials: state.entities.organizations.credentials,
-    showCredentialsForm: state.entities.organizations.credentials.showForm,
-  };
-}
-
-export default connect(mapStateToProps)(Credentials);
+export default connect()(Credentials);

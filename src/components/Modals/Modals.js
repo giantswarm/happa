@@ -5,15 +5,16 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import EmailField from 'shared/EmailField';
 import InputField from 'shared/InputField';
-import { batchedClusterDeleteConfirmed } from 'stores/batchActions';
-import { clusterDeleteConfirmed } from 'stores/cluster/actions';
+import {
+  batchedClusterDeleteConfirmed,
+  batchedOrganizationDeleteConfirmed,
+} from 'stores/batchActions';
 import { modalHide } from 'stores/modal/actions';
 import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import {
   organizationAddMemberConfirmed,
   organizationAddMemberTyping,
   organizationCreateConfirmed,
-  organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'stores/organization/actions';
 import Button from 'UI/Button';
@@ -60,14 +61,6 @@ class Modals extends React.Component {
       organizationName: '',
     });
   }
-
-  deleteClusterConfirmed = (clusterId) => {
-    this.props.dispatch(clusterDeleteConfirmed(clusterId));
-  };
-
-  deleteOrganisation = (orgId) => {
-    this.props.dispatch(organizationDeleteConfirmed(orgId));
-  };
 
   createOrganisation = (e) => {
     e.preventDefault();
@@ -177,10 +170,13 @@ class Modals extends React.Component {
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
-                onClick={this.deleteOrganisation.bind(
-                  this,
-                  this.props.modal.templateValues.orgId
-                )}
+                onClick={() =>
+                  this.props.dispatch(
+                    batchedOrganizationDeleteConfirmed(
+                      this.props.modal.templateValues.orgId
+                    )
+                  )
+                }
                 type='submit'
               >
                 {this.props.modal.templateValues.loading

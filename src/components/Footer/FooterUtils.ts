@@ -22,7 +22,7 @@ export function getReleaseURL(version: string): string {
   if (isHash) {
     URL = `https://github.com/giantswarm/happa/commit/${version}`;
   } else {
-    URL = `https://docs.giantswarm.io/changes/web-ui/happa/${version}`;
+    URL = `https://docs.giantswarm.io/changes/web-ui/happa/${version}/`;
   }
 
   return URL;
