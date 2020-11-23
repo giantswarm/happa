@@ -46,7 +46,7 @@ const Section = ({ flat, title, children, ...rest }) => {
 };
 
 Section.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.node,
   title: PropTypes.string,
   flat: PropTypes.bool,
 };

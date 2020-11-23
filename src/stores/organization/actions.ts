@@ -182,7 +182,7 @@ async function updateOrganizationDetailsForID(
 export function organizationDeleteConfirmed(
   orgId: string
 ): ThunkAction<
-  Promise<void>,
+  Promise<boolean>,
   IState,
   void,
   OrganizationActions | ModalActions
@@ -202,6 +202,8 @@ export function organizationDeleteConfirmed(
 
       await dispatch(organizationsLoad());
       dispatch(organizationDeleteSuccess(orgId));
+
+      return true;
     } catch {
       new FlashMessage(
         `Could not delete organization <code>${orgId}</code>.`,
@@ -213,8 +215,8 @@ export function organizationDeleteConfirmed(
       dispatch({
         type: ORGANIZATION_DELETE_ERROR,
       });
-    } finally {
-      dispatch(modalHide());
+
+      return false;
     }
   };
 }
