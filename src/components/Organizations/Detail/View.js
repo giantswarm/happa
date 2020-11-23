@@ -11,7 +11,6 @@ import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
 import { Ellipsis } from 'styles';
@@ -46,14 +45,6 @@ const memberTableDefaultSorting = [
 ];
 
 class OrganizationDetail extends React.Component {
-  static supportsBYOC(provider) {
-    if (provider === Providers.AWS || provider === Providers.AZURE) {
-      return true;
-    }
-
-    return false;
-  }
-
   componentDidMount() {
     if (!this.props.organization) return;
 
@@ -152,9 +143,12 @@ class OrganizationDetail extends React.Component {
   };
 
   supportsDeletion() {
-    const { clusters, credentials, loadingCredentials } = this.props;
-    const { provider } = this.props.app.info.general;
-    const supportsBYOC = OrganizationDetail.supportsBYOC(provider);
+    const {
+      clusters,
+      credentials,
+      loadingCredentials,
+      supportsBYOC,
+    } = this.props;
 
     const result = {
       status: true,
@@ -189,11 +183,9 @@ class OrganizationDetail extends React.Component {
       credentials,
       showCredentialsForm,
       loadingCredentials,
+      supportsBYOC,
     } = this.props;
     if (!organization) return null;
-
-    const { provider } = this.props.app.info.general;
-    const supportsBYOC = OrganizationDetail.supportsBYOC(provider);
 
     const supportsDeletion = this.supportsDeletion();
 
@@ -251,7 +243,6 @@ class OrganizationDetail extends React.Component {
               organizationName={organization.id}
               credentials={credentials}
               showCredentialsForm={showCredentialsForm}
-              provider={provider}
               loadingCredentials={loadingCredentials}
             />
           </Section>
@@ -280,8 +271,8 @@ OrganizationDetail.propTypes = {
   credentials: PropTypes.array,
   loadingCredentials: PropTypes.bool,
   showCredentialsForm: PropTypes.bool,
-  app: PropTypes.object,
   membersForTable: PropTypes.array,
+  supportsBYOC: PropTypes.bool,
 };
 
 // eslint-disable-next-line react/no-multi-comp

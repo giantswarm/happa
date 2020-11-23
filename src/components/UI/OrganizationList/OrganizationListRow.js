@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Providers } from 'shared/constants';
 
 const StyledTableDataCell = styled.td`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
@@ -12,7 +11,7 @@ const OrganizationListRow = ({
   clusters,
   organization,
   getViewURL,
-  provider,
+  supportsBYOC,
 }) => {
   const orgID = organization.id;
   const organizationDetailURL = getViewURL(orgID);
@@ -31,7 +30,7 @@ const OrganizationListRow = ({
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
       </StyledTableDataCell>
 
-      {(provider === Providers.AWS || provider === Providers.AZURE) && (
+      {supportsBYOC && (
         <StyledTableDataCell centered={true}>
           {hasCredentials && (
             <Link to={organizationDetailURL}>
@@ -48,7 +47,7 @@ OrganizationListRow.propTypes = {
   getViewURL: PropTypes.func.isRequired,
   organization: PropTypes.object,
   clusters: PropTypes.array,
-  provider: PropTypes.string,
+  supportsBYOC: PropTypes.bool,
 };
 
 export default OrganizationListRow;

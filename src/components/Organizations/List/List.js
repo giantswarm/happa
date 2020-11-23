@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { organizationCreate } from 'stores/organization/actions';
+import { supportsBYOC } from 'stores/organization/utils';
 import EmptyStateDisplay from 'UI/EmptyStateDisplay';
 import OrganizationList from 'UI/OrganizationList/OrganizationList';
 
@@ -36,7 +37,7 @@ class OrganizationListWrapper extends React.Component {
             }
           >
             <OrganizationList
-              provider={this.props.provider}
+              supportsBYOC={this.props.supportsBYOC}
               clusters={this.props.clusters}
               getViewURL={this.getOrganizationURL}
               organizations={this.props.organizations}
@@ -55,7 +56,7 @@ OrganizationListWrapper.propTypes = {
   dispatch: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
-  provider: PropTypes.string,
+  supportsBYOC: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -63,10 +64,12 @@ function mapStateToProps(state) {
     state.entities.organizations.items
   ).sort((a, b) => a.id.localeCompare(b.id));
 
+  const providerSupportsBYOC = supportsBYOC(state.main.info.general.provider);
+
   return {
     organizations: sortedOrganizations,
     clusters: state.entities.clusters.items,
-    provider: state.main.info.general.provider,
+    supportsBYOC: providerSupportsBYOC,
   };
 }
 

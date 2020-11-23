@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Providers } from 'shared/constants';
 
 import Row from './OrganizationListRow';
 
@@ -10,7 +9,7 @@ const StyledTableHeader = styled.th`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
 `;
 
-const OrganizationList = ({ provider, ...props }) => {
+const OrganizationList = ({ supportsBYOC, ...props }) => {
   return (
     <table>
       <thead>
@@ -19,7 +18,7 @@ const OrganizationList = ({ provider, ...props }) => {
           <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
           <StyledTableHeader centered={true}>Members</StyledTableHeader>
 
-          {(provider === Providers.AWS || provider === Providers.AZURE) && (
+          {supportsBYOC && (
             <StyledTableHeader centered={true}>
               Provider Credentials
             </StyledTableHeader>
@@ -38,7 +37,7 @@ const OrganizationList = ({ provider, ...props }) => {
               )}
               getViewURL={props.getViewURL}
               organization={organization}
-              provider={provider}
+              supportsBYOC={supportsBYOC}
             />
           );
         })}
@@ -51,7 +50,7 @@ OrganizationList.propTypes = {
   getViewURL: PropTypes.func.isRequired,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
-  provider: PropTypes.string,
+  supportsBYOC: PropTypes.bool,
 };
 
 export default OrganizationList;

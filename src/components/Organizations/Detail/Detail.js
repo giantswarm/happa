@@ -10,6 +10,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
 import { selectOrganizationByID } from 'stores/organization/selectors';
+import { supportsBYOC } from 'stores/organization/utils';
 
 import DetailView from './View';
 
@@ -62,11 +63,11 @@ DetailIndex.propTypes = {
   match: PropTypes.object,
   organization: PropTypes.object,
   clusters: PropTypes.array,
-  app: PropTypes.object,
   membersForTable: PropTypes.array,
   credentials: PropTypes.array,
   loadingCredentials: PropTypes.bool,
   showCredentialsForm: PropTypes.bool,
+  supportsBYOC: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -86,10 +87,11 @@ function mapStateToProps(state, ownProps) {
     });
   });
 
+  const providerSupportsBYOC = supportsBYOC(state.main.info.general.provider);
+
   return {
     organization,
     membersForTable,
-    app: state.main,
     clusters,
     credentials: state.entities.organizations.credentials.items,
     loadingCredentials: selectLoadingFlagByAction(
@@ -97,6 +99,7 @@ function mapStateToProps(state, ownProps) {
       ORGANIZATION_CREDENTIALS_LOAD_REQUEST
     ),
     showCredentialsForm: state.entities.organizations.credentials.showForm,
+    supportsBYOC: providerSupportsBYOC,
   };
 }
 
