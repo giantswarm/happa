@@ -218,7 +218,7 @@ function mapStateToProps(state, ownProps) {
     !selectedCluster ||
     isClusterCreating(selectedCluster) ||
     isClusterUpdating(selectedCluster) ||
-    selectIsClusterAwaitingUpgrade(selectedClusterID)
+    selectIsClusterAwaitingUpgrade(selectedClusterID)(state)
   ) {
     selectedClusterID = undefined;
   }

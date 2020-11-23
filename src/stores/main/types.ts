@@ -25,7 +25,7 @@ export interface IMainState {
   info: IInstallationInfo;
   selectedOrganization: string | null;
   firstLoadComplete: boolean;
-  selectedClusterID?: string;
+  selectedClusterID: string | null;
 }
 
 export interface IMainSelectClusterAction {
