@@ -16,10 +16,10 @@ import DetailView from './View';
 
 class DetailIndex extends React.Component {
   componentDidMount() {
-    if (!this.props.organization) {
-      const { dispatch, match } = this.props;
-      const { orgId } = match.params;
+    const { dispatch, match } = this.props;
+    const { orgId } = match.params;
 
+    if (!this.props.organization) {
       new FlashMessage(
         `Organization <code>${orgId}</code> not found`,
         messageType.ERROR,
