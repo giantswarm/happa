@@ -299,29 +299,27 @@ export function clusterLoadDetails(
 }
 
 function clusterLoadStatus(
-  clusterId: string,
+  id: string,
   opts: { withLoadingFlags?: boolean }
 ): ThunkAction<Promise<V4.IClusterStatus>, IState, void, ClusterActions> {
   return async (dispatch) => {
     try {
       if (opts.withLoadingFlags) {
-        dispatch({ type: CLUSTER_LOAD_STATUS_REQUEST, clusterId });
+        dispatch({ type: CLUSTER_LOAD_STATUS_REQUEST, id });
       }
 
       const clustersApi = new GiantSwarm.ClustersApi();
-      const response = await clustersApi.getClusterStatusWithHttpInfo(
-        clusterId
-      );
-      dispatch({ type: CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
+      const response = await clustersApi.getClusterStatusWithHttpInfo(id);
+      dispatch({ type: CLUSTER_LOAD_STATUS_SUCCESS, id });
 
       // FIXME(axbarsan): Find the real types of the API response.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return JSON.parse((response as any).response.text);
     } catch (err) {
       if (err.status === StatusCodes.NotFound) {
-        dispatch({ type: CLUSTER_LOAD_STATUS_NOT_FOUND, clusterId });
+        dispatch({ type: CLUSTER_LOAD_STATUS_NOT_FOUND, id });
       } else {
-        dispatch({ type: CLUSTER_LOAD_STATUS_ERROR, error: err });
+        dispatch({ type: CLUSTER_LOAD_STATUS_ERROR, id, error: err });
 
         let errorMessage =
           'Something went wrong while trying to load the cluster status.';
