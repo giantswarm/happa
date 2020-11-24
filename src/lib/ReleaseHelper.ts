@@ -86,7 +86,7 @@ export class ReleaseHelper {
     const awsV5Version = new VersionImpl(Constants.AWS_V5_VERSION);
 
     let currVersionFound = false;
-    let upgradeVersions: IVersion[] = this.versions.filter((version) => {
+    const upgradeVersions: IVersion[] = this.versions.filter((version) => {
       if (version === this.currentVersion) {
         currVersionFound = true;
 
@@ -120,26 +120,15 @@ export class ReleaseHelper {
         return false;
       }
 
+      const currentMajor = parseInt(this.currentVersion.getMajor(), 10);
+      const nextMajor = parseInt(version.getMajor(), 10);
+      if (nextMajor - currentMajor > 1) {
+        // Tried to skip a major version. We only allow skipping a major at a time.
+        return false;
+      }
+
       return true;
     });
-
-    if (upgradeVersions.length > 0) {
-      const firstVersion = upgradeVersions[0];
-
-      upgradeVersions = upgradeVersions.filter((version) => {
-        if (
-          (this.currentVersion.getMajor() !== version.getMajor() ||
-            this.currentVersion.getMinor() !== version.getMinor()) &&
-          (firstVersion.getMajor() !== version.getMajor() ||
-            firstVersion.getMinor() !== version.getMinor())
-        ) {
-          // Tried to skip release. We only allow a maximum of 1 minor or major change.
-          return false;
-        }
-
-        return true;
-      });
-    }
 
     this.versionsForUpgrade = upgradeVersions;
   }
