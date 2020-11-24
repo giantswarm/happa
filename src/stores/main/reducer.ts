@@ -27,7 +27,7 @@ import {
 
 const initialState = (): IMainState => ({
   selectedOrganization: fetchSelectedOrganizationFromStorage(),
-  selectedClusterID: undefined,
+  selectedClusterID: null,
   firstLoadComplete: false,
   loggedInUser: fetchUserFromStorage(),
   info: {
