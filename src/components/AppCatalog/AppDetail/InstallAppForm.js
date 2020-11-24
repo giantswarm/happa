@@ -118,7 +118,7 @@ const InstallAppForm = ({
           label='Namespace:'
           onChange={updateNamespace}
           validationError={namespaceError}
-          value={formAbilities.appNamespace || namespace}
+          value={namespace}
         />
       )}
 
