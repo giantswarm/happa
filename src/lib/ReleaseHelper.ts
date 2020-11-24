@@ -98,7 +98,7 @@ export class ReleaseHelper {
       if (
         this.provider === Providers.AWS &&
         this.currentVersion.compare(awsV5Version) < 0 &&
-        version.compare(awsV5Version) >= 1
+        version.compare(awsV5Version) >= 0
       ) {
         // AWS does not allow upgrading from a pre-NP to a NP version.
         return false;
