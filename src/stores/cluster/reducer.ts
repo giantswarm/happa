@@ -107,9 +107,7 @@ const clusterReducer = produce(
       }
 
       case CLUSTER_LOAD_STATUS_NOT_FOUND: {
-        const cluster = draft.items[action.clusterId] as
-          | V4.ICluster
-          | undefined;
+        const cluster = draft.items[action.id] as V4.ICluster | undefined;
         if (cluster) {
           cluster.status = undefined;
         }
