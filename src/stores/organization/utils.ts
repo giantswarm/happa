@@ -1,3 +1,6 @@
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
+
 export function getOrganizationByID(
   id: string,
   organizations: IOrganization[]
@@ -11,4 +14,10 @@ export function getOrganizationByID(
   }
 
   return undefined;
+}
+
+export function supportsBYOC(
+  provider: PropertiesOf<typeof Providers>
+): boolean {
+  return provider === Providers.AWS || provider === Providers.AZURE;
 }

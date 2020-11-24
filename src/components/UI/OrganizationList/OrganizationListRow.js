@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Providers } from 'shared/constants';
 
 const StyledTableDataCell = styled.td`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
@@ -11,9 +10,8 @@ const StyledTableDataCell = styled.td`
 const OrganizationListRow = ({
   clusters,
   organization,
-  onDelete,
   getViewURL,
-  provider,
+  supportsBYOC,
 }) => {
   const orgID = organization.id;
   const organizationDetailURL = getViewURL(orgID);
@@ -32,7 +30,7 @@ const OrganizationListRow = ({
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
       </StyledTableDataCell>
 
-      {provider !== Providers.KVM && (
+      {supportsBYOC && (
         <StyledTableDataCell centered={true}>
           {hasCredentials && (
             <Link to={organizationDetailURL}>
@@ -41,28 +39,15 @@ const OrganizationListRow = ({
           )}
         </StyledTableDataCell>
       )}
-
-      <StyledTableDataCell>
-        <div className='contextual'>
-          <i
-            className='fa fa-delete clickable'
-            data-orgid={orgID}
-            onClick={onDelete}
-            title='Delete this organization'
-            data-testid={`${orgID}-delete`}
-          />
-        </div>
-      </StyledTableDataCell>
     </tr>
   );
 };
 
 OrganizationListRow.propTypes = {
   getViewURL: PropTypes.func.isRequired,
-  onDelete: PropTypes.func,
   organization: PropTypes.object,
   clusters: PropTypes.array,
-  provider: PropTypes.string,
+  supportsBYOC: PropTypes.bool,
 };
 
 export default OrganizationListRow;

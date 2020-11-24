@@ -69,7 +69,7 @@ interface IClusterPicker {
   onChangeQuery: (query: string) => void;
   onSelectCluster: (clusterId: string) => void;
   query: string;
-  selectedClusterID?: string;
+  selectedClusterID: string | null;
 }
 
 const ClusterPicker: FC<IClusterPicker> = (props) => {

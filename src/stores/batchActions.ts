@@ -36,6 +36,7 @@ import {
 } from 'stores/nodepool/actions';
 import {
   organizationCredentialsLoad,
+  organizationDeleteConfirmed,
   organizationSelect,
   organizationsLoad,
 } from 'stores/organization/actions';
@@ -280,6 +281,24 @@ export function batchedClusterDeleteConfirmed(
       await dispatch(clusterDeleteConfirmed(cluster));
       dispatch(push(AppRoutes.Home));
       dispatch(modalHide());
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
+}
+
+export function batchedOrganizationDeleteConfirmed(
+  organizationID: string
+): ThunkAction<Promise<void>, IState, void, AnyAction> {
+  return async (dispatch) => {
+    try {
+      const orgDeleted = await dispatch(
+        organizationDeleteConfirmed(organizationID)
+      );
+      dispatch(modalHide());
+      if (!orgDeleted) return;
+
+      dispatch(push(OrganizationsRoutes.Home));
     } catch (err) {
       ErrorReporter.getInstance().notify(err);
     }

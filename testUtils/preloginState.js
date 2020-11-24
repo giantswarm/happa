@@ -16,7 +16,7 @@ export default {
   },
   main: {
     selectedOrganization: null,
-    selectedClusterID: undefined,
+    selectedClusterID: null,
     firstLoadComplete: false,
     loggedInUser: null,
     info: {

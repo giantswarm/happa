@@ -11,7 +11,6 @@ import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
 import { Ellipsis } from 'styles';
@@ -24,6 +23,11 @@ const MembersTable = styled.div`
   .member-email {
     ${Ellipsis}
   }
+`;
+
+const Disclaimer = styled.p`
+  margin: 0 0 20px;
+  line-height: 1.2;
 `;
 
 const clusterTableDefaultSorting = [
@@ -41,6 +45,12 @@ const memberTableDefaultSorting = [
 ];
 
 class OrganizationDetail extends React.Component {
+  componentDidMount() {
+    if (!this.props.organization) return;
+
+    this.props.actions.organizationCredentialsLoad(this.props.organization.id);
+  }
+
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
   };
@@ -52,14 +62,8 @@ class OrganizationDetail extends React.Component {
     );
   };
 
-  // determine whether the component should deal with BYOC credentials
-  // (not relevant on KVM)
-  canCredentials = (provider) => {
-    if (provider === Providers.AWS || provider === Providers.AZURE) {
-      return true;
-    }
-
-    return false;
+  deleteOrganization = () => {
+    this.props.actions.organizationDelete(this.props.organization.id);
   };
 
   // Provides the configuraiton for the clusters table
@@ -138,80 +142,125 @@ class OrganizationDetail extends React.Component {
     ];
   };
 
+  supportsDeletion() {
+    const {
+      clusters,
+      credentials,
+      loadingCredentials,
+      supportsBYOC,
+    } = this.props;
+
+    const result = {
+      status: true,
+      message:
+        'All information related to this organization will be deleted. There is no way to undo this action.',
+    };
+    switch (true) {
+      case clusters.length > 0:
+        result.status = false;
+        result.message =
+          'This organization cannot be deleted because it contains clusters. Please delete all clusters in order to be able to delete the organization.';
+        break;
+
+      case loadingCredentials:
+        result.status = false;
+        break;
+
+      case supportsBYOC && credentials.length > 0:
+        result.status = false;
+        result.message =
+          'This organization cannot be deleted because it has BYOC credentials. Please remove them in order to be able to delete the organization.';
+        break;
+    }
+
+    return result;
+  }
+
   render() {
-    let credentialsSection = null;
+    const {
+      clusters,
+      organization,
+      credentials,
+      showCredentialsForm,
+      loadingCredentials,
+      supportsBYOC,
+    } = this.props;
+    if (!organization) return null;
+
+    const supportsDeletion = this.supportsDeletion();
+
     const newClusterPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.New,
-      {
-        orgId: this.props.organization.id,
-      }
+      { orgId: organization.id }
     );
 
-    if (this.canCredentials(this.props.app.info.general.provider)) {
-      credentialsSection = (
-        <Section title='Provider credentials'>
-          <Credentials organizationName={this.props.match.params.orgId} />
+    return (
+      <DocumentTitle title={`Organization Details | ${organization.id}`}>
+        <h1>Organization: {organization.id}</h1>
+        <Section title='Clusters'>
+          {clusters.length === 0 ? (
+            <p>This organization doesn&apos;t have any clusters.</p>
+          ) : (
+            <BootstrapTable
+              bordered={false}
+              columns={this.getClusterTableColumnsConfig()}
+              data={clusters}
+              defaultSortDirection='asc'
+              defaultSorted={clusterTableDefaultSorting}
+              keyField='id'
+            />
+          )}
+          <Link to={newClusterPath}>
+            <Button bsStyle='default'>
+              <i className='fa fa-add-circle' /> Create Cluster
+            </Button>
+          </Link>
         </Section>
-      );
-    }
 
-    if (this.props.organization) {
-      return (
-        <DocumentTitle
-          title={`Organization Details | ${this.props.organization.id}`}
-        >
-          <>
-            <h1>Organization: {this.props.match.params.orgId}</h1>
-            <Section title='Clusters'>
-              <>
-                {this.props.clusters.length === 0 ? (
-                  <p>This organization doesn&apos;t have any clusters.</p>
-                ) : (
-                  <BootstrapTable
-                    bordered={false}
-                    columns={this.getClusterTableColumnsConfig()}
-                    data={this.props.clusters}
-                    defaultSortDirection='asc'
-                    defaultSorted={clusterTableDefaultSorting}
-                    keyField='id'
-                  />
-                )}
-                <Link to={newClusterPath}>
-                  <Button bsStyle='default'>
-                    <i className='fa fa-add-circle' /> Create Cluster
-                  </Button>
-                </Link>
-              </>
-            </Section>
+        <Section title='Members'>
+          <MembersTable>
+            {!organization.members || organization.members.length === 0 ? (
+              <p>This organization has no members</p>
+            ) : (
+              <BootstrapTable
+                bordered={false}
+                columns={this.getMemberTableColumnsConfig()}
+                data={this.props.membersForTable}
+                defaultSortDirection='asc'
+                defaultSorted={memberTableDefaultSorting}
+                keyField='email'
+              />
+            )}
+            <Button bsStyle='default' onClick={this.addMember}>
+              <i className='fa fa-add-circle' /> Add Member
+            </Button>
+          </MembersTable>
+        </Section>
 
-            <Section title='Members'>
-              <MembersTable>
-                {this.props.organization.members.length === 0 ? (
-                  <p>This organization has no members</p>
-                ) : (
-                  <BootstrapTable
-                    bordered={false}
-                    columns={this.getMemberTableColumnsConfig()}
-                    data={this.props.membersForTable}
-                    defaultSortDirection='asc'
-                    defaultSorted={memberTableDefaultSorting}
-                    keyField='email'
-                  />
-                )}
-                <Button bsStyle='default' onClick={this.addMember}>
-                  <i className='fa fa-add-circle' /> Add Member
-                </Button>
-              </MembersTable>
-            </Section>
+        {supportsBYOC && (
+          <Section title='Provider credentials'>
+            <Credentials
+              organizationName={organization.id}
+              credentials={credentials}
+              showCredentialsForm={showCredentialsForm}
+              loadingCredentials={loadingCredentials}
+            />
+          </Section>
+        )}
 
-            {credentialsSection}
-          </>
-        </DocumentTitle>
-      );
-    }
-
-    // 404 or fetching
-    return <h1>404 or fetching</h1>;
+        <Section title='Delete This Organization' flat>
+          <Disclaimer>{supportsDeletion.message}</Disclaimer>
+          <Button
+            bsStyle='danger'
+            onClick={this.deleteOrganization}
+            disabled={!supportsDeletion.status}
+            aria-label='Delete organization'
+          >
+            <i className='fa fa-delete' /> Delete Organization
+          </Button>
+        </Section>
+      </DocumentTitle>
+    );
   }
 }
 
@@ -219,9 +268,11 @@ OrganizationDetail.propTypes = {
   actions: PropTypes.object,
   clusters: PropTypes.array,
   organization: PropTypes.object,
-  match: PropTypes.object,
-  app: PropTypes.object,
+  credentials: PropTypes.array,
+  loadingCredentials: PropTypes.bool,
+  showCredentialsForm: PropTypes.bool,
   membersForTable: PropTypes.array,
+  supportsBYOC: PropTypes.bool,
 };
 
 // eslint-disable-next-line react/no-multi-comp
