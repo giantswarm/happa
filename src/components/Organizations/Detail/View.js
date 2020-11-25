@@ -248,7 +248,7 @@ class OrganizationDetail extends React.Component {
           </Section>
         )}
 
-        <Section title='Delete This Organization' flat>
+        <Section title='Delete this organization' flat>
           <Disclaimer>{supportsDeletion.message}</Disclaimer>
           <Button
             bsStyle='danger'
