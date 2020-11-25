@@ -417,12 +417,8 @@ class ClusterDetailView extends React.Component {
               ref={(s) => {
                 this.upgradeClusterModal = s;
               }}
-              provider={provider}
               release={release}
               targetRelease={this.state.targetRelease}
-              setTargetRelease={this.setTargetRelease}
-              cancelSetTargetRelease={this.cancelSetTargetRelease}
-              isAdmin={isAdmin}
             />
           </div>
         </LoadingOverlay>

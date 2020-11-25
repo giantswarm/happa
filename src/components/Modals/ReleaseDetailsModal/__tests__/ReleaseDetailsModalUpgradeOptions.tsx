@@ -109,10 +109,10 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
     const closeModalMockFn = jest.fn();
 
     renderWithTheme(ReleaseDetailsModalUpgradeOptions, {
-      isAdmin: true,
+      isAdmin: false,
       releases: availableReleases,
-      provider: 'aws',
-      currentVersion: '9.0.0',
+      provider: 'azure',
+      currentVersion: '9.3.0',
       showUpgradeModal: showUpgradeModalMockFn,
       setUpgradeVersion: setUpgradeVersionMockFn,
       closeModal: closeModalMockFn,
@@ -122,7 +122,7 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
       screen.getByText(/This cluster can be upgraded to these releases\:/)
     ).toBeInTheDocument();
 
-    const versions = ['9.0.1', '9.0.2', '9.0.3'];
+    const versions = ['10.0.23', '10.1.0'];
     for (const version of versions) {
       const releaseButton = screen.getByRole('button', { name: `v${version}` });
       expect(releaseButton).toBeInTheDocument();
@@ -146,7 +146,7 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
     const closeModalMockFn = jest.fn();
 
     renderWithTheme(ReleaseDetailsModalUpgradeOptions, {
-      isAdmin: true,
+      isAdmin: false,
       releases: availableReleases,
       provider: 'aws',
       currentVersion: '9.2.3',
@@ -159,10 +159,14 @@ describe('ReleaseDetailsModalUpgradeOptions', () => {
       screen.getByText(/This cluster can be upgraded to these releases\:/)
     ).toBeInTheDocument();
 
-    const versions = ['9.2.4-beta3', '9.2.4-beta4'];
+    const versions = ['9.2.4-beta3', '9.2.4-beta4', '9.3.0'];
     for (const version of versions) {
+      let label = `v${version}`;
+      if (version.includes('beta')) {
+        label += ' (BETA)';
+      }
       const releaseButton = screen.getByRole('button', {
-        name: `v${version} (BETA)`,
+        name: label,
       });
       expect(releaseButton).toBeInTheDocument();
 
