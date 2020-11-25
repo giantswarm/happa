@@ -123,7 +123,7 @@ export class ReleaseHelper {
       const currentMajor = parseInt(this.currentVersion.getMajor(), 10);
       const nextMajor = parseInt(version.getMajor(), 10);
       if (nextMajor - currentMajor > 1) {
-        // Tried to skip a major version. We only allow skipping a major at a time.
+        // Tried to skip a major version. We don't allow skipping major versions.
         return false;
       }
 
