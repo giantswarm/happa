@@ -150,22 +150,22 @@ class CreateNodePoolsCluster extends Component {
         createPayload.master_nodes = {
           availability_zones: this.state.availabilityZonesLabels.zonesArray,
           azure: {
-            availability_zones_unspecified: false
-          }
+            availability_zones_unspecified: false,
+          },
         };
         break;
       case MASTER_AZ_MODE_AUTO:
         createPayload.master_nodes = {
           azure: {
-            availability_zones_unspecified: false
-          }
+            availability_zones_unspecified: false,
+          },
         };
         break;
       case MASTER_AZ_MODE_NOT_SPECIFIED:
         createPayload.master_nodes = {
           azure: {
-            availability_zones_unspecified: true
-          }
+            availability_zones_unspecified: true,
+          },
         };
         break;
     }
