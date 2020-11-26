@@ -272,7 +272,7 @@ class CreateNodePoolsCluster extends Component {
                   </RUMActionTarget>
                   {masterAZMode === MASTER_AZ_MODE_AUTO && (
                     <p>
-                      An Availabilty Zone will be automatcially chosen from the
+                      An Availabilty Zone will be automatically chosen from the
                       existing ones.
                     </p>
                   )}
