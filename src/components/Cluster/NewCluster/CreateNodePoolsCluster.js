@@ -145,14 +145,29 @@ class CreateNodePoolsCluster extends Component {
       release_version: this.props.selectedRelease,
     };
 
-    if (this.state.masterAZMode === MASTER_AZ_MODE_MANUAL) {
-      createPayload.master = {
-        availability_zone: this.state.availabilityZonesLabels.zonesArray[0],
-      };
-    } else {
-      createPayload.master = {
-        availability_zone: this.state.masterAZMode,
-      };
+    switch (this.state.masterAZMode) {
+      case MASTER_AZ_MODE_MANUAL:
+        createPayload.master_nodes = {
+          availability_zones: this.state.availabilityZonesLabels.zonesArray,
+          azure: {
+            availability_zones_unspecified: false
+          }
+        };
+        break;
+      case MASTER_AZ_MODE_AUTO:
+        createPayload.master_nodes = {
+          azure: {
+            availability_zones_unspecified: false
+          }
+        };
+        break;
+      case MASTER_AZ_MODE_NOT_SPECIFIED:
+        createPayload.master_nodes = {
+          azure: {
+            availability_zones_unspecified: true
+          }
+        };
+        break;
     }
 
     if (this.props.capabilities.supportsHAMasters) {
