@@ -325,7 +325,9 @@ class CreateNodePoolsCluster extends Component {
                       <InputGroup>
                         <RadioInput
                           id='notspecified'
-                          checked={masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED}
+                          checked={
+                            masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED
+                          }
                           label='Not specified'
                           onChange={() =>
                             this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
