@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { Constants } from 'shared/constants';
+import { Providers, Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
@@ -98,7 +98,7 @@ class CreateNodePoolsCluster extends Component {
       zonesArray: [],
       valid: false,
     },
-    masterAZMode: MASTER_AZ_MODE_AUTO,
+    masterAZMode: MASTER_AZ_MODE_NOT_SPECIFIED,
     nodePoolsForms: {
       isValid: false,
       isSubmitting: false,
@@ -237,7 +237,7 @@ class CreateNodePoolsCluster extends Component {
     const { masterAZMode, masterNodes } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { nodePools } = this.state.nodePoolsForms;
-    const { minAZ, maxAZ, defaultAZ, isClusterCreating } = this.props;
+    const { minAZ, maxAZ, defaultAZ, isClusterCreating, provider } = this.props;
 
     return (
       <>
@@ -256,40 +256,44 @@ class CreateNodePoolsCluster extends Component {
                 hint={<>&#32;</>}
               >
                 <div>
-                  <RUMActionTarget
-                    name={RUMActions.SelectMasterAZSelectionAutomatic}
-                  >
-                    <InputGroup>
-                      <RadioInput
-                        id='automatic'
-                        checked={masterAZMode === MASTER_AZ_MODE_AUTO}
-                        label='Automatic'
-                        onChange={() =>
-                          this.setMasterAZMode(MASTER_AZ_MODE_AUTO)
-                        }
-                      />
-                    </InputGroup>
-                  </RUMActionTarget>
+                  {maxAZ > 0 && (
+                    <RUMActionTarget
+                      name={RUMActions.SelectMasterAZSelectionAutomatic}
+                    >
+                      <InputGroup>
+                        <RadioInput
+                          id='automatic'
+                          checked={masterAZMode === MASTER_AZ_MODE_AUTO}
+                          label='Automatic'
+                          onChange={() =>
+                            this.setMasterAZMode(MASTER_AZ_MODE_AUTO)
+                          }
+                        />
+                      </InputGroup>
+                    </RUMActionTarget>
+                  )}
                   {masterAZMode === MASTER_AZ_MODE_AUTO && (
                     <p>
                       An Availabilty Zone will be automatically chosen from the
                       existing ones.
                     </p>
                   )}
-                  <RUMActionTarget
-                    name={RUMActions.SelectMasterAZSelectionManual}
-                  >
-                    <InputGroup>
-                      <RadioInput
-                        id='manual'
-                        checked={masterAZMode === MASTER_AZ_MODE_MANUAL}
-                        label='Manual'
-                        onChange={() =>
-                          this.setMasterAZMode(MASTER_AZ_MODE_MANUAL)
-                        }
-                      />
-                    </InputGroup>
-                  </RUMActionTarget>
+                  {maxAZ > 0 && (
+                    <RUMActionTarget
+                      name={RUMActions.SelectMasterAZSelectionManual}
+                    >
+                      <InputGroup>
+                        <RadioInput
+                          id='manual'
+                          checked={masterAZMode === MASTER_AZ_MODE_MANUAL}
+                          label='Manual'
+                          onChange={() =>
+                            this.setMasterAZMode(MASTER_AZ_MODE_MANUAL)
+                          }
+                        />
+                      </InputGroup>
+                    </RUMActionTarget>
+                  )}
                   {masterAZMode === MASTER_AZ_MODE_MANUAL && (
                     <AZWrapperDiv>
                       <AvailabilityZonesParser
@@ -314,20 +318,22 @@ class CreateNodePoolsCluster extends Component {
                       )}
                     </AZWrapperDiv>
                   )}
-                  <RUMActionTarget
-                    name={RUMActions.SelectMasterAZSelectionNotSpecified}
-                  >
-                    <InputGroup>
-                      <RadioInput
-                        id='notspecified'
-                        checked={masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED}
-                        label='Not specified'
-                        onChange={() =>
-                          this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
-                        }
-                      />
-                    </InputGroup>
-                  </RUMActionTarget>
+                  {provider === Providers.AZURE && (
+                    <RUMActionTarget
+                      name={RUMActions.SelectMasterAZSelectionNotSpecified}
+                    >
+                      <InputGroup>
+                        <RadioInput
+                          id='notspecified'
+                          checked={masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED}
+                          label='Not specified'
+                          onChange={() =>
+                            this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
+                          }
+                        />
+                      </InputGroup>
+                    </RUMActionTarget>
+                  )}
                   {masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED && (
                     <p>
                       By not specifying an availability zone, Azure will select
@@ -426,17 +432,23 @@ CreateNodePoolsCluster.propTypes = {
   dispatch: PropTypes.func,
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
+  provider: PropTypes.string,
   selectedOrganization: PropTypes.string,
   selectedRelease: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const { availability_zones: AZ } = state.main.info.general;
+  const { availability_zones: AZ, provider } = state.main.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
-  const maxAZ = Math.min(AZ.max, 4);
-  const minAZ = 1;
+  let maxAZ = Math.min(AZ.max, 4);
+  let minAZ = 1;
+  if (availabilityZones && availabilityZones.length === 0) {
+    // Region does not support availability zones.
+    maxAZ = 0;
+    minAZ = 0;
+  }
   const defaultAZ = AZ.default;
 
   return {
@@ -444,6 +456,7 @@ function mapStateToProps(state) {
     minAZ,
     maxAZ,
     defaultAZ,
+    provider,
     isClusterCreating: selectLoadingFlagByAction(state, CLUSTER_CREATE_REQUEST),
   };
 }
