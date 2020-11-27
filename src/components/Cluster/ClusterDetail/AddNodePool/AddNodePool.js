@@ -134,6 +134,7 @@ class AddNodePool extends Component {
   componentDidMount() {
     this.setState({
       ...this.computeInstanceCapabilities(),
+      ...this.computeAvailabilityZonesPresence(),
     });
   }
 
@@ -145,6 +146,18 @@ class AddNodePool extends Component {
       this.setState(this.computeInstanceCapabilities());
     }
   }
+
+  computeAvailabilityZonesPresence = () => {
+    const { availabilityZones } = this.props;
+
+    return {
+      // Region does not support availability zones.
+      azSelection:
+        availabilityZones.length === 0
+          ? AvailabilityZoneSelection.NotSpecified
+          : AvailabilityZoneSelection.Automatic,
+    };
+  };
 
   computeInstanceCapabilities = () => {
     const { selectedRelease, provider } = this.props;
