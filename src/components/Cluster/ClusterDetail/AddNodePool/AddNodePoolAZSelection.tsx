@@ -135,7 +135,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
   return (
     <div {...rest}>
       <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
-      {maxNumOfZones !== undefined && maxNumOfZones > 0 && (
+      {(maxNumOfZones as number) > 0 && (
         <StyledPanel
           expanded={value === AvailabilityZoneSelection.Automatic}
           onToggle={onToggleFakeCallback}
