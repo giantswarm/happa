@@ -135,70 +135,74 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
   return (
     <div {...rest}>
       <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
-      <StyledPanel
-        expanded={value === AvailabilityZoneSelection.Automatic}
-        onToggle={onToggleFakeCallback}
-      >
-        <AddNodePoolAZSelectionCheckbox
-          onChange={onChange}
-          value={value}
-          npID={npID}
-          label='Automatic'
-          type={AvailabilityZoneSelection.Automatic}
-        />
-        <StyledPanelCollapse>
-          <AZSelectorWrapper>
-            <p>Number of availability zones to use:</p>
-            <AvailabilityZonesParser
-              min={minNumOfZones}
-              max={maxNumOfZones}
-              defaultValue={defaultNumOfZones}
-              zones={allZones}
-              updateAZValuesInParent={onUpdateZones(
-                AvailabilityZoneSelection.Automatic
-              )}
-              isLabels={false}
-            />
-          </AZSelectorWrapper>
-          <p>{automaticAZSelectionMessage}</p>
-        </StyledPanelCollapse>
-      </StyledPanel>
-      <StyledPanel
-        expanded={value === AvailabilityZoneSelection.Manual}
-        onToggle={onToggleFakeCallback}
-      >
-        <AddNodePoolAZSelectionCheckbox
-          onChange={onChange}
-          value={value}
-          npID={npID}
-          label='Manual'
-          type={AvailabilityZoneSelection.Manual}
-        />
-        <StyledPanelCollapse>
-          <p>
-            You can select up to {maxNumOfZones} availability zones to make use
-            of.
-          </p>
-          <AZSelectorWrapper>
-            <ManualAZSelector>
+      {(maxNumOfZones as number) > 0 && (
+        <StyledPanel
+          expanded={value === AvailabilityZoneSelection.Automatic}
+          onToggle={onToggleFakeCallback}
+        >
+          <AddNodePoolAZSelectionCheckbox
+            onChange={onChange}
+            value={value}
+            npID={npID}
+            label='Automatic'
+            type={AvailabilityZoneSelection.Automatic}
+          />
+          <StyledPanelCollapse>
+            <AZSelectorWrapper>
+              <p>Number of availability zones to use:</p>
               <AvailabilityZonesParser
                 min={minNumOfZones}
                 max={maxNumOfZones}
-                defaultValue={2}
+                defaultValue={defaultNumOfZones}
                 zones={allZones}
                 updateAZValuesInParent={onUpdateZones(
-                  AvailabilityZoneSelection.Manual
+                  AvailabilityZoneSelection.Automatic
                 )}
-                isLabels={true}
+                isLabels={false}
               />
-            </ManualAZSelector>
+            </AZSelectorWrapper>
+            <p>{automaticAZSelectionMessage}</p>
+          </StyledPanelCollapse>
+        </StyledPanel>
+      )}
+      {(maxNumOfZones as number) > 0 && (
+        <StyledPanel
+          expanded={value === AvailabilityZoneSelection.Manual}
+          onToggle={onToggleFakeCallback}
+        >
+          <AddNodePoolAZSelectionCheckbox
+            onChange={onChange}
+            value={value}
+            npID={npID}
+            label='Manual'
+            type={AvailabilityZoneSelection.Manual}
+          />
+          <StyledPanelCollapse>
+            <p>
+              You can select up to {maxNumOfZones} availability zones to make
+              use of.
+            </p>
+            <AZSelectorWrapper>
+              <ManualAZSelector>
+                <AvailabilityZonesParser
+                  min={minNumOfZones}
+                  max={maxNumOfZones}
+                  defaultValue={2}
+                  zones={allZones}
+                  updateAZValuesInParent={onUpdateZones(
+                    AvailabilityZoneSelection.Manual
+                  )}
+                  isLabels={true}
+                />
+              </ManualAZSelector>
 
-            {manualAZSelectionErrorMessage && (
-              <ErrorMessage>{manualAZSelectionErrorMessage}</ErrorMessage>
-            )}
-          </AZSelectorWrapper>
-        </StyledPanelCollapse>
-      </StyledPanel>
+              {manualAZSelectionErrorMessage && (
+                <ErrorMessage>{manualAZSelectionErrorMessage}</ErrorMessage>
+              )}
+            </AZSelectorWrapper>
+          </StyledPanelCollapse>
+        </StyledPanel>
+      )}
 
       {provider === Providers.AZURE && (
         <StyledPanel
