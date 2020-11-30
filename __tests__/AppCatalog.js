@@ -287,7 +287,7 @@ describe('Apps and App Catalog', () => {
       });
 
       // Check if namespace input is disabled
-      expect(getByLabelText(/namespace:/i).readOnly).toBeTruthy();
+      expect(getByLabelText(/namespace:/i).readOnly).toBeFalsy();
 
       // Upload a configmap file
       let fileInput = getByLabelText(/User level config values YAML:/i);

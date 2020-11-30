@@ -5,7 +5,7 @@ import { renderWithTheme } from 'testUtils/renderUtils';
 import AppVersionPicker from 'UI/VersionPicker/VersionPicker';
 
 it('renders without crashing', () => {
-  renderWithTheme(AppVersionPicker);
+  renderWithTheme(AppVersionPicker, { selectedVersion: '1' });
 });
 
 it('lists all non test versions by default', () => {

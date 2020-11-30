@@ -4,7 +4,7 @@ import yaml from 'js-yaml';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { installApp } from 'stores/appcatalog/actions';
@@ -104,10 +104,13 @@ const InstallAppModal = (props) => {
       });
   }
 
-  const updateNamespace = (ns) => {
-    setNamespace(ns);
-    setNamespaceError(validateAppName(ns).message);
-  };
+  const updateNamespace = useCallback(
+    (ns) => {
+      setNamespace(ns);
+      setNamespaceError(validateAppName(ns).message);
+    },
+    [setNamespace, setNamespaceError]
+  );
 
   const updateName = (newName) => {
     if (namespace === name) {

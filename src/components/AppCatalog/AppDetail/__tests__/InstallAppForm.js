@@ -5,21 +5,24 @@ import { renderWithTheme } from 'testUtils/renderUtils';
 import InstallAppForm from '../InstallAppForm';
 
 it('renders without crashing', () => {
-  renderWithTheme(InstallAppForm);
+  renderWithTheme(InstallAppForm, { version: '1' });
 });
 
 it('renders a normal namespace field usually', () => {
-  const { getByLabelText } = renderWithTheme(InstallAppForm);
+  const { getByLabelText } = renderWithTheme(InstallAppForm, { version: '1' });
 
   const namespaceField = getByLabelText('Namespace:');
   expect(namespaceField).not.toHaveAttribute('read-only');
 });
 
-it('renders a readonly namespace field for nginx-ingress-controller-app', () => {
-  const { getByLabelText } = renderWithTheme(InstallAppForm, {
+it('use kube-system as default namespace for nginx-ingress-controller-app', () => {
+  const onChangeNamespaceMock = jest.fn();
+
+  renderWithTheme(InstallAppForm, {
     appName: 'nginx-ingress-controller-app',
+    version: '1',
+    onChangeNamespace: onChangeNamespaceMock,
   });
 
-  const namespaceField = getByLabelText('Namespace:');
-  expect(namespaceField).toHaveAttribute('readOnly');
+  expect(onChangeNamespaceMock).toHaveBeenCalledWith('kube-system');
 });
