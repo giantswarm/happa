@@ -70,7 +70,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
 
-  const noLabels = Object.keys(labels).length === 0;
+  const noLabels = !labels || Object.keys(labels).length === 0;
 
   const dispatch = useDispatch();
 
