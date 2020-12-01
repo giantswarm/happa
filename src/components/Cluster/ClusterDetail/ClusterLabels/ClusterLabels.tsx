@@ -145,6 +145,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
 ClusterLabels.propTypes = {
   className: PropTypes.string,
   clusterId: PropTypes.string.isRequired,
+  // @ts-ignore
   labels: PropTypes.object,
 };
 
