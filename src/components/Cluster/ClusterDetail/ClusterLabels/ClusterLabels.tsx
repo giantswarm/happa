@@ -15,7 +15,7 @@ import EditLabelTooltip from './EditLabelTooltip';
 
 interface IClusterLabelsProps extends ComponentPropsWithoutRef<'div'> {
   clusterId: string;
-  labels: V5ClusterLabelsProperty;
+  labels?: V5ClusterLabelsProperty;
 }
 
 const ClusterLabelsWrapper = styled.div`
@@ -98,28 +98,29 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
       ) : (
         <>
           <LabelsWrapper>
-            {Object.entries(labels).map(([label, value]) => (
-              <LabelWrapper key={label}>
-                <EditLabelTooltip
-                  allowInteraction={!loading && allowEditing}
-                  label={label}
-                  onOpen={(isOpen) => setAllowEditing(isOpen)}
-                  onSave={save}
-                  value={value}
-                />
-                <DeleteLabelButton
-                  allowInteraction={!loading && allowEditing}
-                  onOpen={(isOpen) => setAllowEditing(isOpen)}
-                  onDelete={() => {
-                    save({ key: label, value: null });
-                  }}
-                  role='button'
-                  aria-label={`Delete '${label}' label`}
-                >
-                  &times;
-                </DeleteLabelButton>
-              </LabelWrapper>
-            ))}
+            {labels &&
+              Object.entries(labels).map(([label, value]) => (
+                <LabelWrapper key={label}>
+                  <EditLabelTooltip
+                    allowInteraction={!loading && allowEditing}
+                    label={label}
+                    onOpen={(isOpen) => setAllowEditing(isOpen)}
+                    onSave={save}
+                    value={value}
+                  />
+                  <DeleteLabelButton
+                    allowInteraction={!loading && allowEditing}
+                    onOpen={(isOpen) => setAllowEditing(isOpen)}
+                    onDelete={() => {
+                      save({ key: label, value: null });
+                    }}
+                    role='button'
+                    aria-label={`Delete '${label}' label`}
+                  >
+                    &times;
+                  </DeleteLabelButton>
+                </LabelWrapper>
+              ))}
             <EditLabelTooltip
               allowInteraction={!loading && allowEditing}
               label=''
@@ -144,8 +145,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
 ClusterLabels.propTypes = {
   className: PropTypes.string,
   clusterId: PropTypes.string.isRequired,
-  // @ts-ignore
-  labels: PropTypes.object.isRequired,
+  labels: PropTypes.object,
 };
 
 export default ClusterLabels;
