@@ -25,8 +25,8 @@ interface IAppCatalogApp {
   home: string;
   icon: string;
   name: string;
-  sources: string[];
-  annotations: IAppCatalogAppAnnotations;
+  sources?: string[];
+  annotations?: IAppCatalogAppAnnotations;
   urls: string[];
 
   // Injected by client-side.
