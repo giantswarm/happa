@@ -62,7 +62,33 @@ describe('appcatalog::actions', () => {
           type: CLUSTER_LOAD_APP_README_ERROR,
           appVersion: invalidAppVersion,
           catalogName: 'notUnderTest',
-          error: 'No list of sources to check for a README.',
+          error: 'This app does not reference a README file.',
+        },
+      ];
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('dispatches an error if receiving an appVersion without a README annotation', async () => {
+      const initialState = {} as IState;
+      const store = mockStore(initialState);
+      const appVersionWithEmptySources = ({} as unknown) as IAppCatalogApp;
+
+      await store.dispatch(
+        loadAppReadme('notUnderTest', appVersionWithEmptySources)
+      );
+
+      const expectedActions = [
+        {
+          type: CLUSTER_LOAD_APP_README_REQUEST,
+          appVersion: appVersionWithEmptySources,
+          catalogName: 'notUnderTest',
+        },
+        {
+          type: CLUSTER_LOAD_APP_README_ERROR,
+          appVersion: appVersionWithEmptySources,
+          catalogName: 'notUnderTest',
+          error: 'This app does not reference a README file.',
         },
       ];
 
@@ -109,6 +135,45 @@ describe('appcatalog::actions', () => {
 
       const appVersionWithReadmeInSources = {
         sources: ['http://mockserver.fake/README.md'],
+      } as IAppCatalogApp;
+
+      await store.dispatch(
+        loadAppReadme('notUnderTest', appVersionWithReadmeInSources)
+      );
+
+      const expectedActions = [
+        {
+          type: CLUSTER_LOAD_APP_README_REQUEST,
+          appVersion: appVersionWithReadmeInSources,
+          catalogName: 'notUnderTest',
+        },
+        {
+          type: CLUSTER_LOAD_APP_README_SUCCESS,
+          appVersion: appVersionWithReadmeInSources,
+          catalogName: 'notUnderTest',
+          readmeText:
+            'This is a sample readme, fetched from http://mockserver.fake/README.md',
+        },
+      ];
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('fetches a readme file and dispatches the success action if the appVersion has a README URLs in its annotations', async () => {
+      const initialState = {} as IState;
+      const store = mockStore(initialState);
+      nock('http://mockserver.fake')
+        .get('/README.md')
+        .reply(
+          StatusCodes.Ok,
+          'This is a sample readme, fetched from http://mockserver.fake/README.md'
+        );
+
+      const appVersionWithReadmeInSources = {
+        annotations: {
+          'application.giantswarm.io/readme':
+            'http://mockserver.fake/README.md',
+        },
       } as IAppCatalogApp;
 
       await store.dispatch(
