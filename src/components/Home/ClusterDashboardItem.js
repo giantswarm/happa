@@ -1,4 +1,4 @@
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers';

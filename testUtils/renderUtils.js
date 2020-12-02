@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import App from 'App';
 import { ConnectedRouter } from 'connected-react-router';
-import { ThemeProvider } from 'emotion-theming';
+import { ThemeProvider } from '@emotion/react';
 import { createMemoryHistory } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import React from 'react';

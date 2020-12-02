@@ -1,4 +1,4 @@
-import { withTheme } from 'emotion-theming';
+import { withTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';

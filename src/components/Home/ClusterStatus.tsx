@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
