@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
+import { Providers } from 'shared/constants';
 import { v5ClustersResponse } from 'testUtils/mockHttpCalls';
 import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
@@ -17,6 +18,7 @@ describe('View', () => {
     renderWithStore(View, {
       organization,
       clusters: [],
+      provider: Providers.AWS,
       credentials: [],
       loadingCredentials: false,
       showCredentialsForm: false,
@@ -71,6 +73,7 @@ describe('View', () => {
     const { rerender } = renderWithStore(View, {
       organization,
       clusters: [],
+      provider: Providers.AWS,
       credentials: [],
       loadingCredentials: true,
       showCredentialsForm: false,
@@ -99,6 +102,7 @@ describe('View', () => {
       getComponentWithStore(View, {
         organization,
         clusters: [],
+        provider: Providers.AWS,
         credentials,
         loadingCredentials: false,
         showCredentialsForm: false,
