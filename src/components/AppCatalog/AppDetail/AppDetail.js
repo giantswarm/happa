@@ -24,14 +24,6 @@ import LoadingOverlay from 'UI/LoadingOverlay';
 
 import InstallAppModal from './InstallAppModal';
 
-function hasReadmeSource(appVersion) {
-  if (!appVersion.sources) {
-    return false;
-  }
-
-  return appVersion.sources.some((url) => url.endsWith(Constants.README_FILE));
-}
-
 class AppDetail extends React.Component {
   imgError = () => {
     this.setState({
@@ -77,11 +69,11 @@ class AppDetail extends React.Component {
       errorLoadingReadme,
     } = this.props;
 
+    // Skip if we don't know what app we're looking at yet
+    if (!selectedAppVersion) return;
+
     // Skip if there was an error loading the readme.
     if (errorLoadingReadme) return;
-
-    // Skip if there is no readme source to load.
-    if (!hasReadmeSource(selectedAppVersion)) return;
 
     // Skip if the readme is already loaded.
     if (selectedAppVersion.readme) return;
@@ -195,7 +187,7 @@ function mapStateToProps(state, ownProps) {
   const appName = decodeURIComponent(ownProps.match.params.app);
   const version = decodeURIComponent(ownProps.match.params.version);
 
-  let appVersions = [{}];
+  let appVersions = [];
   if (
     state.entities.catalogs.items[catalogName] &&
     !state.entities.catalogs.items[catalogName].isFetchingIndex &&

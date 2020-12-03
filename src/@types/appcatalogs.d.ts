@@ -25,11 +25,16 @@ interface IAppCatalogApp {
   home: string;
   icon: string;
   name: string;
-  sources: string[];
+  sources?: string[];
+  annotations?: IAppCatalogAppAnnotations;
   urls: string[];
 
   // Injected by client-side.
   readme?: string;
+}
+
+interface IAppCatalogAppAnnotations {
+  'application.giantswarm.io/readme': string;
 }
 
 interface IAppCatalogAppMap {
