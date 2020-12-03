@@ -11,6 +11,7 @@ import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
 import { Ellipsis } from 'styles';
@@ -184,6 +185,7 @@ class OrganizationDetail extends React.Component {
       showCredentialsForm,
       loadingCredentials,
       supportsBYOC,
+      provider,
     } = this.props;
     if (!organization) return null;
 
@@ -240,6 +242,7 @@ class OrganizationDetail extends React.Component {
         {supportsBYOC && (
           <Section title='Provider credentials'>
             <Credentials
+              provider={provider}
               organizationName={organization.id}
               credentials={credentials}
               showCredentialsForm={showCredentialsForm}
@@ -272,6 +275,7 @@ OrganizationDetail.propTypes = {
   loadingCredentials: PropTypes.bool,
   showCredentialsForm: PropTypes.bool,
   membersForTable: PropTypes.array,
+  provider: PropTypes.oneOf(Object.values(Providers)),
   supportsBYOC: PropTypes.bool,
 };
 
