@@ -9,13 +9,13 @@ import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
-import { ITheme } from 'styles';
+import { Theme } from '@emotion/react';
 
 import Routes from './Routes';
 
 interface IAppProps {
   store: Store;
-  theme: ITheme;
+  theme: Theme;
   history: History<History.LocationState>;
 }
 

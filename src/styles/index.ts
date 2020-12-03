@@ -71,14 +71,16 @@ export interface IThemeFonts {
   console: string;
 }
 
-export interface ITheme {
-  colors: IColorMap;
-  border_radius: string;
-  breakpoints: Record<CSSBreakpoints, number>;
-  fontFamilies: IThemeFonts;
-  border: string;
-  spacingPx: number;
-  disabledOpacity: number;
+declare module '@emotion/react' {
+  export interface Theme {
+    colors: IColorMap;
+    border_radius: string;
+    breakpoints: Record<CSSBreakpoints, number>;
+    fontFamilies: IThemeFonts;
+    border: string;
+    spacingPx: number;
+    disabledOpacity: number;
+  }
 }
 
 /***** BASE STYLES ****/
@@ -153,8 +155,8 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
 /* Style Wrappers & Reusable elements */
 
 export const Code = styled.code`
-  font-family: ${(props) => props.theme.fontFamilies.console};
-  background-color: ${(props) => props.theme.colors.shade2};
+  font-family: ${({theme}) => theme.fontFamilies.console};
+  background-color: ${({theme}) => theme.colors.shade2};
   border-radius: 2px;
   padding: 0 12px;
   height: 30px;
