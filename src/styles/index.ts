@@ -1,4 +1,4 @@
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { CSSBreakpoints } from 'shared/constants';
 
@@ -71,14 +71,16 @@ export interface IThemeFonts {
   console: string;
 }
 
-export interface ITheme {
-  colors: IColorMap;
-  border_radius: string;
-  breakpoints: Record<CSSBreakpoints, number>;
-  fontFamilies: IThemeFonts;
-  border: string;
-  spacingPx: number;
-  disabledOpacity: number;
+declare module '@emotion/react' {
+  export interface Theme {
+    colors: IColorMap;
+    border_radius: string;
+    breakpoints: Record<CSSBreakpoints, number>;
+    fontFamilies: IThemeFonts;
+    border: string;
+    spacingPx: number;
+    disabledOpacity: number;
+  }
 }
 
 /***** BASE STYLES ****/

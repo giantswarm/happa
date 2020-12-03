@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom/extend-expect';
 
+import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render } from '@testing-library/react';
 // Components
 import NodePoolDropdownMenu from 'Cluster/ClusterDetail/NodePoolDropdownMenu';
-import { ThemeProvider } from 'emotion-theming';
 import React from 'react';
 import theme from 'styles/theme';
 // Not really needed actually. Keeping it by now as an example of simple test without store.

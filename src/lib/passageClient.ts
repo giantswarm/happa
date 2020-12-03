@@ -137,17 +137,18 @@ class Passage {
     helpers.validateOrRaise(params, constraints);
 
     const url = `${this.config.endpoint}/recovery/`;
-    const res = await HttpClientImpl.post<
-      IRequestPasswordRecoveryTokenResponse
-    >(url, {
-      timeout: this.config.timeout_ms,
-      data: {
-        email: params.email,
-      },
-      headers: {
-        ContentType: 'application/json',
-      },
-    });
+    const res = await HttpClientImpl.post<IRequestPasswordRecoveryTokenResponse>(
+      url,
+      {
+        timeout: this.config.timeout_ms,
+        data: {
+          email: params.email,
+        },
+        headers: {
+          ContentType: 'application/json',
+        },
+      }
+    );
 
     return res.data;
   }

@@ -53,7 +53,6 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       min={3}
       onChange={onUpdateMemorySize}
       stepSize={1}
-      unit='GB'
       value={memorySize}
       eventNameSuffix='MEMORY'
     />
@@ -63,7 +62,6 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       min={10}
       onChange={onUpdateDiskSize}
       stepSize={10}
-      unit='GB'
       value={diskSize}
       eventNameSuffix='STORAGE'
     />

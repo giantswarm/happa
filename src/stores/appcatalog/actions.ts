@@ -257,17 +257,6 @@ export function loadAppReadme(
       appVersion,
     });
 
-    if (!appVersion.sources) {
-      dispatch({
-        type: CLUSTER_LOAD_APP_README_ERROR,
-        catalogName,
-        appVersion,
-        error: 'No list of sources to check for a README.',
-      });
-
-      return Promise.resolve();
-    }
-
     let readmeURL = selectReadmeURL(appVersion);
     if (!readmeURL) {
       dispatch({

@@ -20,12 +20,12 @@ describe('HttpClient', () => {
     // Has defaults
     expect(client.getRequestConfig()).toStrictEqual({
       url: '',
-      method: 'GET',
+      method: HttpRequestMethods.GET,
       timeout: 10000,
       headers: {},
     });
 
-    const config: Partial<IHttpClientConfig> = {
+    const config: IHttpClientConfig = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -47,7 +47,7 @@ describe('HttpClient', () => {
   it('can be configured with various setters', () => {
     // eslint-disable-next-line no-magic-numbers
     const token = generateRandomString(15);
-    const config: Partial<IHttpClientConfig> = {
+    const config: IHttpClientConfig = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
       headers: {
@@ -70,14 +70,8 @@ describe('HttpClient', () => {
 
     client
       .setHeader('TestHeader')
-      .setHeader(
-        'TestHeader2',
-        (config.headers as IHttpClientConfig['headers']).TestHeader2
-      )
-      .setHeader(
-        'TestHeader3',
-        (config.headers as IHttpClientConfig['headers']).TestHeader3
-      )
+      .setHeader('TestHeader2', config.headers.TestHeader2)
+      .setHeader('TestHeader3', config.headers.TestHeader3)
       .setAuthorizationToken('testScheme', token)
       .setRequestMethod(HttpRequestMethods.POST)
       .setBody({

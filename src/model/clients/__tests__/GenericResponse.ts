@@ -50,6 +50,6 @@ describe('GenericResponse', () => {
     });
     expect(res.requestConfig).toStrictEqual({
       url: '/v4/test',
-    });
+    } as IHttpClientConfig);
   });
 });

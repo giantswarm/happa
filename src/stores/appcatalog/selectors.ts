@@ -28,5 +28,8 @@ export function selectIngressAppFromCluster(cluster: Cluster) {
 export function selectReadmeURL(
   appVersion: IAppCatalogApp
 ): string | undefined {
-  return appVersion.sources?.find((url) => url.endsWith(Constants.README_FILE));
+  return (
+    appVersion.annotations?.['application.giantswarm.io/readme'] ||
+    appVersion.sources?.find((url) => url.endsWith(Constants.README_FILE))
+  );
 }
