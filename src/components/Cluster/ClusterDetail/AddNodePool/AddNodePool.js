@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import AddNodePoolAZSelection from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolAZSelection';
+import AZSelection from 'Cluster/AZSelection/AZSelection';
+import { AvailabilityZoneSelection } from 'Cluster/AZSelection/AZSelectionUtils';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
-import { AvailabilityZoneSelection } from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolUtils';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import { compare } from 'lib/semver';
@@ -52,7 +52,7 @@ const CheckboxWrapper = styled.div`
   }
 `;
 
-const StyledAddNodePoolAZSelection = styled(AddNodePoolAZSelection)`
+const StyledAZSelection = styled(AZSelection)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 4}px;
 `;
 
@@ -446,7 +446,7 @@ class AddNodePool extends Component {
           )}
         </Section>
 
-        <StyledAddNodePoolAZSelection
+        <StyledAZSelection
           npID={id}
           value={azSelection}
           provider={provider}

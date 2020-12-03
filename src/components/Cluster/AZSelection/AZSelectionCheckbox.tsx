@@ -1,4 +1,3 @@
-import { AvailabilityZoneSelection } from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolUtils';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -6,7 +5,9 @@ import { RUMActions } from 'shared/constants/realUserMonitoring';
 import RadioInput from 'UI/Inputs/RadioInput';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
-interface IAddNodePoolAZSelectionCheckboxProps
+import { AvailabilityZoneSelection } from './AZSelectionUtils';
+
+interface IAZSelectionCheckboxProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof RadioInput>,
     'onChange' | 'value' | 'id'
@@ -17,7 +18,7 @@ interface IAddNodePoolAZSelectionCheckboxProps
   npID?: string;
 }
 
-const AddNodePoolAZSelectionCheckbox: React.FC<IAddNodePoolAZSelectionCheckboxProps> = ({
+const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
   onChange,
   type,
   value,
@@ -42,17 +43,17 @@ const AddNodePoolAZSelectionCheckbox: React.FC<IAddNodePoolAZSelectionCheckboxPr
   );
 };
 
-AddNodePoolAZSelectionCheckbox.propTypes = {
+AZSelectionCheckbox.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number,
   type: PropTypes.number,
   npID: PropTypes.string,
 };
 
-AddNodePoolAZSelectionCheckbox.defaultProps = {
+AZSelectionCheckbox.defaultProps = {
   type: AvailabilityZoneSelection.Automatic,
   value: AvailabilityZoneSelection.Automatic,
   npID: '',
 };
 
-export default AddNodePoolAZSelectionCheckbox;
+export default AZSelectionCheckbox;

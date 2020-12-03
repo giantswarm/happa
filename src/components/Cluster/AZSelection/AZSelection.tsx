@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import AddNodePoolAZSelectionCheckbox from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolAZSelectionCheckbox';
-import { AvailabilityZoneSelection } from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolUtils';
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -9,6 +7,9 @@ import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
+
+import AZSelectionCheckbox from './AZSelectionCheckbox';
+import { AvailabilityZoneSelection } from './AZSelectionUtils';
 
 const AZSelectionLabel = styled(ClusterCreationLabelSpan)`
   display: block;
@@ -70,7 +71,7 @@ interface IUpdateZoneLabelsPayload {
   valid: boolean;
 }
 
-interface IAddNodePoolAZSelectionProps
+interface IAZSelectionProps
   extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   onUpdateZones: (
@@ -95,7 +96,7 @@ interface IAddNodePoolAZSelectionProps
   selectedZones?: string[];
 }
 
-const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
+const AZSelection: React.FC<IAZSelectionProps> = ({
   onChange,
   onUpdateZones,
   value,
@@ -140,7 +141,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           expanded={value === AvailabilityZoneSelection.Automatic}
           onToggle={onToggleFakeCallback}
         >
-          <AddNodePoolAZSelectionCheckbox
+          <AZSelectionCheckbox
             onChange={onChange}
             value={value}
             npID={npID}
@@ -170,7 +171,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           expanded={value === AvailabilityZoneSelection.Manual}
           onToggle={onToggleFakeCallback}
         >
-          <AddNodePoolAZSelectionCheckbox
+          <AZSelectionCheckbox
             onChange={onChange}
             value={value}
             npID={npID}
@@ -209,7 +210,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
           expanded={value === AvailabilityZoneSelection.NotSpecified}
           onToggle={onToggleFakeCallback}
         >
-          <AddNodePoolAZSelectionCheckbox
+          <AZSelectionCheckbox
             onChange={onChange}
             value={value}
             npID={npID}
@@ -230,7 +231,7 @@ const AddNodePoolAZSelection: React.FC<IAddNodePoolAZSelectionProps> = ({
   );
 };
 
-AddNodePoolAZSelection.propTypes = {
+AZSelection.propTypes = {
   onUpdateZones: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number,
@@ -244,7 +245,7 @@ AddNodePoolAZSelection.propTypes = {
   selectedZones: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
-AddNodePoolAZSelection.defaultProps = {
+AZSelection.defaultProps = {
   value: AvailabilityZoneSelection.Automatic,
   npID: '',
   provider: Providers.AWS,
@@ -256,4 +257,4 @@ AddNodePoolAZSelection.defaultProps = {
   selectedZones: [],
 };
 
-export default AddNodePoolAZSelection;
+export default AZSelection;
