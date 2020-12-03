@@ -1,6 +1,7 @@
+import { ThemeProvider } from '@emotion/react';
+import { Theme } from '@emotion/react';
 import CPAuthProvider from 'Auth/CP/CPAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
-import { ThemeProvider } from '@emotion/react';
 import Footer from 'Footer/Footer';
 import { History } from 'history';
 import PropTypes from 'prop-types';
@@ -9,7 +10,6 @@ import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
-import { Theme } from '@emotion/react';
 
 import Routes from './Routes';
 

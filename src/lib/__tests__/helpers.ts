@@ -11,13 +11,13 @@ import {
   formatDate,
   hasAppropriateLength,
   humanFileSize,
+  IHumanFileSizeValue,
   isJwtExpired,
   makeKubeConfigTextFile,
   relativeDate,
   toTitleCase,
   truncate,
   validateOrRaise,
-  IHumanFileSizeValue
 } from 'lib/helpers';
 import { IKeyPair } from 'shared/types';
 
@@ -115,7 +115,9 @@ cool`);
       ];
 
       for (const attempt of attempts) {
-        expect(humanFileSize(attempt.size)).toStrictEqual(attempt.result as IHumanFileSizeValue<true>);
+        expect(humanFileSize(attempt.size)).toStrictEqual(
+          attempt.result as IHumanFileSizeValue<true>
+        );
       }
 
       /* eslint-enable no-magic-numbers */

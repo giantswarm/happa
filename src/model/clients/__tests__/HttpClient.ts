@@ -70,14 +70,8 @@ describe('HttpClient', () => {
 
     client
       .setHeader('TestHeader')
-      .setHeader(
-        'TestHeader2',
-        (config.headers as IHttpClientConfig['headers']).TestHeader2
-      )
-      .setHeader(
-        'TestHeader3',
-        (config.headers as IHttpClientConfig['headers']).TestHeader3
-      )
+      .setHeader('TestHeader2', config.headers.TestHeader2)
+      .setHeader('TestHeader3', config.headers.TestHeader3)
       .setAuthorizationToken('testScheme', token)
       .setRequestMethod(HttpRequestMethods.POST)
       .setBody({

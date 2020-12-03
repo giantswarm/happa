@@ -194,7 +194,7 @@ module.exports = {
     'react/jsx-pascal-case': 1,
     'react-hooks/rules-of-hooks': 2,
     'react-hooks/exhaustive-deps': 1,
-    'simple-import-sort/sort': 2,
+    'simple-import-sort/imports': 2,
     'import/first': 2,
     'import/newline-after-import': 2,
     'import/no-duplicates': 0,

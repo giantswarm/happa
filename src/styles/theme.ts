@@ -1,5 +1,5 @@
+import { Theme } from '@emotion/react';
 import { CSSBreakpoints } from 'shared/constants';
-import {Theme} from '@emotion/react'
 
 const theme: Theme = {
   colors: {
