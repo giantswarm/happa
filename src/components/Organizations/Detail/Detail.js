@@ -6,6 +6,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
@@ -68,6 +69,7 @@ DetailIndex.propTypes = {
   loadingCredentials: PropTypes.bool,
   showCredentialsForm: PropTypes.bool,
   supportsBYOC: PropTypes.bool,
+  provider: PropTypes.oneOf(Object.values(Providers)),
 };
 
 function mapStateToProps(state, ownProps) {
@@ -87,7 +89,8 @@ function mapStateToProps(state, ownProps) {
     });
   });
 
-  const providerSupportsBYOC = supportsBYOC(state.main.info.general.provider);
+  const { provider } = state.main.info.general;
+  const providerSupportsBYOC = supportsBYOC(provider);
 
   return {
     organization,
@@ -99,6 +102,7 @@ function mapStateToProps(state, ownProps) {
       ORGANIZATION_CREDENTIALS_LOAD_REQUEST
     ),
     showCredentialsForm: state.entities.organizations.credentials.showForm,
+    provider,
     supportsBYOC: providerSupportsBYOC,
   };
 }
