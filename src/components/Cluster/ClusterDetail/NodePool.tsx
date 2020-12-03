@@ -19,7 +19,12 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-const NPViewAndEditNameStyled = styled(ViewAndEditName)`
+// TODO(axbarsan): Remove type assertion once the bug is fixed in `emotion`.
+const NPViewAndEditNameStyled = styled(
+  ViewAndEditName as React.ComponentClass<
+    React.ComponentPropsWithRef<typeof ViewAndEditName>
+  >
+)`
   input[type='text'] {
     font-size: 15px;
     line-height: 1.8em;
@@ -240,7 +245,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             value={nodePool.name}
             typeLabel='node pool'
             onSave={this.editNodePoolName}
-            ref={(viewEditName: HTMLSpanElement | null): void => {
+            ref={(viewEditName: unknown) => {
               this.viewEditNameRef = viewEditName as INPViewAndEditName;
             }}
             onToggleEditingState={this.toggleEditingState}

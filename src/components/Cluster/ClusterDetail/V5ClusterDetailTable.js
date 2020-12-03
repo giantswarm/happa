@@ -1,4 +1,4 @@
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';

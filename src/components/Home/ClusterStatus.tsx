@@ -1,5 +1,5 @@
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -15,7 +15,6 @@ import {
   isClusterUpdating,
 } from 'stores/cluster/utils';
 import { IState } from 'stores/state';
-import { ITheme } from 'styles';
 
 const Wrapper = styled.div<{
   disabled: boolean;
@@ -57,7 +56,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   onClick,
   ...rest
 }) => {
-  const theme = useTheme<ITheme>();
+  const theme = useTheme();
 
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
   const isClusterAwaitingUpgrade = useSelector(

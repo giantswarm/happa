@@ -11,6 +11,7 @@ import {
   formatDate,
   hasAppropriateLength,
   humanFileSize,
+  IHumanFileSizeValue,
   isJwtExpired,
   makeKubeConfigTextFile,
   relativeDate,
@@ -114,7 +115,9 @@ cool`);
       ];
 
       for (const attempt of attempts) {
-        expect(humanFileSize(attempt.size)).toStrictEqual(attempt.result);
+        expect(humanFileSize(attempt.size)).toStrictEqual(
+          attempt.result as IHumanFileSizeValue<true>
+        );
       }
 
       /* eslint-enable no-magic-numbers */
@@ -200,7 +203,7 @@ cool`);
 
       for (const attempt of attempts) {
         expect(humanFileSize(attempt.size, false)).toStrictEqual(
-          attempt.result
+          attempt.result as IHumanFileSizeValue<false>
         );
       }
 

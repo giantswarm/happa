@@ -1,7 +1,7 @@
+import { Theme } from '@emotion/react';
 import { CSSBreakpoints } from 'shared/constants';
-import { ITheme } from 'styles';
 
-const theme: ITheme = {
+const theme: Theme = {
   colors: {
     // dark blue as defined in Giant Swarm's style guide
     darkBlue: '#234a61',

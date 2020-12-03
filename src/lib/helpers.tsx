@@ -75,7 +75,7 @@ type FileSizeUnitNonSI =
   | 'YiB';
 type FileSizeUnit<T> = T extends true ? FileSizeUnitSI : FileSizeUnitNonSI;
 
-interface IHumanFileSizeValue<T extends boolean> {
+export interface IHumanFileSizeValue<T extends boolean> {
   value: string;
   unit: FileSizeUnit<T>;
 }
