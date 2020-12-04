@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import Checkbox from 'UI/Checkbox';
@@ -52,7 +53,7 @@ const CheckboxWrapper = styled.div`
   }
 `;
 
-const StyledAZSelection = styled(AZSelection)`
+const AZSelectionWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 4}px;
 `;
 
@@ -446,19 +447,25 @@ class AddNodePool extends Component {
           )}
         </Section>
 
-        <StyledAZSelection
-          npID={id}
-          value={azSelection}
-          provider={provider}
-          onChange={this.toggleAZSelector}
-          minNumOfZones={minAZ}
-          maxNumOfZones={maxAZ}
-          defaultNumOfZones={defaultAZ}
-          allZones={this.props.availabilityZones}
-          numOfZones={this.state.availabilityZonesPicker.value}
-          selectedZones={zonesArray}
-          onUpdateZones={this.updateAZ}
-        />
+        <AZSelectionWrapper>
+          <ClusterCreationLabelSpan as='div'>
+            Availability Zones selection
+          </ClusterCreationLabelSpan>
+          <AZSelection
+            uniqueIdentifier={`np-${id}-az`}
+            baseActionName={RUMActions.SelectAZSelection}
+            value={azSelection}
+            provider={provider}
+            onChange={this.toggleAZSelector}
+            minNumOfZones={minAZ}
+            maxNumOfZones={maxAZ}
+            defaultNumOfZones={defaultAZ}
+            allZones={this.props.availabilityZones}
+            numOfZones={this.state.availabilityZonesPicker.value}
+            selectedZones={zonesArray}
+            onUpdateZones={this.updateAZ}
+          />
+        </AZSelectionWrapper>
 
         {this.state.allowSpotInstances && (
           <Section>
@@ -530,7 +537,6 @@ class AddNodePool extends Component {
             )}
           </Section>
         )}
-
         <Section className='scaling-range'>
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector

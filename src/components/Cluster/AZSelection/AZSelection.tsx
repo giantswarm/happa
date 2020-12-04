@@ -6,19 +6,15 @@ import Panel from 'react-bootstrap/lib/Panel';
 import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 
 import AZSelectionCheckbox from './AZSelectionCheckbox';
 import { AvailabilityZoneSelection } from './AZSelectionUtils';
-
-const AZSelectionLabel = styled(ClusterCreationLabelSpan)`
-  display: block;
-`;
 
 const StyledPanel = styled(Panel)`
   background: transparent;
   border-width: 0;
   margin-bottom: ${({ theme }) => theme.spacingPx * 3}px;
+  box-shadow: none;
 `;
 
 const StyledPanelCollapse = styled(PanelCollapse)`
@@ -80,8 +76,9 @@ interface IAZSelectionProps
 
   // Common.
   value?: AvailabilityZoneSelection;
-  npID?: string;
+  uniqueIdentifier?: string;
   provider?: PropertiesOf<typeof Providers>;
+  baseActionName?: string;
 
   // Manual and automatic modes.
   allZones?: string[];
@@ -100,7 +97,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
   onChange,
   onUpdateZones,
   value,
-  npID,
+  uniqueIdentifier,
   provider,
   allZones,
   minNumOfZones,
@@ -108,6 +105,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
   defaultNumOfZones,
   numOfZones,
   selectedZones,
+  baseActionName,
   ...rest
 }) => {
   /**
@@ -134,7 +132,6 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
 
   return (
     <div {...rest}>
-      <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
       {maxNumOfZones! > 0 && (
         <StyledPanel
           expanded={value === AvailabilityZoneSelection.Automatic}
@@ -143,9 +140,10 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
           <AZSelectionCheckbox
             onChange={onChange}
             value={value}
-            npID={npID}
+            uniqueIdentifier={uniqueIdentifier}
             label='Automatic'
             type={AvailabilityZoneSelection.Automatic}
+            baseActionName={baseActionName}
           />
           <StyledPanelCollapse>
             <AZSelectorWrapper>
@@ -173,9 +171,10 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
           <AZSelectionCheckbox
             onChange={onChange}
             value={value}
-            npID={npID}
+            uniqueIdentifier={uniqueIdentifier}
             label='Manual'
             type={AvailabilityZoneSelection.Manual}
+            baseActionName={baseActionName}
           />
           <StyledPanelCollapse>
             <p>
@@ -212,9 +211,10 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
           <AZSelectionCheckbox
             onChange={onChange}
             value={value}
-            npID={npID}
+            uniqueIdentifier={uniqueIdentifier}
             label='Not specified'
             type={AvailabilityZoneSelection.NotSpecified}
+            baseActionName={baseActionName}
           />
           <StyledPanelCollapse>
             <p>
@@ -234,7 +234,7 @@ AZSelection.propTypes = {
   onUpdateZones: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number,
-  npID: PropTypes.string,
+  uniqueIdentifier: PropTypes.string,
   provider: PropTypes.oneOf(Object.values(Providers)),
   allZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   minNumOfZones: PropTypes.number,
@@ -242,11 +242,12 @@ AZSelection.propTypes = {
   defaultNumOfZones: PropTypes.number,
   numOfZones: PropTypes.number,
   selectedZones: PropTypes.arrayOf(PropTypes.string.isRequired),
+  baseActionName: PropTypes.string,
 };
 
 AZSelection.defaultProps = {
   value: AvailabilityZoneSelection.Automatic,
-  npID: '',
+  uniqueIdentifier: '',
   provider: Providers.AWS,
   allZones: [],
   minNumOfZones: 0,
@@ -254,6 +255,7 @@ AZSelection.defaultProps = {
   defaultNumOfZones: 0,
   numOfZones: 0,
   selectedZones: [],
+  baseActionName: '',
 };
 
 export default AZSelection;

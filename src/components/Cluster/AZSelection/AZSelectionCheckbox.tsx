@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import RadioInput from 'UI/Inputs/RadioInput';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
@@ -15,27 +14,27 @@ interface IAZSelectionCheckboxProps
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   type?: AvailabilityZoneSelection;
   value?: AvailabilityZoneSelection;
-  npID?: string;
+  uniqueIdentifier?: string;
+  baseActionName?: string;
 }
 
 const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
   onChange,
   type,
   value,
-  npID,
+  uniqueIdentifier,
+  baseActionName,
   ...rest
 }) => {
   const typeName = AvailabilityZoneSelection[type as AvailabilityZoneSelection];
-  const id = `np-${npID}-az-${typeName.toLowerCase()}`;
+  const id = `${uniqueIdentifier}-${typeName.toLowerCase()}`;
 
   return (
-    <RUMActionTarget
-      name={mergeActionNames(RUMActions.SelectAZSelection, typeName)}
-    >
+    <RUMActionTarget name={mergeActionNames(baseActionName!, typeName)}>
       <RadioInput
         id={id}
         checked={value === type}
-        onChange={() => onChange(type as AvailabilityZoneSelection)}
+        onChange={() => onChange(type!)}
         tabIndex={0}
         {...rest}
       />
@@ -47,13 +46,15 @@ AZSelectionCheckbox.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number,
   type: PropTypes.number,
-  npID: PropTypes.string,
+  uniqueIdentifier: PropTypes.string,
+  baseActionName: PropTypes.string,
 };
 
 AZSelectionCheckbox.defaultProps = {
   type: AvailabilityZoneSelection.Automatic,
   value: AvailabilityZoneSelection.Automatic,
-  npID: '',
+  uniqueIdentifier: '',
+  baseActionName: '',
 };
 
 export default AZSelectionCheckbox;
