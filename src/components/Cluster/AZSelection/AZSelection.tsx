@@ -187,7 +187,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
                 <AvailabilityZonesParser
                   min={minNumOfZones}
                   max={maxNumOfZones}
-                  defaultValue={2}
+                  defaultValue={defaultNumOfZones}
                   zones={allZones}
                   updateAZValuesInParent={onUpdateZones(
                     AvailabilityZoneSelection.Manual

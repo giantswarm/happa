@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import AZSelection from 'Cluster/AZSelection/AZSelection';
+import { AvailabilityZoneSelection } from 'Cluster/AZSelection/AZSelectionUtils';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -81,10 +82,6 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const MASTER_AZ_MODE_AUTO = 'auto';
-const MASTER_AZ_MODE_MANUAL = 'manual';
-const MASTER_AZ_MODE_NOT_SPECIFIED = '';
-
 const defaultNodePool = () => ({
   data: { name: Constants.DEFAULT_NODEPOOL_NAME },
 });
@@ -99,7 +96,7 @@ class CreateNodePoolsCluster extends Component {
       zonesArray: [],
       valid: false,
     },
-    masterAZMode: MASTER_AZ_MODE_NOT_SPECIFIED,
+    masterAZMode: AvailabilityZoneSelection.NotSpecified,
     nodePoolsForms: {
       isValid: false,
       isSubmitting: false,
@@ -127,9 +124,9 @@ class CreateNodePoolsCluster extends Component {
     const isValid =
       this.props.allowSubmit &&
       areNodePoolsValid &&
-      (masterAZMode === MASTER_AZ_MODE_AUTO ||
-        masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED ||
-        (masterAZMode === MASTER_AZ_MODE_MANUAL &&
+      (masterAZMode === AvailabilityZoneSelection.Automatic ||
+        masterAZMode === AvailabilityZoneSelection.NotSpecified ||
+        (masterAZMode === AvailabilityZoneSelection.Manual &&
           availabilityZonesLabels.valid));
 
     return isValid;
@@ -147,7 +144,7 @@ class CreateNodePoolsCluster extends Component {
     };
 
     switch (this.state.masterAZMode) {
-      case MASTER_AZ_MODE_MANUAL:
+      case AvailabilityZoneSelection.Manual:
         createPayload.master_nodes = {
           availability_zones: this.state.availabilityZonesLabels.zonesArray,
           azure: {
@@ -155,14 +152,14 @@ class CreateNodePoolsCluster extends Component {
           },
         };
         break;
-      case MASTER_AZ_MODE_AUTO:
+      case AvailabilityZoneSelection.Automatic:
         createPayload.master_nodes = {
           azure: {
             availability_zones_unspecified: false,
           },
         };
         break;
-      case MASTER_AZ_MODE_NOT_SPECIFIED:
+      case AvailabilityZoneSelection.NotSpecified:
         createPayload.master_nodes = {
           azure: {
             availability_zones_unspecified: true,
@@ -192,8 +189,14 @@ class CreateNodePoolsCluster extends Component {
     }));
   };
 
-  updateAZ = (payload) => {
-    this.setState({ availabilityZonesLabels: payload });
+  updateAZ = (azSelection) => (payload) => {
+    switch (azSelection) {
+      case AvailabilityZoneSelection.Manual:
+        this.setState({
+          availabilityZonesLabels: payload,
+        });
+        break;
+    }
   };
 
   addNodePoolForm = () => {
@@ -262,7 +265,7 @@ class CreateNodePoolsCluster extends Component {
                   allZones={this.props.availabilityZones}
                   numOfZones={zonesArray.length}
                   selectedZones={zonesArray}
-                  onUpdateZones={() => this.updateAZ}
+                  onUpdateZones={this.updateAZ}
                 />
                 <MasterAZSelectionInput
                   label='Master node availability zones selection'
@@ -278,16 +281,21 @@ class CreateNodePoolsCluster extends Component {
                         <InputGroup>
                           <RadioInput
                             id='automatic'
-                            checked={masterAZMode === MASTER_AZ_MODE_AUTO}
+                            checked={
+                              masterAZMode ===
+                              AvailabilityZoneSelection.Automatic
+                            }
                             label='Automatic'
                             onChange={() =>
-                              this.setMasterAZMode(MASTER_AZ_MODE_AUTO)
+                              this.setMasterAZMode(
+                                AvailabilityZoneSelection.Automatic
+                              )
                             }
                           />
                         </InputGroup>
                       </RUMActionTarget>
                     )}
-                    {masterAZMode === MASTER_AZ_MODE_AUTO && (
+                    {masterAZMode === AvailabilityZoneSelection.Automatic && (
                       <p>
                         An Availabilty Zone will be automatically chosen from
                         the existing ones.
@@ -300,16 +308,20 @@ class CreateNodePoolsCluster extends Component {
                         <InputGroup>
                           <RadioInput
                             id='manual'
-                            checked={masterAZMode === MASTER_AZ_MODE_MANUAL}
+                            checked={
+                              masterAZMode === AvailabilityZoneSelection.Manual
+                            }
                             label='Manual'
                             onChange={() =>
-                              this.setMasterAZMode(MASTER_AZ_MODE_MANUAL)
+                              this.setMasterAZMode(
+                                AvailabilityZoneSelection.Manual
+                              )
                             }
                           />
                         </InputGroup>
                       </RUMActionTarget>
                     )}
-                    {masterAZMode === MASTER_AZ_MODE_MANUAL && (
+                    {masterAZMode === AvailabilityZoneSelection.Manual && (
                       <AZWrapperDiv>
                         <AvailabilityZonesParser
                           min={minAZ}
@@ -341,17 +353,21 @@ class CreateNodePoolsCluster extends Component {
                           <RadioInput
                             id='notspecified'
                             checked={
-                              masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED
+                              masterAZMode ===
+                              AvailabilityZoneSelection.NotSpecified
                             }
                             label='Not specified'
                             onChange={() =>
-                              this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
+                              this.setMasterAZMode(
+                                AvailabilityZoneSelection.NotSpecified
+                              )
                             }
                           />
                         </InputGroup>
                       </RUMActionTarget>
                     )}
-                    {masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED && (
+                    {masterAZMode ===
+                      AvailabilityZoneSelection.NotSpecified && (
                       <p>
                         By not specifying an availability zone, Azure will
                         select a zone by itself, where the requested virtual
