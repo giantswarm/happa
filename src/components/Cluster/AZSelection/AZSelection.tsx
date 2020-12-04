@@ -120,23 +120,22 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
 
   let automaticAZSelectionMessage =
     'Availability zones will be selected randomly.';
-  if ((numOfZones as number) < 2) {
+  if (numOfZones! < 2) {
     automaticAZSelectionMessage = `Covering one availability zone, the worker nodes of this node pool will be placed in the same availability zone as the cluster's master node.`;
   }
 
   let manualAZSelectionErrorMessage = '';
-  if ((selectedZones as string[]).length < 1) {
+  if (selectedZones!.length < 1) {
     manualAZSelectionErrorMessage = 'Please select at least one.';
-  } else if ((selectedZones as string[]).length > (maxNumOfZones as number)) {
-    const zoneCountDiff =
-      (selectedZones as string[]).length - (maxNumOfZones as number);
+  } else if (selectedZones!.length > maxNumOfZones!) {
+    const zoneCountDiff = selectedZones!.length - maxNumOfZones!;
     manualAZSelectionErrorMessage = `${maxNumOfZones} is the maximum you can have. Please uncheck at least ${zoneCountDiff} of them.`;
   }
 
   return (
     <div {...rest}>
       <AZSelectionLabel>Availability Zones selection</AZSelectionLabel>
-      {(maxNumOfZones as number) > 0 && (
+      {maxNumOfZones! > 0 && (
         <StyledPanel
           expanded={value === AvailabilityZoneSelection.Automatic}
           onToggle={onToggleFakeCallback}
@@ -166,7 +165,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
           </StyledPanelCollapse>
         </StyledPanel>
       )}
-      {(maxNumOfZones as number) > 0 && (
+      {maxNumOfZones! > 0 && (
         <StyledPanel
           expanded={value === AvailabilityZoneSelection.Manual}
           onToggle={onToggleFakeCallback}

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import AZSelection from 'Cluster/AZSelection/AZSelection';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -249,102 +250,117 @@ class CreateNodePoolsCluster extends Component {
                 onChange={this.updateMasterNodesHighAvailability}
               />
             ) : (
-              <MasterAZSelectionInput
-                label='Master node availability zones selection'
-                inputId='master-node-az-selection'
-                // regular space, hides hint ;)
-                hint={<>&#32;</>}
-              >
-                <div>
-                  {maxAZ > 0 && (
-                    <RUMActionTarget
-                      name={RUMActions.SelectMasterAZSelectionAutomatic}
-                    >
-                      <InputGroup>
-                        <RadioInput
-                          id='automatic'
-                          checked={masterAZMode === MASTER_AZ_MODE_AUTO}
-                          label='Automatic'
-                          onChange={() =>
-                            this.setMasterAZMode(MASTER_AZ_MODE_AUTO)
-                          }
+              <>
+                <AZSelection
+                  npID='haha'
+                  value={masterAZMode}
+                  provider={provider}
+                  onChange={this.setMasterAZMode}
+                  minNumOfZones={minAZ}
+                  maxNumOfZones={maxAZ}
+                  defaultNumOfZones={defaultAZ}
+                  allZones={this.props.availabilityZones}
+                  numOfZones={zonesArray.length}
+                  selectedZones={zonesArray}
+                  onUpdateZones={() => this.updateAZ}
+                />
+                <MasterAZSelectionInput
+                  label='Master node availability zones selection'
+                  inputId='master-node-az-selection'
+                  // regular space, hides hint ;)
+                  hint={<>&#32;</>}
+                >
+                  <div>
+                    {maxAZ > 0 && (
+                      <RUMActionTarget
+                        name={RUMActions.SelectMasterAZSelectionAutomatic}
+                      >
+                        <InputGroup>
+                          <RadioInput
+                            id='automatic'
+                            checked={masterAZMode === MASTER_AZ_MODE_AUTO}
+                            label='Automatic'
+                            onChange={() =>
+                              this.setMasterAZMode(MASTER_AZ_MODE_AUTO)
+                            }
+                          />
+                        </InputGroup>
+                      </RUMActionTarget>
+                    )}
+                    {masterAZMode === MASTER_AZ_MODE_AUTO && (
+                      <p>
+                        An Availabilty Zone will be automatically chosen from
+                        the existing ones.
+                      </p>
+                    )}
+                    {maxAZ > 0 && (
+                      <RUMActionTarget
+                        name={RUMActions.SelectMasterAZSelectionManual}
+                      >
+                        <InputGroup>
+                          <RadioInput
+                            id='manual'
+                            checked={masterAZMode === MASTER_AZ_MODE_MANUAL}
+                            label='Manual'
+                            onChange={() =>
+                              this.setMasterAZMode(MASTER_AZ_MODE_MANUAL)
+                            }
+                          />
+                        </InputGroup>
+                      </RUMActionTarget>
+                    )}
+                    {masterAZMode === MASTER_AZ_MODE_MANUAL && (
+                      <AZWrapperDiv>
+                        <AvailabilityZonesParser
+                          min={minAZ}
+                          max={maxAZ}
+                          defaultValue={defaultAZ}
+                          zones={this.props.availabilityZones}
+                          updateAZValuesInParent={this.updateAZ}
+                          isLabels={true}
+                          isRadioButtons
                         />
-                      </InputGroup>
-                    </RUMActionTarget>
-                  )}
-                  {masterAZMode === MASTER_AZ_MODE_AUTO && (
-                    <p>
-                      An Availabilty Zone will be automatically chosen from the
-                      existing ones.
-                    </p>
-                  )}
-                  {maxAZ > 0 && (
-                    <RUMActionTarget
-                      name={RUMActions.SelectMasterAZSelectionManual}
-                    >
-                      <InputGroup>
-                        <RadioInput
-                          id='manual'
-                          checked={masterAZMode === MASTER_AZ_MODE_MANUAL}
-                          label='Manual'
-                          onChange={() =>
-                            this.setMasterAZMode(MASTER_AZ_MODE_MANUAL)
-                          }
-                        />
-                      </InputGroup>
-                    </RUMActionTarget>
-                  )}
-                  {masterAZMode === MASTER_AZ_MODE_MANUAL && (
-                    <AZWrapperDiv>
-                      <AvailabilityZonesParser
-                        min={minAZ}
-                        max={maxAZ}
-                        defaultValue={defaultAZ}
-                        zones={this.props.availabilityZones}
-                        updateAZValuesInParent={this.updateAZ}
-                        isLabels={true}
-                        isRadioButtons
-                      />
-                      {zonesArray.length < 1 && (
-                        <p className='danger'>
-                          Please select one availability zone.
-                        </p>
-                      )}
-                      {zonesArray.length > maxAZ && (
-                        <p className='danger'>
-                          {maxAZ} is the maximum you can have. Please uncheck{' '}
-                          {zonesArray.length - maxAZ} of them.
-                        </p>
-                      )}
-                    </AZWrapperDiv>
-                  )}
-                  {provider === Providers.AZURE && (
-                    <RUMActionTarget
-                      name={RUMActions.SelectMasterAZSelectionNotSpecified}
-                    >
-                      <InputGroup>
-                        <RadioInput
-                          id='notspecified'
-                          checked={
-                            masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED
-                          }
-                          label='Not specified'
-                          onChange={() =>
-                            this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
-                          }
-                        />
-                      </InputGroup>
-                    </RUMActionTarget>
-                  )}
-                  {masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED && (
-                    <p>
-                      By not specifying an availability zone, Azure will select
-                      a zone by itself, where the requested virtual machine size
-                      has the best availability.
-                    </p>
-                  )}
-                </div>
-              </MasterAZSelectionInput>
+                        {zonesArray.length < 1 && (
+                          <p className='danger'>
+                            Please select one availability zone.
+                          </p>
+                        )}
+                        {zonesArray.length > maxAZ && (
+                          <p className='danger'>
+                            {maxAZ} is the maximum you can have. Please uncheck{' '}
+                            {zonesArray.length - maxAZ} of them.
+                          </p>
+                        )}
+                      </AZWrapperDiv>
+                    )}
+                    {provider === Providers.AZURE && (
+                      <RUMActionTarget
+                        name={RUMActions.SelectMasterAZSelectionNotSpecified}
+                      >
+                        <InputGroup>
+                          <RadioInput
+                            id='notspecified'
+                            checked={
+                              masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED
+                            }
+                            label='Not specified'
+                            onChange={() =>
+                              this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
+                            }
+                          />
+                        </InputGroup>
+                      </RUMActionTarget>
+                    )}
+                    {masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED && (
+                      <p>
+                        By not specifying an availability zone, Azure will
+                        select a zone by itself, where the requested virtual
+                        machine size has the best availability.
+                      </p>
+                    )}
+                  </div>
+                </MasterAZSelectionInput>
+              </>
             )}
           </FlexColumn>
           {Object.keys(nodePools).length === 0 && <HorizontalLine />}
