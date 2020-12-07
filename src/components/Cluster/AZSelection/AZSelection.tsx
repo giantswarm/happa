@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
@@ -7,8 +6,14 @@ import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 
+import AZSelectionAutomatic from './AZSelectionAutomatic';
 import AZSelectionCheckbox from './AZSelectionCheckbox';
-import { AvailabilityZoneSelection } from './AZSelectionUtils';
+import AZSelectionManual from './AZSelectionManual';
+import AZSelectionNotSpecified from './AZSelectionNotSpecified';
+import {
+  AvailabilityZoneSelection,
+  AZSelectionZonesUpdater,
+} from './AZSelectionUtils';
 
 const StyledPanel = styled(Panel)`
   background: transparent;
@@ -38,43 +43,11 @@ const StyledPanelCollapse = styled(PanelCollapse)`
   }
 `;
 
-const ErrorMessage = styled.p`
-  color: ${({ theme }) => theme.colors.error};
-  font-weight: 400;
-  margin-bottom: 0;
-`;
-
-const AZSelectorWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacingPx * 5}px;
-  margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
-`;
-
-const ManualAZSelector = styled.div`
-  font-size: 16px;
-`;
-
-interface IUpdateZonePickerPayload {
-  value: number;
-  valid: boolean;
-}
-
-interface IUpdateZoneLabelsPayload {
-  number: number;
-  zonesString: string;
-  zonesArray: string[];
-  valid: boolean;
-}
-
 interface IAZSelectionProps
   extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
-  onChange: (newAZSelection: AvailabilityZoneSelection) => void;
-  onUpdateZones: (
-    azSelection: AvailabilityZoneSelection
-  ) => (payload: IUpdateZonePickerPayload | IUpdateZoneLabelsPayload) => void;
-
   // Common.
+  onChange: (newAZSelection: AvailabilityZoneSelection) => void;
+  onUpdateZones: AZSelectionZonesUpdater;
   value?: AvailabilityZoneSelection;
   uniqueIdentifier?: string;
   provider?: PropertiesOf<typeof Providers>;
@@ -116,91 +89,57 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
    */
   const onToggleFakeCallback = () => {};
 
-  let automaticAZSelectionMessage =
-    'Availability zones will be selected randomly.';
-  if (numOfZones! < 2) {
-    automaticAZSelectionMessage = `Covering one availability zone, the worker nodes of this node pool will be placed in the same availability zone as the cluster's master node.`;
-  }
-
-  let manualAZSelectionErrorMessage = '';
-  if (selectedZones!.length < 1) {
-    manualAZSelectionErrorMessage = 'Please select at least one.';
-  } else if (selectedZones!.length > maxNumOfZones!) {
-    const zoneCountDiff = selectedZones!.length - maxNumOfZones!;
-    manualAZSelectionErrorMessage = `${maxNumOfZones} is the maximum you can have. Please uncheck at least ${zoneCountDiff} of them.`;
-  }
-
   return (
     <div {...rest}>
       {maxNumOfZones! > 0 && (
-        <StyledPanel
-          expanded={value === AvailabilityZoneSelection.Automatic}
-          onToggle={onToggleFakeCallback}
-        >
-          <AZSelectionCheckbox
-            onChange={onChange}
-            value={value}
-            uniqueIdentifier={uniqueIdentifier}
-            label='Automatic'
-            type={AvailabilityZoneSelection.Automatic}
-            baseActionName={baseActionName}
-          />
-          <StyledPanelCollapse>
-            <AZSelectorWrapper>
-              <p>Number of availability zones to use:</p>
-              <AvailabilityZonesParser
-                min={minNumOfZones}
-                max={maxNumOfZones}
-                defaultValue={defaultNumOfZones}
-                zones={allZones}
-                updateAZValuesInParent={onUpdateZones(
-                  AvailabilityZoneSelection.Automatic
-                )}
-                isLabels={false}
+        <>
+          <StyledPanel
+            expanded={value === AvailabilityZoneSelection.Automatic}
+            onToggle={onToggleFakeCallback}
+          >
+            <AZSelectionCheckbox
+              onChange={onChange}
+              value={value}
+              uniqueIdentifier={uniqueIdentifier}
+              label='Automatic'
+              type={AvailabilityZoneSelection.Automatic}
+              baseActionName={baseActionName}
+            />
+            <StyledPanelCollapse>
+              <AZSelectionAutomatic
+                onUpdateZones={onUpdateZones}
+                allZones={allZones!}
+                minNumOfZones={minNumOfZones!}
+                maxNumOfZones={maxNumOfZones!}
+                defaultNumOfZones={defaultNumOfZones!}
+                numOfZones={numOfZones!}
               />
-            </AZSelectorWrapper>
-            <p>{automaticAZSelectionMessage}</p>
-          </StyledPanelCollapse>
-        </StyledPanel>
-      )}
-      {maxNumOfZones! > 0 && (
-        <StyledPanel
-          expanded={value === AvailabilityZoneSelection.Manual}
-          onToggle={onToggleFakeCallback}
-        >
-          <AZSelectionCheckbox
-            onChange={onChange}
-            value={value}
-            uniqueIdentifier={uniqueIdentifier}
-            label='Manual'
-            type={AvailabilityZoneSelection.Manual}
-            baseActionName={baseActionName}
-          />
-          <StyledPanelCollapse>
-            <p>
-              You can select up to {maxNumOfZones} availability zones to make
-              use of.
-            </p>
-            <AZSelectorWrapper>
-              <ManualAZSelector>
-                <AvailabilityZonesParser
-                  min={minNumOfZones}
-                  max={maxNumOfZones}
-                  defaultValue={defaultNumOfZones}
-                  zones={allZones}
-                  updateAZValuesInParent={onUpdateZones(
-                    AvailabilityZoneSelection.Manual
-                  )}
-                  isLabels={true}
-                />
-              </ManualAZSelector>
-
-              {manualAZSelectionErrorMessage && (
-                <ErrorMessage>{manualAZSelectionErrorMessage}</ErrorMessage>
-              )}
-            </AZSelectorWrapper>
-          </StyledPanelCollapse>
-        </StyledPanel>
+            </StyledPanelCollapse>
+          </StyledPanel>
+          <StyledPanel
+            expanded={value === AvailabilityZoneSelection.Manual}
+            onToggle={onToggleFakeCallback}
+          >
+            <AZSelectionCheckbox
+              onChange={onChange}
+              value={value}
+              uniqueIdentifier={uniqueIdentifier}
+              label='Manual'
+              type={AvailabilityZoneSelection.Manual}
+              baseActionName={baseActionName}
+            />
+            <StyledPanelCollapse>
+              <AZSelectionManual
+                onUpdateZones={onUpdateZones}
+                allZones={allZones!}
+                minNumOfZones={minNumOfZones!}
+                maxNumOfZones={maxNumOfZones!}
+                defaultNumOfZones={defaultNumOfZones!}
+                selectedZones={selectedZones!}
+              />
+            </StyledPanelCollapse>
+          </StyledPanel>
+        </>
       )}
 
       {provider === Providers.AZURE && (
@@ -217,12 +156,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
             baseActionName={baseActionName}
           />
           <StyledPanelCollapse>
-            <p>
-              By not specifying an availability zone, Azure will select a zone
-              by itself, where the requested virtual machine size has the best
-              availability. This is especially useful for virtual machine sizes
-              with GPU, which are not available in all availability zones.
-            </p>
+            <AZSelectionNotSpecified />
           </StyledPanelCollapse>
         </StyledPanel>
       )}
@@ -231,31 +165,37 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
 };
 
 AZSelection.propTypes = {
-  onUpdateZones: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onUpdateZones: PropTypes.func.isRequired,
   value: PropTypes.number,
   uniqueIdentifier: PropTypes.string,
   provider: PropTypes.oneOf(Object.values(Providers)),
+  baseActionName: PropTypes.string,
+
   allZones: PropTypes.arrayOf(PropTypes.string.isRequired),
   minNumOfZones: PropTypes.number,
   maxNumOfZones: PropTypes.number,
   defaultNumOfZones: PropTypes.number,
+
   numOfZones: PropTypes.number,
+
   selectedZones: PropTypes.arrayOf(PropTypes.string.isRequired),
-  baseActionName: PropTypes.string,
 };
 
 AZSelection.defaultProps = {
   value: AvailabilityZoneSelection.Automatic,
   uniqueIdentifier: '',
   provider: Providers.AWS,
+  baseActionName: '',
+
   allZones: [],
   minNumOfZones: 0,
   maxNumOfZones: 0,
   defaultNumOfZones: 0,
+
   numOfZones: 0,
+
   selectedZones: [],
-  baseActionName: '',
 };
 
 export default AZSelection;
