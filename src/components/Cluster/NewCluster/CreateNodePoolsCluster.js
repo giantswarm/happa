@@ -62,7 +62,7 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const AZSelectionWrapper = styled.div`
+const AZSelectionWrapper = styled(FlexColumn)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
 `;
 
@@ -230,14 +230,14 @@ class CreateNodePoolsCluster extends Component {
     return (
       <>
         <WrapperDiv data-testid='nodepool-cluster-creation-view'>
-          <FlexColumn>
+          <AZSelectionWrapper>
             {this.props.capabilities.supportsHAMasters ? (
               <MasterNodes
                 isHighAvailability={masterNodes.isHighAvailability}
                 onChange={this.updateMasterNodesHighAvailability}
               />
             ) : (
-              <AZSelectionWrapper>
+              <>
                 <ClusterCreationLabelSpan as='div'>
                   Master node availability zones selection
                 </ClusterCreationLabelSpan>
@@ -255,9 +255,9 @@ class CreateNodePoolsCluster extends Component {
                   selectedZones={zonesArray}
                   onUpdateZones={this.updateAZ}
                 />
-              </AZSelectionWrapper>
+              </>
             )}
-          </FlexColumn>
+          </AZSelectionWrapper>
           {Object.keys(nodePools).length === 0 && <HorizontalLine />}
           <NodePoolsTransitionGroup>
             {Object.keys(nodePools).map((npId) => {
