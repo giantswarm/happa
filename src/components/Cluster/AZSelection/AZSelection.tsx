@@ -12,6 +12,7 @@ import AZSelectionManual from './AZSelectionManual';
 import AZSelectionNotSpecified from './AZSelectionNotSpecified';
 import {
   AvailabilityZoneSelection,
+  AZSelectionVariants,
   AZSelectionZonesUpdater,
 } from './AZSelectionUtils';
 
@@ -48,6 +49,7 @@ interface IAZSelectionProps
   // Common.
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   onUpdateZones: AZSelectionZonesUpdater;
+  variant?: AZSelectionVariants;
   value?: AvailabilityZoneSelection;
   uniqueIdentifier?: string;
   provider?: PropertiesOf<typeof Providers>;
@@ -69,6 +71,7 @@ interface IAZSelectionProps
 const AZSelection: React.FC<IAZSelectionProps> = ({
   onChange,
   onUpdateZones,
+  variant,
   value,
   uniqueIdentifier,
   provider,
@@ -108,6 +111,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
             <StyledPanelCollapse>
               <AZSelectionAutomatic
                 onUpdateZones={onUpdateZones}
+                variant={variant!}
                 allZones={allZones!}
                 minNumOfZones={minNumOfZones!}
                 maxNumOfZones={maxNumOfZones!}
@@ -131,6 +135,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
             <StyledPanelCollapse>
               <AZSelectionManual
                 onUpdateZones={onUpdateZones}
+                variant={variant!}
                 allZones={allZones!}
                 minNumOfZones={minNumOfZones!}
                 maxNumOfZones={maxNumOfZones!}
@@ -156,7 +161,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
             baseActionName={baseActionName}
           />
           <StyledPanelCollapse>
-            <AZSelectionNotSpecified />
+            <AZSelectionNotSpecified variant={variant!} />
           </StyledPanelCollapse>
         </StyledPanel>
       )}
@@ -167,6 +172,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
 AZSelection.propTypes = {
   onChange: PropTypes.func.isRequired,
   onUpdateZones: PropTypes.func.isRequired,
+  variant: PropTypes.number,
   value: PropTypes.number,
   uniqueIdentifier: PropTypes.string,
   provider: PropTypes.oneOf(Object.values(Providers)),
@@ -183,6 +189,7 @@ AZSelection.propTypes = {
 };
 
 AZSelection.defaultProps = {
+  variant: AZSelectionVariants.Master,
   value: AvailabilityZoneSelection.Automatic,
   uniqueIdentifier: '',
   provider: Providers.AWS,

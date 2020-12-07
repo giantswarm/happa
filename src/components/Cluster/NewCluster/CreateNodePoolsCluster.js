@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import AZSelection from 'Cluster/AZSelection/AZSelection';
-import { AvailabilityZoneSelection } from 'Cluster/AZSelection/AZSelectionUtils';
+import {
+  AvailabilityZoneSelection,
+  AZSelectionVariants,
+} from 'Cluster/AZSelection/AZSelectionUtils';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -239,7 +242,7 @@ class CreateNodePoolsCluster extends Component {
                   Master node availability zones selection
                 </ClusterCreationLabelSpan>
                 <AZSelection
-                  uniqueIdentifier='master-az'
+                  variant={AZSelectionVariants.Master}
                   baseActionName={RUMActions.SelectMasterAZSelection}
                   value={masterAZMode}
                   provider={provider}

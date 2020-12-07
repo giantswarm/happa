@@ -1,18 +1,27 @@
+import PropTypes from 'prop-types';
 import * as React from 'react';
 
-interface AZSelectionNotSpecifiedProps {}
+import { AZSelectionVariants } from './AZSelectionUtils';
 
-const AZSelectionNotSpecified: React.FC<AZSelectionNotSpecifiedProps> = () => {
-  return (
-    <p>
-      By not specifying an availability zone, Azure will select a zone by
-      itself, where the requested virtual machine size has the best
-      availability. This is especially useful for virtual machine sizes with
-      GPU, which are not available in all availability zones.
-    </p>
-  );
+interface AZSelectionNotSpecifiedProps {
+  variant: AZSelectionVariants;
+}
+
+const AZSelectionNotSpecified: React.FC<AZSelectionNotSpecifiedProps> = ({
+  variant,
+}) => {
+  let descriptionMessage =
+    'By not specifying an availability zone, Azure will select a zone by itself, where the requested virtual machine size has the best availability.';
+  if (variant === AZSelectionVariants.NodePool) {
+    descriptionMessage =
+      'By not specifying an availability zone, Azure will select a zone by itself, where the requested virtual machine size has the best availability. This is especially useful for virtual machine sizes with GPU, which are not available in all availability zones.';
+  }
+
+  return <p>{descriptionMessage}</p>;
 };
 
-AZSelectionNotSpecified.propTypes = {};
+AZSelectionNotSpecified.propTypes = {
+  variant: PropTypes.number.isRequired,
+};
 
 export default AZSelectionNotSpecified;

@@ -4,12 +4,14 @@ import * as React from 'react';
 
 import {
   AvailabilityZoneSelection,
+  AZSelectionVariants,
   AZSelectionZonesUpdater,
   AZSelectorWrapper,
 } from './AZSelectionUtils';
 
 interface AZSelectionAutomaticProps {
   onUpdateZones: AZSelectionZonesUpdater;
+  variant: AZSelectionVariants;
   allZones: string[];
   minNumOfZones: number;
   maxNumOfZones: number;
@@ -19,12 +21,21 @@ interface AZSelectionAutomaticProps {
 
 const AZSelectionAutomatic: React.FC<AZSelectionAutomaticProps> = ({
   onUpdateZones,
+  variant,
   allZones,
   minNumOfZones,
   maxNumOfZones,
   defaultNumOfZones,
   numOfZones,
 }) => {
+  if (variant === AZSelectionVariants.Master) {
+    return (
+      <p>
+        An Availabilty Zone will be automatically chosen from the existing ones.
+      </p>
+    );
+  }
+
   let automaticAZSelectionMessage =
     'Availability zones will be selected randomly.';
   if (numOfZones < 2) {
@@ -53,6 +64,7 @@ const AZSelectionAutomatic: React.FC<AZSelectionAutomaticProps> = ({
 
 AZSelectionAutomatic.propTypes = {
   onUpdateZones: PropTypes.func.isRequired,
+  variant: PropTypes.number.isRequired,
   allZones: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   minNumOfZones: PropTypes.number.isRequired,
   maxNumOfZones: PropTypes.number.isRequired,

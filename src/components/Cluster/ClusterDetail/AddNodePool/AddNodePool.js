@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import AZSelection from 'Cluster/AZSelection/AZSelection';
-import { AvailabilityZoneSelection } from 'Cluster/AZSelection/AZSelectionUtils';
+import {
+  AvailabilityZoneSelection,
+  AZSelectionVariants,
+} from 'Cluster/AZSelection/AZSelectionUtils';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
@@ -452,6 +455,7 @@ class AddNodePool extends Component {
             Availability Zones selection
           </ClusterCreationLabelSpan>
           <AZSelection
+            variant={AZSelectionVariants.NodePool}
             uniqueIdentifier={`np-${id}-az`}
             baseActionName={RUMActions.SelectAZSelection}
             value={azSelection}

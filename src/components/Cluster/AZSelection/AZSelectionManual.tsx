@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import {
   AvailabilityZoneSelection,
+  AZSelectionVariants,
   AZSelectionZonesUpdater,
   AZSelectorWrapper,
 } from './AZSelectionUtils';
@@ -21,6 +22,7 @@ const ManualAZSelector = styled.div`
 
 interface AZSelectionManualProps {
   onUpdateZones: AZSelectionZonesUpdater;
+  variant: AZSelectionVariants;
   allZones: string[];
   minNumOfZones: number;
   maxNumOfZones: number;
@@ -30,25 +32,32 @@ interface AZSelectionManualProps {
 
 const AZSelectionManual: React.FC<AZSelectionManualProps> = ({
   onUpdateZones,
+  variant,
   allZones,
   minNumOfZones,
   maxNumOfZones,
   defaultNumOfZones,
   selectedZones,
 }) => {
-  let manualAZSelectionErrorMessage = '';
+  let descriptionMessage = 'Please select an availability zone.';
+  if (variant === AZSelectionVariants.NodePool) {
+    descriptionMessage = `You can select up to ${maxNumOfZones} availability zones to make use of.`;
+  }
+
+  let errorMessage = '';
   if (selectedZones.length < 1) {
-    manualAZSelectionErrorMessage = 'Please select at least one.';
+    errorMessage = 'Please select one.';
+    if (variant === AZSelectionVariants.NodePool) {
+      errorMessage = 'Please select at least one.';
+    }
   } else if (selectedZones.length > maxNumOfZones) {
     const zoneCountDiff = selectedZones.length - maxNumOfZones;
-    manualAZSelectionErrorMessage = `${maxNumOfZones} is the maximum you can have. Please uncheck at least ${zoneCountDiff} of them.`;
+    errorMessage = `${maxNumOfZones} is the maximum you can have. Please uncheck at least ${zoneCountDiff} of them.`;
   }
 
   return (
     <>
-      <p>
-        You can select up to {maxNumOfZones} availability zones to make use of.
-      </p>
+      <p>{descriptionMessage}</p>
       <AZSelectorWrapper>
         <ManualAZSelector>
           <AvailabilityZonesParser
@@ -60,12 +69,11 @@ const AZSelectionManual: React.FC<AZSelectionManualProps> = ({
               AvailabilityZoneSelection.Manual
             )}
             isLabels={true}
+            isRadioButtons={variant === AZSelectionVariants.Master}
           />
         </ManualAZSelector>
 
-        {manualAZSelectionErrorMessage && (
-          <ErrorMessage>{manualAZSelectionErrorMessage}</ErrorMessage>
-        )}
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </AZSelectorWrapper>
     </>
   );
@@ -73,6 +81,7 @@ const AZSelectionManual: React.FC<AZSelectionManualProps> = ({
 
 AZSelectionManual.propTypes = {
   onUpdateZones: PropTypes.func.isRequired,
+  variant: PropTypes.number.isRequired,
   allZones: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   minNumOfZones: PropTypes.number.isRequired,
   maxNumOfZones: PropTypes.number.isRequired,

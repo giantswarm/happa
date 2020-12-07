@@ -6,6 +6,11 @@ export enum AvailabilityZoneSelection {
   NotSpecified,
 }
 
+export enum AZSelectionVariants {
+  Master,
+  NodePool,
+}
+
 export interface IUpdateZonePickerPayload {
   value: number;
   valid: boolean;
