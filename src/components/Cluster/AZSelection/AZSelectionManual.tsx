@@ -20,7 +20,7 @@ const ManualAZSelector = styled.div`
   font-size: 16px;
 `;
 
-interface AZSelectionManualProps {
+interface IAZSelectionManualProps {
   onUpdateZones: AZSelectionZonesUpdater;
   variant: AZSelectionVariants;
   allZones: string[];
@@ -30,7 +30,7 @@ interface AZSelectionManualProps {
   selectedZones: string[];
 }
 
-const AZSelectionManual: React.FC<AZSelectionManualProps> = ({
+const AZSelectionManual: React.FC<IAZSelectionManualProps> = ({
   onUpdateZones,
   variant,
   allZones,

@@ -3,11 +3,11 @@ import * as React from 'react';
 
 import { AZSelectionVariants } from './AZSelectionUtils';
 
-interface AZSelectionNotSpecifiedProps {
+interface IAZSelectionNotSpecifiedProps {
   variant: AZSelectionVariants;
 }
 
-const AZSelectionNotSpecified: React.FC<AZSelectionNotSpecifiedProps> = ({
+const AZSelectionNotSpecified: React.FC<IAZSelectionNotSpecifiedProps> = ({
   variant,
 }) => {
   let descriptionMessage =

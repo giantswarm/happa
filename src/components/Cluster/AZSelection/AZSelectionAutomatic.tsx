@@ -9,7 +9,7 @@ import {
   AZSelectorWrapper,
 } from './AZSelectionUtils';
 
-interface AZSelectionAutomaticProps {
+interface IAZSelectionAutomaticProps {
   onUpdateZones: AZSelectionZonesUpdater;
   variant: AZSelectionVariants;
   allZones: string[];
@@ -19,7 +19,7 @@ interface AZSelectionAutomaticProps {
   numOfZones: number;
 }
 
-const AZSelectionAutomatic: React.FC<AZSelectionAutomaticProps> = ({
+const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
   onUpdateZones,
   variant,
   allZones,
