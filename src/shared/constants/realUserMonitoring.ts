@@ -11,9 +11,7 @@ export enum RUMActions {
 
   SelectAZSelection = 'SELECT_AZ_SELECTION',
 
-  SelectMasterAZSelectionAutomatic = 'SELECT_MASTER_AZ_SELECTION_AUTOMATIC',
-  SelectMasterAZSelectionManual = 'SELECT_MASTER_AZ_SELECTION_MANUAL',
-  SelectMasterAZSelectionNotSpecified = 'SELECT_MASTER_AZ_NOT_SPECIFIED',
+  SelectMasterAZSelection = 'SELECT_MASTER_AZ_SELECTION',
 
   CreateClusterSubmit = 'CREATE_CLUSTER_SUBMIT',
   CreateClusterCancel = 'CREATE_CLUSTER_CANCEL',

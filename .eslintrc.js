@@ -232,6 +232,7 @@ module.exports = {
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
     '@typescript-eslint/no-shadow': 2,
+    '@typescript-eslint/no-non-null-assertion': 0,
   },
   overrides: [
     {

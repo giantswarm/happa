@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import AddNodePoolAZSelection from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolAZSelection';
+import AZSelection from 'Cluster/AZSelection/AZSelection';
+import {
+  AvailabilityZoneSelection,
+  AZSelectionVariants,
+} from 'Cluster/AZSelection/AZSelectionUtils';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
-import { AvailabilityZoneSelection } from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolUtils';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import { compare } from 'lib/semver';
@@ -9,6 +12,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
+import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import Checkbox from 'UI/Checkbox';
@@ -52,7 +56,7 @@ const CheckboxWrapper = styled.div`
   }
 `;
 
-const StyledAddNodePoolAZSelection = styled(AddNodePoolAZSelection)`
+const AZSelectionWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 4}px;
 `;
 
@@ -446,19 +450,26 @@ class AddNodePool extends Component {
           )}
         </Section>
 
-        <StyledAddNodePoolAZSelection
-          npID={id}
-          value={azSelection}
-          provider={provider}
-          onChange={this.toggleAZSelector}
-          minNumOfZones={minAZ}
-          maxNumOfZones={maxAZ}
-          defaultNumOfZones={defaultAZ}
-          allZones={this.props.availabilityZones}
-          numOfZones={this.state.availabilityZonesPicker.value}
-          selectedZones={zonesArray}
-          onUpdateZones={this.updateAZ}
-        />
+        <AZSelectionWrapper>
+          <ClusterCreationLabelSpan as='div'>
+            Availability Zones selection
+          </ClusterCreationLabelSpan>
+          <AZSelection
+            variant={AZSelectionVariants.NodePool}
+            uniqueIdentifier={`np-${id}-az`}
+            baseActionName={RUMActions.SelectAZSelection}
+            value={azSelection}
+            provider={provider}
+            onChange={this.toggleAZSelector}
+            minNumOfZones={minAZ}
+            maxNumOfZones={maxAZ}
+            defaultNumOfZones={defaultAZ}
+            allZones={this.props.availabilityZones}
+            numOfZones={this.state.availabilityZonesPicker.value}
+            selectedZones={zonesArray}
+            onUpdateZones={this.updateAZ}
+          />
+        </AZSelectionWrapper>
 
         {this.state.allowSpotInstances && (
           <Section>
@@ -530,7 +541,6 @@ class AddNodePool extends Component {
             )}
           </Section>
         )}
-
         <Section className='scaling-range'>
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
