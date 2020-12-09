@@ -1,4 +1,9 @@
 import styled from '@emotion/styled';
+import AZSelection from 'Cluster/AZSelection/AZSelection';
+import {
+  AvailabilityZoneSelection,
+  AZSelectionVariants,
+} from 'Cluster/AZSelection/AZSelectionUtils';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -6,20 +11,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { Constants, Providers } from 'shared/constants';
+import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
-import StyledInput from 'UI/ClusterCreation/StyledInput';
 import { FlexColumn, FlexRow } from 'UI/FlexDivs';
-import RadioInput from 'UI/Inputs/RadioInput';
 
 import AddNodePool from '../ClusterDetail/AddNodePool/AddNodePool';
-import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
 import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
@@ -29,33 +32,12 @@ const WrapperDiv = styled.div`
   margin-top: 32px;
 `;
 
-const InputGroup = styled.fieldset`
-  margin-bottom: 4px;
-`;
-
 const NodePoolsTransitionGroup = styled(TransitionGroup)`
   margin-bottom: 32px;
 `;
 
 const ClusterCreationHint = styled.p`
   margin-top: 23px;
-`;
-
-const MasterAZSelectionInput = styled(StyledInput)`
-  margin-bottom: 0;
-`;
-
-const AZWrapperDiv = styled.div`
-  margin: 0 0 25px 24px;
-  height: 26px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  .danger {
-    font-weight: 400;
-    margin: 0 0 0 15px;
-    color: ${(props) => props.theme.colors.error};
-  }
 `;
 
 const AddNodePoolWrapperDiv = styled.div`
@@ -80,9 +62,9 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const MASTER_AZ_MODE_AUTO = 'auto';
-const MASTER_AZ_MODE_MANUAL = 'manual';
-const MASTER_AZ_MODE_NOT_SPECIFIED = '';
+const AZSelectionWrapper = styled(FlexColumn)`
+  margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
+`;
 
 const defaultNodePool = () => ({
   data: { name: Constants.DEFAULT_NODEPOOL_NAME },
@@ -98,7 +80,7 @@ class CreateNodePoolsCluster extends Component {
       zonesArray: [],
       valid: false,
     },
-    masterAZMode: MASTER_AZ_MODE_NOT_SPECIFIED,
+    masterAZMode: AvailabilityZoneSelection.NotSpecified,
     nodePoolsForms: {
       isValid: false,
       isSubmitting: false,
@@ -126,9 +108,9 @@ class CreateNodePoolsCluster extends Component {
     const isValid =
       this.props.allowSubmit &&
       areNodePoolsValid &&
-      (masterAZMode === MASTER_AZ_MODE_AUTO ||
-        masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED ||
-        (masterAZMode === MASTER_AZ_MODE_MANUAL &&
+      (masterAZMode === AvailabilityZoneSelection.Automatic ||
+        masterAZMode === AvailabilityZoneSelection.NotSpecified ||
+        (masterAZMode === AvailabilityZoneSelection.Manual &&
           availabilityZonesLabels.valid));
 
     return isValid;
@@ -146,7 +128,7 @@ class CreateNodePoolsCluster extends Component {
     };
 
     switch (this.state.masterAZMode) {
-      case MASTER_AZ_MODE_MANUAL:
+      case AvailabilityZoneSelection.Manual:
         createPayload.master_nodes = {
           availability_zones: this.state.availabilityZonesLabels.zonesArray,
           azure: {
@@ -154,14 +136,14 @@ class CreateNodePoolsCluster extends Component {
           },
         };
         break;
-      case MASTER_AZ_MODE_AUTO:
+      case AvailabilityZoneSelection.Automatic:
         createPayload.master_nodes = {
           azure: {
             availability_zones_unspecified: false,
           },
         };
         break;
-      case MASTER_AZ_MODE_NOT_SPECIFIED:
+      case AvailabilityZoneSelection.NotSpecified:
         createPayload.master_nodes = {
           azure: {
             availability_zones_unspecified: true,
@@ -191,8 +173,14 @@ class CreateNodePoolsCluster extends Component {
     }));
   };
 
-  updateAZ = (payload) => {
-    this.setState({ availabilityZonesLabels: payload });
+  updateAZ = (azSelection) => (payload) => {
+    switch (azSelection) {
+      case AvailabilityZoneSelection.Manual:
+        this.setState({
+          availabilityZonesLabels: payload,
+        });
+        break;
+    }
   };
 
   addNodePoolForm = () => {
@@ -242,111 +230,34 @@ class CreateNodePoolsCluster extends Component {
     return (
       <>
         <WrapperDiv data-testid='nodepool-cluster-creation-view'>
-          <FlexColumn>
+          <AZSelectionWrapper>
             {this.props.capabilities.supportsHAMasters ? (
               <MasterNodes
                 isHighAvailability={masterNodes.isHighAvailability}
                 onChange={this.updateMasterNodesHighAvailability}
               />
             ) : (
-              <MasterAZSelectionInput
-                label='Master node availability zones selection'
-                inputId='master-node-az-selection'
-                // regular space, hides hint ;)
-                hint={<>&#32;</>}
-              >
-                <div>
-                  {maxAZ > 0 && (
-                    <RUMActionTarget
-                      name={RUMActions.SelectMasterAZSelectionAutomatic}
-                    >
-                      <InputGroup>
-                        <RadioInput
-                          id='automatic'
-                          checked={masterAZMode === MASTER_AZ_MODE_AUTO}
-                          label='Automatic'
-                          onChange={() =>
-                            this.setMasterAZMode(MASTER_AZ_MODE_AUTO)
-                          }
-                        />
-                      </InputGroup>
-                    </RUMActionTarget>
-                  )}
-                  {masterAZMode === MASTER_AZ_MODE_AUTO && (
-                    <p>
-                      An Availabilty Zone will be automatically chosen from the
-                      existing ones.
-                    </p>
-                  )}
-                  {maxAZ > 0 && (
-                    <RUMActionTarget
-                      name={RUMActions.SelectMasterAZSelectionManual}
-                    >
-                      <InputGroup>
-                        <RadioInput
-                          id='manual'
-                          checked={masterAZMode === MASTER_AZ_MODE_MANUAL}
-                          label='Manual'
-                          onChange={() =>
-                            this.setMasterAZMode(MASTER_AZ_MODE_MANUAL)
-                          }
-                        />
-                      </InputGroup>
-                    </RUMActionTarget>
-                  )}
-                  {masterAZMode === MASTER_AZ_MODE_MANUAL && (
-                    <AZWrapperDiv>
-                      <AvailabilityZonesParser
-                        min={minAZ}
-                        max={maxAZ}
-                        defaultValue={defaultAZ}
-                        zones={this.props.availabilityZones}
-                        updateAZValuesInParent={this.updateAZ}
-                        isLabels={true}
-                        isRadioButtons
-                      />
-                      {zonesArray.length < 1 && (
-                        <p className='danger'>
-                          Please select one availability zone.
-                        </p>
-                      )}
-                      {zonesArray.length > maxAZ && (
-                        <p className='danger'>
-                          {maxAZ} is the maximum you can have. Please uncheck{' '}
-                          {zonesArray.length - maxAZ} of them.
-                        </p>
-                      )}
-                    </AZWrapperDiv>
-                  )}
-                  {provider === Providers.AZURE && (
-                    <RUMActionTarget
-                      name={RUMActions.SelectMasterAZSelectionNotSpecified}
-                    >
-                      <InputGroup>
-                        <RadioInput
-                          id='notspecified'
-                          checked={
-                            masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED
-                          }
-                          label='Not specified'
-                          onChange={() =>
-                            this.setMasterAZMode(MASTER_AZ_MODE_NOT_SPECIFIED)
-                          }
-                        />
-                      </InputGroup>
-                    </RUMActionTarget>
-                  )}
-                  {masterAZMode === MASTER_AZ_MODE_NOT_SPECIFIED && (
-                    <p>
-                      By not specifying an availability zone, Azure will select
-                      a zone by itself, where the requested virtual machine size
-                      has the best availability.
-                    </p>
-                  )}
-                </div>
-              </MasterAZSelectionInput>
+              <>
+                <ClusterCreationLabelSpan as='div'>
+                  Master node availability zones selection
+                </ClusterCreationLabelSpan>
+                <AZSelection
+                  variant={AZSelectionVariants.Master}
+                  baseActionName={RUMActions.SelectMasterAZSelection}
+                  value={masterAZMode}
+                  provider={provider}
+                  onChange={this.setMasterAZMode}
+                  minNumOfZones={minAZ}
+                  maxNumOfZones={maxAZ}
+                  defaultNumOfZones={defaultAZ}
+                  allZones={this.props.availabilityZones}
+                  numOfZones={zonesArray.length}
+                  selectedZones={zonesArray}
+                  onUpdateZones={this.updateAZ}
+                />
+              </>
             )}
-          </FlexColumn>
+          </AZSelectionWrapper>
           {Object.keys(nodePools).length === 0 && <HorizontalLine />}
           <NodePoolsTransitionGroup>
             {Object.keys(nodePools).map((npId) => {
