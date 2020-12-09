@@ -1,10 +1,11 @@
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
-import update from 'react-addons-update';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import FlashMessage from 'UI/FlashMessage';
+
+const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 class ChangeEmailForm extends React.Component {
   state = {
@@ -26,37 +27,32 @@ class ChangeEmailForm extends React.Component {
 
   validateEmail = (e) => {
     const email = e.target.value;
-    let isButtonVisible = false;
 
-    if (email !== this.props.user.email) {
-      isButtonVisible = true;
-    }
-
-    let newState = update(this.state, {
-      isSuccess: { $set: false },
-      isButtonVisible: { $set: isButtonVisible },
-
-      fields: {
-        email: {
-          value: { $set: email },
+    this.setState((prevState) => {
+      const newState = Object.assign(prevState, {
+        isSuccess: false,
+        isButtonVisible: false,
+        fields: {
+          email: {
+            value: email,
+          },
         },
-      },
+      });
+
+      if (email !== this.props.user.email) {
+        newState.isButtonVisible = true;
+      }
+
+      if (emailRegexp.test(email)) {
+        newState.isValid = true;
+        newState.error = false;
+      } else {
+        newState.isValid = false;
+        newState.error = false;
+      }
+
+      return newState;
     });
-
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (re.test(email)) {
-      newState = update(newState, {
-        isValid: { $set: true },
-        error: { $set: false },
-      });
-    } else {
-      newState = update(newState, {
-        isValid: { $set: false },
-        error: { $set: false },
-      });
-    }
-
-    this.setState(newState);
   };
 
   submit = (e) => {

@@ -110,7 +110,6 @@
     "prop-types": "15.7.2",
     "query-string": "6.13.7",
     "react": "16.14.0",
-    "react-addons-update": "15.6.2",
     "react-bootstrap": "0.33.1",
     "react-bootstrap-table-next": "4.0.3",
     "react-breadcrumbs": "2.1.7",
