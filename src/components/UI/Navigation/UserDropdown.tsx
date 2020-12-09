@@ -110,7 +110,6 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                     </MenuItem>
                   </li>
                 )}
-
                 {FeatureFlags.FEATURE_CP_ACCESS && (
                   <li role='presentation'>
                     <MenuItem href={AppRoutes.CPAccess} to={AppRoutes.CPAccess}>
