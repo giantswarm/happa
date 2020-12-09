@@ -28,11 +28,11 @@ class ChangeEmailForm extends React.Component {
   validateEmail = (e) => {
     const email = e.target.value;
 
-    this.setState((prevState) => {
+    this.setState((prevState, props) => {
       const newState = Object.assign(prevState, {
         isSuccess: false,
         isValid: emailRegexp.test(email),
-        isButtonVisible: email !== this.props.user.email,
+        isButtonVisible: email !== props.user.email,
         error: false,
         fields: {
           email: {
