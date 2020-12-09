@@ -9,7 +9,6 @@ import FeatureFlags from 'shared/FeatureFlags';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
 
 const Wrapper = styled.div`
-  margin-left: ${({ theme }) => theme.spacingPx * 4}px;
   display: flex;
   align-items: center;
 `;

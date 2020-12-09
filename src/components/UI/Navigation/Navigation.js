@@ -101,6 +101,10 @@ const BreadcrumbWrapper = styled.div`
 const Actions = styled.div`
   margin-left: auto;
   display: flex;
+
+  > * + * {
+    margin-left: ${({ theme }) => theme.spacingPx * 4}px;
+  }
 `;
 
 // eslint-disable-next-line react/prefer-stateless-function
