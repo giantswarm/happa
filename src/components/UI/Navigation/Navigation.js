@@ -57,14 +57,6 @@ const OuterNav = styled.nav`
     }
   }
 
-  .subactions {
-    margin-left: auto;
-
-    a:last-child {
-      margin-right: 0px;
-    }
-  }
-
   .logo {
     width: 22px;
     height: 22px;
@@ -106,6 +98,11 @@ const BreadcrumbWrapper = styled.div`
   }
 `;
 
+const Actions = styled.div`
+  margin-left: auto;
+  display: flex;
+`;
+
 // eslint-disable-next-line react/prefer-stateless-function
 class Navigation extends React.Component {
   render() {
@@ -122,7 +119,7 @@ class Navigation extends React.Component {
             isUserAdmin={this.props.user.isAdmin}
           />
 
-          <div className='subactions'>
+          <Actions>
             <OrganizationDropdown
               onSelectOrganization={this.props.onSelectOrganization}
               organizations={this.props.organizations}
@@ -130,7 +127,7 @@ class Navigation extends React.Component {
             />
             &nbsp; &nbsp;
             <UserDropdown user={this.props.user} />
-          </div>
+          </Actions>
         </div>
 
         <BreadcrumbWrapper>
