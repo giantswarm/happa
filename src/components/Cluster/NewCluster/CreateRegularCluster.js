@@ -8,7 +8,7 @@ import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { batchedClusterCreate } from 'stores/batchActions';
-import { CLUSTER_CREATE_REQUEST } from 'stores/cluster/constants';
+import { CLUSTER_COMPLETE_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
@@ -285,8 +285,7 @@ class CreateRegularCluster extends React.Component {
   }
 
   render() {
-    const { provider } = this.props;
-    const { isClusterCreating } = this.state;
+    const { provider, isClusterCreating } = this.props;
 
     const multiAZSelectorProps = CreateRegularCluster.getMultiAZSelectorProps(
       provider,
@@ -462,7 +461,10 @@ function mapStateToProps(state) {
 
   return {
     ...propsToPush,
-    isClusterCreating: selectLoadingFlagByAction(state, CLUSTER_CREATE_REQUEST),
+    isClusterCreating: selectLoadingFlagByAction(
+      state,
+      CLUSTER_COMPLETE_CREATION_REQUEST
+    ),
   };
 }
 

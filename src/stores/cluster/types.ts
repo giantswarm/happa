@@ -1,5 +1,8 @@
 import { IKeyPair } from 'shared/types';
 import {
+  CLUSTER_COMPLETE_CREATION_ERROR,
+  CLUSTER_COMPLETE_CREATION_REQUEST,
+  CLUSTER_COMPLETE_CREATION_SUCCESS,
   CLUSTER_CREATE_ERROR,
   CLUSTER_CREATE_KEY_PAIR_ERROR,
   CLUSTER_CREATE_KEY_PAIR_REQUEST,
@@ -158,6 +161,19 @@ export interface IClusterCreateErrorAction {
   error: string;
 }
 
+export interface IClusterCompleteCreationRequestAction {
+  type: typeof CLUSTER_COMPLETE_CREATION_REQUEST;
+}
+
+export interface IClusterCompleteCreationSuccessAction {
+  type: typeof CLUSTER_COMPLETE_CREATION_SUCCESS;
+}
+
+export interface IClusterCompleteCreationErrorAction {
+  type: typeof CLUSTER_COMPLETE_CREATION_ERROR;
+  error: string;
+}
+
 export interface IClusterDeleteConfirmedRequestAction {
   type: typeof CLUSTER_DELETE_CONFIRMED;
   cluster: Cluster;
@@ -239,6 +255,9 @@ export type ClusterActions =
   | IClusterCreateSuccessAction
   | IClusterCreateV5SuccessAction
   | IClusterCreateErrorAction
+  | IClusterCompleteCreationRequestAction
+  | IClusterCompleteCreationSuccessAction
+  | IClusterCompleteCreationErrorAction
   | IClusterDeleteConfirmedRequestAction
   | IClusterDeleteSuccessAction
   | IClusterDeleteErrorAction
