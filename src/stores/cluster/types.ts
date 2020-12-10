@@ -1,8 +1,8 @@
 import { IKeyPair } from 'shared/types';
 import {
-  CLUSTER_COMPLETE_CREATION_ERROR,
-  CLUSTER_COMPLETE_CREATION_REQUEST,
-  CLUSTER_COMPLETE_CREATION_SUCCESS,
+  BATCHED_CLUSTER_CREATION_ERROR,
+  BATCHED_CLUSTER_CREATION_REQUEST,
+  BATCHED_CLUSTER_CREATION_SUCCESS,
   CLUSTER_CREATE_ERROR,
   CLUSTER_CREATE_KEY_PAIR_ERROR,
   CLUSTER_CREATE_KEY_PAIR_REQUEST,
@@ -161,16 +161,16 @@ export interface IClusterCreateErrorAction {
   error: string;
 }
 
-export interface IClusterCompleteCreationRequestAction {
-  type: typeof CLUSTER_COMPLETE_CREATION_REQUEST;
+export interface IBatchedClusterCreationRequestAction {
+  type: typeof BATCHED_CLUSTER_CREATION_REQUEST;
 }
 
-export interface IClusterCompleteCreationSuccessAction {
-  type: typeof CLUSTER_COMPLETE_CREATION_SUCCESS;
+export interface IBatchedClusterCreationSuccessAction {
+  type: typeof BATCHED_CLUSTER_CREATION_SUCCESS;
 }
 
-export interface IClusterCompleteCreationErrorAction {
-  type: typeof CLUSTER_COMPLETE_CREATION_ERROR;
+export interface IBatchedClusterCreationErrorAction {
+  type: typeof BATCHED_CLUSTER_CREATION_ERROR;
   error: string;
 }
 
@@ -255,9 +255,9 @@ export type ClusterActions =
   | IClusterCreateSuccessAction
   | IClusterCreateV5SuccessAction
   | IClusterCreateErrorAction
-  | IClusterCompleteCreationRequestAction
-  | IClusterCompleteCreationSuccessAction
-  | IClusterCompleteCreationErrorAction
+  | IBatchedClusterCreationRequestAction
+  | IBatchedClusterCreationSuccessAction
+  | IBatchedClusterCreationErrorAction
   | IClusterDeleteConfirmedRequestAction
   | IClusterDeleteSuccessAction
   | IClusterDeleteErrorAction

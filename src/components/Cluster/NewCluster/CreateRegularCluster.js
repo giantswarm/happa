@@ -8,7 +8,7 @@ import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { batchedClusterCreate } from 'stores/batchActions';
-import { CLUSTER_COMPLETE_CREATION_REQUEST } from 'stores/cluster/constants';
+import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import Button from 'UI/Button';
 import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
@@ -463,7 +463,7 @@ function mapStateToProps(state) {
     ...propsToPush,
     isClusterCreating: selectLoadingFlagByAction(
       state,
-      CLUSTER_COMPLETE_CREATION_REQUEST
+      BATCHED_CLUSTER_CREATION_REQUEST
     ),
   };
 }

@@ -20,9 +20,9 @@ import {
   refreshClustersList,
 } from 'stores/cluster/actions';
 import {
-  CLUSTER_COMPLETE_CREATION_ERROR,
-  CLUSTER_COMPLETE_CREATION_REQUEST,
-  CLUSTER_COMPLETE_CREATION_SUCCESS,
+  BATCHED_CLUSTER_CREATION_ERROR,
+  BATCHED_CLUSTER_CREATION_REQUEST,
+  BATCHED_CLUSTER_CREATION_SUCCESS,
   CLUSTER_LOAD_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
 import { loadUser } from 'stores/cpauth/actions';
@@ -154,14 +154,14 @@ export function batchedClusterCreate(
     let redirectPath = '';
 
     try {
-      dispatch({ type: CLUSTER_COMPLETE_CREATION_REQUEST });
+      dispatch({ type: BATCHED_CLUSTER_CREATION_REQUEST });
 
       const creationResponse = await dispatch(
         clusterCreate(cluster, isV5Cluster)
       );
       if (!creationResponse) {
         dispatch({
-          type: CLUSTER_COMPLETE_CREATION_ERROR,
+          type: BATCHED_CLUSTER_CREATION_ERROR,
           error: 'Something went wrong while trying to create the cluster.',
         });
 
@@ -197,12 +197,12 @@ export function batchedClusterCreate(
         );
       }
 
-      dispatch({ type: CLUSTER_COMPLETE_CREATION_SUCCESS });
+      dispatch({ type: BATCHED_CLUSTER_CREATION_SUCCESS });
 
       return Promise.resolve();
     } catch (err) {
       dispatch({
-        type: CLUSTER_COMPLETE_CREATION_ERROR,
+        type: BATCHED_CLUSTER_CREATION_ERROR,
         error: extractMessageFromError(
           err,
           'Something went wrong while trying to create the cluster.'

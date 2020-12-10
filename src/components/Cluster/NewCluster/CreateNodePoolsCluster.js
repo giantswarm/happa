@@ -14,7 +14,7 @@ import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
-import { CLUSTER_COMPLETE_CREATION_REQUEST } from 'stores/cluster/constants';
+import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -372,7 +372,7 @@ function mapStateToProps(state) {
     provider,
     isClusterCreating: selectLoadingFlagByAction(
       state,
-      CLUSTER_COMPLETE_CREATION_REQUEST
+      BATCHED_CLUSTER_CREATION_REQUEST
     ),
   };
 }
