@@ -47,6 +47,7 @@ const theme: Theme = {
     white2: '#D7D7D7',
     white3: '#B9C1C8',
     white4: '#eee',
+    white5: '#ccd',
 
     whiteInput: '#f0f0f0',
     yellow1: '#ddb03a',
