@@ -19,7 +19,12 @@ import {
   clustersList,
   refreshClustersList,
 } from 'stores/cluster/actions';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
+import {
+  BATCHED_CLUSTER_CREATION_ERROR,
+  BATCHED_CLUSTER_CREATION_REQUEST,
+  BATCHED_CLUSTER_CREATION_SUCCESS,
+  CLUSTER_LOAD_DETAILS_REQUEST,
+} from 'stores/cluster/constants';
 import { loadUser } from 'stores/cpauth/actions';
 import {
   globalLoadError,
@@ -42,6 +47,7 @@ import {
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
+import { extractMessageFromError } from 'utils/errorUtils';
 
 export function batchedLayout(): ThunkAction<
   Promise<void>,
@@ -148,10 +154,17 @@ export function batchedClusterCreate(
     let redirectPath = '';
 
     try {
+      dispatch({ type: BATCHED_CLUSTER_CREATION_REQUEST });
+
       const creationResponse = await dispatch(
         clusterCreate(cluster, isV5Cluster)
       );
       if (!creationResponse) {
+        dispatch({
+          type: BATCHED_CLUSTER_CREATION_ERROR,
+          error: 'Something went wrong while trying to create the cluster.',
+        });
+
         return Promise.resolve();
       }
       const { clusterId, owner } = creationResponse;
@@ -184,8 +197,18 @@ export function batchedClusterCreate(
         );
       }
 
+      dispatch({ type: BATCHED_CLUSTER_CREATION_SUCCESS });
+
       return Promise.resolve();
     } catch (err) {
+      dispatch({
+        type: BATCHED_CLUSTER_CREATION_ERROR,
+        error: extractMessageFromError(
+          err,
+          'Something went wrong while trying to create the cluster.'
+        ),
+      });
+
       ErrorReporter.getInstance().notify(err);
 
       return Promise.resolve();

@@ -378,12 +378,12 @@ export function clusterCreate(
           type: V5_CLUSTER_CREATE_SUCCESS,
           clusterId,
         });
-      } else {
-        dispatch({
-          type: CLUSTER_CREATE_SUCCESS,
-          clusterId,
-        });
       }
+
+      dispatch({
+        type: CLUSTER_CREATE_SUCCESS,
+        clusterId,
+      });
 
       const organizationID =
         selectOrganizationByID(cluster.owner)(getState())?.id ?? cluster.owner;
