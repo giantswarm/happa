@@ -6,7 +6,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { useCallback, useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
 
@@ -34,7 +34,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
         if (isLoggedIn) {
           await auth.logout();
           // Force a reload, so we could re-run the batched actions.
-          window.location.href = AppRoutes.Home;
+          window.location.href = OtherRoutes.Home;
         } else {
           await auth.attemptLogin();
         }
@@ -48,14 +48,14 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
   useEffect(() => {
     const currentURL = window.location.href;
 
-    if (currentURL.includes(AppRoutes.CPAccessCallback)) {
+    if (currentURL.includes(OtherRoutes.CPAccessCallback)) {
       const handleAuthParams = async () => {
         try {
           const auth = CPAuth.getInstance();
           await auth.handleLoginResponse(currentURL);
 
           // Force a reload, so we could re-run the batched actions.
-          window.location.href = AppRoutes.Home;
+          window.location.href = OtherRoutes.Home;
         } catch (err) {
           new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
         }
@@ -69,7 +69,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
     <Breadcrumb
       data={{
         title: 'Control Plane Access'.toUpperCase(),
-        pathname: AppRoutes.CPAccess,
+        pathname: OtherRoutes.CPAccess,
       }}
     >
       <DocumentTitle title='Control Plane Access'>

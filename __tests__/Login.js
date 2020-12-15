@@ -5,7 +5,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   authTokenResponse,
@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 it('renders the login page at /login', async () => {
-  const { getByText } = renderRouteWithStore(AppRoutes.Login, {}, {});
+  const { getByText } = renderRouteWithStore(OtherRoutes.Login, {}, {});
 
   await waitFor(() => {
     expect(getByText('Log in to Giant Swarm')).toBeInTheDocument();
@@ -51,7 +51,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
 
   // AND I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(
-    AppRoutes.Login,
+    OtherRoutes.Login,
     {},
     {}
   );
@@ -83,7 +83,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
 it('tells the user to give a password if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(
-    AppRoutes.Login,
+    OtherRoutes.Login,
     {},
     {}
   );
@@ -107,7 +107,7 @@ it('tells the user to give a password if they leave it blank', async () => {
 it('tells the user to give a email if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(
-    AppRoutes.Login,
+    OtherRoutes.Login,
     {},
     {}
   );
@@ -134,7 +134,7 @@ it('shows an error if the user logs in with invalid credentials', async () => {
 
   // And I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(
-    AppRoutes.Login,
+    OtherRoutes.Login,
     {},
     {}
   );

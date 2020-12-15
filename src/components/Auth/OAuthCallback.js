@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
@@ -26,7 +26,7 @@ const OAuthCallback = ({ location, dispatch, actions }) => {
         // Login user officially
         try {
           await actions.auth0Login(authResult);
-          dispatch(push(AppRoutes.Home));
+          dispatch(push(OtherRoutes.Home));
         } catch (authError) {
           setError(authError);
         }
@@ -50,7 +50,7 @@ const OAuthCallback = ({ location, dispatch, actions }) => {
             <>
               <h1>Something went wrong</h1>
               <p>{error.errorDescription}</p>
-              <Link to={AppRoutes.AdminLogin}>Try again</Link>
+              <Link to={OtherRoutes.AdminLogin}>Try again</Link>
             </>
           ) : (
             <img className='loader' src={spinner} />

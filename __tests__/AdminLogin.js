@@ -10,7 +10,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import React from 'react';
 import { AuthorizationTypes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
 import {
@@ -63,7 +63,7 @@ helpers.isJwtExpired = jest.fn();
 helpers.validateOrRaise = jest.fn();
 
 const renderRouteWithStore = (
-  initialRoute = AppRoutes.Home,
+  initialRoute = OtherRoutes.Home,
   state = {},
   storage = initialStorage
 ) => {
@@ -87,7 +87,7 @@ describe('AdminLogin', () => {
   });
 
   it('renders without crashing', async () => {
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {}, {});
 
     await findByText(
       /verifying credentials, and redirecting to our authentication provider if necessary./i
@@ -102,14 +102,16 @@ describe('AdminLogin', () => {
     getMockCall('/v4/appcatalogs/');
 
     mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
+      store.dispatch(
+        push(`${OtherRoutes.OAuthCallback}#response_type=id_token`)
+      );
     });
 
     mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {}, {});
 
     // Check if the user has been redirected to the homepage
     await findByText(/there are no organizations yet in your installation./i);
@@ -127,7 +129,7 @@ describe('AdminLogin', () => {
 
     helpers.isJwtExpired.mockReturnValue(false);
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {
       ...preloginState,
       main: { loggedInUser: mockUserData },
     });
@@ -161,7 +163,7 @@ describe('AdminLogin', () => {
       callback(null, mockAuthResponseWithNewToken)
     );
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {
       ...preloginState,
       main: { loggedInUser: mockUserData },
     });
@@ -177,14 +179,16 @@ describe('AdminLogin', () => {
 
   it('displays an error message if the OAuth provider callback URL is not valid', async () => {
     mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=invalid`));
+      store.dispatch(
+        push(`${OtherRoutes.OAuthCallback}#response_type=invalid`)
+      );
     });
 
     mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {}, {});
 
     await findByText(
       /invalid or empty response from the authentication provider./i
@@ -193,14 +197,16 @@ describe('AdminLogin', () => {
 
   it('displays an error message if the OAuth provider can not login', async () => {
     mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
+      store.dispatch(
+        push(`${OtherRoutes.OAuthCallback}#response_type=id_token`)
+      );
     });
 
     mockAuth0ParseHash.mockImplementation((callback) => {
       callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
     });
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {}, {});
 
     await findByText(/^Something went wrong$/i);
   });
@@ -217,7 +223,7 @@ describe('AdminLogin', () => {
       callback(new Error('u w0t m8?'), mockAuthResponseWithNewToken)
     );
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
+    const { findByText } = renderRouteWithStore(OtherRoutes.AdminLogin, {
       ...preloginState,
       main: { loggedInUser: mockUserData },
     });

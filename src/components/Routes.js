@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 
 import AdminLogin from './Auth/AdminLogin';
 import Login from './Auth/Login';
@@ -15,15 +15,15 @@ import StyleGuide from './UI/StyleGuide';
 const Routes = () => {
   return (
     <Switch>
-      <Route component={AdminLogin} path={AppRoutes.AdminLogin} />
-      <Route component={Login} path={AppRoutes.Login} />
-      <Route component={Logout} path={AppRoutes.Logout} />
-      <Route component={SetPassword} path={AppRoutes.SetPassword} />
-      <Route component={ForgotPassword} path={AppRoutes.ForgotPassword} />
-      <Route component={SignUp} path={AppRoutes.SignUp} />
-      <Route component={OAuthCallback} path={AppRoutes.OAuthCallback} />
-      <Route component={StyleGuide} path={AppRoutes.StyleGuide} />
-      <Route component={Layout} path={AppRoutes.Home} />
+      <Route component={AdminLogin} path={OtherRoutes.AdminLogin} />
+      <Route component={Login} path={OtherRoutes.Login} />
+      <Route component={Logout} path={OtherRoutes.Logout} />
+      <Route component={SetPassword} path={OtherRoutes.SetPassword} />
+      <Route component={ForgotPassword} path={OtherRoutes.ForgotPassword} />
+      <Route component={SignUp} path={OtherRoutes.SignUp} />
+      <Route component={OAuthCallback} path={OtherRoutes.OAuthCallback} />
+      <Route component={StyleGuide} path={OtherRoutes.StyleGuide} />
+      <Route component={Layout} path={OtherRoutes.Home} />
     </Switch>
   );
 };

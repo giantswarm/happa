@@ -5,7 +5,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   AWSInfoResponse,
@@ -37,7 +37,7 @@ it('logging out redirects to the login page', async () => {
   nock(API_ENDPOINT).delete('/v4/auth-tokens/').reply(StatusCodes.Ok);
 
   // Given I am logged in and on the home page.
-  const { getByText } = renderRouteWithStore(AppRoutes.Home);
+  const { getByText } = renderRouteWithStore(OtherRoutes.Home);
 
   // Wait till the app is ready and we're on the home page.
   await waitFor(() => {

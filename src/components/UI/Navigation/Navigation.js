@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { CSSBreakpoints } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import { AppRoutes } from 'shared/constants/routes';
+import { OtherRoutes } from 'shared/constants/routes';
 import { mq } from 'styles';
 
 import MainMenu from './MainMenu';
@@ -114,7 +114,7 @@ class Navigation extends React.Component {
       <OuterNav>
         <div className='main-nav'>
           <RUMActionTarget name={RUMActions.ClickMainNavLogo}>
-            <Link to={AppRoutes.Home}>
+            <Link to={OtherRoutes.Home}>
               <img className='logo' src={logo} />
             </Link>
           </RUMActionTarget>

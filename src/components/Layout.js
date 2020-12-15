@@ -10,9 +10,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   AccountSettingsRoutes,
   AppCatalogRoutes,
-  AppRoutes,
   ExceptionNotificationTestRoutes,
   OrganizationsRoutes,
+  OtherRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
@@ -46,7 +46,7 @@ class Layout extends React.Component {
       // firsts calls happa makes to the API.
       this.props.dispatch(batchedLayout());
     } else {
-      this.props.dispatch(push(AppRoutes.Login));
+      this.props.dispatch(push(OtherRoutes.Login));
     }
   }
 
@@ -67,11 +67,11 @@ class Layout extends React.Component {
             showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
             user={this.props.user}
           />
-          <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
+          <Breadcrumb data={{ title: 'HOME', pathname: OtherRoutes.Home }}>
             <div className='main'>
               <Switch>
                 {/*prettier-ignore*/}
-                <Route component={Home} exact path={AppRoutes.Home} />
+                <Route component={Home} exact path={OtherRoutes.Home} />
                 <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
                 <Route component={Users} exact path={UsersRoutes.Home} />
                 <Route
@@ -90,10 +90,10 @@ class Layout extends React.Component {
                 />
 
                 {FeatureFlags.FEATURE_CP_ACCESS && (
-                  <Route component={CPLoginPage} path={AppRoutes.CPAccess} />
+                  <Route component={CPLoginPage} path={OtherRoutes.CPAccess} />
                 )}
 
-                <Redirect path='*' to={AppRoutes.Home} />
+                <Redirect path='*' to={OtherRoutes.Home} />
               </Switch>
             </div>
           </Breadcrumb>
