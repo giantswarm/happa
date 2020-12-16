@@ -84,6 +84,8 @@ interface IDispatchProps extends DispatchProp {
 interface INodePoolsProps extends IStateProps, IDispatchProps {
   cluster: Cluster;
   provider: PropertiesOf<typeof Providers>;
+  supportsAutoscaling?: boolean;
+  supportsSpotInstances?: boolean;
 }
 
 interface INodePoolsState {
@@ -124,6 +126,13 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     dispatch: PropTypes.func,
     // @ts-ignore
     provider: PropTypes.string,
+    supportsAutoscaling: PropTypes.bool,
+    supportsSpotInstances: PropTypes.bool,
+  };
+
+  public static defaultProps = {
+    supportsAutoscaling: false,
+    supportsSpotInstances: false,
   };
 
   public readonly state: INodePoolsState = {
@@ -227,7 +236,13 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} alt='' />;
     }
-    const { cluster, nodePool, provider } = this.props;
+    const {
+      cluster,
+      nodePool,
+      provider,
+      supportsAutoscaling,
+      supportsSpotInstances,
+    } = this.props;
     const { id, availability_zones, status } = nodePool;
     const { isNameBeingEdited } = this.state;
 
@@ -258,7 +273,11 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <div>
               <AvailabilityZonesWrapper zones={availability_zones} />
             </div>
-            <NodePoolScaling nodePool={nodePool} provider={provider} />
+            <NodePoolScaling
+              nodePool={nodePool}
+              supportsAutoscaling={supportsAutoscaling}
+              supportsSpotInstances={supportsSpotInstances}
+            />
             <NodePoolDropdownMenu
               provider={provider}
               clusterId={cluster.id}
@@ -272,12 +291,13 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         <ScaleNodePoolModal
           cluster={cluster}
           nodePool={nodePool}
-          provider={provider}
           ref={(s: IScaleNodePoolModal): void => {
             this.scaleNodePoolModal = s;
           }}
           workerNodesDesired={desired}
           workerNodesRunning={current}
+          supportsAutoscaling={supportsAutoscaling}
+          supportsSpotInstances={supportsSpotInstances}
         />
       </>
     );

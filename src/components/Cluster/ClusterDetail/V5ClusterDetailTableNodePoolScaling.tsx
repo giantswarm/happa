@@ -3,29 +3,24 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
-import {
-  supportsNodePoolAutoscaling,
-  supportsNodePoolSpotInstances,
-} from 'stores/nodepool/utils';
+import { Constants } from 'shared/constants';
 
 interface IV5ClusterDetailTableNodePoolScalingProps {
-  provider: PropertiesOf<typeof Providers>;
+  supportsAutoscaling?: boolean;
+  supportsSpotInstances?: boolean;
 }
 
 const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoolScalingProps> = ({
-  provider,
+  supportsAutoscaling,
+  supportsSpotInstances,
 }) => {
-  const supportsAutoScaling = supportsNodePoolAutoscaling(provider);
-  const supportsSpotInstances = supportsNodePoolSpotInstances(provider);
-  const desiredCountTooltipMessage = supportsAutoScaling
+  const desiredCountTooltipMessage = supportsAutoscaling
     ? Constants.DESIRED_NODES_EXPLANATION_AUTOSCALER
     : Constants.DESIRED_NODES_EXPLANATION;
 
   return (
     <>
-      {supportsAutoScaling && (
+      {supportsAutoscaling && (
         <>
           <OverlayTrigger
             overlay={
@@ -86,7 +81,13 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
 };
 
 V5ClusterDetailTableNodePoolScaling.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
+  supportsAutoscaling: PropTypes.bool,
+  supportsSpotInstances: PropTypes.bool,
+};
+
+V5ClusterDetailTableNodePoolScaling.defaultProps = {
+  supportsAutoscaling: false,
+  supportsSpotInstances: false,
 };
 
 export default V5ClusterDetailTableNodePoolScaling;

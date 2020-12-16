@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import NameInput from 'UI/ClusterCreation/NameInput';
@@ -408,12 +407,18 @@ class AddNodePool extends Component {
   render() {
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { azSelection, name } = this.state;
-    const { minAZ, maxAZ, defaultAZ, provider, id } = this.props;
+    const {
+      minAZ,
+      maxAZ,
+      defaultAZ,
+      provider,
+      id,
+      supportsAutoscaling,
+    } = this.props;
 
     const machineType = this.getMachineType();
 
-    const isScalingAuto = supportsNodePoolAutoscaling(provider);
-    const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
+    const scalingLabel = supportsAutoscaling ? 'Scaling range' : 'Node count';
 
     return (
       <>
@@ -544,7 +549,7 @@ class AddNodePool extends Component {
         <Section className='scaling-range'>
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
-              autoscalingEnabled={isScalingAuto}
+              autoscalingEnabled={supportsAutoscaling}
               label={{ max: 'MAX', min: 'MIN' }}
               onChange={this.updateScaling}
               readOnly={false}
@@ -569,10 +574,14 @@ AddNodePool.propTypes = {
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
   defaultAZ: PropTypes.number,
+  supportsAutoscaling: PropTypes.bool,
+  supportsSpotInstances: PropTypes.bool,
 };
 
 AddNodePool.defaultProps = {
   name: Constants.DEFAULT_NODEPOOL_NAME,
+  supportsAutoscaling: false,
+  supportsSpotInstances: false,
 };
 
 function mapStateToProps(state) {

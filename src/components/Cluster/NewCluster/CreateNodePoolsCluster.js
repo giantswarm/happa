@@ -16,6 +16,10 @@ import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import {
+  supportsNodePoolAutoscaling,
+  supportsNodePoolSpotInstances,
+} from 'stores/nodepool/utils';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
@@ -225,7 +229,23 @@ class CreateNodePoolsCluster extends Component {
     const { masterAZMode, masterNodes } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { nodePools } = this.state.nodePoolsForms;
-    const { minAZ, maxAZ, defaultAZ, isClusterCreating, provider } = this.props;
+    const {
+      minAZ,
+      maxAZ,
+      defaultAZ,
+      isClusterCreating,
+      provider,
+      selectedRelease,
+    } = this.props;
+
+    const supportsNPAutoscaling = supportsNodePoolAutoscaling(
+      provider,
+      selectedRelease
+    );
+    const supportsNPSpotInstances = supportsNodePoolSpotInstances(
+      provider,
+      selectedRelease
+    );
 
     return (
       <>
@@ -273,6 +293,8 @@ class CreateNodePoolsCluster extends Component {
                         informParent={this.updateNodePoolForm}
                         name={nodePoolName}
                         id={npId}
+                        supportsAutoscaling={supportsNPAutoscaling}
+                        supportsSpotInstances={supportsNPSpotInstances}
                       />
                       <RUMActionTarget name={RUMActions.RemoveNodePool}>
                         <i
