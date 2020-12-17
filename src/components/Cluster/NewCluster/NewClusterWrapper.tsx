@@ -10,7 +10,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Constants, Providers } from 'shared/constants';
-import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
 import { getFirstNodePoolsRelease, getProvider } from 'stores/main/selectors';
 import Headline from 'UI/ClusterCreation/Headline';
@@ -90,7 +90,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
   const dispatch = useDispatch();
 
   const closeForm = () => {
-    dispatch(push(AppRoutes.Home));
+    dispatch(push(MainRoutes.Home));
   };
 
   return (

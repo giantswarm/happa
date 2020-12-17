@@ -1,4 +1,4 @@
-const AppRoutes = {
+const MainRoutes = {
   Home: '/',
   AdminLogin: '/admin-login',
   Login: '/login',
@@ -59,9 +59,9 @@ const OrganizationsRoutes = {
 
 export {
   AccountSettingsRoutes,
-  AppRoutes,
   AppCatalogRoutes,
   OrganizationsRoutes,
+  MainRoutes,
   UsersRoutes,
   ExceptionNotificationTestRoutes,
 };

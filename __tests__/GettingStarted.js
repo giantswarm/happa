@@ -4,7 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   AWSInfoResponse,
@@ -43,7 +43,7 @@ it('lets me get there from the dashboard and go through the pages', async () => 
   getMockCall('/v4/clusters/', v4ClustersResponse);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
 
-  const { findByText } = renderRouteWithStore(AppRoutes.Home);
+  const { findByText } = renderRouteWithStore(MainRoutes.Home);
 
   const getStartedButton = await findByText('Get Started');
   expect(getStartedButton).toBeInTheDocument();
@@ -86,7 +86,7 @@ it('the get started button does not show up if the cluster is older than 30 days
   getMockCall('/v4/clusters/', modifiedClustersResponse);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, modifiedClusterResponse);
 
-  const { findByText, queryByText } = renderRouteWithStore(AppRoutes.Home);
+  const { findByText, queryByText } = renderRouteWithStore(MainRoutes.Home);
 
   await findByText(V4_CLUSTER.id);
   expect(queryByText('Get Started')).not.toBeInTheDocument();

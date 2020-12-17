@@ -7,7 +7,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
   getMockCall,
@@ -20,7 +20,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 const testToken = 'm0ckt0ken';
 const tokenTestPath = `/invite/${testToken}`;
 
-const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
+const verifyingRoute = RoutePath.createUsablePath(MainRoutes.SignUp, {
   token: testToken,
 });
 

@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
 import { Constants, Providers } from 'shared/constants';
-import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import {
   batchedClusterDetailView,
@@ -122,7 +122,7 @@ class ClusterDetailView extends React.Component {
 
     this.props.clearInterval(this.loadDataInterval);
 
-    dispatch(push(AppRoutes.Home));
+    dispatch(push(MainRoutes.Home));
   };
 
   loadDetails = () => {

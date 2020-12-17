@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import {
   AppCatalogRoutes,
-  AppRoutes,
+  MainRoutes,
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
@@ -76,7 +76,7 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
   return (
     <>
       <NavDiv>
-        <StyledNavLink activeClassName='active' exact to={AppRoutes.Home}>
+        <StyledNavLink activeClassName='active' exact to={MainRoutes.Home}>
           Clusters
         </StyledNavLink>
         <StyledNavLink activeClassName='active' to={OrganizationsRoutes.Home}>
@@ -121,7 +121,7 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
                   <DropdownNavLink
                     activeClassName='active'
                     exact
-                    to={AppRoutes.Home}
+                    to={MainRoutes.Home}
                     onClick={onClickHandler}
                   >
                     Clusters
