@@ -5,7 +5,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { OrganizationsRoutes, OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { INodePool } from 'shared/types';
 import { listCatalogs } from 'stores/appcatalog/actions';
@@ -69,7 +69,7 @@ export function batchedLayout(): ThunkAction<
         messageType.WARNING,
         messageTTL.MEDIUM
       );
-      dispatch(push(OtherRoutes.Login));
+      dispatch(push(MainRoutes.Login));
       ErrorReporter.getInstance().notify(err);
 
       return;
@@ -302,7 +302,7 @@ export function batchedClusterDeleteConfirmed(
   return async (dispatch) => {
     try {
       await dispatch(clusterDeleteConfirmed(cluster));
-      dispatch(push(OtherRoutes.Home));
+      dispatch(push(MainRoutes.Home));
       dispatch(modalHide());
     } catch (err) {
       ErrorReporter.getInstance().notify(err);

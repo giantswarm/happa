@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AuthorizationTypes } from 'shared/constants';
-import { OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import { MainActions } from 'stores/main/types';
 import { IState } from 'stores/state';
@@ -39,7 +39,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
               await dispatch(mainActions.auth0Login(result));
 
               // Redirect to dashboard.
-              dispatch(push(OtherRoutes.Home));
+              dispatch(push(MainRoutes.Home));
             } catch {
               // Unable to refresh token silently, so send the down the auth0
               // flow.
@@ -47,7 +47,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
             }
           } else {
             // Token isn't expired yet, so just redirect the user to the dashboard.
-            dispatch(push(OtherRoutes.Home));
+            dispatch(push(MainRoutes.Home));
           }
         } else {
           // User doesn't have any previous token at all, send them to auth0 so

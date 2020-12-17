@@ -7,7 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
-import { OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
@@ -29,13 +29,13 @@ class Logout extends React.Component {
       this.props.user.auth.scheme
     ) {
       if (this.props.user.auth.scheme === AuthorizationTypes.BEARER) {
-        this.props.dispatch(push(OtherRoutes.Login));
+        this.props.dispatch(push(MainRoutes.Login));
         this.props.actions.logoutSuccess();
       } else {
         this.props.actions.giantswarmLogout();
       }
     } else {
-      this.props.dispatch(push(OtherRoutes.Login));
+      this.props.dispatch(push(MainRoutes.Login));
       this.props.actions.logoutSuccess();
     }
   }

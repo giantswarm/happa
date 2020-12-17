@@ -6,7 +6,7 @@ import { createMemoryHistory } from 'history';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
 
@@ -24,7 +24,7 @@ export const initialStorage = {
  * @param {CPAuth} cpAuth Control Plane API handler.
  */
 export function renderRouteWithStore(
-  initialRoute = OtherRoutes.Home,
+  initialRoute = MainRoutes.Home,
   state = {},
   storage = initialStorage,
   cpAuth = CPAuth.getInstance()

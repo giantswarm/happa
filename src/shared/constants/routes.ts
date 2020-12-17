@@ -1,4 +1,4 @@
-const OtherRoutes = {
+const MainRoutes = {
   Home: '/',
   AdminLogin: '/admin-login',
   Login: '/login',
@@ -61,7 +61,7 @@ export {
   AccountSettingsRoutes,
   AppCatalogRoutes,
   OrganizationsRoutes,
-  OtherRoutes,
+  MainRoutes,
   UsersRoutes,
   ExceptionNotificationTestRoutes,
 };

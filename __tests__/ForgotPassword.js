@@ -7,7 +7,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import {
   authTokenResponse,
   AWSInfoResponse,
@@ -35,7 +35,7 @@ describe('PasswordReset', () => {
     it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {
       // Given I am not logged in and visit the app.
       const { findByText, getByText } = renderRouteWithStore(
-        OtherRoutes.Home,
+        MainRoutes.Home,
         {},
         {}
       );
@@ -67,7 +67,7 @@ describe('PasswordReset', () => {
 
       // And I am not logged in and visit the app.
       const { getByText, findByText, getByLabelText } = renderRouteWithStore(
-        OtherRoutes.ForgotPassword,
+        MainRoutes.ForgotPassword,
         {},
         {}
       );
@@ -98,7 +98,7 @@ describe('PasswordReset', () => {
   describe('SetPassword', () => {
     // eslint-disable-next-line no-magic-numbers
     const token = generateRandomString(22);
-    const routeWithToken = RoutePath.createUsablePath(OtherRoutes.SetPassword, {
+    const routeWithToken = RoutePath.createUsablePath(MainRoutes.SetPassword, {
       token,
     });
 

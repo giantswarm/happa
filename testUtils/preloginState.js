@@ -1,5 +1,5 @@
 import { Providers } from 'shared/constants';
-import { OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 
 // This is what the state looks like when someone brand new arrives at the site
 // and they are not logged in at all.
@@ -7,7 +7,7 @@ import { OtherRoutes } from 'shared/constants/routes';
 export default {
   router: {
     location: {
-      pathname: OtherRoutes.Login,
+      pathname: MainRoutes.Login,
       search: '',
       hash: '',
       key: '0fgz24',

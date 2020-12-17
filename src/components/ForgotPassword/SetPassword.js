@@ -12,7 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { OtherRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
@@ -106,7 +106,7 @@ class SetPassword extends React.Component {
           messageTTL.MEDIUM
         );
 
-        this.props.dispatch(push(OtherRoutes.Home));
+        this.props.dispatch(push(MainRoutes.Home));
 
         return null;
       })
@@ -282,7 +282,7 @@ class SetPassword extends React.Component {
               <img className='loader' src={spinner} />
             </SlideTransition>
           </div>
-          <Link to={OtherRoutes.Login}>Back to login form</Link>
+          <Link to={MainRoutes.Login}>Back to login form</Link>
         </form>
       );
     }
@@ -302,7 +302,7 @@ class SetPassword extends React.Component {
           Something went wrong.
         </div>
         <br />
-        <Link to={OtherRoutes.ForgotPassword}>Request a new token</Link>
+        <Link to={MainRoutes.ForgotPassword}>Request a new token</Link>
       </>
     );
   };
@@ -341,10 +341,10 @@ class SetPassword extends React.Component {
             <img className='loader' src={spinner} />
           </SlideTransition>
         </div>
-        <Link to={OtherRoutes.Login}>Back to login form</Link>
+        <Link to={MainRoutes.Login}>Back to login form</Link>
         <br />
         <br />
-        <Link to={OtherRoutes.ForgotPassword}>Request a new token</Link>
+        <Link to={MainRoutes.ForgotPassword}>Request a new token</Link>
       </form>
     );
   };
