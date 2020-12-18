@@ -119,6 +119,7 @@ class Navigation extends React.Component {
             </Link>
           </RUMActionTarget>
           <MainMenu
+            showApps={this.props.showApps}
             showAppCatalog={this.props.showAppCatalog}
             isUserAdmin={this.props.user.isAdmin}
           />
@@ -144,6 +145,7 @@ class Navigation extends React.Component {
 
 Navigation.propTypes = {
   user: PropTypes.object,
+  showApps: PropTypes.bool,
   showAppCatalog: PropTypes.bool,
   organizations: PropTypes.object,
   onSelectOrganization: PropTypes.func,
