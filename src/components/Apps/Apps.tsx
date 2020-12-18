@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom';
 import { AppsRoutes } from 'shared/constants/routes';
 
 const Apps: React.FC = () => {
-  // eslint-disable-next-line class-methods-use-this
   return (
     <Breadcrumb
       data={{
