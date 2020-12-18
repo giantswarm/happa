@@ -146,7 +146,7 @@ function MainMenu({ showApps, showAppCatalog, isUserAdmin }) {
                   <li>
                     <DropdownNavLink
                       activeClassName='active'
-                      to={App.Home}
+                      to={AppsRoutes.Home}
                       onClick={onClickHandler}
                     >
                       Apps
