@@ -186,10 +186,8 @@ const clusterReducer = produce(
       case CLUSTER_PATCH_ERROR: {
         if (draft.items[action.cluster.id]) {
           draft.items[action.cluster.id] = action.cluster;
-          draft.idsAwaitingUpgrade = reconcileClustersAwaitingUpgrade(
-            draft.items,
-            draft.idsAwaitingUpgrade
-          );
+
+          delete draft.idsAwaitingUpgrade[action.cluster.id];
         }
 
         break;

@@ -5,7 +5,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { INodePool } from 'shared/types';
 import { listCatalogs } from 'stores/appcatalog/actions';
@@ -19,7 +19,12 @@ import {
   clustersList,
   refreshClustersList,
 } from 'stores/cluster/actions';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
+import {
+  BATCHED_CLUSTER_CREATION_ERROR,
+  BATCHED_CLUSTER_CREATION_REQUEST,
+  BATCHED_CLUSTER_CREATION_SUCCESS,
+  CLUSTER_LOAD_DETAILS_REQUEST,
+} from 'stores/cluster/constants';
 import { loadUser } from 'stores/cpauth/actions';
 import {
   globalLoadError,
@@ -42,6 +47,7 @@ import {
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
+import { extractMessageFromError } from 'utils/errorUtils';
 
 export function batchedLayout(): ThunkAction<
   Promise<void>,
@@ -63,7 +69,7 @@ export function batchedLayout(): ThunkAction<
         messageType.WARNING,
         messageTTL.MEDIUM
       );
-      dispatch(push(AppRoutes.Login));
+      dispatch(push(MainRoutes.Login));
       ErrorReporter.getInstance().notify(err);
 
       return;
@@ -148,10 +154,17 @@ export function batchedClusterCreate(
     let redirectPath = '';
 
     try {
+      dispatch({ type: BATCHED_CLUSTER_CREATION_REQUEST });
+
       const creationResponse = await dispatch(
         clusterCreate(cluster, isV5Cluster)
       );
       if (!creationResponse) {
+        dispatch({
+          type: BATCHED_CLUSTER_CREATION_ERROR,
+          error: 'Something went wrong while trying to create the cluster.',
+        });
+
         return Promise.resolve();
       }
       const { clusterId, owner } = creationResponse;
@@ -184,8 +197,18 @@ export function batchedClusterCreate(
         );
       }
 
+      dispatch({ type: BATCHED_CLUSTER_CREATION_SUCCESS });
+
       return Promise.resolve();
     } catch (err) {
+      dispatch({
+        type: BATCHED_CLUSTER_CREATION_ERROR,
+        error: extractMessageFromError(
+          err,
+          'Something went wrong while trying to create the cluster.'
+        ),
+      });
+
       ErrorReporter.getInstance().notify(err);
 
       return Promise.resolve();
@@ -279,7 +302,7 @@ export function batchedClusterDeleteConfirmed(
   return async (dispatch) => {
     try {
       await dispatch(clusterDeleteConfirmed(cluster));
-      dispatch(push(AppRoutes.Home));
+      dispatch(push(MainRoutes.Home));
       dispatch(modalHide());
     } catch (err) {
       ErrorReporter.getInstance().notify(err);

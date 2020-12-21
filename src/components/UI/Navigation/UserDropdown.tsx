@@ -4,7 +4,7 @@ import React from 'react';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
 import { AuthorizationTypes } from 'shared/constants';
-import { AccountSettingsRoutes, AppRoutes } from 'shared/constants/routes';
+import { AccountSettingsRoutes, MainRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
 
@@ -112,13 +112,16 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                 )}
                 {FeatureFlags.FEATURE_CP_ACCESS && (
                   <li role='presentation'>
-                    <MenuItem href={AppRoutes.CPAccess} to={AppRoutes.CPAccess}>
+                    <MenuItem
+                      href={MainRoutes.CPAccess}
+                      to={MainRoutes.CPAccess}
+                    >
                       Control Plane Access
                     </MenuItem>
                   </li>
                 )}
                 <li role='presentation'>
-                  <MenuItem href={AppRoutes.Logout} to={AppRoutes.Logout}>
+                  <MenuItem href={MainRoutes.Logout} to={MainRoutes.Logout}>
                     Logout
                   </MenuItem>
                 </li>

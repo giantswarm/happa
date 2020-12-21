@@ -6,7 +6,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -204,7 +204,7 @@ it('Cluster list shows all clusters, each one with its details, for the selected
     v4AWSClusterStatusResponse
   );
 
-  const clusterDetailPath = RoutePath.createUsablePath(AppRoutes.Home);
+  const clusterDetailPath = RoutePath.createUsablePath(MainRoutes.Home);
   const { getAllByTestId, getByText } = renderRouteWithStore(clusterDetailPath);
 
   // Wait for the last elements to load.

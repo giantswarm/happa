@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
 
 import GettingStarted from '../../GettingStarted/GettingStarted';
@@ -27,7 +27,7 @@ const ClusterDetail = () => {
         messageTTL.MEDIUM
       );
 
-      dispatch(push(AppRoutes.Home));
+      dispatch(push(MainRoutes.Home));
     }
   }, [clusterExists, clusterID, dispatch]);
 

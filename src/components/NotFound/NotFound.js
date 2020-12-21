@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 
 const NotFound = () => (
   <>
@@ -11,7 +11,7 @@ const NotFound = () => (
       In any case, what you were looking for isn&apos;t here! Sorry!
     </p>
     <p>
-      Go back to <Link to={AppRoutes.Home}>Home</Link>
+      Go back to <Link to={MainRoutes.Home}>Home</Link>
     </p>
     <p>If you want to contact us about this issue, you can reach us here:</p>
     <p>

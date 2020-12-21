@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { AppRoutes, UsersRoutes } from 'shared/constants/routes';
+import { MainRoutes, UsersRoutes } from 'shared/constants/routes';
 import {
   invitationCreate,
   invitationsLoad,
@@ -44,7 +44,7 @@ class Users extends React.Component {
         .dispatch(usersLoad())
         .then(this.props.dispatch(invitationsLoad()));
     } else {
-      this.props.dispatch(push(AppRoutes.Home));
+      this.props.dispatch(push(MainRoutes.Home));
     }
   }
 

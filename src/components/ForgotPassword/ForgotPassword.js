@@ -9,7 +9,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -108,7 +108,7 @@ class ForgotPassword extends React.Component {
         </small>
 
         <small>
-          <Link to={AppRoutes.Login}>Back to login form</Link>
+          <Link to={MainRoutes.Login}>Back to login form</Link>
         </small>
       </div>
     );
@@ -144,7 +144,7 @@ class ForgotPassword extends React.Component {
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </Button>
-          <Link to={AppRoutes.Login}>Back to login form</Link>
+          <Link to={MainRoutes.Login}>Back to login form</Link>
         </form>
       </>
     );
