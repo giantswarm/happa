@@ -13,6 +13,8 @@ export const createDeepEqualSelector = createSelectorCreator(
 const actionTypeRegexp = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)/;
 export function typeWithoutSuffix(actionType: string) {
   const matches = actionTypeRegexp.exec(actionType);
+  if (!matches) return '';
+
   const [, requestName] = matches;
 
   return requestName;

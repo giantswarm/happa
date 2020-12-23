@@ -198,7 +198,7 @@ const clusterReducer = produce(
           | V5.ICluster
           | undefined;
         if (cluster) {
-          cluster.nodePools = [...cluster.nodePools, action.nodePool.id];
+          cluster.nodePools = [...cluster.nodePools!, action.nodePool.id];
         }
 
         break;
