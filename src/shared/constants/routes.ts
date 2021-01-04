@@ -12,6 +12,11 @@ const MainRoutes = {
   StyleGuide: '/styleguide',
 };
 
+const AppsRoutes = {
+  Home: '/apps',
+  AppDetail: '/apps/:catalogName/:app/:version',
+};
+
 const AppCatalogRoutes = {
   Home: '/app-catalogs',
   AppList: '/app-catalogs/:catalogName',
@@ -60,6 +65,7 @@ const OrganizationsRoutes = {
 export {
   AccountSettingsRoutes,
   AppCatalogRoutes,
+  AppsRoutes,
   OrganizationsRoutes,
   MainRoutes,
   UsersRoutes,
