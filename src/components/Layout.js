@@ -10,6 +10,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   AccountSettingsRoutes,
   AppCatalogRoutes,
+  AppsRoutes,
   ExceptionNotificationTestRoutes,
   MainRoutes,
   OrganizationsRoutes,
@@ -20,6 +21,7 @@ import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
+import Apps from './Apps/Apps';
 import ExceptionNotificationTest from './ExceptionNotificationTest/ExceptionNotificationTest';
 import Home from './Home/Home';
 import Modals from './Modals/Modals';
@@ -64,6 +66,7 @@ class Layout extends React.Component {
             onSelectOrganization={this.selectOrganization}
             organizations={this.props.organizations}
             selectedOrganization={this.props.selectedOrganization}
+            showApps={Object.keys(this.props.catalogs.items).length > 0}
             showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
             user={this.props.user}
           />
@@ -73,6 +76,7 @@ class Layout extends React.Component {
                 {/*prettier-ignore*/}
                 <Route component={Home} exact path={MainRoutes.Home} />
                 <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
+                <Route component={Apps} path={AppsRoutes.Home} />
                 <Route component={Users} exact path={UsersRoutes.Home} />
                 <Route
                   component={Organizations}
