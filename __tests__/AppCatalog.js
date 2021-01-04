@@ -424,9 +424,12 @@ describe('Apps and App Catalog', () => {
           clusterId: V4_CLUSTER.id,
         }
       );
-      const { findByText } = renderRouteWithStore(clusterDetailPath);
+      const { findByText, findByTestId } = renderRouteWithStore(
+        clusterDetailPath
+      );
 
-      const appsTab = await findByText(/^apps$/i);
+      const clusterDetailsView = await findByTestId('cluster-details-view');
+      const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
       // findByText throws an error if there are multiple elements with the text
