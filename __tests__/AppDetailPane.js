@@ -86,9 +86,12 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+      const { findByText, findByTestId, getByText } = renderRouteWithStore(
+        clusterDetailPath
+      );
 
-      const appsTab = await findByText(/^apps$/i);
+      const clusterDetailsView = await findByTestId('cluster-details-view');
+      const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
@@ -130,11 +133,15 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const { findByText, getByText, queryByText } = renderRouteWithStore(
-        clusterDetailPath
-      );
+      const {
+        findByText,
+        findByTestId,
+        getByText,
+        queryByText,
+      } = renderRouteWithStore(clusterDetailPath);
 
-      const appsTab = await findByText(/^apps$/i);
+      const clusterDetailsView = await findByTestId('cluster-details-view');
+      const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
@@ -171,11 +178,15 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const { findByText, getByText, queryByText } = renderRouteWithStore(
-        clusterDetailPath
-      );
+      const {
+        findByText,
+        findByTestId,
+        getByText,
+        queryByText,
+      } = renderRouteWithStore(clusterDetailPath);
 
-      const appsTab = await findByText(/^apps$/i);
+      const clusterDetailsView = await findByTestId('cluster-details-view');
+      const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
@@ -222,11 +233,15 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const { findByText, getByText, queryByText } = renderRouteWithStore(
-        clusterDetailPath
-      );
+      const {
+        findByText,
+        findByTestId,
+        getByText,
+        queryByText,
+      } = renderRouteWithStore(clusterDetailPath);
 
-      const appsTab = await findByText(/^apps$/i);
+      const clusterDetailsView = await findByTestId('cluster-details-view');
+      const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
@@ -271,11 +286,15 @@ describe('Installed app detail pane', () => {
     // After deleting the app, there are no apps.
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
-    const { findByText, getByText, queryByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const {
+      findByText,
+      findByTestId,
+      getByText,
+      queryByText,
+    } = renderRouteWithStore(clusterDetailPath);
 
-    const appsTab = await findByText(/^apps$/i);
+    const clusterDetailsView = await findByTestId('cluster-details-view');
+    const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
     fireEvent.click(appsTab);
 
     // Click on app to open the editing modal
@@ -300,9 +319,12 @@ describe('Installed app detail pane', () => {
   it('shows a no apps installed message when there are no apps yet', async () => {
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
-    const { findByText } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, findByTestId } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
-    const appsTab = await findByText(/^apps$/i);
+    const clusterDetailsView = await findByTestId('cluster-details-view');
+    const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
     fireEvent.click(appsTab);
 
     expect(
@@ -313,9 +335,10 @@ describe('Installed app detail pane', () => {
   it('can deal with apps when not able to find the corresponding appcatalog', async () => {
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, [appResponseNoCatalog]);
 
-    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+    const { findByTestId, getByText } = renderRouteWithStore(clusterDetailPath);
 
-    const appsTab = await findByText(/^apps$/i);
+    const clusterDetailsView = await findByTestId('cluster-details-view');
+    const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
     fireEvent.click(appsTab);
 
     // Click on app to open the editing modal
@@ -334,11 +357,15 @@ describe('Installed app detail pane', () => {
       .get('/giantswarm-catalog/index.yaml')
       .reply(StatusCodes.Ok, catalogIndexResponse);
 
-    const { findByText, getByText, getByTestId } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const {
+      findByTestId,
+      findByText,
+      getByText,
+      getByTestId,
+    } = renderRouteWithStore(clusterDetailPath);
 
-    const appsTab = await findByText(/^apps$/i);
+    const clusterDetailsView = await findByTestId('cluster-details-view');
+    const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
     fireEvent.click(appsTab);
 
     // Click on app to open the editing modal.
