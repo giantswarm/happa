@@ -12,7 +12,10 @@ import {
   getReleasesIsFetching,
   getSortedReleaseVersions,
 } from 'stores/releases/selectors';
-import { getReleaseEOLStatus, isPreRelease } from 'stores/releases/utils';
+import {
+  getKubernetesReleaseEOLStatus,
+  isPreRelease,
+} from 'stores/releases/utils';
 import {
   ListToggler,
   SelectedDescription,
@@ -76,7 +79,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
       k8sVersionEOLDate &&
       !kubernetesVersion?.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
     ) {
-      const { isEol } = getReleaseEOLStatus(k8sVersionEOLDate);
+      const { isEol } = getKubernetesReleaseEOLStatus(k8sVersionEOLDate);
       if (isEol) {
         return `${kubernetesVersion} ${Constants.APP_VERSION_EOL_SUFFIX}`;
       }
