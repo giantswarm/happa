@@ -19,7 +19,7 @@ const AppDetailsItem = (props) => {
         {label === 'Home' && (
           <p>
             <Code>
-              <a href={data} rel='noopener noreferrer'>
+              <a href={data} rel='noopener noreferrer' target='_blank'>
                 {data}
               </a>
             </Code>
@@ -30,7 +30,7 @@ const AppDetailsItem = (props) => {
             {data.map((app) => (
               <li key={app}>
                 <Code>
-                  <a href={app} rel='noopener noreferrer'>
+                  <a href={app} rel='noopener noreferrer' target='_blank'>
                     {app}
                   </a>
                 </Code>
