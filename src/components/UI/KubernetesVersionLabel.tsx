@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { Overlay } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
-import { getReleaseEOLStatus } from 'stores/releases/utils';
+import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 
 const EolLabel = styled.span`
   background: ${({ theme }) => theme.colors.darkBlueDarker3};
@@ -37,7 +37,7 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   const labelRef = useRef<HTMLSpanElement>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
-  const eolStatus = getReleaseEOLStatus(eolDate as string);
+  const eolStatus = getKubernetesReleaseEOLStatus(eolDate as string);
   const isEol = eolStatus.isEol && Boolean(version);
 
   const tryToToggleTooltip = (open: boolean) => () => {

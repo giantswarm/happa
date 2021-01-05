@@ -11,7 +11,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
 import { selectOrganizationByID } from 'stores/organization/selectors';
-import { supportsBYOC } from 'stores/organization/utils';
+import { supportsMultiAccount } from 'stores/organization/utils';
 
 import DetailView from './View';
 
@@ -68,7 +68,7 @@ DetailIndex.propTypes = {
   credentials: PropTypes.array,
   loadingCredentials: PropTypes.bool,
   showCredentialsForm: PropTypes.bool,
-  supportsBYOC: PropTypes.bool,
+  supportsMultiAccount: PropTypes.bool,
   provider: PropTypes.oneOf(Object.values(Providers)),
 };
 
@@ -90,7 +90,7 @@ function mapStateToProps(state, ownProps) {
   });
 
   const { provider } = state.main.info.general;
-  const providerSupportsBYOC = supportsBYOC(provider);
+  const providerSupportsMultiAccount = supportsMultiAccount(provider);
 
   return {
     organization,
@@ -103,7 +103,7 @@ function mapStateToProps(state, ownProps) {
     ),
     showCredentialsForm: state.entities.organizations.credentials.showForm,
     provider,
-    supportsBYOC: providerSupportsBYOC,
+    supportsMultiAccount: providerSupportsMultiAccount,
   };
 }
 

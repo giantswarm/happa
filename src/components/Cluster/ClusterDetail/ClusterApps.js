@@ -15,7 +15,7 @@ import {
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
-import { getReleaseEOLStatus } from 'stores/releases/utils';
+import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/FlashMessage';
@@ -199,7 +199,9 @@ class ClusterApps extends React.Component {
       release.k8sVersionEOLDate &&
       !version.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
     ) {
-      const { isEol } = getReleaseEOLStatus(release.k8sVersionEOLDate);
+      const { isEol } = getKubernetesReleaseEOLStatus(
+        release.k8sVersionEOLDate
+      );
       if (isEol) {
         return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
       }

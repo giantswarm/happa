@@ -9,7 +9,7 @@ const StyledTableHeader = styled.th`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
 `;
 
-const OrganizationList = ({ supportsBYOC, ...props }) => {
+const OrganizationList = ({ supportsMultiAccount, ...props }) => {
   return (
     <table>
       <thead>
@@ -18,7 +18,7 @@ const OrganizationList = ({ supportsBYOC, ...props }) => {
           <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
           <StyledTableHeader centered={true}>Members</StyledTableHeader>
 
-          {supportsBYOC && (
+          {supportsMultiAccount && (
             <StyledTableHeader centered={true}>
               Provider Credentials
             </StyledTableHeader>
@@ -37,7 +37,7 @@ const OrganizationList = ({ supportsBYOC, ...props }) => {
               )}
               getViewURL={props.getViewURL}
               organization={organization}
-              supportsBYOC={supportsBYOC}
+              supportsMultiAccount={supportsMultiAccount}
             />
           );
         })}
@@ -50,7 +50,7 @@ OrganizationList.propTypes = {
   getViewURL: PropTypes.func.isRequired,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
-  supportsBYOC: PropTypes.bool,
+  supportsMultiAccount: PropTypes.bool,
 };
 
 export default OrganizationList;
