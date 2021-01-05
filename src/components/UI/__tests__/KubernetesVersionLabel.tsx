@@ -92,7 +92,7 @@ describe('KubernetesVersionLabel', () => {
     expect(versionLabel).not.toBeInTheDocument();
 
     versionLabel = screen.getByText(/1.0/i);
-    tooltipMessageRegexp = /This version will reach its end of life/i;
+    tooltipMessageRegexp = /This Kubernetes version will reach its end of life/i;
     fireEvent.mouseEnter(versionLabel);
     expect(screen.getByText(tooltipMessageRegexp)).toBeInTheDocument();
     fireEvent.mouseLeave(versionLabel);
