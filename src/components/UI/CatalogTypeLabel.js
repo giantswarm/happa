@@ -43,7 +43,7 @@ const CatalogTypeLabel = (props) => {
     case 'internal':
       icon = 'eye-with-line';
       message =
-        'Only Giant Swarm admins are able to see these catalogs. They usually contain apps for the control plane.';
+        'Only Giant Swarm admins are able to see these catalogs. They usually contain apps for the management cluster.';
       break;
     case 'community':
       icon = 'warning';

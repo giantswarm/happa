@@ -26,7 +26,7 @@ const CredentialsDisplay = (props) => {
         <div>
           <p>
             No specific provider credentials set. Clusters of this organization
-            will be created in the default tenant cluster subscription
+            will be created in the default workload cluster subscription
             configured for this installation.
           </p>
           {button}
@@ -38,7 +38,7 @@ const CredentialsDisplay = (props) => {
       <div>
         <p>
           No credentials set. Clusters of this organization will be created in
-          the default tenant cluster account of this installation.
+          the default workload cluster account of this installation.
         </p>
         {button}
       </div>
