@@ -23,7 +23,7 @@ describe('View', () => {
       loadingCredentials: false,
       showCredentialsForm: false,
       membersForTable: [],
-      supportsBYOC: true,
+      supportsMultiAccount: true,
     });
 
     expect(
@@ -50,7 +50,7 @@ describe('View', () => {
       loadingCredentials: false,
       showCredentialsForm: false,
       membersForTable: [],
-      supportsBYOC: true,
+      supportsMultiAccount: true,
     });
 
     expect(
@@ -78,7 +78,7 @@ describe('View', () => {
       loadingCredentials: true,
       showCredentialsForm: false,
       membersForTable: [],
-      supportsBYOC: true,
+      supportsMultiAccount: true,
     });
 
     expect(
@@ -107,13 +107,13 @@ describe('View', () => {
         loadingCredentials: false,
         showCredentialsForm: false,
         membersForTable: [],
-        supportsBYOC: true,
+        supportsMultiAccount: true,
       })
     );
 
     expect(
       screen.getByText(
-        'This organization cannot be deleted because it has BYOC credentials. Please remove them in order to be able to delete the organization.'
+        'This organization cannot be deleted because it has provider credentials. Please remove them in order to be able to delete the organization.'
       )
     ).toBeInTheDocument();
 
