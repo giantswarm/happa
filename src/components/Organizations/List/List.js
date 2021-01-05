@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { organizationCreate } from 'stores/organization/actions';
-import { supportsBYOC } from 'stores/organization/utils';
+import { supportsMultiAccount } from 'stores/organization/utils';
 import EmptyStateDisplay from 'UI/EmptyStateDisplay';
 import OrganizationList from 'UI/OrganizationList/OrganizationList';
 
@@ -37,7 +37,7 @@ class OrganizationListWrapper extends React.Component {
             }
           >
             <OrganizationList
-              supportsBYOC={this.props.supportsBYOC}
+              supportsMultiAccount={this.props.supportsMultiAccount}
               clusters={this.props.clusters}
               getViewURL={this.getOrganizationURL}
               organizations={this.props.organizations}
@@ -56,7 +56,7 @@ OrganizationListWrapper.propTypes = {
   dispatch: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
-  supportsBYOC: PropTypes.bool,
+  supportsMultiAccount: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -64,12 +64,14 @@ function mapStateToProps(state) {
     state.entities.organizations.items
   ).sort((a, b) => a.id.localeCompare(b.id));
 
-  const providerSupportsBYOC = supportsBYOC(state.main.info.general.provider);
+  const providerSupportsMultiAccount = supportsMultiAccount(
+    state.main.info.general.provider
+  );
 
   return {
     organizations: sortedOrganizations,
     clusters: state.entities.clusters.items,
-    supportsBYOC: providerSupportsBYOC,
+    supportsMultiAccount: providerSupportsMultiAccount,
   };
 }
 
