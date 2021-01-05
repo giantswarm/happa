@@ -11,7 +11,7 @@ const OrganizationListRow = ({
   clusters,
   organization,
   getViewURL,
-  supportsBYOC,
+  supportsMultiAccount,
 }) => {
   const orgID = organization.id;
   const organizationDetailURL = getViewURL(orgID);
@@ -30,7 +30,7 @@ const OrganizationListRow = ({
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
       </StyledTableDataCell>
 
-      {supportsBYOC && (
+      {supportsMultiAccount && (
         <StyledTableDataCell centered={true}>
           {hasCredentials && (
             <Link to={organizationDetailURL}>
@@ -47,7 +47,7 @@ OrganizationListRow.propTypes = {
   getViewURL: PropTypes.func.isRequired,
   organization: PropTypes.object,
   clusters: PropTypes.array,
-  supportsBYOC: PropTypes.bool,
+  supportsMultiAccount: PropTypes.bool,
 };
 
 export default OrganizationListRow;

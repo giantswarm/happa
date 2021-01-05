@@ -16,7 +16,7 @@ export function getOrganizationByID(
   return undefined;
 }
 
-export function supportsBYOC(
+export function supportsMultiAccount(
   provider: PropertiesOf<typeof Providers>
 ): boolean {
   return provider === Providers.AWS || provider === Providers.AZURE;
