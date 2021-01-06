@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airbrake/browser@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@airbrake/browser/-/browser-1.4.1.tgz#c0832eed3096498e51ff947e1e35bda23021a7be"
-  integrity sha512-4KChn2eGDllwqYJ4c6MFqIiJ2RZgg49inYiIsdpAj5MLtOpZRlPF8MsOSLGHxkEDX6u5M9KRidUfktuQ/C9lKA==
+"@airbrake/browser@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@airbrake/browser/-/browser-1.4.2.tgz#c7aa1b6b0db664011c71e733d364d03b393e9774"
+  integrity sha512-hlP+IMDcJXpoIaXTeKl8W+p18hKRJ9SKgLQTVh45GA9/qFXsLgu0V4tn0jDT5NQQXJG1+IKBv/RLRVgyswJy+w==
   dependencies:
     "@types/promise-polyfill" "^6.0.3"
     "@types/request" "2.48.5"
