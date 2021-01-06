@@ -19,7 +19,7 @@ class ScaleClusterModal extends React.Component {
 
   /**
    * Returns true if autoscaling of worker nodes is possible in this
-   * tenant cluster.
+   * workload cluster.
    *
    * @param String Provider identifier (aws, azure, kvm)
    * @param String Semantic release version number
