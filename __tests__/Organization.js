@@ -179,7 +179,7 @@ describe('', () => {
       expect(organizationMember.textContent).toBe(orgResponse.members[0].email);
 
       const noOrgsMessage = await findByText(
-        `No credentials set. Clusters of this organization will be created in the default tenant cluster account of this installation.`
+        `No credentials set. Clusters of this organization will be created in the default workload cluster account of this installation.`
       );
       expect(noOrgsMessage).toBeInTheDocument();
     });

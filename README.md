@@ -14,7 +14,7 @@ The Giant Swarm web user interface. It lets users:
 - Add / remove members from organizations
 - Learn how to get started with their kubernetes clusters by following a guide
 
-Happa is intended to be deployed to Giant Swarm control planes and acts as a client to the Giant Swarm API.
+Happa is intended to be deployed to Giant Swarm management clusters and acts as a client to the Giant Swarm API.
 
 ![Screenshot of Happa](https://user-images.githubusercontent.com/455309/51164968-a5320780-18d9-11e9-91c5-10ad144d7ada.png)
 

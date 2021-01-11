@@ -13,7 +13,7 @@ import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import {
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
@@ -152,8 +152,8 @@ export function refreshUserInfo(): ThunkAction<
           messageTTL.MEDIUM
         );
         const redirectPath = loggedInUser.isAdmin
-          ? AppRoutes.AdminLogin
-          : AppRoutes.Login;
+          ? MainRoutes.AdminLogin
+          : MainRoutes.Login;
 
         dispatch(push(redirectPath));
       } else {
@@ -242,7 +242,7 @@ export function giantswarmLogin(
     } catch (err) {
       const message = (err as Error).message ?? (err as string);
       dispatch(loginError(message));
-      dispatch(push(AppRoutes.Login));
+      dispatch(push(MainRoutes.Login));
 
       return Promise.reject(err);
     }
@@ -262,12 +262,12 @@ export function giantswarmLogout(): ThunkAction<
       const authTokensApi = new GiantSwarm.AuthTokensApi();
       await authTokensApi.deleteAuthToken();
 
-      dispatch(push(AppRoutes.Login));
+      dispatch(push(MainRoutes.Login));
       dispatch(logoutSuccess());
 
       return Promise.resolve();
     } catch (err) {
-      dispatch(push(AppRoutes.Login));
+      dispatch(push(MainRoutes.Login));
       dispatch(logoutError(err));
 
       return Promise.reject(err);

@@ -7,7 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import Button from 'UI/Button';
 
@@ -150,7 +150,7 @@ export class SignUp extends React.Component {
     );
 
     setTimeout(() => {
-      this.props.dispatch(push(AppRoutes.Home));
+      this.props.dispatch(push(MainRoutes.Home));
     }, transitionDelay);
   }
 

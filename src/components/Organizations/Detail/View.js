@@ -148,7 +148,7 @@ class OrganizationDetail extends React.Component {
       clusters,
       credentials,
       loadingCredentials,
-      supportsBYOC,
+      supportsMultiAccount,
     } = this.props;
 
     const result = {
@@ -167,10 +167,10 @@ class OrganizationDetail extends React.Component {
         result.status = false;
         break;
 
-      case supportsBYOC && credentials.length > 0:
+      case supportsMultiAccount && credentials.length > 0:
         result.status = false;
         result.message =
-          'This organization cannot be deleted because it has BYOC credentials. Please remove them in order to be able to delete the organization.';
+          'This organization cannot be deleted because it has provider credentials. Please remove them in order to be able to delete the organization.';
         break;
     }
 
@@ -184,7 +184,7 @@ class OrganizationDetail extends React.Component {
       credentials,
       showCredentialsForm,
       loadingCredentials,
-      supportsBYOC,
+      supportsMultiAccount,
       provider,
     } = this.props;
     if (!organization) return null;
@@ -239,7 +239,7 @@ class OrganizationDetail extends React.Component {
           </MembersTable>
         </Section>
 
-        {supportsBYOC && (
+        {supportsMultiAccount && (
           <Section title='Provider credentials'>
             <Credentials
               provider={provider}
@@ -276,7 +276,7 @@ OrganizationDetail.propTypes = {
   showCredentialsForm: PropTypes.bool,
   membersForTable: PropTypes.array,
   provider: PropTypes.oneOf(Object.values(Providers)),
-  supportsBYOC: PropTypes.bool,
+  supportsMultiAccount: PropTypes.bool,
 };
 
 // eslint-disable-next-line react/no-multi-comp

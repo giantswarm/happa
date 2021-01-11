@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Constants, Providers } from 'shared/constants';
-import { getReleaseEOLStatus } from 'stores/releases/utils';
+import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
@@ -21,7 +21,9 @@ class ReleaseDetailsModal extends React.Component {
       release.k8sVersionEOLDate &&
       !version.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
     ) {
-      const { isEol } = getReleaseEOLStatus(release.k8sVersionEOLDate);
+      const { isEol } = getKubernetesReleaseEOLStatus(
+        release.k8sVersionEOLDate
+      );
       if (isEol) {
         return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
       }
