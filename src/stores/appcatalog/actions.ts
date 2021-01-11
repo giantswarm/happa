@@ -230,7 +230,7 @@ async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
   }
 
   const responseText = await response.text();
-  const rawCatalog = yaml.safeLoad(responseText) as IAppCatalogYAML;
+  const rawCatalog = yaml.load(responseText) as IAppCatalogYAML;
   const catalogWithApps: IAppCatalog = Object.assign({}, catalog, {
     apps: rawCatalog.entries,
   });
