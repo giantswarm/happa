@@ -122,7 +122,7 @@ class ViewAndEditName extends Component<
     this.setState({
       editing: state,
       ...additionalState,
-    });
+    } as IViewAndEditNameState);
 
     const { onToggleEditingState } = this.props;
     onToggleEditingState?.(state);
