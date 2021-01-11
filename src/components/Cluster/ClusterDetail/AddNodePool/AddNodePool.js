@@ -78,9 +78,9 @@ class AddNodePool extends Component {
     },
     azSelection: AvailabilityZoneSelection.Automatic,
     scaling: {
-      min: null,
+      min: Constants.NP_DEFAULT_MIN_SCALING,
       minValid: true,
-      max: null,
+      max: Constants.NP_DEFAULT_MAX_SCALING,
       maxValid: true,
     },
     // eslint-disable-next-line react/no-unused-state
@@ -104,35 +104,6 @@ class AddNodePool extends Component {
     allowSpotInstances: false,
     allowAlikeInstances: false,
   };
-
-  static getDerivedStateFromProps(newProps, prevState) {
-    // Set scaling defaults.
-    if (prevState.scaling.max === null && prevState.scaling.min === null) {
-      const statePatch = {
-        scaling: {
-          ...prevState.scaling,
-        },
-      };
-
-      switch (newProps.provider) {
-        case Providers.AWS:
-          statePatch.scaling.min = Constants.NP_DEFAULT_MIN_SCALING_AWS;
-          statePatch.scaling.max = Constants.NP_DEFAULT_MAX_SCALING_AWS;
-
-          break;
-
-        case Providers.AZURE:
-          statePatch.scaling.min = Constants.NP_DEFAULT_MIN_SCALING_AZURE;
-          statePatch.scaling.max = Constants.NP_DEFAULT_MAX_SCALING_AZURE;
-
-          break;
-      }
-
-      return statePatch;
-    }
-
-    return null;
-  }
 
   componentDidMount() {
     this.setState({

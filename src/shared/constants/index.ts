@@ -62,10 +62,8 @@ export const Constants = {
   MIN_NAME_LENGTH: 3,
   MAX_NAME_LENGTH: 100,
 
-  NP_DEFAULT_MIN_SCALING_AWS: 3,
-  NP_DEFAULT_MAX_SCALING_AWS: 10,
-  NP_DEFAULT_MIN_SCALING_AZURE: 3,
-  NP_DEFAULT_MAX_SCALING_AZURE: 3,
+  NP_DEFAULT_MIN_SCALING: 3,
+  NP_DEFAULT_MAX_SCALING: 10,
 
   // App name of the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',
