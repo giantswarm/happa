@@ -77,7 +77,7 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "@airbrake/browser": "1.4.1",
+    "@airbrake/browser": "1.4.2",
     "@emotion/core": "11.0.0",
     "@emotion/react": "11.1.1",
     "@emotion/styled": "11.0.0",
