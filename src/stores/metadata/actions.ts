@@ -100,13 +100,13 @@ export const registerUpdateChecker = (
  * that there is an update in progress in the UI.
  * @param timeout - The timeout between the update gets executed.
  */
-export const executeUpdate = createAsynchronousAction<number, IState, number>({
+export const executeUpdate = createAsynchronousAction<number, IState, void>({
   actionTypePrefix: METADATA_UPDATE_EXECUTE,
   perform: (
     _,
     _d,
     timeout: number = Constants.DEFAULT_METADATA_UPDATE_TIMEOUT
-  ): Promise<number> => {
+  ): Promise<void> => {
     return new Promise((resolve: () => void) => {
       window.setTimeout(() => {
         resolve();
