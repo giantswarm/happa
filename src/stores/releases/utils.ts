@@ -1,6 +1,6 @@
 import { compareDates, getRelativeDateFromNow } from 'lib/helpers';
 
-export function getReleaseEOLStatus(
+export function getKubernetesReleaseEOLStatus(
   eolDate: string
 ): { message: string; isEol: boolean } {
   const result = {
@@ -14,14 +14,14 @@ export function getReleaseEOLStatus(
   const relativeDate = getRelativeDateFromNow(eolDate);
   switch (compareDates(now, eolDate)) {
     case -1:
-      result.message = `This version will reach its end of life ${relativeDate}.`;
+      result.message = `This Kubernetes version will reach its end of life ${relativeDate}.`;
       break;
     case 0:
-      result.message = 'This version reached its end of life today.';
+      result.message = 'This Kubernetes version reached its end of life today.';
       result.isEol = true;
       break;
     case 1:
-      result.message = `This version reached its end of life ${relativeDate}.`;
+      result.message = `This Kubernetes version reached its end of life ${relativeDate}.`;
       result.isEol = true;
       break;
   }
