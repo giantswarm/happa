@@ -138,7 +138,7 @@ const InstallAppModal = (props) => {
 
     reader.onload = (e) => {
       try {
-        const parsedYAML = yaml.safeLoad(e.target.result);
+        const parsedYAML = yaml.load(e.target.result);
         setValuesYAML(parsedYAML);
         setValuesYAMLError('');
       } catch {
@@ -161,7 +161,7 @@ const InstallAppModal = (props) => {
 
     reader.onload = (e) => {
       try {
-        const parsedYAML = yaml.safeLoad(e.target.result);
+        const parsedYAML = yaml.load(e.target.result);
         setSecretsYAML(parsedYAML);
         setSecretsYAMLError('');
       } catch {

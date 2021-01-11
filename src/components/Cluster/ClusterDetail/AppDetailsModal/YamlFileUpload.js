@@ -48,7 +48,7 @@ const YAMLFileUpload = (props) => {
 
       return function (event) {
         try {
-          parsedYAML = yaml.safeLoad(event.target.result);
+          parsedYAML = yaml.load(event.target.result);
         } catch (err) {
           new FlashMessage(
             'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
