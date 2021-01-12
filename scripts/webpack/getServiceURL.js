@@ -25,7 +25,7 @@ const getInstallationInfo = function (installation) {
     `opsctl show installation -i ${installation}`,
     { encoding: 'utf-8' }
   );
-  const installationInfo = yaml.safeLoad(installationInfoYAML);
+  const installationInfo = yaml.load(installationInfoYAML);
 
   cache = installationInfo;
   console.log(chalk.yellow(`📡  [opsctl] Done`));
