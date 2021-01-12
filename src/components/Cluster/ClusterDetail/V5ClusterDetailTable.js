@@ -291,6 +291,21 @@ const LabelsRow = styled(ClusterLabels)`
 // to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
 
 class V5ClusterDetailTable extends React.Component {
+  static getNumberOfAdditionalColumns(
+    supportsNPAutoscaling,
+    supportsNPSpotInstances
+  ) {
+    let additionalColumnCount = 2;
+    if (supportsNPAutoscaling) {
+      additionalColumnCount += 2;
+    }
+    if (supportsNPSpotInstances) {
+      additionalColumnCount++;
+    }
+
+    return additionalColumnCount;
+  }
+
   state = {
     isNodePoolBeingAdded: false,
     nodePoolForm: {
@@ -347,20 +362,6 @@ class V5ClusterDetailTable extends React.Component {
     });
   };
 
-  getNumberOfAdditionalColumns() {
-    const { provider } = this.props;
-
-    let additionalColumnCount = 2;
-    if (supportsNodePoolAutoscaling(provider)) {
-      additionalColumnCount += 2;
-    }
-    if (supportsNodePoolSpotInstances(provider)) {
-      additionalColumnCount++;
-    }
-
-    return additionalColumnCount;
-  }
-
   render() {
     const { nodePoolForm } = this.state;
     const {
@@ -402,7 +403,19 @@ class V5ClusterDetailTable extends React.Component {
     const machineTypeLabel =
       provider === Providers.AWS ? 'Instance type' : 'VM Size';
 
-    const additionalColumnCount = this.getNumberOfAdditionalColumns();
+    const supportsNPAutoscaling = supportsNodePoolAutoscaling(
+      provider,
+      release_version
+    );
+    const supportsNPSpotInstances = supportsNodePoolSpotInstances(
+      provider,
+      release_version
+    );
+
+    const additionalColumnCount = V5ClusterDetailTable.getNumberOfAdditionalColumns(
+      supportsNPAutoscaling,
+      supportsNPSpotInstances
+    );
 
     return (
       <>
@@ -483,7 +496,10 @@ class V5ClusterDetailTable extends React.Component {
                 <NodePoolsColumnHeader>
                   Availability Zones
                 </NodePoolsColumnHeader>
-                <V5ClusterDetailTableNodePoolScaling provider={provider} />
+                <V5ClusterDetailTableNodePoolScaling
+                  supportsAutoscaling={supportsNPAutoscaling}
+                  supportsSpotInstances={supportsNPSpotInstances}
+                />
                 <NodePoolsColumnHeader>&nbsp;</NodePoolsColumnHeader>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
@@ -513,6 +529,8 @@ class V5ClusterDetailTable extends React.Component {
                           cluster={cluster}
                           nodePool={nodePool}
                           provider={provider}
+                          supportsAutoscaling={supportsNPAutoscaling}
+                          supportsSpotInstances={supportsNPSpotInstances}
                         />
                       </GridRowNodePoolsItem>
                     </BaseTransition>
@@ -532,6 +550,8 @@ class V5ClusterDetailTable extends React.Component {
                   selectedRelease={release_version}
                   closeForm={this.toggleAddNodePoolForm}
                   informParent={this.updateNodePoolForm}
+                  supportsAutoscaling={supportsNPAutoscaling}
+                  supportsSpotInstances={supportsNPSpotInstances}
                 />
                 <FlexWrapperDiv>
                   <Button

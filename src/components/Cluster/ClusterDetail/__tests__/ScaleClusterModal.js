@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import nock from 'nock';
 import React from 'react';
 import { Providers } from 'shared/constants';
@@ -389,19 +387,14 @@ describe('ScaleClusterModal', () => {
      * Autoscaling on
      * @provider AWS
      */
-    const {
-      getByLabelText,
-      findByText,
-      getByDisplayValue,
-      rerender,
-    } = renderWithProps({
+    let component = renderWithProps({
       workerNodesDesired: 3,
       provider: Providers.AWS,
       cluster: v4AWSClusterResponse,
     });
 
-    const minInput = getByLabelText(/minimum/i);
-    const maxInput = getByLabelText(/maximum/i);
+    const minInput = screen.getByLabelText(/minimum/i);
+    const maxInput = screen.getByLabelText(/maximum/i);
 
     fireEvent.change(maxInput, {
       target: {
@@ -410,7 +403,7 @@ describe('ScaleClusterModal', () => {
     });
 
     // Everything is valid
-    let saveButton = await findByText(/apply/i);
+    let saveButton = await screen.findByText(/apply/i);
     expect(saveButton.disabled).toBeFalsy();
 
     fireEvent.change(minInput, {
@@ -419,7 +412,9 @@ describe('ScaleClusterModal', () => {
       },
     });
 
-    saveButton = await findByText(/increase minimum number of nodes by 1/i);
+    saveButton = await screen.findByText(
+      /increase minimum number of nodes by 1/i
+    );
     expect(saveButton.disabled).toBeFalsy();
 
     fireEvent.change(minInput, {
@@ -434,8 +429,14 @@ describe('ScaleClusterModal', () => {
       },
     });
 
-    saveButton = await findByText(/remove 1 worker node/i);
+    saveButton = await screen.findByText(/remove 1 worker node/i);
     expect(saveButton.disabled).toBeFalsy();
+
+    fireEvent.change(minInput, {
+      target: {
+        value: v4AWSClusterResponse.scaling.min,
+      },
+    });
 
     fireEvent.change(maxInput, {
       target: {
@@ -443,19 +444,19 @@ describe('ScaleClusterModal', () => {
       },
     });
 
+    component.unmount();
+
     /**
      * Autoscaling off
      * @provider Azure
      */
-    rerender(
-      getComponentWithProps({
-        provider: Providers.AZURE,
-        cluster: v4AzureClusterResponse,
-        workerNodesDesired: 3,
-      })
-    );
+    component = renderWithProps({
+      provider: Providers.AZURE,
+      cluster: v4AzureClusterResponse,
+      workerNodesDesired: 3,
+    });
 
-    let valueInput = getByDisplayValue(
+    let valueInput = screen.getByDisplayValue(
       new RegExp(v4AzureClusterResponse.scaling.min)
     );
 
@@ -465,7 +466,7 @@ describe('ScaleClusterModal', () => {
       },
     });
 
-    saveButton = await findByText(/add 1 worker node/i);
+    saveButton = await screen.findByText(/add 1 worker node/i);
     expect(saveButton.disabled).toBeFalsy();
 
     fireEvent.change(valueInput, {
@@ -474,7 +475,7 @@ describe('ScaleClusterModal', () => {
       },
     });
 
-    saveButton = await findByText(/remove 1 worker node/i);
+    saveButton = await screen.findByText(/remove 1 worker node/i);
     expect(saveButton.disabled).toBeFalsy();
 
     fireEvent.change(valueInput, {
@@ -483,19 +484,19 @@ describe('ScaleClusterModal', () => {
       },
     });
 
+    component.unmount();
+
     /**
      * Autoscaling off
      * @provider KVM
      */
-    rerender(
-      getComponentWithProps({
-        provider: Providers.KVM,
-        cluster: v4KVMClusterResponse,
-        workerNodesDesired: 3,
-      })
-    );
+    component = renderWithProps({
+      provider: Providers.KVM,
+      cluster: v4KVMClusterResponse,
+      workerNodesDesired: 3,
+    });
 
-    valueInput = getByDisplayValue(
+    valueInput = screen.getByDisplayValue(
       new RegExp(v4KVMClusterResponse.scaling.min)
     );
 
@@ -505,7 +506,7 @@ describe('ScaleClusterModal', () => {
       },
     });
 
-    saveButton = await findByText(/add 1 worker node/i);
+    saveButton = await screen.findByText(/add 1 worker node/i);
     expect(saveButton.disabled).toBeFalsy();
 
     fireEvent.change(valueInput, {
@@ -514,7 +515,7 @@ describe('ScaleClusterModal', () => {
       },
     });
 
-    saveButton = await findByText(/remove 1 worker node/i);
+    saveButton = await screen.findByText(/remove 1 worker node/i);
     expect(saveButton.disabled).toBeFalsy();
   });
 

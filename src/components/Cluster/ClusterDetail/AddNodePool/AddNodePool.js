@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import NameInput from 'UI/ClusterCreation/NameInput';
@@ -79,9 +78,9 @@ class AddNodePool extends Component {
     },
     azSelection: AvailabilityZoneSelection.Automatic,
     scaling: {
-      min: null,
+      min: Constants.NP_DEFAULT_MIN_SCALING,
       minValid: true,
-      max: null,
+      max: Constants.NP_DEFAULT_MAX_SCALING,
       maxValid: true,
     },
     // eslint-disable-next-line react/no-unused-state
@@ -105,35 +104,6 @@ class AddNodePool extends Component {
     allowSpotInstances: false,
     allowAlikeInstances: false,
   };
-
-  static getDerivedStateFromProps(newProps, prevState) {
-    // Set scaling defaults.
-    if (prevState.scaling.max === null && prevState.scaling.min === null) {
-      const statePatch = {
-        scaling: {
-          ...prevState.scaling,
-        },
-      };
-
-      switch (newProps.provider) {
-        case Providers.AWS:
-          statePatch.scaling.min = Constants.NP_DEFAULT_MIN_SCALING_AWS;
-          statePatch.scaling.max = Constants.NP_DEFAULT_MAX_SCALING_AWS;
-
-          break;
-
-        case Providers.AZURE:
-          statePatch.scaling.min = Constants.NP_DEFAULT_MIN_SCALING_AZURE;
-          statePatch.scaling.max = Constants.NP_DEFAULT_MAX_SCALING_AZURE;
-
-          break;
-      }
-
-      return statePatch;
-    }
-
-    return null;
-  }
 
   componentDidMount() {
     this.setState({
@@ -408,12 +378,18 @@ class AddNodePool extends Component {
   render() {
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { azSelection, name } = this.state;
-    const { minAZ, maxAZ, defaultAZ, provider, id } = this.props;
+    const {
+      minAZ,
+      maxAZ,
+      defaultAZ,
+      provider,
+      id,
+      supportsAutoscaling,
+    } = this.props;
 
     const machineType = this.getMachineType();
 
-    const isScalingAuto = supportsNodePoolAutoscaling(provider);
-    const scalingLabel = isScalingAuto ? 'Scaling range' : 'Node count';
+    const scalingLabel = supportsAutoscaling ? 'Scaling range' : 'Node count';
 
     return (
       <>
@@ -544,7 +520,7 @@ class AddNodePool extends Component {
         <Section className='scaling-range'>
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
-              autoscalingEnabled={isScalingAuto}
+              autoscalingEnabled={supportsAutoscaling}
               label={{ max: 'MAX', min: 'MIN' }}
               onChange={this.updateScaling}
               readOnly={false}
@@ -569,10 +545,14 @@ AddNodePool.propTypes = {
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
   defaultAZ: PropTypes.number,
+  supportsAutoscaling: PropTypes.bool,
+  supportsSpotInstances: PropTypes.bool,
 };
 
 AddNodePool.defaultProps = {
   name: Constants.DEFAULT_NODEPOOL_NAME,
+  supportsAutoscaling: false,
+  supportsSpotInstances: false,
 };
 
 function mapStateToProps(state) {

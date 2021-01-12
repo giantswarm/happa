@@ -148,11 +148,11 @@ export const v5ClusterResponse = {
   conditions: [
     {
       last_transition_time: clusterCreateDateToday,
-      condition: 'Created',
+      condition: 'Creating',
     },
     {
       last_transition_time: clusterCreateDateToday,
-      condition: 'Creating',
+      condition: 'Created',
     },
   ],
   versions: [

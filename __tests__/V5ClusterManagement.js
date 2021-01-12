@@ -183,8 +183,8 @@ scales node pools correctly`, async () => {
     getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
 
     const defaultScaling = {
-      min: Constants.NP_DEFAULT_MIN_SCALING_AWS,
-      max: Constants.NP_DEFAULT_MAX_SCALING_AWS,
+      min: Constants.NP_DEFAULT_MIN_SCALING,
+      max: Constants.NP_DEFAULT_MAX_SCALING,
     };
     const increaseValue = 1;
     const newScaling = {

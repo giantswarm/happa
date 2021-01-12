@@ -3,12 +3,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import * as Providers from 'shared/constants/providers';
-import { INodePool, PropertiesOf } from 'shared/types';
-import {
-  supportsNodePoolAutoscaling,
-  supportsNodePoolSpotInstances,
-} from 'stores/nodepool/utils';
+import { INodePool } from 'shared/types';
 
 const NodesWrapper = styled.div<{ highlight?: boolean }>`
   width: 36px;
@@ -23,16 +18,15 @@ const NodesWrapper = styled.div<{ highlight?: boolean }>`
 
 interface INodePoolScalingProps {
   nodePool: INodePool;
-  provider: PropertiesOf<typeof Providers>;
+  supportsAutoscaling?: boolean;
+  supportsSpotInstances?: boolean;
 }
 
 const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
   nodePool,
-  provider,
+  supportsAutoscaling,
+  supportsSpotInstances,
 }) => {
-  const supportsAutoscaling = supportsNodePoolAutoscaling(provider);
-  const supportsSpotInstances = supportsNodePoolSpotInstances(provider);
-
   const { id, scaling, status } = nodePool;
 
   const current = status?.nodes_ready ?? 0;
@@ -100,7 +94,13 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
 NodePoolScaling.propTypes = {
   // @ts-ignore
   nodePool: PropTypes.object.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
+  supportsAutoscaling: PropTypes.bool,
+  supportsSpotInstances: PropTypes.bool,
+};
+
+NodePoolScaling.defaultProps = {
+  supportsAutoscaling: false,
+  supportsSpotInstances: false,
 };
 
 export default NodePoolScaling;

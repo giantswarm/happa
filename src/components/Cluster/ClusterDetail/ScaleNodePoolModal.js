@@ -7,7 +7,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import * as nodePoolActions from 'stores/nodepool/actions';
-import { supportsNodePoolAutoscaling } from 'stores/nodepool/utils';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import FlashMessageComponent from 'UI/FlashMessage';
@@ -116,10 +115,10 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   workerDelta = () => {
-    const { nodePool, workerNodesDesired } = this.props;
+    const { nodePool, workerNodesDesired, supportsAutoscaling } = this.props;
     const { min, max } = this.state.scaling;
 
-    if (!supportsNodePoolAutoscaling(this.props.provider)) {
+    if (!supportsAutoscaling) {
       // On non-auto-scaling clusters scaling.min == scaling.max so comparing
       // only min between props and current state works.
       return min - nodePool.scaling.min;
@@ -147,12 +146,12 @@ class ScaleNodePoolModal extends React.Component {
     let workerDelta = this.workerDelta();
     const pluralizeWorkers = this.pluralize(workerDelta);
 
-    const { nodePool, workerNodesDesired } = this.props;
+    const { nodePool, workerNodesDesired, supportsAutoscaling } = this.props;
     const { min, max, minValid, maxValid } = this.state.scaling;
     // Are there any nodes already?
     const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
 
-    if (supportsNodePoolAutoscaling(this.props.provider)) {
+    if (supportsAutoscaling) {
       if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
 
@@ -216,7 +215,7 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   render() {
-    const { workerNodesRunning, provider } = this.props;
+    const { workerNodesRunning, supportsAutoscaling } = this.props;
     const { error, scaling } = this.state;
     const { min, max, minValid, loading } = scaling;
 
@@ -225,7 +224,7 @@ class ScaleNodePoolModal extends React.Component {
     if (max < workerNodesRunning && minValid) {
       const diff = workerNodesRunning - max;
 
-      if (supportsNodePoolAutoscaling(provider)) {
+      if (supportsAutoscaling) {
         warnings.push(
           <CSSTransition
             classNames='rollup'
@@ -280,13 +279,13 @@ class ScaleNodePoolModal extends React.Component {
     let body = (
       <BootstrapModal.Body>
         <p>
-          {supportsNodePoolAutoscaling(provider)
+          {supportsAutoscaling
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
             : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
-            autoscalingEnabled={supportsNodePoolAutoscaling(provider)}
+            autoscalingEnabled={supportsAutoscaling}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}
@@ -359,9 +358,15 @@ ScaleNodePoolModal.propTypes = {
   cluster: PropTypes.object,
   nodePool: PropTypes.object,
   nodePoolActions: PropTypes.object,
-  provider: PropTypes.string,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
+  supportsAutoscaling: PropTypes.bool,
+  supportsSpotInstances: PropTypes.bool,
+};
+
+ScaleNodePoolModal.defaultProps = {
+  supportsAutoscaling: false,
+  supportsSpotInstances: false,
 };
 
 function mapDispatchToProps(dispatch) {

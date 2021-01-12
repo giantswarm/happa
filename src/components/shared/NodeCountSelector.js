@@ -118,7 +118,7 @@ class NodeCountSelector extends React.Component {
             onChange={this.updateNodeCount}
             readOnly={readOnly}
             stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-            value={scaling.max}
+            value={scaling.min}
             eventNameSuffix='WORKER_NODES'
           />
         </label>
