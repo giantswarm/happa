@@ -307,14 +307,13 @@ export function getClusterLatestCondition(
     cluster.conditions &&
     cluster.conditions.length > 0
   ) {
-    const sortedConditions = cluster.conditions.sort(
-      (conditionA, conditionB) => {
-        return compareDates(
-          conditionA.last_transition_time!,
-          conditionB.last_transition_time!
-        );
-      }
-    );
+    const sortedConditions = cluster.conditions.slice();
+    sortedConditions.sort((conditionA, conditionB) => {
+      return compareDates(
+        conditionA.last_transition_time ?? -1,
+        conditionB.last_transition_time ?? -1
+      );
+    });
 
     return sortedConditions[sortedConditions.length - 1].condition;
   }
