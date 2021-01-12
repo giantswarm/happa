@@ -110,7 +110,7 @@
     "prop-types": "15.7.2",
     "query-string": "6.13.7",
     "react": "17.0.1",
-    "react-bootstrap": "0.33.1",
+    "react-bootstrap": "1.4.3",
     "react-bootstrap-table-next": "4.0.3",
     "react-breadcrumbs": "2.1.7",
     "react-content-loader": "^5.1.4",
