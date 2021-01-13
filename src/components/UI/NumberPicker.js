@@ -251,6 +251,8 @@ class NumberPicker extends React.Component {
                   this.state.inputValue === this.props.min && 'disabled'
                 }
                 onClick={this.decrement}
+                aria-label='Decrement'
+                role='button'
               >
                 &ndash;
               </DecrementButton>
@@ -278,6 +280,8 @@ class NumberPicker extends React.Component {
               <IncrementButton
                 className={this.props.value === this.props.max && 'disabled'}
                 onClick={this.increment}
+                aria-label='Increment'
+                role='button'
               >
                 +
               </IncrementButton>

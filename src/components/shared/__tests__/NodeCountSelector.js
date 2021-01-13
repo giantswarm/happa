@@ -50,29 +50,30 @@ describe('NodeCountSelector', () => {
 
   it('respects value constraints, with autoscale off', () => {
     const minValue = 5;
-    const maxValue = 8;
+    const maxValue = 5;
 
-    const { getByTestId } = renderWithProps({
+    const { getByTestId, getByRole } = renderWithProps({
       autoscalingEnabled: false,
       minValue,
       maxValue,
     });
     const input = getByTestId(labelTestID).querySelector('input');
 
-    fireEvent.change(input, {
-      target: {
-        value: '3',
-      },
+    const decrementButton = getByRole('button', {
+      name: 'Decrement',
+    });
+    const incrementButton = getByRole('button', {
+      name: 'Increment',
     });
 
+    for (let i = 0; i < 9; i++) {
+      fireEvent.click(decrementButton);
+    }
     expect(input.value).toBe(`${minValue}`);
 
-    fireEvent.change(input, {
-      target: {
-        value: '10',
-      },
-    });
-
+    for (let i = 0; i < 9; i++) {
+      fireEvent.click(incrementButton);
+    }
     expect(input.value).toBe(`${maxValue}`);
   });
 
@@ -80,7 +81,7 @@ describe('NodeCountSelector', () => {
     const minValue = 5;
     const maxValue = 8;
 
-    const { getAllByTestId } = renderWithProps({
+    const { getAllByTestId, getAllByRole } = renderWithProps({
       autoscalingEnabled: true,
       minValue,
       maxValue,
@@ -88,17 +89,17 @@ describe('NodeCountSelector', () => {
     const inputs = getAllByTestId(labelTestID).map((label) =>
       label.querySelector('input')
     );
+    const decrementButtons = getAllByRole('button', {
+      name: 'Decrement',
+    });
+    const incrementButtons = getAllByRole('button', {
+      name: 'Increment',
+    });
 
-    fireEvent.change(inputs[0], {
-      target: {
-        value: '3',
-      },
-    });
-    fireEvent.change(inputs[1], {
-      target: {
-        value: '10',
-      },
-    });
+    for (let i = 0; i < 9; i++) {
+      fireEvent.click(decrementButtons[0]);
+      fireEvent.click(incrementButtons[1]);
+    }
 
     expect(inputs[0].value).toBe(`${minValue}`);
     expect(inputs[1].value).toBe(`${maxValue}`);
