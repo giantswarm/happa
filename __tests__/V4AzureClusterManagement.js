@@ -166,14 +166,14 @@ describe('V4AzureClusterManagement', () => {
 
     fireEvent.change(azInput, {
       target: {
-        value: defaultAZCount - 1,
+        value: defaultAZCount,
       },
     });
     expect(azInput.value).toBe(String(defaultAZCount));
 
     fireEvent.change(azInput, {
       target: {
-        value: maxAZCount + 1,
+        value: maxAZCount,
       },
     });
     expect(azInput.value).toBe(String(maxAZCount));

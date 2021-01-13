@@ -145,37 +145,43 @@ class NumberPicker extends React.Component {
     const currentValue = this.props.value;
     const desiredValue = currentValue + this.props.stepSize;
 
-    this.updateInput({
-      target: { value: desiredValue },
-    });
+    this.updateInput(desiredValue);
   };
 
   decrement = () => {
     const currentValue = this.props.value;
     const desiredValue = currentValue - this.props.stepSize;
 
-    this.updateInput({
-      target: { value: desiredValue },
-    });
+    this.updateInput(desiredValue);
   };
 
-  updateInput = (e) => {
-    const desiredValue = e.target.value;
-
+  updateInput = (desiredValue, allowInvalidValues = false) => {
     // Validate.
     // eslint-disable-next-line prefer-const
     let { value, validationError } = this.validateInput(desiredValue);
 
     // Ensure values are never above max or below min. They can be null.
     const { max, min } = this.props;
-    value = value === null ? '' : value < min ? min : value > max ? max : value;
+    switch (true) {
+      case value === null:
+        value = '';
+        break;
+      case !allowInvalidValues && value < min:
+        value = min;
+        break;
+      case !allowInvalidValues && value > max:
+        value = max;
+        break;
+    }
+
+    const isValid = validationError.length < 1 || (min <= 0 && value === 0);
 
     // Update state.
     this.setState(
       {
         inputValue: value,
         value,
-        valid: Boolean(value) || (min <= 0 && value === 0),
+        valid: isValid,
         validationError,
       },
       () => {
@@ -245,6 +251,8 @@ class NumberPicker extends React.Component {
                   this.state.inputValue === this.props.min && 'disabled'
                 }
                 onClick={this.decrement}
+                aria-label='Decrement'
+                role='button'
               >
                 &ndash;
               </DecrementButton>
@@ -253,9 +261,7 @@ class NumberPicker extends React.Component {
           <ValueSpan>
             <input
               disabled={this.props.readOnly}
-              // max={this.props.max}
-              // min={this.props.min}
-              onChange={this.updateInput}
+              onChange={(e) => this.updateInput(e.target.value, true)}
               onFocus={this.handleFocus}
               step={this.props.stepSize}
               type='number'
@@ -274,6 +280,8 @@ class NumberPicker extends React.Component {
               <IncrementButton
                 className={this.props.value === this.props.max && 'disabled'}
                 onClick={this.increment}
+                aria-label='Increment'
+                role='button'
               >
                 +
               </IncrementButton>
