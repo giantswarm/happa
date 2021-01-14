@@ -19,7 +19,6 @@ const List = styled.div`
   width: 100%;
   padding-left: 20px;
 `;
-const ONE_HUNDRED = 100;
 
 const AppsList: React.FC = () => {
   return (
@@ -41,16 +40,24 @@ const AppsList: React.FC = () => {
       <ListAndFacets>
         <Facets />
         <List>
-          {Array(ONE_HUNDRED)
-            .fill(1)
-            .map((i) => (
-              <App
-                key={i}
-                name='g8s-prometheus'
-                catalog='Giant Swarm Control Plane'
-                to='https://google.com'
-              />
-            ))}
+          {[
+            'g8s-prometheus',
+            'apm-server',
+            'elastabot',
+            'elastic-stack',
+            'elasticsearch-curator',
+            'fluentd',
+            'prometheus-mongodb-exporter',
+            'prometheus-pushgateway',
+            'prometheus-postgres-exporter',
+          ].map((name) => (
+            <App
+              key={name}
+              name={name}
+              catalog='Giant Swarm Control Plane'
+              to='https://google.com'
+            />
+          ))}
         </List>
       </ListAndFacets>
     </div>

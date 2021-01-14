@@ -4,6 +4,7 @@ import React, { FC, ImgHTMLAttributes, useState } from 'react';
 interface IFallback {
   label: string;
   backgroundColor: string;
+  textColor: string;
 }
 
 interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
@@ -17,7 +18,13 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
 
   if (loadError) {
     return (
-      <div {...restProps} style={{ backgroundColor: fallback.backgroundColor }}>
+      <div
+        {...restProps}
+        style={{
+          backgroundColor: fallback.backgroundColor,
+          color: fallback.textColor,
+        }}
+      >
         {fallback.label}
       </div>
     );
@@ -30,6 +37,7 @@ ImgWithFallback.propTypes = {
   fallback: PropTypes.shape({
     label: PropTypes.string.isRequired,
     backgroundColor: PropTypes.string.isRequired,
+    textColor: PropTypes.string.isRequired,
   }).isRequired,
 };
 

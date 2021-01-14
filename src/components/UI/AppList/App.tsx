@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import Icon from './Icon';
+
 const Wrapper = styled(Link)`
   display: flex;
   flex-direction: column;
@@ -18,6 +20,9 @@ const Wrapper = styled(Link)`
 `;
 
 const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker4};
   width: 100%;
   height: 55%;
@@ -56,7 +61,9 @@ interface IAppProps {
 const App: React.FC<IAppProps> = ({ name, catalog, to }) => {
   return (
     <Wrapper to={to}>
-      <IconWrapper />
+      <IconWrapper>
+        <Icon src='' name={name} />
+      </IconWrapper>
       <DetailWrapper>
         <Name>{name}</Name>
         <Catalog>
