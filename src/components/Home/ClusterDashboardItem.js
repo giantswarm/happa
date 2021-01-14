@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { push } from 'connected-react-router';
+import parseISO from 'date-fns/fp/parseISO';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
@@ -161,12 +161,9 @@ function ClusterDashboardItem({
    * Returns true if the cluster is younger than 30 days
    */
   const clusterYoungerThan30Days = () => {
-    const age = Math.abs(
-      moment(cluster.create_date)
-        .utc()
-        // eslint-disable-next-line no-magic-numbers
-        .diff(moment().utc()) / 1000
-    );
+    const now = new Date().getUTCSeconds();
+    const creationDate = parseISO(cluster.create_date).getUTCSeconds();
+    const age = creationDate - now;
 
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24 * 60 * 60;
