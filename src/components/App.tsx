@@ -32,7 +32,7 @@ interface IAppProps {
 
 const App: React.FC<IAppProps> = ({ store, theme, history }) => (
   <Provider store={store}>
-    <StyledGrommet>
+    <StyledGrommet plain>
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
           {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
