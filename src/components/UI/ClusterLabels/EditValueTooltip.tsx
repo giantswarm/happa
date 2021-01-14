@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from 'styled-components';
 
 const tooltipThemeColor = 'darkBlueLighter2';
 

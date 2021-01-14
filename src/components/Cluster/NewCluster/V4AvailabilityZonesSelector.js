@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import Section from 'UI/ClusterCreation/Section';
 import NumberPicker from 'UI/NumberPicker';

@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import { baseLabelStyles } from 'styles/cluster-creation';
 
 import Input from '../Inputs/Input';

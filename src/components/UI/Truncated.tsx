@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import { truncate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from 'styled-components';
 
 interface ITruncatedProps
   extends React.ComponentPropsWithoutRef<React.ElementType> {

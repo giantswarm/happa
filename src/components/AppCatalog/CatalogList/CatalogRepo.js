@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import ImgWithFallback from 'shared/ImgWithFallback';
+import styled from 'styled-components';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import CachingColorHash from 'utils/cachingColorHash';
 

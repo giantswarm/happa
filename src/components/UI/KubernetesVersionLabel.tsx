@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { Overlay } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
+import styled from 'styled-components';
 
 const EolLabel = styled.span`
   background: ${({ theme }) => theme.colors.darkBlueDarker3};

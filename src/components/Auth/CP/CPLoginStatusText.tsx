@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
+import styled from 'styled-components';
 
 const Text = styled.div<{ loggedIn: boolean }>`
   margin-right: ${({ theme }) => theme.spacingPx * 4}px;

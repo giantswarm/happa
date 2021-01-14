@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   border-left: 6px solid ${({ theme }) => theme.colors.dropdownBackground};

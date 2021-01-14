@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from 'styled-components';
 
 const PKILabel = styled.span`
   text-decoration: underline;

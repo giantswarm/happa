@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
+import styled from 'styled-components';
 
 const azColors = [
   '#66c2a5',

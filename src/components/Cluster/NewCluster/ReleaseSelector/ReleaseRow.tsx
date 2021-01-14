@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
+import styled from 'styled-components';
 import {
   CenteredCell,
   ComponentsRow,

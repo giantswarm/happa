@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { ChangeEvent, ElementRef, FC, ReactNode } from 'react';
+import { css } from 'styled-components';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   margin-bottom: 15px;

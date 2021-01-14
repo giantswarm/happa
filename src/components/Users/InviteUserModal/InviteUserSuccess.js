@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 
 import { getInitialState } from '.';
 

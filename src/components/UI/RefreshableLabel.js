@@ -1,8 +1,8 @@
-import { keyframes } from '@emotion/react';
-import styled from '@emotion/styled';
 import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 const yellowFade = keyframes`
   from {

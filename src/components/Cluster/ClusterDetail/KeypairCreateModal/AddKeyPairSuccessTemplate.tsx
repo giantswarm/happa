@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
 import DownloadKubeconfigButton from 'Cluster/ClusterDetail/KeypairCreateModal/DownloadKubeconfigButton';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import Button from 'UI/Button';
 
 const CLIPBOARD_RESET_TIME = 500;

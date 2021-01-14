@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import {
   AvailabilityZoneSelection,

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import PropTypes from 'prop-types';
@@ -6,6 +5,7 @@ import React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { selectIngressAppFromCluster } from 'stores/appcatalog/selectors';
+import styled from 'styled-components';
 
 import { Text } from './Components';
 

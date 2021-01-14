@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 
 import Row from './OrganizationListRow';
 

@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { CSSBreakpoints } from 'shared/constants/cssBreakpoints';
+import styled from 'styled-components';
 import { Code, mq } from 'styles';
 import Truncated from 'UI/Truncated';
 

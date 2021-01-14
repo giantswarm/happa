@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
 import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import styled from 'styled-components';
 
 import AZSelectionAutomatic from './AZSelectionAutomatic';
 import AZSelectionCheckbox from './AZSelectionCheckbox';

@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 const ErrorText = styled.span`
   color: ${({ theme }) => theme.colors.error};

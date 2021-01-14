@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 const Wrapper = styled.div`

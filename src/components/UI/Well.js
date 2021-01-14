@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 const Well = styled.div`
   background-color: ${({ theme }) => theme.colors.shade7};

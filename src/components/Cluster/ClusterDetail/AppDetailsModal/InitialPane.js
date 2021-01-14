@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from 'styled-components';
 import Button from 'UI/Button';
 import DetailItem from 'UI/DetailList';
 import Truncated from 'UI/Truncated';

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import styled from 'styled-components';
 import { mq } from 'styles';
 import Truncated from 'UI/Truncated';
 

@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import ClusterStatus from 'Home/ClusterStatus';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
+import styled from 'styled-components';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import Input from 'UI/Inputs/Input';
 

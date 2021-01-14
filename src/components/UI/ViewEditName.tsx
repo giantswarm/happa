@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, {
@@ -11,6 +10,7 @@ import Overlay from 'react-bootstrap/lib/Overlay';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
+import styled from 'styled-components';
 import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
 
 import Button from './Button';
