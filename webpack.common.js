@@ -123,9 +123,6 @@ const makeFeatureFlags = () => {
 module.exports = {
   entry: ['react-hot-loader/patch', './src/components/index.tsx'],
   context: __dirname,
-  node: {
-    fs: 'empty',
-  },
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
@@ -145,6 +142,12 @@ module.exports = {
         use: ['babel-loader'],
       },
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.sass$/,
         use: [
           'style-loader',
@@ -161,28 +164,56 @@ module.exports = {
       },
       {
         test: /\.(png|jpg)$/,
-        loader: 'url-loader?limit=8192',
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+        },
       },
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader:
-          'url-loader?limit=10000&mimetype=application/font-woff&name=assets/[name].[contenthash:12].[ext]',
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          mimetype: 'application/font-woff',
+          name: 'assets/[name].[contenthash:12].[ext]',
+        },
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader:
-          'url-loader?limit=10000&mimetype=application/octet-stream&name=assets/[name].[contenthash:12].[ext]',
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          mimetype: 'application/octet-stream',
+          name: 'assets/[name].[contenthash:12].[ext]',
+        },
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader?name=assets/[name].[contenthash:12].[ext]',
+        loader: 'file-loader',
+        options: {
+          name: 'assets/[name].[contenthash:12].[ext]',
+        },
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=image/svg+xml',
+        loader: 'url-loader',
         options: {
+          limit: 10000,
           esModule: false,
+          mimetype: 'image/svg+xml',
         },
+      },
+      {
+        test: /node_modules\/vfile\/core\.js/,
+        use: [
+          {
+            loader: 'imports-loader',
+            options: {
+              type: 'commonjs',
+              imports: ['single process/browser process'],
+            },
+          },
+        ],
       },
       {
         parser: {
@@ -198,9 +229,12 @@ module.exports = {
       path.resolve(`${__dirname}/src`),
       path.resolve(`${__dirname}/src/components`),
     ],
-
     alias: {
       'react-dom': '@hot-loader/react-dom',
+    },
+    fallback: {
+      fs: false,
+      path: false,
     },
   },
   plugins: [
@@ -212,7 +246,10 @@ module.exports = {
       },
     }),
     // Ignore locale data from the moment package, which we don't use.
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/,
+    }),
     new webpack.DefinePlugin(makeFeatureFlags()),
   ],
 };
