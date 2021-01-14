@@ -1,6 +1,7 @@
+import add from 'date-fns/fp/add';
+import parseISO from 'date-fns/fp/parseISO';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import moment from 'moment';
 import { ThunkAction } from 'redux-thunk';
 import { Providers, StatusCodes } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
@@ -519,9 +520,9 @@ export function clusterLoadKeyPairs(
       const keypairsApi = new GiantSwarm.KeyPairsApi();
       const response = await keypairsApi.getKeyPairs(clusterId);
       const keyPairs = Object.values(response).map((keyPair) => {
-        keyPair.expire_date = moment(keyPair.create_date)
-          .utc()
-          .add(keyPair.ttl_hours, 'hours');
+        keyPair.expire_date = add({
+          hours: keyPair.ttl_hours,
+        })(parseISO(keyPair.create_date));
 
         return keyPair;
       });
