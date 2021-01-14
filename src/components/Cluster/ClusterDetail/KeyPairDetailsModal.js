@@ -11,7 +11,7 @@ import CertificateOrgsLabel from './CertificateOrgsLabel';
 
 class KeyPairDetailsModal extends React.Component {
   static createDate(date) {
-    const formattedDate = format('D MMM YYYY, HH:mm z')(parseISO(date));
+    const formattedDate = format('d MMM yyyy, HH:mm z')(parseISO(date));
 
     return (
       <span>
@@ -24,7 +24,7 @@ class KeyPairDetailsModal extends React.Component {
     let expiryClass = '';
 
     const now = new Date().getUTCSeconds();
-    const expirationDate = parseISO(timestamp).getUTCSeconds();
+    const expirationDate = parseISO(expiry).getUTCSeconds();
     const expirySeconds = expirationDate - now;
 
     // eslint-disable-next-line no-magic-numbers
@@ -34,7 +34,8 @@ class KeyPairDetailsModal extends React.Component {
 
     return (
       <span className={expiryClass}>
-        {expiry.format('D MMM YYYY, HH:mm z')} &ndash; {relativeDate(expiry)}
+        {format('d MMM yyyy, HH:mm z')(expirationDate)} &ndash;{' '}
+        {relativeDate(expiry)}
       </span>
     );
   }

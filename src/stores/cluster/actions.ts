@@ -522,7 +522,7 @@ export function clusterLoadKeyPairs(
       const keyPairs = Object.values(response).map((keyPair) => {
         keyPair.expire_date = add({
           hours: keyPair.ttl_hours,
-        })(parseISO(keyPair.create_date));
+        })(parseISO(keyPair.create_date)).toISOString();
 
         return keyPair;
       });

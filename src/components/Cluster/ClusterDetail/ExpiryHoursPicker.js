@@ -1,4 +1,6 @@
-import moment from 'moment';
+import add from 'date-fns/fp/add';
+import parseISO from 'date-fns/fp/parseISO';
+import startOfDay from 'date-fns/fp/startOfDay';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DatePicker from 'react-datepicker';
@@ -33,29 +35,26 @@ class ExpiryHoursPicker extends React.Component {
       props.initialValue - years * 8760 - months * 720 - days * 24
     );
 
+    const expireDate = add({
+      hours: props.initialValue,
+    })(new Date().getUTCSeconds());
+
     // eslint-disable-next-line react/state-in-constructor
     this.state = {
       yearsValue: years,
       monthsValue: months,
       daysValue: days,
       hoursValue: hours,
-      expireDate: moment().add(props.initialValue, 'hours').utc(),
+      expireDate: expireDate,
       selectionType: 'relative',
       error: '',
     };
-
-    // to set the week start to Monday
-    moment.updateLocale('en', {
-      week: {
-        dow: 1,
-      },
-    });
   }
 
   handleDateChange(date) {
     this.setState(
       {
-        expireDate: moment(date),
+        expireDate: parseISO(date),
         selectionType: 'date',
       },
       () => {
@@ -138,18 +137,21 @@ class ExpiryHoursPicker extends React.Component {
       (prevState, props) => {
         if (prevState.selectionType === 'date') {
           // expireDate is at the start of the day of whatever the user picked.
-          expireDate = prevState.expireDate.utc().startOf('day').clone();
+          expireDate = startOfDay(prevState.expireDate);
         } else if (prevState.selectionType === 'relative') {
           // Calculate hours based on years, months, days, hours chosen
-          expireDate = moment().utc().add(prevState.yearsValue, 'years');
-          expireDate.add(prevState.monthsValue, 'months');
-          expireDate.add(prevState.daysValue, 'days');
-          expireDate.add(prevState.hoursValue, 'hours');
+          expireDate = add({
+            years: prevState.yearsValue,
+            months: prevState.monthsValue,
+            days: prevState.daysValue,
+            hours: prevState.hoursValue,
+          })(expireDate);
         }
 
         // Now that we have an expireDate, calculate the difference between it and
         // now in hours.
-        TTL = expireDate.diff(moment().utc(), 'hours');
+        const now = new Date().getUTCHours();
+        TTL = expireDate.getUTCHours() - now;
 
         let error = '';
         if (TTL >= props.maxSafeValueHours) {
@@ -173,6 +175,9 @@ class ExpiryHoursPicker extends React.Component {
   render() {
     const { error } = this.state;
     const hasError = error !== '';
+
+    const maxDate = add({ years: 30 })(new Date());
+    const minDate = add({ day: 1 })(new Date());
 
     return (
       <List className='expiry-hours-picker'>
@@ -258,13 +263,10 @@ class ExpiryHoursPicker extends React.Component {
           <DatePicker
             dateFormat='yyyy-MM-dd'
             dropdownMode='select'
-            maxDate={moment()
-              // eslint-disable-next-line no-magic-numbers
-              .add(30, 'years')
-              .toDate()}
-            minDate={moment().add(1, 'day').toDate()}
+            maxDate={maxDate}
+            minDate={minDate}
             onChange={this.handleDateChange.bind(this)}
-            selected={this.state.expireDate.toDate()}
+            selected={this.state.expireDate}
             showMonthDropdown
             showYearDropdown
           />
