@@ -245,11 +245,6 @@ module.exports = {
         ...makeEndpoints(),
       },
     }),
-    // Ignore locale data from the moment package, which we don't use.
-    new webpack.IgnorePlugin({
-      resourceRegExp: /^\.\/locale$/,
-      contextRegExp: /moment$/,
-    }),
     new webpack.DefinePlugin(makeFeatureFlags()),
   ],
 };

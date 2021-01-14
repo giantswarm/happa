@@ -103,7 +103,6 @@
     "js-base64": "3.6.0",
     "js-yaml": "4.0.0",
     "lunr": "^2.3.9",
-    "moment": "2.29.1",
     "normalize.css": "8.0.1",
     "noty": "^3.1.4",
     "oidc-client": "^1.10.1",
