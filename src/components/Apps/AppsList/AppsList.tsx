@@ -15,7 +15,7 @@ const List = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 20px;
-  border-left: 1px solid #fff;
+  border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
   width: 100%;
   padding-left: 20px;
 `;
