@@ -1,5 +1,6 @@
+import format from 'date-fns/fp/format';
+import parseISO from 'date-fns/fp/parseISO';
 import { relativeDate } from 'lib/helpers';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
@@ -10,21 +11,24 @@ import CertificateOrgsLabel from './CertificateOrgsLabel';
 
 class KeyPairDetailsModal extends React.Component {
   static createDate(date) {
+    const formattedDate = format('D MMM YYYY, HH:mm z')(parseISO(date));
+
     return (
       <span>
-        {moment(date).utc().format('D MMM YYYY, HH:mm z')} &ndash;{' '}
-        {relativeDate(date)}
+        {formattedDate} &ndash; {relativeDate(date)}
       </span>
     );
   }
 
   static expireDate(expiry) {
     let expiryClass = '';
-    // eslint-disable-next-line no-magic-numbers
-    const expirySeconds = expiry.utc().diff(moment().utc()) / 1000;
+
+    const now = new Date().getUTCSeconds();
+    const expirationDate = parseISO(timestamp).getUTCSeconds();
+    const expirySeconds = expirationDate - now;
 
     // eslint-disable-next-line no-magic-numbers
-    if (Math.abs(expirySeconds) < 60 * 60 * 24) {
+    if (expirySeconds < 60 * 60 * 24) {
       expiryClass = 'expiring';
     }
 
