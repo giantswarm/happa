@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import moment from 'moment';
+import formatDistance from 'date-fns/fp/formatDistance';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -89,7 +89,7 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
-    const lastUpdated = moment().fromNow();
+    const lastUpdated = formatDistance(new Date())(new Date());
 
     this.setState({ awsInstanceTypes, azureVMSizes, lastUpdated });
   }
@@ -197,7 +197,7 @@ class V4ClusterDetailTable extends React.Component {
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
             <span className='last-updated-datestring'>
-              {this.state.lastUpdated}
+              {this.state.lastUpdated} ago
             </span>
             .
           </small>
