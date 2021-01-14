@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
+import styled from 'styled-components';
 import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
 import ValidationError from 'UI/ClusterLabels/ValidationError';
 import ValueLabel from 'UI/ClusterLabels/ValueLabel';

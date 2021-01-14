@@ -1,5 +1,3 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import produce from 'immer';
@@ -26,6 +24,8 @@ import {
   supportsNodePoolAutoscaling,
   supportsNodePoolSpotInstances,
 } from 'stores/nodepool/utils';
+import { css } from 'styled-components';
+import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';

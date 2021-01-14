@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
+import styled from 'styled-components';
 import { FlexRowBase, Row } from 'styles';
 
 // Have to force component type as any, because of styled props not being inferred correctly

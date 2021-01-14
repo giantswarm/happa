@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 const Headline = styled.h1`
   padding-bottom: ${({ theme }) => theme.spacingPx * 6}px;

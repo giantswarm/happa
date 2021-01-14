@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import { replace } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import { memoize, throttle } from 'underscore';
 

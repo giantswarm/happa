@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import AddKeyPairErrorTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairErrorTemplate';
 import AddKeyPairSuccessTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairSuccessTemplate';
 import AddKeyPairTemplate from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairTemplate';
@@ -20,6 +19,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Providers, StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
+import styled from 'styled-components';
 import Button from 'UI/Button';
 
 const StyledModal = styled(BootstrapModal)`

@@ -1,5 +1,3 @@
-import { ThemeProvider } from '@emotion/react';
-import { Theme } from '@emotion/react';
 import CPAuthProvider from 'Auth/CP/CPAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import Footer from 'Footer/Footer';
@@ -10,12 +8,13 @@ import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
+import { DefaultTheme, ThemeProvider } from 'styled-components';
 
 import Routes from './Routes';
 
 interface IAppProps {
   store: Store;
-  theme: Theme;
+  theme: DefaultTheme;
   history: History<History.LocationState>;
 }
 

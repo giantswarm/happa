@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -7,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import styled from 'styled-components';
 
 import ConfigureKubeCTL from './Steps/ConfigureKubectl';
 import InstallIngress from './Steps/InstallIngress';

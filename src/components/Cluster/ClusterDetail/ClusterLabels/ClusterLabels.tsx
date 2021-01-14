@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
@@ -8,6 +7,7 @@ import {
   getClusterLabelsError,
   getClusterLabelsLoading,
 } from 'stores/clusterlabels/selectors';
+import styled from 'styled-components';
 import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
 
 import DeleteLabelButton from './DeleteLabelButton';

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import AZSelection from 'Cluster/AZSelection/AZSelection';
 import {
   AvailabilityZoneSelection,
@@ -20,6 +19,7 @@ import {
   supportsNodePoolAutoscaling,
   supportsNodePoolSpotInstances,
 } from 'stores/nodepool/utils';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';

@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { INodePool } from 'shared/types';
+import styled from 'styled-components';
 
 const NodesWrapper = styled.div<{ highlight?: boolean }>`
   width: 36px;

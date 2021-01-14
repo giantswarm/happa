@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from 'styled-components';
 import CachingColorHash from 'utils/cachingColorHash';
 
 const colorHash = new CachingColorHash();

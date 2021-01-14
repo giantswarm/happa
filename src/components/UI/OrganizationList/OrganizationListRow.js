@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 const StyledTableDataCell = styled.td`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};

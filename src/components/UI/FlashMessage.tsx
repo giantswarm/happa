@@ -4,9 +4,9 @@
 // props on dismiss.
 //
 
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
+import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 
 const FlashMessageOuter = styled.div<{ type: FlashMessageType }>`

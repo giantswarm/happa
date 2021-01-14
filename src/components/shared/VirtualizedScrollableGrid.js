@@ -1,8 +1,8 @@
-import { withTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';
 import { FixedSizeGrid as List } from 'react-window';
+import { withTheme } from 'styled-components';
 import { debounce } from 'underscore';
 
 const MIN_COLUMN_COUNT = 1;

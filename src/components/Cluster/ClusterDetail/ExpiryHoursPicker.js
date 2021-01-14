@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Constants } from 'shared/constants';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/FlashMessage';
 

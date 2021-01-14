@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import platform from 'lib/platform';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as clusterActions from 'stores/cluster/actions';
+import styled from 'styled-components';
 import Aside from 'UI/Aside';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

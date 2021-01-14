@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
 import AddKeyPairGenericError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairGenericError';
 import AddKeyPairServiceUnavailableError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairServiceUnavailableError';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/FlashMessage';
 

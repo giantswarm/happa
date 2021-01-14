@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal/ReleaseDetailsModal';
@@ -8,6 +7,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import styled from 'styled-components';
 import { Code, Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';

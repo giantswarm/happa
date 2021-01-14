@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import AZSelection from 'Cluster/AZSelection/AZSelection';
 import {
   AvailabilityZoneSelection,
@@ -14,6 +13,7 @@ import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import styled from 'styled-components';
 import Checkbox from 'UI/Checkbox';
 import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
 import NameInput from 'UI/ClusterCreation/NameInput';

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import FooterUpdateButton from 'Footer/FooterUpdateButton';
 import {
   getReleaseURL,
@@ -19,6 +18,7 @@ import {
   getMetadataNewVersion,
 } from 'stores/metadata/selectors';
 import { IState } from 'stores/state';
+import styled from 'styled-components';
 
 const FooterGroup = styled.span`
   & + & {

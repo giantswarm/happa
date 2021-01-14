@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
 import {
   getAvailabilityZonesSectionLabel,
   getReadinessLabel,
 } from 'Cluster/ClusterDetail/MasterNodes/MasterNodesUtils';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 

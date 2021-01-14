@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
+import styled from 'styled-components';
 import { AdditionalInputHint } from 'UI/ClusterCreation/StyledInput';
 import NumberPicker from 'UI/NumberPicker';
 
