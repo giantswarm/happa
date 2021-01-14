@@ -20,7 +20,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
   output: {
-    filename: 'assets/[name].[hash].js',
+    filename: 'assets/[name].[contenthash].js',
   },
   devServer: {
     contentBase: './src',
@@ -68,7 +68,7 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
