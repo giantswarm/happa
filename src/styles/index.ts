@@ -1,6 +1,8 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
+import 'styled-components';
+
 import { CSSBreakpoints } from 'shared/constants';
+import { css } from 'styled-components';
+import styled from 'styled-components';
 
 import theme from './theme';
 
@@ -72,8 +74,8 @@ export interface IThemeFonts {
   console: string;
 }
 
-declare module '@emotion/react' {
-  export interface Theme {
+declare module 'styled-components' {
+  export interface DefaultTheme {
     colors: IColorMap;
     border_radius: string;
     breakpoints: Record<CSSBreakpoints, number>;

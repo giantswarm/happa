@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import diff from 'deep-diff';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
@@ -7,6 +6,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from 'stores/cluster/actions';
+import styled from 'styled-components';
 import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import FlashMessageComponent from 'UI/FlashMessage';

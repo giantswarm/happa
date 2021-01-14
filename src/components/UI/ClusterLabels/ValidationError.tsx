@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 const ValidationError = styled.div<{ isValid: boolean }>`
   margin: 5px;

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,6 +15,7 @@ import {
   getKubernetesReleaseEOLStatus,
   isPreRelease,
 } from 'stores/releases/utils';
+import styled from 'styled-components';
 import {
   ListToggler,
   SelectedDescription,

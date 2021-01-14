@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import React, { ComponentPropsWithRef, FC } from 'react';
 import BsButton from 'react-bootstrap/lib/Button';
+import styled from 'styled-components';
 
 interface IButtonProps extends ComponentPropsWithRef<'button'> {}
 

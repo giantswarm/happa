@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   useAllowedInstanceTypes,
   useInstanceTypeCapabilities,
@@ -8,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
+import styled from 'styled-components';
 import {
   ListToggler,
   SelectedDescription,

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -8,6 +7,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
+import styled from 'styled-components';
 
 const StyledInstallIngressButton = styled(InstallIngressButton)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;

@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import Button from 'react-bootstrap/lib/Button';
+import styled from 'styled-components';
 
 export const TableButton = styled(Button)`
   height: 24px;

@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
+import styled from 'styled-components';
 
 const TableWrapper = styled.div`
   .react-bootstrap-table table {

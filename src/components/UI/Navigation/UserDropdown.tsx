@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Gravatar from 'react-gravatar';
@@ -6,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { AuthorizationTypes } from 'shared/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
+import styled from 'styled-components';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
 
 const Wrapper = styled.div`

@@ -1,5 +1,3 @@
-import { useTheme } from '@emotion/react';
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -15,6 +13,8 @@ import {
   isClusterUpdating,
 } from 'stores/cluster/utils';
 import { IState } from 'stores/state';
+import styled from 'styled-components';
+import theme from 'styles/theme';
 
 const Wrapper = styled.div<{
   disabled: boolean;
@@ -23,7 +23,7 @@ const Wrapper = styled.div<{
 }>`
   display: inline-block;
   color: ${({ color }) => color};
-  opacity: ${({ theme, disabled }) => disabled && theme.disabledOpacity};
+  opacity: ${(props) => props.disabled && props.theme.disabledOpacity};
   cursor: ${({ isHyperlink }) => isHyperlink && 'pointer'};
 
   span {
@@ -56,8 +56,6 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   onClick,
   ...rest
 }) => {
-  const theme = useTheme();
-
   const canClusterUpgrade = useSelector(selectCanClusterUpgrade(clusterId));
   const isClusterAwaitingUpgrade = useSelector(
     selectIsClusterAwaitingUpgrade(clusterId)

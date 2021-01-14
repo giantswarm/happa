@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { logo } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,6 +7,7 @@ import RUMActionTarget from 'RUM/RUMActionTarget';
 import { CSSBreakpoints } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { MainRoutes } from 'shared/constants/routes';
+import styled from 'styled-components';
 import { mq } from 'styles';
 
 import MainMenu from './MainMenu';

@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import { ReleaseHelper } from 'lib/ReleaseHelper';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import styled from 'styled-components';
 
 import ReleaseDetailsModalSection from './ReleaseDetailsModalSection';
 import ReleaseDetailsModalUpgradeOptionsBetaDisclaimer from './ReleaseDetailsModalUpgradeOptionsBetaDisclaimer';

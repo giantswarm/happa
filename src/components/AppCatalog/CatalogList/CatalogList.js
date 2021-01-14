@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import Well from 'UI/Well';
 
 import CatalogRepo from './CatalogRepo';

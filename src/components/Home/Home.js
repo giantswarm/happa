@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import formatDistance from 'date-fns/fp/formatDistance';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
@@ -14,6 +13,7 @@ import { batchedRefreshClusters } from 'stores/batchActions';
 import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 import { selectClustersList } from 'stores/cluster/selectors';
 import { selectErrorByAction } from 'stores/error/selectors';
+import styled from 'styled-components';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
 import { memoize } from 'underscore';

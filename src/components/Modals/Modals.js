@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
@@ -17,6 +16,7 @@ import {
   organizationCreateConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'stores/organization/actions';
+import styled from 'styled-components';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 

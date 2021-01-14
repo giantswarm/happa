@@ -1,8 +1,7 @@
-import { ThemeProvider } from '@emotion/react';
-import { Theme } from '@emotion/react';
 import CPAuthProvider from 'Auth/CP/CPAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import Footer from 'Footer/Footer';
+import { Grommet } from 'grommet';
 import { History } from 'history';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,27 +9,41 @@ import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import FeatureFlags from 'shared/FeatureFlags';
+import { DefaultTheme, ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 
 import Routes from './Routes';
 
+const StyledGrommet = styled(Grommet)`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0px 10px;
+`;
+
 interface IAppProps {
   store: Store;
-  theme: Theme;
+  theme: DefaultTheme;
   history: History<History.LocationState>;
 }
 
 const App: React.FC<IAppProps> = ({ store, theme, history }) => (
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <ConnectedRouter history={history}>
-        {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
+    <StyledGrommet plain>
+      <ThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+          {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
 
-        <main>
-          <Routes />
-        </main>
-        <Footer />
-      </ConnectedRouter>
-    </ThemeProvider>
+          <main>
+            <Routes />
+          </main>
+          <Footer />
+        </ConnectedRouter>
+      </ThemeProvider>
+    </StyledGrommet>
   </Provider>
 );
 

@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithRef } from 'react';
+import styled from 'styled-components';
 
 const Label = styled.label`
   cursor: pointer;

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import CPLoginButton from 'Auth/CP/CPLoginButton';
 import CPLoginStatusText from 'Auth/CP/CPLoginStatusText';
 import CPAuth from 'lib/CPAuth/CPAuth';
@@ -9,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { getCPAuthUser } from 'stores/cpauth/selectors';
+import styled from 'styled-components';
 
 const CPStatus = styled.div`
   margin-top: ${({ theme }) => theme.spacingPx * 8}px;

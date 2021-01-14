@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import formatDistance from 'date-fns/fp/formatDistance';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,6 +5,7 @@ import { connect } from 'react-redux';
 import { CSSBreakpoints, Providers } from 'shared/constants';
 import { selectResourcesV4 } from 'stores/cluster/selectors';
 import { isClusterCreating } from 'stores/cluster/utils';
+import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
 import Button from 'UI/Button';
 

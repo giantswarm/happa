@@ -1,4 +1,3 @@
-import { ThemeProvider } from '@emotion/react';
 import { render } from '@testing-library/react';
 import App from 'App';
 import { ConnectedRouter } from 'connected-react-router';
@@ -8,6 +7,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
+import { ThemeProvider } from 'styled-components';
 import theme from 'styles/theme';
 
 export const initialStorage = {

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -36,6 +35,7 @@ import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
 import { getAllReleases } from 'stores/releases/selectors';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';

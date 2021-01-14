@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
@@ -6,6 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from 'stores/cluster/actions';
+import styled from 'styled-components';
 import Aside from 'UI/Aside';
 import Button from 'UI/Button';
 import FlashMessageComponent from 'UI/FlashMessage';

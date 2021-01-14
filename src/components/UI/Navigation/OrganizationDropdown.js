@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import styled from 'styled-components';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
 import Truncated from 'UI/Truncated';
 

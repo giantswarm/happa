@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacingPx * 9}px;

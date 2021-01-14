@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, ReactNode } from 'react';
+import styled from 'styled-components';
 
 import { Info, InfoRow, Text } from './Components';
 

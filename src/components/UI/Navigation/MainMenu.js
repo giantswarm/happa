@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -9,6 +8,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import styled from 'styled-components';
 import { mq } from 'styles';
 import DropdownMenu, { List } from 'UI/DropdownMenu';
 
