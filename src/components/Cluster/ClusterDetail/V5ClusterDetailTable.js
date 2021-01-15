@@ -318,7 +318,7 @@ class V5ClusterDetailTable extends React.Component {
 
   componentDidMount() {
     this.setState({
-      lastUpdated: formatDistance(new Date())(new Date()),
+      lastUpdated: `${formatDistance(new Date())(new Date())} ago`,
     });
   }
 
@@ -620,7 +620,7 @@ class V5ClusterDetailTable extends React.Component {
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
             <span className='last-updated-datestring'>
-              {this.state.lastUpdated} ago
+              {this.state.lastUpdated}
             </span>
             .
           </small>

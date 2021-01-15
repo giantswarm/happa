@@ -65,7 +65,7 @@ class Home extends React.Component {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.setState({
-      lastUpdated: formatDistance(new Date())(new Date()),
+      lastUpdated: `${formatDistance(new Date())(new Date())} ago`,
     });
   }
 
@@ -89,7 +89,7 @@ class Home extends React.Component {
   refreshClustersList = () => {
     this.props.dispatch(batchedRefreshClusters());
     this.setState({
-      lastUpdated: formatDistance(new Date())(new Date()),
+      lastUpdated: `${formatDistance(new Date())(new Date())} ago`,
     });
   };
 
@@ -173,7 +173,7 @@ class Home extends React.Component {
               <small>
                 This table is auto-refreshing. Details last fetched{' '}
                 <span className='last-updated-datestring'>
-                  {this.state.lastUpdated} ago
+                  {this.state.lastUpdated}
                 </span>
                 .
               </small>

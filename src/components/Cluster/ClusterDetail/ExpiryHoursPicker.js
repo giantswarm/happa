@@ -1,5 +1,5 @@
 import add from 'date-fns/fp/add';
-import parseISO from 'date-fns/fp/parseISO';
+import differenceInHours from 'date-fns/fp/differenceInHours';
 import startOfDay from 'date-fns/fp/startOfDay';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -37,7 +37,7 @@ class ExpiryHoursPicker extends React.Component {
 
     const expireDate = add({
       hours: props.initialValue,
-    })(new Date().getUTCSeconds());
+    })(new Date());
 
     // eslint-disable-next-line react/state-in-constructor
     this.state = {
@@ -54,7 +54,7 @@ class ExpiryHoursPicker extends React.Component {
   handleDateChange(date) {
     this.setState(
       {
-        expireDate: parseISO(date),
+        expireDate: date,
         selectionType: 'date',
       },
       () => {
@@ -135,6 +135,8 @@ class ExpiryHoursPicker extends React.Component {
 
     this.setState(
       (prevState, props) => {
+        const now = new Date();
+
         if (prevState.selectionType === 'date') {
           // expireDate is at the start of the day of whatever the user picked.
           expireDate = startOfDay(prevState.expireDate);
@@ -145,13 +147,12 @@ class ExpiryHoursPicker extends React.Component {
             months: prevState.monthsValue,
             days: prevState.daysValue,
             hours: prevState.hoursValue,
-          })(expireDate);
+          })(now);
         }
 
         // Now that we have an expireDate, calculate the difference between it and
         // now in hours.
-        const now = new Date().getUTCHours();
-        TTL = expireDate.getUTCHours() - now;
+        TTL = differenceInHours(now)(expireDate);
 
         let error = '';
         if (TTL >= props.maxSafeValueHours) {

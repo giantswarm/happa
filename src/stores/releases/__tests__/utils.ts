@@ -14,7 +14,7 @@ describe('releases::utils', () => {
 
       expect(result.isEol).toBeTruthy();
       expect(result.message).toBe(
-        'This Kubernetes version reached its end of life a day ago.'
+        'This Kubernetes version reached its end of life 1 day ago.'
       );
     });
 
@@ -34,7 +34,7 @@ describe('releases::utils', () => {
 
       expect(result.isEol).toBeFalsy();
       expect(result.message).toBe(
-        'This Kubernetes version will reach its end of life in a day.'
+        'This Kubernetes version will reach its end of life in 1 day.'
       );
     });
 

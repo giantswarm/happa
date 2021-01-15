@@ -1,4 +1,4 @@
-import compareDesc from 'date-fns/fp/compareDesc';
+import compareAsc from 'date-fns/fp/compareAsc';
 import format from 'date-fns/fp/format';
 import formatDistance from 'date-fns/fp/formatDistance';
 import parseISO from 'date-fns/fp/parseISO';
@@ -172,9 +172,9 @@ export function formatDate(date: string): string {
 export function getRelativeDateFromNow(date: string): string {
   const givenDate = parseISO(date);
   const now = new Date();
-  let distance = formatDistance(givenDate, now);
+  let distance = formatDistance(now)(givenDate);
 
-  if (compareDesc(givenDate, now) < 0) {
+  if (compareAsc(now)(givenDate) < 0) {
     distance += ' ago';
   } else {
     distance = `in ${distance}`;
@@ -203,7 +203,7 @@ export function compareDates(
     b = toDate(dateB);
   }
 
-  return compareDesc(a, b) as -1 | 0 | 1;
+  return compareAsc(b)(a) as -1 | 0 | 1;
 }
 
 /**

@@ -1,3 +1,4 @@
+import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import format from 'date-fns/fp/format';
 import parseISO from 'date-fns/fp/parseISO';
 import { relativeDate } from 'lib/helpers';
@@ -23,9 +24,8 @@ class KeyPairDetailsModal extends React.Component {
   static expireDate(expiry) {
     let expiryClass = '';
 
-    const now = new Date().getUTCSeconds();
-    const expirationDate = parseISO(expiry).getUTCSeconds();
-    const expirySeconds = expirationDate - now;
+    const expirationDate = parseISO(expiry);
+    const expirySeconds = differenceInSeconds(new Date())(expirationDate);
 
     // eslint-disable-next-line no-magic-numbers
     if (expirySeconds < 60 * 60 * 24) {

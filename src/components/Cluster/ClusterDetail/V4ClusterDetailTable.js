@@ -89,7 +89,7 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
-    const lastUpdated = formatDistance(new Date())(new Date());
+    const lastUpdated = `${formatDistance(new Date())(new Date())} ago`;
 
     this.setState({ awsInstanceTypes, azureVMSizes, lastUpdated });
   }
@@ -197,7 +197,7 @@ class V4ClusterDetailTable extends React.Component {
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
             <span className='last-updated-datestring'>
-              {this.state.lastUpdated} ago
+              {this.state.lastUpdated}
             </span>
             .
           </small>
