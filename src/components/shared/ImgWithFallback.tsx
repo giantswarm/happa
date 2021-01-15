@@ -12,9 +12,27 @@ interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 const ImgWithFallback: FC<IImgWithFallback> = (props) => {
-  const [loadError, setLoadError] = useState(false);
+  const [loadError, setLoadError] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const { fallback, ...restProps } = props;
+
+  if (loading) {
+    return (
+      <img
+        {...restProps}
+        onError={() => {
+          setLoadError(true);
+          setLoading(false);
+        }}
+        onLoad={() => {
+          setLoadError(false);
+          setLoading(false);
+        }}
+        style={{ opacity: 0 }}
+      />
+    );
+  }
 
   if (loadError) {
     return (
@@ -30,7 +48,7 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
     );
   }
 
-  return <img {...restProps} onError={() => setLoadError(true)} />;
+  return <img {...restProps} onLoad={() => setLoadError(false)} />;
 };
 
 ImgWithFallback.propTypes = {

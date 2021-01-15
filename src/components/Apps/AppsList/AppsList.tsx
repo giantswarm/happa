@@ -50,6 +50,7 @@ const AppsList: React.FC = () => {
             'prometheus-mongodb-exporter',
             'prometheus-pushgateway',
             'prometheus-postgres-exporter',
+            ...Array(100).fill('other app'),
           ].map((name) => (
             <App
               key={name}
