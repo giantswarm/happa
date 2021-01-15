@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ImgWithFallback from 'shared/ImgWithFallback';
+import styled from 'styled-components';
 import theme from 'styles/theme';
 import CachingColorHash from 'utils/cachingColorHash';
 

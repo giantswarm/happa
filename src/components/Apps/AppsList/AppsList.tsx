@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import React from 'react';
+import styled from 'styled-components';
 import App from 'UI/AppList/App';
 
 const ListAndFacets = styled.div`
