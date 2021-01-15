@@ -1,7 +1,6 @@
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
-import format from 'date-fns/fp/format';
-import parseISO from 'date-fns/fp/parseISO';
-import { relativeDate } from 'lib/helpers';
+import toDate from 'date-fns-tz/toDate';
+import { formatDate, relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
@@ -12,7 +11,7 @@ import CertificateOrgsLabel from './CertificateOrgsLabel';
 
 class KeyPairDetailsModal extends React.Component {
   static createDate(date) {
-    const formattedDate = format('d MMM yyyy, HH:mm z')(parseISO(date));
+    const formattedDate = formatDate(date);
 
     return (
       <span>
@@ -24,8 +23,9 @@ class KeyPairDetailsModal extends React.Component {
   static expireDate(expiry) {
     let expiryClass = '';
 
-    const expirationDate = parseISO(expiry);
+    const expirationDate = toDate(expiry, { timeZone: 'UTC' });
     const expirySeconds = differenceInSeconds(new Date())(expirationDate);
+    const formattedDate = formatDate(expiry);
 
     // eslint-disable-next-line no-magic-numbers
     if (expirySeconds < 60 * 60 * 24) {
@@ -34,8 +34,7 @@ class KeyPairDetailsModal extends React.Component {
 
     return (
       <span className={expiryClass}>
-        {format('d MMM yyyy, HH:mm z')(expirationDate)} &ndash;{' '}
-        {relativeDate(expiry)}
+        {formattedDate} &ndash; {relativeDate(expiry)}
       </span>
     );
   }

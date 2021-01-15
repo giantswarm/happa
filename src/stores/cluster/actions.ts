@@ -1,5 +1,5 @@
 import add from 'date-fns/fp/add';
-import parseISO from 'date-fns/fp/parseISO';
+import toDate from 'date-fns-tz/toDate';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { ThunkAction } from 'redux-thunk';
@@ -520,9 +520,10 @@ export function clusterLoadKeyPairs(
       const keypairsApi = new GiantSwarm.KeyPairsApi();
       const response = await keypairsApi.getKeyPairs(clusterId);
       const keyPairs = Object.values(response).map((keyPair) => {
+        const creationDate = toDate(keyPair.create_date, { timeZone: 'UTC' });
         keyPair.expire_date = add({
           hours: keyPair.ttl_hours,
-        })(parseISO(keyPair.create_date)).toISOString();
+        })(creationDate).toISOString();
 
         return keyPair;
       });

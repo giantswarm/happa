@@ -2,7 +2,8 @@ import compareAsc from 'date-fns/fp/compareAsc';
 import format from 'date-fns/fp/format';
 import formatDistance from 'date-fns/fp/formatDistance';
 import parseISO from 'date-fns/fp/parseISO';
-import toDate from 'date-fns/fp/toDate';
+import toDate from 'date-fns-tz/toDate';
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import React, { ReactElement } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -162,7 +163,9 @@ export function validateOrRaise<T>(
  * @param date
  */
 export function formatDate(date: string): string {
-  return format('d MMM yyyy, HH:mm z')(parseISO(date));
+  const parsedDate = utcToZonedTime(parseISO(date), 'UTC');
+
+  return `${format('d MMM yyyy, HH:mm')(parsedDate)} UTC`;
 }
 
 /**
@@ -187,21 +190,8 @@ export function compareDates(
   dateA: Date | string | number,
   dateB: Date | string | number
 ): -1 | 0 | 1 {
-  // eslint-disable-next-line @typescript-eslint/init-declarations
-  let a: Date;
-  if (typeof dateA === 'string') {
-    a = parseISO(dateA);
-  } else {
-    a = toDate(dateA);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/init-declarations
-  let b: Date;
-  if (typeof dateB === 'string') {
-    b = parseISO(dateB);
-  } else {
-    b = toDate(dateB);
-  }
+  const a = toDate(dateA, { timeZone: 'UTC' });
+  const b = toDate(dateB, { timeZone: 'UTC' });
 
   return compareAsc(b)(a) as -1 | 0 | 1;
 }

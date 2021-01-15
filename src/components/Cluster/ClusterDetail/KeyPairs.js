@@ -1,5 +1,5 @@
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
-import parseISO from 'date-fns/fp/parseISO';
+import toDate from 'date-fns-tz/toDate';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -52,9 +52,8 @@ class KeyPairs extends React.Component {
   static expireDateCellFormatter(_cell, row) {
     let expiryClass = '';
 
-    const expirySeconds = differenceInSeconds(new Date())(
-      parseISO(row.expire_date)
-    );
+    const expirationDate = toDate(row.expire_date, { timeZone: 'UTC' });
+    const expirySeconds = differenceInSeconds(new Date())(expirationDate);
 
     // eslint-disable-next-line no-magic-numbers
     if (Math.abs(expirySeconds) < 60 * 60 * 24) {
