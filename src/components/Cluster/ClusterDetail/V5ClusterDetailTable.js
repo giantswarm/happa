@@ -1,7 +1,7 @@
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
+import formatDistance from 'date-fns/fp/formatDistance';
 import produce from 'immer';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -317,7 +317,9 @@ class V5ClusterDetailTable extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ lastUpdated: moment().fromNow() });
+    this.setState({
+      lastUpdated: `${formatDistance(new Date())(new Date())} ago`,
+    });
   }
 
   toggleAddNodePoolForm = () =>

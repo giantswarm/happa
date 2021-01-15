@@ -1,6 +1,7 @@
+import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
+import toDate from 'date-fns-tz/toDate';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -50,11 +51,9 @@ class KeyPairs extends React.Component {
 
   static expireDateCellFormatter(_cell, row) {
     let expiryClass = '';
-    const expirySeconds =
-      moment(row.expire_date)
-        .utc()
-        // eslint-disable-next-line no-magic-numbers
-        .diff(moment().utc()) / 1000;
+
+    const expirationDate = toDate(row.expire_date, { timeZone: 'UTC' });
+    const expirySeconds = differenceInSeconds(new Date())(expirationDate);
 
     // eslint-disable-next-line no-magic-numbers
     if (Math.abs(expirySeconds) < 60 * 60 * 24) {

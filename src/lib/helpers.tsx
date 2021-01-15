@@ -1,4 +1,9 @@
-import moment from 'moment';
+import compareAsc from 'date-fns/fp/compareAsc';
+import format from 'date-fns/fp/format';
+import formatDistance from 'date-fns/fp/formatDistance';
+import parseISO from 'date-fns/fp/parseISO';
+import toDate from 'date-fns-tz/toDate';
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import React, { ReactElement } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -155,11 +160,12 @@ export function validateOrRaise<T>(
 
 /**
  * Format a date into a pretty way.
- * @param date - The date in the `ISO8601DateString` format.
- * @source http://momentjs.com/docs/#/displaying/
+ * @param date
  */
 export function formatDate(date: string): string {
-  return moment.utc(date).format('D MMM YYYY, HH:mm z');
+  const parsedDate = utcToZonedTime(parseISO(date), 'UTC');
+
+  return `${format('d MMM yyyy, HH:mm')(parsedDate)} UTC`;
 }
 
 /**
@@ -167,32 +173,33 @@ export function formatDate(date: string): string {
  * @param date
  */
 export function getRelativeDateFromNow(date: string): string {
-  return moment.utc(date).fromNow();
+  const givenDate = parseISO(date);
+  const now = new Date();
+  let distance = formatDistance(now)(givenDate);
+
+  if (compareAsc(now)(givenDate) < 0) {
+    distance += ' ago';
+  } else {
+    distance = `in ${distance}`;
+  }
+
+  return distance;
 }
 
 export function compareDates(
   dateA: Date | string | number,
   dateB: Date | string | number
 ): -1 | 0 | 1 {
-  const a = moment.utc(dateA);
-  const b = moment.utc(dateB);
+  const a = toDate(dateA, { timeZone: 'UTC' });
+  const b = toDate(dateB, { timeZone: 'UTC' });
 
-  switch (true) {
-    case a.isBefore(b):
-      return -1;
-    case a.isSame(b):
-      return 0;
-    case a.isAfter(b):
-      return 1;
-  }
-
-  return -1;
+  return compareAsc(b)(a) as -1 | 0 | 1;
 }
 
 /**
  * Get a component containing a formatted given date, relative
  * from now (e.g. 2 days ago).
- * @param date - The date in the `ISO8601DateString` format.
+ * @param date
  */
 // TODO(axbarsan): Refactor a part of this into a UI component.
 export function relativeDate(date?: string): ReactElement {
