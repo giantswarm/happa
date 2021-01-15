@@ -177,8 +177,9 @@ class ExpiryHoursPicker extends React.Component {
     const { error } = this.state;
     const hasError = error !== '';
 
-    const maxDate = add({ years: 30 })(new Date());
-    const minDate = add({ day: 1 })(new Date());
+    const now = new Date();
+    const maxDate = add({ years: 30 })(now);
+    const minDate = add({ day: 1 })(now);
 
     return (
       <List className='expiry-hours-picker'>
