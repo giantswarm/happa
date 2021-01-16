@@ -1,5 +1,4 @@
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { Auth0DecodedHash } from 'auth0-js';
 
 const renewTimeout = 10000;
 
@@ -52,7 +51,7 @@ class Auth {
   public async handleAuthentication(
     callback: (
       err: { errorDescription: string } | null,
-      authResult: Auth0DecodedHash | null
+      authResult: IAuthResult | null
     ) => void
   ) {
     if (this.auth0) {
@@ -65,7 +64,7 @@ class Auth {
         });
 
         callback(null, {
-          idTokenPayload: idToken,
+          idTokenPayload: (idToken as unknown) as IIDTokenPayload,
           accessToken: accessToken,
         });
       } catch (e) {
@@ -73,13 +72,13 @@ class Auth {
           {
             errorDescription: `Something went wrong while trying to authenticate: ${e}`,
           },
-          {}
+          null
         );
       }
     } else {
       callback(
         { errorDescription: `can't login, auth0 not initialized yet` },
-        {}
+        null
       );
     }
   }
