@@ -2,9 +2,9 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { render } from '@testing-library/react';
 import App from 'App';
-import auth0 from 'auth0-js';
 import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
+import Auth from 'lib/auth0';
 import * as helpers from 'lib/helpers';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -41,19 +41,6 @@ const mockSuccessfulAuthResponse = {
 
 let store = null;
 
-// Mock auth0 module
-jest.genMockFromModule('auth0-js');
-jest.mock('auth0-js');
-
-const mockAuth0Authorize = jest.fn();
-const mockAuth0ParseHash = jest.fn();
-const mockAuth0CheckSession = jest.fn();
-auth0.WebAuth = jest.fn(() => ({
-  authorize: mockAuth0Authorize,
-  parseHash: mockAuth0ParseHash,
-  checkSession: mockAuth0CheckSession,
-}));
-
 // Mock helpers
 jest.mock('lib/helpers');
 
@@ -87,6 +74,13 @@ describe('AdminLogin', () => {
   });
 
   it('renders without crashing', async () => {
+    delete window.location;
+    window.location = {
+      assign: () => {
+        // noop
+      },
+    };
+
     const { findByText } = renderRouteWithStore(MainRoutes.AdminLogin, {}, {});
 
     await findByText(
@@ -95,21 +89,24 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to the OAuth provider and handles login, if there is no user stored', async () => {
+    delete window.location;
+    window.location = {
+      assign: () => {
+        store.dispatch(
+          push(`${MainRoutes.OAuthCallback}#response_type=id_token`)
+        );
+      },
+    };
+
+    Auth.getInstance().handleAuthentication = (callback) => {
+      callback(null, mockSuccessfulAuthResponse);
+    };
+
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
-
-    mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(
-        push(`${MainRoutes.OAuthCallback}#response_type=id_token`)
-      );
-    });
-
-    mockAuth0ParseHash.mockImplementation((callback) => {
-      callback(null, mockSuccessfulAuthResponse);
-    });
 
     const { findByText } = renderRouteWithStore(MainRoutes.AdminLogin, {}, {});
 
@@ -158,10 +155,16 @@ describe('AdminLogin', () => {
       { accessToken: 'some-other-token' }
     );
 
+    Auth.getInstance().renewToken = () => {
+      return new Promise((resolve) => {
+        resolve(mockAuthResponseWithNewToken);
+      });
+    };
+
     helpers.isJwtExpired.mockReturnValue(true);
-    mockAuth0CheckSession.mockImplementation((_config, callback) =>
-      callback(null, mockAuthResponseWithNewToken)
-    );
+    // mockAuth0CheckSession.mockImplementation((_config, callback) =>
+    //   callback(null, mockAuthResponseWithNewToken)
+    // );
 
     const { findByText } = renderRouteWithStore(MainRoutes.AdminLogin, {
       ...preloginState,
@@ -178,31 +181,37 @@ describe('AdminLogin', () => {
   });
 
   it('displays an error message if the OAuth provider callback URL is not valid', async () => {
-    mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${MainRoutes.OAuthCallback}#response_type=invalid`));
-    });
+    delete window.location;
+    window.location = {
+      assign: () => {
+        store.dispatch(
+          push(`${MainRoutes.OAuthCallback}#response_type=invalid`)
+        );
+      },
+    };
 
-    mockAuth0ParseHash.mockImplementation((callback) => {
-      callback(null, mockSuccessfulAuthResponse);
-    });
+    Auth.getInstance().handleAuthentication = (callback) => {
+      callback('some error', {});
+    };
 
     const { findByText } = renderRouteWithStore(MainRoutes.AdminLogin, {}, {});
 
-    await findByText(
-      /invalid or empty response from the authentication provider./i
-    );
+    await findByText(/Something went wrong/i);
   });
 
   it('displays an error message if the OAuth provider can not login', async () => {
-    mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(
-        push(`${MainRoutes.OAuthCallback}#response_type=id_token`)
-      );
-    });
+    delete window.location;
+    window.location = {
+      assign: () => {
+        store.dispatch(
+          push(`${MainRoutes.OAuthCallback}#response_type=id_token`)
+        );
+      },
+    };
 
-    mockAuth0ParseHash.mockImplementation((callback) => {
-      callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
-    });
+    Auth.getInstance().handleAuthentication = (callback) => {
+      callback('some error', {});
+    };
 
     const { findByText } = renderRouteWithStore(MainRoutes.AdminLogin, {}, {});
 
@@ -210,16 +219,20 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to OAuth provider login page if renewing the token fails', async () => {
-    const mockAuthResponseWithNewToken = Object.assign(
-      {},
-      mockSuccessfulAuthResponse,
-      { accessToken: 'some-other-token' }
-    );
+    delete window.location;
+    window.location = {
+      assign: () => {
+        // noop
+      },
+    };
 
     helpers.isJwtExpired.mockReturnValue(true);
-    mockAuth0CheckSession.mockImplementation((_config, callback) =>
-      callback(new Error('u w0t m8?'), mockAuthResponseWithNewToken)
-    );
+
+    Auth.getInstance().renewToken = () => {
+      return new Promise((_, reject) => {
+        reject(new Error('Something failed'));
+      });
+    };
 
     const { findByText } = renderRouteWithStore(MainRoutes.AdminLogin, {
       ...preloginState,

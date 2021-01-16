@@ -27,6 +27,12 @@ module.exports = {
   globals: {
     FEATURE_CP_ACCESS: false,
     // window.config object will now be available in all tests
+    crypto: {
+      getRandomValues: () => [1, 5, 10, 15, 100],
+      subtle: {
+        digest: () => 12345,
+      },
+    },
     config: {
       apiEndpoint: 'http://1.2.3.4',
       cpApiEndpoint: 'http://2.3.4.5',

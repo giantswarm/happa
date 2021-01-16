@@ -80,6 +80,7 @@
   "mainOutput": "main",
   "dependencies": {
     "@airbrake/browser": "1.4.2",
+    "@auth0/auth0-spa-js": "^1.13.6",
     "@hot-loader/react-dom": "17.0.1",
     "@khanacademy/react-multi-select": "0.3.3",
     "auth0-js": "9.14.0",
@@ -144,6 +145,7 @@
     "@babel/preset-env": "7.12.11",
     "@babel/preset-react": "7.12.10",
     "@babel/preset-typescript": "7.12.7",
+    "@peculiar/webcrypto": "^1.1.4",
     "@storybook/addon-actions": "^6.1.14",
     "@storybook/addon-essentials": "^6.1.14",
     "@storybook/addon-links": "^6.1.14",

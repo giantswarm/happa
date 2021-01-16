@@ -15,10 +15,10 @@ describe('Auth', () => {
       const auther = Auth.getInstance();
       // @ts-expect-error
       auther.auth0 = {
-        checkSession: jest.fn(),
+        getIdTokenClaims: jest.fn(),
       };
       // @ts-expect-error
-      (auther.auth0.checkSession as jest.Mock).mockImplementation(() => {
+      (auther.auth0.getIdTokenClaims as jest.Mock).mockImplementation(() => {
         return new Promise((resolve) => {
           // eslint-disable-next-line no-magic-numbers
           setTimeout(resolve, 50000);

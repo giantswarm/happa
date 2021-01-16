@@ -15,29 +15,23 @@ const OAuthCallback = ({ location, dispatch, actions }) => {
   const auth = useRef(Auth.getInstance());
 
   useEffect(() => {
-    if (/id_token|error/.test(location.hash)) {
+    async function handleAuth() {
+      await auth.current.init();
       auth.current.handleAuthentication(async (err, authResult) => {
-        if (err) {
+        if (!err) {
+          // Login user officially
+          try {
+            await actions.auth0Login(authResult);
+            dispatch(push(MainRoutes.Home));
+          } catch (authError) {
+            setError(authError);
+          }
+        } else {
           setError(err);
-
-          return;
         }
-
-        // Login user officially
-        try {
-          await actions.auth0Login(authResult);
-          dispatch(push(MainRoutes.Home));
-        } catch (authError) {
-          setError(authError);
-        }
-      });
-    } else {
-      setError({
-        error: 'unauthorized',
-        errorDescription:
-          'Invalid or empty response from the authentication provider.',
       });
     }
+    handleAuth();
   }, [location, dispatch, actions]);
 
   return (
