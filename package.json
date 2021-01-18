@@ -99,7 +99,7 @@
     "giantswarm-cp-client": "git+https://github.com/giantswarm/giantswarm-cp-client.git",
     "grommet": "^2.16.2",
     "history": "4.10.1",
-    "immer": "7.0.14",
+    "immer": "8.0.0",
     "immutable": "3.8.2",
     "js-base64": "3.6.0",
     "js-yaml": "4.0.0",
