@@ -204,7 +204,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       return <Code>{node_spec.azure.vm_size}</Code>;
     }
 
-    // Spot instances.
+    // Alike instance types.
     const instanceTypes = status?.instance_types ?? null;
 
     return (
