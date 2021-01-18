@@ -1,6 +1,9 @@
 interface IClusterCapabilities {
   hasOptionalIngress: boolean;
   supportsHAMasters: boolean;
+  supportsNodePoolAutoscaling: boolean;
+  supportsNodePoolSpotInstances: boolean;
+  supportsAlikeInstances: boolean;
 }
 
 interface IBaseCluster {

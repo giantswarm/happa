@@ -578,10 +578,7 @@ export function clusterCreateKeyPair(
 function reduceClustersIntoMap(
   clusters: Array<Cluster>,
   provider: PropertiesOf<typeof Providers>,
-  makeCapabilities: (
-    releaseVersion: string,
-    provider: PropertiesOf<typeof Providers>
-  ) => IClusterCapabilities
+  makeCapabilities: ReturnType<typeof computeCapabilities>
 ): IClusterMap {
   return clusters.reduce((agg: IClusterMap, curr: Cluster) => {
     const newCluster: Cluster = {

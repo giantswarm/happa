@@ -361,12 +361,10 @@ ScaleNodePoolModal.propTypes = {
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
   supportsAutoscaling: PropTypes.bool,
-  supportsSpotInstances: PropTypes.bool,
 };
 
 ScaleNodePoolModal.defaultProps = {
   supportsAutoscaling: false,
-  supportsSpotInstances: false,
 };
 
 function mapDispatchToProps(dispatch) {
