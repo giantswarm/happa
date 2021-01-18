@@ -198,7 +198,7 @@ describe('Users', () => {
 
     const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
     const expiryDate = within(selectedEmailCell.parentNode).getByText(
-      /in a year/i
+      /in about 1 year/i
     );
     expect(expiryDate).toBeInTheDocument();
 

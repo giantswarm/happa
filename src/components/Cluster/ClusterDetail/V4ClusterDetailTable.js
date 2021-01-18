@@ -1,4 +1,4 @@
-import moment from 'moment';
+import formatDistance from 'date-fns/fp/formatDistance';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -89,7 +89,7 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
-    const lastUpdated = moment().fromNow();
+    const lastUpdated = `${formatDistance(new Date())(new Date())} ago`;
 
     this.setState({ awsInstanceTypes, azureVMSizes, lastUpdated });
   }

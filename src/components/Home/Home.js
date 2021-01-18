@@ -1,7 +1,7 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import formatDistance from 'date-fns/fp/formatDistance';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -65,7 +65,7 @@ class Home extends React.Component {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.setState({
-      lastUpdated: moment().fromNow(),
+      lastUpdated: `${formatDistance(new Date())(new Date())} ago`,
     });
   }
 
@@ -88,7 +88,9 @@ class Home extends React.Component {
 
   refreshClustersList = () => {
     this.props.dispatch(batchedRefreshClusters());
-    this.setState({ lastUpdated: moment().fromNow() });
+    this.setState({
+      lastUpdated: `${formatDistance(new Date())(new Date())} ago`,
+    });
   };
 
   handleVisibilityChange = () => {
