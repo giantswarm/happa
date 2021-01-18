@@ -4,6 +4,11 @@ import { Constants, Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
 import { IIDsAwaitingUpgradeMap } from 'stores/cluster/types';
 import { getMinHAMastersVersion } from 'stores/main/selectors';
+import {
+  supportsAlikeInstances,
+  supportsNodePoolAutoscaling,
+  supportsNodePoolSpotInstances,
+} from 'stores/nodepool/utils';
 import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { validateLabelKey } from 'utils/labelUtils';
@@ -276,6 +281,15 @@ export const computeCapabilities = (state: IState) => (
   return {
     hasOptionalIngress,
     supportsHAMasters,
+    supportsNodePoolAutoscaling: supportsNodePoolAutoscaling(
+      provider,
+      releaseVersion
+    ),
+    supportsNodePoolSpotInstances: supportsNodePoolSpotInstances(
+      provider,
+      releaseVersion
+    ),
+    supportsAlikeInstances: supportsAlikeInstances(provider, releaseVersion),
   };
 };
 

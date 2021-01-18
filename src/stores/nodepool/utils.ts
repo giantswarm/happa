@@ -19,10 +19,26 @@ export function supportsNodePoolAutoscaling(
 }
 
 export function supportsNodePoolSpotInstances(
-  provider: PropertiesOf<typeof Providers>
+  provider: PropertiesOf<typeof Providers>,
+  releaseVersion: string
 ): boolean {
-  switch (provider) {
-    case Providers.AWS:
+  switch (true) {
+    case provider === Providers.AWS &&
+      compare(releaseVersion, Constants.AWS_ONDEMAND_INSTANCES_VERSION) >= 0:
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+export function supportsAlikeInstances(
+  provider: PropertiesOf<typeof Providers>,
+  releaseVersion: string
+): boolean {
+  switch (true) {
+    case provider === Providers.AWS &&
+      compare(releaseVersion, Constants.AWS_USE_ALIKE_INSTANCES_VERSION) >= 0:
       return true;
 
     default:
