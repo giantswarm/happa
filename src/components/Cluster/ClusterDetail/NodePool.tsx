@@ -297,7 +297,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           workerNodesDesired={desired}
           workerNodesRunning={current}
           supportsAutoscaling={supportsAutoscaling}
-          supportsSpotInstances={supportsSpotInstances}
         />
       </>
     );
