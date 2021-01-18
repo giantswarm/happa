@@ -162,8 +162,9 @@ export function validateOrRaise<T>(
  * Format a date into a pretty way.
  * @param date
  */
-export function formatDate(date: string): string {
-  const parsedDate = utcToZonedTime(parseISO(date), 'UTC');
+export function formatDate(date: string | number | Date): string {
+  const givenDate = date instanceof Date ? date : parseISO(date);
+  const parsedDate = utcToZonedTime(givenDate, 'UTC');
 
   return `${format('d MMM yyyy, HH:mm')(parsedDate)} UTC`;
 }
@@ -172,8 +173,8 @@ export function formatDate(date: string): string {
  * Get a formatted date structure, relative to now (e.g. 2 days ago, or 1 year ago).
  * @param date
  */
-export function getRelativeDateFromNow(date: string): string {
-  const givenDate = parseISO(date);
+export function getRelativeDateFromNow(date: string | number | Date): string {
+  const givenDate = date instanceof Date ? date : parseISO(date);
   const now = new Date();
   let distance = formatDistance(now)(givenDate);
 
