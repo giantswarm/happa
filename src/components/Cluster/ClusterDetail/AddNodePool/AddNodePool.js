@@ -6,7 +6,6 @@ import {
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
-import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -101,24 +100,16 @@ class AddNodePool extends Component {
       vmSize: this.props.defaultVmSize,
     },
     spotInstancesEnabled: false,
-    allowSpotInstances: false,
-    allowAlikeInstances: false,
   };
 
   componentDidMount() {
     this.setState({
-      ...this.computeInstanceCapabilities(),
       ...this.computeAvailabilityZonesPresence(),
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.updateValue();
-    const { selectedRelease: prevSelectedRelease } = prevProps;
-    const { selectedRelease } = this.props;
-    if (prevSelectedRelease !== selectedRelease) {
-      this.setState(this.computeInstanceCapabilities());
-    }
   }
 
   computeAvailabilityZonesPresence = () => {
@@ -130,20 +121,6 @@ class AddNodePool extends Component {
         availabilityZones.length === 0
           ? AvailabilityZoneSelection.NotSpecified
           : AvailabilityZoneSelection.Automatic,
-    };
-  };
-
-  computeInstanceCapabilities = () => {
-    const { selectedRelease, provider } = this.props;
-
-    return {
-      allowSpotInstances:
-        provider === Providers.AWS &&
-        compare(Constants.AWS_ONDEMAND_INSTANCES_VERSION, selectedRelease) <= 0,
-      allowAlikeInstances:
-        provider === Providers.AWS &&
-        compare(Constants.AWS_USE_ALIKE_INSTANCES_VERSION, selectedRelease) <=
-          0,
     };
   };
 
@@ -378,18 +355,19 @@ class AddNodePool extends Component {
   render() {
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { azSelection, name } = this.state;
+    const { minAZ, maxAZ, defaultAZ, provider, id, capabilities } = this.props;
+
     const {
-      minAZ,
-      maxAZ,
-      defaultAZ,
-      provider,
-      id,
-      supportsAutoscaling,
-    } = this.props;
+      supportsNodePoolAutoscaling,
+      supportsNodePoolSpotInstances,
+      supportsAlikeInstances,
+    } = capabilities;
 
     const machineType = this.getMachineType();
 
-    const scalingLabel = supportsAutoscaling ? 'Scaling range' : 'Node count';
+    const scalingLabel = supportsNodePoolAutoscaling
+      ? 'Scaling range'
+      : 'Node count';
 
     return (
       <>
@@ -415,7 +393,7 @@ class AddNodePool extends Component {
             machineType={machineType}
           />
 
-          {this.state.allowAlikeInstances && (
+          {supportsAlikeInstances && (
             <CheckboxWrapper>
               <Checkbox
                 checked={this.state.aws.useAlike}
@@ -447,7 +425,7 @@ class AddNodePool extends Component {
           />
         </AZSelectionWrapper>
 
-        {this.state.allowSpotInstances && (
+        {supportsNodePoolSpotInstances && (
           <Section>
             <StyledInput
               label='Instance distribution'
@@ -520,7 +498,7 @@ class AddNodePool extends Component {
         <Section className='scaling-range'>
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
-              autoscalingEnabled={supportsAutoscaling}
+              autoscalingEnabled={supportsNodePoolAutoscaling}
               label={{ max: 'MAX', min: 'MIN' }}
               onChange={this.updateScaling}
               readOnly={false}
@@ -541,18 +519,14 @@ AddNodePool.propTypes = {
   informParent: PropTypes.func,
   name: PropTypes.string,
   id: PropTypes.string,
-  selectedRelease: PropTypes.string,
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
   defaultAZ: PropTypes.number,
-  supportsAutoscaling: PropTypes.bool,
-  supportsSpotInstances: PropTypes.bool,
+  capabilities: PropTypes.object,
 };
 
 AddNodePool.defaultProps = {
   name: Constants.DEFAULT_NODEPOOL_NAME,
-  supportsAutoscaling: false,
-  supportsSpotInstances: false,
 };
 
 function mapStateToProps(state) {

@@ -15,10 +15,6 @@ import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'stores/batchActions';
 import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import {
-  supportsNodePoolAutoscaling,
-  supportsNodePoolSpotInstances,
-} from 'stores/nodepool/utils';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -235,23 +231,16 @@ class CreateNodePoolsCluster extends Component {
       defaultAZ,
       isClusterCreating,
       provider,
-      selectedRelease,
+      capabilities,
     } = this.props;
 
-    const supportsNPAutoscaling = supportsNodePoolAutoscaling(
-      provider,
-      selectedRelease
-    );
-    const supportsNPSpotInstances = supportsNodePoolSpotInstances(
-      provider,
-      selectedRelease
-    );
+    const { supportsHAMasters } = capabilities;
 
     return (
       <>
         <WrapperDiv data-testid='nodepool-cluster-creation-view'>
           <AZSelectionWrapper>
-            {this.props.capabilities.supportsHAMasters ? (
+            {supportsHAMasters ? (
               <MasterNodes
                 isHighAvailability={masterNodes.isHighAvailability}
                 onChange={this.updateMasterNodesHighAvailability}
@@ -289,12 +278,10 @@ class CreateNodePoolsCluster extends Component {
                     <NodePoolHeading>{nodePoolName}</NodePoolHeading>
                     <AddNodePoolFlexColumnDiv>
                       <AddNodePool
-                        selectedRelease={this.props.selectedRelease}
                         informParent={this.updateNodePoolForm}
                         name={nodePoolName}
                         id={npId}
-                        supportsAutoscaling={supportsNPAutoscaling}
-                        supportsSpotInstances={supportsNPSpotInstances}
+                        capabilities={capabilities}
                       />
                       <RUMActionTarget name={RUMActions.RemoveNodePool}>
                         <i
