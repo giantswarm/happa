@@ -24,7 +24,7 @@ describe('releases::utils', () => {
 
       expect(result.isEol).toBeTruthy();
       expect(result.message).toMatch(
-        /This Kubernetes version reached its end of life (today|a few seconds ago)\./
+        /This Kubernetes version reached its end of life (today|less than a minute ago)\./
       );
     });
 
