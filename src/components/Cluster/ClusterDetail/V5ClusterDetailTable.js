@@ -542,7 +542,6 @@ class V5ClusterDetailTable extends React.Component {
                 />
                 <FlexWrapperDiv>
                   <Button
-                    bsSize='large'
                     bsStyle='primary'
                     disabled={!nodePoolForm.isValid}
                     loading={nodePoolForm.isSubmitting}
@@ -554,8 +553,7 @@ class V5ClusterDetailTable extends React.Component {
                   {/* We want to hide cancel button when the Create NP button has been clicked */}
                   {!nodePoolForm.isSubmitting && (
                     <Button
-                      bsSize='large'
-                      bsStyle='default'
+                      bsStyle='outline'
                       loading={nodePoolForm.isSubmitting}
                       onClick={this.toggleAddNodePoolForm}
                       type='button'

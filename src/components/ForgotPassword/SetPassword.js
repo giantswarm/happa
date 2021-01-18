@@ -15,6 +15,7 @@ import { bindActionCreators } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
 import PasswordField from '../SignUp/PasswordField';
@@ -269,19 +270,17 @@ class SetPassword extends React.Component {
               }}
             />
           </div>
-          <div className='progress_button--container'>
-            <button
-              className='btn primary'
-              disabled={this.state.submitting || !this.formIsValid()}
-              onClick={this.submit}
-              type='submit'
-            >
-              {this.state.submitting ? 'Submitting ...' : 'Submit'}
-            </button>
-            <SlideTransition in={this.state.submitting}>
-              <img className='loader' src={spinner} />
-            </SlideTransition>
-          </div>
+
+          <Button
+            onClick={this.submit}
+            bsStyle='primary'
+            disabled={this.state.submitting || !this.formIsValid()}
+            loading={this.state.submitting}
+            loadingPosition='right'
+          >
+            {this.state.submitting ? 'Submitting ...' : 'Submit'}
+          </Button>
+
           <Link to={MainRoutes.Login}>Back to login form</Link>
         </form>
       );
@@ -328,19 +327,15 @@ class SetPassword extends React.Component {
           />
         </div>
 
-        <div className='progress_button--container'>
-          <button
-            className='btn primary'
-            disabled={this.state.submitting}
-            onClick={this.setEmail}
-            type='submit'
-          >
-            {this.state.submitting ? 'Submitting ...' : 'Submit'}
-          </button>
-          <SlideTransition in={this.state.submitting}>
-            <img className='loader' src={spinner} />
-          </SlideTransition>
-        </div>
+        <Button
+          bsStyle='primary'
+          disabled={this.state.submitting}
+          onClick={this.setEmail}
+          loading={this.state.submitting}
+          loadingPosition='right'
+        >
+          {this.state.submitting ? 'Submitting ...' : 'Submit'}
+        </Button>
         <Link to={MainRoutes.Login}>Back to login form</Link>
         <br />
         <br />

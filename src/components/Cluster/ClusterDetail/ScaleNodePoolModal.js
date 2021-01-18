@@ -157,7 +157,7 @@ class ScaleNodePoolModal extends React.Component {
 
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
-          style: 'success',
+          style: 'primary',
           disabled: !minValid,
         };
       }
@@ -177,7 +177,7 @@ class ScaleNodePoolModal extends React.Component {
       if (min !== nodePool.scaling.min) {
         return {
           title: 'Apply',
-          style: 'success',
+          style: 'primary',
           disabled: !(minValid && maxValid),
         };
       }
@@ -185,7 +185,7 @@ class ScaleNodePoolModal extends React.Component {
       if (max !== nodePool.scaling.max) {
         return {
           title: 'Apply',
-          style: 'success',
+          style: 'primary',
           disabled: !(minValid && maxValid),
         };
       }
@@ -198,7 +198,7 @@ class ScaleNodePoolModal extends React.Component {
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralizeWorkers}`,
-        style: 'success',
+        style: 'primary',
         disabled: !(minValid && maxValid),
       };
     }

@@ -92,7 +92,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
           >
             <FixedWidthTableButton
               data-testid={`show-components-${version}`}
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 e.preventDefault();
                 setCollapsed(!collapsed);
@@ -109,7 +109,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             href={releaseNotesURL}
             target='_blank'
             rel='noopener noreferrer'
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             <i className='fa fa-open-in-new' />
             Open

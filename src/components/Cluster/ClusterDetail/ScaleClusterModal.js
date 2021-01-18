@@ -180,7 +180,7 @@ class ScaleClusterModal extends React.Component {
 
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
-          style: 'success',
+          style: 'primary',
           disabled: !this.state.scaling.minValid,
         };
       }
@@ -202,7 +202,7 @@ class ScaleClusterModal extends React.Component {
       if (this.state.scaling.min !== this.props.cluster.scaling.min) {
         return {
           title: 'Apply',
-          style: 'success',
+          style: 'primary',
           disabled: !(
             this.state.scaling.minValid && this.state.scaling.maxValid
           ),
@@ -212,7 +212,7 @@ class ScaleClusterModal extends React.Component {
       if (this.state.scaling.max !== this.props.cluster.scaling.max) {
         return {
           title: 'Apply',
-          style: 'success',
+          style: 'primary',
           disabled: !(
             this.state.scaling.minValid && this.state.scaling.maxValid
           ),
@@ -233,7 +233,7 @@ class ScaleClusterModal extends React.Component {
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralizeWorkers}`,
-        style: 'success',
+        style: 'primary',
         disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
       };
     }

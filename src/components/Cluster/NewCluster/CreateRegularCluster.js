@@ -369,7 +369,6 @@ class CreateRegularCluster extends React.Component {
         <FlexRow>
           <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
             <Button
-              bsSize='large'
               bsStyle='primary'
               disabled={!this.valid()}
               loading={isClusterCreating}
@@ -382,8 +381,7 @@ class CreateRegularCluster extends React.Component {
           {!isClusterCreating && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
-                bsSize='large'
-                bsStyle='default'
+                bsStyle='outline'
                 loading={isClusterCreating}
                 onClick={this.props.closeForm}
                 type='button'

@@ -307,7 +307,6 @@ class CreateNodePoolsCluster extends Component {
         <FlexRow>
           <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
             <Button
-              bsSize='large'
               bsStyle='primary'
               disabled={!this.isValid()}
               loading={isClusterCreating}
@@ -321,8 +320,7 @@ class CreateNodePoolsCluster extends Component {
           {!isClusterCreating && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
-                bsSize='large'
-                bsStyle='default'
+                bsStyle='outline'
                 loading={isClusterCreating}
                 onClick={this.props.closeForm}
                 type='button'

@@ -16,7 +16,7 @@ const CredentialsDisplay = (props) => {
   }
   if (props.credentials.length === 0) {
     const button = (
-      <Button bsStyle='default' className='small' onClick={props.onShowForm}>
+      <Button bsStyle='outline' onClick={props.onShowForm}>
         Set Credentials
       </Button>
     );
