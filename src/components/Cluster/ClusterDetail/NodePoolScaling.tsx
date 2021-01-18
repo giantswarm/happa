@@ -30,10 +30,8 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
   const { id, scaling, status } = nodePool;
 
   const current = status?.nodes_ready ?? 0;
-  let desired = status?.nodes ?? 0;
-  if (supportsAutoscaling) {
-    desired = scaling?.max ?? 0;
-  }
+  const desired = status?.nodes ?? 0;
+
   const spot_instances = status?.spot_instances ?? 0;
 
   const formatInstanceDistribution = () => {

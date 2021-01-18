@@ -274,7 +274,7 @@ token: can't be blank`)
       const date = new Date(Date.now() - 50000).toISOString();
       render(relativeDate(date));
 
-      const label = screen.getByText(/a minute ago/i);
+      const label = screen.getByText(/1 minute ago/i);
       expect(label).toBeInTheDocument();
 
       const formattedDate = formatDate(date);
@@ -569,7 +569,6 @@ token: can't be blank`)
       randomDate.setTime(90821343701982);
 
       let dates = [
-        '2020-01-30',
         '1930-02-30',
         '2020-02-21T16:50:20.589772+00:00',
         '1996-09-10',
@@ -581,14 +580,13 @@ token: can't be blank`)
 
       dates = dates.sort(compareDates);
       expect(dates).toStrictEqual([
+        '1930-02-30',
         // eslint-disable-next-line no-magic-numbers
         12341231312,
         '1996-09-10',
         '2020-02-21T16:50:20.589772+00:00',
-        randomDate,
-        '1930-02-30',
-        '2020-01-30',
         '2999-12-18',
+        randomDate,
       ]);
     });
   });

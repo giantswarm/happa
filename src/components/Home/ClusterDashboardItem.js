@@ -1,7 +1,8 @@
 import { push } from 'connected-react-router';
+import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
+import toDate from 'date-fns-tz/toDate';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
@@ -161,12 +162,8 @@ function ClusterDashboardItem({
    * Returns true if the cluster is younger than 30 days
    */
   const clusterYoungerThan30Days = () => {
-    const age = Math.abs(
-      moment(cluster.create_date)
-        .utc()
-        // eslint-disable-next-line no-magic-numbers
-        .diff(moment().utc()) / 1000
-    );
+    const creationDate = toDate(cluster.create_date, { timeZone: 'UTC' });
+    const age = differenceInSeconds(new Date())(creationDate);
 
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24 * 60 * 60;
