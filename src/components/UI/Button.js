@@ -9,7 +9,7 @@ import LoadingIndicator from './LoadingIndicator';
 //
 // <Button
 //   type='button|submit|reset'
-//   bsStyle='primary|danger|outline|link'
+//   bsStyle='primary|secondary|danger|outline|link'
 //   loading=true|false
 //   disabled=true|false
 //   onClick=function>
