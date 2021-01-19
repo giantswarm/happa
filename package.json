@@ -85,7 +85,7 @@
     "auth0-js": "9.14.0",
     "axios": "0.21.1",
     "bluebird": "3.7.2",
-    "bootstrap": "3.4.1",
+    "bootstrap": "4.5.3",
     "bowser": "^2.11.0",
     "classnames": "2.2.6",
     "color-hash": "latest",
