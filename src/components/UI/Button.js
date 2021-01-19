@@ -143,7 +143,7 @@ const Button = (props) => {
   } = props;
 
   return (
-    <Wrapper className='progress_button--container'>
+    <Wrapper className='button-wrapper'>
       {loadingPosition === 'left' ? (
         <LoadingIndicator
           loading={loading}
