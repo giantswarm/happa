@@ -25,8 +25,8 @@ import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
-import { FlexColumn, FlexWrapperDiv } from 'UI/FlexDivs';
+import Button from 'UI/Controls/Button';
+import { FlexColumn, FlexWrapperDiv } from 'UI/Layout/FlexDivs';
 
 import AddNodePool from './AddNodePool/AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';

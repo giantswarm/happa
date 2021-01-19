@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
-import Truncated from 'UI/Truncated';
+import Truncated from 'UI/Util/Truncated';
 
 const INITIAL_MAX_CHART_VERSIONS = 5;
 

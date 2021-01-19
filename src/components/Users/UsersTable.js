@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import styled from 'styled-components';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';

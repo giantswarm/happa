@@ -19,8 +19,8 @@ import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 const Wrapper = styled.div`
   display: flex;

@@ -2,7 +2,7 @@ import ClusterStatus from 'Home/ClusterStatus';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Input from 'UI/Inputs/Input';
 
 const ClusterPickerWrapper = styled.div`

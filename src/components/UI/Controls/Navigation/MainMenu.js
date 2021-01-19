@@ -10,7 +10,7 @@ import {
 } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { mq } from 'styles';
-import DropdownMenu, { List } from 'UI/DropdownMenu';
+import DropdownMenu, { List } from 'UI/Controls/DropdownMenu';
 
 import Hamburger from './Hamburger';
 

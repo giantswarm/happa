@@ -12,8 +12,8 @@ import { bindActionCreators } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
-import LoginFormContainer from 'UI/LoginFormContainer';
+import Button from 'UI/Controls/Button';
+import LoginFormContainer from 'UI/Layout/LoginFormContainer';
 
 class ForgotPassword extends React.Component {
   state = {

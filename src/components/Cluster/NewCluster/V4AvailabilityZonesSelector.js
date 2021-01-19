@@ -3,9 +3,9 @@ import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
-import Section from 'UI/ClusterCreation/Section';
-import NumberPicker from 'UI/NumberPicker';
+import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
+import Section from 'UI/Display/Cluster/ClusterCreation/Section';
+import NumberPicker from 'UI/Inputs/NumberPicker';
 
 const AZWrapper = styled.div`
   display: flex;

@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
-import { CursorPointerCell, Tr } from 'UI/ExpandableSelector/Items';
+import { CursorPointerCell, Tr } from 'UI/Controls/ExpandableSelector/Items';
 import RadioInput from 'UI/Inputs/RadioInput';
 
 interface IInstanceTypeRow extends IInstanceType {

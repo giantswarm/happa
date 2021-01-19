@@ -24,8 +24,8 @@ import ExceptionNotificationTest from './ExceptionNotificationTest/ExceptionNoti
 import Home from './Home/Home';
 import Modals from './Modals/Modals';
 import Organizations from './Organizations/Organizations';
-import LoadingOverlay from './UI/LoadingOverlay';
-import Navigation from './UI/Navigation/Navigation';
+import Navigation from './UI/Controls/Navigation/Navigation';
+import LoadingOverlay from './UI/Display/Loading/LoadingOverlay';
 import Users from './Users/Users';
 
 const ONE_SECOND = 1000;

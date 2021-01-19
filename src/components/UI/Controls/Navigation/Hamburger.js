@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { DropdownTrigger } from 'UI/DropdownMenu';
+import { DropdownTrigger } from 'UI/Controls/DropdownMenu';
 
 const Bar = styled.div`
   display: flex;

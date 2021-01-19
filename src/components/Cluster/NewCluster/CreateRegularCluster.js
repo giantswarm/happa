@@ -10,12 +10,12 @@ import { batchedClusterCreate } from 'stores/batchActions';
 import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
-import Section from 'UI/ClusterCreation/Section';
-import StyledInput from 'UI/ClusterCreation/StyledInput';
-import FlashMessage from 'UI/FlashMessage';
-import { FlexColumn, FlexRow } from 'UI/FlexDivs';
+import Button from 'UI/Controls/Button';
+import HorizontalLine from 'UI/Display/Cluster/ClusterCreation/HorizontalLine';
+import Section from 'UI/Display/Cluster/ClusterCreation/Section';
+import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import FlashMessage from 'UI/Display/FlashMessage';
+import { FlexColumn, FlexRow } from 'UI/Layout/FlexDivs';
 
 import ClusterCreationDuration from './ClusterCreationDuration';
 import KVMWorkerConfiguration from './KVMWorkerConfiguration';

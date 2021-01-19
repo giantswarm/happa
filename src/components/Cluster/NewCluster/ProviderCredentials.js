@@ -3,9 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { organizationCredentialsLoad } from 'stores/organization/actions';
-import AWSAccountID from 'UI/AWSAccountID';
-import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
-import Section from 'UI/ClusterCreation/Section';
+import AWSAccountID from 'UI/Display/Cluster/AWSAccountID';
+import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
+import Section from 'UI/Display/Cluster/ClusterCreation/Section';
 
 class ProviderCredentials extends React.Component {
   componentDidMount() {

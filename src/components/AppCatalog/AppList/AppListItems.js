@@ -2,10 +2,10 @@ import AppListPlaceholder from 'AppCatalog/AppList/AppListPlaceholder';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import AppContainer from 'UI/AppContainer';
+import AppContainer from 'UI/Display/Apps/AppContainer';
+import { APP_CONTAINER_HEIGHT } from 'UI/Display/Apps/AppContainer';
 
 import VirtualizedScrollableGrid from '../../shared/VirtualizedScrollableGrid';
-import { APP_CONTAINER_HEIGHT } from '../../UI/AppContainer';
 
 const StyledAppsWrapper = styled.div`
   width: 100%;

@@ -3,7 +3,7 @@ import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 const CLIPBOARD_RESET_TIME = 500;
 

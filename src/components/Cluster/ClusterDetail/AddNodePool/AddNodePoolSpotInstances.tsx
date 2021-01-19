@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
-import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
-import NumberPicker from 'UI/NumberPicker';
+import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
+import NumberPicker from 'UI/Inputs/NumberPicker';
 
 const SpotValuesLabelText = styled.span`
   font-weight: 300;

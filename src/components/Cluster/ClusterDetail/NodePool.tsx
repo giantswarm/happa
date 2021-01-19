@@ -13,7 +13,7 @@ import { INodePool, PropertiesOf } from 'shared/types';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import styled from 'styled-components';
 import { Code, Ellipsis } from 'styles/';
-import ViewAndEditName from 'UI/ViewEditName';
+import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';

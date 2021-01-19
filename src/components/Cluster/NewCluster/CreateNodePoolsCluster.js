@@ -17,10 +17,10 @@ import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
-import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
-import HorizontalLine from 'UI/ClusterCreation/HorizontalLine';
-import { FlexColumn, FlexRow } from 'UI/FlexDivs';
+import Button from 'UI/Controls/Button';
+import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
+import HorizontalLine from 'UI/Display/Cluster/ClusterCreation/HorizontalLine';
+import { FlexColumn, FlexRow } from 'UI/Layout/FlexDivs';
 
 import AddNodePool from '../ClusterDetail/AddNodePool/AddNodePool';
 import {

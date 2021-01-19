@@ -9,9 +9,9 @@ import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import * as clusterActions from 'stores/cluster/actions';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import FlashMessageComponent from 'UI/FlashMessage';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 
 class ScaleClusterModal extends React.Component {
   // eslint-disable-next-line no-magic-numbers

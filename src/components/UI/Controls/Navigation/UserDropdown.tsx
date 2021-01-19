@@ -6,7 +6,7 @@ import { AuthorizationTypes } from 'shared/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import styled from 'styled-components';
-import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
+import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 
 const Wrapper = styled.div`
   display: flex;

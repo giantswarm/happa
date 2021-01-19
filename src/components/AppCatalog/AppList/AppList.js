@@ -10,7 +10,7 @@ import { listCatalogs } from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 
 import AppListInner from './AppListInner';
 

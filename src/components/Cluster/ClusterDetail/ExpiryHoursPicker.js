@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import FlashMessage from 'UI/FlashMessage';
+import FlashMessage from 'UI/Display/FlashMessage';
 
 const List = styled.ul`
   & > li + li {

@@ -4,9 +4,9 @@ import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
-import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
-import ValidationError from 'UI/ClusterLabels/ValidationError';
-import ValueLabel from 'UI/ClusterLabels/ValueLabel';
+import EditValueTooltip from 'UI/Display/Cluster/ClusterLabels/EditValueTooltip';
+import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
+import ValueLabel from 'UI/Display/ValueLabel';
 import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
@@ -22,6 +22,10 @@ interface IEditLabelTooltip {
 
 const EditLabelTooltipWrapper = styled.div`
   display: inline-block;
+`;
+
+const StyledValueLabel = styled(ValueLabel)`
+  margin-bottom: 0;
 `;
 
 const FormWrapper = styled.div`
@@ -151,7 +155,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           <i className='fa fa-add-circle' /> Add label
         </AddLabelButton>
       ) : (
-        <ValueLabel
+        <StyledValueLabel
           onClick={open}
           label={
             <Editable allowInteraction={allowInteraction}>{label}</Editable>

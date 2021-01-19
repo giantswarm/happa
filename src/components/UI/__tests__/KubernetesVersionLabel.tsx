@@ -4,7 +4,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
-import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
+import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 
 describe('KubernetesVersionLabel', () => {
   it('renders without crashing', () => {

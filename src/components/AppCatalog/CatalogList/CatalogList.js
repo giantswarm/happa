@@ -2,7 +2,7 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import Well from 'UI/Well';
+import Well from 'UI/Layout/Well';
 
 import CatalogRepo from './CatalogRepo';
 

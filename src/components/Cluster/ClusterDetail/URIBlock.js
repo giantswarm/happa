@@ -6,7 +6,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { CSSBreakpoints } from 'shared/constants/cssBreakpoints';
 import styled from 'styled-components';
 import { Code, mq } from 'styles';
-import Truncated from 'UI/Truncated';
+import Truncated from 'UI/Util/Truncated';
 
 const StatusIcon = styled.i`
   width: 14px;

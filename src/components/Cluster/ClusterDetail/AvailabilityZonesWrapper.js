@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
+import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 
 /**
  * This component is a wrapper for positioning AZ labels in cluster views, in the node pool row.

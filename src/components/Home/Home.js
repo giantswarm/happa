@@ -14,8 +14,8 @@ import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
 import { selectClustersList } from 'stores/cluster/selectors';
 import { selectErrorByAction } from 'stores/error/selectors';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import ClusterEmptyState from 'UI/ClusterEmptyState';
+import Button from 'UI/Controls/Button';
+import ClusterEmptyState from 'UI/Display/Cluster/ClusterEmptyState';
 import { memoize } from 'underscore';
 
 import ClusterDashboardItem from './ClusterDashboardItem';

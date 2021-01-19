@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import NumberPicker from 'UI/NumberPicker';
-import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
+import NumberPicker from 'UI/Inputs/NumberPicker';
+import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
 
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 0,

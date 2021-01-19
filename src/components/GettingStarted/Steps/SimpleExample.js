@@ -7,7 +7,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import Aside from 'UI/Aside';
+import Aside from 'UI/Layout/Aside';
 
 import { CodeBlock, Output, Prompt } from '../CodeBlock';
 

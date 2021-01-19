@@ -2,7 +2,7 @@ import { replace } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import CatalogTypeLabel from 'UI/CatalogTypeLabel';
+import CatalogTypeLabel from 'UI/Display/Apps/CatalogTypeLabel';
 import { memoize, throttle } from 'underscore';
 
 import AppListItems from './AppListItems';

@@ -1,6 +1,6 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import React, { ReactNode } from 'react';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 function generateUncaughtException() {
   throw Error('Error thrown on purpose from /exception-notification-test/');

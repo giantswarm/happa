@@ -2,7 +2,7 @@ import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/Ins
 import { useInstanceTypeSelectionLabels } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React from 'react';
-import StyledInput from 'UI/ClusterCreation/StyledInput';
+import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
 
 type ChangeHandler = (machineType: string) => void;
 

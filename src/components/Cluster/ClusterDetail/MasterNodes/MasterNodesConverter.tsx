@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 const Strong = styled.strong`
   font-weight: 700;

@@ -9,8 +9,8 @@ import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
-import Aside from 'UI/Aside';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Aside from 'UI/Layout/Aside';
 
 import { CodeBlock, Prompt } from '../CodeBlock';
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';

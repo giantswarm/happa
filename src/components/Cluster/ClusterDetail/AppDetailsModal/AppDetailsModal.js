@@ -16,8 +16,8 @@ import {
   updateClusterApp as updateAppAction,
 } from 'stores/appcatalog/actions';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import DeleteConfirmFooter from './DeleteConfirmFooter';
 import EditChartVersionPane from './EditChartVersionPane';

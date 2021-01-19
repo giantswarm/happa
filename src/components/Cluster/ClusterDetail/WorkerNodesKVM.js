@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
-import Button from 'UI/Button';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import Button from 'UI/Controls/Button';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 

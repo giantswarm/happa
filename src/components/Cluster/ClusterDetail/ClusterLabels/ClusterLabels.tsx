@@ -8,7 +8,7 @@ import {
   getClusterLabelsLoading,
 } from 'stores/clusterlabels/selectors';
 import styled from 'styled-components';
-import LabelWrapper from 'UI/ClusterLabels/LabelWrapper';
+import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
 
 import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';

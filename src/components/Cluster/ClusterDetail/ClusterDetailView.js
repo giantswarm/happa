@@ -37,12 +37,12 @@ import { selectNodePools } from 'stores/nodepool/selectors';
 import { getAllReleases } from 'stores/releases/selectors';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import LoadingOverlay from 'UI/LoadingOverlay';
-import Section from 'UI/Section';
-import ViewAndEditName from 'UI/ViewEditName';
-import Well from 'UI/Well';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
+import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import Section from 'UI/Layout/Section';
+import Well from 'UI/Layout/Well';
 import { memoize } from 'underscore';
 
 import ClusterApps from './ClusterApps';

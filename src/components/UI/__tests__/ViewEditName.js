@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { renderWithTheme } from 'testUtils/renderUtils';
-import ViewEditName from 'UI/ViewEditName';
+import ViewEditName from 'UI/Inputs/ViewEditName';
 
 const defaultEntity = {
   value: 'Some value',

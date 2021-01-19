@@ -5,8 +5,8 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
+import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 
 const Group = styled.span`
   & + & {

@@ -8,7 +8,7 @@ import {
 import { selectResourcesV4 } from 'stores/cluster/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { Dot } from 'styles';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 import ClusterDashboardNodes from './ClusterDashboardNodes';

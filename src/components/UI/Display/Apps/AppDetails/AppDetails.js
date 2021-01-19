@@ -9,7 +9,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import styled from 'styled-components';
 import { mq } from 'styles';
-import Truncated from 'UI/Truncated';
+import Truncated from 'UI/Util/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';

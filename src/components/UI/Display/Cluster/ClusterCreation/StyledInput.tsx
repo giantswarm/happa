@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { baseLabelStyles } from 'styles/cluster-creation';
-
-import Input from '../Inputs/Input';
+import Input from 'UI/Inputs/Input';
 
 const StyledInput = styled(Input)`
   .input-field-label {

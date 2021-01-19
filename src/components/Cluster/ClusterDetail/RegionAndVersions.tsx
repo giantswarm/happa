@@ -9,8 +9,8 @@ import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { Code, Dot } from 'styles';
-import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 interface IRegionAndVersionsProps {
   clusterId: string;

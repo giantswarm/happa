@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
-import NumberPicker from 'UI/NumberPicker';
+import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
+import NumberPicker from 'UI/Inputs/NumberPicker';
 
 const initialStateLabels = {
   number: 0,

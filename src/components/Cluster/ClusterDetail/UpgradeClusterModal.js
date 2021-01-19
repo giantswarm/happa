@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import ComponentChangelog from 'UI/ComponentChangelog';
-import FlashMessageComponent from 'UI/FlashMessage';
-import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+import Button from 'UI/Controls/Button';
+import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
+import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 import { groupBy, sortBy } from 'underscore';
 
 const Pages = {

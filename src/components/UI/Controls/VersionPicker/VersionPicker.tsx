@@ -1,8 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
-import Truncated from 'UI/Truncated';
+import DropdownMenu, {
+  DropdownTrigger,
+  Link,
+  List,
+} from 'UI/Controls/DropdownMenu';
+import Truncated from 'UI/Util/Truncated';
 
 import {
   checkIfContainsTestVersions,

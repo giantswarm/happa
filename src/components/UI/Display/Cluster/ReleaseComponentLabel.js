@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
-
-import ValueLabel from './ValueLabel';
+import ValueLabel from 'UI/Display/ValueLabel';
 
 const OldVersion = styled.span`
   color: ${(p) => p.theme.colors.redOld};

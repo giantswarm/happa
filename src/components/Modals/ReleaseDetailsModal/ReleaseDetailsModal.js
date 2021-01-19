@@ -4,9 +4,9 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Constants, Providers } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
-import Button from 'UI/Button';
-import ComponentChangelog from 'UI/ComponentChangelog';
-import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+import Button from 'UI/Controls/Button';
+import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
+import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
 
 import ReleaseDetailsModalSection from './ReleaseDetailsModalSection';

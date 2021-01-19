@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+import ValidationErrorMessage from 'UI/Inputs/ValidationErrorMessage';
 
 let typingTimer = 0;
 const doneTypingInterval = 250; // ms

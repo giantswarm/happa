@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import AvailabilityZonesLabel from 'UI/AvailabilityZonesLabel';
+import AvailabilityZonesLabel from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
 
 // Returns an array of AvailabilityZonesLabel components
 const AvailabilityZonesLabels = ({ zones, labelsChecked, ...props }) => {
