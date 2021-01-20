@@ -54,7 +54,7 @@ const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
       <StyledTextBox readOnly value={kubeconfig} title='kubeconfig' />
 
       {hasContentInClipboard ? (
-        <Button bsStyle='default' onClick={copyKubeconfig}>
+        <Button bsStyle='outline' onClick={copyKubeconfig}>
           &nbsp;&nbsp;
           <i
             aria-hidden='true'
@@ -64,7 +64,7 @@ const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
           &nbsp;&nbsp;
         </Button>
       ) : (
-        <Button bsStyle='default' onClick={copyKubeconfig}>
+        <Button bsStyle='outline' onClick={copyKubeconfig}>
           Copy
         </Button>
       )}

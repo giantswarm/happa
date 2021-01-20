@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useRef, useState } from 'react';
-import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
+import Button from 'UI/Button';
 import StyledDeleteButton from 'UI/ClusterLabels/DeleteLabelButton';
 import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
 

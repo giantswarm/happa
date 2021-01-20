@@ -4,6 +4,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import Button from 'UI/Button';
 
 const NextSteps = (props) => {
   const pathParams = {
@@ -99,9 +100,9 @@ const NextSteps = (props) => {
 
         <div className='component_slider--nav'>
           <Link to={clusterGuideExamplePath}>
-            <button type='button'>
+            <Button bsStyle='secondary'>
               <i className='fa fa-chevron-left' /> Back
-            </button>
+            </Button>
           </Link>
         </div>
       </>

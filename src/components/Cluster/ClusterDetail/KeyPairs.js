@@ -185,7 +185,9 @@ class KeyPairs extends React.Component {
 
   actionsCellFormatter = (_cell, row) => {
     return (
-      <Button onClick={this.showKeyPairModal.bind(this, row)}>Details</Button>
+      <Button bsSize='sm' onClick={this.showKeyPairModal.bind(this, row)}>
+        Details
+      </Button>
     );
   };
 

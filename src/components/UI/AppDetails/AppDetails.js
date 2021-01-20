@@ -89,7 +89,7 @@ const Install = styled.div`
   flex: 0 0 120px;
   text-align: center;
 
-  .progress_button--container {
+  .button-wrapper {
     margin-top: 0px;
     margin-bottom: 5px;
     margin-right: 0px;
