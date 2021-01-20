@@ -5,6 +5,8 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { INodePool } from 'shared/types';
 import styled from 'styled-components';
 
+import NodePoolScalingSpotInstancesDetails from './NodePoolScalingSpotInstancesDetails';
+
 const NodesWrapper = styled.div<{ highlight?: boolean }>`
   width: 36px;
   height: 30px;
@@ -34,29 +36,6 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
 
   const spot_instances = status?.spot_instances ?? 0;
 
-  const formatInstanceDistribution = () => {
-    const aws = nodePool.node_spec?.aws;
-
-    let baseCapacity = '-';
-    let spotPercentage = '-';
-
-    if (aws?.instance_distribution) {
-      baseCapacity = String(aws.instance_distribution.on_demand_base_capacity);
-      spotPercentage = String(
-        /* eslint-disable-next-line no-magic-numbers */
-        100 - aws.instance_distribution.on_demand_percentage_above_base_capacity
-      );
-    }
-
-    return (
-      <>
-        On-demand base capacity: {baseCapacity}
-        <br />
-        Spot instance percentage: {spotPercentage}
-      </>
-    );
-  };
-
   return (
     <>
       {supportsAutoscaling && (
@@ -77,7 +56,7 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
         <OverlayTrigger
           overlay={
             <Tooltip id={`${id}-spot-distribution-tooltip`}>
-              {formatInstanceDistribution()}
+              <NodePoolScalingSpotInstancesDetails nodePool={nodePool} />
             </Tooltip>
           }
           placement='top'
