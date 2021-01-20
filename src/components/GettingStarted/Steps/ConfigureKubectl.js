@@ -11,9 +11,9 @@ import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import { CodeBlock, Prompt } from 'UI/Display/CodeBlock/CodeBlock';
 import Aside from 'UI/Layout/Aside';
 
-import { CodeBlock, Prompt } from '../CodeBlock';
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 
 const ToggleAlternativeButton = styled.div`

@@ -7,11 +7,10 @@ import { bindActionCreators } from 'redux';
 import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import { CodeBlock, Prompt } from 'UI/Display/CodeBlock/CodeBlock';
+import FileBlock from 'UI/Display/CodeBlock/FileBlock';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Aside from 'UI/Layout/Aside';
-
-import { CodeBlock, Prompt } from '../CodeBlock';
-import FileBlock from '../FileBlock';
 
 const Modernizr = window.Modernizr;
 

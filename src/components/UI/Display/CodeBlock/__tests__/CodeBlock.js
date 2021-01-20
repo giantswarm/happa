@@ -4,8 +4,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
-
-import { CodeBlock, Output, Prompt } from '../CodeBlock';
+import { CodeBlock, Output, Prompt } from 'UI/Display/CodeBlock/CodeBlock';
 
 jest.mock('lib/hooks/useCopyToClipboard');
 
