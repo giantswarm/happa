@@ -7,8 +7,8 @@ import { bindActionCreators } from 'redux';
 import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-import { CodeBlock, Prompt } from 'UI/Display/CodeBlock/CodeBlock';
-import FileBlock from 'UI/Display/CodeBlock/FileBlock';
+import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
+import FileBlock from 'UI/Display/Documentation/FileBlock';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Aside from 'UI/Layout/Aside';
 
