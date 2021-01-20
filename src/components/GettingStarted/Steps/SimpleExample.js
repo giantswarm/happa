@@ -8,9 +8,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
+import { CodeBlock, Output, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import Aside from 'UI/Layout/Aside';
-
-import { CodeBlock, Output, Prompt } from '../CodeBlock';
 
 class SimpleExample extends React.Component {
   state = {
@@ -177,7 +176,7 @@ class SimpleExample extends React.Component {
               {`
                   service/helloworld created
                   deployment.apps/helloworld created
-                  poddisruptionbudget.policy/helloworld-pdb created§
+                  poddisruptionbudget.policy/helloworld-pdb created
                   ingress.networking.k8s.io/helloworld created
                 `}
             </Output>

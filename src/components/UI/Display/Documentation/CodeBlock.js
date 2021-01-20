@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
 import Line from './Line';
+import Styles from './Styles';
 
 export const Prompt = ({ children }) => {
   return <Line prompt={true} text={dedent(children)} />;
@@ -90,34 +91,36 @@ export const CodeBlock = ({ children }) => {
   };
 
   return (
-    <div className={getClassNames()}>
-      <pre>
-        <div className='content'>{children}</div>
-        <div className='codeblock--buttons'>
-          <a
-            href='#'
-            onClick={handleClick}
-            onMouseOut={() => setHovering(false)}
-            onMouseOver={() => setHovering(true)}
-            onMouseUp={copyCodeToClipboard}
-            title='Copy content to clipboard'
+    <Styles>
+      <div className={getClassNames()}>
+        <pre>
+          <div className='content'>{children}</div>
+          <div className='codeblock--buttons'>
+            <a
+              href='#'
+              onClick={handleClick}
+              onMouseOut={() => setHovering(false)}
+              onMouseOver={() => setHovering(true)}
+              onMouseUp={copyCodeToClipboard}
+              title='Copy content to clipboard'
+            >
+              <i aria-hidden='true' className='fa fa-content-copy' />
+            </a>
+          </div>
+          <BaseTransition
+            in={hasContentInClipboard}
+            timeout={{ enter: 1000, exit: 1000 }}
+            classNames='checkmark'
           >
-            <i aria-hidden='true' className='fa fa-content-copy' />
-          </a>
-        </div>
-        <BaseTransition
-          in={hasContentInClipboard}
-          timeout={{ enter: 1000, exit: 1000 }}
-          classNames='checkmark'
-        >
-          <i
-            aria-hidden='true'
-            className='fa fa-done codeblock--checkmark'
-            title='Content copied to clipboard'
-          />
-        </BaseTransition>
-      </pre>
-    </div>
+            <i
+              aria-hidden='true'
+              className='fa fa-done codeblock--checkmark'
+              title='Content copied to clipboard'
+            />
+          </BaseTransition>
+        </pre>
+      </div>
+    </Styles>
   );
 };
 
