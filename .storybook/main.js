@@ -12,8 +12,6 @@ module.exports = {
       path.resolve(`${__dirname}/../src/components`),
     ];
 
-    console.log(config);
-
     return config;
   },
 };
