@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
+import ClusterEmptyState from 'UI/Display/Cluster/ClusterEmptyState';
+import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
+import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import RadioInput from 'UI/Inputs/RadioInput';
-
-import ClusterEmptyState from './ClusterEmptyState';
-import ComponentChangelog from './ComponentChangelog';
-import ReleaseComponentLabel from './ReleaseComponentLabel';
-import VersionPicker from './VersionPicker/VersionPicker';
 
 const Wrapper = styled.div`
   h2 {

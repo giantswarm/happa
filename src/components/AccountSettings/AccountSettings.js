@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
-import Section from 'UI/Section';
+import Section from 'UI/Layout/Section';
 
 import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './ChangePasswordForm';

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 interface IDownloadKubeconfigButtonProps {
   content?: string;

@@ -7,9 +7,9 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import * as nodePoolActions from 'stores/nodepool/actions';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import FlashMessageComponent from 'UI/FlashMessage';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 
 class ScaleNodePoolModal extends React.Component {
   // eslint-disable-next-line no-magic-numbers

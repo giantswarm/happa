@@ -1,7 +1,7 @@
 import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import FlashMessage from 'UI/FlashMessage';
+import FlashMessage from 'UI/Display/FlashMessage';
 import { sortBy } from 'underscore';
 
 import { getInitialState } from '.';

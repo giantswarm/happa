@@ -4,10 +4,10 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants, FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
-import Button from 'UI/Button';
-import InstanceType from 'UI/InstanceType';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import Button from 'UI/Controls/Button';
+import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
+import InstanceType from 'UI/Display/Cluster/InstanceType';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 

@@ -7,9 +7,9 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
-import FlashMessage from 'UI/FlashMessage';
-import Section from 'UI/Section';
+import Button from 'UI/Controls/Button';
+import FlashMessage from 'UI/Display/FlashMessage';
+import Section from 'UI/Layout/Section';
 
 import PasswordField from '../SignUp/PasswordField';
 

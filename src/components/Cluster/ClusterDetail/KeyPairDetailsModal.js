@@ -4,7 +4,7 @@ import { formatDate, relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
-import DetailItem from 'UI/DetailList';
+import DetailItem from 'UI/Layout/DetailList';
 
 import GenericModal from '../../Modals/GenericModal';
 import CertificateOrgsLabel from './CertificateOrgsLabel';

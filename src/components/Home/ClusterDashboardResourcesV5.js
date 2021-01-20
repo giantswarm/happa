@@ -9,7 +9,7 @@ import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { makeV5ResourcesSelector } from 'stores/nodepool/selectors';
 import { Dot } from 'styles';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 import ClusterDashboardNodes from './ClusterDashboardNodes';

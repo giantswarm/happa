@@ -12,8 +12,8 @@ import {
   userRemoveExpiration,
   usersLoad,
 } from 'stores/user/actions';
-import Button from 'UI/Button';
-import Section from 'UI/Section';
+import Button from 'UI/Controls/Button';
+import Section from 'UI/Layout/Section';
 
 import DeleteUserModal from './DeleteUserModal';
 import InvitesTable from './InvitesTable';

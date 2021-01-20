@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 import PasswordField from './PasswordField';
 import StatusMessage from './StatusMessage';

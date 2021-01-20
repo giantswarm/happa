@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
 import styled from 'styled-components';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 const StyledInstallIngressButton = styled(InstallIngressButton)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;

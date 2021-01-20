@@ -7,7 +7,7 @@ import { selectResourcesV4 } from 'stores/cluster/selectors';
 import { isClusterCreating } from 'stores/cluster/utils';
 import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 import CredentialInfoRow from './CredentialInfoRow';
 import NodesRunning from './NodesRunning';

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import ImgWithFallback from 'shared/ImgWithFallback';
 import styled from 'styled-components';
-import CatalogTypeLabel from 'UI/CatalogTypeLabel';
+import CatalogTypeLabel from 'UI/Display/Apps/CatalogTypeLabel';
 import CachingColorHash from 'utils/cachingColorHash';
 
 import CatalogExternalLink from './CatalogExternalLink';

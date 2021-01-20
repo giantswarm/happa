@@ -4,7 +4,7 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import { Providers } from 'shared/constants';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 /**
  * CredentialsForm is a sub-component of Credentials.

@@ -11,10 +11,10 @@ import {
   CursorPointerCell,
   TableButton,
   Tr,
-} from 'UI/ExpandableSelector/Items';
+} from 'UI/Controls/ExpandableSelector/Items';
+import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import RadioInput from 'UI/Inputs/RadioInput';
-import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
-import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 const FixedWidthTableButton = styled(TableButton)`
   width: 100px;

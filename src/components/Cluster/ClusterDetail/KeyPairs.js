@@ -12,8 +12,8 @@ import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import FlashMessage from 'UI/FlashMessage';
+import Button from 'UI/Controls/Button';
+import FlashMessage from 'UI/Display/FlashMessage';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';

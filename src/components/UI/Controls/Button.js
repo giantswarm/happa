@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BsButton from 'react-bootstrap/lib/Button';
 import styled from 'styled-components';
-
-import LoadingIndicator from './LoadingIndicator';
+import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 
 // Button
 //

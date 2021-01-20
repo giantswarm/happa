@@ -14,9 +14,9 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
 import styled from 'styled-components';
 import { Ellipsis } from 'styles';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import Section from 'UI/Section';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Section from 'UI/Layout/Section';
 
 import Credentials from './Credentials';
 

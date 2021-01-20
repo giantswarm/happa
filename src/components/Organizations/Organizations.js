@@ -6,7 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 
 import Detail from './Detail/Detail';
 import List from './List/List';

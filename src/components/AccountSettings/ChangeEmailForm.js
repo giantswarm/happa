@@ -2,8 +2,8 @@ import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
-import FlashMessage from 'UI/FlashMessage';
+import Button from 'UI/Controls/Button';
+import FlashMessage from 'UI/Display/FlashMessage';
 
 const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 

@@ -19,8 +19,8 @@ import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { clearError } from 'stores/error/actions';
 import { selectErrorByAction } from 'stores/error/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import AppDetails from 'UI/AppDetails/AppDetails';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import AppDetails from 'UI/Display/Apps/AppDetails/AppDetails';
+import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 
 import InstallAppModal from './InstallAppModal';
 

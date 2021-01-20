@@ -13,13 +13,13 @@ import { Constants, Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
 import { getFirstNodePoolsRelease, getProvider } from 'stores/main/selectors';
-import Headline from 'UI/ClusterCreation/Headline';
-import NameInput from 'UI/ClusterCreation/NameInput';
-import Section from 'UI/ClusterCreation/Section';
+import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
+import NameInput from 'UI/Display/Cluster/ClusterCreation/NameInput';
+import Section from 'UI/Display/Cluster/ClusterCreation/Section';
 import StyledInput, {
   AdditionalInputHint,
-} from 'UI/ClusterCreation/StyledInput';
-import { FlexColumn } from 'UI/FlexDivs';
+} from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import { FlexColumn } from 'UI/Layout/FlexDivs';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';

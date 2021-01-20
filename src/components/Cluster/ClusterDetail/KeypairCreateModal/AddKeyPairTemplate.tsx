@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import TwoInputArea, { InnerTwoInputArea } from 'UI/TwoInputArea';
+import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
 
 interface IAddKeyPairTemplateProps {
   email: string;

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useRef, useState } from 'react';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import StyledDeleteButton from 'UI/ClusterLabels/DeleteLabelButton';
-import EditValueTooltip from 'UI/ClusterLabels/EditValueTooltip';
+import Button from 'UI/Controls/Button';
+import StyledDeleteButton from 'UI/Display/Cluster/ClusterLabels/DeleteLabelButton';
+import EditValueTooltip from 'UI/Display/Cluster/ClusterLabels/EditValueTooltip';
 
 interface IDeleteLabelButton extends ComponentPropsWithoutRef<'button'> {
   onDelete(): void;

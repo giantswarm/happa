@@ -2,8 +2,8 @@ import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
-import AWSAccountID from 'UI/AWSAccountID';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
+import AWSAccountID from 'UI/Display/Cluster/AWSAccountID';
 
 const CredentialsDisplay = (props) => {
   if (props.loading) {

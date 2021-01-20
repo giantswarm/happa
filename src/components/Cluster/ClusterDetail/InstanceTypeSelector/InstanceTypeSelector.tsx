@@ -14,8 +14,8 @@ import {
   SelectedItem,
   SelectedWrapper,
   Table,
-} from 'UI/ExpandableSelector/Selector';
-import InstanceType from 'UI/InstanceType';
+} from 'UI/Controls/ExpandableSelector/Selector';
+import InstanceType from 'UI/Display/Cluster/InstanceType';
 
 import InstanceTypeRow from './InstanceTypeRow';
 

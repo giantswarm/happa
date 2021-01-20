@@ -4,8 +4,8 @@ import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
-import DropdownMenu, { DropdownTrigger, List } from 'UI/DropdownMenu';
-import Truncated from 'UI/Truncated';
+import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
+import Truncated from 'UI/Util/Truncated';
 
 const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   width: unset;

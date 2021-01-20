@@ -16,9 +16,9 @@ import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
-import FlashMessageComponent from 'UI/FlashMessage';
+import Button from 'UI/Controls/Button';
+import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreinstalledApp';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';

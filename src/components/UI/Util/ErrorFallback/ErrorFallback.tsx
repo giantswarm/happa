@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { ReactElement, ReactNode } from 'react';
-import ErrorText from 'UI/ErrorText';
+import ErrorText from 'UI/Util/ErrorFallback/ErrorText';
 
 interface IErrorFallbackProps {
   children?: ReactElement;

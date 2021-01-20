@@ -4,10 +4,10 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import DetailItem from 'UI/DetailList';
-import Truncated from 'UI/Truncated';
-import VersionPicker from 'UI/VersionPicker/VersionPicker';
+import Button from 'UI/Controls/Button';
+import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
+import DetailItem from 'UI/Layout/DetailList';
+import Truncated from 'UI/Util/Truncated';
 
 import YAMLFileUpload from './YamlFileUpload';
 

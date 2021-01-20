@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import DropdownMenu, { DropdownTrigger, Link, List } from 'UI/DropdownMenu';
+import DropdownMenu, {
+  DropdownTrigger,
+  Link,
+  List,
+} from 'UI/Controls/DropdownMenu';
 
 const NodePoolDropdownMenu = ({
   triggerEditName,

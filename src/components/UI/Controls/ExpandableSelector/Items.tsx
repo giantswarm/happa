@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 export const TableButton = styled(Button)`
   height: 24px;

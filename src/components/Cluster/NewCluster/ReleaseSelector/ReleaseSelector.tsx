@@ -22,9 +22,9 @@ import {
   SelectedItem,
   SelectedWrapper,
   Table,
-} from 'UI/ExpandableSelector/Selector';
-import LoadingOverlay from 'UI/LoadingOverlay';
-import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+} from 'UI/Controls/ExpandableSelector/Selector';
+import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 
 import ReleaseRow from './ReleaseRow';
 

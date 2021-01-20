@@ -6,7 +6,7 @@ import { StatusCodes } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import FlashMessage from 'UI/FlashMessage';
+import FlashMessage from 'UI/Display/FlashMessage';
 
 const StyledFlashMessage = styled(FlashMessage)`
   i.fa + span {

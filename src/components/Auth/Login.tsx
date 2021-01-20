@@ -13,7 +13,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 import { parseErrorMessages } from './parseErrorMessages';
 

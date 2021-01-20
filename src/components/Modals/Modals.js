@@ -17,8 +17,8 @@ import {
   organizationRemoveMemberConfirmed,
 } from 'stores/organization/actions';
 import styled from 'styled-components';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 const NodePoolTextDiv = styled.div`
   strong {

@@ -4,7 +4,7 @@ import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { css } from 'styled-components';
 import styled from 'styled-components';
-import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+import ValidationErrorMessage from 'UI/Inputs/ValidationErrorMessage';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
 // NumberPicker is a component that allows a user to pick a number by

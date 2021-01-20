@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { organizationCreate } from 'stores/organization/actions';
 import { supportsMultiAccount } from 'stores/organization/utils';
-import Button from 'UI/Button';
-import EmptyStateDisplay from 'UI/EmptyStateDisplay';
-import OrganizationList from 'UI/OrganizationList/OrganizationList';
+import Button from 'UI/Controls/Button';
+import OrganizationList from 'UI/Display/OrganizationList/OrganizationList';
+import EmptyStateDisplay from 'UI/Util/EmptyStateDisplay';
 
 class OrganizationListWrapper extends React.Component {
   getOrganizationURL = (id) => {

@@ -11,8 +11,8 @@ import { installApp } from 'stores/appcatalog/actions';
 import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectOrganizationByID } from 'stores/organization/selectors';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import GenericModal from '../../Modals/GenericModal';
 import ClusterPicker from './ClusterPicker';

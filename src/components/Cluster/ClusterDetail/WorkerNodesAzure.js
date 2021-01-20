@@ -3,10 +3,10 @@ import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import styled from 'styled-components';
 import { FallbackSpan } from 'styles';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
-import Button from 'UI/Button';
-import InstanceType from 'UI/InstanceType';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import Button from 'UI/Controls/Button';
+import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
+import InstanceType from 'UI/Display/Cluster/InstanceType';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 export const WrapperDiv = styled.div`
   font-size: 16px;

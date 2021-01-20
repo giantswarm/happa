@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { renderWithTheme } from 'testUtils/renderUtils';
-import Truncated from 'UI/Truncated';
+import Truncated from 'UI/Util/Truncated';
 
 describe('Truncated', () => {
   it('renders without crashing', () => {

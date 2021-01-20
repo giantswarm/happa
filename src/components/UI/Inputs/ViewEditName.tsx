@@ -11,9 +11,8 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
-
-import Button from './Button';
 
 interface IViewAndEditNameProps extends React.ComponentPropsWithRef<'span'> {
   value: string;

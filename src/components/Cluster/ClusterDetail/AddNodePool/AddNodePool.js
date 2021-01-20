@@ -14,13 +14,13 @@ import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import styled from 'styled-components';
-import Checkbox from 'UI/Checkbox';
-import ClusterCreationLabelSpan from 'UI/ClusterCreation/ClusterCreationLabelSpan';
-import NameInput from 'UI/ClusterCreation/NameInput';
-import Section from 'UI/ClusterCreation/Section';
+import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
+import NameInput from 'UI/Display/Cluster/ClusterCreation/NameInput';
+import Section from 'UI/Display/Cluster/ClusterCreation/Section';
 import StyledInput, {
   AdditionalInputHint,
-} from 'UI/ClusterCreation/StyledInput';
+} from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import Checkbox from 'UI/Inputs/Checkbox';
 
 const CheckboxWrapper = styled.div`
   .checkbox-label {

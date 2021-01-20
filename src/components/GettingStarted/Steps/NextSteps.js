@@ -4,7 +4,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import Button from 'UI/Button';
+import Button from 'UI/Controls/Button';
 
 const NextSteps = (props) => {
   const pathParams = {

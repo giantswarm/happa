@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { AdditionalInputHint } from 'UI/ClusterCreation/StyledInput';
-import NumberPicker from 'UI/NumberPicker';
+import { AdditionalInputHint } from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import NumberPicker from 'UI/Inputs/NumberPicker';
 
 interface INumberPickerOnChangePayload {
   valid: boolean;

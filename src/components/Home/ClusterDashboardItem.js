@@ -21,12 +21,12 @@ import { getAllReleases } from 'stores/releases/selectors';
 import { css } from 'styled-components';
 import styled from 'styled-components';
 import { Dot, mq } from 'styles';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import ErrorFallback from 'UI/ErrorFallback';
-import ErrorText from 'UI/ErrorText';
-import KubernetesVersionLabel from 'UI/KubernetesVersionLabel';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
+import ErrorFallback from 'UI/Util/ErrorFallback/ErrorFallback';
+import ErrorText from 'UI/Util/ErrorFallback/ErrorText';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
