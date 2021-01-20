@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Button from 'UI/Controls/Button';
 
 interface IDownloadKubeconfigButtonProps {
   content?: string;
@@ -18,12 +19,11 @@ const DownloadKubeconfigButton: React.FC<IDownloadKubeconfigButtonProps> = ({
 }) => {
   return (
     <a
-      className='btn btn-default'
       download='giantswarm-kubeconfig'
       // Safe because of defaultProps.
       href={window.URL.createObjectURL(getBlob(content as string))}
     >
-      Download
+      <Button bsStyle='outline'>Download</Button>
     </a>
   );
 };

@@ -1,9 +1,9 @@
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
-import Button from 'react-bootstrap/lib/Button';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 import EditValueTooltip from 'UI/Display/Cluster/ClusterLabels/EditValueTooltip';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
 import ValueLabel from 'UI/Display/ValueLabel';
@@ -205,7 +205,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
             </ValueInputWrapper>
             <Buttons>
               <Button
-                bsStyle='success'
+                bsStyle='primary'
                 disabled={!keyIsValid || !valueIsValid}
                 onClick={save}
               >

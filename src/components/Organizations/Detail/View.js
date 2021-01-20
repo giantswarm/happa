@@ -5,7 +5,6 @@ import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'react-bootstrap/lib/Button';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -15,6 +14,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
 import styled from 'styled-components';
 import { Ellipsis } from 'styles';
+import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Section from 'UI/Layout/Section';
 
@@ -213,7 +213,7 @@ class OrganizationDetail extends React.Component {
             />
           )}
           <Link to={newClusterPath}>
-            <Button bsStyle='default'>
+            <Button bsStyle='outline'>
               <i className='fa fa-add-circle' /> Create Cluster
             </Button>
           </Link>
@@ -233,7 +233,7 @@ class OrganizationDetail extends React.Component {
                 keyField='email'
               />
             )}
-            <Button bsStyle='default' onClick={this.addMember}>
+            <Button bsStyle='outline' onClick={this.addMember}>
               <i className='fa fa-add-circle' /> Add Member
             </Button>
           </MembersTable>
@@ -321,7 +321,7 @@ function clusterActionsCellFormatter(_cell, row) {
 
   return (
     <Link to={clusterDetailPath}>
-      <Button bsStyle='default' type='button'>
+      <Button bsStyle='outline' bsSize='sm' type='button'>
         Details
       </Button>
     </Link>
@@ -335,6 +335,8 @@ function memberActionsCellFormatter(_cell, row) {
       // eslint-disable-next-line react/no-this-in-sfc
       onClick={this.removeMember.bind(this, row.email)}
       type='button'
+      bsStyle='outline'
+      bsSize='sm'
       data-testid='organization-member-remove'
     >
       Remove

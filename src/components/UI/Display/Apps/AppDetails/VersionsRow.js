@@ -26,6 +26,7 @@ const AppVersion = styled(Copyable)`
 
 const ExpandVersions = styled.button`
   padding: 0px;
+  border: 0px;
   background-color: inherit;
   margin-bottom: 0px;
   font-size: 14px;

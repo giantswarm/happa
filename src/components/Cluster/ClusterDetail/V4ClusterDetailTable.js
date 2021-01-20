@@ -35,7 +35,7 @@ const WrapperDiv = styled.div`
 const KubernetesURIWrapper = styled(FlexRowWithTwoBlocksOnEdges)`
   flex-wrap: wrap;
 
-  .progress_button--container {
+  .button-wrapper {
     margin-right: 0;
   }
 

@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Aside from 'UI/Layout/Aside';
 
@@ -334,15 +335,15 @@ class ConfigKubeCtl extends React.Component {
 
           <div className='component_slider--nav'>
             <Link to={clusterGuideOverviewPath}>
-              <button type='button'>
+              <Button bsStyle='secondary'>
                 <i className='fa fa-chevron-left' /> Back
-              </button>
+              </Button>
             </Link>
 
             <Link to={this.props.steps[this.props.stepIndex + 1].url}>
-              <button className='primary' type='button'>
+              <Button bsStyle='primary'>
                 Continue <i className='fa fa-chevron-right' />
-              </button>
+              </Button>
             </Link>
           </div>
         </div>

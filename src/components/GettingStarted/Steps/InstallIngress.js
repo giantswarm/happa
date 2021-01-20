@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 
 const StyledInstallIngressButton = styled(InstallIngressButton)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;
@@ -68,15 +69,15 @@ const InstallIngress = (props) => {
 
         <div className='component_slider--nav'>
           <Link to={clusterGuideConfigurationPath}>
-            <button type='button'>
+            <Button bsStyle='secondary'>
               <i className='fa fa-chevron-left' /> Back
-            </button>
+            </Button>
           </Link>
 
           <Link to={clusterGuideExamplePath}>
-            <button className='primary' type='button'>
+            <Button bsStyle='primary'>
               Continue <i className='fa fa-chevron-right' />
-            </button>
+            </Button>
           </Link>
         </div>
       </>

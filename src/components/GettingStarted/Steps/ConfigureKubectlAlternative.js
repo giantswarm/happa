@@ -154,7 +154,6 @@ class ConfigKubeCtl extends React.Component {
           {Modernizr.adownload ? (
             <div className='cert-downloads'>
               <a
-                className='button outline'
                 download='ca.crt'
                 href={window.URL.createObjectURL(
                   new Blob(
@@ -163,10 +162,9 @@ class ConfigKubeCtl extends React.Component {
                   )
                 )}
               >
-                CA CERTIFICATE
+                <Button bsStyle='outline'>CA CERTIFICATE</Button>
               </a>
               <a
-                className='button outline'
                 download='client.crt'
                 href={window.URL.createObjectURL(
                   new Blob([this.state.keyPair.data.client_certificate_data], {
@@ -174,10 +172,9 @@ class ConfigKubeCtl extends React.Component {
                   })
                 )}
               >
-                CLIENT CERTIFICATE
+                <Button bsStyle='outline'>CLIENT CERTIFICATE</Button>
               </a>
               <a
-                className='button outline'
                 download='client.key'
                 href={window.URL.createObjectURL(
                   new Blob([this.state.keyPair.data.client_key_data], {
@@ -185,7 +182,7 @@ class ConfigKubeCtl extends React.Component {
                   })
                 )}
               >
-                CLIENT KEY
+                <Button bsStyle='outline'>CLIENT KEY</Button>
               </a>
             </div>
           ) : (

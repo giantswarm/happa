@@ -2,11 +2,11 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { organizationCreate } from 'stores/organization/actions';
 import { supportsMultiAccount } from 'stores/organization/utils';
+import Button from 'UI/Controls/Button';
 import OrganizationList from 'UI/Display/OrganizationList/OrganizationList';
 import EmptyStateDisplay from 'UI/Util/EmptyStateDisplay';
 
@@ -43,7 +43,7 @@ class OrganizationListWrapper extends React.Component {
               organizations={this.props.organizations}
             />
           </EmptyStateDisplay>
-          <Button bsStyle='default' onClick={this.createOrganization}>
+          <Button bsStyle='outline' onClick={this.createOrganization}>
             <i className='fa fa-add-circle' /> Create New Organization
           </Button>
         </>

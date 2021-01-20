@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import BsButton from 'react-bootstrap/lib/Button';
+import styled from 'styled-components';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 
 // Button
 //
 // <Button
 //   type='button|submit|reset'
-//   bsStyle='primary|success|danger|info|warning|link'
+//   bsStyle='primary|secondary|danger|outline|link'
 //   loading=true|false
 //   disabled=true|false
 //   onClick=function>
@@ -20,6 +21,111 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 //
 // You can also disable the button by setting the disabled prop to true.
 //
+
+const Wrapper = styled.div`
+  .btn {
+    border: 0px;
+    border-radius: 3px;
+    color: #fff;
+    padding: 6px 12px;
+    font-weight: 400;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.1s cubic-bezier(0, -0.41, 0.19, 1.44);
+  }
+  .btn.small {
+    font-size: 14px;
+    padding: 8px 18px;
+  }
+
+  .btn-secondary {
+    background-color: #52728a;
+    border: 1px #52728a solid;
+  }
+
+  .btn-primary {
+    background-color: #2d9a2c;
+    border: 1px #2d9a2c solid;
+  }
+
+  .btn-link {
+    color: #ccc;
+  }
+
+  .btn-link:hover {
+    color: #fff;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:active:focus,
+  .btn:focus {
+    background-color: #5c7f9a;
+    color: #fff;
+  }
+
+  .btn-primary.disabled.focus,
+  .btn-primary.disabled:focus,
+  .btn-primary.disabled:hover,
+  .btn-primary[disabled].focus,
+  .btn-primary[disabled]:focus,
+  .btn-primary[disabled]:hover,
+  fieldset[disabled] .btn-primary.focus,
+  fieldset[disabled] .btn-primary:focus,
+  fieldset[disabled] .btn-primary:hover {
+    background-color: #404040;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:active:focus,
+  .btn-primary:focus,
+  .btn-primary:active:hover {
+    background-color: #278626;
+    border-color: #278626;
+  }
+
+  .btn-danger:hover,
+  .btn-danger:active:hover {
+    background-color: #d43f3a;
+    border-color: #d43f3a;
+  }
+
+  .btn:disabled,
+  .btn:disabled:hover,
+  .btn:disabled:active:hover {
+    background-color: #aaa;
+    border-color: #aaa;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: #ccc;
+    border: 1px solid #d7d7d7;
+  }
+
+  .btn-outline:focus,
+  .btn-outline:active,
+  .btn-outline:hover,
+  .btn-outline:active:focus,
+  .btn-outline:hover:focus,
+  .btn-outline:hover:active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #fff;
+  }
+
+  .btn {
+    i.fa {
+      padding-right: 0.3em;
+    }
+  }
+
+  .btn.btn-sm {
+    height: 24px;
+    padding: 0px 8px !important;
+    margin-left: 5px;
+  }
+`;
 
 const Button = (props) => {
   const {
@@ -36,7 +142,7 @@ const Button = (props) => {
   } = props;
 
   return (
-    <div className='progress_button--container'>
+    <Wrapper className='button-wrapper'>
       {loadingPosition === 'left' ? (
         <LoadingIndicator
           loading={loading}
@@ -47,7 +153,7 @@ const Button = (props) => {
 
       <BsButton
         bsSize={bsSize}
-        bsStyle={bsStyle}
+        bsStyle={bsStyle || 'outline'}
         disabled={disabled || loading}
         onClick={onClick}
         type={type}
@@ -64,7 +170,7 @@ const Button = (props) => {
           timeout={loadingTimeout}
         />
       ) : undefined}
-    </div>
+    </Wrapper>
   );
 };
 

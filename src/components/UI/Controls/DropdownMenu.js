@@ -44,6 +44,7 @@ export const DropdownTrigger = styled.button`
   height: 40px;
   margin: 0;
   border-radius: 0;
+  border: 0;
   padding: 0;
   background: unset;
   transition: background 0.3s;

@@ -192,7 +192,7 @@ const AppDetailsModal = (props) => {
       modalFooter = (
         <>
           <Button
-            bsStyle='success'
+            bsStyle='primary'
             onClick={editChartVersion}
             loading={props.clusterUpdateRequestPending}
           >

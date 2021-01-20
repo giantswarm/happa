@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from 'UI/Controls/Button';
 
 const Overview = (props) => (
   <>
@@ -21,9 +22,9 @@ const Overview = (props) => (
 
     <div className='component_slider--nav'>
       <Link to={props.steps[0].url}>
-        <button className='primary' type='button'>
+        <Button bsStyle='primary'>
           Start <i className='fa fa-chevron-right' />
-        </button>
+        </Button>
       </Link>
     </div>
   </>
