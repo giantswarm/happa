@@ -4,6 +4,7 @@ import {
   AZSelectionVariants,
 } from 'Cluster/AZSelection/AZSelectionUtils';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
+import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolSpotInstances';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -20,32 +21,6 @@ import Section from 'UI/ClusterCreation/Section';
 import StyledInput, {
   AdditionalInputHint,
 } from 'UI/ClusterCreation/StyledInput';
-import NumberPicker from 'UI/NumberPicker';
-
-const SpotValuesLabelText = styled.span`
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 32px;
-  display: inline-block;
-  width: 210px;
-`;
-
-const SpotValuesNumberPickerWrapper = styled.div`
-  margin-bottom: 8px;
-
-  .spot-number-picker {
-    margin-right: 8px;
-  }
-`;
-
-const SpotValuesHelpText = styled.p`
-  padding-bottom: 20px;
-  padding-left: 28px;
-  font-size: 14px;
-  i {
-    white-space: nowrap;
-  }
-`;
 
 const CheckboxWrapper = styled.div`
   .checkbox-label {
@@ -442,56 +417,17 @@ class AddNodePool extends Component {
               </CheckboxWrapper>
             </StyledInput>
             {this.state.spotInstancesEnabled && (
-              <>
-                <ClusterCreationLabelSpan>
-                  Spot instances
-                </ClusterCreationLabelSpan>
-                <SpotValuesNumberPickerWrapper>
-                  <SpotValuesLabelText>
-                    Spot instance percentage
-                  </SpotValuesLabelText>
-                  <NumberPicker
-                    readOnly={false}
-                    max={100}
-                    min={0}
-                    stepSize={10}
-                    value={
-                      this.state.aws.instanceDistribution.spotInstancePercentage
-                    }
-                    onChange={this.setSpotInstancePercentage}
-                    theme='spot-number-picker'
-                    eventNameSuffix='SPOT_PERCENTAGE'
-                  />
-                  <SpotValuesLabelText>percent</SpotValuesLabelText>
-                </SpotValuesNumberPickerWrapper>
-                <SpotValuesHelpText>
-                  Controls the percentage of spot instances to be used for
-                  worker nodes beyond the number of{' '}
-                  <i>on demand base capacity</i>.
-                </SpotValuesHelpText>
-                <SpotValuesNumberPickerWrapper>
-                  <SpotValuesLabelText>
-                    On demand base capacity
-                  </SpotValuesLabelText>
-                  <NumberPicker
-                    readOnly={false}
-                    min={0}
-                    max={32767}
-                    stepSize={1}
-                    value={
-                      this.state.aws.instanceDistribution.onDemandBaseCapacity
-                    }
-                    onChange={this.setOnDemandBaseCapacity}
-                    theme='spot-number-picker'
-                    eventNameSuffix='ONDEMAND_BASE_CAPACITY'
-                  />
-                  <SpotValuesLabelText>instances</SpotValuesLabelText>
-                </SpotValuesNumberPickerWrapper>
-                <SpotValuesHelpText>
-                  Controls how much of the initial capacity is made up of
-                  on-demand instances.
-                </SpotValuesHelpText>
-              </>
+              <AddNodePoolSpotInstances
+                provider={provider}
+                spotPercentage={
+                  this.state.aws.instanceDistribution.spotInstancePercentage
+                }
+                setSpotPercentage={this.setSpotInstancePercentage}
+                onDemandBaseCapacity={
+                  this.state.aws.instanceDistribution.onDemandBaseCapacity
+                }
+                setOnDemandBaseCapacity={this.setOnDemandBaseCapacity}
+              />
             )}
           </Section>
         )}
