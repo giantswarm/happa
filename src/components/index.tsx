@@ -201,8 +201,6 @@ function handleReport(rh: Metric) {
   };
   const actionName = mergeActionNames(RUMActions.WebVitals, rh.name);
 
-  // Submit data to Datadog RUM
-  window.DD_RUM?.addUserAction(actionName, values);
   // Submit data to Giant Swarm API
   submitCustomRUM(actionName, 1, values.web_vitals);
 }
