@@ -115,7 +115,7 @@ class Navigation extends React.Component {
         <div className='main-nav'>
           <RUMActionTarget name={RUMActions.ClickMainNavLogo}>
             <Link to={MainRoutes.Home}>
-              <img className='logo' src={logo} />
+              <img className='logo' src={logo} width='22' height='22' />
             </Link>
           </RUMActionTarget>
           <MainMenu
