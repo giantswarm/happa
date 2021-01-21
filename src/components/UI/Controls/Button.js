@@ -8,7 +8,7 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 //
 // <Button
 //   type='button|submit|reset'
-//   bsStyle='primary|secondary|danger|outline|link'
+//   bsStyle='primary|secondary|danger|default|link'
 //   loading=true|false
 //   disabled=true|false
 //   onClick=function>
@@ -97,18 +97,18 @@ const Wrapper = styled.div`
     border-color: #aaa;
   }
 
-  .btn-outline {
+  .btn-default {
     background-color: transparent;
     color: #ccc;
     border: 1px solid #d7d7d7;
   }
 
-  .btn-outline:focus,
-  .btn-outline:active,
-  .btn-outline:hover,
-  .btn-outline:active:focus,
-  .btn-outline:hover:focus,
-  .btn-outline:hover:active {
+  .btn-default:focus,
+  .btn-default:active,
+  .btn-default:hover,
+  .btn-default:active:focus,
+  .btn-default:hover:focus,
+  .btn-default:hover:active {
     background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
     border: 1px solid #fff;
@@ -153,7 +153,7 @@ const Button = (props) => {
 
       <BsButton
         bsSize={bsSize}
-        bsStyle={bsStyle || 'outline'}
+        bsStyle={bsStyle || 'default'}
         disabled={disabled || loading}
         onClick={onClick}
         type={type}

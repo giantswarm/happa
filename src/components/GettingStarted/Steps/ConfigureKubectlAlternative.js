@@ -161,7 +161,7 @@ class ConfigKubeCtl extends React.Component {
                   )
                 )}
               >
-                <Button bsStyle='outline'>CA CERTIFICATE</Button>
+                <Button bsStyle='default'>CA CERTIFICATE</Button>
               </a>
               <a
                 download='client.crt'
@@ -171,7 +171,7 @@ class ConfigKubeCtl extends React.Component {
                   })
                 )}
               >
-                <Button bsStyle='outline'>CLIENT CERTIFICATE</Button>
+                <Button bsStyle='default'>CLIENT CERTIFICATE</Button>
               </a>
               <a
                 download='client.key'
@@ -181,7 +181,7 @@ class ConfigKubeCtl extends React.Component {
                   })
                 )}
               >
-                <Button bsStyle='outline'>CLIENT KEY</Button>
+                <Button bsStyle='default'>CLIENT KEY</Button>
               </a>
             </div>
           ) : (

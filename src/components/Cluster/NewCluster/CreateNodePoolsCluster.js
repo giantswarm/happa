@@ -320,7 +320,7 @@ class CreateNodePoolsCluster extends Component {
           {!isClusterCreating && (
             <RUMActionTarget name={RUMActions.CreateClusterCancel}>
               <Button
-                bsStyle='outline'
+                bsStyle='default'
                 loading={isClusterCreating}
                 onClick={this.props.closeForm}
                 type='button'
