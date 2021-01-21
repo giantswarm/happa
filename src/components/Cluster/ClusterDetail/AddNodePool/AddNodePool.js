@@ -73,6 +73,9 @@ class AddNodePool extends Component {
     },
     azure: {
       vmSize: this.props.defaultVmSize,
+      spotInstances: {
+        maxPrice: 0,
+      },
     },
     spotInstancesEnabled: false,
   };
@@ -185,6 +188,20 @@ class AddNodePool extends Component {
     }
   };
 
+  setMaxPrice = ({ value: maxPrice, valid }) => {
+    if (valid) {
+      this.setState(({ azure }) => ({
+        azure: {
+          ...azure,
+          spotInstances: {
+            ...azure.spotInstances,
+            maxPrice,
+          },
+        },
+      }));
+    }
+  };
+
   updateAZ = (azSelection) => (payload) => {
     switch (azSelection) {
       case AvailabilityZoneSelection.Automatic:
@@ -248,6 +265,7 @@ class AddNodePool extends Component {
       name,
       spotInstancesEnabled,
       aws,
+      azure,
     } = this.state;
     const { provider } = this.props;
 
@@ -304,6 +322,10 @@ class AddNodePool extends Component {
       case Providers.AZURE:
         nodePoolDefinition.node_spec.azure = {
           vm_size: this.state.azure.vmSize,
+          spot_instances: {
+            enabled: spotInstancesEnabled,
+            maxPrice: azure.spotInstances.maxPrice,
+          },
         };
 
         break;
@@ -343,6 +365,16 @@ class AddNodePool extends Component {
     const scalingLabel = supportsNodePoolAutoscaling
       ? 'Scaling range'
       : 'Node count';
+
+    let spotInstancesLabel = 'Spot instances';
+    if (provider === Providers.AWS) {
+      spotInstancesLabel = 'Instance distribution';
+    }
+
+    let spotInstancesToggleLabel = 'Enabled';
+    if (provider === Providers.AWS) {
+      spotInstancesToggleLabel = 'Enable Spot instances';
+    }
 
     return (
       <>
@@ -403,7 +435,7 @@ class AddNodePool extends Component {
         {supportsNodePoolSpotInstances && (
           <Section>
             <StyledInput
-              label='Instance distribution'
+              label={spotInstancesLabel}
               inputId={`spot-instances-${id}`}
               // regular space, hides hint ;)
               hint={<>&#32;</>}
@@ -412,7 +444,7 @@ class AddNodePool extends Component {
                 <Checkbox
                   checked={this.state.spotInstancesEnabled}
                   onChange={this.setSpotInstancesEnabled}
-                  label='Enable Spot instances'
+                  label={spotInstancesToggleLabel}
                 />
               </CheckboxWrapper>
             </StyledInput>
@@ -427,6 +459,8 @@ class AddNodePool extends Component {
                   this.state.aws.instanceDistribution.onDemandBaseCapacity
                 }
                 setOnDemandBaseCapacity={this.setOnDemandBaseCapacity}
+                maxPrice={this.state.azure.spotInstances.maxPrice}
+                setMaxPrice={this.setMaxPrice}
               />
             )}
           </Section>
