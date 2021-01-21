@@ -8,7 +8,7 @@ export const isExpiringSoon = (timestamp) => {
   const expiryTime = 60 * 60 * 24;
 
   const expirationDate = toDate(timestamp, { timeZone: 'UTC' });
-  const expirySeconds = differenceInSeconds(new Date())(expirationDate);
+  const expirySeconds = differenceInSeconds(expirationDate)(new Date());
 
   return expirySeconds > 0 && expirySeconds < expiryTime;
 };
@@ -19,7 +19,7 @@ export const isExpired = (timestamp) => {
   }
 
   const expirationDate = toDate(timestamp, { timeZone: 'UTC' });
-  const expirySeconds = differenceInSeconds(new Date())(expirationDate);
+  const expirySeconds = differenceInSeconds(expirationDate)(new Date());
 
   return expirySeconds < 0;
 };
