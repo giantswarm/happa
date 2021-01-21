@@ -53,7 +53,7 @@ class KeyPairs extends React.Component {
     let expiryClass = '';
 
     const expirationDate = toDate(row.expire_date, { timeZone: 'UTC' });
-    const expirySeconds = differenceInSeconds(new Date())(expirationDate);
+    const expirySeconds = differenceInSeconds(expirationDate)(new Date());
 
     // eslint-disable-next-line no-magic-numbers
     if (Math.abs(expirySeconds) < 60 * 60 * 24) {

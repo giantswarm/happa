@@ -69,18 +69,18 @@ it('lets me get there from the dashboard and go through the pages', async () => 
 });
 
 it('the get started button does not show up if the cluster is older than 30 days', async () => {
-  const futureDate = new Date();
-  futureDate.setMonth(futureDate.getMonth() + 2);
+  const oldDate = new Date();
+  oldDate.setMonth(oldDate.getMonth() - 2);
 
-  const clusterCreateDate2MonthsLater = futureDate.toISOString();
+  const clusterCreateDate2MonthsBefore = oldDate.toISOString();
 
   const modifiedClustersResponse = [
     Object.assign({}, v4ClustersResponse[0], {
-      create_date: clusterCreateDate2MonthsLater,
+      create_date: clusterCreateDate2MonthsBefore,
     }),
   ];
   const modifiedClusterResponse = Object.assign({}, v4AWSClusterResponse, {
-    create_date: clusterCreateDate2MonthsLater,
+    create_date: clusterCreateDate2MonthsBefore,
   });
 
   getMockCall('/v4/clusters/', modifiedClustersResponse);

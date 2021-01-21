@@ -163,7 +163,7 @@ function ClusterDashboardItem({
    */
   const clusterYoungerThan30Days = () => {
     const creationDate = toDate(cluster.create_date, { timeZone: 'UTC' });
-    const age = differenceInSeconds(new Date())(creationDate);
+    const age = differenceInSeconds(creationDate)(new Date());
 
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24 * 60 * 60;

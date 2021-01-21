@@ -24,7 +24,7 @@ class KeyPairDetailsModal extends React.Component {
     let expiryClass = '';
 
     const expirationDate = toDate(expiry, { timeZone: 'UTC' });
-    const expirySeconds = differenceInSeconds(new Date())(expirationDate);
+    const expirySeconds = differenceInSeconds(expirationDate)(new Date());
     const formattedDate = formatDate(expiry);
 
     // eslint-disable-next-line no-magic-numbers
