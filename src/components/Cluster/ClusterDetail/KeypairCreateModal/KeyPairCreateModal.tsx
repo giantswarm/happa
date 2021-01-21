@@ -186,7 +186,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
 
   return (
     <>
-      <Button bsStyle='outline' onClick={show}>
+      <Button bsStyle='default' onClick={show}>
         <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
       <StyledModal

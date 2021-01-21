@@ -213,7 +213,7 @@ class OrganizationDetail extends React.Component {
             />
           )}
           <Link to={newClusterPath}>
-            <Button bsStyle='outline'>
+            <Button bsStyle='default'>
               <i className='fa fa-add-circle' /> Create Cluster
             </Button>
           </Link>
@@ -233,7 +233,7 @@ class OrganizationDetail extends React.Component {
                 keyField='email'
               />
             )}
-            <Button bsStyle='outline' onClick={this.addMember}>
+            <Button bsStyle='default' onClick={this.addMember}>
               <i className='fa fa-add-circle' /> Add Member
             </Button>
           </MembersTable>
@@ -321,7 +321,7 @@ function clusterActionsCellFormatter(_cell, row) {
 
   return (
     <Link to={clusterDetailPath}>
-      <Button bsStyle='outline' bsSize='sm' type='button'>
+      <Button bsStyle='default' bsSize='sm' type='button'>
         Details
       </Button>
     </Link>
@@ -335,7 +335,7 @@ function memberActionsCellFormatter(_cell, row) {
       // eslint-disable-next-line react/no-this-in-sfc
       onClick={this.removeMember.bind(this, row.email)}
       type='button'
-      bsStyle='outline'
+      bsStyle='default'
       bsSize='sm'
       data-testid='organization-member-remove'
     >
