@@ -23,7 +23,7 @@ const DownloadKubeconfigButton: React.FC<IDownloadKubeconfigButtonProps> = ({
       // Safe because of defaultProps.
       href={window.URL.createObjectURL(getBlob(content as string))}
     >
-      <Button bsStyle='outline'>Download</Button>
+      <Button bsStyle='default'>Download</Button>
     </a>
   );
 };

@@ -60,7 +60,7 @@ const getActionsCellFormatter = (_cell, row, deleteUser) => {
   const onDelete = () => deleteUser(row.email);
 
   return (
-    <Button bsStyle='outline' bsSize='sm' onClick={onDelete} type='button'>
+    <Button bsStyle='default' bsSize='sm' onClick={onDelete} type='button'>
       Delete
     </Button>
   );
