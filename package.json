@@ -225,7 +225,7 @@
     "redux-immutable-state-invariant": "2.1.0",
     "redux-mock-store": "^1.5.4",
     "request": "^2.85.0",
-    "sass-loader": "10.1.0",
+    "sass-loader": "10.1.1",
     "style-loader": "2.0.0",
     "stylelint": "13.9.0",
     "stylelint-config-standard": "20.0.0",
