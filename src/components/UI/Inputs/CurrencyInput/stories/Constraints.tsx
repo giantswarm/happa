@@ -14,5 +14,5 @@ export const Constraints: Story<
 Constraints.args = {
   value: 1,
   max: 10,
-  min: -5,
+  min: 2,
 };

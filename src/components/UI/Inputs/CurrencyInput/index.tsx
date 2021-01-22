@@ -42,6 +42,8 @@ interface ICurrencyInputProps
   precision?: number;
   value?: number;
   label?: string;
+  min?: number;
+  max?: number;
   labelTextProps?: React.ComponentPropsWithRef<'label'>;
   rootProps?: Omit<React.ComponentPropsWithRef<'div'>, 'htmlFor'>;
   onChange?: (newValue: number) => void;
@@ -55,6 +57,8 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
   rootProps,
   value,
   id,
+  min,
+  max,
   onChange,
   ...rest
 }) => {
@@ -62,10 +66,17 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
   const step = 1 / 10 ** precision!;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const valueConvertedToPrecision = formatNumberWithPrecision(
+    let valueConvertedToPrecision = formatNumberWithPrecision(
       e.target.valueAsNumber,
       precision!
     );
+
+    if (min) {
+      valueConvertedToPrecision = Math.max(valueConvertedToPrecision, min);
+    }
+    if (max) {
+      valueConvertedToPrecision = Math.min(valueConvertedToPrecision, max);
+    }
 
     onChange?.(valueConvertedToPrecision);
   };
@@ -88,6 +99,8 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
           type='number'
           step={step}
           onChange={handleChange}
+          min={min}
+          max={max}
         />
       </InputWrapper>
     </div>
