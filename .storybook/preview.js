@@ -1,3 +1,7 @@
+import { addDecorator } from '@storybook/react';
+import { ThemeProvider } from 'styled-components';
+import theme from 'styles/theme';
+
 import 'babel-polyfill';
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,3 +12,5 @@ import 'styles/app.sass';
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
 };
+
+addDecorator((story) => <ThemeProvider theme={theme}>{story()}</ThemeProvider>);
