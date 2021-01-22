@@ -18,7 +18,7 @@ module.exports = {
       loaders: [
         'style-loader',
         'css-loader',
-        'sass-loader', // if scss then add 'sass-loader'
+        'sass-loader',
       ],
     });
 
