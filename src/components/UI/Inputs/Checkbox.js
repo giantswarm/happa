@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 const CheckboxWrapper = styled.span`
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
 
 const FaCheckBoxIcon = styled.i`
@@ -12,6 +14,8 @@ const FaCheckBoxIcon = styled.i`
 
 const CheckboxLabel = styled.span`
   margin-left: 5px;
+  display: flex;
+  align-items: center;
 `;
 
 const Checkbox = ({ checked, label, onChange }) => {

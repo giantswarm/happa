@@ -26,22 +26,16 @@ function acronymize(text: string) {
   return acronym;
 }
 
-interface IStyledImageWithFallbackProps {
-  outlineColor: string;
-}
-
-const StyledImageWithFallback = styled(
-  ImgWithFallback
-)<IStyledImageWithFallbackProps>`
-  font-size: 40px;
-  align-items: center;
-  font-weight: 800;
-  justify-content: center;
-  text-shadow: -1px -1px 0 ${({ outlineColor }) => outlineColor},
-    1px -1px 0 ${({ outlineColor }) => outlineColor},
-    -1px 1px 0 ${({ outlineColor }) => outlineColor},
-    1px 1px 0 ${({ outlineColor }) => outlineColor};
-`;
+const StyledImageWithFallback = (outlinecolor: string) => {
+  return styled(ImgWithFallback)`
+    font-size: 40px;
+    align-items: center;
+    font-weight: 800;
+    justify-content: center;
+    text-shadow: -1px -1px 0 ${outlinecolor}, 1px -1px 0 ${outlinecolor},
+      -1px 1px 0 ${outlinecolor}, 1px 1px 0 ${outlinecolor};
+  `;
+};
 
 interface IIconProps {
   name: string;
@@ -49,11 +43,12 @@ interface IIconProps {
 }
 
 const Icon: React.FC<IIconProps> = ({ name, src }) => {
+  const Image = StyledImageWithFallback(colorHash.calculateColor(name));
+
   return (
-    <StyledImageWithFallback
+    <Image
       src={src}
       alt={name}
-      outlineColor={colorHash.calculateColor(name)}
       fallback={{
         label: acronymize(name),
         backgroundColor: 'transparent',

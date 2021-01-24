@@ -2,13 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import App from 'UI/AppList/App';
 
+import Facets from './Facets';
+import Toolbar from './Toolbar';
+
 const ListAndFacets = styled.div`
   display: flex;
-`;
-
-const Facets = styled.div`
-  width: 230px;
-  flex-shrink: 0;
 `;
 
 const List = styled.div`
@@ -18,6 +16,21 @@ const List = styled.div`
   border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
   width: 100%;
   padding-left: 20px;
+`;
+
+const Icon = styled.img`
+  width: 20px;
+  margin-right: 6px;
+`;
+
+const CatalogType = styled.span`
+  background-color: #8dc163;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0px 6px;
+  border-radius: 3px;
+  margin-left: 8px;
+  color: #222;
 `;
 
 const AppsList: React.FC = () => {
@@ -36,9 +49,42 @@ const AppsList: React.FC = () => {
         </a>
       </p>
       <hr />
-
+      <Toolbar matchCount={10} />
       <ListAndFacets>
-        <Facets />
+        <Facets
+          options={[
+            {
+              value: 'giantswarm',
+              label: (
+                <>
+                  <Icon src='/images/repo_icons/managed.png' />
+                  Giant Swarm <CatalogType>MANAGED</CatalogType>
+                </>
+              ),
+              checked: false,
+            },
+            {
+              value: 'giantswarm-playground',
+              label: (
+                <>
+                  <Icon src='/images/repo_icons/incubator.png' />
+                  Giant Swarm Playground
+                </>
+              ),
+              checked: false,
+            },
+            {
+              value: 'helm-stable',
+              label: (
+                <>
+                  <Icon src='/images/repo_icons/community.png' />
+                  Helm Stable
+                </>
+              ),
+              checked: false,
+            },
+          ]}
+        />
         <List>
           {[
             'g8s-prometheus',
@@ -50,7 +96,6 @@ const AppsList: React.FC = () => {
             'prometheus-mongodb-exporter',
             'prometheus-pushgateway',
             'prometheus-postgres-exporter',
-            ...Array(100).fill('other app'),
           ].map((name) => (
             <App
               key={name}
