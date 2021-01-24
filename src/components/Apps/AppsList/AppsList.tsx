@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import App from 'UI/AppList/App';
+import Facets from 'UI/Inputs/Facets';
 
-import Facets from './Facets';
 import Toolbar from './Toolbar';
 
 const ListAndFacets = styled.div`
@@ -52,6 +52,9 @@ const AppsList: React.FC = () => {
       <Toolbar matchCount={10} />
       <ListAndFacets>
         <Facets
+          onChange={(value, checked) => {
+            console.log(value, checked);
+          }}
           options={[
             {
               value: 'giantswarm',
@@ -61,7 +64,7 @@ const AppsList: React.FC = () => {
                   Giant Swarm <CatalogType>MANAGED</CatalogType>
                 </>
               ),
-              checked: false,
+              checked: true,
             },
             {
               value: 'giantswarm-playground',

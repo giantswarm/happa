@@ -21,6 +21,7 @@ const ListItem = styled.li`
 interface IFacetsProps {
   errorMessage?: string;
   options: IFacetOption[];
+  onChange: (value: string, checked: boolean) => void;
 }
 
 interface IFacetOption {
@@ -38,9 +39,7 @@ const Facets: React.FC<IFacetsProps> = (props) => {
           <ListItem key={o.value}>
             <Checkbox
               checked={o.checked}
-              onChange={() => {
-                console.log(o.value);
-              }}
+              onChange={props.onChange.bind(this, o.value)}
               label={o.label}
             />
           </ListItem>
@@ -54,6 +53,7 @@ const Facets: React.FC<IFacetsProps> = (props) => {
 Facets.propTypes = {
   errorMessage: PropTypes.string,
   options: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default Facets;
