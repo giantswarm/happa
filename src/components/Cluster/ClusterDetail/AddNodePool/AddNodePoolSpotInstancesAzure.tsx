@@ -28,6 +28,10 @@ const CheckboxWrapper = styled.div`
   }
 `;
 
+const Description = styled.small`
+  margin-top: ${({ theme }) => theme.spacingPx}px;
+`;
+
 interface IAddNodePoolSpotInstancesAzureProps {
   maxPrice: number;
   setMaxPrice: (newPrice: number) => void;
@@ -68,6 +72,10 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
           label='Use fixed on-demand pricing'
         />
       </CheckboxWrapper>
+      <Description>
+        The maximum price that a single node pool VM instance can reach before
+        it is deallocated.
+      </Description>
     </AzureSpotInstances>
   );
 };
