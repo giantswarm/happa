@@ -104,7 +104,7 @@ function getIsSpotInstancesEnabled(provider: string, nodePool: INodePool) {
     case Providers.AWS:
       return (
         (nodePool.node_spec?.aws?.instance_distribution
-          .on_demand_percentage_above_base_capacity ?? 0) > 0
+          ?.on_demand_percentage_above_base_capacity ?? 0) > 0
       );
     default:
       return false;

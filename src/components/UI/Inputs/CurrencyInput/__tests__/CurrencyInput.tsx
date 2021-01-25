@@ -65,7 +65,7 @@ describe('CurrencyInput', () => {
       },
     });
     // eslint-disable-next-line no-magic-numbers
-    expect(onChangeMockFn).toBeCalledWith(25.16798);
+    expect(onChangeMockFn).toBeCalledWith(25.16799);
   });
 
   it('respects value constraints', () => {
