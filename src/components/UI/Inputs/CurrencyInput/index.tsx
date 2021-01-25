@@ -199,5 +199,5 @@ function formatNumberWithPrecision(num: number, precision: number): number {
   // eslint-disable-next-line no-magic-numbers
   const precisionFactor = 10 ** precision;
 
-  return Math.floor(num * precisionFactor) / precisionFactor;
+  return Math.round(num * precisionFactor) / precisionFactor;
 }
