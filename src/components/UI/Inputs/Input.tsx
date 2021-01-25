@@ -72,6 +72,7 @@ export interface IInput<T> {
   className?: string;
   description?: ReactNode;
   hint?: ReactNode;
+  hideHint?: boolean;
   icon?: string;
   inputId?: string;
   label?: string;
@@ -118,7 +119,7 @@ const Input: FC<IInput<string | FileList>> = (props) => {
           <i className='fa fa-warning' /> {props.validationError}
         </ValidationError>
       ) : (
-        <Hint>{props.hint ?? <>&nbsp;</>}</Hint>
+        !props.hideHint && <Hint>{props.hint ?? <>&nbsp;</>}</Hint>
       )}
     </Wrapper>
   );
@@ -129,6 +130,7 @@ Input.propTypes = {
   className: PropTypes.string,
   description: PropTypes.string,
   hint: PropTypes.node,
+  hideHint: PropTypes.bool,
   icon: PropTypes.string,
   inputId: PropTypes.string,
   label: PropTypes.string,
