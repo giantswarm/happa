@@ -7,6 +7,7 @@ export { FloatValues } from './FloatValues';
 export { Constraints } from './Constraints';
 export { Currencies } from './Currencies';
 export { Label } from './Label';
+export { ValidationError } from './ValidationError';
 
 export default {
   title: 'Inputs/CurrencyInput',

@@ -103,4 +103,17 @@ describe('CurrencyInput', () => {
     });
     expect(onChangeMockFn).toBeCalledWith(1);
   });
+
+  it('allows displaying a validation error', () => {
+    const onChangeMockFn = jest.fn();
+    renderWithTheme(CurrencyInput, {
+      onChange: onChangeMockFn,
+      id: 'test-input',
+      label: 'Test input',
+      value: 1,
+      validationError: 'Naah. Wrong value',
+    });
+
+    expect(screen.getByText('Naah. Wrong value')).toBeInTheDocument();
+  });
 });

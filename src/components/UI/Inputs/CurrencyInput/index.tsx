@@ -33,6 +33,11 @@ const LabelText = styled.label`
   color: ${(props) => props.theme.colors.white2};
 `;
 
+const ValidationError = styled.span`
+  font-size: 12px;
+  color: ${(props) => props.theme.colors.yellow1};
+`;
+
 interface ICurrencyInputProps
   extends Omit<
     React.ComponentPropsWithRef<'input'>,
@@ -47,6 +52,7 @@ interface ICurrencyInputProps
   labelTextProps?: React.ComponentPropsWithRef<'label'>;
   rootProps?: Omit<React.ComponentPropsWithRef<'div'>, 'htmlFor'>;
   onChange?: (newValue: number) => void;
+  validationError?: string;
 }
 
 const CurrencyInput: React.FC<ICurrencyInputProps> = ({
@@ -60,6 +66,7 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
   min,
   max,
   onChange,
+  validationError,
   ...rest
 }) => {
   // eslint-disable-next-line no-magic-numbers
@@ -103,6 +110,11 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
           max={max}
         />
       </InputWrapper>
+      {validationError && (
+        <ValidationError>
+          <i className='fa fa-warning' /> {validationError}
+        </ValidationError>
+      )}
     </div>
   );
 };
@@ -149,6 +161,10 @@ CurrencyInput.propTypes = {
    * The value change event handler.
    */
   onChange: PropTypes.func,
+  /**
+   * An error message to be displayed near the input.
+   */
+  validationError: PropTypes.string,
 };
 
 CurrencyInput.defaultProps = {
