@@ -275,6 +275,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             </div>
             <NodePoolScaling
               nodePool={nodePool}
+              provider={provider}
               supportsAutoscaling={supportsAutoscaling}
               supportsSpotInstances={supportsSpotInstances}
             />

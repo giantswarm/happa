@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { INodePool } from 'shared/types';
+import { Providers } from 'shared/constants';
+import { INodePool, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 
 import NodePoolScalingSpotInstancesDetails from './NodePoolScalingSpotInstancesDetails';
@@ -20,12 +21,14 @@ const NodesWrapper = styled.div<{ highlight?: boolean }>`
 
 interface INodePoolScalingProps {
   nodePool: INodePool;
+  provider: PropertiesOf<typeof Providers>;
   supportsAutoscaling?: boolean;
   supportsSpotInstances?: boolean;
 }
 
 const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
   nodePool,
+  provider,
   supportsAutoscaling,
   supportsSpotInstances,
 }) => {
@@ -34,7 +37,8 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
   const current = status?.nodes_ready ?? 0;
   const desired = status?.nodes ?? 0;
 
-  const spot_instances = status?.spot_instances ?? 0;
+  const spotInstancesCount = status?.spot_instances ?? 0;
+  const spotInstancesEnabled = getIsSpotInstancesEnabled(provider, nodePool);
 
   return (
     <>
@@ -55,13 +59,23 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
       {supportsSpotInstances && (
         <OverlayTrigger
           overlay={
-            <Tooltip id={`${id}-spot-distribution-tooltip`}>
-              <NodePoolScalingSpotInstancesDetails nodePool={nodePool} />
+            <Tooltip id={`${id}-spot-instances-tooltip`}>
+              <NodePoolScalingSpotInstancesDetails
+                provider={provider}
+                nodePool={nodePool}
+              />
             </Tooltip>
           }
           placement='top'
         >
-          <NodesWrapper>{spot_instances}</NodesWrapper>
+          <NodesWrapper>
+            {provider === Providers.AWS && spotInstancesCount}
+            {provider === Providers.AZURE && (
+              <i
+                className={spotInstancesEnabled ? 'fa fa-done' : 'fa fa-close'}
+              />
+            )}
+          </NodesWrapper>
         </OverlayTrigger>
       )}
     </>
@@ -71,6 +85,7 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
 NodePoolScaling.propTypes = {
   // @ts-ignore
   nodePool: PropTypes.object.isRequired,
+  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
   supportsAutoscaling: PropTypes.bool,
   supportsSpotInstances: PropTypes.bool,
 };
@@ -81,3 +96,17 @@ NodePoolScaling.defaultProps = {
 };
 
 export default NodePoolScaling;
+
+function getIsSpotInstancesEnabled(provider: string, nodePool: INodePool) {
+  switch (provider) {
+    case Providers.AZURE:
+      return nodePool.node_spec?.azure?.spot_instances?.enabled ?? false;
+    case Providers.AWS:
+      return (
+        (nodePool.node_spec?.aws?.instance_distribution
+          .on_demand_percentage_above_base_capacity ?? 0) > 0
+      );
+    default:
+      return false;
+  }
+}

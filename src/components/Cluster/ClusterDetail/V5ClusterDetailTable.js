@@ -486,6 +486,7 @@ class V5ClusterDetailTable extends React.Component {
                   Availability Zones
                 </NodePoolsColumnHeader>
                 <V5ClusterDetailTableNodePoolScaling
+                  provider={provider}
                   supportsAutoscaling={supportsNodePoolAutoscaling}
                   supportsSpotInstances={supportsNodePoolSpotInstances}
                 />
