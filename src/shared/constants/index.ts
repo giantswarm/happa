@@ -67,6 +67,10 @@ export const Constants = {
   NP_DEFAULT_MIN_SCALING: 3,
   NP_DEFAULT_MAX_SCALING: 10,
 
+  AZURE_SPOT_INSTANCES_MAX_PRICE_MIN: 0.00001,
+  AZURE_SPOT_INSTANCES_MAX_PRICE_MAX: 5,
+  AZURE_SPOT_INSTANCES_MAX_PRICE_PRECISION: 5,
+
   // App name of the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',
   // App catalog name containing the 'nginx-ingress-controller-app'

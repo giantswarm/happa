@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
 import NumberPicker from 'UI/Inputs/NumberPicker';
+
+import AddNodePoolSpotInstancesAzure from './AddNodePoolSpotInstancesAzure';
 
 const SpotValuesLabelText = styled.span`
   font-weight: 300;
@@ -32,10 +33,6 @@ const SpotValuesHelpText = styled.p`
   }
 `;
 
-const MaxPriceWrapper = styled.div`
-  margin-top: ${({ theme }) => theme.spacingPx * 2}px;
-`;
-
 type SpecChangeHandler<T> = (patch: { value: T; valid: boolean }) => void;
 
 interface IAddNodePoolSpotInstancesProps {
@@ -45,7 +42,10 @@ interface IAddNodePoolSpotInstancesProps {
   onDemandBaseCapacity: number;
   setOnDemandBaseCapacity: SpecChangeHandler<number>;
   maxPrice: number;
-  setMaxPrice: SpecChangeHandler<number>;
+  setMaxPrice: (newPrice: number) => void;
+  maxPriceValidationError: string;
+  useOnDemandPricing: boolean;
+  setUseOnDemandPricing: (isActive: boolean) => void;
 }
 
 const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
@@ -56,6 +56,9 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
   setOnDemandBaseCapacity,
   maxPrice,
   setMaxPrice,
+  maxPriceValidationError,
+  useOnDemandPricing,
+  setUseOnDemandPricing,
 }) => {
   if (provider === Providers.AWS) {
     return (
@@ -101,21 +104,13 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
     );
   } else if (provider === Providers.AZURE) {
     return (
-      <>
-        <ClusterCreationLabelSpan>Maximum price</ClusterCreationLabelSpan>
-        <MaxPriceWrapper>
-          <NumberPicker
-            readOnly={false}
-            max={10}
-            min={0}
-            stepSize={1}
-            value={maxPrice}
-            onChange={setMaxPrice}
-            eventNameSuffix={RUMActions.SpotInstancesMaximumPrice}
-            format='float'
-          />
-        </MaxPriceWrapper>
-      </>
+      <AddNodePoolSpotInstancesAzure
+        maxPrice={maxPrice}
+        setMaxPrice={setMaxPrice}
+        maxPriceValidationError={maxPriceValidationError}
+        useOnDemandPricing={useOnDemandPricing}
+        setUseOnDemandPricing={setUseOnDemandPricing}
+      />
     );
   }
 
@@ -130,6 +125,9 @@ AddNodePoolSpotInstances.propTypes = {
   setOnDemandBaseCapacity: PropTypes.func.isRequired,
   maxPrice: PropTypes.number.isRequired,
   setMaxPrice: PropTypes.func.isRequired,
+  maxPriceValidationError: PropTypes.string.isRequired,
+  useOnDemandPricing: PropTypes.bool.isRequired,
+  setUseOnDemandPricing: PropTypes.func.isRequired,
 };
 
 export default AddNodePoolSpotInstances;

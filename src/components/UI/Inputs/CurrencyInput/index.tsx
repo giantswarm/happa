@@ -55,6 +55,7 @@ interface ICurrencyInputProps
   min?: number;
   max?: number;
   labelTextProps?: React.ComponentPropsWithRef<'label'>;
+  inputWrapperProps?: React.ComponentPropsWithRef<'div'>;
   rootProps?: Omit<React.ComponentPropsWithRef<'div'>, 'htmlFor'>;
   onChange?: (newValue: number) => void;
   validationError?: string;
@@ -65,6 +66,7 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
   precision,
   label,
   labelTextProps,
+  inputWrapperProps,
   rootProps,
   value,
   id,
@@ -103,7 +105,7 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
           {label}
         </LabelText>
       )}
-      <InputWrapper disabled={disabled}>
+      <InputWrapper {...inputWrapperProps} disabled={disabled}>
         <CurrencyLabel disabled={disabled}>{currencyLabel}</CurrencyLabel>
         <StyledInput
           {...rest}
@@ -161,6 +163,10 @@ CurrencyInput.propTypes = {
    */
   labelTextProps: PropTypes.object,
   /**
+   * Props to be passed to the input element's parent element.
+   */
+  inputWrapperProps: PropTypes.object,
+  /**
    * Props to be passed to the root element.
    */
   rootProps: PropTypes.object,
@@ -172,6 +178,9 @@ CurrencyInput.propTypes = {
    * An error message to be displayed near the input.
    */
   validationError: PropTypes.string,
+  /**
+   * Whether the input can be modified or not.
+   */
   disabled: PropTypes.bool,
 };
 

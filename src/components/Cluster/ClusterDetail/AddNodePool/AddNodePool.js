@@ -75,6 +75,8 @@ class AddNodePool extends Component {
       vmSize: this.props.defaultVmSize,
       spotInstances: {
         maxPrice: 0,
+        validationError: '',
+        onDemandPricing: true,
       },
     },
     spotInstancesEnabled: false,
@@ -188,18 +190,40 @@ class AddNodePool extends Component {
     }
   };
 
-  setMaxPrice = ({ value: maxPrice, valid }) => {
-    if (valid) {
-      this.setState(({ azure }) => ({
-        azure: {
-          ...azure,
-          spotInstances: {
-            ...azure.spotInstances,
-            maxPrice,
-          },
-        },
-      }));
+  setSpotInstancesMaxPrice = (maxPrice) => {
+    let validationError = '';
+    if (maxPrice < Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN) {
+      validationError = `The value should be between ${Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN} and ${Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MAX}.`;
     }
+
+    this.setState(({ azure }) => ({
+      azure: {
+        ...azure,
+        spotInstances: {
+          ...azure.spotInstances,
+          maxPrice,
+          validationError,
+        },
+      },
+    }));
+  };
+
+  setSpotInstancesUseOnDemandPricing = (onDemandPricing) => {
+    const maxPrice = onDemandPricing
+      ? 0
+      : Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN;
+
+    this.setState(({ azure }) => ({
+      azure: {
+        ...azure,
+        spotInstances: {
+          ...azure.spotInstances,
+          onDemandPricing,
+          maxPrice,
+          validationError: '',
+        },
+      },
+    }));
   };
 
   updateAZ = (azSelection) => (payload) => {
@@ -223,12 +247,15 @@ class AddNodePool extends Component {
   };
 
   validate() {
+    const { provider } = this.props;
     const {
       availabilityZonesPicker,
       availabilityZonesLabels,
       azSelection,
       scaling,
       name,
+      spotInstancesEnabled,
+      azure,
     } = this.state;
     if (!name.valid) {
       return false;
@@ -247,6 +274,14 @@ class AddNodePool extends Component {
     if (
       azSelection === AvailabilityZoneSelection.Automatic &&
       !availabilityZonesPicker.valid
+    ) {
+      return false;
+    }
+
+    if (
+      provider === Providers.AZURE &&
+      spotInstancesEnabled &&
+      azure.spotInstances.validationError.length > 0
     ) {
       return false;
     }
@@ -319,16 +354,22 @@ class AddNodePool extends Component {
         break;
       }
 
-      case Providers.AZURE:
+      case Providers.AZURE: {
+        let spotInstancesMaxPrice = 0;
+        if (spotInstancesEnabled && !azure.spotInstances.onDemandPricing) {
+          spotInstancesMaxPrice = azure.spotInstances.maxPrice;
+        }
+
         nodePoolDefinition.node_spec.azure = {
           vm_size: this.state.azure.vmSize,
           spot_instances: {
             enabled: spotInstancesEnabled,
-            maxPrice: azure.spotInstances.maxPrice,
+            maxPrice: spotInstancesMaxPrice,
           },
         };
 
         break;
+      }
     }
 
     // Add scaling setup.
@@ -460,7 +501,14 @@ class AddNodePool extends Component {
                 }
                 setOnDemandBaseCapacity={this.setOnDemandBaseCapacity}
                 maxPrice={this.state.azure.spotInstances.maxPrice}
-                setMaxPrice={this.setMaxPrice}
+                setMaxPrice={this.setSpotInstancesMaxPrice}
+                maxPriceValidationError={
+                  this.state.azure.spotInstances.validationError
+                }
+                useOnDemandPricing={
+                  this.state.azure.spotInstances.onDemandPricing
+                }
+                setUseOnDemandPricing={this.setSpotInstancesUseOnDemandPricing}
               />
             )}
           </Section>
