@@ -72,6 +72,7 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
             {provider === Providers.AWS && spotInstancesCount}
             {provider === Providers.AZURE && (
               <i
+                title={spotInstancesEnabled ? 'Enabled' : 'Disabled'}
                 className={spotInstancesEnabled ? 'fa fa-done' : 'fa fa-close'}
               />
             )}
