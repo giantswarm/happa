@@ -4,10 +4,13 @@ import styled from 'styled-components';
 
 import { InputElement } from '../Input';
 
-const InputWrapper = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
+const InputWrapper = styled.div<{ disabled?: boolean }>`
+  border: 1px solid
+    ${({ theme, disabled }) =>
+      disabled ? theme.colors.darkBlueLighter2 : theme.colors.darkBlueLighter1};
   border-radius: ${({ theme }) => theme.border_radius};
-  color: ${(props) => props.theme.colors.whiteInput};
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.gray : theme.colors.whiteInput};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,10 +23,12 @@ const StyledInput = styled(InputElement)`
   border-bottom-left-radius: 0;
 `;
 
-const CurrencyLabel = styled.div`
+const CurrencyLabel = styled.div<{ disabled?: boolean }>`
   color: ${(props) => props.theme.colors.whiteInput};
-  background: ${({ theme }) => theme.colors.darkBlueLighter1};
-  color: ${({ theme }) => theme.colors.white5};
+  background: ${({ theme, disabled }) =>
+    disabled ? theme.colors.darkBlueLighter2 : theme.colors.darkBlueLighter1};
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.white3 : theme.colors.white5};
   padding: 8px 10px;
   line-height: 1;
 `;
@@ -67,6 +72,7 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
   max,
   onChange,
   validationError,
+  disabled,
   ...rest
 }) => {
   // eslint-disable-next-line no-magic-numbers
@@ -97,8 +103,8 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
           {label}
         </LabelText>
       )}
-      <InputWrapper>
-        <CurrencyLabel>{currencyLabel}</CurrencyLabel>
+      <InputWrapper disabled={disabled}>
+        <CurrencyLabel disabled={disabled}>{currencyLabel}</CurrencyLabel>
         <StyledInput
           {...rest}
           id={id}
@@ -108,6 +114,7 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
           onChange={handleChange}
           min={min}
           max={max}
+          disabled={disabled}
         />
       </InputWrapper>
       {validationError && (
@@ -165,6 +172,7 @@ CurrencyInput.propTypes = {
    * An error message to be displayed near the input.
    */
   validationError: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 CurrencyInput.defaultProps = {
