@@ -51,6 +51,7 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
     <AzureSpotInstances>
       <MaxPriceWrapper>
         <CurrencyInput
+          id='spot-instances-max-price'
           onChange={setMaxPrice}
           value={maxPrice}
           /* Minimum value is set to `0` to allow user to type `0.xxx` values using their keyboard. */

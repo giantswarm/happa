@@ -364,7 +364,7 @@ class AddNodePool extends Component {
           vm_size: this.state.azure.vmSize,
           spot_instances: {
             enabled: spotInstancesEnabled,
-            maxPrice: spotInstancesMaxPrice,
+            max_price: spotInstancesMaxPrice,
           },
         };
 
