@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import App from 'UI/AppList/App';
+import App from 'UI/Display/Apps/AppList/App';
 import Facets from 'UI/Inputs/Facets';
 
 import Toolbar from './Toolbar';
