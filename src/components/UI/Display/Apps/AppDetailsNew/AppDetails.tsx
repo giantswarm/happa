@@ -8,8 +8,6 @@ import Button from 'UI/Controls/Button';
 
 import { HeadingRenderer, urlFor } from './utils';
 
-const Wrapper = styled.div``;
-
 const Header = styled.div`
   display: flex;
   margin-top: 25px;
@@ -82,6 +80,8 @@ const Details = styled.div`
   width: 40%;
 `;
 
+const DetailGroup = styled.div``;
+
 const Detail = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.darkBlueLighter3};
   padding-top: 10px;
@@ -101,6 +101,37 @@ const Keyword = styled.span`
   border-radius: 5px;
 `;
 
+const Wrapper = styled.div`
+  &.no-readme {
+    max-width: 1000px;
+    margin: auto;
+
+    .shrinkable {
+      width: 33%;
+    }
+
+    ${Body} {
+      margin-left: 150px;
+    }
+
+    ${Details} {
+      width: 100%;
+    }
+
+    ${DetailGroup} {
+      display: flex;
+      ${Detail} {
+        width: 33%;
+        margin-right: 25px;
+
+        &:last-child {
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+`;
+
 interface IAppDetailProps {
   appTitle: string;
   appIconURL: string;
@@ -111,12 +142,12 @@ interface IAppDetailProps {
   description: string;
   website: string;
   keywords: string[];
-  readme: string;
+  readme?: string;
 }
 
 const AppDetail: React.FC<IAppDetailProps> = (props) => {
   return (
-    <Wrapper>
+    <Wrapper className={props.readme ? '' : 'no-readme'}>
       <Link to='/apps'>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to Apps
@@ -137,40 +168,44 @@ const AppDetail: React.FC<IAppDetailProps> = (props) => {
       </Header>
 
       <Body>
-        <Readme>
-          <ReactMarkdown
-            className='markdown'
-            renderers={{
-              heading: HeadingRenderer,
-              link: (p) => (
-                <a
-                  href={urlFor(p.href, 'http://google.com')}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  {p.children}
-                </a>
-              ),
-            }}
-          >
-            {props.readme}
-          </ReactMarkdown>
-        </Readme>
+        {props.readme && (
+          <Readme>
+            <ReactMarkdown
+              className='markdown'
+              renderers={{
+                heading: HeadingRenderer,
+                link: (p) => (
+                  <a
+                    href={urlFor(p.href, 'http://google.com')}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    {p.children}
+                  </a>
+                ),
+              }}
+            >
+              {props.readme}
+            </ReactMarkdown>
+          </Readme>
+        )}
         <Details>
-          <Detail>
-            <small>CHART VERSION</small>
-            {props.chartVersion}
-          </Detail>
+          <DetailGroup>
+            <Detail>
+              <small>CHART VERSION</small>
+              {props.chartVersion}
+            </Detail>
 
-          <Detail>
-            <small>CREATED</small>
-            {formatDistanceToNow(props.createDate)} ago
-          </Detail>
+            <Detail>
+              <small>CREATED</small>
+              {formatDistanceToNow(props.createDate)} ago
+            </Detail>
 
-          <Detail>
-            <small>INCLUDES VERSION</small>
-            {props.includesVersion}
-          </Detail>
+            <Detail>
+              <small>INCLUDES VERSION</small>
+              {props.includesVersion}
+            </Detail>
+          </DetailGroup>
 
           <Detail>
             <small>DESCRIPTION</small>
@@ -206,7 +241,7 @@ AppDetail.propTypes = {
   description: PropTypes.string.isRequired,
   website: PropTypes.string.isRequired,
   keywords: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  readme: PropTypes.string.isRequired,
+  readme: PropTypes.string,
 };
 
 export default AppDetail;
