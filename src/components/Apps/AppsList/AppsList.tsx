@@ -104,7 +104,7 @@ const AppsList: React.FC = () => {
               key={name}
               name={name}
               catalog='Giant Swarm Control Plane'
-              to='https://google.com'
+              to='/apps/catalogName/appName/v1.2.3/'
             />
           ))}
         </List>
