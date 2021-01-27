@@ -6,7 +6,7 @@ RUN apk --no-cache add findutils gzip
 COPY dist /www
 
 # Copy storybook built static files.
-COPY storybook-static /www
+COPY storybook-static /www/storybook
 
 RUN find /www \
   -type f -regextype posix-extended \
