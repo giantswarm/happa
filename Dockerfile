@@ -2,7 +2,11 @@ FROM quay.io/giantswarm/alpine:3.12 AS compress
 
 RUN apk --no-cache add findutils gzip
 
+# Copy happa built static files.
 COPY dist /www
+
+# Copy storybook built static files.
+COPY storybook-static /www
 
 RUN find /www \
   -type f -regextype posix-extended \

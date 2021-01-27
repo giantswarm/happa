@@ -19,11 +19,12 @@
     "typecheck": "./node_modules/.bin/tsc",
     "dist": "./node_modules/.bin/webpack --config webpack.prod.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook:build": "build-storybook"
   },
   "eslintIgnore": [
     "node_modules",
     "dist",
+    "storybook-static",
     "coverage",
     "helm",
     ".vscode",
