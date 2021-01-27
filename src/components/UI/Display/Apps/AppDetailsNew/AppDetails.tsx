@@ -132,7 +132,7 @@ const Wrapper = styled.div`
   }
 `;
 
-interface IAppDetailProps {
+export interface IAppDetailProps {
   appTitle: string;
   appIconURL: string;
   catalogName: string;
@@ -171,6 +171,7 @@ const AppDetail: React.FC<IAppDetailProps> = (props) => {
         {props.readme && (
           <Readme>
             <ReactMarkdown
+              skipHtml
               className='markdown'
               renderers={{
                 heading: HeadingRenderer,
