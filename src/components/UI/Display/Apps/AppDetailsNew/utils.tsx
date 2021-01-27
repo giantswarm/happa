@@ -10,8 +10,6 @@ export function HeadingRenderer(headingProps: IHeadingProps) {
   const text = children.reduce(flatten, '');
   const slug = text.toLowerCase().replace(/\W/g, '-');
 
-  console.log(slug);
-
   return React.createElement(
     `h${headingProps.level}`,
     { id: slug },
