@@ -260,22 +260,22 @@ jobs:
           root: ~/happa
           <<: *whitelist
 
-    build-storybook:
-      <<: *defaults
+  build-storybook:
+    <<: *defaults
 
-      steps:
-        - checkout
+    steps:
+      - checkout
 
-        - attach_workspace:
-            at: ~/happa
+      - attach_workspace:
+          at: ~/happa
 
-        - run:
-            name: Build storybook static assets
-            command: NODE_ENV=production yarn run storybook:build
+      - run:
+          name: Build storybook static assets
+          command: NODE_ENV=production yarn run storybook:build
 
-        - persist_to_workspace:
-            root: ~/happa
-            <<: *whitelist
+      - persist_to_workspace:
+          root: ~/happa
+          <<: *whitelist
 
   build-container:
     executor: architect/architect
