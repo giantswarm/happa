@@ -50,10 +50,6 @@ workflows:
           requires:
             - checkout
           <<: *job_filters
-      - build-storybook:
-          requires:
-            - checkout
-          <<: *job_filters
       - build-container:
           requires:
             - test
@@ -61,7 +57,6 @@ workflows:
             - prettier
             - typecheck
             - build
-            - build-storybook
           <<: *job_filters
 
       - architect/push-to-docker:
@@ -246,6 +241,10 @@ jobs:
           command: NODE_ENV=production yarn run dist
 
       - run:
+          name: Build storybook static assets
+          command: NODE_ENV=production yarn run storybook:build
+
+      - run:
           name: Create VERSION file
           command: |
             tag=$(git tag --points-at HEAD)
@@ -255,23 +254,6 @@ jobs:
             else
               git tag --points-at HEAD | tr '\n' ' ' > VERSION
             fi
-
-      - persist_to_workspace:
-          root: ~/happa
-          <<: *whitelist
-
-  build-storybook:
-    <<: *defaults
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
-
-      - run:
-          name: Build storybook static assets
-          command: NODE_ENV=production yarn run storybook:build
 
       - persist_to_workspace:
           root: ~/happa
