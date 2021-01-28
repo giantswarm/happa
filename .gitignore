@@ -31,3 +31,6 @@ tsconfig.tsbuildinfo
 
 # Environmental variables
 .env
+
+# Storybook
+/storybook-static
