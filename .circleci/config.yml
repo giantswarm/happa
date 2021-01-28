@@ -17,6 +17,7 @@ job_filters: &job_filters
 whitelist: &whitelist
   paths:
     - dist/*
+    - storybook-static/*
     - node_modules/*
     - VERSION
 
@@ -238,6 +239,10 @@ jobs:
       - run:
           name: Build web application
           command: NODE_ENV=production yarn run dist
+
+      - run:
+          name: Build storybook static assets
+          command: NODE_ENV=production yarn run storybook:build
 
       - run:
           name: Create VERSION file
