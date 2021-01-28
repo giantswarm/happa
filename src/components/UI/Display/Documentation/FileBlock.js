@@ -7,8 +7,6 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import Line from './Line';
 import Styles from './Styles';
 
-const Modernizr = window.Modernizr;
-
 /**
  *
  * Use this to show the contents of a file to a user.
@@ -99,7 +97,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
             onMouseOut={() => setHovering(false)}
             onMouseOver={() => setHovering(true)}
           >
-            {Modernizr.adownload ? downloadAsFileLink() : null}
+            {downloadAsFileLink()}
             <a
               href='#'
               onClick={handleClick}
