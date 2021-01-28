@@ -38,7 +38,6 @@ module.exports = merge(common, {
       patterns: [
         { from: 'src/metadata.json', to: 'metadata.json' },
         { from: 'src/images', to: 'images' },
-        { from: 'src/vendor/modernizr.js', to: 'vendor/modernizr.js' },
       ],
     }),
   ],

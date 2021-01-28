@@ -1,25 +1,25 @@
 const nodeFetch = require('node-fetch');
 
-const localStorageMock = (function() {
+const localStorageMock = (function () {
   let store = {};
 
   return {
-    getItem: function(key) {
+    getItem: function (key) {
       return store[key] || null;
     },
-    setItem: function(key, value) {
+    setItem: function (key, value) {
       store[key] = value;
     },
-    removeItem: function(key) {
+    removeItem: function (key) {
       delete store[key];
     },
-    clear: function() {
+    clear: function () {
       store = {};
     },
 
     // replaceWith is not part of the localStorage spec, but useful for us
     // in testing to set the full localStorage to a known set of values.
-    replaceWith: function(newStore) {
+    replaceWith: function (newStore) {
       store = newStore;
     },
   };
@@ -41,7 +41,3 @@ global.console = {
 /* eslint-enable no-console */
 
 global.fetch = nodeFetch;
-
-global.Modernizr = {
-  adownload: true,
-};

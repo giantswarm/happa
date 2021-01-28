@@ -12,8 +12,6 @@ import FileBlock from 'UI/Display/Documentation/FileBlock';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Aside from 'UI/Layout/Aside';
 
-const Modernizr = window.Modernizr;
-
 const KeyPairError = styled.div`
   height: 20px;
   font-size: 14px;
@@ -150,56 +148,38 @@ class ConfigKubeCtl extends React.Component {
         </FileBlock>
         <div className='well'>
           <h4>Certificate and Key Download</h4>
-          {Modernizr.adownload ? (
-            <div className='cert-downloads'>
-              <a
-                download='ca.crt'
-                href={window.URL.createObjectURL(
-                  new Blob(
-                    [this.state.keyPair.data.certificate_authority_data],
-                    { type: 'application/plain;charset=utf-8' }
-                  )
-                )}
-              >
-                <Button bsStyle='default'>CA CERTIFICATE</Button>
-              </a>
-              <a
-                download='client.crt'
-                href={window.URL.createObjectURL(
-                  new Blob([this.state.keyPair.data.client_certificate_data], {
-                    type: 'application/plain;charset=utf-8',
-                  })
-                )}
-              >
-                <Button bsStyle='default'>CLIENT CERTIFICATE</Button>
-              </a>
-              <a
-                download='client.key'
-                href={window.URL.createObjectURL(
-                  new Blob([this.state.keyPair.data.client_key_data], {
-                    type: 'application/plain;charset=utf-8',
-                  })
-                )}
-              >
-                <Button bsStyle='default'>CLIENT KEY</Button>
-              </a>
-            </div>
-          ) : (
-            <div className='cert-downloads'>
-              <FileBlock fileName='ca.crt' hideText={true}>
-                {this.state.keyPair.data.certificate_authority_data}
-              </FileBlock>
-
-              <FileBlock fileName='client.crt' hideText={true}>
-                {this.state.keyPair.data.client_certificate_data}
-              </FileBlock>
-
-              <FileBlock fileName='client.key' hideText={true}>
-                {this.state.keyPair.data.client_key_data}
-              </FileBlock>
-            </div>
-          )}
-
+          <div className='cert-downloads'>
+            <a
+              download='ca.crt'
+              href={window.URL.createObjectURL(
+                new Blob([this.state.keyPair.data.certificate_authority_data], {
+                  type: 'application/plain;charset=utf-8',
+                })
+              )}
+            >
+              <Button bsStyle='default'>CA CERTIFICATE</Button>
+            </a>
+            <a
+              download='client.crt'
+              href={window.URL.createObjectURL(
+                new Blob([this.state.keyPair.data.client_certificate_data], {
+                  type: 'application/plain;charset=utf-8',
+                })
+              )}
+            >
+              <Button bsStyle='default'>CLIENT CERTIFICATE</Button>
+            </a>
+            <a
+              download='client.key'
+              href={window.URL.createObjectURL(
+                new Blob([this.state.keyPair.data.client_key_data], {
+                  type: 'application/plain;charset=utf-8',
+                })
+              )}
+            >
+              <Button bsStyle='default'>CLIENT KEY</Button>
+            </a>
+          </div>
           <p>
             These files resemble the certificates in the configuration file
             above. They facilitate authenticated access to services using a web
