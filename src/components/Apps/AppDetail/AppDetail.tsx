@@ -1,6 +1,6 @@
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { AppsRoutes } from 'shared/constants/routes';
+import { useRouteMatch } from 'react-router-dom';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
 const readme = `[![CircleCI](https://circleci.com/gh/giantswarm/prometheus-operator-app.svg?style=shield)](https://circleci.com/gh/giantswarm/prometheus-operator-app)
@@ -34,11 +34,13 @@ prometheusOperator:
 \`\`\``;
 
 const AppDetail: React.FC = () => {
+  const match = useRouteMatch();
+
   return (
     <Breadcrumb
       data={{
-        title: 'Apps'.toUpperCase(),
-        pathname: AppsRoutes.Home,
+        title: 'efk-stack-app'.toUpperCase(),
+        pathname: match.url,
       }}
     >
       <AppDetailPage
