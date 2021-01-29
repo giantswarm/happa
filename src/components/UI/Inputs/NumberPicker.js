@@ -143,9 +143,9 @@ class NumberPicker extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.max !== this.props.max || prevProps.min !== this.props.min) {
-      const { validationError } = this.validateInput(this.state.value);
+      const { value, validationError } = this.validateInput(this.state.value);
       const isValid = validationError.length < 1;
-      this.updateValue(this.state.value, isValid, validationError);
+      this.updateValue(value, isValid, validationError);
     }
   }
 
