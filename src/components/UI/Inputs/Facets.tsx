@@ -24,7 +24,7 @@ interface IFacetsProps {
   onChange: (value: string, checked: boolean) => void;
 }
 
-interface IFacetOption {
+export interface IFacetOption {
   value: string;
   checked: boolean;
   label: JSX.Element;

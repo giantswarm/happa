@@ -1,15 +1,17 @@
 import { Meta, Story } from '@storybook/react/types-6-0';
 import React from 'react';
 
-import AppDetail, { IAppDetailProps } from './AppDetails';
+import AppDetailPage, { IAppDetailPageProps } from './AppDetailPage';
 import markdownSample from './markdown_sample.md';
 
 export default {
-  title: 'Display/Apps/AppDetail',
-  component: AppDetail,
+  title: 'Display/Apps/AppDetailPage',
+  component: AppDetailPage,
 } as Meta;
 
-const Template: Story<IAppDetailProps> = (args) => <AppDetail {...args} />;
+const Template: Story<IAppDetailPageProps> = (args) => (
+  <AppDetailPage {...args} />
+);
 
 export const WithReadme = Template.bind({});
 WithReadme.args = {

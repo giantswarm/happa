@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Icon from './Icon';
+import AppIcon from './AppIcon';
+import CatalogLabel from './CatalogLabel';
 
 const Wrapper = styled(Link)`
   display: flex;
@@ -47,37 +48,42 @@ const Name = styled.div`
   font-size: 18px;
 `;
 
-const Catalog = styled.div`
+const StyledCatalogLabel = styled(CatalogLabel)`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.darkBlueLighter5};
 `;
-
-interface IAppProps {
-  name: string;
-  catalog: string;
+export interface IAppProps {
   to: string;
+  name: string;
+  catalogName: string;
+  catalogIconUrl: string;
+  catalogIsManaged?: boolean;
 }
 
-const App: React.FC<IAppProps> = ({ name, catalog, to }) => {
+const App: React.FC<IAppProps> = (props) => {
   return (
-    <Wrapper to={to}>
+    <Wrapper to={props.to}>
       <IconWrapper>
-        <Icon src='' name={name} />
+        <AppIcon src='' name={props.name} />
       </IconWrapper>
       <DetailWrapper>
-        <Name>{name}</Name>
-        <Catalog>
-          <i className='fa fa-done' /> {catalog}
-        </Catalog>
+        <Name>{props.name}</Name>
+        <StyledCatalogLabel
+          catalogName={props.catalogName}
+          isManaged={props.catalogIsManaged}
+          iconUrl='https://dummyimage.com/125/125/fff'
+        />
       </DetailWrapper>
     </Wrapper>
   );
 };
 
 App.propTypes = {
-  name: PropTypes.string.isRequired,
-  catalog: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  catalogName: PropTypes.string.isRequired,
+  catalogIconUrl: PropTypes.string.isRequired,
+  catalogIsManaged: PropTypes.bool,
 };
 
 export default App;

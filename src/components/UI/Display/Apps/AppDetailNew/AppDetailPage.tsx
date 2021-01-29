@@ -132,7 +132,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export interface IAppDetailProps {
+export interface IAppDetailPageProps {
   appTitle: string;
   appIconURL: string;
   catalogName: string;
@@ -145,7 +145,7 @@ export interface IAppDetailProps {
   readme?: string;
 }
 
-const AppDetail: React.FC<IAppDetailProps> = (props) => {
+const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
   return (
     <Wrapper className={props.readme ? '' : 'no-readme'}>
       <Link to='/apps'>

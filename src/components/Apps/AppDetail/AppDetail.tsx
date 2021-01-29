@@ -1,5 +1,7 @@
 import React from 'react';
-import AppDetails from 'UI/Display/Apps/AppDetailsNew/AppDetails';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { useRouteMatch } from 'react-router-dom';
+import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
 const readme = `[![CircleCI](https://circleci.com/gh/giantswarm/prometheus-operator-app.svg?style=shield)](https://circleci.com/gh/giantswarm/prometheus-operator-app)
 
@@ -32,19 +34,28 @@ prometheusOperator:
 \`\`\``;
 
 const AppDetail: React.FC = () => {
+  const match = useRouteMatch();
+
   return (
-    <AppDetails
-      appTitle='efk-stack-app'
-      appIconURL='/images/repo_icons/managed.png'
-      catalogName='Giant Swarm Managed'
-      chartVersion='v0.3.2'
-      createDate={new Date(2021, 0, 1)}
-      includesVersion='v1.9.0'
-      description='Open Distro for ElasticSearch'
-      website='github.com/giantswarm/efk-stack-app'
-      keywords={['elk', 'database', 'fluentd', 'logging', 'search']}
-      readme={readme}
-    />
+    <Breadcrumb
+      data={{
+        title: 'efk-stack-app'.toUpperCase(),
+        pathname: match.url,
+      }}
+    >
+      <AppDetailPage
+        appTitle='efk-stack-app'
+        appIconURL='/images/repo_icons/managed.png'
+        catalogName='Giant Swarm Managed'
+        chartVersion='v0.3.2'
+        createDate={new Date(2021, 0, 1)}
+        includesVersion='v1.9.0'
+        description='Open Distro for ElasticSearch'
+        website='github.com/giantswarm/efk-stack-app'
+        keywords={['elk', 'database', 'fluentd', 'logging', 'search']}
+        readme={readme}
+      />
+    </Breadcrumb>
   );
 };
 
