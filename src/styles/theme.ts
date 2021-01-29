@@ -1,7 +1,6 @@
 import { CSSBreakpoints } from 'shared/constants';
-import { DefaultTheme } from 'styled-components';
 
-const theme: DefaultTheme = {
+const theme = {
   colors: {
     // dark blue as defined in Giant Swarm's style guide
     darkBlue: '#234a61',
@@ -101,5 +100,7 @@ const theme: DefaultTheme = {
   border: '1px solid #3A5F7B',
   disabledOpacity: 0.7,
 };
+
+export type Theme = typeof theme;
 
 export default theme;
