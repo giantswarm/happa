@@ -4013,10 +4013,10 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-auth0-js@9.14.0:
-  version "9.14.0"
-  resolved "https://registry.yarnpkg.com/auth0-js/-/auth0-js-9.14.0.tgz#8401095a99bc53756425f9e52ed5220b4be4b369"
-  integrity sha512-40gIBUejmYAYse06ck6sxdNO0KU0pX+KDIQsWAkcyFtI0HU6dY5aeHxZfVYkYjtbArKr5s13LuZFdKrUiGyCqQ==
+auth0-js@9.14.3:
+  version "9.14.3"
+  resolved "https://registry.yarnpkg.com/auth0-js/-/auth0-js-9.14.3.tgz#1b6feee3c8a131906694713c82c68f46eabc953c"
+  integrity sha512-UO/fGv9641PUpYjz2nkPaUHzzrhNaJKupJOqt8blj1pD6wBgpZtxUSXBox6Y8md3eTBzpxeWxV+6RKzzERvr1g==
   dependencies:
     base64-js "^1.3.0"
     idtoken-verifier "^2.0.3"
@@ -5004,15 +5004,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-base64-js@^1.0.2:
+base64-js@^1.0.2, base64-js@^1.3.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
-
-base64-js@^1.3.0:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
-  integrity sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
 
 base@^0.11.1:
   version "0.11.2"
@@ -11542,10 +11537,10 @@ no-case@^3.0.3:
     lower-case "^2.0.1"
     tslib "^1.10.0"
 
-nock@13.0.6:
-  version "13.0.6"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-13.0.6.tgz#9f90573ea6e84883b94eeac374d1c73460afed56"
-  integrity sha512-W81UZ1Tv21SWDZcA8Lu9LXYVl2gO9ADY5GadC6gFV9690h4TXz0oCkEoMckN/sPMHkDA79Ka9dXga9Mt1+j+Sg==
+nock@13.0.7:
+  version "13.0.7"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-13.0.7.tgz#9bc718c66bd0862dfa14601a9ba678a406127910"
+  integrity sha512-WBz73VYIjdbO6BwmXODRQLtn7B5tldA9pNpWJe5QTtTEscQlY5KXU4srnGzBOK2fWakkXj69gfTnXGzmrsaRWw==
   dependencies:
     debug "^4.1.0"
     json-stringify-safe "^5.0.1"
@@ -13169,12 +13164,7 @@ qs@6.7.0:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
-qs@^6.5.1, qs@^6.7.0, qs@^6.9.4:
-  version "6.9.4"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.4.tgz#9090b290d1f91728d3c22e54843ca44aea5ab687"
-  integrity sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ==
-
-qs@^6.6.0:
+qs@^6.5.1, qs@^6.6.0, qs@^6.7.0, qs@^6.9.4:
   version "6.9.6"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.6.tgz#26ed3c8243a431b2924aca84cc90471f35d5a0ee"
   integrity sha512-TIRk4aqYLNoJUbd+g2lEdz5kLWIuTMRagAXxl78Q0RiVjAOugHmeKNGdd3cwo/ktpf9aL9epCfFqWDEKysUlLQ==
