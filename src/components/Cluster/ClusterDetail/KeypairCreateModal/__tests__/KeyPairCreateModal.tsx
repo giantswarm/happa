@@ -114,7 +114,7 @@ describe('KeyPairCreateModal', () => {
     ) as HTMLElement;
     fireEvent.change(monthsInput, {
       target: {
-        value: 1,
+        value: 2,
       },
     });
 
