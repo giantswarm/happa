@@ -16,7 +16,7 @@ const initialState: IAppCatalogsState = {
   lastUpdated: 0,
   isFetching: false,
   ui: {
-    selectedCatalogs: [],
+    selectedCatalogs: {},
   },
   items: {},
 };
@@ -75,18 +75,15 @@ const catalogReducer = produce(
       }
 
       case ENABLE_CATALOG: {
-        if (!draft.ui.selectedCatalogs.includes(action.catalog)) {
-          draft.ui.selectedCatalogs.push(action.catalog);
+        if (!draft.ui.selectedCatalogs[action.catalog]) {
+          draft.ui.selectedCatalogs[action.catalog] = true;
         }
 
         break;
       }
 
       case DISABLE_CATALOG: {
-        const index = draft.ui.selectedCatalogs.indexOf(action.catalog);
-        if (index > -1) {
-          draft.ui.selectedCatalogs.splice(index, 1);
-        }
+        draft.ui.selectedCatalogs[action.catalog] = false;
 
         break;
       }

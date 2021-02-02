@@ -53,7 +53,9 @@ export interface IAppCatalogsMap {
 }
 
 export interface IAppCatalogsUI {
-  selectedCatalogs: string[];
+  selectedCatalogs: {
+    [key: string]: boolean;
+  };
 }
 
 export interface IAppCatalogsState {

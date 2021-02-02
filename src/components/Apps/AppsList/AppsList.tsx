@@ -85,7 +85,7 @@ function catalogsToFacets(
     .map(([key, catalog]) => {
       return {
         value: key,
-        checked: catalogs.ui.selectedCatalogs.includes(key),
+        checked: catalogs.ui.selectedCatalogs[key],
         label: (
           <CatalogLabel
             catalogName={catalog.spec.title}
