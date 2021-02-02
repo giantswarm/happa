@@ -32,6 +32,8 @@ import {
   DELETE_CLUSTER_APP_ERROR,
   DELETE_CLUSTER_APP_REQUEST,
   DELETE_CLUSTER_APP_SUCCESS,
+  DISABLE_CATALOG,
+  ENABLE_CATALOG,
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
@@ -50,9 +52,16 @@ export interface IAppCatalogsMap {
   [key: string]: IAppCatalog;
 }
 
+export interface IAppCatalogsUI {
+  selectedCatalogs: {
+    [key: string]: boolean;
+  };
+}
+
 export interface IAppCatalogsState {
   lastUpdated: number;
   isFetching: boolean;
+  ui: IAppCatalogsUI;
   items: IAppCatalogsMap;
 }
 
@@ -362,6 +371,16 @@ export interface IAppCatalogPrepareIngressTabDataErrorAction {
   error: string;
 }
 
+export interface IAppCatalogEnableCatalogAction {
+  type: typeof ENABLE_CATALOG;
+  catalog: string;
+}
+
+export interface IAppCatalogDisableCatalogAction {
+  type: typeof DISABLE_CATALOG;
+  catalog: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -410,4 +429,6 @@ export type AppCatalogActions =
   | IAppCatalogInstallLatestIngressErrorAction
   | IAppCatalogPrepareIngressTabDataRequestAction
   | IAppCatalogPrepareIngressTabDataSuccessAction
-  | IAppCatalogPrepareIngressTabDataErrorAction;
+  | IAppCatalogPrepareIngressTabDataErrorAction
+  | IAppCatalogEnableCatalogAction
+  | IAppCatalogDisableCatalogAction;

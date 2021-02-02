@@ -38,6 +38,8 @@ import {
   CLUSTER_UPDATE_APP_SECRET_REQUEST,
   CLUSTER_UPDATE_APP_SECRET_SUCCESS,
   DELETE_CLUSTER_APP,
+  DISABLE_CATALOG,
+  ENABLE_CATALOG,
   INSTALL_APP,
   INSTALL_INGRESS_APP,
   LOAD_CLUSTER_APPS,
@@ -52,6 +54,8 @@ import {
   AppCatalogActions,
   IAppCatalogDeleteClusterAppActionPayload,
   IAppCatalogDeleteClusterAppActionResponse,
+  IAppCatalogDisableCatalogAction,
+  IAppCatalogEnableCatalogAction,
   IAppCatalogInstallAppActionPayload,
   IAppCatalogInstallAppActionResponse,
   IAppCatalogLoadClusterAppsActionPayload,
@@ -1122,3 +1126,21 @@ export const prepareIngressTabData = createAsynchronousAction<
   },
   throwOnError: false,
 });
+
+export const enableCatalog = (
+  catalogName: string
+): IAppCatalogEnableCatalogAction => {
+  return {
+    type: ENABLE_CATALOG,
+    catalog: catalogName,
+  };
+};
+
+export const disableCatalog = (
+  catalogName: string
+): IAppCatalogDisableCatalogAction => {
+  return {
+    type: DISABLE_CATALOG,
+    catalog: catalogName,
+  };
+};
