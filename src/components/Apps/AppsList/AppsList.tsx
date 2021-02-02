@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { disableCatalog, enableCatalog } from 'stores/appcatalog/actions';
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
+import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 
 interface IStateProps {
@@ -82,18 +85,29 @@ function catalogsToFacets(
     .map(([key, catalog]) => {
       return {
         value: key,
-        checked: true,
-        label: <>{catalog.spec.title}</>,
+        checked: catalogs.ui.selectedCatalogs.includes(key),
+        label: (
+          <CatalogLabel
+            catalogName={catalog.spec.title}
+            iconUrl={catalog.spec.logoURL}
+          />
+        ),
       };
     });
 }
 
 const AppsList: React.FC<IAppsListProps> = (props) => {
+  const dispatch = useDispatch();
+
   return (
     <AppsListPage
       matchCount={0}
       onChangeFacets={(value, checked) => {
-        console.log(value, checked);
+        if (checked) {
+          dispatch(enableCatalog(value));
+        } else {
+          dispatch(disableCatalog(value));
+        }
       }}
       apps={[]}
       facetOptions={catalogsToFacets(props.catalogs, props.isAdmin)}
