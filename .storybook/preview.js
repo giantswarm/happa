@@ -1,5 +1,4 @@
 import { addDecorator } from '@storybook/react';
-import { ThemeProvider } from 'styled-components';
 import { MemoryRouter } from 'react-router';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
