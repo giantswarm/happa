@@ -1,10 +1,16 @@
 import { Constants } from 'shared/constants';
 import { IState } from 'stores/state';
 
+import { IAppCatalogsState } from './types';
+
 export function selectIngressCatalog(state: IState): IAppCatalog | undefined {
   return state.entities.catalogs.items[
     Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME
   ];
+}
+
+export function selectCatalogs(state: IState): IAppCatalogsState {
+  return state.entities.catalogs;
 }
 
 export function selectIngressAppToInstall(

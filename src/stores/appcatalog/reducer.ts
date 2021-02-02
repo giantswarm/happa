@@ -5,6 +5,8 @@ import {
   CATALOG_LOAD_INDEX_SUCCESS,
   CATALOGS_LIST_SUCCESS,
   CLUSTER_LOAD_APP_README_SUCCESS,
+  DISABLE_CATALOG,
+  ENABLE_CATALOG,
 } from 'stores/appcatalog/constants';
 
 import * as actions from './actions';
@@ -13,6 +15,9 @@ import { AppCatalogActions, IAppCatalogsState } from './types';
 const initialState: IAppCatalogsState = {
   lastUpdated: 0,
   isFetching: false,
+  ui: {
+    selectedCatalogs: {},
+  },
   items: {},
 };
 
@@ -65,6 +70,20 @@ const catalogReducer = produce(
         if (!currentAppVersion) break;
 
         currentAppVersion.readme = action.readmeText;
+
+        break;
+      }
+
+      case ENABLE_CATALOG: {
+        if (!draft.ui.selectedCatalogs[action.catalog]) {
+          draft.ui.selectedCatalogs[action.catalog] = true;
+        }
+
+        break;
+      }
+
+      case DISABLE_CATALOG: {
+        draft.ui.selectedCatalogs[action.catalog] = false;
 
         break;
       }
