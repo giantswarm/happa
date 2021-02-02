@@ -1,6 +1,6 @@
 import { addDecorator } from '@storybook/react';
-import { ThemeProvider } from 'styled-components';
 import theme from 'styles/theme';
+import ThemeProvider from 'styles/ThemeProvider';
 
 import 'babel-polyfill';
 import 'normalize.css';
