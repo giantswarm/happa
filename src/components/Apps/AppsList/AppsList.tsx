@@ -8,12 +8,7 @@ import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 
-interface IStateProps {
-  catalogs: IAppCatalogsState;
-  isAdmin: boolean;
-}
-
-interface IAppsListProps extends IStateProps {}
+interface IAppsListProps {}
 
 // Determines if a catalog is an internal catalog or not.
 // We changed the location of this information at some point, so happa currently
