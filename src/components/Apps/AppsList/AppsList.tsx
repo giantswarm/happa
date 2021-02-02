@@ -1,11 +1,9 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { disableCatalog, enableCatalog } from 'stores/appcatalog/actions';
+import { selectCatalogs } from 'stores/appcatalog/selectors';
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { getUserIsAdmin } from 'stores/main/selectors';
-import { IState } from 'stores/state';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
@@ -96,8 +94,10 @@ function catalogsToFacets(
     });
 }
 
-const AppsList: React.FC<IAppsListProps> = (props) => {
+const AppsList: React.FC<IAppsListProps> = () => {
   const dispatch = useDispatch();
+  const isAdmin = useSelector(getUserIsAdmin);
+  const catalogs = useSelector(selectCatalogs);
 
   return (
     <AppsListPage
@@ -110,22 +110,9 @@ const AppsList: React.FC<IAppsListProps> = (props) => {
         }
       }}
       apps={[]}
-      facetOptions={catalogsToFacets(props.catalogs, props.isAdmin)}
+      facetOptions={catalogsToFacets(catalogs, isAdmin)}
     />
   );
 };
 
-function mapStateToProps(state: IState) {
-  return {
-    catalogs: state.entities.catalogs,
-    isAdmin: getUserIsAdmin(state),
-  };
-}
-
-AppsList.propTypes = {
-  catalogs: (PropTypes.object as PropTypes.Requireable<IAppCatalogsState>)
-    .isRequired,
-  isAdmin: PropTypes.bool.isRequired,
-};
-
-export default connect(mapStateToProps)(AppsList);
+export default AppsList;
