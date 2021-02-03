@@ -4,10 +4,11 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  &.hasError {
-    opacity: 0.4;
-  }
+const LOW_OPACITY = 0.4;
+const NORMAL_OPACITY = 1;
+
+const Wrapper = styled.div<{ hasError: boolean }>`
+  opacity: ${({ hasError }) => (hasError ? LOW_OPACITY : NORMAL_OPACITY)};
 `;
 
 const Icon = styled.img`
@@ -58,7 +59,7 @@ ErrorIcon.propTypes = {
 
 const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
   return (
-    <Wrapper {...props} className={props.error ? 'hasError' : ''}>
+    <Wrapper {...props} hasError={Boolean(props.error)}>
       <Icon src={props.iconUrl} />
       {props.catalogName}
       {props.isManaged && <CatalogType>MANAGED</CatalogType>}&nbsp;
