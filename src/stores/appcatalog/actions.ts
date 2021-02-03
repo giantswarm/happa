@@ -13,9 +13,6 @@ import {
   CATALOG_LOAD_INDEX_REQUEST,
   CATALOG_LOAD_INDEX_SUCCESS,
   CATALOGS_LIST,
-  CATALOGS_LOAD_ERROR,
-  CATALOGS_LOAD_REQUEST,
-  CATALOGS_LOAD_SUCCESS,
   CLUSTER_CREATE_APP_CONFIG_ERROR,
   CLUSTER_CREATE_APP_CONFIG_REQUEST,
   CLUSTER_CREATE_APP_CONFIG_SUCCESS,
@@ -55,7 +52,6 @@ import {
   IAppCatalogDeleteClusterAppActionPayload,
   IAppCatalogDeleteClusterAppActionResponse,
   IAppCatalogDisableCatalogAction,
-  IAppCatalogEnableCatalogAction,
   IAppCatalogInstallAppActionPayload,
   IAppCatalogInstallAppActionResponse,
   IAppCatalogLoadClusterAppsActionPayload,
@@ -117,60 +113,13 @@ export const listCatalogs = createAsynchronousAction<
   throwOnError: false,
 });
 
-export function catalogsLoad(): ThunkAction<
-  Promise<IAppCatalogsMap>,
-  IState,
-  void,
-  AppCatalogActions
-> {
-  return async (dispatch) => {
-    try {
-      dispatch({ type: CATALOGS_LOAD_REQUEST });
-
-      const appsApi = new GiantSwarm.AppsApi();
-      const response = await appsApi.getAppCatalogs();
-      const catalogs = Array.from(response).reduce(
-        (agg: IAppCatalogsMap, currCatalog: IAppCatalog) => {
-          const { labels } = currCatalog.metadata;
-
-          if (
-            labels &&
-            labels['application.giantswarm.io/catalog-type'] !== 'internal'
-          ) {
-            currCatalog.isFetchingIndex = true;
-            agg[currCatalog.metadata.name] = currCatalog;
-          }
-
-          return agg;
-        },
-        {}
-      );
-
-      dispatch({
-        type: CATALOGS_LOAD_SUCCESS,
-        catalogs,
-      });
-
-      return catalogs;
-    } catch (err) {
-      const message = (err as Error).message ?? (err as string);
-      dispatch({
-        type: CATALOGS_LOAD_ERROR,
-        error: message,
-      });
-
-      return Promise.reject(err);
-    }
-  };
-}
-
 export function catalogLoadIndex(
-  catalog: IAppCatalog
+  catalogName: string
 ): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
   return async (dispatch, getState) => {
     try {
       const currCatalog: IAppCatalog | undefined = getState().entities.catalogs
-        .items[catalog.metadata.name];
+        .items[catalogName];
       if (currCatalog?.apps || currCatalog?.isFetchingIndex) {
         // Skip if we already have apps loaded.
         return Promise.resolve();
@@ -178,15 +127,15 @@ export function catalogLoadIndex(
 
       dispatch({
         type: CATALOG_LOAD_INDEX_REQUEST,
-        catalogName: catalog.metadata.name,
-        id: catalog.metadata.name,
+        catalogName: catalogName,
+        id: catalogName,
       });
 
-      const catalogWithApps = await loadIndexForCatalog(catalog);
+      const catalogWithApps = await loadIndexForCatalog(currCatalog);
       dispatch({
         type: CATALOG_LOAD_INDEX_SUCCESS,
         catalog: catalogWithApps,
-        id: catalog.metadata.name,
+        id: catalogName,
       });
 
       return Promise.resolve();
@@ -195,8 +144,8 @@ export function catalogLoadIndex(
       dispatch({
         type: CATALOG_LOAD_INDEX_ERROR,
         error: message,
-        catalogName: catalog.metadata.name,
-        id: catalog.metadata.name,
+        catalogName: catalogName,
+        id: catalogName,
       });
 
       return Promise.resolve();
@@ -1091,7 +1040,7 @@ export const prepareIngressTabData = createAsynchronousAction<
 
       await Promise.all([
         dispatch(loadClusterApps({ clusterId: payload.clusterId })),
-        dispatch(catalogLoadIndex(gsCatalog)),
+        dispatch(catalogLoadIndex(gsCatalog.metadata.name)),
       ]);
 
       return Promise.resolve();
@@ -1127,14 +1076,18 @@ export const prepareIngressTabData = createAsynchronousAction<
   throwOnError: false,
 });
 
-export const enableCatalog = (
+export function enableCatalog(
   catalogName: string
-): IAppCatalogEnableCatalogAction => {
-  return {
-    type: ENABLE_CATALOG,
-    catalog: catalogName,
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch) => {
+    dispatch({
+      type: ENABLE_CATALOG,
+      catalog: catalogName,
+    });
+
+    await dispatch(catalogLoadIndex(catalogName));
   };
-};
+}
 
 export const disableCatalog = (
   catalogName: string

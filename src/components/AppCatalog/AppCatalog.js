@@ -13,7 +13,7 @@ import CatalogList from './CatalogList/CatalogList';
 
 class AppCatalog extends React.Component {
   catalogLoadIndex = (catalog) => {
-    return this.props.dispatch(catalogLoadIndex(catalog));
+    return this.props.dispatch(catalogLoadIndex(catalog.metadata.name));
   };
 
   render() {

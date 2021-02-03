@@ -5,9 +5,6 @@ import {
   CATALOGS_LIST_ERROR,
   CATALOGS_LIST_REQUEST,
   CATALOGS_LIST_SUCCESS,
-  CATALOGS_LOAD_ERROR,
-  CATALOGS_LOAD_REQUEST,
-  CATALOGS_LOAD_SUCCESS,
   CLUSTER_CREATE_APP_CONFIG_ERROR,
   CLUSTER_CREATE_APP_CONFIG_REQUEST,
   CLUSTER_CREATE_APP_CONFIG_SUCCESS,
@@ -98,20 +95,6 @@ export interface IAppCatalogLoadIndexErrorAction {
   type: typeof CATALOG_LOAD_INDEX_ERROR;
   catalogName: string;
   id: string;
-  error: string;
-}
-
-export interface IAppCatalogLoadRequestAction {
-  type: typeof CATALOGS_LOAD_REQUEST;
-}
-
-export interface IAppCatalogLoadSuccessAction {
-  type: typeof CATALOGS_LOAD_SUCCESS;
-  catalogs: IAppCatalogsMap;
-}
-
-export interface IAppCatalogLoadErrorAction {
-  type: typeof CATALOGS_LOAD_ERROR;
   error: string;
 }
 
@@ -388,9 +371,6 @@ export type AppCatalogActions =
   | IAppCatalogLoadIndexRequestAction
   | IAppCatalogLoadIndexSuccessAction
   | IAppCatalogLoadIndexErrorAction
-  | IAppCatalogLoadRequestAction
-  | IAppCatalogLoadSuccessAction
-  | IAppCatalogLoadErrorAction
   | IAppCatalogLoadAppReadmeRequestAction
   | IAppCatalogLoadAppReadmeSuccessAction
   | IAppCatalogLoadAppReadmeErrorAction
