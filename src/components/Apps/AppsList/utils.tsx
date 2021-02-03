@@ -63,6 +63,7 @@ const sortFunc = (
 
 export function catalogsToFacets(
   catalogs: IAppCatalogsState,
+  catalogErrors: { [key: string]: string },
   isAdmin: boolean
 ): IFacetOption[] {
   return Object.entries(catalogs.items)
@@ -76,6 +77,7 @@ export function catalogsToFacets(
           <CatalogLabel
             catalogName={catalog.spec.title}
             iconUrl={catalog.spec.logoURL}
+            error={catalogErrors[catalog.metadata.name]}
           />
         ),
       };
