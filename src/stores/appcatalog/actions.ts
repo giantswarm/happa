@@ -13,9 +13,6 @@ import {
   CATALOG_LOAD_INDEX_REQUEST,
   CATALOG_LOAD_INDEX_SUCCESS,
   CATALOGS_LIST,
-  CATALOGS_LOAD_ERROR,
-  CATALOGS_LOAD_REQUEST,
-  CATALOGS_LOAD_SUCCESS,
   CLUSTER_CREATE_APP_CONFIG_ERROR,
   CLUSTER_CREATE_APP_CONFIG_REQUEST,
   CLUSTER_CREATE_APP_CONFIG_SUCCESS,
@@ -116,53 +113,6 @@ export const listCatalogs = createAsynchronousAction<
   shouldPerform: () => true,
   throwOnError: false,
 });
-
-export function catalogsLoad(): ThunkAction<
-  Promise<IAppCatalogsMap>,
-  IState,
-  void,
-  AppCatalogActions
-> {
-  return async (dispatch) => {
-    try {
-      dispatch({ type: CATALOGS_LOAD_REQUEST });
-
-      const appsApi = new GiantSwarm.AppsApi();
-      const response = await appsApi.getAppCatalogs();
-      const catalogs = Array.from(response).reduce(
-        (agg: IAppCatalogsMap, currCatalog: IAppCatalog) => {
-          const { labels } = currCatalog.metadata;
-
-          if (
-            labels &&
-            labels['application.giantswarm.io/catalog-type'] !== 'internal'
-          ) {
-            currCatalog.isFetchingIndex = true;
-            agg[currCatalog.metadata.name] = currCatalog;
-          }
-
-          return agg;
-        },
-        {}
-      );
-
-      dispatch({
-        type: CATALOGS_LOAD_SUCCESS,
-        catalogs,
-      });
-
-      return catalogs;
-    } catch (err) {
-      const message = (err as Error).message ?? (err as string);
-      dispatch({
-        type: CATALOGS_LOAD_ERROR,
-        error: message,
-      });
-
-      return Promise.reject(err);
-    }
-  };
-}
 
 export function catalogLoadIndex(
   catalog: IAppCatalog
