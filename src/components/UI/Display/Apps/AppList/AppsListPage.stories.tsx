@@ -16,9 +16,7 @@ const Template: Story<IAppsListPageProps> = (args) => (
 export const Standard = Template.bind({});
 Standard.args = {
   matchCount: 10,
-  onChangeFacets: (value, checked) => {
-    console.log(value, checked);
-  },
+  onChangeFacets: () => {},
   apps: [
     {
       name: 'g8s-prometheus',
@@ -114,9 +112,7 @@ Standard.args = {
 export const EmptyState = Template.bind({});
 EmptyState.args = {
   matchCount: 0,
-  onChangeFacets: (value, checked) => {
-    console.log(value, checked);
-  },
+  onChangeFacets: () => {},
   apps: [],
   facetOptions: [
     {

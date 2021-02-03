@@ -57,12 +57,7 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
       </Search>
 
       <Sort>
-        Sort by{' '}
-        <StyledSortingDropdown
-          setSortingOrder={(x: string) => {
-            console.log(x);
-          }}
-        />
+        Sort by <StyledSortingDropdown setSortingOrder={() => {}} />
       </Sort>
     </Wrapper>
   );
