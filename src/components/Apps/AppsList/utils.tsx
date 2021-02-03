@@ -23,7 +23,7 @@ const isInternal = (catalog: IAppCatalog): boolean => {
 
 // Admins can see all catalogs.
 // Non admins can only see non internal catalogs.
-const filterFunc = (isAdmin: boolean) => {
+export const filterFunc = (isAdmin: boolean) => {
   return ([_, catalog]: [string, IAppCatalog]) => {
     if (isAdmin) {
       return true;

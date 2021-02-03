@@ -1,3 +1,4 @@
+import { filterFunc } from 'components/Apps/AppsList/utils';
 import { push } from 'connected-react-router';
 import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -8,8 +9,11 @@ import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import FeatureFlags from 'shared/FeatureFlags';
 import { INodePool } from 'shared/types';
-import { listCatalogs } from 'stores/appcatalog/actions';
-import { loadClusterApps } from 'stores/appcatalog/actions';
+import {
+  enableCatalog,
+  listCatalogs,
+  loadClusterApps,
+} from 'stores/appcatalog/actions';
 import {
   clusterCreate,
   clusterDeleteConfirmed,
@@ -33,6 +37,7 @@ import {
   refreshUserInfo,
 } from 'stores/main/actions';
 import { getInfo } from 'stores/main/actions';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -55,7 +60,7 @@ export function batchedLayout(): ThunkAction<
   void,
   AnyAction
 > {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(globalLoadStart());
 
     try {
@@ -86,7 +91,19 @@ export function batchedLayout(): ThunkAction<
 
     try {
       await dispatch(organizationsLoad());
-      dispatch(listCatalogs());
+
+      // eslint-disable-next-line @typescript-eslint/await-thenable
+      const catalogs = await dispatch(listCatalogs());
+      const userIsAdmin = getUserIsAdmin(getState());
+
+      Object.entries(catalogs)
+        .filter(filterFunc(userIsAdmin))
+        .forEach(([key]) => {
+          if (key !== 'helm-stable') {
+            dispatch(enableCatalog(key));
+          }
+        });
+
       dispatch(loadReleases());
       await dispatch(
         clustersList({

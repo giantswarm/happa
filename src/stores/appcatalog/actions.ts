@@ -52,7 +52,6 @@ import {
   IAppCatalogDeleteClusterAppActionPayload,
   IAppCatalogDeleteClusterAppActionResponse,
   IAppCatalogDisableCatalogAction,
-  IAppCatalogEnableCatalogAction,
   IAppCatalogInstallAppActionPayload,
   IAppCatalogInstallAppActionResponse,
   IAppCatalogLoadClusterAppsActionPayload,
@@ -115,12 +114,12 @@ export const listCatalogs = createAsynchronousAction<
 });
 
 export function catalogLoadIndex(
-  catalog: IAppCatalog
+  catalogName: string
 ): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
   return async (dispatch, getState) => {
     try {
       const currCatalog: IAppCatalog | undefined = getState().entities.catalogs
-        .items[catalog.metadata.name];
+        .items[catalogName];
       if (currCatalog?.apps || currCatalog?.isFetchingIndex) {
         // Skip if we already have apps loaded.
         return Promise.resolve();
@@ -128,15 +127,15 @@ export function catalogLoadIndex(
 
       dispatch({
         type: CATALOG_LOAD_INDEX_REQUEST,
-        catalogName: catalog.metadata.name,
-        id: catalog.metadata.name,
+        catalogName: catalogName,
+        id: catalogName,
       });
 
-      const catalogWithApps = await loadIndexForCatalog(catalog);
+      const catalogWithApps = await loadIndexForCatalog(currCatalog);
       dispatch({
         type: CATALOG_LOAD_INDEX_SUCCESS,
         catalog: catalogWithApps,
-        id: catalog.metadata.name,
+        id: catalogName,
       });
 
       return Promise.resolve();
@@ -145,8 +144,8 @@ export function catalogLoadIndex(
       dispatch({
         type: CATALOG_LOAD_INDEX_ERROR,
         error: message,
-        catalogName: catalog.metadata.name,
-        id: catalog.metadata.name,
+        catalogName: catalogName,
+        id: catalogName,
       });
 
       return Promise.resolve();
@@ -1041,7 +1040,7 @@ export const prepareIngressTabData = createAsynchronousAction<
 
       await Promise.all([
         dispatch(loadClusterApps({ clusterId: payload.clusterId })),
-        dispatch(catalogLoadIndex(gsCatalog)),
+        dispatch(catalogLoadIndex(gsCatalog.metadata.name)),
       ]);
 
       return Promise.resolve();
@@ -1077,14 +1076,18 @@ export const prepareIngressTabData = createAsynchronousAction<
   throwOnError: false,
 });
 
-export const enableCatalog = (
+export function enableCatalog(
   catalogName: string
-): IAppCatalogEnableCatalogAction => {
-  return {
-    type: ENABLE_CATALOG,
-    catalog: catalogName,
+): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
+  return async (dispatch) => {
+    dispatch({
+      type: ENABLE_CATALOG,
+      catalog: catalogName,
+    });
+
+    await dispatch(catalogLoadIndex(catalogName));
   };
-};
+}
 
 export const disableCatalog = (
   catalogName: string
