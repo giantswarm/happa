@@ -50,16 +50,50 @@ interface ICurrencyInputProps
     React.ComponentPropsWithRef<'input'>,
     'type' | 'onChange' | 'step'
   > {
+  /**
+   * Define a currency to be displayed in the
+   * left side of the input.
+   */
   currencyLabel?: string;
+  /**
+   * The number of decimal places allowed.
+   */
   precision?: number;
+  /**
+   * The controlled value of the input.
+   */
   value?: number;
+  /**
+   * The label displayed above the input.
+   */
   label?: string;
+  /**
+   * The minimum allowed value.
+   */
   min?: number;
+  /**
+   * The maximum allowed value
+   */
   max?: number;
+  /**
+   * Props to be passed to the label element.
+   */
   labelTextProps?: React.ComponentPropsWithRef<'label'>;
+  /**
+   * Props to be passed to the input element's parent element.
+   */
   inputWrapperProps?: React.ComponentPropsWithRef<'div'>;
+  /**
+   * Props to be passed to the root element.
+   */
   rootProps?: Omit<React.ComponentPropsWithRef<'div'>, 'htmlFor'>;
+  /**
+   * The value change event handler.
+   */
   onChange?: (newValue: number) => void;
+  /**
+   * An error message to be displayed near the input.
+   */
   validationError?: string;
 }
 
@@ -131,58 +165,18 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = ({
 };
 
 CurrencyInput.propTypes = {
-  /**
-   * Define a currency to be displayed in the
-   * left side of the input.
-   */
   currencyLabel: PropTypes.string,
-  /**
-   * The number of decimal places allowed.
-   */
   precision: PropTypes.number,
-  /**
-   * The controlled value of the input.
-   */
   value: PropTypes.number,
-  /**
-   * The unique identifier of the input.
-   */
   id: PropTypes.string,
-  /**
-   * The label displayed above the input.
-   */
   label: PropTypes.string,
-  /**
-   * The minimum allowed value.
-   */
   min: PropTypes.number,
-  /**
-   * The maximum allowed value
-   */
   max: PropTypes.number,
-  /**
-   * Props to be passed to the label element.
-   */
   labelTextProps: PropTypes.object,
-  /**
-   * Props to be passed to the input element's parent element.
-   */
   inputWrapperProps: PropTypes.object,
-  /**
-   * Props to be passed to the root element.
-   */
   rootProps: PropTypes.object,
-  /**
-   * The value change event handler.
-   */
   onChange: PropTypes.func,
-  /**
-   * An error message to be displayed near the input.
-   */
   validationError: PropTypes.string,
-  /**
-   * Whether the input can be modified or not.
-   */
   disabled: PropTypes.bool,
 };
 
