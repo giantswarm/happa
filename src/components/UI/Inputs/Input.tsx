@@ -35,12 +35,20 @@ export const InputElement = styled.input`
   width: 100%;
   font-weight: 400;
 
-  &:read-only {
+  &:read-only,
+  &:disabled {
     cursor: not-allowed;
   }
 
-  &:read-only:focus {
+  &:read-only:focus,
+  &:disabled:focus {
     outline: none;
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.darkBlueLighter1};
+    border-color: ${({ theme }) => theme.colors.darkBlueLighter2};
+    color: ${({ theme }) => theme.colors.gray};
   }
 `;
 

@@ -32,4 +32,6 @@ export enum RUMActions {
 
   IncrementNumber = 'INCREMENT_NUMBER',
   DecrementNumber = 'DECREMENT_NUMBER',
+
+  SpotInstancesMaximumPrice = 'SPOT_INSTANCES_MAX_PRICE',
 }
