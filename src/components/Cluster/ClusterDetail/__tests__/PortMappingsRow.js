@@ -3,8 +3,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
 import theme from 'styles/theme';
+import ThemeProvider from 'styles/ThemeProvider';
 
 import PortMappingsRow from '../PortMappingsRow';
 

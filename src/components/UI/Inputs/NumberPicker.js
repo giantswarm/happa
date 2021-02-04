@@ -141,6 +141,14 @@ class NumberPicker extends React.Component {
     validationError: '',
   };
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.max !== this.props.max || prevProps.min !== this.props.min) {
+      const { value, validationError } = this.validateInput(this.state.value);
+      const isValid = validationError.length < 1;
+      this.updateValue(value, isValid, validationError);
+    }
+  }
+
   increment = () => {
     const currentValue = this.props.value;
     const desiredValue = currentValue + this.props.stepSize;
@@ -176,11 +184,14 @@ class NumberPicker extends React.Component {
 
     const isValid = validationError.length < 1 || (min <= 0 && value === 0);
 
-    // Update state.
+    this.updateValue(value, isValid, validationError);
+  };
+
+  updateValue(newValue, isValid = false, validationError = '') {
     this.setState(
       {
-        inputValue: value,
-        value,
+        inputValue: newValue,
+        value: newValue,
         valid: isValid,
         validationError,
       },
@@ -194,7 +205,7 @@ class NumberPicker extends React.Component {
         }
       }
     );
-  };
+  }
 
   validateInput = (desiredValue) => {
     if (desiredValue === '') {
@@ -268,6 +279,7 @@ class NumberPicker extends React.Component {
               value={
                 this.props.readOnly ? this.props.value : this.state.inputValue
               }
+              title={this.props.title}
             />
           </ValueSpan>
           {this.props.readOnly ? undefined : (
@@ -304,6 +316,7 @@ NumberPicker.propTypes = {
   readOnly: PropTypes.bool,
   theme: PropTypes.string,
   className: PropTypes.string,
+  title: PropTypes.string,
   /** This string is appended to the user action event names recorded in Real User Monitoring. Should be UPPERCASE. */
   eventNameSuffix: PropTypes.string,
 };

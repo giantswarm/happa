@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
 
@@ -290,5 +290,78 @@ describe('NodeCountSelector', () => {
     expect(getByTestId(autoScalingLabelTestID).textContent).toBe(
       'To disable autoscaling, set both numbers to the same value.'
     );
+  });
+
+  it('allows setting the autoscaling values in any order', () => {
+    const onChangeMockFn = jest.fn();
+    const baseProps = {
+      autoscalingEnabled: true,
+      minValue: 1,
+      maxValue: 99,
+      onChange: onChangeMockFn,
+    };
+
+    const scaling = {
+      min: 3,
+      minValid: true,
+      max: 10,
+      maxValid: true,
+    };
+
+    const { rerender } = renderWithProps({
+      ...baseProps,
+      scaling,
+    });
+
+    const minInputElement = screen.getByTitle('Minimum');
+    const maxInputElement = screen.getByTitle('Maximum');
+
+    fireEvent.change(maxInputElement, { target: { value: 2 } });
+    scaling.max = 2;
+    scaling.maxValid = false;
+    scaling.minValid = false;
+    rerender(
+      getComponent({
+        ...baseProps,
+        scaling,
+      })
+    );
+    expect(onChangeMockFn).toHaveBeenLastCalledWith({ scaling });
+
+    fireEvent.change(minInputElement, { target: { value: 2 } });
+    scaling.min = 2;
+    scaling.maxValid = true;
+    scaling.minValid = true;
+    rerender(
+      getComponent({
+        ...baseProps,
+        scaling,
+      })
+    );
+    expect(onChangeMockFn).toHaveBeenLastCalledWith({ scaling });
+
+    fireEvent.change(minInputElement, { target: { value: 5 } });
+    scaling.min = 5;
+    scaling.maxValid = false;
+    scaling.minValid = false;
+    rerender(
+      getComponent({
+        ...baseProps,
+        scaling,
+      })
+    );
+    expect(onChangeMockFn).toHaveBeenLastCalledWith({ scaling });
+
+    fireEvent.change(maxInputElement, { target: { value: 8 } });
+    scaling.max = 8;
+    scaling.maxValid = true;
+    scaling.minValid = true;
+    rerender(
+      getComponent({
+        ...baseProps,
+        scaling,
+      })
+    );
+    expect(onChangeMockFn).toHaveBeenLastCalledWith({ scaling });
   });
 });

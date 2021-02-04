@@ -2,13 +2,11 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 
 export const TableButton = styled(Button)`
-  height: 24px;
-  line-height: 24px;
   position: relative;
-  top: -2px;
   margin-left: 5px;
   padding: 0px 15px;
   text-transform: uppercase;
+
   i {
     margin-right: 4px;
   }
