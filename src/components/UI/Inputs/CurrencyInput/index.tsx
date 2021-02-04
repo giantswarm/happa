@@ -14,6 +14,7 @@ const InputWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 `;
 
 const StyledInput = styled(InputElement)`
@@ -30,7 +31,8 @@ const CurrencyLabel = styled.div<{ disabled?: boolean }>`
   color: ${({ theme, disabled }) =>
     disabled ? theme.colors.white3 : theme.colors.white5};
   padding: 8px 10px;
-  line-height: 1;
+  line-height: 1rem;
+  font-size: 14px;
 `;
 
 const LabelText = styled.label`
