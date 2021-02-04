@@ -47,7 +47,7 @@ const NodePoolScalingSpotInstancesDetails: React.FC<INodePoolScalingSpotInstance
       if (maxPrice > 0) {
         maxPriceRow = `Using maximum price: $${maxPrice}`;
       } else {
-        maxPriceRow = `Using on-demand pricing`;
+        maxPriceRow = `Using current on-demand pricing as maximum`;
       }
     }
 

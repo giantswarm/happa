@@ -47,7 +47,7 @@ describe('AddNodePool', () => {
         expect(screen.queryByText(/spot instances/i)).not.toBeInTheDocument();
       });
 
-      it('when spot instances are turned on, the default behaviour is using on-demand pricing', () => {
+      it('when spot instances are turned on, the default behaviour is using on-demand max pricing', () => {
         const capabilities: IClusterCapabilities = {
           hasOptionalIngress: false,
           supportsAlikeInstances: false,
@@ -74,7 +74,7 @@ describe('AddNodePool', () => {
         expect(toggleLabelElement).toBeInTheDocument();
         fireEvent.click(toggleLabelElement);
 
-        expect(screen.getByLabelText('Maximum price')).toHaveValue(0);
+        expect(screen.getByLabelText('Maximum price per hour')).toHaveValue(0);
 
         const expectedNodePool = ({
           availability_zones: {
@@ -105,7 +105,7 @@ describe('AddNodePool', () => {
         );
       });
 
-      it('can set a maximum price when on-demand pricing is turned off', () => {
+      it('can set a maximum price when on-demand max pricing is turned off', () => {
         const capabilities: IClusterCapabilities = {
           hasOptionalIngress: false,
           supportsAlikeInstances: false,
@@ -132,13 +132,15 @@ describe('AddNodePool', () => {
         expect(toggleLabelElement).toBeInTheDocument();
         fireEvent.click(toggleLabelElement);
 
-        // Deactivate fixed on-demand pricing.
+        // Deactivate current on-demand max pricing.
         const onDemandToggleElement = screen.getByText(
-          'Use fixed on-demand pricing'
+          'Use current on-demand pricing as max'
         );
         fireEvent.click(onDemandToggleElement);
 
-        const maxPriceInputElement = screen.getByLabelText('Maximum price');
+        const maxPriceInputElement = screen.getByLabelText(
+          'Maximum price per hour'
+        );
         fireEvent.change(maxPriceInputElement, {
           target: {
             value: '0.00035',

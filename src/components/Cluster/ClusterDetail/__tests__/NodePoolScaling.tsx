@@ -82,7 +82,7 @@ describe('NodePoolScaling', () => {
       fireEvent.mouseLeave(spotInstancesTab);
     });
 
-    it('renders the spot instances column correctly, with spot instances supported and enabled, using on-demand pricing', () => {
+    it('renders the spot instances column correctly, with spot instances supported and enabled, using on-demand max pricing', () => {
       const np: INodePool = {
         id: '3jx5q',
         name: 'My first node pool',
@@ -121,7 +121,9 @@ describe('NodePoolScaling', () => {
       // Hover over the column.
       fireEvent.mouseEnter(spotInstancesTab);
       expect(screen.getByText(/spot instances enabled/i)).toBeInTheDocument();
-      expect(screen.getByText(/using on-demand pricing/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/using current on-demand pricing as maximum/i)
+      ).toBeInTheDocument();
       fireEvent.mouseLeave(spotInstancesTab);
     });
 
