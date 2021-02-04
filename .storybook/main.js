@@ -3,7 +3,18 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  addons: [
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        configureJSX: true,
+        babelOptions: {},
+        sourceLoaderOptions: null,
+      },
+    },
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+  ],
 
   webpackFinal: async (config, { _ }) => {
     config.resolve.modules = [
@@ -15,12 +26,17 @@ module.exports = {
 
     config.module.rules.push({
       test: /\.sass$/,
-      loaders: [
-        'style-loader',
-        'css-loader',
-        'sass-loader',
+      loaders: ['style-loader', 'css-loader', 'sass-loader'],
+    });
+
+    config.module.rules.push({
+      test: /\.(ts|tsx)$/,
+      use: [
+        { loader: require.resolve('babel-loader') },
+        { loader: require.resolve('react-docgen-typescript-loader') },
       ],
     });
+    config.resolve.extensions.push('.ts', '.tsx');
 
     config.plugins.push(
       new MiniCssExtractPlugin({
