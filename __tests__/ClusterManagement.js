@@ -32,281 +32,293 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-beforeEach(() => {
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-  getConfiguration.mockResolvedValueOnce(metadataResponse);
-  getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/organizations/', orgsResponse);
-  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-});
-
-/************ TESTS ************/
-it('creates a v5 cluster and redirect to details view', async () => {
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-  getMockCall('/v4/clusters/');
-  getMockCall('/v4/releases/', releasesResponse);
-  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
-  getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
-
-  const v5ClusterCreationResponse = {
-    code: 'RESOURCE_CREATED',
-    message: `The cluster with ID ${v5ClusterResponse.id} has been created.`,
-  };
-
-  // Cluster POST request
-  nock(API_ENDPOINT)
-    .intercept(`/v5/clusters/`, 'POST')
-    .reply(StatusCodes.Ok, v5ClusterCreationResponse, {
-      location: `/v5/clusters/${v5ClusterResponse.id}/`,
-    });
-
-  // Node Pools POST response
-  const nodePoolCreationResponse = { ...nodePoolsResponse[0] };
-
-  // Node pools POST request
-  nock(API_ENDPOINT)
-    .intercept(`/v5/clusters/${v5ClusterResponse.id}/nodepools/`, 'POST')
-    .reply(StatusCodes.Ok, nodePoolCreationResponse);
-
-  // Node pools get
-  getMockCallTimes(
-    `/v5/clusters/${v5ClusterResponse.id}/nodepools/`,
-    [nodePoolCreationResponse],
-    2
-  );
-
-  // Cluster GET request
-  getMockCallTimes(
-    `/v5/clusters/${v5ClusterResponse.id}/`,
-    v5ClusterResponse,
-    2
-  );
-
-  const newClusterPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.New,
-    { orgId: ORGANIZATION }
-  );
-  const {
-    getAllByText,
-    findAllByText,
-    getByText,
-    getByTestId,
-  } = renderRouteWithStore(newClusterPath);
-
-  await waitFor(() => {
-    getByText('Create Cluster');
-    // Is this the v5 form?
-    expect(getByTestId('nodepool-cluster-creation-view')).toBeInTheDocument();
+describe('ClusterManagement', () => {
+  beforeEach(() => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   });
 
-  fireEvent.click(getByText('Create Cluster'));
-  await waitFor(() => getByTestId('cluster-details-view'));
+  /************ TESTS ************/
+  it('creates a v5 cluster and redirect to details view', async () => {
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/releases/', releasesResponse);
+    getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
+    getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
 
-  // Expect we have been redirected to the cluster details view
-  expect(getByTestId('cluster-details-view')).toBeInTheDocument();
-  expect(getAllByText(v5ClusterResponse.id));
-  expect(await findAllByText(nodePoolCreationResponse.id));
-});
+    const v5ClusterCreationResponse = {
+      code: 'RESOURCE_CREATED',
+      message: `The cluster with ID ${v5ClusterResponse.id} has been created.`,
+    };
 
-it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
-details view`, async () => {
-  // eslint-disable-next-line no-magic-numbers
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
-  getMockCall('/v4/clusters/');
-  getMockCallTimes('/v4/releases/', releasesResponse, 2);
+    // Cluster POST request
+    nock(API_ENDPOINT)
+      .intercept(`/v5/clusters/`, 'POST')
+      .reply(StatusCodes.Ok, v5ClusterCreationResponse, {
+        location: `/v5/clusters/${v5ClusterResponse.id}/`,
+      });
 
-  const v4ClusterCreationResponse = {
-    code: 'RESOURCE_CREATED',
-    message: `The cluster with ID ${V4_CLUSTER.id} has been created.`,
-  };
+    // Node Pools POST response
+    const nodePoolCreationResponse = { ...nodePoolsResponse[0] };
 
-  // Cluster POST request
-  nock(API_ENDPOINT)
-    .intercept(`/v4/clusters/`, 'POST')
-    .reply(StatusCodes.Ok, v4ClusterCreationResponse, {
-      location: `/v4/clusters/${V4_CLUSTER.id}/`, // Headers
+    // Node pools POST request
+    nock(API_ENDPOINT)
+      .intercept(`/v5/clusters/${v5ClusterResponse.id}/nodepools/`, 'POST')
+      .reply(StatusCodes.Ok, nodePoolCreationResponse);
+
+    // Node pools get
+    getMockCallTimes(
+      `/v5/clusters/${v5ClusterResponse.id}/nodepools/`,
+      [nodePoolCreationResponse],
+      2
+    );
+
+    // Cluster GET request
+    getMockCallTimes(
+      `/v5/clusters/${v5ClusterResponse.id}/`,
+      v5ClusterResponse,
+      2
+    );
+
+    const newClusterPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.New,
+      { orgId: ORGANIZATION }
+    );
+    const {
+      getAllByText,
+      findAllByText,
+      getByText,
+      getByTestId,
+    } = renderRouteWithStore(newClusterPath);
+
+    await waitFor(() => {
+      getByText('Create Cluster');
+      // Is this the v5 form?
+      expect(getByTestId('nodepool-cluster-creation-view')).toBeInTheDocument();
     });
 
-  // Cluster GET request
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+    fireEvent.click(getByText('Create Cluster'));
+    await waitFor(() => getByTestId('cluster-details-view'));
 
-  const newClusterPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.New,
-    {
-      orgId: ORGANIZATION,
+    // Expect we have been redirected to the cluster details view
+    expect(getByTestId('cluster-details-view')).toBeInTheDocument();
+    expect(getAllByText(v5ClusterResponse.id));
+    expect(await findAllByText(nodePoolCreationResponse.id));
+  });
+
+  it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
+details view`, async () => {
+    // eslint-disable-next-line no-magic-numbers
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
+    getMockCall('/v4/clusters/');
+    getMockCallTimes('/v4/releases/', releasesResponse, 2);
+
+    const v4ClusterCreationResponse = {
+      code: 'RESOURCE_CREATED',
+      message: `The cluster with ID ${V4_CLUSTER.id} has been created.`,
+    };
+
+    // Cluster POST request
+    nock(API_ENDPOINT)
+      .intercept(`/v4/clusters/`, 'POST')
+      .reply(StatusCodes.Ok, v4ClusterCreationResponse, {
+        location: `/v4/clusters/${V4_CLUSTER.id}/`, // Headers
+      });
+
+    // Cluster GET request
+    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+
+    const newClusterPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.New,
+      {
+        orgId: ORGANIZATION,
+      }
+    );
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse,
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+
+    // Empty response
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+
+    const {
+      findByText,
+      findByTestId,
+      getAllByText,
+      getByTitle,
+    } = renderRouteWithStore(newClusterPath);
+
+    fireEvent.click(await findByText(/Available releases/i));
+
+    fireEvent.click(
+      getByTitle(
+        new RegExp(`Select release ${preNodePoolRelease.version}`, 'i')
+      )
+    );
+
+    // Click the create cluster button.
+    fireEvent.click(await findByText('Create Cluster'));
+
+    // Wait till we're on the cluster detail page.
+    await findByTestId('cluster-details-view');
+
+    // Expect we have been redirected to the cluster details view
+    expect(getAllByText(V4_CLUSTER.id)[0]).toBeInTheDocument();
+  });
+
+  it(`redirects the user to clusters to list and shows flash message when cluster doesn't exist`, async () => {
+    const fakeCluster = 'f4ke1';
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/clusters/');
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.Home,
+      {
+        orgId: ORGANIZATION,
+        clusterId: fakeCluster,
+      }
+    );
+    const { getByTestId } = renderRouteWithStore(clusterDetailPath);
+
+    // Expect we have been redirected to the clusters list.
+    await waitFor(() =>
+      expect(getByTestId('clusters-list')).toBeInTheDocument()
+    );
+
+    const flashMessage = document.querySelector('#noty_layout__topRight');
+    expect(flashMessage).toContainHTML(
+      `Cluster <code>f4ke1</code> no longer exists.`
+    );
+  });
+
+  it('Cluster list shows all clusters, each one with its details, for the selected organization', async () => {
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/clusters/', [
+      ...v4ClustersResponse,
+      ...v5ClustersResponse,
+    ]);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
+    getMockCall(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, nodePoolsResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+
+    const clusterDetailPath = RoutePath.createUsablePath(MainRoutes.Home);
+    const { getAllByTestId, getByText } = renderRouteWithStore(
+      clusterDetailPath
+    );
+
+    // Wait for the last elements to load.
+    await waitFor(() =>
+      expect(getAllByTestId('cluster-resources').length).toBe(2)
+    );
+
+    // Expect id, name and release version of both clusters are in view.
+    expect(getByText(V4_CLUSTER.id)).toBeInTheDocument();
+    expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
+    expect(getByText(V4_CLUSTER.releaseVersion)).toBeInTheDocument();
+    expect(getByText(V5_CLUSTER.id)).toBeInTheDocument();
+    expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
+    expect(getByText(V5_CLUSTER.releaseVersion)).toBeInTheDocument();
+
+    await waitFor(() =>
+      expect(getAllByTestId('cluster-resources').length).toBe(2)
+    );
+
+    // Expect resources to be in the view.
+    // If we refactor resources selector this will break.
+    // TODO Use selectors in tests to produce resources and expect this info is in the view
+    const v4ClusterResources = within(getAllByTestId('cluster-resources')[1]);
+    expect(v4ClusterResources.getByText(/3 nodes/i)).toBeInTheDocument();
+
+    const v5ClusterResources = within(getAllByTestId('cluster-resources')[0]);
+    expect(v5ClusterResources.getByText(/2 node pools/i)).toBeInTheDocument();
+    expect(v5ClusterResources.getByText(/6 nodes/i)).toBeInTheDocument();
+    expect(v5ClusterResources.getByText(/24 CPU cores/i)).toBeInTheDocument();
+  });
+
+  it('it does not show disabled releases in release selection modal for regular users', async () => {
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const storage = {
+      user:
+        '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
+    };
+
+    const newClusterPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.New,
+      {
+        orgId: ORGANIZATION,
+      }
+    );
+
+    const { findByText, queryByText, container } = renderRouteWithStore(
+      newClusterPath,
+      {},
+      storage
+    );
+
+    fireEvent.click(await findByText(/Available releases/i));
+
+    const table = container.querySelector('table');
+
+    let numActiveReleases = 0;
+
+    for (const { version, active } of releasesResponse) {
+      if (active === true) {
+        expect(within(table).getByText(version)).toBeInTheDocument();
+        numActiveReleases++;
+      } else {
+        expect(queryByText(version)).not.toBeInTheDocument();
+      }
     }
-  );
-  getMockCallTimes(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse,
-    2
-  );
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
 
-  // Empty response
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    const tableRows = table.querySelectorAll('tbody tr');
 
-  const {
-    findByText,
-    findByTestId,
-    getAllByText,
-    getByTitle,
-  } = renderRouteWithStore(newClusterPath);
+    expect(tableRows).toHaveLength(numActiveReleases);
+  });
 
-  fireEvent.click(await findByText(/Available releases/i));
+  it('it displays disabled releases in release selection modal for admin users', async () => {
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/releases/', releasesResponse);
 
-  fireEvent.click(
-    getByTitle(new RegExp(`Select release ${preNodePoolRelease.version}`, 'i'))
-  );
+    const storage = {
+      user:
+        '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+    };
 
-  // Click the create cluster button.
-  fireEvent.click(await findByText('Create Cluster'));
+    const newClusterPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.New,
+      {
+        orgId: ORGANIZATION,
+      }
+    );
 
-  // Wait till we're on the cluster detail page.
-  await findByTestId('cluster-details-view');
+    const { findByText, container } = renderRouteWithStore(
+      newClusterPath,
+      {},
+      storage
+    );
 
-  // Expect we have been redirected to the cluster details view
-  expect(getAllByText(V4_CLUSTER.id)[0]).toBeInTheDocument();
-});
+    fireEvent.click(await findByText(/Available releases/i));
 
-it(`redirects the user to clusters to list and shows flash message when cluster doesn't exist`, async () => {
-  const fakeCluster = 'f4ke1';
-  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-  getMockCall('/v4/clusters/');
+    const table = container.querySelector('table');
 
-  const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail.Home,
-    {
-      orgId: ORGANIZATION,
-      clusterId: fakeCluster,
-    }
-  );
-  const { getByTestId } = renderRouteWithStore(clusterDetailPath);
-
-  // Expect we have been redirected to the clusters list.
-  await waitFor(() => expect(getByTestId('clusters-list')).toBeInTheDocument());
-
-  const flashMessage = document.querySelector('#noty_layout__topRight');
-  expect(flashMessage).toContainHTML(
-    `Cluster <code>f4ke1</code> no longer exists.`
-  );
-});
-
-it('Cluster list shows all clusters, each one with its details, for the selected organization', async () => {
-  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-  getMockCall('/v4/clusters/', [...v4ClustersResponse, ...v5ClustersResponse]);
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
-  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, nodePoolsResponse);
-  getMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
-  );
-
-  const clusterDetailPath = RoutePath.createUsablePath(MainRoutes.Home);
-  const { getAllByTestId, getByText } = renderRouteWithStore(clusterDetailPath);
-
-  // Wait for the last elements to load.
-  await waitFor(() =>
-    expect(getAllByTestId('cluster-resources').length).toBe(2)
-  );
-
-  // Expect id, name and release version of both clusters are in view.
-  expect(getByText(V4_CLUSTER.id)).toBeInTheDocument();
-  expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
-  expect(getByText(V4_CLUSTER.releaseVersion)).toBeInTheDocument();
-  expect(getByText(V5_CLUSTER.id)).toBeInTheDocument();
-  expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
-  expect(getByText(V5_CLUSTER.releaseVersion)).toBeInTheDocument();
-
-  await waitFor(() =>
-    expect(getAllByTestId('cluster-resources').length).toBe(2)
-  );
-
-  // Expect resources to be in the view.
-  // If we refactor resources selector this will break.
-  // TODO Use selectors in tests to produce resources and expect this info is in the view
-  const v4ClusterResources = within(getAllByTestId('cluster-resources')[1]);
-  expect(v4ClusterResources.getByText(/3 nodes/i)).toBeInTheDocument();
-
-  const v5ClusterResources = within(getAllByTestId('cluster-resources')[0]);
-  expect(v5ClusterResources.getByText(/2 node pools/i)).toBeInTheDocument();
-  expect(v5ClusterResources.getByText(/6 nodes/i)).toBeInTheDocument();
-  expect(v5ClusterResources.getByText(/24 CPU cores/i)).toBeInTheDocument();
-});
-
-it('it does not show disabled releases in release selection modal for regular users', async () => {
-  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-  getMockCall('/v4/clusters/');
-  getMockCall('/v4/releases/', releasesResponse);
-
-  const storage = {
-    user:
-      '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
-  };
-
-  const newClusterPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.New,
-    {
-      orgId: ORGANIZATION,
-    }
-  );
-
-  const { findByText, queryByText, container } = renderRouteWithStore(
-    newClusterPath,
-    {},
-    storage
-  );
-
-  fireEvent.click(await findByText(/Available releases/i));
-
-  const table = container.querySelector('table');
-
-  let numActiveReleases = 0;
-
-  for (const { version, active } of releasesResponse) {
-    if (active === true) {
+    for (const { version } of releasesResponse) {
       expect(within(table).getByText(version)).toBeInTheDocument();
-      numActiveReleases++;
-    } else {
-      expect(queryByText(version)).not.toBeInTheDocument();
     }
-  }
-
-  const tableRows = table.querySelectorAll('tbody tr');
-
-  expect(tableRows).toHaveLength(numActiveReleases);
-});
-
-it('it displays disabled releases in release selection modal for admin users', async () => {
-  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-  getMockCall('/v4/clusters/');
-  getMockCall('/v4/releases/', releasesResponse);
-
-  const storage = {
-    user:
-      '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
-  };
-
-  const newClusterPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.New,
-    {
-      orgId: ORGANIZATION,
-    }
-  );
-
-  const { findByText, container } = renderRouteWithStore(
-    newClusterPath,
-    {},
-    storage
-  );
-
-  fireEvent.click(await findByText(/Available releases/i));
-
-  const table = container.querySelector('table');
-
-  for (const { version } of releasesResponse) {
-    expect(within(table).getByText(version)).toBeInTheDocument();
-  }
-});
+  });
+  // eslint-disable-next-line no-magic-numbers
+}, 10000);
