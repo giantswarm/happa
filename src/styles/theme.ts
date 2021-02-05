@@ -244,8 +244,8 @@ const theme = deepMerge(generate(16), {
       responsiveBreakpoint: 'small',
     },
     input: {
-      padding: '10px',
-      weight: 600,
+      padding: 'small',
+      weight: 500,
     },
     spacing: '20px',
     size: {
@@ -376,10 +376,10 @@ const theme = deepMerge(generate(16), {
   },
   formField: {
     border: {
-      color: 'border',
+      color: 'text-xweak',
       error: {
         color: {
-          dark: 'white',
+          dark: 'status-critical',
           light: 'status-critical',
         },
       },
@@ -388,6 +388,7 @@ const theme = deepMerge(generate(16), {
       style: 'solid',
       size: 'xsmall',
     },
+    background: 'background-light',
     content: {
       pad: 'small',
     },
@@ -407,21 +408,23 @@ const theme = deepMerge(generate(16), {
       weight: 'normal',
     },
     help: {
-      color: 'text-xweak',
+      color: 'text-weak',
       margin: {
-        start: 'small',
-        horizontal: 'none',
-        vertical: 'small',
+        start: 'none',
+        top: 'none',
+        bottom: 'small',
       },
       size: 'small',
       weight: 'normal',
     },
     info: {
-      color: 'text-xweak',
+      color: 'text-weak',
       margin: {
         vertical: 'xsmall',
-        horizontal: 'small',
+        horizontal: 'none',
       },
+      size: 'small',
+      weight: 'normal',
     },
     label: {
       margin: {
@@ -429,7 +432,7 @@ const theme = deepMerge(generate(16), {
         horizontal: 'none',
       },
       size: 'medium',
-      weight: 'normal',
+      weight: 'bold',
       color: 'text',
     },
     margin: {

@@ -3,7 +3,7 @@ import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import TextInput from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof TextInput>> = (
+export const Label: Story<ComponentPropsWithoutRef<typeof TextInput>> = (
   args
 ) => {
   const [value, setValue] = useState(args.value);
@@ -17,11 +17,12 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof TextInput>> = (
   );
 };
 
-Simple.args = {
+Label.args = {
   value: 'Hi people',
+  label: 'Some input',
 };
 
-Simple.argTypes = {
+Label.argTypes = {
   label: { control: { type: 'text' } },
   error: { control: { type: 'text' } },
   info: { control: { type: 'text' } },
