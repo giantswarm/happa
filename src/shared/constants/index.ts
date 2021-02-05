@@ -27,6 +27,7 @@ export const Constants = {
   AZURE_NP_AUTOSCALING_VERSION: '13.1.0',
 
   AZURE_MULTI_AZ_VERSION: '11.1.0',
+  AZURE_SPOT_INSTANCES_VERSION: '14.1.0',
   AWS_ONDEMAND_INSTANCES_VERSION: '11.2.0',
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.2.0',
   AWS_HA_MASTERS_VERSION: '11.4.0',
@@ -43,7 +44,9 @@ export const Constants = {
     'Lower end of the scaling range for the cluster autoscaler',
   MAX_NODES_EXPLANATION:
     'Upper end of the scaling range for the cluster autoscaler',
-  SPOT_NODES_EXPLANATION: 'Current number of spot instances in this node pool',
+  SPOT_COLUMN_EXPLANATION_AWS:
+    'Current number of spot instances in this node pool',
+  SPOT_COLUMN_EXPLANATION_AZURE: 'Whether Spot instances are used or not.',
 
   KEYPAIR_DEFAULT_TTL: 24, // A day, In hours
   // eslint-disable-next-line no-magic-numbers
@@ -64,6 +67,10 @@ export const Constants = {
 
   NP_DEFAULT_MIN_SCALING: 3,
   NP_DEFAULT_MAX_SCALING: 10,
+
+  AZURE_SPOT_INSTANCES_MAX_PRICE_MIN: 0.00001,
+  AZURE_SPOT_INSTANCES_MAX_PRICE_MAX: 5,
+  AZURE_SPOT_INSTANCES_MAX_PRICE_PRECISION: 5,
 
   // App name of the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',

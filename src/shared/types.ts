@@ -9,8 +9,14 @@ export interface INodePoolNodeSpecAWS {
   use_alike_instance_types: boolean;
 }
 
+export interface INodePoolNodeSpecAzureSpotInstances {
+  enabled: boolean;
+  max_price: number;
+}
+
 export interface INodePoolNodeSpecAzure {
   vm_size: string;
+  spot_instances?: INodePoolNodeSpecAzureSpotInstances;
 }
 
 export interface INodePoolNodeSpecVolumeSizesGB {

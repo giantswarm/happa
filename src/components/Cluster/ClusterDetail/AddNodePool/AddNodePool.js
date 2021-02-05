@@ -73,6 +73,11 @@ class AddNodePool extends Component {
     },
     azure: {
       vmSize: this.props.defaultVmSize,
+      spotInstances: {
+        maxPrice: 0,
+        validationError: '',
+        onDemandPricing: true,
+      },
     },
     spotInstancesEnabled: false,
   };
@@ -185,6 +190,42 @@ class AddNodePool extends Component {
     }
   };
 
+  setSpotInstancesMaxPrice = (maxPrice) => {
+    let validationError = '';
+    if (maxPrice < Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN) {
+      validationError = `The value should be between ${Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN} and ${Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MAX}.`;
+    }
+
+    this.setState(({ azure }) => ({
+      azure: {
+        ...azure,
+        spotInstances: {
+          ...azure.spotInstances,
+          maxPrice,
+          validationError,
+        },
+      },
+    }));
+  };
+
+  setSpotInstancesUseOnDemandPricing = (onDemandPricing) => {
+    const maxPrice = onDemandPricing
+      ? 0
+      : Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN;
+
+    this.setState(({ azure }) => ({
+      azure: {
+        ...azure,
+        spotInstances: {
+          ...azure.spotInstances,
+          onDemandPricing,
+          maxPrice,
+          validationError: '',
+        },
+      },
+    }));
+  };
+
   updateAZ = (azSelection) => (payload) => {
     switch (azSelection) {
       case AvailabilityZoneSelection.Automatic:
@@ -206,12 +247,15 @@ class AddNodePool extends Component {
   };
 
   validate() {
+    const { provider } = this.props;
     const {
       availabilityZonesPicker,
       availabilityZonesLabels,
       azSelection,
       scaling,
       name,
+      spotInstancesEnabled,
+      azure,
     } = this.state;
     if (!name.valid) {
       return false;
@@ -234,6 +278,14 @@ class AddNodePool extends Component {
       return false;
     }
 
+    if (
+      provider === Providers.AZURE &&
+      spotInstancesEnabled &&
+      azure.spotInstances.validationError.length > 0
+    ) {
+      return false;
+    }
+
     return true;
   }
 
@@ -248,6 +300,7 @@ class AddNodePool extends Component {
       name,
       spotInstancesEnabled,
       aws,
+      azure,
     } = this.state;
     const { provider } = this.props;
 
@@ -301,12 +354,22 @@ class AddNodePool extends Component {
         break;
       }
 
-      case Providers.AZURE:
+      case Providers.AZURE: {
+        let spotInstancesMaxPrice = 0;
+        if (spotInstancesEnabled && !azure.spotInstances.onDemandPricing) {
+          spotInstancesMaxPrice = azure.spotInstances.maxPrice;
+        }
+
         nodePoolDefinition.node_spec.azure = {
           vm_size: this.state.azure.vmSize,
+          spot_instances: {
+            enabled: spotInstancesEnabled,
+            max_price: spotInstancesMaxPrice,
+          },
         };
 
         break;
+      }
     }
 
     // Add scaling setup.
@@ -343,6 +406,16 @@ class AddNodePool extends Component {
     const scalingLabel = supportsNodePoolAutoscaling
       ? 'Scaling range'
       : 'Node count';
+
+    let spotInstancesLabel = 'Spot instances';
+    if (provider === Providers.AWS) {
+      spotInstancesLabel = 'Instance distribution';
+    }
+
+    let spotInstancesToggleLabel = 'Enabled';
+    if (provider === Providers.AWS) {
+      spotInstancesToggleLabel = 'Enable Spot instances';
+    }
 
     return (
       <>
@@ -403,7 +476,7 @@ class AddNodePool extends Component {
         {supportsNodePoolSpotInstances && (
           <Section>
             <StyledInput
-              label='Instance distribution'
+              label={spotInstancesLabel}
               inputId={`spot-instances-${id}`}
               // regular space, hides hint ;)
               hint={<>&#32;</>}
@@ -412,7 +485,7 @@ class AddNodePool extends Component {
                 <Checkbox
                   checked={this.state.spotInstancesEnabled}
                   onChange={this.setSpotInstancesEnabled}
-                  label='Enable Spot instances'
+                  label={spotInstancesToggleLabel}
                 />
               </CheckboxWrapper>
             </StyledInput>
@@ -427,6 +500,15 @@ class AddNodePool extends Component {
                   this.state.aws.instanceDistribution.onDemandBaseCapacity
                 }
                 setOnDemandBaseCapacity={this.setOnDemandBaseCapacity}
+                maxPrice={this.state.azure.spotInstances.maxPrice}
+                setMaxPrice={this.setSpotInstancesMaxPrice}
+                maxPriceValidationError={
+                  this.state.azure.spotInstances.validationError
+                }
+                useOnDemandPricing={
+                  this.state.azure.spotInstances.onDemandPricing
+                }
+                setUseOnDemandPricing={this.setSpotInstancesUseOnDemandPricing}
               />
             )}
           </Section>

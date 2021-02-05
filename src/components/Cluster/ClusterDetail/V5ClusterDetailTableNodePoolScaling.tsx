@@ -3,14 +3,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { Constants } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
+
+import V5ClusterDetailTableSpotInstancesTab from './V5ClusterDetailTableSpotInstancesTab';
 
 interface IV5ClusterDetailTableNodePoolScalingProps {
+  provider: PropertiesOf<typeof Providers>;
   supportsAutoscaling?: boolean;
   supportsSpotInstances?: boolean;
 }
 
 const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoolScalingProps> = ({
+  provider,
   supportsAutoscaling,
   supportsSpotInstances,
 }) => {
@@ -65,22 +70,14 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
       </OverlayTrigger>
 
       {supportsSpotInstances && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id='spot-tooltip'>
-              {Constants.SPOT_NODES_EXPLANATION}
-            </Tooltip>
-          }
-          placement='top'
-        >
-          <NodePoolsColumnHeader>Spot</NodePoolsColumnHeader>
-        </OverlayTrigger>
+        <V5ClusterDetailTableSpotInstancesTab provider={provider} />
       )}
     </>
   );
 };
 
 V5ClusterDetailTableNodePoolScaling.propTypes = {
+  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
   supportsAutoscaling: PropTypes.bool,
   supportsSpotInstances: PropTypes.bool,
 };

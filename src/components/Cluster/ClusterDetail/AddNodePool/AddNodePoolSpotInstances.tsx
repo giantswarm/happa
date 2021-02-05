@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 
+import AddNodePoolSpotInstancesAzure from './AddNodePoolSpotInstancesAzure';
+
 const SpotValuesLabelText = styled.span`
   font-weight: 300;
   font-size: 16px;
@@ -39,6 +41,11 @@ interface IAddNodePoolSpotInstancesProps {
   setSpotPercentage: SpecChangeHandler<number>;
   onDemandBaseCapacity: number;
   setOnDemandBaseCapacity: SpecChangeHandler<number>;
+  maxPrice: number;
+  setMaxPrice: (newPrice: number) => void;
+  maxPriceValidationError: string;
+  useOnDemandPricing: boolean;
+  setUseOnDemandPricing: (isActive: boolean) => void;
 }
 
 const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
@@ -47,53 +54,67 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
   setSpotPercentage,
   onDemandBaseCapacity,
   setOnDemandBaseCapacity,
+  maxPrice,
+  setMaxPrice,
+  maxPriceValidationError,
+  useOnDemandPricing,
+  setUseOnDemandPricing,
 }) => {
-  return (
-    <>
-      <ClusterCreationLabelSpan>Spot instances</ClusterCreationLabelSpan>
+  if (provider === Providers.AWS) {
+    return (
+      <>
+        <ClusterCreationLabelSpan>Spot instances</ClusterCreationLabelSpan>
+        <SpotValuesNumberPickerWrapper>
+          <SpotValuesLabelText>Spot instance percentage</SpotValuesLabelText>
+          <NumberPicker
+            readOnly={false}
+            max={100}
+            min={0}
+            stepSize={10}
+            value={spotPercentage}
+            onChange={setSpotPercentage}
+            theme='spot-number-picker'
+            eventNameSuffix='SPOT_PERCENTAGE'
+          />
+          <SpotValuesLabelText>percent</SpotValuesLabelText>
+        </SpotValuesNumberPickerWrapper>
+        <SpotValuesHelpText>
+          Controls the percentage of spot instances to be used for worker nodes
+          beyond the number of <i>on demand base capacity</i>.
+        </SpotValuesHelpText>
+        <SpotValuesNumberPickerWrapper>
+          <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
+          <NumberPicker
+            readOnly={false}
+            min={0}
+            max={32767}
+            stepSize={1}
+            value={onDemandBaseCapacity}
+            onChange={setOnDemandBaseCapacity}
+            theme='spot-number-picker'
+            eventNameSuffix='ONDEMAND_BASE_CAPACITY'
+          />
+          <SpotValuesLabelText>instances</SpotValuesLabelText>
+        </SpotValuesNumberPickerWrapper>
+        <SpotValuesHelpText>
+          Controls how much of the initial capacity is made up of on-demand
+          instances.
+        </SpotValuesHelpText>
+      </>
+    );
+  } else if (provider === Providers.AZURE) {
+    return (
+      <AddNodePoolSpotInstancesAzure
+        maxPrice={maxPrice}
+        setMaxPrice={setMaxPrice}
+        maxPriceValidationError={maxPriceValidationError}
+        useOnDemandPricing={useOnDemandPricing}
+        setUseOnDemandPricing={setUseOnDemandPricing}
+      />
+    );
+  }
 
-      {provider === Providers.AWS && (
-        <>
-          <SpotValuesNumberPickerWrapper>
-            <SpotValuesLabelText>Spot instance percentage</SpotValuesLabelText>
-            <NumberPicker
-              readOnly={false}
-              max={100}
-              min={0}
-              stepSize={10}
-              value={spotPercentage}
-              onChange={setSpotPercentage}
-              theme='spot-number-picker'
-              eventNameSuffix='SPOT_PERCENTAGE'
-            />
-            <SpotValuesLabelText>percent</SpotValuesLabelText>
-          </SpotValuesNumberPickerWrapper>
-          <SpotValuesHelpText>
-            Controls the percentage of spot instances to be used for worker
-            nodes beyond the number of <i>on demand base capacity</i>.
-          </SpotValuesHelpText>
-          <SpotValuesNumberPickerWrapper>
-            <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
-            <NumberPicker
-              readOnly={false}
-              min={0}
-              max={32767}
-              stepSize={1}
-              value={onDemandBaseCapacity}
-              onChange={setOnDemandBaseCapacity}
-              theme='spot-number-picker'
-              eventNameSuffix='ONDEMAND_BASE_CAPACITY'
-            />
-            <SpotValuesLabelText>instances</SpotValuesLabelText>
-          </SpotValuesNumberPickerWrapper>
-          <SpotValuesHelpText>
-            Controls how much of the initial capacity is made up of on-demand
-            instances.
-          </SpotValuesHelpText>
-        </>
-      )}
-    </>
-  );
+  return null;
 };
 
 AddNodePoolSpotInstances.propTypes = {
@@ -102,6 +123,11 @@ AddNodePoolSpotInstances.propTypes = {
   setSpotPercentage: PropTypes.func.isRequired,
   onDemandBaseCapacity: PropTypes.number.isRequired,
   setOnDemandBaseCapacity: PropTypes.func.isRequired,
+  maxPrice: PropTypes.number.isRequired,
+  setMaxPrice: PropTypes.func.isRequired,
+  maxPriceValidationError: PropTypes.string.isRequired,
+  useOnDemandPricing: PropTypes.bool.isRequired,
+  setUseOnDemandPricing: PropTypes.func.isRequired,
 };
 
 export default AddNodePoolSpotInstances;
