@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
-import EmailField from 'shared/EmailField';
-import InputField from 'shared/InputField';
 import {
   batchedClusterDeleteConfirmed,
   batchedOrganizationDeleteConfirmed,
@@ -12,13 +10,16 @@ import { modalHide } from 'stores/modal/actions';
 import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import {
   organizationAddMemberConfirmed,
-  organizationAddMemberTyping,
   organizationCreateConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'stores/organization/actions';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import TextInput from 'UI/Inputs/TextInput';
+
+const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const organizationNameRegexp = /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/;
 
 const NodePoolTextDiv = styled.div`
   strong {
@@ -33,12 +34,10 @@ const NodePoolTextDiv = styled.div`
 `;
 
 class Modals extends React.Component {
-  emailInputRef = React.createRef();
-  orgNameInputRef = React.createRef();
-
   state = {
-    emailValid: false,
-    organizationNameValid: false,
+    email: '',
+    emailValidationError: 'Must not be empty',
+    organizationNameValidationError: 'Must not be empty',
     organizationName: '',
   };
 
@@ -55,19 +54,27 @@ class Modals extends React.Component {
   };
 
   clear() {
+    const newOrgName = '';
+    const organizationNameValidationError = this.validateOrganizationName(
+      newOrgName
+    );
+
+    const newEmail = '';
+    const emailValidationError = this.validateOrganizationName(newEmail);
+
     this.setState({
-      emailValid: false,
-      organizationNameValid: false,
-      organizationName: '',
+      email: newEmail,
+      emailValidationError,
+      organizationNameValidationError,
+      organizationName: newOrgName,
     });
   }
 
   createOrganisation = (e) => {
     e.preventDefault();
 
-    const organizationName = this.orgNameInputRef.current?.value();
-
-    if (organizationName) {
+    const { organizationName, organizationNameValidationError } = this.state;
+    if (organizationNameValidationError.length < 1) {
       this.props.dispatch(organizationCreateConfirmed(organizationName));
     }
   };
@@ -75,17 +82,14 @@ class Modals extends React.Component {
   addMember = (e) => {
     e.preventDefault();
 
-    if (this.state.emailValid) {
-      const email = this.emailInputRef.current?.value();
-
-      if (email) {
-        this.props.dispatch(
-          organizationAddMemberConfirmed(
-            this.props.modal.templateValues.orgId,
-            email
-          )
-        );
-      }
+    const { email, emailValidationError } = this.state;
+    if (emailValidationError.length < 1) {
+      this.props.dispatch(
+        organizationAddMemberConfirmed(
+          this.props.modal.templateValues.orgId,
+          email
+        )
+      );
     }
   };
 
@@ -97,55 +101,40 @@ class Modals extends React.Component {
     this.props.dispatch(organizationRemoveMemberConfirmed(orgId, email));
   };
 
-  emailFieldChanged = (emailField) => {
-    const email = this.props.modal.templateValues.email;
-    const orgId = this.props.modal.templateValues.orgId;
-    this.props.dispatch(organizationAddMemberTyping(orgId, email));
+  emailFieldChanged = (e) => {
+    const email = e.target.value;
 
+    const validationError = !emailRegexp.test(email)
+      ? 'Must be a valid email address'
+      : '';
     this.setState({
-      emailValid: emailField.valid(),
+      email,
+      emailValidationError: validationError,
     });
   };
 
-  onOrganizationNameChange = (organizationName) => {
-    this.setState({ organizationName });
+  onOrganizationNameChange = (e) => {
+    const organizationName = e.target.value;
+
+    const validationError = this.validateOrganizationName(organizationName);
+    this.setState({
+      organizationName,
+      organizationNameValidationError: validationError,
+    });
   };
 
   validateOrganizationName = (organizationName) => {
-    if (!organizationName) {
-      return {
-        valid: false,
-        validationError: '',
-      };
+    switch (true) {
+      case !organizationName:
+        return 'Must not be empty';
+      // eslint-disable-next-line no-magic-numbers
+      case organizationName.length < 4 || organizationName.length > 63:
+        return 'Must be between 4 and 63 characters long';
+      case !organizationNameRegexp.test(organizationName):
+        return 'Must have valid format';
+      default:
+        return '';
     }
-
-    // eslint-disable-next-line no-magic-numbers
-    if (organizationName.length < 4 || organizationName.length > 63) {
-      this.setState({ organizationNameValid: false });
-
-      return {
-        valid: false,
-        validationError: 'must be between 4 and 63 characters long',
-      };
-    }
-
-    if (
-      !/^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/.test(organizationName)
-    ) {
-      this.setState({ organizationNameValid: false });
-
-      return {
-        valid: false,
-        validationError: 'invalid format',
-      };
-    }
-
-    this.setState({ organizationNameValid: true });
-
-    return {
-      valid: true,
-      validationError: '',
-    };
   };
 
   render() {
@@ -212,16 +201,14 @@ class Modals extends React.Component {
                 <li>must start and end with a letter or number</li>
               </ul>
               <form onSubmit={this.createOrganisation}>
-                <InputField
+                <TextInput
                   id='create-organization-name'
                   name='create-organization-name'
-                  autofocus={true}
-                  label='Organization Name:'
-                  type='text'
-                  ref={this.orgNameInputRef}
+                  autoFocus={true}
+                  label='Organization Name'
                   value={this.state.organizationName}
-                  validate={this.validateOrganizationName}
                   onChange={this.onOrganizationNameChange}
+                  error={this.state.organizationNameValidationError}
                 />
               </form>
             </BootstrapModal.Body>
@@ -232,7 +219,7 @@ class Modals extends React.Component {
                 loadingPosition='left'
                 onClick={this.createOrganisation}
                 type='submit'
-                disabled={!this.state.organizationNameValid}
+                disabled={this.state.organizationNameValidationError.length > 0}
               >
                 {this.props.modal.templateValues.loading
                   ? 'Creating Organization'
@@ -260,24 +247,24 @@ class Modals extends React.Component {
                 a user account.
               </p>
 
-              <form onSubmit={this.addMember.bind(this)}>
-                <EmailField
-                  label='Email:'
-                  autofocus
-                  errorMessage={this.props.modal.templateValues.errorMessage}
+              <form onSubmit={this.addMember}>
+                <TextInput
+                  label='Email'
+                  autoFocus={true}
+                  error={this.props.modal.templateValues.errorMessage}
                   name='email'
-                  onChange={this.emailFieldChanged.bind(this)}
-                  ref={this.emailInputRef}
+                  value={this.state.email}
+                  onChange={this.emailFieldChanged}
                 />
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
                 bsStyle='primary'
-                disabled={!this.state.emailValid}
+                disabled={this.state.emailValidationError.length > 0}
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
-                onClick={this.addMember.bind(this)}
+                onClick={this.addMember}
                 type='submit'
               >
                 {this.props.modal.templateValues.loading

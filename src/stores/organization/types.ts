@@ -2,7 +2,6 @@ import {
   ORGANIZATION_ADD_MEMBER_CONFIRMED,
   ORGANIZATION_ADD_MEMBER_ERROR,
   ORGANIZATION_ADD_MEMBER_REQUEST,
-  ORGANIZATION_ADD_MEMBER_TYPING,
   ORGANIZATION_CREATE_CONFIRMED,
   ORGANIZATION_CREATE_ERROR,
   ORGANIZATION_CREATE_REQUEST,
@@ -136,11 +135,6 @@ export interface IOrganizationAddMemberRequestAction {
   orgId: string;
 }
 
-export interface IOrganizationAddMemberTypingAction {
-  type: typeof ORGANIZATION_ADD_MEMBER_TYPING;
-  orgId: string;
-}
-
 export interface IOrganizationAddMemberConfirmedAction {
   type: typeof ORGANIZATION_ADD_MEMBER_CONFIRMED;
   orgId: string;
@@ -191,7 +185,6 @@ export type OrganizationActions =
   | IOrganizationCredentialsLoadSuccessAction
   | IOrganizationCredentialsLoadErrorAction
   | IOrganizationAddMemberRequestAction
-  | IOrganizationAddMemberTypingAction
   | IOrganizationAddMemberConfirmedAction
   | IOrganizationAddMemberErrorAction
   | IOrganizationRemoveMemberAction
