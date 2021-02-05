@@ -48,7 +48,7 @@ describe('appcatalog::actions', () => {
     it('dispatches an error if receiving an appVersion without a sources field to check for README URLs', async () => {
       const initialState = {} as IState;
       const store = mockStore(initialState);
-      const invalidAppVersion = {} as IAppCatalogApp;
+      const invalidAppVersion = {} as IAppCatalogAppVersion;
 
       await store.dispatch(loadAppReadme('notUnderTest', invalidAppVersion));
 
@@ -72,7 +72,7 @@ describe('appcatalog::actions', () => {
     it('dispatches an error if receiving an appVersion without a README annotation', async () => {
       const initialState = {} as IState;
       const store = mockStore(initialState);
-      const appVersionWithEmptySources = ({} as unknown) as IAppCatalogApp;
+      const appVersionWithEmptySources = ({} as unknown) as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithEmptySources)
@@ -100,7 +100,7 @@ describe('appcatalog::actions', () => {
       const store = mockStore(initialState);
       const appVersionWithEmptySources = ({
         sources: [],
-      } as unknown) as IAppCatalogApp;
+      } as unknown) as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithEmptySources)
@@ -135,7 +135,7 @@ describe('appcatalog::actions', () => {
 
       const appVersionWithReadmeInSources = {
         sources: ['http://mockserver.fake/README.md'],
-      } as IAppCatalogApp;
+      } as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithReadmeInSources)
@@ -174,7 +174,7 @@ describe('appcatalog::actions', () => {
           'application.giantswarm.io/readme':
             'http://mockserver.fake/README.md',
         },
-      } as IAppCatalogApp;
+      } as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithReadmeInSources)
@@ -213,7 +213,7 @@ describe('appcatalog::actions', () => {
         sources: [
           'http://mockserver.fake/1.2.3-REALLY-LONG-COMMIT-SHA/README.md',
         ],
-      } as IAppCatalogApp;
+      } as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithTestVersionReadmeInSources)
@@ -252,7 +252,7 @@ describe('appcatalog::actions', () => {
         sources: [
           'http://mockserver.fake/v1.2.3-REALLY-LONG-COMMIT-SHA/README.md',
         ],
-      } as IAppCatalogApp;
+      } as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithTestVersionReadmeInSources)

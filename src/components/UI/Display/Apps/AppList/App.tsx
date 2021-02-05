@@ -71,7 +71,7 @@ const App: React.FC<IAppProps> = (props) => {
         <StyledCatalogLabel
           catalogName={props.catalogName}
           isManaged={props.catalogIsManaged}
-          iconUrl='https://dummyimage.com/125/125/fff'
+          iconUrl={props.catalogIconUrl}
         />
       </DetailWrapper>
     </Wrapper>

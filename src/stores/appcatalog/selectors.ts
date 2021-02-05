@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect';
 import { Constants } from 'shared/constants';
 import { IState } from 'stores/state';
 
@@ -13,9 +14,40 @@ export function selectCatalogs(state: IState): IAppCatalogsState {
   return state.entities.catalogs;
 }
 
+export function selectSelectedCatalogs(state: IState): string[] {
+  return Object.entries(state.entities.catalogs.ui.selectedCatalogs)
+    .filter(([_, enabled]) => enabled)
+    .map(([catalogName]) => catalogName);
+}
+
+export const selectApps = createSelector(
+  [selectSelectedCatalogs, selectCatalogs],
+  (selectedCatalogs, catalogs): IAppCatalogApp[] => {
+    const allApps: IAppCatalogApp[] = [];
+
+    for (let x = 0; x < selectedCatalogs.length; x++) {
+      const catalog = catalogs.items[selectedCatalogs[x]];
+
+      if (catalog && catalog.apps) {
+        allApps.push(
+          ...Object.entries(catalog.apps).map(([appName, appVersions]) => ({
+            name: appName,
+            catalogName: catalog.spec.title,
+            catalogIconURL: catalog.spec.logoURL,
+            appIconURL: '',
+            versions: appVersions,
+          }))
+        );
+      }
+    }
+
+    return allApps;
+  }
+);
+
 export function selectIngressAppToInstall(
   state: IState
-): IAppCatalogApp | undefined {
+): IAppCatalogAppVersion | undefined {
   const ingressCatalog = selectIngressCatalog(state);
 
   return ingressCatalog?.apps?.[Constants.INSTALL_INGRESS_TAB_APP_NAME]?.[0];
@@ -32,7 +64,7 @@ export function selectIngressAppFromCluster(cluster: Cluster) {
 }
 
 export function selectReadmeURL(
-  appVersion: IAppCatalogApp
+  appVersion: IAppCatalogAppVersion
 ): string | undefined {
   return (
     appVersion.annotations?.['application.giantswarm.io/readme'] ||

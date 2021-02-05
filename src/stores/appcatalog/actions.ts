@@ -201,7 +201,7 @@ async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
  */
 export function loadAppReadme(
   catalogName: string,
-  appVersion: IAppCatalogApp
+  appVersion: IAppCatalogAppVersion
 ): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
   return async (dispatch) => {
     dispatch({

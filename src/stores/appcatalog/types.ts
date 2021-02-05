@@ -101,20 +101,20 @@ export interface IAppCatalogLoadIndexErrorAction {
 export interface IAppCatalogLoadAppReadmeRequestAction {
   type: typeof CLUSTER_LOAD_APP_README_REQUEST;
   catalogName: string;
-  appVersion: IAppCatalogApp;
+  appVersion: IAppCatalogAppVersion;
 }
 
 export interface IAppCatalogLoadAppReadmeSuccessAction {
   type: typeof CLUSTER_LOAD_APP_README_SUCCESS;
   catalogName: string;
-  appVersion: IAppCatalogApp;
+  appVersion: IAppCatalogAppVersion;
   readmeText: string;
 }
 
 export interface IAppCatalogLoadAppReadmeErrorAction {
   type: typeof CLUSTER_LOAD_APP_README_ERROR;
   catalogName: string;
-  appVersion: IAppCatalogApp;
+  appVersion: IAppCatalogAppVersion;
   error: string;
 }
 
