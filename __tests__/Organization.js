@@ -126,7 +126,7 @@ describe('', () => {
 
       await findByText('Create an Organization');
 
-      const newOrganizationNameInput = getByLabelText(/Organization Name:/);
+      const newOrganizationNameInput = getByLabelText(/Organization Name/);
       expect(newOrganizationNameInput).toBeInTheDocument();
 
       fireEvent.change(newOrganizationNameInput, {
