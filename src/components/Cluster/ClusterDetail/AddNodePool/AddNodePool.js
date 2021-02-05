@@ -469,7 +469,11 @@ class AddNodePool extends Component {
 
         {supportsNodePoolSpotInstances && (
           <Section>
-            <StyledInput label={spotInstancesLabel} id={`spot-instances-${id}`}>
+            <StyledInput
+              label={spotInstancesLabel}
+              id={`spot-instances-${id}`} // regular space, hides hint ;)
+              hint={<>&#32;</>}
+            >
               <CheckboxWrapper>
                 <Checkbox
                   checked={this.state.spotInstancesEnabled}
