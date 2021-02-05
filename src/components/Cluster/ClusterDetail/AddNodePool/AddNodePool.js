@@ -15,12 +15,10 @@ import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import styled from 'styled-components';
 import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
-import NameInput from 'UI/Display/Cluster/ClusterCreation/NameInput';
 import Section from 'UI/Display/Cluster/ClusterCreation/Section';
-import StyledInput, {
-  AdditionalInputHint,
-} from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
 import Checkbox from 'UI/Inputs/Checkbox';
+import TextInput from 'UI/Inputs/TextInput';
 
 const CheckboxWrapper = styled.div`
   .checkbox-label {
@@ -420,19 +418,15 @@ class AddNodePool extends Component {
     return (
       <>
         <Section>
-          <NameInput
+          <TextInput
             value={name.value}
             label='Name'
-            inputId={`node-pool-name-${id}`}
+            id={`node-pool-name-${id}`}
             placeholder={name.value === '' ? 'Unnamed node pool' : null}
-            validationError={name.validationError}
-            onChange={this.updateName}
+            error={name.validationError}
+            onChange={(e) => this.updateName(e.target.value)}
+            help='Pick a name that helps team mates to understand what these nodes are here for. You can change this later. Each node pool also gets a unique identifier.'
           />
-          <AdditionalInputHint>
-            Pick a name that helps team mates to understand what these nodes are
-            here for. You can change this later. Each node pool also gets a
-            unique identifier.
-          </AdditionalInputHint>
         </Section>
         <Section>
           <AddNodePoolMachineType
@@ -475,12 +469,7 @@ class AddNodePool extends Component {
 
         {supportsNodePoolSpotInstances && (
           <Section>
-            <StyledInput
-              label={spotInstancesLabel}
-              inputId={`spot-instances-${id}`}
-              // regular space, hides hint ;)
-              hint={<>&#32;</>}
-            >
+            <StyledInput label={spotInstancesLabel} id={`spot-instances-${id}`}>
               <CheckboxWrapper>
                 <Checkbox
                   checked={this.state.spotInstancesEnabled}
