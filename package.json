@@ -243,7 +243,6 @@
     "webpack-merge": "5.7.3"
   },
   "resolutions": {
-    "**/crypto-js": "^3.2.1",
     "kind-of": "^6.0.3",
     "lodash": "^4.17.20",
     "serialize-javascript": "^4.0.0",

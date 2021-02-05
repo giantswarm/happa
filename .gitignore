@@ -34,3 +34,11 @@ tsconfig.tsbuildinfo
 
 # Storybook
 /storybook-static
+
+# Yarn
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
