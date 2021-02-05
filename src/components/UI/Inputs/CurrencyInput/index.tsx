@@ -25,6 +25,7 @@ const StyledInput = styled(InputElement)`
   flex: 1 1 0;
   width: calc(100% - 36px);
   height: 32px;
+  border-radius: 0;
 `;
 
 const CurrencyLabel = styled.div<{ disabled?: boolean }>`
