@@ -253,6 +253,7 @@ class Modals extends React.Component {
                   autoFocus={true}
                   error={this.props.modal.templateValues.errorMessage}
                   name='email'
+                  id='email'
                   value={this.state.email}
                   onChange={this.emailFieldChanged}
                 />
