@@ -212,7 +212,7 @@ describe('', () => {
 
       fireEvent.click(addMemberButton);
 
-      const newMemberEmailField = await findByLabelText('Email:');
+      const newMemberEmailField = await findByLabelText('Email');
       expect(newMemberEmailField).toBeInTheDocument();
 
       fireEvent.change(newMemberEmailField, {
