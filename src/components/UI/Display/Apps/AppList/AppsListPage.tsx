@@ -82,12 +82,12 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
 
         {props.apps && props.apps.length > 0 && (
           <List>
-            {props.apps.map((app) => (
+            {props.apps.map((app, i) => (
               <App
-                key={app.name}
+                key={app.name + i.toString()}
                 name={app.name}
                 catalogName={app.catalogName}
-                catalogIconUrl=''
+                catalogIconUrl={app.catalogIconUrl}
                 to='/apps/catalogName/appName/v1.2.3/'
               />
             ))}
