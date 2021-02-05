@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import {
   clearQueues,
   FlashMessage,
@@ -14,6 +15,7 @@ import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
+import TextInput from 'UI/Inputs/TextInput';
 
 import { parseErrorMessages } from './parseErrorMessages';
 
@@ -137,25 +139,21 @@ class Login extends React.Component<ILoginProps, ILoginState> {
           <div className='login_form--container'>
             <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
-              <div className='textfield'>
-                <label htmlFor='email'>Email</label>
-                <input
+              <Box margin={{ bottom: 'small' }}>
+                <TextInput
                   autoComplete='username'
-                  autoFocus
+                  autoFocus={true}
+                  label='Email'
                   id='email'
                   onChange={this.updateEmail}
                   ref={(i) => {
                     this.email = i;
                   }}
-                  type='text'
                   value={this.state.email}
                 />
-              </div>
-
-              <div className='textfield'>
-                <label htmlFor='password'>Password</label>
-                <input
+                <TextInput
                   autoComplete='current-password'
+                  label='Password'
                   id='password'
                   onChange={this.updatePassword}
                   ref={(i) => {
@@ -164,7 +162,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                   type='password'
                   value={this.state.password}
                 />
-              </div>
+              </Box>
 
               <Button
                 bsStyle='primary'
