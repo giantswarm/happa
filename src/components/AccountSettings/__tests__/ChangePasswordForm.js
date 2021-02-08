@@ -190,7 +190,7 @@ describe('ChangePasswordForm', () => {
 
     triggerInputChange(confirmNewPasswordInput, newPassword);
 
-    // Check if set button is present and disabled
+    // Check if set button is present and enabled
     setButton = await findByText(elementLabels.SetButton);
     expect(setButton.disabled).toBeFalsy();
 
