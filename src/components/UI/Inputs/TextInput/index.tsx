@@ -14,7 +14,7 @@ interface ITextInputProps extends React.ComponentPropsWithoutRef<typeof Input> {
   /**
    * Props to be passed to the form field.
    */
-  formFieldProps?: FormFieldProps;
+  formFieldProps?: FormFieldProps & { className?: string };
   /**
    * Whether the input is required or not.
    */
