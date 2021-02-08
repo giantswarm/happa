@@ -87,7 +87,8 @@ const InstallAppForm = ({
     <FormWrapper>
       <TextInput
         help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
-        label='Application Name:'
+        label='Application Name'
+        id='application-name'
         onChange={(e) => updateName(e.target.value)}
         error={nameError}
         value={name}
@@ -95,7 +96,8 @@ const InstallAppForm = ({
       />
 
       <Input
-        label='Chart Version:'
+        label='Chart Version'
+        id='chart-version'
         description='This will determine what version of the app eventually gets installed.'
       >
         <VersionPicker
@@ -109,7 +111,8 @@ const InstallAppForm = ({
         <TextInput
           help={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
           key='fixed-namespace'
-          label='Namespace:'
+          label='Namespace'
+          id='fixed-namespace'
           readOnly={true}
           value={formAbilities.fixedNamespace}
           margin={{ bottom: 'large' }}
@@ -118,7 +121,8 @@ const InstallAppForm = ({
         <TextInput
           help='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
           key='dedicated-namespace'
-          label='Namespace:'
+          label='Namespace'
+          id='dedicated-namespace'
           onChange={(e) => updateNamespace(e.target.value)}
           error={namespaceError}
           value={namespace}
@@ -128,7 +132,8 @@ const InstallAppForm = ({
 
       <FileInput
         description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
-        label='User level config values YAML:'
+        label='User level config values YAML'
+        id='user-level-config'
         onChange={updateValuesYAML}
         validationError={valuesYAMLError}
         value={valuesYAML}
@@ -136,7 +141,8 @@ const InstallAppForm = ({
 
       <FileInput
         description='Sensitive configuration values can be uploaded separately.'
-        label='User level secret values YAML:'
+        label='User level secret values YAML'
+        id='user-level-secret'
         onChange={updateSecretsYAML}
         validationError={secretsYAMLError}
         value={secretsYAML}
