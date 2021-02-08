@@ -12,6 +12,7 @@
     "test:watch": "yarn test --watch",
     "test:clean-cache": "yarn test --clearCache",
     "test:coverage": "yarn test --collect-coverage",
+    "test:update-snapshots": "yarn test --update-snapshot",
     "format": "./node_modules/.bin/prettier \"src/**/*.{js,ts,tsx}\"",
     "prettier": "yarn format --write",
     "validate-prettier": "yarn format --version; yarn format --no-color --check",
