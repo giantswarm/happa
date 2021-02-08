@@ -33,6 +33,8 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('ClusterManagement', () => {
+  jest.setTimeout(15000);
+
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
@@ -321,4 +323,4 @@ details view`, async () => {
     }
   });
   // eslint-disable-next-line no-magic-numbers
-}, 10000);
+});
