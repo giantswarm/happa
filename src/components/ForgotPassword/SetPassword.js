@@ -232,7 +232,7 @@ class SetPassword extends React.Component {
           />
 
           <TextInput
-            name='confirm-password'
+            id='confirm-password'
             label='Password, once again'
             onChange={(e) =>
               this.passwordConfirmationEditingCompleted(e.target.value)

@@ -192,7 +192,7 @@ describe('ChangePasswordForm', () => {
 
     // Check if set button is present and disabled
     setButton = await findByText(elementLabels.SetButton);
-    expect(setButton.disabled).toBeTruthy();
+    expect(setButton.disabled).toBeFalsy();
 
     // Ensure that error text is gone
     errorElement = queryByText(validationErrors.JustLetters);
