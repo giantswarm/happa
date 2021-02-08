@@ -160,7 +160,7 @@ const theme = deepMerge(generate(16), {
       'active-text': 'text-strong',
       'selected-background': 'brand',
       'selected-text': 'text-strong',
-      'status-critical': '#FF4040',
+      'status-critical': '#e49090',
       'status-warning': '#FFAA15',
       'status-ok': '#00C781',
       'status-unknown': '#CCCCCC',
