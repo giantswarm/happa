@@ -146,9 +146,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                   label='Email'
                   id='email'
                   onChange={this.updateEmail}
-                  ref={(i) => {
-                    this.email = i;
-                  }}
+                  type='email'
                   value={this.state.email}
                 />
                 <TextInput
@@ -156,9 +154,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                   label='Password'
                   id='password'
                   onChange={this.updatePassword}
-                  ref={(i) => {
-                    this.password = i;
-                  }}
                   type='password'
                   value={this.state.password}
                 />
