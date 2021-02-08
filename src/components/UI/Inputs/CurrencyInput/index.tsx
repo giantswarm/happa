@@ -22,6 +22,10 @@ const StyledInput = styled(InputElement)`
   border: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  flex: 1 1 0;
+  width: calc(100% - 36px);
+  height: 32px;
+  border-radius: 0;
 `;
 
 const CurrencyLabel = styled.div<{ disabled?: boolean }>`
@@ -33,6 +37,9 @@ const CurrencyLabel = styled.div<{ disabled?: boolean }>`
   padding: 8px 10px;
   line-height: 1rem;
   font-size: 14px;
+  height: 32px;
+  width: 36px;
+  flex: 0 0 0;
 `;
 
 const LabelText = styled.label`
