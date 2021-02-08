@@ -8,9 +8,13 @@ interface ITextInputProps extends React.ComponentPropsWithoutRef<typeof Input> {
    */
   label?: FormFieldProps['label'];
   /**
-   * Props to be passed to the form field wrapper.
+   * Props to be passed to the text input wrapper.
    */
   contentProps?: FormFieldProps['contentProps'];
+  /**
+   * Props to be passed to the form field.
+   */
+  formFieldProps?: FormFieldProps;
   /**
    * Whether the input is required or not.
    */
@@ -44,6 +48,7 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
       id,
       label,
       contentProps,
+      formFieldProps,
       disabled,
       required,
       error,
@@ -69,6 +74,7 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
         help={help}
         margin={margin}
         pad={pad}
+        {...formFieldProps}
       >
         <Input
           {...props}
@@ -87,6 +93,7 @@ TextInput.propTypes = {
   id: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   contentProps: PropTypes.object,
+  formFieldProps: PropTypes.object,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
