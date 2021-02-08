@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import FileInput from 'UI/Inputs/FileInput';
 import Input from 'UI/Inputs/Input';
+import TextInput from 'UI/Inputs/TextInput';
 
 const FormWrapper = styled.div`
   display: flex;
@@ -84,12 +85,13 @@ const InstallAppForm = ({
 
   return (
     <FormWrapper>
-      <Input
-        description='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
+      <TextInput
+        help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
         label='Application Name:'
-        onChange={updateName}
-        validationError={nameError}
+        onChange={(e) => updateName(e.target.value)}
+        error={nameError}
         value={name}
+        margin={{ bottom: 'large' }}
       />
 
       <Input
@@ -104,21 +106,23 @@ const InstallAppForm = ({
       </Input>
 
       {formAbilities.hasFixedNamespace ? (
-        <Input
-          description={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
+        <TextInput
+          help={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
           key='fixed-namespace'
           label='Namespace:'
           readOnly={true}
           value={formAbilities.fixedNamespace}
+          margin={{ bottom: 'large' }}
         />
       ) : (
-        <Input
-          description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
+        <TextInput
+          help='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
           key='dedicated-namespace'
           label='Namespace:'
-          onChange={updateNamespace}
-          validationError={namespaceError}
+          onChange={(e) => updateNamespace(e.target.value)}
+          error={namespaceError}
           value={namespace}
+          margin={{ bottom: 'large' }}
         />
       )}
 
