@@ -9,9 +9,8 @@ import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import FlashMessage from 'UI/Display/FlashMessage';
+import TextInput from 'UI/Inputs/TextInput';
 import Section from 'UI/Layout/Section';
-
-import PasswordField from '../SignUp/PasswordField';
 
 class ChangePassword extends React.Component {
   state = {
@@ -19,11 +18,11 @@ class ChangePassword extends React.Component {
   };
 
   currentPasswordValid = () => {
-    return this.current_password.value();
+    return this.current_password.value;
   };
 
   newPasswordValid = () => {
-    const password = this.new_password.value();
+    const password = this.new_password.value;
 
     const validationResult = validatePassword(password);
 
@@ -49,8 +48,8 @@ class ChangePassword extends React.Component {
   };
 
   newPasswordConfirmationValid = () => {
-    const password = this.new_password.value();
-    const passwordConfirmation = this.new_password_confirmation.value();
+    const password = this.new_password.value;
+    const passwordConfirmation = this.new_password_confirmation.value;
 
     if (password !== passwordConfirmation && password && passwordConfirmation) {
       this.setState({
@@ -64,18 +63,13 @@ class ChangePassword extends React.Component {
     }
 
     return (
-      this.new_password.value() &&
-      this.new_password.value() === this.new_password_confirmation.value()
+      this.new_password.value &&
+      this.new_password.value === this.new_password_confirmation.value
     );
   };
 
-  // eslint-disable-next-line class-methods-use-this
-  passwordEditingStarted() {
-    // NOOP
-  }
-
   validate = () => {
-    if (this.current_password.value()) {
+    if (this.current_password.value) {
       this.setState({
         buttonVisible: true,
         error: false,
@@ -118,8 +112,8 @@ class ChangePassword extends React.Component {
 
     usersApi
       .modifyPassword(this.props.user.email, {
-        current_password_base64: Base64.encode(this.current_password.value()),
-        new_password_base64: Base64.encode(this.new_password.value()),
+        current_password_base64: Base64.encode(this.current_password.value),
+        new_password_base64: Base64.encode(this.new_password.value),
       })
       .then(() => {
         this.setState({
@@ -132,7 +126,7 @@ class ChangePassword extends React.Component {
       .then(() => {
         return this.props.actions.giantswarmLogin(
           this.props.user.email,
-          this.new_password.value()
+          this.new_password.value
         );
       })
       .catch((error) => {
@@ -175,45 +169,38 @@ class ChangePassword extends React.Component {
           <p>Use this form to change your password.</p>
 
           <form className='change_password_form' onSubmit={this.submit}>
-            <div className='textfield small'>
-              <PasswordField
-                name='current_password'
-                label='Current Password'
-                onChange={this.validate}
-                onStartTyping={this.passwordEditingStarted}
-                ref={(p) => {
-                  this.current_password = p;
-                }}
-              />
-            </div>
+            <TextInput
+              id='current_password'
+              label='Current Password'
+              onChange={this.validate}
+              ref={(p) => {
+                this.current_password = p;
+              }}
+              type='password'
+            />
 
-            <div className='textfield small'>
-              <PasswordField
-                name='new_password'
-                label='New Password'
-                onChange={this.validate}
-                onStartTyping={this.passwordEditingStarted}
-                ref={(p) => {
-                  this.new_password = p;
-                }}
-                validationError={this.state.newPasswordValidationMessage}
-              />
-            </div>
+            <TextInput
+              id='new_password'
+              label='New Password'
+              onChange={this.validate}
+              ref={(p) => {
+                this.new_password = p;
+              }}
+              error={this.state.newPasswordValidationMessage}
+              type='password'
+            />
 
-            <div className='textfield small'>
-              <PasswordField
-                name='new_password_confirmation'
-                label='New Password (once more)'
-                onChange={this.validate}
-                onStartTyping={this.passwordEditingStarted}
-                ref={(p) => {
-                  this.new_password_confirmation = p;
-                }}
-                validationError={
-                  this.state.newPassworConfirmationValidationMessage
-                }
-              />
-            </div>
+            <TextInput
+              id='new_password_confirmation'
+              label='New Password (once more)'
+              onChange={this.validate}
+              ref={(p) => {
+                this.new_password_confirmation = p;
+              }}
+              error={this.state.newPassworConfirmationValidationMessage}
+              type='password'
+              margin={{ bottom: 'medium' }}
+            />
 
             <div className='button-area'>
               <SlideTransition in={this.state.buttonVisible}>

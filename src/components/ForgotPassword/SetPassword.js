@@ -16,9 +16,9 @@ import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
+import TextInput from 'UI/Inputs/TextInput';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
-import PasswordField from '../SignUp/PasswordField';
 import StatusMessage from '../SignUp/StatusMessage';
 
 class SetPassword extends React.Component {
@@ -185,29 +185,6 @@ class SetPassword extends React.Component {
     });
   };
 
-  passwordConfirmationEditingStarted = (confirmation) => {
-    this.setState((prevState) => {
-      let valid = false;
-      let statusMessage = prevState.statusMessage;
-
-      if (prevState.passwordField.valid) {
-        if (prevState.passwordField.value === confirmation) {
-          statusMessage = 'password_confirmation_ok';
-          valid = true;
-        }
-      }
-
-      return {
-        statusMessage: statusMessage,
-
-        passwordConfirmationField: {
-          valid: valid,
-          value: confirmation,
-        },
-      };
-    });
-  };
-
   passwordConfirmationEditingCompleted = (confirmation) => {
     this.setState((prevState) => {
       let valid = false;
@@ -246,30 +223,23 @@ class SetPassword extends React.Component {
         <form onSubmit={this.submit}>
           <StatusMessage status={this.state.statusMessage} />
 
-          <div className='textfield'>
-            <PasswordField
-              autoFocus
-              name='password'
-              label='New password'
-              onChange={this.passwordEditingCompleted}
-              onStartTyping={this.passwordEditingStarted}
-              ref={(p) => {
-                this.password = p;
-              }}
-            />
-          </div>
+          <TextInput
+            autoFocus={true}
+            id='password'
+            label='New password'
+            onChange={(e) => this.passwordEditingCompleted(e.target.value)}
+            type='password'
+          />
 
-          <div className='textfield'>
-            <PasswordField
-              name='confirm-password'
-              label='Password, once again'
-              onChange={this.passwordConfirmationEditingCompleted}
-              onStartTyping={this.passwordConfirmationEditingStarted}
-              ref={(p) => {
-                this.passwordConfirmation = p;
-              }}
-            />
-          </div>
+          <TextInput
+            name='confirm-password'
+            label='Password, once again'
+            onChange={(e) =>
+              this.passwordConfirmationEditingCompleted(e.target.value)
+            }
+            margin={{ bottom: 'medium' }}
+            type='password'
+          />
 
           <Button
             onClick={this.submit}
@@ -313,19 +283,14 @@ class SetPassword extends React.Component {
           Before we can check your recovery token, please type in your email
           again for verification purposes.
         </p>
-        <div className='textfield'>
-          <label htmlFor='email'>Email</label>
-          <input
-            autoFocus
-            id='email'
-            onChange={this.updateEmail}
-            ref={(i) => {
-              this.email = i;
-            }}
-            type='email'
-            value={this.state.emailField}
-          />
-        </div>
+        <TextInput
+          autoFocus={true}
+          label='Email'
+          id='email'
+          onChange={this.updateEmail}
+          type='email'
+          value={this.state.emailField}
+        />
 
         <Button
           bsStyle='primary'

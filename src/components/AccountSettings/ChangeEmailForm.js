@@ -4,6 +4,7 @@ import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import FlashMessage from 'UI/Display/FlashMessage';
+import TextInput from 'UI/Inputs/TextInput';
 
 const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -109,12 +110,9 @@ class ChangeEmailForm extends React.Component {
     return (
       <div {...rest}>
         <form className='change_email_form' onSubmit={this.submit}>
-          <input
+          <TextInput
             onChange={this.validateEmail}
-            ref={(i) => {
-              this.new_email = i;
-            }}
-            type='text'
+            type='email'
             value={this.state.fields.email.value}
           />
 

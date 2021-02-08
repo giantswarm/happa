@@ -10,8 +10,8 @@ import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import Button from 'UI/Controls/Button';
+import TextInput from 'UI/Inputs/TextInput';
 
-import PasswordField from './PasswordField';
 import StatusMessage from './StatusMessage';
 import TermsOfService from './TermsOfService';
 
@@ -233,17 +233,6 @@ export class SignUp extends React.Component {
     );
   };
 
-  passwordEditingStarted = (password) => {
-    this.setState({
-      formValid: false,
-      advancable: false,
-      passwordField: {
-        value: password,
-        valid: false,
-      },
-    });
-  };
-
   passwordEditingCompleted = (password) => {
     const validationResult = validatePassword(password);
 
@@ -256,41 +245,6 @@ export class SignUp extends React.Component {
     });
 
     this.validateForm();
-  };
-
-  passwordConfirmationEditingStarted = (confirmation) => {
-    this.setState({
-      formValid: false,
-      advancable: false,
-      passwordConfirmationField: {
-        valid: false,
-        value: confirmation,
-      },
-    });
-
-    if (this.state.passwordField.valid) {
-      if (this.state.passwordField.value === confirmation) {
-        this.setState(
-          {
-            passwordConfirmationField: {
-              valid: true,
-              value: confirmation,
-            },
-            statusMessage: 'password_confirmation_ok',
-          },
-          () => {
-            this.validateForm();
-          }
-        );
-
-        if (this.state.currentStep === 1) {
-          // If we're on the first step, the confirmation field isn't even visible
-          // yet. So a password manager must have filled in the confirmation for the user
-          // Advance automatically as a convenience to the user.
-          this.advanceForm();
-        }
-      }
-    }
   };
 
   passwordConfirmationEditingCompleted = (passwordConfirmation) => {
@@ -396,26 +350,30 @@ export class SignUp extends React.Component {
               {this.state.email}!
             </p>
 
-            <PasswordField
+            <TextInput
               label='Set a password'
-              name='password'
-              onChange={this.passwordEditingCompleted}
-              onStartTyping={this.passwordEditingStarted}
+              type='password'
+              id='password'
+              onChange={(e) => this.passwordEditingCompleted(e.target.value)}
               ref={(p) => {
                 this.password = p;
               }}
+              margin={{ bottom: 'large' }}
             />
           </div>
 
           <div id='passwordConfirmationGroup'>
-            <PasswordField
+            <TextInput
               label='Password, once again'
-              name='confirm-password'
-              onChange={this.passwordConfirmationEditingCompleted}
-              onStartTyping={this.passwordConfirmationEditingStarted}
+              type='password'
+              id='confirm-password'
+              onChange={(e) =>
+                this.passwordConfirmationEditingCompleted(e.target.value)
+              }
               ref={(f) => {
                 this.passwordConfirmation = f;
               }}
+              margin={{ bottom: 'large' }}
             />
           </div>
 
