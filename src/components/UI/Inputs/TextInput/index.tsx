@@ -97,4 +97,8 @@ TextInput.propTypes = {
   pad: PropTypes.bool,
 };
 
+TextInput.defaultProps = {
+  size: 'medium',
+};
+
 export default TextInput;
