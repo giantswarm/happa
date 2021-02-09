@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import TextInput from 'UI/Inputs/TextInput';
 
 const Form = styled('form')`
   width: 300px;
@@ -8,28 +9,15 @@ const Form = styled('form')`
   position: relative;
 `;
 
-const InputWithIcon = styled('div')`
-  display: flex;
-  align-items: stretch;
-`;
-
-const SearchIcon = styled('i')`
-  font-size: 24px;
-  position: relative;
-  top: 6px;
-  margin-right: 4px;
+const SearchIcon = styled.i`
+  font-size: 16px;
   color: ${(props) => props.theme.colors.white3};
-`;
-
-const Input = styled('input')`
-  padding: 8px 10px !important;
-  margin-bottom: 0px !important;
 `;
 
 const ClearLink = styled('a')`
   position: absolute;
   right: 10px;
-  top: -1px;
+  top: 3px;
 `;
 
 const ClearIcon = styled('i')`
@@ -40,15 +28,17 @@ const ClearIcon = styled('i')`
 
 const AppListSearch = ({ value, ...props }) => (
   <Form onSubmit={(e) => e.preventDefault()}>
-    <InputWithIcon>
-      <SearchIcon className='fa fa-search' />
-      <Input onChange={props.onChange} type='text' value={value} />
-      {value && (
-        <ClearLink onClick={props.onReset}>
-          <ClearIcon className='fa fa-close' />
-        </ClearLink>
-      )}
-    </InputWithIcon>
+    <TextInput
+      icon={<SearchIcon className='fa fa-search' />}
+      onChange={props.onChange}
+      value={value}
+      size='medium'
+    />
+    {value && (
+      <ClearLink onClick={props.onReset}>
+        <ClearIcon className='fa fa-close' />
+      </ClearLink>
+    )}
   </Form>
 );
 

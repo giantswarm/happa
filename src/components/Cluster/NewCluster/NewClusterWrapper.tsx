@@ -14,11 +14,9 @@ import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
 import { getFirstNodePoolsRelease, getProvider } from 'stores/main/selectors';
 import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
-import NameInput from 'UI/Display/Cluster/ClusterCreation/NameInput';
 import Section from 'UI/Display/Cluster/ClusterCreation/Section';
-import StyledInput, {
-  AdditionalInputHint,
-} from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import TextInput from 'UI/Inputs/TextInput';
 import { FlexColumn } from 'UI/Layout/FlexDivs';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
@@ -105,16 +103,14 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
           <Headline>Create a Cluster</Headline>
           <FlexColumn>
             <Section>
-              <NameInput
+              <TextInput
                 label='Name'
-                inputId='cluster-name'
+                id='cluster-name'
                 value={clusterName}
-                onChange={setClusterName}
-                validationError={clusterNameValidationError}
+                onChange={(e) => setClusterName(e.target.value)}
+                error={clusterNameValidationError}
+                help='Give your cluster a name to recognize it among others.'
               />
-              <AdditionalInputHint>
-                Give your cluster a name to recognize it among others.
-              </AdditionalInputHint>
             </Section>
             <Section>
               <StyledInput

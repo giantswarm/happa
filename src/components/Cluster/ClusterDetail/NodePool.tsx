@@ -25,11 +25,6 @@ const NPViewAndEditNameStyled = styled(
     React.ComponentPropsWithRef<typeof ViewAndEditName>
   >
 )`
-  input[type='text'] {
-    font-size: 15px;
-    line-height: 1.8em;
-    margin-bottom: 0;
-  }
   .btn-group {
     top: 0;
   }

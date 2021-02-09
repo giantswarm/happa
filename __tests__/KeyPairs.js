@@ -91,13 +91,13 @@ it('lets me create a keypair', async () => {
   expect(modal).toBeInTheDocument();
 
   // And type in a common name prefix.
-  const commonNamePrefixField = getByLabelText('Common Name Prefix:');
+  const commonNamePrefixField = getByLabelText('Common Name Prefix');
   fireEvent.change(commonNamePrefixField, {
     target: { value: 'my-own-cn-prefix' },
   });
 
   // And type in Organizations.
-  const organizationsField = getByLabelText('Organizations:');
+  const organizationsField = getByLabelText('Organizations');
   fireEvent.change(organizationsField, {
     target: { value: 'my-own-organizations' },
   });

@@ -40,11 +40,11 @@ describe('ChangeEmailForm', () => {
     renderWithProps();
   });
 
-  it('renders a text input', () => {
+  it('renders an email input', () => {
     const { getByDisplayValue } = renderWithProps();
     const inputElement = getByDisplayValue(inputInitialValue);
 
-    expect(inputElement.type).toBe('text');
+    expect(inputElement.type).toBe('email');
   });
 
   it('has set button initially hidden', () => {

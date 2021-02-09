@@ -13,6 +13,7 @@ import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
+import TextInput from 'UI/Inputs/TextInput';
 import LoginFormContainer from 'UI/Layout/LoginFormContainer';
 
 class ForgotPassword extends React.Component {
@@ -123,19 +124,15 @@ class ForgotPassword extends React.Component {
           send you a link you can use to set a new password.
         </p>
         <form noValidate='novalidate' onSubmit={this.submit}>
-          <div className='textfield'>
-            <label htmlFor='email'>Email</label>
-            <input
-              autoFocus
-              id='email'
-              onChange={this.updateEmail}
-              ref={(i) => {
-                this.email = i;
-              }}
-              type='text'
-              value={this.state.email}
-            />
-          </div>
+          <TextInput
+            autoFocus={true}
+            label='Email'
+            id='email'
+            onChange={this.updateEmail}
+            type='email'
+            value={this.state.email}
+            margin={{ bottom: 'medium' }}
+          />
           <Button
             bsStyle='primary'
             loading={this.state.submitting}

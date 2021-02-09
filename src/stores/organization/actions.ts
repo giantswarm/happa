@@ -10,7 +10,6 @@ import {
   ORGANIZATION_ADD_MEMBER_CONFIRMED,
   ORGANIZATION_ADD_MEMBER_ERROR,
   ORGANIZATION_ADD_MEMBER_REQUEST,
-  ORGANIZATION_ADD_MEMBER_TYPING,
   ORGANIZATION_CREATE_CONFIRMED,
   ORGANIZATION_CREATE_ERROR,
   ORGANIZATION_CREATE_REQUEST,
@@ -286,15 +285,6 @@ export function organizationCreateConfirmed(
 export function organizationAddMember(orgId: string): OrganizationActions {
   return {
     type: ORGANIZATION_ADD_MEMBER_REQUEST,
-    orgId,
-  };
-}
-
-export function organizationAddMemberTyping(
-  orgId: string
-): OrganizationActions {
-  return {
-    type: ORGANIZATION_ADD_MEMBER_TYPING,
     orgId,
   };
 }

@@ -649,8 +649,8 @@ scales node pools correctly`, async () => {
     await findByText('Labels:');
     fireEvent.click(getByText('Add label', { selector: 'button ' }));
 
-    const keyInput = await findByLabelText('Label key:');
-    const valueInput = getByLabelText('Label value:');
+    const keyInput = await findByLabelText('Label key');
+    const valueInput = getByLabelText('Label value');
     const saveButton = getByText('Save', { selector: 'button' });
 
     fireEvent.change(keyInput, { target: { value: '.invalid.' } });
@@ -698,8 +698,8 @@ scales node pools correctly`, async () => {
     await findByText('Labels:');
     fireEvent.click(getByText('Add label', { selector: 'button ' }));
 
-    const keyInput = await findByLabelText('Label key:');
-    const valueInput = getByLabelText('Label value:');
+    const keyInput = await findByLabelText('Label key');
+    const valueInput = getByLabelText('Label value');
     const saveButton = getByText('Save', { selector: 'button' });
 
     fireEvent.change(keyInput, { target: { value: newLabelKey } });
