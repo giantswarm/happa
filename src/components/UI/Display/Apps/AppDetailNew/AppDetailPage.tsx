@@ -263,7 +263,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           {props.keywords!.length > 0 && (
             <Detail>
               <small>KEYWORDS</small>
-              {props.keywords.map((k) => (
+              {props.keywords!.map((k) => (
                 <Keyword key={k}>{k}</Keyword>
               ))}
             </Detail>
