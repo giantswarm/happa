@@ -1,9 +1,11 @@
+import useError from 'lib/hooks/useError';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { loadAppReadme } from 'stores/appcatalog/actions';
+import { CLUSTER_LOAD_APP_README_ERROR } from 'stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'stores/appcatalog/selectors';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
@@ -19,6 +21,15 @@ const AppDetail: React.FC = () => {
   const [app, catalog] = useSelector(
     selectApp(params.catalogName, params.app, params.version)
   );
+
+  const {
+    errorMessage: readmeErrorMessage,
+    clear: clearReadmeError,
+  } = useError(CLUSTER_LOAD_APP_README_ERROR);
+
+  useEffect(() => {
+    clearReadmeError();
+  }, [catalog, app]);
 
   const dispatch = useDispatch();
 
@@ -53,6 +64,7 @@ const AppDetail: React.FC = () => {
           website={app.home}
           keywords={app.keywords || []}
           hasReadme={readmeURL}
+          readmeError={readmeErrorMessage}
           readme={app.readme}
         />
       )}

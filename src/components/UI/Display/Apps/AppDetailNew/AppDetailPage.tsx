@@ -45,15 +45,17 @@ const AppIconWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
   margin-right: 20px;
   border-radius: ${(props) => props.theme.border_radius};
+  width: 130px;
+  height: 130px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const StyledAppIcon = styled(AppIcon)`
-  width: 130px;
-  height: 130px;
-  flex-shrink: 0;
   border-radius: 5px;
   text-align: center;
-  line-height: 130px;
   font-size: 60px;
 `;
 
@@ -166,6 +168,7 @@ export interface IAppDetailPageProps {
   website: string;
   keywords: string[];
   readme?: string;
+  readmeError?: string;
   hasReadme: boolean;
 }
 
@@ -223,7 +226,11 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
               </ReactMarkdown>
             )}
 
-            {!props.readme && <StyledLoadingIndicator loading={true} />}
+            {!props.readme && !props.readmeError && (
+              <StyledLoadingIndicator loading={true} />
+            )}
+
+            {props.readmeError}
           </Readme>
         )}
         <Details>
@@ -280,6 +287,7 @@ AppDetail.propTypes = {
   website: PropTypes.string.isRequired,
   keywords: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   readme: PropTypes.string,
+  readmeError: PropTypes.string,
   hasReadme: PropTypes.bool.isRequired,
 };
 

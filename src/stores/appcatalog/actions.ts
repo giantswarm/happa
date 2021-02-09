@@ -241,7 +241,7 @@ export function loadAppReadme(
 
       return Promise.resolve();
     } catch (error) {
-      const errorMessage = 'Whoops';
+      const errorMessage = `Error fetching readme at: "${readmeURL}" .`;
       dispatch({
         type: CLUSTER_LOAD_APP_README_ERROR,
         catalogName,
