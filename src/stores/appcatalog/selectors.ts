@@ -32,7 +32,8 @@ export const selectApps = createSelector(
         allApps.push(
           ...Object.entries(catalog.apps).map(([appName, appVersions]) => ({
             name: appName,
-            catalogName: catalog.spec.title,
+            catalogTitle: catalog.spec.title,
+            catalogName: catalog.metadata.name,
             catalogIconURL: catalog.spec.logoURL,
             appIconURL: '',
             versions: appVersions,
@@ -44,6 +45,26 @@ export const selectApps = createSelector(
     return allApps;
   }
 );
+
+export const selectApp = (
+  catalogName: string,
+  appName: string,
+  version: string
+) => (state: IState): [IAppCatalogAppVersion?, IAppCatalog?] => {
+  const catalog = state.entities.catalogs.items[catalogName];
+
+  if (!catalog.apps) {
+    return [undefined, catalog];
+  }
+
+  const appVersions = catalog.apps[appName];
+
+  const app = appVersions.find((appVersion) => {
+    return appVersion.version === version;
+  });
+
+  return [app, catalog];
+};
 
 export function selectIngressAppToInstall(
   state: IState

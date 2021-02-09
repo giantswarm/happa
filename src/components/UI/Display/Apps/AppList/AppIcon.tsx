@@ -43,12 +43,12 @@ const StyledImageWithFallback = styled(
     1px 1px 0 ${({ outlinecolor }) => outlinecolor};
 `;
 
-interface IIconProps {
+interface IIconProps extends React.ComponentPropsWithoutRef<'div'> {
   name: string;
   src: string;
 }
 
-const Icon: React.FC<IIconProps> = ({ name, src }) => {
+const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
   return (
     <StyledImageWithFallback
       outlinecolor={colorHash.calculateColor(name)}
@@ -60,6 +60,7 @@ const Icon: React.FC<IIconProps> = ({ name, src }) => {
         textColor: theme.colors.darkBlueDarker4,
       }}
       title={name}
+      {...rest}
     />
   );
 };

@@ -1,10 +1,14 @@
-import { formatDistanceToNow } from 'date-fns';
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
+import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
+import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
+import Truncated from 'UI/Util/Truncated';
 
 import { HeadingRenderer, urlFor } from './utils';
 
@@ -37,10 +41,20 @@ const Lower = styled.div`
   color: ${({ theme }) => theme.colors.darkBlueLighter6};
 `;
 
-const AppIcon = styled.img`
-  width: 125px;
+const AppIconWrapper = styled.div`
+  background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
+  margin-right: 20px;
+  border-radius: ${(props) => props.theme.border_radius};
+`;
+
+const StyledAppIcon = styled(AppIcon)`
+  width: 130px;
+  height: 130px;
+  flex-shrink: 0;
   border-radius: 5px;
-  margin-right: 25px;
+  text-align: center;
+  line-height: 130px;
+  font-size: 60px;
 `;
 
 const Body = styled.div`
@@ -52,6 +66,7 @@ const Readme = styled.div`
   width: 60%;
   border-radius: 5px;
   margin-right: 25px;
+  flex-shrink: 0;
   padding: 20px;
 
   .markdown pre {
@@ -132,29 +147,40 @@ const Wrapper = styled.div`
   }
 `;
 
+const StyledLoadingIndicator = styled(LoadingIndicator)`
+  margin: auto;
+  width: 50px;
+  display: block;
+  margin-top: 50px;
+`;
+
 export interface IAppDetailPageProps {
   appTitle: string;
   appIconURL: string;
   catalogName: string;
+  catalogIcon?: string;
   chartVersion: string;
-  createDate: Date;
+  createDate: string;
   includesVersion: string;
   description: string;
   website: string;
   keywords: string[];
   readme?: string;
+  hasReadme: boolean;
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
   return (
-    <Wrapper className={props.readme ? '' : 'no-readme'}>
+    <Wrapper className={props.hasReadme ? '' : 'no-readme'}>
       <Link to='/apps'>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to Apps
       </Link>
 
       <Header>
-        <AppIcon src={props.appIconURL} />
+        <AppIconWrapper>
+          <StyledAppIcon src={props.appIconURL} name={props.appTitle} />
+        </AppIconWrapper>
         <HeaderDetails>
           <Upper>
             <h1>{props.appTitle}</h1>
@@ -163,48 +189,58 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
               Install in Cluster
             </Button>
           </Upper>
-          <Lower>{props.catalogName}</Lower>
+          <Lower>
+            <CatalogLabel
+              catalogName={props.catalogName}
+              // isManaged={props.catalogIsManaged}
+              iconUrl={props.catalogIcon}
+            />
+          </Lower>
         </HeaderDetails>
       </Header>
 
       <Body>
-        {props.readme && (
+        {props.hasReadme && (
           <Readme>
-            <ReactMarkdown
-              skipHtml
-              className='markdown'
-              renderers={{
-                heading: HeadingRenderer,
-                link: (p) => (
-                  <a
-                    href={urlFor(p.href, 'http://google.com')}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    {p.children}
-                  </a>
-                ),
-              }}
-            >
-              {props.readme}
-            </ReactMarkdown>
+            {props.readme && (
+              <ReactMarkdown
+                skipHtml
+                className='markdown'
+                renderers={{
+                  heading: HeadingRenderer,
+                  link: (p) => (
+                    <a
+                      href={urlFor(p.href, 'http://google.com')}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      {p.children}
+                    </a>
+                  ),
+                }}
+              >
+                {props.readme}
+              </ReactMarkdown>
+            )}
+
+            {!props.readme && <StyledLoadingIndicator loading={true} />}
           </Readme>
         )}
         <Details>
           <DetailGroup>
             <Detail>
               <small>CHART VERSION</small>
-              {props.chartVersion}
+              <Truncated as='span'>{props.chartVersion}</Truncated>
             </Detail>
 
             <Detail>
               <small>CREATED</small>
-              {formatDistanceToNow(props.createDate)} ago
+              {relativeDate(props.createDate)}
             </Detail>
 
             <Detail>
               <small>INCLUDES VERSION</small>
-              {props.includesVersion}
+              <Truncated as='span'>{props.includesVersion}</Truncated>
             </Detail>
           </DetailGroup>
 
@@ -236,13 +272,15 @@ AppDetail.propTypes = {
   appTitle: PropTypes.string.isRequired,
   appIconURL: PropTypes.string.isRequired,
   catalogName: PropTypes.string.isRequired,
+  catalogIcon: PropTypes.string,
   chartVersion: PropTypes.string.isRequired,
-  createDate: PropTypes.instanceOf(Date).isRequired,
+  createDate: PropTypes.string.isRequired,
   includesVersion: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   website: PropTypes.string.isRequired,
   keywords: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   readme: PropTypes.string,
+  hasReadme: PropTypes.bool.isRequired,
 };
 
 export default AppDetail;
