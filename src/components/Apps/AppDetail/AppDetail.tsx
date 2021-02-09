@@ -62,7 +62,7 @@ const AppDetail: React.FC = () => {
           includesVersion={app.appVersion}
           description={app.description}
           website={app.home}
-          keywords={app.keywords || []}
+          keywords={app.keywords}
           hasReadme={readmeURL}
           readmeError={readmeErrorMessage}
           readme={app.readme}

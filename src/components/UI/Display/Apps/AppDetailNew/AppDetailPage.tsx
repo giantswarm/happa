@@ -166,7 +166,7 @@ export interface IAppDetailPageProps {
   includesVersion: string;
   description: string;
   website: string;
-  keywords: string[];
+  keywords?: string[];
   readme?: string;
   readmeError?: string;
   hasReadme: boolean;
@@ -195,7 +195,6 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <Lower>
             <CatalogLabel
               catalogName={props.catalogName}
-              // isManaged={props.catalogIsManaged}
               iconUrl={props.catalogIcon}
             />
           </Lower>
@@ -261,7 +260,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             {props.website}
           </Detail>
 
-          {props.keywords.length > 0 && (
+          {props.keywords && props.keywords.length > 0 && (
             <Detail>
               <small>KEYWORDS</small>
               {props.keywords.map((k) => (
@@ -275,6 +274,10 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
   );
 };
 
+AppDetail.defaultProps = {
+  keywords: [],
+};
+
 AppDetail.propTypes = {
   appTitle: PropTypes.string.isRequired,
   appIconURL: PropTypes.string.isRequired,
@@ -285,7 +288,7 @@ AppDetail.propTypes = {
   includesVersion: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   website: PropTypes.string.isRequired,
-  keywords: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  keywords: PropTypes.arrayOf(PropTypes.string.isRequired),
   readme: PropTypes.string,
   readmeError: PropTypes.string,
   hasReadme: PropTypes.bool.isRequired,
