@@ -217,7 +217,7 @@ class ScaleNodePoolModal extends React.Component {
   render() {
     const { workerNodesRunning, supportsAutoscaling } = this.props;
     const { error, scaling } = this.state;
-    const { min, max, minValid, loading } = scaling;
+    const { max, minValid, loading } = scaling;
 
     const warnings = [];
 
@@ -258,22 +258,6 @@ class ScaleNodePoolModal extends React.Component {
           </CSSTransition>
         );
       }
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    if (min < 3) {
-      warnings.push(
-        <CSSTransition
-          classNames='rollup'
-          key={3}
-          timeout={ScaleNodePoolModal.rollupAnimationDuration}
-        >
-          <p key='unsupported'>
-            <i className='fa fa-warning' /> We recommend that you run clusters
-            with at least three worker nodes.
-          </p>
-        </CSSTransition>
-      );
     }
 
     let body = (
