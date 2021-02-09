@@ -355,7 +355,8 @@ class AddNodePool extends Component {
       }
 
       case Providers.AZURE: {
-        let spotInstancesMaxPrice = 0;
+        // eslint-disable-next-line @typescript-eslint/init-declarations
+        let spotInstancesMaxPrice;
         if (spotInstancesEnabled && !azure.spotInstances.onDemandPricing) {
           spotInstancesMaxPrice = azure.spotInstances.maxPrice;
         }

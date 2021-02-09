@@ -85,7 +85,7 @@ describe('AddNodePool', () => {
             azure: {
               spot_instances: {
                 enabled: true,
-                max_price: 0,
+                max_price: undefined,
               },
               vm_size: 'Standard_D4s_v3',
             },
