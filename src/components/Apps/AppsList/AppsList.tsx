@@ -1,5 +1,7 @@
+import RoutePath from 'lib/routePath';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppsRoutes } from 'shared/constants/routes';
 import { disableCatalog, enableCatalog } from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
 import { selectApps, selectCatalogs } from 'stores/appcatalog/selectors';
@@ -36,7 +38,12 @@ const AppsList: React.FC = () => {
       apps={apps.map((app) => ({
         name: app.name,
         catalogName: app.catalogName,
-        to: '/example',
+        catalogTitle: app.catalogTitle,
+        to: RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+          catalogName: app.catalogName,
+          app: app.name,
+          version: app.versions[0].version,
+        }),
         catalogIconUrl: app.catalogIconURL,
       }))}
       facetOptions={catalogsToFacets(catalogs, catalogErrors, isAdmin)}

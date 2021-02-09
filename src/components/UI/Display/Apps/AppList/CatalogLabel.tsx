@@ -31,7 +31,7 @@ const RedIcon = styled.i`
 `;
 
 export interface ICatalogLabelProps {
-  iconUrl: string;
+  iconUrl?: string;
   catalogName: string;
   isManaged?: boolean;
   error?: string;
@@ -69,7 +69,7 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
 };
 
 CatalogLabel.propTypes = {
-  iconUrl: PropTypes.string.isRequired,
+  iconUrl: PropTypes.string,
   catalogName: PropTypes.string.isRequired,
   isManaged: PropTypes.bool,
   error: PropTypes.string,

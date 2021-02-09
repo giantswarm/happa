@@ -17,7 +17,7 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
 
   const { fallback, ...restProps } = props;
 
-  if (loading) {
+  if (loading && restProps.src) {
     return (
       <img
         {...restProps}
@@ -34,7 +34,7 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
     );
   }
 
-  if (loadError) {
+  if (loadError || !restProps.src) {
     return (
       <div
         {...restProps}

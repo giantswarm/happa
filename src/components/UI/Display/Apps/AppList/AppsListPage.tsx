@@ -86,9 +86,9 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
               <App
                 key={app.name + i.toString()}
                 name={app.name}
-                catalogName={app.catalogName}
+                catalogTitle={app.catalogTitle}
                 catalogIconUrl={app.catalogIconUrl}
-                to='/apps/catalogName/appName/v1.2.3/'
+                to={app.to}
               />
             ))}
           </List>
