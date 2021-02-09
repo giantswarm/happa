@@ -260,7 +260,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             {props.website}
           </Detail>
 
-          {props.keywords && props.keywords.length > 0 && (
+          {props.keywords!.length > 0 && (
             <Detail>
               <small>KEYWORDS</small>
               {props.keywords.map((k) => (
