@@ -389,9 +389,11 @@ const theme = deepMerge(generate(16), {
       style: 'solid',
       size: 'xsmall',
     },
-    background: 'background-light',
     content: {
       pad: 'small',
+    },
+    background: {
+      color: 'input-background',
     },
     disabled: {
       background: {

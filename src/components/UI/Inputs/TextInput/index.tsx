@@ -1,6 +1,7 @@
 import { FormField, FormFieldProps, TextInput as Input } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { useTheme } from 'styled-components';
 
 interface ITextInputProps extends React.ComponentPropsWithoutRef<typeof Input> {
   /**
@@ -61,14 +62,17 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
     },
     ref
   ) => {
+    const theme = useTheme();
+    const patchedContentProps = Object.assign({}, contentProps);
+    if (!disabled) {
+      patchedContentProps.background = theme.formField.background.color;
+    }
+
     return (
       <FormField
         htmlFor={id}
         label={label}
-        contentProps={{
-          background: 'input-background',
-          ...contentProps,
-        }}
+        contentProps={patchedContentProps}
         disabled={disabled}
         required={required}
         name={name}
