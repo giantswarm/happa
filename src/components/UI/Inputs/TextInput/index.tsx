@@ -65,7 +65,10 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
       <FormField
         htmlFor={id}
         label={label}
-        contentProps={contentProps}
+        contentProps={{
+          background: 'input-background',
+          ...contentProps,
+        }}
         disabled={disabled}
         required={required}
         name={name}

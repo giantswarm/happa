@@ -149,8 +149,8 @@ const theme = deepMerge(generate(16), {
         light: '#798691',
       },
       border: {
-        dark: '#BBBBBB',
-        light: '#BBBBBB',
+        dark: '#3a5f7b',
+        light: '#3a5f7b',
       },
       control: {
         dark: 'border',
@@ -167,6 +167,7 @@ const theme = deepMerge(generate(16), {
       'status-disabled': '#CCCCCC',
       'graph-0': 'brand',
       'graph-1': 'status-warning',
+      'input-background': '#32526a',
       focus: {
         light: 'text-strong',
         dark: 'text-strong',
@@ -376,7 +377,7 @@ const theme = deepMerge(generate(16), {
   },
   formField: {
     border: {
-      color: 'text-xweak',
+      color: 'border',
       error: {
         color: {
           dark: 'status-critical',
