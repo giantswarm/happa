@@ -43,6 +43,7 @@ export interface IAppsListPageProps {
   onChangeFacets: (value: string, checked: boolean) => void;
   onChangeSearchQuery: (value: string) => void;
   onChangeSortOrder: (value: string) => void;
+  onResetSearch: () => void;
   facetOptions: IFacetOption[];
   searchQuery: string;
   sortOrder: string;
@@ -85,7 +86,9 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
                 Please check your search term or check more catalogs to show
                 apps from
               </p>
-              <Button bsStyle='default'>RESET SEARCH</Button>
+              <Button bsStyle='default' onClick={props.onResetSearch}>
+                RESET SEARCH
+              </Button>
             </div>
           </EmptyState>
         )}
@@ -113,6 +116,7 @@ AppsList.propTypes = {
   onChangeFacets: PropTypes.func.isRequired,
   onChangeSearchQuery: PropTypes.func.isRequired,
   onChangeSortOrder: PropTypes.func.isRequired,
+  onResetSearch: PropTypes.func.isRequired,
   sortOrder: PropTypes.string.isRequired,
   facetOptions: PropTypes.array.isRequired,
   searchQuery: PropTypes.string.isRequired,
