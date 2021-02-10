@@ -92,3 +92,7 @@ export function selectReadmeURL(
     appVersion.sources?.find((url) => url.endsWith(Constants.README_FILE))
   );
 }
+
+export function selectAppSearchQuery(state: IState): string {
+  return state.entities.catalogs.ui.searchQuery;
+}

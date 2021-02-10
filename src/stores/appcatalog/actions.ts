@@ -41,6 +41,7 @@ import {
   INSTALL_INGRESS_APP,
   LOAD_CLUSTER_APPS,
   PREPARE_INGRESS_TAB_DATA,
+  SET_APP_SEARCH_QUERY,
   UPDATE_CLUSTER_APP,
 } from 'stores/appcatalog/constants';
 import {
@@ -56,6 +57,7 @@ import {
   IAppCatalogInstallAppActionResponse,
   IAppCatalogLoadClusterAppsActionPayload,
   IAppCatalogLoadClusterAppsActionResponse,
+  IAppCatalogSetAppSearchQuery,
   IAppCatalogsMap,
   IAppCatalogUpdateClusterAppActionPayload,
   IAppCatalogUpdateClusterAppActionResponse,
@@ -1095,5 +1097,14 @@ export const disableCatalog = (
   return {
     type: DISABLE_CATALOG,
     catalog: catalogName,
+  };
+};
+
+export const setAppSearchQuery = (
+  query: string
+): IAppCatalogSetAppSearchQuery => {
+  return {
+    type: SET_APP_SEARCH_QUERY,
+    query,
   };
 };

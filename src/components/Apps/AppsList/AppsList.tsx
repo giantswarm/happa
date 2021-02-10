@@ -2,19 +2,28 @@ import RoutePath from 'lib/routePath';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppsRoutes } from 'shared/constants/routes';
-import { disableCatalog, enableCatalog } from 'stores/appcatalog/actions';
+import {
+  disableCatalog,
+  enableCatalog,
+  setAppSearchQuery,
+} from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
-import { selectApps, selectCatalogs } from 'stores/appcatalog/selectors';
+import {
+  selectApps,
+  selectAppSearchQuery,
+  selectCatalogs,
+} from 'stores/appcatalog/selectors';
 import { selectErrorsByIdsAndAction } from 'stores/entityerror/selectors';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
-import { catalogsToFacets } from './utils';
+import { catalogsToFacets, searchApps } from './utils';
 
 const AppsList: React.FC = () => {
   const dispatch = useDispatch();
   const isAdmin = useSelector(getUserIsAdmin);
   const catalogs = useSelector(selectCatalogs);
+  const searchQuery = useSelector(selectAppSearchQuery);
 
   const catalogErrors = useSelector(
     selectErrorsByIdsAndAction(
@@ -23,11 +32,15 @@ const AppsList: React.FC = () => {
     )
   );
 
-  const apps = useSelector(selectApps);
+  const apps = searchApps(searchQuery, useSelector(selectApps));
 
   return (
     <AppsListPage
       matchCount={apps.length}
+      onChangeSearchQuery={(value: string) => {
+        dispatch(setAppSearchQuery(value));
+      }}
+      searchQuery={searchQuery}
       onChangeFacets={(value, checked) => {
         if (checked) {
           dispatch(enableCatalog(value));

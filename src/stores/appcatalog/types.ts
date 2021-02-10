@@ -40,6 +40,7 @@ import {
   PREPARE_INGRESS_TAB_DATA_ERROR,
   PREPARE_INGRESS_TAB_DATA_REQUEST,
   PREPARE_INGRESS_TAB_DATA_SUCCESS,
+  SET_APP_SEARCH_QUERY,
   UPDATE_CLUSTER_APP_ERROR,
   UPDATE_CLUSTER_APP_REQUEST,
   UPDATE_CLUSTER_APP_SUCCESS,
@@ -53,6 +54,8 @@ export interface IAppCatalogsUI {
   selectedCatalogs: {
     [key: string]: boolean;
   };
+
+  searchQuery: string;
 }
 
 export interface IAppCatalogsState {
@@ -364,6 +367,11 @@ export interface IAppCatalogDisableCatalogAction {
   catalog: string;
 }
 
+export interface IAppCatalogSetAppSearchQuery {
+  type: typeof SET_APP_SEARCH_QUERY;
+  query: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -411,4 +419,5 @@ export type AppCatalogActions =
   | IAppCatalogPrepareIngressTabDataSuccessAction
   | IAppCatalogPrepareIngressTabDataErrorAction
   | IAppCatalogEnableCatalogAction
-  | IAppCatalogDisableCatalogAction;
+  | IAppCatalogDisableCatalogAction
+  | IAppCatalogSetAppSearchQuery;
