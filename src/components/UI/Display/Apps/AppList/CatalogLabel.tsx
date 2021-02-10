@@ -8,6 +8,8 @@ const LOW_OPACITY = 0.4;
 const NORMAL_OPACITY = 1;
 
 const Wrapper = styled.div<{ hasError: boolean }>`
+  display: flex;
+  align-items: center;
   opacity: ${({ hasError }) => (hasError ? LOW_OPACITY : NORMAL_OPACITY)};
 `;
 
@@ -29,6 +31,9 @@ const CatalogType = styled.span`
 const RedIcon = styled.i`
   color: ${({ theme }) => theme.colors.redOld};
 `;
+
+const IconArea = styled.div``;
+const Text = styled.div``;
 
 export interface ICatalogLabelProps {
   iconUrl?: string;
@@ -60,10 +65,14 @@ ErrorIcon.propTypes = {
 const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
   return (
     <Wrapper {...props} hasError={Boolean(props.error)}>
-      <Icon src={props.iconUrl} />
-      {props.catalogName}
-      {props.isManaged && <CatalogType>MANAGED</CatalogType>}&nbsp;
-      {props.error && <ErrorIcon name={props.catalogName} />}
+      <IconArea>
+        <Icon src={props.iconUrl} />
+      </IconArea>
+      <Text>
+        {props.catalogName}
+        {props.isManaged && <CatalogType>MANAGED</CatalogType>}&nbsp;
+        {props.error && <ErrorIcon name={props.catalogName} />}
+      </Text>
     </Wrapper>
   );
 };
