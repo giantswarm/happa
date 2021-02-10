@@ -15,7 +15,6 @@ import {
   ORGANIZATION_ADD_MEMBER_CONFIRMED,
   ORGANIZATION_ADD_MEMBER_ERROR,
   ORGANIZATION_ADD_MEMBER_REQUEST,
-  ORGANIZATION_ADD_MEMBER_TYPING,
   ORGANIZATION_CREATE_CONFIRMED,
   ORGANIZATION_CREATE_REQUEST,
   ORGANIZATION_DELETE_CONFIRMED,
@@ -107,13 +106,6 @@ const modalReducer = produce(
       case ORGANIZATION_ADD_MEMBER_REQUEST:
         draft.visible = true;
         draft.templateValues = { orgId: action.orgId };
-        draft.template = 'organizationAddMember';
-
-        break;
-
-      case ORGANIZATION_ADD_MEMBER_TYPING:
-        draft.visible = true;
-        draft.templateValues = { orgId: action.orgId, loading: false };
         draft.template = 'organizationAddMember';
 
         break;

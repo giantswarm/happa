@@ -149,8 +149,8 @@ const theme = deepMerge(generate(16), {
         light: '#798691',
       },
       border: {
-        dark: '#BBBBBB',
-        light: '#BBBBBB',
+        dark: '#3a5f7b',
+        light: '#3a5f7b',
       },
       control: {
         dark: 'border',
@@ -160,13 +160,14 @@ const theme = deepMerge(generate(16), {
       'active-text': 'text-strong',
       'selected-background': 'brand',
       'selected-text': 'text-strong',
-      'status-critical': '#FF4040',
+      'status-critical': '#e49090',
       'status-warning': '#FFAA15',
       'status-ok': '#00C781',
       'status-unknown': '#CCCCCC',
       'status-disabled': '#CCCCCC',
       'graph-0': 'brand',
       'graph-1': 'status-warning',
+      'input-background': '#32526a',
       focus: {
         light: 'text-strong',
         dark: 'text-strong',
@@ -244,8 +245,8 @@ const theme = deepMerge(generate(16), {
       responsiveBreakpoint: 'small',
     },
     input: {
-      padding: '10px',
-      weight: 600,
+      padding: 'small',
+      weight: 500,
     },
     spacing: '20px',
     size: {
@@ -379,7 +380,7 @@ const theme = deepMerge(generate(16), {
       color: 'border',
       error: {
         color: {
-          dark: 'white',
+          dark: 'status-critical',
           light: 'status-critical',
         },
       },
@@ -390,6 +391,9 @@ const theme = deepMerge(generate(16), {
     },
     content: {
       pad: 'small',
+    },
+    background: {
+      color: 'input-background',
     },
     disabled: {
       background: {
@@ -407,21 +411,23 @@ const theme = deepMerge(generate(16), {
       weight: 'normal',
     },
     help: {
-      color: 'text-xweak',
+      color: 'text-weak',
       margin: {
-        start: 'small',
-        horizontal: 'none',
-        vertical: 'small',
+        start: 'none',
+        top: 'none',
+        bottom: 'small',
       },
       size: 'small',
       weight: 'normal',
     },
     info: {
-      color: 'text-xweak',
+      color: 'text-weak',
       margin: {
         vertical: 'xsmall',
-        horizontal: 'small',
+        horizontal: 'none',
       },
+      size: 'small',
+      weight: 'normal',
     },
     label: {
       margin: {
@@ -429,7 +435,7 @@ const theme = deepMerge(generate(16), {
         horizontal: 'none',
       },
       size: 'medium',
-      weight: 'normal',
+      weight: 'bold',
       color: 'text',
     },
     margin: {

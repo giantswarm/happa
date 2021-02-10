@@ -96,7 +96,7 @@ describe('Users', () => {
     expect(inviteButton).toBeInTheDocument();
     fireEvent.click(inviteButton);
 
-    const emailInput = getByLabelText(/Email:/);
+    const emailInput = getByLabelText(/Email/);
     fireEvent.change(emailInput, {
       target: { value: 'someemail@somedomain.com' },
     });

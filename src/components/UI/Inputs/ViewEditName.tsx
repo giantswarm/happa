@@ -12,7 +12,8 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
+
+import TextInput from './TextInput';
 
 interface IViewAndEditNameProps extends React.ComponentPropsWithRef<'span'> {
   value: string;
@@ -31,7 +32,8 @@ const FormWrapper = styled.span`
   display: inline-block;
 
   form {
-    display: inline-block;
+    display: flex;
+    align-items: center;
   }
 
   .btn-group {
@@ -41,14 +43,9 @@ const FormWrapper = styled.span`
   }
 `;
 
-const NameInput = styled(ValidityStyledInputElement)`
-  &[type='text'] {
-    display: inline-block;
-    padding: 0px 5px;
-    width: 320px;
-    margin-right: 5px;
-    font-size: 85%;
-  }
+const NameInput = styled(TextInput)`
+  padding: 0px 5px;
+  font-size: 85%;
 `;
 
 const NameLabel = styled.a`
@@ -201,13 +198,18 @@ class ViewAndEditName extends Component<
           <form className='form' onSubmit={this.handleSubmit}>
             <NameInput
               ref={this.inputRef}
-              type='text'
               autoComplete='off'
               autoFocus={true}
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
               value={this.state.value}
-              isValid={!hasError}
+              formFieldProps={{
+                margin: {
+                  bottom: 'none',
+                  right: 'small',
+                },
+              }}
+              contentProps={{ width: 'medium' }}
             />
             <Overlay
               target={this.inputRef.current as HTMLInputElement}

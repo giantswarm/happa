@@ -11,7 +11,7 @@ it('renders without crashing', () => {
 it('renders a normal namespace field usually', () => {
   const { getByLabelText } = renderWithTheme(InstallAppForm, { version: '1' });
 
-  const namespaceField = getByLabelText('Namespace:');
+  const namespaceField = getByLabelText('Namespace');
   expect(namespaceField).not.toHaveAttribute('read-only');
 });
 

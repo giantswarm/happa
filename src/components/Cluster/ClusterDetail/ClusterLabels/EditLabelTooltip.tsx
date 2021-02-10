@@ -1,3 +1,4 @@
+import { Text } from 'grommet';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
@@ -7,7 +8,7 @@ import Button from 'UI/Controls/Button';
 import EditValueTooltip from 'UI/Display/Cluster/ClusterLabels/EditValueTooltip';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
 import ValueLabel from 'UI/Display/ValueLabel';
-import ValidityStyledInputElement from 'UI/Inputs/ValidityStyledInputElement';
+import TextInput from 'UI/Inputs/TextInput';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
 interface IEditLabelTooltip {
@@ -31,14 +32,16 @@ const StyledValueLabel = styled(ValueLabel)`
 const FormWrapper = styled.div`
   display: grid;
   margin: 5px 0 0 5px;
-  grid-template: 'keylabel valuelabel .' 'keyinput valueinput buttons';
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template: 'keyinput separator valueinput buttons';
+  grid-template-columns: 1fr 0.05fr 1fr 1fr;
   grid-gap: 0 8px;
 `;
 
 const GridCell = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  text-align: left;
+  margin-bottom: ${({ theme }) => theme.spacingPx}px;
 `;
 
 const KeyInputWrapper = styled(GridCell)`
@@ -49,8 +52,16 @@ const ValueInputWrapper = styled(GridCell)`
   grid-area: valueinput;
 `;
 
+const Separator = styled.div`
+  grid-area: separator;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 14px;
+`;
+
 const Buttons = styled(GridCell)`
   grid-area: buttons;
+  padding-bottom: 2px;
 `;
 
 const AddLabelButton = styled(Button)`
@@ -58,18 +69,6 @@ const AddLabelButton = styled(Button)`
   font-size: 12px;
   line-height: 12px;
   text-transform: uppercase;
-`;
-
-const KeyInputLabel = styled.label`
-  grid-area: keylabel;
-  font-weight: 300;
-  margin: 0 0 0 4px;
-  text-align: left;
-  color: ${({ theme }) => theme.colors.white2};
-`;
-
-const ValueInputLabel = styled(KeyInputLabel)`
-  grid-area: valuelabel;
 `;
 
 const Editable = styled.span<{ allowInteraction?: boolean }>`
@@ -174,33 +173,35 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
       >
         <EditValueTooltip id='add-label-tooltip'>
           <FormWrapper>
-            <KeyInputLabel htmlFor='label-key-input'>Label key:</KeyInputLabel>
             <KeyInputWrapper>
-              <ValidityStyledInputElement
-                type='text'
+              <TextInput
+                label={<Text size='small'>Label key</Text>}
                 onChange={({ target: { value: newRawValue } }) =>
                   setInternalKeyValue(newRawValue)
                 }
                 value={internalKeyValue}
-                isValid={keyIsValid}
                 onKeyUp={keyHandler}
                 id='label-key-input'
+                size='xsmall'
+                formFieldProps={{
+                  margin: { bottom: 'none' },
+                }}
               />
-              :
             </KeyInputWrapper>
-            <ValueInputLabel htmlFor='label-value-input'>
-              Label value:
-            </ValueInputLabel>
+            <Separator>:</Separator>
             <ValueInputWrapper>
-              <ValidityStyledInputElement
-                type='text'
+              <TextInput
+                label={<Text size='small'>Label value</Text>}
                 onChange={({ target: { value: newRawValue } }) =>
                   setInternalValueValue(newRawValue)
                 }
                 value={internalValueValue}
-                isValid={valueIsValid}
                 onKeyUp={keyHandler}
                 id='label-value-input'
+                size='xsmall'
+                formFieldProps={{
+                  margin: { bottom: 'none' },
+                }}
               />
             </ValueInputWrapper>
             <Buttons>
