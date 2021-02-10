@@ -71,6 +71,7 @@ const AppsList: React.FC = () => {
       onChangeSortOrder={(value: string) => {
         dispatch(setAppSortOrder(value));
       }}
+      onResetSearch={() => dispatch(setAppSearchQuery(''))}
       apps={apps.map((app) => ({
         name: app.name,
         catalogName: app.catalogName,

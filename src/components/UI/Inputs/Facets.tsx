@@ -16,6 +16,7 @@ const CatalogList = styled.ul`
 const ListItem = styled.li`
   display: flex;
   align-items: center;
+  margin-bottom: 8px;
 `;
 
 interface IFacetsProps {
