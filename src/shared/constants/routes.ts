@@ -17,12 +17,6 @@ const AppsRoutes = {
   AppDetail: '/apps/:catalogName/:app/:version',
 };
 
-const AppCatalogRoutes = {
-  Home: '/app-catalogs',
-  AppList: '/app-catalogs/:catalogName',
-  AppDetail: '/app-catalogs/:catalogName/:app/:version',
-};
-
 const UsersRoutes = {
   Home: '/users',
 };
@@ -64,7 +58,6 @@ const OrganizationsRoutes = {
 
 export {
   AccountSettingsRoutes,
-  AppCatalogRoutes,
   AppsRoutes,
   OrganizationsRoutes,
   MainRoutes,

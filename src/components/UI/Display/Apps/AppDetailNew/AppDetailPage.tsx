@@ -1,10 +1,9 @@
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Button from 'UI/Controls/Button';
 import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
@@ -170,6 +169,7 @@ export interface IAppDetailPageProps {
   readme?: string;
   readmeError?: string;
   hasReadme: boolean;
+  installAppModal: ReactElement;
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
@@ -187,10 +187,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         <HeaderDetails>
           <Upper>
             <h1>{props.appTitle}</h1>
-            <Button bsStyle='primary'>
-              <i className='fa fa-add-circle' />
-              Install in Cluster
-            </Button>
+            {props.installAppModal}
           </Upper>
           <Lower>
             <CatalogLabel
@@ -292,6 +289,7 @@ AppDetail.propTypes = {
   readme: PropTypes.string,
   readmeError: PropTypes.string,
   hasReadme: PropTypes.bool.isRequired,
+  installAppModal: PropTypes.element.isRequired,
 };
 
 export default AppDetail;

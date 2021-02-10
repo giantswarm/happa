@@ -50,11 +50,13 @@ export const selectApp = (
   catalogName: string,
   appName: string,
   version: string
-) => (state: IState): [IAppCatalogAppVersion?, IAppCatalog?] => {
+) => (
+  state: IState
+): [IAppCatalogAppVersion?, IAppCatalog?, IAppCatalogAppVersion[]?] => {
   const catalog = state.entities.catalogs.items[catalogName];
 
   if (!catalog.apps) {
-    return [undefined, catalog];
+    return [undefined, catalog, undefined];
   }
 
   const appVersions = catalog.apps[appName];
@@ -63,7 +65,7 @@ export const selectApp = (
     return appVersion.version === version;
   });
 
-  return [app, catalog];
+  return [app, catalog, appVersions];
 };
 
 export function selectIngressAppToInstall(

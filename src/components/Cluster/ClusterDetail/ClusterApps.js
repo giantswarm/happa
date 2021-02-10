@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Constants } from 'shared/constants';
-import { AppCatalogRoutes } from 'shared/constants/routes';
+import { AppsRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/appcatalog/actions';
 import {
   selectClusterById,
@@ -314,7 +314,7 @@ class ClusterApps extends React.Component {
 
   openAppCatalog = () => {
     this.props.dispatch(selectCluster(this.props.clusterId));
-    this.props.dispatch(push(AppCatalogRoutes.Home));
+    this.props.dispatch(push(AppsRoutes.Home));
   };
 
   showAppDetail = (appName) => {
