@@ -287,10 +287,10 @@ describe('Apps and App Catalog', () => {
       });
 
       // Check if namespace input is disabled
-      expect(getByLabelText(/namespace:/i).readOnly).toBeFalsy();
+      expect(getByLabelText(/namespace/i).readOnly).toBeFalsy();
 
       // Upload a configmap file
-      let fileInput = getByLabelText(/User level config values YAML:/i);
+      let fileInput = getByLabelText(/User level config values YAML/i);
       let file = new Blob(
         [
           JSON.stringify({
@@ -310,7 +310,7 @@ describe('Apps and App Catalog', () => {
       });
 
       // Upload a secrets file
-      fileInput = getByLabelText(/User level secret values YAML:/i);
+      fileInput = getByLabelText(/User level secret values YAML/i);
       file = new Blob(
         [
           JSON.stringify({

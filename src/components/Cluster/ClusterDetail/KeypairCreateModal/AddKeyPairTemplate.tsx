@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import TextInput from 'UI/Inputs/TextInput';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
 
 interface IAddKeyPairTemplateProps {
@@ -62,44 +63,32 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
       </p>
       <TwoInputArea>
         <InnerTwoInputArea>
-          <label htmlFor='cnPrefix'>Common Name Prefix:</label>
-          <input
+          <TextInput
+            label='Common Name Prefix'
             id='cnPrefix'
-            autoFocus
+            autoFocus={true}
             onChange={handleCNPrefixChange}
-            type='text'
             value={cnPrefix}
+            info={`${getCnPrefixOrEmail()}.user.api.clusterdomain`}
+            error={cnPrefixError}
           />
-          <div className='text-field-hint'>
-            {cnPrefixError === null ? (
-              `${getCnPrefixOrEmail()}.user.api.clusterdomain`
-            ) : (
-              <span className='error'>
-                <i className='fa fa-warning' /> {cnPrefixError}
-              </span>
-            )}
-          </div>
         </InnerTwoInputArea>
         <InnerTwoInputArea>
-          <label htmlFor='organizations'>Organizations:</label>
-          <input
+          <TextInput
             id='organizations'
+            label='Organizations'
             onChange={handleCertificateOrganizationsChange}
-            type='text'
             value={certificateOrganizations}
+            info='Comma seperated values. e.g.: admin,blue-team,staging'
           />
-          <div className='text-field-hint'>
-            Comma seperated values. e.g.: admin,blue-team,staging
-          </div>
         </InnerTwoInputArea>
       </TwoInputArea>
       <br />
       <div>
-        <label htmlFor='description'>Description:</label>
-        <input
+        <TextInput
+          label='Description'
           id='description'
           onChange={handleDescriptionChange}
-          type='text'
           value={description}
         />
       </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
-import Input from 'UI/Inputs/Input';
+import TextInput from 'UI/Inputs/TextInput';
 
 const ClusterPickerWrapper = styled.div`
   display: flex;
@@ -83,7 +83,11 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
 
   return (
     <ClusterPickerWrapper>
-      <Input icon='search' onChange={props.onChangeQuery} value={props.query} />
+      <TextInput
+        icon={<i className='fa fa-search' />}
+        onChange={(e) => props.onChangeQuery(e.target.value)}
+        value={props.query}
+      />
       <ClusterList>
         {props.clusters.length === 0 && (
           <NoSearchResults>

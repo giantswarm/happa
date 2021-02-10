@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import FormControl from 'react-bootstrap/lib/FormControl';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
 import { Providers } from 'shared/constants';
 import Button from 'UI/Controls/Button';
+import TextInput from 'UI/Inputs/TextInput';
 
 /**
  * CredentialsForm is a sub-component of Credentials.
@@ -113,61 +111,45 @@ class CredentialsForm extends React.Component {
             or delete these credentials once set.
           </p>
 
-          <FormGroup controlId='azureSubscriptionID'>
-            <ControlLabel>Azure Subscription ID</ControlLabel>
-            <FormControl
-              name='azureSubscriptionID'
-              onChange={this.handleChange}
-              type='text'
-              value={this.state.azureSubscriptionID}
-            />
-            <FormControl.Feedback />
-          </FormGroup>
+          <TextInput
+            label='Azure Subscription ID'
+            id='azureSubscriptionID'
+            name='azureSubscriptionID'
+            onChange={this.handleChange}
+            value={this.state.azureSubscriptionID}
+          />
 
-          <FormGroup controlId='azureTenantID'>
-            <ControlLabel>Azure Tenant ID</ControlLabel>
-            <FormControl
-              name='azureTenantID'
-              onChange={this.handleChange}
-              type='text'
-              value={this.state.azureTenantID}
-            />
-            <FormControl.Feedback />
-          </FormGroup>
-
-          <FormGroup controlId='azureClientID'>
-            <ControlLabel>Azure Client ID</ControlLabel>
-            <FormControl
-              name='azureClientID'
-              onChange={this.handleChange}
-              type='text'
-              value={this.state.azureClientID}
-            />
-            <FormControl.Feedback />
-          </FormGroup>
-
-          <FormGroup controlId='azureClientSecret'>
-            <ControlLabel>Azure Client Secret</ControlLabel>
-            <FormControl
-              name='azureClientSecret'
-              onChange={this.handleChange}
-              type='password'
-              value={this.state.azureClientSecret}
-            />
-            <FormControl.Feedback />
-          </FormGroup>
-
-          <FormGroup controlId='azureClientSecretAgain'>
-            <ControlLabel>Azure Client Secret (again)</ControlLabel>
-            <FormControl
-              name='azureClientSecretAgain'
-              onChange={this.handleChange}
-              type='password'
-              value={this.state.azureClientSecretAgain}
-            />
-            <FormControl.Feedback />
-          </FormGroup>
-
+          <TextInput
+            label='Azure Tenant ID'
+            id='azureTenantID'
+            name='azureTenantID'
+            onChange={this.handleChange}
+            value={this.state.azureTenantID}
+          />
+          <TextInput
+            label='Azure Client ID'
+            id='azureClientID'
+            name='azureClientID'
+            onChange={this.handleChange}
+            value={this.state.azureClientID}
+          />
+          <TextInput
+            label='Azure Client Secret'
+            id='azureClientSecret'
+            name='azureClientSecret'
+            onChange={this.handleChange}
+            type='password'
+            value={this.state.azureClientSecret}
+          />
+          <TextInput
+            label='Azure Client Secret (again)'
+            id='azureClientSecretAgain'
+            name='azureClientSecretAgain'
+            onChange={this.handleChange}
+            type='password'
+            value={this.state.azureClientSecretAgain}
+            margin={{ bottom: 'medium' }}
+          />
           <Button
             bsStyle='primary'
             disabled={!this.state.isValid}
@@ -199,37 +181,23 @@ class CredentialsForm extends React.Component {
             <i className='fa fa-info' /> It is currently not possible to modify
             or delete these credentials once set.
           </p>
-
-          <FormGroup controlId='awsAdminRoleARN'>
-            <ControlLabel>AWS admin role ARN (GiantSwarmAdmin)</ControlLabel>
-            <FormControl
-              name='awsAdminRoleARN'
-              onChange={this.handleChange}
-              type='text'
-              value={
-                this.state.awsAdminRoleARN ? this.state.awsAdminRoleARN : ''
-              }
-            />
-            <FormControl.Feedback />
-          </FormGroup>
-
-          <FormGroup controlId='awsOperatorRoleARN'>
-            <ControlLabel>
-              AWS operator role ARN (GiantSwarmAWSOperator)
-            </ControlLabel>
-            <FormControl
-              name='awsOperatorRoleARN'
-              onChange={this.handleChange}
-              type='text'
-              value={
-                this.state.awsOperatorRoleARN
-                  ? this.state.awsOperatorRoleARN
-                  : ''
-              }
-            />
-            <FormControl.Feedback />
-          </FormGroup>
-
+          <TextInput
+            label='AWS admin role ARN (GiantSwarmAdmin)'
+            name='awsAdminRoleARN'
+            id='awsAdminRoleARN'
+            onChange={this.handleChange}
+            value={this.state.awsAdminRoleARN ? this.state.awsAdminRoleARN : ''}
+          />
+          <TextInput
+            label='AWS operator role ARN (GiantSwarmAWSOperator)'
+            name='awsOperatorRoleARN'
+            id='awsOperatorRoleARN'
+            onChange={this.handleChange}
+            value={
+              this.state.awsOperatorRoleARN ? this.state.awsOperatorRoleARN : ''
+            }
+            margin={{ bottom: 'medium' }}
+          />
           <Button
             bsStyle='primary'
             disabled={!this.state.isValid}

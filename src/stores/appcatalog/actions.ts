@@ -1110,7 +1110,6 @@ export const setAppSearchQuery = (
     query,
   };
 };
-
 export const setAppSortOrder = (order: string): IAppCatalogSetAppSortOrder => {
   return {
     type: SET_APP_SORT_ORDER,

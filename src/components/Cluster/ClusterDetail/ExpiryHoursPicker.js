@@ -1,6 +1,7 @@
 import add from 'date-fns/fp/add';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import startOfDay from 'date-fns/fp/startOfDay';
+import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DatePicker from 'react-datepicker';
@@ -8,6 +9,7 @@ import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/Display/FlashMessage';
+import TextInput from 'UI/Inputs/TextInput';
 
 const List = styled.ul`
   & > li + li {
@@ -184,94 +186,93 @@ class ExpiryHoursPicker extends React.Component {
     return (
       <List className='expiry-hours-picker'>
         <li className='expiry-hours-picker--granular'>
-          <input
-            checked={this.state.selectionType === 'relative'}
-            id='relativeCheck'
-            name='selectionType'
-            onChange={this.onSelectionTypeChanged.bind(this)}
-            type='radio'
-            value='relative'
-          />
-          <label htmlFor='relativeCheck'>Relatively:</label>
-          <div>
+          <Box direction='row' gap='small'>
             <input
+              checked={this.state.selectionType === 'relative'}
+              id='relativeCheck'
+              name='selectionType'
+              onChange={this.onSelectionTypeChanged.bind(this)}
+              type='radio'
+              value='relative'
+            />
+            <label htmlFor='relativeCheck'>Relatively</label>
+          </Box>
+          <Box direction='row' gap='small' align='baseline'>
+            <TextInput
               autoComplete='off'
               max='10'
               maxLength={2}
               min='0'
               name='years'
               onChange={this.handleYearChange.bind(this)}
-              ref={(i) => {
-                this.years = i;
-              }}
-              type='text'
+              type='number'
+              size='small'
               value={this.state.yearsValue}
-            />{' '}
-            years
-            <input
+            />
+            <Text>years</Text>
+            <TextInput
               autoComplete='off'
               max='999'
               maxLength={2}
               min='0'
               name='months'
               onChange={this.handleMonthChange.bind(this)}
-              ref={(i) => {
-                this.months = i;
-              }}
-              type='text'
+              type='number'
+              size='small'
               value={this.state.monthsValue}
-            />{' '}
-            months
-            <input
+            />
+            <Text>months</Text>
+            <TextInput
               autoComplete='off'
               max='999'
               maxLength={2}
               min='0'
               name='days'
               onChange={this.handleDayChange.bind(this)}
-              ref={(i) => {
-                this.days = i;
-              }}
-              type='text'
+              type='number'
+              size='small'
               value={this.state.daysValue}
-            />{' '}
-            days
-            <input
+            />
+            <Text>days</Text>
+            <TextInput
               autoComplete='off'
               max='999'
               maxLength={2}
               min='0'
               name='hours'
               onChange={this.handleHourChange.bind(this)}
-              ref={(i) => {
-                this.hours = i;
-              }}
-              type='text'
+              type='number'
+              size='small'
               value={this.state.hoursValue}
-            />{' '}
-            hours from now
-          </div>
+            />
+            <Text>hours from now</Text>
+          </Box>
         </li>
         <li>
-          <input
-            checked={this.state.selectionType === 'date'}
-            id='dateCheck'
-            name='selectionType'
-            onChange={this.onSelectionTypeChanged.bind(this)}
-            type='radio'
-            value='date'
-          />
-          <label htmlFor='dateCheck'>Date:</label>
-          <DatePicker
-            dateFormat='yyyy-MM-dd'
-            dropdownMode='select'
-            maxDate={maxDate}
-            minDate={minDate}
-            onChange={this.handleDateChange.bind(this)}
-            selected={this.state.expireDate}
-            showMonthDropdown
-            showYearDropdown
-          />
+          <Box direction='row' align='baseline' gap='medium'>
+            <Box direction='row' gap='small'>
+              <input
+                checked={this.state.selectionType === 'date'}
+                id='dateCheck'
+                name='selectionType'
+                onChange={this.onSelectionTypeChanged.bind(this)}
+                type='radio'
+                value='date'
+              />
+              <label htmlFor='dateCheck'>Date</label>
+            </Box>
+            <DatePicker
+              dateFormat='yyyy-MM-dd'
+              dropdownMode='select'
+              maxDate={maxDate}
+              minDate={minDate}
+              onChange={this.handleDateChange.bind(this)}
+              selected={this.state.expireDate}
+              showMonthDropdown={true}
+              showYearDropdown={true}
+              customInput={<TextInput />}
+            />
+          </Box>
         </li>
         <li>
           <SlideTransition in={hasError}>

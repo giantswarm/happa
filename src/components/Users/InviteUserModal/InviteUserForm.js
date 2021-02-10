@@ -2,6 +2,7 @@ import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import FlashMessage from 'UI/Display/FlashMessage';
+import TextInput from 'UI/Inputs/TextInput';
 import { sortBy } from 'underscore';
 
 import { getInitialState } from '.';
@@ -29,16 +30,14 @@ const InviteUserForm = ({
       </p>
       <p>Invitations are valid for 48 hours.</p>
 
-      <div className='textfield'>
-        <label htmlFor='email'>Email:</label>
-        <input
-          id='email'
-          autoFocus
-          onChange={handleEmailChange}
-          type='text'
-          value={inviteForm.email}
-        />
-      </div>
+      <TextInput
+        label='Email'
+        id='email'
+        type='email'
+        autoFocus={true}
+        onChange={handleEmailChange}
+        value={inviteForm.email}
+      />
 
       <div className='textfield'>
         <label htmlFor='organizations'>Organizations:</label>
@@ -51,7 +50,7 @@ const InviteUserForm = ({
       </div>
 
       <div className='textfield'>
-        <label>Send Email:</label>
+        <label>Send Email</label>
         <div className='checkbox'>
           <label htmlFor='sendEmail'>
             <input

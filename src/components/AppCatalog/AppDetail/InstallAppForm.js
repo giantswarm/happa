@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import FileInput from 'UI/Inputs/FileInput';
 import Input from 'UI/Inputs/Input';
+import TextInput from 'UI/Inputs/TextInput';
 
 const FormWrapper = styled.div`
   display: flex;
@@ -84,16 +85,19 @@ const InstallAppForm = ({
 
   return (
     <FormWrapper>
-      <Input
-        description='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
-        label='Application Name:'
-        onChange={updateName}
-        validationError={nameError}
+      <TextInput
+        help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
+        label='Application Name'
+        id='application-name'
+        onChange={(e) => updateName(e.target.value)}
+        error={nameError}
         value={name}
+        margin={{ bottom: 'large' }}
       />
 
       <Input
-        label='Chart Version:'
+        label='Chart Version'
+        id='chart-version'
         description='This will determine what version of the app eventually gets installed.'
       >
         <VersionPicker
@@ -104,27 +108,32 @@ const InstallAppForm = ({
       </Input>
 
       {formAbilities.hasFixedNamespace ? (
-        <Input
-          description={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
+        <TextInput
+          help={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
           key='fixed-namespace'
-          label='Namespace:'
+          label='Namespace'
+          id='fixed-namespace'
           readOnly={true}
           value={formAbilities.fixedNamespace}
+          margin={{ bottom: 'large' }}
         />
       ) : (
-        <Input
-          description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
+        <TextInput
+          help='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
           key='dedicated-namespace'
-          label='Namespace:'
-          onChange={updateNamespace}
-          validationError={namespaceError}
+          label='Namespace'
+          id='dedicated-namespace'
+          onChange={(e) => updateNamespace(e.target.value)}
+          error={namespaceError}
           value={namespace}
+          margin={{ bottom: 'large' }}
         />
       )}
 
       <FileInput
         description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
-        label='User level config values YAML:'
+        label='User level config values YAML'
+        id='user-level-config'
         onChange={updateValuesYAML}
         validationError={valuesYAMLError}
         value={valuesYAML}
@@ -132,7 +141,8 @@ const InstallAppForm = ({
 
       <FileInput
         description='Sensitive configuration values can be uploaded separately.'
-        label='User level secret values YAML:'
+        label='User level secret values YAML'
+        id='user-level-secret'
         onChange={updateSecretsYAML}
         validationError={secretsYAMLError}
         value={secretsYAML}
