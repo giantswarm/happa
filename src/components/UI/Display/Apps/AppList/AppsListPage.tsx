@@ -42,8 +42,10 @@ export interface IAppsListPageProps {
   matchCount: number;
   onChangeFacets: (value: string, checked: boolean) => void;
   onChangeSearchQuery: (value: string) => void;
+  onChangeSortOrder: (value: string) => void;
   facetOptions: IFacetOption[];
   searchQuery: string;
+  sortOrder: string;
   apps: IAppProps[];
 }
 
@@ -67,6 +69,8 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
         onChangeSearchQuery={props.onChangeSearchQuery}
         searchQuery={props.searchQuery}
         matchCount={props.matchCount}
+        onChangeSortOrder={props.onChangeSortOrder}
+        sortOrder={props.sortOrder}
       />
       <ListAndFacets>
         <Facets onChange={props.onChangeFacets} options={props.facetOptions} />
@@ -108,6 +112,8 @@ AppsList.propTypes = {
   matchCount: PropTypes.number.isRequired,
   onChangeFacets: PropTypes.func.isRequired,
   onChangeSearchQuery: PropTypes.func.isRequired,
+  onChangeSortOrder: PropTypes.func.isRequired,
+  sortOrder: PropTypes.string.isRequired,
   facetOptions: PropTypes.array.isRequired,
   searchQuery: PropTypes.string.isRequired,
   apps: PropTypes.array.isRequired,

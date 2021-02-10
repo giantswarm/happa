@@ -42,6 +42,7 @@ import {
   LOAD_CLUSTER_APPS,
   PREPARE_INGRESS_TAB_DATA,
   SET_APP_SEARCH_QUERY,
+  SET_APP_SORT_ORDER,
   UPDATE_CLUSTER_APP,
 } from 'stores/appcatalog/constants';
 import {
@@ -58,6 +59,7 @@ import {
   IAppCatalogLoadClusterAppsActionPayload,
   IAppCatalogLoadClusterAppsActionResponse,
   IAppCatalogSetAppSearchQuery,
+  IAppCatalogSetAppSortOrder,
   IAppCatalogsMap,
   IAppCatalogUpdateClusterAppActionPayload,
   IAppCatalogUpdateClusterAppActionResponse,
@@ -1106,5 +1108,11 @@ export const setAppSearchQuery = (
   return {
     type: SET_APP_SEARCH_QUERY,
     query,
+  };
+};
+export const setAppSortOrder = (order: string): IAppCatalogSetAppSortOrder => {
+  return {
+    type: SET_APP_SORT_ORDER,
+    order,
   };
 };

@@ -8,6 +8,7 @@ import {
   DISABLE_CATALOG,
   ENABLE_CATALOG,
   SET_APP_SEARCH_QUERY,
+  SET_APP_SORT_ORDER,
 } from 'stores/appcatalog/constants';
 
 import * as actions from './actions';
@@ -19,6 +20,7 @@ const initialState: IAppCatalogsState = {
   ui: {
     selectedCatalogs: {},
     searchQuery: '',
+    sortOrder: 'name',
   },
   items: {},
 };
@@ -92,6 +94,12 @@ const catalogReducer = produce(
 
       case SET_APP_SEARCH_QUERY: {
         draft.ui.searchQuery = action.query;
+
+        break;
+      }
+
+      case SET_APP_SORT_ORDER: {
+        draft.ui.sortOrder = action.order;
 
         break;
       }

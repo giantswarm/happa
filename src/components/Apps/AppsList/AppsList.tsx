@@ -7,11 +7,13 @@ import {
   disableCatalog,
   enableCatalog,
   setAppSearchQuery,
+  setAppSortOrder,
 } from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
 import {
   selectApps,
   selectAppSearchQuery,
+  selectAppSortOrder,
   selectCatalogs,
   selectSelectedCatalogs,
 } from 'stores/appcatalog/selectors';
@@ -43,10 +45,12 @@ const AppsList: React.FC = () => {
 
   const allApps = useSelector(selectApps);
   const selectedCatalogs = useSelector(selectSelectedCatalogs);
+  const memoSelectedCatalogs = selectedCatalogs.join('');
+  const sortOrder = useSelector(selectAppSortOrder);
 
   const apps = useMemo(() => searchApps(debouncedSearchQuery, allApps), [
     debouncedSearchQuery,
-    selectedCatalogs.join(''),
+    memoSelectedCatalogs,
   ]);
 
   return (
@@ -62,6 +66,10 @@ const AppsList: React.FC = () => {
         } else {
           dispatch(disableCatalog(value));
         }
+      }}
+      sortOrder={sortOrder}
+      onChangeSortOrder={(value: string) => {
+        dispatch(setAppSortOrder(value));
       }}
       apps={apps.map((app) => ({
         name: app.name,

@@ -27,8 +27,15 @@ const StyledDropdownTrigger = styled(DropdownTrigger)`
 const StyledList = styled(List)``;
 
 interface ISortingDropdownProps {
+  value: string;
   setSortingOrder: (order: string) => void;
 }
+
+const options: { [index: string]: string } = {
+  name: 'Name',
+  catalog: 'Catalog',
+  latest: 'Latest release (newest first)',
+};
 
 const SortingDropdown: React.FC<ISortingDropdownProps> = (props) => {
   return (
@@ -49,55 +56,27 @@ const SortingDropdown: React.FC<ISortingDropdownProps> = (props) => {
               onKeyDown={onKeyDownHandler}
               type='button'
             >
-              Name
+              {options[props.value]}
               <span className='caret' />
             </StyledDropdownTrigger>
             {isOpen && (
               <StyledList>
-                <li role='presentation'>
-                  <Link
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      props.setSortingOrder('Name');
-                    }}
-                  >
-                    Name
-                  </Link>
-                </li>
-                <li role='presentation'>
-                  <Link
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      props.setSortingOrder('Catalog');
-                    }}
-                  >
-                    Catalog
-                  </Link>
-                </li>
-                <li role='presentation'>
-                  <Link
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      props.setSortingOrder('Latest');
-                    }}
-                  >
-                    Latest release (newest first)
-                  </Link>
-                </li>
-                <li role='presentation'>
-                  <Link
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      props.setSortingOrder('Relevance');
-                    }}
-                  >
-                    Relevance for search term
-                  </Link>
-                </li>
+                {Object.entries(options).map(([key, value]) => {
+                  return (
+                    <li role='presentation' key={key}>
+                      <Link
+                        href='#'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          props.setSortingOrder(key);
+                          onBlurHandler();
+                        }}
+                      >
+                        {value}
+                      </Link>
+                    </li>
+                  );
+                })}
               </StyledList>
             )}
           </div>
@@ -109,6 +88,7 @@ const SortingDropdown: React.FC<ISortingDropdownProps> = (props) => {
 
 SortingDropdown.propTypes = {
   setSortingOrder: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 export default SortingDropdown;
