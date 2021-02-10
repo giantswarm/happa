@@ -16,7 +16,7 @@ interface IBaseCluster {
 
   path?: string;
   credential_id?: string;
-  delete_date?: string | null;
+  delete_date?: Date | null;
 
   // Injected by client-side.
   capabilities?: IClusterCapabilities;
