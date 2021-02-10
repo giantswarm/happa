@@ -41,6 +41,7 @@ import {
   PREPARE_INGRESS_TAB_DATA_REQUEST,
   PREPARE_INGRESS_TAB_DATA_SUCCESS,
   SET_APP_SEARCH_QUERY,
+  SET_APP_SORT_ORDER,
   UPDATE_CLUSTER_APP_ERROR,
   UPDATE_CLUSTER_APP_REQUEST,
   UPDATE_CLUSTER_APP_SUCCESS,
@@ -56,6 +57,7 @@ export interface IAppCatalogsUI {
   };
 
   searchQuery: string;
+  sortOrder: string;
 }
 
 export interface IAppCatalogsState {
@@ -372,6 +374,11 @@ export interface IAppCatalogSetAppSearchQuery {
   query: string;
 }
 
+export interface IAppCatalogSetAppSortOrder {
+  type: typeof SET_APP_SORT_ORDER;
+  order: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -420,4 +427,5 @@ export type AppCatalogActions =
   | IAppCatalogPrepareIngressTabDataErrorAction
   | IAppCatalogEnableCatalogAction
   | IAppCatalogDisableCatalogAction
-  | IAppCatalogSetAppSearchQuery;
+  | IAppCatalogSetAppSearchQuery
+  | IAppCatalogSetAppSortOrder;

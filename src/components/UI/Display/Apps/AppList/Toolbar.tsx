@@ -48,6 +48,8 @@ interface IToolbarProps {
   matchCount: number;
   onChangeSearchQuery: (value: string) => void;
   searchQuery: string;
+  onChangeSortOrder: (value: string) => void;
+  sortOrder: string;
 }
 
 const Toolbar: React.FC<IToolbarProps> = (props) => {
@@ -63,7 +65,11 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
       </Search>
 
       <Sort>
-        Sort by <StyledSortingDropdown setSortingOrder={() => {}} />
+        Sort by{' '}
+        <StyledSortingDropdown
+          value={props.sortOrder}
+          setSortingOrder={props.onChangeSortOrder}
+        />
       </Sort>
     </Wrapper>
   );
@@ -73,6 +79,8 @@ Toolbar.propTypes = {
   matchCount: PropTypes.number.isRequired,
   onChangeSearchQuery: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,
+  onChangeSortOrder: PropTypes.func.isRequired,
+  sortOrder: PropTypes.string.isRequired,
 };
 
 export default Toolbar;

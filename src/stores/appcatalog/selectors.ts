@@ -96,3 +96,7 @@ export function selectReadmeURL(
 export function selectAppSearchQuery(state: IState): string {
   return state.entities.catalogs.ui.searchQuery;
 }
+
+export function selectAppSortOrder(state: IState): string {
+  return state.entities.catalogs.ui.sortOrder;
+}
