@@ -46,13 +46,19 @@ function matchCountMessage(count: number) {
 
 interface IToolbarProps {
   matchCount: number;
+  onChangeSearchQuery: (value: string) => void;
+  searchQuery: string;
 }
 
 const Toolbar: React.FC<IToolbarProps> = (props) => {
   return (
     <Wrapper>
       <Search>
-        <SearchInput hideHint />
+        <SearchInput
+          hideHint
+          value={props.searchQuery}
+          onChange={props.onChangeSearchQuery}
+        />
         {matchCountMessage(props.matchCount)}
       </Search>
 
@@ -65,6 +71,8 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
 
 Toolbar.propTypes = {
   matchCount: PropTypes.number.isRequired,
+  onChangeSearchQuery: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired,
 };
 
 export default Toolbar;

@@ -7,6 +7,7 @@ import {
   CLUSTER_LOAD_APP_README_SUCCESS,
   DISABLE_CATALOG,
   ENABLE_CATALOG,
+  SET_APP_SEARCH_QUERY,
 } from 'stores/appcatalog/constants';
 
 import * as actions from './actions';
@@ -17,6 +18,7 @@ const initialState: IAppCatalogsState = {
   isFetching: false,
   ui: {
     selectedCatalogs: {},
+    searchQuery: '',
   },
   items: {},
 };
@@ -84,6 +86,12 @@ const catalogReducer = produce(
 
       case DISABLE_CATALOG: {
         draft.ui.selectedCatalogs[action.catalog] = false;
+
+        break;
+      }
+
+      case SET_APP_SEARCH_QUERY: {
+        draft.ui.searchQuery = action.query;
 
         break;
       }

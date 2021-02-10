@@ -41,7 +41,9 @@ const EmptyState = styled.div`
 export interface IAppsListPageProps {
   matchCount: number;
   onChangeFacets: (value: string, checked: boolean) => void;
+  onChangeSearchQuery: (value: string) => void;
   facetOptions: IFacetOption[];
+  searchQuery: string;
   apps: IAppProps[];
 }
 
@@ -61,7 +63,11 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
         </a>
       </p>
       <hr />
-      <Toolbar matchCount={props.matchCount} />
+      <Toolbar
+        onChangeSearchQuery={props.onChangeSearchQuery}
+        searchQuery={props.searchQuery}
+        matchCount={props.matchCount}
+      />
       <ListAndFacets>
         <Facets onChange={props.onChangeFacets} options={props.facetOptions} />
 
@@ -101,7 +107,9 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
 AppsList.propTypes = {
   matchCount: PropTypes.number.isRequired,
   onChangeFacets: PropTypes.func.isRequired,
+  onChangeSearchQuery: PropTypes.func.isRequired,
   facetOptions: PropTypes.array.isRequired,
+  searchQuery: PropTypes.string.isRequired,
   apps: PropTypes.array.isRequired,
 };
 

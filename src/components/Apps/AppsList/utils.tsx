@@ -83,3 +83,30 @@ export function catalogsToFacets(
       };
     });
 }
+
+export const searchApps = (searchQuery: string, allApps: IAppCatalogApp[]) => {
+  const fieldsToCheck: string[] = ['name', 'description', 'keywords'];
+  const trimmedSearchQuery = searchQuery.trim().toLowerCase();
+
+  let filteredApps = [];
+
+  if (trimmedSearchQuery === '') return allApps;
+
+  filteredApps = allApps.filter((app) => {
+    // Go through all the app versions
+    return app.versions.some((appVersion) => {
+      // Check if any of the checked fields include the search query
+      return fieldsToCheck.some((field) => {
+        let appVersionsField = appVersion[field as keyof IAppCatalogAppVersion];
+
+        appVersionsField = appVersionsField ? String(appVersionsField) : '';
+
+        const appVersionsFieldValue = appVersionsField.toLowerCase();
+
+        return appVersionsFieldValue.includes(trimmedSearchQuery);
+      });
+    });
+  });
+
+  return filteredApps;
+};
