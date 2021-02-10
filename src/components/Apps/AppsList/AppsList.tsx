@@ -1,5 +1,6 @@
+import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppsRoutes } from 'shared/constants/routes';
 import {
@@ -12,12 +13,15 @@ import {
   selectApps,
   selectAppSearchQuery,
   selectCatalogs,
+  selectSelectedCatalogs,
 } from 'stores/appcatalog/selectors';
 import { selectErrorsByIdsAndAction } from 'stores/entityerror/selectors';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
 import { catalogsToFacets, searchApps } from './utils';
+
+const SEARCH_THROTTLE_RATE_MS = 250;
 
 const AppsList: React.FC = () => {
   const dispatch = useDispatch();
@@ -32,7 +36,18 @@ const AppsList: React.FC = () => {
     )
   );
 
-  const apps = searchApps(searchQuery, useSelector(selectApps));
+  const debouncedSearchQuery = useDebounce(
+    searchQuery,
+    SEARCH_THROTTLE_RATE_MS
+  );
+
+  const allApps = useSelector(selectApps);
+  const selectedCatalogs = useSelector(selectSelectedCatalogs);
+
+  const apps = useMemo(() => searchApps(debouncedSearchQuery, allApps), [
+    debouncedSearchQuery,
+    selectedCatalogs.join(''),
+  ]);
 
   return (
     <AppsListPage
