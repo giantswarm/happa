@@ -52,18 +52,23 @@ export const selectApp = (
   version: string
 ) => (
   state: IState
-): [IAppCatalogAppVersion?, IAppCatalog?, IAppCatalogAppVersion[]?] => {
+): [
+  IAppCatalogAppVersion | null,
+  IAppCatalog | null,
+  IAppCatalogAppVersion[]
+] => {
   const catalog = state.entities.catalogs.items[catalogName];
 
   if (!catalog.apps) {
-    return [undefined, catalog, undefined];
+    return [null, catalog, []];
   }
 
   const appVersions = catalog.apps[appName];
 
-  const app = appVersions.find((appVersion) => {
-    return appVersion.version === version;
-  });
+  const app =
+    appVersions.find((appVersion) => {
+      return appVersion.version === version;
+    }) || null;
 
   return [app, catalog, appVersions];
 };

@@ -1,3 +1,6 @@
+import { AppsRoutes } from 'shared/constants/routes';
+import RoutePath from 'lib/routePath';
+import { push } from 'connected-react-router';
 import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAppModal';
 import useError from 'lib/hooks/useError';
 import React, { useEffect } from 'react';
@@ -50,6 +53,18 @@ const AppDetail: React.FC = () => {
     (state: IState) => state.main.selectedClusterID
   );
 
+  const selectVersion = (v: string) => {
+    if (v && app && catalog) {
+      const path = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: catalog.metadata.name,
+        app: app.name,
+        version: v,
+      });
+
+      dispatch(push(path));
+    }
+  };
+
   return (
     <Breadcrumb
       data={{
@@ -63,6 +78,12 @@ const AppDetail: React.FC = () => {
           appIconURL={app.icon}
           catalogName={catalog.spec.title}
           catalogIcon={catalog.spec.logoURL}
+          otherVersions={otherVersions.map((v) => ({
+            chartVersion: v.version,
+            created: v.created,
+            includesVersion: v.appVersion,
+            test: false,
+          }))}
           chartVersion={app.version}
           createDate={app.created}
           includesVersion={app.appVersion}
@@ -72,6 +93,7 @@ const AppDetail: React.FC = () => {
           hasReadme={readmeURL}
           readmeError={readmeErrorMessage}
           readme={app.readme}
+          selectVersion={selectVersion}
           installAppModal={
             <InstallAppModal
               app={{

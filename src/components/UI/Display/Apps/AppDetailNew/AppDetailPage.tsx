@@ -8,6 +8,9 @@ import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
+import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
+import { push } from 'connected-react-router';
 
 import { HeadingRenderer, urlFor } from './utils';
 
@@ -118,6 +121,15 @@ const Keyword = styled.span`
   border-radius: 5px;
 `;
 
+const VersionPickerRow = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  & > span {
+    margin-right: 10px;
+  }
+`;
+
 const Wrapper = styled.div`
   &.no-readme {
     max-width: 1000px;
@@ -129,6 +141,11 @@ const Wrapper = styled.div`
 
     ${Body} {
       margin-left: 150px;
+    }
+
+    ${VersionPickerRow} {
+      margin-left: 150px;
+      margin-bottom: 30px;
     }
 
     ${Details} {
@@ -160,6 +177,7 @@ export interface IAppDetailPageProps {
   appTitle: string;
   appIconURL: string;
   catalogName: string;
+  otherVersions: IVersion[];
   catalogIcon?: string;
   chartVersion: string;
   createDate: string;
@@ -171,6 +189,7 @@ export interface IAppDetailPageProps {
   readmeError?: string;
   hasReadme: boolean;
   installAppModal: ReactElement;
+  selectVersion: (version: string) => void;
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
@@ -198,6 +217,19 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           </Lower>
         </HeaderDetails>
       </Header>
+
+      <VersionPickerRow>
+        <span>Information for:</span>
+        <VersionPicker
+          onChange={(v) => {
+            if (v) {
+              props.selectVersion(v);
+            }
+          }}
+          selectedVersion={props.chartVersion}
+          versions={props.otherVersions}
+        />
+      </VersionPickerRow>
 
       <Body>
         {props.hasReadme && (
@@ -291,6 +323,8 @@ AppDetail.propTypes = {
   readmeError: PropTypes.string,
   hasReadme: PropTypes.bool.isRequired,
   installAppModal: PropTypes.element.isRequired,
+  otherVersions: PropTypes.array.isRequired,
+  selectVersion: PropTypes.func.isRequired,
 };
 
 export default AppDetail;
