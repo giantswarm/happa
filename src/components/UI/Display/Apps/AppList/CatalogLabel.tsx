@@ -68,7 +68,7 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
     <span>
       {props.catalogName}
       {props.isManaged && <CatalogType>MANAGED</CatalogType>}
-      {props.catalogName == 'Giant Swarm Catalog' && (
+      {props.catalogName === 'Giant Swarm Catalog' && (
         <CatalogType>MANAGED</CatalogType>
       )}
     </span>
@@ -93,7 +93,7 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
           </OverlayTrigger>
         )}
 
-        {(!props.description || props.description == '') && text}
+        {(!props.description || props.description === '') && text}
 
         {props.error && <ErrorIcon name={props.catalogName} />}
       </Text>
