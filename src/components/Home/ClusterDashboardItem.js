@@ -201,7 +201,8 @@ function ClusterDashboardItem({
             <NameWrapper>{cluster.name}</NameWrapper>
           </TitleWrapper>
           <DeleteDateWrapper>
-            Deleted {relativeDate(cluster.delete_date)}
+            Deleted{' '}
+            {!isNaN(cluster.delete_date) && relativeDate(cluster.delete_date)}
           </DeleteDateWrapper>
         </ContentWrapper>
       </WrapperDeleted>

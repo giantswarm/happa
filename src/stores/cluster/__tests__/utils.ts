@@ -1181,7 +1181,7 @@ describe('cluster::utils', () => {
 
     it('ignores clusters that are currently being deleted', () => {
       const v4Cluster = Object.assign({}, v4AWSClusterResponse, {
-        delete_date: '1970-01-01',
+        delete_date: new Date('1970-01-01'),
       });
 
       const clusters: IClusterMap = {

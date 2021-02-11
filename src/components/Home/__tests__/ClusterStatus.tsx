@@ -206,7 +206,7 @@ describe('ClusterStatus', () => {
       {
         id: 'as129',
         release_version: nodePoolRelease.version,
-        delete_date: '123123',
+        delete_date: new Date('2021-02-10T16:39:27Z'),
       },
       {
         [nodePoolRelease.version]: nodePoolRelease as IRelease,
