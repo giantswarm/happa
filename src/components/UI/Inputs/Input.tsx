@@ -81,9 +81,13 @@ export interface IInput<T> {
   readOnly?: boolean;
   validationError?: ReactNode;
   value?: T;
+  'data-testid'?: string;
 }
 
-const Input: FC<IInput<string | FileList>> = (props) => {
+const Input: FC<IInput<string | FileList>> = ({
+  'data-testid': dataTestId,
+  ...props
+}) => {
   const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
     props.onChange?.(e.target.value);
   };
@@ -111,6 +115,7 @@ const Input: FC<IInput<string | FileList>> = (props) => {
             value={props.value as string}
             readOnly={props.readOnly}
             placeholder={props.placeholder}
+            data-testid={dataTestId}
           />
         )}
       </InputWrapper>
@@ -139,6 +144,7 @@ Input.propTypes = {
   readOnly: PropTypes.bool,
   validationError: PropTypes.string,
   value: PropTypes.any,
+  'data-testid': PropTypes.string,
 };
 
 export default Input;
