@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import Input from 'UI/Inputs/Input';
+import TextInput from 'UI/Inputs/TextInput';
 
 import SortingDropdown from './SortingDropdown';
 
@@ -16,9 +16,7 @@ const Search = styled.div`
   align-items: center;
 `;
 
-const SearchInput = styled(Input)`
-  margin-right: 10px;
-  margin-bottom: 0px;
+const SearchInput = styled(TextInput)`
   width: 280px;
 `;
 
@@ -46,7 +44,7 @@ function matchCountMessage(count: number) {
 
 interface IToolbarProps {
   matchCount: number;
-  onChangeSearchQuery: (value: string) => void;
+  onChangeSearchQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchQuery: string;
   onChangeSortOrder: (value: string) => void;
   sortOrder: string;
@@ -57,10 +55,10 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
     <Wrapper>
       <Search>
         <SearchInput
-          hideHint
           value={props.searchQuery}
           onChange={props.onChangeSearchQuery}
           data-testid='app-search-input'
+          margin={{ bottom: 'none', right: 'small' }}
         />
         {matchCountMessage(props.matchCount)}
       </Search>
