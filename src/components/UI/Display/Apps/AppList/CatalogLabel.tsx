@@ -93,7 +93,7 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
           </OverlayTrigger>
         )}
 
-        {(!props.description || props.description === '') && text}
+        {!props.description && text}
 
         {props.error && <ErrorIcon name={props.catalogName} />}
       </Text>
