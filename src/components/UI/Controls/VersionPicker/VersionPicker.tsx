@@ -160,7 +160,6 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
     event: React.MouseEvent<HTMLAnchorElement>
   ) => {
     event.preventDefault();
-    console.log(version);
     onChange?.(version);
   };
 
