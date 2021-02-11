@@ -46,7 +46,7 @@ const AppIconWrapper = styled.div`
   border-radius: ${(props) => props.theme.border_radius};
   width: 130px;
   height: 130px;
-  padding: 20px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -56,6 +56,7 @@ const StyledAppIcon = styled(AppIcon)`
   border-radius: 5px;
   text-align: center;
   font-size: 60px;
+  width: 100%;
 `;
 
 const Body = styled.div`
