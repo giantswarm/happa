@@ -56,8 +56,8 @@ const AppsList: React.FC = () => {
   return (
     <AppsListPage
       matchCount={apps.length}
-      onChangeSearchQuery={(event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setAppSearchQuery(event.target.value));
+      onChangeSearchQuery={(value: string) => {
+        dispatch(setAppSearchQuery(value));
       }}
       searchQuery={searchQuery}
       onChangeFacets={(value, checked) => {

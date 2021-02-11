@@ -41,7 +41,7 @@ const EmptyState = styled.div`
 export interface IAppsListPageProps {
   matchCount: number;
   onChangeFacets: (value: string, checked: boolean) => void;
-  onChangeSearchQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeSearchQuery: (value: string) => void;
   onChangeSortOrder: (value: string) => void;
   onResetSearch: () => void;
   facetOptions: IFacetOption[];

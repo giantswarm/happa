@@ -14,6 +14,12 @@ const Wrapper = styled.div`
 const Search = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
+`;
+
+const ClearSearch = styled.a`
+  position: absolute;
+  left: 255px;
 `;
 
 const SearchInput = styled(TextInput)`
@@ -44,23 +50,42 @@ function matchCountMessage(count: number) {
 
 interface IToolbarProps {
   matchCount: number;
-  onChangeSearchQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeSearchQuery: (value: string) => void;
   searchQuery: string;
   onChangeSortOrder: (value: string) => void;
   sortOrder: string;
 }
 
 const Toolbar: React.FC<IToolbarProps> = (props) => {
+  function onChangeSearchQueryEvent(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    props.onChangeSearchQuery(event.target.value);
+  }
+
   return (
     <Wrapper>
       <Search>
         <SearchInput
           value={props.searchQuery}
-          onChange={props.onChangeSearchQuery}
+          onChange={onChangeSearchQueryEvent}
           data-testid='app-search-input'
           margin={{ bottom: 'none', right: 'small' }}
+          icon={<i className='fa fa-search' />}
         />
+
         {matchCountMessage(props.matchCount)}
+
+        {props.searchQuery !== '' && (
+          <ClearSearch
+            href='#'
+            onClick={() => {
+              props.onChangeSearchQuery('');
+            }}
+          >
+            <i className='fa fa-close' />
+          </ClearSearch>
+        )}
       </Search>
 
       <Sort>
