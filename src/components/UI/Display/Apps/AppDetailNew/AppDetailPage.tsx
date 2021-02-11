@@ -176,6 +176,7 @@ export interface IAppDetailPageProps {
   appTitle: string;
   appIconURL: string;
   catalogName: string;
+  catalogDescription: string;
   otherVersions: IVersion[];
   catalogIcon?: string;
   chartVersion: string;
@@ -211,6 +212,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <Lower>
             <CatalogLabel
               catalogName={props.catalogName}
+              description={props.catalogDescription}
               iconUrl={props.catalogIcon}
             />
           </Lower>
@@ -311,6 +313,7 @@ AppDetail.propTypes = {
   appTitle: PropTypes.string.isRequired,
   appIconURL: PropTypes.string.isRequired,
   catalogName: PropTypes.string.isRequired,
+  catalogDescription: PropTypes.string.isRequired,
   catalogIcon: PropTypes.string,
   chartVersion: PropTypes.string.isRequired,
   createDate: PropTypes.string.isRequired,

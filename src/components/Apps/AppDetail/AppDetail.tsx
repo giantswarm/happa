@@ -77,6 +77,7 @@ const AppDetail: React.FC = () => {
           appTitle={app.name}
           appIconURL={app.icon}
           catalogName={catalog.spec.title}
+          catalogDescription={catalog.spec.description}
           catalogIcon={catalog.spec.logoURL}
           otherVersions={otherVersions.map((v) => ({
             chartVersion: v.version,

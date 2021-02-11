@@ -77,6 +77,7 @@ export function catalogsToFacets(
           <CatalogLabel
             catalogName={catalog.spec.title}
             iconUrl={catalog.spec.logoURL}
+            description={catalog.spec.description}
             error={catalogErrors[catalog.metadata.name]}
           />
         ),
