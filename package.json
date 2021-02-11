@@ -252,11 +252,6 @@
     "node-fetch": "^2.6.1",
     "ua-parser-js": "^0.7.22"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn typecheck && yarn precommit"
-    }
-  },
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "yarn lint:fix",
