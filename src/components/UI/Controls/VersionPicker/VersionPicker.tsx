@@ -1,3 +1,4 @@
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -101,6 +102,10 @@ const VersionPickerItem = styled.li`
   list-style-type: none;
   border-bottom: 1px solid ${(props) => props.theme.colors.shade1};
   cursor: pointer;
+
+  span {
+    margin-right: 15px;
+  }
 `;
 
 const VersionPickerLink = styled(Link)<{ selected: boolean }>`
@@ -155,7 +160,6 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
     event: React.MouseEvent<HTMLAnchorElement>
   ) => {
     event.preventDefault();
-
     onChange?.(version);
   };
 
@@ -212,14 +216,20 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                   <VersionPickerList>
                     {filteredVersions.map((version) => {
                       return (
-                        <VersionPickerItem key={version.version}>
+                        <VersionPickerItem key={version.chartVersion}>
                           <VersionPickerLink
-                            selected={version.version === selectedVersion}
+                            selected={version.chartVersion === selectedVersion}
                             href='#'
-                            onClick={handleOnChange(version.version)}
+                            onClick={(e) => {
+                              handleOnChange(version.chartVersion)(e);
+                              onBlurHandler();
+                            }}
                             role='menuitem'
                           >
-                            <Truncated as='span'>{version.version}</Truncated>
+                            <Truncated as='span'>
+                              {version.chartVersion}
+                            </Truncated>
+                            {relativeDate(version.created)}
                           </VersionPickerLink>
                         </VersionPickerItem>
                       );

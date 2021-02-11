@@ -286,7 +286,9 @@ const InstallAppModal = (props) => {
                   namespaceError={namespaceError}
                   version={version}
                   availableVersions={props.app.versions.map((v) => ({
-                    version: v.version,
+                    chartVersion: v.version,
+                    includedVersion: v.appVersion,
+                    created: v.created,
                   }))}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
