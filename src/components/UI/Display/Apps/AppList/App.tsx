@@ -70,7 +70,6 @@ const App: React.FC<IAppProps> = (props) => {
         <Name>{props.name}</Name>
         <StyledCatalogLabel
           catalogName={props.catalogTitle}
-          description=''
           isManaged={props.catalogIsManaged}
           iconUrl={props.catalogIconUrl}
         />

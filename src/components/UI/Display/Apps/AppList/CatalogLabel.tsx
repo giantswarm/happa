@@ -38,7 +38,7 @@ const Text = styled.div``;
 export interface ICatalogLabelProps {
   iconUrl?: string;
   catalogName: string;
-  description: string;
+  description?: string;
   isManaged?: boolean;
   error?: string;
 }
@@ -104,7 +104,7 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
 CatalogLabel.propTypes = {
   iconUrl: PropTypes.string,
   catalogName: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   isManaged: PropTypes.bool,
   error: PropTypes.string,
 };
