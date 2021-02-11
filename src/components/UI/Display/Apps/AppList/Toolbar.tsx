@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import Input from 'UI/Inputs/Input';
+import TextInput from 'UI/Inputs/TextInput';
 
 import SortingDropdown from './SortingDropdown';
 
@@ -14,11 +14,15 @@ const Wrapper = styled.div`
 const Search = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
 `;
 
-const SearchInput = styled(Input)`
-  margin-right: 10px;
-  margin-bottom: 0px;
+const ClearSearch = styled.a`
+  position: absolute;
+  left: 255px;
+`;
+
+const SearchInput = styled(TextInput)`
   width: 280px;
 `;
 
@@ -53,16 +57,37 @@ interface IToolbarProps {
 }
 
 const Toolbar: React.FC<IToolbarProps> = (props) => {
+  function onChangeSearchQueryEvent(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    props.onChangeSearchQuery(event.target.value);
+  }
+
   return (
     <Wrapper>
       <Search>
         <SearchInput
-          hideHint
           value={props.searchQuery}
-          onChange={props.onChangeSearchQuery}
+          onChange={onChangeSearchQueryEvent}
           data-testid='app-search-input'
+          margin={{ bottom: 'none', right: 'small' }}
+          icon={<i className='fa fa-search' />}
         />
+
         {matchCountMessage(props.matchCount)}
+
+        {props.searchQuery !== '' && (
+          <ClearSearch
+            href='#'
+            onClick={(e) => {
+              e.preventDefault();
+
+              props.onChangeSearchQuery('');
+            }}
+          >
+            <i className='fa fa-close' />
+          </ClearSearch>
+        )}
       </Search>
 
       <Sort>
