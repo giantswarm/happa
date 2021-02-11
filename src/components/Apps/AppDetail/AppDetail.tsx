@@ -1,13 +1,13 @@
-import { AppsRoutes } from 'shared/constants/routes';
-import RoutePath from 'lib/routePath';
-import { push } from 'connected-react-router';
 import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAppModal';
+import { push } from 'connected-react-router';
 import useError from 'lib/hooks/useError';
+import RoutePath from 'lib/routePath';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
+import { AppsRoutes } from 'shared/constants/routes';
 import { loadAppReadme } from 'stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'stores/appcatalog/selectors';

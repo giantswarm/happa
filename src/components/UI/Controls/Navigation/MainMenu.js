@@ -179,7 +179,6 @@ function MainMenu({ showApps, isUserAdmin }) {
 
 MainMenu.propTypes = {
   showApps: PropTypes.bool,
-  showAppCatalog: PropTypes.bool,
   isUserAdmin: PropTypes.bool,
 };
 

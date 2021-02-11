@@ -1,6 +1,6 @@
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
-import { relativeDate } from 'lib/helpers';
 import styled from 'styled-components';
 import DropdownMenu, {
   DropdownTrigger,

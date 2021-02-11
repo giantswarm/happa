@@ -4,13 +4,12 @@ import React, { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
-import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
-import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
-import { push } from 'connected-react-router';
 
 import { HeadingRenderer, urlFor } from './utils';
 
