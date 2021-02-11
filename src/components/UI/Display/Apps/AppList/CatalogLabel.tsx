@@ -38,6 +38,7 @@ const Text = styled.div``;
 export interface ICatalogLabelProps {
   iconUrl?: string;
   catalogName: string;
+  description?: string;
   isManaged?: boolean;
   error?: string;
 }
@@ -63,14 +64,37 @@ ErrorIcon.propTypes = {
 };
 
 const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
+  const text = (
+    <span>
+      {props.catalogName}
+      {props.isManaged && <CatalogType>MANAGED</CatalogType>}
+      {props.catalogName === 'Giant Swarm Catalog' && (
+        <CatalogType>MANAGED</CatalogType>
+      )}
+    </span>
+  );
+
   return (
     <Wrapper {...props} hasError={Boolean(props.error)}>
       <IconArea>
         <Icon src={props.iconUrl} />
       </IconArea>
       <Text>
-        {props.catalogName}
-        {props.isManaged && <CatalogType>MANAGED</CatalogType>}&nbsp;
+        {props.description && (
+          <OverlayTrigger
+            placement='top'
+            overlay={
+              <Tooltip id={`app-catalog-description-${props.catalogName}`}>
+                {props.description}
+              </Tooltip>
+            }
+          >
+            {text}
+          </OverlayTrigger>
+        )}
+
+        {!props.description && text}
+
         {props.error && <ErrorIcon name={props.catalogName} />}
       </Text>
     </Wrapper>
@@ -80,6 +104,7 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
 CatalogLabel.propTypes = {
   iconUrl: PropTypes.string,
   catalogName: PropTypes.string.isRequired,
+  description: PropTypes.string,
   isManaged: PropTypes.bool,
   error: PropTypes.string,
 };
