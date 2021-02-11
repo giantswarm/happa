@@ -79,7 +79,9 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
         {props.searchQuery !== '' && (
           <ClearSearch
             href='#'
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+
               props.onChangeSearchQuery('');
             }}
           >
