@@ -60,6 +60,7 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
           hideHint
           value={props.searchQuery}
           onChange={props.onChangeSearchQuery}
+          data-testid='app-search-input'
         />
         {matchCountMessage(props.matchCount)}
       </Search>

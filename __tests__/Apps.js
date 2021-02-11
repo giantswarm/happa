@@ -4,7 +4,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { AppCatalogRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { AppsRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -54,13 +54,13 @@ describe('Apps and App Catalog', () => {
             '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
         };
         const { findByText } = renderRouteWithStore(
-          AppCatalogRoutes.Home,
+          AppsRoutes.Home,
           {},
           nonAdminUserInStorage
         );
 
         const introText = await findByText(
-          'Pick an App Catalog to browse all the Apps in it.'
+          /Managed apps for use in your clusters/i
         );
 
         expect(introText).toBeInTheDocument();
@@ -87,13 +87,13 @@ describe('Apps and App Catalog', () => {
             '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
         };
         const { findByText } = renderRouteWithStore(
-          AppCatalogRoutes.Home,
+          AppsRoutes.Home,
           {},
           adminUserInStorage
         );
 
         const introText = await findByText(
-          'Pick an App Catalog to browse all the Apps in it.'
+          /Managed apps for use in your clusters/i
         );
 
         expect(introText).toBeInTheDocument();
@@ -120,14 +120,13 @@ describe('Apps and App Catalog', () => {
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
-      const appCatalogListPath = RoutePath.createUsablePath(
-        AppCatalogRoutes.AppList,
-        { catalogName: 'giantswarm-incubator' }
-      );
-      const { findByText } = renderRouteWithStore(appCatalogListPath);
+      const { findByText } = renderRouteWithStore(AppsRoutes.Home);
 
-      const catalogTitle = await findByText('Giant Swarm Incubator');
-      expect(catalogTitle).toBeInTheDocument();
+      const app1 = await findByText('cert-manager-app');
+      expect(app1).toBeInTheDocument();
+
+      const app2 = await findByText('nginx-ingress-controller-app');
+      expect(app2).toBeInTheDocument();
     });
 
     it('renders the app detail page for a given app', async () => {
@@ -145,19 +144,17 @@ describe('Apps and App Catalog', () => {
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
-      const appCatalogListPath = RoutePath.createUsablePath(
-        AppCatalogRoutes.AppDetail,
-        {
-          catalogName: 'giantswarm-incubator',
-          app: 'nginx-ingress-controller-app',
-        }
-      );
-      const { findByText } = renderRouteWithStore(appCatalogListPath);
+      const appDetailPath = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: 'giantswarm-incubator',
+        app: 'nginx-ingress-controller-app',
+        version: '1.1.1',
+      });
+      const { findByText } = renderRouteWithStore(appDetailPath);
 
       // The app's description should be there.
       // This comes from parsing the index.yaml, which is mocked in catalogIndexResponse.
       const appDescription = await findByText(
-        'A Helm chart for the nginx ingress-controller'
+        'A Helm chart for the nginx ingress-controller v1.1.1'
       );
       expect(appDescription).toBeInTheDocument();
     });
@@ -192,19 +189,15 @@ describe('Apps and App Catalog', () => {
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
-      const appCatalogListPath = RoutePath.createUsablePath(
-        AppCatalogRoutes.AppDetail,
-        {
-          catalogName: 'giantswarm-incubator',
-          app: 'nginx-ingress-controller-app',
-        }
-      );
-      const { findByText, getByText } = renderRouteWithStore(
-        appCatalogListPath
-      );
+      const appDetailPath = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: 'giantswarm-incubator',
+        app: 'nginx-ingress-controller-app',
+        version: '1.1.1',
+      });
+      const { findByText, getByText } = renderRouteWithStore(appDetailPath);
 
       // Press the configure button
-      let installButton = await findByText(/configure & install/i);
+      let installButton = await findByText(/install in cluster/i);
       fireEvent.click(installButton);
 
       // Select the current cluster
@@ -263,10 +256,11 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
-        AppCatalogRoutes.AppDetail,
+        AppsRoutes.AppDetail,
         {
           catalogName: 'giantswarm-incubator',
           app: testApp,
+          version: '1.1.1',
         }
       );
       const { findByText, getByText, getByLabelText } = renderRouteWithStore(
@@ -274,7 +268,7 @@ describe('Apps and App Catalog', () => {
       );
 
       // Press the configure button
-      let installButton = await findByText(/configure & install/i);
+      let installButton = await findByText(/install in cluster/i);
       fireEvent.click(installButton);
 
       // Select the current cluster
@@ -356,14 +350,10 @@ describe('Apps and App Catalog', () => {
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.InternalServerError, 'Cannot get catalog apps.');
 
-      const appCatalogListPath = RoutePath.createUsablePath(
-        AppCatalogRoutes.AppList,
-        { catalogName: 'giantswarm-incubator' }
-      );
-      renderRouteWithStore(appCatalogListPath);
+      renderRouteWithStore(AppsRoutes.Home);
 
       const noAppsPlaceholder = await screen.findByText(
-        /there are no apps available in this catalog/i
+        /No apps found for your search/i
       );
       expect(noAppsPlaceholder).toBeInTheDocument();
     });
@@ -383,15 +373,20 @@ describe('Apps and App Catalog', () => {
         .get('/giantswarm-incubator-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
-      const searchQuery = 'something-random';
-      const appCatalogListPath = RoutePath.createUsablePath(
-        `${AppCatalogRoutes.AppList}?q=${searchQuery}`,
-        { catalogName: 'giantswarm-incubator' }
+      const { findByTestId } = renderRouteWithStore(AppsRoutes.Home);
+
+      const searchInput = await findByTestId('app-search-input');
+
+      fireEvent.change(
+        searchInput,
+
+        {
+          target: { value: 'something-random' },
+        }
       );
-      renderRouteWithStore(appCatalogListPath);
 
       const noAppsPlaceholder = await screen.findByText(
-        new RegExp(`no apps matched your search query: "${searchQuery}"`, 'i')
+        /No apps found for your search/i
       );
       expect(noAppsPlaceholder).toBeInTheDocument();
     });

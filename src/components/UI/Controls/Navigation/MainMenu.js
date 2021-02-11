@@ -3,7 +3,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import {
-  AppCatalogRoutes,
   AppsRoutes,
   MainRoutes,
   OrganizationsRoutes,
@@ -73,7 +72,7 @@ const DropdownNavLink = styled(StyledNavLink)`
 
 const DropdownAnchor = DropdownNavLink.withComponent('a');
 
-function MainMenu({ showApps, showAppCatalog, isUserAdmin }) {
+function MainMenu({ showApps, isUserAdmin }) {
   return (
     <>
       <NavDiv>
@@ -86,11 +85,6 @@ function MainMenu({ showApps, showAppCatalog, isUserAdmin }) {
         {showApps && (
           <StyledNavLink activeClassName='active' to={AppsRoutes.Home}>
             Apps
-          </StyledNavLink>
-        )}
-        {showAppCatalog && (
-          <StyledNavLink activeClassName='active' to={AppCatalogRoutes.Home}>
-            App Catalogs
           </StyledNavLink>
         )}
         {isUserAdmin ? (
@@ -150,17 +144,6 @@ function MainMenu({ showApps, showAppCatalog, isUserAdmin }) {
                       onClick={onClickHandler}
                     >
                       Apps
-                    </DropdownNavLink>
-                  </li>
-                )}
-                {showAppCatalog && (
-                  <li>
-                    <DropdownNavLink
-                      activeClassName='active'
-                      to={AppCatalogRoutes.Home}
-                      onClick={onClickHandler}
-                    >
-                      App Catalogs
                     </DropdownNavLink>
                   </li>
                 )}

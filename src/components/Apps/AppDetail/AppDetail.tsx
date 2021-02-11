@@ -1,3 +1,4 @@
+import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAppModal';
 import useError from 'lib/hooks/useError';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -7,6 +8,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { loadAppReadme } from 'stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'stores/appcatalog/selectors';
+import { IState } from 'stores/state';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
 const AppDetail: React.FC = () => {
@@ -18,7 +20,7 @@ const AppDetail: React.FC = () => {
     version: string;
   };
 
-  const [app, catalog] = useSelector(
+  const [app, catalog, otherVersions] = useSelector(
     selectApp(params.catalogName, params.app, params.version)
   );
 
@@ -44,6 +46,10 @@ const AppDetail: React.FC = () => {
     readmeURL = Boolean(selectReadmeURL(app));
   }
 
+  const selectedClusterID = useSelector(
+    (state: IState) => state.main.selectedClusterID
+  );
+
   return (
     <Breadcrumb
       data={{
@@ -66,6 +72,16 @@ const AppDetail: React.FC = () => {
           hasReadme={readmeURL}
           readmeError={readmeErrorMessage}
           readme={app.readme}
+          installAppModal={
+            <InstallAppModal
+              app={{
+                catalog: catalog.metadata.name,
+                name: app.name,
+                versions: otherVersions,
+              }}
+              selectedClusterID={selectedClusterID}
+            />
+          }
         />
       )}
     </Breadcrumb>
