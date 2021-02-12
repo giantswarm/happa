@@ -8,13 +8,13 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dJzjmN"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 blVzEJ"
           disabled=""
         >
           <div
@@ -50,13 +50,13 @@ exports[`CheckBoxInput renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cPMIok"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
@@ -88,7 +88,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <label
         class="StyledText-sc-1sadyjn-0 esuSAl"
@@ -104,7 +104,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cPMIok"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
@@ -144,7 +144,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <label
         class="StyledText-sc-1sadyjn-0 esuSAl"
@@ -155,7 +155,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cPMIok"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
@@ -187,7 +187,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <span
         class="StyledText-sc-1sadyjn-0 erMGdB"
@@ -198,7 +198,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cPMIok"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
@@ -230,13 +230,13 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cPMIok"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
@@ -273,13 +273,13 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 etjgAQ"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cPMIok"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"

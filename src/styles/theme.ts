@@ -335,6 +335,9 @@ const theme = deepMerge(generate(16), {
       color: 'text',
       width: '1px',
     },
+    extend: {
+      fontWeight: 'normal',
+    },
   },
   clock: {
     analog: {
