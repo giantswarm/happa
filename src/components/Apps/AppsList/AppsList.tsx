@@ -28,12 +28,14 @@ const SEARCH_THROTTLE_RATE_MS = 250;
 function sortByName(a: IAppCatalogApp, b: IAppCatalogApp) {
   if (a.name < b.name) return -1;
   if (a.name > b.name) return 1;
+
   return 0;
 }
 
 function sortByCatalog(a: IAppCatalogApp, b: IAppCatalogApp) {
   if (a.catalogTitle < b.catalogTitle) return -1;
   if (a.catalogTitle > b.catalogTitle) return 1;
+
   return 0;
 }
 
@@ -78,13 +80,9 @@ const AppsList: React.FC = () => {
   const apps = useMemo(() => {
     const appCollection = searchApps(debouncedSearchQuery, allApps);
     appCollection.sort(sortFuncs[sortOrder]);
-    
+
     return appCollection;
-  }, [
-    debouncedSearchQuery,
-    memoSelectedCatalogs,
-    sortOrder,
-  ]);
+  }, [debouncedSearchQuery, memoSelectedCatalogs, sortOrder]);
 
   return (
     <AppsListPage
