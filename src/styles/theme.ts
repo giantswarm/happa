@@ -320,7 +320,7 @@ const theme = deepMerge(generate(16), {
       extend: (props: { theme: ThemeType; checked: boolean }) => ({
         transition: 'background 0.3s ease-out',
         background: props.checked
-          ? props.theme.global!.colors?.['status-ok']
+          ? props.theme.global!.colors!['status-ok']
           : props.theme.global!.colors!['input-background'],
       }),
     },
