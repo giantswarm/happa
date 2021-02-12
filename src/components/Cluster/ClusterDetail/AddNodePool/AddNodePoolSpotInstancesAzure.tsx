@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
-import Checkbox from 'UI/Inputs/Checkbox';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import CurrencyInput from 'UI/Inputs/CurrencyInput';
 
 const AzureSpotInstances = styled.div`
@@ -20,12 +20,7 @@ const MaxPriceWrapper = styled.div`
 const CheckboxWrapper = styled.div`
   position: absolute;
   left: 170px;
-  top: 34px;
-
-  .checkbox-label {
-    font-size: 14px;
-    font-weight: normal;
-  }
+  top: 27px;
 `;
 
 const Description = styled.small`
@@ -67,9 +62,9 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
         />
       </MaxPriceWrapper>
       <CheckboxWrapper>
-        <Checkbox
+        <CheckBoxInput
           checked={useOnDemandPricing}
-          onChange={setUseOnDemandPricing}
+          onChange={(e) => setUseOnDemandPricing(e.target.checked)}
           label='Use current on-demand pricing as max'
         />
       </CheckboxWrapper>
