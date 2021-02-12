@@ -1,0 +1,253 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckBoxInput renders a disabled input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dJzjmN"
+          disabled=""
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+            disabled=""
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 gsmpBI"
+              disabled=""
+              type="checkbox"
+              value="Hi people"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jeGaJi StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 bbAHCJ"
+              disabled=""
+            />
+          </div>
+          <span>
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CheckBoxInput renders a simple input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              type="checkbox"
+              value="Hi people"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jeGaJi StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 bbAHCJ"
+            />
+          </div>
+          <span>
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CheckBoxInput renders an input with a form field label 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+      >
+        A brilliant input
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              type="checkbox"
+              value="Hi people"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jeGaJi StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 bbAHCJ"
+            />
+          </div>
+          <span>
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CheckBoxInput renders an input with a help message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <span
+        class="StyledText-sc-1sadyjn-0 erMGdB"
+      >
+        This is a very cool input
+      </span>
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              type="checkbox"
+              value="Hi people"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jeGaJi StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 bbAHCJ"
+            />
+          </div>
+          <span>
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CheckBoxInput renders an input with a validation error 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              type="checkbox"
+              value="Hi people"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jeGaJi StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 bbAHCJ"
+            />
+          </div>
+          <span>
+            Some input
+          </span>
+        </label>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 dxYrxD"
+      >
+        You failed at this
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CheckBoxInput renders an input with an info message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              type="checkbox"
+              value="Hi people"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jeGaJi StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 bbAHCJ"
+            />
+          </div>
+          <span>
+            Some input
+          </span>
+        </label>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 fmFxNm"
+      >
+        You can set a cool value
+      </span>
+    </div>
+  </div>
+</div>
+`;
