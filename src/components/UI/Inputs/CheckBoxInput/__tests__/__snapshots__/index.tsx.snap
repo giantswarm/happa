@@ -22,7 +22,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
             disabled=""
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 gsmpBI"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bmdfYo"
               disabled=""
               type="checkbox"
               value="Hi people"
@@ -62,7 +62,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bqOyiw"
               type="checkbox"
               value="Hi people"
             />
@@ -75,6 +75,62 @@ exports[`CheckBoxInput renders a simple input 1`] = `
           </span>
         </label>
       </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CheckBoxInput renders a toggle input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj CheckBoxInput__StyledFormField-sc-16fe619-0 cXrnNw"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+      >
+        A checkbox
+      </label>
+      <span
+        class="StyledText-sc-1sadyjn-0 erMGdB"
+      >
+        A helpful message
+      </span>
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 jIqVbk"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
+          >
+            <input
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bqOyiw"
+              type="checkbox"
+            />
+            <span
+              class="StyledCheckBox__StyledCheckBoxToggle-sc-1dbk5ju-4 eRtMHu"
+            >
+              <span
+                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 fSFJxz"
+              />
+            </span>
+          </div>
+          <span>
+            Hi friends
+          </span>
+        </label>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 fmFxNm"
+      >
+        Some info
+      </span>
     </div>
   </div>
 </div>
@@ -105,7 +161,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bqOyiw"
               type="checkbox"
               value="Hi people"
             />
@@ -148,7 +204,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bqOyiw"
               type="checkbox"
               value="Hi people"
             />
@@ -186,7 +242,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bqOyiw"
               type="checkbox"
               value="Hi people"
             />
@@ -229,7 +285,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
             class="StyledBox-sc-13pk1d4-0 sFowE StyledCheckBox-sc-1dbk5ju-6 hOFfoi"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 QsUJc"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 bqOyiw"
               type="checkbox"
               value="Hi people"
             />

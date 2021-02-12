@@ -55,4 +55,15 @@ describe('CheckBoxInput', () => {
     });
     expect(container.firstChild).toMatchSnapshot();
   });
+
+  it('renders a toggle input', () => {
+    const { container } = renderWithTheme(CheckBoxInput, {
+      label: 'Hi friends',
+      fieldLabel: 'A checkbox',
+      info: 'Some info',
+      help: 'A helpful message',
+      toggle: true,
+    });
+    expect(container.firstChild).toMatchSnapshot();
+  });
 });

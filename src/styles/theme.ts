@@ -315,9 +315,14 @@ const theme = deepMerge(generate(16), {
     },
     size: '18px',
     toggle: {
-      radius: '4px',
-      size: '18px',
-      background: 'input-background',
+      radius: '18px',
+      size: '32px',
+      extend: (props: { theme: ThemeType; checked: boolean }) => ({
+        transition: 'background 0.3s ease-out',
+        background: props.checked
+          ? props.theme.global!.colors?.['status-ok']
+          : props.theme.global!.colors!['input-background'],
+      }),
     },
     check: {
       radius: '4px',
