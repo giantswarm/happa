@@ -10,6 +10,7 @@ import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import Button from 'UI/Controls/Button';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
 
 import StatusMessage from './StatusMessage';
@@ -380,19 +381,11 @@ export class SignUp extends React.Component {
           <div id='TOSGroup'>
             <TermsOfService />
 
-            <div className='checkbox'>
-              <label htmlFor='tosAccept'>
-                <input
-                  id='tosAccept'
-                  onChange={this.tosChanged}
-                  ref={(i) => {
-                    this.tosAccept = i;
-                  }}
-                  type='checkbox'
-                />
-                I accept the terms of service
-              </label>
-            </div>
+            <CheckBoxInput
+              id='tosAccept'
+              onChange={this.tosChanged}
+              label='I accept the terms of service'
+            />
           </div>
 
           <StatusMessage status={this.state.statusMessage} />
