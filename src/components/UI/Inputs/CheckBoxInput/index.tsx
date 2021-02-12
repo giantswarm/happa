@@ -9,11 +9,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const StyledFormField = styled(FormField)`
-  input {
+  & input {
     margin-top: 0;
   }
 
-  label:not(& > label) {
+  & label:not(& > label) {
     margin-bottom: 0;
   }
 `;
