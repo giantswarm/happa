@@ -1,8 +1,10 @@
 import ExpiryHoursPicker from 'Cluster/ClusterDetail/ExpiryHoursPicker';
+import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
 
@@ -101,28 +103,24 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
       />
 
       {provider === Providers.AWS && (
-        <>
-          <br />
-
-          <label>Kubernetes API Endpoint:</label>
-          <input
-            id='internalApi'
-            type='checkbox'
-            checked={useInternalAPI}
-            onChange={handleUseInternalAPIChange}
-          />
-          <label htmlFor='internalApi' className='checkbox-label'>
-            Use alternative internal api endpoint.
-          </label>
-          <small>
-            When this is selected, the server entry of the created kubeconfig
-            will be https://internal-api.
-            {ingressBaseDomain}
-          </small>
-          <small>This is preferred in some restricted environments.</small>
-
-          <br />
-        </>
+        <CheckBoxInput
+          id='internalApi'
+          checked={useInternalAPI}
+          onChange={handleUseInternalAPIChange}
+          fieldLabel='Kubernetes API Endpoint:'
+          label='Use alternative api endpoint'
+          help={
+            <>
+              <Text size='small' weight='normal' color='text-weak'>
+                When this is selected, the server entry of the created
+                kubeconfig will be https://internal-api.{ingressBaseDomain}.
+              </Text>
+              <Text size='small' weight='normal' color='text-weak'>
+                This is preferred in some restricted environments.
+              </Text>
+            </>
+          }
+        />
       )}
     </>
   );
