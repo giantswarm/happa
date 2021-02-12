@@ -25,6 +25,35 @@ import { catalogsToFacets, searchApps } from './utils';
 
 const SEARCH_THROTTLE_RATE_MS = 250;
 
+function sortByName(a: IAppCatalogApp, b: IAppCatalogApp) {
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+
+  return 0;
+}
+
+function sortByCatalog(a: IAppCatalogApp, b: IAppCatalogApp) {
+  if (a.catalogTitle < b.catalogTitle) return -1;
+  if (a.catalogTitle > b.catalogTitle) return 1;
+
+  return 0;
+}
+
+function sortByLatest(a: IAppCatalogApp, b: IAppCatalogApp) {
+  return (
+    new Date(b.versions[0].created).getTime() -
+    new Date(a.versions[0].created).getTime()
+  );
+}
+
+const sortFuncs: {
+  [key: string]: (a: IAppCatalogApp, b: IAppCatalogApp) => number;
+} = {
+  name: sortByName,
+  catalog: sortByCatalog,
+  latest: sortByLatest,
+};
+
 const AppsList: React.FC = () => {
   const dispatch = useDispatch();
   const isAdmin = useSelector(getUserIsAdmin);
@@ -48,10 +77,12 @@ const AppsList: React.FC = () => {
   const memoSelectedCatalogs = selectedCatalogs.join('');
   const sortOrder = useSelector(selectAppSortOrder);
 
-  const apps = useMemo(() => searchApps(debouncedSearchQuery, allApps), [
-    debouncedSearchQuery,
-    memoSelectedCatalogs,
-  ]);
+  const apps = useMemo(() => {
+    const appCollection = searchApps(debouncedSearchQuery, allApps);
+    appCollection.sort(sortFuncs[sortOrder]);
+
+    return appCollection;
+  }, [debouncedSearchQuery, memoSelectedCatalogs, sortOrder]);
 
   return (
     <AppsListPage

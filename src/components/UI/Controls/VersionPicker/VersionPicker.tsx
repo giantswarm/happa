@@ -16,7 +16,7 @@ import {
 } from './VersionPickerUtils';
 
 const INNER_PADDING = '5px 15px';
-const WIDTH = '250px';
+const WIDTH = '300px';
 const MAX_HEIGHT = '250px';
 
 const VersionPickerDropdownTrigger = styled(DropdownTrigger)`
@@ -102,9 +102,12 @@ const VersionPickerItem = styled.li`
   list-style-type: none;
   border-bottom: 1px solid ${(props) => props.theme.colors.shade1};
   cursor: pointer;
+  display: flex;
 
-  span {
+  .chartVersion {
     margin-right: 15px;
+    width: 115px;
+    display: inline-block;
   }
 `;
 
@@ -226,9 +229,15 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                             }}
                             role='menuitem'
                           >
-                            <Truncated as='span'>
+                            <Truncated
+                              className='chartVersion'
+                              as='span'
+                              numStart={9}
+                              numEnd={3}
+                            >
                               {version.chartVersion}
                             </Truncated>
+
                             {relativeDate(version.created)}
                           </VersionPickerLink>
                         </VersionPickerItem>
