@@ -3,7 +3,7 @@ import React, { ComponentPropsWithoutRef, useEffect, useState } from 'react';
 
 import CheckBoxInput from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
+export const Disabled: Story<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
   args
 ) => {
   const [checked, setChecked] = useState(args.checked);
@@ -21,13 +21,14 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
   );
 };
 
-Simple.args = {
+Disabled.args = {
   checked: false,
 
   label: 'Hi friends',
+  disabled: true,
 };
 
-Simple.argTypes = {
+Disabled.argTypes = {
   label: { control: { type: 'text' } },
   fieldLabel: { control: { type: 'text' } },
   error: { control: { type: 'text' } },

@@ -83,10 +83,19 @@ const CheckBoxInput = React.forwardRef<HTMLInputElement, ICheckBoxInputProps>(
     },
     ref
   ) => {
+    const patchedContentProps = Object.assign({}, contentProps, {
+      border: false,
+      pad: {
+        horizontal: 'none',
+        vertical: 'xsmall',
+      },
+      background: 'none',
+    });
+
     return (
       <StyledFormField
         htmlFor={id}
-        contentProps={contentProps}
+        contentProps={patchedContentProps}
         disabled={disabled}
         required={required}
         name={name}

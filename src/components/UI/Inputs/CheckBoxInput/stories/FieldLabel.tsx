@@ -3,9 +3,9 @@ import React, { ComponentPropsWithoutRef, useEffect, useState } from 'react';
 
 import CheckBoxInput from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
-  args
-) => {
+export const FieldLabel: Story<
+  ComponentPropsWithoutRef<typeof CheckBoxInput>
+> = (args) => {
   const [checked, setChecked] = useState(args.checked);
 
   useEffect(() => {
@@ -21,13 +21,14 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
   );
 };
 
-Simple.args = {
+FieldLabel.args = {
   checked: false,
 
   label: 'Hi friends',
+  fieldLabel: 'A checkbox',
 };
 
-Simple.argTypes = {
+FieldLabel.argTypes = {
   label: { control: { type: 'text' } },
   fieldLabel: { control: { type: 'text' } },
   error: { control: { type: 'text' } },
