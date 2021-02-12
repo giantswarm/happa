@@ -37,6 +37,8 @@ const StyledImageWithFallback = styled(
   align-items: center;
   font-weight: 800;
   justify-content: center;
+  max-width: 100px;
+  max-height: 100%;
   text-shadow: -1px -1px 0 ${({ outlinecolor }) => outlinecolor},
     1px -1px 0 ${({ outlinecolor }) => outlinecolor},
     -1px 1px 0 ${({ outlinecolor }) => outlinecolor},
