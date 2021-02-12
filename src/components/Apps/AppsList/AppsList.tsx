@@ -73,14 +73,18 @@ const AppsList: React.FC = () => {
   const allApps = useSelector(selectApps);
   const selectedCatalogs = useSelector(selectSelectedCatalogs);
   const memoSelectedCatalogs = selectedCatalogs.join('');
+  const sortOrder = useSelector(selectAppSortOrder);
 
-  const apps = useMemo(() => searchApps(debouncedSearchQuery, allApps), [
+  const apps = useMemo(() => {
+    const appCollection = searchApps(debouncedSearchQuery, allApps);
+    appCollection.sort(sortFuncs[sortOrder]);
+    
+    return appCollection;
+  }, [
     debouncedSearchQuery,
     memoSelectedCatalogs,
+    sortOrder,
   ]);
-
-  const sortOrder = useSelector(selectAppSortOrder);
-  apps.sort(sortFuncs[sortOrder]);
 
   return (
     <AppsListPage
