@@ -59,6 +59,7 @@ const StyledAppIcon = styled(AppIcon)`
   text-align: center;
   font-size: 60px;
   width: 100%;
+  margin: auto;
 `;
 
 const Body = styled.div`

@@ -32,10 +32,10 @@ export const selectApps = createSelector(
         allApps.push(
           ...Object.entries(catalog.apps).map(([appName, appVersions]) => ({
             name: appName,
+            appIconURL: appVersions[0].icon,
             catalogTitle: catalog.spec.title,
             catalogName: catalog.metadata.name,
             catalogIconURL: catalog.spec.logoURL,
-            appIconURL: '',
             versions: appVersions,
           }))
         );

@@ -25,7 +25,7 @@ const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker4};
-  width: 100%;
+  padding: 20px;
   height: 55%;
   border-top-left-radius: ${({ theme }) => theme.border_radius};
   border-top-right-radius: ${({ theme }) => theme.border_radius};
@@ -55,6 +55,7 @@ const StyledCatalogLabel = styled(CatalogLabel)`
 export interface IAppProps {
   to: string;
   name: string;
+  appIconURL: string;
   catalogTitle: string;
   catalogIconUrl: string;
   catalogIsManaged?: boolean;
@@ -64,7 +65,7 @@ const App: React.FC<IAppProps> = (props) => {
   return (
     <Wrapper to={props.to}>
       <IconWrapper>
-        <AppIcon src='' name={props.name} />
+        <AppIcon src={props.appIconURL} name={props.name} />
       </IconWrapper>
       <DetailWrapper>
         <Name>{props.name}</Name>
@@ -81,6 +82,7 @@ const App: React.FC<IAppProps> = (props) => {
 App.propTypes = {
   to: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  appIconURL: PropTypes.string.isRequired,
   catalogTitle: PropTypes.string.isRequired,
   catalogIconUrl: PropTypes.string.isRequired,
   catalogIsManaged: PropTypes.bool,

@@ -105,6 +105,7 @@ const AppsList: React.FC = () => {
       onResetSearch={() => dispatch(setAppSearchQuery(''))}
       apps={apps.map((app) => ({
         name: app.name,
+        appIconURL: app.appIconURL,
         catalogName: app.catalogName,
         catalogTitle: app.catalogTitle,
         to: RoutePath.createUsablePath(AppsRoutes.AppDetail, {
