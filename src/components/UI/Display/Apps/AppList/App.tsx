@@ -55,7 +55,7 @@ const StyledCatalogLabel = styled(CatalogLabel)`
 export interface IAppProps {
   to: string;
   name: string;
-  appIconURL: string;
+  appIconURL?: string;
   catalogTitle: string;
   catalogIconUrl: string;
   catalogIsManaged?: boolean;
@@ -82,7 +82,7 @@ const App: React.FC<IAppProps> = (props) => {
 App.propTypes = {
   to: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  appIconURL: PropTypes.string.isRequired,
+  appIconURL: PropTypes.string,
   catalogTitle: PropTypes.string.isRequired,
   catalogIconUrl: PropTypes.string.isRequired,
   catalogIsManaged: PropTypes.bool,

@@ -48,11 +48,11 @@ const StyledImageWithFallback = styled(
 
 interface IIconProps extends React.ComponentPropsWithoutRef<'div'> {
   name: string;
-  src: string;
+  src?: string;
 }
 
 const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
-  if (src.endsWith('light.png')) {
+  if (src?.endsWith('light.png')) {
     src = src.replace('light.png', 'dark.png');
   }
 
@@ -74,7 +74,7 @@ const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
 
 Icon.propTypes = {
   name: PropTypes.string.isRequired,
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
 };
 
 export default Icon;
