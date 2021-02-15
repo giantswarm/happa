@@ -52,14 +52,15 @@ interface IIconProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
-  if (src?.endsWith('light.png')) {
-    src = src.replace('light.png', 'dark.png');
+  let imagesrc = src;
+  if (imagesrc?.endsWith('light.png')) {
+    imagesrc = imagesrc.replace('light.png', 'dark.png');
   }
 
   return (
     <StyledImageWithFallback
       outlinecolor={colorHash.calculateColor(name)}
-      src={src}
+      src={imagesrc}
       alt={name}
       fallback={{
         label: acronymize(name),
