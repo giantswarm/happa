@@ -3,10 +3,10 @@ import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import RadioInput from '../index';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof RadioInput>> = (
+export const Disabled: Story<ComponentPropsWithoutRef<typeof RadioInput>> = (
   args
 ) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('hello');
 
   return (
     <RadioInput
@@ -18,15 +18,13 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof RadioInput>> = (
   );
 };
 
-Simple.args = {
+Disabled.args = {
   name: 'some-input',
   label: 'Hi friends',
-  fieldLabel: 'A radio input',
-  help: 'A helpful message',
-  error: 'Oh no',
+  disabled: true,
 };
 
-Simple.argTypes = {
+Disabled.argTypes = {
   label: { control: { type: 'text' } },
   fieldLabel: { control: { type: 'text' } },
   error: { control: { type: 'text' } },
