@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import Button from 'UI/Controls/Button';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
 const StyledButton = styled(Button)`
   margin-left: 0px;
