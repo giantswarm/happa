@@ -23,12 +23,6 @@ export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
     ${({ toneDown, theme }) =>
       toneDown ? `color: ${theme.colors.darkBlueLighter4};` : ''};
     font-variant-numeric: tabular-nums;
-    span.selection-bullet {
-      margin-right: 0;
-    }
-    .selection-radio {
-      margin-bottom: 0;
-    }
   }
   &:hover {
     background-color: ${({ isSelected, theme }) =>

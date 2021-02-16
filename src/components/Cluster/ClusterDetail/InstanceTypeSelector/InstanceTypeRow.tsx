@@ -5,7 +5,7 @@ import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import { CursorPointerCell, Tr } from 'UI/Controls/ExpandableSelector/Items';
-import RadioInput from 'UI/Inputs/RadioInput';
+import RadioInput from 'UI/Inputs/RadioInput/index';
 
 interface IInstanceTypeRow extends IInstanceType {
   isSelected: boolean;
@@ -36,8 +36,9 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
             value={isSelected ? 'true' : 'false'}
             name={`select-${name}`}
             onChange={() => selectInstanceType(name)}
-            rootProps={{ className: 'selection-radio' }}
-            bulletProps={{ className: 'selection-bullet' }}
+            formFieldProps={{
+              margin: 'none',
+            }}
           />
         </RUMActionTarget>
       </LeftAlignedCell>
