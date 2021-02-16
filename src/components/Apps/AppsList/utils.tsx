@@ -41,17 +41,9 @@ const sortFunc = (
   [, a]: [string, IAppCatalog],
   [, b]: [string, IAppCatalog]
 ) => {
-  const aIsInternal = isInternal(a);
   const aTitle = a.spec.title;
-
-  const bIsInternal = isInternal(b);
   const bTitle = b.spec.title;
 
-  if (aIsInternal && !bIsInternal) {
-    return 1;
-  } else if (!aIsInternal && bIsInternal) {
-    return -1;
-  }
   if (aTitle < bTitle) {
     return -1;
   } else if (aTitle > bTitle) {
@@ -70,12 +62,18 @@ export function catalogsToFacets(
     .filter(filterFunc(isAdmin))
     .sort(sortFunc)
     .map(([key, catalog]) => {
+      let catalogName = catalog.spec.title;
+
+      if (isInternal(catalog) && catalog.spec.title.startsWith('Giant Swarm')) {
+        catalogName = catalog.spec.title.replace('Giant Swarm', '');
+      }
+
       return {
         value: key,
         checked: catalogs.ui.selectedCatalogs[key],
         label: (
           <CatalogLabel
-            catalogName={catalog.spec.title}
+            catalogName={catalogName}
             iconUrl={catalog.spec.logoURL}
             description={catalog.spec.description}
             error={catalogErrors[catalog.metadata.name]}
