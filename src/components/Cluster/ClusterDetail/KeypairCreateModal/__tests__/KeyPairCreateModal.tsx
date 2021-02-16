@@ -130,7 +130,7 @@ describe('KeyPairCreateModal', () => {
     fireEvent.click(openButton);
 
     expect(
-      getByText(/use alternative internal api endpoint./i)
+      getByText(/use alternative internal api endpoint/i)
     ).toBeInTheDocument();
 
     rerender(
@@ -141,7 +141,7 @@ describe('KeyPairCreateModal', () => {
     );
 
     expect(
-      queryByText(/use alternative internal api endpoint./i)
+      queryByText(/use alternative internal api endpoint/i)
     ).not.toBeInTheDocument();
   });
 
@@ -222,9 +222,7 @@ describe('KeyPairCreateModal', () => {
       target: { value: 'some description' },
     });
 
-    const useAlternativeEndpoint = getByLabelText(
-      /use alternative internal api endpoint./i
-    );
+    const useAlternativeEndpoint = getByLabelText('Kubernetes API Endpoint');
     fireEvent.click(useAlternativeEndpoint);
 
     const createButton = getByText(/^create key pair$/i);
