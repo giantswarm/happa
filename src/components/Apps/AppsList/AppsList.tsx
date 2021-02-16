@@ -91,8 +91,7 @@ const AppsList: React.FC = () => {
         dispatch(setAppSearchQuery(value));
       }}
       searchQuery={searchQuery}
-      onChangeFacets={(value, e) => {
-        const checked = e.target.checked;
+      onChangeFacets={(value, checked) => {
         if (checked) {
           dispatch(enableCatalog(value));
         } else {

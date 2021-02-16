@@ -1,4 +1,9 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import {
+  findByTestId,
+  fireEvent,
+  screen,
+  within,
+} from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -25,6 +30,7 @@ import {
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { isInternal } from 'Apps/AppsList/utils';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {
@@ -86,7 +92,7 @@ describe('Apps and App Catalog', () => {
           user:
             '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
         };
-        const { findByText } = renderRouteWithStore(
+        const { findByText, findByTestId } = renderRouteWithStore(
           AppsRoutes.Home,
           {},
           adminUserInStorage
@@ -98,8 +104,19 @@ describe('Apps and App Catalog', () => {
 
         expect(introText).toBeInTheDocument();
 
+        const main = await findByTestId('main');
+
         for (const catalog of appCatalogsResponse) {
-          const catalogTitle = await findByText(catalog.spec.title);
+          let titleToFind = catalog.spec.title;
+          if (
+            isInternal(catalog) &&
+            catalog.spec.title.startsWith('Giant Swarm')
+          ) {
+            titleToFind = catalog.spec.title.replace('Giant Swarm ', '');
+          }
+          const catalogTitle = await within(main).findByText(
+            new RegExp(titleToFind, 'i')
+          );
           expect(catalogTitle).toBeInTheDocument();
         }
       });

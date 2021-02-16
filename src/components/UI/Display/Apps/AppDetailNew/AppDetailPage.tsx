@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import gfm from 'remark-gfm';
 import styled from 'styled-components';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
@@ -68,11 +69,12 @@ const Body = styled.div`
 
 const Readme = styled.div`
   background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
-  width: 60%;
+  width: 65%;
   border-radius: 5px;
   margin-right: 25px;
   flex-shrink: 0;
   padding: 20px;
+  overflow-x: scroll;
 
   .markdown pre {
     background-color: ${(props) => props.theme.colors.darkBlueDarker6};
@@ -97,7 +99,7 @@ const Readme = styled.div`
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 35%;
 `;
 
 const DetailGroup = styled.div``;
@@ -175,7 +177,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 
 export interface IAppDetailPageProps {
   appTitle: string;
-  appIconURL: string;
+  appIconURL?: string;
   catalogName: string;
   catalogDescription: string;
   otherVersions: IVersion[];
@@ -219,7 +221,6 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           </Lower>
         </HeaderDetails>
       </Header>
-
       <VersionPickerRow>
         <span>Information for:</span>
         <VersionPicker
@@ -232,12 +233,12 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           versions={props.otherVersions}
         />
       </VersionPickerRow>
-
       <Body>
         {props.hasReadme && (
           <Readme>
             {props.readme && (
               <ReactMarkdown
+                plugins={[gfm]}
                 skipHtml
                 className='markdown'
                 renderers={{
@@ -289,7 +290,9 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
 
           <Detail>
             <small>WEBSITE</small>
-            {props.website}
+            <a href={props.website} target='_blank' rel='noopener noreferrer'>
+              {props.website}
+            </a>
           </Detail>
 
           {props.keywords!.length > 0 && (
@@ -312,7 +315,7 @@ AppDetail.defaultProps = {
 
 AppDetail.propTypes = {
   appTitle: PropTypes.string.isRequired,
-  appIconURL: PropTypes.string.isRequired,
+  appIconURL: PropTypes.string,
   catalogName: PropTypes.string.isRequired,
   catalogDescription: PropTypes.string.isRequired,
   catalogIcon: PropTypes.string,

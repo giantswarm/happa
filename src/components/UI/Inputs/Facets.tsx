@@ -1,11 +1,20 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
+
+const StyledButton = styled(Button)`
+  margin-left: 0px;
+`;
 
 const Wrapper = styled.div`
   width: 270px;
   flex-shrink: 0;
+
+  .btn.btn-sm {
+    margin-left: 0px;
+  }
 `;
 
 const CatalogList = styled.ul`
@@ -21,7 +30,7 @@ const ListItem = styled.li`
 interface IFacetsProps {
   errorMessage?: string;
   options: IFacetOption[];
-  onChange: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: string, checked: boolean) => void;
 }
 
 export interface IFacetOption {
@@ -31,15 +40,43 @@ export interface IFacetOption {
 }
 
 const Facets: React.FC<IFacetsProps> = (props) => {
+  const onChangeFacet = (
+    value: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    props.onChange(value, event.target.checked);
+  };
+
+  const selectAll = () => {
+    props.options.forEach((o) => {
+      props.onChange(o.value, true);
+    });
+  };
+
+  const selectNone = () => {
+    props.options.forEach((o) => {
+      props.onChange(o.value, false);
+    });
+  };
+
   return (
     <Wrapper>
       <label>Filter by Catalog</label>
+      <br />
+      <StyledButton bsSize='sm' onClick={selectAll}>
+        Select All
+      </StyledButton>{' '}
+      <StyledButton bsSize='sm' onClick={selectNone}>
+        Select None
+      </StyledButton>
+      <br />
+      <br />
       <CatalogList>
         {props.options.map((o) => (
           <ListItem key={o.value}>
             <CheckBoxInput
               checked={o.checked}
-              onChange={props.onChange.bind(this, o.value)}
+              onChange={onChangeFacet.bind(this, o.value)}
               label={o.label}
               margin={{ bottom: 'none' }}
             />
