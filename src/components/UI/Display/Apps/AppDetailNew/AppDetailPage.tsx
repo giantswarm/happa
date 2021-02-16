@@ -2,6 +2,7 @@ import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
@@ -68,11 +69,12 @@ const Body = styled.div`
 
 const Readme = styled.div`
   background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
-  width: 60%;
+  width: 65%;
   border-radius: 5px;
   margin-right: 25px;
   flex-shrink: 0;
   padding: 20px;
+  overflow-x: scroll;
 
   .markdown pre {
     background-color: ${(props) => props.theme.colors.darkBlueDarker6};
@@ -97,7 +99,7 @@ const Readme = styled.div`
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 35%;
 `;
 
 const DetailGroup = styled.div``;
@@ -194,13 +196,17 @@ export interface IAppDetailPageProps {
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
+  // There's a zero width space, which is invisible in most editors in the replacement below.
+  // This allows tables with lots of long configuration properties to
+  // break words in their cells at the .
+  let readme = props.readme;
   return (
     <Wrapper className={props.hasReadme ? '' : 'no-readme'}>
       <Link to='/apps'>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to Apps
       </Link>
-
+      ​
       <Header>
         <AppIconWrapper>
           <StyledAppIcon src={props.appIconURL} name={props.appTitle} />
@@ -219,7 +225,6 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           </Lower>
         </HeaderDetails>
       </Header>
-
       <VersionPickerRow>
         <span>Information for:</span>
         <VersionPicker
@@ -232,12 +237,12 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           versions={props.otherVersions}
         />
       </VersionPickerRow>
-
       <Body>
         {props.hasReadme && (
           <Readme>
-            {props.readme && (
+            {readme && (
               <ReactMarkdown
+                plugins={[gfm]}
                 skipHtml
                 className='markdown'
                 renderers={{
@@ -253,7 +258,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                   ),
                 }}
               >
-                {props.readme}
+                {readme}
               </ReactMarkdown>
             )}
 
