@@ -177,7 +177,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 
 export interface IAppDetailPageProps {
   appTitle: string;
-  appIconURL: string;
+  appIconURL?: string;
   catalogName: string;
   catalogDescription: string;
   otherVersions: IVersion[];
@@ -315,7 +315,7 @@ AppDetail.defaultProps = {
 
 AppDetail.propTypes = {
   appTitle: PropTypes.string.isRequired,
-  appIconURL: PropTypes.string.isRequired,
+  appIconURL: PropTypes.string,
   catalogName: PropTypes.string.isRequired,
   catalogDescription: PropTypes.string.isRequired,
   catalogIcon: PropTypes.string,

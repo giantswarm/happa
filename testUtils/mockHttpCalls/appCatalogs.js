@@ -8,7 +8,7 @@ export const appCatalogsResponse = [
       },
     },
     spec: {
-      title: 'Giant Swarm Catalog',
+      title: 'Giant Swarm CatalogYolo',
       description: 'This catalog holds Apps managed by Giant Swarm. ',
       logoURL: '/images/repo_icons/giantswarm.png',
       storage: {
@@ -44,7 +44,7 @@ export const appCatalogsResponse = [
       },
     },
     spec: {
-      title: 'Giant Swarm',
+      title: 'Giant Swarm Another Catalog',
       description:
         'This catalog holds stable versions of the apps in Giant Swarm.',
       logoURL: '/images/repo_icons/incubator.png',

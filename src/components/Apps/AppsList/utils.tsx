@@ -7,7 +7,7 @@ import { IFacetOption } from 'UI/Inputs/Facets';
 // We changed the location of this information at some point, so happa currently
 // supports both. TODO: Check if there are any catalogs left with the old label
 // if not, simplify this code.
-const isInternal = (catalog: IAppCatalog): boolean => {
+export const isInternal = (catalog: IAppCatalog): boolean => {
   const labels = catalog.metadata.labels;
 
   if (labels) {
@@ -64,8 +64,11 @@ export function catalogsToFacets(
     .map(([key, catalog]) => {
       let catalogName = catalog.spec.title;
 
-      if (isInternal(catalog) && catalog.spec.title.startsWith('Giant Swarm')) {
-        catalogName = catalog.spec.title.replace('Giant Swarm', '');
+      if (
+        isInternal(catalog) &&
+        catalog.spec.title.startsWith('Giant Swarm ')
+      ) {
+        catalogName = catalog.spec.title.replace('Giant Swarm ', '');
       }
 
       return {

@@ -68,7 +68,7 @@ class Layout extends React.Component {
             user={this.props.user}
           />
           <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
-            <div className='main'>
+            <div className='main' data-testid='main'>
               <Switch>
                 {/*prettier-ignore*/}
                 <Route component={Home} exact path={MainRoutes.Home} />
