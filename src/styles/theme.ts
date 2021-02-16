@@ -391,9 +391,38 @@ const theme = deepMerge(generate(16), {
     },
   },
   radioButton: {
-    size: '20px',
+    size: '18px',
     check: {
-      radius: '4px',
+      radius: '18px',
+      extend: (props: { theme: ThemeType }) => ({
+        background: props.theme.global!.colors!['input-background'],
+      }),
+    },
+    icon: {
+      extend: (props: { theme: ThemeType }) => {
+        const fillColor = props.theme.global!.colors!.text!;
+        let colorHex = '';
+        if (typeof fillColor === 'string') {
+          colorHex = fillColor;
+        } else {
+          colorHex = fillColor.dark!;
+        }
+
+        return {
+          fill: colorHex,
+        };
+      },
+    },
+    border: {
+      color: 'text',
+      width: '1px',
+    },
+    font: {
+      weight: 'normal',
+    },
+    color: {
+      dark: 'text',
+      light: 'text',
     },
   },
   formField: {

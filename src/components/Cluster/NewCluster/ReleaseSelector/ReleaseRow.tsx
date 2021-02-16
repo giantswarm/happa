@@ -67,8 +67,9 @@ const ReleaseRow: FC<IReleaseRow> = ({
               value={isSelected ? 'true' : 'false'}
               name={`select-${version}`}
               onChange={() => selectRelease(version)}
-              rootProps={{ className: 'selection-radio' }}
-              bulletProps={{ className: 'selection-bullet' }}
+              formFieldProps={{
+                margin: 'none',
+              }}
             />
           </RUMActionTarget>
         </CursorPointerCell>

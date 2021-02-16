@@ -5,7 +5,6 @@ import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import ClusterEmptyState from 'UI/Display/Cluster/ClusterEmptyState';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
-import RadioInput from 'UI/Inputs/RadioInput';
 
 const Wrapper = styled.div`
   h2 {
@@ -50,28 +49,6 @@ const StyleGuide = () => {
       <h1>Style Guide</h1>
 
       <hr />
-
-      <Header name='Inputs' />
-
-      <small>Radio</small>
-      <ExampleBox>
-        <fieldset>
-          <RadioInput
-            value='naah'
-            id='some-radio'
-            name='inputtrickery'
-            label='Some text'
-          />
-        </fieldset>
-        <fieldset>
-          <RadioInput
-            value='yaah'
-            id='some-other-radio'
-            name='inputtrickery'
-            label='Some other text'
-          />
-        </fieldset>
-      </ExampleBox>
 
       <Header name='VersionPicker' />
 

@@ -36,8 +36,9 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
             value={isSelected ? 'true' : 'false'}
             name={`select-${name}`}
             onChange={() => selectInstanceType(name)}
-            rootProps={{ className: 'selection-radio' }}
-            bulletProps={{ className: 'selection-bullet' }}
+            formFieldProps={{
+              margin: 'none',
+            }}
           />
         </RUMActionTarget>
       </LeftAlignedCell>
