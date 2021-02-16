@@ -17,15 +17,8 @@ import styled from 'styled-components';
 import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
 import Section from 'UI/Display/Cluster/ClusterCreation/Section';
 import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
-import Checkbox from 'UI/Inputs/Checkbox';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
-
-const CheckboxWrapper = styled.div`
-  .checkbox-label {
-    font-size: 16px;
-    font-weight: normal;
-  }
-`;
 
 const AZSelectionWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 4}px;
@@ -437,13 +430,13 @@ class AddNodePool extends Component {
           />
 
           {supportsAlikeInstances && (
-            <CheckboxWrapper>
-              <Checkbox
-                checked={this.state.aws.useAlike}
-                onChange={this.setUseAlikeInstancesEnabled}
-                label='Allow usage of similar instance types'
-              />
-            </CheckboxWrapper>
+            <CheckBoxInput
+              checked={this.state.aws.useAlike}
+              onChange={(e) =>
+                this.setUseAlikeInstancesEnabled(e.target.checked)
+              }
+              label='Allow usage of similar instance types'
+            />
           )}
         </Section>
 
@@ -475,13 +468,11 @@ class AddNodePool extends Component {
               id={`spot-instances-${id}`} // regular space, hides hint ;)
               hint={<>&#32;</>}
             >
-              <CheckboxWrapper>
-                <Checkbox
-                  checked={this.state.spotInstancesEnabled}
-                  onChange={this.setSpotInstancesEnabled}
-                  label={spotInstancesToggleLabel}
-                />
-              </CheckboxWrapper>
+              <CheckBoxInput
+                checked={this.state.spotInstancesEnabled}
+                onChange={(e) => this.setSpotInstancesEnabled(e.target.checked)}
+                label={spotInstancesToggleLabel}
+              />
             </StyledInput>
             {this.state.spotInstancesEnabled && (
               <AddNodePoolSpotInstances

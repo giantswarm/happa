@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import Checkbox from 'UI/Inputs/Checkbox';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
 const Wrapper = styled.div`
   width: 270px;
@@ -16,13 +16,12 @@ const CatalogList = styled.ul`
 const ListItem = styled.li`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
 `;
 
 interface IFacetsProps {
   errorMessage?: string;
   options: IFacetOption[];
-  onChange: (value: string, checked: boolean) => void;
+  onChange: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface IFacetOption {
@@ -38,10 +37,11 @@ const Facets: React.FC<IFacetsProps> = (props) => {
       <CatalogList>
         {props.options.map((o) => (
           <ListItem key={o.value}>
-            <Checkbox
+            <CheckBoxInput
               checked={o.checked}
               onChange={props.onChange.bind(this, o.value)}
               label={o.label}
+              margin={{ bottom: 'none' }}
             />
           </ListItem>
         ))}

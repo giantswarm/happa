@@ -7,6 +7,7 @@ import DropdownMenu, {
   Link,
   List,
 } from 'UI/Controls/DropdownMenu';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import Truncated from 'UI/Util/Truncated';
 
 import {
@@ -159,19 +160,19 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
     setIncludeTestVersions(event.target.checked);
   };
 
+  const handleBlur = (onBlurHandler: () => void) => () => {
+    setTimeout(() => {
+      onBlurHandler();
+      // eslint-disable-next-line no-magic-numbers
+    }, 300);
+  };
+
   const handleOnChange = (version: string) => (
     event: React.MouseEvent<HTMLAnchorElement>
   ) => {
     event.preventDefault();
+
     onChange?.(version);
-  };
-
-  const toggleIncludeTestVersions = (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault();
-
-    setIncludeTestVersions(!includeTestVersions);
   };
 
   return (
@@ -184,7 +185,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
           onBlurHandler,
           onFocusHandler,
         }) => (
-          <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
+          <div onBlur={handleBlur(onBlurHandler)} onFocus={onFocusHandler}>
             <VersionPickerDropdownTrigger
               aria-expanded={isOpen}
               aria-haspopup='true'
@@ -201,17 +202,13 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                   <h5>Switch Chart Version</h5>
 
                   {containsTestVersions && (
-                    <label>
-                      <input
-                        name='includeTestVersions'
-                        type='checkbox'
-                        checked={includeTestVersions}
-                        onChange={handleSetIncludeTestVersions}
-                      />
-                      <a href='#' onClick={toggleIncludeTestVersions}>
-                        Include test versions
-                      </a>
-                    </label>
+                    <CheckBoxInput
+                      id='includeTestVersions'
+                      name='includeTestVersions'
+                      label='Include test versions'
+                      checked={includeTestVersions}
+                      onChange={handleSetIncludeTestVersions}
+                    />
                   )}
                 </Header>
 
