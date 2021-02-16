@@ -27,7 +27,7 @@ exports[`RadioInput renders a disabled input 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 hHEYlT"
             />
           </div>
           <span
@@ -67,7 +67,7 @@ exports[`RadioInput renders a simple input 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 hHEYlT"
             />
           </div>
           <span
@@ -115,7 +115,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 hHEYlT"
             />
           </div>
           <span
@@ -160,7 +160,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 hHEYlT"
             />
           </div>
           <span
@@ -200,7 +200,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 hHEYlT"
             />
           </div>
           <span
@@ -245,7 +245,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 hHEYlT"
             />
           </div>
           <span
