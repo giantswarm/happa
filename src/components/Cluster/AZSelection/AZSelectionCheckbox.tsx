@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import RadioInput from 'UI/Inputs/RadioInput/index';
+import RadioInput from 'UI/Inputs/RadioInput';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
 import { AvailabilityZoneSelection } from './AZSelectionUtils';

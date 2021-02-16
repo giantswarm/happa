@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react/types-6-0';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
-import RadioInput from '../index';
+import RadioInput from '..';
 
 export const Multiple: Story<
   ComponentPropsWithoutRef<typeof RadioInput>

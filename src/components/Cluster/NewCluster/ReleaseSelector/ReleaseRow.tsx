@@ -14,7 +14,7 @@ import {
 } from 'UI/Controls/ExpandableSelector/Items';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
-import RadioInput from 'UI/Inputs/RadioInput/index';
+import RadioInput from 'UI/Inputs/RadioInput';
 
 const FixedWidthTableButton = styled(TableButton)`
   width: 100px;

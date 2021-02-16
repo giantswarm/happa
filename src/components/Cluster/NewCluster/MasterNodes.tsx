@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
-import RadioInput from 'UI/Inputs/RadioInput/index';
+import RadioInput from 'UI/Inputs/RadioInput';
 
 const InputGroup = styled.fieldset`
   margin-bottom: 16px;
