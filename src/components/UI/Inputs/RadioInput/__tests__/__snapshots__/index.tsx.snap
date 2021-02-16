@@ -1,0 +1,266 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RadioInput renders a disabled input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj RadioInput__StyledFormField-sc-1brmdkl-0 drcYif"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledRadioButton__StyledRadioButtonContainer-g1f6ld-0 iatLiT"
+          disabled=""
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 eyXmtN StyledRadioButton-g1f6ld-5 imYubY"
+          >
+            <input
+              class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 NlSSr"
+              disabled=""
+              name="some-input"
+              type="radio"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+            />
+          </div>
+          <span
+            class="StyledRadioButton__StyledRadioButtonLabel-g1f6ld-2 buDiZz"
+          >
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RadioInput renders a simple input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj RadioInput__StyledFormField-sc-1brmdkl-0 drcYif"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledRadioButton__StyledRadioButtonContainer-g1f6ld-0 jtWEwC"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 eyXmtN StyledRadioButton-g1f6ld-5 imYubY"
+          >
+            <input
+              class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 hIKMbD"
+              name="some-input"
+              type="radio"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+            />
+          </div>
+          <span
+            class="StyledRadioButton__StyledRadioButtonLabel-g1f6ld-2 buDiZz"
+          >
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RadioInput renders an input with a form field label 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj RadioInput__StyledFormField-sc-1brmdkl-0 drcYif"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="some-input"
+      >
+        A brilliant input
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledRadioButton__StyledRadioButtonContainer-g1f6ld-0 jtWEwC"
+          for="some-input"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 eyXmtN StyledRadioButton-g1f6ld-5 imYubY"
+          >
+            <input
+              class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 hIKMbD"
+              id="some-input"
+              name="some-input"
+              type="radio"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+            />
+          </div>
+          <span
+            class="StyledRadioButton__StyledRadioButtonLabel-g1f6ld-2 buDiZz"
+          >
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RadioInput renders an input with a help message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj RadioInput__StyledFormField-sc-1brmdkl-0 drcYif"
+    >
+      <span
+        class="StyledText-sc-1sadyjn-0 erMGdB"
+      >
+        This is a very cool input
+      </span>
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledRadioButton__StyledRadioButtonContainer-g1f6ld-0 jtWEwC"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 eyXmtN StyledRadioButton-g1f6ld-5 imYubY"
+          >
+            <input
+              class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 hIKMbD"
+              name="some-input"
+              type="radio"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+            />
+          </div>
+          <span
+            class="StyledRadioButton__StyledRadioButtonLabel-g1f6ld-2 buDiZz"
+          >
+            Some input
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RadioInput renders an input with a validation error 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj RadioInput__StyledFormField-sc-1brmdkl-0 drcYif"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledRadioButton__StyledRadioButtonContainer-g1f6ld-0 jtWEwC"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 eyXmtN StyledRadioButton-g1f6ld-5 imYubY"
+          >
+            <input
+              class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 hIKMbD"
+              name="some-input"
+              type="radio"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+            />
+          </div>
+          <span
+            class="StyledRadioButton__StyledRadioButtonLabel-g1f6ld-2 buDiZz"
+          >
+            Some input
+          </span>
+        </label>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 dxYrxD"
+      >
+        You failed at this
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RadioInput renders an input with an info message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj RadioInput__StyledFormField-sc-1brmdkl-0 drcYif"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 WIbCG FormField__FormFieldContentBox-m9hood-1"
+      >
+        <label
+          class="StyledRadioButton__StyledRadioButtonContainer-g1f6ld-0 jtWEwC"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 eyXmtN StyledRadioButton-g1f6ld-5 imYubY"
+          >
+            <input
+              class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 hIKMbD"
+              name="some-input"
+              type="radio"
+            />
+            <div
+              class="StyledBox-sc-13pk1d4-0 jiYNWj StyledRadioButton__StyledRadioButtonBox-g1f6ld-4 kGVpuu"
+            />
+          </div>
+          <span
+            class="StyledRadioButton__StyledRadioButtonLabel-g1f6ld-2 buDiZz"
+          >
+            Some input
+          </span>
+        </label>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 fmFxNm"
+      >
+        You can set a cool value
+      </span>
+    </div>
+  </div>
+</div>
+`;
