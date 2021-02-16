@@ -1,4 +1,4 @@
-import { generate } from 'grommet';
+import { generate, ThemeType } from 'grommet';
 import { deepMerge } from 'grommet/utils';
 import { CSSBreakpoints } from 'shared/constants';
 
@@ -309,13 +309,34 @@ const theme = deepMerge(generate(16), {
     },
   },
   checkBox: {
-    size: '20px',
+    color: {
+      dark: 'text',
+      light: 'text',
+    },
+    size: '18px',
     toggle: {
-      radius: '4px',
-      size: '40px',
+      radius: '18px',
+      size: '32px',
+      extend: (props: { theme: ThemeType; checked: boolean }) => ({
+        transition: 'background 0.3s ease-out',
+        background: props.checked
+          ? props.theme.global!.colors!['status-ok']
+          : props.theme.global!.colors!['input-background'],
+      }),
     },
     check: {
       radius: '4px',
+      thickness: '2px',
+      extend: (props: { theme: ThemeType }) => ({
+        background: props.theme.global!.colors!['input-background'],
+      }),
+    },
+    border: {
+      color: 'text',
+      width: '1px',
+    },
+    extend: {
+      fontWeight: 'normal',
     },
   },
   clock: {
