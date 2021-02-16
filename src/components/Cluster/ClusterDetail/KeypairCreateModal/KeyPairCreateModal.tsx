@@ -27,11 +27,6 @@ const StyledModal = styled(BootstrapModal)`
     width: 95%;
     max-width: 700px;
   }
-
-  .checkbox-label {
-    display: inline;
-    margin-left: 10px;
-  }
 `;
 
 interface IKeyPairCreateModalProps {

@@ -2,6 +2,7 @@ import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import FlashMessage from 'UI/Display/FlashMessage';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
 import { sortBy } from 'underscore';
 
@@ -49,20 +50,13 @@ const InviteUserForm = ({
         />
       </div>
 
-      <div className='textfield'>
-        <label>Send Email</label>
-        <div className='checkbox'>
-          <label htmlFor='sendEmail'>
-            <input
-              checked={inviteForm.sendEmail}
-              id='sendEmail'
-              onChange={handleSendEmailChange}
-              type='checkbox'
-            />
-            Send the invitee an e-mail with the accept invitation link.
-          </label>
-        </div>
-      </div>
+      <CheckBoxInput
+        id='sendEmail'
+        checked={inviteForm.sendEmail}
+        onChange={handleSendEmailChange}
+        label='Send the invitee an e-mail with the accept invitation link'
+        fieldLabel='Send email'
+      />
 
       <FlashMessage type='danger'>{inviteForm.error}</FlashMessage>
     </form>
