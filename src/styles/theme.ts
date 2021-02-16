@@ -394,6 +394,9 @@ const theme = deepMerge(generate(16), {
     size: '18px',
     check: {
       radius: '18px',
+      extend: (props: { theme: ThemeType }) => ({
+        background: props.theme.global!.colors!['input-background'],
+      }),
     },
     icon: {
       extend: (props: { theme: ThemeType }) => {
