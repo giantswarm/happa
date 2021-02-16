@@ -196,17 +196,13 @@ export interface IAppDetailPageProps {
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
-  // There's a zero width space, which is invisible in most editors in the replacement below.
-  // This allows tables with lots of long configuration properties to
-  // break words in their cells at the .
-  let readme = props.readme;
   return (
     <Wrapper className={props.hasReadme ? '' : 'no-readme'}>
       <Link to='/apps'>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to Apps
       </Link>
-      ​
+
       <Header>
         <AppIconWrapper>
           <StyledAppIcon src={props.appIconURL} name={props.appTitle} />
@@ -240,7 +236,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
       <Body>
         {props.hasReadme && (
           <Readme>
-            {readme && (
+            {props.readme && (
               <ReactMarkdown
                 plugins={[gfm]}
                 skipHtml
@@ -258,7 +254,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                   ),
                 }}
               >
-                {readme}
+                {props.readme}
               </ReactMarkdown>
             )}
 

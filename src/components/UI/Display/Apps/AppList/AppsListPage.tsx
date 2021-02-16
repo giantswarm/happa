@@ -40,10 +40,7 @@ const EmptyState = styled.div`
 
 export interface IAppsListPageProps {
   matchCount: number;
-  onChangeFacets: (
-    value: string,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => void;
+  onChangeFacets: (value: string, checked: Boolean) => void;
   onChangeSearchQuery: (value: string) => void;
   onChangeSortOrder: (value: string) => void;
   onResetSearch: () => void;
