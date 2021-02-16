@@ -1,0 +1,4 @@
+# .husky/pre-commit (v5)
+
+yarn typecheck
+yarn precommit

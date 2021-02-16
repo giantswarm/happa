@@ -20,7 +20,8 @@
     "typecheck": "./node_modules/.bin/tsc",
     "dist": "./node_modules/.bin/webpack --config webpack.prod.js",
     "storybook": "start-storybook -p 6006",
-    "storybook:build": "build-storybook"
+    "storybook:build": "build-storybook",
+    "postinstall": "husky install"
   },
   "eslintIgnore": [
     "node_modules",
@@ -215,7 +216,7 @@
     "file-loader": "6.2.0",
     "fstream": "1.0.12",
     "html-webpack-plugin": "^5.0.0",
-    "husky": "4.3.8",
+    "husky": "5.0.9",
     "imports-loader": "^2.0.0",
     "jest": "26.6.3",
     "json-loader": "0.5.7",
@@ -252,11 +253,6 @@
     "http-proxy": "^1.18.1",
     "node-fetch": "^2.6.1",
     "ua-parser-js": "^0.7.22"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn typecheck && yarn precommit"
-    }
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [

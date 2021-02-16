@@ -9,6 +9,7 @@ import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/Display/FlashMessage';
+import RadioInput from 'UI/Inputs/RadioInput';
 import TextInput from 'UI/Inputs/TextInput';
 
 const List = styled.ul`
@@ -186,17 +187,14 @@ class ExpiryHoursPicker extends React.Component {
     return (
       <List className='expiry-hours-picker'>
         <li className='expiry-hours-picker--granular'>
-          <Box direction='row' gap='small'>
-            <input
-              checked={this.state.selectionType === 'relative'}
-              id='relativeCheck'
-              name='selectionType'
-              onChange={this.onSelectionTypeChanged.bind(this)}
-              type='radio'
-              value='relative'
-            />
-            <label htmlFor='relativeCheck'>Relatively</label>
-          </Box>
+          <RadioInput
+            checked={this.state.selectionType === 'relative'}
+            id='relativeCheck'
+            name='selectionType'
+            onChange={this.onSelectionTypeChanged.bind(this)}
+            value='relative'
+            label='Relatively'
+          />
           <Box direction='row' gap='small' align='baseline'>
             <TextInput
               autoComplete='off'
@@ -249,18 +247,15 @@ class ExpiryHoursPicker extends React.Component {
           </Box>
         </li>
         <li>
-          <Box direction='row' align='baseline' gap='medium'>
-            <Box direction='row' gap='small'>
-              <input
-                checked={this.state.selectionType === 'date'}
-                id='dateCheck'
-                name='selectionType'
-                onChange={this.onSelectionTypeChanged.bind(this)}
-                type='radio'
-                value='date'
-              />
-              <label htmlFor='dateCheck'>Date</label>
-            </Box>
+          <Box direction='row' align='center' gap='medium'>
+            <RadioInput
+              checked={this.state.selectionType === 'date'}
+              id='dateCheck'
+              name='selectionType'
+              onChange={this.onSelectionTypeChanged.bind(this)}
+              value='date'
+              label='Date'
+            />
             <DatePicker
               dateFormat='yyyy-MM-dd'
               dropdownMode='select'
