@@ -21,9 +21,6 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof RadioInput>> = (
 Simple.args = {
   name: 'some-input',
   label: 'Hi friends',
-  fieldLabel: 'A radio input',
-  help: 'A helpful message',
-  error: 'Oh no',
 };
 
 Simple.argTypes = {
