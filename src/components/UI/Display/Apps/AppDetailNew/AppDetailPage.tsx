@@ -289,7 +289,9 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
 
           <Detail>
             <small>WEBSITE</small>
-            {props.website}
+            <a href={props.website} target='_blank' rel='noopener noreferrer'>
+              {props.website}
+            </a>
           </Detail>
 
           {props.keywords!.length > 0 && (
