@@ -1,4 +1,4 @@
-import { generate } from 'grommet';
+import { generate, ThemeType } from 'grommet';
 import { deepMerge } from 'grommet/utils';
 import { CSSBreakpoints } from 'shared/constants';
 
@@ -373,8 +373,20 @@ const theme = deepMerge(generate(16), {
     size: '18px',
     check: {
       radius: '18px',
-      background: {
-        color: 'text',
+    },
+    icon: {
+      extend: (props: { theme: ThemeType }) => {
+        const fillColor = props.theme.global!.colors!.text!;
+        let colorHex = '';
+        if (typeof fillColor === 'string') {
+          colorHex = fillColor;
+        } else {
+          colorHex = fillColor.dark!;
+        }
+
+        return {
+          fill: colorHex,
+        };
       },
     },
     border: {
