@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import RadioInput from 'UI/Inputs/RadioInput';
+import RadioInput from 'UI/Inputs/RadioInput/index';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
 import { AvailabilityZoneSelection } from './AZSelectionUtils';
@@ -9,7 +9,7 @@ import { AvailabilityZoneSelection } from './AZSelectionUtils';
 interface IAZSelectionCheckboxProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof RadioInput>,
-    'onChange' | 'value' | 'id'
+    'onChange' | 'value' | 'id' | 'type' | 'name'
   > {
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   type?: AvailabilityZoneSelection;
@@ -33,6 +33,7 @@ const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
     <RUMActionTarget name={mergeActionNames(baseActionName!, typeName)}>
       <RadioInput
         id={id}
+        name={id}
         checked={value === type}
         onChange={() => onChange(type!)}
         tabIndex={0}
