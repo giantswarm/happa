@@ -66,4 +66,17 @@ describe('Select', () => {
     });
     expect(container.firstChild).toMatchSnapshot();
   });
+
+  it('renders an input inside the dropdown, that can search through the options', () => {
+    const { container } = renderWithTheme(Select, {
+      id: 'pet',
+      options: ['A dog', 'A cat', 'A frog'],
+      searchPlaceholder: 'Search for a pet...',
+      emptySearchMessage: 'No pets found.',
+      disabled: true,
+      dropHeight: 'medium',
+      onSearch: jest.fn(),
+    });
+    expect(container.firstChild).toMatchSnapshot();
+  });
 });
