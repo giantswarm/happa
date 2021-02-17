@@ -107,3 +107,7 @@ export function selectAppSearchQuery(state: IState): string {
 export function selectAppSortOrder(state: IState): string {
   return state.entities.catalogs.ui.sortOrder;
 }
+
+export function selectAppsLastUpdated(state: IState): number {
+  return state.entities.catalogs.lastUpdated;
+}
