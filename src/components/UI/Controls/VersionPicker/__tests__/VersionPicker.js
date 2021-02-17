@@ -12,9 +12,9 @@ it('lists all non test versions by default', () => {
   const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
     selectedVersion: '1.0.5',
     versions: [
-      { version: '1.0.5', test: false },
-      { version: '1.0.4-test', test: true },
-      { version: '1.0.3', test: false },
+      { chartVersion: '1.0.5', test: false },
+      { chartVersion: '1.0.4-test', test: true },
+      { chartVersion: '1.0.3', test: false },
     ],
   });
 
@@ -31,9 +31,9 @@ it('lets me click a toggle switch to show test versions', () => {
   const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
     selectedVersion: '1.0.5',
     versions: [
-      { version: '1.0.5', test: false },
-      { version: '1.0.4-test', test: true },
-      { version: '1.0.3', test: false },
+      { chartVersion: '1.0.5', test: false },
+      { chartVersion: '1.0.4-test', test: true },
+      { chartVersion: '1.0.3', test: false },
     ],
   });
 
@@ -54,9 +54,9 @@ it('clicking a version calls the onChange prop', () => {
     onChange: mockCallback,
     selectedVersion: '1.0.5',
     versions: [
-      { version: '1.0.5', test: false },
-      { version: '1.0.4-test', test: true },
-      { version: '1.0.3', test: false },
+      { chartVersion: '1.0.5', test: false },
+      { chartVersion: '1.0.4-test', test: true },
+      { chartVersion: '1.0.3', test: false },
     ],
   });
 

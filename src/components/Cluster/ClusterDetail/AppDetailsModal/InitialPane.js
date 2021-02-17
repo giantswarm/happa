@@ -60,7 +60,11 @@ const InitialPane = (props) => {
           {props.appVersions && (
             <VersionPicker
               selectedVersion={props.app.spec.version}
-              versions={props.appVersions.map((v) => ({ version: v.version }))}
+              versions={props.appVersions.map((v) => ({
+                chartVersion: v.version,
+                created: v.created,
+                includedVersion: v.appVersion,
+              }))}
               onChange={props.showEditChartVersionPane}
             />
           )}

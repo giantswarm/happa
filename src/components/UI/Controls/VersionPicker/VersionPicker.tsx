@@ -1,3 +1,4 @@
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -16,7 +17,7 @@ import {
 } from './VersionPickerUtils';
 
 const INNER_PADDING = '5px 15px';
-const WIDTH = '250px';
+const WIDTH = '300px';
 const MAX_HEIGHT = '250px';
 
 const VersionPickerDropdownTrigger = styled(DropdownTrigger)`
@@ -102,6 +103,13 @@ const VersionPickerItem = styled.li`
   list-style-type: none;
   border-bottom: 1px solid ${(props) => props.theme.colors.shade1};
   cursor: pointer;
+  display: flex;
+
+  .chartVersion {
+    margin-right: 15px;
+    width: 115px;
+    display: inline-block;
+  }
 `;
 
 const VersionPickerLink = styled(Link)<{ selected: boolean }>`
@@ -208,14 +216,26 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                   <VersionPickerList>
                     {filteredVersions.map((version) => {
                       return (
-                        <VersionPickerItem key={version.version}>
+                        <VersionPickerItem key={version.chartVersion}>
                           <VersionPickerLink
-                            selected={version.version === selectedVersion}
+                            selected={version.chartVersion === selectedVersion}
                             href='#'
-                            onClick={handleOnChange(version.version)}
+                            onClick={(e) => {
+                              handleOnChange(version.chartVersion)(e);
+                              onBlurHandler();
+                            }}
                             role='menuitem'
                           >
-                            <Truncated as='span'>{version.version}</Truncated>
+                            <Truncated
+                              className='chartVersion'
+                              as='span'
+                              numStart={9}
+                              numEnd={3}
+                            >
+                              {version.chartVersion}
+                            </Truncated>
+
+                            {relativeDate(version.created)}
                           </VersionPickerLink>
                         </VersionPickerItem>
                       );

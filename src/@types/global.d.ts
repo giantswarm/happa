@@ -4,3 +4,5 @@
  * declare var FEATURE_SOME_FEATURE: boolean;
  */
 declare var FEATURE_CP_ACCESS: boolean;
+
+declare module '*.md';

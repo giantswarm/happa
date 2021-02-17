@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Constants } from 'shared/constants';
-import { AppCatalogRoutes } from 'shared/constants/routes';
+import { AppsRoutes } from 'shared/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
@@ -65,7 +65,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     if (ingressAppToInstall) {
       const { name, version } = ingressAppToInstall;
 
-      return RoutePath.createUsablePath(AppCatalogRoutes.AppDetail, {
+      return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
         catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
         app: name,
         version,

@@ -1,6 +1,12 @@
 export interface IVersion {
-  // The version
-  version: string;
+  // The version.
+  chartVersion: string;
+
+  // When it was created.
+  created: string;
+
+  // The version of the app that this chart provides.
+  includesVersion: string;
 
   // Whether or not this version is a test version.
   test: boolean;

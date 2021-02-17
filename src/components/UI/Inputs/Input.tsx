@@ -72,6 +72,7 @@ export interface IInput<T> {
   className?: string;
   description?: ReactNode;
   hint?: ReactNode;
+  hideHint?: boolean;
   icon?: string;
   inputId?: string;
   label?: string;
@@ -80,9 +81,13 @@ export interface IInput<T> {
   readOnly?: boolean;
   validationError?: ReactNode;
   value?: T;
+  'data-testid'?: string;
 }
 
-const Input: FC<IInput<string | FileList>> = (props) => {
+const Input: FC<IInput<string | FileList>> = ({
+  'data-testid': dataTestId,
+  ...props
+}) => {
   const onChange = (e: ChangeEvent<ElementRef<'input'>>) => {
     props.onChange?.(e.target.value);
   };
@@ -110,6 +115,7 @@ const Input: FC<IInput<string | FileList>> = (props) => {
             value={props.value as string}
             readOnly={props.readOnly}
             placeholder={props.placeholder}
+            data-testid={dataTestId}
           />
         )}
       </InputWrapper>
@@ -118,7 +124,7 @@ const Input: FC<IInput<string | FileList>> = (props) => {
           <i className='fa fa-warning' /> {props.validationError}
         </ValidationError>
       ) : (
-        <Hint>{props.hint ?? <>&nbsp;</>}</Hint>
+        !props.hideHint && <Hint>{props.hint ?? <>&nbsp;</>}</Hint>
       )}
     </Wrapper>
   );
@@ -129,6 +135,7 @@ Input.propTypes = {
   className: PropTypes.string,
   description: PropTypes.string,
   hint: PropTypes.node,
+  hideHint: PropTypes.bool,
   icon: PropTypes.string,
   inputId: PropTypes.string,
   label: PropTypes.string,
@@ -137,6 +144,7 @@ Input.propTypes = {
   readOnly: PropTypes.bool,
   validationError: PropTypes.string,
   value: PropTypes.any,
+  'data-testid': PropTypes.string,
 };
 
 export default Input;

@@ -195,6 +195,13 @@ module.exports = {
         },
       },
       {
+        test: /\.md(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'file-loader',
+        options: {
+          name: 'assets/[name].[contenthash:12].[ext]',
+        },
+      },
+      {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {

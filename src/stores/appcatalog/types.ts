@@ -5,9 +5,6 @@ import {
   CATALOGS_LIST_ERROR,
   CATALOGS_LIST_REQUEST,
   CATALOGS_LIST_SUCCESS,
-  CATALOGS_LOAD_ERROR,
-  CATALOGS_LOAD_REQUEST,
-  CATALOGS_LOAD_SUCCESS,
   CLUSTER_CREATE_APP_CONFIG_ERROR,
   CLUSTER_CREATE_APP_CONFIG_REQUEST,
   CLUSTER_CREATE_APP_CONFIG_SUCCESS,
@@ -32,6 +29,8 @@ import {
   DELETE_CLUSTER_APP_ERROR,
   DELETE_CLUSTER_APP_REQUEST,
   DELETE_CLUSTER_APP_SUCCESS,
+  DISABLE_CATALOG,
+  ENABLE_CATALOG,
   INSTALL_INGRESS_APP_ERROR,
   INSTALL_INGRESS_APP_REQUEST,
   INSTALL_INGRESS_APP_SUCCESS,
@@ -41,6 +40,8 @@ import {
   PREPARE_INGRESS_TAB_DATA_ERROR,
   PREPARE_INGRESS_TAB_DATA_REQUEST,
   PREPARE_INGRESS_TAB_DATA_SUCCESS,
+  SET_APP_SEARCH_QUERY,
+  SET_APP_SORT_ORDER,
   UPDATE_CLUSTER_APP_ERROR,
   UPDATE_CLUSTER_APP_REQUEST,
   UPDATE_CLUSTER_APP_SUCCESS,
@@ -50,9 +51,19 @@ export interface IAppCatalogsMap {
   [key: string]: IAppCatalog;
 }
 
+export interface IAppCatalogsUI {
+  selectedCatalogs: {
+    [key: string]: boolean;
+  };
+
+  searchQuery: string;
+  sortOrder: string;
+}
+
 export interface IAppCatalogsState {
   lastUpdated: number;
   isFetching: boolean;
+  ui: IAppCatalogsUI;
   items: IAppCatalogsMap;
 }
 
@@ -92,37 +103,23 @@ export interface IAppCatalogLoadIndexErrorAction {
   error: string;
 }
 
-export interface IAppCatalogLoadRequestAction {
-  type: typeof CATALOGS_LOAD_REQUEST;
-}
-
-export interface IAppCatalogLoadSuccessAction {
-  type: typeof CATALOGS_LOAD_SUCCESS;
-  catalogs: IAppCatalogsMap;
-}
-
-export interface IAppCatalogLoadErrorAction {
-  type: typeof CATALOGS_LOAD_ERROR;
-  error: string;
-}
-
 export interface IAppCatalogLoadAppReadmeRequestAction {
   type: typeof CLUSTER_LOAD_APP_README_REQUEST;
   catalogName: string;
-  appVersion: IAppCatalogApp;
+  appVersion: IAppCatalogAppVersion;
 }
 
 export interface IAppCatalogLoadAppReadmeSuccessAction {
   type: typeof CLUSTER_LOAD_APP_README_SUCCESS;
   catalogName: string;
-  appVersion: IAppCatalogApp;
+  appVersion: IAppCatalogAppVersion;
   readmeText: string;
 }
 
 export interface IAppCatalogLoadAppReadmeErrorAction {
   type: typeof CLUSTER_LOAD_APP_README_ERROR;
   catalogName: string;
-  appVersion: IAppCatalogApp;
+  appVersion: IAppCatalogAppVersion;
   error: string;
 }
 
@@ -362,6 +359,26 @@ export interface IAppCatalogPrepareIngressTabDataErrorAction {
   error: string;
 }
 
+export interface IAppCatalogEnableCatalogAction {
+  type: typeof ENABLE_CATALOG;
+  catalog: string;
+}
+
+export interface IAppCatalogDisableCatalogAction {
+  type: typeof DISABLE_CATALOG;
+  catalog: string;
+}
+
+export interface IAppCatalogSetAppSearchQuery {
+  type: typeof SET_APP_SEARCH_QUERY;
+  query: string;
+}
+
+export interface IAppCatalogSetAppSortOrder {
+  type: typeof SET_APP_SORT_ORDER;
+  order: string;
+}
+
 export type AppCatalogActions =
   | IAppCatalogListRequestAction
   | IAppCatalogListSuccessAction
@@ -369,9 +386,6 @@ export type AppCatalogActions =
   | IAppCatalogLoadIndexRequestAction
   | IAppCatalogLoadIndexSuccessAction
   | IAppCatalogLoadIndexErrorAction
-  | IAppCatalogLoadRequestAction
-  | IAppCatalogLoadSuccessAction
-  | IAppCatalogLoadErrorAction
   | IAppCatalogLoadAppReadmeRequestAction
   | IAppCatalogLoadAppReadmeSuccessAction
   | IAppCatalogLoadAppReadmeErrorAction
@@ -410,4 +424,8 @@ export type AppCatalogActions =
   | IAppCatalogInstallLatestIngressErrorAction
   | IAppCatalogPrepareIngressTabDataRequestAction
   | IAppCatalogPrepareIngressTabDataSuccessAction
-  | IAppCatalogPrepareIngressTabDataErrorAction;
+  | IAppCatalogPrepareIngressTabDataErrorAction
+  | IAppCatalogEnableCatalogAction
+  | IAppCatalogDisableCatalogAction
+  | IAppCatalogSetAppSearchQuery
+  | IAppCatalogSetAppSortOrder;

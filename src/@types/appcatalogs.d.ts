@@ -16,6 +16,15 @@ interface IAppCatalogStorage {
 }
 
 interface IAppCatalogApp {
+  name: string;
+  catalogName: string;
+  catalogTitle: string;
+  catalogIconURL: string;
+  appIconURL: string;
+  versions: IAppCatalogAppVersion[];
+}
+
+interface IAppCatalogAppVersion {
   apiVersion: string;
   appVersion: string;
   version: string;
@@ -28,6 +37,7 @@ interface IAppCatalogApp {
   sources?: string[];
   annotations?: IAppCatalogAppAnnotations;
   urls: string[];
+  keywords?: string[];
 
   // Injected by client-side.
   readme?: string;
@@ -38,7 +48,7 @@ interface IAppCatalogAppAnnotations {
 }
 
 interface IAppCatalogAppMap {
-  [name: string]: IAppCatalogApp[];
+  [name: string]: IAppCatalogAppVersion[];
 }
 
 interface IAppCatalog {

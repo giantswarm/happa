@@ -1,4 +1,5 @@
-import { validateAppName } from 'AppCatalog/AppDetail/InstallAppModalUtils';
+import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
+import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
 import RoutePath from 'lib/routePath';
@@ -14,7 +15,6 @@ import { selectOrganizationByID } from 'stores/organization/selectors';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
-import GenericModal from '../../Modals/GenericModal';
 import ClusterPicker from './ClusterPicker';
 import InstallAppForm from './InstallAppForm';
 
@@ -219,7 +219,8 @@ const InstallAppModal = (props) => {
   return (
     <>
       <Button bsStyle='primary' onClick={openModal}>
-        Configure &amp; Install
+        <i className='fa fa-add-circle' />
+        Install in Cluster
       </Button>
       {(() => {
         switch (pages[page]) {
@@ -285,7 +286,9 @@ const InstallAppModal = (props) => {
                   namespaceError={namespaceError}
                   version={version}
                   availableVersions={props.app.versions.map((v) => ({
-                    version: v.version,
+                    chartVersion: v.version,
+                    includedVersion: v.appVersion,
+                    created: v.created,
                   }))}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}

@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import {
-  AppCatalogRoutes,
+  AppsRoutes,
   MainRoutes,
   OrganizationsRoutes,
   UsersRoutes,
@@ -72,7 +72,7 @@ const DropdownNavLink = styled(StyledNavLink)`
 
 const DropdownAnchor = DropdownNavLink.withComponent('a');
 
-function MainMenu({ showAppCatalog, isUserAdmin }) {
+function MainMenu({ showApps, isUserAdmin }) {
   return (
     <>
       <NavDiv>
@@ -82,9 +82,9 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
         <StyledNavLink activeClassName='active' to={OrganizationsRoutes.Home}>
           Organizations
         </StyledNavLink>
-        {showAppCatalog && (
-          <StyledNavLink activeClassName='active' to={AppCatalogRoutes.Home}>
-            App Catalogs
+        {showApps && (
+          <StyledNavLink activeClassName='active' to={AppsRoutes.Home}>
+            Apps
           </StyledNavLink>
         )}
         {isUserAdmin ? (
@@ -136,14 +136,14 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
                     Organizations
                   </DropdownNavLink>
                 </li>
-                {showAppCatalog && (
+                {showApps && (
                   <li>
                     <DropdownNavLink
                       activeClassName='active'
-                      to={AppCatalogRoutes.Home}
+                      to={AppsRoutes.Home}
                       onClick={onClickHandler}
                     >
-                      App Catalogs
+                      Apps
                     </DropdownNavLink>
                   </li>
                 )}
@@ -178,7 +178,7 @@ function MainMenu({ showAppCatalog, isUserAdmin }) {
 }
 
 MainMenu.propTypes = {
-  showAppCatalog: PropTypes.bool,
+  showApps: PropTypes.bool,
   isUserAdmin: PropTypes.bool,
 };
 
