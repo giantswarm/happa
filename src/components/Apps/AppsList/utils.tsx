@@ -38,11 +38,11 @@ export const filterFunc = (isAdmin: boolean) => {
 // appear at the top. And within those groups the catalogs are alphabetically
 // sorted.
 const sortFunc = (
-  [, a]: [string, IAppCatalog],
-  [, b]: [string, IAppCatalog]
+  [, , a]: [string, IAppCatalog, string],
+  [, , b]: [string, IAppCatalog, string]
 ) => {
-  const aTitle = a.spec.title;
-  const bTitle = b.spec.title;
+  const aTitle = a;
+  const bTitle = b;
 
   if (aTitle < bTitle) {
     return -1;
@@ -53,6 +53,20 @@ const sortFunc = (
   return 0;
 };
 
+function computeShortTitle([key, catalog]: [string, IAppCatalog]): [
+  string,
+  IAppCatalog,
+  string
+] {
+  let shortTitle = catalog.spec.title;
+
+  if (isInternal(catalog) && catalog.spec.title.startsWith('Giant Swarm ')) {
+    shortTitle = catalog.spec.title.replace('Giant Swarm ', '');
+  }
+
+  return [key, catalog, shortTitle];
+}
+
 export function catalogsToFacets(
   catalogs: IAppCatalogsState,
   catalogErrors: { [key: string]: string },
@@ -60,23 +74,15 @@ export function catalogsToFacets(
 ): IFacetOption[] {
   return Object.entries(catalogs.items)
     .filter(filterFunc(isAdmin))
+    .map(computeShortTitle)
     .sort(sortFunc)
-    .map(([key, catalog]) => {
-      let catalogName = catalog.spec.title;
-
-      if (
-        isInternal(catalog) &&
-        catalog.spec.title.startsWith('Giant Swarm ')
-      ) {
-        catalogName = catalog.spec.title.replace('Giant Swarm ', '');
-      }
-
+    .map(([key, catalog, shortTitle]) => {
       return {
         value: key,
         checked: catalogs.ui.selectedCatalogs[key],
         label: (
           <CatalogLabel
-            catalogName={catalogName}
+            catalogName={shortTitle}
             iconUrl={catalog.spec.logoURL}
             description={catalog.spec.description}
             error={catalogErrors[catalog.metadata.name]}
