@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 /*
@@ -65,6 +65,12 @@ const MenuWrapper = styled.div`
 function DropdownMenu(props) {
   const [isOpen, setIsOpen] = useState(false);
   let timeOutId = null;
+
+  useEffect(() => {
+    return function cleanup() {
+      clearTimeout(timeOutId);
+    };
+  });
 
   const onBlurHandler = () => {
     timeOutId = setTimeout(() => {

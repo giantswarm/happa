@@ -100,7 +100,7 @@ const NextSteps = (props) => {
 
         <div className='component_slider--nav'>
           <Link to={clusterGuideExamplePath}>
-            <Button bsStyle='secondary'>
+            <Button bsStyle='default'>
               <i className='fa fa-chevron-left' /> Back
             </Button>
           </Link>
