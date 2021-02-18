@@ -278,8 +278,3 @@ it('patches v4 cluster name correctly', async () => {
     expect(getByText(newClusterName)).toBeInTheDocument();
   });
 });
-
-/******************** PENDING TESTS ********************/
-
-// eslint-disable-next-line no-empty-function
-it.skip('renders all the v4 AWS nodes', async () => {});
