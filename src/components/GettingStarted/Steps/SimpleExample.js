@@ -297,7 +297,7 @@ class SimpleExample extends React.Component {
 
           <div className='component_slider--nav'>
             <Link to={this.props.steps[this.props.stepIndex - 1].url}>
-              <Button bsStyle='secondary'>
+              <Button bsStyle='default'>
                 <i className='fa fa-chevron-left' /> Back
               </Button>
             </Link>

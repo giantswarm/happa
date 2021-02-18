@@ -69,7 +69,7 @@ const InstallIngress = (props) => {
 
         <div className='component_slider--nav'>
           <Link to={clusterGuideConfigurationPath}>
-            <Button bsStyle='secondary'>
+            <Button bsStyle='default'>
               <i className='fa fa-chevron-left' /> Back
             </Button>
           </Link>

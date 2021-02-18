@@ -335,7 +335,7 @@ class ConfigKubeCtl extends React.Component {
 
           <div className='component_slider--nav'>
             <Link to={clusterGuideOverviewPath}>
-              <Button bsStyle='secondary'>
+              <Button bsStyle='default'>
                 <i className='fa fa-chevron-left' /> Back
               </Button>
             </Link>

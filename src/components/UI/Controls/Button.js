@@ -8,7 +8,7 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 //
 // <Button
 //   type='button|submit|reset'
-//   bsStyle='primary|secondary|danger|default|link'
+//   bsStyle='primary|danger|default|link'
 //   loading=true|false
 //   disabled=true|false
 //   onClick=function>
