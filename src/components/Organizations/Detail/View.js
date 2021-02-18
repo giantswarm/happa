@@ -1,4 +1,5 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { Heading, Paragraph } from 'grommet';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
@@ -24,11 +25,6 @@ const MembersTable = styled.div`
   .member-email {
     ${Ellipsis}
   }
-`;
-
-const Disclaimer = styled.p`
-  margin: 0 0 20px;
-  line-height: 1.2;
 `;
 
 const clusterTableDefaultSorting = [
@@ -198,10 +194,12 @@ class OrganizationDetail extends React.Component {
 
     return (
       <DocumentTitle title={`Organization Details | ${organization.id}`}>
-        <h1>Organization: {organization.id}</h1>
+        <Heading>Organization: {organization.id}</Heading>
         <Section title='Clusters'>
           {clusters.length === 0 ? (
-            <p>This organization doesn&apos;t have any clusters.</p>
+            <Paragraph>
+              This organization doesn&apos;t have any clusters
+            </Paragraph>
           ) : (
             <BootstrapTable
               bordered={false}
@@ -222,7 +220,7 @@ class OrganizationDetail extends React.Component {
         <Section title='Members'>
           <MembersTable>
             {!organization.members || organization.members.length === 0 ? (
-              <p>This organization has no members</p>
+              <Paragraph>This organization has no members</Paragraph>
             ) : (
               <BootstrapTable
                 bordered={false}
@@ -251,8 +249,8 @@ class OrganizationDetail extends React.Component {
           </Section>
         )}
 
-        <Section title='Delete this organization' flat>
-          <Disclaimer>{supportsDeletion.message}</Disclaimer>
+        <Section title='Delete organization'>
+          <Paragraph>{supportsDeletion.message}</Paragraph>
           <Button
             bsStyle='danger'
             onClick={this.deleteOrganization}

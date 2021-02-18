@@ -1,3 +1,4 @@
+import { Paragraph } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
@@ -92,7 +93,7 @@ class CredentialsForm extends React.Component {
     if (this.props.provider === Providers.AZURE) {
       return (
         <form>
-          <p>
+          <Paragraph>
             Here you can set credentials for the organization{' '}
             <code>{this.props.organizationName}</code> , to be used by all new
             clusters created for this organization. Find more information on how
@@ -105,11 +106,11 @@ class CredentialsForm extends React.Component {
               documentation
             </a>
             .
-          </p>
-          <p>
+          </Paragraph>
+          <Paragraph>
             <i className='fa fa-info' /> It is currently not possible to modify
             or delete these credentials once set.
-          </p>
+          </Paragraph>
 
           <TextInput
             label='Azure Subscription ID'
@@ -162,7 +163,7 @@ class CredentialsForm extends React.Component {
     } else if (this.props.provider === Providers.AWS) {
       return (
         <form>
-          <p>
+          <Paragraph>
             Here you can set credentials for the organization{' '}
             <code>{this.props.organizationName}</code> , to be used by all new
             clusters created for this organization. Find more information on how
@@ -175,12 +176,12 @@ class CredentialsForm extends React.Component {
               documentation
             </a>
             .
-          </p>
+          </Paragraph>
 
-          <p>
+          <Paragraph>
             <i className='fa fa-info' /> It is currently not possible to modify
             or delete these credentials once set.
-          </p>
+          </Paragraph>
           <TextInput
             label='AWS admin role ARN (GiantSwarmAdmin)'
             name='awsAdminRoleARN'

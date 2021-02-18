@@ -1,3 +1,4 @@
+import { Paragraph } from 'grommet';
 import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -36,10 +37,10 @@ const CredentialsDisplay = (props) => {
 
     return (
       <div>
-        <p>
+        <Paragraph>
           No credentials set. Clusters of this organization will be created in
           the default workload cluster account of this installation.
-        </p>
+        </Paragraph>
         {button}
       </div>
     );
