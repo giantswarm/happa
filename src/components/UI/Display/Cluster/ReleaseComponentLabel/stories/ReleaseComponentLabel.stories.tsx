@@ -5,7 +5,7 @@ import ReleaseComponentLabel from '..';
 
 const Template: Story<
   ComponentPropsWithoutRef<typeof ReleaseComponentLabel>
-> = (args) => <ReleaseComponentLabel {...args} />;
+> = (args) => <ReleaseComponentLabel name={args.name} {...args} />;
 
 export const Added = Template.bind({});
 Added.args = {

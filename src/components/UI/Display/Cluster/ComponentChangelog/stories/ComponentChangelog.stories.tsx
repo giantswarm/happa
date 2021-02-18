@@ -5,7 +5,7 @@ import ComponentChangelog from '..';
 
 const Template: Story<ComponentPropsWithoutRef<typeof ComponentChangelog>> = (
   args
-) => <ComponentChangelog {...args} />;
+) => <ComponentChangelog name={args.name} changes={args.changes} />;
 
 export const Simple = Template.bind({});
 Simple.args = {
