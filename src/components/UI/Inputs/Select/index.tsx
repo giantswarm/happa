@@ -50,6 +50,12 @@ const customTheme: ThemeType = {
     },
     step: 5,
   },
+  textInput: {
+    // @ts-expect-error
+    extend: css`
+      font-size: ${({ theme }) => theme.global.font.size};
+    `,
+  },
 };
 
 interface ISelectProps extends React.ComponentPropsWithoutRef<typeof Input> {
