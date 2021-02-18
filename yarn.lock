@@ -11451,10 +11451,10 @@ obuf@^1.0.0, obuf@^1.1.2:
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
 
-oidc-client@^1.11.3:
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/oidc-client/-/oidc-client-1.11.4.tgz#d65ea0ab03ea5a3fffd95369423d940cffcfa68d"
-  integrity sha512-71mEPaDr7g2Ji6t+e1fKLNKJL/XEuDXmXakDUJ9hVpmsLyQKY9kfbjeuDDAN6cP7Rhty3814he/aStqNLBREKA==
+oidc-client@^1.11.5:
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/oidc-client/-/oidc-client-1.11.5.tgz#020aa193d68a3e1f87a24fcbf50073b738de92bb"
+  integrity sha512-LcKrKC8Av0m/KD/4EFmo9Sg8fSQ+WFJWBrmtWd+tZkNn3WT/sQG3REmPANE9tzzhbjW6VkTNy4xhAXCfPApAOg==
   dependencies:
     acorn "^7.4.1"
     base64-js "^1.5.1"
