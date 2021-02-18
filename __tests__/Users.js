@@ -101,18 +101,11 @@ describe('Users', () => {
       target: { value: 'someemail@somedomain.com' },
     });
 
-    const orgsMultiSelectLabel = getByText(/organizations:/i);
-    const orgsMultiSelectWrapper = orgsMultiSelectLabel.nextSibling;
-    const orgsMultiSelectHeader = orgsMultiSelectWrapper.querySelector(
-      '.dropdown-heading'
-    );
-
     // Open multi select
-    fireEvent.click(orgsMultiSelectHeader);
+    fireEvent.click(getByLabelText(/organizations/i));
 
-    // Select `giantswarm` organization
-    const gsOrgLabel = within(orgsMultiSelectWrapper).getByText(/giantswarm/i);
-    fireEvent.click(gsOrgLabel);
+    // Select `giantswarm` organizatio
+    fireEvent.click(getByLabelText(/giantswarm/i));
 
     // Email input validation
 
