@@ -494,51 +494,50 @@ const theme = deepMerge(generate(16), {
     round: '4px',
   },
   heading: {
+    weight: 300,
     level: {
       '1': {
-        font: {
-          weight: '700',
-        },
+        font: {},
         small: {
           size: '28px',
-          height: '33px',
+          height: '35px',
           maxWidth: '567px',
         },
         medium: {
-          size: '42px',
-          height: '47px',
+          size: '28px',
+          height: '35px',
           maxWidth: '833px',
         },
         large: {
-          size: '68px',
-          height: '73px',
+          size: '28px',
+          height: '35px',
           maxWidth: '1367px',
         },
         xlarge: {
-          size: '95px',
-          height: '100px',
+          size: '28px',
+          height: '35px',
           maxWidth: '1900px',
         },
       },
       '2': {
         small: {
-          size: '25px',
-          height: '30px',
+          size: '18px',
+          height: '35px',
           maxWidth: '500px',
         },
         medium: {
-          size: '35px',
-          height: '40px',
+          size: '18px',
+          height: '35px',
           maxWidth: '700px',
         },
         large: {
-          size: '45px',
-          height: '50px',
+          size: '18px',
+          height: '35px',
           maxWidth: '900px',
         },
         xlarge: {
-          size: '55px',
-          height: '60px',
+          size: '18px',
+          height: '35px',
           maxWidth: '1100px',
         },
       },
@@ -636,28 +635,14 @@ const theme = deepMerge(generate(16), {
     small: {
       size: '13px',
       height: '18px',
-      maxWidth: '267px',
+      maxWidth: '400px',
     },
     medium: {
       size: '15px',
       height: '20px',
-      maxWidth: '300px',
+      maxWidth: '500px',
     },
-    large: {
-      size: '18px',
-      height: '23px',
-      maxWidth: '367px',
-    },
-    xlarge: {
-      size: '22px',
-      height: '27px',
-      maxWidth: '433px',
-    },
-    xxlarge: {
-      size: '28px',
-      height: '33px',
-      maxWidth: '567px',
-    },
+    large: {},
   },
   text: {
     xsmall: {
