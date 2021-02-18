@@ -1,3 +1,4 @@
+import { Paragraph } from 'grommet';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -62,7 +63,7 @@ const InvitesTable = ({ invitations }) => {
   const hasInvitations = Object.values(invitations.items).length;
 
   if (!hasInvitations) {
-    return <p>No open invites</p>;
+    return <Paragraph>No open invites</Paragraph>;
   }
 
   return (

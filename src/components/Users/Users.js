@@ -1,5 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
+import { Heading, Paragraph } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -209,7 +210,7 @@ class Users extends React.Component {
       <Breadcrumb data={{ title: 'USERS', pathname: UsersRoutes.Home }}>
         <DocumentTitle title='Users'>
           <>
-            <h1>Users</h1>
+            <Heading>Users</Heading>
             <Section title='Open invites'>
               <>
                 <InvitesTable invitations={invitations} />
@@ -227,15 +228,15 @@ class Users extends React.Component {
             </Section>
             <Section title='Additional information'>
               <>
-                <p>
+                <Paragraph>
                   This page lists the user accounts and account invites for
                   installation <code>{installationNameLabel}</code>. Only Giant
                   Swarm staff can access this page.
-                </p>
-                <p>
+                </Paragraph>
+                <Paragraph>
                   Giant Swarm staff members normally do not require user
                   accounts, as they log in via Single Sign-On (SSO).
-                </p>
+                </Paragraph>
               </>
             </Section>
             {this.renderModalComponent()}
