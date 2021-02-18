@@ -54,6 +54,7 @@ const customTheme: ThemeType = {
     // @ts-expect-error
     extend: css`
       font-size: ${({ theme }) => theme.global.font.size};
+      line-height: ${({ theme }) => theme.global.font.height};
     `,
   },
 };
