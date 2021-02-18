@@ -1,10 +1,9 @@
-import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import FlashMessage from 'UI/Display/FlashMessage';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
+import MultiSelect from 'UI/Inputs/MultiSelect';
 import TextInput from 'UI/Inputs/TextInput';
-import { sortBy } from 'underscore';
 
 import { getInitialState } from '.';
 
@@ -17,11 +16,17 @@ const InviteUserForm = ({
   ...props
 }) => {
   const memoizedOptions = useMemo(() => {
-    return sortBy(organizations.items, 'id').map((organization) => ({
-      label: organization.id,
-      value: organization.id,
-    }));
+    return Object.values(organizations.items).map(
+      (organization) => organization.id
+    );
   }, [organizations.items]);
+
+  const onRemoveOrganization = (orgID) => {
+    const selectedOptions = inviteForm.organizations.filter(
+      (selectedOrgID) => selectedOrgID !== orgID
+    );
+    handleOrganizationChange(selectedOptions);
+  };
 
   return (
     <form onSubmit={(e) => e.preventDefault()} {...props}>
@@ -40,15 +45,18 @@ const InviteUserForm = ({
         value={inviteForm.email}
       />
 
-      <div className='textfield'>
-        <label htmlFor='organizations'>Organizations:</label>
-        <MultiSelect
-          id='organizations'
-          options={memoizedOptions}
-          selected={inviteForm.organizations}
-          onSelectedChanged={handleOrganizationChange}
-        />
-      </div>
+      <MultiSelect
+        id='organizations'
+        label='Organizations'
+        selected={inviteForm.organizations}
+        options={memoizedOptions}
+        placeholder='Please select an organization'
+        onRemoveValue={onRemoveOrganization}
+        onChange={(e) => {
+          handleOrganizationChange(e.value);
+        }}
+        maxVisibleValues={3}
+      />
 
       <CheckBoxInput
         id='sendEmail'
