@@ -1,3 +1,4 @@
+import { Heading } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { CSSBreakpoints } from 'shared/constants';
@@ -38,7 +39,9 @@ const Section = ({ flat, title, children, ...rest }) => {
   return (
     <Wrapper flat={flat} {...rest}>
       <Left flat={flat}>
-        <h3 className='table-label'>{title}</h3>
+        <Heading level={2} margin='none'>
+          {title}
+        </Heading>
       </Left>
       <Right flat={flat}>{children}</Right>
     </Wrapper>
