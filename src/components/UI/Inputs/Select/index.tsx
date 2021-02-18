@@ -157,6 +157,7 @@ Select.propTypes = {
 
 Select.defaultProps = {
   dropHeight: 'small',
+  replace: true,
 };
 
 export default Select;

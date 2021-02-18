@@ -32,7 +32,15 @@ export const Search: Story<ComponentPropsWithoutRef<typeof Select>> = (
 
 Search.args = {
   id: 'pet',
-  options: ['A dog', 'A cat', 'A frog', 'A shark', 'A ghost'],
+  options: [
+    'A dog',
+    'A cat',
+    'A frog',
+    'A shark',
+    'A ghost',
+    'A snake',
+    'A camel',
+  ],
   placeholder: 'Just select something...',
   searchPlaceholder: 'Search for a pet...',
   emptySearchMessage: 'No pets found.',
