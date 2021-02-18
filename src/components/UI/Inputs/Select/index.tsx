@@ -52,8 +52,7 @@ const customTheme: ThemeType = {
   },
 };
 
-interface ISelectInputProps
-  extends React.ComponentPropsWithoutRef<typeof Input> {
+interface ISelectProps extends React.ComponentPropsWithoutRef<typeof Input> {
   /**
    * Props to be passed to the text input wrapper.
    */
@@ -93,7 +92,7 @@ interface ISelectInputProps
   label?: FormFieldProps['label'];
 }
 
-const SelectInput = React.forwardRef<HTMLSelectElement, ISelectInputProps>(
+const Select = React.forwardRef<HTMLSelectElement, ISelectProps>(
   (
     {
       id,
@@ -141,7 +140,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, ISelectInputProps>(
   }
 );
 
-SelectInput.propTypes = {
+Select.propTypes = {
   name: PropTypes.string,
   id: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -156,8 +155,8 @@ SelectInput.propTypes = {
   pad: PropTypes.bool,
 };
 
-SelectInput.defaultProps = {
+Select.defaultProps = {
   dropHeight: 'small',
 };
 
-export default SelectInput;
+export default Select;
