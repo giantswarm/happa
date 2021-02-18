@@ -3,9 +3,20 @@ import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import MultiSelect from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof MultiSelect>> = (
+export const Search: Story<ComponentPropsWithoutRef<typeof MultiSelect>> = (
   args
 ) => {
+  const initialOptions = args.options;
+  const [filteredOptions, setFilteredOptions] = useState(initialOptions);
+
+  const searchFor = (query: string) => {
+    const results = args.options.filter((option) => {
+      return option.toLowerCase().includes(query.toLowerCase());
+    });
+
+    setFilteredOptions(results);
+  };
+
   const [selected, setSelected] = useState(args.selected!);
 
   const onRemoveValue = (option: string) => {
@@ -20,11 +31,13 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof MultiSelect>> = (
       onChange={(e) => {
         setSelected(e.value);
       }}
+      options={filteredOptions}
+      onSearch={searchFor}
     />
   );
 };
 
-Simple.args = {
+Search.args = {
   id: 'pet',
   options: [
     'A dog',
@@ -38,9 +51,12 @@ Simple.args = {
   placeholder: 'Just select something...',
   selected: [],
   label: 'Pets I want to get',
+  searchPlaceholder: 'Search for a pet...',
+  emptySearchMessage: 'No pets found.',
+  dropHeight: 'medium',
 };
 
-Simple.argTypes = {
+Search.argTypes = {
   label: { control: { type: 'text' } },
   error: { control: { type: 'text' } },
   info: { control: { type: 'text' } },

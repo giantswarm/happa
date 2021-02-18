@@ -6,10 +6,14 @@ import CheckBoxInput from '../CheckBoxInput';
 import Select from '../Select';
 import OptionPill from './OptionPill';
 
+function getIDFromOption(option: string): string {
+  return option.toLowerCase().replace(/\s/, '-');
+}
+
 interface IMultiSelectProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof Select>,
-    'multiple' | 'value'
+    'multiple' | 'value' | 'selected'
   > {
   /**
    * The values that can be chosen from the dropdown.
@@ -26,10 +30,9 @@ interface IMultiSelectProps
    */
   onRemoveValue?: (option: string) => void;
   /**
-   * The indexes from the `options` array that are
-   * currently selected.
+   * The options that are currently selected.
    */
-  selected?: number[];
+  selected?: string[];
   /**
    * Whether the input should be disabled or not.
    */
@@ -52,39 +55,45 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, IMultiSelectProps>(
     const visibleSelections = selected?.slice(0, maxVisibleValues) ?? [];
     const extraSelectionsLength = (selected?.length ?? 0) - maxVisibleValues!;
 
+    const selectedOptionsIdx = React.useMemo(() => {
+      return options.reduce<number[]>((acc, curr, idx) => {
+        if (selected?.includes(curr)) {
+          acc.push(idx);
+        }
+
+        return acc;
+      }, []);
+    }, [selected, options]);
+
     return (
       <Select
         multiple={true}
         closeOnChange={false}
         placeholder={placeholder}
-        selected={selected}
+        selected={selectedOptionsIdx}
         options={options}
         disabled={disabled}
         value={
           visibleSelections.length > 0 ? (
             <Box wrap={true} direction='row'>
-              {visibleSelections.map((index) => {
-                const option = options[index];
+              {visibleSelections.map((option) => (
+                <Button
+                  key={`button_${option}`}
+                  href='#'
+                  disabled={disabled}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                return (
-                  <Button
-                    key={`button_${option}`}
-                    href='#'
-                    disabled={disabled}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
+                    if (disabled) return;
 
-                      if (disabled) return;
-
-                      onRemoveValue?.(option);
-                    }}
-                    onFocus={(e) => e.stopPropagation()}
-                  >
-                    <OptionPill option={option} editable={!disabled} />
-                  </Button>
-                );
-              })}
+                    onRemoveValue?.(option);
+                  }}
+                  onFocus={(e) => e.stopPropagation()}
+                >
+                  <OptionPill option={option} editable={!disabled} />
+                </Button>
+              ))}
 
               {extraSelectionsLength > 0 && (
                 <OptionPill
@@ -102,6 +111,8 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, IMultiSelectProps>(
           return (
             <CheckBoxInput
               key={option}
+              id={getIDFromOption(option)}
+              name={getIDFromOption(option)}
               tabIndex={-1}
               checked={state.selected}
               disabled={state.disabled}
@@ -120,7 +131,7 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, IMultiSelectProps>(
 
 MultiSelect.propTypes = {
   options: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  selected: PropTypes.arrayOf(PropTypes.number.isRequired),
+  selected: PropTypes.arrayOf(PropTypes.string.isRequired),
   disabled: PropTypes.bool,
   placeholder: PropTypes.string,
   maxVisibleValues: PropTypes.number,
