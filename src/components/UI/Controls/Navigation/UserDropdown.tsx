@@ -51,7 +51,6 @@ const StyledList = styled(List)`
 `;
 
 const MenuItem = styled(NavLink)`
-  color: ${(props) => props.theme.colors.white1};
   display: block;
   line-height: 1;
   font-weight: 400;
