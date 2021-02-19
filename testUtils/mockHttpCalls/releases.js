@@ -229,7 +229,7 @@ export const nodePoolRelease = {
     {
       component: 'nodepools',
       description:
-        'Add Node Pools functionality. See https://docs.giantswarm.io/basics/nodepools/ for details.',
+        'Add Node Pools functionality. See https://docs.giantswarm.io/advanced/node-pools/ for details.',
     },
     {
       component: 'kiam',

@@ -1,3 +1,4 @@
+import { appPlatformURL } from 'lib/docs';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -56,11 +57,7 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
       <h1 data-testid='apps-browser'>Apps</h1>
       <p>
         Managed apps for use in your clusters. Learn more in our{' '}
-        <a
-          target='_blank'
-          rel='noopener noreferrer'
-          href='https://docs.giantswarm.io/basics/app-platform/'
-        >
+        <a target='_blank' rel='noopener noreferrer' href={appPlatformURL}>
           app platform documentation
           <i className='fa fa-open-in-new' />
         </a>

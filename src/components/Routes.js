@@ -10,7 +10,6 @@ import ForgotPassword from './ForgotPassword/ForgotPassword';
 import SetPassword from './ForgotPassword/SetPassword';
 import Layout from './Layout';
 import SignUp from './SignUp/SignUp';
-import StyleGuide from './UI/StyleGuide';
 
 const Routes = () => {
   return (
@@ -22,7 +21,6 @@ const Routes = () => {
       <Route component={ForgotPassword} path={MainRoutes.ForgotPassword} />
       <Route component={SignUp} path={MainRoutes.SignUp} />
       <Route component={OAuthCallback} path={MainRoutes.OAuthCallback} />
-      <Route component={StyleGuide} path={MainRoutes.StyleGuide} />
       <Route component={Layout} path={MainRoutes.Home} />
     </Switch>
   );

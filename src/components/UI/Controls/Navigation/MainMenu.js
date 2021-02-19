@@ -1,3 +1,4 @@
+import { homeURL } from 'lib/docs';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -92,11 +93,7 @@ function MainMenu({ showApps, isUserAdmin }) {
             Users
           </StyledNavLink>
         ) : undefined}
-        <a
-          href='https://docs.giantswarm.io'
-          rel='noopener noreferrer'
-          target='_blank'
-        >
+        <a href={homeURL} rel='noopener noreferrer' target='_blank'>
           Documentation <i className='fa fa-open-in-new' />
         </a>
       </NavDiv>
@@ -160,7 +157,7 @@ function MainMenu({ showApps, isUserAdmin }) {
                 ) : undefined}
                 <li>
                   <DropdownAnchor
-                    href='https://docs.giantswarm.io'
+                    href={homeURL}
                     rel='noopener noreferrer'
                     target='_blank'
                     onClick={onClickHandler}

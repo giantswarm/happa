@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router';
+import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
@@ -459,7 +460,7 @@ class ClusterApps extends React.Component {
                       <a
                         target='_blank'
                         rel='noopener noreferrer'
-                        href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'
+                        href={ingressControllerInstallationURL}
                       >
                         installing an ingress controller guide.
                       </a>

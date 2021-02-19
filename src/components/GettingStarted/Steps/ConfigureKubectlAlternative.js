@@ -1,3 +1,4 @@
+import { exposingWorkloadsURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
@@ -183,10 +184,7 @@ class ConfigKubeCtl extends React.Component {
           <p>
             These files resemble the certificates in the configuration file
             above. They facilitate authenticated access to services using a web
-            browser.{' '}
-            <a href='https://docs.giantswarm.io/guides/accessing-services-from-the-outside/'>
-              Read more in our Docs.
-            </a>
+            browser. <a href={exposingWorkloadsURL}>Read more in our Docs.</a>
           </p>
         </div>
       </div>

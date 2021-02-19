@@ -1,4 +1,5 @@
 import diff from 'deep-diff';
+import { clusterUpgradeChecklistURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -184,7 +185,7 @@ class UpgradeClusterModal extends React.Component {
           <p>
             Please read our{' '}
             <a
-              href='https://docs.giantswarm.io/reference/cluster-upgrades/#checklist'
+              href={clusterUpgradeChecklistURL}
               rel='noopener noreferrer'
               target='_blank'
             >
