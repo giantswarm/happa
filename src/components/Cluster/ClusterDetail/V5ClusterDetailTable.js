@@ -2,6 +2,7 @@ import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import formatDistance from 'date-fns/fp/formatDistance';
 import produce from 'immer';
+import { nodePoolsURL } from 'lib/docs';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -588,7 +589,7 @@ class V5ClusterDetailTable extends React.Component {
                 worker nodes to your cluster. Node pools also scale
                 independently.{' '}
                 <a
-                  href='https://docs.giantswarm.io/basics/nodepools/'
+                  href={nodePoolsURL}
                   alt='Read more about node pools'
                   target='_blank'
                   rel='noopener noreferrer'
