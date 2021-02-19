@@ -88,7 +88,7 @@ const NextSteps = (props) => {
           <a href={gettingStartedURL} rel='noopener noreferrer' target='_blank'>
             guides
           </a>{' '}
-          that help you set up mnitoring, logging, and more.
+          that help you set up basic metrics, RBAC, and more.
         </p>
 
         <div className='component_slider--nav'>
