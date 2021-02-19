@@ -1,3 +1,7 @@
+import {
+  cloudProviderAccountSetupAwsURL,
+  cloudProviderAccountSetupAzureURL,
+} from 'lib/docs';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
@@ -98,7 +102,7 @@ class CredentialsForm extends React.Component {
             clusters created for this organization. Find more information on how
             to prepare an Azure subscription for running workload cluster in our{' '}
             <a
-              href='https://docs.giantswarm.io/guides/prepare-azure-subscription-for-tenant-clusters/'
+              href={cloudProviderAccountSetupAzureURL}
               rel='noopener noreferrer'
               target='_blank'
             >
@@ -168,7 +172,7 @@ class CredentialsForm extends React.Component {
             clusters created for this organization. Find more information on how
             to prepare an AWS account for running workload cluster in our{' '}
             <a
-              href='https://docs.giantswarm.io/guides/prepare-aws-account-for-tenant-clusters/'
+              href={cloudProviderAccountSetupAwsURL}
               rel='noopener noreferrer'
               target='_blank'
             >
