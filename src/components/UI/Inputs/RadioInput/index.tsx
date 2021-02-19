@@ -83,14 +83,18 @@ const RadioInput = React.forwardRef<HTMLInputElement, IRadioInputProps>(
     },
     ref
   ) => {
-    const patchedContentProps = Object.assign({}, contentProps, {
-      border: false,
-      pad: {
-        horizontal: 'none',
-        vertical: 'xsmall',
+    const patchedContentProps = Object.assign(
+      {},
+      {
+        border: false,
+        pad: {
+          horizontal: 'none',
+          vertical: 'xsmall',
+        },
+        background: 'none',
       },
-      background: 'none',
-    });
+      contentProps
+    );
 
     return (
       <StyledFormField
