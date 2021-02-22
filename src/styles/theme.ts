@@ -1,6 +1,7 @@
 import { generate, ThemeType } from 'grommet';
 import { deepMerge } from 'grommet/utils';
 import { CSSBreakpoints } from 'shared/constants';
+import { css } from 'styled-components';
 
 /* eslint-disable no-magic-numbers */
 
@@ -307,6 +308,13 @@ const theme = deepMerge(generate(16), {
       lineHeight: 1.11,
       daySize: '91.43px',
     },
+  },
+  textArea: {
+    extend: () => css`
+      background: ${(props) => props.theme.global.colors['input-background']};
+      min-width: 100%;
+      min-height: 40px;
+    `,
   },
   checkBox: {
     color: {
