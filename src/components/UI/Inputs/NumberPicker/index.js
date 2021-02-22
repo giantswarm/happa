@@ -1,12 +1,9 @@
 import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { css } from 'styled-components';
 import styled from 'styled-components';
 import ValidationErrorMessage from 'UI/Inputs/ValidationErrorMessage';
-import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
 import TextInput from '../TextInput';
 
@@ -119,7 +116,6 @@ const NumberPicker = ({
   className,
   theme,
   readOnly,
-  eventNameSuffix,
   onChange,
   value,
   stepSize,
@@ -193,18 +189,14 @@ const NumberPicker = ({
 
       <Control>
         {!readOnly && (
-          <RUMActionTarget
-            name={mergeActionNames(RUMActions.DecrementNumber, eventNameSuffix)}
+          <DecrementButton
+            className={currValue === min && 'disabled'}
+            onClick={decrement}
+            aria-label='Decrement'
+            role='button'
           >
-            <DecrementButton
-              className={currValue === min && 'disabled'}
-              onClick={decrement}
-              aria-label='Decrement'
-              role='button'
-            >
-              &ndash;
-            </DecrementButton>
-          </RUMActionTarget>
+            &ndash;
+          </DecrementButton>
         )}
 
         <StyledTextInput
@@ -218,18 +210,14 @@ const NumberPicker = ({
         />
 
         {!readOnly && (
-          <RUMActionTarget
-            name={mergeActionNames(RUMActions.IncrementNumber, eventNameSuffix)}
+          <IncrementButton
+            className={currValue === max && 'disabled'}
+            onClick={increment}
+            aria-label='Increment'
+            role='button'
           >
-            <IncrementButton
-              className={currValue === max && 'disabled'}
-              onClick={increment}
-              aria-label='Increment'
-              role='button'
-            >
-              +
-            </IncrementButton>
-          </RUMActionTarget>
+            +
+          </IncrementButton>
         )}
       </Control>
       <ValidationErrorMessage message={validationError} />
@@ -248,8 +236,6 @@ NumberPicker.propTypes = {
   theme: PropTypes.string,
   className: PropTypes.string,
   title: PropTypes.string,
-  /** This string is appended to the user action event names recorded in Real User Monitoring. Should be UPPERCASE. */
-  eventNameSuffix: PropTypes.string,
 };
 
 export default NumberPicker;

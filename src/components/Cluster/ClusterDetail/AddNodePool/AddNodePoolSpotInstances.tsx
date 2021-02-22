@@ -74,7 +74,6 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
             value={spotPercentage}
             onChange={setSpotPercentage}
             theme='spot-number-picker'
-            eventNameSuffix='SPOT_PERCENTAGE'
           />
           <SpotValuesLabelText>percent</SpotValuesLabelText>
         </SpotValuesNumberPickerWrapper>
@@ -92,7 +91,6 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
             value={onDemandBaseCapacity}
             onChange={setOnDemandBaseCapacity}
             theme='spot-number-picker'
-            eventNameSuffix='ONDEMAND_BASE_CAPACITY'
           />
           <SpotValuesLabelText>instances</SpotValuesLabelText>
         </SpotValuesNumberPickerWrapper>
