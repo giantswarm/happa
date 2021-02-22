@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import ValidationErrorMessage from 'UI/Inputs/ValidationErrorMessage';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
+import TextInput from './TextInput';
+
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
 // field.
@@ -47,27 +49,23 @@ import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 //   valid: true
 // }
 
-const Label = styled.div`
-  display: inline-block;
-  width: 150px;
-`;
+const Label = styled.div``;
 
-const ValueSpan = styled.span`
-  input {
-    display: inline-block;
-    background-color: inherit;
-    border: none;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    outline: none;
-    font-size: 16px;
-  }
-  input:focus {
+const StyledTextInput = styled(TextInput)`
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  appearance: textfield;
+  --moz-appearance: textfield;
+
+  :focus {
     outline: none;
   }
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
+
+  ::-webkit-inner-spin-button,
+  ::-webkit-outer-spin-button {
+    display: none;
     --webkit-appearance: none;
     margin: 0;
   }
@@ -77,40 +75,36 @@ const Wrapper = styled.div`
   display: inline-block;
   margin-top: 4px;
   margin-bottom: 10px;
-
-  /* to hide the increment/decrement buttons when disabled */
-  input:disabled {
-    appearance: textfield;
-  }
 `;
 
 const Control = styled.div`
   width: 160px;
-  display: inline-block;
-  height: 35px;
-  background-color: #32526a;
-  line-height: 35px;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 4px;
   position: relative;
-  margin-bottom: 5px;
 `;
 
 const IncrementDecrementButtonCSS = css`
   position: absolute;
-  display: inline-block;
-  top: 0px;
+  top: 1px;
   width: 35px;
+  height: calc(100% - 2px);
   background-color: #3b5f7b;
-  cursor: pointer;
   user-select: none;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &:hover {
     background-color: #486d8a;
   }
+
   &:active {
     background-color: #3b5f7b;
     color: #aaa;
   }
+
   &.disabled,
   &.disabled:hover,
   &.disabled:active {
@@ -121,16 +115,16 @@ const IncrementDecrementButtonCSS = css`
 
 const IncrementButton = styled.div`
   ${IncrementDecrementButtonCSS};
-  right: 0px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  right: 1px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 `;
 
 const DecrementButton = styled.div`
   ${IncrementDecrementButtonCSS};
-  left: 0px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  left: 1px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 `;
 
 class NumberPicker extends React.Component {
@@ -243,9 +237,7 @@ class NumberPicker extends React.Component {
   render() {
     return (
       <Wrapper
-        className={`${this.props.className ?? ''} ${this.props.theme ?? ''} ${
-          this.props.readOnly ? 'readonly ' : ''
-        }`}
+        className={`${this.props.className ?? ''} ${this.props.theme ?? ''}`}
       >
         {this.props.label ? <Label>{this.props.label}</Label> : undefined}
 
@@ -269,19 +261,17 @@ class NumberPicker extends React.Component {
               </DecrementButton>
             </RUMActionTarget>
           )}
-          <ValueSpan>
-            <input
-              disabled={this.props.readOnly}
-              onChange={(e) => this.updateInput(e.target.value, true)}
-              onFocus={this.handleFocus}
-              step={this.props.stepSize}
-              type='number'
-              value={
-                this.props.readOnly ? this.props.value : this.state.inputValue
-              }
-              title={this.props.title}
-            />
-          </ValueSpan>
+          <StyledTextInput
+            disabled={this.props.readOnly}
+            onChange={(e) => this.updateInput(e.target.value, true)}
+            onFocus={this.handleFocus}
+            step={this.props.stepSize}
+            type='number'
+            value={
+              this.props.readOnly ? this.props.value : this.state.inputValue
+            }
+            title={this.props.title}
+          />
           {this.props.readOnly ? undefined : (
             <RUMActionTarget
               name={mergeActionNames(
