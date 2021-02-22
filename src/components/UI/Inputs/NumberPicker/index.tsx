@@ -86,7 +86,7 @@ const IncrementDecrementButtonCSS = css`
   &.disabled:active {
     color: ${({ theme }) => theme.global.colors.text.dark};
     cursor: default;
-    opacity: 0.7;
+    opacity: 0.8;
 
     ::after {
       content: '';
@@ -97,7 +97,7 @@ const IncrementDecrementButtonCSS = css`
       height: 100%;
       background-color: ${({ theme }) =>
         theme.global.colors['status-disabled']};
-      opacity: 0.5;
+      opacity: 0.3;
     }
   }
 `;
