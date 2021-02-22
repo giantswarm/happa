@@ -11,9 +11,9 @@ function validateInput(desiredValue: number, min?: number, max?: number) {
   switch (true) {
     case Number.isNaN(desiredValue):
       return 'Field must not be empty';
-    case max && desiredValue > max:
+    case typeof max !== 'undefined' && desiredValue > max:
       return `Value must not be larger than ${max}`;
-    case min && desiredValue < min:
+    case typeof min !== 'undefined' && desiredValue < min:
       return `Value must not be smaller than ${min}`;
     case !isWholeNumber(desiredValue):
       return 'Value must be a whole number';
@@ -174,10 +174,10 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
     let newValue = desiredValue;
 
     switch (true) {
-      case !allowInvalidValues && min && newValue < min:
+      case !allowInvalidValues && typeof min !== 'undefined' && newValue < min:
         newValue = min!;
         break;
-      case !allowInvalidValues && max && newValue > max:
+      case !allowInvalidValues && typeof max !== 'undefined' && newValue > max:
         newValue = max!;
         break;
     }
