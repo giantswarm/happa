@@ -324,6 +324,13 @@ const theme = deepMerge(generate(16), {
       `,
     },
   },
+  textArea: {
+    extend: () => css`
+      background: ${(props) => props.theme.global.colors['input-background']};
+      min-width: 100%;
+      min-height: 40px;
+    `,
+  },
   checkBox: {
     color: {
       dark: 'text',

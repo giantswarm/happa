@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextArea renders a disabled input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 fwONFA FormField__FormFieldContentBox-m9hood-1"
+      >
+        <textarea
+          class="StyledTextArea-sc-17i3mwp-0 jYpoen"
+          disabled=""
+          rows="5"
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TextArea renders a simple input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <textarea
+          class="StyledTextArea-sc-17i3mwp-0 cDfWLK"
+          placeholder="Please write a story"
+          rows="5"
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TextArea renders an input with a help message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <span
+        class="StyledText-sc-1sadyjn-0 erMGdB"
+      >
+        A helpful message
+      </span>
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <textarea
+          class="StyledTextArea-sc-17i3mwp-0 cDfWLK"
+          rows="5"
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TextArea renders an input with a label 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="some-text"
+      >
+        A helpful area of text
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <textarea
+          class="StyledTextArea-sc-17i3mwp-0 cDfWLK"
+          id="some-text"
+          rows="5"
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TextArea renders an input with a validation error 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 dfycIj FormField__FormFieldContentBox-m9hood-1"
+      >
+        <textarea
+          class="StyledTextArea-sc-17i3mwp-0 cDfWLK"
+          rows="5"
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 dxYrxD"
+      >
+        There is something very wrong!
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TextArea renders an input with an info message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <textarea
+          class="StyledTextArea-sc-17i3mwp-0 cDfWLK"
+          rows="5"
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 fmFxNm"
+      >
+        Some useful information
+      </span>
+    </div>
+  </div>
+</div>
+`;

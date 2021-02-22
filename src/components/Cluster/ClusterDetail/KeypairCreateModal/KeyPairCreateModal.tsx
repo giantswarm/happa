@@ -11,7 +11,7 @@ import {
   MODAL_CHANGE_TIMEOUT,
   VALIDATION_DEBOUNCE_RATE,
 } from 'Cluster/ClusterDetail/KeypairCreateModal/Utils';
-import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
+import { makeKubeConfigTextFile } from 'lib/helpers';
 import useDebounce from 'lib/hooks/useDebounce';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -80,7 +80,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         }
       );
       setKubeconfig(
-        dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
+        makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI)
       );
       setModal({
         visible: true,
