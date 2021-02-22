@@ -7,9 +7,9 @@ import ValidationErrorMessage from 'UI/Inputs/ValidationErrorMessage';
 
 import TextInput from '../TextInput';
 
-function validateInput(desiredValue, min, max) {
+function validateInput(desiredValue: number, min?: number, max?: number) {
   switch (true) {
-    case desiredValue === '':
+    case Number.isNaN(desiredValue):
       return 'Field must not be empty';
     case max && desiredValue > max:
       return `Value must not be larger than ${max}`;
@@ -22,7 +22,7 @@ function validateInput(desiredValue, min, max) {
   }
 }
 
-function isWholeNumber(value) {
+function isWholeNumber(value: number) {
   return value % 1 === 0;
 }
 
@@ -104,12 +104,25 @@ const DecrementButton = styled.div`
   border-bottom-left-radius: 4px;
 `;
 
+interface INumberPickerProps {
+  value?: number;
+  min?: number;
+  max?: number;
+  label?: string;
+  className?: string;
+  theme?: string;
+  readOnly?: boolean;
+  onChange?: (patch: { value: number; valid: boolean }) => void;
+  stepSize?: number;
+  title?: string;
+}
+
 /**
  * A component that allows a user to pick a number by
  * incrementing / decrementing a value or typing it
  * straight into the input field.
  */
-const NumberPicker = ({
+const NumberPicker: React.FC<INumberPickerProps> = ({
   min,
   max,
   label,
@@ -121,7 +134,7 @@ const NumberPicker = ({
   stepSize,
   title,
 }) => {
-  const [currValue, setCurrValue] = useState(value);
+  const [currValue, setCurrValue] = useState<number>(value!);
   const [validationError, setValidationError] = useState('');
 
   const inputValue = Number.isNaN(currValue) ? '' : currValue;
@@ -130,7 +143,7 @@ const NumberPicker = ({
   const prevMax = usePrevious(max);
 
   const updateValue = useCallback(
-    (newValue, error = '') => {
+    (newValue: number, error = '') => {
       setCurrValue(newValue);
       setValidationError(error);
 
@@ -144,16 +157,16 @@ const NumberPicker = ({
     [onChange]
   );
 
-  const updateInput = (desiredValue, allowInvalidValues = false) => {
+  const updateInput = (desiredValue: number, allowInvalidValues = false) => {
     const error = validateInput(desiredValue, min, max);
     let newValue = desiredValue;
 
     switch (true) {
-      case !allowInvalidValues && newValue < min:
-        newValue = min;
+      case !allowInvalidValues && min && newValue < min:
+        newValue = min!;
         break;
-      case !allowInvalidValues && newValue > max:
-        newValue = max;
+      case !allowInvalidValues && max && newValue > max:
+        newValue = max!;
         break;
     }
 
@@ -161,18 +174,18 @@ const NumberPicker = ({
   };
 
   const increment = () => {
-    const desiredValue = currValue + stepSize;
+    const desiredValue = currValue + stepSize!;
 
     updateInput(desiredValue);
   };
 
   const decrement = () => {
-    const desiredValue = currValue - stepSize;
+    const desiredValue = currValue - stepSize!;
 
     updateInput(desiredValue);
   };
 
-  const handleFocus = (event) => {
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     event.target.select();
   };
 
@@ -190,7 +203,7 @@ const NumberPicker = ({
       <Control>
         {!readOnly && (
           <DecrementButton
-            className={currValue === min && 'disabled'}
+            className={currValue === min ? 'disabled' : undefined}
             onClick={decrement}
             aria-label='Decrement'
             role='button'
@@ -211,7 +224,7 @@ const NumberPicker = ({
 
         {!readOnly && (
           <IncrementButton
-            className={currValue === max && 'disabled'}
+            className={currValue === max ? 'disabled' : undefined}
             onClick={increment}
             aria-label='Increment'
             role='button'
@@ -227,15 +240,22 @@ const NumberPicker = ({
 
 NumberPicker.propTypes = {
   label: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.number,
   stepSize: PropTypes.number,
-  min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  max: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  min: PropTypes.number,
+  max: PropTypes.number,
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   theme: PropTypes.string,
   className: PropTypes.string,
   title: PropTypes.string,
+};
+
+NumberPicker.defaultProps = {
+  value: 0,
+  stepSize: 1,
+  min: 0,
+  max: 999,
 };
 
 export default NumberPicker;
