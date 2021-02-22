@@ -57,7 +57,6 @@ const Wrapper = styled.div`
 const Control = styled.div`
   width: 160px;
   text-align: center;
-  border-radius: 4px;
   position: relative;
 `;
 
@@ -66,7 +65,7 @@ const IncrementDecrementButtonCSS = css`
   top: 1px;
   width: 35px;
   height: calc(100% - 2px);
-  background-color: #3b5f7b;
+  background-color: ${({ theme }) => theme.global.colors.border.dark};
   user-select: none;
   z-index: 1;
   display: flex;
@@ -74,19 +73,32 @@ const IncrementDecrementButtonCSS = css`
   align-items: center;
 
   &:hover {
-    background-color: #486d8a;
+    background-color: ${({ theme }) =>
+      theme.global.colors['background-front'].dark};
   }
 
   &:active {
-    background-color: #3b5f7b;
-    color: #aaa;
+    opacity: 0.4;
   }
 
   &.disabled,
   &.disabled:hover,
   &.disabled:active {
-    background-color: #567;
-    color: #eee;
+    color: ${({ theme }) => theme.global.colors.text.dark};
+    cursor: default;
+    opacity: 0.7;
+
+    ::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: ${({ theme }) =>
+        theme.global.colors['status-disabled']};
+      opacity: 0.5;
+    }
   }
 `;
 
@@ -213,7 +225,7 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
         )}
 
         <StyledTextInput
-          disabled={readOnly}
+          readOnly={readOnly}
           onChange={(e) => updateInput(e.target.valueAsNumber, true)}
           onFocus={handleFocus}
           step={stepSize}
