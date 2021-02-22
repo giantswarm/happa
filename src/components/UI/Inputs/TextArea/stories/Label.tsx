@@ -20,6 +20,7 @@ export const Label: Story<ComponentPropsWithoutRef<typeof TextArea>> = (
 Label.args = {
   value: 'The quick brown fox jumps over the lazy dog',
   label: 'A helpful area of text',
+  id: 'some-text',
 };
 
 Label.argTypes = {
