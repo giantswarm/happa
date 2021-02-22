@@ -11,40 +11,22 @@ import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 import TextInput from '../TextInput';
 
 function validateInput(desiredValue, min, max) {
-  if (desiredValue === '') {
-    return {
-      value: null,
-      validationError: 'Field must not be empty',
-    };
-  } else if (max && desiredValue > max) {
-    return {
-      value: parseInt(desiredValue),
-      validationError: `Value must not be larger than ${max}`,
-    };
-  } else if (min && desiredValue < min) {
-    return {
-      value: parseInt(desiredValue),
-      validationError: `Value must not be smaller than ${min}`,
-    };
-  } else if (!isWholeNumber(parseFloat(desiredValue))) {
-    return {
-      value: parseInt(desiredValue),
-      validationError: 'Value must be a whole number',
-    };
+  switch (true) {
+    case desiredValue === '':
+      return 'Field must not be empty';
+    case max && desiredValue > max:
+      return `Value must not be larger than ${max}`;
+    case min && desiredValue < min:
+      return `Value must not be smaller than ${min}`;
+    case !isWholeNumber(desiredValue):
+      return 'Value must be a whole number';
+    default:
+      return '';
   }
-
-  return {
-    value: parseInt(desiredValue),
-    validationError: '',
-  };
 }
 
 function isWholeNumber(value) {
-  if (typeof value === 'number' && value % 1 === 0) {
-    return true;
-  }
-
-  return false;
+  return value % 1 === 0;
 }
 
 const Label = styled.div``;
@@ -139,61 +121,57 @@ const NumberPicker = ({
   readOnly,
   eventNameSuffix,
   onChange,
-  value: startValue,
+  value,
   stepSize,
   title,
 }) => {
-  const [inputValue, setInputValue] = useState(startValue);
-  const [value, setValue] = useState(startValue);
+  const [currValue, setCurrValue] = useState(value);
   const [validationError, setValidationError] = useState('');
+
+  const inputValue = Number.isNaN(currValue) ? '' : currValue;
 
   const prevMin = usePrevious(min);
   const prevMax = usePrevious(max);
 
   const updateValue = useCallback(
-    (newValue, valid = false, error = '') => {
-      setInputValue(newValue);
-      setValue(newValue);
+    (newValue, error = '') => {
+      setCurrValue(newValue);
       setValidationError(error);
+
+      const isValid = error.length < 1;
 
       onChange?.({
         value: newValue,
-        valid: valid,
+        valid: isValid,
       });
     },
     [onChange]
   );
 
   const updateInput = (desiredValue, allowInvalidValues = false) => {
-    const result = validateInput(desiredValue, min, max);
+    const error = validateInput(desiredValue, min, max);
+    let newValue = desiredValue;
 
-    // Ensure values are never above max or below min. They can be null.
     switch (true) {
-      case result.value === null:
-        result.value = '';
+      case !allowInvalidValues && newValue < min:
+        newValue = min;
         break;
-      case !allowInvalidValues && result.value < min:
-        result.value = min;
-        break;
-      case !allowInvalidValues && result.value > max:
-        result.value = max;
+      case !allowInvalidValues && newValue > max:
+        newValue = max;
         break;
     }
 
-    const valid =
-      result.validationError.length < 1 || (min <= 0 && result.value === 0);
-
-    updateValue(result.value, valid, result.validationError);
+    updateValue(newValue, error);
   };
 
   const increment = () => {
-    const desiredValue = value + stepSize;
+    const desiredValue = currValue + stepSize;
 
     updateInput(desiredValue);
   };
 
   const decrement = () => {
-    const desiredValue = value - stepSize;
+    const desiredValue = currValue - stepSize;
 
     updateInput(desiredValue);
   };
@@ -204,11 +182,10 @@ const NumberPicker = ({
 
   useEffect(() => {
     if (prevMax !== max || prevMin !== min) {
-      const result = validateInput(value, min, max);
-      const valid = result.validationError.length < 1;
-      updateValue(result.value, valid, result.validationError);
+      const error = validateInput(currValue, min, max);
+      updateValue(currValue, error);
     }
-  }, [min, max, prevMin, prevMax, value, updateValue]);
+  }, [min, max, prevMin, prevMax, currValue, updateValue]);
 
   return (
     <Wrapper className={`${className ?? ''} ${theme ?? ''}`}>
@@ -220,7 +197,7 @@ const NumberPicker = ({
             name={mergeActionNames(RUMActions.DecrementNumber, eventNameSuffix)}
           >
             <DecrementButton
-              className={inputValue === min && 'disabled'}
+              className={currValue === min && 'disabled'}
               onClick={decrement}
               aria-label='Decrement'
               role='button'
@@ -232,11 +209,11 @@ const NumberPicker = ({
 
         <StyledTextInput
           disabled={readOnly}
-          onChange={(e) => updateInput(e.target.value, true)}
+          onChange={(e) => updateInput(e.target.valueAsNumber, true)}
           onFocus={handleFocus}
           step={stepSize}
           type='number'
-          value={readOnly ? value : inputValue}
+          value={inputValue}
           title={title}
         />
 
@@ -245,7 +222,7 @@ const NumberPicker = ({
             name={mergeActionNames(RUMActions.IncrementNumber, eventNameSuffix)}
           >
             <IncrementButton
-              className={value === max && 'disabled'}
+              className={currValue === max && 'disabled'}
               onClick={increment}
               aria-label='Increment'
               role='button'
