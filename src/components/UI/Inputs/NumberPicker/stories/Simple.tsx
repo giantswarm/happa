@@ -11,6 +11,7 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof NumberPicker>> = (
 
 Simple.args = {
   value: 3,
+  id: 'money',
   label: 'Count your money',
   info: 'Aha! Did not know that',
   help: 'A very helpful message',

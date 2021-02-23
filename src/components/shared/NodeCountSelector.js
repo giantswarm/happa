@@ -60,6 +60,7 @@ class NodeCountSelector extends React.Component {
           <TwoInputArea>
             <InnerTwoInputArea>
               <NumberPicker
+                id='minimum'
                 label={label?.min ?? 'Minimum'}
                 max={scaling.max}
                 min={minValue}
@@ -67,7 +68,6 @@ class NodeCountSelector extends React.Component {
                 readOnly={readOnly}
                 step={DEFAULT_VALUE_CONSTRAINTS.step}
                 value={scaling.min}
-                title='Minimum'
                 contentProps={{
                   width: 'small',
                 }}
@@ -75,6 +75,7 @@ class NodeCountSelector extends React.Component {
             </InnerTwoInputArea>
             <InnerTwoInputArea>
               <NumberPicker
+                id='maximum'
                 label={label?.max ?? 'Maximum'}
                 max={maxValue}
                 min={scaling.min}
@@ -82,7 +83,6 @@ class NodeCountSelector extends React.Component {
                 readOnly={readOnly}
                 step={DEFAULT_VALUE_CONSTRAINTS.step}
                 value={scaling.max}
-                title='Maximum'
                 contentProps={{
                   width: 'small',
                 }}
@@ -107,6 +107,7 @@ class NodeCountSelector extends React.Component {
           readOnly={readOnly}
           step={DEFAULT_VALUE_CONSTRAINTS.step}
           value={scaling.min}
+          id='count'
           title='Count'
           contentProps={{
             width: 'small',

@@ -35,6 +35,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
     </AdditionalInputHint>
     <Box direction='column' gap='xsmall' margin={{ top: 'small' }}>
       <NumberPicker
+        id='cpu-cores'
         label='CPU Cores'
         min={2}
         max={999}
@@ -45,6 +46,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
         }}
       />
       <NumberPicker
+        id='memory'
         label='Memory (GB)'
         min={3}
         max={999}
@@ -55,6 +57,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
         }}
       />
       <NumberPicker
+        id='storage'
         label='Storage (GB)'
         min={10}
         max={999}
