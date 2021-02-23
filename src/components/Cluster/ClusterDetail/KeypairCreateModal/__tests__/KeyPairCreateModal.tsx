@@ -1,6 +1,5 @@
 import { fireEvent, render, RenderResult } from '@testing-library/react';
 import KeyPairCreateModal from 'Cluster/ClusterDetail/KeypairCreateModal/KeyPairCreateModal';
-import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Providers, StatusCodes } from 'shared/constants';
@@ -10,8 +9,6 @@ import {
   v4AzureClusterResponse,
 } from 'testUtils/mockHttpCalls';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
-
-jest.mock('lib/hooks/useCopyToClipboard');
 
 const mockUser = {
   email: USER_EMAIL,
@@ -197,17 +194,9 @@ describe('KeyPairCreateModal', () => {
     jest.useFakeTimers();
 
     window.URL.createObjectURL = jest.fn();
-    const setClipboardContentMockFn = jest.fn();
-    // @ts-ignore
-    useCopyToClipboard.mockReturnValueOnce([false, setClipboardContentMockFn]);
     mockActions.clusterCreateKeyPair.mockResolvedValueOnce({});
 
-    const {
-      getByText,
-      getByLabelText,
-      findByText,
-      getByTitle,
-    } = renderComponent();
+    const { getByText, getByLabelText, findByText } = renderComponent();
 
     const openButton = getByText(/create key pair and kubeconfig/i);
     fireEvent.click(openButton);
@@ -236,22 +225,5 @@ describe('KeyPairCreateModal', () => {
 
     expect(mockActions.clusterCreateKeyPair).toHaveBeenCalled();
     expect(mockActions.clusterLoadKeyPairs).toHaveBeenCalled();
-
-    const kubeconfigContent = getByTitle(/kubeconfig/i).textContent;
-    const copyButton = getByText(/^copy$/i);
-    fireEvent.click(copyButton);
-    expect(setClipboardContentMockFn).toHaveBeenCalledWith(kubeconfigContent);
-    // @ts-ignore
-    useCopyToClipboard.mockReturnValueOnce([true, setClipboardContentMockFn]);
-
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    const copiedSuccessLabel = getByTitle(/content copied to clipboard/i);
-    expect(copiedSuccessLabel).toBeInTheDocument();
-
-    // @ts-ignore
-    useCopyToClipboard.mockClear();
   });
 });
