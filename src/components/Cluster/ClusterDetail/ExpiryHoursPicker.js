@@ -1,20 +1,33 @@
 import add from 'date-fns/fp/add';
 import differenceInHours from 'date-fns/fp/differenceInHours';
+import format from 'date-fns/fp/format';
 import startOfDay from 'date-fns/fp/startOfDay';
+import toDate from 'date-fns-tz/toDate';
 import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import DatePicker from 'react-datepicker';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/Display/FlashMessage';
+import DateInput from 'UI/Inputs/DateInput';
 import RadioInput from 'UI/Inputs/RadioInput';
 import TextInput from 'UI/Inputs/TextInput';
 
 const List = styled.ul`
   & > li + li {
     margin-top: 25px;
+  }
+
+  .date-input-button {
+    background: ${({ theme }) => theme.global.colors['input-background']};
+    border-width: 0;
+    padding: 9px;
+
+    :hover {
+      box-shadow: none;
+      background: ${({ theme }) => theme.global.colors.border.dark};
+    }
   }
 `;
 
@@ -54,7 +67,9 @@ class ExpiryHoursPicker extends React.Component {
     };
   }
 
-  handleDateChange(date) {
+  handleDateChange = ({ value }) => {
+    const date = toDate(value, { timeZone: 'UTC' });
+
     this.setState(
       {
         expireDate: date,
@@ -64,7 +79,7 @@ class ExpiryHoursPicker extends React.Component {
         this.updateTTL();
       }
     );
-  }
+  };
 
   handleYearChange(event) {
     const value = parseInt(event.target.value) || 0;
@@ -177,12 +192,16 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   render() {
-    const { error } = this.state;
+    const { error, expireDate } = this.state;
     const hasError = error !== '';
 
     const now = new Date();
-    const maxDate = add({ years: 30 })(now);
-    const minDate = add({ day: 1 })(now);
+    const maxDate = add({ years: 30 })(now).toISOString();
+    const minDate = add({ day: 1 })(now).toISOString();
+
+    const dateInputLabel = expireDate
+      ? format('d MMM yyyy')(expireDate)
+      : 'Please pick a date';
 
     return (
       <List className='expiry-hours-picker'>
@@ -256,16 +275,17 @@ class ExpiryHoursPicker extends React.Component {
               value='date'
               label='Date'
             />
-            <DatePicker
-              dateFormat='yyyy-MM-dd'
-              dropdownMode='select'
-              maxDate={maxDate}
-              minDate={minDate}
-              onChange={this.handleDateChange.bind(this)}
-              selected={this.state.expireDate}
-              showMonthDropdown={true}
-              showYearDropdown={true}
-              customInput={<TextInput />}
+            <DateInput
+              id='date-input'
+              buttonProps={{
+                label: dateInputLabel,
+                className: 'date-input-button',
+              }}
+              calendarProps={{
+                bounds: [minDate, maxDate],
+              }}
+              onChange={this.handleDateChange}
+              value={expireDate.toISOString()}
             />
           </Box>
         </li>

@@ -1,0 +1,368 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DateInput renders a button that triggers the calendar 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <button
+          aria-label="Open Drop"
+          class="StyledButton-sc-323bzc-0 jSlMi"
+          id="dob"
+          type="button"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 iQEJEP"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 kwNjsF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+            <div
+              class="StyledBox__StyledBoxGap-sc-13pk1d4-1 ffPhlW"
+            />
+            Pick a date and call me Jim
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DateInput renders a disabled input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="dob"
+      >
+        Date of birth
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 fwONFA FormField__FormFieldContentBox-m9hood-1"
+      >
+        <div
+          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 dOerlP"
+        >
+          <div
+            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 bRMHJR"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 NXPdR"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            autocomplete="off"
+            class="StyledMaskedInput-sc-99vkfa-0 fOqbMj"
+            disabled=""
+            id="dob"
+            placeholder="yyyy-mm-dd"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DateInput renders a simple input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <div
+          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 dOerlP"
+        >
+          <div
+            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 bRMHJR"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 kwNjsF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            autocomplete="off"
+            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            placeholder="yyyy-mm-dd"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DateInput renders an input with a help message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="dob"
+      >
+        Date of birth
+      </label>
+      <span
+        class="StyledText-sc-1sadyjn-0 erMGdB"
+      >
+        This is a very cool input
+      </span>
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <div
+          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 dOerlP"
+        >
+          <div
+            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 bRMHJR"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 kwNjsF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            autocomplete="off"
+            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            id="dob"
+            placeholder="yyyy-mm-dd"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DateInput renders an input with a label 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="dob"
+      >
+        Date of birth
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <div
+          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 dOerlP"
+        >
+          <div
+            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 bRMHJR"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 kwNjsF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            autocomplete="off"
+            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            id="dob"
+            placeholder="yyyy-mm-dd"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DateInput renders an input with a validation error 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="dob"
+      >
+        Date of birth
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 dfycIj FormField__FormFieldContentBox-m9hood-1"
+      >
+        <div
+          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 dOerlP"
+        >
+          <div
+            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 bRMHJR"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 kwNjsF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            autocomplete="off"
+            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            id="dob"
+            placeholder="yyyy-mm-dd"
+            value=""
+          />
+        </div>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 dxYrxD"
+      >
+        You failed at this
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DateInput renders an input with an info message 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+        for="dob"
+      >
+        Date of birth
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 drdhXT FormField__FormFieldContentBox-m9hood-1"
+      >
+        <div
+          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 dOerlP"
+        >
+          <div
+            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 bRMHJR"
+          >
+            <svg
+              aria-label="Calendar"
+              class="StyledIcon-ofa7kd-0 kwNjsF"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2,5 L22,5 L22,22 L2,22 L2,5 Z M18,5 L18,1 M6,5 L6,1 M2,10 L22,10"
+                fill="none"
+                stroke="#000"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <input
+            autocomplete="off"
+            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            id="dob"
+            placeholder="yyyy-mm-dd"
+            value=""
+          />
+        </div>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 fmFxNm"
+      >
+        You can set a cool value
+      </span>
+    </div>
+  </div>
+</div>
+`;
