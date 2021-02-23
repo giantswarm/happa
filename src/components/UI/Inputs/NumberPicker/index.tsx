@@ -125,7 +125,7 @@ interface INumberPickerProps
  * straight into the input field.
  */
 const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
-  ({ value, min, max, step, readOnly, onChange, ...props }, ref) => {
+  ({ value, min, max, step, readOnly, disabled, onChange, ...props }, ref) => {
     const [currValue, setCurrValue] = useState<number>(value!);
     const [validationError, setValidationError] = useState('');
 
@@ -133,6 +133,8 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
 
     const prevMin = usePrevious(min);
     const prevMax = usePrevious(max);
+
+    const editable = !readOnly && !disabled;
 
     const updateValue = useCallback(
       (newValue: number, error = '') => {
@@ -196,6 +198,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
       <ThemeContext.Extend value={customTheme}>
         <StyledTextInput
           readOnly={readOnly}
+          disabled={disabled}
           onChange={(e) => updateInput(e.target.valueAsNumber, true)}
           onFocus={handleFocus}
           step={step}
@@ -205,7 +208,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
           {...props}
           ref={ref}
         >
-          {!readOnly && (
+          {editable && (
             <Controls>
               <IncrementDecrementButton
                 className={currValue === min ? 'disabled' : undefined}
@@ -239,6 +242,7 @@ NumberPicker.propTypes = {
   max: PropTypes.number,
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
+  disabled: PropTypes.bool,
   className: PropTypes.string,
   title: PropTypes.string,
 };
@@ -246,8 +250,6 @@ NumberPicker.propTypes = {
 NumberPicker.defaultProps = {
   value: 0,
   step: 1,
-  min: 0,
-  max: 999,
 };
 
 export default NumberPicker;

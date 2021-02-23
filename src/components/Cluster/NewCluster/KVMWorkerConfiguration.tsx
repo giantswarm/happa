@@ -37,6 +37,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       <NumberPicker
         label='CPU Cores'
         min={2}
+        max={999}
         onChange={onUpdateCPUCores}
         value={cpuCores}
         contentProps={{
@@ -46,6 +47,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       <NumberPicker
         label='Memory (GB)'
         min={3}
+        max={999}
         onChange={onUpdateMemorySize}
         value={memorySize}
         contentProps={{
@@ -55,6 +57,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       <NumberPicker
         label='Storage (GB)'
         min={10}
+        max={999}
         onChange={onUpdateDiskSize}
         step={10}
         value={diskSize}
