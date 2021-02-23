@@ -1,6 +1,6 @@
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
-import styled from 'styled-components';
 import { AdditionalInputHint } from 'UI/Display/Cluster/ClusterCreation/StyledInput';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 
@@ -18,11 +18,6 @@ interface IKVMWorkerConfiguration {
   onUpdateMemorySize(args: INumberPickerOnChangePayload): void;
 }
 
-const KVMNumberPicker = styled(NumberPicker)`
-  display: block;
-  margin-bottom: ${({ theme }) => theme.spacingPx * 6}px;
-`;
-
 const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
   cpuCores,
   diskSize,
@@ -38,25 +33,36 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       node, so please make sure to have twice the specified size available as
       disk space.
     </AdditionalInputHint>
-    <KVMNumberPicker
-      label='CPU Cores'
-      min={2}
-      onChange={onUpdateCPUCores}
-      value={cpuCores}
-    />
-    <KVMNumberPicker
-      label='Memory (GB)'
-      min={3}
-      onChange={onUpdateMemorySize}
-      value={memorySize}
-    />
-    <KVMNumberPicker
-      label='Storage (GB)'
-      min={10}
-      onChange={onUpdateDiskSize}
-      step={10}
-      value={diskSize}
-    />
+    <Box direction='column' gap='xsmall' margin={{ top: 'small' }}>
+      <NumberPicker
+        label='CPU Cores'
+        min={2}
+        onChange={onUpdateCPUCores}
+        value={cpuCores}
+        contentProps={{
+          width: 'small',
+        }}
+      />
+      <NumberPicker
+        label='Memory (GB)'
+        min={3}
+        onChange={onUpdateMemorySize}
+        value={memorySize}
+        contentProps={{
+          width: 'small',
+        }}
+      />
+      <NumberPicker
+        label='Storage (GB)'
+        min={10}
+        onChange={onUpdateDiskSize}
+        step={10}
+        value={diskSize}
+        contentProps={{
+          width: 'small',
+        }}
+      />
+    </Box>
   </>
 );
 
