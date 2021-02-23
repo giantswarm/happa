@@ -1,7 +1,12 @@
 import { generate, ThemeType } from 'grommet';
 import { deepMerge } from 'grommet/utils';
 import { CSSBreakpoints } from 'shared/constants';
-import { css } from 'styled-components';
+import { css, DefaultTheme } from 'styled-components';
+
+interface ICalendarDayProps {
+  theme: DefaultTheme;
+  isSelected: boolean;
+}
 
 /* eslint-disable no-magic-numbers */
 
@@ -301,12 +306,22 @@ const theme = deepMerge(generate(16), {
     medium: {
       fontSize: '15px',
       lineHeight: 1.45,
-      daySize: '45.71px',
+      daySize: '36px',
     },
     large: {
       fontSize: '25px',
       lineHeight: 1.11,
       daySize: '91.43px',
+    },
+    heading: {
+      level: '5',
+    },
+    day: {
+      extend: () => css`
+        border-radius: 100%;
+        background-color: ${(props: ICalendarDayProps) =>
+          props.isSelected && props.theme.global.colors['text-xweak'].dark};
+      `,
     },
   },
   textArea: {
