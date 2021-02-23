@@ -31,7 +31,7 @@ describe('NodeCountSelector', () => {
     });
     const input = getByTestId(labelTestID).querySelector('input');
 
-    expect(input.disabled).toBe(true);
+    expect(input.readOnly).toBeTruthy();
   });
 
   it('shows disabled inputs in read-only mode, with autoscale on', () => {
@@ -43,9 +43,9 @@ describe('NodeCountSelector', () => {
       label.querySelector('input')
     );
 
-    const areAllInputsDisabled = inputs.every((input) => input.disabled);
+    const areAllInputsReadOnly = inputs.every((input) => input.readOnly);
 
-    expect(areAllInputsDisabled).toBe(true);
+    expect(areAllInputsReadOnly).toBeTruthy();
   });
 
   it('respects value constraints, with autoscale off', () => {
