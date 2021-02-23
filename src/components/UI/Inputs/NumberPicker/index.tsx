@@ -122,7 +122,6 @@ interface INumberPickerProps {
   max?: number;
   label?: string;
   className?: string;
-  theme?: string;
   readOnly?: boolean;
   onChange?: (patch: { value: number; valid: boolean }) => void;
   stepSize?: number;
@@ -139,7 +138,6 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
   max,
   label,
   className,
-  theme,
   readOnly,
   onChange,
   value,
@@ -209,7 +207,7 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
   }, [min, max, prevMin, prevMax, currValue, updateValue]);
 
   return (
-    <Wrapper className={`${className ?? ''} ${theme ?? ''}`}>
+    <Wrapper className={className}>
       {label && <Label>{label}</Label>}
 
       <Control>
@@ -258,7 +256,6 @@ NumberPicker.propTypes = {
   max: PropTypes.number,
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
-  theme: PropTypes.string,
   className: PropTypes.string,
   title: PropTypes.string,
 };

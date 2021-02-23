@@ -18,10 +18,10 @@ const SpotValuesLabelText = styled.span`
 
 const SpotValuesNumberPickerWrapper = styled.div`
   margin-bottom: 8px;
+`;
 
-  .spot-number-picker {
-    margin-right: 8px;
-  }
+const StyledNumberPicker = styled(NumberPicker)`
+  margin-right: 8px;
 `;
 
 const SpotValuesHelpText = styled.p`
@@ -66,14 +66,13 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
         <ClusterCreationLabelSpan>Spot instances</ClusterCreationLabelSpan>
         <SpotValuesNumberPickerWrapper>
           <SpotValuesLabelText>Spot instance percentage</SpotValuesLabelText>
-          <NumberPicker
+          <StyledNumberPicker
             readOnly={false}
             max={100}
             min={0}
             stepSize={10}
             value={spotPercentage}
             onChange={setSpotPercentage}
-            theme='spot-number-picker'
           />
           <SpotValuesLabelText>percent</SpotValuesLabelText>
         </SpotValuesNumberPickerWrapper>
@@ -83,14 +82,13 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
         </SpotValuesHelpText>
         <SpotValuesNumberPickerWrapper>
           <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
-          <NumberPicker
+          <StyledNumberPicker
             readOnly={false}
             min={0}
             max={32767}
             stepSize={1}
             value={onDemandBaseCapacity}
             onChange={setOnDemandBaseCapacity}
-            theme='spot-number-picker'
           />
           <SpotValuesLabelText>instances</SpotValuesLabelText>
         </SpotValuesNumberPickerWrapper>
