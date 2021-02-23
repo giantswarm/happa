@@ -1,0 +1,64 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import Well from '../Well';
+import Aside from '../Aside';
+import DetailList from '../DetailList';
+import Section from '../Section';
+
+<Meta title="Layout/Layout" />
+
+# Layout
+
+TODO: Add examples for `FlexDivs` and `TwoInputArea`.
+
+## Aside
+
+<Preview>
+  <Story name="Aside">
+    <p>A paragraph of text before.</p>
+    <Aside>
+        <p>Here is some content inside an aside.</p>
+    </Aside>
+    <p>A paragraph of text below.</p>
+   </Story>
+</Preview>
+
+## DetailList
+
+<Preview>
+  <Story name="DetailList">
+    <DetailList title="Title of the list">
+        <p>Here is a first paragraph.</p>
+        <p>Then comes another paragraph.</p>
+    </DetailList>
+   </Story>
+</Preview>
+
+## Section
+
+<Preview>
+  <Story name="Section">
+    <Section title="The section title">
+        <p>This is a paragraph of text inside our section. It should appear next to the section title.</p>
+    </Section>
+  </Story>
+</Preview>
+
+<Preview>
+   <Story name="Section (flat)">
+    <Section title="The section title" flat>
+        <p>This is a paragraph of text inside our section. It should appear beneath the section title.</p>
+    </Section>
+   </Story>
+</Preview>
+
+## Well
+
+<Preview>
+  <Story name="Well">
+    <p>A paragraph of text before.</p>
+    <Well>
+        <p>Here is a paragraph of text inside a well.</p>
+    </Well>
+    <p>A paragraph of text below.</p>
+   </Story>
+</Preview>
