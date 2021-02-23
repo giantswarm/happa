@@ -70,7 +70,7 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
             readOnly={false}
             max={100}
             min={0}
-            stepSize={10}
+            step={10}
             value={spotPercentage}
             onChange={setSpotPercentage}
           />
@@ -86,7 +86,7 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
             readOnly={false}
             min={0}
             max={32767}
-            stepSize={1}
+            step={1}
             value={onDemandBaseCapacity}
             onChange={setOnDemandBaseCapacity}
           />

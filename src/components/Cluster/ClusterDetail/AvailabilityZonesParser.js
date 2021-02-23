@@ -97,7 +97,7 @@ export default function AvailabilityZonesParser({
       min={min}
       onChange={updateAZPicker}
       readOnly={false}
-      stepSize={1}
+      step={1}
       value={AZPicker.value}
     />
   );

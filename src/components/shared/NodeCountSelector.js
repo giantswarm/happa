@@ -7,7 +7,7 @@ import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 0,
   max: 999,
-  stepSize: 1,
+  step: 1,
 };
 
 const SpanWrapper = styled.span`
@@ -75,7 +75,7 @@ class NodeCountSelector extends React.Component {
                   min={minValue}
                   onChange={this.updateScalingMin}
                   readOnly={readOnly}
-                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                  step={DEFAULT_VALUE_CONSTRAINTS.step}
                   value={scaling.min}
                   title='Minimum'
                 />
@@ -92,7 +92,7 @@ class NodeCountSelector extends React.Component {
                   min={scaling.min}
                   onChange={this.updateScalingMax}
                   readOnly={readOnly}
-                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                  step={DEFAULT_VALUE_CONSTRAINTS.step}
                   value={scaling.max}
                   title='Maximum'
                 />
@@ -117,7 +117,7 @@ class NodeCountSelector extends React.Component {
             max={maxValue}
             onChange={this.updateNodeCount}
             readOnly={readOnly}
-            stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+            step={DEFAULT_VALUE_CONSTRAINTS.step}
             value={scaling.min}
             title='Count'
           />

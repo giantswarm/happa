@@ -124,7 +124,7 @@ interface INumberPickerProps {
   className?: string;
   readOnly?: boolean;
   onChange?: (patch: { value: number; valid: boolean }) => void;
-  stepSize?: number;
+  step?: number;
   title?: string;
 }
 
@@ -141,7 +141,7 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
   readOnly,
   onChange,
   value,
-  stepSize,
+  step,
   title,
 }) => {
   const [currValue, setCurrValue] = useState<number>(value!);
@@ -184,13 +184,13 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
   };
 
   const increment = () => {
-    const desiredValue = currValue + stepSize!;
+    const desiredValue = currValue + step!;
 
     updateInput(desiredValue);
   };
 
   const decrement = () => {
-    const desiredValue = currValue - stepSize!;
+    const desiredValue = currValue - step!;
 
     updateInput(desiredValue);
   };
@@ -226,7 +226,7 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
           readOnly={readOnly}
           onChange={(e) => updateInput(e.target.valueAsNumber, true)}
           onFocus={handleFocus}
-          step={stepSize}
+          step={step}
           type='number'
           value={inputValue}
           title={title}
@@ -251,7 +251,7 @@ const NumberPicker: React.FC<INumberPickerProps> = ({
 NumberPicker.propTypes = {
   label: PropTypes.string,
   value: PropTypes.number,
-  stepSize: PropTypes.number,
+  step: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
   onChange: PropTypes.func,
@@ -262,7 +262,7 @@ NumberPicker.propTypes = {
 
 NumberPicker.defaultProps = {
   value: 0,
-  stepSize: 1,
+  step: 1,
   min: 0,
   max: 999,
 };

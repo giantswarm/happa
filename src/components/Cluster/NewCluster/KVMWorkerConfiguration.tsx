@@ -43,7 +43,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       max={999}
       min={2}
       onChange={onUpdateCPUCores}
-      stepSize={1}
+      step={1}
       value={cpuCores}
     />
     <KVMNumberPicker
@@ -51,7 +51,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       max={999}
       min={3}
       onChange={onUpdateMemorySize}
-      stepSize={1}
+      step={1}
       value={memorySize}
     />
     <KVMNumberPicker
@@ -59,7 +59,7 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
       max={999}
       min={10}
       onChange={onUpdateDiskSize}
-      stepSize={10}
+      step={10}
       value={diskSize}
     />
   </>
