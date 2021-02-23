@@ -58,6 +58,7 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
       name,
       margin,
       pad,
+      children,
       ...props
     },
     ref
@@ -91,6 +92,7 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
           required={required}
           name={name}
         />
+        {children}
       </FormField>
     );
   }
@@ -109,6 +111,7 @@ TextInput.propTypes = {
   name: PropTypes.string,
   margin: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   pad: PropTypes.bool,
+  children: PropTypes.node,
 };
 
 TextInput.defaultProps = {

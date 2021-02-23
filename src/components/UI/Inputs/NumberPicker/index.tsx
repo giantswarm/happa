@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { css } from 'styled-components';
 import styled from 'styled-components';
-import ValidationErrorMessage from 'UI/Inputs/ValidationErrorMessage';
 
 import TextInput from '../TextInput';
 
@@ -26,12 +25,8 @@ function isWholeNumber(value: number) {
   return value % 1 === 0;
 }
 
-const Label = styled.div``;
-
 const StyledTextInput = styled(TextInput)`
   text-align: center;
-  width: 100%;
-  height: 100%;
   outline: none;
   appearance: textfield;
   --moz-appearance: textfield;
@@ -48,29 +43,29 @@ const StyledTextInput = styled(TextInput)`
   }
 `;
 
-const Wrapper = styled.div`
-  display: inline-block;
-  margin-top: 4px;
-  margin-bottom: 10px;
-`;
-
-const Control = styled.div`
-  width: 160px;
-  text-align: center;
-  position: relative;
+const Controls = styled.div`
+  position: absolute;
+  top: 1px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 2px);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 1;
 `;
 
 const IncrementDecrementButtonCSS = css`
-  position: absolute;
-  top: 1px;
+  position: relative;
   width: 35px;
-  height: calc(100% - 2px);
+  height: 100%;
   background-color: ${({ theme }) => theme.global.colors.border.dark};
   user-select: none;
-  z-index: 1;
+
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: all;
 
   &:hover {
     background-color: ${({ theme }) =>
@@ -116,16 +111,13 @@ const DecrementButton = styled.div`
   border-bottom-left-radius: 4px;
 `;
 
-interface INumberPickerProps {
+interface INumberPickerProps
+  extends Omit<React.ComponentPropsWithoutRef<typeof TextInput>, 'onChange'> {
   value?: number;
   min?: number;
   max?: number;
-  label?: string;
-  className?: string;
-  readOnly?: boolean;
-  onChange?: (patch: { value: number; valid: boolean }) => void;
   step?: number;
-  title?: string;
+  onChange?: (patch: { value: number; valid: boolean }) => void;
 }
 
 /**
@@ -133,120 +125,110 @@ interface INumberPickerProps {
  * incrementing / decrementing a value or typing it
  * straight into the input field.
  */
-const NumberPicker: React.FC<INumberPickerProps> = ({
-  min,
-  max,
-  label,
-  className,
-  readOnly,
-  onChange,
-  value,
-  step,
-  title,
-}) => {
-  const [currValue, setCurrValue] = useState<number>(value!);
-  const [validationError, setValidationError] = useState('');
+const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
+  ({ value, min, max, step, readOnly, onChange, ...props }, ref) => {
+    const [currValue, setCurrValue] = useState<number>(value!);
+    const [validationError, setValidationError] = useState('');
 
-  const inputValue = Number.isNaN(currValue) ? '' : currValue;
+    const inputValue = Number.isNaN(currValue) ? '' : currValue;
 
-  const prevMin = usePrevious(min);
-  const prevMax = usePrevious(max);
+    const prevMin = usePrevious(min);
+    const prevMax = usePrevious(max);
 
-  const updateValue = useCallback(
-    (newValue: number, error = '') => {
-      setCurrValue(newValue);
-      setValidationError(error);
+    const updateValue = useCallback(
+      (newValue: number, error = '') => {
+        setCurrValue(newValue);
+        setValidationError(error);
 
-      const isValid = error.length < 1;
+        const isValid = error.length < 1;
 
-      onChange?.({
-        value: newValue,
-        valid: isValid,
-      });
-    },
-    [onChange]
-  );
+        onChange?.({
+          value: newValue,
+          valid: isValid,
+        });
+      },
+      [onChange]
+    );
 
-  const updateInput = (desiredValue: number, allowInvalidValues = false) => {
-    const error = validateInput(desiredValue, min, max);
-    let newValue = desiredValue;
+    const updateInput = (desiredValue: number, allowInvalidValues = false) => {
+      const error = validateInput(desiredValue, min, max);
+      let newValue = desiredValue;
 
-    switch (true) {
-      case !allowInvalidValues && typeof min !== 'undefined' && newValue < min:
-        newValue = min!;
-        break;
-      case !allowInvalidValues && typeof max !== 'undefined' && newValue > max:
-        newValue = max!;
-        break;
-    }
+      switch (true) {
+        case !allowInvalidValues &&
+          typeof min !== 'undefined' &&
+          newValue < min:
+          newValue = min!;
+          break;
+        case !allowInvalidValues &&
+          typeof max !== 'undefined' &&
+          newValue > max:
+          newValue = max!;
+          break;
+      }
 
-    updateValue(newValue, error);
-  };
+      updateValue(newValue, error);
+    };
 
-  const increment = () => {
-    const desiredValue = currValue + step!;
+    const increment = () => {
+      const desiredValue = currValue + step!;
 
-    updateInput(desiredValue);
-  };
+      updateInput(desiredValue);
+    };
 
-  const decrement = () => {
-    const desiredValue = currValue - step!;
+    const decrement = () => {
+      const desiredValue = currValue - step!;
 
-    updateInput(desiredValue);
-  };
+      updateInput(desiredValue);
+    };
 
-  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    event.target.select();
-  };
+    const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+      event.target.select();
+    };
 
-  useEffect(() => {
-    if (prevMax !== max || prevMin !== min) {
-      const error = validateInput(currValue, min, max);
-      updateValue(currValue, error);
-    }
-  }, [min, max, prevMin, prevMax, currValue, updateValue]);
+    useEffect(() => {
+      if (prevMax !== max || prevMin !== min) {
+        const error = validateInput(currValue, min, max);
+        updateValue(currValue, error);
+      }
+    }, [min, max, prevMin, prevMax, currValue, updateValue]);
 
-  return (
-    <Wrapper className={className}>
-      {label && <Label>{label}</Label>}
-
-      <Control>
+    return (
+      <StyledTextInput
+        readOnly={readOnly}
+        onChange={(e) => updateInput(e.target.valueAsNumber, true)}
+        onFocus={handleFocus}
+        step={step}
+        type='number'
+        value={inputValue}
+        error={validationError}
+        {...props}
+        ref={ref}
+      >
         {!readOnly && (
-          <DecrementButton
-            className={currValue === min ? 'disabled' : undefined}
-            onClick={decrement}
-            aria-label='Decrement'
-            role='button'
-          >
-            &ndash;
-          </DecrementButton>
+          <Controls>
+            <DecrementButton
+              className={currValue === min ? 'disabled' : undefined}
+              onClick={decrement}
+              aria-label='Decrement'
+              role='button'
+            >
+              &ndash;
+            </DecrementButton>
+            <IncrementButton
+              className={currValue === max ? 'disabled' : undefined}
+              onClick={increment}
+              aria-label='Increment'
+              role='button'
+            >
+              +
+            </IncrementButton>
+          </Controls>
         )}
-
-        <StyledTextInput
-          readOnly={readOnly}
-          onChange={(e) => updateInput(e.target.valueAsNumber, true)}
-          onFocus={handleFocus}
-          step={step}
-          type='number'
-          value={inputValue}
-          title={title}
-        />
-
-        {!readOnly && (
-          <IncrementButton
-            className={currValue === max ? 'disabled' : undefined}
-            onClick={increment}
-            aria-label='Increment'
-            role='button'
-          >
-            +
-          </IncrementButton>
-        )}
-      </Control>
-      <ValidationErrorMessage message={validationError} />
-    </Wrapper>
-  );
-};
+      </StyledTextInput>
+    );
+  }
+);
 
 NumberPicker.propTypes = {
   label: PropTypes.string,

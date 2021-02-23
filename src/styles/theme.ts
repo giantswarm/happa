@@ -500,6 +500,9 @@ const theme = deepMerge(generate(16), {
       bottom: 'small',
     },
     round: '4px',
+    extend: () => css`
+      position: relative;
+    `,
   },
   heading: {
     level: {
