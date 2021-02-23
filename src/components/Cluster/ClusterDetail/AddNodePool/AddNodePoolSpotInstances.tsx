@@ -83,10 +83,8 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
         <SpotValuesNumberPickerWrapper>
           <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
           <StyledNumberPicker
-            readOnly={false}
             min={0}
             max={32767}
-            step={1}
             value={onDemandBaseCapacity}
             onChange={setOnDemandBaseCapacity}
           />

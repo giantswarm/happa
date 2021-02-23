@@ -40,23 +40,18 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
     </AdditionalInputHint>
     <KVMNumberPicker
       label='CPU Cores'
-      max={999}
       min={2}
       onChange={onUpdateCPUCores}
-      step={1}
       value={cpuCores}
     />
     <KVMNumberPicker
       label='Memory (GB)'
-      max={999}
       min={3}
       onChange={onUpdateMemorySize}
-      step={1}
       value={memorySize}
     />
     <KVMNumberPicker
       label='Storage (GB)'
-      max={999}
       min={10}
       onChange={onUpdateDiskSize}
       step={10}

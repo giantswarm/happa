@@ -1,8 +1,8 @@
+import { ThemeContext, ThemeType } from 'grommet';
 import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import { css } from 'styled-components';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import TextInput from '../TextInput';
 
@@ -25,6 +25,17 @@ function isWholeNumber(value: number) {
   return value % 1 === 0;
 }
 
+const customTheme: ThemeType = {
+  formField: {
+    // @ts-expect-error
+    extend: css`
+      & > div {
+        position: relative;
+      }
+    `,
+  },
+};
+
 const StyledTextInput = styled(TextInput)`
   text-align: center;
   outline: none;
@@ -45,17 +56,19 @@ const StyledTextInput = styled(TextInput)`
 
 const Controls = styled.div`
   position: absolute;
-  top: 1px;
+  top: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 2px);
+  height: 100%;
   display: flex;
   justify-content: space-between;
   pointer-events: none;
   z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
-const IncrementDecrementButtonCSS = css`
+const IncrementDecrementButton = styled.div`
   position: relative;
   width: 35px;
   height: 100%;
@@ -95,20 +108,6 @@ const IncrementDecrementButtonCSS = css`
       opacity: 0.3;
     }
   }
-`;
-
-const IncrementButton = styled.div`
-  ${IncrementDecrementButtonCSS};
-  right: 1px;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-`;
-
-const DecrementButton = styled.div`
-  ${IncrementDecrementButtonCSS};
-  left: 1px;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
 `;
 
 interface INumberPickerProps
@@ -194,38 +193,40 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     }, [min, max, prevMin, prevMax, currValue, updateValue]);
 
     return (
-      <StyledTextInput
-        readOnly={readOnly}
-        onChange={(e) => updateInput(e.target.valueAsNumber, true)}
-        onFocus={handleFocus}
-        step={step}
-        type='number'
-        value={inputValue}
-        error={validationError}
-        {...props}
-        ref={ref}
-      >
-        {!readOnly && (
-          <Controls>
-            <DecrementButton
-              className={currValue === min ? 'disabled' : undefined}
-              onClick={decrement}
-              aria-label='Decrement'
-              role='button'
-            >
-              &ndash;
-            </DecrementButton>
-            <IncrementButton
-              className={currValue === max ? 'disabled' : undefined}
-              onClick={increment}
-              aria-label='Increment'
-              role='button'
-            >
-              +
-            </IncrementButton>
-          </Controls>
-        )}
-      </StyledTextInput>
+      <ThemeContext.Extend value={customTheme}>
+        <StyledTextInput
+          readOnly={readOnly}
+          onChange={(e) => updateInput(e.target.valueAsNumber, true)}
+          onFocus={handleFocus}
+          step={step}
+          type='number'
+          value={inputValue}
+          error={validationError}
+          {...props}
+          ref={ref}
+        >
+          {!readOnly && (
+            <Controls>
+              <IncrementDecrementButton
+                className={currValue === min ? 'disabled' : undefined}
+                onClick={decrement}
+                aria-label='Decrement'
+                role='button'
+              >
+                &ndash;
+              </IncrementDecrementButton>
+              <IncrementDecrementButton
+                className={currValue === max ? 'disabled' : undefined}
+                onClick={increment}
+                aria-label='Increment'
+                role='button'
+              >
+                +
+              </IncrementDecrementButton>
+            </Controls>
+          )}
+        </StyledTextInput>
+      </ThemeContext.Extend>
     );
   }
 );
