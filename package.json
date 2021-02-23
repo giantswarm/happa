@@ -147,7 +147,7 @@
     "@babel/preset-env": "7.12.17",
     "@babel/preset-react": "7.12.13",
     "@babel/preset-typescript": "7.12.17",
-    "@storybook/addon-actions": "^6.1.15",
+    "@storybook/addon-actions": "^6.1.19",
     "@storybook/addon-docs": "^6.1.16",
     "@storybook/addon-essentials": "^6.1.18",
     "@storybook/addon-links": "^6.1.18",
