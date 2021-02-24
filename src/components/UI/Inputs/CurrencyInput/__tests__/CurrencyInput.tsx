@@ -5,7 +5,8 @@ import CurrencyInput from '..';
 
 describe('CurrencyInput', () => {
   it('renders without crashing', () => {
-    renderWithTheme(CurrencyInput, {});
+    const { container } = renderWithTheme(CurrencyInput, {});
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('only allows base 10 number values', () => {
@@ -111,7 +112,7 @@ describe('CurrencyInput', () => {
       id: 'test-input',
       label: 'Test input',
       value: 1,
-      validationError: 'Naah. Wrong value',
+      error: 'Naah. Wrong value',
     });
 
     expect(screen.getByText('Naah. Wrong value')).toBeInTheDocument();

@@ -9,14 +9,6 @@ const AzureSpotInstances = styled.div`
   position: relative;
 `;
 
-const MaxPriceWrapper = styled.div`
-  margin-top: ${({ theme }) => theme.spacingPx * 2}px;
-
-  .max-price__currency-wrapper {
-    width: 160px;
-  }
-`;
-
 const CheckboxWrapper = styled.div`
   position: absolute;
   left: 170px;
@@ -44,23 +36,26 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
 }) => {
   return (
     <AzureSpotInstances>
-      <MaxPriceWrapper>
-        <CurrencyInput
-          id='spot-instances-max-price'
-          onChange={setMaxPrice}
-          value={maxPrice}
-          /* Minimum value is set to `0` to allow user to type `0.xxx` values using their keyboard. */
-          min={0}
-          max={Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MAX}
-          precision={Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_PRECISION}
-          label='Maximum price per hour'
-          validationError={maxPriceValidationError}
-          disabled={useOnDemandPricing}
-          inputWrapperProps={{
-            className: 'max-price__currency-wrapper',
-          }}
-        />
-      </MaxPriceWrapper>
+      <CurrencyInput
+        id='spot-instances-max-price'
+        onChange={setMaxPrice}
+        value={maxPrice}
+        /* Minimum value is set to `0` to allow user to type `0.xxx` values using their keyboard. */
+        min={0}
+        max={Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MAX}
+        precision={Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_PRECISION}
+        label='Maximum price per hour'
+        error={maxPriceValidationError}
+        disabled={useOnDemandPricing}
+        contentProps={{
+          width: 'small',
+        }}
+        formFieldProps={{
+          margin: {
+            top: 'small',
+          },
+        }}
+      />
       <CheckboxWrapper>
         <CheckBoxInput
           checked={useOnDemandPricing}

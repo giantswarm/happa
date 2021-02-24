@@ -18,4 +18,8 @@ Currencies.args = {
 
 Currencies.argTypes = {
   currencyLabel: { control: { type: 'select', options: ['€', '$', '£'] } },
+  label: { control: { type: 'text' } },
+  error: { control: { type: 'text' } },
+  info: { control: { type: 'text' } },
+  help: { control: { type: 'text' } },
 };
