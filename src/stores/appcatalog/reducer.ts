@@ -59,7 +59,9 @@ const catalogReducer = produce(
         break;
 
       case CATALOG_LOAD_INDEX_ERROR:
-        draft.items[action.catalogName].isFetchingIndex = false;
+        if (draft.items[action.catalogName]) {
+          draft.items[action.catalogName].isFetchingIndex = false;
+        }
 
         break;
 

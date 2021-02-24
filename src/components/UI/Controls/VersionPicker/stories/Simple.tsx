@@ -1,19 +1,15 @@
+import { action } from '@storybook/addon-actions';
 import { Story } from '@storybook/react/types-6-0';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import VersionPicker from '../VersionPicker';
-
-export function onChange() {
-  // eslint-disable-next-line no-alert
-  alert('Changed');
-}
 
 export const Simple: Story<ComponentPropsWithoutRef<typeof VersionPicker>> = (
   args
 ) => {
   return (
     <VersionPicker
-      onChange={onChange}
+      onChange={action('changed')}
       selectedVersion={args.selectedVersion}
       versions={[
         {
@@ -122,5 +118,8 @@ Simple.args = {
 };
 
 Simple.argTypes = {
-  selectedVersion: { control: { type: 'text' } },
+  selectedVersion: {
+    description: 'The version selected when rendering the component',
+    control: { type: 'text' },
+  },
 };
