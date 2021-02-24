@@ -5,59 +5,57 @@ import { getComponentWithTheme } from 'testUtils/renderUtils';
 const getComponent = (props) => getComponentWithTheme(NodeCountSelector, props);
 const renderWithProps = (props) => render(getComponent(props));
 
-const labelTestID = 'node-count-selector-picker';
-
 describe('NodeCountSelector', () => {
   it('renders without crashing', () => {
     renderWithProps({});
   });
 
   it('shows 1 picker with autoscale off', () => {
-    const { getAllByTestId } = renderWithProps({ autoscalingEnabled: false });
+    const { getByTitle } = renderWithProps({ autoscalingEnabled: false });
 
-    expect(getAllByTestId(labelTestID).length).toBe(1);
+    expect(getByTitle('Count')).toBeInTheDocument();
   });
 
   it('shows 2 pickers with autoscale on', () => {
-    const { getAllByTestId } = renderWithProps({ autoscalingEnabled: true });
+    const { getByLabelText } = renderWithProps({ autoscalingEnabled: true });
 
-    expect(getAllByTestId(labelTestID).length).toBe(2);
+    expect(getByLabelText('Minimum')).toBeInTheDocument();
+    expect(getByLabelText('Maximum')).toBeInTheDocument();
   });
 
   it('shows disabled inputs in read-only mode, with autoscale off', () => {
-    const { getByTestId } = renderWithProps({
+    const { getByTitle } = renderWithProps({
       autoscalingEnabled: false,
       readOnly: true,
     });
-    const input = getByTestId(labelTestID).querySelector('input');
+    const input = getByTitle('Count');
 
-    expect(input.disabled).toBe(true);
+    expect(input.readOnly).toBeTruthy();
   });
 
   it('shows disabled inputs in read-only mode, with autoscale on', () => {
-    const { getAllByTestId } = renderWithProps({
+    const { getByLabelText } = renderWithProps({
       autoscalingEnabled: true,
       readOnly: true,
     });
-    const inputs = getAllByTestId(labelTestID).map((label) =>
-      label.querySelector('input')
-    );
 
-    const areAllInputsDisabled = inputs.every((input) => input.disabled);
+    const minInput = getByLabelText('Minimum');
+    expect(minInput.readOnly).toBeTruthy();
 
-    expect(areAllInputsDisabled).toBe(true);
+    const maxInput = getByLabelText('Maximum');
+    expect(maxInput.readOnly).toBeTruthy();
   });
 
   it('respects value constraints, with autoscale off', () => {
     const minValue = 5;
     const maxValue = 5;
 
-    const { getByTestId, getByRole } = renderWithProps({
+    const { getByTitle, getByRole } = renderWithProps({
       autoscalingEnabled: false,
       minValue,
       maxValue,
     });
-    const input = getByTestId(labelTestID).querySelector('input');
+    const input = getByTitle('Count');
 
     const decrementButton = getByRole('button', {
       name: 'Decrement',
@@ -81,14 +79,15 @@ describe('NodeCountSelector', () => {
     const minValue = 5;
     const maxValue = 8;
 
-    const { getAllByTestId, getAllByRole } = renderWithProps({
+    const { getByLabelText, getAllByRole } = renderWithProps({
       autoscalingEnabled: true,
       minValue,
       maxValue,
     });
-    const inputs = getAllByTestId(labelTestID).map((label) =>
-      label.querySelector('input')
-    );
+
+    const minInput = getByLabelText('Minimum');
+    const maxInput = getByLabelText('Maximum');
+
     const decrementButtons = getAllByRole('button', {
       name: 'Decrement',
     });
@@ -101,20 +100,20 @@ describe('NodeCountSelector', () => {
       fireEvent.click(incrementButtons[1]);
     }
 
-    expect(inputs[0].value).toBe(`${minValue}`);
-    expect(inputs[1].value).toBe(`${maxValue}`);
+    expect(minInput).toHaveValue(minValue);
+    expect(maxInput).toHaveValue(maxValue);
   });
 
   it('dispatches current changed value outside component, with autoscale off', () => {
     const targetValue = 5;
 
     const onChangeCallback = jest.fn();
-    const { getByTestId } = renderWithProps({
+    const { getByTitle } = renderWithProps({
       autoscalingEnabled: false,
       onChange: onChangeCallback,
     });
 
-    const input = getByTestId(labelTestID).querySelector('input');
+    const input = getByTitle('Count');
 
     fireEvent.change(input, {
       target: {
@@ -137,16 +136,15 @@ describe('NodeCountSelector', () => {
     const targetMaxValue = 10;
 
     const onChangeCallback = jest.fn();
-    const { getAllByTestId } = renderWithProps({
+    const { getByLabelText } = renderWithProps({
       autoscalingEnabled: true,
       onChange: onChangeCallback,
     });
 
-    const inputs = getAllByTestId(labelTestID).map((label) =>
-      label.querySelector('input')
-    );
+    const minInput = getByLabelText('Minimum');
+    const maxInput = getByLabelText('Maximum');
 
-    fireEvent.change(inputs[0], {
+    fireEvent.change(minInput, {
       target: {
         value: `${targetMinValue}`,
       },
@@ -161,7 +159,7 @@ describe('NodeCountSelector', () => {
       },
     });
 
-    fireEvent.change(inputs[1], {
+    fireEvent.change(maxInput, {
       target: {
         value: `${targetMaxValue}`,
       },
@@ -218,10 +216,10 @@ describe('NodeCountSelector', () => {
   });
 
   it('disables default form behaviour, with autoscaling off', () => {
-    const { getByTestId } = renderWithProps({
+    const { getByTitle } = renderWithProps({
       autoscalingEnabled: false,
     });
-    const input = getByTestId(labelTestID).querySelector('input');
+    const input = getByTitle('Count');
     const initialValue = input.value;
 
     fireEvent.keyPress(input, {
@@ -232,25 +230,27 @@ describe('NodeCountSelector', () => {
   });
 
   it('disables default form behaviour, with autoscaling on', () => {
-    const { getAllByTestId } = renderWithProps({
+    const { getByLabelText } = renderWithProps({
       autoscalingEnabled: true,
     });
-    const inputs = getAllByTestId(labelTestID).map((label) =>
-      label.querySelector('input')
-    );
-    const initialValues = inputs.map((input) => input.value);
 
-    fireEvent.keyPress(inputs[0], {
+    const minInput = getByLabelText('Minimum');
+    const minInputInitialValue = minInput.value;
+
+    const maxInput = getByLabelText('Maximum');
+    const maxInputInitialValue = maxInput.value;
+
+    fireEvent.keyPress(minInput, {
       key: 'Enter',
     });
 
-    expect(inputs[0].value).toBe(initialValues[0]);
+    expect(minInput.value).toBe(minInputInitialValue);
 
-    fireEvent.keyPress(inputs[1], {
+    fireEvent.keyPress(maxInput, {
       key: 'Enter',
     });
 
-    expect(inputs[1].value).toBe(initialValues[1]);
+    expect(maxInput.value).toBe(maxInputInitialValue);
   });
 
   it('shows correct autoscale suggestion labels, with autoscaling on', () => {
@@ -313,8 +313,8 @@ describe('NodeCountSelector', () => {
       scaling,
     });
 
-    const minInputElement = screen.getByTitle('Minimum');
-    const maxInputElement = screen.getByTitle('Maximum');
+    const minInputElement = screen.getByLabelText('Minimum');
+    const maxInputElement = screen.getByLabelText('Maximum');
 
     fireEvent.change(maxInputElement, { target: { value: 2 } });
     scaling.max = 2;

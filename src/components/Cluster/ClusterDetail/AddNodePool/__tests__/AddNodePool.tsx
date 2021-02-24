@@ -91,12 +91,12 @@ describe('AddNodePool', () => {
             },
           },
           scaling: {
-            max: 10,
+            max: 3,
             min: 3,
           },
         } as unknown) as V5AddNodePoolRequest;
 
-        expect(informParentMockFn).toBeCalledWith(
+        expect(informParentMockFn).toHaveBeenLastCalledWith(
           {
             isValid: true,
             data: expectedNodePool,
@@ -162,12 +162,12 @@ describe('AddNodePool', () => {
             },
           },
           scaling: {
-            max: 10,
+            max: 3,
             min: 3,
           },
         } as unknown) as V5AddNodePoolRequest;
 
-        expect(informParentMockFn).toBeCalledWith(
+        expect(informParentMockFn).toHaveBeenLastCalledWith(
           {
             isValid: true,
             data: expectedNodePool,
