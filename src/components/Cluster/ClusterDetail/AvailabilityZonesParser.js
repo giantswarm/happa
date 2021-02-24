@@ -92,14 +92,13 @@ export default function AvailabilityZonesParser({
 
   return (
     <NumberPicker
-      label=''
       max={max}
       min={min}
       onChange={updateAZPicker}
-      readOnly={false}
-      stepSize={1}
       value={AZPicker.value}
-      eventNameSuffix='AZS'
+      contentProps={{
+        width: 'small',
+      }}
     />
   );
 }
