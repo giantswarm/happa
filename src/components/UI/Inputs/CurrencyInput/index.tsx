@@ -1,4 +1,4 @@
-import { Box } from 'grommet';
+import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 
@@ -76,12 +76,9 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, ICurrencyInputProps>(
     return (
       <TextInput
         icon={
-          <Box
-            /* FIXME: Add disabled style */
-            color='text-xweak'
-          >
+          <Text color={disabled ? 'text-xweak' : 'text-weak'}>
             {currencyLabel}
-          </Box>
+          </Text>
         }
         value={visibleValue}
         type='number'

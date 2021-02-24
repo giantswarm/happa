@@ -12,11 +12,7 @@ const AzureSpotInstances = styled.div`
 const CheckboxWrapper = styled.div`
   position: absolute;
   left: 170px;
-  top: 27px;
-`;
-
-const Description = styled.small`
-  margin-top: ${({ theme }) => theme.spacingPx}px;
+  bottom: -5px;
 `;
 
 interface IAddNodePoolSpotInstancesAzureProps {
@@ -47,6 +43,7 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
         label='Maximum price per hour'
         error={maxPriceValidationError}
         disabled={useOnDemandPricing}
+        help='The maximum price per hour that a single node pool VM instance can reach before it is deallocated.'
         contentProps={{
           width: 'small',
         }}
@@ -63,10 +60,6 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
           label='Use current on-demand pricing as max'
         />
       </CheckboxWrapper>
-      <Description>
-        The maximum price per hour that a single node pool VM instance can reach
-        before it is deallocated.
-      </Description>
     </AzureSpotInstances>
   );
 };

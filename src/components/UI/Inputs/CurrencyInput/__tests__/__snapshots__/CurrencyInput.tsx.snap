@@ -19,12 +19,11 @@ exports[`CurrencyInput renders without crashing 1`] = `
           <div
             class="StyledTextInput__StyledIcon-sc-1x30a0s-3 dEEIJB"
           >
-            <div
-              class="StyledBox-sc-13pk1d4-0 dYebPD"
-              color="text-xweak"
+            <span
+              class="StyledText-sc-1sadyjn-0 jxyUHc"
             >
               $
-            </div>
+            </span>
           </div>
           <input
             autocomplete="off"
