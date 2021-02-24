@@ -1,19 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
 
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 0,
   max: 999,
-  stepSize: 1,
+  step: 1,
 };
-
-const SpanWrapper = styled.span`
-  display: block;
-  margin-bottom: 10px;
-`;
 
 /**
  * NodeCountSelector is a component that allows a user to pick a number of
@@ -65,40 +59,34 @@ class NodeCountSelector extends React.Component {
         <form onSubmit={this.handleFormSubmit}>
           <TwoInputArea>
             <InnerTwoInputArea>
-              <label data-testid='node-count-selector-picker'>
-                <SpanWrapper>
-                  {label && label.min ? label.min : 'Minimum'}
-                </SpanWrapper>
-                <NumberPicker
-                  label=''
-                  max={scaling.max}
-                  min={minValue}
-                  onChange={this.updateScalingMin}
-                  readOnly={readOnly}
-                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-                  value={scaling.min}
-                  eventNameSuffix='SCALING_MIN'
-                  title='Minimum'
-                />
-              </label>
+              <NumberPicker
+                id='minimum'
+                label={label?.min ?? 'Minimum'}
+                max={scaling.max}
+                min={minValue}
+                onChange={this.updateScalingMin}
+                readOnly={readOnly}
+                step={DEFAULT_VALUE_CONSTRAINTS.step}
+                value={scaling.min}
+                contentProps={{
+                  width: 'small',
+                }}
+              />
             </InnerTwoInputArea>
             <InnerTwoInputArea>
-              <label data-testid='node-count-selector-picker'>
-                <SpanWrapper>
-                  {label && label.max ? label.max : 'Maximum'}
-                </SpanWrapper>
-                <NumberPicker
-                  label=''
-                  max={maxValue}
-                  min={scaling.min}
-                  onChange={this.updateScalingMax}
-                  readOnly={readOnly}
-                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-                  value={scaling.max}
-                  eventNameSuffix='SCALING_MAX'
-                  title='Maximum'
-                />
-              </label>
+              <NumberPicker
+                id='maximum'
+                label={label?.max ?? 'Maximum'}
+                max={maxValue}
+                min={scaling.min}
+                onChange={this.updateScalingMax}
+                readOnly={readOnly}
+                step={DEFAULT_VALUE_CONSTRAINTS.step}
+                value={scaling.max}
+                contentProps={{
+                  width: 'small',
+                }}
+              />
             </InnerTwoInputArea>
           </TwoInputArea>
           <p data-testid='node-count-selector-autoscaling-label'>
@@ -112,19 +100,19 @@ class NodeCountSelector extends React.Component {
 
     return (
       <form onSubmit={this.handleFormSubmit}>
-        <label data-testid='node-count-selector-picker'>
-          <NumberPicker
-            label=''
-            min={minValue}
-            max={maxValue}
-            onChange={this.updateNodeCount}
-            readOnly={readOnly}
-            stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-            value={scaling.min}
-            eventNameSuffix='WORKER_NODES'
-            title='Count'
-          />
-        </label>
+        <NumberPicker
+          min={minValue}
+          max={maxValue}
+          onChange={this.updateNodeCount}
+          readOnly={readOnly}
+          step={DEFAULT_VALUE_CONSTRAINTS.step}
+          value={scaling.min}
+          id='count'
+          title='Count'
+          contentProps={{
+            width: 'small',
+          }}
+        />
       </form>
     );
   }

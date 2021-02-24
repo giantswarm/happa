@@ -56,7 +56,7 @@ const V4AvailabilityZonesSelector = ({
             Selection of availability zones is only possible for release version{' '}
             {requiredReleaseVersion} or greater.
           </PickerLabel>
-          <NumberPicker readOnly={true} value={1} eventNameSuffix='AZS' />
+          <NumberPicker readOnly={true} value={1} />
         </>
       )}
     </Section>

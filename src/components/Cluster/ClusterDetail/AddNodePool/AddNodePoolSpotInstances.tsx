@@ -17,11 +17,9 @@ const SpotValuesLabelText = styled.span`
 `;
 
 const SpotValuesNumberPickerWrapper = styled.div`
+  display: flex;
+  align-items: center;
   margin-bottom: 8px;
-
-  .spot-number-picker {
-    margin-right: 8px;
-  }
 `;
 
 const SpotValuesHelpText = styled.p`
@@ -67,14 +65,19 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
         <SpotValuesNumberPickerWrapper>
           <SpotValuesLabelText>Spot instance percentage</SpotValuesLabelText>
           <NumberPicker
-            readOnly={false}
             max={100}
             min={0}
-            stepSize={10}
+            step={10}
             value={spotPercentage}
             onChange={setSpotPercentage}
-            theme='spot-number-picker'
-            eventNameSuffix='SPOT_PERCENTAGE'
+            contentProps={{
+              width: 'small',
+            }}
+            formFieldProps={{
+              margin: {
+                right: 'small',
+              },
+            }}
           />
           <SpotValuesLabelText>percent</SpotValuesLabelText>
         </SpotValuesNumberPickerWrapper>
@@ -85,14 +88,18 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
         <SpotValuesNumberPickerWrapper>
           <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
           <NumberPicker
-            readOnly={false}
             min={0}
             max={32767}
-            stepSize={1}
             value={onDemandBaseCapacity}
             onChange={setOnDemandBaseCapacity}
-            theme='spot-number-picker'
-            eventNameSuffix='ONDEMAND_BASE_CAPACITY'
+            contentProps={{
+              width: 'small',
+            }}
+            formFieldProps={{
+              margin: {
+                right: 'small',
+              },
+            }}
           />
           <SpotValuesLabelText>instances</SpotValuesLabelText>
         </SpotValuesNumberPickerWrapper>

@@ -502,7 +502,6 @@ class AddNodePool extends Component {
           <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
             <NodeCountSelector
               autoscalingEnabled={supportsNodePoolAutoscaling}
-              label={{ max: 'MAX', min: 'MIN' }}
               onChange={this.updateScaling}
               readOnly={false}
               scaling={this.state.scaling}
