@@ -134,7 +134,7 @@ class Navigation extends React.Component {
           </Actions>
         </div>
 
-        <BreadcrumbWrapper>
+        <BreadcrumbWrapper data-testid='breadcrumbs'>
           <Breadcrumbs />
         </BreadcrumbWrapper>
       </OuterNav>

@@ -68,7 +68,7 @@ const AppDetail: React.FC = () => {
   return (
     <Breadcrumb
       data={{
-        title: 'efk-stack-app'.toUpperCase(),
+        title: app?.name.toUpperCase(),
         pathname: match.url,
       }}
     >
