@@ -246,7 +246,7 @@
   },
   "resolutions": {
     "kind-of": "^6.0.3",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "http-proxy": "^1.18.1",
     "node-fetch": "^2.6.1",
     "ua-parser-js": "^0.7.22"
