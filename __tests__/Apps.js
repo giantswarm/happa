@@ -1,9 +1,5 @@
-import {
-  findByTestId,
-  fireEvent,
-  screen,
-  within,
-} from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
+import { isInternal } from 'Apps/AppsList/utils';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -30,7 +26,6 @@ import {
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { isInternal } from 'Apps/AppsList/utils';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {
@@ -166,7 +161,7 @@ describe('Apps and App Catalog', () => {
         app: 'nginx-ingress-controller-app',
         version: '1.1.1',
       });
-      const { findByText } = renderRouteWithStore(appDetailPath);
+      const { findByText, findByTestId } = renderRouteWithStore(appDetailPath);
 
       // The app's description should be there.
       // This comes from parsing the index.yaml, which is mocked in catalogIndexResponse.
@@ -174,6 +169,13 @@ describe('Apps and App Catalog', () => {
         'A Helm chart for the nginx ingress-controller v1.1.1'
       );
       expect(appDescription).toBeInTheDocument();
+
+      const breadCrumbs = await findByTestId('breadcrumbs');
+      const appBreadCrumb = await within(breadCrumbs).findByText(
+        'NGINX-INGRESS-CONTROLLER-APP'
+      );
+
+      expect(appBreadCrumb).toBeInTheDocument();
     });
 
     it('installs an app in a cluster, with default settings', async () => {
