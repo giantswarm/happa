@@ -2,6 +2,7 @@
 import { FormField, FormFieldProps, TextInput as Input } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
+import { setMultipleRefs } from 'utils/componentUtils';
 
 interface IFileInputProps
   extends Omit<React.ComponentPropsWithRef<typeof Input>, 'type' | 'value'> {
@@ -96,16 +97,7 @@ const FileInput = React.forwardRef<HTMLInputElement, IFileInputProps>(
           required={required}
           name={name}
           {...props}
-          ref={(element) => {
-            inputRef.current = element;
-
-            // TODO(axbarsan): Extract into utility.
-            if (typeof ref === 'function') {
-              ref(element);
-            } else if (ref) {
-              ref.current = element;
-            }
-          }}
+          ref={setMultipleRefs(inputRef, ref)}
         />
         {children}
       </FormField>
