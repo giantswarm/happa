@@ -24,9 +24,7 @@ const InstallAppForm = ({
   availableVersions,
   namespaceError,
   namespace,
-  valuesYAML,
   valuesYAMLError,
-  secretsYAML,
   secretsYAMLError,
 }) => {
   const updateName = (newName) => {
@@ -35,15 +33,15 @@ const InstallAppForm = ({
     }
   };
 
-  const updateValuesYAML = (files) => {
+  const updateValuesYAML = (e) => {
     if (onChangeValuesYAML) {
-      onChangeValuesYAML(files);
+      onChangeValuesYAML(e.target.files);
     }
   };
 
-  const updateSecretsYAML = (files) => {
+  const updateSecretsYAML = (e) => {
     if (onChangeSecretsYAML) {
-      onChangeSecretsYAML(files);
+      onChangeSecretsYAML(e.target.files);
     }
   };
 
@@ -131,21 +129,19 @@ const InstallAppForm = ({
       )}
 
       <FileInput
-        description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
+        help='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
         label='User level config values YAML'
         id='user-level-config'
         onChange={updateValuesYAML}
-        validationError={valuesYAMLError}
-        value={valuesYAML}
+        error={valuesYAMLError}
       />
 
       <FileInput
-        description='Sensitive configuration values can be uploaded separately.'
+        help='Sensitive configuration values can be uploaded separately.'
         label='User level secret values YAML'
         id='user-level-secret'
         onChange={updateSecretsYAML}
-        validationError={secretsYAMLError}
-        value={secretsYAML}
+        error={secretsYAMLError}
       />
     </FormWrapper>
   );
