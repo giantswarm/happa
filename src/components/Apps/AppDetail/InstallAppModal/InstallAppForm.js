@@ -1,15 +1,9 @@
+import { Box, FormField } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import FileInput from 'UI/Inputs/FileInput';
-import Input from 'UI/Inputs/Input';
 import TextInput from 'UI/Inputs/TextInput';
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 const InstallAppForm = ({
   onChangeNamespace,
@@ -84,7 +78,7 @@ const InstallAppForm = ({
   }, [appName, updateNamespace]);
 
   return (
-    <FormWrapper>
+    <Box direction='column' gap='small'>
       <TextInput
         help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
         label='Application Name'
@@ -92,20 +86,23 @@ const InstallAppForm = ({
         onChange={(e) => updateName(e.target.value)}
         error={nameError}
         value={name}
-        margin={{ bottom: 'large' }}
       />
 
-      <Input
+      <FormField
         label='Chart Version'
-        id='chart-version'
-        description='This will determine what version of the app eventually gets installed.'
+        htmlFor='chart-version'
+        help='This will determine what version of the app eventually gets installed.'
+        contentProps={{
+          border: false,
+        }}
       >
         <VersionPicker
+          id='chart-version'
           onChange={updateVersion}
           selectedVersion={version}
           versions={availableVersions}
         />
-      </Input>
+      </FormField>
 
       {formAbilities.hasFixedNamespace ? (
         <TextInput
@@ -147,7 +144,7 @@ const InstallAppForm = ({
         validationError={secretsYAMLError}
         value={secretsYAML}
       />
-    </FormWrapper>
+    </Box>
   );
 };
 
