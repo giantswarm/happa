@@ -14,3 +14,10 @@ export const Simple: Story<ComponentPropsWithoutRef<typeof CurrencyInput>> = (
 Simple.args = {
   value: 1,
 };
+
+Simple.argTypes = {
+  label: { control: { type: 'text' } },
+  error: { control: { type: 'text' } },
+  info: { control: { type: 'text' } },
+  help: { control: { type: 'text' } },
+};

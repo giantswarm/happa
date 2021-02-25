@@ -15,3 +15,10 @@ FloatValues.args = {
   value: 13.5000000004,
   precision: 5,
 };
+
+FloatValues.argTypes = {
+  label: { control: { type: 'text' } },
+  error: { control: { type: 'text' } },
+  info: { control: { type: 'text' } },
+  help: { control: { type: 'text' } },
+};

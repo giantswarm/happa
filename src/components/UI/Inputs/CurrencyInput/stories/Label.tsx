@@ -15,3 +15,10 @@ Label.args = {
   value: 1,
   label: 'Rent price',
 };
+
+Label.argTypes = {
+  label: { control: { type: 'text' } },
+  error: { control: { type: 'text' } },
+  info: { control: { type: 'text' } },
+  help: { control: { type: 'text' } },
+};

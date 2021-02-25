@@ -16,3 +16,10 @@ Constraints.args = {
   max: 10,
   min: 2,
 };
+
+Constraints.argTypes = {
+  label: { control: { type: 'text' } },
+  error: { control: { type: 'text' } },
+  info: { control: { type: 'text' } },
+  help: { control: { type: 'text' } },
+};
