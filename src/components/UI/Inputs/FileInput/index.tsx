@@ -43,6 +43,9 @@ interface IFileInputProps
    * Whether the input should have some extra padding or not.
    */
   pad?: FormFieldProps['pad'];
+  /**
+   * The input's current value.
+   */
   value?: FileList | null;
 }
 
