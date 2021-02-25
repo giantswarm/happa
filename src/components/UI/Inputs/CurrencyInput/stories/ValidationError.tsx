@@ -13,5 +13,12 @@ export const ValidationError: Story<
 
 ValidationError.args = {
   value: 1,
-  validationError: 'Naah. Wrong value',
+  error: 'Naah. Wrong value',
+};
+
+ValidationError.argTypes = {
+  label: { control: { type: 'text' } },
+  error: { control: { type: 'text' } },
+  info: { control: { type: 'text' } },
+  help: { control: { type: 'text' } },
 };
