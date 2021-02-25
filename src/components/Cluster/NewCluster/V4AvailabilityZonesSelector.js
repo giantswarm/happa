@@ -3,8 +3,7 @@ import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
-import Section from 'UI/Display/Cluster/ClusterCreation/Section';
+import InputGroup from 'UI/Inputs/InputGroup';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 
 const AZWrapper = styled.div`
@@ -36,8 +35,7 @@ const V4AvailabilityZonesSelector = ({
   }
 
   return (
-    <Section className='availability-zones' htmlFor='availability-zones'>
-      <ClusterCreationLabelSpan>Availability Zones</ClusterCreationLabelSpan>
+    <InputGroup htmlFor='availability-zones' label='Availability zones'>
       {isAvailable ? (
         <AZWrapper>
           <PickerLabel>Number of availability zones to use:</PickerLabel>
@@ -59,7 +57,7 @@ const V4AvailabilityZonesSelector = ({
           <NumberPicker readOnly={true} value={1} />
         </>
       )}
-    </Section>
+    </InputGroup>
   );
 };
 

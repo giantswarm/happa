@@ -15,6 +15,7 @@ const InputGroup = React.forwardRef<HTMLDivElement, IInputGroupProps>(
     return (
       <FormField
         label={labelComponent}
+        margin={{ bottom: 'none' }}
         {...props}
         contentProps={{
           border: false,

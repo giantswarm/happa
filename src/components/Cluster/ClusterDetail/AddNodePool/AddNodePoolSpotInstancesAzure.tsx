@@ -12,7 +12,7 @@ const AzureSpotInstances = styled.div`
 const CheckboxWrapper = styled.div`
   position: absolute;
   left: 170px;
-  bottom: -5px;
+  bottom: 5px;
 `;
 
 interface IAddNodePoolSpotInstancesAzureProps {
@@ -46,11 +46,6 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
         help='The maximum price per hour that a single node pool VM instance can reach before it is deallocated.'
         contentProps={{
           width: 'small',
-        }}
-        formFieldProps={{
-          margin: {
-            top: 'small',
-          },
         }}
       />
       <CheckboxWrapper>

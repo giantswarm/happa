@@ -1,12 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import InputGroup from 'UI/Inputs/InputGroup';
 import RadioInput from 'UI/Inputs/RadioInput';
-
-const InputGroup = styled.fieldset`
-  margin-bottom: 16px;
-`;
 
 const InputSubtitle = styled.small`
   font-size: 0.74rem;
@@ -27,13 +23,16 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   };
 
   return (
-    <StyledInput
-      inputId='master-nodes'
+    <InputGroup
       label='Master nodes'
-      // "breaking space" hides the hint
-      hint={<>&#32;</>}
+      contentProps={{
+        gap: 'medium',
+      }}
+      margin={{
+        bottom: 'small',
+      }}
     >
-      <InputGroup>
+      <fieldset>
         <RadioInput
           id='high-availability'
           label='High availability'
@@ -41,13 +40,14 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           value='true'
           name='high-availability'
           onChange={handleChange(true)}
+          formFieldProps={{ margin: { bottom: 'none' } }}
         />
         <InputSubtitle>
           Three master nodes, each placed in a separate availability zone,
           selected at random. Preferred for production clusters.
         </InputSubtitle>
-      </InputGroup>
-      <InputGroup>
+      </fieldset>
+      <fieldset>
         <RadioInput
           id='single-master'
           label='Single master'
@@ -55,12 +55,13 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           value='false'
           name='high-availability'
           onChange={handleChange(false)}
+          formFieldProps={{ margin: { bottom: 'none' } }}
         />
         <InputSubtitle>
           One master node, placed in an availability zone selected at random.
         </InputSubtitle>
-      </InputGroup>
-    </StyledInput>
+      </fieldset>
+    </InputGroup>
   );
 };
 

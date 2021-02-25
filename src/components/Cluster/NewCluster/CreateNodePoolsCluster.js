@@ -4,6 +4,7 @@ import {
   AZSelectionVariants,
 } from 'Cluster/AZSelection/AZSelectionUtils';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
+import { Box } from 'grommet';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -18,8 +19,8 @@ import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
-import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
 import HorizontalLine from 'UI/Display/Cluster/ClusterCreation/HorizontalLine';
+import InputGroup from 'UI/Inputs/InputGroup';
 import { FlexColumn, FlexRow } from 'UI/Layout/FlexDivs';
 
 import AddNodePool from '../ClusterDetail/AddNodePool/AddNodePool';
@@ -27,10 +28,6 @@ import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
 } from '../ClusterDetail/V5ClusterDetailTable';
-
-const WrapperDiv = styled.div`
-  margin-top: 32px;
-`;
 
 const NodePoolsTransitionGroup = styled(TransitionGroup)`
   margin-bottom: 32px;
@@ -63,7 +60,8 @@ const NodePoolHeading = styled.div`
 `;
 
 const AZSelectionWrapper = styled(FlexColumn)`
-  margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
+  width: 100%;
+  margin-bottom: ${({ theme }) => theme.spacingPx * 8}px;
 `;
 
 const defaultNodePool = () => ({
@@ -238,7 +236,10 @@ class CreateNodePoolsCluster extends Component {
 
     return (
       <>
-        <WrapperDiv data-testid='nodepool-cluster-creation-view'>
+        <Box
+          margin={{ top: 'medium' }}
+          data-testid='nodepool-cluster-creation-view'
+        >
           <AZSelectionWrapper>
             {supportsHAMasters ? (
               <MasterNodes
@@ -246,10 +247,7 @@ class CreateNodePoolsCluster extends Component {
                 onChange={this.updateMasterNodesHighAvailability}
               />
             ) : (
-              <>
-                <ClusterCreationLabelSpan as='div'>
-                  Master node availability zones selection
-                </ClusterCreationLabelSpan>
+              <InputGroup label='Master node availability zones selection'>
                 <AZSelection
                   variant={AZSelectionVariants.Master}
                   baseActionName={RUMActions.SelectMasterAZSelection}
@@ -264,7 +262,7 @@ class CreateNodePoolsCluster extends Component {
                   selectedZones={zonesArray}
                   onUpdateZones={this.updateAZ}
                 />
-              </>
+              </InputGroup>
             )}
           </AZSelectionWrapper>
           {Object.keys(nodePools).length === 0 && <HorizontalLine />}
@@ -303,7 +301,7 @@ class CreateNodePoolsCluster extends Component {
             </Button>
           </RUMActionTarget>
           <HorizontalLine />
-        </WrapperDiv>
+        </Box>
         <FlexRow>
           <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
             <Button
