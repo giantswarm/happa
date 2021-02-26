@@ -1,10 +1,10 @@
+import { FormField } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { organizationCredentialsLoad } from 'stores/organization/actions';
 import AWSAccountID from 'UI/Display/Cluster/AWSAccountID';
-import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
 import Section from 'UI/Display/Cluster/ClusterCreation/Section';
 
 class ProviderCredentials extends React.Component {
@@ -59,10 +59,14 @@ class ProviderCredentials extends React.Component {
     if (showInfo) {
       return (
         <Section style={{ marginTop: '25px' }}>
-          <ClusterCreationLabelSpan>
-            Provider Credentials
-          </ClusterCreationLabelSpan>
-          {details}
+          <FormField
+            label='Provider credentials'
+            contentProps={{
+              border: false,
+            }}
+          >
+            {details}
+          </FormField>
         </Section>
       );
     }

@@ -163,23 +163,6 @@ export const AddNodePoolFlexColumnDiv = styled(FlexColumn)`
   a {
     text-decoration: underline;
   }
-  /* Overrides for NumberPicker */
-  .availability-zones {
-    margin-bottom: 12px;
-    & > div > div,
-    & > div > div > div {
-      margin: 0;
-    }
-  }
-  .scaling-range {
-    form {
-      label {
-        margin-bottom: 7px;
-        color: ${(props) => props.theme.colors.white1};
-        font-weight: 400;
-      }
-    }
-  }
 `;
 
 const NodePoolsFlexWrapperDiv = styled(FlexWrapperDiv)`

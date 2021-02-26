@@ -1,5 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import RoutePath from 'lib/routePath';
@@ -14,8 +15,7 @@ import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
 import { getFirstNodePoolsRelease, getProvider } from 'stores/main/selectors';
 import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
-import Section from 'UI/Display/Cluster/ClusterCreation/Section';
-import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
 import { FlexColumn } from 'UI/Layout/FlexDivs';
 
@@ -102,29 +102,23 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
         <>
           <Headline>Create a Cluster</Headline>
           <FlexColumn>
-            <Section>
-              <TextInput
-                label='Name'
-                id='cluster-name'
-                value={clusterName}
-                onChange={(e) => setClusterName(e.target.value)}
-                error={clusterNameValidationError}
-                help='Give your cluster a name to recognize it among others.'
-              />
-            </Section>
-            <Section>
-              <StyledInput
-                inputId='release-version'
-                label='Release version'
-                // "breaking space" hides the hint
-                hint={<>&#32;</>}
-              >
+            <Box direction='column' gap='medium'>
+              <InputGroup label='Name' htmlFor='cluster-name'>
+                <TextInput
+                  id='cluster-name'
+                  value={clusterName}
+                  onChange={(e) => setClusterName(e.target.value)}
+                  error={clusterNameValidationError}
+                  help='Give your cluster a name to recognize it among others.'
+                />
+              </InputGroup>
+              <InputGroup label='Release version'>
                 <ReleaseSelector
                   selectRelease={setSelectedRelease}
                   selectedRelease={selectedRelease}
                 />
-              </StyledInput>
-            </Section>
+              </InputGroup>
+            </Box>
           </FlexColumn>
           <CreationForm
             allowSubmit={clusterNameIsValid}

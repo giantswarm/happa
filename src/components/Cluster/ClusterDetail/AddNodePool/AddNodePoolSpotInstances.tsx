@@ -1,9 +1,9 @@
+import { FormField } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
-import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 
 import AddNodePoolSpotInstancesAzure from './AddNodePoolSpotInstancesAzure';
@@ -60,8 +60,12 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
 }) => {
   if (provider === Providers.AWS) {
     return (
-      <>
-        <ClusterCreationLabelSpan>Spot instances</ClusterCreationLabelSpan>
+      <FormField
+        label='Spot instances'
+        contentProps={{
+          border: false,
+        }}
+      >
         <SpotValuesNumberPickerWrapper>
           <SpotValuesLabelText>Spot instance percentage</SpotValuesLabelText>
           <NumberPicker
@@ -107,7 +111,7 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
           Controls how much of the initial capacity is made up of on-demand
           instances.
         </SpotValuesHelpText>
-      </>
+      </FormField>
     );
   } else if (provider === Providers.AZURE) {
     return (

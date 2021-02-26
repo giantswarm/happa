@@ -1,12 +1,4 @@
 import styled from 'styled-components';
-import { baseLabelStyles } from 'styles/cluster-creation';
-import Input from 'UI/Inputs/Input';
-
-const StyledInput = styled(Input)`
-  .input-field-label {
-    ${baseLabelStyles}
-  }
-`;
 
 export const AdditionalInputHint = styled.p`
   margin: 0;
@@ -14,5 +6,3 @@ export const AdditionalInputHint = styled.p`
   line-height: 1.4;
   color: ${(props) => props.theme.colors.white1};
 `;
-
-export default StyledInput;

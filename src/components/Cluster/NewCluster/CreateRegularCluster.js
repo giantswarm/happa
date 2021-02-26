@@ -1,4 +1,5 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -12,9 +13,8 @@ import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import HorizontalLine from 'UI/Display/Cluster/ClusterCreation/HorizontalLine';
-import Section from 'UI/Display/Cluster/ClusterCreation/Section';
-import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
 import FlashMessage from 'UI/Display/FlashMessage';
+import InputGroup from 'UI/Inputs/InputGroup';
 import { FlexColumn, FlexRow } from 'UI/Layout/FlexDivs';
 
 import ClusterCreationDuration from './ClusterCreationDuration';
@@ -27,20 +27,6 @@ const WrapperDiv = styled.div`
     position: absolute;
     left: 0;
     font-weight: 700;
-  }
-  .availability-zones {
-    input {
-      font-weight: 400;
-    }
-  }
-  .scaling-range {
-    form {
-      label {
-        margin-bottom: 7px;
-        color: ${(props) => props.theme.colors.white1};
-        font-weight: 400;
-      }
-    }
   }
 `;
 
@@ -303,21 +289,16 @@ class CreateRegularCluster extends React.Component {
 
         <FlexColumn>
           <div className='worker-nodes'>Worker nodes</div>
-          {(provider === Providers.AWS || provider === Providers.AZURE) && (
-            <V4AvailabilityZonesSelector
-              minValue={this.props.minAvailabilityZones}
-              maxValue={this.props.maxAvailabilityZones}
-              onChange={this.updateAvailabilityZonesPicker}
-              {...multiAZSelectorProps}
-            />
-          )}
-          <Section htmlFor='instance-type'>
-            <StyledInput
-              inputId='instance-type'
-              label={workerConfigurationLabel}
-              // regular space, hides hint ;)
-              hint={<>&#32;</>}
-            >
+          <Box direction='column' gap='medium'>
+            {(provider === Providers.AWS || provider === Providers.AZURE) && (
+              <V4AvailabilityZonesSelector
+                minValue={this.props.minAvailabilityZones}
+                maxValue={this.props.maxAvailabilityZones}
+                onChange={this.updateAvailabilityZonesPicker}
+                {...multiAZSelectorProps}
+              />
+            )}
+            <InputGroup label={workerConfigurationLabel}>
               <WorkerConfiguration
                 selectedInstanceType={
                   provider === Providers.AWS
@@ -336,14 +317,10 @@ class CreateRegularCluster extends React.Component {
                 onUpdateDiskSize={this.updateDiskSize}
                 onUpdateMemorySize={this.updateMemorySize}
               />
-            </StyledInput>
-          </Section>
-          <Section className='scaling-range' htmlFor='scaling-range'>
-            <StyledInput
-              inputId='scaling-range'
+            </InputGroup>
+            <InputGroup
               label='Number of worker nodes'
-              // regular space, hides hint ;)
-              hint={<>&#32;</>}
+              error={this.state.error && this.errorState()}
             >
               <NodeCountSelector
                 autoscalingEnabled={CreateRegularCluster.isScalingAutomatic(
@@ -359,9 +336,8 @@ class CreateRegularCluster extends React.Component {
                 organizationName={this.props.selectedOrganization}
                 provider={provider}
               />
-              {this.state.error && this.errorState()}
-            </StyledInput>
-          </Section>
+            </InputGroup>
+          </Box>
         </FlexColumn>
 
         <HorizontalLine />
