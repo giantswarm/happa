@@ -35,12 +35,3 @@ export const ListToggler = styled(TextBase)<{ collapsible?: boolean }>`
     width: 14px;
   }
 `;
-
-export const Table = styled.table`
-  font-weight: 300;
-  th {
-    font-weight: 300;
-    color: ${({ theme }) => theme.colors.white4};
-    text-align: center;
-  }
-`;
