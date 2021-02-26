@@ -358,11 +358,11 @@ export function updateAppConfig(
 export function createAppConfig(
   appName: string,
   clusterID: string,
-  values: string
+  values: string | null
 ): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
   return async (dispatch, getState) => {
     try {
-      if (Object.keys(values).length === 0) {
+      if (!values) {
         // Skip creating an empty app config.
         return Promise.resolve();
       }
@@ -578,11 +578,11 @@ export function updateAppSecret(
 export function createAppSecret(
   appName: string,
   clusterID: string,
-  values: string
+  values: string | null
 ): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
   return async (dispatch, getState) => {
     try {
-      if (Object.keys(values).length === 0) {
+      if (!values) {
         // Skip creating an empty app secret.
         return Promise.resolve();
       }

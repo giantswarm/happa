@@ -1,15 +1,9 @@
+import { Box, FormField } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import FileInput from 'UI/Inputs/FileInput';
-import Input from 'UI/Inputs/Input';
 import TextInput from 'UI/Inputs/TextInput';
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 const InstallAppForm = ({
   onChangeNamespace,
@@ -24,9 +18,7 @@ const InstallAppForm = ({
   availableVersions,
   namespaceError,
   namespace,
-  valuesYAML,
   valuesYAMLError,
-  secretsYAML,
   secretsYAMLError,
 }) => {
   const updateName = (newName) => {
@@ -35,15 +27,15 @@ const InstallAppForm = ({
     }
   };
 
-  const updateValuesYAML = (files) => {
+  const updateValuesYAML = (e) => {
     if (onChangeValuesYAML) {
-      onChangeValuesYAML(files);
+      onChangeValuesYAML(e.target.files);
     }
   };
 
-  const updateSecretsYAML = (files) => {
+  const updateSecretsYAML = (e) => {
     if (onChangeSecretsYAML) {
-      onChangeSecretsYAML(files);
+      onChangeSecretsYAML(e.target.files);
     }
   };
 
@@ -84,7 +76,7 @@ const InstallAppForm = ({
   }, [appName, updateNamespace]);
 
   return (
-    <FormWrapper>
+    <Box direction='column' gap='small'>
       <TextInput
         help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
         label='Application Name'
@@ -92,20 +84,23 @@ const InstallAppForm = ({
         onChange={(e) => updateName(e.target.value)}
         error={nameError}
         value={name}
-        margin={{ bottom: 'large' }}
       />
 
-      <Input
+      <FormField
         label='Chart Version'
-        id='chart-version'
-        description='This will determine what version of the app eventually gets installed.'
+        htmlFor='chart-version'
+        help='This will determine what version of the app eventually gets installed.'
+        contentProps={{
+          border: false,
+        }}
       >
         <VersionPicker
+          id='chart-version'
           onChange={updateVersion}
           selectedVersion={version}
           versions={availableVersions}
         />
-      </Input>
+      </FormField>
 
       {formAbilities.hasFixedNamespace ? (
         <TextInput
@@ -131,23 +126,21 @@ const InstallAppForm = ({
       )}
 
       <FileInput
-        description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
+        help='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
         label='User level config values YAML'
         id='user-level-config'
         onChange={updateValuesYAML}
-        validationError={valuesYAMLError}
-        value={valuesYAML}
+        error={valuesYAMLError}
       />
 
       <FileInput
-        description='Sensitive configuration values can be uploaded separately.'
+        help='Sensitive configuration values can be uploaded separately.'
         label='User level secret values YAML'
         id='user-level-secret'
         onChange={updateSecretsYAML}
-        validationError={secretsYAMLError}
-        value={secretsYAML}
+        error={secretsYAMLError}
       />
-    </FormWrapper>
+    </Box>
   );
 };
 
@@ -158,11 +151,9 @@ InstallAppForm.propTypes = {
   namespace: PropTypes.string,
   namespaceError: PropTypes.string,
   valuesYAMLError: PropTypes.string,
-  valuesYAML: PropTypes.object,
   version: PropTypes.string,
   availableVersions: PropTypes.array,
   secretsYAMLError: PropTypes.string,
-  secretsYAML: PropTypes.object,
   onChangeName: PropTypes.func,
   onChangeNamespace: PropTypes.func,
   onChangeValuesYAML: PropTypes.func,

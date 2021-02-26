@@ -2,13 +2,12 @@ import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/Ins
 import { useInstanceTypeSelectionLabels } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React from 'react';
-import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
+import InputGroup from 'UI/Inputs/InputGroup';
 
 type ChangeHandler = (machineType: string) => void;
 
 interface IAddNodePoolMachineTypeProps
-  extends React.ComponentPropsWithoutRef<typeof StyledInput> {
-  id?: string;
+  extends Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange'> {
   machineType?: string;
   onChange?: ChangeHandler;
 }
@@ -22,18 +21,12 @@ const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
   const { singular: label } = useInstanceTypeSelectionLabels();
 
   return (
-    <StyledInput
-      {...rest}
-      inputId={`machine-type-${id as string}`}
-      label={label}
-      // regular space, hides hint ;)
-      hint={<>&#32;</>}
-    >
+    <InputGroup {...rest} label={label}>
       <InstanceTypeSelector
         selectedInstanceType={machineType as string}
         selectInstanceType={onChange as ChangeHandler}
       />
-    </StyledInput>
+    </InputGroup>
   );
 };
 

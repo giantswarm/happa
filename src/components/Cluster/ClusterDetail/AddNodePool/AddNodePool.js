@@ -5,6 +5,7 @@ import {
 } from 'Cluster/AZSelection/AZSelectionUtils';
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
 import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolSpotInstances';
+import { Box } from 'grommet';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -13,16 +14,9 @@ import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import styled from 'styled-components';
-import ClusterCreationLabelSpan from 'UI/Display/Cluster/ClusterCreation/ClusterCreationLabelSpan';
-import Section from 'UI/Display/Cluster/ClusterCreation/Section';
-import StyledInput from 'UI/Display/Cluster/ClusterCreation/StyledInput';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
+import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
-
-const AZSelectionWrapper = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacingPx * 4}px;
-`;
 
 class AddNodePool extends Component {
   state = {
@@ -410,40 +404,39 @@ class AddNodePool extends Component {
     }
 
     return (
-      <>
-        <Section>
+      <Box
+        direction='column'
+        gap='medium'
+        pad={{ top: 'small', bottom: 'large' }}
+      >
+        <InputGroup htmlFor={`node-pool-name-${id}`} label='Name'>
           <TextInput
             value={name.value}
-            label='Name'
             id={`node-pool-name-${id}`}
             placeholder={name.value === '' ? 'Unnamed node pool' : null}
             error={name.validationError}
             onChange={(e) => this.updateName(e.target.value)}
             help='Pick a name that helps team mates to understand what these nodes are here for. You can change this later. Each node pool also gets a unique identifier.'
           />
-        </Section>
-        <Section>
-          <AddNodePoolMachineType
-            id={id}
-            onChange={this.setMachineType}
-            machineType={machineType}
+        </InputGroup>
+        <AddNodePoolMachineType
+          id={id}
+          onChange={this.setMachineType}
+          machineType={machineType}
+        />
+
+        {supportsAlikeInstances && (
+          <CheckBoxInput
+            checked={this.state.aws.useAlike}
+            onChange={(e) => this.setUseAlikeInstancesEnabled(e.target.checked)}
+            label='Allow usage of similar instance types'
           />
+        )}
 
-          {supportsAlikeInstances && (
-            <CheckBoxInput
-              checked={this.state.aws.useAlike}
-              onChange={(e) =>
-                this.setUseAlikeInstancesEnabled(e.target.checked)
-              }
-              label='Allow usage of similar instance types'
-            />
-          )}
-        </Section>
-
-        <AZSelectionWrapper>
-          <ClusterCreationLabelSpan as='div'>
-            Availability Zones selection
-          </ClusterCreationLabelSpan>
+        <InputGroup
+          label='Availability zones selection'
+          margin={{ top: 'small' }}
+        >
           <AZSelection
             variant={AZSelectionVariants.NodePool}
             uniqueIdentifier={`np-${id}-az`}
@@ -459,21 +452,21 @@ class AddNodePool extends Component {
             selectedZones={zonesArray}
             onUpdateZones={this.updateAZ}
           />
-        </AZSelectionWrapper>
+        </InputGroup>
 
         {supportsNodePoolSpotInstances && (
-          <Section>
-            <StyledInput
+          <>
+            <InputGroup
+              htmlFor={`spot-instances-${id}`}
               label={spotInstancesLabel}
-              id={`spot-instances-${id}`} // regular space, hides hint ;)
-              hint={<>&#32;</>}
             >
               <CheckBoxInput
+                id={`spot-instances-${id}`}
                 checked={this.state.spotInstancesEnabled}
                 onChange={(e) => this.setSpotInstancesEnabled(e.target.checked)}
                 label={spotInstancesToggleLabel}
               />
-            </StyledInput>
+            </InputGroup>
             {this.state.spotInstancesEnabled && (
               <AddNodePoolSpotInstances
                 provider={provider}
@@ -496,19 +489,18 @@ class AddNodePool extends Component {
                 setUseOnDemandPricing={this.setSpotInstancesUseOnDemandPricing}
               />
             )}
-          </Section>
+          </>
         )}
-        <Section className='scaling-range'>
-          <StyledInput labelId={`scaling-range-${id}`} label={scalingLabel}>
-            <NodeCountSelector
-              autoscalingEnabled={supportsNodePoolAutoscaling}
-              onChange={this.updateScaling}
-              readOnly={false}
-              scaling={this.state.scaling}
-            />
-          </StyledInput>
-        </Section>
-      </>
+        <InputGroup htmlFor={`scaling-range-${id}`} label={scalingLabel}>
+          <NodeCountSelector
+            id={`scaling-range-${id}`}
+            autoscalingEnabled={supportsNodePoolAutoscaling}
+            onChange={this.updateScaling}
+            readOnly={false}
+            scaling={this.state.scaling}
+          />
+        </InputGroup>
+      </Box>
     );
   }
 }

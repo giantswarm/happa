@@ -16,6 +16,8 @@ Object.defineProperty(window.navigator, 'onLine', {
   },
 });
 
+window.scrollTo = jest.fn();
+
 configure({
   asyncUtilTimeout: 4500,
 });

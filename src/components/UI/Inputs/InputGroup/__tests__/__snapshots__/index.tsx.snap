@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputGroup renders a simple input 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 hehMkM FormField__FormFieldBox-m9hood-0 jGEMXj"
+    >
+      <label
+        class="StyledText-sc-1sadyjn-0 esuSAl"
+      >
+        <span
+          class="StyledText-sc-1sadyjn-0 enovsV"
+        >
+          A nice group of inputs
+        </span>
+      </label>
+      <div
+        class="StyledBox-sc-13pk1d4-0 juuJxj FormField__FormFieldContentBox-m9hood-1"
+      />
+    </div>
+  </div>
+</div>
+`;
