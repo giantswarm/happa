@@ -88,6 +88,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
               formFieldProps={{
                 margin: 'none',
               }}
+              tabIndex={-1}
             />
           </RUMActionTarget>
         </TableCell>
