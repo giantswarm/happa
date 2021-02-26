@@ -91,7 +91,7 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
     {
       classes: 'expiry',
       dataField: 'expiry',
-      text: 'EXPIRES',
+      text: 'Expires',
       sort: true,
       formatter: (cell, row) =>
         getExpiryCellFormatter(cell, row, onRemoveExpiration),

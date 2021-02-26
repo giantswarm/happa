@@ -37,20 +37,20 @@ const getTableColumnsConfig = () => {
     {
       classes: 'created',
       dataField: 'created',
-      text: 'INVITED',
+      text: 'Invited',
       sort: true,
       formatter: relativeDate,
     },
     {
       classes: 'invited_by',
       dataField: 'invited_by',
-      text: 'INVITED BY',
+      text: 'Invited by',
       sort: true,
     },
     {
       classes: 'expiry',
       dataField: 'expiry',
-      text: 'EXPIRES',
+      text: 'Expires',
       sort: true,
       formatter: relativeDate,
     },
