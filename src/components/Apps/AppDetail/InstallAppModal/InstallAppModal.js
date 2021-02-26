@@ -33,10 +33,10 @@ const InstallAppModal = (props) => {
   const [namespace, setNamespace] = useState('');
   const [namespaceError, setNamespaceError] = useState('');
 
-  const [valuesYAML, setValuesYAML] = useState({});
+  const [valuesYAML, setValuesYAML] = useState(null);
   const [valuesYAMLError, setValuesYAMLError] = useState('');
 
-  const [secretsYAML, setSecretsYAML] = useState({});
+  const [secretsYAML, setSecretsYAML] = useState(null);
   const [secretsYAMLError, setSecretsYAMLError] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -128,7 +128,7 @@ const InstallAppModal = (props) => {
 
   const updateValuesYAML = (files) => {
     if (files.length < 1) {
-      setValuesYAML({});
+      setValuesYAML(null);
       setValuesYAMLError('');
 
       return;
@@ -151,7 +151,7 @@ const InstallAppModal = (props) => {
 
   const updateSecretsYAML = (files) => {
     if (files.length < 1) {
-      setSecretsYAML({});
+      setSecretsYAML(null);
       setSecretsYAMLError('');
 
       return;
