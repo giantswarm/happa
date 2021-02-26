@@ -13,9 +13,15 @@ import {
   SelectedDescription,
   SelectedItem,
   SelectedWrapper,
-  Table,
 } from 'UI/Controls/ExpandableSelector/Selector';
 import InstanceType from 'UI/Display/Cluster/InstanceType';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from 'UI/Display/Table';
 
 import InstanceTypeRow from './InstanceTypeRow';
 
@@ -76,16 +82,16 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
       </div>
       {!collapsed && (
         <Table>
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Name</th>
-              <th>CPU</th>
-              <th>Memory</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader>
+            <TableRow>
+              <TableCell />
+              <TableCell>Name</TableCell>
+              <TableCell align='center'>CPU</TableCell>
+              <TableCell align='center'>Memory</TableCell>
+              <TableCell>Description</TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {allowedInstanceTypes.map((instanceType) => (
               <InstanceTypeRow
                 key={instanceType.name}
@@ -94,7 +100,7 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
                 selectInstanceType={selectInstanceType}
               />
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       )}
     </>
