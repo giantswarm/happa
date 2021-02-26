@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const StyledTableDataCell = styled.td`
-  text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
-`;
+import { TableCell, TableRow } from 'UI/Display/Table';
 
 const OrganizationListRow = ({
   clusters,
@@ -19,27 +15,27 @@ const OrganizationListRow = ({
   const hasCredentials = organization.credentials.length > 0;
 
   return (
-    <tr>
-      <StyledTableDataCell data-testid={`${orgID}-name`}>
+    <TableRow>
+      <TableCell data-testid={`${orgID}-name`}>
         <Link to={organizationDetailURL}>{orgID}</Link>
-      </StyledTableDataCell>
-      <StyledTableDataCell centered={true} data-testid={`${orgID}-clusters`}>
+      </TableCell>
+      <TableCell align='center' data-testid={`${orgID}-clusters`}>
         <Link to={organizationDetailURL}>{clusters.length}</Link>
-      </StyledTableDataCell>
-      <StyledTableDataCell centered={true} data-testid={`${orgID}-members`}>
+      </TableCell>
+      <TableCell align='center' data-testid={`${orgID}-members`}>
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
-      </StyledTableDataCell>
+      </TableCell>
 
       {supportsMultiAccount && (
-        <StyledTableDataCell centered={true}>
+        <TableCell align='center'>
           {hasCredentials && (
             <Link to={organizationDetailURL}>
               <i className='fa fa-done' />
             </Link>
           )}
-        </StyledTableDataCell>
+        </TableCell>
       )}
-    </tr>
+    </TableRow>
   );
 };
 

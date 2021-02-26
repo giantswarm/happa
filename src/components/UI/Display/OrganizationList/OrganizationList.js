@@ -2,30 +2,35 @@ import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from 'UI/Display/Table';
 
 import Row from './OrganizationListRow';
 
-const StyledTableHeader = styled.th`
-  text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
+const StyledTable = styled(Table)`
+  width: 100%;
 `;
 
 const OrganizationList = ({ supportsMultiAccount, ...props }) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <StyledTableHeader>Name</StyledTableHeader>
-          <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
-          <StyledTableHeader centered={true}>Members</StyledTableHeader>
+    <StyledTable margin={{ bottom: 'medium' }}>
+      <TableHeader>
+        <TableRow>
+          <TableCell>Name</TableCell>
+          <TableCell align='center'>Clusters</TableCell>
+          <TableCell align='center'>Members</TableCell>
 
           {supportsMultiAccount && (
-            <StyledTableHeader centered={true}>
-              Provider Credentials
-            </StyledTableHeader>
+            <TableCell align='center'>Provider Credentials</TableCell>
           )}
-        </tr>
-      </thead>
-      <tbody>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {props.organizations.map((organization) => {
           return (
             <Row
@@ -41,8 +46,8 @@ const OrganizationList = ({ supportsMultiAccount, ...props }) => {
             />
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </StyledTable>
   );
 };
 
