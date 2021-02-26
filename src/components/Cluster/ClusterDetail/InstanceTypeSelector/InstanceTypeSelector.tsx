@@ -51,6 +51,14 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
   const { cpu, ram } = useInstanceTypeCapabilities(selectedInstanceType);
   const allowedInstanceTypes = useAllowedInstanceTypes();
 
+  const handleTabSelect = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    // Handle tapping the space bar.
+    if (e.key === ' ') {
+      e.preventDefault();
+      setCollapsed(!collapsed);
+    }
+  };
+
   return (
     <>
       <SelectedWrapper>
@@ -71,12 +79,22 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         >
           <ListToggler
             role='button'
+            id='machine-type-selector__toggler'
+            aria-expanded={!collapsed}
+            aria-labelledby='available-machines-label'
+            tabIndex={0}
             onClick={() => setCollapsed(!collapsed)}
             collapsible={true}
+            onKeyDown={handleTabSelect}
             title={`Show/hide available ${plural}`}
           >
-            <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
-            Available {plural}
+            <i
+              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+              aria-hidden='true'
+              aria-label='Toggle'
+              role='presentation'
+            />
+            <span id='available-machines-label'>Available {plural}</span>
           </ListToggler>
         </RUMActionTarget>
       </div>
@@ -91,7 +109,11 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
               <TableCell>Description</TableCell>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody
+            role='radiogroup'
+            tabIndex={-1}
+            aria-labelledby='machine-type-selector__toggler'
+          >
             {allowedInstanceTypes.map((instanceType) => (
               <InstanceTypeRow
                 key={instanceType.name}
