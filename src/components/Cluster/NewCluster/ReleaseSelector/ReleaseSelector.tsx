@@ -21,10 +21,16 @@ import {
   SelectedDescription,
   SelectedItem,
   SelectedWrapper,
-  Table,
 } from 'UI/Controls/ExpandableSelector/Selector';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from 'UI/Display/Table';
 
 import ReleaseRow from './ReleaseRow';
 
@@ -190,17 +196,17 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
             </p>
           )}
           <Table>
-            <thead>
-              <tr>
-                <th>&nbsp;</th>
-                <th>Version</th>
-                <th>Released</th>
-                <th>Kubernetes</th>
-                <th>Components</th>
-                <th>Notes</th>
-              </tr>
-            </thead>
-            <tbody
+            <TableHeader>
+              <TableRow>
+                <TableCell />
+                <TableCell>Version</TableCell>
+                <TableCell align='center'>Released</TableCell>
+                <TableCell align='center'>Kubernetes</TableCell>
+                <TableCell align='center'>Components</TableCell>
+                <TableCell align='center'>Notes</TableCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody
               role='radiogroup'
               tabIndex={-1}
               aria-labelledby='release-selector__toggler'
@@ -213,7 +219,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
                   selectRelease={selectRelease}
                 />
               ))}
-            </tbody>
+            </TableBody>
           </Table>
         </>
       )}
