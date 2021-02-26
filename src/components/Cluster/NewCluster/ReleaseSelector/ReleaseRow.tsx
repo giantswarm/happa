@@ -26,7 +26,9 @@ const StyledTableRow = styled(TableRow)`
     props.theme.global.colors['background-front'].dark};
 
   :hover {
-    background: ${({ theme }) => theme.global.colors.border.dark};
+    background: ${(props) =>
+      !props['aria-checked'] &&
+      props.theme.global.colors['background-contrast'].dark};
   }
 
   .button-wrapper {
