@@ -737,7 +737,6 @@ const theme = deepMerge(generate(16), {
     body: {
       pad: 'small',
     },
-    row: {},
     extend: () => css`
       caption {
         font-size: ${(props) => props.theme.text.large.size};
