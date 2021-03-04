@@ -2,7 +2,7 @@ interface ILoggedInUserAuthScheme {
   scheme: import('shared/types').PropertiesOf<
     typeof import('shared/constants').AuthorizationTypes
   >;
-  idToken: string;
+  token: string;
 }
 
 interface ILoggedInUser {
