@@ -14,6 +14,7 @@ import {
   listCatalogs,
   loadClusterApps,
 } from 'stores/appcatalog/actions';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import {
   clusterCreate,
   clusterDeleteConfirmed,
@@ -37,7 +38,7 @@ import {
 } from 'stores/main/actions';
 import { getInfo } from 'stores/main/actions';
 import { getUserIsAdmin } from 'stores/main/selectors';
-import { loadUser } from 'stores/mapiauth/actions';
+import { handleLogin } from 'stores/mapiauth/actions';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -60,12 +61,17 @@ export function batchedLayout(): ThunkAction<
   void,
   AnyAction
 > {
-  return async (dispatch, getState) => {
+  return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
     dispatch(globalLoadStart());
 
     try {
       await dispatch(refreshUserInfo());
       await dispatch(getInfo());
+
+      if (FeatureFlags.FEATURE_MAPI_ACCESS) {
+        const auth = MapiAuth.getInstance();
+        await dispatch(handleLogin(auth));
+      }
     } catch (err) {
       dispatch(globalLoadError());
 
@@ -78,15 +84,6 @@ export function batchedLayout(): ThunkAction<
       ErrorReporter.getInstance().notify(err);
 
       return;
-    }
-
-    if (FeatureFlags.FEATURE_MAPI_ACCESS) {
-      try {
-        dispatch(loadUser(MapiAuth.getInstance()));
-      } catch (err) {
-        dispatch(globalLoadError());
-        ErrorReporter.getInstance().notify(err);
-      }
     }
 
     try {

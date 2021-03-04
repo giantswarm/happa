@@ -8,7 +8,6 @@ const MainRoutes = {
   SignUp: '/signup/:token',
   OAuthCallback: '/oauth/callback',
   MapiAccess: '/mapi-access',
-  MapiAccessCallback: '/mapi-access/callback',
   StyleGuide: '/styleguide',
 };
 

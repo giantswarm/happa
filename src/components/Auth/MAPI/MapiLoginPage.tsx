@@ -2,9 +2,9 @@ import MapiLoginButton from 'Auth/MAPI/MapiLoginButton';
 import MapiLoginStatusText from 'Auth/MAPI/MapiLoginStatusText';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { getMapiAuthUser } from 'stores/mapiauth/selectors';
@@ -19,8 +19,6 @@ const MapiStatus = styled.div`
 interface IMapiLoginPageProps {}
 
 const MapiLoginPage: React.FC<IMapiLoginPageProps> = () => {
-  const dispatch = useDispatch();
-
   const user = useSelector(getMapiAuthUser);
   const isLoggedIn = user !== null;
 
@@ -44,26 +42,6 @@ const MapiLoginPage: React.FC<IMapiLoginPageProps> = () => {
     },
     [isLoggedIn]
   );
-
-  useEffect(() => {
-    const currentURL = window.location.href;
-
-    if (currentURL.includes(MainRoutes.MapiAccessCallback)) {
-      const handleAuthParams = async () => {
-        try {
-          const auth = MapiAuth.getInstance();
-          await auth.handleLoginResponse(currentURL);
-
-          // Force a reload, so we could re-run the batched actions.
-          window.location.href = MainRoutes.Home;
-        } catch (err) {
-          new FlashMessage(err.message, messageType.ERROR, messageTTL.MEDIUM);
-        }
-      };
-
-      handleAuthParams();
-    }
-  }, [dispatch]);
 
   return (
     <Breadcrumb
