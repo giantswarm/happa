@@ -13,59 +13,22 @@ export interface IOAuth2User {
   emailVerified: boolean;
 }
 
-class OAuth2UserImpl implements IOAuth2User {
-  public readonly idToken: string = '';
-  public readonly refreshToken: string = '';
-  public readonly expiresAt: number = 0;
-  public readonly authorizationType: PropertiesOf<typeof AuthorizationTypes> =
-    AuthorizationTypes.BEARER;
+export function isUserExpired(user: IOAuth2User): boolean {
+  const sInMs = 1000;
+  const now = Math.trunc(Date.now() / sInMs); // In seconds.
+  const expiresIn = user.expiresAt - now;
 
-  public readonly groups: string[] = [];
-  public readonly email: string = '';
-  public readonly emailVerified: boolean = false;
-
-  public static fromOIDCUser(user: User): OAuth2UserImpl {
-    const newUser = new OAuth2UserImpl({
-      idToken: user.id_token,
-      refreshToken: user.refresh_token,
-      expiresAt: user.expires_at,
-      groups: user.profile.groups || [],
-      email: user.profile.email,
-      emailVerified: user.profile.email_verified,
-    });
-
-    return newUser;
-  }
-
-  constructor(fromObj?: Partial<IOAuth2User>) {
-    if (!fromObj) return;
-
-    for (const [key, value] of Object.entries(fromObj)) {
-      // @ts-ignore
-      this[key] = value;
-    }
-  }
-
-  public isExpired(): boolean {
-    const sInMs = 1000;
-    const now = Math.trunc(Date.now() / sInMs); // In seconds.
-    const expiresIn = this.expiresAt - now;
-
-    return expiresIn <= 0;
-  }
-
-  public serialize(): IOAuth2User {
-    return {
-      idToken: this.idToken,
-      refreshToken: this.refreshToken,
-      expiresAt: this.expiresAt,
-      authorizationType: this.authorizationType,
-
-      groups: this.groups,
-      email: this.email,
-      emailVerified: this.emailVerified,
-    };
-  }
+  return expiresIn <= 0;
 }
 
-export default OAuth2UserImpl;
+export function getUserFromOIDCUser(user: User): IOAuth2User {
+  return {
+    authorizationType: AuthorizationTypes.BEARER,
+    idToken: user.id_token,
+    refreshToken: user.refresh_token ?? '',
+    expiresAt: user.expires_at,
+    groups: user.profile.groups ?? [],
+    email: user.profile.email ?? '',
+    emailVerified: user.profile.email_verified ?? false,
+  };
+}

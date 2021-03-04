@@ -2,13 +2,14 @@ import {
   convertToOIDCMetadata,
   IOAuth2CustomMetadata,
 } from 'lib/OAuth2/OAuth2CustomMetadata';
-import OAuth2UserImpl from 'lib/OAuth2/OAuth2User';
 import {
   User,
   UserManager,
   UserManagerSettings,
   WebStorageStateStore,
 } from 'oidc-client';
+
+import { getUserFromOIDCUser, IOAuth2User } from './OAuth2User';
 
 export enum OAuth2Events {
   UserLoaded = 'userLoaded',
@@ -20,7 +21,7 @@ export enum OAuth2Events {
 }
 
 interface IOAuth2EventCallbacks {
-  [OAuth2Events.UserLoaded]: (event: CustomEvent<OAuth2UserImpl>) => void;
+  [OAuth2Events.UserLoaded]: (event: CustomEvent<IOAuth2User>) => void;
   [OAuth2Events.TokenExpired]: () => void;
   [OAuth2Events.TokenExpiring]: () => void;
   [OAuth2Events.UserUnloaded]: () => void;
@@ -98,16 +99,14 @@ class OAuth2 {
     return this.userManager.signinRedirect({ useReplaceToNavigate: true });
   }
 
-  public async handleLoginResponse(
-    currentURL: string
-  ): Promise<OAuth2UserImpl> {
+  public async handleLoginResponse(currentURL: string): Promise<IOAuth2User> {
     const origUser = await this.userManager.signinRedirectCallback(currentURL);
-    const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+    const newUser = getUserFromOIDCUser(origUser);
 
     return newUser;
   }
 
-  public async getLoggedInUser(): Promise<OAuth2UserImpl | null> {
+  public async getLoggedInUser(): Promise<IOAuth2User | null> {
     let origUser = await this.userManager.getUser();
     if (!origUser) return null;
 
@@ -117,16 +116,16 @@ class OAuth2 {
     }
 
     this.userManager.events.load(origUser);
-    const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+    const newUser = getUserFromOIDCUser(origUser);
 
     return newUser;
   }
 
-  public async renewUser(): Promise<OAuth2UserImpl> {
+  public async renewUser(): Promise<IOAuth2User> {
     const origUser = await this.userManager.signinSilent();
 
     this.userManager.events.load(origUser);
-    const newUser = OAuth2UserImpl.fromOIDCUser(origUser);
+    const newUser = getUserFromOIDCUser(origUser);
 
     return newUser;
   }
@@ -171,7 +170,7 @@ class OAuth2 {
   }
 
   protected onUserLoaded = (user: User) => {
-    const newUser = OAuth2UserImpl.fromOIDCUser(user);
+    const newUser = getUserFromOIDCUser(user);
     const event = new CustomEvent(OAuth2Events.UserLoaded, {
       detail: newUser,
     });

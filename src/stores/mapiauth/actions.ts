@@ -69,7 +69,7 @@ export const loadUser = createAsynchronousAction<
     const user = await mapiAuth.getLoggedInUser();
     if (!user) return null;
 
-    return user.serialize();
+    return user;
   },
   shouldPerform: () => true,
   throwOnError: true,

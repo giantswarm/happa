@@ -1,5 +1,5 @@
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
-import OAuth2UserImpl from 'lib/OAuth2/OAuth2User';
+import { isUserExpired } from 'lib/OAuth2/OAuth2User';
 import { AnyAction, Middleware } from 'redux';
 import { loadUserError, userExpired } from 'stores/mapiauth/actions';
 import {
@@ -20,8 +20,7 @@ export function mapiAuthMiddleware(mapiAuth: MapiAuth): Middleware {
 
     const loggedInUser = getMapiAuthUser(store.getState());
     if (loggedInUser) {
-      const user = new OAuth2UserImpl(loggedInUser);
-      if (!user.isExpired()) {
+      if (!isUserExpired(loggedInUser)) {
         // User's all good, you can pass.
         return next(action);
       }
@@ -30,7 +29,7 @@ export function mapiAuthMiddleware(mapiAuth: MapiAuth): Middleware {
     // Let's get the latest user information.
     try {
       const user = await mapiAuth.getLoggedInUser();
-      if (user?.isExpired()) {
+      if (user && isUserExpired(user)) {
         /**
          * If we're getting here, it means that the renewal failed,
          * so we need to clear the user data to prevent infinite loops.

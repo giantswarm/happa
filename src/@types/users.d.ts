@@ -3,12 +3,21 @@ interface ILoggedInUserAuthScheme {
     typeof import('shared/constants').AuthorizationTypes
   >;
   token: string;
+
+  /* OIDC specific. */
+  refreshToken?: string;
+  expiresAt?: number;
 }
 
 interface ILoggedInUser {
   auth: ILoggedInUserAuthScheme;
   email: string;
   isAdmin: boolean;
+
+  /* OIDC specific. */
+  emailVerified?: boolean;
+  groups?: string[];
+
   /* @deprecated */
   authToken?: string;
 }
