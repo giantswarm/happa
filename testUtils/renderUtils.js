@@ -21,7 +21,7 @@ export const initialStorage = {
  * @param {String} initialRoute - The route to load.
  * @param {Object} state - The initial store state.
  * @param {Object} storage - The initial local storage state.
- * @param {MapiAuth} mapiAuth Control Plane API handler.
+ * @param {MapiAuth} mapiAuth Management API handler.
  */
 export function renderRouteWithStore(
   initialRoute = MainRoutes.Home,
@@ -84,7 +84,7 @@ export function renderWithStore(component, props, state, options) {
  * @param {Record<string, any>} state Current Store state
  * @param {Record<string, any>} storage Current LocalStorage value
  * @param {History<any>} history Current Browser history
- * @param {MapiAuth} mapiAuth Control Plane API handler.
+ * @param {MapiAuth} mapiAuth Management API handler.
  */
 export function getComponentWithStore(
   Component,

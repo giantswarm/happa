@@ -1,3 +1,4 @@
+import { LoggedInUserTypes } from 'stores/main/utils';
 import { fetchUserFromStorage } from 'utils/localStorageUtils';
 
 describe('localStorageUtils', () => {
@@ -10,6 +11,7 @@ describe('localStorageUtils', () => {
         },
         email: '',
         isAdmin: false,
+        type: LoggedInUserTypes.GS,
       };
       localStorage.setItem('user', JSON.stringify(user));
 
@@ -34,6 +36,7 @@ describe('localStorageUtils', () => {
         email: '',
         isAdmin: false,
         authToken: '123',
+        type: LoggedInUserTypes.GS,
       };
       localStorage.setItem('user', JSON.stringify(user));
 
@@ -45,6 +48,7 @@ describe('localStorageUtils', () => {
         email: '',
         isAdmin: false,
         authToken: '123',
+        type: LoggedInUserTypes.GS,
       });
       localStorage.removeItem('user');
     });

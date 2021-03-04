@@ -18,7 +18,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import FeatureFlags from 'shared/FeatureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
@@ -56,14 +55,12 @@ declare global {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/init-declarations
-let mapiAccess: MapiAuth | undefined;
-if (FeatureFlags.FEATURE_MAPI_ACCESS) {
-  mapiAccess = MapiAuth.getInstance();
-}
-
 // Configure the redux store.
-const store: Store = configureStore({} as IState, history, mapiAccess);
+const store: Store = configureStore(
+  {} as IState,
+  history,
+  MapiAuth.getInstance()
+);
 
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();

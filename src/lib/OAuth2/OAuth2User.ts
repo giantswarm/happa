@@ -13,14 +13,6 @@ export interface IOAuth2User {
   emailVerified: boolean;
 }
 
-export function isUserExpired(user: IOAuth2User): boolean {
-  const sInMs = 1000;
-  const now = Math.trunc(Date.now() / sInMs); // In seconds.
-  const expiresIn = user.expiresAt - now;
-
-  return expiresIn <= 0;
-}
-
 export function getUserFromOIDCUser(user: User): IOAuth2User {
   return {
     authorizationType: AuthorizationTypes.BEARER,

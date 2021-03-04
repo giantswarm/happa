@@ -33,6 +33,8 @@ function monkeyPatchGiantSwarmClient(store: Store) {
   ) {
     const defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
 
+    // TODO(axbarsan): Move into middleware.
+
     /**
      * If we're using a JWT token, and it's expired, refresh the token before making
      * any call.

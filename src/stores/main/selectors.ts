@@ -1,6 +1,5 @@
 import Auth from 'lib/auth0';
 import { isJwtExpired } from 'lib/helpers';
-import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
@@ -12,6 +11,8 @@ import {
 import { PropertiesOf } from 'shared/types';
 import { auth0Login } from 'stores/main/actions';
 import { IState } from 'stores/state';
+
+import { LoggedInUserTypes } from './utils';
 
 export interface ISSOError {
   status: number;
@@ -38,26 +39,28 @@ export const selectAuthToken = (
   ): Promise<
     [token: string, scheme: PropertiesOf<typeof AuthorizationTypes>]
   > => {
-    const auth = state.main.loggedInUser?.auth ?? null;
-    if (!auth) {
+    // TODO(axbarsan): Remove async logic.
+
+    const user = state.main.loggedInUser;
+    if (!user) {
       return Promise.reject(new Error('You are not logged in.'));
     }
-    const scheme = auth.scheme;
-    let currentToken = auth.token;
+
+    let currentToken = user.auth.token;
 
     try {
       /**
        * Renew the token if the user is logged in via SSO,
        * and the current token is expired.
        * */
-      if (scheme === AuthorizationTypes.BEARER && isJwtExpired(currentToken)) {
+      if (user.type === LoggedInUserTypes.Auth0 && isJwtExpired(currentToken)) {
         const newAuthData = await Auth.getInstance().renewToken();
         currentToken = newAuthData.accessToken;
 
         await dispatch(auth0Login(newAuthData));
       }
 
-      return [currentToken, scheme];
+      return [currentToken, user.auth.scheme];
     } catch (err: unknown) {
       const newErr: ISSOError = Object.assign({}, err, {
         status: StatusCodes.Unauthorized,
@@ -138,6 +141,6 @@ export function getK8sVersionEOLDate(version: string) {
   };
 }
 
-export function getMapiAuthUser(state: IState): IOAuth2User | null {
-  return state.main.mapiUser ?? null;
+export function getLoggedInUser(state: IState): ILoggedInUser | null {
+  return state.main.loggedInUser;
 }

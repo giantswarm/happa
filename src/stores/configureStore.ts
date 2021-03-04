@@ -9,8 +9,7 @@ import {
   Store,
 } from 'redux';
 import thunk from 'redux-thunk';
-import FeatureFlags from 'shared/FeatureFlags';
-import { mapiAuthMiddleware } from 'stores/main/middlware';
+import { mainAuthMiddleware } from 'stores/main/middleware';
 import rootReducer from 'stores/rootReducer';
 import { IState } from 'stores/state';
 
@@ -24,17 +23,14 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default function configureStore(
   initialState: IState,
   history: History<History.LocationState>,
-  mapiAuth?: MapiAuth
+  mapiAuth: MapiAuth
 ) {
   const middleware: Middleware[] = [
     routerMiddleware(history),
     thunk,
+    mainAuthMiddleware(mapiAuth),
     callAPIMiddleware,
   ];
-
-  if (FeatureFlags.FEATURE_MAPI_ACCESS && mapiAuth) {
-    middleware.push(mapiAuthMiddleware(mapiAuth));
-  }
 
   store = createStore(
     rootReducer(history),

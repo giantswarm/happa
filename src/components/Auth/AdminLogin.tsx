@@ -8,10 +8,10 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import { MainActions } from 'stores/main/types';
+import { LoggedInUserTypes } from 'stores/main/utils';
 import { IState } from 'stores/state';
 
 interface IStateProps {
@@ -29,7 +29,7 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
     const auth = Auth.getInstance();
     const handleLogin = async () => {
       try {
-        if (user?.auth?.scheme === AuthorizationTypes.BEARER) {
+        if (user?.type === LoggedInUserTypes.Auth0) {
           if (isJwtExpired(user.auth.token)) {
             try {
               // Token is expired. Try to renew it silently, and if that succeeds, redirect

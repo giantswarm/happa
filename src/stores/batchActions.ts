@@ -7,7 +7,6 @@ import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
-import FeatureFlags from 'shared/FeatureFlags';
 import { INodePool } from 'shared/types';
 import {
   enableCatalog,
@@ -36,7 +35,7 @@ import {
   globalLoadStart,
   refreshUserInfo,
 } from 'stores/main/actions';
-import { getInfo, handleMapiLogin } from 'stores/main/actions';
+import { getInfo, resumeLogin } from 'stores/main/actions';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -64,14 +63,13 @@ export function batchedLayout(): ThunkAction<
     dispatch(globalLoadStart());
 
     try {
+      const auth = MapiAuth.getInstance();
+      await dispatch(resumeLogin(auth));
+
       await dispatch(refreshUserInfo());
       await dispatch(getInfo());
-
-      if (FeatureFlags.FEATURE_MAPI_ACCESS) {
-        const auth = MapiAuth.getInstance();
-        await dispatch(handleMapiLogin(auth));
-      }
     } catch (err) {
+      dispatch(push(MainRoutes.Login));
       dispatch(globalLoadError());
 
       new FlashMessage(
@@ -79,7 +77,6 @@ export function batchedLayout(): ThunkAction<
         messageType.WARNING,
         messageTTL.MEDIUM
       );
-      dispatch(push(MainRoutes.Login));
       ErrorReporter.getInstance().notify(err);
 
       return;

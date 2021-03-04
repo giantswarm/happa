@@ -4,7 +4,6 @@ import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
-import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -16,10 +15,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
-import {
-  createAsynchronousAction,
-  IAsynchronousDispatch,
-} from 'stores/asynchronousAction';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import {
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
@@ -34,13 +30,6 @@ import {
   LOGOUT_ERROR,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  MAPI_AUTH_USER_EXPIRED,
-  MAPI_AUTH_USER_EXPIRING,
-  MAPI_AUTH_USER_LOAD,
-  MAPI_AUTH_USER_LOAD_ERROR,
-  MAPI_AUTH_USER_LOAD_SUCCESS,
-  MAPI_AUTH_USER_SESSION_TERMINATED,
-  MAPI_AUTH_USER_SIGNED_OUT,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
@@ -51,6 +40,13 @@ import {
 import { selectAuthToken } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
 import { IState } from 'stores/state';
+import {
+  fetchUserFromStorage,
+  removeUserFromStorage,
+  setUserToStorage,
+} from 'utils/localStorageUtils';
+
+import { LoggedInUserTypes, mapOAuth2UserToUser } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -105,6 +101,12 @@ export function globalLoadError(): MainActions {
 }
 
 export function loginSuccess(userData: ILoggedInUser): MainActions {
+  const defaultClient = GiantSwarm.ApiClient.instance;
+  const defaultClientAuth =
+    defaultClient.authentications.AuthorizationHeaderToken;
+  defaultClientAuth.apiKey = userData.auth.token;
+  defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
+
   return {
     type: LOGIN_SUCCESS,
     userData,
@@ -146,14 +148,23 @@ export function refreshUserInfo(): ThunkAction<
       return Promise.reject(new Error('No logged in user to refresh.'));
     }
 
+    if (loggedInUser.type !== LoggedInUserTypes.GS) {
+      return Promise.resolve();
+    }
+
     try {
       dispatch({ type: REFRESH_USER_INFO_REQUEST });
       const usersApi = new GiantSwarm.UsersApi();
       const response = await usersApi.getCurrentUser();
 
+      const newUser = Object.assign({}, loggedInUser, {
+        email: response.email,
+      });
+      setUserToStorage(newUser);
+
       dispatch({
         type: REFRESH_USER_INFO_SUCCESS,
-        email: response.email,
+        loggedInUser: newUser,
       });
 
       return Promise.resolve();
@@ -208,9 +219,10 @@ export function auth0Login(
           token: authResult.accessToken,
         },
         isAdmin,
+        type: LoggedInUserTypes.Auth0,
       };
 
-      localStorage.setItem('user', JSON.stringify(userData));
+      setUserToStorage(userData);
       dispatch(loginSuccess(userData));
 
       resolve();
@@ -246,9 +258,10 @@ export function giantswarmLogin(
           token: response.auth_token,
         },
         isAdmin: false,
+        type: LoggedInUserTypes.GS,
       };
 
-      localStorage.setItem('user', JSON.stringify(userData));
+      setUserToStorage(userData);
       dispatch(loginSuccess(userData));
 
       return Promise.resolve();
@@ -256,32 +269,6 @@ export function giantswarmLogin(
       const message = (err as Error).message ?? (err as string);
       dispatch(loginError(message));
       dispatch(push(MainRoutes.Login));
-
-      return Promise.reject(err);
-    }
-  };
-}
-
-export function giantswarmLogout(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions | CallHistoryMethodAction
-> {
-  return async (dispatch) => {
-    try {
-      dispatch({ type: LOGOUT_REQUEST });
-
-      const authTokensApi = new GiantSwarm.AuthTokensApi();
-      await authTokensApi.deleteAuthToken();
-
-      dispatch(push(MainRoutes.Login));
-      dispatch(logoutSuccess());
-
-      return Promise.resolve();
-    } catch (err) {
-      dispatch(push(MainRoutes.Login));
-      dispatch(logoutError(err));
 
       return Promise.reject(err);
     }
@@ -343,74 +330,104 @@ export function setNewPassword(
   };
 }
 
-export function mapiUserExpiring(): MainActions {
-  return {
-    type: MAPI_AUTH_USER_EXPIRING,
-  };
-}
-
-export function mapiUserExpired(): MainActions {
-  return {
-    type: MAPI_AUTH_USER_EXPIRED,
-  };
-}
-
-export function mapiUserSignedOut(): MainActions {
-  return {
-    type: MAPI_AUTH_USER_SIGNED_OUT,
-  };
-}
-
-export function mapiUserSessionTerminated(): MainActions {
-  return {
-    type: MAPI_AUTH_USER_SESSION_TERMINATED,
-  };
-}
-
-export function loadMapiUserSuccess(user: IOAuth2User | null): MainActions {
-  return {
-    type: MAPI_AUTH_USER_LOAD_SUCCESS,
-    response: user,
-  };
-}
-
-export function loadMapiUserError(error: string): MainActions {
-  return {
-    type: MAPI_AUTH_USER_LOAD_ERROR,
-    error,
-  };
-}
-
-export const loadMapiUser = createAsynchronousAction<
-  MapiAuth,
-  IState,
-  IOAuth2User | null
->({
-  actionTypePrefix: MAPI_AUTH_USER_LOAD,
-  perform: async (_, _d, mapiAuth?: MapiAuth): Promise<IOAuth2User | null> => {
-    if (!mapiAuth) return null;
-
-    const user = await mapiAuth.getLoggedInUser();
-    if (!user) return null;
-
-    return user;
-  },
-  shouldPerform: () => true,
-  throwOnError: true,
-});
-
-export function handleMapiLogin(
+export function resumeLogin(
   mapiAuth: MapiAuth
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>) => {
+    // Try to resume GS user first.
+    let user = fetchUserFromStorage();
+    if (user) {
+      // Remove MAPI user if it exists.
+      await mapiAuth.logout();
+      dispatch(loginSuccess(user));
+
+      return Promise.resolve();
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
 
     if (isLoginResponse) {
       await mapiAuth.handleLoginResponse(window.location.href);
+      // Remove state and code from url.
       dispatch(replace(window.location.pathname));
     }
 
-    await dispatch(loadMapiUser(mapiAuth));
+    const mapiUser = await mapiAuth.getLoggedInUser();
+    if (mapiUser) {
+      // TODO(axbarsan): Check if this doesn't get executed twice.
+      user = mapOAuth2UserToUser(mapiUser);
+      dispatch(loginSuccess(user));
+
+      return Promise.resolve();
+    }
+
+    return Promise.reject(new Error('You are not logged in.'));
+  };
+}
+
+export function logout(
+  mapiAuth: MapiAuth
+): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  MainActions | CallHistoryMethodAction
+> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: LOGOUT_REQUEST });
+
+      const user = getState().main.loggedInUser;
+      if (!user) {
+        dispatch(push(MainRoutes.Login));
+        dispatch(logoutSuccess());
+
+        return Promise.resolve();
+      }
+
+      switch (user.type) {
+        case LoggedInUserTypes.GS: {
+          const authTokensApi = new GiantSwarm.AuthTokensApi();
+          await authTokensApi.deleteAuthToken();
+
+          break;
+        }
+        case LoggedInUserTypes.MAPI:
+          await mapiAuth.logout();
+
+          break;
+      }
+
+      dispatch(push(MainRoutes.Login));
+      dispatch(logoutSuccess());
+
+      return Promise.resolve();
+    } catch (err) {
+      dispatch(push(MainRoutes.Login));
+      dispatch(logoutError(err));
+
+      return Promise.reject(err);
+    }
+  };
+}
+
+export function mapiLogin(
+  mapiAuth: MapiAuth
+): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  MainActions | CallHistoryMethodAction
+> {
+  return async (dispatch) => {
+    try {
+      // Remove other types of users from cache.
+      removeUserFromStorage();
+      await mapiAuth.attemptLogin();
+    } catch (err) {
+      dispatch(loginError(err.message));
+      dispatch(push(MainRoutes.Login));
+    }
   };
 }

@@ -6,6 +6,7 @@ import auth0 from 'auth0-js';
 import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import React from 'react';
@@ -65,7 +66,8 @@ helpers.validateOrRaise = jest.fn();
 const renderRouteWithStore = (
   initialRoute = MainRoutes.Home,
   state = {},
-  storage = initialStorage
+  storage = initialStorage,
+  mapiAuth = MapiAuth.getInstance()
 ) => {
   localStorage.replaceWith(storage);
 
@@ -74,7 +76,7 @@ const renderRouteWithStore = (
     initialIndex: 0,
   });
 
-  store = configureStore(state, history);
+  store = configureStore(state, history, mapiAuth);
 
   const app = render(<App {...{ store, theme, history }} />);
 

@@ -1,6 +1,4 @@
-import MapiLoginPage from 'Auth/MAPI/MapiLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,7 +13,6 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
-import FeatureFlags from 'shared/FeatureFlags';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -33,21 +30,10 @@ const ONE_SECOND = 1000;
 const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
-const defaultClientAuth =
-  defaultClient.authentications['AuthorizationHeaderToken'];
 
 class Layout extends React.Component {
   componentDidMount() {
-    if (this.props.user) {
-      defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
-      defaultClientAuth.apiKey = this.props.user.auth.token;
-
-      // This is the first component that loads, these are the
-      // firsts calls happa makes to the API.
-      this.props.dispatch(batchedLayout());
-    } else {
-      this.props.dispatch(push(MainRoutes.Login));
-    }
+    this.props.dispatch(batchedLayout());
   }
 
   selectOrganization = (orgId) => {
@@ -88,13 +74,6 @@ class Layout extends React.Component {
                   exact
                   path={ExceptionNotificationTestRoutes.Home}
                 />
-
-                {FeatureFlags.FEATURE_MAPI_ACCESS && (
-                  <Route
-                    component={MapiLoginPage}
-                    path={MainRoutes.MapiAccess}
-                  />
-                )}
 
                 <Redirect path='*' to={MainRoutes.Home} />
               </Switch>

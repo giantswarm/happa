@@ -3,6 +3,7 @@ import { createMemoryHistory } from 'history';
 import Auth from 'lib/auth0';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { isJwtExpired } from 'lib/helpers';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import configureStore from 'stores/configureStore';
 import { IState } from 'stores/state';
 import { USER_EMAIL } from 'testUtils/mockHttpCalls';
@@ -46,7 +47,11 @@ describe('giantswarmClientPatcher', () => {
 
     (isJwtExpired as jest.Mock).mockImplementation(() => true);
 
-    const store = configureStore({} as IState, createMemoryHistory());
+    const store = configureStore(
+      {} as IState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     monkeyPatchGiantSwarmClient(store);
 
     await gsClient.callApi('test', 'GET', {}, {}, {}, {}, {}, [], [], [], {});
@@ -95,7 +100,11 @@ describe('giantswarmClientPatcher', () => {
 
     (isJwtExpired as jest.Mock).mockImplementation(() => false);
 
-    const store = configureStore({} as IState, createMemoryHistory());
+    const store = configureStore(
+      {} as IState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     monkeyPatchGiantSwarmClient(store);
 
     await gsClient.callApi('test', 'GET', {}, {}, {}, {}, {}, [], [], [], {});
@@ -144,7 +153,11 @@ describe('giantswarmClientPatcher', () => {
 
     (isJwtExpired as jest.Mock).mockImplementation(() => true);
 
-    const store = configureStore({} as IState, createMemoryHistory());
+    const store = configureStore(
+      {} as IState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     monkeyPatchGiantSwarmClient(store);
 
     await gsClient.callApi('test', 'GET', {}, {}, {}, {}, {}, [], [], [], {});
@@ -189,7 +202,11 @@ describe('giantswarmClientPatcher', () => {
 
     (isJwtExpired as jest.Mock).mockImplementation(() => true);
 
-    const store = configureStore({} as IState, createMemoryHistory());
+    const store = configureStore(
+      {} as IState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     monkeyPatchGiantSwarmClient(store);
 
     const promise = gsClient.callApi(

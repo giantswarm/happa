@@ -1,6 +1,7 @@
 import { IHttpRequest } from '@airbrake/browser/dist/http_req/api';
 import crossFetch from 'cross-fetch';
 import { createMemoryHistory } from 'history';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import { AuthorizationTypes } from 'shared/constants';
 import configureStore from 'stores/configureStore';
@@ -20,7 +21,11 @@ describe('patchedAirbrakeRequester', () => {
         loggedInUser: null,
       },
     } as unknown) as IState;
-    const store = configureStore(initialState, createMemoryHistory());
+    const store = configureStore(
+      initialState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     const requester = new Requester(store);
 
     const req: IHttpRequest = {
@@ -48,7 +53,11 @@ describe('patchedAirbrakeRequester', () => {
         },
       },
     } as unknown) as IState;
-    const store = configureStore(initialState, createMemoryHistory());
+    const store = configureStore(
+      initialState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     const requester = new Requester(store);
 
     const res = {
@@ -86,7 +95,11 @@ describe('patchedAirbrakeRequester', () => {
         },
       },
     } as unknown) as IState;
-    const store = configureStore(initialState, createMemoryHistory());
+    const store = configureStore(
+      initialState,
+      createMemoryHistory(),
+      MapiAuth.getInstance()
+    );
     const requester = new Requester(store);
 
     const res = {

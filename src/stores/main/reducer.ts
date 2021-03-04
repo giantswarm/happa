@@ -2,12 +2,6 @@ import produce from 'immer';
 import { Providers } from 'shared/constants';
 import {
   CLUSTER_SELECT,
-  MAPI_AUTH_USER_EXPIRED,
-  MAPI_AUTH_USER_LOAD_SUCCESS,
-  MAPI_AUTH_USER_SESSION_TERMINATED,
-  MAPI_AUTH_USER_SIGNED_OUT,
-} from 'stores/main/constants';
-import {
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_SUCCESS,
   INFO_LOAD_SUCCESS,
@@ -26,19 +20,14 @@ import {
 import { OrganizationActions } from 'stores/organization/types';
 import {
   fetchSelectedOrganizationFromStorage,
-  fetchUserFromStorage,
   removeUserFromStorage,
-  setUserToStorage,
 } from 'utils/localStorageUtils';
-
-import { loadMapiUser } from './actions';
 
 const initialState = (): IMainState => ({
   selectedOrganization: fetchSelectedOrganizationFromStorage(),
   selectedClusterID: null,
   firstLoadComplete: false,
-  loggedInUser: fetchUserFromStorage(),
-  mapiUser: null,
+  loggedInUser: null,
   info: {
     general: {
       installation_name: '',
@@ -62,12 +51,7 @@ const makeMainReducer = () => {
     (draft: IMainState, action: MainActions | OrganizationActions) => {
       switch (action.type) {
         case REFRESH_USER_INFO_SUCCESS: {
-          const newUser = Object.assign({}, draft.loggedInUser, {
-            email: action.email,
-          });
-          setUserToStorage(newUser);
-
-          draft.loggedInUser = newUser;
+          draft.loggedInUser = action.loggedInUser;
 
           break;
         }
@@ -78,8 +62,6 @@ const makeMainReducer = () => {
           break;
 
         case LOGIN_SUCCESS: {
-          setUserToStorage(action.userData);
-
           draft.loggedInUser = action.userData;
 
           break;
@@ -114,23 +96,6 @@ const makeMainReducer = () => {
 
         case CLUSTER_SELECT:
           draft.selectedClusterID = action.clusterID;
-
-          break;
-
-        case loadMapiUser().types.success as typeof MAPI_AUTH_USER_LOAD_SUCCESS:
-          draft.mapiUser = action.response;
-
-          break;
-
-        case loadMapiUser().types.error:
-          draft.mapiUser = null;
-
-          break;
-
-        case MAPI_AUTH_USER_SESSION_TERMINATED:
-        case MAPI_AUTH_USER_SIGNED_OUT:
-        case MAPI_AUTH_USER_EXPIRED:
-          draft.mapiUser = null;
 
           break;
       }

@@ -6,13 +6,16 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import PropTypes from 'prop-types';
 import React, { ReactNode } from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import * as mainActions from 'stores/main/actions';
+import { IState } from 'stores/state';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
@@ -26,8 +29,8 @@ interface IStateProps {
 
 // The props coming from injected actions (AKA: `mapDispatchToProps`)
 interface IDispatchProps extends DispatchProp {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  actions: Record<string, (...args: any[]) => Promise<any>>;
+  actions: typeof mainActions;
+  dispatch: IAsynchronousDispatch<IState>;
 }
 
 interface ILoginProps extends IStateProps, IDispatchProps {}
@@ -108,6 +111,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
       this.props.actions
         .giantswarmLogin(this.state.email, this.state.password)
+        // @ts-expect-error
         .then(() => {
           this.props.dispatch(push(MainRoutes.Home));
 
@@ -128,6 +132,20 @@ class Login extends React.Component<ILoginProps, ILoginState> {
           );
         });
     }
+  };
+
+  public mapiLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    this.setState(
+      {
+        authenticating: true,
+      },
+      () => {
+        const auth = MapiAuth.getInstance();
+        this.props.actions.mapiLogin(auth);
+      }
+    );
   };
 
   public render(): ReactNode {
@@ -169,6 +187,16 @@ class Login extends React.Component<ILoginProps, ILoginState> {
               </Button>
               <Link to={MainRoutes.ForgotPassword}>Forgot your password?</Link>
             </form>
+
+            <Box margin={{ vertical: 'large' }}>
+              <Button
+                bsStyle='primary'
+                loading={this.state.authenticating}
+                onClick={this.mapiLogin}
+              >
+                Login using OIDC
+              </Button>
+            </Box>
 
             <div className='login_form--legal'>
               By logging in you acknowledge that we track your activities in
