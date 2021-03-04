@@ -4,11 +4,11 @@ import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import React, { ReactElement, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  loadUserSuccess,
-  userExpired,
-  userExpiring,
-  userSignedOut,
-} from 'stores/mapiauth/actions';
+  loadMapiUserSuccess,
+  mapiUserExpired,
+  mapiUserExpiring,
+  mapiUserSignedOut,
+} from 'stores/main/actions';
 
 interface IMapiAuthProviderProps extends React.PropsWithChildren<{}> {}
 
@@ -17,21 +17,21 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({ children }) => {
 
   const onUserLoaded = useCallback(
     (event: CustomEvent<IOAuth2User | null>) => {
-      dispatch(loadUserSuccess(event.detail));
+      dispatch(loadMapiUserSuccess(event.detail));
     },
     [dispatch]
   );
 
   const onUserSignedOut = useCallback(() => {
-    dispatch(userSignedOut());
+    dispatch(mapiUserSignedOut());
   }, [dispatch]);
 
   const onTokenExpiring = useCallback(() => {
-    dispatch(userExpiring());
+    dispatch(mapiUserExpiring());
   }, [dispatch]);
 
   const onTokenExpired = useCallback(() => {
-    dispatch(userExpired());
+    dispatch(mapiUserExpired());
   }, [dispatch]);
 
   useEffect(() => {

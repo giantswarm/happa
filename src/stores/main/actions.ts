@@ -1,8 +1,10 @@
-import { CallHistoryMethodAction, push } from 'connected-react-router';
+import { CallHistoryMethodAction, push, replace } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -14,6 +16,10 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
+import {
+  createAsynchronousAction,
+  IAsynchronousDispatch,
+} from 'stores/asynchronousAction';
 import {
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
@@ -28,6 +34,13 @@ import {
   LOGOUT_ERROR,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
+  MAPI_AUTH_USER_EXPIRED,
+  MAPI_AUTH_USER_EXPIRING,
+  MAPI_AUTH_USER_LOAD,
+  MAPI_AUTH_USER_LOAD_ERROR,
+  MAPI_AUTH_USER_LOAD_SUCCESS,
+  MAPI_AUTH_USER_SESSION_TERMINATED,
+  MAPI_AUTH_USER_SIGNED_OUT,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
@@ -327,5 +340,77 @@ export function setNewPassword(
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
     return passage.setNewPassword({ email, token, password });
+  };
+}
+
+export function mapiUserExpiring(): MainActions {
+  return {
+    type: MAPI_AUTH_USER_EXPIRING,
+  };
+}
+
+export function mapiUserExpired(): MainActions {
+  return {
+    type: MAPI_AUTH_USER_EXPIRED,
+  };
+}
+
+export function mapiUserSignedOut(): MainActions {
+  return {
+    type: MAPI_AUTH_USER_SIGNED_OUT,
+  };
+}
+
+export function mapiUserSessionTerminated(): MainActions {
+  return {
+    type: MAPI_AUTH_USER_SESSION_TERMINATED,
+  };
+}
+
+export function loadMapiUserSuccess(user: IOAuth2User | null): MainActions {
+  return {
+    type: MAPI_AUTH_USER_LOAD_SUCCESS,
+    response: user,
+  };
+}
+
+export function loadMapiUserError(error: string): MainActions {
+  return {
+    type: MAPI_AUTH_USER_LOAD_ERROR,
+    error,
+  };
+}
+
+export const loadMapiUser = createAsynchronousAction<
+  MapiAuth,
+  IState,
+  IOAuth2User | null
+>({
+  actionTypePrefix: MAPI_AUTH_USER_LOAD,
+  perform: async (_, _d, mapiAuth?: MapiAuth): Promise<IOAuth2User | null> => {
+    if (!mapiAuth) return null;
+
+    const user = await mapiAuth.getLoggedInUser();
+    if (!user) return null;
+
+    return user;
+  },
+  shouldPerform: () => true,
+  throwOnError: true,
+});
+
+export function handleMapiLogin(
+  mapiAuth: MapiAuth
+): ThunkAction<Promise<void>, IState, void, MainActions> {
+  return async (dispatch: IAsynchronousDispatch<IState>) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isLoginResponse = urlParams.has('code') && urlParams.has('state');
+
+    if (isLoginResponse) {
+      await mapiAuth.handleLoginResponse(window.location.href);
+      dispatch(replace(window.location.pathname));
+    }
+
+    await dispatch(loadMapiUser(mapiAuth));
   };
 }

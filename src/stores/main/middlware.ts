@@ -1,12 +1,12 @@
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { isUserExpired } from 'lib/OAuth2/OAuth2User';
 import { AnyAction, Middleware } from 'redux';
-import { loadUserError, userExpired } from 'stores/mapiauth/actions';
+import { loadMapiUserError, mapiUserExpired } from 'stores/main/actions';
 import {
   MAPI_AUTH_USER_EXPIRED,
   MAPI_AUTH_USER_LOAD,
-} from 'stores/mapiauth/constants';
-import { getMapiAuthUser } from 'stores/mapiauth/selectors';
+} from 'stores/main/constants';
+import { getMapiAuthUser } from 'stores/main/selectors';
 
 export function mapiAuthMiddleware(mapiAuth: MapiAuth): Middleware {
   return (store) => (next) => async (action: AnyAction) => {
@@ -36,7 +36,7 @@ export function mapiAuthMiddleware(mapiAuth: MapiAuth): Middleware {
          */
         await mapiAuth.logout();
 
-        return next(userExpired());
+        return next(mapiUserExpired());
       }
 
       return next(action);
@@ -44,7 +44,7 @@ export function mapiAuthMiddleware(mapiAuth: MapiAuth): Middleware {
       // Delete all stale storage.
       await mapiAuth.logout();
 
-      return next(loadUserError(err.toString()));
+      return next(loadMapiUserError(err.toString()));
     }
   };
 }

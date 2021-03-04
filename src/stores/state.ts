@@ -6,7 +6,6 @@ import { IEntityLoadingState } from 'stores/entityloading/types';
 import { IErrorState } from 'stores/error/types';
 import { ILoadingState } from 'stores/loading/types';
 import { IMainState } from 'stores/main/types';
-import { IMapiAuthState } from 'stores/mapiauth/types';
 import { IMetadataState } from 'stores/metadata/types';
 import { IModalState } from 'stores/modal/types';
 import { INodePoolState } from 'stores/nodepool/types';
@@ -32,6 +31,5 @@ export interface IState {
     clusters: IClusterState;
     releases: IReleaseState;
     clusterLabels: IClusterLabelsState;
-    mapiAuth?: IMapiAuthState;
   };
 }

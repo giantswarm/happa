@@ -36,9 +36,8 @@ import {
   globalLoadStart,
   refreshUserInfo,
 } from 'stores/main/actions';
-import { getInfo } from 'stores/main/actions';
+import { getInfo, handleMapiLogin } from 'stores/main/actions';
 import { getUserIsAdmin } from 'stores/main/selectors';
-import { handleLogin } from 'stores/mapiauth/actions';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -70,7 +69,7 @@ export function batchedLayout(): ThunkAction<
 
       if (FeatureFlags.FEATURE_MAPI_ACCESS) {
         const auth = MapiAuth.getInstance();
-        await dispatch(handleLogin(auth));
+        await dispatch(handleMapiLogin(auth));
       }
     } catch (err) {
       dispatch(globalLoadError());

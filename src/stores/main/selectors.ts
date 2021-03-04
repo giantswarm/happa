@@ -1,5 +1,6 @@
 import Auth from 'lib/auth0';
 import { isJwtExpired } from 'lib/helpers';
+import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
@@ -135,4 +136,8 @@ export function getK8sVersionEOLDate(version: string) {
 
     return versionInfo.eol_date;
   };
+}
+
+export function getMapiAuthUser(state: IState): IOAuth2User | null {
+  return state.main.mapiUser ?? null;
 }

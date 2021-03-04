@@ -10,7 +10,7 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import FeatureFlags from 'shared/FeatureFlags';
-import { mapiAuthMiddleware } from 'stores/mapiauth/middleware';
+import { mapiAuthMiddleware } from 'stores/main/middlware';
 import rootReducer from 'stores/rootReducer';
 import { IState } from 'stores/state';
 

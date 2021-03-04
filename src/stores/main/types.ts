@@ -1,5 +1,6 @@
-import { CLUSTER_SELECT } from 'stores/main/constants';
+import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import {
+  CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
   GLOBAL_LOAD_SUCCESS,
@@ -12,6 +13,12 @@ import {
   LOGOUT_ERROR,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
+  MAPI_AUTH_USER_EXPIRED,
+  MAPI_AUTH_USER_EXPIRING,
+  MAPI_AUTH_USER_LOAD_ERROR,
+  MAPI_AUTH_USER_LOAD_SUCCESS,
+  MAPI_AUTH_USER_SESSION_TERMINATED,
+  MAPI_AUTH_USER_SIGNED_OUT,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
@@ -22,6 +29,7 @@ import {
 
 export interface IMainState {
   loggedInUser: ILoggedInUser | null;
+  mapiUser: IOAuth2User | null;
   info: IInstallationInfo;
   selectedOrganization: string | null;
   firstLoadComplete: boolean;
@@ -113,6 +121,32 @@ export interface IMainSetNewPasswordAction {
   type: typeof SET_NEW_PASSWORD;
 }
 
+export interface IMapiAuthUserExpiringAction {
+  type: typeof MAPI_AUTH_USER_EXPIRING;
+}
+
+export interface IMapiAuthUserExpiredAction {
+  type: typeof MAPI_AUTH_USER_EXPIRED;
+}
+
+export interface IMapiAuthUserSignedOutAction {
+  type: typeof MAPI_AUTH_USER_SIGNED_OUT;
+}
+
+export interface IMapiAuthUserSessionTerminatedAction {
+  type: typeof MAPI_AUTH_USER_SESSION_TERMINATED;
+}
+
+export interface IMapiAuthLoadUserActionSuccess {
+  type: typeof MAPI_AUTH_USER_LOAD_SUCCESS;
+  response: IOAuth2User | null;
+}
+
+export interface IMapiAuthLoadUserActionError {
+  type: typeof MAPI_AUTH_USER_LOAD_ERROR;
+  error: string;
+}
+
 export type MainActions =
   | IMainSelectClusterAction
   | IMainInfoLoadRequestAction
@@ -132,4 +166,10 @@ export type MainActions =
   | IMainRefreshUserInfoSuccessAction
   | IMainRequestPasswordRecoveryTokenAction
   | IMainVerifyPasswordRecoveryTokenAction
-  | IMainSetNewPasswordAction;
+  | IMainSetNewPasswordAction
+  | IMapiAuthUserExpiringAction
+  | IMapiAuthUserExpiredAction
+  | IMapiAuthUserSignedOutAction
+  | IMapiAuthUserSessionTerminatedAction
+  | IMapiAuthLoadUserActionSuccess
+  | IMapiAuthLoadUserActionError;

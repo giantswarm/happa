@@ -1,7 +1,6 @@
 import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
 import { combineReducers, ReducersMapObject } from 'redux';
-import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
 import clusters from 'stores/cluster/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
@@ -10,7 +9,6 @@ import entityLoading from 'stores/entityloading/reducer';
 import error from 'stores/error/reducer';
 import loading from 'stores/loading/reducer';
 import makeMainReducer from 'stores/main/reducer';
-import mapiAuth from 'stores/mapiauth/reducer';
 import metadata from 'stores/metadata/reducer';
 import modal from 'stores/modal/reducer';
 import nodePools from 'stores/nodepool/reducer';
@@ -28,9 +26,6 @@ const entityReducers: ReducersMapObject<IState['entities']> = {
   releases,
   users,
 };
-if (FeatureFlags.FEATURE_MAPI_ACCESS) {
-  entityReducers.mapiAuth = mapiAuth;
-}
 const entities = combineReducers(entityReducers);
 
 const rootReducer = (history: History<History.LocationState>) =>
