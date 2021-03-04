@@ -48,7 +48,7 @@ const determineAudienceURL = () => {
   return apiAudienceUrl;
 };
 
-function makeCPApiEndpointURL(currentValue, apiEndpoint) {
+function makeMapiEndpointURL(currentValue, apiEndpoint) {
   if (!apiEndpoint.includes('localhost')) {
     return apiEndpoint.replace('api', 'happaapi');
   }
@@ -56,9 +56,9 @@ function makeCPApiEndpointURL(currentValue, apiEndpoint) {
   return currentValue;
 }
 
-function makeCPApiAudienceURL(currentValue, cpApiEndpoint) {
-  if (!cpApiEndpoint.includes('localhost')) {
-    return cpApiEndpoint.replace('happaapi', 'dex');
+function makeMapiAudienceURL(currentValue, mapiEndpoint) {
+  if (!mapiEndpoint.includes('localhost')) {
+    return mapiEndpoint.replace('happaapi', 'dex');
   }
 
   return currentValue;
@@ -67,37 +67,37 @@ function makeCPApiAudienceURL(currentValue, cpApiEndpoint) {
 const makeEndpoints = () => {
   const defaults = {
     HAPPA_API_ENDPOINT: 'http://localhost:8000',
-    HAPPA_CP_API_ENDPOINT: 'http://localhost:8888',
+    HAPPA_MAPI_ENDPOINT: 'http://localhost:8888',
     HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
   };
 
   const values = Object.assign({}, defaults, envFileVars, process.env);
   const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = values;
 
-  let { HAPPA_CP_API_ENDPOINT } = values;
-  HAPPA_CP_API_ENDPOINT = makeCPApiEndpointURL(
-    HAPPA_CP_API_ENDPOINT,
+  let { HAPPA_MAPI_ENDPOINT } = values;
+  HAPPA_MAPI_ENDPOINT = makeMapiEndpointURL(
+    HAPPA_MAPI_ENDPOINT,
     HAPPA_API_ENDPOINT
   );
 
   const apiAudienceUrl = determineAudienceURL();
-  const cpAudience = makeCPApiAudienceURL(
+  const mapiAudience = makeMapiAudienceURL(
     'http://localhost:9999',
-    HAPPA_CP_API_ENDPOINT
+    HAPPA_MAPI_ENDPOINT
   );
 
   return {
     apiEndpoint: HAPPA_API_ENDPOINT,
-    cpApiEndpoint: HAPPA_CP_API_ENDPOINT,
+    mapiEndpoint: HAPPA_MAPI_ENDPOINT,
     audience: apiAudienceUrl || HAPPA_API_ENDPOINT,
-    cpAudience,
+    mapiAudience,
     passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
   };
 };
 
 const makeFeatureFlags = () => {
   const defaults = {
-    FEATURE_CP_ACCESS: false,
+    FEATURE_MAPI_ACCESS: false,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);

@@ -1,4 +1,4 @@
-import CPAuthProvider from 'Auth/CP/CPAuthProvider';
+import MapiAuthProvider from 'Auth/MAPI/MapiAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import Footer from 'Footer/Footer';
 import { History } from 'history';
@@ -23,7 +23,7 @@ const App: React.FC<IAppProps> = ({ store, theme, history }) => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <ConnectedRouter history={history}>
-        {FeatureFlags.FEATURE_CP_ACCESS && <CPAuthProvider />}
+        {FeatureFlags.FEATURE_MAPI_ACCESS && <MapiAuthProvider />}
 
         <main>
           <Routes />

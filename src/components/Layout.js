@@ -1,4 +1,4 @@
-import CPLoginPage from 'Auth/CP/CPLoginPage';
+import MapiLoginPage from 'Auth/MAPI/MapiLoginPage';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
@@ -89,8 +89,11 @@ class Layout extends React.Component {
                   path={ExceptionNotificationTestRoutes.Home}
                 />
 
-                {FeatureFlags.FEATURE_CP_ACCESS && (
-                  <Route component={CPLoginPage} path={MainRoutes.CPAccess} />
+                {FeatureFlags.FEATURE_MAPI_ACCESS && (
+                  <Route
+                    component={MapiLoginPage}
+                    path={MainRoutes.MapiAccess}
+                  />
                 )}
 
                 <Redirect path='*' to={MainRoutes.Home} />

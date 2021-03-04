@@ -8,16 +8,16 @@ if [ -n "$API_ENDPOINT" ]; then
   sed -i "s|apiEndpoint: .*|apiEndpoint: '$API_ENDPOINT',|" /www/index.html
 fi
 
-if [ -n "$CP_API_ENDPOINT" ]; then
-  sed -i "s|cpApiEndpoint: .*|cpApiEndpoint: '$CP_API_ENDPOINT',|" /www/index.html
+if [ -n "$MAPI_ENDPOINT" ]; then
+  sed -i "s|mapiEndpoint: .*|mapiEndpoint: '$MAPI_ENDPOINT',|" /www/index.html
 fi
 
 if [ -n "$AUDIENCE" ]; then
   sed -i "s|audience: .*|audience: '$AUDIENCE',|" /www/index.html
 fi
 
-if [ -n "$CP_AUDIENCE" ]; then
-  sed -i "s|cpAudience: .*|cpAudience: '$CP_AUDIENCE',|" /www/index.html
+if [ -n "$MAPI_AUDIENCE" ]; then
+  sed -i "s|mapiAudience: .*|mapiAudience: '$MAPI_AUDIENCE',|" /www/index.html
 fi
 
 if [ -n "$PASSAGE_ENDPOINT" ]; then
@@ -29,7 +29,7 @@ if [ -n "$INGRESS_BASE_DOMAIN" ]; then
 fi
 
 if [ "$PROVIDER" = "aws" ]; then
-  if [ -n "$AWS_CAPABILITIES_JSON" ]; then 
+  if [ -n "$AWS_CAPABILITIES_JSON" ]; then
     sed -i "s|awsCapabilitiesJSON: .*|awsCapabilitiesJSON: '$AWS_CAPABILITIES_JSON',|" /www/index.html
   fi
 fi

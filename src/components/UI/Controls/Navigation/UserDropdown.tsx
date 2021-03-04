@@ -109,11 +109,11 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                     </MenuItem>
                   </li>
                 )}
-                {FeatureFlags.FEATURE_CP_ACCESS && (
+                {FeatureFlags.FEATURE_MAPI_ACCESS && (
                   <li role='presentation'>
                     <MenuItem
-                      href={MainRoutes.CPAccess}
-                      to={MainRoutes.CPAccess}
+                      href={MainRoutes.MapiAccess}
+                      to={MainRoutes.MapiAccess}
                     >
                       Control Plane Access
                     </MenuItem>

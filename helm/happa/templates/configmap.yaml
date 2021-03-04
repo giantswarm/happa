@@ -8,9 +8,9 @@ metadata:
 data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
-  cp-api-endpoint: {{ .Values.Installation.V1.GiantSwarm.Happa.API.Address }}
+  mapi-endpoint: {{ .Values.Installation.V1.GiantSwarm.Happa.API.Address }}
   audience: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
-  cp-audience: {{ .Values.Installation.V1.GiantSwarm.OIDC.IssuerAddress }}
+  mapi-audience: {{ .Values.Installation.V1.GiantSwarm.OIDC.IssuerAddress }}
   ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
   installation-name: {{ .Values.Installation.V1.Name }}
   {{- if eq .Values.Installation.V1.Provider.Kind "aws" }}

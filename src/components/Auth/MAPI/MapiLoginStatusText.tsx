@@ -8,11 +8,13 @@ const Text = styled.div<{ loggedIn: boolean }>`
     loggedIn ? theme.colors.white3 : theme.colors.error};
 `;
 
-interface ICPLoginStatusTextProps {
+interface IMapiLoginStatusTextProps {
   email?: string;
 }
 
-const CPLoginStatusText: React.FC<ICPLoginStatusTextProps> = ({ email }) => {
+const MapiLoginStatusText: React.FC<IMapiLoginStatusTextProps> = ({
+  email,
+}) => {
   const isLoggedIn = typeof email !== 'undefined';
 
   return (
@@ -28,8 +30,8 @@ const CPLoginStatusText: React.FC<ICPLoginStatusTextProps> = ({ email }) => {
   );
 };
 
-CPLoginStatusText.propTypes = {
+MapiLoginStatusText.propTypes = {
   email: PropTypes.string,
 };
 
-export default CPLoginStatusText;
+export default MapiLoginStatusText;

@@ -1,11 +1,11 @@
-/* global FEATURE_CP_ACCESS:false */
+/* global FEATURE_MAPI_ACCESS:false */
 
 interface IFeatureFlags {
-  FEATURE_CP_ACCESS: boolean;
+  FEATURE_MAPI_ACCESS: boolean;
 }
 
 const FeatureFlags: IFeatureFlags = {
-  FEATURE_CP_ACCESS,
+  FEATURE_MAPI_ACCESS,
 };
 
 export default FeatureFlags;

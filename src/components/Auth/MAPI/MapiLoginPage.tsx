@@ -1,27 +1,27 @@
-import CPLoginButton from 'Auth/CP/CPLoginButton';
-import CPLoginStatusText from 'Auth/CP/CPLoginStatusText';
-import CPAuth from 'lib/CPAuth/CPAuth';
+import MapiLoginButton from 'Auth/MAPI/MapiLoginButton';
+import MapiLoginStatusText from 'Auth/MAPI/MapiLoginStatusText';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import React, { useCallback, useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getCPAuthUser } from 'stores/cpauth/selectors';
+import { getMapiAuthUser } from 'stores/mapiauth/selectors';
 import styled from 'styled-components';
 
-const CPStatus = styled.div`
+const MapiStatus = styled.div`
   margin-top: ${({ theme }) => theme.spacingPx * 8}px;
   display: flex;
   align-items: center;
 `;
 
-interface ICPLoginPageProps {}
+interface IMapiLoginPageProps {}
 
-const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
+const MapiLoginPage: React.FC<IMapiLoginPageProps> = () => {
   const dispatch = useDispatch();
 
-  const user = useSelector(getCPAuthUser);
+  const user = useSelector(getMapiAuthUser);
   const isLoggedIn = user !== null;
 
   const handleClick = useCallback(
@@ -30,7 +30,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
       e.stopPropagation();
 
       try {
-        const auth = CPAuth.getInstance();
+        const auth = MapiAuth.getInstance();
         if (isLoggedIn) {
           await auth.logout();
           // Force a reload, so we could re-run the batched actions.
@@ -48,10 +48,10 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
   useEffect(() => {
     const currentURL = window.location.href;
 
-    if (currentURL.includes(MainRoutes.CPAccessCallback)) {
+    if (currentURL.includes(MainRoutes.MapiAccessCallback)) {
       const handleAuthParams = async () => {
         try {
-          const auth = CPAuth.getInstance();
+          const auth = MapiAuth.getInstance();
           await auth.handleLoginResponse(currentURL);
 
           // Force a reload, so we could re-run the batched actions.
@@ -69,7 +69,7 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
     <Breadcrumb
       data={{
         title: 'Control Plane Access'.toUpperCase(),
-        pathname: MainRoutes.CPAccess,
+        pathname: MainRoutes.MapiAccess,
       }}
     >
       <DocumentTitle title='Control Plane Access'>
@@ -78,15 +78,15 @@ const CPLoginPage: React.FC<ICPLoginPageProps> = () => {
           In order to have access to the Control Plane API, you must be logged
           in.
         </p>
-        <CPStatus>
-          <CPLoginStatusText email={user?.email} />
-          <CPLoginButton isLoggedIn={isLoggedIn} onClick={handleClick} />
-        </CPStatus>
+        <MapiStatus>
+          <MapiLoginStatusText email={user?.email} />
+          <MapiLoginButton isLoggedIn={isLoggedIn} onClick={handleClick} />
+        </MapiStatus>
       </DocumentTitle>
     </Breadcrumb>
   );
 };
 
-CPLoginPage.propTypes = {};
+MapiLoginPage.propTypes = {};
 
-export default CPLoginPage;
+export default MapiLoginPage;

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import App from 'App';
 import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
-import CPAuth from 'lib/CPAuth/CPAuth';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
@@ -21,13 +21,13 @@ export const initialStorage = {
  * @param {String} initialRoute - The route to load.
  * @param {Object} state - The initial store state.
  * @param {Object} storage - The initial local storage state.
- * @param {CPAuth} cpAuth Control Plane API handler.
+ * @param {MapiAuth} mapiAuth Control Plane API handler.
  */
 export function renderRouteWithStore(
   initialRoute = MainRoutes.Home,
   state = {},
   storage = initialStorage,
-  cpAuth = CPAuth.getInstance()
+  mapiAuth = MapiAuth.getInstance()
 ) {
   localStorage.replaceWith(storage);
 
@@ -36,7 +36,7 @@ export function renderRouteWithStore(
     initialIndex: 0,
   });
 
-  const store = configureStore(state, history, cpAuth);
+  const store = configureStore(state, history, mapiAuth);
 
   const app = render(<App {...{ store, theme, history }} />);
 
@@ -84,7 +84,7 @@ export function renderWithStore(component, props, state, options) {
  * @param {Record<string, any>} state Current Store state
  * @param {Record<string, any>} storage Current LocalStorage value
  * @param {History<any>} history Current Browser history
- * @param {CPAuth} cpAuth Control Plane API handler.
+ * @param {MapiAuth} mapiAuth Control Plane API handler.
  */
 export function getComponentWithStore(
   Component,
@@ -92,11 +92,11 @@ export function getComponentWithStore(
   state = {},
   storage = initialStorage,
   history = createMemoryHistory(),
-  cpAuth = CPAuth.getInstance()
+  mapiAuth = MapiAuth.getInstance()
 ) {
   localStorage.replaceWith(storage);
 
-  const store = configureStore(state, history, cpAuth);
+  const store = configureStore(state, history, mapiAuth);
 
   const app = (
     <Provider store={store}>

@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
-import CPAuth from 'lib/CPAuth/CPAuth';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +14,7 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 class Logout extends React.Component {
   async componentDidMount() {
     try {
-      await CPAuth.getInstance().logout();
+      await MapiAuth.getInstance().logout();
     } catch (err) {
       new FlashMessage(
         `Control Plane logout couldn't be executed: ${err}`,

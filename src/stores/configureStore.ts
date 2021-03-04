@@ -1,6 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
-import CPAuth from 'lib/CPAuth/CPAuth';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import {
   applyMiddleware,
   compose,
@@ -10,7 +10,7 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import FeatureFlags from 'shared/FeatureFlags';
-import { cpAuthMiddleware } from 'stores/cpauth/middleware';
+import { mapiAuthMiddleware } from 'stores/mapiauth/middleware';
 import rootReducer from 'stores/rootReducer';
 import { IState } from 'stores/state';
 
@@ -24,7 +24,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default function configureStore(
   initialState: IState,
   history: History<History.LocationState>,
-  cpAuth?: CPAuth
+  mapiAuth?: MapiAuth
 ) {
   const middleware: Middleware[] = [
     routerMiddleware(history),
@@ -32,8 +32,8 @@ export default function configureStore(
     callAPIMiddleware,
   ];
 
-  if (FeatureFlags.FEATURE_CP_ACCESS && cpAuth) {
-    middleware.push(cpAuthMiddleware(cpAuth));
+  if (FeatureFlags.FEATURE_MAPI_ACCESS && mapiAuth) {
+    middleware.push(mapiAuthMiddleware(mapiAuth));
   }
 
   store = createStore(

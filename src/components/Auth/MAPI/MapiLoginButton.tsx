@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
-interface ICPLoginButtonProps extends React.ComponentPropsWithRef<'button'> {
+interface IMapiLoginButtonProps extends React.ComponentPropsWithRef<'button'> {
   isLoggedIn?: boolean;
   wrapperProps?: React.ComponentPropsWithoutRef<'div'>;
 }
 
-const CPLoginButton: React.FC<ICPLoginButtonProps> = ({
+const MapiLoginButton: React.FC<IMapiLoginButtonProps> = ({
   isLoggedIn,
   wrapperProps,
   ...rest
@@ -27,13 +27,13 @@ const CPLoginButton: React.FC<ICPLoginButtonProps> = ({
   );
 };
 
-CPLoginButton.propTypes = {
+MapiLoginButton.propTypes = {
   isLoggedIn: PropTypes.bool,
   wrapperProps: PropTypes.object,
 };
 
-CPLoginButton.defaultProps = {
+MapiLoginButton.defaultProps = {
   isLoggedIn: false,
 };
 
-export default CPLoginButton;
+export default MapiLoginButton;

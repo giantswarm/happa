@@ -10,9 +10,9 @@ import 'styles/app.sass';
 import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
 import * as Bowser from 'bowser';
-import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
@@ -40,8 +40,8 @@ interface IGlobalConfig {
   audience: string;
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
-  cpApiEndpoint: string;
-  cpAudience: string;
+  mapiEndpoint: string;
+  mapiAudience: string;
   defaultRequestTimeoutSeconds: number;
   enableRealUserMonitoring: boolean;
   environment: GlobalEnvironment;
@@ -57,13 +57,13 @@ declare global {
 }
 
 // eslint-disable-next-line @typescript-eslint/init-declarations
-let cpAccess: CPAuth | undefined;
-if (FeatureFlags.FEATURE_CP_ACCESS) {
-  cpAccess = CPAuth.getInstance();
+let mapiAccess: MapiAuth | undefined;
+if (FeatureFlags.FEATURE_MAPI_ACCESS) {
+  mapiAccess = MapiAuth.getInstance();
 }
 
 // Configure the redux store.
-const store: Store = configureStore({} as IState, history, cpAccess);
+const store: Store = configureStore({} as IState, history, mapiAccess);
 
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();

@@ -1,12 +1,12 @@
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { IClusterState } from 'stores/cluster/types';
 import { IClusterLabelsState } from 'stores/clusterlabels/types';
-import { ICPAuthState } from 'stores/cpauth/types';
 import { IEntityErrorState } from 'stores/entityerror/types';
 import { IEntityLoadingState } from 'stores/entityloading/types';
 import { IErrorState } from 'stores/error/types';
 import { ILoadingState } from 'stores/loading/types';
 import { IMainState } from 'stores/main/types';
+import { IMapiAuthState } from 'stores/mapiauth/types';
 import { IMetadataState } from 'stores/metadata/types';
 import { IModalState } from 'stores/modal/types';
 import { INodePoolState } from 'stores/nodepool/types';
@@ -32,6 +32,6 @@ export interface IState {
     clusters: IClusterState;
     releases: IReleaseState;
     clusterLabels: IClusterLabelsState;
-    cpAuth?: ICPAuthState;
+    mapiAuth?: IMapiAuthState;
   };
 }

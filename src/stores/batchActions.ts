@@ -1,8 +1,8 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
 import { push } from 'connected-react-router';
-import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -29,7 +29,6 @@ import {
   BATCHED_CLUSTER_CREATION_SUCCESS,
   CLUSTER_LOAD_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
-import { loadUser } from 'stores/cpauth/actions';
 import {
   globalLoadError,
   globalLoadFinish,
@@ -38,6 +37,7 @@ import {
 } from 'stores/main/actions';
 import { getInfo } from 'stores/main/actions';
 import { getUserIsAdmin } from 'stores/main/selectors';
+import { loadUser } from 'stores/mapiauth/actions';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -80,9 +80,9 @@ export function batchedLayout(): ThunkAction<
       return;
     }
 
-    if (FeatureFlags.FEATURE_CP_ACCESS) {
+    if (FeatureFlags.FEATURE_MAPI_ACCESS) {
       try {
-        dispatch(loadUser(CPAuth.getInstance()));
+        dispatch(loadUser(MapiAuth.getInstance()));
       } catch (err) {
         dispatch(globalLoadError());
         ErrorReporter.getInstance().notify(err);

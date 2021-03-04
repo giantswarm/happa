@@ -9,7 +9,7 @@ export class CPClient extends HttpClientImpl {
    */
   constructor(authToken: string, authType: string) {
     super({
-      baseURL: window.config.cpApiEndpoint,
+      baseURL: window.config.mapiEndpoint,
     });
 
     this.setHeader('Accept', 'application/json');
