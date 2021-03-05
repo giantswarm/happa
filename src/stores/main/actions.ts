@@ -1,7 +1,6 @@
 import { CallHistoryMethodAction, push, replace } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
-import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
 import Passage, {
@@ -37,7 +36,7 @@ import {
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
-import { getLoggedInUser, selectAuthToken } from 'stores/main/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
 import { IState } from 'stores/state';
 import {
@@ -65,10 +64,11 @@ export function getInfo(): ThunkAction<
     dispatch({ type: INFO_LOAD_REQUEST });
 
     try {
-      const [authToken, authScheme] = await selectAuthToken(dispatch)(
-        getState()
+      const user = getLoggedInUser(getState())!;
+      const httpClient = new GiantSwarmClient(
+        user.auth.token,
+        user.auth.scheme
       );
-      const httpClient = new GiantSwarmClient(authToken, authScheme);
       const infoRes = await getInstallationInfo(httpClient);
 
       dispatch({
@@ -148,10 +148,7 @@ export function refreshUserInfo(): ThunkAction<
       return Promise.reject(new Error('No logged in user to refresh.'));
     }
 
-    if (
-      loggedInUser.type !== LoggedInUserTypes.GS &&
-      loggedInUser.type !== LoggedInUserTypes.Auth0
-    ) {
+    if (loggedInUser.type !== LoggedInUserTypes.GS) {
       return Promise.resolve();
     }
 
@@ -199,37 +196,6 @@ export function refreshUserInfo(): ThunkAction<
 
       return Promise.resolve();
     }
-  };
-}
-
-export function auth0Login(
-  authResult: IAuthResult
-): ThunkAction<Promise<void>, IState, void, MainActions> {
-  return async (dispatch) => {
-    return new Promise((resolve) => {
-      let isAdmin = false;
-      if (
-        authResult.idTokenPayload['https://giantswarm.io/groups'] ===
-        'api-admin'
-      ) {
-        isAdmin = true;
-      }
-
-      const userData: ILoggedInUser = {
-        email: authResult.idTokenPayload.email,
-        auth: {
-          scheme: AuthorizationTypes.BEARER,
-          token: authResult.accessToken,
-        },
-        isAdmin,
-        type: LoggedInUserTypes.Auth0,
-      };
-
-      setUserToStorage(userData);
-      dispatch(loginSuccess(userData));
-
-      resolve();
-    });
   };
 }
 

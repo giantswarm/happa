@@ -11,7 +11,6 @@ import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
 import * as Bowser from 'bowser';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
@@ -64,13 +63,6 @@ const store: Store = configureStore(
 
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();
-
-// Patch the Giant Swarm client so it has access to the store and can dispatch
-// redux actions. This is needed because admin tokens expire after 5 minutes.
-// This patches the Giant Swarm client so that it automatically renews the token
-// before making a request if needed. And when renewing the token, we'd like to
-// update the store with the new token.
-monkeyPatchGiantSwarmClient(store);
 
 // Configure an airbrake notifier for excption notification.
 // But only when not in development.

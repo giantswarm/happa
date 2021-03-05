@@ -22,7 +22,6 @@ import {
 
 export enum LoggedInUserTypes {
   GS,
-  Auth0,
   MAPI,
 }
 

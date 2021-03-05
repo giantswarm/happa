@@ -1,22 +1,6 @@
-import Auth from 'lib/auth0';
-import { isJwtExpired } from 'lib/helpers';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  AuthorizationTypes,
-  Constants,
-  Providers,
-  StatusCodes,
-} from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { auth0Login } from 'stores/main/actions';
 import { IState } from 'stores/state';
-
-import { LoggedInUserTypes } from './types';
-
-export interface ISSOError {
-  status: number;
-}
 
 export function getUserIsAdmin(state: IState) {
   return getLoggedInUser(state)?.isAdmin ?? false;
@@ -25,51 +9,6 @@ export function getUserIsAdmin(state: IState) {
 export function getProvider(state: IState): PropertiesOf<typeof Providers> {
   return state.main.info.general.provider;
 }
-
-/**
- * Select the currently stored authentication token, or a renewed one,
- * if the current one is expired.
- * @param dispatch
- */
-export const selectAuthToken = (
-  dispatch: ThunkDispatch<IState, void, AnyAction>
-) => {
-  return async (
-    state: IState
-  ): Promise<
-    [token: string, scheme: PropertiesOf<typeof AuthorizationTypes>]
-  > => {
-    // TODO(axbarsan): Remove async logic.
-
-    const user = getLoggedInUser(state);
-    if (!user) {
-      return Promise.reject(new Error('You are not logged in.'));
-    }
-
-    let currentToken = user.auth.token;
-
-    try {
-      /**
-       * Renew the token if the user is logged in via SSO,
-       * and the current token is expired.
-       * */
-      if (user.type === LoggedInUserTypes.Auth0 && isJwtExpired(currentToken)) {
-        const newAuthData = await Auth.getInstance().renewToken();
-        currentToken = newAuthData.accessToken;
-
-        await dispatch(auth0Login(newAuthData));
-      }
-
-      return [currentToken, user.auth.scheme];
-    } catch (err: unknown) {
-      const newErr: ISSOError = Object.assign({}, err, {
-        status: StatusCodes.Unauthorized,
-      });
-
-      return Promise.reject(newErr);
-    }
-  };
-};
 
 export function getMinHAMastersVersion(state: IState): string {
   const provider = getProvider(state);

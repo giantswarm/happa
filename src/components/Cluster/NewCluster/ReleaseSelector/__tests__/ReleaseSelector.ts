@@ -2,8 +2,6 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
-jest.unmock('stores/main/selectors');
-
 const mockReleases: IReleases = {
   '1001.0.0-alpha': {
     version: '1001.0.0-alpha',

@@ -6,7 +6,6 @@ const MainRoutes = {
   ForgotPassword: '/forgot_password',
   SetPassword: '/forgot_password/:token',
   SignUp: '/signup/:token',
-  OAuthCallback: '/oauth/callback',
   MapiAccess: '/mapi-access',
   StyleGuide: '/styleguide',
 };
