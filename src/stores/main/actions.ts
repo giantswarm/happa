@@ -3,7 +3,7 @@ import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -47,7 +47,6 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { mapOAuth2UserToUser } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -338,15 +337,12 @@ export function resumeLogin(
   mapiAuth: MapiAuth
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>) => {
-    let user: ILoggedInUser | null = null;
-
     const urlParams = new URLSearchParams(window.location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
 
     if (isLoginResponse) {
-      const mapiUser = await mapiAuth.handleLoginResponse(window.location.href);
-      user = mapOAuth2UserToUser(mapiUser);
-      dispatch(loginSuccess(user));
+      await mapiAuth.handleLoginResponse(window.location.href);
+      // Login callbacks are handled by `MapiAuth`.
 
       // Remove state and code from url.
       dispatch(replace(window.location.pathname));
@@ -355,7 +351,7 @@ export function resumeLogin(
     }
 
     // Try to resume GS user first.
-    user = fetchUserFromStorage();
+    const user = fetchUserFromStorage();
     if (user) {
       // Remove MAPI user if it exists.
       await mapiAuth.logout();
@@ -366,9 +362,7 @@ export function resumeLogin(
 
     const mapiUser = await mapiAuth.getLoggedInUser();
     if (mapiUser) {
-      // TODO(axbarsan): Check if this doesn't get executed twice.
-      user = mapOAuth2UserToUser(mapiUser);
-      dispatch(loginSuccess(user));
+      // Login callbacks are handled by `MapiAuth`.
 
       return Promise.resolve();
     }
@@ -424,7 +418,8 @@ export function logout(
 }
 
 export function mapiLogin(
-  mapiAuth: MapiAuth
+  mapiAuth: MapiAuth,
+  connector?: MapiAuthConnectors
 ): ThunkAction<
   Promise<void>,
   IState,
@@ -435,7 +430,7 @@ export function mapiLogin(
     try {
       // Remove other types of users from cache.
       removeUserFromStorage();
-      await mapiAuth.attemptLogin();
+      await mapiAuth.attemptLogin(connector);
     } catch (err) {
       dispatch(loginError(err.message));
       dispatch(push(MainRoutes.Login));

@@ -116,8 +116,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       }),
     }),
     // @ts-ignore
-    nodePoolActions: PropTypes.object,
-    // @ts-ignore
     dispatch: PropTypes.func,
     // @ts-ignore
     provider: PropTypes.string,

@@ -1,13 +1,17 @@
 import { isJwtExpired } from 'lib/helpers';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { AnyAction, Middleware } from 'redux';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { logout } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
+import { IState } from 'stores/state';
 
 import { LoggedInUserTypes } from './types';
 
 export function mainAuthMiddleware(mapiAuth: MapiAuth): Middleware {
-  return (store) => (next) => async (action: AnyAction) => {
+  return (store) => (next: IAsynchronousDispatch<IState>) => async (
+    action: AnyAction
+  ) => {
     const loggedInUser = getLoggedInUser(store.getState());
     if (!loggedInUser) {
       return next(action);
@@ -31,13 +35,12 @@ export function mainAuthMiddleware(mapiAuth: MapiAuth): Middleware {
          * so we need to clear the user data to prevent infinite loops.
          */
 
-        // TODO(axbarsan): Fix type.
-        return next((logout(mapiAuth) as unknown) as AnyAction);
+        return next(logout(mapiAuth));
       }
 
       return next(action);
     } catch (err) {
-      return next((logout(mapiAuth) as unknown) as AnyAction);
+      return next(logout(mapiAuth));
     }
   };
 }
