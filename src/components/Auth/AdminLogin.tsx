@@ -11,7 +11,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import { MainActions } from 'stores/main/types';
-import { LoggedInUserTypes } from 'stores/main/utils';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { IState } from 'stores/state';
 
 interface IStateProps {

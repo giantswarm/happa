@@ -4,7 +4,7 @@ import { AnyAction, Middleware } from 'redux';
 import { logout } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 
-import { LoggedInUserTypes } from './utils';
+import { LoggedInUserTypes } from './types';
 
 export function mainAuthMiddleware(mapiAuth: MapiAuth): Middleware {
   return (store) => (next) => async (action: AnyAction) => {

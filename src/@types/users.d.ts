@@ -13,7 +13,7 @@ interface ILoggedInUser {
   auth: ILoggedInUserAuthScheme;
   email: string;
   isAdmin: boolean;
-  type: import('stores/main/utils').LoggedInUserTypes;
+  type: import('stores/main/types').LoggedInUserTypes;
 
   /* OIDC specific. */
   emailVerified?: boolean;

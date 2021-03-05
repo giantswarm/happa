@@ -5,7 +5,7 @@ import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import { AuthorizationTypes } from 'shared/constants';
 import configureStore from 'stores/configureStore';
-import { LoggedInUserTypes } from 'stores/main/utils';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { IState } from 'stores/state';
 import { USER_EMAIL } from 'testUtils/mockHttpCalls';
 

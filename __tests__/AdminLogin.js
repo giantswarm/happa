@@ -13,7 +13,7 @@ import React from 'react';
 import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
-import { LoggedInUserTypes } from 'stores/main/utils';
+import { LoggedInUserTypes } from 'stores/main/types';
 import theme from 'styles/theme';
 import {
   AWSInfoResponse,

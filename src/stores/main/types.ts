@@ -20,6 +20,12 @@ import {
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
 
+export enum LoggedInUserTypes {
+  GS,
+  Auth0,
+  MAPI,
+}
+
 export interface IMainState {
   loggedInUser: ILoggedInUser | null;
   info: IInstallationInfo;

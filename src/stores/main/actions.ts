@@ -46,7 +46,8 @@ import {
   setUserToStorage,
 } from 'utils/localStorageUtils';
 
-import { LoggedInUserTypes, mapOAuth2UserToUser } from './utils';
+import { LoggedInUserTypes } from './types';
+import { mapOAuth2UserToUser } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {

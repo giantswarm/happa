@@ -3,7 +3,7 @@ import * as helpers from 'lib/helpers';
 import { getK8sVersionEOLDate, selectAuthToken } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 
-import { LoggedInUserTypes } from '../utils';
+import { LoggedInUserTypes } from '../types';
 
 // Bypass the user selectors mock.
 jest.unmock('stores/main/selectors');

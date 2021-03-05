@@ -12,7 +12,7 @@ import { PropertiesOf } from 'shared/types';
 import { auth0Login } from 'stores/main/actions';
 import { IState } from 'stores/state';
 
-import { LoggedInUserTypes } from './utils';
+import { LoggedInUserTypes } from './types';
 
 export interface ISSOError {
   status: number;

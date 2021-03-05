@@ -1,10 +1,6 @@
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 
-export enum LoggedInUserTypes {
-  GS,
-  Auth0,
-  MAPI,
-}
+import { LoggedInUserTypes } from './types';
 
 export function mapOAuth2UserToUser(user: IOAuth2User): ILoggedInUser {
   // TODO(axbarsan): Determine if the user is admin or not.

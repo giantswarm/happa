@@ -7,7 +7,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
-import { LoggedInUserTypes } from 'stores/main/utils';
+import { LoggedInUserTypes } from 'stores/main/types';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
 
