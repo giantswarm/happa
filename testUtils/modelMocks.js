@@ -1,5 +1,4 @@
 import { AuthorizationTypes } from 'shared/constants';
-import { getLoggedInUser } from 'stores/main/selectors';
 
 jest.mock('model/services/giantSwarm/info');
 jest.mock('model/services/metadata/configuration');
@@ -11,7 +10,7 @@ function mockMainSelectors() {
   return {
     ...original,
     selectAuthToken: jest.fn(() => (state) => {
-      return [getLoggedInUser(state), AuthorizationTypes.GS];
+      return [getLoggedInUser(state).auth.token, AuthorizationTypes.GS];
     }),
   };
 }
