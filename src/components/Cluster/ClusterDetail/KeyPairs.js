@@ -11,6 +11,7 @@ import Copyable from 'shared/Copyable';
 import * as clusterActions from 'stores/cluster/actions';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import FlashMessage from 'UI/Display/FlashMessage';
@@ -267,7 +268,7 @@ function mapStateToProps(state) {
   return {
     clusters: state.entities.clusters,
     provider: state.main.info.general.provider,
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
     loadingKeyPairs: selectLoadingFlagByAction(
       state,
       CLUSTER_LOAD_KEY_PAIRS_REQUEST

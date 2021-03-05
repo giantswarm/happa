@@ -37,7 +37,7 @@ import {
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
-import { selectAuthToken } from 'stores/main/selectors';
+import { getLoggedInUser, selectAuthToken } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
 import { IState } from 'stores/state';
 import {
@@ -139,7 +139,7 @@ export function refreshUserInfo(): ThunkAction<
   MainActions | CallHistoryMethodAction
 > {
   return async (dispatch, getState) => {
-    const loggedInUser = getState().main.loggedInUser;
+    const loggedInUser = getLoggedInUser(getState());
     if (!loggedInUser) {
       dispatch({
         type: REFRESH_USER_INFO_ERROR,
@@ -389,7 +389,7 @@ export function logout(
     try {
       dispatch({ type: LOGOUT_REQUEST });
 
-      const user = getState().main.loggedInUser;
+      const user = getLoggedInUser(getState());
       if (!user) {
         dispatch(push(MainRoutes.Login));
         dispatch(logoutSuccess());

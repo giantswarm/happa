@@ -14,6 +14,7 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
+import { getLoggedInUser } from 'stores/main/selectors';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
@@ -97,7 +98,7 @@ Layout.propTypes = {
 function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,

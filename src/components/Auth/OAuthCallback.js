@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 const OAuthCallback = ({ location, dispatch, actions }) => {
@@ -69,7 +70,7 @@ OAuthCallback.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
     flashMessages: state.flashMessages,
   };
 }

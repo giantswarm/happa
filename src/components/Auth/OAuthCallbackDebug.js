@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import QueryString from 'query-string';
 import React from 'react';
 import { connect } from 'react-redux';
+import { getLoggedInUser } from 'stores/main/selectors';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OauthCallback extends React.Component {
@@ -56,7 +57,7 @@ OauthCallback.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
   };
 }
 

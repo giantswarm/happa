@@ -5,6 +5,7 @@ import Passage, {
   IPassageInvitation,
 } from 'lib/passageClient';
 import { ThunkAction } from 'redux-thunk';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 import {
   INVITATION_CREATE_ERROR,
@@ -159,7 +160,7 @@ export function invitationsLoad(): ThunkAction<
       dispatch({ type: INVITATIONS_LOAD_REQUEST });
 
       const passage = new Passage({ endpoint: window.config.passageEndpoint });
-      const token = getState().main.loggedInUser?.auth.token ?? '';
+      const token = getLoggedInUser(getState())?.auth.token ?? '';
 
       const response = await passage.getInvitations(token);
       const invites = response.reduce(
@@ -212,7 +213,7 @@ export function invitationCreate(invitation: {
       dispatch({ type: INVITATION_CREATE_REQUEST });
 
       const passage = new Passage({ endpoint: window.config.passageEndpoint });
-      const token = getState().main.loggedInUser?.auth.token ?? '';
+      const token = getLoggedInUser(getState())?.auth.token ?? '';
       const response = await passage.createInvitation(token, invitation);
 
       dispatch({

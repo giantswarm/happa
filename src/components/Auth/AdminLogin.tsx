@@ -10,6 +10,7 @@ import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { IState } from 'stores/state';
@@ -90,7 +91,7 @@ AdminLogin.propTypes = {
 
 function mapStateToProps(state: IState): IStateProps {
   return {
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
   };
 }
 

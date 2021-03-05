@@ -3,7 +3,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import { ModalActions } from 'stores/modal/types';
 import {
@@ -247,7 +247,7 @@ export function organizationCreateConfirmed(
       const state = getState();
       let members: IOrganizationMember[] = [];
       if (!getUserIsAdmin(state)) {
-        members = [{ email: state.main.loggedInUser?.email ?? '' }];
+        members = [{ email: getLoggedInUser(state)?.email ?? '' }];
       }
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();

@@ -19,7 +19,7 @@ export interface ISSOError {
 }
 
 export function getUserIsAdmin(state: IState) {
-  return state.main.loggedInUser?.isAdmin ?? false;
+  return getLoggedInUser(state)?.isAdmin ?? false;
 }
 
 export function getProvider(state: IState): PropertiesOf<typeof Providers> {
@@ -41,7 +41,7 @@ export const selectAuthToken = (
   > => {
     // TODO(axbarsan): Remove async logic.
 
-    const user = state.main.loggedInUser;
+    const user = getLoggedInUser(state);
     if (!user) {
       return Promise.reject(new Error('You are not logged in.'));
     }

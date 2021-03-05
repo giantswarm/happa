@@ -10,6 +10,7 @@ import {
 import fetch from 'cross-fetch';
 import { Store } from 'redux';
 import { StatusCodes } from 'shared/constants';
+import { getLoggedInUser } from 'stores/main/selectors';
 
 export class Requester {
   constructor(store: Store) {
@@ -17,7 +18,8 @@ export class Requester {
   }
 
   request = async (req: IHttpRequest): Promise<IHttpResponse> => {
-    if (!this.store.getState().main.loggedInUser) {
+    const user = getLoggedInUser(this.store.getState());
+    if (!user) {
       const err = new Error(
         `user is not logged in yet, unable to report error to GS API`
       );
@@ -25,8 +27,8 @@ export class Requester {
       return Promise.reject(err);
     }
 
-    const scheme = this.store.getState().main.loggedInUser.auth.scheme;
-    const token = this.store.getState().main.loggedInUser.auth.token;
+    const scheme = user.auth.scheme;
+    const token = user.auth.token;
     const authHeader = `${scheme} ${token}`;
 
     const opt: RequestInit = {

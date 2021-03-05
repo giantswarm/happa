@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import Section from 'UI/Layout/Section';
 
 import ChangeEmailForm from './ChangeEmailForm';
@@ -61,7 +62,7 @@ AccountSettings.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
   };
 }
 

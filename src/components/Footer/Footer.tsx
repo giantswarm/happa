@@ -11,6 +11,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import * as metadataActions from 'stores/metadata/actions';
 import { METADATA_UPDATE_EXECUTE_REQUEST } from 'stores/metadata/constants';
 import {
@@ -42,8 +43,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   );
 
   const releaseURL: string = getReleaseURL(currentVersion);
-  const isLoggedIn: boolean =
-    useSelector<IState>((state) => state.main.loggedInUser) !== null;
+  const isLoggedIn: boolean = useSelector<IState>(getLoggedInUser) !== null;
   const isUpdateReady: boolean = hasUpdateReady(
     currentVersion,
     newVersion,

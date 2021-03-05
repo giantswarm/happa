@@ -5,6 +5,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { MainRoutes, UsersRoutes } from 'shared/constants/routes';
+import { getLoggedInUser } from 'stores/main/selectors';
 import {
   invitationCreate,
   invitationsLoad,
@@ -258,7 +259,7 @@ Users.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.main.loggedInUser,
+    currentUser: getLoggedInUser(state),
     users: state.entities.users,
     invitations: state.entities.users.invitations,
     organizations: state.entities.organizations,

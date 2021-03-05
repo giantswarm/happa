@@ -15,6 +15,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import * as mainActions from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
@@ -24,7 +25,7 @@ import { parseErrorMessages } from './parseErrorMessages';
 
 // The props coming from the global state (AKA: `mapStateToProps`)
 interface IStateProps {
-  user: IUser;
+  user: ILoggedInUser | null;
 }
 
 // The props coming from injected actions (AKA: `mapDispatchToProps`)
@@ -215,14 +216,9 @@ class Login extends React.Component<ILoginProps, ILoginState> {
   }
 }
 
-/**
- * If we had the type of the whole state, the type of `state` would be something like
- * `state: Partial<IAppState>`
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapStateToProps(state: Record<string, any>): IStateProps {
+function mapStateToProps(state: IState): IStateProps {
   return {
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
   };
 }
 
