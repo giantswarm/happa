@@ -257,7 +257,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             ) : (
               <Box>
                 <Anchor onClick={this.showLoginForm}>
-                  Log in using email and password
+                  Login using email and password
                 </Anchor>
               </Box>
             )}
