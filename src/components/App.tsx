@@ -7,7 +7,6 @@ import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import FeatureFlags from 'shared/FeatureFlags';
 import { DefaultTheme } from 'styled-components';
 import ThemeProvider from 'styles/ThemeProvider';
 
@@ -23,7 +22,7 @@ const App: React.FC<IAppProps> = ({ store, theme, history }) => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <ConnectedRouter history={history}>
-        {FeatureFlags.FEATURE_MAPI_ACCESS && <MapiAuthProvider />}
+        <MapiAuthProvider />
 
         <main>
           <Routes />
