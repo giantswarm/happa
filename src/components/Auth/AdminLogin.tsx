@@ -1,66 +1,20 @@
-import { CallHistoryMethodAction, push } from 'connected-react-router';
 import { spinner } from 'images';
-import Auth from 'lib/auth0';
 import { clearQueues } from 'lib/flashMessage';
-import { isJwtExpired } from 'lib/helpers';
-import PropTypes from 'prop-types';
+import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { MainRoutes } from 'shared/constants/routes';
+import { useDispatch, useSelector } from 'react-redux';
 import * as mainActions from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
-import { MainActions } from 'stores/main/types';
-import { LoggedInUserTypes } from 'stores/main/types';
-import { IState } from 'stores/state';
 
-interface IStateProps {
-  user?: ILoggedInUser | null;
-}
+interface IAdminLoginProps {}
 
-interface IDispatchProps {
-  dispatch: ThunkDispatch<IState, void, MainActions | CallHistoryMethodAction>;
-}
+const AdminLogin: React.FC<IAdminLoginProps> = () => {
+  const user = useSelector(getLoggedInUser);
+  const dispatch = useDispatch();
 
-interface IAdminLoginProps extends IStateProps, IDispatchProps {}
-
-const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
   useEffect(() => {
-    const auth = Auth.getInstance();
-    const handleLogin = async () => {
-      try {
-        if (user?.type === LoggedInUserTypes.Auth0) {
-          if (isJwtExpired(user.auth.token)) {
-            try {
-              // Token is expired. Try to renew it silently, and if that succeeds, redirect
-              // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
-              const result = await auth.renewToken();
-              // Update state with new token.
-              await dispatch(mainActions.auth0Login(result));
-
-              // Redirect to dashboard.
-              dispatch(push(MainRoutes.Home));
-            } catch {
-              // Unable to refresh token silently, so send the down the auth0
-              // flow.
-              auth.login();
-            }
-          } else {
-            // Token isn't expired yet, so just redirect the user to the dashboard.
-            dispatch(push(MainRoutes.Home));
-          }
-        } else {
-          // User doesn't have any previous token at all, send them to auth0 so
-          // they can get one.
-          auth.login();
-        }
-      } catch (err) {
-        // NOOP
-      }
-    };
-
-    handleLogin();
+    const auth = MapiAuth.getInstance();
+    dispatch(mainActions.mapiLogin(auth, MapiAuthConnectors.GiantSwarm));
 
     return () => {
       clearQueues();
@@ -83,22 +37,6 @@ const AdminLogin: React.FC<IAdminLoginProps> = ({ user, dispatch }) => {
   );
 };
 
-AdminLogin.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  // @ts-ignore
-  user: PropTypes.object,
-};
+AdminLogin.propTypes = {};
 
-function mapStateToProps(state: IState): IStateProps {
-  return {
-    user: getLoggedInUser(state),
-  };
-}
-
-function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
-  return {
-    dispatch: dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AdminLogin);
+export default AdminLogin;
