@@ -3,6 +3,8 @@ import * as helpers from 'lib/helpers';
 import { getK8sVersionEOLDate, selectAuthToken } from 'stores/main/selectors';
 import { IState } from 'stores/state';
 
+import { LoggedInUserTypes } from '../utils';
+
 // Bypass the user selectors mock.
 jest.unmock('stores/main/selectors');
 
@@ -35,6 +37,7 @@ describe('main::selectors', () => {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'giantswarm', token: 'a-valid-token' },
             isAdmin: false,
+            type: LoggedInUserTypes.GS,
           },
         },
       } as IState;
@@ -58,6 +61,7 @@ describe('main::selectors', () => {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'Bearer', token: 'an-expired-token' },
             isAdmin: true,
+            type: LoggedInUserTypes.Auth0,
           },
         },
       } as IState;
@@ -81,6 +85,7 @@ describe('main::selectors', () => {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'Bearer', token: 'an-expired-token' },
             isAdmin: true,
+            type: LoggedInUserTypes.Auth0,
           },
         },
       } as IState;
@@ -104,6 +109,7 @@ describe('main::selectors', () => {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'giantswarm', token: 'a-non-jwt-token' },
             isAdmin: false,
+            type: LoggedInUserTypes.GS,
           },
         },
       } as IState;

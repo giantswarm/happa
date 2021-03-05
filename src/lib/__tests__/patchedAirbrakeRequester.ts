@@ -5,6 +5,7 @@ import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import { AuthorizationTypes } from 'shared/constants';
 import configureStore from 'stores/configureStore';
+import { LoggedInUserTypes } from 'stores/main/utils';
 import { IState } from 'stores/state';
 import { USER_EMAIL } from 'testUtils/mockHttpCalls';
 
@@ -50,6 +51,7 @@ describe('patchedAirbrakeRequester', () => {
             token: 'some-token',
           },
           isAdmin: false,
+          type: LoggedInUserTypes.GS,
         },
       },
     } as unknown) as IState;
@@ -91,6 +93,7 @@ describe('patchedAirbrakeRequester', () => {
             scheme: AuthorizationTypes.GS,
             token: 'some-token',
           },
+          type: LoggedInUserTypes.GS,
           isAdmin: false,
         },
       },

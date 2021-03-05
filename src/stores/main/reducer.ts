@@ -20,6 +20,7 @@ import {
 import { OrganizationActions } from 'stores/organization/types';
 import {
   fetchSelectedOrganizationFromStorage,
+  fetchUserFromStorage,
   removeUserFromStorage,
 } from 'utils/localStorageUtils';
 
@@ -27,7 +28,7 @@ const initialState = (): IMainState => ({
   selectedOrganization: fetchSelectedOrganizationFromStorage(),
   selectedClusterID: null,
   firstLoadComplete: false,
-  loggedInUser: null,
+  loggedInUser: fetchUserFromStorage(),
   info: {
     general: {
       installation_name: '',

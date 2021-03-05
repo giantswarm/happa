@@ -13,6 +13,7 @@ import React from 'react';
 import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
+import { LoggedInUserTypes } from 'stores/main/utils';
 import theme from 'styles/theme';
 import {
   AWSInfoResponse,
@@ -31,6 +32,7 @@ const mockUserData = {
     token: 'some-token',
   },
   isAdmin: true,
+  type: LoggedInUserTypes.Auth0,
 };
 const mockSuccessfulAuthResponse = {
   accessToken: 'some-token',

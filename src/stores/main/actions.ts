@@ -148,7 +148,10 @@ export function refreshUserInfo(): ThunkAction<
       return Promise.reject(new Error('No logged in user to refresh.'));
     }
 
-    if (loggedInUser.type !== LoggedInUserTypes.GS) {
+    if (
+      loggedInUser.type !== LoggedInUserTypes.GS &&
+      loggedInUser.type !== LoggedInUserTypes.Auth0
+    ) {
       return Promise.resolve();
     }
 
@@ -334,23 +337,30 @@ export function resumeLogin(
   mapiAuth: MapiAuth
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>) => {
+    let user: ILoggedInUser | null = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isLoginResponse = urlParams.has('code') && urlParams.has('state');
+
+    if (isLoginResponse) {
+      const mapiUser = await mapiAuth.handleLoginResponse(window.location.href);
+      user = mapOAuth2UserToUser(mapiUser);
+      dispatch(loginSuccess(user));
+
+      // Remove state and code from url.
+      dispatch(replace(window.location.pathname));
+
+      return Promise.resolve();
+    }
+
     // Try to resume GS user first.
-    let user = fetchUserFromStorage();
+    user = fetchUserFromStorage();
     if (user) {
       // Remove MAPI user if it exists.
       await mapiAuth.logout();
       dispatch(loginSuccess(user));
 
       return Promise.resolve();
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const isLoginResponse = urlParams.has('code') && urlParams.has('state');
-
-    if (isLoginResponse) {
-      await mapiAuth.handleLoginResponse(window.location.href);
-      // Remove state and code from url.
-      dispatch(replace(window.location.pathname));
     }
 
     const mapiUser = await mapiAuth.getLoggedInUser();

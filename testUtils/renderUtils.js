@@ -7,12 +7,20 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
+import { LoggedInUserTypes } from 'stores/main/utils';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
 
 export const initialStorage = {
-  user:
-    '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+  user: JSON.stringify({
+    email: 'developer@giantswarm.io',
+    auth: {
+      scheme: 'giantswarm',
+      token: 'a-valid-token',
+    },
+    isAdmin: true,
+    type: LoggedInUserTypes.GS,
+  }),
 };
 
 /**

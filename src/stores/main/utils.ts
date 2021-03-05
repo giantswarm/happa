@@ -1,9 +1,9 @@
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 
 export enum LoggedInUserTypes {
-  GS = 0,
-  Auth0 = 1,
-  MAPI = 2,
+  GS,
+  Auth0,
+  MAPI,
 }
 
 export function mapOAuth2UserToUser(user: IOAuth2User): ILoggedInUser {
