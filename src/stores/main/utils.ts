@@ -11,10 +11,7 @@ export function mapOAuth2UserToUser(user: IOAuth2User): ILoggedInUser {
     auth: {
       scheme: user.authorizationType,
       token: user.idToken,
-      expiresAt: user.expiresAt,
-      refreshToken: user.refreshToken,
     },
-    emailVerified: user.emailVerified,
     groups: user.groups,
     type: LoggedInUserTypes.MAPI,
     isAdmin,

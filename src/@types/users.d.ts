@@ -3,10 +3,6 @@ interface ILoggedInUserAuthScheme {
     typeof import('shared/constants').AuthorizationTypes
   >;
   token: string;
-
-  /* OIDC specific. */
-  refreshToken?: string;
-  expiresAt?: number;
 }
 
 interface ILoggedInUser {
@@ -16,7 +12,6 @@ interface ILoggedInUser {
   type: import('stores/main/types').LoggedInUserTypes;
 
   /* OIDC specific. */
-  emailVerified?: boolean;
   groups?: string[];
 
   /* @deprecated */
