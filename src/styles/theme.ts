@@ -726,6 +726,9 @@ const theme = deepMerge(generate(16), {
       small: '16px',
     },
   },
+  anchor: {
+    color: 'text',
+  },
 });
 
 /* eslint-enable no-magic-numbers */

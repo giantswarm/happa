@@ -1,5 +1,5 @@
 import { push } from 'connected-react-router';
-import { Box } from 'grommet';
+import { Anchor, Box, Heading, Paragraph } from 'grommet';
 import {
   clearQueues,
   FlashMessage,
@@ -17,11 +17,16 @@ import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import * as mainActions from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 import { IState } from 'stores/state';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 
 import { parseErrorMessages } from './parseErrorMessages';
+
+const StyledBox = styled(Box)`
+  position: relative;
+`;
 
 // The props coming from the global state (AKA: `mapStateToProps`)
 interface IStateProps {
@@ -40,6 +45,8 @@ interface ILoginState {
   email: string;
   password: string;
   authenticating: boolean;
+  mapiAuthenticating: boolean;
+  loginFormVisible: boolean;
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
@@ -58,11 +65,9 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     email: '',
     password: '',
     authenticating: false,
+    mapiAuthenticating: false,
+    loginFormVisible: false,
   };
-
-  public email: HTMLInputElement | null = null;
-
-  public password: HTMLInputElement | null = null;
 
   public onAuthenticateFailed = (message: string) => {
     new FlashMessage(message, messageType.ERROR, messageTTL.LONG);
@@ -140,76 +145,123 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
     this.setState(
       {
-        authenticating: true,
+        mapiAuthenticating: true,
       },
       () => {
+        clearQueues();
+
         const auth = MapiAuth.getInstance();
         this.props.actions.mapiLogin(auth);
       }
     );
   };
 
+  public showLoginForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    this.setState({ loginFormVisible: true });
+  };
+
   public render(): ReactNode {
+    const {
+      authenticating,
+      mapiAuthenticating,
+      email,
+      password,
+      loginFormVisible,
+    } = this.state;
+
+    const isLoading = authenticating || mapiAuthenticating;
+
     return (
       <>
         <div className='login_form--mask' />
 
         <SlideTransition appear={true} in={true} direction='down'>
-          <div className='login_form--container'>
-            <h1>Log in to Giant&nbsp;Swarm</h1>
-            <form onSubmit={this.logIn}>
-              <Box margin={{ bottom: 'small' }}>
-                <TextInput
-                  autoComplete='username'
-                  autoFocus={true}
-                  label='Email'
-                  id='email'
-                  onChange={this.updateEmail}
-                  type='email'
-                  value={this.state.email}
-                />
-                <TextInput
-                  autoComplete='current-password'
-                  label='Password'
-                  id='password'
-                  onChange={this.updatePassword}
-                  type='password'
-                  value={this.state.password}
-                />
-              </Box>
-
+          <StyledBox width='large' margin='auto'>
+            <Heading level={1} margin={{ bottom: 'large' }}>
+              Welcome to Giant Swarm
+            </Heading>
+            <Box margin={{ bottom: 'medium' }}>
               <Button
                 bsStyle='primary'
-                loading={this.state.authenticating}
-                onClick={this.logIn}
-                type='submit'
-              >
-                Log in
-              </Button>
-              <Link to={MainRoutes.ForgotPassword}>Forgot your password?</Link>
-            </form>
-
-            <Box margin={{ vertical: 'large' }}>
-              <Button
-                bsStyle='primary'
-                loading={this.state.authenticating}
+                bsSize='lg'
+                loading={mapiAuthenticating}
                 onClick={this.mapiLogin}
+                disabled={authenticating}
               >
-                Login using OIDC
+                Proceed to login
               </Button>
+              <Paragraph fill={true} margin={{ top: 'large' }}>
+                The above option will use a central authentication provider to
+                log you in. If you have logged in using email and password
+                before, and want to continue to do so, you can still do it for a
+                transitional period.
+              </Paragraph>
             </Box>
 
-            <div className='login_form--legal'>
-              By logging in you acknowledge that we track your activities in
-              order to analyze your product usage and improve your experience.
-              See our{' '}
-              <a href='https://giantswarm.io/privacypolicy/'>Privacy Policy</a>.
-              <br />
-              <br />
-              Trouble logging in? Please contact us via{' '}
-              <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
-            </div>
-          </div>
+            {loginFormVisible ? (
+              <Box direction='column' gap='medium'>
+                <form onSubmit={this.logIn}>
+                  <Box margin={{ bottom: 'small' }}>
+                    <TextInput
+                      autoComplete='username'
+                      autoFocus={true}
+                      label='Email'
+                      id='email'
+                      onChange={this.updateEmail}
+                      type='email'
+                      value={email}
+                      readOnly={isLoading}
+                    />
+                    <TextInput
+                      autoComplete='current-password'
+                      label='Password'
+                      id='password'
+                      onChange={this.updatePassword}
+                      type='password'
+                      value={password}
+                      readOnly={isLoading}
+                    />
+                  </Box>
+
+                  <Button
+                    bsStyle='default'
+                    loading={authenticating}
+                    onClick={this.logIn}
+                    type='submit'
+                    disabled={mapiAuthenticating}
+                  >
+                    Login
+                  </Button>
+                  <Link to={MainRoutes.ForgotPassword}>
+                    Forgot your password?
+                  </Link>
+                </form>
+                <div className='login_form--legal'>
+                  By logging in you acknowledge that we track your activities in
+                  order to analyze your product usage and improve your
+                  experience. See our{' '}
+                  <a href='https://giantswarm.io/privacypolicy/'>
+                    Privacy Policy
+                  </a>
+                  .
+                  <br />
+                  <br />
+                  Trouble logging in? Please contact us via{' '}
+                  <a href='mailto:support@giantswarm.io'>
+                    support@giantswarm.io
+                  </a>
+                </div>
+              </Box>
+            ) : (
+              <Box>
+                <Anchor onClick={this.showLoginForm}>
+                  Log in using email and password
+                </Anchor>
+              </Box>
+            )}
+          </StyledBox>
         </SlideTransition>
       </>
     );
