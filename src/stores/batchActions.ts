@@ -34,6 +34,7 @@ import {
   globalLoadFinish,
   globalLoadStart,
   refreshUserInfo,
+  validateMAPIAccess,
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
 import { getUserIsAdmin } from 'stores/main/selectors';
@@ -85,7 +86,8 @@ export function batchedLayout(): ThunkAction<
     try {
       await dispatch(organizationsLoad());
 
-      // eslint-disable-next-line @typescript-eslint/await-thenable
+      dispatch(validateMAPIAccess());
+
       const catalogs = await dispatch(listCatalogs());
       const userIsAdmin = getUserIsAdmin(getState());
 

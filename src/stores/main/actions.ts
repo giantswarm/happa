@@ -403,3 +403,20 @@ export function mapiLogin(
     }
   };
 }
+
+export function validateMAPIAccess(): ThunkAction<
+  void,
+  IState,
+  void,
+  MainActions | CallHistoryMethodAction
+> {
+  return (dispatch, getState) => {
+    const state = getState();
+    const user = getLoggedInUser(state)!;
+    const organizations = Object.values(state.entities.organizations.items);
+
+    if (user.type === LoggedInUserTypes.MAPI && organizations.length < 1) {
+      dispatch(replace(MainRoutes.Unauthorized));
+    }
+  };
+}

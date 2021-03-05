@@ -8,6 +8,7 @@ const MainRoutes = {
   SignUp: '/signup/:token',
   MapiAccess: '/mapi-access',
   StyleGuide: '/styleguide',
+  Unauthorized: '/unauthorized',
 };
 
 const AppsRoutes = {
