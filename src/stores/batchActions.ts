@@ -66,6 +66,19 @@ export function batchedLayout(): ThunkAction<
       const auth = MapiAuth.getInstance();
       await dispatch(resumeLogin(auth));
 
+      try {
+        await dispatch(organizationsLoad());
+      } catch (err) {
+        const hasAccessToResources = getHasAccessToResources(getState());
+        if (!hasAccessToResources) {
+          dispatch(replace(MainRoutes.Unauthorized));
+
+          return;
+        }
+
+        throw err;
+      }
+
       await dispatch(refreshUserInfo());
       await dispatch(getInfo());
     } catch (err) {
@@ -83,14 +96,6 @@ export function batchedLayout(): ThunkAction<
     }
 
     try {
-      await dispatch(organizationsLoad());
-
-      if (!getHasAccessToResources(getState())) {
-        dispatch(replace(MainRoutes.Unauthorized));
-
-        return;
-      }
-
       const catalogs = await dispatch(listCatalogs());
       const userIsAdmin = getUserIsAdmin(getState());
 

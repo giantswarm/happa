@@ -93,7 +93,7 @@ export function organizationsLoad(): ThunkAction<
       const currentOrganizations = getState().entities.organizations;
       const alreadyFetching = currentOrganizations.isFetching;
       if (alreadyFetching) {
-        return;
+        return Promise.resolve();
       }
 
       dispatch({ type: ORGANIZATION_LOAD_REQUEST });
@@ -132,17 +132,14 @@ export function organizationsLoad(): ThunkAction<
       dispatch(
         organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
       );
-    } catch (error) {
-      new FlashMessage(
-        'An error occurred as we tried to load organizations.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io.'
-      );
 
+      return Promise.resolve();
+    } catch (error) {
       dispatch({
         type: ORGANIZATION_LOAD_ERROR,
       });
+
+      return Promise.reject(error);
     }
   };
 }
