@@ -1,5 +1,5 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
-import { push, replace } from 'connected-react-router';
+import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
@@ -67,7 +67,7 @@ export function batchedLayout(
       } catch (err) {
         const hasAccessToResources = getHasAccessToResources(getState());
         if (!hasAccessToResources) {
-          dispatch(replace(MainRoutes.Unauthorized));
+          dispatch(globalLoadFinish());
 
           return;
         }

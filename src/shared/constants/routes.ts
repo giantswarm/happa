@@ -6,9 +6,7 @@ const MainRoutes = {
   ForgotPassword: '/forgot_password',
   SetPassword: '/forgot_password/:token',
   SignUp: '/signup/:token',
-  MapiAccess: '/mapi-access',
   StyleGuide: '/styleguide',
-  Unauthorized: '/unauthorized',
 };
 
 const AppsRoutes = {

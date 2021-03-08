@@ -87,7 +87,9 @@ export function getLoggedInUser(state: IState): ILoggedInUser | null {
 }
 
 export function getHasAccessToResources(state: IState): boolean {
-  const user = getLoggedInUser(state)!;
+  const user = getLoggedInUser(state);
+  if (!user) return false;
+
   const organizations = Object.values(state.entities.organizations.items);
 
   if (user.type === LoggedInUserTypes.MAPI && organizations.length < 1) {

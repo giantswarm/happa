@@ -1,4 +1,5 @@
 import { withAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import MapiUnauthorized from 'Auth/MAPI/MapiUnauthorized';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
@@ -15,7 +16,10 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
-import { getLoggedInUser } from 'stores/main/selectors';
+import {
+  getHasAccessToResources,
+  getLoggedInUser,
+} from 'stores/main/selectors';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
@@ -35,7 +39,9 @@ defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
 
 class Layout extends React.Component {
   componentDidMount() {
-    this.props.dispatch(batchedLayout(this.props.authProvider));
+    const { dispatch, authProvider } = this.props;
+
+    dispatch(batchedLayout(authProvider));
   }
 
   selectOrganization = (orgId) => {
@@ -44,43 +50,51 @@ class Layout extends React.Component {
   };
 
   render() {
+    const { user } = this.props;
+
     return (
       <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
-          <Modals />
-          <Navigation
-            onSelectOrganization={this.selectOrganization}
-            organizations={this.props.organizations}
-            selectedOrganization={this.props.selectedOrganization}
-            showApps={Object.keys(this.props.catalogs.items).length > 0}
-            user={this.props.user}
-          />
-          <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
-            <div className='main' data-testid='main'>
-              <Switch>
-                {/*prettier-ignore*/}
-                <Route component={Home} exact path={MainRoutes.Home} />
-                <Route component={Apps} path={AppsRoutes.Home} />
-                <Route component={Users} exact path={UsersRoutes.Home} />
-                <Route
-                  component={Organizations}
-                  path={OrganizationsRoutes.Home}
-                />
-                <Route
-                  component={AccountSettings}
-                  exact
-                  path={AccountSettingsRoutes.Home}
-                />
-                <Route
-                  component={ExceptionNotificationTest}
-                  exact
-                  path={ExceptionNotificationTestRoutes.Home}
-                />
+          {this.props.hasAccessToResources ? (
+            <>
+              <Modals />
+              <Navigation
+                onSelectOrganization={this.selectOrganization}
+                organizations={this.props.organizations}
+                selectedOrganization={this.props.selectedOrganization}
+                showApps={Object.keys(this.props.catalogs.items).length > 0}
+                user={user}
+              />
+              <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
+                <div className='main' data-testid='main'>
+                  <Switch>
+                    {/*prettier-ignore*/}
+                    <Route component={Home} exact path={MainRoutes.Home} />
+                    <Route component={Apps} path={AppsRoutes.Home} />
+                    <Route component={Users} exact path={UsersRoutes.Home} />
+                    <Route
+                      component={Organizations}
+                      path={OrganizationsRoutes.Home}
+                    />
+                    <Route
+                      component={AccountSettings}
+                      exact
+                      path={AccountSettingsRoutes.Home}
+                    />
+                    <Route
+                      component={ExceptionNotificationTest}
+                      exact
+                      path={ExceptionNotificationTestRoutes.Home}
+                    />
 
-                <Redirect path='*' to={MainRoutes.Home} />
-              </Switch>
-            </div>
-          </Breadcrumb>
+                    <Redirect path='*' to={MainRoutes.Home} />
+                  </Switch>
+                </div>
+              </Breadcrumb>
+            </>
+          ) : (
+            <MapiUnauthorized user={user} />
+          )}
         </LoadingOverlay>
       </DocumentTitle>
     );
@@ -95,6 +109,7 @@ Layout.propTypes = {
   catalogs: PropTypes.object,
   firstLoadComplete: PropTypes.bool,
   authProvider: PropTypes.object,
+  hasAccessToResources: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -104,6 +119,7 @@ function mapStateToProps(state) {
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,
+    hasAccessToResources: getHasAccessToResources(state),
   };
 }
 
