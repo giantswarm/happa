@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
@@ -25,7 +23,7 @@ it('renders the login page at /login', async () => {
   const { getByText } = renderRouteWithStore(MainRoutes.Login, {}, {});
 
   await waitFor(() => {
-    expect(getByText('Log in to Giant Swarm')).toBeInTheDocument();
+    expect(getByText('Welcome to Giant Swarm')).toBeInTheDocument();
   });
 });
 
@@ -56,6 +54,8 @@ it('redirects to / and shows the layout after a succesful login', async () => {
     {}
   );
 
+  fireEvent.click(screen.getByText('Login using email and password'));
+
   // When I type in my email and password
   const emailInput = getByLabelText('Email');
   const passwordInput = getByLabelText('Password');
@@ -66,7 +66,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   fireEvent.change(passwordInput, { target: { value: 'password' } });
 
   // And click submit
-  const button = getByText('Log in');
+  const button = getByText('Login');
   fireEvent.click(button);
 
   // Then I should be logged in and see the home page with no orgs or clusters.
@@ -88,6 +88,8 @@ it('tells the user to give a password if they leave it blank', async () => {
     {}
   );
 
+  fireEvent.click(screen.getByText('Login using email and password'));
+
   // When I type in my email but not my password.
   const emailInput = getByLabelText('Email');
   fireEvent.change(emailInput, {
@@ -95,7 +97,7 @@ it('tells the user to give a password if they leave it blank', async () => {
   });
 
   // And click submit
-  const button = getByText('Log in');
+  const button = getByText('Login');
   fireEvent.click(button);
 
   // Then I should see a message reminding me not to leave my password blank.
@@ -112,12 +114,14 @@ it('tells the user to give a email if they leave it blank', async () => {
     {}
   );
 
+  fireEvent.click(screen.getByText('Login using email and password'));
+
   // When I type in my password but not my email.
   const passwordInput = getByLabelText('Password');
   fireEvent.change(passwordInput, { target: { value: 'password' } });
 
   // And click submit
-  const button = getByText('Log in');
+  const button = getByText('Login');
   fireEvent.click(button);
 
   // Then I should see a message reminding me not to leave my password blank.
@@ -139,6 +143,8 @@ it('shows an error if the user logs in with invalid credentials', async () => {
     {}
   );
 
+  fireEvent.click(screen.getByText('Login using email and password'));
+
   // When I type in my email and password
   const emailInput = getByLabelText('Email');
   const passwordInput = getByLabelText('Password');
@@ -149,11 +155,11 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   fireEvent.change(passwordInput, { target: { value: 'password' } });
 
   // And click submit
-  const button = getByText('Log in');
+  const button = getByText('Login');
   fireEvent.click(button);
 
   // Then I should see a message reminding me not to leave my password blank.
   await waitFor(() => {
-    expect(getByText(/Could not log in/i)).toBeInTheDocument();
+    expect(getByText(/Could not login/i)).toBeInTheDocument();
   });
 });
