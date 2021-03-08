@@ -8,8 +8,10 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 //
 // <Button
 //   type='button|submit|reset'
+//   bsSize='sm'|undefined
 //   bsStyle='primary|danger|default|link'
 //   loading=true|false
+//   loadingPosition='left'|undefined
 //   disabled=true|false
 //   onClick=function>
 //
