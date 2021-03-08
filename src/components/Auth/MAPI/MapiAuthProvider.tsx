@@ -44,13 +44,11 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
   useEffect(() => {
     auth.addEventListener(OAuth2Events.UserLoaded, onUserLoaded);
     auth.addEventListener(OAuth2Events.UserUnloaded, onUserInvalid);
-    auth.addEventListener(OAuth2Events.TokenExpired, onUserInvalid);
     auth.addEventListener(OAuth2Events.SilentRenewError, onUserInvalid);
 
     return () => {
       auth.removeEventListener(OAuth2Events.UserLoaded, onUserLoaded);
       auth.removeEventListener(OAuth2Events.UserUnloaded, onUserInvalid);
-      auth.removeEventListener(OAuth2Events.TokenExpired, onUserInvalid);
       auth.removeEventListener(OAuth2Events.SilentRenewError, onUserInvalid);
     };
   }, [onUserLoaded, onUserInvalid, auth]);
