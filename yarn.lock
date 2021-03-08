@@ -1532,7 +1532,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@storybook/addon-actions@6.1.21", "@storybook/addon-actions@^6.1.20":
+"@storybook/addon-actions@6.1.21", "@storybook/addon-actions@^6.1.21":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-6.1.21.tgz#881dceb0ed650fe28086d9993703f8081b29f4ce"
   integrity sha512-H+nhSgK3X5L+JfArsC9ufvgJzQwPN9UXBxhMl74faEDCo9RGmq9ywNcjn9XlZGGnJ3jCaYrI/T1u0J7F6PBrTA==
@@ -1587,7 +1587,7 @@
     core-js "^3.0.1"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-docs@6.1.21", "@storybook/addon-docs@^6.1.20":
+"@storybook/addon-docs@6.1.21", "@storybook/addon-docs@^6.1.21":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@storybook/addon-docs/-/addon-docs-6.1.21.tgz#2ab12698200e7353c4789d705b0a1972f6d268d8"
   integrity sha512-MvTmxrOSo+zZ5MaMx9LVWM8DlvVHeryCJKPJx8BYCEN38r8mIK7uCFYok8oMPmACrVe0MfXOdJCm1HKkBKjsMg==
