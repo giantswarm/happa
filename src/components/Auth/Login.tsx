@@ -22,6 +22,10 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 
+import {
+  IPropsWithAuthProvider,
+  withAuthProvider,
+} from './MAPI/MapiAuthProvider';
 import { parseErrorMessages } from './parseErrorMessages';
 
 const StyledBox = styled(Box)`
@@ -39,7 +43,10 @@ interface IDispatchProps extends DispatchProp {
   dispatch: IAsynchronousDispatch<IState>;
 }
 
-interface ILoginProps extends IStateProps, IDispatchProps {}
+interface ILoginProps
+  extends IStateProps,
+    IDispatchProps,
+    IPropsWithAuthProvider {}
 
 interface ILoginState {
   email: string;
@@ -55,10 +62,11 @@ class Login extends React.Component<ILoginProps, ILoginState> {
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
      */
-    // @ts-ignore
+    // @ts-expect-error
     dispatch: PropTypes.func,
-    // @ts-ignore
+    // @ts-expect-error
     actions: PropTypes.object,
+    authProvider: PropTypes.object,
   };
 
   public readonly state: ILoginState = {
@@ -150,7 +158,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
       () => {
         clearQueues();
 
-        const auth = MapiAuth.getInstance();
+        const auth = this.props.authProvider as MapiAuth;
         this.props.actions.mapiLogin(auth);
       }
     );
@@ -285,4 +293,7 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
 
 // This is complaining about our prop types not having the EXACT same structure as our Props interface
 // @ts-ignore
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAuthProvider(Login));

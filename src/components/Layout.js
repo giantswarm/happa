@@ -1,3 +1,4 @@
+import { withAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
@@ -34,7 +35,7 @@ defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
 
 class Layout extends React.Component {
   componentDidMount() {
-    this.props.dispatch(batchedLayout());
+    this.props.dispatch(batchedLayout(this.props.authProvider));
   }
 
   selectOrganization = (orgId) => {
@@ -93,6 +94,7 @@ Layout.propTypes = {
   dispatch: PropTypes.func,
   catalogs: PropTypes.object,
   firstLoadComplete: PropTypes.bool,
+  authProvider: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -111,4 +113,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAuthProvider(Layout));

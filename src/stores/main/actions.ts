@@ -3,6 +3,7 @@ import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -300,15 +301,15 @@ export function setNewPassword(
 }
 
 export function resumeLogin(
-  mapiAuth: MapiAuth
+  auth: IOAuth2Provider
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>) => {
     const urlParams = new URLSearchParams(window.location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
 
     if (isLoginResponse) {
-      await mapiAuth.handleLoginResponse(window.location.href);
-      // Login callbacks are handled by `MapiAuth`.
+      await auth.handleLoginResponse(window.location.href);
+      // Login callbacks are handled by `OAuth2`.
 
       // Remove state and code from url.
       dispatch(replace(window.location.pathname));
@@ -320,15 +321,15 @@ export function resumeLogin(
     const user = fetchUserFromStorage();
     if (user) {
       // Remove MAPI user if it exists.
-      await mapiAuth.logout();
+      await auth.logout();
       dispatch(loginSuccess(user));
 
       return Promise.resolve();
     }
 
-    const mapiUser = await mapiAuth.getLoggedInUser();
+    const mapiUser = await auth.getLoggedInUser();
     if (mapiUser) {
-      // Login callbacks are handled by `MapiAuth`.
+      // Login callbacks are handled by `OAuth2`.
 
       return Promise.resolve();
     }
@@ -338,7 +339,7 @@ export function resumeLogin(
 }
 
 export function logout(
-  mapiAuth: MapiAuth
+  auth: IOAuth2Provider
 ): ThunkAction<
   Promise<void>,
   IState,
@@ -365,7 +366,7 @@ export function logout(
           break;
         }
         case LoggedInUserTypes.MAPI:
-          await mapiAuth.logout();
+          await auth.logout();
 
           break;
       }
@@ -384,7 +385,7 @@ export function logout(
 }
 
 export function mapiLogin(
-  mapiAuth: MapiAuth,
+  auth: MapiAuth,
   connector?: MapiAuthConnectors
 ): ThunkAction<
   Promise<void>,
@@ -396,7 +397,7 @@ export function mapiLogin(
     try {
       // Remove other types of users from cache.
       removeUserFromStorage();
-      await mapiAuth.attemptLogin(connector);
+      await auth.attemptLogin(connector);
     } catch (err) {
       dispatch(loginError(err.message));
       dispatch(push(MainRoutes.Login));

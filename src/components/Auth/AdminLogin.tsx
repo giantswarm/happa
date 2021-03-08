@@ -6,20 +6,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as mainActions from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 
+import { useAuthProvider } from './MAPI/MapiAuthProvider';
+
 interface IAdminLoginProps {}
 
 const AdminLogin: React.FC<IAdminLoginProps> = () => {
   const user = useSelector(getLoggedInUser);
+  const auth = useAuthProvider();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const auth = MapiAuth.getInstance();
-    dispatch(mainActions.mapiLogin(auth, MapiAuthConnectors.GiantSwarm));
+    dispatch(
+      mainActions.mapiLogin(auth as MapiAuth, MapiAuthConnectors.GiantSwarm)
+    );
 
     return () => {
       clearQueues();
     };
-  }, [dispatch, user]);
+  }, [dispatch, user, auth]);
 
   return (
     <>

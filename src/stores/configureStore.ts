@@ -1,6 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import {
   applyMiddleware,
   compose,
@@ -23,12 +23,12 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default function configureStore(
   initialState: IState,
   history: History<History.LocationState>,
-  mapiAuth: MapiAuth
+  auth: IOAuth2Provider
 ) {
   const middleware: Middleware[] = [
     routerMiddleware(history),
     thunk,
-    mainAuthMiddleware(mapiAuth),
+    mainAuthMiddleware(auth),
     callAPIMiddleware,
   ];
 

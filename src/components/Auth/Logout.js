@@ -1,5 +1,4 @@
 import { spinner } from 'images';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -7,9 +6,11 @@ import { bindActionCreators } from 'redux';
 import * as mainActions from 'stores/main/actions';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
+import { withAuthProvider } from './MAPI/MapiAuthProvider';
+
 class Logout extends React.Component {
   componentDidMount() {
-    const auth = MapiAuth.getInstance();
+    const auth = this.props.authProvider;
     this.props.actions.logout(auth);
   }
 
@@ -39,6 +40,7 @@ class Logout extends React.Component {
 
 Logout.propTypes = {
   actions: PropTypes.object,
+  authProvider: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -47,4 +49,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(Logout);
+export default connect(null, mapDispatchToProps)(withAuthProvider(Logout));

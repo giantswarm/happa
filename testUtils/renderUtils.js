@@ -1,8 +1,9 @@
 import { render } from '@testing-library/react';
 import App from 'App';
+import MapiAuthProvider from 'Auth/MAPI/MapiAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
@@ -29,13 +30,13 @@ export const initialStorage = {
  * @param {String} initialRoute - The route to load.
  * @param {Object} state - The initial store state.
  * @param {Object} storage - The initial local storage state.
- * @param {MapiAuth} mapiAuth Management API handler.
+ * @param {IOAuth2Provider} auth Authentication provider.
  */
 export function renderRouteWithStore(
   initialRoute = MainRoutes.Home,
   state = {},
   storage = initialStorage,
-  mapiAuth = MapiAuth.getInstance()
+  auth = new TestOAuth2()
 ) {
   localStorage.replaceWith(storage);
 
@@ -44,9 +45,9 @@ export function renderRouteWithStore(
     initialIndex: 0,
   });
 
-  const store = configureStore(state, history, mapiAuth);
+  const store = configureStore(state, history, auth);
 
-  const app = render(<App {...{ store, theme, history }} />);
+  const app = render(<App {...{ store, theme, history, auth }} />);
 
   return app;
 }
@@ -92,7 +93,7 @@ export function renderWithStore(component, props, state, options) {
  * @param {Record<string, any>} state Current Store state
  * @param {Record<string, any>} storage Current LocalStorage value
  * @param {History<any>} history Current Browser history
- * @param {MapiAuth} mapiAuth Management API handler.
+ * @param {IOAuth2Provider} auth Authentication provider.
  */
 export function getComponentWithStore(
   Component,
@@ -100,17 +101,19 @@ export function getComponentWithStore(
   state = {},
   storage = initialStorage,
   history = createMemoryHistory(),
-  mapiAuth = MapiAuth.getInstance()
+  auth = new TestOAuth2()
 ) {
   localStorage.replaceWith(storage);
 
-  const store = configureStore(state, history, mapiAuth);
+  const store = configureStore(state, history, auth);
 
   const app = (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          <Component {...props} />
+          <MapiAuthProvider auth={auth}>
+            <Component {...props} />
+          </MapiAuthProvider>
         </ConnectedRouter>
       </ThemeProvider>
     </Provider>

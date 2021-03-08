@@ -11,6 +11,7 @@ import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
 import * as Bowser from 'bowser';
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { defaultConfig as mapiAuthConfig } from 'lib/MapiAuth/config';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
@@ -54,12 +55,10 @@ declare global {
   }
 }
 
+const auth = new MapiAuth(mapiAuthConfig);
+
 // Configure the redux store.
-const store: Store = configureStore(
-  {} as IState,
-  history,
-  MapiAuth.getInstance()
-);
+const store: Store = configureStore({} as IState, history, auth);
 
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();
@@ -108,7 +107,7 @@ body.classList.remove('loading');
 
 // Finally, render the app!
 const appContainer = document.getElementById('app');
-render(<App {...{ store, theme, history }} />, appContainer);
+render(<App {...{ store, theme, history, auth }} />, appContainer);
 
 const getSizes = () => {
   return {

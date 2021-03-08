@@ -20,7 +20,7 @@ export enum OAuth2Events {
   SilentRenewError = 'silentRenewError',
 }
 
-interface IOAuth2EventCallbacks {
+export interface IOAuth2EventCallbacks {
   [OAuth2Events.UserLoaded]: (event: CustomEvent<IOAuth2User>) => void;
   [OAuth2Events.TokenExpired]: () => void;
   [OAuth2Events.TokenExpiring]: () => void;
@@ -36,6 +36,29 @@ export interface IOAuth2SigningKey {
   alg: string;
   n: string;
   e: string;
+}
+
+export interface IOAuth2Provider {
+  attemptLogin: () => Promise<void>;
+  handleLoginResponse: (fromURL: string) => Promise<IOAuth2User | null>;
+  getLoggedInUser: () => Promise<IOAuth2User | null>;
+  renewUser: () => Promise<IOAuth2User>;
+  logout: () => Promise<void>;
+
+  addEventListener: <
+    T extends OAuth2Events,
+    U extends IOAuth2EventCallbacks[T]
+  >(
+    event: T,
+    cb: U
+  ) => void;
+  removeEventListener: <
+    T extends OAuth2Events,
+    U extends IOAuth2EventCallbacks[T]
+  >(
+    event: T,
+    fn: U
+  ) => void;
 }
 
 export interface IOAuth2Config {
@@ -58,7 +81,7 @@ export interface IOAuth2Config {
   signingKeys?: IOAuth2SigningKey[];
 }
 
-class OAuth2 {
+class OAuth2 implements IOAuth2Provider {
   protected userManager: UserManager;
   protected eventEmitter: EventTarget;
 
@@ -149,7 +172,7 @@ class OAuth2 {
     this.eventEmitter.removeEventListener(event, fn as EventListener, false);
   }
 
-  public unregisterInternalEvents() {
+  protected unregisterInternalEvents() {
     this.userManager.events.removeUserLoaded(this.onUserLoaded);
     this.userManager.events.removeAccessTokenExpired(this.onAccessTokenExpired);
     this.userManager.events.removeAccessTokenExpiring(

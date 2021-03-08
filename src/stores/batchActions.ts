@@ -2,7 +2,7 @@ import { filterFunc } from 'components/Apps/AppsList/utils';
 import { push, replace } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -53,17 +53,13 @@ import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
 
-export function batchedLayout(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  AnyAction
-> {
+export function batchedLayout(
+  auth: IOAuth2Provider
+): ThunkAction<Promise<void>, IState, void, AnyAction> {
   return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
     dispatch(globalLoadStart());
 
     try {
-      const auth = MapiAuth.getInstance();
       await dispatch(resumeLogin(auth));
 
       try {
