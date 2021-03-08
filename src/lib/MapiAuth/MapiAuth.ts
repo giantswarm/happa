@@ -21,7 +21,7 @@ class MapiAuth extends OAuth2 {
     const authURL = new URL(
       this.userManager.settings.metadata!.authorization_endpoint!
     );
-    authURL.searchParams.append('connector_id', connector);
+    authURL.searchParams.set('connector_id', connector);
 
     this.userManager.settings.metadata!.authorization_endpoint = authURL.toString();
 
