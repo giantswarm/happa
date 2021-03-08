@@ -83,18 +83,16 @@ export function batchedLayout(): ThunkAction<
     }
 
     try {
-      const state = getState();
-
       await dispatch(organizationsLoad());
 
-      if (!getHasAccessToResources(state)) {
+      if (!getHasAccessToResources(getState())) {
         dispatch(replace(MainRoutes.Unauthorized));
 
         return;
       }
 
       const catalogs = await dispatch(listCatalogs());
-      const userIsAdmin = getUserIsAdmin(state);
+      const userIsAdmin = getUserIsAdmin(getState());
 
       Object.entries(catalogs)
         .filter(filterFunc(userIsAdmin))
