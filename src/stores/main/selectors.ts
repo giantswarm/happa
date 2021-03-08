@@ -2,6 +2,8 @@ import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { IState } from 'stores/state';
 
+import { LoggedInUserTypes } from './types';
+
 export function getUserIsAdmin(state: IState) {
   return getLoggedInUser(state)?.isAdmin ?? false;
 }
@@ -82,4 +84,15 @@ export function getK8sVersionEOLDate(version: string) {
 
 export function getLoggedInUser(state: IState): ILoggedInUser | null {
   return state.main.loggedInUser;
+}
+
+export function getHasAccessToResources(state: IState): boolean {
+  const user = getLoggedInUser(state)!;
+  const organizations = Object.values(state.entities.organizations.items);
+
+  if (user.type === LoggedInUserTypes.MAPI && organizations.length < 1) {
+    return false;
+  }
+
+  return true;
 }

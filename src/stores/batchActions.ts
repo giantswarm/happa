@@ -1,5 +1,5 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
@@ -34,10 +34,9 @@ import {
   globalLoadFinish,
   globalLoadStart,
   refreshUserInfo,
-  validateMAPIAccess,
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -84,12 +83,18 @@ export function batchedLayout(): ThunkAction<
     }
 
     try {
+      const state = getState();
+
       await dispatch(organizationsLoad());
 
-      dispatch(validateMAPIAccess());
+      if (!getHasAccessToResources(state)) {
+        dispatch(replace(MainRoutes.Unauthorized));
+
+        return;
+      }
 
       const catalogs = await dispatch(listCatalogs());
-      const userIsAdmin = getUserIsAdmin(getState());
+      const userIsAdmin = getUserIsAdmin(state);
 
       Object.entries(catalogs)
         .filter(filterFunc(userIsAdmin))
