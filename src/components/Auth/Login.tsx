@@ -292,8 +292,8 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
 }
 
 // This is complaining about our prop types not having the EXACT same structure as our Props interface
-// @ts-ignore
 export default connect(
   mapStateToProps,
   mapDispatchToProps
+  // @ts-expect-error
 )(withAuthProvider(Login));
