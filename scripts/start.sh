@@ -52,7 +52,7 @@ fi
 
 if [ -n "$MAPI_AUTH_REDIRECT_URL" ]; then
   sed -i "s|mapiAuthRedirectURL: .*|mapiAuthRedirectURL: '$MAPI_AUTH_REDIRECT_URL',|" /www/index.html
-else
+fi
 
 if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
   sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: true,|" /www/index.html
@@ -74,7 +74,6 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
   echo "RUM is enabled."
   sed -i "s|enableRealUserMonitoring: .*|enableRealUserMonitoring: true,|" /www/index.html
 else
-
   sed -i "s|enableRealUserMonitoring: .*|enableRealUserMonitoring: false,|" /www/index.html
 fi
 
