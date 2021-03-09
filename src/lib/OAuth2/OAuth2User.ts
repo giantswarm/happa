@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { User } from 'oidc-client';
 import { AuthorizationTypes } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';

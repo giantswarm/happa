@@ -28,7 +28,8 @@ class TestOAuth2 implements IOAuth2Provider {
   public async getLoggedInUser(): Promise<IOAuth2User | null> {
     if (!this.loggedInUser) return null;
 
-    if (compareDates(this.loggedInUser.expiresAt, new Date()) >= 0) {
+    // eslint-disable-next-line no-magic-numbers
+    if (compareDates(this.loggedInUser.expiresAt * 1000, new Date()) <= 0) {
       await this.renewUser();
     }
 
@@ -36,12 +37,12 @@ class TestOAuth2 implements IOAuth2Provider {
   }
 
   public async renewUser(): Promise<IOAuth2User> {
-    const expirationDate = add({ days: 1 })(new Date()).getSeconds();
-
-    this.loggedInUser!.expiresAt = expirationDate;
+    const now = new Date();
+    const expirationDate = add({ days: 1 })(now);
+    this.loggedInUser = TestOAuth2.createLoggedInUser(now, expirationDate);
     this.dispatchEvent(OAuth2Events.UserLoaded, this.loggedInUser);
 
-    return Promise.resolve(this.loggedInUser!);
+    return Promise.resolve(this.loggedInUser);
   }
 
   public async logout(): Promise<void> {
@@ -65,7 +66,16 @@ class TestOAuth2 implements IOAuth2Provider {
     this.callbacks[event].filter((cb) => !Object.is(cb, fn));
   }
 
-  private dispatchEvent<T extends OAuth2Events, P>(event: T, payload?: P) {
+  public expireUser() {
+    if (!this.loggedInUser) return;
+
+    const expiredDate = new Date(0);
+    this.loggedInUser = TestOAuth2.createLoggedInUser(expiredDate, expiredDate);
+    this.dispatchEvent(OAuth2Events.TokenExpired);
+    this.dispatchEvent(OAuth2Events.UserLoaded, this.loggedInUser);
+  }
+
+  public dispatchEvent<T extends OAuth2Events, P>(event: T, payload?: P) {
     let dispatchedEvent: CustomEvent | null = null;
     if (payload) {
       dispatchedEvent = new CustomEvent(event, {
@@ -78,9 +88,9 @@ class TestOAuth2 implements IOAuth2Provider {
     }
   }
 
-  private loggedInUser: IOAuth2User | null = null;
+  public loggedInUser: IOAuth2User | null = null;
 
-  private callbacks: Record<
+  public callbacks: Record<
     keyof IOAuth2EventCallbacks,
     IOAuth2EventCallbacks[keyof IOAuth2EventCallbacks][]
   > = {
@@ -92,14 +102,15 @@ class TestOAuth2 implements IOAuth2Provider {
     [OAuth2Events.SilentRenewError]: [],
   };
 
-  private static createLoggedInUser(): IOAuth2User {
-    const now = new Date();
-    const expiration = add({ days: 1 })(now);
+  public static createLoggedInUser(
+    creationDate = new Date(),
+    expirationDate = add({ days: 1 })(creationDate)
+  ): IOAuth2User {
+    // eslint-disable-next-line no-magic-numbers
+    const nowDuration = Math.ceil(Number(creationDate) / 1000); // in seconds.
 
     // eslint-disable-next-line no-magic-numbers
-    const nowDuration = Number(now) / 1000; // in seconds.
-    // eslint-disable-next-line no-magic-numbers
-    const expirationDuration = Number(expiration) / 1000; // in seconds.
+    const expirationDuration = Math.ceil(Number(expirationDate) / 1000); // in seconds.
 
     const groups = ['some-group'];
     const email = 'developer@giantswarm.io';

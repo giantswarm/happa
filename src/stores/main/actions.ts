@@ -350,10 +350,10 @@ export function logout(
   return async (dispatch, getState) => {
     try {
       dispatch({ type: LOGOUT_REQUEST });
+      dispatch(push(MainRoutes.Login));
 
       const user = getLoggedInUser(getState());
       if (!user) {
-        dispatch(push(MainRoutes.Login));
         dispatch(logoutSuccess());
 
         return Promise.resolve();
@@ -372,12 +372,10 @@ export function logout(
           break;
       }
 
-      dispatch(push(MainRoutes.Login));
       dispatch(logoutSuccess());
 
       return Promise.resolve();
     } catch (err) {
-      dispatch(push(MainRoutes.Login));
       dispatch(logoutError(err));
 
       return Promise.reject(err);

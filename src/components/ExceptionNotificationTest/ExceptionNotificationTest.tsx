@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import React, { ReactNode } from 'react';
 import Button from 'UI/Controls/Button';

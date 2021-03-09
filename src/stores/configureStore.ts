@@ -26,9 +26,9 @@ export default function configureStore(
   auth: IOAuth2Provider
 ) {
   const middleware: Middleware[] = [
+    mainAuthMiddleware(auth),
     routerMiddleware(history),
     thunk,
-    mainAuthMiddleware(auth),
     callAPIMiddleware,
   ];
 

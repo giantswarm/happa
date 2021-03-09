@@ -20,12 +20,12 @@ import {
 
 describe('AdminLogin', () => {
   it('performs the admin login flow via OAuth2', async () => {
+    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
+    (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/organizations/', orgsResponse);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse as any);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
-    (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
