@@ -97,22 +97,20 @@ const makeEndpoints = () => {
 
 const makeFeatureFlags = () => {
   const defaults = {
-    FEATURE_MAPI_ACCESS: false,
+    FEATURE_MAPI_AUTH: false,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
-
-  const flags = Object.create(null);
-
+  const flags = {};
   for (const flagName of Object.keys(defaults)) {
-    const flag = dirtyFlags[flagName];
-    switch (typeof flag) {
+    const flagValue = dirtyFlags[flagName];
+    switch (typeof flagValue) {
       case 'string':
-        flags[flagName] = flag.toLowerCase() === 'true';
+        flags[flagName] = flagValue.toLowerCase() === 'true';
         break;
 
       case 'boolean':
-        flags[flagName] = flag;
+        flags[flagName] = flagValue;
         break;
     }
   }
@@ -247,11 +245,11 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'src/index.ejs',
       templateParameters: {
         ...makeEndpoints(),
+        ...makeFeatureFlags(),
       },
     }),
-    new webpack.DefinePlugin(makeFeatureFlags()),
   ],
 };

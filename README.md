@@ -102,30 +102,6 @@ https://fortawesome.com/kits/d940f7eb/docs
 Dependabot is configured to automatically create PR's that update our dependencies
 when they go stale. Keep an eye on the PR's, dependabot creates them on Mondays.
 
-## Feature Flags (Development)
-
-To enable developers to make small Pull Requests, happa supports Feature Flags.
-Flags are defined in [`webpack.common.js`](webpack.common.js) and can be used in code like this:
-
-```js
-import FeatureFlags from 'shared/FeatureFlags';
-
-if (FeatureFlags.FEATURE_CLUSTER_LABELS_V0) {
-  return <p>Cluster labels are enabled</p>;
-}
-```
-
-The value defined in [`webpack.common.js`](webpack.common.js) is the value for the production build.
-Each value can be overriden by either setting the feature flag name in your environment or by adding it to a `.env` file in the root of this directory.
-
-Once the feature is finished, the feature flag can be removed or set to `true`.
-
-### Known feature flags
-
-| Key                         | Feature                               | Enabled             |
-| --------------------------- | ------------------------------------- | ------------------- |
-| `FEATURE_CLUSTER_LABELS_V0` | Initial cluster labels implementation | 2020-05-12: `false` |
-
 # Code Style
 
 Happa's Code Style is determined by `prettier`. Please make sure files in the

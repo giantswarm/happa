@@ -53,6 +53,10 @@
         defaultRequestTimeoutSeconds: 10,
       };
       window.config = config;
+
+      window.featureFlags = {
+        FEATURE_MAPI_AUTH: <%= FEATURE_MAPI_AUTH %>,
+      };
     </script>
 
     <style>

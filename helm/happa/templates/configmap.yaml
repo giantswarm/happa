@@ -28,3 +28,8 @@ data:
   {{ else }}
   enable-rum: 'FALSE'
   {{ end }}
+
+  # Feature flags
+  {{ if eq .Values.Installation.V1.Infra.TestingEnvironment true }}
+  feature-mapi-auth: 'TRUE'
+  {{ end }}

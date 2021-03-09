@@ -34,27 +34,6 @@ enum GlobalEnvironment {
   Docker = 'docker-container',
 }
 
-interface IGlobalConfig {
-  apiEndpoint: string;
-  audience: string;
-  awsCapabilitiesJSON: string;
-  azureCapabilitiesJSON: string;
-  mapiEndpoint: string;
-  mapiAudience: string;
-  defaultRequestTimeoutSeconds: number;
-  enableRealUserMonitoring: boolean;
-  environment: GlobalEnvironment;
-  happaVersion: string;
-  ingressBaseDomain: string;
-  passageEndpoint: string;
-}
-
-declare global {
-  interface Window {
-    config: IGlobalConfig;
-  }
-}
-
 const auth = new MapiAuth(mapiAuthConfig);
 
 // Configure the redux store.

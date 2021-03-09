@@ -13,6 +13,7 @@ import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
+import { FeatureFlags } from 'shared/FeatureFlags';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import * as mainActions from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -74,7 +75,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     password: '',
     authenticating: false,
     mapiAuthenticating: false,
-    loginFormVisible: false,
+    loginFormVisible: !FeatureFlags.FEATURE_MAPI_AUTH,
   };
 
   public onAuthenticateFailed = (message: string) => {
@@ -190,23 +191,26 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             <Heading level={1} margin={{ bottom: 'large' }}>
               Welcome to Giant Swarm
             </Heading>
-            <Box margin={{ bottom: 'medium' }}>
-              <Button
-                bsStyle='primary'
-                bsSize='lg'
-                loading={mapiAuthenticating}
-                onClick={this.mapiLogin}
-                disabled={authenticating}
-              >
-                Proceed to login
-              </Button>
-              <Paragraph fill={true} margin={{ top: 'large' }}>
-                The above option will use a central authentication provider to
-                log you in. If you have logged in using email and password
-                before, and want to continue to do so, you can still do it for a
-                transitional period.
-              </Paragraph>
-            </Box>
+
+            {FeatureFlags.FEATURE_MAPI_AUTH && (
+              <Box margin={{ bottom: 'medium' }}>
+                <Button
+                  bsStyle='primary'
+                  bsSize='lg'
+                  loading={mapiAuthenticating}
+                  onClick={this.mapiLogin}
+                  disabled={authenticating}
+                >
+                  Proceed to login
+                </Button>
+                <Paragraph fill={true} margin={{ top: 'large' }}>
+                  The above option will use a central authentication provider to
+                  log you in. If you have logged in using email and password
+                  before, and want to continue to do so, you can still do it for
+                  a transitional period.
+                </Paragraph>
+              </Box>
+            )}
 
             {loginFormVisible ? (
               <Box direction='column' gap='medium'>

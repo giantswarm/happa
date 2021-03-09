@@ -6,6 +6,7 @@ import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
+import { FeatureFlags } from 'shared/FeatureFlags';
 import {
   API_ENDPOINT,
   authTokenResponse,
@@ -344,5 +345,21 @@ describe('Login', () => {
     ).toBeInTheDocument();
 
     getLoggedInUserMockFn.mockRestore();
+  });
+
+  it('hides OAuth2 support if the feature is not enabled', () => {
+    const initialMapiAuth = FeatureFlags.FEATURE_MAPI_AUTH;
+    FeatureFlags.FEATURE_MAPI_AUTH = false;
+
+    renderRouteWithStore(MainRoutes.Login, {}, {});
+
+    expect(
+      screen.queryByText('Login using email and password')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Proceed to login' })
+    ).not.toBeInTheDocument();
+
+    FeatureFlags.FEATURE_MAPI_AUTH = initialMapiAuth;
   });
 });
