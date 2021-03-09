@@ -174,6 +174,7 @@ const theme = deepMerge(generate(16), {
       'graph-0': 'brand',
       'graph-1': 'status-warning',
       'input-background': '#32526a',
+      'input-highlight': '#ce990f',
       focus: {
         light: 'text-strong',
         dark: 'text-strong',
@@ -418,6 +419,7 @@ const theme = deepMerge(generate(16), {
     check: {
       radius: '18px',
       extend: (props: { theme: ThemeType }) => ({
+        color: props.theme.global!.colors!['input-highlight'],
         background: props.theme.global!.colors!['input-background'],
       }),
     },
