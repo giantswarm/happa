@@ -27,15 +27,7 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
     try {
       const user = await auth.getLoggedInUser();
       if (user && isJwtExpired(user.idToken)) {
-        /**
-         * If we're getting here, it means that the renewal failed,
-         * so we need to clear the user data to prevent infinite loops.
-         */
-
-        await logout(auth)(next, store.getState);
-
-        // eslint-disable-next-line consistent-return
-        return;
+        throw new Error('User is expired');
       }
 
       return next(action);
