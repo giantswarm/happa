@@ -1,17 +1,14 @@
 import { isJwtExpired } from 'lib/helpers';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { AnyAction, Middleware } from 'redux';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { Middleware } from 'redux';
 import { logout } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
-import { IState } from 'stores/state';
 
 import { LoggedInUserTypes } from './types';
 
 export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
-  return (store) => (next: IAsynchronousDispatch<IState>) => async (
-    action: AnyAction
-  ) => {
+  // eslint-disable-next-line consistent-return
+  return (store) => (next) => async (action) => {
     const loggedInUser = getLoggedInUser(store.getState());
     if (!loggedInUser) {
       return next(action);
@@ -35,12 +32,15 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
          * so we need to clear the user data to prevent infinite loops.
          */
 
-        return next(logout(auth));
+        await logout(auth)(next, store.getState);
+
+        // eslint-disable-next-line consistent-return
+        return;
       }
 
       return next(action);
     } catch (err) {
-      return next(logout(auth));
+      await logout(auth)(next, store.getState);
     }
   };
 }

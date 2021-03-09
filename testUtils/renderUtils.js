@@ -24,6 +24,13 @@ export const initialStorage = {
   }),
 };
 
+export function createInitialHistory(withRoute) {
+  return createMemoryHistory({
+    initialEntries: [withRoute],
+    initialIndex: 0,
+  });
+}
+
 /**
  * This function will render the whole app with a mocked store in the route
  * provided.
@@ -36,14 +43,10 @@ export function renderRouteWithStore(
   initialRoute = MainRoutes.Home,
   state = {},
   storage = initialStorage,
-  auth = new TestOAuth2()
+  auth = new TestOAuth2(),
+  history = createInitialHistory(initialRoute)
 ) {
   localStorage.replaceWith(storage);
-
-  const history = createMemoryHistory({
-    initialEntries: [initialRoute],
-    initialIndex: 0,
-  });
 
   const store = configureStore(state, history, auth);
 

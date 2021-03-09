@@ -303,8 +303,9 @@ export function setNewPassword(
 export function resumeLogin(
   auth: IOAuth2Provider
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
-  return async (dispatch: IAsynchronousDispatch<IState>) => {
-    const urlParams = new URLSearchParams(window.location.search);
+  return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
+    const location = getState().router.location;
+    const urlParams = new URLSearchParams(location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
 
     if (isLoginResponse) {
@@ -312,7 +313,7 @@ export function resumeLogin(
       // Login callbacks are handled by `OAuth2`.
 
       // Remove state and code from url.
-      dispatch(replace(window.location.pathname));
+      dispatch(replace(location.pathname));
 
       return Promise.resolve();
     }
