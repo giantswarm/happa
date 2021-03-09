@@ -15,6 +15,9 @@ Installation:
         Address: ""
       OIDC:
         IssuerAddress: ""
+        StaticClients:
+          Happa:
+            Address: ""
     Guest:
       Kubernetes:
         IngressController:
@@ -43,6 +46,10 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: ""
+      OIDC:
+        StaticClients:
+          Happa:
+            Secret: ""
     Security:
       Subnet:
         Others: ""

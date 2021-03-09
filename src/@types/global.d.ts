@@ -13,6 +13,7 @@ interface IGlobalConfig {
   happaVersion: string;
   ingressBaseDomain: string;
   passageEndpoint: string;
+  mapiAuthRedirectURL: string;
 }
 
 interface IFeatureFlags {

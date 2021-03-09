@@ -104,6 +104,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: enable-rum
+        - name: MAPI_AUTH_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: mapi-auth-redirect-url
         - name: ENVIRONMENT
           value: kubernetes
         - name: FEATURE_MAPI_AUTH

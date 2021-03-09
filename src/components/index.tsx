@@ -11,7 +11,7 @@ import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
 import * as Bowser from 'bowser';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { defaultConfig as mapiAuthConfig } from 'lib/MapiAuth/config';
+import { makeDefaultConfig } from 'lib/MapiAuth/makeDefaultConfig';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
@@ -34,7 +34,8 @@ enum GlobalEnvironment {
   Docker = 'docker-container',
 }
 
-const auth = new MapiAuth(mapiAuthConfig);
+const authConfig = makeDefaultConfig();
+const auth = new MapiAuth(authConfig);
 
 // Configure the redux store.
 const store: Store = configureStore({} as IState, history, auth);
