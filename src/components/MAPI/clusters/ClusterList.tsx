@@ -11,7 +11,7 @@ import {
 } from 'model/services/mapi/clusters/key';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { getCPAuthUser } from 'stores/cpauth/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR from 'swr';
@@ -29,7 +29,7 @@ interface IClusterListProps
 const client = new HttpClientImpl();
 
 const ClusterList: React.FC<IClusterListProps> = () => {
-  const user = useSelector(getCPAuthUser);
+  const user = useSelector(getLoggedInUser);
   const { data, error, isValidating } = useSWR(
     getClusterListKey(user),
     getClusterList(client, user!)
