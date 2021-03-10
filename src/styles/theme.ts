@@ -424,19 +424,9 @@ const theme = deepMerge(generate(16), {
       }),
     },
     icon: {
-      extend: (props: { theme: ThemeType }) => {
-        const fillColor = props.theme.global!.colors!.text!;
-        let colorHex = '';
-        if (typeof fillColor === 'string') {
-          colorHex = fillColor;
-        } else {
-          colorHex = fillColor.dark!;
-        }
-
-        return {
-          fill: colorHex,
-        };
-      },
+      extend: () => css`
+        fill: ${(props) => props.theme.global.colors['input-highlight']};
+      `,
     },
     border: {
       color: 'text',
