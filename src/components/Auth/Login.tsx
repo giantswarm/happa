@@ -244,7 +244,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                     type='submit'
                     disabled={mapiAuthenticating}
                   >
-                    Login
+                    Log in
                   </Button>
                   <Link to={MainRoutes.ForgotPassword}>
                     Forgot your password?
@@ -269,7 +269,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             ) : (
               <Box>
                 <Anchor onClick={this.showLoginForm}>
-                  Login using email and password
+                  Log in using email and password
                 </Anchor>
               </Box>
             )}

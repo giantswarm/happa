@@ -67,7 +67,7 @@ describe('Login', () => {
       {}
     );
 
-    fireEvent.click(screen.getByText('Login using email and password'));
+    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my email and password
     const emailInput = getByLabelText('Email');
@@ -79,7 +79,7 @@ describe('Login', () => {
     fireEvent.change(passwordInput, { target: { value: 'password' } });
 
     // And click submit
-    const button = getByText('Login');
+    const button = getByText('Log in');
     fireEvent.click(button);
 
     // Then I should be logged in and see the home page with no orgs or clusters.
@@ -101,7 +101,7 @@ describe('Login', () => {
       {}
     );
 
-    fireEvent.click(screen.getByText('Login using email and password'));
+    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my email but not my password.
     const emailInput = getByLabelText('Email');
@@ -110,7 +110,7 @@ describe('Login', () => {
     });
 
     // And click submit
-    const button = getByText('Login');
+    const button = getByText('Log in');
     fireEvent.click(button);
 
     // Then I should see a message reminding me not to leave my password blank.
@@ -127,14 +127,14 @@ describe('Login', () => {
       {}
     );
 
-    fireEvent.click(screen.getByText('Login using email and password'));
+    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my password but not my email.
     const passwordInput = getByLabelText('Password');
     fireEvent.change(passwordInput, { target: { value: 'password' } });
 
     // And click submit
-    const button = getByText('Login');
+    const button = getByText('Log in');
     fireEvent.click(button);
 
     // Then I should see a message reminding me not to leave my password blank.
@@ -156,7 +156,7 @@ describe('Login', () => {
       {}
     );
 
-    fireEvent.click(screen.getByText('Login using email and password'));
+    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my email and password
     const emailInput = getByLabelText('Email');
@@ -168,12 +168,12 @@ describe('Login', () => {
     fireEvent.change(passwordInput, { target: { value: 'password' } });
 
     // And click submit
-    const button = getByText('Login');
+    const button = getByText('Log in');
     fireEvent.click(button);
 
     // Then I should see a message reminding me not to leave my password blank.
     await waitFor(() => {
-      expect(getByText(/Could not login/i)).toBeInTheDocument();
+      expect(getByText(/Could not log in/i)).toBeInTheDocument();
     });
   });
 
@@ -354,10 +354,10 @@ describe('Login', () => {
     renderRouteWithStore(MainRoutes.Login, {}, {});
 
     expect(
-      screen.queryByText('Login using email and password')
+      screen.queryByText('Log in using email and password')
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: 'Proceed to login' })
+      screen.queryByRole('button', { name: 'Proceed to l ogin' })
     ).not.toBeInTheDocument();
 
     FeatureFlags.FEATURE_MAPI_AUTH = initialMapiAuth;

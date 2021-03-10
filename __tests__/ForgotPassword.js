@@ -42,7 +42,7 @@ describe('PasswordReset', () => {
       const pageTitle = await findByText(/Welcome to Giant Swarm/i);
       expect(pageTitle).toBeInTheDocument();
 
-      fireEvent.click(screen.getByText('Login using email and password'));
+      fireEvent.click(screen.getByText('Log in using email and password'));
 
       // When I click "Forgot your password?".
       const forgotPasswordLink = getByText('Forgot your password?');
