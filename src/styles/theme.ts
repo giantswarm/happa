@@ -419,7 +419,6 @@ const theme = deepMerge(generate(16), {
     check: {
       radius: '18px',
       extend: (props: { theme: ThemeType }) => ({
-        //color: props.theme.global!.colors!['input-highlight'],
         background: props.theme.global!.colors!['input-background'],
       }),
     },
