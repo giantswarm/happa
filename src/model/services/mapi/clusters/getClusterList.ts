@@ -8,7 +8,7 @@ export function getClusterList(client: IHttpClient, user: IOAuth2User) {
     client.setHeader('Accept', 'application/json');
     client.setRequestMethod(HttpRequestMethods.GET);
     client.setURL(
-      `${window.config.cpApiEndpoint}/apis/cluster.x-k8s.io/v1alpha3/clusters`
+      `${window.config.mapiEndpoint}/apis/cluster.x-k8s.io/v1alpha3/clusters`
     );
     client.setAuthorizationToken(user.authorizationType, user.idToken);
 
