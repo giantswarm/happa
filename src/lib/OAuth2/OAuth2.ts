@@ -66,10 +66,10 @@ export interface IOAuth2Provider {
 export interface IOAuth2Config {
   authority: string;
   clientId: string;
-  clientSecret: string;
   redirectUri: string;
   responseType?: string;
   responseMode?: 'query' | 'fragment';
+  clientSecret?: string;
   scope?: string;
   prompt?: string;
   automaticSilentRenew?: boolean;
