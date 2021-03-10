@@ -1,8 +1,9 @@
-import { CallHistoryMethodAction, push } from 'connected-react-router';
+import { CallHistoryMethodAction, push, replace } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
-import { IAuthResult } from 'lib/auth0';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -14,6 +15,7 @@ import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import {
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
@@ -35,9 +37,16 @@ import {
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
-import { selectAuthToken } from 'stores/main/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
 import { IState } from 'stores/state';
+import {
+  fetchUserFromStorage,
+  removeUserFromStorage,
+  setUserToStorage,
+} from 'utils/localStorageUtils';
+
+import { LoggedInUserTypes } from './types';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -56,10 +65,11 @@ export function getInfo(): ThunkAction<
     dispatch({ type: INFO_LOAD_REQUEST });
 
     try {
-      const [authToken, authScheme] = await selectAuthToken(dispatch)(
-        getState()
+      const user = getLoggedInUser(getState())!;
+      const httpClient = new GiantSwarmClient(
+        user.auth.token,
+        user.auth.scheme
       );
-      const httpClient = new GiantSwarmClient(authToken, authScheme);
       const infoRes = await getInstallationInfo(httpClient);
 
       dispatch({
@@ -92,6 +102,12 @@ export function globalLoadError(): MainActions {
 }
 
 export function loginSuccess(userData: ILoggedInUser): MainActions {
+  const defaultClient = GiantSwarm.ApiClient.instance;
+  const defaultClientAuth =
+    defaultClient.authentications.AuthorizationHeaderToken;
+  defaultClientAuth.apiKey = userData.auth.token;
+  defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
+
   return {
     type: LOGIN_SUCCESS,
     userData,
@@ -123,7 +139,7 @@ export function refreshUserInfo(): ThunkAction<
   MainActions | CallHistoryMethodAction
 > {
   return async (dispatch, getState) => {
-    const loggedInUser = getState().main.loggedInUser;
+    const loggedInUser = getLoggedInUser(getState());
     if (!loggedInUser) {
       dispatch({
         type: REFRESH_USER_INFO_ERROR,
@@ -133,14 +149,23 @@ export function refreshUserInfo(): ThunkAction<
       return Promise.reject(new Error('No logged in user to refresh.'));
     }
 
+    if (loggedInUser.type !== LoggedInUserTypes.GS) {
+      return Promise.resolve();
+    }
+
     try {
       dispatch({ type: REFRESH_USER_INFO_REQUEST });
       const usersApi = new GiantSwarm.UsersApi();
       const response = await usersApi.getCurrentUser();
 
+      const newUser = Object.assign({}, loggedInUser, {
+        email: response.email,
+      });
+      setUserToStorage(newUser);
+
       dispatch({
         type: REFRESH_USER_INFO_SUCCESS,
-        email: response.email,
+        loggedInUser: newUser,
       });
 
       return Promise.resolve();
@@ -175,36 +200,6 @@ export function refreshUserInfo(): ThunkAction<
   };
 }
 
-export function auth0Login(
-  authResult: IAuthResult
-): ThunkAction<Promise<void>, IState, void, MainActions> {
-  return async (dispatch) => {
-    return new Promise((resolve) => {
-      let isAdmin = false;
-      if (
-        authResult.idTokenPayload['https://giantswarm.io/groups'] ===
-        'api-admin'
-      ) {
-        isAdmin = true;
-      }
-
-      const userData: ILoggedInUser = {
-        email: authResult.idTokenPayload.email,
-        auth: {
-          scheme: AuthorizationTypes.BEARER,
-          token: authResult.accessToken,
-        },
-        isAdmin,
-      };
-
-      localStorage.setItem('user', JSON.stringify(userData));
-      dispatch(loginSuccess(userData));
-
-      resolve();
-    });
-  };
-}
-
 export function giantswarmLogin(
   email: string,
   password: string
@@ -233,9 +228,10 @@ export function giantswarmLogin(
           token: response.auth_token,
         },
         isAdmin: false,
+        type: LoggedInUserTypes.GS,
       };
 
-      localStorage.setItem('user', JSON.stringify(userData));
+      setUserToStorage(userData);
       dispatch(loginSuccess(userData));
 
       return Promise.resolve();
@@ -243,32 +239,6 @@ export function giantswarmLogin(
       const message = (err as Error).message ?? (err as string);
       dispatch(loginError(message));
       dispatch(push(MainRoutes.Login));
-
-      return Promise.reject(err);
-    }
-  };
-}
-
-export function giantswarmLogout(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions | CallHistoryMethodAction
-> {
-  return async (dispatch) => {
-    try {
-      dispatch({ type: LOGOUT_REQUEST });
-
-      const authTokensApi = new GiantSwarm.AuthTokensApi();
-      await authTokensApi.deleteAuthToken();
-
-      dispatch(push(MainRoutes.Login));
-      dispatch(logoutSuccess());
-
-      return Promise.resolve();
-    } catch (err) {
-      dispatch(push(MainRoutes.Login));
-      dispatch(logoutError(err));
 
       return Promise.reject(err);
     }
@@ -327,5 +297,109 @@ export function setNewPassword(
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
     return passage.setNewPassword({ email, token, password });
+  };
+}
+
+export function resumeLogin(
+  auth: IOAuth2Provider
+): ThunkAction<Promise<void>, IState, void, MainActions> {
+  return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
+    const location = getState().router.location;
+    const urlParams = new URLSearchParams(location.search);
+    const isLoginResponse = urlParams.has('code') && urlParams.has('state');
+
+    if (isLoginResponse) {
+      await auth.handleLoginResponse(window.location.href);
+      // Login callbacks are handled by `OAuth2`.
+
+      // Remove state and code from url.
+      dispatch(replace(location.pathname));
+
+      return Promise.resolve();
+    }
+
+    // Try to resume GS user first.
+    const user = fetchUserFromStorage();
+    if (user) {
+      // Remove MAPI user if it exists.
+      await auth.logout();
+      dispatch(loginSuccess(user));
+
+      return Promise.resolve();
+    }
+
+    const mapiUser = await auth.getLoggedInUser();
+    if (mapiUser) {
+      // Login callbacks are handled by `OAuth2`.
+
+      return Promise.resolve();
+    }
+
+    return Promise.reject(new Error('You are not logged in.'));
+  };
+}
+
+export function logout(
+  auth: IOAuth2Provider
+): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  MainActions | CallHistoryMethodAction
+> {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: LOGOUT_REQUEST });
+      dispatch(push(MainRoutes.Login));
+
+      const user = getLoggedInUser(getState());
+      if (!user) {
+        dispatch(logoutSuccess());
+
+        return Promise.resolve();
+      }
+
+      switch (user.type) {
+        case LoggedInUserTypes.GS: {
+          const authTokensApi = new GiantSwarm.AuthTokensApi();
+          await authTokensApi.deleteAuthToken();
+
+          break;
+        }
+        case LoggedInUserTypes.MAPI:
+          await auth.logout();
+
+          break;
+      }
+
+      dispatch(logoutSuccess());
+
+      return Promise.resolve();
+    } catch (err) {
+      dispatch(logoutError(err));
+
+      return Promise.reject(err);
+    }
+  };
+}
+
+export function mapiLogin(
+  auth: MapiAuth,
+  connector?: MapiAuthConnectors
+): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  MainActions | CallHistoryMethodAction
+> {
+  return async (dispatch) => {
+    try {
+      // Remove other types of users from cache.
+      removeUserFromStorage();
+      await auth.attemptLogin(connector);
+    } catch (err) {
+      dispatch(loginError(err.message));
+      dispatch(push(MainRoutes.Login));
+    }
   };
 }

@@ -30,8 +30,6 @@ function createRelease(version: string, active: boolean): IRelease {
   } as IRelease;
 }
 
-jest.unmock('stores/main/selectors');
-
 describe('cluster::selectors', () => {
   describe('selectTargetRelease', () => {
     it('returns null for a nullish cluster', () => {

@@ -84,7 +84,6 @@
   "dependencies": {
     "@airbrake/browser": "2.1.3",
     "@hot-loader/react-dom": "17.0.1",
-    "auth0-js": "9.14.3",
     "axios": "0.21.1",
     "bluebird": "3.7.2",
     "bootstrap": "3.4.1",
@@ -98,7 +97,6 @@
     "deep-diff": "1.0.2",
     "dotenv": "8.2.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
-    "giantswarm-cp-client": "git+https://github.com/giantswarm/giantswarm-cp-client.git",
     "grommet": "^2.16.3",
     "history": "4.10.1",
     "immer": "8.0.1",
@@ -156,7 +154,6 @@
     "@testing-library/jest-dom": "5.11.9",
     "@testing-library/react": "11.2.5",
     "@testing-library/react-hooks": "5.1.0",
-    "@types/auth0-js": "9.14.2",
     "@types/bluebird": "3.5.33",
     "@types/bootstrap": "4.5.1",
     "@types/classnames": "2.2.11",

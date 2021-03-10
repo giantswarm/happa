@@ -649,27 +649,27 @@ const theme = deepMerge(generate(16), {
   paragraph: {
     small: {
       size: '13px',
-      height: '18px',
+      height: '22px',
       maxWidth: '267px',
     },
     medium: {
       size: '15px',
-      height: '20px',
+      height: '24px',
       maxWidth: '300px',
     },
     large: {
       size: '18px',
-      height: '23px',
+      height: '27px',
       maxWidth: '367px',
     },
     xlarge: {
       size: '22px',
-      height: '27px',
+      height: '31px',
       maxWidth: '433px',
     },
     xxlarge: {
       size: '28px',
-      height: '33px',
+      height: '37px',
       maxWidth: '567px',
     },
   },
@@ -716,6 +716,9 @@ const theme = deepMerge(generate(16), {
     size: {
       small: '16px',
     },
+  },
+  anchor: {
+    color: 'text',
   },
 });
 
