@@ -1,6 +1,6 @@
-import CPLoginPage from 'Auth/CP/CPLoginPage';
+import { withAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import MapiUnauthorized from 'Auth/MAPI/MapiUnauthorized';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,8 +15,11 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
-import FeatureFlags from 'shared/FeatureFlags';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
+import {
+  getHasAccessToResources,
+  getLoggedInUser,
+} from 'stores/main/selectors';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
@@ -33,21 +36,12 @@ const ONE_SECOND = 1000;
 const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
-const defaultClientAuth =
-  defaultClient.authentications['AuthorizationHeaderToken'];
 
 class Layout extends React.Component {
   componentDidMount() {
-    if (this.props.user) {
-      defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
-      defaultClientAuth.apiKey = this.props.user.auth.token;
+    const { dispatch, authProvider } = this.props;
 
-      // This is the first component that loads, these are the
-      // firsts calls happa makes to the API.
-      this.props.dispatch(batchedLayout());
-    } else {
-      this.props.dispatch(push(MainRoutes.Login));
-    }
+    dispatch(batchedLayout(authProvider));
   }
 
   selectOrganization = (orgId) => {
@@ -56,47 +50,51 @@ class Layout extends React.Component {
   };
 
   render() {
+    const { user } = this.props;
+
     return (
       <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
-          <Modals />
-          <Navigation
-            onSelectOrganization={this.selectOrganization}
-            organizations={this.props.organizations}
-            selectedOrganization={this.props.selectedOrganization}
-            showApps={Object.keys(this.props.catalogs.items).length > 0}
-            user={this.props.user}
-          />
-          <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
-            <div className='main' data-testid='main'>
-              <Switch>
-                {/*prettier-ignore*/}
-                <Route component={Home} exact path={MainRoutes.Home} />
-                <Route component={Apps} path={AppsRoutes.Home} />
-                <Route component={Users} exact path={UsersRoutes.Home} />
-                <Route
-                  component={Organizations}
-                  path={OrganizationsRoutes.Home}
-                />
-                <Route
-                  component={AccountSettings}
-                  exact
-                  path={AccountSettingsRoutes.Home}
-                />
-                <Route
-                  component={ExceptionNotificationTest}
-                  exact
-                  path={ExceptionNotificationTestRoutes.Home}
-                />
+          {this.props.hasAccessToResources ? (
+            <>
+              <Modals />
+              <Navigation
+                onSelectOrganization={this.selectOrganization}
+                organizations={this.props.organizations}
+                selectedOrganization={this.props.selectedOrganization}
+                showApps={Object.keys(this.props.catalogs.items).length > 0}
+                user={user}
+              />
+              <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
+                <div className='main' data-testid='main'>
+                  <Switch>
+                    {/*prettier-ignore*/}
+                    <Route component={Home} exact path={MainRoutes.Home} />
+                    <Route component={Apps} path={AppsRoutes.Home} />
+                    <Route component={Users} exact path={UsersRoutes.Home} />
+                    <Route
+                      component={Organizations}
+                      path={OrganizationsRoutes.Home}
+                    />
+                    <Route
+                      component={AccountSettings}
+                      exact
+                      path={AccountSettingsRoutes.Home}
+                    />
+                    <Route
+                      component={ExceptionNotificationTest}
+                      exact
+                      path={ExceptionNotificationTestRoutes.Home}
+                    />
 
-                {FeatureFlags.FEATURE_CP_ACCESS && (
-                  <Route component={CPLoginPage} path={MainRoutes.CPAccess} />
-                )}
-
-                <Redirect path='*' to={MainRoutes.Home} />
-              </Switch>
-            </div>
-          </Breadcrumb>
+                    <Redirect path='*' to={MainRoutes.Home} />
+                  </Switch>
+                </div>
+              </Breadcrumb>
+            </>
+          ) : (
+            <MapiUnauthorized user={user} />
+          )}
         </LoadingOverlay>
       </DocumentTitle>
     );
@@ -110,15 +108,18 @@ Layout.propTypes = {
   dispatch: PropTypes.func,
   catalogs: PropTypes.object,
   firstLoadComplete: PropTypes.bool,
+  authProvider: PropTypes.object,
+  hasAccessToResources: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,
+    hasAccessToResources: getHasAccessToResources(state),
   };
 }
 
@@ -128,4 +129,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAuthProvider(Layout));

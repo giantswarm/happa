@@ -174,6 +174,7 @@ const theme = deepMerge(generate(16), {
       'graph-0': 'brand',
       'graph-1': 'status-warning',
       'input-background': '#32526a',
+      'input-highlight': '#41B5F2',
       focus: {
         light: 'text-strong',
         dark: 'text-strong',
@@ -422,19 +423,9 @@ const theme = deepMerge(generate(16), {
       }),
     },
     icon: {
-      extend: (props: { theme: ThemeType }) => {
-        const fillColor = props.theme.global!.colors!.text!;
-        let colorHex = '';
-        if (typeof fillColor === 'string') {
-          colorHex = fillColor;
-        } else {
-          colorHex = fillColor.dark!;
-        }
-
-        return {
-          fill: colorHex,
-        };
-      },
+      extend: () => css`
+        fill: ${(props) => props.theme.global.colors['input-highlight']};
+      `,
     },
     border: {
       color: 'text',
@@ -658,27 +649,27 @@ const theme = deepMerge(generate(16), {
   paragraph: {
     small: {
       size: '13px',
-      height: '18px',
+      height: '22px',
       maxWidth: '267px',
     },
     medium: {
       size: '15px',
-      height: '20px',
+      height: '24px',
       maxWidth: '300px',
     },
     large: {
       size: '18px',
-      height: '23px',
+      height: '27px',
       maxWidth: '367px',
     },
     xlarge: {
       size: '22px',
-      height: '27px',
+      height: '31px',
       maxWidth: '433px',
     },
     xxlarge: {
       size: '28px',
-      height: '33px',
+      height: '37px',
       maxWidth: '567px',
     },
   },
@@ -725,6 +716,9 @@ const theme = deepMerge(generate(16), {
     size: {
       small: '16px',
     },
+  },
+  anchor: {
+    color: 'text',
   },
 });
 

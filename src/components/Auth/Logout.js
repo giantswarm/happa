@@ -1,43 +1,17 @@
-import { push } from 'connected-react-router';
 import { spinner } from 'images';
-import CPAuth from 'lib/CPAuth/CPAuth';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { AuthorizationTypes } from 'shared/constants';
-import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
-class Logout extends React.Component {
-  async componentDidMount() {
-    try {
-      await CPAuth.getInstance().logout();
-    } catch (err) {
-      new FlashMessage(
-        `Control Plane logout couldn't be executed: ${err}`,
-        messageType.WARNING,
-        messageTTL.MEDIUM
-      );
-    }
+import { withAuthProvider } from './MAPI/MapiAuthProvider';
 
-    if (
-      this.props.user &&
-      this.props.user.auth &&
-      this.props.user.auth.scheme
-    ) {
-      if (this.props.user.auth.scheme === AuthorizationTypes.BEARER) {
-        this.props.dispatch(push(MainRoutes.Login));
-        this.props.actions.logoutSuccess();
-      } else {
-        this.props.actions.giantswarmLogout();
-      }
-    } else {
-      this.props.dispatch(push(MainRoutes.Login));
-      this.props.actions.logoutSuccess();
-    }
+class Logout extends React.Component {
+  componentDidMount() {
+    const auth = this.props.authProvider;
+    this.props.actions.logout(auth);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -66,21 +40,13 @@ class Logout extends React.Component {
 
 Logout.propTypes = {
   actions: PropTypes.object,
-  dispatch: PropTypes.func,
-  user: PropTypes.object,
+  authProvider: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(mainActions, dispatch),
-    dispatch: dispatch,
   };
 }
 
-function mapStateToProps(state) {
-  return {
-    user: state.main.loggedInUser,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Logout);
+export default connect(null, mapDispatchToProps)(withAuthProvider(Logout));

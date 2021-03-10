@@ -25,13 +25,12 @@ module.exports = {
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
-    FEATURE_CP_ACCESS: false,
     // window.config object will now be available in all tests
     config: {
       apiEndpoint: 'http://1.2.3.4',
-      cpApiEndpoint: 'http://2.3.4.5',
+      mapiEndpoint: 'http://2.3.4.5',
       audience: 'http://1.2.3.4',
-      cpAudience: 'http://2.3.4.5',
+      mapiAudience: 'http://2.3.4.5',
       passageEndpoint: 'http://5.6.7.8',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',
@@ -41,6 +40,9 @@ module.exports = {
         '{"m4.xlarge":{"cpu_cores":4,"description":"M4 General Purpose Extra Large","memory_size_gb":16,"storage_size_gb":0},"m3.large":{"description":"M3 General Purpose Large","memory_size_gb":7.5,"cpu_cores":2,"storage_size_gb":32},"m3.xlarge":{"description":"M3 General Purpose Extra Large","memory_size_gb":15,"cpu_cores":4,"storage_size_gb":80},"m3.2xlarge":{"description":"M3 General Purpose Double Extra Large","memory_size_gb":30,"cpu_cores":8,"storage_size_gb":160}}',
       azureCapabilitiesJSON:
         '{"Standard_A2_v2":{"additionalProperties":{},"description":"This is some description","maxDataDiskCount":4,"memoryInMb":4294.967296,"name":"Standard_A2_v2","numberOfCores":2,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":21474.83648},"Standard_A4_v2":{"additionalProperties":{},"description":"Here is a longer description that might be too long for the field","maxDataDiskCount":8,"memoryInMb":8589.934592,"name":"Standard_A4_v2","numberOfCores":4,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":42949.67296},"Standard_A8_v2":{"additionalProperties":{},"description":"Another VM size description text","maxDataDiskCount":16,"memoryInMb":17179.869184,"name":"Standard_A8_v2","numberOfCores":8,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":85899.34592}}',
+    },
+    featureFlags: {
+      FEATURE_MAPI_AUTH: true,
     },
   },
 };

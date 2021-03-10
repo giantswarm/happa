@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
@@ -41,8 +39,10 @@ describe('PasswordReset', () => {
       );
 
       // Wait till the app is ready and we're on the login page.
-      const pageTitle = await findByText(/Log in to Giant Swarm/i);
+      const pageTitle = await findByText(/Welcome to Giant Swarm/i);
       expect(pageTitle).toBeInTheDocument();
+
+      fireEvent.click(screen.getByText('Log in using email and password'));
 
       // When I click "Forgot your password?".
       const forgotPasswordLink = getByText('Forgot your password?');

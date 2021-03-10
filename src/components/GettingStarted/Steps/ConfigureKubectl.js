@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as clusterActions from 'stores/cluster/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
@@ -368,7 +369,7 @@ function mapStateToProps(state, ownProps) {
   return {
     selectedCluster: selectedCluster,
     clusters: state.entities.clusters,
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
   };
 }
 

@@ -1,5 +1,5 @@
-import { CLUSTER_SELECT } from 'stores/main/constants';
 import {
+  CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
   GLOBAL_LOAD_SUCCESS,
@@ -19,6 +19,11 @@ import {
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
+
+export enum LoggedInUserTypes {
+  GS,
+  MAPI,
+}
 
 export interface IMainState {
   loggedInUser: ILoggedInUser | null;
@@ -98,7 +103,7 @@ export interface IMainRefreshUserInfoErrorAction {
 
 export interface IMainRefreshUserInfoSuccessAction {
   type: typeof REFRESH_USER_INFO_SUCCESS;
-  email: string;
+  loggedInUser: ILoggedInUser;
 }
 
 export interface IMainRequestPasswordRecoveryTokenAction {

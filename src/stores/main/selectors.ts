@@ -1,71 +1,16 @@
-import Auth from 'lib/auth0';
-import { isJwtExpired } from 'lib/helpers';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import {
-  AuthorizationTypes,
-  Constants,
-  Providers,
-  StatusCodes,
-} from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { auth0Login } from 'stores/main/actions';
 import { IState } from 'stores/state';
 
-export interface ISSOError {
-  status: number;
-}
+import { LoggedInUserTypes } from './types';
 
 export function getUserIsAdmin(state: IState) {
-  return state.main.loggedInUser?.isAdmin ?? false;
+  return getLoggedInUser(state)?.isAdmin ?? false;
 }
 
 export function getProvider(state: IState): PropertiesOf<typeof Providers> {
   return state.main.info.general.provider;
 }
-
-/**
- * Select the currently stored authentication token, or a renewed one,
- * if the current one is expired.
- * @param dispatch
- */
-export const selectAuthToken = (
-  dispatch: ThunkDispatch<IState, void, AnyAction>
-) => {
-  return async (
-    state: IState
-  ): Promise<
-    [token: string, scheme: PropertiesOf<typeof AuthorizationTypes>]
-  > => {
-    const auth = state.main.loggedInUser?.auth ?? null;
-    if (!auth) {
-      return Promise.reject(new Error('You are not logged in.'));
-    }
-    const scheme = auth.scheme;
-    let currentToken = auth.token;
-
-    try {
-      /**
-       * Renew the token if the user is logged in via SSO,
-       * and the current token is expired.
-       * */
-      if (scheme === AuthorizationTypes.BEARER && isJwtExpired(currentToken)) {
-        const newAuthData = await Auth.getInstance().renewToken();
-        currentToken = newAuthData.accessToken;
-
-        await dispatch(auth0Login(newAuthData));
-      }
-
-      return [currentToken, scheme];
-    } catch (err: unknown) {
-      const newErr: ISSOError = Object.assign({}, err, {
-        status: StatusCodes.Unauthorized,
-      });
-
-      return Promise.reject(newErr);
-    }
-  };
-};
 
 export function getMinHAMastersVersion(state: IState): string {
   const provider = getProvider(state);
@@ -135,4 +80,21 @@ export function getK8sVersionEOLDate(version: string) {
 
     return versionInfo.eol_date;
   };
+}
+
+export function getLoggedInUser(state: IState): ILoggedInUser | null {
+  return state.main.loggedInUser;
+}
+
+export function getHasAccessToResources(state: IState): boolean {
+  const user = getLoggedInUser(state);
+  if (!user) return false;
+
+  const organizations = Object.values(state.entities.organizations.items);
+
+  if (user.type === LoggedInUserTypes.MAPI && organizations.length < 1) {
+    return false;
+  }
+
+  return true;
 }

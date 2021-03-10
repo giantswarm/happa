@@ -4,7 +4,6 @@ import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
 import { AuthorizationTypes } from 'shared/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'shared/constants/routes';
-import FeatureFlags from 'shared/FeatureFlags';
 import styled from 'styled-components';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 
@@ -106,16 +105,6 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                       to={AccountSettingsRoutes.Home}
                     >
                       Account Settings
-                    </MenuItem>
-                  </li>
-                )}
-                {FeatureFlags.FEATURE_CP_ACCESS && (
-                  <li role='presentation'>
-                    <MenuItem
-                      href={MainRoutes.CPAccess}
-                      to={MainRoutes.CPAccess}
-                    >
-                      Control Plane Access
                     </MenuItem>
                   </li>
                 )}

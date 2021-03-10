@@ -5,7 +5,6 @@ import { MainRoutes } from 'shared/constants/routes';
 import AdminLogin from './Auth/AdminLogin';
 import Login from './Auth/Login';
 import Logout from './Auth/Logout';
-import OAuthCallback from './Auth/OAuthCallback';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import SetPassword from './ForgotPassword/SetPassword';
 import Layout from './Layout';
@@ -20,7 +19,6 @@ const Routes = () => {
       <Route component={SetPassword} path={MainRoutes.SetPassword} />
       <Route component={ForgotPassword} path={MainRoutes.ForgotPassword} />
       <Route component={SignUp} path={MainRoutes.SignUp} />
-      <Route component={OAuthCallback} path={MainRoutes.OAuthCallback} />
       <Route component={Layout} path={MainRoutes.Home} />
     </Switch>
   );

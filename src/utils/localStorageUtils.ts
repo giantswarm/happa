@@ -1,5 +1,5 @@
-import GiantSwarm from 'giantswarm';
 import { AuthorizationTypes } from 'shared/constants';
+import { LoggedInUserTypes } from 'stores/main/types';
 
 export function removeUserFromStorage() {
   localStorage.removeItem('user');
@@ -18,6 +18,14 @@ export function fetchUserFromStorage(): ILoggedInUser | null {
   }
   if (!user) return null;
 
+  // TODO(axbarsan): Remove this once all users transitioned away from Auth0.
+  if (user.auth.scheme === AuthorizationTypes.BEARER) {
+    return null;
+  } else if (!user.type) {
+    // Migrate users from the pre-MAPI era.
+    user.type = LoggedInUserTypes.GS;
+  }
+
   /**
    * User was logged in pre-jwt auth being available.
    * Migrate it.
@@ -34,12 +42,6 @@ export function fetchUserFromStorage(): ILoggedInUser | null {
 
 export function setUserToStorage(userData: ILoggedInUser) {
   localStorage.setItem('user', JSON.stringify(userData));
-
-  const defaultClient = GiantSwarm.ApiClient.instance;
-  const defaultClientAuth =
-    defaultClient.authentications.AuthorizationHeaderToken;
-  defaultClientAuth.apiKey = userData.auth.token;
-  defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
 }
 
 export const setOrganizationToStorage = (organizationId: string | null) => {

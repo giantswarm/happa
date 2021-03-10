@@ -9,6 +9,11 @@ interface ILoggedInUser {
   auth: ILoggedInUserAuthScheme;
   email: string;
   isAdmin: boolean;
+  type: import('stores/main/types').LoggedInUserTypes;
+
+  /* OIDC specific. */
+  groups?: string[];
+
   /* @deprecated */
   authToken?: string;
 }

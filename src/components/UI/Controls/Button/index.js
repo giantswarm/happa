@@ -8,8 +8,10 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 //
 // <Button
 //   type='button|submit|reset'
+//   bsSize='sm'|undefined
 //   bsStyle='primary|danger|default|link'
 //   loading=true|false
+//   loadingPosition='left'|undefined
 //   disabled=true|false
 //   onClick=function>
 //
@@ -84,10 +86,15 @@ const Wrapper = styled.div`
     border-color: #278626;
   }
 
+  .btn-danger {
+    background-color: #d9534f;
+    border: 1px #d9534f solid;
+  }
+
   .btn-danger:hover,
   .btn-danger:active:hover {
     background-color: #d43f3a;
-    border-color: #d43f3a;
+    border: 1px #d43f3a solid;
   }
 
   .btn:disabled,

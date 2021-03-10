@@ -1,9 +1,11 @@
 import { IHttpRequest } from '@airbrake/browser/dist/http_req/api';
 import crossFetch from 'cross-fetch';
 import { createMemoryHistory } from 'history';
+import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import { AuthorizationTypes } from 'shared/constants';
 import configureStore from 'stores/configureStore';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { IState } from 'stores/state';
 import { USER_EMAIL } from 'testUtils/mockHttpCalls';
 
@@ -20,7 +22,11 @@ describe('patchedAirbrakeRequester', () => {
         loggedInUser: null,
       },
     } as unknown) as IState;
-    const store = configureStore(initialState, createMemoryHistory());
+    const store = configureStore(
+      initialState,
+      createMemoryHistory(),
+      new TestOAuth2()
+    );
     const requester = new Requester(store);
 
     const req: IHttpRequest = {
@@ -45,10 +51,15 @@ describe('patchedAirbrakeRequester', () => {
             token: 'some-token',
           },
           isAdmin: false,
+          type: LoggedInUserTypes.GS,
         },
       },
     } as unknown) as IState;
-    const store = configureStore(initialState, createMemoryHistory());
+    const store = configureStore(
+      initialState,
+      createMemoryHistory(),
+      new TestOAuth2()
+    );
     const requester = new Requester(store);
 
     const res = {
@@ -82,11 +93,16 @@ describe('patchedAirbrakeRequester', () => {
             scheme: AuthorizationTypes.GS,
             token: 'some-token',
           },
+          type: LoggedInUserTypes.GS,
           isAdmin: false,
         },
       },
     } as unknown) as IState;
-    const store = configureStore(initialState, createMemoryHistory());
+    const store = configureStore(
+      initialState,
+      createMemoryHistory(),
+      new TestOAuth2()
+    );
     const requester = new Requester(store);
 
     const res = {

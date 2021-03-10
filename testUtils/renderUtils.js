@@ -1,19 +1,35 @@
 import { render } from '@testing-library/react';
 import App from 'App';
+import MapiAuthProvider from 'Auth/MAPI/MapiAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
-import CPAuth from 'lib/CPAuth/CPAuth';
+import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
+import { LoggedInUserTypes } from 'stores/main/types';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
 
 export const initialStorage = {
-  user:
-    '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+  user: JSON.stringify({
+    email: 'developer@giantswarm.io',
+    auth: {
+      scheme: 'giantswarm',
+      token: 'a-valid-token',
+    },
+    isAdmin: true,
+    type: LoggedInUserTypes.GS,
+  }),
 };
+
+export function createInitialHistory(withRoute) {
+  return createMemoryHistory({
+    initialEntries: [withRoute],
+    initialIndex: 0,
+  });
+}
 
 /**
  * This function will render the whole app with a mocked store in the route
@@ -21,24 +37,20 @@ export const initialStorage = {
  * @param {String} initialRoute - The route to load.
  * @param {Object} state - The initial store state.
  * @param {Object} storage - The initial local storage state.
- * @param {CPAuth} cpAuth Control Plane API handler.
+ * @param {IOAuth2Provider} auth Authentication provider.
  */
 export function renderRouteWithStore(
   initialRoute = MainRoutes.Home,
   state = {},
   storage = initialStorage,
-  cpAuth = CPAuth.getInstance()
+  auth = new TestOAuth2(),
+  history = createInitialHistory(initialRoute)
 ) {
   localStorage.replaceWith(storage);
 
-  const history = createMemoryHistory({
-    initialEntries: [initialRoute],
-    initialIndex: 0,
-  });
+  const store = configureStore(state, history, auth);
 
-  const store = configureStore(state, history, cpAuth);
-
-  const app = render(<App {...{ store, theme, history }} />);
+  const app = render(<App {...{ store, theme, history, auth }} />);
 
   return app;
 }
@@ -84,7 +96,7 @@ export function renderWithStore(component, props, state, options) {
  * @param {Record<string, any>} state Current Store state
  * @param {Record<string, any>} storage Current LocalStorage value
  * @param {History<any>} history Current Browser history
- * @param {CPAuth} cpAuth Control Plane API handler.
+ * @param {IOAuth2Provider} auth Authentication provider.
  */
 export function getComponentWithStore(
   Component,
@@ -92,17 +104,19 @@ export function getComponentWithStore(
   state = {},
   storage = initialStorage,
   history = createMemoryHistory(),
-  cpAuth = CPAuth.getInstance()
+  auth = new TestOAuth2()
 ) {
   localStorage.replaceWith(storage);
 
-  const store = configureStore(state, history, cpAuth);
+  const store = configureStore(state, history, auth);
 
   const app = (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          <Component {...props} />
+          <MapiAuthProvider auth={auth}>
+            <Component {...props} />
+          </MapiAuthProvider>
         </ConnectedRouter>
       </ThemeProvider>
     </Provider>

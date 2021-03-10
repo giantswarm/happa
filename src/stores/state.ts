@@ -1,7 +1,6 @@
 import { IAppCatalogsState } from 'stores/appcatalog/types';
 import { IClusterState } from 'stores/cluster/types';
 import { IClusterLabelsState } from 'stores/clusterlabels/types';
-import { ICPAuthState } from 'stores/cpauth/types';
 import { IEntityErrorState } from 'stores/entityerror/types';
 import { IEntityLoadingState } from 'stores/entityloading/types';
 import { IErrorState } from 'stores/error/types';
@@ -32,6 +31,5 @@ export interface IState {
     clusters: IClusterState;
     releases: IReleaseState;
     clusterLabels: IClusterLabelsState;
-    cpAuth?: ICPAuthState;
   };
 }

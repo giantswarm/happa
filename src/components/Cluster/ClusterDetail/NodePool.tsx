@@ -116,8 +116,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       }),
     }),
     // @ts-ignore
-    nodePoolActions: PropTypes.object,
-    // @ts-ignore
     dispatch: PropTypes.func,
     // @ts-ignore
     provider: PropTypes.string,
@@ -173,8 +171,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
 
   deleteNodePool = (): void => {
     this.props.dispatch(
-      // @ts-ignore
-      this.props.nodePoolActions.nodePoolDelete(
+      nodePoolActions.nodePoolDelete(
         // @ts-ignore
         this.props.cluster.id,
         this.props.nodePool
