@@ -1,0 +1,56 @@
+import { Box } from 'grommet';
+import { Meta } from '@storybook/addon-docs/blocks';
+import ColorSample  from 'styles/stories/ColorSample';
+import theme from 'styles/theme';
+
+<Meta title='Display/Colors' />
+
+# Colors
+
+## Our main colors
+
+<Preview>
+  <Story name="Main">
+    <ColorSample color={theme.colors.darkBlue} title='colors.darkBlue'>
+      <p>Our reference dark blue. We derive many other shades from this color value.</p>
+    </ColorSample>
+
+    <ColorSample color={theme.colors.yellow1} title='colors.yellow1'>
+      <p>Our reference dark blue. We derive many other shades from this color value.</p>
+    </ColorSample>
+  </Story>
+</Preview>
+
+## Shades of dark blue
+
+Based on our reference dark blue we have a pallette of derivatives.
+
+<Preview>
+  <Story name="DarkBlueShades">
+    <Box pad="medium">
+      <ColorSample color={theme.colors.darkBlueLighter9} title='colors.darkBlueLighter9' contrastingColor='black'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter8} title='colors.darkBlueLighter8' contrastingColor='black'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter7} title='colors.darkBlueLighter7' contrastingColor='black'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter6} title='colors.darkBlueLighter6' contrastingColor='black'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter5} title='colors.darkBlueLighter5'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter4} title='colors.darkBlueLighter4'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter3} title='colors.darkBlueLighter3'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter2} title='colors.darkBlueLighter2'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueLighter1} title='colors.darkBlueLighter1'></ColorSample>
+    </Box>
+    <Box pad="medium">
+      <ColorSample color={theme.colors.darkBlue} title='colors.darkBlue'></ColorSample>
+    </Box>
+    <Box pad="medium">
+      <ColorSample color={theme.colors.darkBlueDarker1} title='colors.darkBlueDarker1'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker2} title='colors.darkBlueDarker2'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker3} title='colors.darkBlueDarker3'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker4} title='colors.darkBlueDarker4'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker5} title='colors.darkBlueDarker5'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker6} title='colors.darkBlueDarker6'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker7} title='colors.darkBlueDarker7'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker8} title='colors.darkBlueDarker8'></ColorSample>
+      <ColorSample color={theme.colors.darkBlueDarker9} title='colors.darkBlueDarker9'></ColorSample>
+    </Box>
+  </Story>
+</Preview>
