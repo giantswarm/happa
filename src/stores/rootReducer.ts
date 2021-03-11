@@ -1,11 +1,9 @@
 import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
 import { combineReducers, ReducersMapObject } from 'redux';
-import FeatureFlags from 'shared/FeatureFlags';
 import catalogs from 'stores/appcatalog/reducer';
 import clusters from 'stores/cluster/reducer';
 import clusterLabels from 'stores/clusterlabels/reducer';
-import cpAuth from 'stores/cpauth/reducer';
 import entityError from 'stores/entityerror/reducer';
 import entityLoading from 'stores/entityloading/reducer';
 import error from 'stores/error/reducer';
@@ -28,9 +26,6 @@ const entityReducers: ReducersMapObject<IState['entities']> = {
   releases,
   users,
 };
-if (FeatureFlags.FEATURE_CP_ACCESS) {
-  entityReducers.cpAuth = cpAuth;
-}
 const entities = combineReducers(entityReducers);
 
 const rootReducer = (history: History<History.LocationState>) =>

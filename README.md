@@ -50,9 +50,9 @@ Use environment variables to adjust the behavior of this application in producti
 | Variable Name           | Description                                                                                                                                           | Default                |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | API_ENDPOINT            | URL to Giant Swarm's API.                                                                                                                             | http://localhost:8000  |
-| CP_API_ENDPOINT         | URL to Giant Swarm's K8s Control Plane API.                                                                                                           |                        |
+| MAPI_ENDPOINT         | URL to Giant Swarm's K8s Management API.                                                                                                           |                        |
 | AUDIENCE                | The Audience claim that our oauth library will use when requesting a token.                                                                           | API_ENDPOINT           |
-| CP_AUDIENCE             | The Audience claim that our oauth library will use when requesting a token for logging into the Control Plane API.                                    | http://localhost:9999  |
+| MAPI_AUDIENCE             | The Audience claim that our oauth library will use when requesting a token for logging into the Management API.                                    | http://localhost:9999  |
 | PASSAGE_ENDPOINT        | URL to Passage, which helps users when they lose their password or have been invited to create an account.                                            | http://localhost:5001  |
 | INGRESS_BASE_DOMAIN     | The ingress base domain of the installation that Happa is on. This affects the getting started guide.                                                 | k8s.sample.io          |
 | AWS_CAPABILITIES_JSON   | A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information |                        |
@@ -101,30 +101,6 @@ https://fortawesome.com/kits/d940f7eb/docs
 
 Dependabot is configured to automatically create PR's that update our dependencies
 when they go stale. Keep an eye on the PR's, dependabot creates them on Mondays.
-
-## Feature Flags (Development)
-
-To enable developers to make small Pull Requests, happa supports Feature Flags.
-Flags are defined in [`webpack.common.js`](webpack.common.js) and can be used in code like this:
-
-```js
-import FeatureFlags from 'shared/FeatureFlags';
-
-if (FeatureFlags.FEATURE_CLUSTER_LABELS_V0) {
-  return <p>Cluster labels are enabled</p>;
-}
-```
-
-The value defined in [`webpack.common.js`](webpack.common.js) is the value for the production build.
-Each value can be overriden by either setting the feature flag name in your environment or by adding it to a `.env` file in the root of this directory.
-
-Once the feature is finished, the feature flag can be removed or set to `true`.
-
-### Known feature flags
-
-| Key                         | Feature                               | Enabled             |
-| --------------------------- | ------------------------------------- | ------------------- |
-| `FEATURE_CLUSTER_LABELS_V0` | Initial cluster labels implementation | 2020-05-12: `false` |
 
 # Code Style
 

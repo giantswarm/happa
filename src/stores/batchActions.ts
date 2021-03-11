@@ -1,19 +1,19 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
 import { push } from 'connected-react-router';
-import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
-import FeatureFlags from 'shared/FeatureFlags';
 import { INodePool } from 'shared/types';
 import {
   enableCatalog,
   listCatalogs,
   loadClusterApps,
 } from 'stores/appcatalog/actions';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import {
   clusterCreate,
   clusterDeleteConfirmed,
@@ -29,15 +29,14 @@ import {
   BATCHED_CLUSTER_CREATION_SUCCESS,
   CLUSTER_LOAD_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
-import { loadUser } from 'stores/cpauth/actions';
 import {
   globalLoadError,
   globalLoadFinish,
   globalLoadStart,
   refreshUserInfo,
 } from 'stores/main/actions';
-import { getInfo } from 'stores/main/actions';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getInfo, resumeLogin } from 'stores/main/actions';
+import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -54,19 +53,32 @@ import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
 
-export function batchedLayout(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  AnyAction
-> {
-  return async (dispatch, getState) => {
+export function batchedLayout(
+  auth: IOAuth2Provider
+): ThunkAction<Promise<void>, IState, void, AnyAction> {
+  return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
     dispatch(globalLoadStart());
 
     try {
+      await dispatch(resumeLogin(auth));
+
+      try {
+        await dispatch(organizationsLoad());
+      } catch (err) {
+        const hasAccessToResources = getHasAccessToResources(getState());
+        if (!hasAccessToResources) {
+          dispatch(globalLoadFinish());
+
+          return;
+        }
+
+        throw err;
+      }
+
       await dispatch(refreshUserInfo());
       await dispatch(getInfo());
     } catch (err) {
+      dispatch(push(MainRoutes.Login));
       dispatch(globalLoadError());
 
       new FlashMessage(
@@ -74,25 +86,12 @@ export function batchedLayout(): ThunkAction<
         messageType.WARNING,
         messageTTL.MEDIUM
       );
-      dispatch(push(MainRoutes.Login));
       ErrorReporter.getInstance().notify(err);
 
       return;
     }
 
-    if (FeatureFlags.FEATURE_CP_ACCESS) {
-      try {
-        dispatch(loadUser(CPAuth.getInstance()));
-      } catch (err) {
-        dispatch(globalLoadError());
-        ErrorReporter.getInstance().notify(err);
-      }
-    }
-
     try {
-      await dispatch(organizationsLoad());
-
-      // eslint-disable-next-line @typescript-eslint/await-thenable
       const catalogs = await dispatch(listCatalogs());
       const userIsAdmin = getUserIsAdmin(getState());
 

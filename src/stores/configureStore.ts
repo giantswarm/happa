@@ -1,6 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
-import CPAuth from 'lib/CPAuth/CPAuth';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import {
   applyMiddleware,
   compose,
@@ -9,8 +9,7 @@ import {
   Store,
 } from 'redux';
 import thunk from 'redux-thunk';
-import FeatureFlags from 'shared/FeatureFlags';
-import { cpAuthMiddleware } from 'stores/cpauth/middleware';
+import { mainAuthMiddleware } from 'stores/main/middleware';
 import rootReducer from 'stores/rootReducer';
 import { IState } from 'stores/state';
 
@@ -24,17 +23,14 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default function configureStore(
   initialState: IState,
   history: History<History.LocationState>,
-  cpAuth?: CPAuth
+  auth: IOAuth2Provider
 ) {
   const middleware: Middleware[] = [
+    mainAuthMiddleware(auth),
     routerMiddleware(history),
     thunk,
     callAPIMiddleware,
   ];
-
-  if (FeatureFlags.FEATURE_CP_ACCESS && cpAuth) {
-    middleware.push(cpAuthMiddleware(cpAuth));
-  }
 
   store = createStore(
     rootReducer(history),

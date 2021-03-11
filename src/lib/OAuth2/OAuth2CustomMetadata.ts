@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { OidcMetadata } from 'oidc-client';
 
 export interface IOAuth2CustomMetadata {

@@ -30,7 +30,7 @@ import {
 } from 'stores/cluster/utils';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
@@ -465,7 +465,7 @@ function mapStateToProps(state, props) {
     catalogs: state.entities.catalogs,
     nodePools: selectNodePools(state),
     provider: state.main.info.general.provider,
-    user: state.main.loggedInUser,
+    user: getLoggedInUser(state),
     region: state.main.info.general.datacenter,
     isAdmin: getUserIsAdmin(state),
     clusterIsAwaitingUpgrade: selectIsClusterAwaitingUpgrade(clusterID ?? '')(

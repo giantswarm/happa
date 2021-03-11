@@ -64,21 +64,21 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: api-endpoint
-        - name: CP_API_ENDPOINT
+        - name: MAPI_ENDPOINT
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
-              key: cp-api-endpoint
+              key: mapi-endpoint
         - name: AUDIENCE
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
               key: audience
-        - name: CP_AUDIENCE
+        - name: MAPI_AUDIENCE
           valueFrom:
             configMapKeyRef:
               name: happa-configmap
-              key: cp-audience
+              key: mapi-audience
         - name: INGRESS_BASE_DOMAIN
           valueFrom:
             configMapKeyRef:
@@ -104,8 +104,18 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: enable-rum
+        - name: MAPI_AUTH_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: mapi-auth-redirect-url
         - name: ENVIRONMENT
           value: kubernetes
+        - name: FEATURE_MAPI_AUTH
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: feature-mapi-auth
         livenessProbe:
           httpGet:
             path: /
