@@ -1,6 +1,7 @@
 import { Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
-import { HttpClientImpl } from 'model/clients/HttpClient';
+import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import {
   getClusterList,
   getClusterListKey,
@@ -9,6 +10,7 @@ import {
   getClusterName,
   getReleaseVersion,
 } from 'model/services/mapi/clusters/key';
+import { ICapiV1Alpha3ClusterList } from 'model/services/mapi/clusters/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -25,22 +27,20 @@ const StyledDot = styled(Dot)`
 interface IClusterListProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-// TODO(axbarsan): Create a hook for this;
-const client = new HttpClientImpl();
-
 const ClusterList: React.FC<IClusterListProps> = () => {
+  const client = useHttpClient();
   const user = useSelector(getLoggedInUser);
-  const { data, error, isValidating } = useSWR(
-    getClusterListKey(user),
-    getClusterList(client, user!)
-  );
+  const { data, error, isValidating } = useSWR<
+    ICapiV1Alpha3ClusterList,
+    GenericResponse
+  >(getClusterListKey(user), getClusterList(client, user!));
 
   if (!user) {
     return <div>Not authenticated</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.data}</div>;
   }
 
   // Initial load.
@@ -52,6 +52,8 @@ const ClusterList: React.FC<IClusterListProps> = () => {
   if (isValidating) {
     return <div>Loading...</div>;
   }
+
+  // TODO(axbarsan): Write create/update/delete examples
 
   return (
     <Box direction='column' gap='medium'>
