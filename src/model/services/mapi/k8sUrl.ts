@@ -1,60 +1,151 @@
 export interface IK8sLabelSelector {
+  /**
+   * Find all the resources that have
+   * these labels set to these values.
+   */
   matchingLabels?: Record<string, string>;
 }
 
 export interface IK8sFieldSelector {
+  /**
+   * Find all the resources that have
+   * these fields set to these values.
+   */
   matchingFields?: Record<string, string>;
 }
 
 export interface IK8sBaseOptions {
+  /**
+   * The Kubernetes API URL.
+   */
   baseUrl: string;
+  /**
+   * The kind of resource that we need to fetch (e.g. `clusters`).
+   * It must be in plural form.
+   */
   kind: string;
+  /**
+   * The required resource group and version (e.g. `cluster.x-k8s.io/v1alpha3`).
+   * This field must not be set when `isCore` is set to true.
+   */
   apiVersion?: string;
+  /**
+   * Set this to `true` if you want to fetch core K8s resources (e.g. `pods`).s
+   */
   isCore?: boolean;
 }
 
 export interface IK8sGetOptions extends IK8sBaseOptions {
+  /**
+   * The resource's name.
+   */
   name: string;
+  /**
+   * The namespace that the resource lives in.
+   */
   namespace: string;
 }
 
 export interface IK8sListOptions extends IK8sBaseOptions {
+  /**
+   * Find a specific resource based on label values.
+   */
   labelSelector?: IK8sLabelSelector;
+  /**
+   * Find a specific resourec based on field values.
+   */
   fieldSelector?: IK8sFieldSelector;
 }
 
 export interface IK8sWatchOptions extends IK8sBaseOptions {
+  /**
+   * The resource's name.
+   */
   name: string;
+  /**
+   * The namespace that the resource lives in.
+   */
   namespace: string;
+  /**
+   * This field must be set to `true` when watching resources.
+   */
   watch: true;
 }
 
 export interface IK8sCreateOptions extends IK8sBaseOptions {
+  /**
+   * The namespace that the resource lives in.
+   */
   namespace: string;
+  /**
+   * If set to `true`, it indicates that modifications
+   * will not be persisted.
+   */
   dryRun?: boolean;
 }
 
 export interface IK8sUpdateOptions extends IK8sBaseOptions {
+  /**
+   * The resource's name.
+   */
   name: string;
+  /**
+   * The namespace that the resource lives in.
+   */
   namespace: string;
+  /**
+   * If set to `true`, it indicates that modifications
+   * will not be persisted.
+   */
   dryRun?: boolean;
 }
 
 export interface IK8sPatchOptions extends IK8sBaseOptions {
+  /**
+   * The resource's name.
+   */
   name: string;
+  /**
+   * The namespace that the resource lives in.
+   */
   namespace: string;
+  /**
+   * If set to `true`, it indicates that modifications
+   * will not be persisted.
+   */
   dryRun?: boolean;
 }
 
 export interface IK8sDeleteOptions extends IK8sBaseOptions {
+  /**
+   * The namespace that the resource lives in.
+   */
   namespace: string;
+  /**
+   * The resource's name. This can be omitted when trying
+   * to delete multiple resources at the same time.
+   * This cannot be set when `labelSelector` or `fieldSelector`
+   * are set.
+   */
   name?: string;
+  /**
+   * Find a specific resource based on label values.
+   * This cannot be used when`name` is set.
+   */
   labelSelector?: IK8sLabelSelector;
+  /**
+   * Find a specific resourec based on field values.
+   * This cannot be used when`name` is set.
+   */
   fieldSelector?: IK8sFieldSelector;
 }
 
-// TODO(axbarsan): Take into account core types (api/v1 prefix).
-
+/**
+ * Create a URL that can be used to fetch information from the
+ * Kubernetes API.
+ * @param options - Different common settings for writing the URL
+ * in the correct shape.
+ */
 export function create(options: IK8sGetOptions): URL;
 export function create(options: IK8sListOptions): URL;
 export function create(options: IK8sWatchOptions): URL;
