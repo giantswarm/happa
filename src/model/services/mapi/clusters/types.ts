@@ -1,30 +1,5 @@
-export interface IMetaV1ObjectMeta {
-  name: string;
-  namespace: string;
-  resourceVersion: string;
-  selfLink: string;
-  uid: string;
-  creationTimestamp: string;
-  finalizers: string[];
-  generation: number;
-  annotations?: Record<string, string>;
-  deletionTimestamp?: string;
-  labels?: Record<string, string>;
-}
-
-export interface IMetaV1TypeMeta {
-  resourceVersion: string;
-  selfLink: string;
-}
-
-export interface ICoreV1ObjectReference {
-  apiVersion: string;
-  kind: string;
-  name: string;
-  namespace: string;
-  resourceVersion?: string;
-  uid?: string;
-}
+import { ICoreV1ObjectReference } from '../core/types';
+import { IMetaV1List, IMetaV1ObjectMeta } from '../meta/types';
 
 export interface ICapiV1Alpha3ClusterSpecClusterNetwork {
   apiServerPort: number;
@@ -70,13 +45,6 @@ export interface ICapiV1Alpha3Cluster {
   metadata: IMetaV1ObjectMeta;
   spec: ICapiV1Alpha3ClusterSpec;
   status: ICapiV1Alpha3ClusterStatus;
-}
-
-export interface IMetaV1List<T> {
-  apiVersion: string;
-  kind: string;
-  metadata: IMetaV1TypeMeta;
-  items: T[];
 }
 
 export interface ICapiV1Alpha3ClusterList

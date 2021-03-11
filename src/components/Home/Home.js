@@ -1,9 +1,7 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import formatDistance from 'date-fns/fp/formatDistance';
-import { Box, Heading } from 'grommet';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
-import ClusterList from 'MAPI/clusters/ClusterList';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -136,27 +134,12 @@ class Home extends React.Component {
                 'Ready to launch your first cluster? Click the green button!'}
             </div>
           )}
-
-          <Box margin={{ bottom: 'xlarge' }}>
-            <Heading level={3} margin={{ bottom: 'medium' }}>
-              Management API Clusters
-            </Heading>
-            <ClusterList />
-          </Box>
-
           {clusters.length === 0 && (
             <ClusterEmptyState
               errorLoadingClusters={this.props.errorLoadingClusters}
               selectedOrganization={selectedOrganization}
             />
           )}
-
-          {clusters.length > 0 && (
-            <Heading level={3} margin={{ bottom: 'medium' }}>
-              Giant Swarm API Clusters
-            </Heading>
-          )}
-
           {clusters.length > 0 && (
             <AnimationWrapper>
               <TransitionGroup
@@ -182,7 +165,6 @@ class Home extends React.Component {
               </TransitionGroup>
             </AnimationWrapper>
           )}
-
           {clusters.length > 0 ? (
             <p className='last-updated'>
               <small>

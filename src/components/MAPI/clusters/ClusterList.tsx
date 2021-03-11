@@ -53,8 +53,6 @@ const ClusterList: React.FC<IClusterListProps> = () => {
     return <div>Loading...</div>;
   }
 
-  // TODO(axbarsan): Write create/update/delete examples
-
   return (
     <Box direction='column' gap='medium'>
       {data.items.map((cluster) => {
