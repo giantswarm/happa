@@ -15,7 +15,22 @@ import theme from 'styles/theme';
       <p>Our reference dark blue. We derive many other shades from this color value.</p>
     </ColorSample>
     <ColorSample color={theme.colors.yellow1} title='colors.yellow1'>
-      <p>Our reference dark blue. We derive many other shades from this color value.</p>
+      <p>Some yellow tone</p>
+    </ColorSample>
+    <ColorSample color={theme.colors.gold} title='colors.gold'>
+      <p>A golden yellow, which we use for some information/warnings that should draw attention, e. g. "Upgrade available".</p>
+    </ColorSample>
+    <ColorSample color={theme.colors.error} title='colors.error'>
+      <p>Text color for error messages displayed on a dark blue background.</p>
+    </ColorSample>
+    <ColorSample color={theme.colors.greenNew} title='colors.greenNew'>
+      Green color used for a replacement version number in a <code>ReleaseComponentLabel</code>.
+    </ColorSample>
+    <ColorSample color={theme.colors.redOld} title='colors.redOld'>
+      Red color used for a replaced version number in a <code>ReleaseComponentLabel</code>.
+    </ColorSample>
+    <ColorSample color={theme.global.colors['input-highlight']} title='theme.global.colors["input-highlight"]'>
+      Blue to highlight a selected radio button item
     </ColorSample>
   </Story>
 </Preview>
@@ -51,5 +66,41 @@ Based on our reference dark blue we have a pallette of derivatives.
       <ColorSample color={theme.colors.darkBlueDarker8} title='colors.darkBlueDarker8'></ColorSample>
       <ColorSample color={theme.colors.darkBlueDarker9} title='colors.darkBlueDarker9'></ColorSample>
     </Box>
+  </Story>
+</Preview>
+
+## Shades of white and gray
+
+<Preview>
+  <Story name="WhitesGrays">
+    <ColorSample color={theme.colors.white1} title='colors.white1' contrastingColor='black'></ColorSample>
+    <ColorSample color={theme.colors.white2} title='colors.white2' contrastingColor='black'></ColorSample>
+    <ColorSample color={theme.colors.white3} title='colors.white3' contrastingColor='black'></ColorSample>
+    <ColorSample color={theme.colors.white4} title='colors.white4' contrastingColor='black'></ColorSample>
+    <ColorSample color={theme.colors.white5} title='colors.white5' contrastingColor='black'></ColorSample>
+    <ColorSample color={theme.colors.gray} title='colors.gray' contrastingColor='black'></ColorSample>
+  </Story>
+</Preview>
+
+## Deprecated colors
+
+These are colors we should no longer use and replace with others.
+(This means we should use a different theme entry to reference the color.)
+
+<Preview>
+  <Story name="Deprecated">
+    <ColorSample color={theme.colors.foreground} title='colors.foreground'></ColorSample>
+    <ColorSample color={theme.colors.loadingForeground} title='colors.loadingForeground'></ColorSample>
+    <ColorSample color={theme.colors.dropdownBackground} title='colors.dropdownBackground'></ColorSample>
+    <ColorSample color={theme.colors.shade1} title='colors.shade1'></ColorSample>
+    <ColorSample color={theme.colors.shade2} title='colors.shade2'></ColorSample>
+    <ColorSample color={theme.colors.shade3} title='colors.shade3'></ColorSample>
+    <ColorSample color={theme.colors.shade4} title='colors.shade4'></ColorSample>
+    <ColorSample color={theme.colors.shade5} title='colors.shade5'></ColorSample>
+    <ColorSample color={theme.colors.shade6} title='colors.shade6'></ColorSample>
+    <ColorSample color={theme.colors.shade7} title='colors.shade7'></ColorSample>
+    <ColorSample color={theme.colors.shade8} title='colors.shade8'></ColorSample>
+    <ColorSample color={theme.colors.shade9} title='colors.shade9'></ColorSample>
+    <ColorSample color={theme.colors.shade10} title='colors.shade10'></ColorSample>
   </Story>
 </Preview>
