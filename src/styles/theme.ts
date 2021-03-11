@@ -60,7 +60,6 @@ const theme = deepMerge(generate(16), {
     yellow1: '#ddb03a',
     gold: '#ce990f',
     goldBackground: '#a97904',
-    red: 'red',
     gray: '#ccc',
     error: '#e49090',
 
