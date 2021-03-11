@@ -717,6 +717,25 @@ const theme = deepMerge(generate(16), {
       small: '16px',
     },
   },
+  table: {
+    header: {
+      extend: () => css`
+        text-transform: uppercase;
+        font-size: ${(props) => props.theme.text.xsmall.size};
+        color: ${(props) => props.theme.global.colors['text-weak'].dark};
+      `,
+    },
+    body: {
+      pad: 'small',
+    },
+    extend: () => css`
+      caption {
+        font-size: ${(props) => props.theme.text.large.size};
+        color: ${(props) => props.theme.global.colors.text.dark};
+        font-weight: bold;
+      }
+    `,
+  },
   anchor: {
     color: 'text',
   },

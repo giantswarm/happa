@@ -13,9 +13,15 @@ import {
   SelectedDescription,
   SelectedItem,
   SelectedWrapper,
-  Table,
 } from 'UI/Controls/ExpandableSelector/Selector';
 import InstanceType from 'UI/Display/Cluster/InstanceType';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from 'UI/Display/Table';
 
 import InstanceTypeRow from './InstanceTypeRow';
 
@@ -45,6 +51,14 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
   const { cpu, ram } = useInstanceTypeCapabilities(selectedInstanceType);
   const allowedInstanceTypes = useAllowedInstanceTypes();
 
+  const handleTabSelect = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    // Handle tapping the space bar.
+    if (e.key === ' ') {
+      e.preventDefault();
+      setCollapsed(!collapsed);
+    }
+  };
+
   return (
     <>
       <SelectedWrapper>
@@ -65,27 +79,41 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         >
           <ListToggler
             role='button'
+            id='machine-type-selector__toggler'
+            aria-expanded={!collapsed}
+            aria-labelledby='available-machines-label'
+            tabIndex={0}
             onClick={() => setCollapsed(!collapsed)}
             collapsible={true}
+            onKeyDown={handleTabSelect}
             title={`Show/hide available ${plural}`}
           >
-            <i className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`} />
-            Available {plural}
+            <i
+              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+              aria-hidden='true'
+              aria-label='Toggle'
+              role='presentation'
+            />
+            <span id='available-machines-label'>Available {plural}</span>
           </ListToggler>
         </RUMActionTarget>
       </div>
       {!collapsed && (
         <Table>
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Name</th>
-              <th>CPU</th>
-              <th>Memory</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader>
+            <TableRow>
+              <TableCell />
+              <TableCell>Name</TableCell>
+              <TableCell align='center'>CPU</TableCell>
+              <TableCell align='center'>Memory</TableCell>
+              <TableCell>Description</TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            role='radiogroup'
+            tabIndex={-1}
+            aria-labelledby='machine-type-selector__toggler'
+          >
             {allowedInstanceTypes.map((instanceType) => (
               <InstanceTypeRow
                 key={instanceType.name}
@@ -94,7 +122,7 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
                 selectInstanceType={selectInstanceType}
               />
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       )}
     </>
