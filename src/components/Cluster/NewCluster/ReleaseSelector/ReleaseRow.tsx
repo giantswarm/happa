@@ -5,19 +5,39 @@ import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import {
-  CenteredCell,
-  ComponentsRow,
   ComponentsWrapper,
-  CursorPointerCell,
   TableButton,
-  Tr,
 } from 'UI/Controls/ExpandableSelector/Items';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
+
+const INACTIVE_OPACITY = 0.4;
 
 const FixedWidthTableButton = styled(TableButton)`
   width: 100px;
+`;
+
+const StyledTableRow = styled(TableRow)`
+  cursor: pointer;
+  background: ${(props) =>
+    props['aria-checked'] &&
+    props.theme.global.colors['background-front'].dark};
+
+  :hover {
+    background: ${(props) =>
+      !props['aria-checked'] &&
+      props.theme.global.colors['background-contrast'].dark};
+  }
+
+  .button-wrapper {
+    margin-right: 0;
+  }
+`;
+
+const StyledTableCell = styled(TableCell)<{ active?: boolean }>`
+  opacity: ${({ active }) => !active && INACTIVE_OPACITY};
 `;
 
 interface IReleaseRow extends IRelease {
@@ -49,16 +69,14 @@ const ReleaseRow: FC<IReleaseRow> = ({
 
   return (
     <>
-      <Tr
+      <StyledTableRow
         tabIndex={isSelected ? -1 : 0}
         role='radio'
         aria-checked={isSelected}
-        isSelected={isSelected}
         onClick={() => selectRelease(version)}
         onKeyDown={handleTabSelect}
-        toneDown={!active}
       >
-        <CursorPointerCell>
+        <TableCell>
           <RUMActionTarget name={RUMActions.SelectRelease}>
             <RadioInput
               id={`select-${version}`}
@@ -70,20 +88,29 @@ const ReleaseRow: FC<IReleaseRow> = ({
               formFieldProps={{
                 margin: 'none',
               }}
+              tabIndex={-1}
             />
           </RUMActionTarget>
-        </CursorPointerCell>
-        <CursorPointerCell>{version}</CursorPointerCell>
-        <CursorPointerCell>{relativeDate(timestamp)}</CursorPointerCell>
-        <CursorPointerCell>
+        </TableCell>
+        <StyledTableCell active={active}>{version}</StyledTableCell>
+        <StyledTableCell active={active} align='center'>
+          {relativeDate(timestamp)}
+        </StyledTableCell>
+        <StyledTableCell active={active} align='center'>
           <KubernetesVersionLabel
             version={kubernetesVersion}
             eolDate={k8sVersionEOLDate}
             hideIcon={true}
             hidePatchVersion={false}
           />
-        </CursorPointerCell>
-        <CenteredCell onClick={(e) => e.stopPropagation()}>
+        </StyledTableCell>
+        <TableCell
+          align='center'
+          tabIndex={-1}
+          onClick={(e: React.MouseEvent<HTMLTableCellElement>) =>
+            e.stopPropagation()
+          }
+        >
           <RUMActionTarget
             name={
               collapsed
@@ -103,8 +130,14 @@ const ReleaseRow: FC<IReleaseRow> = ({
               {collapsed ? 'Show' : 'Hide'}
             </FixedWidthTableButton>
           </RUMActionTarget>
-        </CenteredCell>
-        <CenteredCell onClick={(e) => e.stopPropagation()}>
+        </TableCell>
+        <TableCell
+          align='center'
+          tabIndex={-1}
+          onClick={(e: React.MouseEvent<HTMLTableCellElement>) =>
+            e.stopPropagation()
+          }
+        >
           <TableButton
             data-testid={`open-changelog-${version}`}
             href={releaseNotesURL}
@@ -115,11 +148,11 @@ const ReleaseRow: FC<IReleaseRow> = ({
             <i className='fa fa-open-in-new' />
             Open
           </TableButton>
-        </CenteredCell>
-      </Tr>
+        </TableCell>
+      </StyledTableRow>
       {!collapsed && (
-        <ComponentsRow>
-          <td colSpan={6}>
+        <TableRow>
+          <TableCell colSpan={6}>
             <ComponentsWrapper data-testid={`components-${version}`}>
               {components
                 .slice()
@@ -132,8 +165,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
                   />
                 ))}
             </ComponentsWrapper>
-          </td>
-        </ComponentsRow>
+          </TableCell>
+        </TableRow>
       )}
     </>
   );
