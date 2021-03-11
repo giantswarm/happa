@@ -8,8 +8,9 @@ export interface IK8sFieldSelector {
 
 export interface IK8sBaseOptions {
   baseUrl: string;
-  apiVersion: string;
   kind: string;
+  apiVersion?: string;
+  isCore?: boolean;
 }
 
 export interface IK8sGetOptions extends IK8sBaseOptions {
@@ -73,6 +74,7 @@ export function create(options: any): URL {
     watch,
     labelSelector,
     fieldSelector,
+    isCore,
   } = options;
 
   const url = new URL(baseUrl);
@@ -81,7 +83,17 @@ export function create(options: any): URL {
   const pathnameParts = [];
 
   if (apiVersion) {
+    if (isCore) {
+      throw new Error(
+        `The option 'apiVersion' cannot be set when 'isCore' is set to true.`
+      );
+    }
+
     pathnameParts.push(apiVersion);
+  } else if (!isCore) {
+    throw new Error(
+      `The option 'apiVersion' must be set when 'isCore' is set to false.`
+    );
   }
 
   if (namespace) {
@@ -93,11 +105,32 @@ export function create(options: any): URL {
   }
 
   if (name) {
+    if (labelSelector) {
+      throw new Error(
+        `The option 'labelSelector' cannot be set when 'name' is present.`
+      );
+    }
+
+    if (fieldSelector) {
+      throw new Error(
+        `The option 'fieldSelector' cannot be set when 'name' is present.`
+      );
+    }
+
     pathnameParts.push(name);
+  } else if (watch) {
+    throw new Error(
+      `The option 'watch' can only be set when 'name' is present.`
+    );
   }
 
   if (pathnameParts.length > 0) {
-    url.pathname += `apis/${pathnameParts.join('/')}/`;
+    let pathPrefix = 'apis';
+    if (isCore) {
+      pathPrefix = 'api/v1';
+    }
+
+    url.pathname += `${pathPrefix}/${pathnameParts.join('/')}/`.toLowerCase();
   }
 
   // Compute the search parameters.
@@ -106,22 +139,10 @@ export function create(options: any): URL {
   }
 
   if (watch) {
-    if (!name) {
-      throw new Error(
-        `The option 'watch' can only be set when 'name' is present.`
-      );
-    }
-
     url.searchParams.set('watch', 'true');
   }
 
   if (labelSelector) {
-    if (name) {
-      throw new Error(
-        `The option 'labelSelector' cannot be set when 'name' is present.`
-      );
-    }
-
     const labels = serializeLabelSelector(labelSelector);
     if (labels) {
       url.searchParams.set('labelSelector', labels);
@@ -129,12 +150,6 @@ export function create(options: any): URL {
   }
 
   if (fieldSelector) {
-    if (name) {
-      throw new Error(
-        `The option 'fieldSelector' cannot be set when 'name' is present.`
-      );
-    }
-
     const fields = serializeFieldSelector(fieldSelector);
     if (fields) {
       url.searchParams.set('fieldSelector', fields);

@@ -27,6 +27,24 @@ describe('k8sUrl', () => {
       {
         options: {
           baseUrl: 'https://some-url.com',
+          kind: 'resources',
+        },
+        expected: new Error(
+          `The option 'apiVersion' must be set when 'isCore' is set to false.`
+        ),
+      },
+      {
+        options: {
+          baseUrl: 'https://some-url.com',
+          apiVersion: 'Some-resource.K8s.io/v1alpha1',
+          kind: 'Resources',
+        },
+        expected:
+          'https://some-url.com/apis/some-resource.k8s.io/v1alpha1/resources/',
+      },
+      {
+        options: {
+          baseUrl: 'https://some-url.com',
           apiVersion: 'some-resource.k8s.io/v1alpha1',
           kind: 'resources',
           name: 'bf23a',
@@ -212,6 +230,25 @@ describe('k8sUrl', () => {
         },
         expected: new Error(
           `The option 'watch' can only be set when 'name' is present.`
+        ),
+      },
+      {
+        options: {
+          baseUrl: 'https://some-url.com',
+          kind: 'resources',
+          isCore: true,
+        },
+        expected: 'https://some-url.com/api/v1/resources/',
+      },
+      {
+        options: {
+          baseUrl: 'https://some-url.com',
+          apiVersion: 'some-resource.k8s.io/v1alpha1',
+          kind: 'resources',
+          isCore: true,
+        },
+        expected: new Error(
+          `The option 'apiVersion' cannot be set when 'isCore' is set to true.`
         ),
       },
     ];
