@@ -33,4 +33,6 @@ data:
   # Feature flags
   {{ if eq .Values.Installation.V1.Infra.TestingEnvironment true }}
   feature-mapi-auth: 'TRUE'
+  {{ else }}
+  feature-mapi-auth: 'FALSE'
   {{ end }}
