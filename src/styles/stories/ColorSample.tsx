@@ -1,6 +1,6 @@
 import { Box } from 'grommet';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 /**
@@ -21,6 +21,7 @@ const StyledDiv = styled.div`
 `;
 
 interface IColorSampleProps {
+  children: ReactNode;
   color: string;
   contrastingColor?: string;
   title?: string;
