@@ -53,6 +53,6 @@ it('logging out redirects to the login page', async () => {
 
   // Then I should get redirected to the login page.
   await waitFor(() => {
-    expect(getByText('Log in')).toBeInTheDocument();
+    expect(getByText('Welcome to Giant Swarm')).toBeInTheDocument();
   });
 });

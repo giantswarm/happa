@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
+import { LoggedInUserTypes } from 'stores/main/types';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
@@ -177,6 +178,7 @@ export class SignUp extends React.Component {
               scheme: AuthorizationTypes.GS,
               token: data.token,
             },
+            type: LoggedInUserTypes.GS,
           };
 
           this.props.actions.loginSuccess(userData);

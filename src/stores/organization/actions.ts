@@ -3,7 +3,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import { ModalActions } from 'stores/modal/types';
 import {
@@ -93,7 +93,7 @@ export function organizationsLoad(): ThunkAction<
       const currentOrganizations = getState().entities.organizations;
       const alreadyFetching = currentOrganizations.isFetching;
       if (alreadyFetching) {
-        return;
+        return Promise.resolve();
       }
 
       dispatch({ type: ORGANIZATION_LOAD_REQUEST });
@@ -132,17 +132,14 @@ export function organizationsLoad(): ThunkAction<
       dispatch(
         organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
       );
-    } catch (error) {
-      new FlashMessage(
-        'An error occurred as we tried to load organizations.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io.'
-      );
 
+      return Promise.resolve();
+    } catch (error) {
       dispatch({
         type: ORGANIZATION_LOAD_ERROR,
       });
+
+      return Promise.reject(error);
     }
   };
 }
@@ -247,7 +244,7 @@ export function organizationCreateConfirmed(
       const state = getState();
       let members: IOrganizationMember[] = [];
       if (!getUserIsAdmin(state)) {
-        members = [{ email: state.main.loggedInUser?.email ?? '' }];
+        members = [{ email: getLoggedInUser(state)?.email ?? '' }];
       }
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();

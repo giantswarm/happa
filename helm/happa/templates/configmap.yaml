@@ -8,9 +8,9 @@ metadata:
 data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
-  cp-api-endpoint: {{ .Values.Installation.V1.GiantSwarm.Happa.API.Address }}
+  mapi-endpoint: {{ .Values.Installation.V1.GiantSwarm.Happa.API.Address }}
   audience: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
-  cp-audience: {{ .Values.Installation.V1.GiantSwarm.OIDC.IssuerAddress }}
+  mapi-audience: {{ .Values.Installation.V1.GiantSwarm.OIDC.IssuerAddress }}
   ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
   installation-name: {{ .Values.Installation.V1.Name }}
   {{- if eq .Values.Installation.V1.Provider.Kind "aws" }}
@@ -21,10 +21,18 @@ data:
   {{- end }}
   default-request-timeout-seconds: '{{ .Values.Installation.V1.GiantSwarm.Happa.DefaultRequestTimeoutSeconds }}'
   provider: {{ .Values.Installation.V1.Provider.Kind }}
+  mapi-auth-redirect-url: {{ .Values.Installation.V1.GiantSwarm.OIDC.StaticClients.Happa.Address }}
 
   # Enables real user monitoring (RUM)
   {{ if eq .Values.Installation.V1.GiantSwarm.Happa.EnableUserMonitoring true }}
   enable-rum: 'TRUE'
   {{ else }}
   enable-rum: 'FALSE'
+  {{ end }}
+
+  # Feature flags
+  {{ if eq .Values.Installation.V1.Infra.TestingEnvironment true }}
+  feature-mapi-auth: 'TRUE'
+  {{ else }}
+  feature-mapi-auth: 'FALSE'
   {{ end }}

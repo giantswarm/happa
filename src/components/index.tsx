@@ -10,15 +10,14 @@ import 'styles/app.sass';
 import { Notifier } from '@airbrake/browser';
 import axios from 'axios';
 import * as Bowser from 'bowser';
-import CPAuth from 'lib/CPAuth/CPAuth';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
+import { makeDefaultConfig } from 'lib/MapiAuth/makeDefaultConfig';
+import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import FeatureFlags from 'shared/FeatureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
@@ -35,45 +34,14 @@ enum GlobalEnvironment {
   Docker = 'docker-container',
 }
 
-interface IGlobalConfig {
-  apiEndpoint: string;
-  audience: string;
-  awsCapabilitiesJSON: string;
-  azureCapabilitiesJSON: string;
-  cpApiEndpoint: string;
-  cpAudience: string;
-  defaultRequestTimeoutSeconds: number;
-  enableRealUserMonitoring: boolean;
-  environment: GlobalEnvironment;
-  happaVersion: string;
-  ingressBaseDomain: string;
-  passageEndpoint: string;
-}
-
-declare global {
-  interface Window {
-    config: IGlobalConfig;
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/init-declarations
-let cpAccess: CPAuth | undefined;
-if (FeatureFlags.FEATURE_CP_ACCESS) {
-  cpAccess = CPAuth.getInstance();
-}
+const authConfig = makeDefaultConfig();
+const auth = new MapiAuth(authConfig);
 
 // Configure the redux store.
-const store: Store = configureStore({} as IState, history, cpAccess);
+const store: Store = configureStore({} as IState, history, auth);
 
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();
-
-// Patch the Giant Swarm client so it has access to the store and can dispatch
-// redux actions. This is needed because admin tokens expire after 5 minutes.
-// This patches the Giant Swarm client so that it automatically renews the token
-// before making a request if needed. And when renewing the token, we'd like to
-// update the store with the new token.
-monkeyPatchGiantSwarmClient(store);
 
 // Configure an airbrake notifier for excption notification.
 // But only when not in development.
@@ -119,7 +87,7 @@ body.classList.remove('loading');
 
 // Finally, render the app!
 const appContainer = document.getElementById('app');
-render(<App {...{ store, theme, history }} />, appContainer);
+render(<App {...{ store, theme, history, auth }} />, appContainer);
 
 const getSizes = () => {
   return {

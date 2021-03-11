@@ -8,16 +8,16 @@ if [ -n "$API_ENDPOINT" ]; then
   sed -i "s|apiEndpoint: .*|apiEndpoint: '$API_ENDPOINT',|" /www/index.html
 fi
 
-if [ -n "$CP_API_ENDPOINT" ]; then
-  sed -i "s|cpApiEndpoint: .*|cpApiEndpoint: '$CP_API_ENDPOINT',|" /www/index.html
+if [ -n "$MAPI_ENDPOINT" ]; then
+  sed -i "s|mapiEndpoint: .*|mapiEndpoint: '$MAPI_ENDPOINT',|" /www/index.html
 fi
 
 if [ -n "$AUDIENCE" ]; then
   sed -i "s|audience: .*|audience: '$AUDIENCE',|" /www/index.html
 fi
 
-if [ -n "$CP_AUDIENCE" ]; then
-  sed -i "s|cpAudience: .*|cpAudience: '$CP_AUDIENCE',|" /www/index.html
+if [ -n "$MAPI_AUDIENCE" ]; then
+  sed -i "s|mapiAudience: .*|mapiAudience: '$MAPI_AUDIENCE',|" /www/index.html
 fi
 
 if [ -n "$PASSAGE_ENDPOINT" ]; then
@@ -29,7 +29,7 @@ if [ -n "$INGRESS_BASE_DOMAIN" ]; then
 fi
 
 if [ "$PROVIDER" = "aws" ]; then
-  if [ -n "$AWS_CAPABILITIES_JSON" ]; then 
+  if [ -n "$AWS_CAPABILITIES_JSON" ]; then
     sed -i "s|awsCapabilitiesJSON: .*|awsCapabilitiesJSON: '$AWS_CAPABILITIES_JSON',|" /www/index.html
   fi
 fi
@@ -50,6 +50,16 @@ else
   sed -i "s|environment: .*|environment: 'docker-container',|" /www/index.html
 fi
 
+if [ -n "$MAPI_AUTH_REDIRECT_URL" ]; then
+  sed -i "s|mapiAuthRedirectURL: .*|mapiAuthRedirectURL: '$MAPI_AUTH_REDIRECT_URL',|" /www/index.html
+fi
+
+if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
+  sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: true,|" /www/index.html
+else
+  sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: false,|" /www/index.html
+fi
+
 # This sets the VERSION placeholder in the footer to the version specified in the
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
@@ -64,7 +74,6 @@ if [ "$ENABLE_RUM" = "TRUE" ]; then
   echo "RUM is enabled."
   sed -i "s|enableRealUserMonitoring: .*|enableRealUserMonitoring: true,|" /www/index.html
 else
-
   sed -i "s|enableRealUserMonitoring: .*|enableRealUserMonitoring: false,|" /www/index.html
 fi
 

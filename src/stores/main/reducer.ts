@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { Providers } from 'shared/constants';
-import { CLUSTER_SELECT } from 'stores/main/constants';
 import {
+  CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_SUCCESS,
   INFO_LOAD_SUCCESS,
@@ -22,7 +22,6 @@ import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
   removeUserFromStorage,
-  setUserToStorage,
 } from 'utils/localStorageUtils';
 
 const initialState = (): IMainState => ({
@@ -53,12 +52,7 @@ const makeMainReducer = () => {
     (draft: IMainState, action: MainActions | OrganizationActions) => {
       switch (action.type) {
         case REFRESH_USER_INFO_SUCCESS: {
-          const newUser = Object.assign({}, draft.loggedInUser, {
-            email: action.email,
-          });
-          setUserToStorage(newUser);
-
-          draft.loggedInUser = newUser;
+          draft.loggedInUser = action.loggedInUser;
 
           break;
         }
@@ -69,8 +63,6 @@ const makeMainReducer = () => {
           break;
 
         case LOGIN_SUCCESS: {
-          setUserToStorage(action.userData);
-
           draft.loggedInUser = action.userData;
 
           break;

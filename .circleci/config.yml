@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.10.0
+  architect: giantswarm/architect@2.1.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -105,7 +105,6 @@ workflows:
           context: architect
           app_name: "happa"
           app_collection_repo: "aws-app-collection"
-          unique: "true"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -119,7 +118,6 @@ workflows:
           context: architect
           app_name: "happa"
           app_collection_repo: "azure-app-collection"
-          unique: "true"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -133,7 +131,6 @@ workflows:
           context: architect
           app_name: "happa"
           app_collection_repo: "kvm-app-collection"
-          unique: "true"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -290,9 +287,9 @@ jobs:
             docker run --name happa-branch \
               -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
               -e AUDIENCE=test \
-              -e CP_AUDIENCE=test \
+              -e MAPI_AUDIENCE=test \
               -e API_ENDPOINT=test \
-              -e CP_API_ENDPOINT=test \
+              -e MAPI_ENDPOINT=test \
               -e PASSAGE_ENDPOINT=test \
               -e PROVIDER=development \
               -e INGRESS_BASE_DOMAIN=test \
@@ -301,6 +298,8 @@ jobs:
               -e AZURE_CAPABILITIES_JSON={} \
               -e ENVIRONMENT=test-in-ci \
               -e ENABLE_RUM=TRUE \
+              -e MAPI_AUTH_REDIRECT_URL=test \
+              -e FEATURE_MAPI_AUTH=TRUE \
               -p 8000:8000 \
               -d \
               "$(cat .docker_image_name)"
