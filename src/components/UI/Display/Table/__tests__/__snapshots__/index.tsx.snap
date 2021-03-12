@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Table renders a simple table 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+  >
+    <table
+      class="StyledTable-sc-1m3u5g-6 dJVMne"
+    >
+      <caption
+        class="StyledTable__StyledTableDataCaption-sc-1m3u5g-1 cfHyvy"
+      >
+        Expenses
+      </caption>
+      <thead
+        class="StyledTable__StyledTableHeader-sc-1m3u5g-4"
+      >
+        <tr
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2"
+        >
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 fgCKPZ"
+          >
+            <div
+              class="StyledBox-sc-13pk1d4-0 dYebPD"
+            >
+              Name
+            </div>
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 fgCKPZ"
+          >
+            <div
+              class="StyledBox-sc-13pk1d4-0 dYebPD"
+            >
+              Location
+            </div>
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 fgCKPZ"
+          >
+            <div
+              class="StyledBox-sc-13pk1d4-0 dYebPD"
+            >
+              Amount
+            </div>
+          </td>
+        </tr>
+      </thead>
+      <tbody
+        class="StyledTable__StyledTableBody-sc-1m3u5g-3"
+      >
+        <tr
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2"
+        >
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            Food
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            Amazon
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            $25,36
+          </td>
+        </tr>
+        <tr
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2"
+        >
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            Laptop
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            Apple
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            $1683,00
+          </td>
+        </tr>
+        <tr
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2"
+        >
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            Phone
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            Apple
+          </td>
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 bzVrRx"
+          >
+            $1037,73
+          </td>
+        </tr>
+      </tbody>
+      <tfoot
+        class="StyledTable__StyledTableFooter-sc-1m3u5g-5"
+      >
+        <tr
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2"
+        >
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 eYSCdQ"
+          />
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 eYSCdQ"
+          />
+          <td
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 eYSCdQ"
+          >
+            $2746,09
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+`;
