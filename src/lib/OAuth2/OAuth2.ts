@@ -223,7 +223,7 @@ class OAuth2 implements IOAuth2Provider {
   };
 
   protected onSilentRenewError = (error: Error) => {
-    const event = new CustomEvent(OAuth2Events.UserLoaded, {
+    const event = new CustomEvent(OAuth2Events.SilentRenewError, {
       detail: error,
     });
     this.eventEmitter.dispatchEvent(event);
