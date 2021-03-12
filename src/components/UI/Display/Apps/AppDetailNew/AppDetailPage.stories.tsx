@@ -25,6 +25,7 @@ WithReadme.args = {
   website: 'github.com/giantswarm/efk-stack-app',
   keywords: ['elk', 'database', 'fluentd', 'logging', 'search'],
   readme: markdownSample,
+  hasReadme: true,
 };
 
 export const WithoutReadme = Template.bind({});
