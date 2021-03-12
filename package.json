@@ -201,7 +201,7 @@
     "command-line-args": "^5.0.2",
     "copy-webpack-plugin": "8.0.0",
     "cors": "^2.8.4",
-    "css-loader": "5.1.1",
+    "css-loader": "5.1.2",
     "eslint": "7.21.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.22.1",
