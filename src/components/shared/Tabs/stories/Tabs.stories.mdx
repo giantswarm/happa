@@ -1,0 +1,27 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import Tabs from '../';
+import Tab from 'react-bootstrap/lib/Tab';
+
+<Meta
+  title="Layout/Tabs"
+  component={Tabs}
+/>
+
+# Tabs
+
+<ArgsTable of={Tabs} />
+
+### Multiple buttons
+
+<Preview>
+  <Story name="Simple">
+    <Tabs defaultActiveKey={1}>
+      <Tab eventKey={1} title='First'>
+        <div>This is some content in the First tab</div>
+      </Tab>
+      <Tab eventKey={2} title='Second'>
+        <div>This is some content in the Second tab</div>
+      </Tab>
+    </Tabs>
+  </Story>
+</Preview>
