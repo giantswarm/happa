@@ -134,14 +134,12 @@ class Home extends React.Component {
                 'Ready to launch your first cluster? Click the green button!'}
             </div>
           )}
-
           {clusters.length === 0 && (
             <ClusterEmptyState
               errorLoadingClusters={this.props.errorLoadingClusters}
               selectedOrganization={selectedOrganization}
             />
           )}
-
           {clusters.length > 0 && (
             <AnimationWrapper>
               <TransitionGroup
@@ -167,7 +165,6 @@ class Home extends React.Component {
               </TransitionGroup>
             </AnimationWrapper>
           )}
-
           {clusters.length > 0 ? (
             <p className='last-updated'>
               <small>
