@@ -6249,11 +6249,6 @@ depd@~1.1.2:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
-dequal@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.2.tgz#85ca22025e3a87e65ef75a7a437b35284a7e319d"
-  integrity sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==
-
 des.js@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/des.js/-/des.js-1.0.1.tgz#5382142e1bdc53f85d86d53e5f4aa7deb91e0843"
@@ -14949,12 +14944,10 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-swr@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-0.4.2.tgz#4a9ed5e9948088af145c79d716d294cb99712a29"
-  integrity sha512-SKGxcAfyijj/lE5ja5zVMDqJNudASH3WZPRUakDVOePTM18FnsXgugndjl9BSRwj+jokFCulMDe7F2pQL+VhEw==
-  dependencies:
-    dequal "2.0.2"
+swr@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.5.3.tgz#7290a9a61329d930583ef365317e636b8dbaa8bb"
+  integrity sha512-RUE3RWn3jt9e4qLPat2A9vbHG/5N6konsc27xKjE65jFSiGv0P7HLD8IGvwAv6DRKktL7Od2UcayX0plKb2awg==
 
 symbol-observable@^1.0.3, symbol-observable@^1.2.0:
   version "1.2.0"
@@ -16085,10 +16078,10 @@ webpack-virtual-modules@^0.2.2:
   dependencies:
     debug "^3.0.0"
 
-webpack@5.24.4:
-  version "5.24.4"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.24.4.tgz#37d8cf95841dd23c809ea02931294b3455d74a59"
-  integrity sha512-RXOdxF9hFFFhg47BryCgyFrEyyu7Y/75/uiI2DoUiTMqysK+WczVSTppvkR47oZcmI/DPaXCiCiaXBP8QjkNpA==
+webpack@5.25.1:
+  version "5.25.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.25.1.tgz#d3564440ed2569253fa45864405a313916bef6f6"
+  integrity sha512-dzFTJwehoLZkeHUkvMSwAgVdGL+PerfX0mke9tOWjJs4OzFctkxCqD8Zj5J387jLkC4gNqSin0/EurhH28boCg==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.46"
