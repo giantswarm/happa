@@ -94,3 +94,6 @@ export interface IAzureCluster {
 }
 
 export interface IAzureClusterList extends metav1.IList<IAzureCluster> {}
+
+export const AzureCluster = 'AzureCluster';
+export const AzureClusterList = 'AzureClusterList';

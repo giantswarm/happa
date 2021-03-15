@@ -64,3 +64,6 @@ export interface ICluster {
 }
 
 export interface IClusterList extends metav1.IList<ICluster> {}
+
+export const Cluster = 'Cluster';
+export const ClusterList = 'ClusterList';
