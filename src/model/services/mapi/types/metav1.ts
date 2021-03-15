@@ -1,4 +1,4 @@
-export interface IMetaV1ObjectMeta {
+export interface IObjectMeta {
   name: string;
   namespace: string;
   resourceVersion: string;
@@ -12,14 +12,14 @@ export interface IMetaV1ObjectMeta {
   labels?: Record<string, string>;
 }
 
-export interface IMetaV1TypeMeta {
+export interface ITypeMeta {
   resourceVersion: string;
   selfLink: string;
 }
 
-export interface IMetaV1List<T> {
+export interface IList<T> {
   apiVersion: string;
   kind: string;
-  metadata: IMetaV1TypeMeta;
+  metadata: ITypeMeta;
   items: T[];
 }

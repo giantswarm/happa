@@ -2,7 +2,7 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import { ICapiV1Alpha3ClusterList } from './types';
+import * as capiv1alpha3 from './types/capiv1alpha3';
 
 export function getClusterList(client: IHttpClient, user: ILoggedInUser) {
   return async () => {
@@ -17,7 +17,7 @@ export function getClusterList(client: IHttpClient, user: ILoggedInUser) {
     client.setRequestMethod(HttpRequestMethods.GET);
     client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-    const response = await client.execute<ICapiV1Alpha3ClusterList>();
+    const response = await client.execute<capiv1alpha3.IClusterList>();
 
     return response.data;
   };
