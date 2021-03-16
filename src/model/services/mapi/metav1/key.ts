@@ -1,4 +1,4 @@
-import { IK8sStatus, K8sStatusErrorReasons } from './';
+import { IK8sStatus, IK8sStatusError, K8sStatusErrorReasons } from './';
 
 /**
  * Determine if an object is a K8s status response.
@@ -17,7 +17,7 @@ export function isStatus(obj: unknown): obj is IK8sStatus {
  */
 export function isStatusError<
   T extends K8sStatusErrorReasons = K8sStatusErrorReasons.Unknown
->(obj: unknown, reason: T): obj is T {
+>(obj: unknown, reason: T): obj is IK8sStatusError<T> {
   if (!isStatus(obj)) return false;
 
   return obj.reason === reason;

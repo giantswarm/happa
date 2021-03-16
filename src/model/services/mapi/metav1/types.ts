@@ -191,9 +191,9 @@ export interface IK8sStatusError<
   R extends K8sStatusErrorReasons,
   C extends number = IK8sStatusErrorCodeMapping[R]
 > extends IK8sStatus {
-  reason?: R;
-  code?: C;
   status: K8sStatuses.Failure;
+  reason: R;
+  code: C;
 }
 
 /* eslint-disable no-magic-numbers */
