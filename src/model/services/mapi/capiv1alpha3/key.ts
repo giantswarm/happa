@@ -1,4 +1,4 @@
-import { ICluster } from './types';
+import { ICluster } from './';
 
 export function getClusterDescription(cluster: ICluster): string {
   let name =
