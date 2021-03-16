@@ -1,3 +1,4 @@
+import AccessControl from 'MAPI/AccessControl';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -19,6 +20,10 @@ const Organizations = (props) => {
       <LoadingOverlay loading={props.loadingClustersDetails}>
         <Switch>
           <Route component={List} exact path={OrganizationsRoutes.List} />
+          <Route
+            component={AccessControl}
+            path={OrganizationsRoutes.AccessControl}
+          />
           <Route component={Detail} path={OrganizationsRoutes.Detail} />
           <Redirect to={OrganizationsRoutes.Home} />
         </Switch>

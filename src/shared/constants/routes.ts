@@ -30,6 +30,7 @@ const OrganizationsRoutes = {
   Home: '/organizations',
   List: '/organizations',
   Detail: '/organizations/:orgId',
+  AccessControl: '/organizations/:ordId/access-control-beta',
   Clusters: {
     Home: '/organizations/:orgId/clusters',
     New: '/organizations/:orgId/clusters/new',
