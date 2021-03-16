@@ -1,6 +1,6 @@
-import * as capiv1alpha3 from './types/capiv1alpha3';
+import { ICluster } from './types';
 
-export function getClusterDescription(cluster: capiv1alpha3.ICluster): string {
+export function getClusterDescription(cluster: ICluster): string {
   let name =
     cluster.metadata.annotations?.['cluster.giantswarm.io/description'];
   name ??= 'Unnamed cluster';
@@ -8,7 +8,7 @@ export function getClusterDescription(cluster: capiv1alpha3.ICluster): string {
   return name;
 }
 
-export function getReleaseVersion(cluster: capiv1alpha3.ICluster): string {
+export function getReleaseVersion(cluster: ICluster): string {
   let release = cluster.metadata.labels?.['release.giantswarm.io/version'];
   release ??= '1.0.0';
 

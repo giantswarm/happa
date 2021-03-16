@@ -1,10 +1,6 @@
 import { Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
-import {
-  getClusterDescription,
-  getReleaseVersion,
-} from 'model/services/mapi/clusters/key';
-import * as capiv1alpha3 from 'model/services/mapi/clusters/types/capiv1alpha3';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -23,8 +19,8 @@ interface IClusterListItemProps {
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({ cluster }) => {
-  const description = getClusterDescription(cluster);
-  const releaseVersion = getReleaseVersion(cluster);
+  const description = capiv1alpha3.getClusterDescription(cluster);
+  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
 
   return (
     <Box

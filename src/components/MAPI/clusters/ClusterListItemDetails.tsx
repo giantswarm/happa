@@ -1,13 +1,9 @@
 import { Box, Text } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import {
-  getClusterInfraRef,
-  getClusterInfraRefKey,
-} from 'model/services/mapi/clusters/getClusterInfraRef';
-import * as capiv1alpha3 from 'model/services/mapi/clusters/types/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/clusters/types/capzv1alpha3';
-import * as k8sError from 'model/services/mapi/k8sError';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -26,12 +22,12 @@ const ClusterListItemDetails: React.FC<IClusterListItemDetailsProps> = ({
 
   // Use type intersection for multiple cluster types.
   const { data, error } = useSWR<capzv1alpha3.IAzureCluster, GenericResponse>(
-    getClusterInfraRefKey(user, cluster),
-    getClusterInfraRef(client, user!, cluster)
+    capiv1alpha3.getClusterInfraRefKey(user, cluster),
+    capiv1alpha3.getClusterInfraRef(client, user!, cluster)
   );
 
   if (
-    k8sError.isStatusError(error?.data, k8sError.K8sStatusErrorReasons.NotFound)
+    metav1.isStatusError(error?.data, metav1.K8sStatusErrorReasons.NotFound)
   ) {
     return (
       <Box key='details'>
@@ -40,19 +36,21 @@ const ClusterListItemDetails: React.FC<IClusterListItemDetailsProps> = ({
     );
   }
 
-  if (!data)
+  if (!data) {
     return (
       <Box key='details'>
         <Text>Loading infrastructure ref...</Text>
       </Box>
     );
+  }
 
-  if (data?.kind === capzv1alpha3.AzureCluster)
+  if (data?.kind === capzv1alpha3.AzureCluster) {
     return (
       <Box key='details'>
         <Text>Region: {data.spec.location}</Text>
       </Box>
     );
+  }
 
   return null;
 };

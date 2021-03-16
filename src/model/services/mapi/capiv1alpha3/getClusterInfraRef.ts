@@ -1,17 +1,13 @@
 import { IHttpClient } from 'model/clients/HttpClient';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import {
-  getAzureClusterByName,
-  getAzureClusterByNameKey,
-} from './getAzureClusterByName';
-import * as capiv1alpha3 from './types/capiv1alpha3';
-import * as capzv1alpha3 from './types/capzv1alpha3';
+import * as capzv1alpha3 from '../capzv1alpha3';
+import { ICluster } from './';
 
 export function getClusterInfraRef(
   client: IHttpClient,
   user: ILoggedInUser,
-  cluster: capiv1alpha3.ICluster
+  cluster: ICluster
 ) {
   return async () => {
     const { infrastructureRef } = cluster.spec;
@@ -23,7 +19,7 @@ export function getClusterInfraRef(
 
     switch (infrastructureRef.kind) {
       case capzv1alpha3.AzureCluster:
-        return getAzureClusterByName(
+        return capzv1alpha3.getAzureClusterByName(
           client,
           user,
           cluster.metadata.namespace,
@@ -38,7 +34,7 @@ export function getClusterInfraRef(
 
 export function getClusterInfraRefKey(
   user: ILoggedInUser | null,
-  cluster: capiv1alpha3.ICluster
+  cluster: ICluster
 ): string | null {
   if (!user || user.type !== LoggedInUserTypes.MAPI) return null;
 
@@ -47,7 +43,7 @@ export function getClusterInfraRefKey(
 
   switch (infrastructureRef.kind) {
     case capzv1alpha3.AzureCluster:
-      return getAzureClusterByNameKey(
+      return capzv1alpha3.getAzureClusterByNameKey(
         user,
         cluster.metadata.namespace,
         infrastructureRef.name

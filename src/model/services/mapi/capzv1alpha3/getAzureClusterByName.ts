@@ -2,7 +2,7 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import * as capzv1alpha3 from './types/capzv1alpha3';
+import { IAzureCluster } from './';
 
 export function getAzureClusterByName(
   client: IHttpClient,
@@ -24,7 +24,7 @@ export function getAzureClusterByName(
     client.setRequestMethod(HttpRequestMethods.GET);
     client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-    const response = await client.execute<capzv1alpha3.IAzureCluster>();
+    const response = await client.execute<IAzureCluster>();
 
     return response.data;
   };

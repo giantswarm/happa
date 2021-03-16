@@ -1,3 +1,29 @@
+export interface IObjectMeta {
+  name: string;
+  namespace: string;
+  resourceVersion: string;
+  selfLink: string;
+  uid: string;
+  creationTimestamp: string;
+  finalizers: string[];
+  generation: number;
+  annotations?: Record<string, string>;
+  deletionTimestamp?: string;
+  labels?: Record<string, string>;
+}
+
+export interface ITypeMeta {
+  resourceVersion: string;
+  selfLink: string;
+}
+
+export interface IList<T> {
+  apiVersion: string;
+  kind: string;
+  metadata: ITypeMeta;
+  items: T[];
+}
+
 export enum K8sStatusErrorReasons {
   /**
    * The server has declined to indicate a specific reason.
@@ -194,26 +220,3 @@ export interface IK8sStatusErrorCodeMapping {
   [K8sStatusErrorReasons.ServiceUnavailable]: 503;
 }
 /* eslint-enable no-magic-numbers */
-
-/**
- * Determine if an object is a K8s status response.
- * @param obj
- */
-export function isStatus(obj: unknown): obj is IK8sStatus {
-  if (!obj) return false;
-
-  return (obj as IK8sStatus).kind === 'Status';
-}
-
-/**
- * Determine if an object is K8s error status response.
- * @param obj
- * @param reason
- */
-export function isStatusError<
-  T extends K8sStatusErrorReasons = K8sStatusErrorReasons.Unknown
->(obj: unknown, reason: T): obj is T {
-  if (!isStatus(obj)) return false;
-
-  return obj.reason === reason;
-}

@@ -1,6 +1,6 @@
-import * as corev1 from '../../types/corev1';
-import * as metav1 from '../../types/metav1';
-import * as capiv1alpha3 from './capiv1alpha3';
+import * as capiv1alpha3 from '../capiv1alpha3';
+import * as corev1 from '../corev1';
+import * as metav1 from '../metav1';
 
 export type Tags = Record<string, string>;
 

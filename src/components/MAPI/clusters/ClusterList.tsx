@@ -1,11 +1,7 @@
 import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import {
-  getClusterList,
-  getClusterListKey,
-} from 'model/services/mapi/clusters/getClusterList';
-import * as capiv1alpha3 from 'model/services/mapi/clusters/types/capiv1alpha3';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -22,7 +18,10 @@ const ClusterList: React.FC<IClusterListProps> = () => {
   const { data, error, isValidating } = useSWR<
     capiv1alpha3.IClusterList,
     GenericResponse
-  >(getClusterListKey(user), getClusterList(client, user!));
+  >(
+    capiv1alpha3.getClusterListKey(user),
+    capiv1alpha3.getClusterList(client, user!)
+  );
 
   if (!user) {
     return <div>Not authenticated</div>;
