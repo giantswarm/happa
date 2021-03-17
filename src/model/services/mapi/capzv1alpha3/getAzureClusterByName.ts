@@ -2,14 +2,21 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import { ICapiV1Alpha3ClusterList } from './types';
+import { IAzureCluster } from './';
 
-export function getClusterList(client: IHttpClient, user: ILoggedInUser) {
+export function getAzureClusterByName(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  namespace: string,
+  name: string
+) {
   return async () => {
     const url = k8sUrl.create({
       baseUrl: window.config.mapiEndpoint,
-      apiVersion: 'cluster.x-k8s.io/v1alpha3',
-      kind: 'clusters',
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+      kind: 'azureclusters',
+      namespace: namespace,
+      name: name,
     });
 
     client.setURL(url.toString());
@@ -17,16 +24,20 @@ export function getClusterList(client: IHttpClient, user: ILoggedInUser) {
     client.setRequestMethod(HttpRequestMethods.GET);
     client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-    const response = await client.execute<ICapiV1Alpha3ClusterList>();
+    const response = await client.execute<IAzureCluster>();
 
     return response.data;
   };
 }
 
-export function getClusterListKey(user: ILoggedInUser | null): string | null {
+export function getAzureClusterByNameKey(
+  user: ILoggedInUser | null,
+  namespace: string,
+  name: string
+): string | null {
   if (!user || user.type !== LoggedInUserTypes.MAPI) return null;
 
   // TODO(axbarsan): This might be a good place to handle permissions.
 
-  return 'getClusterList';
+  return `getAzureClusterByName/${namespace}/${name}`;
 }
