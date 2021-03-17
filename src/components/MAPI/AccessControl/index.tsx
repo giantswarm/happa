@@ -111,6 +111,7 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
           roles={sampleData}
           activeRoleName={activeRoleName}
           setActiveRoleName={setActiveRoleName}
+          isLoading={false}
         />
         <Box
           basis='2/3'

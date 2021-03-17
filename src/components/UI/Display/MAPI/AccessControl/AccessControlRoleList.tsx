@@ -5,24 +5,28 @@ import React, { useCallback, useMemo, useState } from 'react';
 import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
+import AccessControlRoleLoadingPlaceholder from './AccessControlRoleLoadingPlaceholder';
 import AccessControlRolePlaceholder from './AccessControlRolePlaceholder';
 import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceholder';
 import { IAccessControlRoleItem } from './types';
 import { filterRoles } from './utils';
 
 const SEARCH_DEBOUNCE_RATE_MS = 250;
+const LOADING_COMPONENTS = [1, 2, 3];
 
 interface IAccessControlRoleListProps
   extends React.ComponentPropsWithoutRef<typeof Sidebar> {
   roles: IAccessControlRoleItem[];
   activeRoleName: string;
   setActiveRoleName: (newName: string) => void;
+  isLoading?: boolean;
 }
 
 const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   roles,
   activeRoleName,
   setActiveRoleName,
+  isLoading,
   ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,24 +59,31 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
           placeholder='Find role'
           value={searchQuery}
           onChange={handleSearch}
+          readOnly={isLoading}
         />
       </Box>
       <Box direction='column' gap='small'>
-        {roles.length < 1 && <AccessControlRolePlaceholder />}
+        {isLoading &&
+          LOADING_COMPONENTS.map((idx) => (
+            <AccessControlRoleLoadingPlaceholder key={idx} />
+          ))}
+
+        {!isLoading && roles.length < 1 && <AccessControlRolePlaceholder />}
 
         {roles.length > 0 && filteredRoles.length < 1 && (
           <AccessControlRoleSearchPlaceholder />
         )}
 
-        {filteredRoles.map(({ name, ...role }) => (
-          <AccessControlRoleListItem
-            key={name}
-            active={activeRoleName === name}
-            onClick={handleItemClick(name)}
-            name={name}
-            {...role}
-          />
-        ))}
+        {!isLoading &&
+          filteredRoles.map(({ name, ...role }) => (
+            <AccessControlRoleListItem
+              key={name}
+              active={activeRoleName === name}
+              onClick={handleItemClick(name)}
+              name={name}
+              {...role}
+            />
+          ))}
       </Box>
     </Sidebar>
   );
@@ -83,6 +94,11 @@ AccessControlRoleList.propTypes = {
   roles: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   activeRoleName: PropTypes.string.isRequired,
   setActiveRoleName: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool,
+};
+
+AccessControlRoleList.defaultProps = {
+  isLoading: false,
 };
 
 export default AccessControlRoleList;
