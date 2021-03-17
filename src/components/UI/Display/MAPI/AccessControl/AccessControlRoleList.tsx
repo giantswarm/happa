@@ -4,6 +4,8 @@ import React, { useCallback, useState } from 'react';
 import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
+import AccessControlRolePlaceholder from './AccessControlRolePlaceholder';
+import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceholder';
 import { IAccessControlRoleItem } from './types';
 
 interface IAccessControlRoleListProps
@@ -25,7 +27,9 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
     setSearchValue(e.target.value);
   };
   const filteredRoles = roles.filter((role) => {
-    const query = searchValue.toLowerCase();
+    const query = searchValue.trim().toLowerCase();
+    if (!query) return true;
+
     const value = role.name.toLowerCase();
 
     return value.includes(query);
@@ -51,6 +55,12 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
         />
       </Box>
       <Box direction='column' gap='small'>
+        {roles.length < 1 && <AccessControlRolePlaceholder />}
+
+        {roles.length > 0 && filteredRoles.length < 1 && (
+          <AccessControlRoleSearchPlaceholder />
+        )}
+
         {filteredRoles.map(({ name, ...role }) => (
           <AccessControlRoleListItem
             key={name}
