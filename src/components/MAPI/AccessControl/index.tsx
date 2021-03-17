@@ -4,18 +4,88 @@ import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessCo
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-const sampleData: ui.IAccessRoleItem[] = [
+const sampleData: ui.IAccessControlRoleItem[] = [
   {
     name: 'read-all',
     inCluster: true,
-    resourceCount: 56,
-    groupCount: 1,
-    userCount: 3,
+    groups: [
+      {
+        name: 'admins',
+        editable: false,
+      },
+      {
+        name: 'infrastructure-billing',
+        editable: true,
+      },
+    ],
+    users: [
+      {
+        name: 'dan@acme-corp.com',
+        editable: true,
+      },
+      {
+        name: 'jen@acme-corp.com',
+        editable: true,
+      },
+      {
+        name: 'monitoring@acme-corp.com',
+        editable: true,
+      },
+    ],
+    serviceAccounts: [],
+    permissions: [
+      {
+        apiGroup: 'application.giantswarm.io',
+        resources: ['appcatalogs'],
+        resourceNames: [],
+        verbs: ['get', 'watch', 'list'],
+      },
+      {
+        apiGroup: 'application.giantswarm.io',
+        resources: ['apps'],
+        resourceNames: [],
+        verbs: ['get', 'watch', 'list'],
+      },
+      {
+        apiGroup: 'application.giantswarm.io',
+        resources: ['charts'],
+        resourceNames: [],
+        verbs: ['get', 'watch', 'list'],
+      },
+    ],
   },
-  { name: 'read-apps', resourceCount: 4, groupCount: 1 },
-  { name: 'write-all', inCluster: true, resourceCount: 56 },
-  { name: 'cluster-admin', inCluster: true, resourceCount: -1, groupCount: 1 },
-  { name: 'some-group', inCluster: false, resourceCount: 150, groupCount: 1 },
+  {
+    name: 'read-apps',
+    inCluster: false,
+    groups: [
+      {
+        name: 'infrastructure-billing',
+        editable: true,
+      },
+    ],
+    users: [],
+    serviceAccounts: [],
+    permissions: [
+      {
+        apiGroup: 'application.giantswarm.io',
+        resources: ['appcatalogs'],
+        resourceNames: [],
+        verbs: ['get', 'watch', 'list'],
+      },
+      {
+        apiGroup: 'application.giantswarm.io',
+        resources: ['apps'],
+        resourceNames: [],
+        verbs: ['get', 'watch', 'list'],
+      },
+      {
+        apiGroup: 'application.giantswarm.io',
+        resources: ['charts'],
+        resourceNames: [],
+        verbs: ['get', 'watch', 'list'],
+      },
+    ],
+  },
 ];
 
 interface IAccessControlProps

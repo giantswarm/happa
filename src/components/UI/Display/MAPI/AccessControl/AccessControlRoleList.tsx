@@ -4,11 +4,11 @@ import React, { useCallback, useState } from 'react';
 import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
-import { IAccessRoleItem } from './types';
+import { IAccessControlRoleItem } from './types';
 
 interface IAccessControlRoleListProps
   extends React.ComponentPropsWithoutRef<typeof Sidebar> {
-  roles: IAccessRoleItem[];
+  roles: IAccessControlRoleItem[];
   activeRoleName: string;
   setActiveRoleName: (newName: string) => void;
 }
