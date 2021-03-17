@@ -107,7 +107,7 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
             shrink: 1,
           }}
           basis='1/3'
-          width={{ min: '430px' }}
+          width={{ min: '400px' }}
           roles={sampleData}
           activeRoleName={activeRoleName}
           setActiveRoleName={setActiveRoleName}
