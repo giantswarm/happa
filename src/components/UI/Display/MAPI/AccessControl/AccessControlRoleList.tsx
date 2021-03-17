@@ -1,12 +1,16 @@
 import { Box, Sidebar } from 'grommet';
+import useDebounce from 'lib/hooks/useDebounce';
 import PropTypes from 'prop-types';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
 import AccessControlRolePlaceholder from './AccessControlRolePlaceholder';
 import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceholder';
 import { IAccessControlRoleItem } from './types';
+import { filterRoles } from './utils';
+
+const SEARCH_DEBOUNCE_RATE_MS = 250;
 
 interface IAccessControlRoleListProps
   extends React.ComponentPropsWithoutRef<typeof Sidebar> {
@@ -21,19 +25,18 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   setActiveRoleName,
   ...props
 }) => {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(
+    searchQuery,
+    SEARCH_DEBOUNCE_RATE_MS
+  );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+    setSearchQuery(e.target.value);
   };
-  const filteredRoles = roles.filter((role) => {
-    const query = searchValue.trim().toLowerCase();
-    if (!query) return true;
-
-    const value = role.name.toLowerCase();
-
-    return value.includes(query);
-  });
+  const filteredRoles = useMemo(() => {
+    return filterRoles(roles, debouncedSearchQuery);
+  }, [debouncedSearchQuery, roles]);
 
   const handleItemClick = useCallback(
     (name: string) => (e: React.MouseEvent<HTMLElement>) => {
@@ -50,7 +53,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
         <TextInput
           icon={<i className='fa fa-search' />}
           placeholder='Find role'
-          value={searchValue}
+          value={searchQuery}
           onChange={handleSearch}
         />
       </Box>
