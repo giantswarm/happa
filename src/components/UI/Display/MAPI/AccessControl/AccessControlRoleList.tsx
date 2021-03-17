@@ -41,13 +41,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   );
 
   return (
-    <Sidebar
-      responsive={false}
-      pad={{ left: 'none', right: 'medium' }}
-      border={{ side: 'right' }}
-      height={{ min: '400px' }}
-      {...props}
-    >
+    <Sidebar responsive={false} {...props}>
       <Box margin={{ bottom: 'small' }}>
         <TextInput
           icon={<i className='fa fa-search' />}

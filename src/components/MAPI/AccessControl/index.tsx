@@ -1,4 +1,4 @@
-import { Box } from 'grommet';
+import { Box, Heading } from 'grommet';
 import React, { useState } from 'react';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
@@ -97,12 +97,31 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
   return (
     <Box {...props}>
       <AccessControlRoleDescription margin={{ bottom: 'medium' }} />
-      <Box direction='row'>
+      <Box direction='row' fill='horizontal'>
         <AccessControlRoleList
+          pad={{ left: 'none', right: 'medium' }}
+          border={{ side: 'right' }}
+          height={{ min: '400px' }}
+          flex={{
+            grow: 1,
+            shrink: 1,
+          }}
+          basis='1/3'
+          width={{ min: '430px' }}
           roles={sampleData}
           activeRoleName={activeRoleName}
           setActiveRoleName={setActiveRoleName}
         />
+        <Box
+          basis='2/3'
+          flex={{
+            grow: 1,
+            shrink: 1,
+          }}
+          pad={{ left: 'medium', right: 'none' }}
+        >
+          <Heading level={3}>Hi</Heading>
+        </Box>
       </Box>
     </Box>
   );

@@ -99,10 +99,10 @@ const AccessControlRoleListItem = React.forwardRef<
           <Box width='120px'>
             <Text color='text-weak'>Resources: {resourceCount}</Text>
           </Box>
-          <Box width='120px'>
+          <Box width='100px'>
             <Text color='text-weak'>Groups: {groupCount}</Text>
           </Box>
-          <Box width='120px'>
+          <Box width='100px'>
             <Text color='text-weak'>Users: {userCount}</Text>
           </Box>
         </Box>
