@@ -34,6 +34,7 @@ export interface IAccessControlRoleItemPermission {
 export interface IAccessControlRoleItem {
   name: string;
   inCluster: boolean;
+  managedBy: string;
   groups: IAccessControlRoleItemGroup[];
   users: IAccessControlRoleItemUser[];
   serviceAccounts: IAccessControlRoleItemServiceAccount[];

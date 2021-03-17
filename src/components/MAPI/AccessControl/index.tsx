@@ -1,6 +1,7 @@
-import { Box, Heading } from 'grommet';
-import React, { useState } from 'react';
+import { Box } from 'grommet';
+import React, { useEffect, useState } from 'react';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
+import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
@@ -8,6 +9,7 @@ const sampleData: ui.IAccessControlRoleItem[] = [
   {
     name: 'read-all',
     inCluster: true,
+    managedBy: 'Giant Swarm (rbac-operator)',
     groups: [
       {
         name: 'admins',
@@ -35,28 +37,17 @@ const sampleData: ui.IAccessControlRoleItem[] = [
     serviceAccounts: [],
     permissions: [
       {
-        apiGroup: 'application.giantswarm.io',
-        resources: ['appcatalogs'],
-        resourceNames: [],
-        verbs: ['get', 'watch', 'list'],
-      },
-      {
-        apiGroup: 'application.giantswarm.io',
-        resources: ['apps'],
-        resourceNames: [],
-        verbs: ['get', 'watch', 'list'],
-      },
-      {
-        apiGroup: 'application.giantswarm.io',
-        resources: ['charts'],
-        resourceNames: [],
-        verbs: ['get', 'watch', 'list'],
+        apiGroup: '*',
+        resources: ['*'],
+        resourceNames: ['*'],
+        verbs: ['*'],
       },
     ],
   },
   {
     name: 'read-apps',
     inCluster: false,
+    managedBy: 'you',
     groups: [
       {
         name: 'infrastructure-billing',
@@ -82,7 +73,16 @@ const sampleData: ui.IAccessControlRoleItem[] = [
         apiGroup: 'application.giantswarm.io',
         resources: ['charts'],
         resourceNames: [],
-        verbs: ['get', 'watch', 'list'],
+        verbs: [
+          'get',
+          'watch',
+          'list',
+          'create',
+          'update',
+          'patch',
+          'delete',
+          'banana',
+        ],
       },
     ],
   },
@@ -93,6 +93,11 @@ interface IAccessControlProps
 
 const AccessControl: React.FC<IAccessControlProps> = (props) => {
   const [activeRoleName, setActiveRoleName] = useState('');
+  const activeRole = sampleData.find((role) => role.name === activeRoleName);
+
+  useEffect(() => {
+    setActiveRoleName(sampleData[0].name);
+  }, []);
 
   return (
     <Box {...props}>
@@ -103,7 +108,7 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
           border={{ side: 'right' }}
           height={{ min: '400px' }}
           flex={{
-            grow: 1,
+            grow: 0,
             shrink: 1,
           }}
           basis='1/3'
@@ -113,16 +118,15 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
           setActiveRoleName={setActiveRoleName}
           isLoading={false}
         />
-        <Box
+        <AccessControlRoleDetail
           basis='2/3'
           flex={{
             grow: 1,
             shrink: 1,
           }}
           pad={{ left: 'medium', right: 'none' }}
-        >
-          <Heading level={3}>Hi</Heading>
-        </Box>
+          activeRole={activeRole}
+        />
       </Box>
     </Box>
   );
