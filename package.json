@@ -99,7 +99,7 @@
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "grommet": "^2.16.3",
     "history": "4.10.1",
-    "immer": "8.0.1",
+    "immer": "8.0.2",
     "immutable": "3.8.2",
     "js-base64": "3.6.0",
     "js-yaml": "4.0.0",
@@ -237,7 +237,7 @@
     "terser-webpack-plugin": "^5.1.1",
     "typescript": "4.2.3",
     "url-loader": "4.1.1",
-    "webpack": "5.26.2",
+    "webpack": "5.26.3",
     "webpack-cli": "4.5.0",
     "webpack-dev-server": "3.11.2",
     "webpack-merge": "5.7.3"
