@@ -1,4 +1,4 @@
-export enum AccessControlSubjects {
+export enum AccessControlSubjectTypes {
   Group,
   User,
   ServiceAccount,

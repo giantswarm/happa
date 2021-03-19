@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React, { useReducer } from 'react';
 import AccessControlSubjectSet, {
@@ -6,10 +7,11 @@ import AccessControlSubjectSet, {
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 
 import {
-  AccessControlSubjects,
+  AccessControlSubjectTypes,
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
 } from '../../UI/Display/MAPI/AccessControl/types';
+import { parseSubjects } from './utils';
 
 interface IStateValue {
   isAdding: boolean;
@@ -17,26 +19,26 @@ interface IStateValue {
   namesLoading: string[];
 }
 
-type State = Record<AccessControlSubjects, IStateValue>;
+type State = Record<AccessControlSubjectTypes, IStateValue>;
 
 interface IAction {
-  type: 'toggleAdding' | 'startLoading' | 'stopLoading';
-  subjectType: AccessControlSubjects;
+  type: 'startAdding' | 'stopAdding' | 'startLoading' | 'stopLoading';
+  subjectType: AccessControlSubjectTypes;
   subjectName?: string;
 }
 
 const initialState: State = {
-  [AccessControlSubjects.Group]: {
+  [AccessControlSubjectTypes.Group]: {
     isAdding: false,
     isLoading: false,
     namesLoading: [],
   },
-  [AccessControlSubjects.User]: {
+  [AccessControlSubjectTypes.User]: {
     isAdding: false,
     isLoading: false,
     namesLoading: [],
   },
-  [AccessControlSubjects.ServiceAccount]: {
+  [AccessControlSubjectTypes.ServiceAccount]: {
     isAdding: false,
     isLoading: false,
     namesLoading: [],
@@ -47,12 +49,21 @@ const reducer: React.Reducer<State, IAction> = (state, action) => {
   const currSubject = state[action.subjectType];
 
   switch (action.type) {
-    case 'toggleAdding':
+    case 'startAdding':
       return {
         ...state,
         [action.subjectType]: {
           ...currSubject,
-          isAdding: !currSubject.isAdding,
+          isAdding: true,
+        },
+      };
+
+    case 'stopAdding':
+      return {
+        ...state,
+        [action.subjectType]: {
+          ...currSubject,
+          isAdding: false,
         },
       };
 
@@ -123,8 +134,8 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
 interface IAccessControlRoleSubjectsProps
   extends Pick<IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'>,
     React.ComponentPropsWithoutRef<typeof Box> {
-  onAdd: (type: AccessControlSubjects, names: string[]) => Promise<void>;
-  onDelete: (type: AccessControlSubjects, name: string) => Promise<void>;
+  onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
+  onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
@@ -135,41 +146,69 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleToggleAdding = (type: AccessControlSubjects) => () => {
-    dispatch({ type: 'toggleAdding', subjectType: type });
+  const handleToggleAdding = (type: AccessControlSubjectTypes) => () => {
+    if (state[type].isAdding) {
+      dispatch({ type: 'stopAdding', subjectType: type });
+    } else {
+      dispatch({ type: 'startAdding', subjectType: type });
+    }
   };
 
-  const handleAdd = (type: AccessControlSubjects) => async (
+  const handleAdd = (type: AccessControlSubjectTypes) => async (
     newValue: string
   ) => {
-    const desiredValue = newValue.trim();
-    if (desiredValue.length < 1) {
-      dispatch({ type: 'toggleAdding', subjectType: type });
+    const values = parseSubjects(newValue);
+    if (values.length < 1) {
+      dispatch({ type: 'stopAdding', subjectType: type });
 
       return;
     }
 
-    const values = [desiredValue];
-
     try {
       dispatch({ type: 'startLoading', subjectType: type });
       await onAdd(type, values);
-      dispatch({ type: 'toggleAdding', subjectType: type });
-    } catch (err) {
-      // TODO(axbarsan): Handle errors.
+      dispatch({ type: 'stopAdding', subjectType: type });
+
+      new FlashMessage(
+        'Subjects added successfully.',
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err: unknown) {
+      const message = (err as Error).message;
+
+      new FlashMessage(
+        'Could not add subject:',
+        messageType.ERROR,
+        messageTTL.LONG,
+        message
+      );
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type });
     }
   };
 
-  const handleDeleting = (type: AccessControlSubjects) => async (
+  const handleDeleting = (type: AccessControlSubjectTypes) => async (
     name: string
   ) => {
     try {
       dispatch({ type: 'startLoading', subjectType: type, subjectName: name });
       await onDelete(type, name);
-    } catch (err) {
-      // TODO(axbarsan): Handle errors.
+
+      new FlashMessage(
+        'Subject deleted successfully.',
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err: unknown) {
+      const message = (err as Error).message;
+
+      new FlashMessage(
+        'Could not delete subject:',
+        messageType.ERROR,
+        messageTTL.LONG,
+        message
+      );
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type, subjectName: name });
     }
@@ -185,13 +224,13 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         </Box>
         <AccessControlSubjectSet
           items={groups.map(
-            mapValueToSetItem(state[AccessControlSubjects.Group])
+            mapValueToSetItem(state[AccessControlSubjectTypes.Group])
           )}
-          onAdd={handleAdd(AccessControlSubjects.Group)}
-          onToggleAdding={handleToggleAdding(AccessControlSubjects.Group)}
-          onDeleteItem={handleDeleting(AccessControlSubjects.Group)}
-          isAdding={state[AccessControlSubjects.Group].isAdding}
-          isLoading={state[AccessControlSubjects.Group].isLoading}
+          onAdd={handleAdd(AccessControlSubjectTypes.Group)}
+          onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.Group)}
+          onDeleteItem={handleDeleting(AccessControlSubjectTypes.Group)}
+          isAdding={state[AccessControlSubjectTypes.Group].isAdding}
+          isLoading={state[AccessControlSubjectTypes.Group].isLoading}
         />
       </Box>
       <Box gap='small' direction='column'>

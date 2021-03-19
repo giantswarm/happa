@@ -7,7 +7,7 @@ import Tabs from 'shared/Tabs';
 
 import AccessControlRolePermissions from './AccessControlRolePermissions';
 import AccessControlRoleType from './AccessControlRoleType';
-import { IAccessControlRoleItem } from './types';
+import { AccessControlSubjectTypes, IAccessControlRoleItem } from './types';
 
 interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
@@ -20,13 +20,17 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
 }) => {
   if (!activeRole) return null;
 
-  const handleAdd = () => {
+  const handleAdd = (type: AccessControlSubjectTypes, names: string[]) => {
+    console.log(type, names);
+
     return new Promise<void>((resolve) => {
       setTimeout(resolve, 1000);
     });
   };
 
-  const handleDelete = () => {
+  const handleDelete = (type: AccessControlSubjectTypes, name: string) => {
+    console.log(type, name);
+
     return new Promise<void>((resolve) => {
       setTimeout(resolve, 1000);
     });
