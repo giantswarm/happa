@@ -1,11 +1,11 @@
 import { Box, Heading, Text } from 'grommet';
+import AccessControlRoleSubjects from 'MAPI/AccessControl/AccessControlRoleSubjects';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from 'shared/Tabs';
 
 import AccessControlRolePermissions from './AccessControlRolePermissions';
-import AccessControlRoleSubjects from './AccessControlRoleSubjects';
 import AccessControlRoleType from './AccessControlRoleType';
 import { IAccessControlRoleItem } from './types';
 
@@ -19,6 +19,18 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   ...props
 }) => {
   if (!activeRole) return null;
+
+  const handleAdd = () => {
+    return new Promise<void>((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+  };
+
+  const handleDelete = () => {
+    return new Promise<void>((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+  };
 
   return (
     <Box {...props}>
@@ -34,6 +46,8 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
         <Tabs defaultActiveKey='1'>
           <Tab eventKey='1' title='Subjects'>
             <AccessControlRoleSubjects
+              onAdd={handleAdd}
+              onDelete={handleDelete}
               groups={activeRole.groups}
               users={activeRole.users}
               serviceAccounts={activeRole.serviceAccounts}

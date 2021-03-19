@@ -13,25 +13,25 @@ const sampleData: ui.IAccessControlRoleItem[] = [
     groups: [
       {
         name: 'admins',
-        editable: false,
+        isEditable: false,
       },
       {
         name: 'infrastructure-billing',
-        editable: true,
+        isEditable: true,
       },
     ],
     users: [
       {
         name: 'dan@acme-corp.com',
-        editable: true,
+        isEditable: true,
       },
       {
         name: 'jen@acme-corp.com',
-        editable: true,
+        isEditable: true,
       },
       {
         name: 'monitoring@acme-corp.com',
-        editable: true,
+        isEditable: true,
       },
     ],
     serviceAccounts: [],
@@ -51,7 +51,7 @@ const sampleData: ui.IAccessControlRoleItem[] = [
     groups: [
       {
         name: 'infrastructure-billing',
-        editable: true,
+        isEditable: true,
       },
     ],
     users: [],

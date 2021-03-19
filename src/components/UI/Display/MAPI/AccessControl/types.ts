@@ -1,16 +1,12 @@
-export interface IAccessControlRoleItemGroup {
-  name: string;
-  editable: boolean;
+export enum AccessControlSubjects {
+  Group,
+  User,
+  ServiceAccount,
 }
 
-export interface IAccessControlRoleItemUser {
+export interface IAccessControlRoleSubjectItem {
   name: string;
-  editable: boolean;
-}
-
-export interface IAccessControlRoleItemServiceAccount {
-  name: string;
-  editable: boolean;
+  isEditable: boolean;
 }
 
 export type AccessControlRoleItemVerb =
@@ -35,8 +31,8 @@ export interface IAccessControlRoleItem {
   name: string;
   inCluster: boolean;
   managedBy: string;
-  groups: IAccessControlRoleItemGroup[];
-  users: IAccessControlRoleItemUser[];
-  serviceAccounts: IAccessControlRoleItemServiceAccount[];
+  groups: IAccessControlRoleSubjectItem[];
+  users: IAccessControlRoleSubjectItem[];
+  serviceAccounts: IAccessControlRoleSubjectItem[];
   permissions: IAccessControlRoleItemPermission[];
 }
