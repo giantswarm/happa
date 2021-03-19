@@ -150,6 +150,8 @@ interface IAccessControlRoleSubjectsProps
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   roleName,
   groups,
+  users,
+  serviceAccounts,
   onAdd,
   onDelete,
   ...props
@@ -260,6 +262,16 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
             <i className='fa fa-user' /> Users
           </Text>
         </Box>
+        <AccessControlSubjectSet
+          items={users.map(
+            mapValueToSetItem(state[AccessControlSubjectTypes.User])
+          )}
+          onAdd={handleAdd(AccessControlSubjectTypes.User)}
+          onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.User)}
+          onDeleteItem={handleDeleting(AccessControlSubjectTypes.User)}
+          isAdding={state[AccessControlSubjectTypes.User].isAdding}
+          isLoading={state[AccessControlSubjectTypes.User].isLoading}
+        />
       </Box>
       <Box gap='small' direction='column'>
         <Box>
@@ -267,6 +279,20 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
             <i className='fa fa-service-account' /> Service accounts
           </Text>
         </Box>
+        <AccessControlSubjectSet
+          items={serviceAccounts.map(
+            mapValueToSetItem(state[AccessControlSubjectTypes.ServiceAccount])
+          )}
+          onAdd={handleAdd(AccessControlSubjectTypes.ServiceAccount)}
+          onToggleAdding={handleToggleAdding(
+            AccessControlSubjectTypes.ServiceAccount
+          )}
+          onDeleteItem={handleDeleting(
+            AccessControlSubjectTypes.ServiceAccount
+          )}
+          isAdding={state[AccessControlSubjectTypes.ServiceAccount].isAdding}
+          isLoading={state[AccessControlSubjectTypes.ServiceAccount].isLoading}
+        />
       </Box>
     </Box>
   );
@@ -276,6 +302,10 @@ AccessControlRoleSubjects.propTypes = {
   roleName: PropTypes.string.isRequired,
   // @ts-expect-error
   groups: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  // @ts-expect-error
+  users: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  // @ts-expect-error
+  serviceAccounts: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
