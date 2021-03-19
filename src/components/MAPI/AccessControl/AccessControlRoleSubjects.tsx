@@ -1,7 +1,7 @@
 import { Box, Text } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import AccessControlSubjectSet, {
   IAccessControlSubjectSetItem,
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
@@ -22,7 +22,7 @@ interface IStateValue {
 type State = Record<AccessControlSubjectTypes, IStateValue>;
 
 interface IAction {
-  type: 'startAdding' | 'stopAdding' | 'startLoading' | 'stopLoading';
+  type: 'startAdding' | 'stopAdding' | 'startLoading' | 'stopLoading' | 'reset';
   subjectType: AccessControlSubjectTypes;
   subjectName?: string;
 }
@@ -114,6 +114,14 @@ const reducer: React.Reducer<State, IAction> = (state, action) => {
         },
       };
 
+    case 'reset':
+      return {
+        ...state,
+        [action.subjectType]: {
+          ...initialState[action.subjectType],
+        },
+      };
+
     default:
       return state;
   }
@@ -134,11 +142,13 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
 interface IAccessControlRoleSubjectsProps
   extends Pick<IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'>,
     React.ComponentPropsWithoutRef<typeof Box> {
+  roleName: string;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
+  roleName,
   groups,
   onAdd,
   onDelete,
@@ -214,6 +224,17 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   };
 
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'reset', subjectType: AccessControlSubjectTypes.Group });
+      dispatch({ type: 'reset', subjectType: AccessControlSubjectTypes.User });
+      dispatch({
+        type: 'reset',
+        subjectType: AccessControlSubjectTypes.ServiceAccount,
+      });
+    };
+  }, [roleName]);
+
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
       <Box gap='small' direction='column'>
@@ -252,6 +273,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 };
 
 AccessControlRoleSubjects.propTypes = {
+  roleName: PropTypes.string.isRequired,
   // @ts-expect-error
   groups: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   onAdd: PropTypes.func.isRequired,

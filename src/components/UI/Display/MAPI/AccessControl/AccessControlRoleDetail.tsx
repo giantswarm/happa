@@ -50,6 +50,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
         <Tabs defaultActiveKey='1'>
           <Tab eventKey='1' title='Subjects'>
             <AccessControlRoleSubjects
+              roleName={activeRole.name}
               onAdd={handleAdd}
               onDelete={handleDelete}
               groups={activeRole.groups}
