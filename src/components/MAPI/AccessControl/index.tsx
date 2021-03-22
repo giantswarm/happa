@@ -33,6 +33,22 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
     }
   }, [activeRole, data]);
 
+  const handleAdd = (type: ui.AccessControlSubjectTypes, names: string[]) => {
+    console.log(type, names);
+
+    return new Promise<void>((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+  };
+
+  const handleDelete = (type: ui.AccessControlSubjectTypes, name: string) => {
+    console.log(type, name);
+
+    return new Promise<void>((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+  };
+
   return (
     <Box {...props}>
       <AccessControlRoleDescription margin={{ bottom: 'medium' }} />
@@ -59,6 +75,8 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
           }}
           pad={{ left: 'medium', right: 'none' }}
           activeRole={activeRole}
+          onAdd={handleAdd}
+          onDelete={handleDelete}
         />
       </Box>
     </Box>

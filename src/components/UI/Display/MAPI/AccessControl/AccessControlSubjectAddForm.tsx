@@ -60,11 +60,19 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
     onAdd((e.target as HTMLFormElement).values.value);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+
+      onToggleAdding();
+    }
+  };
+
   return (
     <Box {...props}>
       {isAdding ? (
         <StyledBox direction='row' gap='small' align='center'>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
             <TextInput
               name='values'
               size='small'

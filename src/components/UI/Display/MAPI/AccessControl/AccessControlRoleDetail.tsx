@@ -17,30 +17,18 @@ export function formatManagedBy(managedBy?: string): string {
 
 interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
+  onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
+  onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
 }
 
 const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   activeRole,
+  onAdd,
+  onDelete,
   ...props
 }) => {
   if (!activeRole) return null;
-
-  const handleAdd = (type: AccessControlSubjectTypes, names: string[]) => {
-    console.log(type, names);
-
-    return new Promise<void>((resolve) => {
-      setTimeout(resolve, 1000);
-    });
-  };
-
-  const handleDelete = (type: AccessControlSubjectTypes, name: string) => {
-    console.log(type, name);
-
-    return new Promise<void>((resolve) => {
-      setTimeout(resolve, 1000);
-    });
-  };
 
   return (
     <Box {...props}>
@@ -57,8 +45,8 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
           <Tab eventKey='1' title='Subjects'>
             <AccessControlRoleSubjects
               roleName={activeRole.name}
-              onAdd={handleAdd}
-              onDelete={handleDelete}
+              onAdd={onAdd}
+              onDelete={onDelete}
               groups={activeRole.groups}
               users={activeRole.users}
               serviceAccounts={activeRole.serviceAccounts}
@@ -76,6 +64,8 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
 };
 
 AccessControlRoleDetail.propTypes = {
+  onAdd: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   // @ts-expect-error
   activeRole: PropTypes.object,
 };
