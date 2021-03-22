@@ -1,4 +1,4 @@
-import { Box } from 'grommet';
+import { Box, Keyboard } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -60,36 +60,40 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
     onAdd((e.target as HTMLFormElement).values.value);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
+  const handleOnEsc = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
 
-      onToggleAdding();
-    }
+    onToggleAdding();
   };
 
   return (
     <Box {...props}>
       {isAdding ? (
         <StyledBox direction='row' gap='small' align='center'>
-          <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
-            <TextInput
-              name='values'
-              size='small'
-              margin='none'
-              contentProps={{
-                width: 'medium',
-                direction: 'row',
-                round: 'xxsmall',
-              }}
-              readOnly={isLoading}
-              autoFocus={true}
-            >
-              <SaveButton type='submit' bsStyle='primary' disabled={isLoading}>
-                OK
-              </SaveButton>
-            </TextInput>
-          </form>
+          <Keyboard onEsc={handleOnEsc}>
+            <form onSubmit={handleSubmit}>
+              <TextInput
+                name='values'
+                size='small'
+                margin='none'
+                contentProps={{
+                  width: 'medium',
+                  direction: 'row',
+                  round: 'xxsmall',
+                }}
+                readOnly={isLoading}
+                autoFocus={true}
+              >
+                <SaveButton
+                  type='submit'
+                  bsStyle='primary'
+                  disabled={isLoading}
+                >
+                  OK
+                </SaveButton>
+              </TextInput>
+            </form>
+          </Keyboard>
           {isLoading && (
             <StyledLoadingIndicator
               loading={true}
