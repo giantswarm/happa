@@ -21,7 +21,7 @@ export type AccessControlRoleItemVerb =
   | string;
 
 export interface IAccessControlRoleItemPermission {
-  apiGroup: string;
+  apiGroups: string[];
   resources: string[];
   resourceNames: string[];
   verbs: AccessControlRoleItemVerb[];

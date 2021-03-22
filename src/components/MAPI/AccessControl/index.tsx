@@ -1,103 +1,37 @@
 import { Box } from 'grommet';
+import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getLoggedInUser } from 'stores/main/selectors';
+import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-const sampleData: ui.IAccessControlRoleItem[] = [
-  {
-    name: 'read-all',
-    inCluster: true,
-    managedBy: 'Giant Swarm (rbac-operator)',
-    groups: [
-      {
-        name: 'admins',
-        isEditable: false,
-      },
-      {
-        name: 'infrastructure-billing',
-        isEditable: true,
-      },
-    ],
-    users: [
-      {
-        name: 'dan@acme-corp.com',
-        isEditable: true,
-      },
-      {
-        name: 'jen@acme-corp.com',
-        isEditable: true,
-      },
-      {
-        name: 'monitoring@acme-corp.com',
-        isEditable: true,
-      },
-    ],
-    serviceAccounts: [],
-    permissions: [
-      {
-        apiGroup: '*',
-        resources: ['*'],
-        resourceNames: ['*'],
-        verbs: ['*'],
-      },
-    ],
-  },
-  {
-    name: 'read-apps',
-    inCluster: false,
-    managedBy: 'you',
-    groups: [
-      {
-        name: 'infrastructure-billing',
-        isEditable: true,
-      },
-    ],
-    users: [],
-    serviceAccounts: [],
-    permissions: [
-      {
-        apiGroup: 'application.giantswarm.io',
-        resources: ['appcatalogs'],
-        resourceNames: [],
-        verbs: ['get', 'watch', 'list'],
-      },
-      {
-        apiGroup: 'application.giantswarm.io',
-        resources: ['apps'],
-        resourceNames: [],
-        verbs: ['get', 'watch', 'list'],
-      },
-      {
-        apiGroup: 'application.giantswarm.io',
-        resources: ['charts'],
-        resourceNames: [],
-        verbs: [
-          'get',
-          'watch',
-          'list',
-          'create',
-          'update',
-          'patch',
-          'delete',
-          'banana',
-        ],
-      },
-    ],
-  },
-];
+import { getRoleItems, getRoleItemsKey } from './utils';
 
 interface IAccessControlProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const AccessControl: React.FC<IAccessControlProps> = (props) => {
+  const client = useHttpClient();
+  const user = useSelector(getLoggedInUser);
+  // TODO(axbarsan): Handle error.
+  const { data } = useSWR<ui.IAccessControlRoleItem[], GenericResponse>(
+    getRoleItemsKey(user),
+    getRoleItems(client, user!)
+  );
+
   const [activeRoleName, setActiveRoleName] = useState('');
-  const activeRole = sampleData.find((role) => role.name === activeRoleName);
+  const activeRole = data?.find((role) => role.name === activeRoleName);
 
   useEffect(() => {
-    setActiveRoleName(sampleData[0].name);
-  }, []);
+    if (!activeRole && data && data.length > 0) {
+      setActiveRoleName(data[0].name);
+    }
+  }, [activeRole, data]);
 
   return (
     <Box {...props}>
@@ -112,11 +46,10 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
             shrink: 1,
           }}
           basis='1/3'
-          width={{ min: '400px' }}
-          roles={sampleData}
+          width={{ min: '450px' }}
+          roles={data}
           activeRoleName={activeRoleName}
           setActiveRoleName={setActiveRoleName}
-          isLoading={false}
         />
         <AccessControlRoleDetail
           basis='2/3'

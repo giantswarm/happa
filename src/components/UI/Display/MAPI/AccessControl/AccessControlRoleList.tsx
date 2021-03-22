@@ -2,6 +2,7 @@ import { Box, Sidebar } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useState } from 'react';
+import styled from 'styled-components';
 import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
@@ -12,21 +13,24 @@ import { IAccessControlRoleItem } from './types';
 import { filterRoles } from './utils';
 
 const SEARCH_DEBOUNCE_RATE_MS = 250;
-const LOADING_COMPONENTS = [1, 2, 3];
+const LOADING_COMPONENTS = new Array(6).fill(0).map((_, idx) => idx);
+
+const Content = styled(Box)`
+  position: sticky;
+  top: 110px;
+`;
 
 interface IAccessControlRoleListProps
   extends React.ComponentPropsWithoutRef<typeof Sidebar> {
-  roles: IAccessControlRoleItem[];
   activeRoleName: string;
   setActiveRoleName: (newName: string) => void;
-  isLoading?: boolean;
+  roles?: IAccessControlRoleItem[];
 }
 
 const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   roles,
   activeRoleName,
   setActiveRoleName,
-  isLoading,
   ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,6 +43,8 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
     setSearchQuery(e.target.value);
   };
   const filteredRoles = useMemo(() => {
+    if (!roles) return [];
+
     return filterRoles(roles, debouncedSearchQuery);
   }, [debouncedSearchQuery, roles]);
 
@@ -53,52 +59,56 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
 
   return (
     <Sidebar responsive={false} {...props}>
-      <Box margin={{ bottom: 'small' }}>
-        <TextInput
-          icon={<i className='fa fa-search' />}
-          placeholder='Find role'
-          value={searchQuery}
-          onChange={handleSearch}
-          readOnly={isLoading}
-        />
-      </Box>
-      <Box direction='column' gap='small'>
-        {isLoading &&
-          LOADING_COMPONENTS.map((idx) => (
-            <AccessControlRoleLoadingPlaceholder key={idx} />
-          ))}
+      <Content>
+        <Box margin={{ bottom: 'small' }}>
+          <TextInput
+            icon={<i className='fa fa-search' />}
+            placeholder='Find role'
+            value={searchQuery}
+            onChange={handleSearch}
+            readOnly={!roles}
+          />
+        </Box>
+        <Box
+          height={{ max: '60vh' }}
+          overflow={{ vertical: 'auto' }}
+          pad='small'
+        >
+          {!roles &&
+            LOADING_COMPONENTS.map((idx) => (
+              <AccessControlRoleLoadingPlaceholder
+                key={idx}
+                margin={{ bottom: 'small' }}
+              />
+            ))}
 
-        {!isLoading && roles.length < 1 && <AccessControlRolePlaceholder />}
+          {roles && roles.length < 1 && <AccessControlRolePlaceholder />}
 
-        {roles.length > 0 && filteredRoles.length < 1 && (
-          <AccessControlRoleSearchPlaceholder />
-        )}
+          {roles && roles.length > 0 && filteredRoles.length < 1 && (
+            <AccessControlRoleSearchPlaceholder />
+          )}
 
-        {!isLoading &&
-          filteredRoles.map(({ name, ...role }) => (
+          {filteredRoles.map((role) => (
             <AccessControlRoleListItem
-              key={name}
-              active={activeRoleName === name}
-              onClick={handleItemClick(name)}
-              name={name}
+              key={role.name}
+              margin={{ bottom: 'small' }}
+              active={activeRoleName === role.name}
+              onClick={handleItemClick(role.name)}
               {...role}
             />
           ))}
-      </Box>
+        </Box>
+      </Content>
     </Sidebar>
   );
 };
 
 AccessControlRoleList.propTypes = {
-  // @ts-expect-error
-  roles: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   activeRoleName: PropTypes.string.isRequired,
   setActiveRoleName: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
-};
-
-AccessControlRoleList.defaultProps = {
-  isLoading: false,
+  // @ts-expect-error
+  roles: PropTypes.arrayOf(PropTypes.object.isRequired),
 };
 
 export default AccessControlRoleList;

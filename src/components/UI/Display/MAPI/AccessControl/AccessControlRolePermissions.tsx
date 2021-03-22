@@ -1,3 +1,4 @@
+import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -16,21 +17,24 @@ import {
 } from './types';
 
 function makePermissionKey(
-  permission: IAccessControlRoleItemPermission
+  permission: IAccessControlRoleItemPermission,
+  index: number
 ): string {
-  const parts = [permission.apiGroup];
+  const parts = [];
+  parts.push(permission.apiGroups.join(','));
   parts.push(permission.resources.join(','));
   parts.push(permission.resourceNames.join(','));
+  parts.push(index);
 
   return parts.join('/');
 }
 
-function formatApiGroup(group: string): string {
-  if (group === '*') {
+function formatApiGroups(groups: string[]): string {
+  if (groups.length < 1 || (groups.length === 1 && groups[0] === '*')) {
     return 'All';
   }
 
-  return group;
+  return groups.join(', ');
 }
 
 function formatResources(resources: string[]): string {
@@ -60,23 +64,35 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
     <StyledTable {...props}>
       <TableHeader>
         <TableRow>
-          <TableCell>API Group</TableCell>
+          <TableCell>API Groups</TableCell>
           <TableCell>Resources</TableCell>
           <TableCell>Resource Names</TableCell>
           <TableCell>Verbs</TableCell>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {permissions.map((permission) => (
-          <TableRow key={makePermissionKey(permission)}>
-            <TableCell width='small'>
-              {formatApiGroup(permission.apiGroup)}
+        {permissions.map((permission, idx) => (
+          <TableRow key={makePermissionKey(permission, idx)}>
+            <TableCell size='small'>
+              <Box>
+                <Text truncate={true}>
+                  {formatApiGroups(permission.apiGroups)}
+                </Text>
+              </Box>
             </TableCell>
-            <TableCell width='xsmall'>
-              {formatResources(permission.resources)}
+            <TableCell size='small'>
+              <Box>
+                <Text truncate={true}>
+                  {formatResources(permission.resources)}
+                </Text>
+              </Box>
             </TableCell>
-            <TableCell width='xsmall'>
-              {formatResources(permission.resourceNames)}
+            <TableCell size='small'>
+              <Box>
+                <Text truncate={true}>
+                  {formatResources(permission.resourceNames)}
+                </Text>
+              </Box>
             </TableCell>
             <TableCell>
               <AccessControlRoleVerbs verbs={permission.verbs} />

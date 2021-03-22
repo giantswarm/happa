@@ -9,6 +9,12 @@ import AccessControlRolePermissions from './AccessControlRolePermissions';
 import AccessControlRoleType from './AccessControlRoleType';
 import { AccessControlSubjectTypes, IAccessControlRoleItem } from './types';
 
+export function formatManagedBy(managedBy?: string): string {
+  if (!managedBy) return 'you';
+
+  return `Giant Swarm (${managedBy})`;
+}
+
 interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   activeRole?: IAccessControlRoleItem;
@@ -44,7 +50,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
       <Box direction='row' wrap={true} gap='xsmall'>
         <AccessControlRoleType inCluster={activeRole.inCluster} />
         <Text>&bull;</Text>
-        <Text>Managed by {activeRole.managedBy}</Text>
+        <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
       </Box>
       <Box margin={{ top: 'medium' }}>
         <Tabs defaultActiveKey='1'>

@@ -13,7 +13,7 @@ function formatResourceCounter(
 ): string {
   let totalCount = 0;
   for (const perm of permissions) {
-    if (perm.apiGroup === '*') {
+    if (perm.apiGroups.length === 1 && perm.apiGroups[0] === '*') {
       return 'All';
     }
     if (perm.resources.length === 1 && perm.resources[0] === '*') {
@@ -39,6 +39,7 @@ function formatCounter(fromValue: number): string {
 }
 
 const StyledCard = styled(Card)`
+  min-height: auto;
   box-shadow: ${(props) =>
     props['aria-selected']
       ? `0 0 0 1px ${props.theme.global.colors.text.dark}`
@@ -76,6 +77,7 @@ const AccessControlRoleListItem = React.forwardRef<
       pad={{ vertical: 'small', horizontal: 'medium' }}
       round='xsmall'
       elevation='none'
+      overflow='visible'
       background='background-front'
       aria-selected={active}
       role='button'
@@ -85,13 +87,15 @@ const AccessControlRoleListItem = React.forwardRef<
     >
       <CardHeader>
         <Heading level={5} margin='none'>
-          <Text>{name}</Text>
+          <Box direction='row' align='center'>
+            <Text truncate={true}>{name}</Text>
 
-          {inCluster && (
-            <Text margin={{ left: 'xxsmall' }}>
-              <i className='fa fa-globe' aria-label='Cluster role' />
-            </Text>
-          )}
+            {inCluster && (
+              <Text margin={{ left: 'xxsmall' }}>
+                <i className='fa fa-globe' aria-label='Cluster role' />
+              </Text>
+            )}
+          </Box>
         </Heading>
       </CardHeader>
       <CardBody margin={{ top: 'xsmall' }}>
