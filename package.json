@@ -110,7 +110,7 @@
     "oidc-client": "^1.11.5",
     "platform": "1.3.6",
     "prop-types": "15.7.2",
-    "query-string": "6.14.1",
+    "query-string": "7.0.0",
     "react": "17.0.1",
     "react-bootstrap": "0.33.1",
     "react-bootstrap-table-next": "4.0.3",
