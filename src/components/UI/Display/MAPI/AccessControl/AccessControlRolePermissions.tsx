@@ -76,7 +76,7 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
           scrollableAncestor='window'
           replace={true}
           items={permissions}
-          step={10}
+          step={50}
           renderMarker={(marker) => (
             <TableRow>
               <TableCell>{marker}</TableCell>

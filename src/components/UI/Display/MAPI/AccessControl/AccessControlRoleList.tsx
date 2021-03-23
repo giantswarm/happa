@@ -93,7 +93,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             <AccessControlRoleSearchPlaceholder />
           )}
 
-          <InfiniteScroll replace={true} items={filteredRoles} step={10}>
+          <InfiniteScroll replace={true} items={filteredRoles} step={50}>
             {(role: IAccessControlRoleItem) => (
               <AccessControlRoleListItem
                 key={role.name}
