@@ -232,3 +232,11 @@ export function filterRoles(
     return value.includes(searchQuery);
   });
 }
+
+export function getUserNameParts(
+  user: string
+): [userName: string, domain?: string] {
+  const userParts = user.split('@');
+
+  return [userParts[0], userParts[1]];
+}

@@ -5,13 +5,14 @@ import React, { useEffect, useReducer } from 'react';
 import AccessControlSubjectSet, {
   IAccessControlSubjectSetItem,
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
+import AccessControlSubjectSetItem from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSetItem';
 
 import {
   AccessControlSubjectTypes,
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
 } from '../../UI/Display/MAPI/AccessControl/types';
-import { parseSubjects } from './utils';
+import { getUserNameParts, parseSubjects } from './utils';
 
 interface IStateValue {
   isAdding: boolean;
@@ -249,6 +250,12 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           items={groups.map(
             mapValueToSetItem(state[AccessControlSubjectTypes.Group])
           )}
+          renderItem={(params) => (
+            <AccessControlSubjectSetItem
+              deleteTooltipMessage="Remove this group's binding to this role"
+              {...params}
+            />
+          )}
           onAdd={handleAdd(AccessControlSubjectTypes.Group)}
           onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.Group)}
           onDeleteItem={handleDeleting(AccessControlSubjectTypes.Group)}
@@ -266,6 +273,22 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           items={users.map(
             mapValueToSetItem(state[AccessControlSubjectTypes.User])
           )}
+          renderItem={(params) => {
+            const [name, domain] = getUserNameParts(params.name);
+
+            return (
+              <AccessControlSubjectSetItem
+                deleteTooltipMessage="Remove this user's binding to this role"
+                {...params}
+                name={
+                  <Box direction='row'>
+                    <Text color='text-weak'>{name}</Text>
+                    {domain && <Text color='text-xweak'>{`@{domain}`}</Text>}
+                  </Box>
+                }
+              />
+            );
+          }}
           onAdd={handleAdd(AccessControlSubjectTypes.User)}
           onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.User)}
           onDeleteItem={handleDeleting(AccessControlSubjectTypes.User)}
@@ -282,6 +305,12 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         <AccessControlSubjectSet
           items={serviceAccounts.map(
             mapValueToSetItem(state[AccessControlSubjectTypes.ServiceAccount])
+          )}
+          renderItem={(params) => (
+            <AccessControlSubjectSetItem
+              deleteTooltipMessage="Remove this service account's binding to this role"
+              {...params}
+            />
           )}
           onAdd={handleAdd(AccessControlSubjectTypes.ServiceAccount)}
           onToggleAdding={handleToggleAdding(
