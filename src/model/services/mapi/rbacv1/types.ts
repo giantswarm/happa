@@ -5,7 +5,7 @@ export interface IPolicyRule {
   apiGroups?: string[];
   resources?: string[];
   resourcesNames?: string[];
-  nonResourceURLs: string[];
+  nonResourceURLs?: string[];
 }
 
 export interface IRoleRef {

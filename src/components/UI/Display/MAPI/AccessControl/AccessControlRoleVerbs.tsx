@@ -13,8 +13,8 @@ function formatVerbs(verbs: string[]): string {
     return 'None';
   }
 
-  if (verbs.length === 1 && verbs[0] === '*') {
-    return 'All';
+  for (const verb of verbs) {
+    if (verb === '*') return 'All';
   }
 
   return verbs.join(', ');

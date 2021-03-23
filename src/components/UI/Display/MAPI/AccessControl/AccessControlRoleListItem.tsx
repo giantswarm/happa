@@ -13,11 +13,11 @@ function formatResourceCounter(
 ): string {
   let totalCount = 0;
   for (const perm of permissions) {
-    if (perm.apiGroups.length === 1 && perm.apiGroups[0] === '*') {
-      return 'All';
+    for (const group of perm.apiGroups) {
+      if (group === '*') return 'All';
     }
-    if (perm.resources.length === 1 && perm.resources[0] === '*') {
-      return 'All';
+    for (const resource of perm.resources) {
+      if (resource === '*') return 'All';
     }
 
     totalCount += perm.resourceNames.length + perm.resources.length;

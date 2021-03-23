@@ -31,19 +31,18 @@ function makePermissionKey(
 }
 
 function formatApiGroups(groups: string[]): string {
-  if (groups.length < 1 || (groups.length === 1 && groups[0] === '*')) {
-    return 'All';
+  for (const group of groups) {
+    if (group === '*') return 'All';
   }
 
   return groups.join(', ');
 }
 
 function formatResources(resources: string[]): string {
-  if (
-    resources.length < 1 ||
-    (resources.length === 1 && resources[0] === '*')
-  ) {
-    return 'All';
+  if (resources.length < 1) return 'All';
+
+  for (const resource of resources) {
+    if (resource === '*') return 'All';
   }
 
   return resources.join(', ');

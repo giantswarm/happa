@@ -123,16 +123,26 @@ function appendSubjectsToRoleItem(
 export function getRolePermissions(
   role: rbacv1.IClusterRole | rbacv1.IRole
 ): ui.IAccessControlRoleItemPermission[] {
-  return new Array(role.rules.length).fill(null).map((_, idx) => {
-    const rule = role.rules[idx];
+  const permissions: ui.IAccessControlRoleItemPermission[] = [];
 
-    return {
+  for (const rule of role.rules) {
+    if (
+      !rule.hasOwnProperty('apiGroups') &&
+      !rule.hasOwnProperty('resourceNames') &&
+      !rule.hasOwnProperty('resources')
+    ) {
+      continue;
+    }
+
+    permissions.push({
       verbs: rule.verbs ?? [],
       apiGroups: rule.apiGroups ?? [],
       resourceNames: rule.resourcesNames ?? [],
       resources: rule.resources ?? [],
-    };
-  });
+    });
+  }
+
+  return permissions;
 }
 
 /**
