@@ -11,6 +11,7 @@ import {
   AccessControlSubjectTypes,
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
+  IAccessControlRoleSubjectRoleBinding,
 } from '../../UI/Display/MAPI/AccessControl/types';
 import { getUserNameParts } from './utils';
 
@@ -137,6 +138,7 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
     name: value.name,
     isEditable: value.isEditable,
     isLoading,
+    roleBindings: value.roleBindings,
   };
 };
 
@@ -145,7 +147,11 @@ interface IAccessControlRoleSubjectsProps
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
-  onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
+  onDelete: (
+    type: AccessControlSubjectTypes,
+    name: string,
+    roleBindings: IAccessControlRoleSubjectRoleBinding[]
+  ) => Promise<void>;
 }
 
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
@@ -201,11 +207,12 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   };
 
   const handleDeleting = (type: AccessControlSubjectTypes) => async (
-    name: string
+    name: string,
+    roleBindings: IAccessControlRoleSubjectRoleBinding[]
   ) => {
     try {
       dispatch({ type: 'startLoading', subjectType: type, subjectName: name });
-      await onDelete(type, name);
+      await onDelete(type, name, roleBindings);
 
       new FlashMessage(
         'Subject deleted successfully.',

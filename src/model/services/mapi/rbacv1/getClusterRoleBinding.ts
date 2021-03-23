@@ -2,14 +2,20 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import { IClusterRoleList } from './types';
+import { IClusterRoleBinding } from './types';
 
-export function getClusterRoleList(client: IHttpClient, user: ILoggedInUser) {
+export function getClusterRoleBinding(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  name: string
+) {
   return async () => {
     const url = k8sUrl.create({
       baseUrl: window.config.mapiEndpoint,
       apiVersion: 'rbac.authorization.k8s.io/v1',
-      kind: 'clusterroles',
+      kind: 'clusterrolebindings',
+      name,
+      namespace: '',
     });
 
     client.setRequestConfig({
@@ -21,16 +27,17 @@ export function getClusterRoleList(client: IHttpClient, user: ILoggedInUser) {
     });
     client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-    const response = await client.execute<IClusterRoleList>();
+    const response = await client.execute<IClusterRoleBinding>();
 
     return response.data;
   };
 }
 
-export function getClusterRoleListKey(
-  user: ILoggedInUser | null
+export function getClusterRoleBindingKey(
+  user: ILoggedInUser | null,
+  name: string
 ): string | null {
   if (!user || user.type !== LoggedInUserTypes.MAPI) return null;
 
-  return 'getClusterRoleList';
+  return `getClusterRoleBinding/${name}`;
 }

@@ -1,6 +1,5 @@
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
-import { SubjectKinds } from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 const subjectDelimiterRegexp = /\s*(?:[,\s;])\s*/;
@@ -69,14 +68,14 @@ export function mapResourcesToUiRoles(
   for (const binding of clusterRoleBindings.items) {
     const role = roleMap[binding.roleRef.name];
     if (role?.inCluster) {
-      appendSubjectsToRoleItem(binding.subjects, role);
+      appendSubjectsToRoleItem(binding, role);
     }
   }
 
   for (const binding of roleBindings.items) {
     const role = roleMap[binding.roleRef.name];
     if (role?.inCluster === false) {
-      appendSubjectsToRoleItem(binding.subjects, role);
+      appendSubjectsToRoleItem(binding, role);
     }
   }
 
@@ -89,27 +88,51 @@ export function mapResourcesToUiRoles(
  * @param binding
  */
 function appendSubjectsToRoleItem(
-  subjects: rbacv1.ISubject[],
+  binding: rbacv1.IClusterRoleBinding | rbacv1.IRoleBinding,
   role: ui.IAccessControlRoleItem
 ) {
-  for (const subject of subjects) {
+  const uiRoleBinding: ui.IAccessControlRoleSubjectRoleBinding = {
+    name: binding.metadata.name,
+    namespace: binding.metadata.namespace ?? '',
+    inCluster: binding.kind === rbacv1.ClusterRoleBinding,
+  };
+
+  for (const subject of binding.subjects) {
     switch (subject.kind) {
-      case SubjectKinds.Group:
+      case rbacv1.SubjectKinds.Group:
+        if (role.groups.hasOwnProperty(subject.name)) {
+          role.groups[subject.name].roleBindings.push(uiRoleBinding);
+          continue;
+        }
+
         role.groups[subject.name] = {
           name: subject.name,
           isEditable: isSubjectEditable(subject),
+          roleBindings: [uiRoleBinding],
         };
         break;
-      case SubjectKinds.User:
+      case rbacv1.SubjectKinds.User:
+        if (role.users.hasOwnProperty(subject.name)) {
+          role.users[subject.name].roleBindings.push(uiRoleBinding);
+          continue;
+        }
+
         role.users[subject.name] = {
           name: subject.name,
           isEditable: isSubjectEditable(subject),
+          roleBindings: [uiRoleBinding],
         };
         break;
-      case SubjectKinds.ServiceAccount:
+      case rbacv1.SubjectKinds.ServiceAccount:
+        if (role.serviceAccounts.hasOwnProperty(subject.name)) {
+          role.serviceAccounts[subject.name].roleBindings.push(uiRoleBinding);
+          continue;
+        }
+
         role.serviceAccounts[subject.name] = {
           name: subject.name,
           isEditable: isSubjectEditable(subject),
+          roleBindings: [uiRoleBinding],
         };
         break;
     }
@@ -270,4 +293,59 @@ export function mapUiSubjectTypeToSubjectKind(
     default:
       return rbacv1.SubjectKinds.Group;
   }
+}
+
+export async function removeSubjectFromClusterRoleBinding(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  subjectName: string,
+  subjectType: ui.AccessControlSubjectTypes,
+  binding: ui.IAccessControlRoleSubjectRoleBinding
+) {
+  const subjectKind = mapUiSubjectTypeToSubjectKind(subjectType);
+
+  const bindingResource = await rbacv1.getClusterRoleBinding(
+    client,
+    user,
+    binding.name
+  )();
+  // Remove the subjects that match.
+  bindingResource.subjects = bindingResource.subjects.filter((subject) => {
+    const isSubject =
+      subject.kind === subjectKind && subject.name === subjectName;
+
+    return !isSubject;
+  });
+
+  // If there's no subject left, we can delete the resource.
+  if (bindingResource.subjects.length < 1) {
+    return rbacv1.deleteClusterRoleBinding(
+      client,
+      user,
+      bindingResource.metadata.name
+    );
+  }
+
+  // There are other subjects there, let's keep the resource.
+  return rbacv1.updateClusterRoleBinding(client, user, bindingResource);
+}
+
+export async function removeSubjectFromAllClusterRoleBindings(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  subjectName: string,
+  subjectType: ui.AccessControlSubjectTypes,
+  bindings: ui.IAccessControlRoleSubjectRoleBinding[]
+) {
+  return Promise.all(
+    bindings.map((binding) =>
+      removeSubjectFromClusterRoleBinding(
+        client,
+        user,
+        subjectName,
+        subjectType,
+        binding
+      )
+    )
+  );
 }

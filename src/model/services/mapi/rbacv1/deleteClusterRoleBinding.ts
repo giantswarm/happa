@@ -1,13 +1,12 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
+import * as metav1 from 'model/services/mapi/metav1';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import { IClusterRoleBinding } from './types';
-
-export async function createClusterRoleBinding(
+export async function deleteClusterRoleBinding(
   client: IHttpClient,
   user: ILoggedInUser,
-  roleBinding: IClusterRoleBinding
+  name: string
 ) {
   if (!user || user.type !== LoggedInUserTypes.MAPI)
     return Promise.reject(new Error('Not logged in.'));
@@ -16,19 +15,20 @@ export async function createClusterRoleBinding(
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'rbac.authorization.k8s.io/v1',
     kind: 'clusterrolebindings',
+    name: name,
+    namespace: '',
   });
 
   client.setRequestConfig({
     url: url.toString(),
-    method: HttpRequestMethods.POST,
+    method: HttpRequestMethods.DELETE,
     headers: {
       Accept: 'application/json',
     },
-    data: (roleBinding as unknown) as Record<string, unknown>,
   });
   client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-  const response = await client.execute<IClusterRoleBinding>();
+  const response = await client.execute<metav1.IK8sStatus>();
 
   return response.data;
 }

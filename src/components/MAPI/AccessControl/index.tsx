@@ -1,10 +1,8 @@
 import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import { HttpClientImpl } from 'model/clients/HttpClient';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
-import { createClusterRoleBinding } from 'model/services/mapi/rbacv1/createClusterRoleBinding';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -19,6 +17,7 @@ import {
   getRoleItemsKey,
   makeRoleBinding,
   mapUiSubjectTypeToSubjectKind,
+  removeSubjectFromAllClusterRoleBindings,
 } from './utils';
 
 interface IAccessControlProps
@@ -58,9 +57,8 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
         });
       }
 
-      const httpClient = new HttpClientImpl();
-      await createClusterRoleBinding(
-        httpClient,
+      await rbacv1.createClusterRoleBinding(
+        client,
         user!,
         roleBinding as rbacv1.IClusterRoleBinding
       );
@@ -87,13 +85,38 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
 
   const handleDelete = async (
     type: ui.AccessControlSubjectTypes,
-    name: string
+    name: string,
+    roleBindings: ui.IAccessControlRoleSubjectRoleBinding[]
   ) => {
-    console.log(type, name);
+    try {
+      if (!activeRole) return Promise.resolve();
 
-    return new Promise<void>((resolve) => {
-      setTimeout(resolve, 1000);
-    });
+      await removeSubjectFromAllClusterRoleBindings(
+        client,
+        user!,
+        name,
+        type,
+        roleBindings
+      );
+      mutate();
+
+      return Promise.resolve();
+    } catch (err: unknown) {
+      const defaultMessage = 'Something went wrong.';
+
+      if (metav1.isStatus((err as GenericResponse).data)) {
+        return Promise.reject(
+          new Error(
+            (err as GenericResponse<metav1.IK8sStatus>).data.message ??
+              defaultMessage
+          )
+        );
+      } else if (err instanceof Error) {
+        return Promise.reject(err);
+      }
+
+      return Promise.reject(new Error(defaultMessage));
+    }
   };
 
   return (

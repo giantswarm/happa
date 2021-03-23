@@ -12,9 +12,13 @@ export function getRoleBindingList(client: IHttpClient, user: ILoggedInUser) {
       kind: 'rolebindings',
     });
 
-    client.setURL(url.toString());
-    client.setHeader('Accept', 'application/json');
-    client.setRequestMethod(HttpRequestMethods.GET);
+    client.setRequestConfig({
+      url: url.toString(),
+      method: HttpRequestMethods.GET,
+      headers: {
+        Accept: 'application/json',
+      },
+    });
     client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
     const response = await client.execute<IRoleBindingList>();

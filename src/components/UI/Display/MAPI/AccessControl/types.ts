@@ -4,9 +4,16 @@ export enum AccessControlSubjectTypes {
   ServiceAccount,
 }
 
+export interface IAccessControlRoleSubjectRoleBinding {
+  name: string;
+  inCluster: boolean;
+  namespace: string;
+}
+
 export interface IAccessControlRoleSubjectItem {
   name: string;
   isEditable: boolean;
+  roleBindings: IAccessControlRoleSubjectRoleBinding[];
 }
 
 export type AccessControlRoleItemVerb =
