@@ -43,6 +43,8 @@ interface IAccessControlSubjectAddFormProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   onAdd: (newValue: string) => void;
   onToggleAdding: () => void;
+  onClearError: () => void;
+  errorMessage?: string;
   isAdding?: boolean;
   isLoading?: boolean;
 }
@@ -52,6 +54,8 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
   onToggleAdding,
   isAdding,
   isLoading,
+  errorMessage,
+  onClearError,
   ...props
 }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,6 +68,12 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
     e.preventDefault();
 
     onToggleAdding();
+  };
+
+  const handleChange = () => {
+    if (errorMessage) {
+      onClearError();
+    }
   };
 
   return (
@@ -83,6 +93,8 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
                 }}
                 readOnly={isLoading}
                 autoFocus={true}
+                onChange={handleChange}
+                error={errorMessage}
               >
                 <SaveButton
                   type='submit'
@@ -115,11 +127,14 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
 AccessControlSubjectAddForm.propTypes = {
   onAdd: PropTypes.func.isRequired,
   onToggleAdding: PropTypes.func.isRequired,
+  onClearError: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
   isAdding: PropTypes.bool,
   isLoading: PropTypes.bool,
 };
 
 AccessControlSubjectAddForm.defaultProps = {
+  errorMessage: '',
   isAdding: false,
   isLoading: false,
 };

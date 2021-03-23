@@ -44,6 +44,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
       direction='row'
       gap='xsmall'
       pad={{ vertical: 'xsmall', horizontal: 'small' }}
+      height='38px'
       background='border'
       round='xxsmall'
       align='center'

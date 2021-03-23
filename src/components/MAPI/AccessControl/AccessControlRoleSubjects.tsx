@@ -12,7 +12,7 @@ import {
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
 } from '../../UI/Display/MAPI/AccessControl/types';
-import { getUserNameParts, parseSubjects } from './utils';
+import { getUserNameParts } from './utils';
 
 interface IStateValue {
   isAdding: boolean;
@@ -168,9 +168,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   };
 
   const handleAdd = (type: AccessControlSubjectTypes) => async (
-    newValue: string
+    values: string[]
   ) => {
-    const values = parseSubjects(newValue);
     if (values.length < 1) {
       dispatch({ type: 'stopAdding', subjectType: type });
 

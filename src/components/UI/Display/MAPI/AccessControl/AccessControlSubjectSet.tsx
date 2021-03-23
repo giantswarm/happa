@@ -1,6 +1,7 @@
 import { Box } from 'grommet';
+import { parseSubjects } from 'MAPI/AccessControl/utils';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
 
 export interface IAccessControlSubjectSetRenderer
@@ -21,7 +22,7 @@ interface IAccessControlSubjectSetProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   items: IAccessControlSubjectSetItem[];
   renderItem: (params: IAccessControlSubjectSetRenderer) => React.ReactNode;
-  onAdd: (newValue: string) => void;
+  onAdd: (values: string[]) => void;
   onToggleAdding: () => void;
   onDeleteItem: (name: string) => void;
   isAdding?: boolean;
@@ -38,8 +39,44 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
   isLoading,
   ...props
 }) => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const clearError = () => {
+    setErrorMessage('');
+  };
+
+  const validateSubjects = (values: string[]): string => {
+    const existingNames = [];
+
+    for (const item of items) {
+      if (values.includes(item.name)) {
+        existingNames.push(item.name);
+      }
+    }
+
+    if (existingNames.length === 1) {
+      return `Subject '${existingNames[0]}' already exists.`;
+    } else if (existingNames.length > 1) {
+      return `Subjects '${existingNames.join(', ')}' already exist.`;
+    }
+
+    return '';
+  };
+
+  const handleAdd = (newValue: string) => {
+    const values = parseSubjects(newValue);
+
+    const error = validateSubjects(values);
+    if (error) {
+      setErrorMessage(error);
+
+      return;
+    }
+
+    onAdd(values);
+  };
+
   return (
-    <Box direction='row' wrap={true} {...props}>
+    <Box direction='row' wrap={true} align='start' {...props}>
       {items.map(({ name, isEditable, isLoading: isItemLoading }) => (
         <React.Fragment key={name}>
           {renderItem({
@@ -54,8 +91,10 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
         margin={{ right: 'small', bottom: 'small' }}
         isAdding={isAdding}
         isLoading={isLoading}
-        onAdd={onAdd}
+        onAdd={handleAdd}
         onToggleAdding={onToggleAdding}
+        errorMessage={errorMessage}
+        onClearError={clearError}
       />
     </Box>
   );
