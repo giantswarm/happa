@@ -120,7 +120,7 @@ AccessControlRoleListItem.propTypes = {
   inCluster: PropTypes.bool.isRequired,
   active: PropTypes.bool.isRequired,
   // @ts-expect-error
-  permissions: PropTypes.object.isRequired,
+  permissions: PropTypes.arrayOf(PropTypes.object.isRequired),
   // @ts-expect-error
   groups: PropTypes.object.isRequired,
   // @ts-expect-error

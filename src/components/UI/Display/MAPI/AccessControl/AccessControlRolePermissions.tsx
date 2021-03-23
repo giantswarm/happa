@@ -1,3 +1,4 @@
+import { InfiniteScroll } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -71,28 +72,40 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {permissions.map((permission, idx) => (
-          <TableRow key={makePermissionKey(permission, idx)}>
-            <TableCell size='small'>
-              <Truncated numStart={10}>
-                {formatApiGroups(permission.apiGroups)}
-              </Truncated>
-            </TableCell>
-            <TableCell size='small'>
-              <Truncated numStart={10}>
-                {formatResources(permission.resources)}
-              </Truncated>
-            </TableCell>
-            <TableCell size='small'>
-              <Truncated numStart={10}>
-                {formatResources(permission.resourceNames)}
-              </Truncated>
-            </TableCell>
-            <TableCell>
-              <AccessControlRoleVerbs verbs={permission.verbs} />
-            </TableCell>
-          </TableRow>
-        ))}
+        <InfiniteScroll
+          scrollableAncestor='window'
+          replace={true}
+          items={permissions}
+          step={10}
+          renderMarker={(marker) => (
+            <TableRow>
+              <TableCell>{marker}</TableCell>
+            </TableRow>
+          )}
+        >
+          {(permission: IAccessControlRoleItemPermission, idx: number) => (
+            <TableRow key={makePermissionKey(permission, idx)}>
+              <TableCell size='small'>
+                <Truncated numStart={10}>
+                  {formatApiGroups(permission.apiGroups)}
+                </Truncated>
+              </TableCell>
+              <TableCell size='small'>
+                <Truncated numStart={10}>
+                  {formatResources(permission.resources)}
+                </Truncated>
+              </TableCell>
+              <TableCell size='small'>
+                <Truncated numStart={10}>
+                  {formatResources(permission.resourceNames)}
+                </Truncated>
+              </TableCell>
+              <TableCell>
+                <AccessControlRoleVerbs verbs={permission.verbs} />
+              </TableCell>
+            </TableRow>
+          )}
+        </InfiniteScroll>
       </TableBody>
     </StyledTable>
   );

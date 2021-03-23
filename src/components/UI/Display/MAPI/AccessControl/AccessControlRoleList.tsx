@@ -1,4 +1,4 @@
-import { Box, Sidebar } from 'grommet';
+import { Box, InfiniteScroll, Sidebar } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
 import { filterRoles } from 'MAPI/AccessControl/utils';
 import PropTypes from 'prop-types';
@@ -93,15 +93,17 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             <AccessControlRoleSearchPlaceholder />
           )}
 
-          {filteredRoles.map((role) => (
-            <AccessControlRoleListItem
-              key={role.name}
-              margin={{ bottom: 'small' }}
-              active={activeRoleName === role.name}
-              onClick={handleItemClick(role.name)}
-              {...role}
-            />
-          ))}
+          <InfiniteScroll replace={true} items={filteredRoles} step={10}>
+            {(role: IAccessControlRoleItem) => (
+              <AccessControlRoleListItem
+                key={role.name}
+                margin={{ bottom: 'small' }}
+                active={activeRoleName === role.name}
+                onClick={handleItemClick(role.name)}
+                {...role}
+              />
+            )}
+          </InfiniteScroll>
         </Box>
       </Content>
     </Sidebar>
