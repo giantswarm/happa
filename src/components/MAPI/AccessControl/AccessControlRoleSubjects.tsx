@@ -290,7 +290,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
                 name={
                   <Box direction='row'>
                     <Text color='text-weak'>{name}</Text>
-                    {domain && <Text color='text-xweak'>{`@{domain}`}</Text>}
+                    {domain && <Text color='text-xweak'>{`@${domain}`}</Text>}
                   </Box>
                 }
               />

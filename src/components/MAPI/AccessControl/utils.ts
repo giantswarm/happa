@@ -236,3 +236,38 @@ export function getUserNameParts(
 
   return [userParts[0], userParts[1]];
 }
+
+export function makeRoleBinding(
+  roleItem: ui.IAccessControlRoleItem
+): rbacv1.IClusterRoleBinding | rbacv1.IRoleBinding {
+  const now = Date.now();
+
+  return {
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    kind: roleItem.inCluster ? rbacv1.ClusterRoleBinding : rbacv1.RoleBinding,
+    metadata: {
+      name: `${roleItem.name}-${now}`,
+    },
+    roleRef: {
+      apiGroup: 'rbac.authorization.k8s.io',
+      kind: roleItem.inCluster ? rbacv1.ClusterRole : rbacv1.Role,
+      name: roleItem.name,
+    },
+    subjects: [],
+  };
+}
+
+export function mapUiSubjectTypeToSubjectKind(
+  type: ui.AccessControlSubjectTypes
+): rbacv1.SubjectKinds {
+  switch (type) {
+    case ui.AccessControlSubjectTypes.Group:
+      return rbacv1.SubjectKinds.Group;
+    case ui.AccessControlSubjectTypes.User:
+      return rbacv1.SubjectKinds.User;
+    case ui.AccessControlSubjectTypes.ServiceAccount:
+      return rbacv1.SubjectKinds.ServiceAccount;
+    default:
+      return rbacv1.SubjectKinds.Group;
+  }
+}

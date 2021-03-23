@@ -30,7 +30,7 @@ export interface ISubject {
 export const ClusterRole = 'ClusterRole';
 
 export interface IClusterRole {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof ClusterRole;
   metadata: metav1.IObjectMeta;
   rules: IPolicyRule[];
@@ -39,14 +39,14 @@ export interface IClusterRole {
 export const ClusterRoleList = 'ClusterRoleList';
 
 export interface IClusterRoleList extends metav1.IList<IClusterRole> {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof ClusterRoleList;
 }
 
 export const ClusterRoleBinding = 'ClusterRoleBinding';
 
 export interface IClusterRoleBinding {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof ClusterRoleBinding;
   metadata: metav1.IObjectMeta;
   roleRef: IRoleRef;
@@ -57,14 +57,14 @@ export const ClusterRoleBindingList = 'ClusterRoleBindingList';
 
 export interface IClusterRoleBindingList
   extends metav1.IList<IClusterRoleBinding> {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof ClusterRoleBindingList;
 }
 
 export const Role = 'Role';
 
 export interface IRole {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof Role;
   metadata: metav1.IObjectMeta;
   rules: IPolicyRule[];
@@ -73,14 +73,14 @@ export interface IRole {
 export const RoleList = 'RoleList';
 
 export interface IRoleList extends metav1.IList<IRole> {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof RoleList;
 }
 
 export const RoleBinding = 'RoleBinding';
 
 export interface IRoleBinding {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof RoleBinding;
   metadata: metav1.IObjectMeta;
   roleRef: IRoleRef;
@@ -90,6 +90,6 @@ export interface IRoleBinding {
 export const RoleBindingList = 'RoleBindingList';
 
 export interface IRoleBindingList extends metav1.IList<IRoleBinding> {
-  apiVersion: 'v1';
+  apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof RoleBindingList;
 }

@@ -1,6 +1,10 @@
 import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
+import { HttpClientImpl } from 'model/clients/HttpClient';
+import * as metav1 from 'model/services/mapi/metav1';
+import * as rbacv1 from 'model/services/mapi/rbacv1';
+import { createClusterRoleBinding } from 'model/services/mapi/rbacv1/createClusterRoleBinding';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -10,7 +14,12 @@ import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControl
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-import { getRoleItems, getRoleItemsKey } from './utils';
+import {
+  getRoleItems,
+  getRoleItemsKey,
+  makeRoleBinding,
+  mapUiSubjectTypeToSubjectKind,
+} from './utils';
 
 interface IAccessControlProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
@@ -19,7 +28,7 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
   const client = useHttpClient();
   const user = useSelector(getLoggedInUser);
   // TODO(axbarsan): Handle error.
-  const { data } = useSWR<ui.IAccessControlRoleItem[], GenericResponse>(
+  const { data, mutate } = useSWR<ui.IAccessControlRoleItem[], GenericResponse>(
     getRoleItemsKey(user),
     getRoleItems(client, user!)
   );
@@ -33,15 +42,53 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
     }
   }, [activeRole, data]);
 
-  const handleAdd = (type: ui.AccessControlSubjectTypes, names: string[]) => {
-    console.log(type, names);
+  const handleAdd = async (
+    type: ui.AccessControlSubjectTypes,
+    names: string[]
+  ) => {
+    try {
+      if (!activeRole) return Promise.resolve();
 
-    return new Promise<void>((resolve) => {
-      setTimeout(resolve, 1000);
-    });
+      const roleBinding = makeRoleBinding(activeRole);
+      for (const name of names) {
+        roleBinding.subjects.push({
+          name,
+          kind: mapUiSubjectTypeToSubjectKind(type),
+          apiGroup: 'rbac.authorization.k8s.io',
+        });
+      }
+
+      const httpClient = new HttpClientImpl();
+      await createClusterRoleBinding(
+        httpClient,
+        user!,
+        roleBinding as rbacv1.IClusterRoleBinding
+      );
+      mutate();
+
+      return Promise.resolve();
+    } catch (err: unknown) {
+      const defaultMessage = 'Something went wrong.';
+
+      if (metav1.isStatus((err as GenericResponse).data)) {
+        return Promise.reject(
+          new Error(
+            (err as GenericResponse<metav1.IK8sStatus>).data.message ??
+              defaultMessage
+          )
+        );
+      } else if (err instanceof Error) {
+        return Promise.reject(err);
+      }
+
+      return Promise.reject(new Error(defaultMessage));
+    }
   };
 
-  const handleDelete = (type: ui.AccessControlSubjectTypes, name: string) => {
+  const handleDelete = async (
+    type: ui.AccessControlSubjectTypes,
+    name: string
+  ) => {
     console.log(type, name);
 
     return new Promise<void>((resolve) => {
