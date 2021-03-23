@@ -1,4 +1,4 @@
-import { Box, InfiniteScroll, Sidebar } from 'grommet';
+import { Box, InfiniteScroll, Keyboard, Sidebar } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
 import { filterRoles } from 'MAPI/AccessControl/utils';
 import PropTypes from 'prop-types';
@@ -74,37 +74,45 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             readOnly={!roles}
           />
         </Box>
-        <Box
-          height={{ max: '60vh' }}
-          overflow={{ vertical: 'auto' }}
-          pad='small'
+        <Keyboard
+          onSpace={(e) => {
+            e.preventDefault();
+
+            (e.target as HTMLElement).click();
+          }}
         >
-          {!roles &&
-            LOADING_COMPONENTS.map((idx) => (
-              <AccessControlRoleLoadingPlaceholder
-                key={idx}
-                margin={{ bottom: 'small' }}
-              />
-            ))}
+          <Box
+            height={{ max: '60vh' }}
+            overflow={{ vertical: 'auto' }}
+            pad='small'
+          >
+            {!roles &&
+              LOADING_COMPONENTS.map((idx) => (
+                <AccessControlRoleLoadingPlaceholder
+                  key={idx}
+                  margin={{ bottom: 'small' }}
+                />
+              ))}
 
-          {roles && roles.length < 1 && <AccessControlRolePlaceholder />}
+            {roles && roles.length < 1 && <AccessControlRolePlaceholder />}
 
-          {roles && roles.length > 0 && filteredRoles.length < 1 && (
-            <AccessControlRoleSearchPlaceholder />
-          )}
-
-          <InfiniteScroll replace={true} items={filteredRoles} step={50}>
-            {(role: IAccessControlRoleItem) => (
-              <AccessControlRoleListItem
-                key={role.name}
-                margin={{ bottom: 'small' }}
-                active={activeRoleName === role.name}
-                onClick={handleItemClick(role.name)}
-                {...role}
-              />
+            {roles && roles.length > 0 && filteredRoles.length < 1 && (
+              <AccessControlRoleSearchPlaceholder />
             )}
-          </InfiniteScroll>
-        </Box>
+
+            <InfiniteScroll replace={true} items={filteredRoles} step={50}>
+              {(role: IAccessControlRoleItem) => (
+                <AccessControlRoleListItem
+                  key={role.name}
+                  margin={{ bottom: 'small' }}
+                  active={activeRoleName === role.name}
+                  onClick={handleItemClick(role.name)}
+                  {...role}
+                />
+              )}
+            </InfiniteScroll>
+          </Box>
+        </Keyboard>
       </Content>
     </Sidebar>
   );
