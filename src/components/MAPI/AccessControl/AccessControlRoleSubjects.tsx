@@ -191,7 +191,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       const message = (err as Error).message;
 
       new FlashMessage(
-        'Could not add subject:',
+        'Could not add subjects:',
         messageType.ERROR,
         messageTTL.LONG,
         message
