@@ -1,5 +1,6 @@
 import { Box, Sidebar } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
+import { filterRoles } from 'MAPI/AccessControl/utils';
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -10,7 +11,6 @@ import AccessControlRoleLoadingPlaceholder from './AccessControlRoleLoadingPlace
 import AccessControlRolePlaceholder from './AccessControlRolePlaceholder';
 import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceholder';
 import { IAccessControlRoleItem } from './types';
-import { filterRoles } from './utils';
 
 const SEARCH_DEBOUNCE_RATE_MS = 250;
 const LOADING_COMPONENTS = new Array(6).fill(0).map((_, idx) => idx);
