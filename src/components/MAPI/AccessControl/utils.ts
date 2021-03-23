@@ -40,9 +40,9 @@ export function mapResourcesToUiRoles(
         name: role.metadata.name,
         inCluster: true,
         managedBy: rbacv1.getManagedBy(role) ?? '',
-        groups: [],
-        serviceAccounts: [],
-        users: [],
+        groups: {},
+        serviceAccounts: {},
+        users: {},
         permissions: getRolePermissions(role),
       };
     }
@@ -58,29 +58,25 @@ export function mapResourcesToUiRoles(
         name: role.metadata.name,
         inCluster: false,
         managedBy: rbacv1.getManagedBy(role) ?? '',
-        groups: [],
-        serviceAccounts: [],
-        users: [],
+        groups: {},
+        serviceAccounts: {},
+        users: {},
         permissions: getRolePermissions(role),
       };
     }
   }
 
   for (const binding of clusterRoleBindings.items) {
-    if (roleMap[binding.roleRef.name]?.inCluster) {
-      const subjects = getSubjectsFromBindingByCategories(binding);
-      roleMap[binding.roleRef.name].groups = subjects.groups;
-      roleMap[binding.roleRef.name].users = subjects.users;
-      roleMap[binding.roleRef.name].serviceAccounts = subjects.serviceAccounts;
+    const role = roleMap[binding.roleRef.name];
+    if (role?.inCluster) {
+      appendSubjectsToRoleItem(binding.subjects, role);
     }
   }
 
   for (const binding of roleBindings.items) {
-    if (roleMap[binding.roleRef.name]?.inCluster === false) {
-      const subjects = getSubjectsFromBindingByCategories(binding);
-      roleMap[binding.roleRef.name].groups = subjects.groups;
-      roleMap[binding.roleRef.name].users = subjects.users;
-      roleMap[binding.roleRef.name].serviceAccounts = subjects.serviceAccounts;
+    const role = roleMap[binding.roleRef.name];
+    if (role?.inCluster === false) {
+      appendSubjectsToRoleItem(binding.subjects, role);
     }
   }
 
@@ -92,42 +88,32 @@ export function mapResourcesToUiRoles(
  * (e.g. `groups`, `users`, `serviceAccounts`).
  * @param binding
  */
-function getSubjectsFromBindingByCategories(
-  binding: rbacv1.IClusterRoleBinding | rbacv1.IRoleBinding
-): Pick<ui.IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'> {
-  const categories: Pick<
-    ui.IAccessControlRoleItem,
-    'groups' | 'users' | 'serviceAccounts'
-  > = {
-    groups: [],
-    users: [],
-    serviceAccounts: [],
-  };
-
-  for (const subject of binding.subjects) {
+function appendSubjectsToRoleItem(
+  subjects: rbacv1.ISubject[],
+  role: ui.IAccessControlRoleItem
+) {
+  for (const subject of subjects) {
     switch (subject.kind) {
       case SubjectKinds.Group:
-        categories.groups.push({
+        role.groups[subject.name] = {
           name: subject.name,
           isEditable: isSubjectEditable(subject),
-        });
+        };
         break;
       case SubjectKinds.User:
-        categories.users.push({
+        role.users[subject.name] = {
           name: subject.name,
           isEditable: isSubjectEditable(subject),
-        });
+        };
         break;
       case SubjectKinds.ServiceAccount:
-        categories.serviceAccounts.push({
+        role.serviceAccounts[subject.name] = {
           name: subject.name,
           isEditable: isSubjectEditable(subject),
-        });
+        };
         break;
     }
   }
-
-  return categories;
 }
 
 /**

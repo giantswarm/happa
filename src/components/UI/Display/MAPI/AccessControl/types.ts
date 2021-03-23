@@ -31,8 +31,8 @@ export interface IAccessControlRoleItem {
   name: string;
   inCluster: boolean;
   managedBy: string;
-  groups: IAccessControlRoleSubjectItem[];
-  users: IAccessControlRoleSubjectItem[];
-  serviceAccounts: IAccessControlRoleSubjectItem[];
+  groups: Record<string, IAccessControlRoleSubjectItem>;
+  users: Record<string, IAccessControlRoleSubjectItem>;
+  serviceAccounts: Record<string, IAccessControlRoleSubjectItem>;
   permissions: IAccessControlRoleItemPermission[];
 }

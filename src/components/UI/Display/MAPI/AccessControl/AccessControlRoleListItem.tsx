@@ -69,8 +69,8 @@ const AccessControlRoleListItem = React.forwardRef<
   IAccessControlRoleListItemProps
 >(({ name, inCluster, active, permissions, groups, users, ...props }, ref) => {
   const resourceCount = formatResourceCounter(permissions);
-  const groupCount = formatCounter(groups.length);
-  const userCount = formatCounter(users.length);
+  const groupCount = formatCounter(Object.values(groups).length);
+  const userCount = formatCounter(Object.values(users).length);
 
   return (
     <StyledCard
@@ -120,11 +120,11 @@ AccessControlRoleListItem.propTypes = {
   inCluster: PropTypes.bool.isRequired,
   active: PropTypes.bool.isRequired,
   // @ts-expect-error
-  permissions: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  permissions: PropTypes.object.isRequired,
   // @ts-expect-error
-  groups: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  groups: PropTypes.object.isRequired,
   // @ts-expect-error
-  users: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  users: PropTypes.object.isRequired,
 };
 
 export default AccessControlRoleListItem;

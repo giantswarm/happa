@@ -247,7 +247,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Text>
         </Box>
         <AccessControlSubjectSet
-          items={groups.map(
+          items={Object.values(groups).map(
             mapValueToSetItem(state[AccessControlSubjectTypes.Group])
           )}
           renderItem={(params) => (
@@ -270,7 +270,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Text>
         </Box>
         <AccessControlSubjectSet
-          items={users.map(
+          items={Object.values(users).map(
             mapValueToSetItem(state[AccessControlSubjectTypes.User])
           )}
           renderItem={(params) => {
@@ -303,7 +303,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Text>
         </Box>
         <AccessControlSubjectSet
-          items={serviceAccounts.map(
+          items={Object.values(serviceAccounts).map(
             mapValueToSetItem(state[AccessControlSubjectTypes.ServiceAccount])
           )}
           renderItem={(params) => (
@@ -330,11 +330,11 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 AccessControlRoleSubjects.propTypes = {
   roleName: PropTypes.string.isRequired,
   // @ts-expect-error
-  groups: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  groups: PropTypes.object.isRequired,
   // @ts-expect-error
-  users: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  users: PropTypes.object.isRequired,
   // @ts-expect-error
-  serviceAccounts: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  serviceAccounts: PropTypes.object.isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
