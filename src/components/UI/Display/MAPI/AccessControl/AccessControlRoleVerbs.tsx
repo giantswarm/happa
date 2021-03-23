@@ -134,6 +134,7 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
             align='center'
             justify='center'
             round='xxsmall'
+            aria-label={verb}
           >
             <Text size='small' color={options.active ? 'text' : 'text-xweak'}>
               {options.display}
