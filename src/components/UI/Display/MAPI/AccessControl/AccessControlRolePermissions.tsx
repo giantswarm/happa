@@ -1,4 +1,3 @@
-import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -9,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from 'UI/Display/Table';
+import Truncated from 'UI/Util/Truncated';
 
 import AccessControlRoleVerbs from './AccessControlRoleVerbs';
 import {
@@ -74,25 +74,19 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
         {permissions.map((permission, idx) => (
           <TableRow key={makePermissionKey(permission, idx)}>
             <TableCell size='small'>
-              <Box>
-                <Text truncate={true}>
-                  {formatApiGroups(permission.apiGroups)}
-                </Text>
-              </Box>
+              <Truncated numStart={10}>
+                {formatApiGroups(permission.apiGroups)}
+              </Truncated>
             </TableCell>
             <TableCell size='small'>
-              <Box>
-                <Text truncate={true}>
-                  {formatResources(permission.resources)}
-                </Text>
-              </Box>
+              <Truncated numStart={10}>
+                {formatResources(permission.resources)}
+              </Truncated>
             </TableCell>
             <TableCell size='small'>
-              <Box>
-                <Text truncate={true}>
-                  {formatResources(permission.resourceNames)}
-                </Text>
-              </Box>
+              <Truncated numStart={10}>
+                {formatResources(permission.resourceNames)}
+              </Truncated>
             </TableCell>
             <TableCell>
               <AccessControlRoleVerbs verbs={permission.verbs} />

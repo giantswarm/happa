@@ -82,6 +82,7 @@ function makeVerbMap(from: AccessControlRoleItemVerb[]): IVerbMap {
     },
   };
 
+  // Make all verbs active.
   if (from.length === 1 && from[0] === '*') {
     for (const v of Object.keys(verbs)) {
       verbs[v].active = true;

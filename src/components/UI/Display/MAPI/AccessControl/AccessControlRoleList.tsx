@@ -13,6 +13,11 @@ import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceho
 import { IAccessControlRoleItem } from './types';
 
 const SEARCH_DEBOUNCE_RATE_MS = 250;
+/**
+ * A bunch of placeholder components used for the loading
+ * animation. Replace `6` with the number of components you
+ * want to show.
+ *  */
 const LOADING_COMPONENTS = new Array(6).fill(0).map((_, idx) => idx);
 
 const Content = styled(Box)`
