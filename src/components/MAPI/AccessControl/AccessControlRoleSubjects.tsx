@@ -237,6 +237,10 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     };
   }, [roleName]);
 
+  const groupType = state[AccessControlSubjectTypes.Group];
+  const userType = state[AccessControlSubjectTypes.User];
+  const serviceAccountType = state[AccessControlSubjectTypes.ServiceAccount];
+
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
       <Box gap='small' direction='column'>
@@ -246,9 +250,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Text>
         </Box>
         <AccessControlSubjectSet
-          items={Object.values(groups).map(
-            mapValueToSetItem(state[AccessControlSubjectTypes.Group])
-          )}
+          items={Object.values(groups).map(mapValueToSetItem(groupType))}
           renderItem={(params) => (
             <AccessControlSubjectSetItem
               deleteTooltipMessage="Remove this group's binding to this role"
@@ -258,9 +260,17 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           onAdd={handleAdd(AccessControlSubjectTypes.Group)}
           onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.Group)}
           onDeleteItem={handleDeleting(AccessControlSubjectTypes.Group)}
-          isAdding={state[AccessControlSubjectTypes.Group].isAdding}
-          isLoading={state[AccessControlSubjectTypes.Group].isLoading}
+          isAdding={groupType.isAdding}
+          isLoading={groupType.isLoading}
         />
+        {groupType.isAdding && (
+          <Box>
+            <Text>
+              Enter one or more group identifiers, exactly as defined in your
+              identity provider, including upper/lowercase spelling.
+            </Text>
+          </Box>
+        )}
       </Box>
       <Box gap='small' direction='column'>
         <Box>
@@ -269,9 +279,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Text>
         </Box>
         <AccessControlSubjectSet
-          items={Object.values(users).map(
-            mapValueToSetItem(state[AccessControlSubjectTypes.User])
-          )}
+          items={Object.values(users).map(mapValueToSetItem(userType))}
           renderItem={(params) => {
             const [name, domain] = getUserNameParts(params.name);
 
@@ -291,9 +299,17 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           onAdd={handleAdd(AccessControlSubjectTypes.User)}
           onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.User)}
           onDeleteItem={handleDeleting(AccessControlSubjectTypes.User)}
-          isAdding={state[AccessControlSubjectTypes.User].isAdding}
-          isLoading={state[AccessControlSubjectTypes.User].isLoading}
+          isAdding={userType.isAdding}
+          isLoading={userType.isLoading}
         />
+        {userType.isAdding && (
+          <Box>
+            <Text>
+              Enter one or more email addresses, exactly as defined in your
+              identity provider, including upper/lowercase spelling.
+            </Text>
+          </Box>
+        )}
       </Box>
       <Box gap='small' direction='column'>
         <Box>
@@ -303,7 +319,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         </Box>
         <AccessControlSubjectSet
           items={Object.values(serviceAccounts).map(
-            mapValueToSetItem(state[AccessControlSubjectTypes.ServiceAccount])
+            mapValueToSetItem(serviceAccountType)
           )}
           renderItem={(params) => (
             <AccessControlSubjectSetItem
@@ -318,9 +334,17 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           onDeleteItem={handleDeleting(
             AccessControlSubjectTypes.ServiceAccount
           )}
-          isAdding={state[AccessControlSubjectTypes.ServiceAccount].isAdding}
-          isLoading={state[AccessControlSubjectTypes.ServiceAccount].isLoading}
+          isAdding={serviceAccountType.isAdding}
+          isLoading={serviceAccountType.isLoading}
         />
+        {serviceAccountType.isAdding && (
+          <Box>
+            <Text>
+              Enter one or more account identifiers, including upper/lowercase
+              spelling.
+            </Text>
+          </Box>
+        )}
       </Box>
     </Box>
   );
