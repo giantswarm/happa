@@ -15,6 +15,11 @@ export function getRoleList(
       apiVersion: 'rbac.authorization.k8s.io/v1',
       kind: 'roles',
       namespace: namespace!,
+      labelSelector: {
+        matchingLabels: {
+          'ui.giantswarm.io/display': 'true',
+        },
+      },
     });
 
     client.setRequestConfig({

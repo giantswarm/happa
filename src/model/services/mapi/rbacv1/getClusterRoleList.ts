@@ -10,6 +10,11 @@ export function getClusterRoleList(client: IHttpClient, user: ILoggedInUser) {
       baseUrl: window.config.mapiEndpoint,
       apiVersion: 'rbac.authorization.k8s.io/v1',
       kind: 'clusterroles',
+      labelSelector: {
+        matchingLabels: {
+          'ui.giantswarm.io/display': 'true',
+        },
+      },
     });
 
     client.setRequestConfig({

@@ -10,7 +10,7 @@ export function getManagedBy(role: IRole | IClusterRole): string | undefined {
 }
 
 export function getUiDisplay(role: IRole | IClusterRole): boolean | undefined {
-  const label = role.metadata.labels?.['webui.giantswarm.io/display'];
+  const label = role.metadata.labels?.['ui.giantswarm.io/display'];
   if (!label) return undefined;
 
   return label === 'true';

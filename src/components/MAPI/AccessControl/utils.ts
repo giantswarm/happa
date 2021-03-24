@@ -242,10 +242,6 @@ function isSubjectEditable(subject: rbacv1.ISubject): boolean {
 function shouldDisplayRole(role: rbacv1.IClusterRole | rbacv1.IRole): boolean {
   switch (true) {
     case role.metadata.name.startsWith('system:'):
-    case rbacv1.getAppBranch(role) &&
-      rbacv1.getManagedBy(role) === 'rbac-operator':
-    case rbacv1.getUiDisplay(role) === false:
-      return false;
     default:
       return true;
   }
