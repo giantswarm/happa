@@ -16,7 +16,7 @@ export interface ILocalObjectReference {
 export const ServiceAccount = 'ServiceAccount';
 
 export interface IServiceAccount {
-  apiVersion: 'rbac.authorization.k8s.io/v1';
+  apiVersion: 'v1';
   kind: typeof ServiceAccount;
   metadata: metav1.IObjectMeta;
   secrets?: IObjectReference[];

@@ -306,6 +306,27 @@ export function makeRoleBinding(
 }
 
 /**
+ * Create empty `ServiceAccount`, based on the given role.
+ * @param name
+ * @param roleItem
+ */
+function makeServiceAccount(
+  name: string,
+  roleItem: ui.IAccessControlRoleItem
+): corev1.IServiceAccount {
+  const namespace = roleItem.namespace || 'default';
+
+  return {
+    apiVersion: 'v1',
+    kind: corev1.ServiceAccount,
+    metadata: {
+      name,
+      namespace,
+    },
+  };
+}
+
+/**
  * Map the UI subject type to the subject kind
  * used in Kubernetes.
  * @param type
@@ -352,11 +373,13 @@ export async function createRoleBindingWithSubjects(
 
     if (subject.kind === rbacv1.SubjectKinds.ServiceAccount) {
       // We need to create a `ServiceAccount` resource first.
+      const serviceAccount = makeServiceAccount(subject.name, roleItem);
+
       subject.apiGroup = '';
-      subject.namespace = roleItem.namespace || 'default';
+      subject.namespace = serviceAccount.metadata.namespace;
 
       subjectCreationRequests.push(
-        corev1.getServiceAccount(client, user, name, subject.namespace)
+        corev1.createServiceAccount(client, user, serviceAccount)
       );
     }
 
@@ -381,6 +404,27 @@ export async function createRoleBindingWithSubjects(
 }
 
 /**
+ * Delete the service account derived from the given subject.
+ * @param client
+ * @param user
+ * @param subject
+ */
+export async function deleteServiceAccountFromSubject(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  subject: rbacv1.ISubject
+) {
+  const serviceAccount = await corev1.getServiceAccount(
+    client,
+    user,
+    subject.name,
+    subject.namespace!
+  )();
+
+  return corev1.deleteServiceAccount(client, user, serviceAccount);
+}
+
+/**
  * Delete a subject from a given `ClusterRoleBinding` resource.
  * @param client
  * @param user
@@ -402,12 +446,26 @@ export async function deleteSubjectFromClusterRoleBinding(
     user,
     binding.name
   )();
+
+  const subjectDeletionRequests: Promise<metav1.IK8sStatus>[] = [];
+
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {
     const isSubject = s.kind === subjectKind && s.name === subject.name;
+    if (isSubject) {
+      if (s.kind === rbacv1.SubjectKinds.ServiceAccount) {
+        subjectDeletionRequests.push(
+          deleteServiceAccountFromSubject(client, user, s)
+        );
+      }
 
-    return !isSubject;
+      return false;
+    }
+
+    return true;
   });
+
+  await Promise.all(subjectDeletionRequests);
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
@@ -441,12 +499,26 @@ export async function deleteSubjectFromRoleBinding(
     binding.name,
     binding.namespace
   )();
+
+  const subjectDeletionRequests: Promise<metav1.IK8sStatus>[] = [];
+
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {
     const isSubject = s.kind === subjectKind && s.name === subject.name;
+    if (isSubject) {
+      if (s.kind === rbacv1.SubjectKinds.ServiceAccount) {
+        subjectDeletionRequests.push(
+          deleteServiceAccountFromSubject(client, user, s)
+        );
+      }
 
-    return !isSubject;
+      return false;
+    }
+
+    return true;
   });
+
+  await Promise.all(subjectDeletionRequests);
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
