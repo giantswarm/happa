@@ -24,7 +24,10 @@ Simple.args = {
     },
     { name: 'security', clusters: 0 },
   ],
-  createOrg: () => {},
+  createOrg: () =>
+    new Promise((resolve) => {
+      resolve();
+    }),
 };
 
 Simple.argTypes = {};

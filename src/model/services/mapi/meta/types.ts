@@ -1,12 +1,12 @@
 export interface IMetaV1ObjectMeta {
   name: string;
-  namespace: string;
-  resourceVersion: string;
-  selfLink: string;
-  uid: string;
-  creationTimestamp: string;
-  finalizers: string[];
-  generation: number;
+  namespace?: string;
+  resourceVersion?: string;
+  selfLink?: string;
+  uid?: string;
+  creationTimestamp?: string;
+  finalizers?: string[];
+  generation?: number;
   annotations?: Record<string, string>;
   deletionTimestamp?: string;
   labels?: Record<string, string>;

@@ -24,13 +24,14 @@ interface IOrganizationIndexDataTableRow {
 }
 interface IOrganizationIndexPageProps {
   onClickRow: (name: string) => void;
-  data: IOrganizationIndexDataTableRow[];
-  createOrg: (name: string) => void;
+  data?: IOrganizationIndexDataTableRow[];
+  createOrg: (name: string) => Promise<void>;
 }
 
 const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState('');
+  const [creating, setCreating] = useState(false);
   const orgNameInput = useRef<HTMLInputElement>(null);
   const [firstOpen, setFirstOpen] = useState(true);
 
@@ -46,6 +47,7 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
 
   const resetForm = () => {
     setFirstOpen(true);
+    setCreating(false);
     setCreateOrgOpen(false);
     setNewOrgName('');
   };
@@ -132,10 +134,11 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
               management cluster. Some name restrictins apply.
             </Text>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 if (valid) {
-                  props.createOrg(newOrgName);
+                  setCreating(true);
+                  await props.createOrg(newOrgName);
                   resetForm();
                   setNewOrgName('');
                   if (orgNameInput && orgNameInput.current) {
@@ -158,11 +161,14 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
                 <Button
                   bsStyle='primary'
                   type='submit'
+                  loading={creating}
                   disabled={Boolean(debouncedStatusMessage) || !valid}
                 >
                   Create
                 </Button>
-                <Button onClick={resetForm}>Cancel</Button>
+                {creating ? undefined : (
+                  <Button onClick={resetForm}>Cancel</Button>
+                )}
               </Box>
             </form>
           </Box>
@@ -185,7 +191,7 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
 
 OrganizationListPage.propTypes = {
   onClickRow: PropTypes.func.isRequired,
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array,
   createOrg: PropTypes.func.isRequired,
 };
 
