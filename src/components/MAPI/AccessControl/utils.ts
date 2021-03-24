@@ -68,7 +68,9 @@ export function mapResourcesToUiRoles(
 
   for (const binding of roleBindings.items) {
     const role = roleMap[binding.roleRef.name];
-    appendSubjectsToRoleItem(binding, role);
+    if (role) {
+      appendSubjectsToRoleItem(binding, role);
+    }
   }
 
   return Object.values(roleMap);
