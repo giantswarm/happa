@@ -1,8 +1,9 @@
-import { Anchor, Box, Text } from 'grommet';
+import { Anchor, Box, Drop, Text } from 'grommet';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import { IAccessControlSubjectSetRenderer } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 
@@ -15,6 +16,20 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
     display: inline-block;
     vertical-align: middle;
     width: 15px;
+  }
+`;
+
+const StyledAnchor = styled(Anchor)`
+  :focus {
+    outline: 0;
+  }
+
+  :focus:not(:focus-visible) {
+    box-shadow: none;
+  }
+
+  i:focus {
+    outline: 0;
   }
 `;
 
@@ -33,16 +48,37 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
   deleteTooltipMessage,
   ...props
 }) => {
-  const handleDelete = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const deleteButtonRef = useRef<HTMLAnchorElement>(null);
+
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
+  const showConfirmation = (
+    e?: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>
+  ) => {
+    e?.preventDefault();
+
+    setConfirmationVisible(true);
+  };
+
+  const hideConfirmation = (
+    e?: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>
+  ) => {
+    e?.preventDefault();
+
+    window.setTimeout(() => {
+      setConfirmationVisible(false);
+    });
+  };
+
+  const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
+    setConfirmationVisible(false);
     onDelete();
   };
 
   return (
     <Box
       direction='row'
-      gap='xsmall'
       pad={{ vertical: 'xsmall', horizontal: 'small' }}
       height='38px'
       background='border'
@@ -70,16 +106,60 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
           }
           placement='top'
         >
-          <Anchor size='large' color='text-weak' onClick={handleDelete}>
+          <StyledAnchor
+            ref={deleteButtonRef}
+            size='large'
+            color='text-weak'
+            onClick={showConfirmation}
+            margin={{ left: 'xsmall' }}
+            tabIndex={0}
+          >
             <i className='fa fa-close' role='presentation' title='Delete' />
-          </Anchor>
+          </StyledAnchor>
         </OverlayTrigger>
       )}
 
       {isEditable && !isLoading && !deleteTooltipMessage && (
-        <Anchor size='large' color='text-weak' onClick={handleDelete}>
+        <StyledAnchor
+          ref={deleteButtonRef}
+          size='large'
+          color='text-weak'
+          onClick={showConfirmation}
+          margin={{ left: 'xsmall' }}
+          tabIndex={0}
+        >
           <i className='fa fa-close' role='presentation' title='Delete' />
-        </Anchor>
+        </StyledAnchor>
+      )}
+
+      {confirmationVisible && deleteButtonRef.current && (
+        <Drop
+          align={{ bottom: 'top', right: 'right' }}
+          target={deleteButtonRef.current}
+          plain={true}
+          trapFocus={true}
+        >
+          <Box
+            background='background-front'
+            pad='medium'
+            round='small'
+            direction='column'
+            gap='small'
+            border={{ color: 'text-xweak' }}
+          >
+            <Box>
+              <Text>Are you sure?</Text>
+            </Box>
+            <Box direction='row'>
+              <Button bsStyle='danger' onClick={handleDelete}>
+                Yes, delete it
+              </Button>
+              <Button bsStyle='link' onClick={hideConfirmation}>
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        </Drop>
       )}
     </Box>
   );
