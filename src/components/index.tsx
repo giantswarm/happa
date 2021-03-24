@@ -55,6 +55,8 @@ if (window.config.environment !== GlobalEnvironment.Dev) {
     projectId: 1,
     projectKey: 'happa',
     environment: window.config.environment,
+    // turn off attempt to fetch config from server
+    remoteConfig: false,
   });
 
   // Reach into the airbrake notifier instance and modify the private _url and
