@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
-import AccessControlRoleLoadingPlaceholder from './AccessControlRoleLoadingPlaceholder';
+import AccessControlRoleListItemLoadingPlaceholder from './AccessControlRoleListItemLoadingPlaceholder';
 import AccessControlRolePlaceholder from './AccessControlRolePlaceholder';
 import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceholder';
 import { IAccessControlRoleItem } from './types';
@@ -91,7 +91,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
           >
             {!roles &&
               LOADING_COMPONENTS.map((idx) => (
-                <AccessControlRoleLoadingPlaceholder
+                <AccessControlRoleListItemLoadingPlaceholder
                   key={idx}
                   margin={{ bottom: 'small' }}
                 />

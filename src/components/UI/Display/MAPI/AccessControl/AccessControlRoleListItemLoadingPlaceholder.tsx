@@ -3,10 +3,10 @@ import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-interface IAccessControlRoleLoadingPlaceholderProps
+interface IAccessControlRoleListItemLoadingPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const AccessControlRoleLoadingPlaceholder: React.FC<IAccessControlRoleLoadingPlaceholderProps> = (
+const AccessControlRoleListItemLoadingPlaceholder: React.FC<IAccessControlRoleListItemLoadingPlaceholderProps> = (
   props
 ) => {
   const theme = useTheme();
@@ -30,6 +30,6 @@ const AccessControlRoleLoadingPlaceholder: React.FC<IAccessControlRoleLoadingPla
   );
 };
 
-AccessControlRoleLoadingPlaceholder.propTypes = {};
+AccessControlRoleListItemLoadingPlaceholder.propTypes = {};
 
-export default React.memo(AccessControlRoleLoadingPlaceholder);
+export default React.memo(AccessControlRoleListItemLoadingPlaceholder);

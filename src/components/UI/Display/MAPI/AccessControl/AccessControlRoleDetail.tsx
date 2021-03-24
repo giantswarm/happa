@@ -5,6 +5,7 @@ import * as React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from 'shared/Tabs';
 
+import AccessControlRoleDetailLoadingPlaceholder from './AccessControlRoleDetailLoadingPlaceholder';
 import AccessControlRolePermissions from './AccessControlRolePermissions';
 import AccessControlRoleType from './AccessControlRoleType';
 import { AccessControlSubjectTypes, IAccessControlRoleItem } from './types';
@@ -28,37 +29,41 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   onDelete,
   ...props
 }) => {
-  if (!activeRole) return null;
-
   return (
     <Box {...props}>
-      <Box>
-        <Heading level={4}>{activeRole.name}</Heading>
-      </Box>
-      <Box direction='row' wrap={true} gap='xsmall'>
-        <AccessControlRoleType namespace={activeRole.namespace} />
-        <Text>&bull;</Text>
-        <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
-      </Box>
-      <Box margin={{ top: 'medium' }}>
-        <Tabs defaultActiveKey='1'>
-          <Tab eventKey='1' title='Subjects'>
-            <AccessControlRoleSubjects
-              roleName={activeRole.name}
-              onAdd={onAdd}
-              onDelete={onDelete}
-              groups={activeRole.groups}
-              users={activeRole.users}
-              serviceAccounts={activeRole.serviceAccounts}
-            />
-          </Tab>
-          <Tab eventKey='2' title='Permissions'>
-            <AccessControlRolePermissions
-              permissions={activeRole.permissions}
-            />
-          </Tab>
-        </Tabs>
-      </Box>
+      {!activeRole && <AccessControlRoleDetailLoadingPlaceholder />}
+
+      {activeRole && (
+        <>
+          <Box>
+            <Heading level={4}>{activeRole.name}</Heading>
+          </Box>
+          <Box direction='row' wrap={true} gap='xsmall'>
+            <AccessControlRoleType namespace={activeRole.namespace} />
+            <Text>&bull;</Text>
+            <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
+          </Box>
+          <Box margin={{ top: 'medium' }}>
+            <Tabs defaultActiveKey='1'>
+              <Tab eventKey='1' title='Subjects'>
+                <AccessControlRoleSubjects
+                  roleName={activeRole.name}
+                  onAdd={onAdd}
+                  onDelete={onDelete}
+                  groups={activeRole.groups}
+                  users={activeRole.users}
+                  serviceAccounts={activeRole.serviceAccounts}
+                />
+              </Tab>
+              <Tab eventKey='2' title='Permissions'>
+                <AccessControlRolePermissions
+                  permissions={activeRole.permissions}
+                />
+              </Tab>
+            </Tabs>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
