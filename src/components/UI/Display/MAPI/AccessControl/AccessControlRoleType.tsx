@@ -4,13 +4,14 @@ import * as React from 'react';
 
 interface IAccessControlRoleTypeProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
-  inCluster?: boolean;
+  namespace?: string;
 }
 
 const AccessControlRoleType: React.FC<IAccessControlRoleTypeProps> = ({
-  inCluster,
+  namespace,
   ...props
 }) => {
+  const inCluster = namespace!.length < 1;
   const message = inCluster ? 'Cluster role' : 'Namespaced role';
 
   return (
@@ -27,11 +28,11 @@ const AccessControlRoleType: React.FC<IAccessControlRoleTypeProps> = ({
 };
 
 AccessControlRoleType.propTypes = {
-  inCluster: PropTypes.bool,
+  namespace: PropTypes.string,
 };
 
 AccessControlRoleType.defaultProps = {
-  inCluster: false,
+  namespace: '',
 };
 
 export default AccessControlRoleType;

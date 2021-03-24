@@ -67,7 +67,7 @@ interface IAccessControlRoleListItemProps
 const AccessControlRoleListItem = React.forwardRef<
   HTMLDivElement,
   IAccessControlRoleListItemProps
->(({ name, inCluster, active, permissions, groups, users, ...props }, ref) => {
+>(({ name, namespace, active, permissions, groups, users, ...props }, ref) => {
   const resourceCount = formatResourceCounter(permissions);
   const groupCount = formatCounter(Object.values(groups).length);
   const userCount = formatCounter(Object.values(users).length);
@@ -90,7 +90,7 @@ const AccessControlRoleListItem = React.forwardRef<
           <Box direction='row' align='center'>
             <Text truncate={true}>{name}</Text>
 
-            {inCluster && (
+            {namespace.length < 1 && (
               <Text margin={{ left: 'xxsmall' }}>
                 <i className='fa fa-globe' aria-label='Cluster role' />
               </Text>
@@ -117,7 +117,7 @@ const AccessControlRoleListItem = React.forwardRef<
 
 AccessControlRoleListItem.propTypes = {
   name: PropTypes.string.isRequired,
-  inCluster: PropTypes.bool.isRequired,
+  namespace: PropTypes.string.isRequired,
   active: PropTypes.bool.isRequired,
   // @ts-expect-error
   permissions: PropTypes.arrayOf(PropTypes.object.isRequired),

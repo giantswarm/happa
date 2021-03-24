@@ -3,10 +3,12 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import * as metav1 from 'model/services/mapi/metav1';
 import { LoggedInUserTypes } from 'stores/main/types';
 
+import { IClusterRoleBinding } from './types';
+
 export async function deleteClusterRoleBinding(
   client: IHttpClient,
   user: ILoggedInUser,
-  name: string
+  roleBinding: IClusterRoleBinding
 ) {
   if (!user || user.type !== LoggedInUserTypes.MAPI)
     return Promise.reject(new Error('Not logged in.'));
@@ -15,7 +17,7 @@ export async function deleteClusterRoleBinding(
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'rbac.authorization.k8s.io/v1',
     kind: 'clusterrolebindings',
-    name: name,
+    name: roleBinding.metadata.name,
     namespace: '',
   });
 

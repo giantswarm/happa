@@ -2,7 +2,6 @@ import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as metav1 from 'model/services/mapi/metav1';
-import * as rbacv1 from 'model/services/mapi/rbacv1';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -13,11 +12,10 @@ import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRo
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 import {
+  createRoleBindingWithSubjects,
+  deleteSubjectFromRole,
   getRoleItems,
   getRoleItemsKey,
-  makeRoleBinding,
-  mapUiSubjectTypeToSubjectKind,
-  removeSubjectFromAllClusterRoleBindings,
 } from './utils';
 
 interface IAccessControlProps
@@ -48,19 +46,12 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
     try {
       if (!activeRole) return Promise.resolve();
 
-      const roleBinding = makeRoleBinding(activeRole);
-      for (const name of names) {
-        roleBinding.subjects.push({
-          name,
-          kind: mapUiSubjectTypeToSubjectKind(type),
-          apiGroup: 'rbac.authorization.k8s.io',
-        });
-      }
-
-      await rbacv1.createClusterRoleBinding(
+      await createRoleBindingWithSubjects(
         client,
         user!,
-        roleBinding as rbacv1.IClusterRoleBinding
+        type,
+        names,
+        activeRole
       );
       mutate();
 
@@ -85,19 +76,12 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
 
   const handleDelete = async (
     type: ui.AccessControlSubjectTypes,
-    name: string,
-    roleBindings: ui.IAccessControlRoleSubjectRoleBinding[]
+    name: string
   ) => {
     try {
       if (!activeRole) return Promise.resolve();
 
-      await removeSubjectFromAllClusterRoleBindings(
-        client,
-        user!,
-        name,
-        type,
-        roleBindings
-      );
+      await deleteSubjectFromRole(client, user!, name, type, activeRole);
       mutate();
 
       return Promise.resolve();

@@ -11,7 +11,6 @@ import {
   AccessControlSubjectTypes,
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
-  IAccessControlRoleSubjectRoleBinding,
 } from '../../UI/Display/MAPI/AccessControl/types';
 import { getUserNameParts } from './utils';
 
@@ -138,7 +137,6 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
     name: value.name,
     isEditable: value.isEditable,
     isLoading,
-    roleBindings: value.roleBindings,
   };
 };
 
@@ -147,11 +145,7 @@ interface IAccessControlRoleSubjectsProps
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
-  onDelete: (
-    type: AccessControlSubjectTypes,
-    name: string,
-    roleBindings: IAccessControlRoleSubjectRoleBinding[]
-  ) => Promise<void>;
+  onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
@@ -207,15 +201,14 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   };
 
   const handleDeleting = (type: AccessControlSubjectTypes) => async (
-    name: string,
-    roleBindings: IAccessControlRoleSubjectRoleBinding[]
+    name: string
   ) => {
     try {
       dispatch({ type: 'startLoading', subjectType: type, subjectName: name });
-      await onDelete(type, name, roleBindings);
+      await onDelete(type, name);
 
       new FlashMessage(
-        'Subject deleted successfully.',
+        `Subject ${name} deleted successfully.`,
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -223,7 +216,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       const message = (err as Error).message;
 
       new FlashMessage(
-        'Could not delete subject:',
+        `Could not delete subject ${name}:`,
         messageType.ERROR,
         messageTTL.LONG,
         message

@@ -2,12 +2,12 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { LoggedInUserTypes } from 'stores/main/types';
 
-import { IClusterRoleBinding } from './types';
+import { IRoleBinding } from './types';
 
-export async function updateClusterRoleBinding(
+export async function updateRoleBinding(
   client: IHttpClient,
   user: ILoggedInUser,
-  roleBinding: IClusterRoleBinding
+  roleBinding: IRoleBinding
 ) {
   if (!user || user.type !== LoggedInUserTypes.MAPI)
     return Promise.reject(new Error('Not logged in.'));
@@ -15,9 +15,9 @@ export async function updateClusterRoleBinding(
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'rbac.authorization.k8s.io/v1',
-    kind: 'clusterrolebindings',
+    kind: 'rolebindings',
     name: roleBinding.metadata.name,
-    namespace: '',
+    namespace: roleBinding.metadata.namespace!,
   } as k8sUrl.IK8sUpdateOptions);
 
   client.setRequestConfig({
@@ -30,7 +30,7 @@ export async function updateClusterRoleBinding(
   });
   client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-  const response = await client.execute<IClusterRoleBinding>();
+  const response = await client.execute<IRoleBinding>();
 
   return response.data;
 }

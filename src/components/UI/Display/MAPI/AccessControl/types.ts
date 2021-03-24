@@ -6,7 +6,6 @@ export enum AccessControlSubjectTypes {
 
 export interface IAccessControlRoleSubjectRoleBinding {
   name: string;
-  inCluster: boolean;
   namespace: string;
 }
 
@@ -36,7 +35,7 @@ export interface IAccessControlRoleItemPermission {
 
 export interface IAccessControlRoleItem {
   name: string;
-  inCluster: boolean;
+  namespace: string;
   managedBy: string;
   groups: Record<string, IAccessControlRoleSubjectItem>;
   users: Record<string, IAccessControlRoleSubjectItem>;

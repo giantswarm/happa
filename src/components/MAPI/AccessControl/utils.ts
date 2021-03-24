@@ -37,7 +37,7 @@ export function mapResourcesToUiRoles(
     ) {
       roleMap[role.metadata.name] = {
         name: role.metadata.name,
-        inCluster: true,
+        namespace: '',
         managedBy: rbacv1.getManagedBy(role) ?? '',
         groups: {},
         serviceAccounts: {},
@@ -55,7 +55,7 @@ export function mapResourcesToUiRoles(
     ) {
       roleMap[role.metadata.name] = {
         name: role.metadata.name,
-        inCluster: false,
+        namespace: role.metadata.namespace!,
         managedBy: rbacv1.getManagedBy(role) ?? '',
         groups: {},
         serviceAccounts: {},
@@ -67,14 +67,14 @@ export function mapResourcesToUiRoles(
 
   for (const binding of clusterRoleBindings.items) {
     const role = roleMap[binding.roleRef.name];
-    if (role?.inCluster) {
+    if (role?.namespace.length < 1) {
       appendSubjectsToRoleItem(binding, role);
     }
   }
 
   for (const binding of roleBindings.items) {
     const role = roleMap[binding.roleRef.name];
-    if (role?.inCluster === false) {
+    if (role?.namespace.length > 0) {
       appendSubjectsToRoleItem(binding, role);
     }
   }
@@ -94,7 +94,6 @@ function appendSubjectsToRoleItem(
   const uiRoleBinding: ui.IAccessControlRoleSubjectRoleBinding = {
     name: binding.metadata.name,
     namespace: binding.metadata.namespace ?? '',
-    inCluster: binding.kind === rbacv1.ClusterRoleBinding,
   };
 
   for (const subject of binding.subjects) {
@@ -265,15 +264,18 @@ export function makeRoleBinding(
 ): rbacv1.IClusterRoleBinding | rbacv1.IRoleBinding {
   const now = Date.now();
 
+  const inCluster = roleItem.namespace.length < 1;
+
   return {
     apiVersion: 'rbac.authorization.k8s.io/v1',
-    kind: roleItem.inCluster ? rbacv1.ClusterRoleBinding : rbacv1.RoleBinding,
+    kind: inCluster ? rbacv1.ClusterRoleBinding : rbacv1.RoleBinding,
     metadata: {
       name: `${roleItem.name}-${now}`,
+      namespace: roleItem.namespace,
     },
     roleRef: {
       apiGroup: 'rbac.authorization.k8s.io',
-      kind: roleItem.inCluster ? rbacv1.ClusterRole : rbacv1.Role,
+      kind: inCluster ? rbacv1.ClusterRole : rbacv1.Role,
       name: roleItem.name,
     },
     subjects: [],
@@ -295,10 +297,49 @@ export function mapUiSubjectTypeToSubjectKind(
   }
 }
 
-export async function removeSubjectFromClusterRoleBinding(
+export async function createRoleBindingWithSubjects(
   client: IHttpClient,
   user: ILoggedInUser,
-  subjectName: string,
+  type: ui.AccessControlSubjectTypes,
+  subjectNames: string[],
+  roleItem: ui.IAccessControlRoleItem
+) {
+  const roleBinding = makeRoleBinding(roleItem);
+  for (const name of subjectNames) {
+    const kind = mapUiSubjectTypeToSubjectKind(type);
+
+    // TODO(axbarsan): Actually create `ServiceAccount` resources.
+    let apiGroup = '';
+    if (kind !== rbacv1.SubjectKinds.ServiceAccount) {
+      apiGroup = 'rbac.authorization.k8s.io';
+    }
+
+    roleBinding.subjects.push({
+      name,
+      kind,
+      apiGroup,
+    });
+  }
+
+  if (roleItem.namespace.length < 1) {
+    return rbacv1.createClusterRoleBinding(
+      client,
+      user,
+      roleBinding as rbacv1.IClusterRoleBinding
+    );
+  }
+
+  return rbacv1.createRoleBinding(
+    client,
+    user,
+    roleBinding as rbacv1.IRoleBinding
+  );
+}
+
+export async function deleteSubjectFromClusterRoleBinding(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  subject: ui.IAccessControlRoleSubjectItem,
   subjectType: ui.AccessControlSubjectTypes,
   binding: ui.IAccessControlRoleSubjectRoleBinding
 ) {
@@ -309,43 +350,99 @@ export async function removeSubjectFromClusterRoleBinding(
     user,
     binding.name
   )();
-  // Remove the subjects that match.
-  bindingResource.subjects = bindingResource.subjects.filter((subject) => {
-    const isSubject =
-      subject.kind === subjectKind && subject.name === subjectName;
+  // Delete the subjects that match.
+  bindingResource.subjects = bindingResource.subjects.filter((s) => {
+    const isSubject = s.kind === subjectKind && s.name === subject.name;
 
     return !isSubject;
   });
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
-    return rbacv1.deleteClusterRoleBinding(
-      client,
-      user,
-      bindingResource.metadata.name
-    );
+    return rbacv1.deleteClusterRoleBinding(client, user, bindingResource);
   }
 
   // There are other subjects there, let's keep the resource.
   return rbacv1.updateClusterRoleBinding(client, user, bindingResource);
 }
 
-export async function removeSubjectFromAllClusterRoleBindings(
+export async function deleteSubjectFromRoleBinding(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  subject: ui.IAccessControlRoleSubjectItem,
+  subjectType: ui.AccessControlSubjectTypes,
+  binding: ui.IAccessControlRoleSubjectRoleBinding
+) {
+  const subjectKind = mapUiSubjectTypeToSubjectKind(subjectType);
+
+  const bindingResource = await rbacv1.getRoleBinding(
+    client,
+    user,
+    binding.name,
+    binding.namespace
+  )();
+  // Delete the subjects that match.
+  bindingResource.subjects = bindingResource.subjects.filter((s) => {
+    const isSubject = s.kind === subjectKind && s.name === subject.name;
+
+    return !isSubject;
+  });
+
+  // If there's no subject left, we can delete the resource.
+  if (bindingResource.subjects.length < 1) {
+    return rbacv1.deleteRoleBinding(client, user, bindingResource);
+  }
+
+  // There are other subjects there, let's keep the resource.
+  return rbacv1.updateRoleBinding(client, user, bindingResource);
+}
+
+export async function deleteSubjectFromRole(
   client: IHttpClient,
   user: ILoggedInUser,
   subjectName: string,
   subjectType: ui.AccessControlSubjectTypes,
-  bindings: ui.IAccessControlRoleSubjectRoleBinding[]
+  roleItem: ui.IAccessControlRoleItem
 ) {
-  return Promise.all(
-    bindings.map((binding) =>
-      removeSubjectFromClusterRoleBinding(
-        client,
-        user,
-        subjectName,
-        subjectType,
-        binding
+  const subject = findSubjectInRoleItem(subjectName, subjectType, roleItem);
+  if (!subject || subject.roleBindings.length < 1) {
+    return Promise.resolve();
+  }
+
+  if (roleItem.namespace.length < 1) {
+    return Promise.all(
+      subject.roleBindings.map((binding) =>
+        deleteSubjectFromClusterRoleBinding(
+          client,
+          user,
+          subject,
+          subjectType,
+          binding
+        )
       )
+    );
+  }
+
+  return Promise.all(
+    subject.roleBindings.map((binding) =>
+      deleteSubjectFromRoleBinding(client, user, subject, subjectType, binding)
     )
   );
+}
+
+export function findSubjectInRoleItem(
+  subjectName: string,
+  subjectType: ui.AccessControlSubjectTypes,
+  role: ui.IAccessControlRoleItem
+): ui.IAccessControlRoleSubjectItem | undefined {
+  switch (subjectType) {
+    case ui.AccessControlSubjectTypes.Group:
+      return role.groups[subjectName];
+    case ui.AccessControlSubjectTypes.User:
+      return role.users[subjectName];
+    case ui.AccessControlSubjectTypes.ServiceAccount:
+      return role.serviceAccounts[subjectName];
+    default:
+      return undefined;
+  }
 }

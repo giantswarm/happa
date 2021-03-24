@@ -7,11 +7,7 @@ import Tabs from 'shared/Tabs';
 
 import AccessControlRolePermissions from './AccessControlRolePermissions';
 import AccessControlRoleType from './AccessControlRoleType';
-import {
-  AccessControlSubjectTypes,
-  IAccessControlRoleItem,
-  IAccessControlRoleSubjectRoleBinding,
-} from './types';
+import { AccessControlSubjectTypes, IAccessControlRoleItem } from './types';
 
 export function formatManagedBy(managedBy?: string): string {
   if (!managedBy) return 'you';
@@ -22,11 +18,7 @@ export function formatManagedBy(managedBy?: string): string {
 interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
-  onDelete: (
-    type: AccessControlSubjectTypes,
-    name: string,
-    roleBindings: IAccessControlRoleSubjectRoleBinding[]
-  ) => Promise<void>;
+  onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
 }
 
@@ -44,7 +36,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
         <Heading level={4}>{activeRole.name}</Heading>
       </Box>
       <Box direction='row' wrap={true} gap='xsmall'>
-        <AccessControlRoleType inCluster={activeRole.inCluster} />
+        <AccessControlRoleType namespace={activeRole.namespace} />
         <Text>&bull;</Text>
         <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
       </Box>

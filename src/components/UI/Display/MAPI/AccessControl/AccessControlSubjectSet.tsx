@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
 
-import { IAccessControlRoleSubjectRoleBinding } from './types';
-
 export interface IAccessControlSubjectSetRenderer
   extends React.ComponentPropsWithoutRef<typeof Box> {
   name: string;
@@ -18,7 +16,6 @@ export interface IAccessControlSubjectSetItem {
   name: string;
   isEditable: boolean;
   isLoading: boolean;
-  roleBindings: IAccessControlRoleSubjectRoleBinding[];
 }
 
 interface IAccessControlSubjectSetProps
@@ -27,10 +24,7 @@ interface IAccessControlSubjectSetProps
   renderItem: (params: IAccessControlSubjectSetRenderer) => React.ReactNode;
   onAdd: (values: string[]) => void;
   onToggleAdding: () => void;
-  onDeleteItem: (
-    name: string,
-    roleBindings: IAccessControlRoleSubjectRoleBinding[]
-  ) => void;
+  onDeleteItem: (name: string) => void;
   isAdding?: boolean;
   isLoading?: boolean;
 }
@@ -83,18 +77,16 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
 
   return (
     <Box direction='row' wrap={true} align='start' {...props}>
-      {items.map(
-        ({ name, isEditable, isLoading: isItemLoading, roleBindings }) => (
-          <React.Fragment key={name}>
-            {renderItem({
-              name,
-              isEditable,
-              isLoading: isItemLoading,
-              onDelete: () => onDeleteItem(name, roleBindings),
-            })}
-          </React.Fragment>
-        )
-      )}
+      {items.map(({ name, isEditable, isLoading: isItemLoading }) => (
+        <React.Fragment key={name}>
+          {renderItem({
+            name,
+            isEditable,
+            isLoading: isItemLoading,
+            onDelete: () => onDeleteItem(name),
+          })}
+        </React.Fragment>
+      ))}
       <AccessControlSubjectAddForm
         margin={{ right: 'small', bottom: 'small' }}
         isAdding={isAdding}
