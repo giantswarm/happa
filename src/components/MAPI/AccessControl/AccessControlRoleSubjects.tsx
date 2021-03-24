@@ -181,19 +181,28 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       await onAdd(type, values);
       dispatch({ type: 'stopAdding', subjectType: type });
 
-      new FlashMessage(
-        'Subjects added successfully.',
-        messageType.SUCCESS,
-        messageTTL.SHORT
-      );
+      let message = '';
+      if (values.length > 1) {
+        message = 'Subjects added successfully.';
+      } else {
+        message = 'Subject added successfully.';
+      }
+
+      new FlashMessage(message, messageType.SUCCESS, messageTTL.SHORT);
     } catch (err: unknown) {
-      const message = (err as Error).message;
+      let message = '';
+      if (values.length > 1) {
+        message = 'Could not add subjects:';
+      } else {
+        message = 'Could not add subject:';
+      }
+      const errorMessage = (err as Error).message;
 
       new FlashMessage(
-        'Could not add subjects:',
+        message,
         messageType.ERROR,
         messageTTL.LONG,
-        message
+        errorMessage
       );
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type });

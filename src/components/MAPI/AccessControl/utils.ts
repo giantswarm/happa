@@ -265,6 +265,10 @@ export function filterRoles(
   });
 }
 
+/**
+ * Get the username and domain out of a subject username.
+ * @param user
+ */
 export function getUserNameParts(
   user: string
 ): [userName: string, domain?: string] {
@@ -273,6 +277,10 @@ export function getUserNameParts(
   return [userParts[0], userParts[1]];
 }
 
+/**
+ * Create empty `ClusterRoleBinding`/`RoleBinding`, based on the given role.
+ * @param roleItem
+ */
 export function makeRoleBinding(
   roleItem: ui.IAccessControlRoleItem
 ): rbacv1.IClusterRoleBinding | rbacv1.IRoleBinding {
@@ -296,6 +304,11 @@ export function makeRoleBinding(
   };
 }
 
+/**
+ * Map the UI subject type to the subject kind
+ * used in Kubernetes.
+ * @param type
+ */
 export function mapUiSubjectTypeToSubjectKind(
   type: ui.AccessControlSubjectTypes
 ): rbacv1.SubjectKinds {
@@ -311,6 +324,14 @@ export function mapUiSubjectTypeToSubjectKind(
   }
 }
 
+/**
+ * Create a new role binding that contains the given subjects.
+ * @param client
+ * @param user
+ * @param type - The type of the given subject names.
+ * @param subjectNames - The given subject names.
+ * @param roleItem - The role that the binding should point to.
+ */
 export async function createRoleBindingWithSubjects(
   client: IHttpClient,
   user: ILoggedInUser,
@@ -350,6 +371,14 @@ export async function createRoleBindingWithSubjects(
   );
 }
 
+/**
+ * Delete a subject from a given `ClusterRoleBinding` resource.
+ * @param client
+ * @param user
+ * @param subject
+ * @param subjectType
+ * @param binding
+ */
 export async function deleteSubjectFromClusterRoleBinding(
   client: IHttpClient,
   user: ILoggedInUser,
@@ -380,6 +409,14 @@ export async function deleteSubjectFromClusterRoleBinding(
   return rbacv1.updateClusterRoleBinding(client, user, bindingResource);
 }
 
+/**
+ * Delete a subject from a given `RoleBinding` resource.
+ * @param client
+ * @param user
+ * @param subject
+ * @param subjectType
+ * @param binding
+ */
 export async function deleteSubjectFromRoleBinding(
   client: IHttpClient,
   user: ILoggedInUser,
@@ -411,6 +448,15 @@ export async function deleteSubjectFromRoleBinding(
   return rbacv1.updateRoleBinding(client, user, bindingResource);
 }
 
+/**
+ * Delete a subject from a given role. It will delete the subject from
+ * all the role bindings that point to this role.
+ * @param client
+ * @param user
+ * @param subjectName
+ * @param subjectType
+ * @param roleItem
+ */
 export async function deleteSubjectFromRole(
   client: IHttpClient,
   user: ILoggedInUser,
@@ -444,6 +490,12 @@ export async function deleteSubjectFromRole(
   );
 }
 
+/**
+ * Find a subject by name and type into a given role.
+ * @param subjectName
+ * @param subjectType
+ * @param role
+ */
 export function findSubjectInRoleItem(
   subjectName: string,
   subjectType: ui.AccessControlSubjectTypes,
@@ -461,6 +513,12 @@ export function findSubjectInRoleItem(
   }
 }
 
+/**
+ * Extract the error message from a K8s API response.
+ * @param fromErr
+ * @param fallback - What message to return if the message
+ * could not be extracted.
+ */
 export function extractErrorMessage(
   fromErr: unknown,
   fallback = 'Something went wrong'

@@ -122,7 +122,7 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
       }
       placement='left'
     >
-      <Box gap='xxsmall' direction='row' {...props}>
+      <Box gap='xxsmall' direction='row' aria-label={formattedVerbs} {...props}>
         {Object.entries(verbMap).map(([verb, options]) => (
           <Box
             width='23px'
@@ -135,7 +135,7 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
             align='center'
             justify='center'
             round='xxsmall'
-            aria-label={verb}
+            aria-disabled={!options.active}
           >
             <Text size='small' color={options.active ? 'text' : 'text-xweak'}>
               {options.display}
