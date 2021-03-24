@@ -167,19 +167,28 @@ export function getRolePermissions(
   return permissions;
 }
 
+export function getOrgNamespaceFromOrgName(name: string): string {
+  return `org-${name}`;
+}
+
 /**
  * Fetch the list of roles and role bindings and map it to the
  * data structure necessary for rendering the UI.
  * @param client
  * @param user
+ * @param organizationName
  */
-export function getRoleItems(client: IHttpClient, user: ILoggedInUser) {
+export function getRoleItems(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  namespace: string
+) {
   return async () => {
     const response = await Promise.all([
       rbacv1.getClusterRoleList(client, user)(),
-      rbacv1.getRoleList(client, user)(),
+      rbacv1.getRoleList(client, user, namespace)(),
       rbacv1.getClusterRoleBindingList(client, user)(),
-      rbacv1.getRoleBindingList(client, user)(),
+      rbacv1.getRoleBindingList(client, user, namespace)(),
     ]);
 
     return mapResourcesToUiRoles(...response);
@@ -190,12 +199,15 @@ export function getRoleItems(client: IHttpClient, user: ILoggedInUser) {
  * Get the cache key used for the role getter request in.
  * @param user
  */
-export function getRoleItemsKey(user: ILoggedInUser | null): string | null {
+export function getRoleItemsKey(
+  user: ILoggedInUser | null,
+  namespace: string
+): string | null {
   const keyParts = [
     rbacv1.getClusterRoleListKey(user),
-    rbacv1.getRoleListKey(user),
+    rbacv1.getRoleListKey(user, namespace),
     rbacv1.getClusterRoleBindingListKey(user),
-    rbacv1.getRoleBindingListKey(user),
+    rbacv1.getRoleBindingListKey(user, namespace),
   ];
 
   let key = '';

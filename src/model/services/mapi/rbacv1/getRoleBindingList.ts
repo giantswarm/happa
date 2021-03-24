@@ -4,12 +4,17 @@ import { LoggedInUserTypes } from 'stores/main/types';
 
 import { IRoleBindingList } from './types';
 
-export function getRoleBindingList(client: IHttpClient, user: ILoggedInUser) {
+export function getRoleBindingList(
+  client: IHttpClient,
+  user: ILoggedInUser,
+  namespace?: string
+) {
   return async () => {
     const url = k8sUrl.create({
       baseUrl: window.config.mapiEndpoint,
       apiVersion: 'rbac.authorization.k8s.io/v1',
       kind: 'rolebindings',
+      namespace: namespace!,
     });
 
     client.setRequestConfig({
@@ -28,9 +33,10 @@ export function getRoleBindingList(client: IHttpClient, user: ILoggedInUser) {
 }
 
 export function getRoleBindingListKey(
-  user: ILoggedInUser | null
+  user: ILoggedInUser | null,
+  namespace?: string
 ): string | null {
   if (!user || user.type !== LoggedInUserTypes.MAPI) return null;
 
-  return 'getRoleBindingList';
+  return `getRoleBindingList/${namespace}`;
 }

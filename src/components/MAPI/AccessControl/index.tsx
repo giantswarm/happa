@@ -4,6 +4,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
@@ -14,6 +15,7 @@ import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import {
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
+  getOrgNamespaceFromOrgName,
   getRoleItems,
   getRoleItemsKey,
 } from './utils';
@@ -22,12 +24,15 @@ interface IAccessControlProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const AccessControl: React.FC<IAccessControlProps> = (props) => {
+  const { orgId } = useParams<{ orgId: string }>();
+  const orgNamespace = getOrgNamespaceFromOrgName(orgId);
+
   const client = useHttpClient();
   const user = useSelector(getLoggedInUser);
   // TODO(axbarsan): Handle error.
   const { data, mutate } = useSWR<ui.IAccessControlRoleItem[], GenericResponse>(
-    getRoleItemsKey(user),
-    getRoleItems(client, user!)
+    getRoleItemsKey(user, orgNamespace),
+    getRoleItems(client, user!, orgNamespace)
   );
 
   const [activeRoleName, setActiveRoleName] = useState('');

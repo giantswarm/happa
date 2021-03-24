@@ -8,7 +8,7 @@ export * from './updateRoleBinding';
 export * from './getClusterRoleBinding';
 export * from './getRoleBinding';
 export * from './getClusterRoleList';
-export * from './getRoleBindings';
+export * from './getRoleBindingList';
 export * from './getRoleList';
 export * from './types';
 export * from './key';
