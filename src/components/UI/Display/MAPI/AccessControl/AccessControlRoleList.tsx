@@ -64,6 +64,9 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
     [setActiveRoleName]
   );
 
+  let loadingErrorMessage = errorMessage;
+  loadingErrorMessage ??= `Error loading roles: ${loadingErrorMessage}`;
+
   return (
     <Sidebar responsive={false} {...props}>
       <Content>
@@ -74,7 +77,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             value={searchQuery}
             onChange={handleSearch}
             readOnly={!roles}
-            error={errorMessage}
+            error={loadingErrorMessage}
           />
         </Box>
         <Keyboard
