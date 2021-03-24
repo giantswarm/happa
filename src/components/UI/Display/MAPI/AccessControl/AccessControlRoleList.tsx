@@ -65,7 +65,9 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   );
 
   let loadingErrorMessage = errorMessage;
-  loadingErrorMessage ??= `Error loading roles: ${loadingErrorMessage}`;
+  if (loadingErrorMessage) {
+    loadingErrorMessage = `Error loading roles: ${loadingErrorMessage}`;
+  }
 
   return (
     <Sidebar responsive={false} {...props}>
