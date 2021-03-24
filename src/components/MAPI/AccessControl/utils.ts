@@ -151,7 +151,7 @@ export function getRolePermissions(
     }
 
     permissions.push({
-      verbs: rule.verbs ?? [],
+      verbs: rule.verbs,
       apiGroups: rule.apiGroups ?? [],
       resourceNames: rule.resourcesNames ?? [],
       resources: rule.resources ?? [],
