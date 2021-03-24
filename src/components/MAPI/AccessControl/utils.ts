@@ -1,5 +1,6 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
+import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
@@ -339,22 +340,30 @@ export async function createRoleBindingWithSubjects(
   subjectNames: string[],
   roleItem: ui.IAccessControlRoleItem
 ) {
+  const subjectCreationRequests = [];
+
   const roleBinding = makeRoleBinding(roleItem);
   for (const name of subjectNames) {
-    const kind = mapUiSubjectTypeToSubjectKind(type);
+    const subject: rbacv1.ISubject = {
+      name,
+      kind: mapUiSubjectTypeToSubjectKind(type),
+      apiGroup: 'rbac.authorization.k8s.io',
+    };
 
-    // TODO(axbarsan): Actually create `ServiceAccount` resources.
-    let apiGroup = '';
-    if (kind !== rbacv1.SubjectKinds.ServiceAccount) {
-      apiGroup = 'rbac.authorization.k8s.io';
+    if (subject.kind === rbacv1.SubjectKinds.ServiceAccount) {
+      // We need to create a `ServiceAccount` resource first.
+      subject.apiGroup = '';
+      subject.namespace = roleItem.namespace || 'default';
+
+      subjectCreationRequests.push(
+        corev1.getServiceAccount(client, user, name, subject.namespace)
+      );
     }
 
-    roleBinding.subjects.push({
-      name,
-      kind,
-      apiGroup,
-    });
+    roleBinding.subjects.push(subject);
   }
+
+  await Promise.all(subjectCreationRequests);
 
   if (roleItem.namespace.length < 1) {
     return rbacv1.createClusterRoleBinding(
