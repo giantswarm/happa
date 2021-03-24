@@ -30,12 +30,14 @@ interface IAccessControlRoleListProps
   activeRoleName: string;
   setActiveRoleName: (newName: string) => void;
   roles?: IAccessControlRoleItem[];
+  errorMessage?: string;
 }
 
 const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   roles,
   activeRoleName,
   setActiveRoleName,
+  errorMessage,
   ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -72,6 +74,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             value={searchQuery}
             onChange={handleSearch}
             readOnly={!roles}
+            error={errorMessage}
           />
         </Box>
         <Keyboard
@@ -124,6 +127,7 @@ AccessControlRoleList.propTypes = {
   isLoading: PropTypes.bool,
   // @ts-expect-error
   roles: PropTypes.arrayOf(PropTypes.object.isRequired),
+  errorMessage: PropTypes.string,
 };
 
 export default AccessControlRoleList;

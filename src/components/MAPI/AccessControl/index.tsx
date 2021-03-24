@@ -1,7 +1,6 @@
 import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -15,6 +14,7 @@ import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import {
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
+  extractErrorMessage,
   getOrgNamespaceFromOrgName,
   getRoleItems,
   getRoleItemsKey,
@@ -29,8 +29,10 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
 
   const client = useHttpClient();
   const user = useSelector(getLoggedInUser);
-  // TODO(axbarsan): Handle error.
-  const { data, mutate } = useSWR<ui.IAccessControlRoleItem[], GenericResponse>(
+  const { data, mutate, error } = useSWR<
+    ui.IAccessControlRoleItem[],
+    GenericResponse
+  >(
     getRoleItemsKey(user, orgNamespace),
     getRoleItems(client, user!, orgNamespace)
   );
@@ -62,20 +64,9 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
 
       return Promise.resolve();
     } catch (err: unknown) {
-      const defaultMessage = 'Something went wrong.';
+      const errorMessage = extractErrorMessage(err);
 
-      if (metav1.isStatus((err as GenericResponse).data)) {
-        return Promise.reject(
-          new Error(
-            (err as GenericResponse<metav1.IK8sStatus>).data.message ??
-              defaultMessage
-          )
-        );
-      } else if (err instanceof Error) {
-        return Promise.reject(err);
-      }
-
-      return Promise.reject(new Error(defaultMessage));
+      return Promise.reject(new Error(errorMessage));
     }
   };
 
@@ -91,20 +82,9 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
 
       return Promise.resolve();
     } catch (err: unknown) {
-      const defaultMessage = 'Something went wrong.';
+      const errorMessage = extractErrorMessage(err);
 
-      if (metav1.isStatus((err as GenericResponse).data)) {
-        return Promise.reject(
-          new Error(
-            (err as GenericResponse<metav1.IK8sStatus>).data.message ??
-              defaultMessage
-          )
-        );
-      } else if (err instanceof Error) {
-        return Promise.reject(err);
-      }
-
-      return Promise.reject(new Error(defaultMessage));
+      return Promise.reject(new Error(errorMessage));
     }
   };
 
@@ -125,6 +105,7 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
           roles={data}
           activeRoleName={activeRoleName}
           setActiveRoleName={setActiveRoleName}
+          errorMessage={extractErrorMessage(error)}
         />
         <AccessControlRoleDetail
           basis='2/3'

@@ -1,4 +1,6 @@
+import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
+import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
@@ -457,4 +459,24 @@ export function findSubjectInRoleItem(
     default:
       return undefined;
   }
+}
+
+export function extractErrorMessage(
+  fromErr: unknown,
+  fallback = 'Something went wrong'
+): string {
+  if (!fromErr) return '';
+
+  let message = '';
+
+  if (metav1.isStatus((fromErr as GenericResponse).data)) {
+    message =
+      (fromErr as GenericResponse<metav1.IK8sStatus>).data.message ?? '';
+  } else if (fromErr instanceof Error) {
+    message = fromErr.message;
+  }
+
+  message ||= fallback;
+
+  return message;
 }
