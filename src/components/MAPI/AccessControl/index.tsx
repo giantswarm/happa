@@ -58,6 +58,7 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
         user!,
         type,
         names,
+        orgNamespace,
         activeRole
       );
       mutate();
@@ -77,7 +78,14 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
     try {
       if (!activeRole) return Promise.resolve();
 
-      await deleteSubjectFromRole(client, user!, name, type, activeRole);
+      await deleteSubjectFromRole(
+        client,
+        user!,
+        name,
+        type,
+        orgNamespace,
+        activeRole
+      );
       mutate();
 
       return Promise.resolve();
