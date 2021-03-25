@@ -507,7 +507,7 @@ const theme = deepMerge(generate(16), {
     level: {
       '1': {
         font: {
-          weight: '700',
+          weight: '300',
         },
         small: {
           size: '28px',
@@ -515,8 +515,7 @@ const theme = deepMerge(generate(16), {
           maxWidth: '567px',
         },
         medium: {
-          size: '42px',
-          height: '47px',
+          size: '28px',
           maxWidth: '833px',
         },
         large: {
@@ -531,14 +530,16 @@ const theme = deepMerge(generate(16), {
         },
       },
       '2': {
+        font: {
+          weight: '300',
+        },
         small: {
           size: '25px',
           height: '30px',
           maxWidth: '500px',
         },
         medium: {
-          size: '35px',
-          height: '40px',
+          size: '20px',
           maxWidth: '700px',
         },
         large: {
@@ -714,6 +715,11 @@ const theme = deepMerge(generate(16), {
     },
   },
   table: {
+    row: {
+      hover: {
+        background: 'selected-background',
+      },
+    },
     header: {
       extend: () => css`
         text-transform: uppercase;
