@@ -1,7 +1,6 @@
 import Cluster from 'Cluster/Cluster';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import AccessControl from 'MAPI/AccessControl';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -11,7 +10,6 @@ import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getLoggedInUser } from 'stores/main/selectors';
-import { LoggedInUserTypes } from 'stores/main/types';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { supportsMultiAccount } from 'stores/organization/utils';
@@ -54,13 +52,6 @@ class DetailIndex extends React.Component {
             path={`${match.path}`}
             render={() => <DetailView {...this.props} />}
           />
-          {this.props.user.type === LoggedInUserTypes.MAPI && (
-            <Route
-              component={AccessControl}
-              exact={true}
-              path={OrganizationsRoutes.AccessControl}
-            />
-          )}
           <Route component={Cluster} path={`${match.path}/clusters`} />
           <Redirect path={`${match.path}/*`} to={`${match.url}`} />
         </Switch>

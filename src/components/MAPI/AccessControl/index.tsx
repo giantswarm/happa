@@ -1,9 +1,9 @@
 import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
+import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
@@ -21,11 +21,15 @@ import {
 } from './utils';
 
 interface IAccessControlProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+  extends React.ComponentPropsWithoutRef<typeof Box> {
+  organizationName: string;
+}
 
-const AccessControl: React.FC<IAccessControlProps> = (props) => {
-  const { orgId } = useParams<{ orgId: string }>();
-  const orgNamespace = getOrgNamespaceFromOrgName(orgId);
+const AccessControl: React.FC<IAccessControlProps> = ({
+  organizationName,
+  ...props
+}) => {
+  const orgNamespace = getOrgNamespaceFromOrgName(organizationName);
 
   const client = useHttpClient();
   const user = useSelector(getLoggedInUser);
@@ -131,6 +135,8 @@ const AccessControl: React.FC<IAccessControlProps> = (props) => {
   );
 };
 
-AccessControl.propTypes = {};
+AccessControl.propTypes = {
+  organizationName: PropTypes.string.isRequired,
+};
 
 export default AccessControl;
