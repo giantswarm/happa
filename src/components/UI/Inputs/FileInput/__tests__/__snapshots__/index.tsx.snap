@@ -18,7 +18,7 @@ exports[`FileInput renders a disabled input 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 fwybnj"
+            class="StyledTextInput-sc-1x30a0s-0 XeSGl"
             disabled=""
             type="file"
             value=""
@@ -48,7 +48,7 @@ exports[`FileInput renders a simple input 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dnJA-dm"
+            class="StyledTextInput-sc-1x30a0s-0 hKejfQ"
             type="file"
             value=""
           />
@@ -82,7 +82,7 @@ exports[`FileInput renders an input with a help message 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dnJA-dm"
+            class="StyledTextInput-sc-1x30a0s-0 hKejfQ"
             type="file"
             value=""
           />
@@ -117,7 +117,7 @@ exports[`FileInput renders an input with a label 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dnJA-dm"
+            class="StyledTextInput-sc-1x30a0s-0 hKejfQ"
             id="input"
             type="file"
             value=""
@@ -147,7 +147,7 @@ exports[`FileInput renders an input with a validation error 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dnJA-dm"
+            class="StyledTextInput-sc-1x30a0s-0 hKejfQ"
             type="file"
             value=""
           />
@@ -181,7 +181,7 @@ exports[`FileInput renders an input with an info message 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dnJA-dm"
+            class="StyledTextInput-sc-1x30a0s-0 hKejfQ"
             type="file"
             value=""
           />

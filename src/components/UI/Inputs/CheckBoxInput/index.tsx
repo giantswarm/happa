@@ -114,7 +114,7 @@ const CheckBoxInput = React.forwardRef<HTMLInputElement, ICheckBoxInputProps>(
         <Input
           {...props}
           id={id}
-          ref={ref as React.Ref<HTMLInputElement> & string}
+          ref={ref}
           disabled={disabled}
           required={required}
           name={name}

@@ -20,11 +20,13 @@ import {
   getHasAccessToResources,
   getLoggedInUser,
 } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
 import ExceptionNotificationTest from './ExceptionNotificationTest/ExceptionNotificationTest';
 import Home from './Home/Home';
+import MAPIOrganizations from './MAPI/organizations/OrganizationIndex';
 import Modals from './Modals/Modals';
 import Organizations from './Organizations/Organizations';
 import Navigation from './UI/Controls/Navigation/Navigation';
@@ -72,10 +74,19 @@ class Layout extends React.Component {
                     <Route component={Home} exact path={MainRoutes.Home} />
                     <Route component={Apps} path={AppsRoutes.Home} />
                     <Route component={Users} exact path={UsersRoutes.Home} />
-                    <Route
-                      component={Organizations}
-                      path={OrganizationsRoutes.Home}
-                    />
+
+                    {this.props.user.type === LoggedInUserTypes.MAPI ? (
+                      <Route
+                        component={MAPIOrganizations}
+                        path={OrganizationsRoutes.Home}
+                      />
+                    ) : (
+                      <Route
+                        component={Organizations}
+                        path={OrganizationsRoutes.Home}
+                      />
+                    )}
+
                     <Route
                       component={AccountSettings}
                       exact
