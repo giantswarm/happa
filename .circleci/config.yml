@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@2.1.0
+  architect: giantswarm/architect@2.4.1
 
 defaults: &defaults
   working_directory: ~/happa
@@ -101,6 +101,19 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-collection:
+          name: push-happa-to-shared-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "shared-app-collection"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
           name: push-happa-to-aws-app-collection
           context: architect
           app_name: "happa"
@@ -131,6 +144,19 @@ workflows:
           context: architect
           app_name: "happa"
           app_collection_repo: "kvm-app-collection"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+              
+      - architect/push-to-app-collection:
+          name: push-happa-to-vmware-app-collection
+          context: architect
+          app_name: "happa"
+          app_collection_repo: "vmware-app-collection"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:

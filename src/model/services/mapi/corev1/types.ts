@@ -1,4 +1,4 @@
-export interface ICoreV1ObjectReference {
+export interface IObjectReference {
   apiVersion: string;
   kind: string;
   name: string;

@@ -1,12 +1,12 @@
-import { IMetaV1List, IMetaV1ObjectMeta } from '../meta/types';
+import { IList, IObjectMeta } from '../metav1/types';
 
 export interface IOrganizationSpec {}
 
 export interface IOrganization {
   apiVersion: string;
   kind: string;
-  metadata: IMetaV1ObjectMeta;
+  metadata: IObjectMeta;
   spec: IOrganizationSpec;
 }
 
-export interface IOrganizationList extends IMetaV1List<IOrganization> {}
+export interface IOrganizationList extends IList<IOrganization> {}
