@@ -40,3 +40,7 @@ export const kubernetesResourcesURL =
 
 // All information about node pools.
 export const nodePoolsURL = 'https://docs.giantswarm.io/advanced/node-pools/';
+
+// Organization concept docs.
+// TODO: @oponder,@marians find a meaningful target for this documentation link.
+export const organizationsExplainedURL = 'https://docs.giantswarm.io/';

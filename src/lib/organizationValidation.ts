@@ -1,8 +1,8 @@
 export enum OrganizationNameStatusMessage {
-  TooShort = 'must be at least 4 characters long',
-  StartAndEndWithAlphaNumeric = 'must start and end with an alphanumeric character (a-z, 0-9)',
-  CharacterSet = 'must contain only a-z, 0-9, and hyphens and underscores',
-  TooLong = 'must not be longer than 249 characters',
+  TooShort = 'Must be at least 4 characters long',
+  StartAndEndWithAlphaNumeric = 'Must start and end with an alphanumeric character (a-z, 0-9)',
+  CharacterSet = 'Must contain only a-z, 0-9, and hyphens and underscores',
+  TooLong = 'Must not be longer than 249 characters',
   Ok = '',
 }
 

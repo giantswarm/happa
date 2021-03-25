@@ -1,4 +1,5 @@
 import { Box, DataTable, Heading, Text } from 'grommet';
+import { organizationsExplainedURL } from 'lib/docs';
 import useDebounce from 'lib/hooks/useDebounce';
 import {
   OrganizationNameStatusMessage,
@@ -9,24 +10,38 @@ import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 import Well from 'UI/Layout/Well';
+import Truncated from 'UI/Util/Truncated';
 
 const VALIDATION_ERROR_DEBOUNCE_MS = 500;
 
 interface IOrganizationIndexDataTableRow {
   name: string;
   clusters?: number;
-  oldest_release?: string;
-  newest_release?: string;
-  oldest_k8s_version?: string;
-  newest_k8s_version?: string;
+  oldestRelease?: string;
+  newestRelease?: string;
+  oldestK8sVersion?: string;
+  newestK8sVersion?: string;
   apps?: number;
-  app_deployments?: number;
+  appDeployments?: number;
 }
 interface IOrganizationIndexPageProps {
   onClickRow: (name: string) => void;
   data?: IOrganizationIndexDataTableRow[];
   createOrg: (name: string) => Promise<void>;
 }
+
+interface ITextOrNaProps {
+  text?: string | number | undefined | null;
+}
+
+// Returns 'n/a' if props.text is empty.
+const TextOrNA: React.FC<ITextOrNaProps> = (props) => {
+  return <span>{props.text ? props.text : 'n/a'}</span>;
+};
+
+TextOrNA.propTypes = {
+  text: PropTypes.string,
+};
 
 const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
@@ -63,7 +78,16 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
         <Heading margin='none'>Your Organizations</Heading>
         <Text margin={{ bottom: 'large' }}>
           Organizations help you manage clusters and apps for different
-          purposes, projects, or teams. Learn more in our documentation
+          purposes, projects, or teams. Learn more in our{' '}
+          {/* TODO: @oponder,@marians find a meaningful target for this documentation link. */}
+          <a
+            href={organizationsExplainedURL}
+            rel='noopener noreferrer'
+            target='_blank'
+          >
+            documentation <i className='fa fa-open-in-new' />
+          </a>
+          .
         </Text>
 
         <DataTable
@@ -77,42 +101,51 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
               property: 'name',
               header: 'Name',
               primary: true,
+              render: (datum) => <Truncated as='span'>{datum.name}</Truncated>,
             },
             {
               property: 'clusters',
               header: 'Clusters',
               align: 'center',
+              render: (datum) => <TextOrNA text={datum.clusters} />,
             },
-            {
-              property: 'oldest_release',
-              header: 'Oldest release',
-              align: 'center',
-            },
-            {
-              property: 'newest_release',
-              header: 'Newest release',
-              align: 'center',
-            },
-            {
-              property: 'oldest_k8s_version',
-              header: 'Oldest K8S Version',
-              align: 'center',
-            },
-            {
-              property: 'newest_k8s_version',
-              header: 'Newest K8S Version',
-              align: 'center',
-            },
-            {
-              property: 'apps',
-              header: 'Apps',
-              align: 'center',
-            },
-            {
-              property: 'app_deployments',
-              header: 'App Deployments',
-              align: 'center',
-            },
+            // TODO: @oponder: enable these in another PR when we have the data.
+            // {
+            //   property: 'oldest_release',
+            //   header: 'Oldest release',
+            //   align: 'center',
+            //   render: (datum) => <TextOrNA text={datum.oldestRelease} />,
+            // },
+            // {
+            //   property: 'newest_release',
+            //   header: 'Newest release',
+            //   align: 'center',
+            //   render: (datum) => <TextOrNA text={datum.newestRelease} />,
+            // },
+            // {
+            //   property: 'oldest_k8s_version',
+            //   header: 'Oldest K8S Version',
+            //   align: 'center',
+            //   render: (datum) => <TextOrNA text={datum.oldestK8sVersion} />,
+            // },
+            // {
+            //   property: 'newest_k8s_version',
+            //   header: 'Newest K8S Version',
+            //   align: 'center',
+            //   render: (datum) => <TextOrNA text={datum.newestK8sVersion} />,
+            // },
+            // {
+            //   property: 'apps',
+            //   header: 'Apps',
+            //   align: 'center',
+            //   render: (datum) => <TextOrNA text={datum.apps} />,
+            // },
+            // {
+            //   property: 'app_deployments',
+            //   header: 'App Deployments',
+            //   align: 'center',
+            //   render: (datum) => <TextOrNA text={datum.appDeployments} />,
+            // },
           ]}
           data={props.data}
         />
@@ -131,7 +164,7 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
             </Heading>
             <Text margin={{ bottom: 'small' }}>
               This will create a new Organization CR and a namespace in the
-              management cluster. Some name restrictins apply.
+              management cluster. Some name restrictions apply.
             </Text>
             <form
               onSubmit={async (e) => {
