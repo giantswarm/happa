@@ -460,4 +460,42 @@ describe('AccessControlRoleSubjects', () => {
     expect(input).not.toBeInTheDocument();
     expect(onAddMockfn).not.toHaveBeenCalled();
   });
+
+  it('does not allow adding a subject that is already in the list', () => {
+    const onAddMockfn = jest.fn();
+
+    renderWithTheme(AccessControlRoleSubjects, {
+      groups: {
+        'test-group1': {
+          name: 'test-group1',
+          isEditable: true,
+          roleBindings: [],
+        },
+      },
+      users: {},
+      serviceAccounts: {},
+      roleName: 'test-role',
+      onAdd: onAddMockfn,
+      onDelete: jest.fn(),
+    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+
+    const section = screen.getByLabelText('Groups');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    ) as HTMLInputElement;
+
+    const submitButton = screen.getByRole('button', { name: 'OK' });
+    fireEvent.change(input, {
+      target: { value: 'test-group1' },
+    });
+
+    fireEvent.click(submitButton);
+
+    expect(screen.getByText(`Subject 'test-group1' already exists.`));
+
+    expect(input).toBeInTheDocument();
+    expect(onAddMockfn).not.toHaveBeenCalled();
+  });
 });
