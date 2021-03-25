@@ -497,5 +497,13 @@ describe('AccessControlRoleSubjects', () => {
 
     expect(input).toBeInTheDocument();
     expect(onAddMockfn).not.toHaveBeenCalled();
+
+    fireEvent.change(input, {
+      target: { value: '' },
+    });
+
+    expect(
+      screen.queryByText(`Subject 'test-group1' already exists.`)
+    ).not.toBeInTheDocument();
   });
 });
