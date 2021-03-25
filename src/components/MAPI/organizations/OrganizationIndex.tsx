@@ -1,4 +1,3 @@
-import AccessControl from 'MAPI/AccessControl';
 import Detail from 'Organizations/Detail/Detail';
 import * as React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -19,11 +18,6 @@ const OrganizationIndex: React.FC = () => {
             component={OrganizationList}
             exact
             path={OrganizationsRoutes.List}
-          />
-          <Route
-            component={AccessControl}
-            exact={true}
-            path={OrganizationsRoutes.AccessControl}
           />
           <Route component={Detail} path={OrganizationsRoutes.Detail} />
           <Redirect to={OrganizationsRoutes.Home} />
