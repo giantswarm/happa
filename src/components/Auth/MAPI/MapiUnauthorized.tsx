@@ -16,7 +16,7 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
   user,
   ...props
 }) => {
-  const userID = user?.email ?? 'Not logged in';
+  const email = user?.email ?? 'Not logged in';
 
   let groups = user?.groups?.join(', ');
   groups ||= 'none';
@@ -49,8 +49,8 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
       </Paragraph>
       <Box direction='column' gap='xsmall' margin={{ top: 'small' }}>
         <Box direction='row' gap='xsmall'>
-          <Text weight='bold'>User ID:</Text>
-          <Text>{userID}</Text>
+          <Text weight='bold'>Email:</Text>
+          <Text>{email}</Text>
         </Box>
         <Box direction='row' gap='xsmall'>
           <Text weight='bold'>Groups:</Text>
