@@ -3,7 +3,8 @@ import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import React, { useMemo } from 'react';
 import { Tab } from 'react-bootstrap';
-import { useParams } from 'react-router';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { useParams, useRouteMatch } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
@@ -26,22 +27,30 @@ interface IOrganizationDetailProps {}
 
 const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const { orgId } = useParams<{ orgId: string }>();
+  const match = useRouteMatch();
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
   return (
-    <Box>
-      <Heading level={1} margin={{ bottom: 'large' }}>
-        Organization: {orgId}
-      </Heading>
-      <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
-        <Tab eventKey={paths.Detail} title='General'>
-          <OrganizationDetailPage />
-        </Tab>
-        <Tab eventKey={paths.AccessControl} title='Access control'>
-          <AccessControlPage organizationName={orgId} />
-        </Tab>
-      </Tabs>
-    </Box>
+    <Breadcrumb
+      data={{
+        title: orgId.toUpperCase(),
+        pathname: match.url,
+      }}
+    >
+      <Box>
+        <Heading level={1} margin={{ bottom: 'large' }}>
+          Organization: {orgId}
+        </Heading>
+        <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
+          <Tab eventKey={paths.Detail} title='General'>
+            <OrganizationDetailPage />
+          </Tab>
+          <Tab eventKey={paths.AccessControl} title='Access control'>
+            <AccessControlPage organizationName={orgId} />
+          </Tab>
+        </Tabs>
+      </Box>
+    </Breadcrumb>
   );
 };
 
