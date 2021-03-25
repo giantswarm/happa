@@ -1,7 +1,7 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 
-import { ISelfSubjectRulesReview } from './';
+import { ISelfSubjectRulesReview } from '.';
 
 export function selfSubjectRulesReview(
   client: IHttpClient,

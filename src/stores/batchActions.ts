@@ -5,7 +5,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
 import { HttpClientImpl } from 'model/clients/HttpClient';
-import { selfSubjectRulesReview } from 'model/services/mapi/authorization';
+import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
