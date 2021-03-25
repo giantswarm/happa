@@ -1,3 +1,4 @@
+import Cluster from 'Cluster/Cluster';
 import * as React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -19,6 +20,7 @@ const OrganizationIndex: React.FC = () => {
             exact
             path={OrganizationsRoutes.List}
           />
+          <Route component={Cluster} path={OrganizationsRoutes.Clusters.Home} />
           <Route
             component={OrganizationDetail}
             path={OrganizationsRoutes.Detail}
