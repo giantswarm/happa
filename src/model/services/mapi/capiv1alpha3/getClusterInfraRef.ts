@@ -22,7 +22,7 @@ export function getClusterInfraRef(
         return capzv1alpha3.getAzureClusterByName(
           client,
           user,
-          cluster.metadata.namespace,
+          cluster.metadata.namespace!,
           infrastructureRef.name
         )();
 
@@ -45,7 +45,7 @@ export function getClusterInfraRefKey(
     case capzv1alpha3.AzureCluster:
       return capzv1alpha3.getAzureClusterByNameKey(
         user,
-        cluster.metadata.namespace,
+        cluster.metadata.namespace!,
         infrastructureRef.name
       );
 
