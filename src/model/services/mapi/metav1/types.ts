@@ -1,6 +1,6 @@
 export interface IObjectMeta {
   name: string;
-  namespace: string;
+  namespace?: string;
   resourceVersion?: string;
   selfLink?: string;
   uid?: string;
@@ -13,8 +13,8 @@ export interface IObjectMeta {
 }
 
 export interface ITypeMeta {
-  resourceVersion: string;
-  selfLink: string;
+  rresourceVersion?: string;
+  selfLink?: string;
 }
 
 export interface IList<T> {
