@@ -11,7 +11,7 @@ import {
   AccessControlSubjectTypes,
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
-} from '../../UI/Display/MAPI/AccessControl/types';
+} from '../../../UI/Display/MAPI/AccessControl/types';
 import { getUserNameParts } from './utils';
 
 interface IStateValue {

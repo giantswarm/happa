@@ -1,6 +1,6 @@
 import { Box, Heading } from 'grommet';
 import RoutePath from 'lib/routePath';
-import AccessControlPage from 'MAPI/AccessControl';
+import AccessControlPage from 'MAPI/organizations/AccessControl';
 import React, { useMemo } from 'react';
 import { Tab } from 'react-bootstrap';
 import { useParams } from 'react-router';

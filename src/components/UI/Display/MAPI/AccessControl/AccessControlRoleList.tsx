@@ -1,6 +1,6 @@
 import { Box, InfiniteScroll, Keyboard, Sidebar } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
-import { filterRoles } from 'MAPI/AccessControl/utils';
+import { filterRoles } from 'MAPI/organizations/AccessControl/utils';
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';

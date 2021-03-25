@@ -1,5 +1,5 @@
 import { Box, Heading, Text } from 'grommet';
-import AccessControlRoleSubjects from 'MAPI/AccessControl/AccessControlRoleSubjects';
+import AccessControlRoleSubjects from 'MAPI/organizations/AccessControl/AccessControlRoleSubjects';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';

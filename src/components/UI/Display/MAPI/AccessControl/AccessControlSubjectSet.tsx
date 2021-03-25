@@ -1,5 +1,5 @@
 import { Box } from 'grommet';
-import { parseSubjects } from 'MAPI/AccessControl/utils';
+import { parseSubjects } from 'MAPI/organizations/AccessControl/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
