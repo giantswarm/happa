@@ -4,6 +4,8 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
+import { HttpClientImpl } from 'model/clients/HttpClient';
+import { selfSubjectRulesReview } from 'model/services/mapi/authorization';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
@@ -36,6 +38,7 @@ import {
   refreshUserInfo,
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -61,6 +64,14 @@ export function batchedLayout(
 
     try {
       await dispatch(resumeLogin(auth));
+
+      const client = new HttpClientImpl();
+      const user = getLoggedInUser(getState());
+
+      if (user) {
+        const data = await selfSubjectRulesReview(client, user)();
+        console.log(data);
+      }
 
       try {
         await dispatch(organizationsLoad());
