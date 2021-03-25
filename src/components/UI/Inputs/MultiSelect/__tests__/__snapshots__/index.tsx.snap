@@ -36,7 +36,7 @@ exports[`MultiSelect renders a simple input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hODqtm Select__SelectTextInput-sc-17idtfo-0 bIurki"
+                  class="StyledTextInput-sc-1x30a0s-0 ANDDk Select__SelectTextInput-sc-17idtfo-0 bIurki"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
