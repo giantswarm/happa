@@ -1,4 +1,4 @@
-import { Anchor, Box, Drop, Text } from 'grommet';
+import { Anchor, Box, Drop, Keyboard, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
@@ -52,7 +52,10 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
 
   const [confirmationVisible, setConfirmationVisible] = useState(false);
   const showConfirmation = (
-    e?: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>
+    e?:
+      | React.MouseEvent<HTMLElement>
+      | React.FocusEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
   ) => {
     e?.preventDefault();
 
@@ -60,7 +63,10 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
   };
 
   const hideConfirmation = (
-    e?: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>
+    e?:
+      | React.MouseEvent<HTMLElement>
+      | React.FocusEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
   ) => {
     e?.preventDefault();
 
@@ -133,33 +139,35 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
       )}
 
       {confirmationVisible && deleteButtonRef.current && (
-        <Drop
-          align={{ bottom: 'top', right: 'right' }}
-          target={deleteButtonRef.current}
-          plain={true}
-          trapFocus={true}
-        >
-          <Box
-            background='background-front'
-            pad='medium'
-            round='small'
-            direction='column'
-            gap='small'
-            border={{ color: 'text-xweak' }}
+        <Keyboard onEsc={hideConfirmation}>
+          <Drop
+            align={{ bottom: 'top', right: 'right' }}
+            target={deleteButtonRef.current}
+            plain={true}
+            trapFocus={true}
           >
-            <Box>
-              <Text>Are you sure?</Text>
+            <Box
+              background='background-front'
+              pad='medium'
+              round='small'
+              direction='column'
+              gap='small'
+              border={{ color: 'text-xweak' }}
+            >
+              <Box>
+                <Text>Are you sure?</Text>
+              </Box>
+              <Box direction='row'>
+                <Button bsStyle='danger' onClick={handleDelete}>
+                  Yes, delete it
+                </Button>
+                <Button bsStyle='link' onClick={hideConfirmation}>
+                  Cancel
+                </Button>
+              </Box>
             </Box>
-            <Box direction='row'>
-              <Button bsStyle='danger' onClick={handleDelete}>
-                Yes, delete it
-              </Button>
-              <Button bsStyle='link' onClick={hideConfirmation}>
-                Cancel
-              </Button>
-            </Box>
-          </Box>
-        </Drop>
+          </Drop>
+        </Keyboard>
       )}
     </Box>
   );

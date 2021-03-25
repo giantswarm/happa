@@ -252,7 +252,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
-      <Box gap='small' direction='column'>
+      <Box gap='small' direction='column' aria-label='Groups'>
         <Box>
           <Text size='medium' weight='bold'>
             <i className='fa fa-group' /> Groups
@@ -262,6 +262,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           items={Object.values(groups).map(mapValueToSetItem(groupType))}
           renderItem={(params) => (
             <AccessControlSubjectSetItem
+              aria-label={params.name}
               deleteTooltipMessage="Remove this group's binding to this role"
               {...params}
             />
@@ -281,7 +282,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Box>
         )}
       </Box>
-      <Box gap='small' direction='column'>
+      <Box gap='small' direction='column' aria-label='Users'>
         <Box>
           <Text size='medium' weight='bold'>
             <i className='fa fa-user' /> Users
@@ -294,6 +295,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
             return (
               <AccessControlSubjectSetItem
+                aria-label={params.name}
                 deleteTooltipMessage="Remove this user's binding to this role"
                 {...params}
                 name={
@@ -320,7 +322,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           </Box>
         )}
       </Box>
-      <Box gap='small' direction='column'>
+      <Box gap='small' direction='column' aria-label='Service accounts'>
         <Box>
           <Text size='medium' weight='bold'>
             <i className='fa fa-service-account' /> Service accounts
@@ -332,6 +334,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           )}
           renderItem={(params) => (
             <AccessControlSubjectSetItem
+              aria-label={params.name}
               deleteTooltipMessage="Remove this service account's binding to this role"
               {...params}
             />

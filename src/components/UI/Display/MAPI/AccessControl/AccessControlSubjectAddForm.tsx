@@ -61,7 +61,11 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    onAdd((e.target as HTMLFormElement).values.value);
+    onAdd(
+      ((e.target as HTMLFormElement).elements.namedItem(
+        'values'
+      ) as HTMLInputElement).value
+    );
   };
 
   const handleOnEsc = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -81,9 +85,10 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
       {isAdding ? (
         <StyledBox direction='row' gap='small' align='center'>
           <Keyboard onEsc={handleOnEsc}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} aria-label='Subjects to add'>
               <TextInput
                 name='values'
+                id='values'
                 size='small'
                 margin='none'
                 contentProps={{
@@ -95,6 +100,7 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
                 autoFocus={true}
                 onChange={handleChange}
                 error={errorMessage}
+                placeholder='e.g. subject1, subject2, subject3'
               >
                 <SaveButton
                   type='submit'
