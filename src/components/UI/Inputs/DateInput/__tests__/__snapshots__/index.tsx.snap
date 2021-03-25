@@ -86,7 +86,7 @@ exports[`DateInput renders a disabled input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 fOqbMj"
+            class="StyledMaskedInput-sc-99vkfa-0 cDbCop"
             disabled=""
             id="dob"
             placeholder="yyyy-mm-dd"
@@ -133,7 +133,7 @@ exports[`DateInput renders a simple input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            class="StyledMaskedInput-sc-99vkfa-0 hsPlqc"
             placeholder="yyyy-mm-dd"
             value=""
           />
@@ -189,7 +189,7 @@ exports[`DateInput renders an input with a help message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            class="StyledMaskedInput-sc-99vkfa-0 hsPlqc"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -241,7 +241,7 @@ exports[`DateInput renders an input with a label 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            class="StyledMaskedInput-sc-99vkfa-0 hsPlqc"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -293,7 +293,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            class="StyledMaskedInput-sc-99vkfa-0 hsPlqc"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -350,7 +350,7 @@ exports[`DateInput renders an input with an info message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iLSSWe"
+            class="StyledMaskedInput-sc-99vkfa-0 hsPlqc"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
