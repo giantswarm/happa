@@ -18,7 +18,7 @@ export async function deleteServiceAccount(
     isCore: true,
     kind: 'serviceaccounts',
     name: serviceAccount.metadata.name,
-    namespace: serviceAccount.metadata.namespace,
+    namespace: serviceAccount.metadata.namespace!,
   });
 
   client.setRequestConfig({

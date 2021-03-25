@@ -16,7 +16,7 @@ export async function createServiceAccount(
     baseUrl: window.config.mapiEndpoint,
     isCore: true,
     kind: 'serviceaccounts',
-    namespace: serviceAccount.metadata.namespace,
+    namespace: serviceAccount.metadata.namespace!,
   });
 
   client.setRequestConfig({
