@@ -139,7 +139,7 @@ const Select = React.forwardRef<HTMLSelectElement, ISelectProps>(
             dropAlign={{ top: 'bottom' }}
             {...props}
             id={id}
-            ref={ref as React.Ref<HTMLSelectElement> & string}
+            ref={ref}
             disabled={disabled}
             name={name}
           />

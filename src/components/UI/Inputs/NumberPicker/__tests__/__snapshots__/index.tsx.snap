@@ -29,7 +29,7 @@ exports[`NumberPicker renders a simple input 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dnJA-dm NumberPicker__StyledTextInput-h062ap-0 kyyVZW"
+            class="StyledTextInput-sc-1x30a0s-0 hKejfQ NumberPicker__StyledTextInput-h062ap-0 kyyVZW"
             id="money"
             step="1"
             type="number"

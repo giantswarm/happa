@@ -21,7 +21,7 @@ const InputGroup = React.forwardRef<HTMLDivElement, IInputGroupProps>(
           border: false,
           ...contentProps,
         }}
-        ref={ref as React.Ref<HTMLDivElement> & string}
+        ref={ref}
       />
     );
   }
