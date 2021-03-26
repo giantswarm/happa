@@ -14,9 +14,9 @@ const OrganizationDetailLoadingPlaceholder: React.FC<IOrganizationDetailLoadingP
   return (
     <Box {...props}>
       <ContentLoader
-        viewBox='0 0 100% 100vh'
+        viewBox='0 0 1200 700'
         speed={2}
-        height='100vh'
+        height='700px'
         width='100%'
         backgroundColor={theme.global.colors['text-xweak'].dark}
         foregroundColor={theme.global.colors['text-weak'].dark}
@@ -24,7 +24,6 @@ const OrganizationDetailLoadingPlaceholder: React.FC<IOrganizationDetailLoadingP
         <rect x='0' y='0' rx='4' ry='4' width='100%' height='40' />
         <rect x='0' y='80' rx='4' ry='4' width='80' height='40' />
         <rect x='90' y='80' rx='4' ry='4' width='120' height='40' />
-        <rect x='0' y='150' rx='4' ry='4' width='100%' height='500' />
       </ContentLoader>
     </Box>
   );
