@@ -4,13 +4,13 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import { createOrganization } from 'model/services/mapi/organizations/createOrganization';
+import { createOrganization } from 'model/services/mapi/securityv1alpha1/createOrganization';
 import {
   getOrganizationList,
   getOrganizationListKey,
-} from 'model/services/mapi/organizations/getOrganizationList';
-import { getOrganizationName } from 'model/services/mapi/organizations/key';
-import { IOrganizationList } from 'model/services/mapi/organizations/types';
+} from 'model/services/mapi/securityv1alpha1/getOrganizationList';
+import { getOrganizationName } from 'model/services/mapi/securityv1alpha1/key';
+import { IOrganizationList } from 'model/services/mapi/securityv1alpha1/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
