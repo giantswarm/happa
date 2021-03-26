@@ -64,6 +64,14 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
       );
 
       dispatch(push(OrganizationsRoutes.Home));
+    } else if (error) {
+      new FlashMessage(
+        `There was a problem loading organization <code>${orgId}</code>`,
+        messageType.ERROR,
+        messageTTL.FOREVER
+      );
+
+      dispatch(push(OrganizationsRoutes.Home));
     }
   }, [error, orgId, dispatch]);
 
