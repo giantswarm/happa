@@ -15,7 +15,7 @@ export function getOrganization(
       apiVersion: 'security.giantswarm.io/v1alpha1',
       kind: 'organizations',
       name,
-      namespace: 'default',
+      namespace: '',
     });
 
     client.setURL(url.toString());
@@ -29,8 +29,11 @@ export function getOrganization(
   };
 }
 
-export function getOrganizationKey(user: ILoggedInUser | null): string | null {
+export function getOrganizationKey(
+  user: ILoggedInUser | null,
+  name: string
+): string | null {
   if (!user || user.type !== LoggedInUserTypes.MAPI) return null;
 
-  return 'getOrganization';
+  return `getOrganization/${name}`;
 }

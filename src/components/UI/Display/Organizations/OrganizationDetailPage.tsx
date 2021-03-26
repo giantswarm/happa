@@ -91,7 +91,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             </Text>
           </Box>
           <Box>
-            <Button bsStyle='danger'>
+            <Button bsStyle='danger' disabled={true}>
               <i
                 className='fa fa-delete'
                 role='presentation'

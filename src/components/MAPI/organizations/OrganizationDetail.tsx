@@ -1,12 +1,21 @@
+import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
-import React, { useMemo } from 'react';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import * as metav1 from 'model/services/mapi/metav1';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
+import React, { useEffect, useMemo } from 'react';
 import { Tab } from 'react-bootstrap';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useRouteMatch } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import { getLoggedInUser } from 'stores/main/selectors';
+import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 
 function computePaths(orgName: string) {
@@ -30,23 +39,55 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const match = useRouteMatch();
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
+  const client = useHttpClient();
+  const user = useSelector(getLoggedInUser);
+
+  const { data, error } = useSWR<
+    securityv1alpha1.IOrganization,
+    GenericResponse
+  >(
+    securityv1alpha1.getOrganizationKey(user, orgId),
+    securityv1alpha1.getOrganization(client, user!, orgId)
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (
+      metav1.isStatusError(error?.data, metav1.K8sStatusErrorReasons.NotFound)
+    ) {
+      new FlashMessage(
+        `Organization <code>${orgId}</code> not found`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        'Please make sure the Organization ID is correct and that you have access to it.'
+      );
+
+      dispatch(push(OrganizationsRoutes.Home));
+    }
+  }, [error, orgId, dispatch]);
+
+  if (!data) {
+    return <div>loading...</div>;
+  }
+
   return (
     <Breadcrumb
       data={{
-        title: orgId.toUpperCase(),
+        title: data.metadata.name.toUpperCase(),
         pathname: match.url,
       }}
     >
       <Box>
         <Heading level={1} margin={{ bottom: 'large' }}>
-          Organization: {orgId}
+          Organization: {data.metadata.name}
         </Heading>
         <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
           <Tab eventKey={paths.Detail} title='General'>
             <OrganizationDetailPage />
           </Tab>
           <Tab eventKey={paths.AccessControl} title='Access control'>
-            <AccessControlPage organizationName={orgId} />
+            <AccessControlPage organizationName={data.metadata.name} />
           </Tab>
         </Tabs>
       </Box>
