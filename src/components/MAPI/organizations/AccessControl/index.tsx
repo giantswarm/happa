@@ -3,7 +3,7 @@ import produce from 'immer';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -45,7 +45,10 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   );
 
   const [activeRoleName, setActiveRoleName] = useState('');
-  const activeRole = data?.find((role) => role.name === activeRoleName);
+  const activeRole = useMemo(
+    () => data?.find((role) => role.name === activeRoleName),
+    [data, activeRoleName]
+  );
 
   useLayoutEffect(() => {
     if (!activeRole && data && data.length > 0) {
