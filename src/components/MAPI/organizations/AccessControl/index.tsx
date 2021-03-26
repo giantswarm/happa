@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import produce from 'immer';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
@@ -13,6 +14,7 @@ import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRo
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 import {
+  appendSubjectsToRoleItem,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
   extractErrorMessage,
@@ -56,9 +58,9 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     names: string[]
   ) => {
     try {
-      if (!activeRole) return Promise.resolve();
+      if (!activeRole || !data) return Promise.resolve();
 
-      await createRoleBindingWithSubjects(
+      const newRoleBinding = await createRoleBindingWithSubjects(
         client,
         user!,
         type,
@@ -66,7 +68,16 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         orgNamespace,
         activeRole
       );
-      mutate();
+
+      const newData = produce((draft: typeof data) => {
+        for (const item of draft) {
+          if (item.name === activeRoleName) {
+            appendSubjectsToRoleItem(newRoleBinding, item);
+            break;
+          }
+        }
+      }, data);
+      mutate(newData, false);
 
       return Promise.resolve();
     } catch (err: unknown) {
@@ -81,7 +92,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     name: string
   ) => {
     try {
-      if (!activeRole) return Promise.resolve();
+      if (!activeRole || !data) return Promise.resolve();
 
       await deleteSubjectFromRole(
         client,
@@ -91,7 +102,26 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         orgNamespace,
         activeRole
       );
-      mutate();
+
+      const newData = produce((draft: typeof data) => {
+        for (const item of draft) {
+          if (item.name === activeRoleName) {
+            switch (type) {
+              case ui.AccessControlSubjectTypes.Group:
+                delete item.groups[name];
+                break;
+              case ui.AccessControlSubjectTypes.User:
+                delete item.users[name];
+                break;
+              case ui.AccessControlSubjectTypes.ServiceAccount:
+                delete item.serviceAccounts[name];
+                break;
+            }
+            break;
+          }
+        }
+      }, data);
+      mutate(newData, false);
 
       return Promise.resolve();
     } catch (err: unknown) {

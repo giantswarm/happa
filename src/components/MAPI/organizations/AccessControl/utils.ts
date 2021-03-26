@@ -81,7 +81,7 @@ export function mapResourcesToUiRoles(
  * (e.g. `groups`, `users`, `serviceAccounts`).
  * @param binding
  */
-function appendSubjectsToRoleItem(
+export function appendSubjectsToRoleItem(
   binding: rbacv1.IRoleBinding,
   role: ui.IAccessControlRoleItem
 ) {
