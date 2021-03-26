@@ -37,9 +37,6 @@ describe('ClusterManagement', () => {
   jest.mock('model/services/mapi/authorizationv1');
 
   beforeEach(() => {
-    console.log('wtf');
-
-    console.log('ftw');
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);

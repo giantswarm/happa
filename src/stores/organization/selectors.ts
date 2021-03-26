@@ -9,3 +9,9 @@ export const selectOrganizationByID = (id: string) => (
     Object.values(state.entities.organizations.items)
   );
 };
+
+export const selectOrganizations = () => (
+  state: IState
+): Record<string, IOrganization> | undefined => {
+  return state.entities.organizations.items;
+};

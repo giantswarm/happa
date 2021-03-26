@@ -54,3 +54,66 @@ export interface ISelfSubjectRulesReview {
   spec: ISelfSubjectRulesReviewSpec;
   status?: ISelfSubjectRulesReviewStatus;
 }
+
+export interface ISelfSubjectAccessReview {
+  apiVersion: string;
+  kind: string;
+  metadata?: metav1.IObjectMeta;
+  spec: ISelfSubjectAccessReviewSpec;
+  status?: ISelfSubjectAccessReviewStatus;
+}
+
+// SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAttributes
+// and NonResourceAttributes must be set
+export interface ISelfSubjectAccessReviewSpec {
+  // ResourceAttributes describes information for a resource access request
+  resourceAttributes?: IResourceAttributes;
+  // NonResourceAttributes describes information for a non-resource access request
+  nonResourceAttributes?: INonResourceAttributes;
+}
+
+// ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface
+export interface IResourceAttributes {
+  // Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces
+  // "" (empty) is defaulted for LocalSubjectAccessReviews
+  // "" (empty) is empty for cluster-scoped resources
+  // "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview
+  namespace?: string;
+  // Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.
+  verb?: string;
+  // Group is the API Group of the Resource.  "*" means all.
+  group?: string;
+  // Version is the API Version of the Resource.  "*" means all.
+  version?: string;
+  // Resource is one of the existing resource types.  "*" means all.
+  resource?: string;
+  // Subresource is one of the existing resource types.  "" means none.
+  subresource?: string;
+  // Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
+  name?: string;
+}
+
+// NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
+export interface INonResourceAttributes {
+  // Path is the URL path of the request
+  path: string;
+  // Verb is the standard HTTP verb
+  verb: string;
+}
+
+// SubjectAccessReviewStatus represents the current state of a SubjectAccessReview.
+export interface ISelfSubjectAccessReviewStatus {
+  // Allowed is required. True if the action would be allowed, false otherwise.
+  allowed: boolean;
+  // Denied is optional. True if the action would be denied, otherwise
+  // false. If both allowed is false and denied is false, then the
+  // authorizer has no opinion on whether to authorize the action. Denied
+  // may not be true if Allowed is true.
+  denied: boolean;
+  // Reason is optional.  It indicates why a request was allowed or denied.
+  reason: string;
+  // EvaluationError is an indication that some error occurred during the authorization check.
+  // It is entirely possible to get an error and be able to continue determine authorization status in spite of it.
+  // For instance, RBAC can be missing a role, but enough roles are still present and bound to reason about the request.
+  evaluationError: string;
+}

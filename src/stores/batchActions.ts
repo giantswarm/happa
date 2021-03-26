@@ -4,8 +4,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
-import { HttpClientImpl } from 'model/clients/HttpClient';
-import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
@@ -40,6 +38,7 @@ import {
 import { getInfo, resumeLogin } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -51,6 +50,7 @@ import {
   organizationDeleteConfirmed,
   organizationSelect,
   organizationsLoad,
+  organizationsLoadMAPI,
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
@@ -65,16 +65,13 @@ export function batchedLayout(
     try {
       await dispatch(resumeLogin(auth));
 
-      const client = new HttpClientImpl();
-      const user = getLoggedInUser(getState());
-
-      if (user) {
-        const data = await selfSubjectRulesReview(client, user)();
-        console.log(data);
-      }
-
       try {
-        await dispatch(organizationsLoad());
+        const user = getLoggedInUser(getState());
+        if (user?.type === LoggedInUserTypes.MAPI) {
+          await dispatch(organizationsLoadMAPI());
+        } else {
+          await dispatch(organizationsLoad());
+        }
       } catch (err) {
         const hasAccessToResources = getHasAccessToResources(getState());
         if (!hasAccessToResources) {
