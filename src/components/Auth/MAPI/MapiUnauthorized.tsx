@@ -24,7 +24,9 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
   return (
     <StyledBox width='large' margin='auto' {...props}>
       <Heading level={1} margin={{ bottom: 'large' }}>
-        There is a problem
+        <Text weight='bold' size='5xl'>
+          There is a problem
+        </Text>
       </Heading>
       <Paragraph fill={true}>
         <Text weight='bold'>

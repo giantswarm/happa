@@ -16,6 +16,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
+import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 
 function computePaths(orgName: string) {
@@ -75,29 +76,31 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
     }
   }, [error, orgId, dispatch]);
 
-  if (!data) {
-    return <div>loading...</div>;
-  }
-
   return (
     <Breadcrumb
       data={{
-        title: data.metadata.name.toUpperCase(),
+        title: orgId.toUpperCase(),
         pathname: match.url,
       }}
     >
       <Box>
-        <Heading level={1} margin={{ bottom: 'large' }}>
-          Organization: {data.metadata.name}
-        </Heading>
-        <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
-          <Tab eventKey={paths.Detail} title='General'>
-            <OrganizationDetailPage />
-          </Tab>
-          <Tab eventKey={paths.AccessControl} title='Access control'>
-            <AccessControlPage organizationName={data.metadata.name} />
-          </Tab>
-        </Tabs>
+        {!data ? (
+          <OrganizationDetailLoadingPlaceholder />
+        ) : (
+          <>
+            <Heading level={1} margin={{ bottom: 'large' }}>
+              Organization: {data.metadata.name}
+            </Heading>
+            <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
+              <Tab eventKey={paths.Detail} title='General'>
+                <OrganizationDetailPage />
+              </Tab>
+              <Tab eventKey={paths.AccessControl} title='Access control'>
+                <AccessControlPage organizationName={data.metadata.name} />
+              </Tab>
+            </Tabs>
+          </>
+        )}
       </Box>
     </Breadcrumb>
   );
