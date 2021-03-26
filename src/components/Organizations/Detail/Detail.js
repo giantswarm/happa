@@ -9,7 +9,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { getLoggedInUser } from 'stores/main/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { supportsMultiAccount } from 'stores/organization/utils';
@@ -61,7 +60,6 @@ class DetailIndex extends React.Component {
 }
 
 DetailIndex.propTypes = {
-  user: PropTypes.object,
   dispatch: PropTypes.func,
   match: PropTypes.object,
   organization: PropTypes.object,
@@ -96,7 +94,6 @@ function mapStateToProps(state, ownProps) {
 
   return {
     organization,
-    user: getLoggedInUser(state),
     membersForTable,
     clusters,
     credentials: state.entities.organizations.credentials.items,
