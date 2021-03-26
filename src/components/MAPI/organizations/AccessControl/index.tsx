@@ -2,7 +2,7 @@ import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
@@ -44,7 +44,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   const [activeRoleName, setActiveRoleName] = useState('');
   const activeRole = data?.find((role) => role.name === activeRoleName);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!activeRole && data && data.length > 0) {
       setActiveRoleName(data[0].name);
     }
