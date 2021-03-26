@@ -26,13 +26,13 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>6</Text>
-            <Text>82</Text>
-            <Text>73</Text>
-            <Text>984 GB</Text>
-            <Text>876 GB</Text>
-            <Text>328</Text>
-            <Text>292</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
           </Box>
         </Box>
       </Box>
@@ -50,22 +50,14 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
           </Box>
           <Box direction='column' gap='xsmall'>
             <Box direction='row' gap='small'>
-              <Text>v11.5.6</Text>
-              <KubernetesVersionLabel
-                version='v1.16.0'
-                eolDate='2016-01-01'
-                hidePatchVersion={true}
-              />
+              <Text>n/a</Text>
+              <KubernetesVersionLabel hidePatchVersion={true} />
             </Box>
             <Box direction='row' gap='small'>
-              <Text>v14.1.0</Text>
-              <KubernetesVersionLabel
-                version='v1.19.0'
-                eolDate='2055-01-01'
-                hidePatchVersion={true}
-              />
+              <Text>n/a</Text>
+              <KubernetesVersionLabel hidePatchVersion={true} />
             </Box>
-            <Text>4</Text>
+            <Text>n/a</Text>
           </Box>
         </Box>
       </Box>
@@ -81,8 +73,8 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             <Text>App deployments</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>3</Text>
-            <Text>18</Text>
+            <Text>n/a</Text>
+            <Text>n/a</Text>
           </Box>
         </Box>
       </Box>
