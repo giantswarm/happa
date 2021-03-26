@@ -74,7 +74,14 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
       <Content>
         <Box margin={{ bottom: 'small' }}>
           <TextInput
-            icon={<i className='fa fa-search' />}
+            icon={
+              <i
+                className='fa fa-search'
+                role='presentation'
+                aria-hidden={true}
+                title='Find role'
+              />
+            }
             placeholder='Find role'
             value={searchQuery}
             onChange={handleSearch}
