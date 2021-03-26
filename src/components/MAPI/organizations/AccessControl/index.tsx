@@ -4,6 +4,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import DocumentTitle from 'shared/DocumentTitle';
 import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
@@ -101,37 +102,39 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   };
 
   return (
-    <Box {...props}>
-      <AccessControlRoleDescription margin={{ bottom: 'medium' }} />
-      <Box direction='row' fill='horizontal'>
-        <AccessControlRoleList
-          pad={{ left: 'none', right: 'medium' }}
-          border={{ side: 'right' }}
-          height={{ min: '400px' }}
-          flex={{
-            grow: 0,
-            shrink: 1,
-          }}
-          basis='1/3'
-          width={{ min: '450px' }}
-          roles={data}
-          activeRoleName={activeRoleName}
-          setActiveRoleName={setActiveRoleName}
-          errorMessage={extractErrorMessage(error)}
-        />
-        <AccessControlRoleDetail
-          basis='2/3'
-          flex={{
-            grow: 1,
-            shrink: 1,
-          }}
-          pad={{ left: 'medium', right: 'none' }}
-          activeRole={activeRole}
-          onAdd={handleAdd}
-          onDelete={handleDelete}
-        />
+    <DocumentTitle title={`Access control | ${organizationName}`}>
+      <Box {...props}>
+        <AccessControlRoleDescription margin={{ bottom: 'medium' }} />
+        <Box direction='row' fill='horizontal'>
+          <AccessControlRoleList
+            pad={{ left: 'none', right: 'medium' }}
+            border={{ side: 'right' }}
+            height={{ min: '400px' }}
+            flex={{
+              grow: 0,
+              shrink: 1,
+            }}
+            basis='1/3'
+            width={{ min: '450px' }}
+            roles={data}
+            activeRoleName={activeRoleName}
+            setActiveRoleName={setActiveRoleName}
+            errorMessage={extractErrorMessage(error)}
+          />
+          <AccessControlRoleDetail
+            basis='2/3'
+            flex={{
+              grow: 1,
+              shrink: 1,
+            }}
+            pad={{ left: 'medium', right: 'none' }}
+            activeRole={activeRole}
+            onAdd={handleAdd}
+            onDelete={handleDelete}
+          />
+        </Box>
       </Box>
-    </Box>
+    </DocumentTitle>
   );
 };
 

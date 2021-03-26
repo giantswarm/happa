@@ -9,10 +9,10 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import { Tab } from 'react-bootstrap';
-import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router';
+import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
 import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
@@ -37,7 +37,6 @@ interface IOrganizationDetailProps {}
 
 const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const { orgId } = useParams<{ orgId: string }>();
-  const match = useRouteMatch();
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
   const client = useHttpClient();
@@ -77,12 +76,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   }, [error, orgId, dispatch]);
 
   return (
-    <Breadcrumb
-      data={{
-        title: orgId.toUpperCase(),
-        pathname: match.url,
-      }}
-    >
+    <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
         {!data ? (
           <OrganizationDetailLoadingPlaceholder />
@@ -102,7 +96,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
           </>
         )}
       </Box>
-    </Breadcrumb>
+    </DocumentTitle>
   );
 };
 
