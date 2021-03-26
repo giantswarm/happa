@@ -34,6 +34,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('ClusterManagement', () => {
   jest.setTimeout(15000);
+  jest.mock('model/services/mapi/authorizationv1');
 
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);

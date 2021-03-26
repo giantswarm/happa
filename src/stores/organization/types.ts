@@ -19,6 +19,7 @@ import {
   ORGANIZATION_DELETE_REQUEST,
   ORGANIZATION_DELETE_SUCCESS,
   ORGANIZATION_LOAD_ERROR,
+  ORGANIZATION_LOAD_MAPI_REQUEST,
   ORGANIZATION_LOAD_REQUEST,
   ORGANIZATION_LOAD_SUCCESS,
   ORGANIZATION_REMOVE_MEMBER,
@@ -46,6 +47,10 @@ export interface IOrganizationSelectAction {
 
 export interface IOrganizationLoadRequestAction {
   type: typeof ORGANIZATION_LOAD_REQUEST;
+}
+
+export interface IOrganizationLoadMAPIRequestAction {
+  type: typeof ORGANIZATION_LOAD_MAPI_REQUEST;
 }
 
 export interface IOrganizationLoadSuccessAction {
@@ -167,6 +172,7 @@ export type OrganizationActions =
   | IOrganizationSelectAction
   | IOrganizationLoadSuccessAction
   | IOrganizationLoadErrorAction
+  | IOrganizationLoadMAPIRequestAction
   | IOrganizationLoadRequestAction
   | IOrganizationCreateRequestAction
   | IOrganizationCreateConfirmedAction

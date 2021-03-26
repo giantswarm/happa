@@ -44,3 +44,12 @@ export * from './keypairs';
 
 // Metadata
 export * from './metadata';
+
+// SelfSubjectAccessReviews
+export * from './selfSubjectAccessReviews';
+
+// SelfSubjectRulesReviews
+export * from './selfSubjectRulesReviews';
+
+// MapiOrganizations
+export * from './mapiOrganizations';
