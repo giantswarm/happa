@@ -86,7 +86,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
           </Box>
         </Box>
       </Box>
-      <Box direction='row' margin={{ top: 'medium' }}>
+      <Box direction='row' pad={{ top: 'medium' }} border='top'>
         <Box direction='column' gap='medium'>
           <Text weight='bold' size='large' margin='none'>
             Delete this organization
