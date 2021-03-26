@@ -36,7 +36,9 @@ import {
   refreshUserInfo,
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
   clusterNodePoolsLoad,
@@ -48,6 +50,7 @@ import {
   organizationDeleteConfirmed,
   organizationSelect,
   organizationsLoad,
+  organizationsLoadMAPI,
 } from 'stores/organization/actions';
 import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
@@ -63,7 +66,12 @@ export function batchedLayout(
       await dispatch(resumeLogin(auth));
 
       try {
-        await dispatch(organizationsLoad());
+        const user = getLoggedInUser(getState());
+        if (user?.type === LoggedInUserTypes.MAPI) {
+          await dispatch(organizationsLoadMAPI());
+        } else {
+          await dispatch(organizationsLoad());
+        }
       } catch (err) {
         const hasAccessToResources = getHasAccessToResources(getState());
         if (!hasAccessToResources) {

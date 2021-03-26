@@ -1,5 +1,12 @@
 import GiantSwarm, { V4Organization } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { HttpClientImpl } from 'model/clients/HttpClient';
+import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1';
+import {
+  ISelfSubjectAccessReviewSpec,
+  selfSubjectAccessReview,
+} from 'model/services/mapi/authorizationv1/';
+import { getOrganizationList } from 'model/services/mapi/securityv1alpha1/';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -27,6 +34,7 @@ import {
   ORGANIZATION_DELETE_REQUEST,
   ORGANIZATION_DELETE_SUCCESS,
   ORGANIZATION_LOAD_ERROR,
+  ORGANIZATION_LOAD_MAPI_REQUEST,
   ORGANIZATION_LOAD_REQUEST,
   ORGANIZATION_LOAD_SUCCESS,
   ORGANIZATION_REMOVE_MEMBER,
@@ -78,6 +86,121 @@ export function organizationsLoadSuccess(
 }
 
 /**
+ * This action loads organizations using the MAPI instead of the GS Rest API.
+ */
+export function organizationsLoadMAPI(): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  OrganizationActions
+> {
+  return async (dispatch, getState) => {
+    try {
+      const currentOrganizations = getState().entities.organizations;
+      const alreadyFetching = currentOrganizations.isFetching;
+      if (alreadyFetching) {
+        return Promise.resolve();
+      }
+
+      dispatch({ type: ORGANIZATION_LOAD_MAPI_REQUEST });
+
+      const client = new HttpClientImpl();
+      const user = getLoggedInUser(getState());
+
+      if (!user) {
+        return Promise.reject(
+          new Error('cannot load orgs without being logged in')
+        );
+      }
+
+      // Can I LIST Organization CR's ?
+      let canList = false;
+      const request: ISelfSubjectAccessReviewSpec = {
+        resourceAttributes: {
+          namespace: 'default',
+          verb: 'list',
+          group: 'security.giantswarm.io',
+          resource: 'organizations',
+        },
+      };
+      const accessReviewResponse = await selfSubjectAccessReview(
+        client,
+        user,
+        request
+      )();
+
+      if (accessReviewResponse.status?.allowed) {
+        canList = true;
+      }
+
+      let orgs: string[] = [];
+      if (canList) {
+        // The user can list all orgs. So list them all and dispatch the action that
+        // updates the global state with all the orgs
+        const orgListResponse = await getOrganizationList(client, user)();
+        orgs = orgListResponse.items.map((o) => o.metadata.name);
+      } else {
+        // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
+        // which ones they can get.
+        const rulesReviewResponse = await selfSubjectRulesReview(
+          client,
+          user
+        )();
+
+        rulesReviewResponse.status?.resourceRules.forEach((rule) => {
+          if (
+            rule.verbs.includes('get') &&
+            rule.resources.includes('organizations')
+          ) {
+            orgs.push(...rule.resourceNames);
+          }
+        });
+      }
+
+      const uniqueOrgs = orgs.filter((v, i, a) => a.indexOf(v) === i);
+
+      const orgsAsIOrganiation: IOrganization[] = uniqueOrgs.map((o) => {
+        return {
+          id: o,
+          members: [],
+          credentials: [],
+        };
+      });
+
+      const organizationsAsMap = orgsAsIOrganiation.reduce(
+        (orgAcc: Record<string, IOrganization>, currentOrg: IOrganization) => {
+          orgAcc[currentOrg.id] = currentOrg;
+
+          return orgAcc;
+        },
+        {}
+      );
+
+      const currentlySelectedOrganization = getState().main
+        .selectedOrganization;
+      const selectedOrganization = determineSelectedOrganization(
+        Object.keys(organizationsAsMap),
+        currentlySelectedOrganization
+      );
+      setOrganizationToStorage(selectedOrganization);
+
+      dispatch(
+        organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
+      );
+
+      return Promise.resolve();
+    } catch (error) {
+      // Dispatch error action
+      dispatch({
+        type: ORGANIZATION_LOAD_ERROR,
+      });
+
+      return Promise.reject(error);
+    }
+  };
+}
+
+/**
  * This action does various requests to the Giant Swarm API
  * and massages the responses into some reasonable state for Happa to
  * work with.
@@ -100,8 +223,6 @@ export function organizationsLoad(): ThunkAction<
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();
       const organizations = await organizationsApi.getOrganizations();
-      const currentlySelectedOrganization = getState().main
-        .selectedOrganization;
 
       const organizationsWithDetails = await Promise.all(
         organizations.map((organization) => {
@@ -123,12 +244,14 @@ export function organizationsLoad(): ThunkAction<
         {}
       );
 
+      const currentlySelectedOrganization = getState().main
+        .selectedOrganization;
       const selectedOrganization = determineSelectedOrganization(
         Object.keys(organizationsAsMap),
         currentlySelectedOrganization
       );
-
       setOrganizationToStorage(selectedOrganization);
+
       dispatch(
         organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
       );

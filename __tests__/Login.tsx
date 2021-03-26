@@ -2,6 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { isJwtExpired } from 'lib/helpers';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
+import { selfSubjectAccessReview } from 'model/services/mapi/authorizationv1/selfSubjectAccessReview';
+import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1/selfSubjectRulesReview';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -11,13 +13,13 @@ import {
   API_ENDPOINT,
   authTokenResponse,
   AWSInfoResponse,
+  cantListOrgs,
   getMockCall,
   metadataResponse,
-  ORGANIZATION,
-  orgResponse,
-  orgsResponse,
+  noOrgsSubjectRulesReview,
   postMockCall,
   releasesResponse,
+  someOrgsSubjectRulesReview,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import {
@@ -178,11 +180,15 @@ describe('Login', () => {
   });
 
   it('performs the OAuth2 login flow', async () => {
+    (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(cantListOrgs)
+    );
+
+    (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(someOrgsSubjectRulesReview)
+    );
+
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse as any);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
@@ -239,6 +245,14 @@ describe('Login', () => {
   });
 
   it('displays a warning message if the user is logged in via OAuth2 and does not have any permissions', async () => {
+    (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(cantListOrgs)
+    );
+
+    (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(noOrgsSubjectRulesReview)
+    );
+    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     const history = createInitialHistory(MainRoutes.Login);
 
     const testAuth = new TestOAuth2(history);
@@ -263,11 +277,14 @@ describe('Login', () => {
   });
 
   it('renews the token if it expired and automatic renewal failed', async () => {
+    (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(cantListOrgs)
+    );
+
+    (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(someOrgsSubjectRulesReview)
+    );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse as any);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
@@ -302,11 +319,14 @@ describe('Login', () => {
   });
 
   it('logs out the user if the manual renewal failed', async () => {
+    (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(cantListOrgs)
+    );
+
+    (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(someOrgsSubjectRulesReview)
+    );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse as any);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);

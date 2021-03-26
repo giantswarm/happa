@@ -1,33 +1,21 @@
 import { push } from 'connected-react-router';
-import produce from 'immer';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
-import { GenericResponse } from 'model/clients/GenericResponse';
 import { createOrganization } from 'model/services/mapi/securityv1alpha1/createOrganization';
-import {
-  getOrganizationList,
-  getOrganizationListKey,
-} from 'model/services/mapi/securityv1alpha1/getOrganizationList';
-import { getOrganizationName } from 'model/services/mapi/securityv1alpha1/key';
-import { IOrganizationList } from 'model/services/mapi/securityv1alpha1/types';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { getLoggedInUser } from 'stores/main/selectors';
-import useSWR from 'swr';
+import { selectOrganizations } from 'stores/organization/selectors';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
 
 const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch();
+  const organizations = useSelector(selectOrganizations()) || {};
 
   const client = useHttpClient();
   const user = useSelector(getLoggedInUser);
-  const { data, mutate } = useSWR<IOrganizationList, GenericResponse>(
-    getOrganizationListKey(user),
-    getOrganizationList(client, user!)
-  );
 
   return (
     <OrganizationListPage
@@ -38,22 +26,15 @@ const OrganizationIndex: React.FC = () => {
 
         dispatch(push(orgPath));
       }}
-      data={data?.items.map((d) => ({
-        name: getOrganizationName(d),
+      data={Object.keys(organizations).map((orgName) => ({
+        name: orgName,
       }))}
       // TODO: @oponder: Do we like this? Handling errors and doing requests and mutation in the component?
       //                 I was generally always ok with it.. but it feels like I am breaking some rules.
       createOrg={async (orgName) => {
-        if (user && data) {
+        if (user) {
           try {
-            const response = await createOrganization(client, user, orgName)();
-
-            mutate(
-              produce((newData) => {
-                newData.items.push(response);
-              }),
-              false
-            );
+            await createOrganization(client, user, orgName)();
           } catch (error) {
             if (error?.config?.data?.message) {
               new FlashMessage(
