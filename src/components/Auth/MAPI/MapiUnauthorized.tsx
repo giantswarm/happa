@@ -1,6 +1,8 @@
 import { Anchor, Box, Heading, Paragraph, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { NavLink } from 'react-router-dom';
+import { MainRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 
 const StyledBox = styled(Box)`
@@ -58,6 +60,13 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
           <Text weight='bold'>Groups:</Text>
           <Text>{groups}</Text>
         </Box>
+      </Box>
+      <Box direction='column' gap='xsmall' margin={{ top: 'medium' }}>
+        <Paragraph fill={true}>
+          <NavLink href={MainRoutes.Logout} to={MainRoutes.Logout}>
+            Try logging in again
+          </NavLink>
+        </Paragraph>
       </Box>
     </StyledBox>
   );

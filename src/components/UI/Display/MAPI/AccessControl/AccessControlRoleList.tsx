@@ -4,9 +4,9 @@ import { filterRoles } from 'MAPI/organizations/AccessControl/utils';
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import AccessControlRoleListItem from 'UI/Display/MAPI/AccessControl/AccessControlRoleListItem';
 import TextInput from 'UI/Inputs/TextInput';
 
+import AccessControlRoleListItem from './AccessControlRoleListItem';
 import AccessControlRoleListItemLoadingPlaceholder from './AccessControlRoleListItemLoadingPlaceholder';
 import AccessControlRolePlaceholder from './AccessControlRolePlaceholder';
 import AccessControlRoleSearchPlaceholder from './AccessControlRoleSearchPlaceholder';
