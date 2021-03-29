@@ -264,7 +264,7 @@ export function getUserNameParts(
 ): [userName: string, domain?: string] {
   const userParts = user.split('@');
 
-  return [userParts[0], userParts[1]];
+  return userParts.slice(0, 2) as [string, string];
 }
 
 /**
