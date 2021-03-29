@@ -18,7 +18,11 @@ const AccessControlRoleType: React.FC<IAccessControlRoleTypeProps> = ({
     <Box gap='xxsmall' direction='row' {...props}>
       {inCluster && (
         <Text>
-          <i className='fa fa-globe' aria-label='Cluster role' />
+          <i
+            className='fa fa-globe'
+            aria-label='Cluster role'
+            role='presentation'
+          />
         </Text>
       )}
 
