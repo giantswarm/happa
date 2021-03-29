@@ -231,6 +231,7 @@ function isSubjectEditable(subject: rbacv1.ISubject): boolean {
 function shouldDisplayRole(role: rbacv1.IClusterRole | rbacv1.IRole): boolean {
   switch (true) {
     case role.metadata.name.startsWith('system:'):
+      return false;
     default:
       return true;
   }
