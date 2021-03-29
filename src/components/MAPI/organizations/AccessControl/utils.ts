@@ -80,6 +80,7 @@ export function mapResourcesToUiRoles(
  * Get all the subjects from a role binding, and group them by type
  * (e.g. `groups`, `users`, `serviceAccounts`).
  * @param binding
+ * @param role
  */
 export function appendSubjectsToRoleItem(
   binding: rbacv1.IRoleBinding,
@@ -174,7 +175,7 @@ export function getOrgNamespaceFromOrgName(name: string): string {
  * data structure necessary for rendering the UI.
  * @param client
  * @param user
- * @param organizationName
+ * @param namespace
  */
 export function getRoleItems(
   client: IHttpClient,
@@ -298,7 +299,6 @@ export function makeRoleBinding(
 /**
  * Create empty `ServiceAccount`, based on the given role.
  * @param name
- * @param roleItem
  */
 function makeServiceAccount(name: string): corev1.IServiceAccount {
   return {
@@ -337,6 +337,7 @@ export function mapUiSubjectTypeToSubjectKind(
  * @param user
  * @param type - The type of the given subject names.
  * @param subjectNames - The given subject names.
+ * @param namespace
  * @param roleItem - The role that the binding should point to.
  */
 export async function createRoleBindingWithSubjects(
