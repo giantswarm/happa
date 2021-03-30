@@ -41,6 +41,26 @@ export const readAppsRole = {
   ],
 };
 
+export const haveFunRole = {
+  metadata: {
+    name: 'have-fun',
+    namespace: 'org-giantswarm',
+    selfLink: '/apis/rbac.authorization.k8s.io/v1/roles/have-fun',
+    uid: '231asdas-e7e0-40a4-222-sadasdsa12312',
+    resourceVersion: '283944854',
+    creationTimestamp: '2021-03-22T16:28:26Z',
+    labels: {
+      'giantswarm.io/managed-by': 'rbac-operator',
+      'ui.giantswarm.io/display': 'true',
+    },
+  },
+  rules: [
+    {
+      verbs: ['get'],
+    },
+  ],
+};
+
 export const roleList = {
   kind: 'RoleList',
   apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -48,5 +68,5 @@ export const roleList = {
     selfLink: '/apis/rbac.authorization.k8s.io/v1/roles/',
     resourceVersion: '284016986',
   },
-  items: [editAllRole, readAppsRole],
+  items: [editAllRole, readAppsRole, haveFunRole],
 };

@@ -48,12 +48,12 @@ export const writeAllCustomerRoleBinding = {
   },
 };
 
-export const readAllRoleBinding = {
+export const editAllRoleBinding = {
   metadata: {
-    name: 'read-all-group',
+    name: 'edit-all-group',
     namespace: 'org-giantswarm',
     selfLink:
-      '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/read-all-group',
+      '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group',
     uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
     resourceVersion: '281804578',
     creationTimestamp: '2020-09-29T10:42:53Z',
@@ -70,11 +70,56 @@ export const readAllRoleBinding = {
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'Admins',
     },
+    {
+      kind: 'ServiceAccount',
+      apiGroup: 'rbac.authorization.k8s.io',
+      name: 'el-toro',
+    },
+    {
+      kind: 'User',
+      apiGroup: 'rbac.authorization.k8s.io',
+      name: 'system:boss',
+    },
   ],
   roleRef: {
     apiGroup: 'rbac.authorization.k8s.io',
     kind: 'Role',
-    name: 'read-all',
+    name: 'edit-all',
+  },
+};
+
+export const coolRoleBinding = {
+  metadata: {
+    name: 'cool',
+    namespace: 'org-giantswarm',
+    selfLink:
+      '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool',
+    uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+    resourceVersion: '281804578',
+    creationTimestamp: '2020-09-29T10:42:53Z',
+    labels: {
+      'giantswarm.io/managed-by': 'rbac-operator',
+    },
+    finalizers: [
+      'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+    ],
+  },
+  subjects: [
+    {
+      kind: 'User',
+      apiGroup: 'rbac.authorization.k8s.io',
+      name: 'test@test.com',
+    },
+    {
+      kind: 'User',
+      apiGroup: 'rbac.authorization.k8s.io',
+      name: 'system:boss',
+    },
+  ],
+  roleRef: {
+    apiGroup: 'rbac.authorization.k8s.io',
+    kind: 'Role',
+    name: 'edit-all',
   },
 };
 
@@ -86,5 +131,5 @@ export const roleBindingList = {
       '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/',
     resourceVersion: '284086409',
   },
-  items: [writeAllCustomerRoleBinding, readAllRoleBinding],
+  items: [writeAllCustomerRoleBinding, editAllRoleBinding, coolRoleBinding],
 };

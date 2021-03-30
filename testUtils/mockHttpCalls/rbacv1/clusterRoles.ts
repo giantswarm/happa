@@ -68,6 +68,31 @@ export const clusterAdminClusterRole = {
   ],
 };
 
+export const systemTenantBossClusterRole = {
+  metadata: {
+    name: 'system:tenant-boss',
+    selfLink:
+      '/apis/rbac.authorization.k8s.io/v1/clusterroles/system:tenant-boss',
+    uid: '87f1d3ef-276c-11e8-9e05-000d3a2870da',
+    resourceVersion: '281319140',
+    creationTimestamp: '2018-03-14T09:46:12Z',
+    labels: {
+      'kubernetes.io/bootstrapping': 'rbac-defaults',
+      'ui.giantswarm.io/display': 'true',
+    },
+    annotations: {
+      'rbac.authorization.kubernetes.io/autoupdate': 'true',
+    },
+  },
+  rules: [
+    {
+      verbs: ['get', 'list'],
+      apiGroups: ['test.giantswarm.io'],
+      resources: ['supertest', 'superboss'],
+    },
+  ],
+};
+
 export const clusterRoleList = {
   kind: 'ClusterRoleList',
   apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -75,5 +100,10 @@ export const clusterRoleList = {
     selfLink: '/apis/rbac.authorization.k8s.io/v1/clusterroles/',
     resourceVersion: '284016986',
   },
-  items: [readAllClusterRole, readAppsClusterRole, clusterAdminClusterRole],
+  items: [
+    readAllClusterRole,
+    readAppsClusterRole,
+    clusterAdminClusterRole,
+    systemTenantBossClusterRole,
+  ],
 };
