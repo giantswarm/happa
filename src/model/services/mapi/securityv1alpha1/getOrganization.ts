@@ -15,7 +15,6 @@ export function getOrganization(
       apiVersion: 'security.giantswarm.io/v1alpha1',
       kind: 'organizations',
       name,
-      namespace: '',
     });
 
     client.setURL(url.toString());
