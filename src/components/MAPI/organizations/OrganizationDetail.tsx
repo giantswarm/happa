@@ -71,9 +71,11 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
         messageTTL.FOREVER
       );
 
-      dispatch(push(OrganizationsRoutes.Home));
+      if (!data) {
+        dispatch(push(OrganizationsRoutes.Home));
+      }
     }
-  }, [error, orgId, dispatch]);
+  }, [error, orgId, dispatch, data]);
 
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
