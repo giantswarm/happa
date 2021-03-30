@@ -1,3 +1,12 @@
+export const singleMAPIOrgResponse = {
+  apiVersion: 'security.giantswarm.io/v1alpha1',
+  kind: 'Organization',
+  metadata: {
+    name: 'org1',
+  },
+  spec: {},
+};
+
 export const emptyMAPIOrgsResponse = {
   apiVersion: 'security.giantswarm.io/v1alpha1',
   items: [],
