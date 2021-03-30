@@ -28,7 +28,6 @@ export function createOrganization(
       spec: {},
       metadata: {
         name: orgName,
-        namespace: '',
       },
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

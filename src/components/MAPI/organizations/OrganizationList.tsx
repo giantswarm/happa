@@ -7,12 +7,15 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { getLoggedInUser } from 'stores/main/selectors';
+import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { selectOrganizations } from 'stores/organization/selectors';
+import { IState } from 'stores/state';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
 
 const OrganizationIndex: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const organizations = useSelector(selectOrganizations()) || {};
 
   const client = useHttpClient();
@@ -40,6 +43,7 @@ const OrganizationIndex: React.FC = () => {
           if (user) {
             try {
               await createOrganization(client, user, orgName)();
+              await dispatch(organizationsLoadMAPI());
             } catch (error) {
               if (error?.config?.data?.message) {
                 new FlashMessage(
