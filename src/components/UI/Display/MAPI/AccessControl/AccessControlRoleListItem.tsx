@@ -82,6 +82,7 @@ const AccessControlRoleListItem = React.forwardRef<
       aria-selected={active}
       role='button'
       tabIndex={active ? -1 : 0}
+      aria-label={name}
       {...props}
       ref={ref}
     >
@@ -92,7 +93,11 @@ const AccessControlRoleListItem = React.forwardRef<
 
             {namespace.length < 1 && (
               <Text margin={{ left: 'xxsmall' }}>
-                <i className='fa fa-globe' aria-label='Cluster role' />
+                <i
+                  className='fa fa-globe'
+                  role='presentation'
+                  aria-label='Cluster role'
+                />
               </Text>
             )}
           </Box>

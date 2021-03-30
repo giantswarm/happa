@@ -6,9 +6,11 @@ import {
   ISelfSubjectAccessReviewSpec,
   selfSubjectAccessReview,
 } from 'model/services/mapi/authorizationv1/';
-import { getOrganizationList } from 'model/services/mapi/organizations/';
-import { getOrganization } from 'model/services/mapi/organizations/';
-import { getOrganizationUIName } from 'model/services/mapi/organizations/key';
+import {
+  getOrganization,
+  getOrganizationList,
+} from 'model/services/mapi/securityv1alpha1/';
+import { getOrganizationUIName } from 'model/services/mapi/securityv1alpha1/key';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';

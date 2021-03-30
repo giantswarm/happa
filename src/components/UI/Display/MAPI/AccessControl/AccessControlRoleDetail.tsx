@@ -30,7 +30,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   ...props
 }) => {
   return (
-    <Box {...props}>
+    <Box role='main' aria-label='Role details' {...props}>
       {!activeRole && <AccessControlRoleDetailLoadingPlaceholder />}
 
       {activeRole && (
