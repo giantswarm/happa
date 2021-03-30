@@ -43,7 +43,7 @@ export interface IK8sGetOptions extends IK8sBaseOptions {
   /**
    * The namespace that the resource lives in.
    */
-  namespace: string;
+  namespace?: string;
 }
 
 export interface IK8sListOptions extends IK8sBaseOptions {

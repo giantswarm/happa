@@ -4,6 +4,7 @@ import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { selfSubjectAccessReview } from 'model/services/mapi/authorizationv1/selfSubjectAccessReview';
 import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1/selfSubjectRulesReview';
+import { getOrganization } from 'model/services/mapi/organizations/';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -19,6 +20,7 @@ import {
   noOrgsSubjectRulesReview,
   postMockCall,
   releasesResponse,
+  singleMAPIOrgResponse,
   someOrgsSubjectRulesReview,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -183,6 +185,9 @@ describe('Login', () => {
     (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(cantListOrgs)
     );
+    (getOrganization as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(singleMAPIOrgResponse)
+    );
 
     (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(someOrgsSubjectRulesReview)
@@ -248,6 +253,9 @@ describe('Login', () => {
     (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(cantListOrgs)
     );
+    (getOrganization as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(singleMAPIOrgResponse)
+    );
 
     (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(noOrgsSubjectRulesReview)
@@ -279,6 +287,9 @@ describe('Login', () => {
   it('renews the token if it expired and automatic renewal failed', async () => {
     (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(cantListOrgs)
+    );
+    (getOrganization as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(singleMAPIOrgResponse)
     );
 
     (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
@@ -322,11 +333,15 @@ describe('Login', () => {
     (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(cantListOrgs)
     );
+    (getOrganization as jest.Mock).mockReturnValue(() =>
+      Promise.resolve(singleMAPIOrgResponse)
+    );
 
     (selfSubjectRulesReview as jest.Mock).mockReturnValue(() =>
       Promise.resolve(someOrgsSubjectRulesReview)
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
+
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
