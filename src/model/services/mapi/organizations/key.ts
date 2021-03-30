@@ -6,3 +6,12 @@ export function getOrganizationName(organization: IOrganization): string {
 
   return name;
 }
+
+export function getOrganizationUIName(organization: IOrganization): string {
+  const uiAnnotation =
+    organization.metadata.annotations?.[
+      'ui.giantswarm.io/original-organization-name'
+    ];
+
+  return uiAnnotation || getOrganizationName(organization);
+}

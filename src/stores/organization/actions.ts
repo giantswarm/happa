@@ -7,6 +7,8 @@ import {
   selfSubjectAccessReview,
 } from 'model/services/mapi/authorizationv1/';
 import { getOrganizationList } from 'model/services/mapi/organizations/';
+import { getOrganization } from 'model/services/mapi/organizations/';
+import { getOrganizationUIName } from 'model/services/mapi/organizations/key';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -138,7 +140,7 @@ export function organizationsLoadMAPI(): ThunkAction<
         // The user can list all orgs. So list them all and dispatch the action that
         // updates the global state with all the orgs
         const orgListResponse = await getOrganizationList(client, user)();
-        orgs = orgListResponse.items.map((o) => o.metadata.name);
+        orgs = orgListResponse.items.map((o) => getOrganizationUIName(o));
       } else {
         // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
         // which ones they can get.
@@ -155,6 +157,17 @@ export function organizationsLoadMAPI(): ThunkAction<
             orgs.push(...rule.resourceNames);
           }
         });
+
+        // We now know what orgs they can get. We still need to fetch them
+        // to check if the orgs have a 'ui.giantswarm.io/original-organization-name'
+        // annotation.
+        const orgGetRequests = orgs.map((orgName) =>
+          getOrganization(client, user, orgName)()
+        );
+
+        const orgGetResponses = await Promise.all(orgGetRequests);
+
+        orgs = orgGetResponses.map((org) => getOrganizationUIName(org));
       }
 
       const uniqueOrgs = orgs.filter((v, i, a) => a.indexOf(v) === i);
