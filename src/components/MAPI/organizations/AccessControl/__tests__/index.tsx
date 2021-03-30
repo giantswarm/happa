@@ -35,7 +35,6 @@ function getComponent(
 
 describe('AccessControl', () => {
   beforeAll(() => {
-    nock.enableNetConnect();
     axios.defaults.adapter = require('axios/lib/adapters/http');
   });
 
