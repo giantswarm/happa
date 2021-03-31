@@ -48,20 +48,36 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
     setClipboardContent(clusterID);
   };
 
+  // TODO: remove this artificial bit of problem creation.
+  const realClusterID = `${clusterID}25s8rjr38`;
+
+  var label = realClusterID.substring(0, 5);
+
+  if (label !== realClusterID) {
+    label = (
+      <OverlayTrigger
+        overlay={
+          <Tooltip id='idtooltip'>
+            <>Cluster ID: {realClusterID}</>
+          </Tooltip>
+        }
+        placement='top'
+      >
+        <>{realClusterID.substring(0, 4)}…</>
+      </OverlayTrigger>
+    );
+  }
+
   return (
     <Wrapper onMouseLeave={() => setClipboardContent(null)}>
-      <Label clusterID={clusterID} title={`Unique Cluster ID: ${clusterID}`}>
-        {clusterID}
-      </Label>
+      <Label clusterID={realClusterID}>{label}</Label>
 
       {copyEnabled &&
         (hasContentInClipboard ? (
           <i aria-hidden='true' className='fa fa-done' />
         ) : (
           <OverlayTrigger
-            overlay={
-              <Tooltip id='tooltip'>Copy {clusterID} to clipboard.</Tooltip>
-            }
+            overlay={<Tooltip id='tooltip'>Copy ID to clipboard.</Tooltip>}
             placement='top'
           >
             <i
