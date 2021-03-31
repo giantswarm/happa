@@ -201,7 +201,7 @@ describe('AccessControl', () => {
         '/apis/rbac.authorization.k8s.io/v1/clusterroles/?labelSelector=ui.giantswarm.io%2Fdisplay%3Dtrue'
       )
       .reply(StatusCodes.InternalServerError, {
-        apiVersion: 'rbac.authorization.k8s.io/v1',
+        apiVersion: 'v1',
         kind: 'Status',
         message: 'There was a huge problem.',
         status: metav1.K8sStatuses.Failure,
@@ -384,7 +384,7 @@ describe('AccessControl', () => {
     };
 
     const creationResponse = {
-      apiVersion: 'rbac.authorization.k8s.io/v1',
+      apiVersion: 'v1',
       kind: 'Status',
       message: 'There was a huge problem.',
       status: metav1.K8sStatuses.Failure,
@@ -585,7 +585,7 @@ describe('AccessControl', () => {
     };
 
     const creationResponse = {
-      apiVersion: 'rbac.authorization.k8s.io/v1',
+      apiVersion: 'v1',
       kind: 'Status',
       message: 'There was a huge problem.',
       status: metav1.K8sStatuses.Failure,
@@ -795,7 +795,7 @@ describe('AccessControl', () => {
     };
 
     const putResponse = {
-      apiVersion: 'rbac.authorization.k8s.io/v1',
+      apiVersion: 'v1',
       kind: 'Status',
       message: 'There was a huge problem.',
       status: metav1.K8sStatuses.Failure,
@@ -981,7 +981,7 @@ describe('AccessControl', () => {
     };
 
     const putResponse = {
-      apiVersion: 'rbac.authorization.k8s.io/v1',
+      apiVersion: 'v1',
       kind: 'Status',
       message: 'There was a huge problem.',
       status: metav1.K8sStatuses.Failure,
@@ -1230,7 +1230,7 @@ describe('AccessControl', () => {
     )[] = [
       corev1Mocks.automationServiceAccount as corev1.IServiceAccount,
       {
-        apiVersion: 'rbac.authorization.k8s.io/v1',
+        apiVersion: 'v1',
         kind: 'Status',
         message: 'There was a huge problem.',
         status: metav1.K8sStatuses.Failure,
@@ -1423,7 +1423,7 @@ describe('AccessControl', () => {
     nock(window.config.mapiEndpoint)
       .delete('/api/v1/namespaces/org-giantswarm/serviceaccounts/el-toro/')
       .reply(StatusCodes.InternalServerError, {
-        apiVersion: 'rbac.authorization.k8s.io/v1',
+        apiVersion: 'v1',
         kind: 'Status',
         message: 'There was a huge problem.',
         status: metav1.K8sStatuses.Failure,
