@@ -62,7 +62,7 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
         }
         placement='top'
       >
-        <>{realClusterID.substring(0, 4)}…</>
+        <span>{realClusterID.substring(0, 4)}…</span>
       </OverlayTrigger>
     );
   }
