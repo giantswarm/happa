@@ -8,11 +8,11 @@ import { getConfiguration } from 'model/services/metadata/configuration';
 import { MainRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
-  canListOrgs,
   getMockCall,
-  mapiOrgsResponse,
+  getOrganizationListResponse,
   metadataResponse,
   releasesResponse,
+  selfSubjectAccessReviewCanListOrgs,
 } from 'testUtils/mockHttpCalls';
 import {
   createInitialHistory,
@@ -22,11 +22,11 @@ import {
 describe('AdminLogin', () => {
   it('performs the admin login flow via OAuth2', async () => {
     (getOrganizationList as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(mapiOrgsResponse)
+      Promise.resolve(getOrganizationListResponse)
     );
 
     (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(canListOrgs)
+      Promise.resolve(selfSubjectAccessReviewCanListOrgs)
     );
 
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
