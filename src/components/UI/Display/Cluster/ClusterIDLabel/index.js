@@ -48,8 +48,7 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
     setClipboardContent(clusterID);
   };
 
-  // TODO: remove this artificial bit of problem creation.
-  const realClusterID = `${clusterID}25s8rjr38`;
+  const realClusterID = clusterID;
 
   var label = realClusterID.substring(0, 5);
 
