@@ -65,7 +65,7 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
         }
         placement='top'
       >
-        <span data-id={realClusterID}>{label}</span>
+        <span aria-label={realClusterID}>{label}</span>
       </OverlayTrigger>
     </Label>
   );

@@ -155,7 +155,7 @@ describe('', () => {
         findByText,
         getByText,
         findByTestId,
-        getByTitle,
+        getByLabelText,
       } = renderRouteWithStore(organizationDetailsPath);
 
       const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
@@ -164,7 +164,7 @@ describe('', () => {
       // id column in clusters table
       // FIXME: the title attribute is no longer there.
       expect(
-        getByTitle(`Cluster ID: ${v4AWSClusterResponse.id}`)
+        getByLabelText(`/Cluster ID: ${v4AWSClusterResponse.id}/`)
       ).toBeInTheDocument();
 
       // name cloumn in clusters table
