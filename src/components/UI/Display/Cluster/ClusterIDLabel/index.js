@@ -51,9 +51,12 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
   const realClusterID = clusterID;
 
   var label = realClusterID.substring(0, 5);
-
   if (label !== realClusterID) {
-    label = (
+    label = `${realClusterID.substring(0, 4)}…`;
+  }
+
+  const labelComponent = (
+    <Label clusterID={realClusterID}>
       <OverlayTrigger
         overlay={
           <Tooltip id='idtooltip'>
@@ -62,21 +65,21 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
         }
         placement='top'
       >
-        <span>{realClusterID.substring(0, 4)}…</span>
+        <span data-id={realClusterID}>{label}</span>
       </OverlayTrigger>
-    );
-  }
+    </Label>
+  );
 
   return (
     <Wrapper onMouseLeave={() => setClipboardContent(null)}>
-      <Label clusterID={realClusterID}>{label}</Label>
+      {labelComponent}
 
       {copyEnabled &&
         (hasContentInClipboard ? (
           <i aria-hidden='true' className='fa fa-done' />
         ) : (
           <OverlayTrigger
-            overlay={<Tooltip id='tooltip'>Copy ID to clipboard.</Tooltip>}
+            overlay={<Tooltip id='tooltip'>Copy ID to clipboard</Tooltip>}
             placement='top'
           >
             <i
