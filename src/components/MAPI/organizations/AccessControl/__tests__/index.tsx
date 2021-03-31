@@ -228,7 +228,7 @@ describe('AccessControl', () => {
     ).toBeInTheDocument();
   });
 
-  it('can create simple subjects', async () => {
+  it('can create groups', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -341,9 +341,11 @@ describe('AccessControl', () => {
     expect(within(section).getByLabelText('subject1')).toBeInTheDocument();
     expect(within(section).getByLabelText('subject2')).toBeInTheDocument();
     expect(within(section).getByLabelText('subject3')).toBeInTheDocument();
+
+    ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 
-  it('displays an error if creating simple subjects fails', async () => {
+  it('displays an error if creating groups fails', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -437,5 +439,205 @@ describe('AccessControl', () => {
     expect(
       within(section).queryByLabelText('subject3')
     ).not.toBeInTheDocument();
+
+    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+  });
+
+  it('can create users', async () => {
+    const now = 1617189262247;
+    // @ts-expect-error
+    Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
+
+    const creationRequest = {
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'RoleBinding',
+      metadata: {
+        name: `edit-all-${now}`,
+        namespace: 'org-giantswarm',
+      },
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+      subjects: [
+        {
+          name: 'subject1@example.com',
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+        },
+        {
+          name: 'subject2',
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+        },
+      ],
+    };
+
+    const creationResponse = {
+      kind: 'RoleBinding',
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      metadata: {
+        name: `edit-all-${now}`,
+        namespace: 'org-giantswarm',
+        selfLink: `/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-${now}`,
+        uid: '522ea429-9561-4d80-ba12-6eb656b51145',
+        resourceVersion: '284491712',
+        creationTimestamp: new Date(now).toISOString(),
+      },
+      subjects: [
+        {
+          name: 'subject1@example.com',
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+        },
+        {
+          name: 'subject2',
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    nock(window.config.mapiEndpoint)
+      .post(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/',
+        creationRequest
+      )
+      .reply(StatusCodes.Created, creationResponse);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Users');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    );
+    fireEvent.change(input, {
+      target: { value: 'subject1@example.com, subject2' },
+    });
+
+    fireEvent.click(within(section).getByRole('button', { name: 'OK' }));
+    expect(within(section).getByRole('progressbar')).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(/Subjects added successfully./)
+    ).toBeInTheDocument();
+
+    expect(
+      within(section).getByLabelText('subject1@example.com')
+    ).toBeInTheDocument();
+    expect(within(section).getByLabelText('subject2')).toBeInTheDocument();
+
+    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+  });
+
+  it('displays an error if creating users fails', async () => {
+    const now = 1617189262247;
+    // @ts-expect-error
+    Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
+
+    const creationRequest = {
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'RoleBinding',
+      metadata: {
+        name: `edit-all-${now}`,
+        namespace: 'org-giantswarm',
+      },
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+      subjects: [
+        {
+          name: 'subject1@example.com',
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+        },
+        {
+          name: 'subject2',
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+        },
+      ],
+    };
+
+    const creationResponse = {
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'Status',
+      message: 'There was a huge problem.',
+      status: metav1.K8sStatuses.Failure,
+      reason: metav1.K8sStatusErrorReasons.InternalError,
+      code: StatusCodes.InternalServerError,
+    };
+
+    nock(window.config.mapiEndpoint)
+      .post(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/',
+        creationRequest
+      )
+      .reply(creationResponse.code, creationResponse);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Users');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    );
+    fireEvent.change(input, {
+      target: { value: 'subject1@example.com, subject2' },
+    });
+
+    fireEvent.click(within(section).getByRole('button', { name: 'OK' }));
+    expect(within(section).getByRole('progressbar')).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(/Could not add subjects:/)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
+
+    expect(
+      within(section).queryByLabelText('subject1@example.com')
+    ).not.toBeInTheDocument();
+    expect(
+      within(section).queryByLabelText('subject2')
+    ).not.toBeInTheDocument();
+
+    ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 });
