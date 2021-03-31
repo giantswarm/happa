@@ -162,10 +162,7 @@ describe('', () => {
       expect(pageTitle).toBeInTheDocument();
 
       // id column in clusters table
-      // FIXME: the title attribute is no longer there.
-      expect(
-        getByLabelText(`/Cluster ID: ${v4AWSClusterResponse.id}/`)
-      ).toBeInTheDocument();
+      expect(getByLabelText(v4AWSClusterResponse.id)).toBeInTheDocument();
 
       // name cloumn in clusters table
       expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
