@@ -4,7 +4,7 @@ import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { selfSubjectAccessReview } from 'model/services/mapi/authorizationv1/selfSubjectAccessReview';
 import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1/selfSubjectRulesReview';
-import { getOrganization } from 'model/services/mapi/organizations/';
+import { getOrganization } from 'model/services/mapi/securityv1alpha1/';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';

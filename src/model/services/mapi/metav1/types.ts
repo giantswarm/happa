@@ -13,7 +13,7 @@ export interface IObjectMeta {
 }
 
 export interface ITypeMeta {
-  rresourceVersion?: string;
+  resourceVersion?: string;
   selfLink?: string;
 }
 

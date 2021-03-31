@@ -53,3 +53,5 @@ export * from './selfSubjectRulesReviews';
 
 // MapiOrganizations
 export * from './mapiOrganizations';
+
+export * from './rbacv1';

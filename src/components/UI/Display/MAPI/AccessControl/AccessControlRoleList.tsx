@@ -70,7 +70,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   }
 
   return (
-    <Sidebar responsive={false} {...props}>
+    <Sidebar responsive={false} as='aside' aria-label='Role list' {...props}>
       <Content>
         <Box margin={{ bottom: 'small' }}>
           <TextInput
