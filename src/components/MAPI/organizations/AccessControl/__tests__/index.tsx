@@ -640,4 +640,429 @@ describe('AccessControl', () => {
 
     ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
+
+  it('can delete a group', async () => {
+    const putRequest = {
+      metadata: {
+        name: 'edit-all-group',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'ServiceAccount',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'el-toro',
+        },
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    const putResponse = {
+      metadata: {
+        name: 'edit-all-group',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'ServiceAccount',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'el-toro',
+        },
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group/',
+        putRequest
+      )
+      .reply(StatusCodes.Ok, putResponse);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group/'
+      )
+      .reply(StatusCodes.Ok, rbacv1Mocks.editAllRoleBinding);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Groups');
+    const subject = within(section).getByLabelText('Admins');
+    fireEvent.click(within(subject).getByTitle('Delete'));
+    fireEvent.click(screen.getByText('Yes, delete it'));
+
+    expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Subject Admins deleted successfully./)
+    ).toBeInTheDocument();
+
+    expect(within(section).queryByLabelText('Admins')).not.toBeInTheDocument();
+  });
+
+  it('displays an error if deleting a group fails', async () => {
+    const putRequest = {
+      metadata: {
+        name: 'edit-all-group',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'ServiceAccount',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'el-toro',
+        },
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    const putResponse = {
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'Status',
+      message: 'There was a huge problem.',
+      status: metav1.K8sStatuses.Failure,
+      reason: metav1.K8sStatusErrorReasons.InternalError,
+      code: StatusCodes.InternalServerError,
+    };
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group/',
+        putRequest
+      )
+      .reply(putResponse.code, putResponse);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group/'
+      )
+      .reply(StatusCodes.Ok, rbacv1Mocks.editAllRoleBinding);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Groups');
+    const subject = within(section).getByLabelText('Admins');
+    fireEvent.click(within(subject).getByTitle('Delete'));
+    fireEvent.click(screen.getByText('Yes, delete it'));
+
+    expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Could not delete subject Admins/)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
+
+    expect(within(section).getByLabelText('Admins')).toBeInTheDocument();
+  });
+
+  it('can delete a user', async () => {
+    const putRequest = {
+      metadata: {
+        name: 'cool',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    const putResponse = {
+      metadata: {
+        name: 'cool',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool/',
+        putRequest
+      )
+      .reply(StatusCodes.Ok, putResponse);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool/'
+      )
+      .reply(StatusCodes.Ok, rbacv1Mocks.coolRoleBinding);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Users');
+    const subject = within(section).getByLabelText('test@test.com');
+    fireEvent.click(within(subject).getByTitle('Delete'));
+    fireEvent.click(screen.getByText('Yes, delete it'));
+
+    expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Subject test@test.com deleted successfully./)
+    ).toBeInTheDocument();
+
+    expect(
+      within(section).queryByLabelText('test@test.com')
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays an error if deleting a user fails', async () => {
+    const putRequest = {
+      metadata: {
+        name: 'cool',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    const putResponse = {
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'Status',
+      message: 'There was a huge problem.',
+      status: metav1.K8sStatuses.Failure,
+      reason: metav1.K8sStatusErrorReasons.InternalError,
+      code: StatusCodes.InternalServerError,
+    };
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool/',
+        putRequest
+      )
+      .reply(putResponse.code, putResponse);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/cool/'
+      )
+      .reply(StatusCodes.Ok, rbacv1Mocks.coolRoleBinding);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Users');
+    const subject = within(section).getByLabelText('test@test.com');
+    fireEvent.click(within(subject).getByTitle('Delete'));
+    fireEvent.click(screen.getByText('Yes, delete it'));
+
+    expect(
+      await screen.findByText(/Could not delete subject test@test.com/)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
+
+    expect(within(section).getByLabelText('test@test.com')).toBeInTheDocument();
+  });
+
+  it('deletes the whole rolebinding when deleting the last subject in it', async () => {
+    nock(window.config.mapiEndpoint)
+      .delete(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/write-all-customer-group/'
+      )
+      .reply(StatusCodes.Ok, rbacv1Mocks.writeAllCustomerRoleBinding);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/write-all-customer-group/'
+      )
+      .reply(StatusCodes.Ok, rbacv1Mocks.writeAllCustomerRoleBinding);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'cluster-admin',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Groups');
+    const subject = within(section).getByLabelText('Admins');
+    fireEvent.click(within(subject).getByTitle('Delete'));
+    fireEvent.click(screen.getByText('Yes, delete it'));
+
+    expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Subject Admins deleted successfully./)
+    ).toBeInTheDocument();
+
+    expect(within(section).queryByLabelText('Admins')).not.toBeInTheDocument();
+  });
 });
