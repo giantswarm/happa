@@ -1,3 +1,4 @@
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
@@ -174,37 +175,32 @@ export function getOrgNamespaceFromOrgName(name: string): string {
  * Fetch the list of roles and role bindings and map it to the
  * data structure necessary for rendering the UI.
  * @param client
- * @param user
+ * @param auth
  * @param namespace
  */
-export function getRoleItems(
+export async function getRoleItems(
   client: IHttpClient,
-  user: ILoggedInUser,
+  auth: IOAuth2Provider,
   namespace: string
 ) {
-  return async () => {
-    const response = await Promise.all([
-      rbacv1.getClusterRoleList(client, user)(),
-      rbacv1.getRoleList(client, user, namespace)(),
-      rbacv1.getRoleBindingList(client, user, namespace)(),
-    ]);
+  const response = await Promise.all([
+    rbacv1.getClusterRoleList(client, auth),
+    rbacv1.getRoleList(client, auth, namespace),
+    rbacv1.getRoleBindingList(client, auth, namespace),
+  ]);
 
-    return mapResourcesToUiRoles(...response);
-  };
+  return mapResourcesToUiRoles(...response);
 }
 
 /**
  * Get the cache key used for the role getter request in.
- * @param user
+ * @param namespace
  */
-export function getRoleItemsKey(
-  user: ILoggedInUser | null,
-  namespace: string
-): string | null {
+export function getRoleItemsKey(namespace: string): string | null {
   const keyParts = [
-    rbacv1.getClusterRoleListKey(user),
-    rbacv1.getRoleListKey(user, namespace),
-    rbacv1.getRoleBindingListKey(user, namespace),
+    rbacv1.getClusterRoleListKey(),
+    rbacv1.getRoleListKey(namespace),
+    rbacv1.getRoleBindingListKey(namespace),
   ];
 
   let key = '';
@@ -334,7 +330,7 @@ export function mapUiSubjectTypeToSubjectKind(
 /**
  * Create a new role binding that contains the given subjects.
  * @param client
- * @param user
+ * @param auth
  * @param type - The type of the given subject names.
  * @param subjectNames - The given subject names.
  * @param namespace
@@ -342,7 +338,7 @@ export function mapUiSubjectTypeToSubjectKind(
  */
 export async function createRoleBindingWithSubjects(
   client: IHttpClient,
-  user: ILoggedInUser,
+  auth: IOAuth2Provider,
   type: ui.AccessControlSubjectTypes,
   subjectNames: string[],
   namespace: string,
@@ -368,7 +364,7 @@ export async function createRoleBindingWithSubjects(
       subject.namespace = namespace;
 
       subjectCreationRequests.push(
-        corev1.createServiceAccount(client, user, serviceAccount)
+        corev1.createServiceAccount(client, auth, serviceAccount)
       );
     }
 
@@ -377,34 +373,34 @@ export async function createRoleBindingWithSubjects(
 
   await Promise.all(subjectCreationRequests);
 
-  return rbacv1.createRoleBinding(client, user, roleBinding);
+  return rbacv1.createRoleBinding(client, auth, roleBinding);
 }
 
 /**
  * Delete the service account derived from the given subject.
  * @param client
- * @param user
+ * @param auth
  * @param subject
  */
 export async function deleteServiceAccountFromSubject(
   client: IHttpClient,
-  user: ILoggedInUser,
+  auth: IOAuth2Provider,
   subject: rbacv1.ISubject
 ) {
   const serviceAccount = await corev1.getServiceAccount(
     client,
-    user,
+    auth,
     subject.name,
     subject.namespace!
-  )();
+  );
 
-  return corev1.deleteServiceAccount(client, user, serviceAccount);
+  return corev1.deleteServiceAccount(client, auth, serviceAccount);
 }
 
 /**
  * Delete a subject from a given `RoleBinding` resource.
  * @param client
- * @param user
+ * @param auth
  * @param subject
  * @param subjectType
  * @param namespace
@@ -412,7 +408,7 @@ export async function deleteServiceAccountFromSubject(
  */
 export async function deleteSubjectFromRoleBinding(
   client: IHttpClient,
-  user: ILoggedInUser,
+  auth: IOAuth2Provider,
   subject: ui.IAccessControlRoleSubjectItem,
   subjectType: ui.AccessControlSubjectTypes,
   namespace: string,
@@ -422,12 +418,12 @@ export async function deleteSubjectFromRoleBinding(
 
   const bindingResource = await rbacv1.getRoleBinding(
     client,
-    user,
+    auth,
     binding.name,
     namespace
-  )();
+  );
 
-  const subjectDeletionRequests: Promise<metav1.IK8sStatus>[] = [];
+  const subjectDeletionRequests: Promise<corev1.IServiceAccount>[] = [];
 
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {
@@ -435,7 +431,7 @@ export async function deleteSubjectFromRoleBinding(
     if (isSubject) {
       if (s.kind === rbacv1.SubjectKinds.ServiceAccount) {
         subjectDeletionRequests.push(
-          deleteServiceAccountFromSubject(client, user, s)
+          deleteServiceAccountFromSubject(client, auth, s)
         );
       }
 
@@ -449,18 +445,18 @@ export async function deleteSubjectFromRoleBinding(
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
-    return rbacv1.deleteRoleBinding(client, user, bindingResource);
+    return rbacv1.deleteRoleBinding(client, auth, bindingResource);
   }
 
   // There are other subjects there, let's keep the resource.
-  return rbacv1.updateRoleBinding(client, user, bindingResource);
+  return rbacv1.updateRoleBinding(client, auth, bindingResource);
 }
 
 /**
  * Delete a subject from a given role. It will delete the subject from
  * all the role bindings that point to this role.
  * @param client
- * @param user
+ * @param auth
  * @param subjectName
  * @param subjectType
  * @param namespace
@@ -468,7 +464,7 @@ export async function deleteSubjectFromRoleBinding(
  */
 export async function deleteSubjectFromRole(
   client: IHttpClient,
-  user: ILoggedInUser,
+  auth: IOAuth2Provider,
   subjectName: string,
   subjectType: ui.AccessControlSubjectTypes,
   namespace: string,
@@ -483,7 +479,7 @@ export async function deleteSubjectFromRole(
     subject.roleBindings.map((binding) =>
       deleteSubjectFromRoleBinding(
         client,
-        user,
+        auth,
         subject,
         subjectType,
         namespace,

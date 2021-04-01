@@ -1,42 +1,25 @@
-import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
-import { LoggedInUserTypes } from 'stores/main/types';
 
+import { getResource } from '../generic/getResource';
 import { IRoleBindingList } from './types';
 
 export function getRoleBindingList(
   client: IHttpClient,
-  user: ILoggedInUser,
-  namespace?: string
+  auth: IOAuth2Provider,
+  namespace: string
 ) {
-  return async () => {
-    const url = k8sUrl.create({
-      baseUrl: window.config.mapiEndpoint,
-      apiVersion: 'rbac.authorization.k8s.io/v1',
-      kind: 'rolebindings',
-      namespace: namespace!,
-    });
+  const url = k8sUrl.create({
+    baseUrl: window.config.mapiEndpoint,
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    kind: 'rolebindings',
+    namespace,
+  });
 
-    client.setRequestConfig({
-      url: url.toString(),
-      method: HttpRequestMethods.GET,
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-    client.setAuthorizationToken(user.auth.scheme, user.auth.token);
-
-    const response = await client.execute<IRoleBindingList>();
-
-    return response.data;
-  };
+  return getResource<IRoleBindingList>(client, auth, url.toString());
 }
 
-export function getRoleBindingListKey(
-  user: ILoggedInUser | null,
-  namespace?: string
-): string | null {
-  if (!user || user.type !== LoggedInUserTypes.MAPI) return null;
-
+export function getRoleBindingListKey(namespace: string) {
   return `getRoleBindingList/${namespace}`;
 }

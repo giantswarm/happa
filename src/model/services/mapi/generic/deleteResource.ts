@@ -3,14 +3,14 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 
 import { executeRequest } from './executeRequest';
 
-export function getResource<T>(
+export function deleteResource<T>(
   client: IHttpClient,
   auth: IOAuth2Provider,
   url: string
 ) {
   client.setRequestConfig({
     url,
-    method: HttpRequestMethods.GET,
+    method: HttpRequestMethods.DELETE,
     headers: {
       Accept: 'application/json',
     },

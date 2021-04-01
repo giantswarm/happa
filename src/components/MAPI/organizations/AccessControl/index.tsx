@@ -1,12 +1,11 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import produce from 'immer';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
@@ -35,13 +34,12 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   const orgNamespace = getOrgNamespaceFromOrgName(organizationName);
 
   const client = useHttpClient();
-  const user = useSelector(getLoggedInUser);
+  const auth = useAuthProvider();
   const { data, mutate, error } = useSWR<
     ui.IAccessControlRoleItem[],
     GenericResponse
-  >(
-    getRoleItemsKey(user, orgNamespace),
-    getRoleItems(client, user!, orgNamespace)
+  >(getRoleItemsKey(orgNamespace), () =>
+    getRoleItems(client, auth, orgNamespace)
   );
 
   const [activeRoleName, setActiveRoleName] = useState('');
@@ -65,7 +63,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 
       const newRoleBinding = await createRoleBindingWithSubjects(
         client,
-        user!,
+        auth,
         type,
         names,
         orgNamespace,
@@ -99,7 +97,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 
       await deleteSubjectFromRole(
         client,
-        user!,
+        auth,
         name,
         type,
         orgNamespace,

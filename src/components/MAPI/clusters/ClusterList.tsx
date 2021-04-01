@@ -18,7 +18,9 @@ const ClusterList: React.FC<IClusterListProps> = () => {
   const { data, error, isValidating } = useSWR<
     capiv1alpha3.IClusterList,
     GenericResponse
-  >(capiv1alpha3.getClusterListKey(client, auth), capiv1alpha3.getClusterList);
+  >(capiv1alpha3.getClusterListKey(), () =>
+    capiv1alpha3.getClusterList(client, auth)
+  );
 
   if (error) {
     return <div>Error: {error.data}</div>;

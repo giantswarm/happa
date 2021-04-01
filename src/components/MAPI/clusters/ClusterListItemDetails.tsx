@@ -21,8 +21,8 @@ const ClusterListItemDetails: React.FC<IClusterListItemDetailsProps> = ({
 
   // Use type intersection for multiple cluster types.
   const { data, error } = useSWR<capzv1alpha3.IAzureCluster, GenericResponse>(
-    capiv1alpha3.getClusterInfraRefKey(client, auth, cluster),
-    capiv1alpha3.getClusterInfraRef
+    capiv1alpha3.getClusterInfraRefKey(cluster),
+    () => capiv1alpha3.getClusterInfraRef(client, auth, cluster)
   );
 
   if (

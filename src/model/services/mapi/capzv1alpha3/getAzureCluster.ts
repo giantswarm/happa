@@ -8,14 +8,6 @@ import { IAzureCluster } from '.';
 export function getAzureCluster(
   client: IHttpClient,
   auth: IOAuth2Provider,
-  url: string
-) {
-  return getResource<IAzureCluster>(client, auth, url);
-}
-
-export function getAzureClusterKey(
-  client: IHttpClient,
-  auth: IOAuth2Provider,
   namespace: string,
   name: string
 ) {
@@ -27,5 +19,9 @@ export function getAzureClusterKey(
     name,
   });
 
-  return [client, auth, url.toString()];
+  return getResource<IAzureCluster>(client, auth, url.toString());
+}
+
+export function getAzureClusterKey(namespace: string, name: string) {
+  return `getAzureCluster/${namespace}/${name}`;
 }

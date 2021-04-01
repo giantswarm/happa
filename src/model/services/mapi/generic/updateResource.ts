@@ -3,17 +3,19 @@ import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 
 import { executeRequest } from './executeRequest';
 
-export function getResource<T>(
+export function updateResource<T>(
   client: IHttpClient,
   auth: IOAuth2Provider,
-  url: string
+  url: string,
+  data: Record<string, unknown>
 ) {
   client.setRequestConfig({
-    url,
-    method: HttpRequestMethods.GET,
+    url: url.toString(),
+    method: HttpRequestMethods.PUT,
     headers: {
       Accept: 'application/json',
     },
+    data,
   });
 
   return executeRequest<T>(client, auth);
