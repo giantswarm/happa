@@ -21,9 +21,7 @@ import {
 
 describe('AdminLogin', () => {
   it('performs the admin login flow via OAuth2', async () => {
-    (getOrganizationList as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(mapiOrgsResponse)
-    );
+    (getOrganizationList as jest.Mock).mockResolvedValue(mapiOrgsResponse);
 
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(canListOrgs);
 

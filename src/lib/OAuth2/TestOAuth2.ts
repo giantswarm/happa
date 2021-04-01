@@ -7,8 +7,15 @@ import { IOAuth2EventCallbacks, IOAuth2Provider, OAuth2Events } from './OAuth2';
 import { IOAuth2User } from './OAuth2User';
 
 class TestOAuth2 implements IOAuth2Provider {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private history = createMemoryHistory()) {}
+  constructor(
+    private history = createMemoryHistory(),
+    autoLogin: boolean = false
+  ) {
+    if (autoLogin) {
+      this.loggedInUser = TestOAuth2.createLoggedInUser();
+      this.renewUser();
+    }
+  }
 
   public async attemptLogin(): Promise<void> {
     this.history.push('/?code=some-code&state=some-state');

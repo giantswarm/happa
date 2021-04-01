@@ -1,10 +1,11 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import axios from 'axios';
+import { createMemoryHistory } from 'history';
+import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import * as React from 'react';
-import { AuthorizationTypes, StatusCodes } from 'shared/constants';
-import { LoggedInUserTypes } from 'stores/main/types';
+import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
 import * as rbacv1Mocks from 'testUtils/mockHttpCalls/rbacv1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -20,17 +21,17 @@ function getComponent(
     </SWRConfig>
   );
 
-  return getComponentWithStore(Component, props, {
-    main: {
-      selectedOrganization: 'giantswarm',
-      loggedInUser: {
-        email: 'developer@giantswarm.io',
-        auth: { scheme: AuthorizationTypes.BEARER, token: 'a-valid-token' },
-        isAdmin: true,
-        type: LoggedInUserTypes.MAPI,
-      },
-    },
-  });
+  const history = createMemoryHistory();
+  const auth = new TestOAuth2(history, true);
+
+  return getComponentWithStore(
+    Component,
+    props,
+    undefined,
+    undefined,
+    history,
+    auth
+  );
 }
 
 describe('AccessControl', () => {

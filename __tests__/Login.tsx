@@ -185,9 +185,7 @@ describe('Login', () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
       cantListOrgs
     );
-    (getOrganization as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(singleMAPIOrgResponse)
-    );
+    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
 
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       someOrgsSubjectRulesReview
@@ -253,9 +251,7 @@ describe('Login', () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
       cantListOrgs
     );
-    (getOrganization as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(singleMAPIOrgResponse)
-    );
+    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
 
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       noOrgsSubjectRulesReview
@@ -288,9 +284,7 @@ describe('Login', () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
       cantListOrgs
     );
-    (getOrganization as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(singleMAPIOrgResponse)
-    );
+    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
 
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       someOrgsSubjectRulesReview
@@ -333,9 +327,7 @@ describe('Login', () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
       cantListOrgs
     );
-    (getOrganization as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(singleMAPIOrgResponse)
-    );
+    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
 
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       someOrgsSubjectRulesReview
