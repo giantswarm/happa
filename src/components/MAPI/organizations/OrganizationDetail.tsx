@@ -1,3 +1,4 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -9,12 +10,11 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import { Tab } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
-import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
@@ -40,14 +40,13 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
   const client = useHttpClient();
-  const user = useSelector(getLoggedInUser);
+  const auth = useAuthProvider();
 
   const { data, error } = useSWR<
     securityv1alpha1.IOrganization,
     GenericResponse
-  >(
-    securityv1alpha1.getOrganizationKey(user, orgId),
-    securityv1alpha1.getOrganization(client, user!, orgId)
+  >(securityv1alpha1.getOrganizationKey(orgId), () =>
+    securityv1alpha1.getOrganization(client, auth, orgId)
   );
 
   const dispatch = useDispatch();

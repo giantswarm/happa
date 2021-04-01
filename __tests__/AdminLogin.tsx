@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
-import { selfSubjectAccessReview } from 'model/services/mapi/authorizationv1';
+import { createSelfSubjectAccessReview } from 'model/services/mapi/authorizationv1';
 import { getOrganizationList } from 'model/services/mapi/securityv1alpha1/getOrganizationList';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { MainRoutes } from 'shared/constants/routes';
@@ -25,9 +25,7 @@ describe('AdminLogin', () => {
       Promise.resolve(mapiOrgsResponse)
     );
 
-    (selfSubjectAccessReview as jest.Mock).mockReturnValue(() =>
-      Promise.resolve(canListOrgs)
-    );
+    (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(canListOrgs);
 
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);

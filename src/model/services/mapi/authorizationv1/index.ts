@@ -1,3 +1,3 @@
 export * from './types';
-export * from './selfSubjectRulesReview';
-export * from './selfSubjectAccessReview';
+export * from './createSelfSubjectRulesReview';
+export * from './createSelfSubjectAccessReview';
