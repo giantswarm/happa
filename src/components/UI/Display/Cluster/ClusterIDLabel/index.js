@@ -48,24 +48,22 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
     setClipboardContent(clusterID);
   };
 
-  const realClusterID = clusterID;
-
-  var label = realClusterID.substring(0, 5);
-  if (label !== realClusterID) {
-    label = `${realClusterID.substring(0, 4)}…`;
+  let label = clusterID.substring(0, 5);
+  if (label !== clusterID) {
+    label = `${clusterID.substring(0, 4)}…`;
   }
 
   const labelComponent = (
-    <Label clusterID={realClusterID}>
+    <Label clusterID={clusterID}>
       <OverlayTrigger
         overlay={
           <Tooltip id='idtooltip'>
-            <>Cluster ID: {realClusterID}</>
+            <>Cluster ID: {clusterID}</>
           </Tooltip>
         }
         placement='top'
       >
-        <span aria-label={realClusterID}>{label}</span>
+        <span aria-label={clusterID}>{label}</span>
       </OverlayTrigger>
     </Label>
   );
