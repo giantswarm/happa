@@ -1,7 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import produce from 'immer';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
@@ -33,13 +33,13 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 }) => {
   const orgNamespace = getOrgNamespaceFromOrgName(organizationName);
 
-  const client = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
   const { data, mutate, error } = useSWR<
     ui.IAccessControlRoleItem[],
     GenericResponse
   >(getRoleItemsKey(orgNamespace), () =>
-    getRoleItems(client, auth, orgNamespace)
+    getRoleItems(clientFactory, auth, orgNamespace)
   );
 
   const [activeRoleName, setActiveRoleName] = useState('');
@@ -62,7 +62,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       if (!activeRole || !data) return Promise.resolve();
 
       const newRoleBinding = await createRoleBindingWithSubjects(
-        client,
+        clientFactory(),
         auth,
         type,
         names,
@@ -96,7 +96,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       if (!activeRole || !data) return Promise.resolve();
 
       await deleteSubjectFromRole(
-        client,
+        clientFactory(),
         auth,
         name,
         type,

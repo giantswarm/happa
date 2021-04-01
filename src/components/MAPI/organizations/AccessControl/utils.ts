@@ -1,3 +1,4 @@
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -174,19 +175,19 @@ export function getOrgNamespaceFromOrgName(name: string): string {
 /**
  * Fetch the list of roles and role bindings and map it to the
  * data structure necessary for rendering the UI.
- * @param client
+ * @param clientFactory
  * @param auth
  * @param namespace
  */
 export async function getRoleItems(
-  client: IHttpClient,
+  clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   namespace: string
 ) {
   const response = await Promise.all([
-    rbacv1.getClusterRoleList(client, auth),
-    rbacv1.getRoleList(client, auth, namespace),
-    rbacv1.getRoleBindingList(client, auth, namespace),
+    rbacv1.getClusterRoleList(clientFactory(), auth),
+    rbacv1.getRoleList(clientFactory(), auth, namespace),
+    rbacv1.getRoleBindingList(clientFactory(), auth, namespace),
   ]);
 
   return mapResourcesToUiRoles(...response);
