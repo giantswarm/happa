@@ -2,6 +2,13 @@ import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import { IHttpClient } from 'model/clients/HttpClient';
 
+/**
+ * Make sure that the user is authenticated,
+ * their token is not expired, and that the given
+ * HTTP client uses the authentication token.
+ * @param client
+ * @param auth
+ */
 export async function ensureClientAuth(
   client: IHttpClient,
   auth: IOAuth2Provider
