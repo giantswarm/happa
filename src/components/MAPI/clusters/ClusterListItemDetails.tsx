@@ -1,3 +1,4 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -6,8 +7,6 @@ import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 
 interface IClusterListItemDetailsProps {
@@ -18,12 +17,12 @@ const ClusterListItemDetails: React.FC<IClusterListItemDetailsProps> = ({
   cluster,
 }) => {
   const client = useHttpClient();
-  const user = useSelector(getLoggedInUser);
+  const auth = useAuthProvider();
 
   // Use type intersection for multiple cluster types.
   const { data, error } = useSWR<capzv1alpha3.IAzureCluster, GenericResponse>(
-    capiv1alpha3.getClusterInfraRefKey(user, cluster),
-    capiv1alpha3.getClusterInfraRef(client, user!, cluster)
+    capiv1alpha3.getClusterInfraRefKey(client, auth, cluster),
+    capiv1alpha3.getClusterInfraRef
   );
 
   if (
