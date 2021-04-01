@@ -209,8 +209,8 @@ class ClusterApps extends React.Component {
       }
     }
 
-    if (typeof version === 'undefined' || version === '') {
-      version = <NotAvailable />;
+    if (!version) {
+      return <NotAvailable />;
     }
 
     return version;
