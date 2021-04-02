@@ -12,9 +12,9 @@ const NotAvailableOuter = styled.span`
 
 interface INotAvailableProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const NotAvailable: FC<INotAvailableProps> = ({ ...rest }) => {
+const NotAvailable: FC<INotAvailableProps> = (props) => {
   return (
-    <NotAvailableOuter {...rest}>
+    <NotAvailableOuter {...props}>
       <abbr aria-label='no information available'>n/a</abbr>
     </NotAvailableOuter>
   );
