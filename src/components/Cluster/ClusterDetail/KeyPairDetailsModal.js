@@ -4,6 +4,7 @@ import { formatDate, relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
+import NotAvailable from 'UI/Display/NotAvailable';
 import DetailItem from 'UI/Layout/DetailList';
 
 import GenericModal from '../../Modals/GenericModal';
@@ -61,7 +62,7 @@ class KeyPairDetailsModal extends React.Component {
 
         <DetailItem title='Common Name (CN)' className='code breaking'>
           {this.props.keyPair.common_name === '' ? (
-            <span>n/a</span>
+            <NotAvailable />
           ) : (
             <Copyable copyText={this.props.keyPair.common_name}>
               <span>{this.props.keyPair.common_name}</span>
@@ -71,7 +72,7 @@ class KeyPairDetailsModal extends React.Component {
 
         <DetailItem title='Certificate Organizations (O)'>
           {this.props.keyPair.certificate_organizations === '' ? (
-            <span>n/a</span>
+            <NotAvailable />
           ) : (
             <Copyable copyText={this.props.keyPair.certificate_organizations}>
               <CertificateOrgsLabel
@@ -91,7 +92,7 @@ class KeyPairDetailsModal extends React.Component {
 
         <DetailItem title='Description'>
           {this.props.keyPair.description === '' ? (
-            <span>n/a</span>
+            <NotAvailable />
           ) : (
             this.props.keyPair.description
           )}

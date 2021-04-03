@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import AvailabilityZonesLabel from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 // Returns an array of AvailabilityZonesLabel components
 const AvailabilityZonesLabels = ({ zones, labelsChecked, ...props }) => {
   if (!zones || zones.length === 0) {
-    return <abbr title='No information available'>n/a</abbr>;
+    return <NotAvailable />;
   }
 
   return zones.map((az) => {

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 interface INodePoolScalingSpotInstancesDetailsProps {
   nodePool: INodePool;
@@ -16,13 +17,19 @@ const NodePoolScalingSpotInstancesDetails: React.FC<INodePoolScalingSpotInstance
   if (provider === Providers.AWS) {
     const instanceDistribution = node_spec?.aws?.instance_distribution;
 
-    let baseCapacity = 'n/a';
-    let spotPercentage = 'n/a';
+    let baseCapacity = <NotAvailable />;
+    let spotPercentage = <NotAvailable />;
     if (instanceDistribution) {
-      baseCapacity = String(instanceDistribution.on_demand_base_capacity);
-      spotPercentage = String(
-        /* eslint-disable-next-line no-magic-numbers */
-        100 - instanceDistribution.on_demand_percentage_above_base_capacity
+      baseCapacity = (
+        <span>{String(instanceDistribution.on_demand_base_capacity)}</span>
+      );
+      spotPercentage = (
+        <span>
+          {String(
+            /* eslint-disable-next-line no-magic-numbers */
+            100 - instanceDistribution.on_demand_percentage_above_base_capacity
+          )}
+        </span>
       );
     }
 

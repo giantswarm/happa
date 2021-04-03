@@ -7,6 +7,7 @@ import { FallbackSpan } from 'styles';
 import Button from 'UI/Controls/Button';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import InstanceType from 'UI/Display/Cluster/InstanceType';
+import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
@@ -41,7 +42,7 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv>
         <div>Instance type</div>
-        <InstanceType>{instanceName ?? 'n/a'}</InstanceType>
+        <InstanceType>{instanceName ?? <NotAvailable />}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>

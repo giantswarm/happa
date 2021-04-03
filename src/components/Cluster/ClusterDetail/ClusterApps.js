@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
@@ -208,6 +209,10 @@ class ClusterApps extends React.Component {
       }
     }
 
+    if (!version) {
+      return <NotAvailable />;
+    }
+
     return version;
   }
 
@@ -240,19 +245,19 @@ class ClusterApps extends React.Component {
       name: 'cert-exporter',
       logoUrl: '/images/app_icons/cert_exporter@2x.png',
       category: 'management',
-      version: 'n/a',
+      version: null,
     },
     {
       name: 'net-exporter',
       logoUrl: '/images/app_icons/net_exporter@2x.png',
       category: 'management',
-      version: 'n/a',
+      version: null,
     },
     {
       name: 'RBAC and PSP defaults',
       logoUrl: '/images/app_icons/rbac_and_psp_defaults@2x.png',
       category: 'essentials',
-      version: 'n/a',
+      version: null,
     },
   ];
 
