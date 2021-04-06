@@ -87,7 +87,6 @@ describe('AccessControl', () => {
       name: 'cluster-admin',
     });
     expect(listItem).toBeInTheDocument();
-    expect(within(listItem).getByText('Resources: All')).toBeInTheDocument();
     expect(within(listItem).getByText('Groups: 1')).toBeInTheDocument();
     expect(within(listItem).getByText('Users: None')).toBeInTheDocument();
     expect(
@@ -143,7 +142,6 @@ describe('AccessControl', () => {
       name: 'edit-all',
     });
     expect(listItem).toBeInTheDocument();
-    expect(within(listItem).getByText('Resources: All')).toBeInTheDocument();
     expect(within(listItem).getByText('Groups: 1')).toBeInTheDocument();
     expect(within(listItem).getByText('Users: 2')).toBeInTheDocument();
     expect(
