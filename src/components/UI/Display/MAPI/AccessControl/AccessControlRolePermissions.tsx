@@ -52,6 +52,10 @@ const StyledTable = styled(Table)`
   width: 100%;
 `;
 
+const StyledTableCell = styled(TableCell)`
+  font-family: Inconsolata, monospace;
+`;
+
 interface IAccessControlRolePermissionsProps
   extends Pick<IAccessControlRoleItem, 'permissions'>,
     React.ComponentPropsWithoutRef<typeof Table> {}
@@ -60,6 +64,8 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
   permissions,
   ...props
 }) => {
+  const keepCharactersStart = 20;
+
   return (
     <StyledTable {...props}>
       <TableHeader>
@@ -84,22 +90,22 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
         >
           {(permission: IAccessControlRoleItemPermission, idx: number) => (
             <TableRow key={makePermissionKey(permission, idx)}>
-              <TableCell size='small'>
-                <Truncated numStart={10}>
+              <StyledTableCell size='medium'>
+                <Truncated numStart={keepCharactersStart}>
                   {formatApiGroups(permission.apiGroups)}
                 </Truncated>
-              </TableCell>
-              <TableCell size='small'>
-                <Truncated numStart={10}>
+              </StyledTableCell>
+              <StyledTableCell size='medium'>
+                <Truncated numStart={keepCharactersStart}>
                   {formatResources(permission.resources)}
                 </Truncated>
-              </TableCell>
-              <TableCell size='small'>
-                <Truncated numStart={10}>
+              </StyledTableCell>
+              <StyledTableCell size='medium'>
+                <Truncated numStart={keepCharactersStart}>
                   {formatResources(permission.resourceNames)}
                 </Truncated>
-              </TableCell>
-              <TableCell>
+              </StyledTableCell>
+              <TableCell size='medium'>
                 <AccessControlRoleVerbs verbs={permission.verbs} />
               </TableCell>
             </TableRow>
