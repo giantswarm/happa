@@ -77,7 +77,7 @@ function makeVerbMap(from: AccessControlRoleItemVerb[]): IVerbMap {
     },
     other: {
       color: 'transparent',
-      display: '···',
+      display: '⋯',
       active: false,
     },
   };

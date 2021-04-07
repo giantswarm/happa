@@ -145,15 +145,14 @@ const AccessControl: React.FC<IAccessControlProps> = ({
               grow: 0,
               shrink: 1,
             }}
-            basis='1/3'
-            width={{ min: '450px' }}
+            basis='1/4'
             roles={data}
             activeRoleName={activeRoleName}
             setActiveRoleName={setActiveRoleName}
             errorMessage={extractErrorMessage(error)}
           />
           <AccessControlRoleDetail
-            basis='2/3'
+            basis='3/4'
             flex={{
               grow: 1,
               shrink: 1,
