@@ -6,6 +6,7 @@ import { FallbackSpan } from 'styles';
 import Button from 'UI/Controls/Button';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import InstanceType from 'UI/Display/Cluster/InstanceType';
+import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 export const WrapperDiv = styled.div`
@@ -41,7 +42,7 @@ function WorkerNodesAzure({
       `${instanceType.numberOfCores} CPUs, ${(instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM`
     : '0 CPUs, 0 GB RAM';
 
-  const nodeCount = nodes || 'n/a';
+  const nodeCount = nodes || <NotAvailable />;
 
   return (
     <WrapperDiv>
@@ -53,7 +54,7 @@ function WorkerNodesAzure({
       </LineDiv>
       <LineDiv>
         <div>VM size</div>
-        <InstanceType>{instanceType?.name ?? 'n/a'}</InstanceType>
+        <InstanceType>{instanceType?.name ?? <NotAvailable />}</InstanceType>
         <RefreshableLabel value={instanceTypeText}>
           {instanceTypeText}
         </RefreshableLabel>

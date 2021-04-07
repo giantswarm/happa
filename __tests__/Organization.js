@@ -155,16 +155,14 @@ describe('', () => {
         findByText,
         getByText,
         findByTestId,
-        getByTitle,
+        getByLabelText,
       } = renderRouteWithStore(organizationDetailsPath);
 
       const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
       expect(pageTitle).toBeInTheDocument();
 
       // id column in clusters table
-      expect(
-        getByTitle(`Unique Cluster ID: ${v4AWSClusterResponse.id}`)
-      ).toBeInTheDocument();
+      expect(getByLabelText(v4AWSClusterResponse.id)).toBeInTheDocument();
 
       // name cloumn in clusters table
       expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
