@@ -1,2 +1,2 @@
 export * from './types';
-export * from './getAzureClusterByName';
+export * from './getAzureCluster';

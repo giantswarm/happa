@@ -102,7 +102,6 @@ describe('AccessControlRoleList', () => {
       .getByText('some-role')
       .closest('[role=button]') as HTMLElement;
     expect(within(role).getByLabelText('Cluster role')).toBeInTheDocument();
-    expect(within(role).getByText('Resources: None')).toBeInTheDocument();
     expect(within(role).getByText('Groups: None')).toBeInTheDocument();
     expect(within(role).getByText('Users: None')).toBeInTheDocument();
 
@@ -112,7 +111,6 @@ describe('AccessControlRoleList', () => {
     expect(
       within(role).queryByLabelText('Cluster role')
     ).not.toBeInTheDocument();
-    expect(within(role).getByText('Resources: All')).toBeInTheDocument();
     expect(within(role).getByText('Groups: 1')).toBeInTheDocument();
     expect(within(role).getByText('Users: 1')).toBeInTheDocument();
 
@@ -122,7 +120,6 @@ describe('AccessControlRoleList', () => {
     expect(
       within(role).queryByLabelText('Cluster role')
     ).not.toBeInTheDocument();
-    expect(within(role).getByText('Resources: All')).toBeInTheDocument();
     expect(within(role).getByText('Groups: None')).toBeInTheDocument();
     expect(within(role).getByText('Users: 99+')).toBeInTheDocument();
   });

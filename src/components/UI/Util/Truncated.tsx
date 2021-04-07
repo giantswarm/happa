@@ -72,7 +72,7 @@ Truncated.defaultProps = {
   as: 'span',
   numEnd: 5,
   numStart: 15,
-  replacer: '...',
+  replacer: '…',
   tooltipPlacement: 'top',
 };
 

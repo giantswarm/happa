@@ -17,7 +17,7 @@ const VALIDATION_ERROR_DEBOUNCE_MS = 500;
 
 interface IOrganizationIndexDataTableRow {
   name: string;
-  clusters?: number;
+  clusterCount?: string;
   oldestRelease?: string;
   newestRelease?: string;
   oldestK8sVersion?: string;
@@ -108,7 +108,7 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
               property: 'clusters',
               header: 'Clusters',
               align: 'center',
-              render: (datum) => <TextOrNA text={datum.clusters} />,
+              render: (datum) => <TextOrNA text={datum.clusterCount} />,
             },
             // TODO: @oponder: enable these in another PR when we have the data.
             // {
