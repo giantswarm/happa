@@ -14,7 +14,7 @@ Simple.args = {
   data: [
     {
       name: 'acme',
-      clusters: 6,
+      clusterCount: '6',
       oldestRelease: 'v11.5.6',
       newestRelease: 'v14.1.0',
       oldestK8sVersion: 'v1.15',
@@ -22,7 +22,7 @@ Simple.args = {
       apps: 3,
       appDeployments: 18,
     },
-    { name: 'security', clusters: 0 },
+    { name: 'security', clusterCount: '0' },
   ],
   createOrg: () =>
     new Promise((resolve) => {

@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginSuccess, logoutSuccess } from 'stores/main/actions';
@@ -68,7 +69,7 @@ export function useAuthProvider(): IOAuth2Provider {
     throw new Error('useAuthProvider must be used within an AuthProvider.');
   }
 
-  return authProvider;
+  return useMemo(() => authProvider, [authProvider]);
 }
 
 export interface IPropsWithAuthProvider {

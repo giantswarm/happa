@@ -14,6 +14,12 @@ import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { createDeepEqualSelector } from 'stores/utils';
 
+export const selectClusters = () => (
+  state: IState
+): Record<string, Cluster> => {
+  return state.entities.clusters.items;
+};
+
 export function selectClusterById(
   state: IState,
   id: string
