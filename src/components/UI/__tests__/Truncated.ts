@@ -25,14 +25,6 @@ describe('Truncated', () => {
     expect(getByText('ATextThatIsTooL...layed')).toBeInTheDocument();
   });
 
-  it('renders truncated text if the text is long', () => {
-    const { getByText } = renderWithTheme(Truncated, {
-      children: 'ATextThatIsTooLongToBeDisplayed',
-    });
-
-    expect(getByText('ATextThatIsTooL...layed')).toBeInTheDocument();
-  });
-
   it('accepts zero values', () => {
     const { getByText } = renderWithTheme(Truncated, {
       children: 'ATextThatIsTooLongToBeDisplayed',
