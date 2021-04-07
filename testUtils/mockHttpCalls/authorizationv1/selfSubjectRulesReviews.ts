@@ -1,4 +1,4 @@
-export const someOrgsSubjectRulesReview = {
+export const selfSubjectRulesReviewWithSomeOrgs = {
   kind: 'SelfSubjectRulesReview',
   apiVersion: 'authorization.k8s.io/v1',
   metadata: {
@@ -90,7 +90,7 @@ export const someOrgsSubjectRulesReview = {
   },
 };
 
-export const noOrgsSubjectRulesReview = {
+export const selfSubjectRulesReviewWithNoOrgs = {
   kind: 'SelfSubjectRulesReview',
   apiVersion: 'authorization.k8s.io/v1',
   metadata: {

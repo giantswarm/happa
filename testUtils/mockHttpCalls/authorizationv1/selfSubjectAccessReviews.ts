@@ -1,4 +1,4 @@
-export const canListOrgs = {
+export const selfSubjectAccessReviewCanListOrgs = {
   kind: 'SelfSubjectAccessReview',
   apiVersion: 'authorization.k8s.io/v1',
   metadata: {
@@ -19,7 +19,7 @@ export const canListOrgs = {
   },
 };
 
-export const cantListOrgs = {
+export const selfSubjectAccessReviewCantListOrgs = {
   kind: 'SelfSubjectAccessReview',
   apiVersion: 'authorization.k8s.io/v1',
   metadata: {

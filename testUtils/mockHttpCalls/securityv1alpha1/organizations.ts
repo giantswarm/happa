@@ -1,13 +1,4 @@
-export const singleMAPIOrgResponse = {
-  apiVersion: 'security.giantswarm.io/v1alpha1',
-  kind: 'Organization',
-  metadata: {
-    name: 'org1',
-  },
-  spec: {},
-};
-
-export const emptyMAPIOrgsResponse = {
+export const emptyOrganizationListResponse = {
   apiVersion: 'security.giantswarm.io/v1alpha1',
   items: [],
   kind: 'OrganizationList',
@@ -18,7 +9,7 @@ export const emptyMAPIOrgsResponse = {
   },
 };
 
-export const mapiOrgsResponse = {
+export const getOrganizationListResponse = {
   apiVersion: 'security.giantswarm.io/v1alpha1',
   items: [
     {

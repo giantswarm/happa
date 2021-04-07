@@ -14,14 +14,14 @@ import {
   API_ENDPOINT,
   authTokenResponse,
   AWSInfoResponse,
-  cantListOrgs,
   getMockCall,
+  getOrganizationByName,
   metadataResponse,
-  noOrgsSubjectRulesReview,
   postMockCall,
   releasesResponse,
-  singleMAPIOrgResponse,
-  someOrgsSubjectRulesReview,
+  selfSubjectAccessReviewCantListOrgs,
+  selfSubjectRulesReviewWithNoOrgs,
+  selfSubjectRulesReviewWithSomeOrgs,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import {
@@ -183,14 +183,12 @@ describe('Login', () => {
 
   it('performs the OAuth2 login flow', async () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
-      cantListOrgs
+      selfSubjectAccessReviewCantListOrgs
     );
-    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
-
+    (getOrganization as jest.Mock).mockResolvedValue(getOrganizationByName);
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
-      someOrgsSubjectRulesReview
+      selfSubjectRulesReviewWithSomeOrgs
     );
-
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
@@ -249,12 +247,11 @@ describe('Login', () => {
 
   it('displays a warning message if the user is logged in via OAuth2 and does not have any permissions', async () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
-      cantListOrgs
+      selfSubjectAccessReviewCantListOrgs
     );
-    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
-
+    (getOrganization as jest.Mock).mockResolvedValue(getOrganizationByName);
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
-      noOrgsSubjectRulesReview
+      selfSubjectRulesReviewWithNoOrgs
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     const history = createInitialHistory(MainRoutes.Login);
@@ -282,12 +279,12 @@ describe('Login', () => {
 
   it('renews the token if it expired and automatic renewal failed', async () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
-      cantListOrgs
+      selfSubjectAccessReviewCantListOrgs
     );
-    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
+    (getOrganization as jest.Mock).mockResolvedValue(getOrganizationByName);
 
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
-      someOrgsSubjectRulesReview
+      selfSubjectRulesReviewWithSomeOrgs
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/');
@@ -325,12 +322,12 @@ describe('Login', () => {
 
   it('logs out the user if the manual renewal failed', async () => {
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
-      cantListOrgs
+      selfSubjectAccessReviewCantListOrgs
     );
-    (getOrganization as jest.Mock).mockResolvedValue(singleMAPIOrgResponse);
+    (getOrganization as jest.Mock).mockResolvedValue(getOrganizationByName);
 
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
-      someOrgsSubjectRulesReview
+      selfSubjectRulesReviewWithSomeOrgs
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
 

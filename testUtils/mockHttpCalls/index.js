@@ -45,13 +45,10 @@ export * from './keypairs';
 // Metadata
 export * from './metadata';
 
-// SelfSubjectAccessReviews
-export * from './selfSubjectAccessReviews';
-
-// SelfSubjectRulesReviews
-export * from './selfSubjectRulesReviews';
+// SelfSubjectAccessReviews & SelfSubjectRulesReviews
+export * from './authorizationv1';
 
 // MapiOrganizations
-export * from './mapiOrganizations';
+export * from './securityv1alpha1';
 
 export * from './rbacv1';
