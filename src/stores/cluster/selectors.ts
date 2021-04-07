@@ -16,7 +16,7 @@ import { createDeepEqualSelector } from 'stores/utils';
 
 export const selectClusters = () => (
   state: IState
-): Record<string, Cluster> | undefined => {
+): Record<string, Cluster> => {
   return state.entities.clusters.items;
 };
 

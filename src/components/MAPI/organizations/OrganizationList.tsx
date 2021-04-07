@@ -19,7 +19,7 @@ import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage'
 const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const organizations = useSelector(selectOrganizations()) || {};
-  const clusters = useSelector(selectClusters()) || {};
+  const clusters = useSelector(selectClusters());
 
   const clustersPerOwner = clustersGroupedByOwner(Object.values(clusters));
 
