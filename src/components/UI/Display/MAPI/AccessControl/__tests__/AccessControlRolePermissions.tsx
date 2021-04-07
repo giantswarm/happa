@@ -31,15 +31,15 @@ describe('AccessControlRolePermissions', () => {
       {
         permission: {
           apiGroups: ['apps.domain.io'],
-          resources: ['test1', 'test2', 'test3'],
+          resources: ['test1', 'test2', 'test3', 'test4', 'test5'],
           resourceNames: [],
           verbs: ['get', 'list'],
         },
         cellContents: [
           { content: 'apps.domain.io' },
           {
-            content: 'test1, tes...test3',
-            tooltipContent: 'test1, test2, test3',
+            content: 'test1, test2, test3,…test5',
+            tooltipContent: 'test1, test2, test3, test4, test5',
           },
           { content: 'All' },
           {
@@ -128,7 +128,7 @@ describe('AccessControlRolePermissions', () => {
         },
         cellContents: [
           {
-            content: 'test2.doma...n.com',
+            content: 'test2.domain.com, te…n.com',
             tooltipContent: 'test2.domain.com, test3.domain.com',
           },
           {
@@ -155,7 +155,7 @@ describe('AccessControlRolePermissions', () => {
         },
         cellContents: [
           {
-            content: 'test4.doma...n.com',
+            content: 'test4.domain.com, te…n.com',
             tooltipContent: 'test4.domain.com, test5.domain.com',
           },
           {
