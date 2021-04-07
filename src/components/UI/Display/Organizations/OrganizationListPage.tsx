@@ -8,6 +8,7 @@ import {
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
+import NotAvailable from 'UI/Display/NotAvailable';
 import TextInput from 'UI/Inputs/TextInput';
 import Well from 'UI/Layout/Well';
 import Truncated from 'UI/Util/Truncated';
@@ -16,7 +17,7 @@ const VALIDATION_ERROR_DEBOUNCE_MS = 500;
 
 interface IOrganizationIndexDataTableRow {
   name: string;
-  clusters?: number;
+  clusterCount?: string;
   oldestRelease?: string;
   newestRelease?: string;
   oldestK8sVersion?: string;
@@ -36,7 +37,7 @@ interface ITextOrNaProps {
 
 // Returns 'n/a' if props.text is empty.
 const TextOrNA: React.FC<ITextOrNaProps> = (props) => {
-  return <span>{props.text ? props.text : 'n/a'}</span>;
+  return <span>{props.text ? props.text : <NotAvailable />}</span>;
 };
 
 TextOrNA.propTypes = {
@@ -107,7 +108,7 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
               property: 'clusters',
               header: 'Clusters',
               align: 'center',
-              render: (datum) => <TextOrNA text={datum.clusters} />,
+              render: (datum) => <TextOrNA text={datum.clusterCount} />,
             },
             // TODO: @oponder: enable these in another PR when we have the data.
             // {

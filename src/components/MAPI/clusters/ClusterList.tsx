@@ -1,10 +1,9 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 
 import ClusterListItem from './ClusterListItem';
@@ -14,18 +13,14 @@ interface IClusterListProps
 
 const ClusterList: React.FC<IClusterListProps> = () => {
   const client = useHttpClient();
-  const user = useSelector(getLoggedInUser);
+  const auth = useAuthProvider();
+
   const { data, error, isValidating } = useSWR<
     capiv1alpha3.IClusterList,
     GenericResponse
-  >(
-    capiv1alpha3.getClusterListKey(user),
-    capiv1alpha3.getClusterList(client, user!)
+  >(capiv1alpha3.getClusterListKey(), () =>
+    capiv1alpha3.getClusterList(client, auth)
   );
-
-  if (!user) {
-    return <div>Not authenticated</div>;
-  }
 
   if (error) {
     return <div>Error: {error.data}</div>;

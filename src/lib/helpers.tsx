@@ -9,6 +9,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { IKeyPair } from 'shared/types';
 import { getOrganizationByID } from 'stores/organization/utils';
+import NotAvailable from 'UI/Display/NotAvailable';
 import validate from 'validate.js';
 
 /**
@@ -205,7 +206,7 @@ export function compareDates(
 // TODO(axbarsan): Refactor a part of this into a UI component.
 export function relativeDate(date?: string): ReactElement {
   if (!date) {
-    return <span>n/a</span>;
+    return <NotAvailable />;
   }
 
   const formattedDate = formatDate(date);

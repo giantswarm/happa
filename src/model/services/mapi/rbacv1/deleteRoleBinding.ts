@@ -1,18 +1,15 @@
-import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
-import * as metav1 from 'model/services/mapi/metav1';
-import { LoggedInUserTypes } from 'stores/main/types';
 
+import { deleteResource } from '../generic/deleteResource';
 import { IRoleBinding } from './types';
 
-export async function deleteRoleBinding(
+export function deleteRoleBinding(
   client: IHttpClient,
-  user: ILoggedInUser,
+  auth: IOAuth2Provider,
   roleBinding: IRoleBinding
 ) {
-  if (!user || user.type !== LoggedInUserTypes.MAPI)
-    return Promise.reject(new Error('Not logged in.'));
-
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -21,16 +18,5 @@ export async function deleteRoleBinding(
     namespace: roleBinding.metadata.namespace!,
   });
 
-  client.setRequestConfig({
-    url: url.toString(),
-    method: HttpRequestMethods.DELETE,
-    headers: {
-      Accept: 'application/json',
-    },
-  });
-  client.setAuthorizationToken(user.auth.scheme, user.auth.token);
-
-  const response = await client.execute<metav1.IK8sStatus>();
-
-  return response.data;
+  return deleteResource<IRoleBinding>(client, auth, url.toString());
 }

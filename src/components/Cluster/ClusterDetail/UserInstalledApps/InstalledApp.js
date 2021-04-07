@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 const App = styled.div`
   display: flex;
@@ -45,7 +46,7 @@ const InstalledApp = ({ app, iconErrors, onIconError, onClick, ...rest }) => {
           />
         )}
         {app.metadata.name}
-        <small>Chart Version: {app.spec?.version ?? 'n/a'}</small>
+        <small>Chart Version: {app.spec?.version ?? <NotAvailable />}</small>
       </div>
     </App>
   );

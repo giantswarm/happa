@@ -68,7 +68,7 @@ export function batchedLayout(
       try {
         const user = getLoggedInUser(getState());
         if (user?.type === LoggedInUserTypes.MAPI) {
-          await dispatch(organizationsLoadMAPI());
+          await dispatch(organizationsLoadMAPI(auth));
         } else {
           await dispatch(organizationsLoad());
         }

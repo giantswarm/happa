@@ -1,12 +1,11 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import produce from 'immer';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getLoggedInUser } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
@@ -34,14 +33,13 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 }) => {
   const orgNamespace = getOrgNamespaceFromOrgName(organizationName);
 
-  const client = useHttpClient();
-  const user = useSelector(getLoggedInUser);
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
   const { data, mutate, error } = useSWR<
     ui.IAccessControlRoleItem[],
     GenericResponse
-  >(
-    getRoleItemsKey(user, orgNamespace),
-    getRoleItems(client, user!, orgNamespace)
+  >(getRoleItemsKey(orgNamespace), () =>
+    getRoleItems(clientFactory, auth, orgNamespace)
   );
 
   const [activeRoleName, setActiveRoleName] = useState('');
@@ -64,8 +62,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       if (!activeRole || !data) return Promise.resolve();
 
       const newRoleBinding = await createRoleBindingWithSubjects(
-        client,
-        user!,
+        clientFactory,
+        auth,
         type,
         names,
         orgNamespace,
@@ -98,8 +96,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       if (!activeRole || !data) return Promise.resolve();
 
       await deleteSubjectFromRole(
-        client,
-        user!,
+        clientFactory,
+        auth,
         name,
         type,
         orgNamespace,
@@ -147,15 +145,14 @@ const AccessControl: React.FC<IAccessControlProps> = ({
               grow: 0,
               shrink: 1,
             }}
-            basis='1/3'
-            width={{ min: '450px' }}
+            basis='1/4'
             roles={data}
             activeRoleName={activeRoleName}
             setActiveRoleName={setActiveRoleName}
             errorMessage={extractErrorMessage(error)}
           />
           <AccessControlRoleDetail
-            basis='2/3'
+            basis='3/4'
             flex={{
               grow: 1,
               shrink: 1,

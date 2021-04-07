@@ -3,28 +3,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import {
-  IAccessControlRoleItem,
-  IAccessControlRoleItemPermission,
-} from './types';
-
-function formatResourceCounter(
-  permissions: IAccessControlRoleItemPermission[]
-): string {
-  let totalCount = 0;
-  for (const perm of permissions) {
-    for (const group of perm.apiGroups) {
-      if (group === '*') return 'All';
-    }
-    for (const resource of perm.resources) {
-      if (resource === '*') return 'All';
-    }
-
-    totalCount += perm.resourceNames.length + perm.resources.length;
-  }
-
-  return formatCounter(totalCount);
-}
+import { IAccessControlRoleItem } from './types';
 
 function formatCounter(fromValue: number): string {
   switch (true) {
@@ -68,7 +47,6 @@ const AccessControlRoleListItem = React.forwardRef<
   HTMLDivElement,
   IAccessControlRoleListItemProps
 >(({ name, namespace, active, permissions, groups, users, ...props }, ref) => {
-  const resourceCount = formatResourceCounter(permissions);
   const groupCount = formatCounter(Object.values(groups).length);
   const userCount = formatCounter(Object.values(users).length);
 
@@ -105,9 +83,6 @@ const AccessControlRoleListItem = React.forwardRef<
       </CardHeader>
       <CardBody margin={{ top: 'xsmall' }}>
         <Box justify='between' direction='row'>
-          <Box width='120px'>
-            <Text color='text-weak'>Resources: {resourceCount}</Text>
-          </Box>
           <Box width='100px'>
             <Text color='text-weak'>Groups: {groupCount}</Text>
           </Box>
