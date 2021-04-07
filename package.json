@@ -134,7 +134,7 @@
     "styled-components": "^5.2.1",
     "superagent": "6.1.0",
     "swr": "^0.5.5",
-    "ua-parser-js": "^0.7.25",
+    "ua-parser-js": "^0.7.27",
     "underscore": "1.12.1",
     "uuid": "^8.3.1",
     "validate.js": "0.13.1",
