@@ -178,7 +178,7 @@ export interface IK8sStatusDetails {
  * A return value for calls that don't return other objects.
  */
 export interface IK8sStatus {
-  apiVersion: string;
+  apiVersion: 'v1';
   kind: 'Status';
   message?: string;
   status?: K8sStatuses;
