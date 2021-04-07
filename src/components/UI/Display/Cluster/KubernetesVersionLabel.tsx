@@ -5,6 +5,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 const EolLabel = styled.span`
   background: ${({ theme }) => theme.colors.darkBlueDarker3};
@@ -28,7 +29,7 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
   eolDate,
   hideIcon,
 }) => {
-  let versionLabel = version || 'n/a';
+  let versionLabel = version || <NotAvailable />;
   if (version && hidePatchVersion) {
     const v = version.split('.');
     versionLabel = `${v[0]}.${v[1]}`;

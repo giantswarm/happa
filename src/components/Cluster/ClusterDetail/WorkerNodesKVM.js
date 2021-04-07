@@ -3,6 +3,7 @@ import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
 import Button from 'UI/Controls/Button';
+import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
@@ -17,7 +18,7 @@ function WorkerNodesKVM({
     ? `${worker.cpu.cores} CPUs, ${worker.memory.size_gb} GB RAM`
     : '0 CPUs, 0 GB RAM';
 
-  const nodeCount = nodes || 'n/a';
+  const nodeCount = nodes || <NotAvailable />;
 
   return (
     <WrapperDiv>
