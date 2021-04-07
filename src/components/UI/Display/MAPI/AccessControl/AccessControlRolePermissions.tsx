@@ -32,7 +32,7 @@ function makePermissionKey(
   return parts.join('/');
 }
 
-const AllSpan = styled('span')`
+const AllSpan = styled.span`
   font-family: Roboto, sans-serif;
 `;
 
