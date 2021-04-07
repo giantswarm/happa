@@ -1,6 +1,6 @@
 import { InfiniteScroll } from 'grommet';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import {
   Table,
@@ -17,6 +17,8 @@ import {
   IAccessControlRoleItemPermission,
 } from './types';
 
+const keepCharactersStart = 20;
+
 function makePermissionKey(
   permission: IAccessControlRoleItemPermission,
   index: number
@@ -30,23 +32,9 @@ function makePermissionKey(
   return parts.join('/');
 }
 
-function formatApiGroups(groups: string[]): string {
-  for (const group of groups) {
-    if (group === '*') return 'All';
-  }
-
-  return groups.join(', ');
-}
-
-function formatResources(resources: string[]): string {
-  if (resources.length < 1) return 'All';
-
-  for (const resource of resources) {
-    if (resource === '*') return 'All';
-  }
-
-  return resources.join(', ');
-}
+const AllSpan = styled('span')`
+  font-family: Roboto, sans-serif;
+`;
 
 const StyledTable = styled(Table)`
   width: 100%;
@@ -56,6 +44,28 @@ const StyledTableCell = styled(TableCell)`
   font-family: Inconsolata, monospace;
 `;
 
+function formatApiGroups(groups: string[]): ReactNode {
+  for (const group of groups) {
+    if (group === '*') return <AllSpan>All</AllSpan>;
+  }
+
+  return (
+    <Truncated numStart={keepCharactersStart}>{groups.join(', ')}</Truncated>
+  );
+}
+
+function formatResources(resources: string[]): ReactNode {
+  if (resources.length < 1) return <AllSpan>All</AllSpan>;
+
+  for (const resource of resources) {
+    if (resource === '*') return <AllSpan>All</AllSpan>;
+  }
+
+  return (
+    <Truncated numStart={keepCharactersStart}>{resources.join(', ')}</Truncated>
+  );
+}
+
 interface IAccessControlRolePermissionsProps
   extends Pick<IAccessControlRoleItem, 'permissions'>,
     React.ComponentPropsWithoutRef<typeof Table> {}
@@ -64,8 +74,6 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
   permissions,
   ...props
 }) => {
-  const keepCharactersStart = 20;
-
   return (
     <StyledTable {...props}>
       <TableHeader>
@@ -91,19 +99,13 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
           {(permission: IAccessControlRoleItemPermission, idx: number) => (
             <TableRow key={makePermissionKey(permission, idx)}>
               <StyledTableCell size='medium'>
-                <Truncated numStart={keepCharactersStart}>
-                  {formatApiGroups(permission.apiGroups)}
-                </Truncated>
+                {formatApiGroups(permission.apiGroups)}
               </StyledTableCell>
               <StyledTableCell size='medium'>
-                <Truncated numStart={keepCharactersStart}>
-                  {formatResources(permission.resources)}
-                </Truncated>
+                {formatResources(permission.resources)}
               </StyledTableCell>
               <StyledTableCell size='medium'>
-                <Truncated numStart={keepCharactersStart}>
-                  {formatResources(permission.resourceNames)}
-                </Truncated>
+                {formatResources(permission.resourceNames)}
               </StyledTableCell>
               <TableCell size='medium'>
                 <AccessControlRoleVerbs verbs={permission.verbs} />
