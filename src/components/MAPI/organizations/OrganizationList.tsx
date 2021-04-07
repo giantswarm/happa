@@ -1,3 +1,4 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
@@ -8,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { getLoggedInUser } from 'stores/main/selectors';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
@@ -19,7 +19,7 @@ const OrganizationIndex: React.FC = () => {
   const organizations = useSelector(selectOrganizations()) || {};
 
   const client = useHttpClient();
-  const user = useSelector(getLoggedInUser);
+  const auth = useAuthProvider();
 
   return (
     <DocumentTitle title='Organizations'>
@@ -40,26 +40,24 @@ const OrganizationIndex: React.FC = () => {
         // TODO: @oponder: Do we like this? Handling errors and doing requests and mutation in the component?
         //                 I was generally always ok with it.. but it feels like I am breaking some rules.
         createOrg={async (orgName) => {
-          if (user) {
-            try {
-              await createOrganization(client, user, orgName)();
-              await dispatch(organizationsLoadMAPI());
-            } catch (error) {
-              if (error?.config?.data?.message) {
-                new FlashMessage(
-                  `Unable to create organization "${orgName}"`,
-                  messageType.ERROR,
-                  messageTTL.LONG,
-                  error.config.data.message
-                );
-              } else {
-                new FlashMessage(
-                  `Unable to create organization "${orgName}"`,
-                  messageType.ERROR,
-                  messageTTL.LONG,
-                  'Something unexpected went wrong while trying to create this organization'
-                );
-              }
+          try {
+            await createOrganization(client, auth, orgName);
+            await dispatch(organizationsLoadMAPI(auth));
+          } catch (error) {
+            if (error?.config?.data?.message) {
+              new FlashMessage(
+                `Unable to create organization "${orgName}"`,
+                messageType.ERROR,
+                messageTTL.LONG,
+                error.config.data.message
+              );
+            } else {
+              new FlashMessage(
+                `Unable to create organization "${orgName}"`,
+                messageType.ERROR,
+                messageTTL.LONG,
+                'Something unexpected went wrong while trying to create this organization'
+              );
             }
           }
         }}
