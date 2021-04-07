@@ -13,6 +13,17 @@ import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { validateLabelKey } from 'utils/labelUtils';
 
+export const clustersGroupedByOwner = (
+  clusters: Cluster[]
+): Record<string, Cluster[]> => {
+  return clusters.reduce((r, a) => {
+    r[a.owner] = r[a.owner] || [];
+    r[a.owner].push(a);
+
+    return r;
+  }, {} as Record<string, Cluster[]>);
+};
+
 /**
  * Determine whether a cluster at a certain version can be upgraded to a target version.
  * @param currentVersion

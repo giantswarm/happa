@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { selectClusters } from 'stores/cluster/selectors';
+import { clustersGroupedByOwner } from 'stores/cluster/utils';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
@@ -17,6 +19,9 @@ import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage'
 const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const organizations = useSelector(selectOrganizations()) || {};
+  const clusters = useSelector(selectClusters());
+
+  const clustersPerOwner = clustersGroupedByOwner(Object.values(clusters));
 
   const client = useHttpClient();
   const auth = useAuthProvider();
@@ -36,6 +41,7 @@ const OrganizationIndex: React.FC = () => {
         }}
         data={Object.keys(organizations).map((orgName) => ({
           name: orgName,
+          clusterCount: clustersPerOwner[orgName]?.length.toString() || '0',
         }))}
         // TODO: @oponder: Do we like this? Handling errors and doing requests and mutation in the component?
         //                 I was generally always ok with it.. but it feels like I am breaking some rules.
