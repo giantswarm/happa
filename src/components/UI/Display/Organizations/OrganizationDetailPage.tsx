@@ -1,6 +1,7 @@
 import { Box, Text } from 'grommet';
 import React from 'react';
 import Button from 'UI/Controls/Button';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 
@@ -26,13 +27,27 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
           </Box>
         </Box>
       </Box>
@@ -50,14 +65,20 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
           </Box>
           <Box direction='column' gap='xsmall'>
             <Box direction='row' gap='small'>
-              <Text>n/a</Text>
+              <Text>
+                <NotAvailable />
+              </Text>
               <KubernetesVersionLabel hidePatchVersion={true} />
             </Box>
             <Box direction='row' gap='small'>
-              <Text>n/a</Text>
+              <Text>
+                <NotAvailable />
+              </Text>
               <KubernetesVersionLabel hidePatchVersion={true} />
             </Box>
-            <Text>n/a</Text>
+            <Text>
+              <NotAvailable />
+            </Text>
           </Box>
         </Box>
       </Box>
@@ -73,8 +94,12 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             <Text>App deployments</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>n/a</Text>
-            <Text>n/a</Text>
+            <Text>
+              <NotAvailable />
+            </Text>
+            <Text>
+              <NotAvailable />
+            </Text>
           </Box>
         </Box>
       </Box>

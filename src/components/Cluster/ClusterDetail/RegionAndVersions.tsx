@@ -10,6 +10,7 @@ import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { Code, Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 interface IRegionAndVersionsProps {
@@ -69,7 +70,9 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
         </OverlayTrigger>
       )}
       <div>
-        <span>Created {createDate ? relativeDate(createDate) : 'n/a'}</span>
+        <span>
+          Created {createDate ? relativeDate(createDate) : <NotAvailable />}
+        </span>
         {release && (
           <>
             <span>
