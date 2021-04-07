@@ -62,7 +62,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       if (!activeRole || !data) return Promise.resolve();
 
       const newRoleBinding = await createRoleBindingWithSubjects(
-        clientFactory(),
+        clientFactory,
         auth,
         type,
         names,
@@ -96,7 +96,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       if (!activeRole || !data) return Promise.resolve();
 
       await deleteSubjectFromRole(
-        clientFactory(),
+        clientFactory,
         auth,
         name,
         type,

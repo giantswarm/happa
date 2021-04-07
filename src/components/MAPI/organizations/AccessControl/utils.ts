@@ -330,7 +330,7 @@ export function mapUiSubjectTypeToSubjectKind(
 
 /**
  * Create a new role binding that contains the given subjects.
- * @param client
+ * @param clientFactory
  * @param auth
  * @param type - The type of the given subject names.
  * @param subjectNames - The given subject names.
@@ -338,7 +338,7 @@ export function mapUiSubjectTypeToSubjectKind(
  * @param roleItem - The role that the binding should point to.
  */
 export async function createRoleBindingWithSubjects(
-  client: IHttpClient,
+  clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   type: ui.AccessControlSubjectTypes,
   subjectNames: string[],
@@ -365,7 +365,7 @@ export async function createRoleBindingWithSubjects(
       subject.namespace = namespace;
 
       subjectCreationRequests.push(
-        corev1.createServiceAccount(client, auth, serviceAccount)
+        corev1.createServiceAccount(clientFactory(), auth, serviceAccount)
       );
     }
 
@@ -374,7 +374,7 @@ export async function createRoleBindingWithSubjects(
 
   await Promise.all(subjectCreationRequests);
 
-  return rbacv1.createRoleBinding(client, auth, roleBinding);
+  return rbacv1.createRoleBinding(clientFactory(), auth, roleBinding);
 }
 
 /**
@@ -400,7 +400,7 @@ export async function deleteServiceAccountFromSubject(
 
 /**
  * Delete a subject from a given `RoleBinding` resource.
- * @param client
+ * @param clientFactory
  * @param auth
  * @param subject
  * @param subjectType
@@ -408,7 +408,7 @@ export async function deleteServiceAccountFromSubject(
  * @param binding
  */
 export async function deleteSubjectFromRoleBinding(
-  client: IHttpClient,
+  clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   subject: ui.IAccessControlRoleSubjectItem,
   subjectType: ui.AccessControlSubjectTypes,
@@ -418,7 +418,7 @@ export async function deleteSubjectFromRoleBinding(
   const subjectKind = mapUiSubjectTypeToSubjectKind(subjectType);
 
   const bindingResource = await rbacv1.getRoleBinding(
-    client,
+    clientFactory(),
     auth,
     binding.name,
     namespace
@@ -432,7 +432,7 @@ export async function deleteSubjectFromRoleBinding(
     if (isSubject) {
       if (s.kind === rbacv1.SubjectKinds.ServiceAccount) {
         subjectDeletionRequests.push(
-          deleteServiceAccountFromSubject(client, auth, s)
+          deleteServiceAccountFromSubject(clientFactory(), auth, s)
         );
       }
 
@@ -446,17 +446,17 @@ export async function deleteSubjectFromRoleBinding(
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
-    return rbacv1.deleteRoleBinding(client, auth, bindingResource);
+    return rbacv1.deleteRoleBinding(clientFactory(), auth, bindingResource);
   }
 
   // There are other subjects there, let's keep the resource.
-  return rbacv1.updateRoleBinding(client, auth, bindingResource);
+  return rbacv1.updateRoleBinding(clientFactory(), auth, bindingResource);
 }
 
 /**
  * Delete a subject from a given role. It will delete the subject from
  * all the role bindings that point to this role.
- * @param client
+ * @param clientFactory
  * @param auth
  * @param subjectName
  * @param subjectType
@@ -464,7 +464,7 @@ export async function deleteSubjectFromRoleBinding(
  * @param roleItem
  */
 export async function deleteSubjectFromRole(
-  client: IHttpClient,
+  clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   subjectName: string,
   subjectType: ui.AccessControlSubjectTypes,
@@ -479,7 +479,7 @@ export async function deleteSubjectFromRole(
   return Promise.all(
     subject.roleBindings.map((binding) =>
       deleteSubjectFromRoleBinding(
-        client,
+        clientFactory,
         auth,
         subject,
         subjectType,
