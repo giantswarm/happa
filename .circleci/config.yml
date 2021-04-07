@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@2.4.1
+  architect: giantswarm/architect@2.6.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -151,7 +151,7 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
-              
+
       - architect/push-to-app-collection:
           name: push-happa-to-vmware-app-collection
           context: architect
