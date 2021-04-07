@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@2.4.1
+  architect: giantswarm/architect@2.6.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -63,8 +63,8 @@ workflows:
           name: push-happa-to-quay
           context: architect
           image: *image_name
-          username_envar: "QUAY_USERNAME"
-          password_envar: "QUAY_PASSWORD"
+          username_envar: 'QUAY_USERNAME'
+          password_envar: 'QUAY_PASSWORD'
           requires:
             - build-container
           # Needed to trigger job also on git tag.
@@ -75,9 +75,9 @@ workflows:
       - architect/push-to-docker:
           name: push-happa-to-aliyun
           context: architect
-          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa"
-          username_envar: "ALIYUN_USERNAME"
-          password_envar: "ALIYUN_PASSWORD"
+          image: 'registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa'
+          username_envar: 'ALIYUN_USERNAME'
+          password_envar: 'ALIYUN_PASSWORD'
           requires:
             - build-container
           # Needed to trigger job only on git tag.
@@ -90,9 +90,9 @@ workflows:
       - architect/push-to-app-catalog:
           name: push-happa-to-control-plane-app-catalog
           context: architect
-          app_catalog: "control-plane-catalog"
-          app_catalog_test: "control-plane-test-catalog"
-          chart: "happa"
+          app_catalog: 'control-plane-catalog'
+          app_catalog_test: 'control-plane-test-catalog'
+          chart: 'happa'
           requires:
             - push-happa-to-quay
           # Needed to trigger job also on git tag.
@@ -103,8 +103,8 @@ workflows:
       - architect/push-to-app-collection:
           name: push-happa-to-shared-app-collection
           context: architect
-          app_name: "happa"
-          app_collection_repo: "shared-app-collection"
+          app_name: 'happa'
+          app_collection_repo: 'shared-app-collection'
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -116,8 +116,8 @@ workflows:
       - architect/push-to-app-collection:
           name: push-happa-to-aws-app-collection
           context: architect
-          app_name: "happa"
-          app_collection_repo: "aws-app-collection"
+          app_name: 'happa'
+          app_collection_repo: 'aws-app-collection'
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -129,8 +129,8 @@ workflows:
       - architect/push-to-app-collection:
           name: push-happa-to-azure-app-collection
           context: architect
-          app_name: "happa"
-          app_collection_repo: "azure-app-collection"
+          app_name: 'happa'
+          app_collection_repo: 'azure-app-collection'
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -142,8 +142,8 @@ workflows:
       - architect/push-to-app-collection:
           name: push-happa-to-kvm-app-collection
           context: architect
-          app_name: "happa"
-          app_collection_repo: "kvm-app-collection"
+          app_name: 'happa'
+          app_collection_repo: 'kvm-app-collection'
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -151,12 +151,12 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
-              
+
       - architect/push-to-app-collection:
           name: push-happa-to-vmware-app-collection
           context: architect
-          app_name: "happa"
-          app_collection_repo: "vmware-app-collection"
+          app_name: 'happa'
+          app_collection_repo: 'vmware-app-collection'
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -174,8 +174,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-npm-deps-{{ checksum "yarn.lock" }}
-          - v1-npm-deps-
+            - v1-npm-deps-{{ checksum "yarn.lock" }}
+            - v1-npm-deps-
 
       - run:
           name: Print version information
