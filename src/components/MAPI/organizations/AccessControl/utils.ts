@@ -427,7 +427,7 @@ export async function deleteSubjectFromRoleBinding(
     namespace
   )();
 
-  const subjectDeletionRequests: Promise<metav1.IK8sStatus>[] = [];
+  const subjectDeletionRequests: Promise<corev1.IServiceAccount>[] = [];
 
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {

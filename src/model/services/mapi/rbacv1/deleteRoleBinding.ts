@@ -1,6 +1,5 @@
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
-import * as metav1 from 'model/services/mapi/metav1';
 import { LoggedInUserTypes } from 'stores/main/types';
 
 import { IRoleBinding } from './types';
@@ -30,7 +29,7 @@ export async function deleteRoleBinding(
   });
   client.setAuthorizationToken(user.auth.scheme, user.auth.token);
 
-  const response = await client.execute<metav1.IK8sStatus>();
+  const response = await client.execute<IRoleBinding>();
 
   return response.data;
 }
