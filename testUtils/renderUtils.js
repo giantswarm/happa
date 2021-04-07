@@ -104,7 +104,7 @@ export function getComponentWithStore(
   state = {},
   storage = initialStorage,
   history = createMemoryHistory(),
-  auth = new TestOAuth2()
+  auth = new TestOAuth2(history)
 ) {
   localStorage.replaceWith(storage);
 

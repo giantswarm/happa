@@ -1,10 +1,11 @@
 import GiantSwarm, { V4Organization } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpClientImpl } from 'model/clients/HttpClient';
-import { selfSubjectRulesReview } from 'model/services/mapi/authorizationv1';
+import { createSelfSubjectRulesReview } from 'model/services/mapi/authorizationv1';
 import {
+  createSelfSubjectAccessReview,
   ISelfSubjectAccessReviewSpec,
-  selfSubjectAccessReview,
 } from 'model/services/mapi/authorizationv1/';
 import {
   getOrganization,
@@ -91,13 +92,11 @@ export function organizationsLoadSuccess(
 
 /**
  * This action loads organizations using the MAPI instead of the GS Rest API.
+ * @param auth
  */
-export function organizationsLoadMAPI(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  OrganizationActions
-> {
+export function organizationsLoadMAPI(
+  auth: IOAuth2Provider
+): ThunkAction<Promise<void>, IState, void, OrganizationActions> {
   return async (dispatch, getState) => {
     try {
       const currentOrganizations = getState().entities.organizations;
@@ -109,13 +108,6 @@ export function organizationsLoadMAPI(): ThunkAction<
       dispatch({ type: ORGANIZATION_LOAD_MAPI_REQUEST });
 
       const client = new HttpClientImpl();
-      const user = getLoggedInUser(getState());
-
-      if (!user) {
-        return Promise.reject(
-          new Error('cannot load orgs without being logged in')
-        );
-      }
 
       // Can I LIST Organization CR's ?
       let canList = false;
@@ -127,11 +119,11 @@ export function organizationsLoadMAPI(): ThunkAction<
           resource: 'organizations',
         },
       };
-      const accessReviewResponse = await selfSubjectAccessReview(
+      const accessReviewResponse = await createSelfSubjectAccessReview(
         client,
-        user,
+        auth,
         request
-      )();
+      );
 
       if (accessReviewResponse.status?.allowed) {
         canList = true;
@@ -141,15 +133,15 @@ export function organizationsLoadMAPI(): ThunkAction<
       if (canList) {
         // The user can list all orgs. So list them all and dispatch the action that
         // updates the global state with all the orgs
-        const orgListResponse = await getOrganizationList(client, user)();
+        const orgListResponse = await getOrganizationList(client, auth);
         orgs = orgListResponse.items.map((o) => getOrganizationUIName(o));
       } else {
         // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
         // which ones they can get.
-        const rulesReviewResponse = await selfSubjectRulesReview(
+        const rulesReviewResponse = await createSelfSubjectRulesReview(
           client,
-          user
-        )();
+          auth
+        );
 
         rulesReviewResponse.status?.resourceRules.forEach((rule) => {
           if (
@@ -164,7 +156,7 @@ export function organizationsLoadMAPI(): ThunkAction<
         // to check if the orgs have a 'ui.giantswarm.io/original-organization-name'
         // annotation.
         const orgGetRequests = orgs.map((orgName) =>
-          getOrganization(client, user, orgName)()
+          getOrganization(client, auth, orgName)
         );
 
         const orgGetResponses = await Promise.all(orgGetRequests);

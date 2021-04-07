@@ -74,6 +74,7 @@ export const editAllRoleBinding = {
       kind: 'ServiceAccount',
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'el-toro',
+      namespace: 'org-giantswarm',
     },
     {
       kind: 'User',

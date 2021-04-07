@@ -3,23 +3,25 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 
 import { getResource } from '../generic/getResource';
-import { IOrganization } from './types';
+import { IAzureCluster } from '.';
 
-export function getOrganization(
+export function getAzureCluster(
   client: IHttpClient,
   auth: IOAuth2Provider,
+  namespace: string,
   name: string
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: 'security.giantswarm.io/v1alpha1',
-    kind: 'organizations',
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+    kind: 'azureclusters',
+    namespace,
     name,
   });
 
-  return getResource<IOrganization>(client, auth, url.toString());
+  return getResource<IAzureCluster>(client, auth, url.toString());
 }
 
-export function getOrganizationKey(name: string) {
-  return `getOrganization/${name}`;
+export function getAzureClusterKey(namespace: string, name: string) {
+  return `getAzureCluster/${namespace}/${name}`;
 }
