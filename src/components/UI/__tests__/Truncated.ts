@@ -22,7 +22,7 @@ describe('Truncated', () => {
       children: 'ATextThatIsTooLongToBeDisplayed',
     });
 
-    expect(getByText('ATextThatIsTooL...layed')).toBeInTheDocument();
+    expect(getByText('ATextThatIsTooL…layed')).toBeInTheDocument();
   });
 
   it('accepts zero values', () => {
@@ -60,7 +60,7 @@ describe('Truncated', () => {
       children: 'ATextThatIsTooLongToBeDisplayed',
     });
 
-    const label: HTMLSpanElement = getByText('ATextThatIsTooL...layed');
+    const label: HTMLSpanElement = getByText('ATextThatIsTooL…layed');
     fireEvent.mouseOver(label);
     expect(getByText('ATextThatIsTooLongToBeDisplayed')).toBeInTheDocument();
   });
