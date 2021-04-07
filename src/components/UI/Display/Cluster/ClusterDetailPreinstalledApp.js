@@ -41,7 +41,7 @@ const ClusterDetailPreinstalledApp = (props) => {
 ClusterDetailPreinstalledApp.propTypes = {
   logoUrl: PropTypes.string,
   name: PropTypes.string,
-  version: PropTypes.string,
+  version: PropTypes.node,
 };
 
 export default ClusterDetailPreinstalledApp;

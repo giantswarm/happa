@@ -2,34 +2,34 @@
 
 exports[`NumberPicker renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 yBlmn"
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 breHlv"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jazqMc FormField__FormFieldBox-m9hood-0 fdHFHW"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 eGzyIU"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 esuSAl"
+        class="StyledText-sc-1sadyjn-0 weZKr"
         for="money"
       >
         Count your money
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 erMGdB"
+        class="StyledText-sc-1sadyjn-0 hosPKv"
       >
         A very helpful message
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 daSUHp FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 cMXsuX FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dpaJQp"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 cnyLED"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 hKejfQ NumberPicker__StyledTextInput-h062ap-0 kyyVZW"
+            class="StyledTextInput-sc-1x30a0s-0 dkAuoK NumberPicker__StyledTextInput-h062ap-0 dCqhWo"
             id="money"
             step="1"
             type="number"
@@ -37,18 +37,18 @@ exports[`NumberPicker renders a simple input 1`] = `
           />
         </div>
         <div
-          class="NumberPicker__Controls-h062ap-1 hrhmvG"
+          class="NumberPicker__Controls-h062ap-1 iLomFA"
         >
           <div
             aria-label="Decrement"
-            class="NumberPicker__IncrementDecrementButton-h062ap-2 lhpAmG"
+            class="NumberPicker__IncrementDecrementButton-h062ap-2 eXVwgA"
             role="button"
           >
             –
           </div>
           <div
             aria-label="Increment"
-            class="NumberPicker__IncrementDecrementButton-h062ap-2 lhpAmG"
+            class="NumberPicker__IncrementDecrementButton-h062ap-2 eXVwgA"
             role="button"
           >
             +
@@ -56,7 +56,7 @@ exports[`NumberPicker renders a simple input 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fmFxNm"
+        class="StyledText-sc-1sadyjn-0 kTuWTg"
       >
         Aha! Did not know that
       </span>
