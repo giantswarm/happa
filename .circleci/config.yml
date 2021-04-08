@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@dev:catalogbot-ssh
+  architect: giantswarm/architect@2.6.0
 
 defaults: &defaults
   working_directory: ~/happa
