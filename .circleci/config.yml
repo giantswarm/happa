@@ -101,7 +101,6 @@ workflows:
 
       - architect/push-to-app-collection:
           name: push-happa-to-shared-app-collection
-          context: architect
           app_name: "happa"
           app_collection_repo: "shared-app-collection"
           requires:
@@ -114,7 +113,6 @@ workflows:
 
       - architect/push-to-app-collection:
           name: push-happa-to-aws-app-collection
-          context: architect
           app_name: "happa"
           app_collection_repo: "aws-app-collection"
           requires:
@@ -127,7 +125,6 @@ workflows:
 
       - architect/push-to-app-collection:
           name: push-happa-to-azure-app-collection
-          context: architect
           app_name: "happa"
           app_collection_repo: "azure-app-collection"
           requires:
@@ -140,7 +137,6 @@ workflows:
 
       - architect/push-to-app-collection:
           name: push-happa-to-kvm-app-collection
-          context: architect
           app_name: "happa"
           app_collection_repo: "kvm-app-collection"
           requires:
@@ -153,7 +149,6 @@ workflows:
 
       - architect/push-to-app-collection:
           name: push-happa-to-vmware-app-collection
-          context: architect
           app_name: "happa"
           app_collection_repo: "vmware-app-collection"
           requires:
