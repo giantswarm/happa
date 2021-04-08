@@ -29,7 +29,7 @@ module.exports = {
 
     config.module.rules.push({
       test: /\.sass$/,
-      loaders: ['style-loader', 'css-loader', 'sass-loader'],
+      use: ['style-loader', 'css-loader', 'sass-loader'],
     });
 
     config.module.rules.push({
