@@ -14,7 +14,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: {{ .Values.Installation.V1.GiantSwarm.Happa.Address | quote }}
     nginx.ingress.kubernetes.io/enable-cors: "true"
 
-    {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
+    {{- if .Values.Installation.V1.GiantSwarm.Happa.API.Letsencrypt }}
     kubernetes.io/tls-acme: "true"
     {{- end }}
 
