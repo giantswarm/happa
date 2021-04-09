@@ -34,17 +34,49 @@ const App = styled.div`
   }
 `;
 
-const InstalledApp = ({ app, iconErrors, onIconError, onClick, ...rest }) => {
+interface IAppMetadata {
+  name: string;
+}
+
+interface IAppSpec {
+  version?: string;
+}
+
+interface IApp {
+  logoUrl?: string;
+  metadata: IAppMetadata;
+  spec: IAppSpec;
+}
+
+interface IInstalledAppProps {
+  app: IApp;
+  iconErrors?: object;
+  onIconError: () => void;
+  onClick: (e: React.MouseEvent) => void;
+}
+
+const InstalledApp: React.FC<IInstalledAppProps> = ({
+  app,
+  iconErrors,
+  onIconError,
+  onClick,
+  ...rest
+}) => {
+  let img = null;
+  if (app.logoUrl && !iconErrors?.hasOwnProperty(app.logoUrl)) {
+    img = (
+      <img
+        alt={`${app.metadata.name} icon`}
+        onError={onIconError}
+        src={app.logoUrl}
+      />
+    );
+  }
+
   return (
     <App onClick={onClick} {...rest}>
       <div className='details'>
-        {app.logoUrl && !iconErrors[app.logoUrl] && (
-          <img
-            alt={`${app.metadata.name} icon`}
-            onError={onIconError}
-            src={app.logoUrl}
-          />
-        )}
+        {img}
         {app.metadata.name}
         <small>Chart Version: {app.spec?.version ?? <NotAvailable />}</small>
       </div>
@@ -53,10 +85,10 @@ const InstalledApp = ({ app, iconErrors, onIconError, onClick, ...rest }) => {
 };
 
 InstalledApp.propTypes = {
-  app: PropTypes.object,
+  app: (PropTypes.object as PropTypes.Requireable<IApp>).isRequired,
   iconErrors: PropTypes.object,
-  onIconError: PropTypes.func,
-  onClick: PropTypes.func,
+  onIconError: PropTypes.any,
+  onClick: PropTypes.any,
 };
 
 export default InstalledApp;
