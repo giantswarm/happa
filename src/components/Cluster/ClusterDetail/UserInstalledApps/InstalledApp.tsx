@@ -45,7 +45,7 @@ interface IAppSpec {
 interface IApp {
   logoUrl?: string;
   metadata: IAppMetadata;
-  spec: IAppSpec;
+  spec?: IAppSpec;
 }
 
 interface IInstalledAppProps {
@@ -78,7 +78,7 @@ const InstalledApp: React.FC<IInstalledAppProps> = ({
       <div className='details'>
         {img}
         {app.metadata.name}
-        <small>Chart Version: {app.spec?.version ?? <NotAvailable />}</small>
+        <small>Chart version: {app.spec?.version ?? <NotAvailable />}</small>
       </div>
     </App>
   );
