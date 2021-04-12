@@ -8,7 +8,7 @@ entries:
     home: https://github.com/jetstack/cert-manager
     name: cert-manager-app
     urls:
-    - https://giantswarm.github.com/giantswarm-catalog/cert-manager-app-1.0.3.tgz
+    - https://giantswarm.github.io/giantswarm-catalog/cert-manager-app-1.0.3.tgz
     version: 1.0.3
   - appVersion: 0.9.0
     created: "2019-12-27T12:56:39.18904853Z"
@@ -17,7 +17,7 @@ entries:
     home: https://github.com/jetstack/cert-manager
     name: cert-manager-app
     urls:
-    - https://giantswarm.github.com/giantswarm-catalog/cert-manager-app-1.0.2.tgz
+    - https://giantswarm.github.io/giantswarm-catalog/cert-manager-app-1.0.2.tgz
     version: 1.0.2
   - appVersion: 0.9.0
     created: "2019-12-04T11:35:06.700889121Z"
@@ -26,7 +26,7 @@ entries:
     home: https://github.com/jetstack/cert-manager
     name: cert-manager-app
     urls:
-    - https://giantswarm.github.com/giantswarm-catalog/cert-manager-app-1.0.1.tgz
+    - https://giantswarm.github.io/giantswarm-catalog/cert-manager-app-1.0.1.tgz
     version: 1.0.1
   nginx-ingress-controller-app:
   - apiVersion: v1
@@ -37,7 +37,7 @@ entries:
     home: https://github.com/giantswarm/nginx-ingress-controller-app
     name: nginx-ingress-controller-app
     urls:
-    - https://giantswarm.github.com/giantswarm-catalog/nginx-ingress-controller-app-1.1.1.tgz
+    - https://giantswarm.github.io/giantswarm-catalog/nginx-ingress-controller-app-1.1.1.tgz
     version: 1.1.1
   - apiVersion: v1
     appVersion: v0.26.1
@@ -47,7 +47,7 @@ entries:
     home: https://github.com/giantswarm/nginx-ingress-controller-app
     name: nginx-ingress-controller-app
     urls:
-    - https://giantswarm.github.com/giantswarm-catalog/nginx-ingress-controller-app-1.1.0.tgz
+    - https://giantswarm.github.io/giantswarm-catalog/nginx-ingress-controller-app-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
     appVersion: v0.25.1
@@ -57,6 +57,6 @@ entries:
     home: https://github.com/giantswarm/nginx-ingress-controller-app
     name: nginx-ingress-controller-app
     urls:
-    - https://giantswarm.github.com/giantswarm-catalog/nginx-ingress-controller-app-0.12.0.tgz
+    - https://giantswarm.github.io/giantswarm-catalog/nginx-ingress-controller-app-0.12.0.tgz
     version: 0.0.1
 generated: "2020-01-04T12:51:45.418183532Z"`;
