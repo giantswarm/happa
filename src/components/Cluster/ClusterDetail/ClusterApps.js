@@ -391,6 +391,10 @@ class ClusterApps extends React.Component {
     const isUpdating = clusterIsUpdating || clusterIsAwaitingUpgrade;
     const isUpdatingOrCreating = clusterIsCreating || isUpdating;
 
+    const selectedApp = this.props.installedApps?.find(
+      (x) => x.metadata.name === this.state.appDetailsModal.appName
+    );
+
     return (
       <>
         {this.props.showInstalledAppsBlock && (
@@ -490,15 +494,12 @@ class ClusterApps extends React.Component {
           )}
         </div>
 
-        {this.state.appDetailsModal.appName && (
+        {selectedApp && (
           <AppDetailsModal
             // Instead of just assigning the selected app to the state of this component,
             // this ensures any updates to the apps continue to flow down into the modal.
-            app={this.props.installedApps?.find(
-              (x) => x.metadata.name === this.state.appDetailsModal.appName
-            )}
+            app={selectedApp}
             clusterId={this.props.clusterId}
-            dispatch={this.props.dispatch}
             onClose={this.hideAppModal}
             visible={this.state.appDetailsModal.visible}
           />
