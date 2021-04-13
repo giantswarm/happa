@@ -23,3 +23,14 @@ export interface IServiceAccount {
   imagePullSecrets?: ILocalObjectReference[];
   automountServiceAccountToken?: boolean;
 }
+
+export const ConfigMap = 'ConfigMap';
+
+export interface IConfigMap {
+  apiVersion: 'v1';
+  kind: typeof ConfigMap;
+  metadata: metav1.IObjectMeta;
+  immutable?: boolean;
+  data?: Record<string, string>;
+  binaryData?: Record<string, string>;
+}
