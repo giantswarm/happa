@@ -46,7 +46,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   onClose,
   visible,
 }) => {
-  const appName = app.spec.name;
+  const appName = app.metadata.name;
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -55,7 +55,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   );
   const appVersions = useSelector(
     (state: IState) =>
-      state.entities.catalogs.items[app?.spec.catalog]?.apps?.[appName]
+      state.entities.catalogs.items[app?.spec.catalog]?.apps?.[app.spec.name]
   );
 
   const [pane, setPane] = useState(ModalPanes.Initial);
