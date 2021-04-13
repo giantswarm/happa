@@ -64,7 +64,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     updateAppAction().types.error
   );
 
-  const clusterUpdateRequestPending = useSelector((state: IState) =>
+  const isLoading = useSelector((state: IState) =>
     selectLoadingFlagByAction(state, updateAppAction().types.request)
   );
 
@@ -193,7 +193,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
               <Button
                 bsStyle='primary'
                 onClick={editChartVersion}
-                loading={clusterUpdateRequestPending}
+                loading={isLoading}
               >
                 Update Chart Version
               </Button>
