@@ -169,7 +169,7 @@ const Button = React.forwardRef((props, ref) => {
   } = props;
 
   return (
-    <Wrapper className='button-wrapper'>
+    <Wrapper ref={ref} className='button-wrapper'>
       {loadingPosition === 'left' ? (
         <LoadingIndicator
           loading={loading}
@@ -186,7 +186,6 @@ const Button = React.forwardRef((props, ref) => {
         type={type}
         role='button'
         {...rest}
-        ref={ref}
       >
         {children}
       </BsButton>
