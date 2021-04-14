@@ -42,6 +42,7 @@ interface IOrganizationDetailProps {}
 
 const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const { orgId } = useParams<{ orgId: string }>();
+
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
   const clientFactory = useHttpClientFactory();

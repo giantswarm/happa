@@ -51,8 +51,10 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
     try {
       await onDelete();
 
+      setIsLoading(false);
+
       new FlashMessage(
-        `Organization <code>${organizationName}</code> deleted successfully.`,
+        `Organization ${organizationName} deleted successfully.`,
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -61,14 +63,14 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
     } catch (err: unknown) {
       const message = (err as Error).message;
 
+      setIsLoading(false);
+
       new FlashMessage(
         `Could not delete organization ${organizationName}:`,
         messageType.ERROR,
         messageTTL.LONG,
         message
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
