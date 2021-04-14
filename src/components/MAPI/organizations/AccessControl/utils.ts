@@ -1,9 +1,7 @@
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
-import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
@@ -162,14 +160,6 @@ export function getRolePermissions(
   }
 
   return permissions;
-}
-
-/**
- * Compute an organization namespace from the given organization name.
- * @param name
- */
-export function getOrgNamespaceFromOrgName(name: string): string {
-  return `org-${name}`;
 }
 
 /**
@@ -511,30 +501,4 @@ export function findSubjectInRoleItem(
     default:
       return undefined;
   }
-}
-
-/**
- * Extract the error message from a K8s API response.
- * @param fromErr
- * @param fallback - What message to return if the message
- * could not be extracted.
- */
-export function extractErrorMessage(
-  fromErr: unknown,
-  fallback = 'Something went wrong'
-): string {
-  if (!fromErr) return '';
-
-  let message = '';
-
-  if (metav1.isStatus((fromErr as GenericResponse).data)) {
-    message =
-      (fromErr as GenericResponse<metav1.IK8sStatus>).data.message ?? '';
-  } else if (fromErr instanceof Error) {
-    message = fromErr.message;
-  }
-
-  message ||= fallback;
-
-  return message;
 }
