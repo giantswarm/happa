@@ -8,7 +8,7 @@ import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Tab } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
@@ -48,11 +48,12 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const httpClient = useRef(clientFactory());
   const { data, error } = useSWR<
     securityv1alpha1.IOrganization,
     GenericResponse
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
-    securityv1alpha1.getOrganization(clientFactory(), auth, orgId)
+    securityv1alpha1.getOrganization(httpClient.current, auth, orgId)
   );
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
