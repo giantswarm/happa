@@ -134,7 +134,9 @@ export function organizationsLoadMAPI(
         // The user can list all orgs. So list them all and dispatch the action that
         // updates the global state with all the orgs
         const orgListResponse = await getOrganizationList(client, auth);
-        orgs = orgListResponse.items.map((o) => getOrganizationUIName(o));
+        orgs = orgListResponse.items
+          .filter((org) => !org.metadata.deletionTimestamp)
+          .map((o) => getOrganizationUIName(o));
       } else {
         // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
         // which ones they can get.
