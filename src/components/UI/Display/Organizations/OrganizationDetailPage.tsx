@@ -1,13 +1,20 @@
 import { Box, Text } from 'grommet';
+import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
+import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'UI/Controls/Button';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 
-interface IOrganizationDetailPageProps {}
+interface IOrganizationDetailPageProps {
+  organizationName: string;
+  onDelete: () => Promise<void>;
+}
 
-const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
+const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
+  organizationName,
+  onDelete,
+}) => {
   return (
     <Box direction='column' gap='large'>
       <Box direction='row' gap='large'>
@@ -116,14 +123,10 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             </Text>
           </Box>
           <Box>
-            <Button bsStyle='danger' disabled={true}>
-              <i
-                className='fa fa-delete'
-                role='presentation'
-                aria-hidden={true}
-              />{' '}
-              Delete Organization
-            </Button>
+            <OrganizationDetailDelete
+              organizationName={organizationName}
+              onDelete={onDelete}
+            />
           </Box>
         </Box>
       </Box>
@@ -131,6 +134,9 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
   );
 };
 
-OrganizationDetailPage.propTypes = {};
+OrganizationDetailPage.propTypes = {
+  organizationName: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
 
 export default OrganizationDetailPage;

@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -15,9 +15,14 @@ import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { organizationsLoadMAPI } from 'stores/organization/actions';
+import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
+
+import { extractErrorMessage } from './utils';
 
 function computePaths(orgName: string) {
   return {
@@ -39,17 +44,17 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const { orgId } = useParams<{ orgId: string }>();
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
-  const client = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const { data, error } = useSWR<
     securityv1alpha1.IOrganization,
     GenericResponse
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
-    securityv1alpha1.getOrganization(client, auth, orgId)
+    securityv1alpha1.getOrganization(clientFactory(), auth, orgId)
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   useEffect(() => {
     if (
@@ -76,6 +81,27 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
     }
   }, [error, orgId, dispatch, data]);
 
+  const handleDelete = async () => {
+    try {
+      const client = clientFactory();
+
+      const org = await securityv1alpha1.getOrganization(
+        clientFactory(),
+        auth,
+        orgId
+      );
+      await securityv1alpha1.deleteOrganization(client, auth, org);
+
+      await dispatch(organizationsLoadMAPI(auth));
+
+      return Promise.resolve();
+    } catch (err: unknown) {
+      const errorMessage = extractErrorMessage(err);
+
+      return Promise.reject(new Error(errorMessage));
+    }
+  };
+
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
@@ -88,7 +114,10 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
             </Heading>
             <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
               <Tab eventKey={paths.Detail} title='General'>
-                <OrganizationDetailPage />
+                <OrganizationDetailPage
+                  organizationName={data.metadata.name}
+                  onDelete={handleDelete}
+                />
               </Tab>
               <Tab eventKey={paths.AccessControl} title='Access control'>
                 <AccessControlPage organizationName={data.metadata.name} />
