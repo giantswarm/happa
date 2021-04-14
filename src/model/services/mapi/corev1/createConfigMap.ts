@@ -17,10 +17,5 @@ export function createConfigMap(
     namespace: configMap.metadata.namespace!,
   });
 
-  return createResource<IConfigMap>(
-    client,
-    auth,
-    url.toString(),
-    (configMap as unknown) as Record<string, unknown>
-  );
+  return createResource<IConfigMap>(client, auth, url.toString(), configMap);
 }
