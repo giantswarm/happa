@@ -46,26 +46,22 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   onClose,
   visible,
 }) => {
-  const appName = app.metadata.name;
-
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   const catalog = useSelector<IState, IAppCatalog | undefined>(
     (state) => state.entities.catalogs.items[app.spec.catalog]
   );
-  const appVersions = useSelector(
-    (state: IState) =>
-      state.entities.catalogs.items[app?.spec.catalog]?.apps?.[app.spec.name]
+  const isLoading = useSelector((state: IState) =>
+    selectLoadingFlagByAction(state, updateAppAction().types.request)
   );
+
+  const appName = app.metadata.name;
+  const appVersions = catalog?.apps?.[app.spec.name];
 
   const [pane, setPane] = useState(ModalPanes.Initial);
   const [desiredVersion, setDesiredVersion] = useState(app.spec.version);
   const { clear: clearUpdateAppError } = useError(
     updateAppAction().types.error
-  );
-
-  const isLoading = useSelector((state: IState) =>
-    selectLoadingFlagByAction(state, updateAppAction().types.request)
   );
 
   useEffect(() => {
