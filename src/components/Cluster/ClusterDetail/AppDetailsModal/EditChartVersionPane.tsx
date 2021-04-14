@@ -1,23 +1,21 @@
-import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { updateClusterApp } from 'stores/appcatalog/actions';
 import { FlashMessageType } from 'styles';
 import FlashMessage from 'UI/Display/FlashMessage';
 
 interface IEditChartVersionPaneProps {
   currentVersion: string;
   desiredVersion: string;
+  errorMessage?: string;
 }
 
 const EditChartVersionPane: React.FC<IEditChartVersionPaneProps> = ({
   currentVersion,
   desiredVersion,
+  errorMessage,
 }) => {
-  const { errorMessage } = useError(updateClusterApp().types.error);
-
   return (
-    <div data-testid='edit-chart-version-pane'>
+    <div>
       Current chart version: <code>{currentVersion}</code>
       <br />
       <br />
@@ -45,6 +43,7 @@ const EditChartVersionPane: React.FC<IEditChartVersionPaneProps> = ({
 EditChartVersionPane.propTypes = {
   currentVersion: PropTypes.string.isRequired,
   desiredVersion: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string,
 };
 
 export default EditChartVersionPane;

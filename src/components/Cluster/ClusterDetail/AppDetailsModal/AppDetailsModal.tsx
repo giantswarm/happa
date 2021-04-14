@@ -14,6 +14,7 @@ import {
   updateAppConfig as updateAppConfigAction,
   updateAppSecret as updateAppSecretAction,
   updateClusterApp as updateAppAction,
+  updateClusterApp,
 } from 'stores/appcatalog/actions';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
@@ -54,6 +55,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   const isLoading = useSelector((state: IState) =>
     selectLoadingFlagByAction(state, updateAppAction().types.request)
   );
+  const { errorMessage } = useError(updateClusterApp().types.error);
 
   const appName = app.metadata.name;
   const appVersions = catalog?.apps?.[app.spec.name];
@@ -204,6 +206,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           <EditChartVersionPane
             currentVersion={app.spec.version}
             desiredVersion={desiredVersion}
+            errorMessage={errorMessage}
           />
         </GenericModal>
       );
