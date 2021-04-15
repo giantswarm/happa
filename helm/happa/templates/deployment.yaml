@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: happa
-  namespace: giantswarm
+  namespace: {{ .Values.namespace }}
   labels:
     app: happa
 spec:
