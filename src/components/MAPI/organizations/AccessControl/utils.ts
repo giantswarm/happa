@@ -374,27 +374,6 @@ export async function createRoleBindingWithSubjects(
 }
 
 /**
- * Delete the service account derived from the given subject.
- * @param client
- * @param auth
- * @param subject
- */
-export async function deleteServiceAccountFromSubject(
-  client: IHttpClient,
-  auth: IOAuth2Provider,
-  subject: rbacv1.ISubject
-) {
-  const serviceAccount = await corev1.getServiceAccount(
-    client,
-    auth,
-    subject.name,
-    subject.namespace!
-  );
-
-  return corev1.deleteServiceAccount(client, auth, serviceAccount);
-}
-
-/**
  * Delete a subject from a given `RoleBinding` resource.
  * @param clientFactory
  * @param auth
@@ -420,25 +399,12 @@ export async function deleteSubjectFromRoleBinding(
     namespace
   );
 
-  const subjectDeletionRequests: Promise<corev1.IServiceAccount>[] = [];
-
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {
     const isSubject = s.kind === subjectKind && s.name === subject.name;
-    if (isSubject) {
-      if (s.kind === rbacv1.SubjectKinds.ServiceAccount) {
-        subjectDeletionRequests.push(
-          deleteServiceAccountFromSubject(clientFactory(), auth, s)
-        );
-      }
 
-      return false;
-    }
-
-    return true;
+    return !isSubject;
   });
-
-  await Promise.all(subjectDeletionRequests);
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
