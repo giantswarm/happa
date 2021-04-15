@@ -3,23 +3,25 @@ import { getUserNameParts, parseSubjects } from '../utils';
 describe('AccessControl/utils', () => {
   describe('parseSubjects', () => {
     test.each`
-      subjects                          | expected
-      ${''}                             | ${[]}
-      ${'subject1'}                     | ${['subject1']}
-      ${'subject1 subject2'}            | ${['subject1', 'subject2']}
-      ${'subject1,subject2'}            | ${['subject1', 'subject2']}
-      ${'subject1, subject2'}           | ${['subject1', 'subject2']}
-      ${'subject1 ,subject2'}           | ${['subject1', 'subject2']}
-      ${'subject1 , subject2'}          | ${['subject1', 'subject2']}
-      ${'subject1 ,subject2, subject3'} | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1;subject2'}            | ${['subject1', 'subject2']}
-      ${'subject1; subject2'}           | ${['subject1', 'subject2']}
-      ${'subject1 ;subject2'}           | ${['subject1', 'subject2']}
-      ${'subject1 ; subject2'}          | ${['subject1', 'subject2']}
-      ${'subject1 ;subject2; subject3'} | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1	subject2; subject3'}   | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1			subject2 subject3'}    | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1			subject2 subject3						'}    | ${['subject1', 'subject2', 'subject3']}
+      subjects                                            | expected
+      ${''}                                               | ${[]}
+      ${'subject1'}                                       | ${['subject1']}
+      ${'subject1 subject2'}                              | ${['subject1', 'subject2']}
+      ${'subject1,subject2'}                              | ${['subject1', 'subject2']}
+      ${'subject1, subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject1 ,subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject1 , subject2'}                            | ${['subject1', 'subject2']}
+      ${'subject1 ,subject2, subject3'}                   | ${['subject1', 'subject2', 'subject3']}
+      ${'subject1;subject2'}                              | ${['subject1', 'subject2']}
+      ${'subject1; subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject1 ;subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject1 ; subject2'}                            | ${['subject1', 'subject2']}
+      ${'subject1 ;subject2; subject3'}                   | ${['subject1', 'subject2', 'subject3']}
+      ${'subject1	subject2; subject3'}                     | ${['subject1', 'subject2', 'subject3']}
+      ${'subject1			subject2 subject3'}                      | ${['subject1', 'subject2', 'subject3']}
+      ${'subject1			subject2 subject3						'}                      | ${['subject1', 'subject2', 'subject3']}
+      ${'some-account, test1, test, test2, default, '}    | ${['some-account', 'test1', 'test', 'test2', 'default']}
+      ${'some-account, test1, test, test2, default,;,; '} | ${['some-account', 'test1', 'test', 'test2', 'default']}
     `(`gets subjects from '$subjects'`, ({ subjects, expected }) => {
       const parsed = parseSubjects(subjects);
       expect(parsed).toStrictEqual(expected);

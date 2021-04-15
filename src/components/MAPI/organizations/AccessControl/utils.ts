@@ -7,7 +7,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-const subjectDelimiterRegexp = /\s*(?:[,\s;])\s*/;
+const subjectDelimiterRegexp = /\s*(?:[,\s;])+\s*/;
 
 /**
  * Parse subjects from a serialized value (e.g. an user input).
@@ -17,7 +17,7 @@ export function parseSubjects(from: string): string[] {
   const trimmed = from.trim();
   if (trimmed.length < 1) return [];
 
-  return trimmed.split(subjectDelimiterRegexp);
+  return trimmed.split(subjectDelimiterRegexp).filter((s) => s.length > 0);
 }
 
 /**
