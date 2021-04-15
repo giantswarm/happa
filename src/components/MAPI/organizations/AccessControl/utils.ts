@@ -357,15 +357,11 @@ export async function createRoleBindingWithSubjects(
     };
 
     if (subject.kind === rbacv1.SubjectKinds.ServiceAccount) {
-      // We need to create a `ServiceAccount` resource first.
-      const serviceAccount = makeServiceAccount(subject.name);
-      serviceAccount.metadata.namespace = namespace;
-
       subject.apiGroup = '';
       subject.namespace = namespace;
 
       subjectCreationRequests.push(
-        corev1.createServiceAccount(clientFactory(), auth, serviceAccount)
+        ensureServiceAccount(clientFactory(), auth, subject.name, namespace)
       );
     }
 
@@ -537,4 +533,45 @@ export function extractErrorMessage(
   message ||= fallback;
 
   return message;
+}
+
+/**
+ * Check if an existing account exists. If it does,
+ * return it, and if it doesn't, create one.
+ * @param client
+ * @param auth
+ * @param name
+ * @param namespace
+ */
+export async function ensureServiceAccount(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  name: string,
+  namespace: string
+): Promise<corev1.IServiceAccount> {
+  try {
+    const account = await corev1.getServiceAccount(
+      client,
+      auth,
+      name,
+      namespace
+    );
+
+    return account;
+  } catch (err: unknown) {
+    // If the service account is not found, we'll create it.
+    if (
+      !metav1.isStatusError(
+        (err as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      return Promise.reject(err);
+    }
+  }
+
+  const serviceAccount = makeServiceAccount(name);
+  serviceAccount.metadata.namespace = namespace;
+
+  return corev1.createServiceAccount(client, auth, serviceAccount);
 }
