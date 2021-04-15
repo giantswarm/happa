@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import { parseSubjects } from 'MAPI/organizations/AccessControl/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
@@ -37,6 +36,7 @@ interface IAccessControlSubjectSetProps
   onDeleteItem: (name: string) => void;
   isAdding?: boolean;
   isLoading?: boolean;
+  inputSuggestions?: string[];
 }
 
 const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
@@ -47,6 +47,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
   onDeleteItem,
   isAdding,
   isLoading,
+  inputSuggestions,
   ...props
 }) => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -81,17 +82,15 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
     return '';
   };
 
-  const handleAdd = (newValue: string) => {
-    const values = parseSubjects(newValue);
-
-    const error = validateSubjects(values);
+  const handleAdd = (newValue: string[]) => {
+    const error = validateSubjects(newValue);
     if (error) {
       setErrorMessage(error);
 
       return;
     }
 
-    onAdd(values);
+    onAdd(newValue);
   };
 
   return (
@@ -114,6 +113,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
         onToggleAdding={onToggleAdding}
         errorMessage={errorMessage}
         onClearError={clearError}
+        suggestions={inputSuggestions}
       />
     </Box>
   );
@@ -128,6 +128,7 @@ AccessControlSubjectSet.propTypes = {
   onDeleteItem: PropTypes.func.isRequired,
   isAdding: PropTypes.bool,
   isLoading: PropTypes.bool,
+  inputSuggestions: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AccessControlSubjectSet.defaultProps = {

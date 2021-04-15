@@ -21,6 +21,14 @@ export function parseSubjects(from: string): string[] {
 }
 
 /**
+ * Check if a string is a separator between subjects.
+ * @param value
+ */
+export function isSubjectDelimiter(value: string): boolean {
+  return subjectDelimiterRegexp.test(value);
+}
+
+/**
  * Map all the resources necessary for rendering the whole UI.
  * @param clusterRoles
  * @param roles
@@ -540,4 +548,74 @@ export async function ensureServiceAccount(
   serviceAccount.metadata.namespace = namespace;
 
   return corev1.createServiceAccount(client, auth, serviceAccount);
+}
+
+/**
+ * Filter subject suggestions based on the
+ * existing value.
+ * @param existing
+ * @param suggestions
+ * @param limit
+ */
+export function filterSubjectSuggestions(
+  existing: string,
+  suggestions: string[],
+  limit: number
+): string[] {
+  const subjects = parseSubjects(existing);
+  const uniqueSuggestions = suggestions.filter((suggestion) => {
+    // Don't include existing subjects.
+    return !subjects.includes(suggestion);
+  });
+
+  /**
+   * There isn't any value here, let's just return
+   * the full suggestion list.
+   * If the latest char is a delimiter, it means
+   * that the user is trying to add a new value, and
+   * doesn't need filtering based on a search query.
+   */
+  if (subjects.length < 1 || isSubjectDelimiter(existing.slice(-1))) {
+    return uniqueSuggestions.slice(0, limit + 1);
+  }
+
+  /**
+   * Consider the last entry as a search query,
+   * and try to find suggestions that fit.
+   */
+  const searchQuery = subjects[subjects.length - 1].toLowerCase();
+  const newSuggestions = uniqueSuggestions.filter((suggestion) => {
+    return suggestion.toLowerCase().includes(searchQuery);
+  });
+
+  return newSuggestions.slice(0, limit + 1);
+}
+
+/**
+ * Append a subject suggestion to a serialized
+ * collection of subjects.
+ * @param value
+ * @param suggestion
+ */
+export function appendSubjectSuggestionToValue(
+  value: string,
+  suggestion: string
+): string {
+  const subjects = parseSubjects(value);
+
+  let newValue = value;
+  if (subjects.length > 0 && !isSubjectDelimiter(newValue.slice(-1))) {
+    const latestSubjectLength = subjects[subjects.length - 1].length;
+    newValue = newValue.substr(0, newValue.length - latestSubjectLength);
+
+    /**
+     * If the latest char after trimming is not
+     * a delimiter, then let's add one.
+     */
+    if (newValue.length > 0 && !isSubjectDelimiter(newValue.slice(-1))) {
+      newValue += ', ';
+    }
+  }
+
+  return `${newValue}${suggestion}, `;
 }

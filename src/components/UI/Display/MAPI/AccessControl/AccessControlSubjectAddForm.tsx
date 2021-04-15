@@ -1,10 +1,19 @@
 import { Box, Keyboard } from 'grommet';
+import useDebounce from 'lib/hooks/useDebounce';
+import {
+  appendSubjectSuggestionToValue,
+  filterSubjectSuggestions,
+  parseSubjects,
+} from 'MAPI/organizations/AccessControl/utils';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import TextInput from 'UI/Inputs/TextInput';
+
+const VISIBLE_SUGGESTION_COUNT = 10;
+const FILTER_DEBOUNCE_RATE = 250;
 
 const StyledButton = styled(Button)`
   &.btn {
@@ -41,9 +50,10 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 
 interface IAccessControlSubjectAddFormProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
-  onAdd: (newValue: string) => void;
+  onAdd: (newValue: string[]) => void;
   onToggleAdding: () => void;
   onClearError: () => void;
+  suggestions?: string[];
   errorMessage?: string;
   isAdding?: boolean;
   isLoading?: boolean;
@@ -56,16 +66,18 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
   isLoading,
   errorMessage,
   onClearError,
+  suggestions,
   ...props
 }) => {
+  const [value, setValue] = useState('');
+  const debouncedValue = useDebounce(value, FILTER_DEBOUNCE_RATE);
+  const [visibleSuggestions, setVisibleSuggestions] = useState<string[]>([]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    onAdd(
-      ((e.target as HTMLFormElement).elements.namedItem(
-        'values'
-      ) as HTMLInputElement).value
-    );
+    const newValue = parseSubjects(value);
+    onAdd(newValue);
   };
 
   const handleOnEsc = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -74,11 +86,52 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
     onToggleAdding();
   };
 
-  const handleChange = () => {
+  const handleChangeSuggestions = (
+    currentValue: string,
+    suggestionCollection: string[]
+  ) => {
+    const newSuggestions = filterSubjectSuggestions(
+      currentValue,
+      suggestionCollection,
+      VISIBLE_SUGGESTION_COUNT
+    );
+    setVisibleSuggestions(newSuggestions);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+
     if (errorMessage) {
       onClearError();
     }
   };
+
+  const handleSuggestionSelect: React.ComponentPropsWithoutRef<
+    typeof TextInput
+  >['onSuggestionSelect'] = (e) => {
+    const newValue = appendSubjectSuggestionToValue(value, e.suggestion);
+    setValue(newValue);
+
+    if (suggestions) {
+      handleChangeSuggestions(newValue, suggestions);
+    }
+  };
+
+  useEffect(() => {
+    if (suggestions) {
+      handleChangeSuggestions(debouncedValue, suggestions);
+    }
+  }, [debouncedValue, suggestions]);
+
+  useLayoutEffect(() => {
+    if (!isAdding) {
+      setValue('');
+
+      if (errorMessage) {
+        onClearError();
+      }
+    }
+  }, [errorMessage, isAdding, onClearError]);
 
   return (
     <Box {...props}>
@@ -99,8 +152,11 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
                 readOnly={isLoading}
                 autoFocus={true}
                 onChange={handleChange}
+                value={value}
                 error={errorMessage}
                 placeholder='e.g. subject1, subject2, subject3'
+                onSuggestionSelect={handleSuggestionSelect}
+                suggestions={visibleSuggestions}
               >
                 <SaveButton
                   type='submit'
@@ -137,6 +193,7 @@ AccessControlSubjectAddForm.propTypes = {
   errorMessage: PropTypes.string,
   isAdding: PropTypes.bool,
   isLoading: PropTypes.bool,
+  suggestions: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AccessControlSubjectAddForm.defaultProps = {
