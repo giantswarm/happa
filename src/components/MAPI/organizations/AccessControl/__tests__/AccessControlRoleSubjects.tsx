@@ -506,4 +506,55 @@ describe('AccessControlRoleSubjects', () => {
       screen.queryByText(`Subject 'test-group1' already exists.`)
     ).not.toBeInTheDocument();
   });
+
+  it('does not allow adding the same subject multiple times', () => {
+    const onAddMockfn = jest.fn();
+
+    renderWithTheme(AccessControlRoleSubjects, {
+      groups: {
+        'test-group1': {
+          name: 'test-group1',
+          isEditable: true,
+          roleBindings: [],
+        },
+      },
+      users: {},
+      serviceAccounts: {},
+      roleName: 'test-role',
+      onAdd: onAddMockfn,
+      onDelete: jest.fn(),
+    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+
+    const section = screen.getByLabelText('Groups');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    ) as HTMLInputElement;
+
+    const submitButton = screen.getByRole('button', { name: 'OK' });
+    fireEvent.change(input, {
+      target: {
+        value:
+          'test-group1 test-group2 test-group1 test-group1 test-group3 test-group2',
+      },
+    });
+
+    fireEvent.click(submitButton);
+
+    expect(
+      screen.getByText(`Subjects 'test-group1', 'test-group2' already exist.`)
+    );
+
+    expect(input).toBeInTheDocument();
+    expect(onAddMockfn).not.toHaveBeenCalled();
+
+    fireEvent.change(input, {
+      target: { value: '' },
+    });
+
+    expect(
+      screen.queryByText(`Subjects 'test-group1', 'test-group2' already exist.`)
+    ).not.toBeInTheDocument();
+  });
 });
