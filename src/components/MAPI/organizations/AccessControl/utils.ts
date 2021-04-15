@@ -620,6 +620,13 @@ export function appendSubjectSuggestionToValue(
   return `${newValue}${suggestion}, `;
 }
 
+/**
+ * Fetch all the service accounts in a namespace, and map them
+ * into a list of names.
+ * @param client
+ * @param auth
+ * @param namespace
+ */
 export async function fetchServiceAccountSuggestions(
   client: IHttpClient,
   auth: IOAuth2Provider,
@@ -634,6 +641,10 @@ export async function fetchServiceAccountSuggestions(
   return serviceAccounts.items.map((account) => account.metadata.name);
 }
 
+/**
+ * The unique cache key for the service account suggestion fetcher.
+ * @param namespace
+ */
 export function fetchServiceAccountSuggestionsKey(
   namespace: string = 'default'
 ): string {

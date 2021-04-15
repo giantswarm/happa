@@ -111,10 +111,6 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
   >['onSuggestionSelect'] = (e) => {
     const newValue = appendSubjectSuggestionToValue(value, e.suggestion);
     setValue(newValue);
-
-    if (suggestions) {
-      handleChangeSuggestions(newValue, suggestions);
-    }
   };
 
   useEffect(() => {
