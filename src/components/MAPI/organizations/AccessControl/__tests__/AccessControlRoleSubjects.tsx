@@ -6,6 +6,7 @@ import AccessControlRoleSubjects from '../AccessControlRoleSubjects';
 describe('AccessControlRoleSubjects', () => {
   it('renders without crashing', () => {
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {},
       users: {},
       serviceAccounts: {},
@@ -17,6 +18,7 @@ describe('AccessControlRoleSubjects', () => {
 
   it('renders all provided subjects', () => {
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',
@@ -89,6 +91,7 @@ describe('AccessControlRoleSubjects', () => {
 
   it('displays a delete button next to editable subjects', () => {
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',
@@ -174,6 +177,7 @@ describe('AccessControlRoleSubjects', () => {
     });
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {},
       users: {},
       serviceAccounts: {},
@@ -254,6 +258,7 @@ describe('AccessControlRoleSubjects', () => {
     });
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',
@@ -304,6 +309,7 @@ describe('AccessControlRoleSubjects', () => {
     const onDeleteMockFn = jest.fn();
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',
@@ -345,6 +351,7 @@ describe('AccessControlRoleSubjects', () => {
     });
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {},
       users: {},
       serviceAccounts: {},
@@ -396,6 +403,7 @@ describe('AccessControlRoleSubjects', () => {
     });
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',
@@ -435,6 +443,7 @@ describe('AccessControlRoleSubjects', () => {
     const onAddMockfn = jest.fn();
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {},
       users: {},
       serviceAccounts: {},
@@ -465,6 +474,7 @@ describe('AccessControlRoleSubjects', () => {
     const onAddMockfn = jest.fn();
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',
@@ -511,6 +521,7 @@ describe('AccessControlRoleSubjects', () => {
     const onAddMockfn = jest.fn();
 
     renderWithTheme(AccessControlRoleSubjects, {
+      namespace: 'org-test',
       groups: {
         'test-group1': {
           name: 'test-group1',

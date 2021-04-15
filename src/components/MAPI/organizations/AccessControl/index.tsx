@@ -161,6 +161,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
             activeRole={activeRole}
             onAdd={handleAdd}
             onDelete={handleDelete}
+            namespace={orgNamespace}
           />
         </Box>
       </Box>

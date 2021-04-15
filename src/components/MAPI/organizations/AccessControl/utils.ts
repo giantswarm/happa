@@ -619,3 +619,23 @@ export function appendSubjectSuggestionToValue(
 
   return `${newValue}${suggestion}, `;
 }
+
+export async function fetchServiceAccountSuggestions(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string
+): Promise<string[]> {
+  const serviceAccounts = await corev1.getServiceAccountList(
+    client,
+    auth,
+    namespace
+  );
+
+  return serviceAccounts.items.map((account) => account.metadata.name);
+}
+
+export function fetchServiceAccountSuggestionsKey(
+  namespace: string = 'default'
+): string {
+  return corev1.getServiceAccountListKey(namespace);
+}
