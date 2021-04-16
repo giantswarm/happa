@@ -14,7 +14,7 @@ function formatVerbs(verbs: string[]): string {
   }
 
   for (const verb of verbs) {
-    if (verb === '*') return 'All';
+    if (verb === '*') return 'All (*)';
   }
 
   return verbs.join(', ');
