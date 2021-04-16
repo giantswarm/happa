@@ -142,7 +142,7 @@ export function appendSubjectsToRoleItem(
 export function getRolePermissions(
   role: rbacv1.IClusterRole | rbacv1.IRole
 ): ui.IAccessControlRoleItemPermission[] {
-  const permissions: ui.IAccessControlRoleItemPermission[] = [];
+  const permissions: Record<string, ui.IAccessControlRoleItemPermission> = {};
 
   for (const rule of role.rules) {
     if (
@@ -153,15 +153,26 @@ export function getRolePermissions(
       continue;
     }
 
-    permissions.push({
-      verbs: rule.verbs,
-      apiGroups: rule.apiGroups ?? [],
-      resourceNames: rule.resourcesNames ?? [],
-      resources: rule.resources ?? [],
-    });
+    const hashKey = [
+      rule.apiGroups?.join(),
+      rule.resources?.join(),
+      rule.resourcesNames?.join(),
+    ].join();
+
+    if (permissions.hasOwnProperty(hashKey)) {
+      // Aggregate verbs for similar rules.
+      permissions[hashKey].verbs.push(...rule.verbs);
+    } else {
+      permissions[hashKey] = {
+        verbs: rule.verbs,
+        apiGroups: rule.apiGroups ?? [],
+        resources: rule.resources ?? [],
+        resourceNames: rule.resourcesNames ?? [],
+      };
+    }
   }
 
-  return permissions;
+  return Object.values(permissions);
 }
 
 /**
