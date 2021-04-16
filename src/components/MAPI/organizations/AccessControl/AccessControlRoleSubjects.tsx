@@ -149,12 +149,10 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
 };
 
 interface IAccessControlRoleSubjectsProps
-  extends Pick<
-      IAccessControlRoleItem,
-      'groups' | 'users' | 'serviceAccounts' | 'namespace'
-    >,
+  extends Pick<IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'>,
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
+  namespace: string;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
 }

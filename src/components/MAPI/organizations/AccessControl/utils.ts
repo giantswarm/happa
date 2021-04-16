@@ -624,7 +624,7 @@ export function appendSubjectSuggestionToValue(
 export async function fetchServiceAccountSuggestions(
   client: IHttpClient,
   auth: IOAuth2Provider,
-  namespace: string
+  namespace: string = 'default'
 ): Promise<string[]> {
   const serviceAccounts = await corev1.getServiceAccountList(
     client,
