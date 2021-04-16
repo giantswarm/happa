@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
 
 function gatherSubjectUsage(acc: Record<string, number>, currValue: string) {
-  if (acc[currValue]) {
+  if (acc.hasOwnProperty(currValue)) {
     acc[currValue]++;
   } else {
     acc[currValue] = 1;
