@@ -33,7 +33,7 @@ export interface IClusterRole {
   apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof ClusterRole;
   metadata: metav1.IObjectMeta;
-  rules: IPolicyRule[];
+  rules: IPolicyRule[] | null;
 }
 
 export const ClusterRoleList = 'ClusterRoleList';
@@ -67,7 +67,7 @@ export interface IRole {
   apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof Role;
   metadata: metav1.IObjectMeta;
-  rules: IPolicyRule[];
+  rules: IPolicyRule[] | null;
 }
 
 export const RoleList = 'RoleList';
