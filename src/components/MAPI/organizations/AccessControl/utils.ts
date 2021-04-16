@@ -144,7 +144,7 @@ export function getRolePermissions(
 ): ui.IAccessControlRoleItemPermission[] {
   if (!role.rules) return [];
 
-  const permissions: ui.IAccessControlRoleItemPermission[] = [];
+  const permissions: Record<string, ui.IAccessControlRoleItemPermission> = {};
 
   for (const rule of role.rules) {
     if (
@@ -155,15 +155,55 @@ export function getRolePermissions(
       continue;
     }
 
-    permissions.push({
-      verbs: rule.verbs,
-      apiGroups: rule.apiGroups ?? [],
-      resourceNames: rule.resourcesNames ?? [],
-      resources: rule.resources ?? [],
-    });
+    const hashKey = [
+      rule.apiGroups?.join(),
+      rule.resources?.join(),
+      rule.resourcesNames?.join(),
+    ].join();
+
+    if (permissions.hasOwnProperty(hashKey)) {
+      // Aggregate verbs for similar rules.
+      permissions[hashKey].verbs.push(...rule.verbs);
+    } else {
+      permissions[hashKey] = {
+        verbs: rule.verbs,
+        apiGroups: rule.apiGroups ?? [],
+        resources: rule.resources ?? [],
+        resourceNames: rule.resourcesNames ?? [],
+      };
+    }
   }
 
-  return permissions;
+  const permissionCollection = Object.values(permissions);
+
+  return permissionCollection.sort(sortPermissions);
+}
+
+/**
+ * Sort permissions by:
+ * - apiGroups
+ * - resources
+ * - resourceNames
+ * @param a
+ * @param b
+ */
+export function sortPermissions(
+  a: ui.IAccessControlRoleItemPermission,
+  b: ui.IAccessControlRoleItemPermission
+): number {
+  const sortRules = [
+    () => a.apiGroups.join().localeCompare(b.apiGroups.join()),
+    () => a.resources.join().localeCompare(b.resources.join()),
+    () => a.resourceNames.join().localeCompare(b.resourceNames.join()),
+  ];
+
+  let ruleResult = 0;
+  for (const rule of sortRules) {
+    ruleResult = rule();
+    if (ruleResult !== 0) return ruleResult;
+  }
+
+  return ruleResult;
 }
 
 /**
