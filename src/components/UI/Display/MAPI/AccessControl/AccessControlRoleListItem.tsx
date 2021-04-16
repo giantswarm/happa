@@ -37,6 +37,10 @@ const StyledCard = styled(Card)`
   }
 `;
 
+const StyledHeading = styled(Heading)`
+  max-width: 100%;
+`;
+
 interface IAccessControlRoleListItemProps
   extends IAccessControlRoleItem,
     React.ComponentPropsWithoutRef<typeof Card> {
@@ -65,7 +69,7 @@ const AccessControlRoleListItem = React.forwardRef<
       ref={ref}
     >
       <CardHeader>
-        <Heading level={5} margin='none'>
+        <StyledHeading level={5} margin='none'>
           <Box direction='row' align='center'>
             <Text truncate={true}>{name}</Text>
 
@@ -79,7 +83,7 @@ const AccessControlRoleListItem = React.forwardRef<
               </Text>
             )}
           </Box>
-        </Heading>
+        </StyledHeading>
       </CardHeader>
       <CardBody margin={{ top: 'xsmall' }}>
         <Box justify='between' direction='row'>
