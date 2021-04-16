@@ -256,9 +256,11 @@ export function filterRoles(
     ];
 
     for (const permission of role.permissions) {
-      valuesToCheck.push(...permission.apiGroups);
-      valuesToCheck.push(...permission.resources);
-      valuesToCheck.push(...permission.resourceNames);
+      valuesToCheck.push(
+        ...permission.apiGroups,
+        ...permission.resources,
+        ...permission.resourceNames
+      );
     }
 
     return valuesToCheck.some((value: string) => {
