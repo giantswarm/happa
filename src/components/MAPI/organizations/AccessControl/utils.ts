@@ -288,9 +288,24 @@ export function filterRoles(
   if (!searchQuery) return roles;
 
   return roles.filter((role) => {
-    const value = role.name.toLowerCase();
+    const valuesToCheck: string[] = [
+      role.name,
+      ...Object.keys(role.groups),
+      ...Object.keys(role.users),
+      ...Object.keys(role.serviceAccounts),
+    ];
 
-    return value.includes(searchQuery);
+    for (const permission of role.permissions) {
+      valuesToCheck.push(
+        ...permission.apiGroups,
+        ...permission.resources,
+        ...permission.resourceNames
+      );
+    }
+
+    return valuesToCheck.some((value: string) => {
+      return value.toLowerCase().includes(searchQuery);
+    });
   });
 }
 
