@@ -8,16 +8,31 @@ import {
   IAccessControlRoleItemPermission,
 } from './types';
 
-function formatVerbs(verbs: string[]): string {
+function formatVerbs(verbs: string[], verbMap: IVerbMap): string {
   if (verbs.length < 1) {
     return 'None';
   }
 
   for (const verb of verbs) {
-    if (verb === '*') return 'All';
+    if (verb === '*') return 'All (*)';
   }
 
-  return verbs.join(', ');
+  const verbOrder = Object.keys(verbMap);
+  // Sort verbs in the order they are in the map, and leave unknown ones at the end.
+  const orderedVerbs = verbs.sort((a, b) => {
+    let aIdx = verbOrder.indexOf(a);
+    if (aIdx < 0) {
+      aIdx = verbOrder.length - 1;
+    }
+    let bIdx = verbOrder.indexOf(b);
+    if (bIdx < 0) {
+      bIdx = verbOrder.length - 1;
+    }
+
+    return aIdx - bIdx;
+  });
+
+  return orderedVerbs.join(', ');
 }
 
 interface IVerbSymbol {
@@ -111,7 +126,10 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
   ...props
 }) => {
   const verbMap = useMemo(() => makeVerbMap(verbs), [verbs]);
-  const formattedVerbs = useMemo(() => formatVerbs(verbs), [verbs]);
+  const formattedVerbs = useMemo(() => formatVerbs(verbs, verbMap), [
+    verbs,
+    verbMap,
+  ]);
 
   return (
     <OverlayTrigger

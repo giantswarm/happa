@@ -150,7 +150,9 @@ export function appendSubjectsToRoleItem(
 export function getRolePermissions(
   role: rbacv1.IClusterRole | rbacv1.IRole
 ): ui.IAccessControlRoleItemPermission[] {
-  const permissions: ui.IAccessControlRoleItemPermission[] = [];
+  if (!role.rules) return [];
+
+  const permissions: Record<string, ui.IAccessControlRoleItemPermission> = {};
 
   for (const rule of role.rules) {
     if (
@@ -161,15 +163,55 @@ export function getRolePermissions(
       continue;
     }
 
-    permissions.push({
-      verbs: rule.verbs,
-      apiGroups: rule.apiGroups ?? [],
-      resourceNames: rule.resourcesNames ?? [],
-      resources: rule.resources ?? [],
-    });
+    const hashKey = [
+      rule.apiGroups?.join(),
+      rule.resources?.join(),
+      rule.resourcesNames?.join(),
+    ].join();
+
+    if (permissions.hasOwnProperty(hashKey)) {
+      // Aggregate verbs for similar rules.
+      permissions[hashKey].verbs.push(...rule.verbs);
+    } else {
+      permissions[hashKey] = {
+        verbs: rule.verbs,
+        apiGroups: rule.apiGroups ?? [],
+        resources: rule.resources ?? [],
+        resourceNames: rule.resourcesNames ?? [],
+      };
+    }
   }
 
-  return permissions;
+  const permissionCollection = Object.values(permissions);
+
+  return permissionCollection.sort(sortPermissions);
+}
+
+/**
+ * Sort permissions by:
+ * - apiGroups
+ * - resources
+ * - resourceNames
+ * @param a
+ * @param b
+ */
+export function sortPermissions(
+  a: ui.IAccessControlRoleItemPermission,
+  b: ui.IAccessControlRoleItemPermission
+): number {
+  const sortRules = [
+    () => a.apiGroups.join().localeCompare(b.apiGroups.join()),
+    () => a.resources.join().localeCompare(b.resources.join()),
+    () => a.resourceNames.join().localeCompare(b.resourceNames.join()),
+  ];
+
+  let ruleResult = 0;
+  for (const rule of sortRules) {
+    ruleResult = rule();
+    if (ruleResult !== 0) return ruleResult;
+  }
+
+  return ruleResult;
 }
 
 /**
@@ -256,9 +298,24 @@ export function filterRoles(
   if (!searchQuery) return roles;
 
   return roles.filter((role) => {
-    const value = role.name.toLowerCase();
+    const valuesToCheck: string[] = [
+      role.name,
+      ...Object.keys(role.groups),
+      ...Object.keys(role.users),
+      ...Object.keys(role.serviceAccounts),
+    ];
 
-    return value.includes(searchQuery);
+    for (const permission of role.permissions) {
+      valuesToCheck.push(
+        ...permission.apiGroups,
+        ...permission.resources,
+        ...permission.resourceNames
+      );
+    }
+
+    return valuesToCheck.some((value: string) => {
+      return value.toLowerCase().includes(searchQuery);
+    });
   });
 }
 
