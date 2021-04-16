@@ -142,6 +142,8 @@ export function appendSubjectsToRoleItem(
 export function getRolePermissions(
   role: rbacv1.IClusterRole | rbacv1.IRole
 ): ui.IAccessControlRoleItemPermission[] {
+  if (!role.rules) return [];
+
   const permissions: Record<string, ui.IAccessControlRoleItemPermission> = {};
 
   for (const rule of role.rules) {
