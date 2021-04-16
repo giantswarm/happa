@@ -62,6 +62,7 @@ class Credentials extends React.Component {
         onShowForm={this.handleShowForm}
         organizationName={this.props.organizationName}
         provider={this.props.provider}
+        isAdmin={this.props.isAdmin}
       />
     );
   }
@@ -74,6 +75,7 @@ Credentials.propTypes = {
   organizationName: PropTypes.string,
   showCredentialsForm: PropTypes.bool,
   loadingCredentials: PropTypes.bool,
+  isAdmin: PropTypes.bool,
 };
 
 export default connect()(Credentials);

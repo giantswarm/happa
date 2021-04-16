@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import * as organizationActions from 'stores/organization/actions';
 import styled from 'styled-components';
 import { Ellipsis } from 'styles';
@@ -186,6 +187,7 @@ class OrganizationDetail extends React.Component {
       loadingCredentials,
       supportsMultiAccount,
       provider,
+      isAdmin,
     } = this.props;
     if (!organization) return null;
 
@@ -247,6 +249,7 @@ class OrganizationDetail extends React.Component {
               credentials={credentials}
               showCredentialsForm={showCredentialsForm}
               loadingCredentials={loadingCredentials}
+              isAdmin={isAdmin}
             />
           </Section>
         )}
@@ -277,6 +280,7 @@ OrganizationDetail.propTypes = {
   membersForTable: PropTypes.array,
   provider: PropTypes.oneOf(Object.values(Providers)),
   supportsMultiAccount: PropTypes.bool,
+  isAdmin: PropTypes.bool,
 };
 
 // eslint-disable-next-line react/no-multi-comp
@@ -350,4 +354,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(undefined, mapDispatchToProps)(OrganizationDetail);
+function mapStateToProps(state) {
+  return {
+    isAdmin: getUserIsAdmin(state),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrganizationDetail);

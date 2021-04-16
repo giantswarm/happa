@@ -21,15 +21,27 @@ const CredentialsDisplay = (props) => {
       </Button>
     );
 
+    const msg = (
+      <p>
+        No specific provider credentials set. Clusters of this organization will
+        be created in the default workload cluster subscription configured for
+        this installation.
+      </p>
+    );
+
     if (props.provider === Providers.AZURE) {
-      return (
+      return props.isAdmin ? (
         <div>
-          <p>
-            No specific provider credentials set. Clusters of this organization
-            will be created in the default workload cluster subscription
-            configured for this installation.
-          </p>
+          {msg}
           {button}
+        </div>
+      ) : (
+        <div>
+          {msg}
+          <p>
+            Please get in touch with your solution engineer to set credentials
+            for this organization.
+          </p>
         </div>
       );
     }
@@ -133,6 +145,7 @@ CredentialsDisplay.propTypes = {
   loading: PropTypes.bool,
   provider: PropTypes.string,
   onShowForm: PropTypes.func,
+  isAdmin: PropTypes.bool,
 };
 
 export default CredentialsDisplay;
