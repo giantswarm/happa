@@ -576,7 +576,7 @@ export function filterSubjectSuggestions(
    * doesn't need filtering based on a search query.
    */
   if (subjects.length < 1 || isSubjectDelimiter(existing.slice(-1))) {
-    return uniqueSuggestions.slice(0, limit + 1);
+    return uniqueSuggestions.slice(0, limit);
   }
 
   /**
@@ -588,7 +588,7 @@ export function filterSubjectSuggestions(
     return suggestion.toLowerCase().startsWith(searchQuery);
   });
 
-  return newSuggestions.slice(0, limit + 1);
+  return newSuggestions.slice(0, limit);
 }
 
 /**
@@ -601,20 +601,14 @@ export function appendSubjectSuggestionToValue(
   value: string,
   suggestion: string
 ): string {
+  if (value.length < 1) return '';
+
   const subjects = parseSubjects(value);
 
   let newValue = value;
   if (subjects.length > 0 && !isSubjectDelimiter(newValue.slice(-1))) {
     const latestSubjectLength = subjects[subjects.length - 1].length;
     newValue = newValue.substr(0, newValue.length - latestSubjectLength);
-
-    /**
-     * If the latest char after trimming is not
-     * a delimiter, then let's add one.
-     */
-    if (newValue.length > 0 && !isSubjectDelimiter(newValue.slice(-1))) {
-      newValue += ', ';
-    }
   }
 
   return `${newValue}${suggestion}, `;
