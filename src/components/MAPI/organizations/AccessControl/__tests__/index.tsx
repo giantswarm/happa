@@ -118,7 +118,7 @@ describe('AccessControl', () => {
     expect(within(cells[1]).getByText('All')).toBeInTheDocument();
     expect(within(cells[2]).getByText('All')).toBeInTheDocument();
     expect(
-      within(cells[3]).getByLabelText('Supported verbs: All')
+      within(cells[3]).getByLabelText('Supported verbs: All (*)')
     ).toBeInTheDocument();
   });
 
