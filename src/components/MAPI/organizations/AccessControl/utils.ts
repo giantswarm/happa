@@ -585,7 +585,7 @@ export function filterSubjectSuggestions(
    */
   const searchQuery = subjects[subjects.length - 1].toLowerCase();
   const newSuggestions = uniqueSuggestions.filter((suggestion) => {
-    return suggestion.toLowerCase().includes(searchQuery);
+    return suggestion.toLowerCase().startsWith(searchQuery);
   });
 
   return newSuggestions.slice(0, limit + 1);
