@@ -619,10 +619,23 @@ export function filterSubjectSuggestions(
   suggestions: string[],
   limit: number
 ): string[] {
+  const isLastCharDelimiter = isSubjectDelimiter(existing.slice(-1));
+
   const subjects = parseSubjects(existing);
   const uniqueSuggestions = suggestions.filter((suggestion) => {
-    // Don't include existing subjects.
-    return !subjects.includes(suggestion);
+    for (let i = 0; i < subjects.length; i++) {
+      // Include the subject if the user is trying to get auto-completion.
+      if (!isLastCharDelimiter && i === subjects.length - 1) {
+        return true;
+      }
+
+      // Don't include existing subjects.
+      if (suggestion === subjects[i]) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
   /**
@@ -632,7 +645,7 @@ export function filterSubjectSuggestions(
    * that the user is trying to add a new value, and
    * doesn't need filtering based on a search query.
    */
-  if (subjects.length < 1 || isSubjectDelimiter(existing.slice(-1))) {
+  if (subjects.length < 1 || isLastCharDelimiter) {
     return uniqueSuggestions.slice(0, limit);
   }
 
@@ -658,7 +671,7 @@ export function appendSubjectSuggestionToValue(
   value: string,
   suggestion: string
 ): string {
-  if (value.length < 1) return '';
+  if (value.length < 1 && suggestion.length < 1) return '';
 
   const subjects = parseSubjects(value);
 

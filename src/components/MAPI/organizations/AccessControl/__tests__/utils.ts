@@ -53,15 +53,16 @@ describe('AccessControl/utils', () => {
 
   describe('filterSubjectSuggestions', () => {
     test.each`
-      input      | suggestions                                           | limit | expected
-      ${''}      | ${[]}                                                 | ${3}  | ${[]}
-      ${'test'}  | ${[]}                                                 | ${3}  | ${[]}
-      ${''}      | ${['test1', 'test2']}                                 | ${3}  | ${['test1', 'test2']}
-      ${'test'}  | ${['test1', 'test2']}                                 | ${3}  | ${['test1', 'test2']}
-      ${'test1'} | ${['test1', 'test2']}                                 | ${3}  | ${[]}
-      ${'test1'} | ${['test1', 'test2']}                                 | ${3}  | ${[]}
-      ${'test'}  | ${['test1', 'test2', 'some-other']}                   | ${3}  | ${['test1', 'test2']}
-      ${'test'}  | ${['test1', 'test2', 'some-other', 'test3', 'test4']} | ${3}  | ${['test1', 'test2', 'test3']}
+      input             | suggestions                                           | limit | expected
+      ${''}             | ${[]}                                                 | ${3}  | ${[]}
+      ${'test'}         | ${[]}                                                 | ${3}  | ${[]}
+      ${''}             | ${['test1', 'test2']}                                 | ${3}  | ${['test1', 'test2']}
+      ${'test'}         | ${['test1', 'test2']}                                 | ${3}  | ${['test1', 'test2']}
+      ${'test1'}        | ${['test1', 'test2']}                                 | ${3}  | ${['test1']}
+      ${'test1 test2'}  | ${['test1', 'test2', 'test3']}                        | ${3}  | ${['test2']}
+      ${'test1 test2 '} | ${['test1', 'test2', 'test3']}                        | ${3}  | ${['test3']}
+      ${'test'}         | ${['test1', 'test2', 'some-other']}                   | ${3}  | ${['test1', 'test2']}
+      ${'test'}         | ${['test1', 'test2', 'some-other', 'test3', 'test4']} | ${3}  | ${['test1', 'test2', 'test3']}
     `(
       `filters suggestions with the '$input' input`,
       ({ input, suggestions, limit, expected }) => {
@@ -75,6 +76,7 @@ describe('AccessControl/utils', () => {
     test.each`
       value                      | suggestion | expected
       ${''}                      | ${''}      | ${''}
+      ${''}                      | ${'test1'} | ${'test1, '}
       ${'tes'}                   | ${'test1'} | ${'test1, '}
       ${'tes '}                  | ${'test1'} | ${'tes test1, '}
       ${'tes,    '}              | ${'test1'} | ${'tes,    test1, '}
