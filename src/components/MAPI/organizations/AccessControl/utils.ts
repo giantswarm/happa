@@ -172,7 +172,36 @@ export function getRolePermissions(
     }
   }
 
-  return Object.values(permissions);
+  const permissionCollection = Object.values(permissions);
+
+  return permissionCollection.sort(sortPermissions);
+}
+
+/**
+ * Sort permissions by:
+ * - apiGroups
+ * - resources
+ * - resourceNames
+ * @param a
+ * @param b
+ */
+export function sortPermissions(
+  a: ui.IAccessControlRoleItemPermission,
+  b: ui.IAccessControlRoleItemPermission
+): number {
+  const sortRules = [
+    () => a.apiGroups.join().localeCompare(b.apiGroups.join()),
+    () => a.resources.join().localeCompare(b.resources.join()),
+    () => a.resourceNames.join().localeCompare(b.resourceNames.join()),
+  ];
+
+  let ruleResult = 0;
+  for (const rule of sortRules) {
+    ruleResult = rule();
+    if (ruleResult !== 0) return ruleResult;
+  }
+
+  return ruleResult;
 }
 
 /**

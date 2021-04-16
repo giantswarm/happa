@@ -1,7 +1,12 @@
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-import { getRolePermissions, getUserNameParts, parseSubjects } from '../utils';
+import {
+  getRolePermissions,
+  getUserNameParts,
+  parseSubjects,
+  sortPermissions,
+} from '../utils';
 
 describe('AccessControl/utils', () => {
   describe('parseSubjects', () => {
@@ -85,9 +90,9 @@ describe('AccessControl/utils', () => {
       const expectedPermissions: ui.IAccessControlRoleItemPermission[] = [
         {
           apiGroups: ['test.giantswarm.io'],
-          resources: ['supertest', 'superboss'],
+          resources: ['otherthing'],
           resourceNames: [],
-          verbs: ['get', 'list', 'watch', 'delete'],
+          verbs: ['create'],
         },
         {
           apiGroups: ['test.giantswarm.io'],
@@ -97,9 +102,9 @@ describe('AccessControl/utils', () => {
         },
         {
           apiGroups: ['test.giantswarm.io'],
-          resources: ['otherthing'],
+          resources: ['supertest', 'superboss'],
           resourceNames: [],
-          verbs: ['create'],
+          verbs: ['get', 'list', 'watch', 'delete'],
         },
         {
           apiGroups: ['test2.giantswarm.io'],
@@ -111,6 +116,103 @@ describe('AccessControl/utils', () => {
 
       const result = getRolePermissions(role);
       expect(result).toStrictEqual(expectedPermissions);
+    });
+  });
+
+  describe('sortPermissions', () => {
+    it('sorts permissions by the required fields', () => {
+      const permissions: ui.IAccessControlRoleItemPermission[] = [
+        {
+          apiGroups: ['test.giantswarm.io'],
+          resources: ['supertest', 'superboss'],
+          resourceNames: [],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test2.giantswarm.io'],
+          resources: ['supertest', 'superboss'],
+          resourceNames: [],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test5.giantswarm.io'],
+          resources: ['some-test'],
+          resourceNames: [],
+          verbs: ['watch'],
+        },
+        {
+          apiGroups: ['test2.giantswarm.io'],
+          resources: ['some-other'],
+          resourceNames: [],
+          verbs: ['delete'],
+        },
+        {
+          apiGroups: ['test3.giantswarm.io'],
+          resources: ['some-resource'],
+          resourceNames: ['some-other-name'],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test2.giantswarm.io'],
+          resources: ['superboss'],
+          resourceNames: [],
+          verbs: ['watch'],
+        },
+        {
+          apiGroups: ['test3.giantswarm.io'],
+          resources: ['some-resource'],
+          resourceNames: ['some-name'],
+          verbs: ['get', 'list'],
+        },
+      ];
+
+      const expected = [
+        {
+          apiGroups: ['test.giantswarm.io'],
+          resources: ['supertest', 'superboss'],
+          resourceNames: [],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test2.giantswarm.io'],
+          resources: ['some-other'],
+          resourceNames: [],
+          verbs: ['delete'],
+        },
+        {
+          apiGroups: ['test2.giantswarm.io'],
+          resources: ['superboss'],
+          resourceNames: [],
+          verbs: ['watch'],
+        },
+        {
+          apiGroups: ['test2.giantswarm.io'],
+          resources: ['supertest', 'superboss'],
+          resourceNames: [],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test3.giantswarm.io'],
+          resources: ['some-resource'],
+          resourceNames: ['some-name'],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test3.giantswarm.io'],
+          resources: ['some-resource'],
+          resourceNames: ['some-other-name'],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['test5.giantswarm.io'],
+          resources: ['some-test'],
+          resourceNames: [],
+          verbs: ['watch'],
+        },
+      ];
+
+      const result = permissions.sort(sortPermissions);
+      expect(result).toStrictEqual(expected);
     });
   });
 });
