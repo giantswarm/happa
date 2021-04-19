@@ -402,4 +402,4 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t "$(cat .docker_image_name_fe_docs)" . --file "./Dockerfile.fa-docs"
+            docker build -t "$(cat .docker_image_name_fe_docs)" . --file "./Dockerfile.fe-docs"
