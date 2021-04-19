@@ -19,7 +19,7 @@ function formatVerbs(verbs: string[], verbMap: IVerbMap): string {
 
   const verbOrder = Object.keys(verbMap);
   // Sort verbs in the order they are in the map, and leave unknown ones at the end.
-  const orderedVerbs = verbs.sort((a, b) => {
+  const orderedVerbs = verbs.slice().sort((a, b) => {
     let aIdx = verbOrder.indexOf(a);
     if (aIdx < 0) {
       aIdx = verbOrder.length - 1;
