@@ -329,12 +329,12 @@ jobs:
             IMAGE_NAME: *image_name
           name: Generate container image tag
           command: |
-            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name
+            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name_fe_docs
 
       - run:
           name: Build Docker image
           command: |
-            docker build -t "$(cat .docker_image_name)" .
+            docker build -t "$(cat .docker_image_name_fe_docs)" .
 
       - run:
           name: Launch container for tests
