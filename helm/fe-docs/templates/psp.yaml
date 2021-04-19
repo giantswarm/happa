@@ -23,3 +23,5 @@ spec:
     rule: MustRunAs
   volumes:
   - emptyDir
+  - secret
+  - configMap
