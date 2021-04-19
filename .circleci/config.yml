@@ -192,6 +192,7 @@ workflows:
           app_catalog: "giantswarm-operations-platform-catalog"
           app_catalog_test: "giantswarm-operations-platform-test-catalog"
           chart: "fe-docs"
+          explicit_allow_chart_name_mismatch: true
           requires:
             - push-fe-docs-to-quay
           # Needed to trigger job also on git tag.
