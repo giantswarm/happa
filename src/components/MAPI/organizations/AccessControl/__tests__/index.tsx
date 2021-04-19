@@ -1160,6 +1160,18 @@ describe('AccessControl', () => {
 
     for (let i = 0; i < serviceAccountCreationRequests.length; i++) {
       nock(window.config.mapiEndpoint)
+        .get(
+          `/api/v1/namespaces/org-giantswarm/serviceaccounts/${serviceAccountCreationRequests[i].metadata.name}/`
+        )
+        .reply(StatusCodes.NotFound, {
+          apiVersion: 'v1',
+          kind: 'Status',
+          message: 'New service account, who dis?',
+          status: metav1.K8sStatuses.Failure,
+          reason: metav1.K8sStatusErrorReasons.NotFound,
+          code: StatusCodes.NotFound,
+        });
+      nock(window.config.mapiEndpoint)
         .post(
           '/api/v1/namespaces/org-giantswarm/serviceaccounts/',
           serviceAccountCreationRequests[i]
@@ -1205,6 +1217,116 @@ describe('AccessControl', () => {
     ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 
+  it('can re-use existing service accounts', async () => {
+    const now = 1617189262247;
+    // @ts-expect-error
+    Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
+
+    const serviceAccountCreationRequest = {
+      apiVersion: 'v1',
+      kind: 'ServiceAccount',
+      metadata: { name: 'random', namespace: 'org-giantswarm' },
+    };
+
+    const serviceAccountCreationResponse = corev1Mocks.randomServiceAccount;
+
+    const roleBindingCreationRequest = {
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'RoleBinding',
+      metadata: {
+        name: `edit-all-${now}`,
+        namespace: 'org-giantswarm',
+      },
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+      subjects: [
+        {
+          name: 'random',
+          kind: 'ServiceAccount',
+          apiGroup: '',
+          namespace: 'org-giantswarm',
+        },
+      ],
+    };
+
+    const roleBindingCreationResponse = {
+      kind: 'RoleBinding',
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      metadata: {
+        name: `edit-all-${now}`,
+        namespace: 'org-giantswarm',
+        selfLink: `/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-${now}`,
+        uid: '522ea429-9561-4d80-ba12-6eb656b51145',
+        resourceVersion: '284491712',
+        creationTimestamp: new Date(now).toISOString(),
+      },
+      subjects: [
+        {
+          name: 'random',
+          kind: 'ServiceAccount',
+          namespace: 'org-giantswarm',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    nock(window.config.mapiEndpoint)
+      .post(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/',
+        roleBindingCreationRequest
+      )
+      .reply(StatusCodes.Created, roleBindingCreationResponse);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/api/v1/namespaces/org-giantswarm/serviceaccounts/${serviceAccountCreationRequest.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, serviceAccountCreationResponse);
+
+    render(
+      getComponent({
+        organizationName: 'giantswarm',
+      })
+    );
+
+    const sidebar = screen.getByRole('complementary', {
+      name: 'Role list',
+    });
+    const currentRole = await within(sidebar).findByRole('button', {
+      name: 'edit-all',
+    });
+    fireEvent.click(currentRole);
+
+    const content = screen.getByRole('main', { name: 'Role details' });
+    const section = within(content).getByLabelText('Service accounts');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    );
+    fireEvent.change(input, {
+      target: { value: 'random' },
+    });
+
+    fireEvent.click(within(section).getByRole('button', { name: 'OK' }));
+    expect(within(section).getByRole('progressbar')).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(/Subject added successfully./)
+    ).toBeInTheDocument();
+
+    expect(within(section).getByLabelText('random')).toBeInTheDocument();
+
+    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+  });
+
   it('displays an error if creating service accounts fails', async () => {
     const now = 1617189262247;
     // @ts-expect-error
@@ -1239,6 +1361,18 @@ describe('AccessControl', () => {
     ];
 
     for (let i = 0; i < serviceAccountCreationRequests.length; i++) {
+      nock(window.config.mapiEndpoint)
+        .get(
+          `/api/v1/namespaces/org-giantswarm/serviceaccounts/${serviceAccountCreationRequests[i].metadata.name}/`
+        )
+        .reply(StatusCodes.NotFound, {
+          apiVersion: 'v1',
+          kind: 'Status',
+          message: 'New service account, who dis?',
+          status: metav1.K8sStatuses.Failure,
+          reason: metav1.K8sStatusErrorReasons.NotFound,
+          code: StatusCodes.NotFound,
+        });
       nock(window.config.mapiEndpoint)
         .post(
           '/api/v1/namespaces/org-giantswarm/serviceaccounts/',
@@ -1376,14 +1510,6 @@ describe('AccessControl', () => {
       )
       .reply(StatusCodes.Ok, rbacv1Mocks.editAllRoleBinding);
 
-    nock(window.config.mapiEndpoint)
-      .delete('/api/v1/namespaces/org-giantswarm/serviceaccounts/el-toro/')
-      .reply(StatusCodes.Ok, corev1Mocks.elToroServiceAccount);
-
-    nock(window.config.mapiEndpoint)
-      .get('/api/v1/namespaces/org-giantswarm/serviceaccounts/el-toro/')
-      .reply(StatusCodes.Ok, corev1Mocks.elToroServiceAccount);
-
     render(
       getComponent({
         organizationName: 'giantswarm',
@@ -1413,26 +1539,62 @@ describe('AccessControl', () => {
   });
 
   it('displays an error if deleting a service account fails', async () => {
+    const putRequest = {
+      metadata: {
+        name: 'edit-all-group',
+        namespace: 'org-giantswarm',
+        selfLink:
+          '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group',
+        uid: '27a1682b-c33b-42af-9489-36bf32ba6d52',
+        resourceVersion: '281804578',
+        creationTimestamp: '2020-09-29T10:42:53Z',
+        labels: {
+          'giantswarm.io/managed-by': 'rbac-operator',
+        },
+        finalizers: [
+          'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+        ],
+      },
+      subjects: [
+        {
+          kind: 'Group',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'Admins',
+        },
+        {
+          kind: 'User',
+          apiGroup: 'rbac.authorization.k8s.io',
+          name: 'system:boss',
+        },
+      ],
+      roleRef: {
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'Role',
+        name: 'edit-all',
+      },
+    };
+
+    const putResponse = {
+      apiVersion: 'v1',
+      kind: 'Status',
+      message: 'There was a huge problem.',
+      status: metav1.K8sStatuses.Failure,
+      reason: metav1.K8sStatusErrorReasons.InternalError,
+      code: StatusCodes.InternalServerError,
+    };
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group/',
+        putRequest
+      )
+      .reply(putResponse.code, putResponse);
+
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/edit-all-group/'
       )
       .reply(StatusCodes.Ok, rbacv1Mocks.editAllRoleBinding);
-
-    nock(window.config.mapiEndpoint)
-      .delete('/api/v1/namespaces/org-giantswarm/serviceaccounts/el-toro/')
-      .reply(StatusCodes.InternalServerError, {
-        apiVersion: 'v1',
-        kind: 'Status',
-        message: 'There was a huge problem.',
-        status: metav1.K8sStatuses.Failure,
-        reason: metav1.K8sStatusErrorReasons.InternalError,
-        code: StatusCodes.InternalServerError,
-      });
-
-    nock(window.config.mapiEndpoint)
-      .get('/api/v1/namespaces/org-giantswarm/serviceaccounts/el-toro/')
-      .reply(StatusCodes.Ok, corev1Mocks.elToroServiceAccount);
 
     render(
       getComponent({

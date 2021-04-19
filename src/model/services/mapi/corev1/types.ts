@@ -24,6 +24,13 @@ export interface IServiceAccount {
   automountServiceAccountToken?: boolean;
 }
 
+export const ServiceAccountList = 'ServiceAccountList';
+
+export interface IServiceAccountList extends metav1.IList<IServiceAccount> {
+  apiVersion: 'v1';
+  kind: typeof ServiceAccountList;
+}
+
 export const ConfigMap = 'ConfigMap';
 
 export interface IConfigMap {

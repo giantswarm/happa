@@ -36,3 +36,9 @@ export const elToroServiceAccount = {
     creationTimestamp: '2021-03-31T15:12:35Z',
   },
 };
+
+export const serviceAccountList = {
+  kind: 'ServiceAccountList',
+  apiVersion: 'v1',
+  items: [elToroServiceAccount, randomServiceAccount, automationServiceAccount],
+};

@@ -18,12 +18,14 @@ export function formatManagedBy(managedBy?: string): string {
 
 interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
+  namespace: string;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
 }
 
 const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
+  namespace,
   activeRole,
   onAdd,
   onDelete,
@@ -53,6 +55,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
                   groups={activeRole.groups}
                   users={activeRole.users}
                   serviceAccounts={activeRole.serviceAccounts}
+                  namespace={namespace}
                 />
               </Tab>
               <Tab eventKey='2' title='Permissions'>
@@ -69,6 +72,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
 };
 
 AccessControlRoleDetail.propTypes = {
+  namespace: PropTypes.string.isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   // @ts-expect-error

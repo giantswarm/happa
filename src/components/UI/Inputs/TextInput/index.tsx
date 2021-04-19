@@ -1,7 +1,32 @@
-import { FormField, FormFieldProps, TextInput as Input } from 'grommet';
+import {
+  FormField,
+  FormFieldProps,
+  TextInput as Input,
+  ThemeContext,
+  ThemeType,
+} from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { useTheme } from 'styled-components';
+import { css, useTheme } from 'styled-components';
+
+const customTheme: ThemeType = {
+  global: {
+    drop: {
+      background: 'input-background',
+      shadowSize: 'none',
+      border: {
+        radius: '0px 0px 4px 4px',
+      },
+      zIndex: '9999',
+      // @ts-expect-error
+      extend: css`
+        border: 1px solid ${({ theme }) => theme.global.colors.border.dark};
+        font-size: ${({ theme }) => theme.text.small.size};
+        font-weight: 400;
+      `,
+    },
+  },
+};
 
 interface ITextInputProps extends React.ComponentPropsWithoutRef<typeof Input> {
   /**
@@ -70,30 +95,32 @@ const TextInput = React.forwardRef<HTMLInputElement, ITextInputProps>(
     }
 
     return (
-      <FormField
-        htmlFor={id}
-        label={label}
-        contentProps={patchedContentProps}
-        disabled={disabled}
-        required={required}
-        name={name}
-        error={error}
-        info={info}
-        help={help}
-        margin={margin}
-        pad={pad}
-        {...formFieldProps}
-      >
-        <Input
-          {...props}
-          id={id}
-          ref={ref}
+      <ThemeContext.Extend value={customTheme}>
+        <FormField
+          htmlFor={id}
+          label={label}
+          contentProps={patchedContentProps}
           disabled={disabled}
           required={required}
           name={name}
-        />
-        {children}
-      </FormField>
+          error={error}
+          info={info}
+          help={help}
+          margin={margin}
+          pad={pad}
+          {...formFieldProps}
+        >
+          <Input
+            {...props}
+            id={id}
+            ref={ref}
+            disabled={disabled}
+            required={required}
+            name={name}
+          />
+          {children}
+        </FormField>
+      </ThemeContext.Extend>
     );
   }
 );
@@ -116,6 +143,7 @@ TextInput.propTypes = {
 
 TextInput.defaultProps = {
   size: 'medium',
+  dropHeight: 'small',
 };
 
 export default TextInput;
