@@ -22,6 +22,7 @@ whitelist: &whitelist
     - VERSION
 
 image_name: &image_name quay.io/giantswarm/happa
+fe_docs_image_name: &fe_docs_image_name quay.io/giantswarm/fe-docs
 
 workflows:
   version: 2
@@ -147,6 +148,18 @@ workflows:
             tags:
               only: /^v.*/
 
+      # FE Docs
+
+      - build-fe-docs:
+          requires:
+            - checkout
+          <<: *job_filters
+
+      - build-fe-docs-container:
+          requires:
+            - build-fe-docs
+          <<: *job_filters
+
       - architect/push-to-app-collection:
           name: push-happa-to-vmware-app-collection
           app_name: "happa"
@@ -156,6 +169,33 @@ workflows:
           filters:
             branches:
               ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
+          name: push-fe-docs-to-quay
+          context: architect
+          image: *fe_docs_image_name
+          username_envar: "QUAY_USERNAME"
+          password_envar: "QUAY_PASSWORD"
+          dockerfile: "./Dockerfile.fe-docs"
+          requires:
+            - build-fe-docs-container
+          # Needed to trigger job also on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-catalog:
+          name: push-fe-docs-to-operations-platform-app-catalog
+          context: architect
+          app_catalog: "giantswarm-operations-platform-catalog"
+          app_catalog_test: "giantswarm-operations-platform-test-catalog"
+          chart: "fe-docs"
+          requires:
+            - push-fe-docs-to-quay
+          # Needed to trigger job also on git tag.
+          filters:
             tags:
               only: /^v.*/
 
@@ -258,10 +298,6 @@ jobs:
           command: NODE_ENV=production yarn run dist
 
       - run:
-          name: Build storybook static assets
-          command: NODE_ENV=production yarn run storybook:build
-
-      - run:
           name: Create VERSION file
           command: |
             tag=$(git tag --points-at HEAD)
@@ -326,3 +362,44 @@ jobs:
             sleep 2
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep Happa
+
+  build-fe-docs:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
+
+      - run:
+          name: Build FE Docs static assets
+          command: NODE_ENV=production yarn run storybook:build
+
+      - persist_to_workspace:
+          root: ~/happa
+          <<: *whitelist
+
+  build-fe-docs-container:
+    executor: architect/architect
+
+    working_directory: ~/happa
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - attach_workspace:
+          at: ~/happa
+
+      - run:
+          environment:
+            IMAGE_NAME: *fe_docs_image_name
+          name: Generate container image tag
+          command: |
+            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name
+
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t "$(cat .docker_image_name)" .

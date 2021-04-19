@@ -1,9 +1,9 @@
-FROM quay.io/giantswarm/alpine:3.12 AS compress
+FROM quay.io/giantswarm/alpine:3.13.5 AS compress
 
 RUN apk --no-cache add findutils gzip
 
-# Copy happa built static files.
-COPY dist /www
+# Copy FE Docs built static files.
+COPY storybook-static /www
 
 RUN find /www \
   -type f -regextype posix-extended \
@@ -13,14 +13,12 @@ RUN find /www \
 
 FROM quay.io/giantswarm/nginx:1.18-alpine
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY --chown=nginx scripts/start.sh /
+COPY nginx.fe-docs.conf /etc/nginx/nginx.conf
 COPY --from=compress --chown=nginx /www /www
 COPY --chown=nginx VERSION /
 
 RUN chmod u=rwx /www
-RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 
 USER nginx
 
-CMD ["/start.sh"]
+CMD ["nginx", "-c /etc/nginx/nginx.conf", "-g", "daemon off;"]
