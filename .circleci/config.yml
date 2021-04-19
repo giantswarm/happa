@@ -22,7 +22,6 @@ whitelist: &whitelist
     - VERSION
 
 image_name: &image_name quay.io/giantswarm/happa
-image_name_fe_docs: &image_name_fe_docs quay.io/giantswarm/fe-docs
 
 workflows:
   version: 2
@@ -175,7 +174,7 @@ workflows:
       - architect/push-to-docker:
           name: push-fe-docs-to-quay
           context: architect
-          image: *image_name_fe_docs
+          image: quay.io/giantswarm/fe-docs
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
           dockerfile: "./Dockerfile.fe-docs"
@@ -394,7 +393,7 @@ jobs:
 
       - run:
           environment:
-            IMAGE_NAME: *image_name_fe_docs
+            IMAGE_NAME: quay.io/giantswarm/fe-docs
           name: Generate container image tag
           command: |
             echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name_fe_docs
