@@ -42,6 +42,11 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 30
             timeoutSeconds: 2
-
+          volumeMounts:
+            - mountPath: /var/cache/nginx
+              name: cache-volume
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
       serviceAccount: {{ .Values.name }}
       serviceAccountName: {{ .Values.name }}

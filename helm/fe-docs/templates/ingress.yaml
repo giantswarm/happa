@@ -6,6 +6,7 @@ metadata:
   labels:
     app: {{ .Values.name }}
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-giantswarm
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"

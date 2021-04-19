@@ -394,10 +394,10 @@ jobs:
 
       - run:
           environment:
-            IMAGE_NAME_FE_DOCS: *image_name_fe_docs
+            IMAGE_NAME: *image_name_fe_docs
           name: Generate container image tag
           command: |
-            echo -n "${IMAGE_NAME_FE_DOCS}:$(architect project version)" > .docker_image_name_fe_docs
+            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name_fe_docs
 
       - run:
           name: Build Docker image

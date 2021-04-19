@@ -1,24 +1,9 @@
-FROM quay.io/giantswarm/alpine:3.13.5 AS compress
+FROM quay.io/giantswarm/nginx-unprivileged:1.18-alpine
 
-RUN apk --no-cache add findutils gzip
+USER 0
 
-# Copy FE Docs built static files.
-COPY storybook-static /www
+COPY storybook-static /usr/share/nginx/html
 
-RUN find /www \
-  -type f -regextype posix-extended \
-  -size +512c \
-  -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
-  -exec gzip -9 -k '{}' \;
+EXPOSE 8080
 
-FROM quay.io/giantswarm/nginx:1.18-alpine
-
-COPY nginx.fe-docs.conf /etc/nginx/nginx.conf
-COPY --from=compress --chown=nginx /www /www
-COPY --chown=nginx VERSION /
-
-RUN chmod u=rwx /www
-
-USER nginx
-
-CMD ["nginx", "-c /etc/nginx/nginx.conf", "-g", "daemon off;"]
+USER 101
