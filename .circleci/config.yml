@@ -22,7 +22,7 @@ whitelist: &whitelist
     - VERSION
 
 image_name: &image_name quay.io/giantswarm/happa
-fe_docs_image_name: &fe_docs_image_name quay.io/giantswarm/fe-docs
+image_name_fe_docs: &image_name_fe_docs quay.io/giantswarm/fe-docs
 
 workflows:
   version: 2
@@ -148,18 +148,6 @@ workflows:
             tags:
               only: /^v.*/
 
-      # FE Docs
-
-      - build-fe-docs:
-          requires:
-            - checkout
-          <<: *job_filters
-
-      - build-fe-docs-container:
-          requires:
-            - build-fe-docs
-          <<: *job_filters
-
       - architect/push-to-app-collection:
           name: push-happa-to-vmware-app-collection
           app_name: "happa"
@@ -172,10 +160,22 @@ workflows:
             tags:
               only: /^v.*/
 
+      # FE Docs
+
+      - build-fe-docs:
+          requires:
+            - checkout
+          <<: *job_filters
+
+      - build-fe-docs-container:
+          requires:
+            - build-fe-docs
+          <<: *job_filters
+
       - architect/push-to-docker:
           name: push-fe-docs-to-quay
           context: architect
-          image: *fe_docs_image_name
+          image: *image_name_fe_docs
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
           dockerfile: "./Dockerfile.fe-docs"
@@ -394,10 +394,10 @@ jobs:
 
       - run:
           environment:
-            IMAGE_NAME: *fe_docs_image_name
+            IMAGE_NAME_FE_DOCS: *image_name_fe_docs
           name: Generate container image tag
           command: |
-            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name_fe_docs
+            echo -n "${IMAGE_NAME_FE_DOCS}:$(architect project version)" > .docker_image_name_fe_docs
 
       - run:
           name: Build Docker image
