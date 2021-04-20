@@ -10,11 +10,12 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import { Tab } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
+import { selectClusters } from 'stores/cluster/selectors';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
@@ -38,6 +39,7 @@ interface IOrganizationDetailProps {}
 const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const { orgId } = useParams<{ orgId: string }>();
   const paths = useMemo(() => computePaths(orgId), [orgId]);
+  const clusters = useSelector(selectClusters());
 
   const client = useHttpClient();
   const auth = useAuthProvider();
@@ -76,6 +78,10 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
     }
   }, [error, orgId, dispatch, data]);
 
+  const ownedClusters = Object.values(clusters).filter(
+    (cluster) => cluster.owner === orgId
+  );
+
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
@@ -88,7 +94,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
             </Heading>
             <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
               <Tab eventKey={paths.Detail} title='General'>
-                <OrganizationDetailPage />
+                <OrganizationDetailPage clusters={ownedClusters} />
               </Tab>
               <Tab eventKey={paths.AccessControl} title='Access control'>
                 <AccessControlPage organizationName={data.metadata.name} />
