@@ -1,0 +1,9 @@
+FROM quay.io/giantswarm/nginx-unprivileged:1.18-alpine
+
+USER 0
+
+COPY storybook-static /usr/share/nginx/html
+
+EXPOSE 8080
+
+USER 101
