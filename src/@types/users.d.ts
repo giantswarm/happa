@@ -46,6 +46,6 @@ type PermissionVerb =
   | '*'
   | string;
 
-interface IOrganizationPermissions extends Record<string, PermissionVerb[]> {}
+interface INamespacePermissions extends Record<string, PermissionVerb[]> {}
 
-interface IPermissionMap extends Record<string, IOrganizationPermissions> {}
+interface IPermissionMap extends Record<string, INamespacePermissions> {}

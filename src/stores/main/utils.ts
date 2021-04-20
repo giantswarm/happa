@@ -49,8 +49,8 @@ function hashPermissionKey(
 
 function computeResourceRules(
   rules: authorizationv1.IResourceRule[]
-): IOrganizationPermissions {
-  const permissions: IOrganizationPermissions = {};
+): INamespacePermissions {
+  const permissions: INamespacePermissions = {};
 
   for (const rule of rules) {
     for (const group of rule.apiGroups) {
@@ -62,7 +62,7 @@ function computeResourceRules(
          */
         if (resource === '*') {
           const key = hashPermissionKey(group, '*', '*');
-          appendKeyToOrgPermissions(key, rule.verbs, permissions);
+          appendKeyToNamespacePermissions(key, rule.verbs, permissions);
 
           break;
         }
@@ -70,27 +70,27 @@ function computeResourceRules(
         if (rule.resourceNames) {
           for (const resourceName of rule.resourceNames) {
             const key = hashPermissionKey(group, resource, resourceName);
-            appendKeyToOrgPermissions(key, rule.verbs, permissions);
+            appendKeyToNamespacePermissions(key, rule.verbs, permissions);
           }
 
           continue;
         }
 
         const key = hashPermissionKey(group, resource, '*');
-        appendKeyToOrgPermissions(key, rule.verbs, permissions);
+        appendKeyToNamespacePermissions(key, rule.verbs, permissions);
       }
     }
   }
 
-  optimizeOrgPermissions(permissions);
+  optimizeNamespacePermissions(permissions);
 
   return permissions;
 }
 
-function appendKeyToOrgPermissions(
+function appendKeyToNamespacePermissions(
   key: string,
   verbs: string[],
-  permissions: IOrganizationPermissions
+  permissions: INamespacePermissions
 ) {
   if (key.length < 1) return;
 
@@ -107,9 +107,9 @@ function appendKeyToOrgPermissions(
   permissions[key] = Array.from(uniqueVerbs);
 }
 
-function optimizeOrgPermissions(
-  permissions: IOrganizationPermissions
-): IOrganizationPermissions {
+function optimizeNamespacePermissions(
+  permissions: INamespacePermissions
+): INamespacePermissions {
   for (const key of Object.keys(permissions)) {
     const [group, resource, resourceName] = key.split(':');
 
@@ -131,7 +131,7 @@ function optimizeOrgPermissions(
     if (resource.length > 0) {
       const commonPermissionsKey = hashPermissionKey(group, '*', '*');
       if (permissions.hasOwnProperty(commonPermissionsKey)) {
-        appendKeyToOrgPermissions(
+        appendKeyToNamespacePermissions(
           key,
           permissions[commonPermissionsKey],
           permissions
@@ -149,7 +149,7 @@ function optimizeOrgPermissions(
     if (resourceName.length > 0) {
       const commonPermissionsKey = hashPermissionKey(group, resource, '*');
       if (permissions.hasOwnProperty(commonPermissionsKey)) {
-        appendKeyToOrgPermissions(
+        appendKeyToNamespacePermissions(
           key,
           permissions[commonPermissionsKey],
           permissions
@@ -159,4 +159,60 @@ function optimizeOrgPermissions(
   }
 
   return permissions;
+}
+
+/**
+ * Check if the user has the permission to use
+ * the given verb for the given resource configuration.
+ * @param permissions
+ * @param verb
+ * @param group
+ * @param resource
+ * @param resourceName
+ */
+export function hasNamespacePermission(
+  permissions: INamespacePermissions,
+  verb: PermissionVerb,
+  group: string,
+  resource: string,
+  resourceName: string = '*'
+): boolean {
+  const key = hashPermissionKey(group, resource, resourceName);
+  if (!permissions.hasOwnProperty(key)) return false;
+
+  const verbs = permissions[key];
+
+  if (verbs.length === 1 && verbs[0] === '*') return true;
+
+  return verbs.includes(verb);
+}
+
+/**
+ * Check if the user has the permission to use
+ * the given verb for the given resource configuration
+ * in the given namespace.
+ * @param permissions
+ * @param namespace
+ * @param verb
+ * @param group
+ * @param resource
+ * @param resourceName
+ */
+export function hasPermission(
+  permissions: IPermissionMap,
+  namespace: string,
+  verb: string,
+  group: string,
+  resource: string,
+  resourceName?: string
+): boolean {
+  if (!permissions.hasOwnProperty(namespace)) return false;
+
+  return hasNamespacePermission(
+    permissions[namespace],
+    verb,
+    group,
+    resource,
+    resourceName
+  );
 }
