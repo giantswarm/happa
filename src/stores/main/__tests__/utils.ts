@@ -218,6 +218,11 @@ describe('main::utils', () => {
                   resources: ['*'],
                   verbs: ['get', 'list', 'watch'],
                 },
+                {
+                  apiGroups: ['apps.gs.io'],
+                  resources: ['apps'],
+                  verbs: ['delete'],
+                },
               ],
               nonResourceRules: [],
               evaluationError: '',
@@ -288,6 +293,7 @@ describe('main::utils', () => {
         expected: {
           'org-giantswarm': {
             '*:*:*': ['get', 'list', 'watch'],
+            'apps.gs.io:apps:*': ['delete', 'get', 'list', 'watch'],
           },
           'org-test': {
             '*:*:*': ['*'],

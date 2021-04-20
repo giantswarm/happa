@@ -112,42 +112,31 @@ function optimizeNamespacePermissions(
 ): INamespacePermissions {
   for (const key of Object.keys(permissions)) {
     const [group, resource, resourceName] = key.split(':');
+    const commonPermissionsKeys: string[] = [];
 
-    /**
-     * Handle the case when all resources have the same verbs.
-     */
-    if (group === '*' && resource === '*' && resourceName === '*') {
-      return {
-        [key]: permissions[key],
-      };
+    if (group.length > 0) {
+      commonPermissionsKeys.push(hashPermissionKey('*', '*', '*'));
     }
 
-    /**
-     * Merge permissions from rules that include all (`*`)
-     * resources, and the ones that include specific resources.
-     *
-     * For example: add permissions from `apps.gs.io:*:*` to `apps.gs.io:apps:*`.
-     */
     if (resource.length > 0) {
-      const commonPermissionsKey = hashPermissionKey(group, '*', '*');
-      if (permissions.hasOwnProperty(commonPermissionsKey)) {
-        appendKeyToNamespacePermissions(
-          key,
-          permissions[commonPermissionsKey],
-          permissions
-        );
-      }
+      commonPermissionsKeys.push(hashPermissionKey(group, '*', '*'));
+    }
+
+    if (resourceName.length > 0) {
+      commonPermissionsKeys.push(hashPermissionKey(group, resource, '*'));
     }
 
     /**
      * Merge permissions from rules that include all (`*`)
-     * resource names, and the ones that include specific
-     * resource names.
+     * groups, resources and resource names with the ones
+     * that include specific groups, resources and resource names.
      *
      * For example: add permissions from `:apps:*` to `:apps:some-app`.
+     * @example `*:*:*` and `apps.gs.io:apps:*`
+     * @example `apps.gs.io:*:*` and `apps.gs.io:apps:*`
+     * @example `:apps:*` and `:apps:some-app`
      */
-    if (resourceName.length > 0) {
-      const commonPermissionsKey = hashPermissionKey(group, resource, '*');
+    for (const commonPermissionsKey of commonPermissionsKeys) {
       if (permissions.hasOwnProperty(commonPermissionsKey)) {
         appendKeyToNamespacePermissions(
           key,
