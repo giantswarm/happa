@@ -1,7 +1,7 @@
 import * as metav1 from '../metav1';
 
 export interface ISelfSubjectRulesReviewSpec {
-  namespace: string;
+  namespace?: string;
 }
 
 // https://github.com/kubernetes/kubernetes/blob/2eb6911e832152abb1cbfd31ae15ceceb4e844a0/pkg/apis/authorization/types.go#L179
@@ -48,8 +48,8 @@ export interface ISelfSubjectRulesReviewStatus {
 }
 
 export interface ISelfSubjectRulesReview {
-  apiVersion: string;
-  kind: string;
+  apiVersion: 'authorization.k8s.io/v1';
+  kind: 'SelfSubjectRulesReview';
   metadata?: metav1.IObjectMeta;
   spec: ISelfSubjectRulesReviewSpec;
   status?: ISelfSubjectRulesReviewStatus;

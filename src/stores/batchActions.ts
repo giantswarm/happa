@@ -30,6 +30,7 @@ import {
   CLUSTER_LOAD_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
 import {
+  fetchPermissions,
   globalLoadError,
   globalLoadFinish,
   globalLoadStart,
@@ -55,6 +56,8 @@ import {
 import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
+
+import { selectOrganizations } from './organization/selectors';
 
 export function batchedLayout(
   auth: IOAuth2Provider
@@ -82,6 +85,9 @@ export function batchedLayout(
 
         throw err;
       }
+
+      const orgNames = Object.keys(selectOrganizations()(getState()));
+      await dispatch(fetchPermissions(auth, orgNames));
 
       await dispatch(refreshUserInfo());
       await dispatch(getInfo());
