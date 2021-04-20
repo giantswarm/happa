@@ -18,7 +18,7 @@ export interface IResourceRule {
   //  "*/foo" represents the subresource 'foo' for all resources in the specified apiGroups.
   resources: string[];
   // ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.  "*" means all.
-  resourceNames: string[];
+  resourceNames?: string[];
 }
 
 // NonResourceRule holds information that describes a rule for the non-resource
