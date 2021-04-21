@@ -6,6 +6,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import DocumentTitle from 'shared/DocumentTitle';
+import { getOrgNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
@@ -17,7 +18,6 @@ import {
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
   extractErrorMessage,
-  getOrgNamespaceFromOrgName,
   getRoleItems,
   getRoleItemsKey,
 } from './utils';

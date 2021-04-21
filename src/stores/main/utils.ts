@@ -208,3 +208,11 @@ export function hasPermission(
     resourceName
   );
 }
+
+/**
+ * Compute an organization namespace from the given organization name.
+ * @param name
+ */
+export function getOrgNamespaceFromOrgName(name: string): string {
+  return `org-${name}`;
+}

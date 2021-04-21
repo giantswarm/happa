@@ -9,7 +9,6 @@ import Passage, {
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
 } from 'lib/passageClient';
-import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/AccessControl/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { HttpClientImpl } from 'model/clients/HttpClient';
@@ -51,7 +50,7 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { computePermissions } from './utils';
+import { computePermissions, getOrgNamespaceFromOrgName } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {

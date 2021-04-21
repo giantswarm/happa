@@ -215,14 +215,6 @@ export function sortPermissions(
 }
 
 /**
- * Compute an organization namespace from the given organization name.
- * @param name
- */
-export function getOrgNamespaceFromOrgName(name: string): string {
-  return `org-${name}`;
-}
-
-/**
  * Fetch the list of roles and role bindings and map it to the
  * data structure necessary for rendering the UI.
  * @param clientFactory
