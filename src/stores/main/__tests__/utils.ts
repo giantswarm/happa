@@ -1,6 +1,10 @@
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 
-import { computePermissions, hasPermission } from '../utils';
+import {
+  computePermissions,
+  getNamespaceFromOrgName,
+  hasPermission,
+} from '../utils';
 
 describe('main::utils', () => {
   describe('computePermissions', () => {
@@ -386,6 +390,33 @@ describe('main::utils', () => {
         expect(result).toEqual(expected);
       }
     );
+  });
+
+  describe('getNamespaceFromOrgName', () => {
+    test.each`
+      orgName                                                                       | expected
+      ${''}                                                                         | ${''}
+      ${'%_#!'}                                                                     | ${''}
+      ${'someorg'}                                                                  | ${'org-someorg'}
+      ${'someOrg'}                                                                  | ${'org-someorg'}
+      ${'some-org'}                                                                 | ${'org-some-org'}
+      ${'some-Org'}                                                                 | ${'org-some-org'}
+      ${'some_org'}                                                                 | ${'org-some-org'}
+      ${'some_Org'}                                                                 | ${'org-some-org'}
+      ${'some____Org'}                                                              | ${'org-some-org'}
+      ${'some$Org'}                                                                 | ${'org-some-org'}
+      ${'some-random%org'}                                                          | ${'org-some-random-org'}
+      ${'some-org-'}                                                                | ${'org-some-org'}
+      ${'-some-org-'}                                                               | ${'org-some-org'}
+      ${'-some-org----'}                                                            | ${'org-some-org'}
+      ${'-some-org%'}                                                               | ${'org-some-org'}
+      ${'-some-random123_org'}                                                      | ${'org-some-random123-org'}
+      ${'some-random_org401'}                                                       | ${'org-some-random-org401'}
+      ${'some-random_org401some-random_org401some-random_org401some-random_org401'} | ${'org-some-random-org401'}
+    `(`computes namespace from '$orgName'`, ({ orgName, expected }) => {
+      const result = getNamespaceFromOrgName(orgName);
+      expect(result).toEqual(expected);
+    });
   });
 });
 

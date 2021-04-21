@@ -50,7 +50,7 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { computePermissions, getOrgNamespaceFromOrgName } from './utils';
+import { computePermissions, getNamespaceFromOrgName } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -413,7 +413,7 @@ export function fetchPermissions(
   orgNames: string[]
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch) => {
-    const namespaces = orgNames.map(getOrgNamespaceFromOrgName);
+    const namespaces = orgNames.map(getNamespaceFromOrgName);
     // Also get permissions for the default namespace.
     namespaces.push('default');
 

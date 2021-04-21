@@ -236,6 +236,27 @@ export function hasPermission(
  * Compute an organization namespace from the given organization name.
  * @param name
  */
-export function getOrgNamespaceFromOrgName(name: string): string {
-  return `org-${name}`;
+export function getNamespaceFromOrgName(name: string): string {
+  if (name.length < 1) return '';
+
+  const nameChars = [];
+  for (const char of name.toLowerCase()) {
+    if ((char >= '0' && char <= '9') || (char >= 'a' && char <= 'z')) {
+      nameChars.push(char);
+    } else if (
+      nameChars.length > 0 &&
+      nameChars[nameChars.length - 1] !== '-'
+    ) {
+      nameChars.push('-');
+    }
+  }
+
+  if (nameChars.length < 1) return '';
+
+  // Remove trailing `-` char if it exists.
+  if (nameChars[nameChars.length - 1] === '-') {
+    nameChars.splice(nameChars.length - 1, 1);
+  }
+
+  return `org-${nameChars.join('')}`;
 }

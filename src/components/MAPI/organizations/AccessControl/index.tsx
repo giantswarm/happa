@@ -6,7 +6,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getOrgNamespaceFromOrgName } from 'stores/main/utils';
+import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
@@ -31,7 +31,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   organizationName,
   ...props
 }) => {
-  const orgNamespace = getOrgNamespaceFromOrgName(organizationName);
+  const orgNamespace = getNamespaceFromOrgName(organizationName);
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
