@@ -42,6 +42,7 @@ import {
 } from 'stores/main/constants';
 import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
+import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import {
   fetchUserFromStorage,
@@ -409,10 +410,11 @@ export function mapiLogin(
 }
 
 export function fetchPermissions(
-  auth: IOAuth2Provider,
-  orgNames: string[]
+  auth: IOAuth2Provider
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const orgNames = Object.keys(selectOrganizations()(getState()));
+
     const namespaces = orgNames.map(getNamespaceFromOrgName);
     // Also get permissions for the default namespace.
     namespaces.push('default');

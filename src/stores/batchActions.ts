@@ -38,7 +38,7 @@ import {
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
-import { getUserIsAdmin, selectHasAppAccess } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -57,8 +57,6 @@ import { loadReleases } from 'stores/releases/actions';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
 
-import { selectOrganizations } from './organization/selectors';
-
 export function batchedLayout(
   auth: IOAuth2Provider
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
@@ -68,26 +66,13 @@ export function batchedLayout(
     try {
       await dispatch(resumeLogin(auth));
 
-      try {
-        const user = getLoggedInUser(getState());
-        if (user?.type === LoggedInUserTypes.MAPI) {
-          await dispatch(organizationsLoadMAPI(auth));
-        } else {
-          await dispatch(organizationsLoad());
-        }
-      } catch (err) {
-        const hasAppAccess = selectHasAppAccess(getState());
-        if (!hasAppAccess) {
-          dispatch(globalLoadFinish());
-
-          return;
-        }
-
-        throw err;
+      const user = getLoggedInUser(getState())!;
+      if (user.type === LoggedInUserTypes.MAPI) {
+        await dispatch(organizationsLoadMAPI(auth));
+        await dispatch(fetchPermissions(auth));
+      } else {
+        await dispatch(organizationsLoad());
       }
-
-      const orgNames = Object.keys(selectOrganizations()(getState()));
-      await dispatch(fetchPermissions(auth, orgNames));
 
       await dispatch(refreshUserInfo());
       await dispatch(getInfo());
