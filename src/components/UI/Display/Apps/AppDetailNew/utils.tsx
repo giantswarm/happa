@@ -1,7 +1,11 @@
 import React from 'react';
 
 interface IHeadingProps extends React.ComponentPropsWithoutRef<'h1'> {
-  level: 1 | 2 | 3 | 4 | 5 | 6;
+  level: number;
+}
+
+export interface IATagProps extends React.ComponentPropsWithoutRef<'a'> {
+  href?: string;
 }
 
 // https://github.com/remarkjs/react-markdown/issues/69

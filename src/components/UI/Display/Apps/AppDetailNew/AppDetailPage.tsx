@@ -12,7 +12,7 @@ import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
 
-import { HeadingRenderer, urlFor } from './utils';
+import { HeadingRenderer, IATagProps, urlFor } from './utils';
 
 const Header = styled.div`
   display: flex;
@@ -241,11 +241,16 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                 plugins={[gfm]}
                 skipHtml
                 className='markdown'
-                renderers={{
-                  heading: HeadingRenderer,
-                  link: (p) => (
+                components={{
+                  h1: HeadingRenderer,
+                  h2: HeadingRenderer,
+                  h3: HeadingRenderer,
+                  h4: HeadingRenderer,
+                  h5: HeadingRenderer,
+                  h6: HeadingRenderer,
+                  a: (p: IATagProps) => (
                     <a
-                      href={urlFor(p.href, 'http://google.com')}
+                      href={urlFor(p.href || '', '')}
                       target='_blank'
                       rel='noreferrer'
                     >
