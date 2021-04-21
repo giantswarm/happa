@@ -91,7 +91,7 @@
     "connected-react-router": "6.9.1",
     "copy-to-clipboard": "3.3.1",
     "date-fns": "^2.19.0",
-    "date-fns-tz": "^1.1.3",
+    "date-fns-tz": "^1.1.4",
     "deep-diff": "1.0.2",
     "dotenv": "8.2.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
