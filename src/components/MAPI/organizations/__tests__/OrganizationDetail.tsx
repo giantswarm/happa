@@ -105,7 +105,9 @@ describe('OrganizationDetail', () => {
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],
@@ -148,7 +150,9 @@ describe('OrganizationDetail', () => {
       });
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],
@@ -178,7 +182,9 @@ describe('OrganizationDetail', () => {
 
   it('can cancel deletion', async () => {
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],
@@ -200,9 +206,11 @@ describe('OrganizationDetail', () => {
     await waitForElementToBeRemoved(screen.getByText('Are you sure?'));
   });
 
-  it('cannot delete the organization if there are still clusters in its namespace', async () => {
+  it('cannot delete the organization if there are still clusters that belong to it', async () => {
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [

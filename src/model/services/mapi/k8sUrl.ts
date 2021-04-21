@@ -48,6 +48,10 @@ export interface IK8sGetOptions extends IK8sBaseOptions {
 
 export interface IK8sListOptions extends IK8sBaseOptions {
   /**
+   * The namespace that the resources live in.
+   */
+  namespace?: string;
+  /**
    * Find a specific resource based on label values.
    */
   labelSelector?: IK8sLabelSelector;

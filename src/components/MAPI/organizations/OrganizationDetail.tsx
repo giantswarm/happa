@@ -23,7 +23,7 @@ import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 
-import { extractErrorMessage, getOrgNamespaceFromOrgName } from './utils';
+import { extractErrorMessage } from './utils';
 
 function computePaths(orgName: string) {
   return {
@@ -106,14 +106,20 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   };
 
   const clusterListClient = useRef(clientFactory());
-  const namespace = getOrgNamespaceFromOrgName(orgId);
+  const getOptions: capiv1alpha3.IGetClusterListOptions = useMemo(() => {
+    return {
+      labelSelector: {
+        matchingLabels: { [capiv1alpha3.labelOrganization]: orgId },
+      },
+    };
+  }, [orgId]);
   const { data: clusterList, error: clusterListError } = useSWR<
     capiv1alpha3.IClusterList,
     GenericResponse
   >(
-    () => (data ? capiv1alpha3.getClusterListKey(namespace) : null),
+    () => (data ? capiv1alpha3.getClusterListKey(getOptions) : null),
     () =>
-      capiv1alpha3.getClusterList(clusterListClient.current, auth, namespace)
+      capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
   );
 
   useEffect(() => {
