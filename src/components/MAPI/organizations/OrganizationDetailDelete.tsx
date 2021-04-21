@@ -93,7 +93,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
           aria-hidden={true}
           aria-label='Delete'
         />{' '}
-        Delete Organization
+        Delete organization
       </Button>
 
       {confirmationVisible && deleteButtonRef.current && (

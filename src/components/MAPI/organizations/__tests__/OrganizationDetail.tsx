@@ -116,7 +116,7 @@ describe('OrganizationDetail', () => {
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
 
-    const deleteButton = screen.getByText('Delete Organization');
+    const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
@@ -159,7 +159,7 @@ describe('OrganizationDetail', () => {
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
 
-    const deleteButton = screen.getByText('Delete Organization');
+    const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
@@ -189,7 +189,7 @@ describe('OrganizationDetail', () => {
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
 
-    const deleteButton = screen.getByText('Delete Organization');
+    const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
@@ -251,7 +251,7 @@ describe('OrganizationDetail', () => {
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
 
-    const deleteButton = screen.getByText('Delete Organization');
+    const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
 
     await waitFor(() => expect(nock.isDone()).toBeTruthy());
