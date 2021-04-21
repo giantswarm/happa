@@ -110,22 +110,22 @@ function appendKeyToNamespacePermissions(
 function optimizeNamespacePermissions(permissions: INamespacePermissions) {
   for (const key of Object.keys(permissions)) {
     const [group, resource, resourceName] = key.split(':');
-    const commonPermissionsKeys: string[] = [];
+    const wildcardPermissionsKeys: string[] = [];
 
     if (group.length > 0) {
-      commonPermissionsKeys.push(hashPermissionKey('*', '*', '*'));
+      wildcardPermissionsKeys.push(hashPermissionKey('*', '*', '*'));
     }
 
     if (resource.length > 0) {
-      commonPermissionsKeys.push(hashPermissionKey(group, '*', '*'));
+      wildcardPermissionsKeys.push(hashPermissionKey(group, '*', '*'));
     }
 
     if (resourceName.length > 0) {
-      commonPermissionsKeys.push(hashPermissionKey(group, resource, '*'));
+      wildcardPermissionsKeys.push(hashPermissionKey(group, resource, '*'));
     }
 
     /**
-     * Merge permissions from rules that include all (`*`)
+     * Merge permissions from  wildcard rules that include all (`*`)
      * groups, resources and resource names with the ones
      * that include specific groups, resources and resource names.
      *
@@ -134,11 +134,11 @@ function optimizeNamespacePermissions(permissions: INamespacePermissions) {
      * @example `apps.gs.io:*:*` and `apps.gs.io:apps:*`
      * @example `:apps:*` and `:apps:some-app`
      */
-    for (const commonPermissionsKey of commonPermissionsKeys) {
-      if (permissions.hasOwnProperty(commonPermissionsKey)) {
+    for (const wildcardKey of wildcardPermissionsKeys) {
+      if (permissions.hasOwnProperty(wildcardKey)) {
         appendKeyToNamespacePermissions(
           key,
-          permissions[commonPermissionsKey],
+          permissions[wildcardKey],
           permissions
         );
       }
