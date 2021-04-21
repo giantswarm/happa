@@ -82,7 +82,7 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "@airbrake/browser": "2.1.3",
+    "@airbrake/browser": "2.1.4",
     "@hot-loader/react-dom": "17.0.1",
     "axios": "0.21.1",
     "bootstrap": "3.4.1",
@@ -91,7 +91,7 @@
     "connected-react-router": "6.9.1",
     "copy-to-clipboard": "3.3.1",
     "date-fns": "^2.19.0",
-    "date-fns-tz": "^1.1.3",
+    "date-fns-tz": "^1.1.4",
     "deep-diff": "1.0.2",
     "dotenv": "8.2.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
@@ -137,7 +137,7 @@
     "web-vitals": "^1.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.13.14",
+    "@babel/core": "7.13.16",
     "@babel/preset-env": "7.13.12",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
@@ -200,7 +200,7 @@
     "eslint": "7.24.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-react": "^7.23.1",
+    "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "express": "^4.16.3",

@@ -1,77 +1,132 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
+import axios from 'axios';
+import { createMemoryHistory } from 'history';
+import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import nock from 'nock';
+import * as React from 'react';
+import { act } from 'react-dom/test-utils';
+import { StatusCodes } from 'shared/constants';
+import { cache, SWRConfig } from 'swr';
+import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
+import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import AccessControlRoleSubjects from '../AccessControlRoleSubjects';
 
+function getComponent(
+  props: React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>
+) {
+  const history = createMemoryHistory();
+  const auth = new TestOAuth2(history, true);
+
+  const Component = (p: typeof props) => (
+    <SWRConfig value={{ dedupingInterval: 0 }}>
+      <AccessControlRoleSubjects {...p} />
+    </SWRConfig>
+  );
+
+  return getComponentWithStore(
+    Component,
+    props,
+    undefined,
+    undefined,
+    history,
+    auth
+  );
+}
+
 describe('AccessControlRoleSubjects', () => {
+  beforeAll(() => {
+    axios.defaults.adapter = require('axios/lib/adapters/http');
+  });
+
+  afterAll(() => {
+    axios.defaults.adapter = require('axios/lib/adapters/xhr');
+  });
+
+  afterEach(() => {
+    cache.clear();
+  });
+
   it('renders without crashing', () => {
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {},
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: jest.fn(),
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {},
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: jest.fn(),
+      })
+    );
   });
 
   it('renders all provided subjects', () => {
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {
-        'test-group1': {
-          name: 'test-group1',
-          isEditable: true,
-          roleBindings: [],
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-group2': {
+            name: 'test-group2',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-group3': {
+            name: 'test-group3',
+            isEditable: true,
+            roleBindings: [],
+          },
         },
-        'test-group2': {
-          name: 'test-group2',
-          isEditable: true,
-          roleBindings: [],
+        users: {
+          'test-user1@domain.com': {
+            name: 'test-user1@domain.com',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-user2': {
+            name: 'test-user2',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-user3': {
+            name: 'test-user3',
+            isEditable: true,
+            roleBindings: [],
+          },
         },
-        'test-group3': {
-          name: 'test-group3',
-          isEditable: true,
-          roleBindings: [],
+        serviceAccounts: {
+          'test-account1': {
+            name: 'test-account1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-account2': {
+            name: 'test-account2',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-account3': {
+            name: 'test-account3',
+            isEditable: true,
+            roleBindings: [],
+          },
         },
-      },
-      users: {
-        'test-user1@domain.com': {
-          name: 'test-user1@domain.com',
-          isEditable: true,
-          roleBindings: [],
-        },
-        'test-user2': {
-          name: 'test-user2',
-          isEditable: true,
-          roleBindings: [],
-        },
-        'test-user3': {
-          name: 'test-user3',
-          isEditable: true,
-          roleBindings: [],
-        },
-      },
-      serviceAccounts: {
-        'test-account1': {
-          name: 'test-account1',
-          isEditable: true,
-          roleBindings: [],
-        },
-        'test-account2': {
-          name: 'test-account2',
-          isEditable: true,
-          roleBindings: [],
-        },
-        'test-account3': {
-          name: 'test-account3',
-          isEditable: true,
-          roleBindings: [],
-        },
-      },
-      roleName: 'test-role',
-      onAdd: jest.fn(),
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: jest.fn(),
+      })
+    );
 
     expect(screen.getByText('test-group1')).toBeInTheDocument();
     expect(screen.getByText('test-group2')).toBeInTheDocument();
@@ -88,47 +143,50 @@ describe('AccessControlRoleSubjects', () => {
   });
 
   it('displays a delete button next to editable subjects', () => {
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {
-        'test-group1': {
-          name: 'test-group1',
-          isEditable: true,
-          roleBindings: [],
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-group2': {
+            name: 'test-group2',
+            isEditable: false,
+            roleBindings: [],
+          },
         },
-        'test-group2': {
-          name: 'test-group2',
-          isEditable: false,
-          roleBindings: [],
+        users: {
+          'test-user1': {
+            name: 'test-user1@domain.com',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-user2': {
+            name: 'test-user2',
+            isEditable: false,
+            roleBindings: [],
+          },
         },
-      },
-      users: {
-        'test-user1': {
-          name: 'test-user1@domain.com',
-          isEditable: true,
-          roleBindings: [],
+        serviceAccounts: {
+          'test-account1': {
+            name: 'test-account1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-account2': {
+            name: 'test-account2',
+            isEditable: false,
+            roleBindings: [],
+          },
         },
-        'test-user2': {
-          name: 'test-user2',
-          isEditable: false,
-          roleBindings: [],
-        },
-      },
-      serviceAccounts: {
-        'test-account1': {
-          name: 'test-account1',
-          isEditable: true,
-          roleBindings: [],
-        },
-        'test-account2': {
-          name: 'test-account2',
-          isEditable: false,
-          roleBindings: [],
-        },
-      },
-      roleName: 'test-role',
-      onAdd: jest.fn(),
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: jest.fn(),
+      })
+    );
 
     let subject = screen.getByLabelText('test-group1');
     let deleteButton = within(subject).getByTitle('Delete');
@@ -170,17 +228,20 @@ describe('AccessControlRoleSubjects', () => {
     jest.useFakeTimers();
     const onAddMockfn = jest.fn(() => {
       // eslint-disable-next-line no-magic-numbers
-      return new Promise((resolve) => setTimeout(resolve, 1000));
+      return new Promise<void>((resolve) => setTimeout(resolve, 1000));
     });
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {},
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: onAddMockfn,
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {},
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: onAddMockfn,
+        onDelete: jest.fn(),
+      })
+    );
 
     const section = screen.getByLabelText('Groups');
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
@@ -210,7 +271,9 @@ describe('AccessControlRoleSubjects', () => {
     expect(input.readOnly).toBeTruthy();
     expect(submitButton).toBeDisabled();
 
-    jest.runAllTimers();
+    act(() => {
+      jest.runAllTimers();
+    });
 
     await waitFor(() => {
       expect(
@@ -235,7 +298,9 @@ describe('AccessControlRoleSubjects', () => {
 
     fireEvent.click(submitButton);
 
-    jest.runAllTimers();
+    act(() => {
+      jest.runAllTimers();
+    });
 
     await waitFor(() => {
       expect(input).not.toBeInTheDocument();
@@ -250,28 +315,31 @@ describe('AccessControlRoleSubjects', () => {
     jest.useFakeTimers();
     const onDeleteMockFn = jest.fn(() => {
       // eslint-disable-next-line no-magic-numbers
-      return new Promise((resolve) => setTimeout(resolve, 1000));
+      return new Promise<void>((resolve) => setTimeout(resolve, 1000));
     });
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {
-        'test-group1': {
-          name: 'test-group1',
-          isEditable: true,
-          roleBindings: [],
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-group2': {
+            name: 'test-group2',
+            isEditable: false,
+            roleBindings: [],
+          },
         },
-        'test-group2': {
-          name: 'test-group2',
-          isEditable: false,
-          roleBindings: [],
-        },
-      },
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: jest.fn(),
-      onDelete: onDeleteMockFn,
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: onDeleteMockFn,
+      })
+    );
 
     const subject = screen.getByLabelText('test-group1');
     const deleteButton = within(subject).getByTitle('Delete');
@@ -285,7 +353,9 @@ describe('AccessControlRoleSubjects', () => {
       expect(within(subject).queryByRole('progressbar')).toBeInTheDocument();
     });
 
-    jest.runAllTimers();
+    act(() => {
+      jest.runAllTimers();
+    });
 
     await waitFor(() => {
       expect(
@@ -303,25 +373,28 @@ describe('AccessControlRoleSubjects', () => {
   it('can cancel deleting subjects', async () => {
     const onDeleteMockFn = jest.fn();
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {
-        'test-group1': {
-          name: 'test-group1',
-          isEditable: true,
-          roleBindings: [],
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-group2': {
+            name: 'test-group2',
+            isEditable: false,
+            roleBindings: [],
+          },
         },
-        'test-group2': {
-          name: 'test-group2',
-          isEditable: false,
-          roleBindings: [],
-        },
-      },
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: jest.fn(),
-      onDelete: onDeleteMockFn,
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: onDeleteMockFn,
+      })
+    );
 
     const subject = screen.getByLabelText('test-group1');
     const deleteButton = within(subject).getByTitle('Delete');
@@ -344,14 +417,17 @@ describe('AccessControlRoleSubjects', () => {
       );
     });
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {},
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: onAddMockfn,
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {},
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: onAddMockfn,
+        onDelete: jest.fn(),
+      })
+    );
 
     const section = screen.getByLabelText('Groups');
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
@@ -395,25 +471,28 @@ describe('AccessControlRoleSubjects', () => {
       );
     });
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {
-        'test-group1': {
-          name: 'test-group1',
-          isEditable: true,
-          roleBindings: [],
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
+          'test-group2': {
+            name: 'test-group2',
+            isEditable: false,
+            roleBindings: [],
+          },
         },
-        'test-group2': {
-          name: 'test-group2',
-          isEditable: false,
-          roleBindings: [],
-        },
-      },
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: jest.fn(),
-      onDelete: onDeleteMockFn,
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: onDeleteMockFn,
+      })
+    );
 
     const subject = screen.getByLabelText('test-group1');
     const deleteButton = within(subject).getByTitle('Delete');
@@ -434,14 +513,17 @@ describe('AccessControlRoleSubjects', () => {
   it('closes the input if trying to add an empty subject', () => {
     const onAddMockfn = jest.fn();
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {},
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: onAddMockfn,
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {},
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: onAddMockfn,
+        onDelete: jest.fn(),
+      })
+    );
 
     const section = screen.getByLabelText('Groups');
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
@@ -464,20 +546,23 @@ describe('AccessControlRoleSubjects', () => {
   it('does not allow adding a subject that is already in the list', () => {
     const onAddMockfn = jest.fn();
 
-    renderWithTheme(AccessControlRoleSubjects, {
-      groups: {
-        'test-group1': {
-          name: 'test-group1',
-          isEditable: true,
-          roleBindings: [],
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
         },
-      },
-      users: {},
-      serviceAccounts: {},
-      roleName: 'test-role',
-      onAdd: onAddMockfn,
-      onDelete: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleSubjects>);
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: onAddMockfn,
+        onDelete: jest.fn(),
+      })
+    );
 
     const section = screen.getByLabelText('Groups');
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
@@ -505,5 +590,105 @@ describe('AccessControlRoleSubjects', () => {
     expect(
       screen.queryByText(`Subject 'test-group1' already exists.`)
     ).not.toBeInTheDocument();
+  });
+
+  it('does not allow adding the same subject multiple times', () => {
+    const onAddMockfn = jest.fn();
+
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {
+          'test-group1': {
+            name: 'test-group1',
+            isEditable: true,
+            roleBindings: [],
+          },
+        },
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: onAddMockfn,
+        onDelete: jest.fn(),
+      })
+    );
+
+    const section = screen.getByLabelText('Groups');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    ) as HTMLInputElement;
+
+    const submitButton = screen.getByRole('button', { name: 'OK' });
+    fireEvent.change(input, {
+      target: {
+        value:
+          'test-group1 test-group2 test-group1 test-group1 test-group3 test-group2',
+      },
+    });
+
+    fireEvent.click(submitButton);
+
+    expect(
+      screen.getByText(`Subjects 'test-group1', 'test-group2' already exist.`)
+    );
+
+    expect(input).toBeInTheDocument();
+    expect(onAddMockfn).not.toHaveBeenCalled();
+
+    fireEvent.change(input, {
+      target: { value: '' },
+    });
+
+    expect(
+      screen.queryByText(`Subjects 'test-group1', 'test-group2' already exist.`)
+    ).not.toBeInTheDocument();
+  });
+
+  it('gives the user suggestions for re-using existing service accounts', async () => {
+    jest.useFakeTimers();
+
+    nock(window.config.mapiEndpoint)
+      .get('/api/v1/namespaces/org-test/serviceaccounts/')
+      .reply(StatusCodes.Ok, corev1Mocks.serviceAccountList);
+
+    render(
+      getComponent({
+        namespace: 'org-test',
+        groups: {},
+        users: {},
+        serviceAccounts: {},
+        roleName: 'test-role',
+        onAdd: jest.fn(),
+        onDelete: jest.fn(),
+      })
+    );
+
+    const section = screen.getByLabelText('Service accounts');
+    fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
+
+    const input = within(section).getByPlaceholderText(
+      'e.g. subject1, subject2, subject3'
+    ) as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: 'random auto' } });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const selectedSuggestion = await screen.findByText('automation');
+    expect(selectedSuggestion).toBeInTheDocument();
+    // An existing account is not shown.
+    await waitFor(() =>
+      expect(screen.queryByText('random')).not.toBeInTheDocument()
+    );
+
+    fireEvent.click(selectedSuggestion);
+
+    await waitFor(() => expect(input).toHaveValue('random automation, '));
+
+    jest.useRealTimers();
   });
 });

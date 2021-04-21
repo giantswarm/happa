@@ -1,0 +1,17 @@
+name: fe-docs
+namespace: fe-docs
+userID: 1000
+groupID: 1000
+image:
+  name: fe-docs
+  repository: giantswarm/fe-docs
+  tag: '[[.Version]]'
+  sha: '[[.SHA]]'
+
+port: 8080
+hostnames: []
+
+Installation:
+  V1:
+    Registry:
+      Domain: quay.io

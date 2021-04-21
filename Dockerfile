@@ -5,9 +5,6 @@ RUN apk --no-cache add findutils gzip
 # Copy happa built static files.
 COPY dist /www
 
-# Copy storybook built static files.
-COPY storybook-static /www/storybook
-
 RUN find /www \
   -type f -regextype posix-extended \
   -size +512c \
