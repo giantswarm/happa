@@ -106,14 +106,10 @@ export function selectHasPermission(
   };
 }
 
-export function selectHasAppAccess(state: IState): boolean {
-  const user = getLoggedInUser(state);
-  if (!user) return false;
-  if (user.type !== LoggedInUserTypes.MAPI) return true;
+export function selectHasAppAccesInNamespace(namespace: string) {
+  return (state: IState) => {
+    const { permissions } = state.main;
 
-  const { permissions } = state.main;
-  const namespaces = Object.keys(permissions);
-  for (const namespace of namespaces) {
     switch (true) {
       case hasNamespacePermission(
         permissions[namespace],
@@ -128,6 +124,21 @@ export function selectHasAppAccess(state: IState): boolean {
         'clusters'
       ):
         return true;
+      default:
+        return false;
+    }
+  };
+}
+
+export function selectHasAppAccess(state: IState): boolean {
+  const user = getLoggedInUser(state);
+  if (!user) return false;
+  if (user.type !== LoggedInUserTypes.MAPI) return true;
+
+  const namespaces = Object.keys(state.main.permissions);
+  for (const namespace of namespaces) {
+    if (selectHasAppAccesInNamespace(namespace)(state)) {
+      return true;
     }
   }
 
