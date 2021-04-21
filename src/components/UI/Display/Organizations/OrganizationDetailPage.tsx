@@ -9,11 +9,13 @@ import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 interface IOrganizationDetailPageProps {
   organizationName: string;
   onDelete: () => Promise<void>;
+  clusterCount?: number;
 }
 
 const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   organizationName,
   onDelete,
+  clusterCount,
 }) => {
   return (
     <Box direction='column' gap='large'>
@@ -34,9 +36,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <Text>{clusterCount ?? <NotAvailable />}</Text>
             <Text>
               <NotAvailable />
             </Text>
@@ -126,6 +126,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <OrganizationDetailDelete
               organizationName={organizationName}
               onDelete={onDelete}
+              clusterCount={clusterCount}
             />
           </Box>
         </Box>
@@ -137,6 +138,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
 OrganizationDetailPage.propTypes = {
   organizationName: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
+  clusterCount: PropTypes.number,
 };
 
 export default OrganizationDetailPage;

@@ -2,6 +2,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import axios from 'axios';
@@ -103,12 +104,22 @@ describe('OrganizationDetail', () => {
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
 
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        items: [],
+        kind: 'ClusterList',
+      });
+
     render(getComponent({}));
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
 
     const deleteButton = screen.getByText('Delete Organization');
     expect(deleteButton).toBeInTheDocument();
+
+    await waitFor(() => expect(deleteButton).toBeEnabled());
 
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByText('Yes, delete it'));
@@ -136,12 +147,22 @@ describe('OrganizationDetail', () => {
         code: StatusCodes.InternalServerError,
       });
 
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        items: [],
+        kind: 'ClusterList',
+      });
+
     render(getComponent({}));
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
 
     const deleteButton = screen.getByText('Delete Organization');
     expect(deleteButton).toBeInTheDocument();
+
+    await waitFor(() => expect(deleteButton).toBeEnabled());
 
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByText('Yes, delete it'));
@@ -156,6 +177,14 @@ describe('OrganizationDetail', () => {
   });
 
   it('can cancel deletion', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        items: [],
+        kind: 'ClusterList',
+      });
+
     render(getComponent({}));
 
     await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
@@ -163,9 +192,70 @@ describe('OrganizationDetail', () => {
     const deleteButton = screen.getByText('Delete Organization');
     expect(deleteButton).toBeInTheDocument();
 
+    await waitFor(() => expect(deleteButton).toBeEnabled());
+
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByText('Cancel'));
 
     await waitForElementToBeRemoved(screen.getByText('Are you sure?'));
+  });
+
+  it('cannot delete the organization if there are still clusters in its namespace', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        items: [
+          {
+            apiVersion: 'cluster.x-k8s.io/v1alpha3',
+            kind: 'Cluster',
+            metadata: {
+              annotations: {
+                'cluster.giantswarm.io/description': 'Unnamed cluster',
+              },
+              creationTimestamp: '2021-04-21T17:23:11Z',
+              labels: {
+                'azure-operator.giantswarm.io/version': '5.5.2',
+                'cluster-operator.giantswarm.io/version': '0.23.22',
+                'cluster.x-k8s.io/cluster-name': 'ed30d',
+                'giantswarm.io/cluster': 'ed30d',
+                'giantswarm.io/organization': 'org1',
+                'release.giantswarm.io/version': '14.1.4',
+              },
+              spec: {
+                clusterNetwork: {
+                  apiServerPort: 443,
+                  serviceDomain: 'cluster.local',
+                  services: {
+                    cidrBlocks: ['172.31.0.0/16'],
+                  },
+                },
+                controlPlaneEndpoint: {
+                  host: '',
+                  port: 0,
+                },
+                infrastructureRef: {
+                  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+                  kind: 'AzureCluster',
+                  name: 'ed30d',
+                  namespace: 'org-org1',
+                },
+              },
+            },
+          },
+        ],
+        kind: 'ClusterList',
+      });
+
+    render(getComponent({}));
+
+    await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
+
+    const deleteButton = screen.getByText('Delete Organization');
+    expect(deleteButton).toBeInTheDocument();
+
+    await waitFor(() => expect(nock.isDone()).toBeTruthy());
+
+    expect(deleteButton).toBeDisabled();
   });
 });

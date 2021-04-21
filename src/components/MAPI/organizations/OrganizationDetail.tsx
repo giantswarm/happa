@@ -6,6 +6,7 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { GenericResponse } from 'model/clients/GenericResponse';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -22,7 +23,7 @@ import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 
-import { extractErrorMessage } from './utils';
+import { extractErrorMessage, getOrgNamespaceFromOrgName } from './utils';
 
 function computePaths(orgName: string) {
   return {
@@ -48,12 +49,12 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const httpClient = useRef(clientFactory());
+  const orgClient = useRef(clientFactory());
   const { data, error } = useSWR<
     securityv1alpha1.IOrganization,
     GenericResponse
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
-    securityv1alpha1.getOrganization(httpClient.current, auth, orgId)
+    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
   );
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
@@ -104,6 +105,27 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
     }
   };
 
+  const clusterListClient = useRef(clientFactory());
+  const namespace = getOrgNamespaceFromOrgName(orgId);
+  const { data: clusterList, error: clusterListError } = useSWR<
+    capiv1alpha3.IClusterList,
+    GenericResponse
+  >(
+    () => (data ? capiv1alpha3.getClusterListKey(namespace) : null),
+    () =>
+      capiv1alpha3.getClusterList(clusterListClient.current, auth, namespace)
+  );
+
+  useEffect(() => {
+    if (clusterListError) {
+      new FlashMessage(
+        'There was a problem loading clusters in this organization.',
+        messageType.ERROR,
+        messageTTL.FOREVER
+      );
+    }
+  }, [clusterListError]);
+
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
@@ -119,6 +141,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
                 <OrganizationDetailPage
                   organizationName={data.metadata.name}
                   onDelete={handleDelete}
+                  clusterCount={clusterList?.items.length}
                 />
               </Tab>
               <Tab eventKey={paths.AccessControl} title='Access control'>

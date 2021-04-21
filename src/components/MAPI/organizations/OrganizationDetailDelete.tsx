@@ -12,11 +12,13 @@ import { getOrgNamespaceFromOrgName } from './utils';
 interface IOrganizationDetailDeleteProps {
   organizationName: string;
   onDelete: () => Promise<void>;
+  clusterCount?: number;
 }
 
 const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   organizationName,
   onDelete,
+  clusterCount,
 }) => {
   const organizationNamespace = getOrgNamespaceFromOrgName(organizationName);
   const deleteButtonRef = useRef<HTMLElement>(null);
@@ -74,6 +76,8 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
     }
   };
 
+  const canDelete = typeof clusterCount !== 'undefined' && clusterCount < 1;
+
   return (
     <Box>
       <Button
@@ -81,6 +85,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
         bsStyle='danger'
         onClick={showConfirmation}
         loading={isLoading}
+        disabled={!canDelete}
       >
         <i
           className='fa fa-delete'
@@ -137,6 +142,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
 OrganizationDetailDelete.propTypes = {
   organizationName: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
+  clusterCount: PropTypes.number,
 };
 
 export default OrganizationDetailDelete;
