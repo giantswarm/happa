@@ -249,6 +249,11 @@ describe('main::utils', () => {
                   resources: ['*'],
                   verbs: ['get', 'list', 'watch'],
                 },
+                {
+                  apiGroups: ['dogs.gs.io'],
+                  resources: ['cats'],
+                  verbs: ['delete'],
+                },
               ],
               nonResourceRules: [],
               evaluationError: '',

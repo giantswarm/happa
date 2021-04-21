@@ -50,7 +50,7 @@ function hashPermissionKey(
 function computeResourceRules(
   rules: authorizationv1.IResourceRule[]
 ): INamespacePermissions {
-  const permissions: INamespacePermissions = {};
+  let permissions: INamespacePermissions = {};
 
   for (const rule of rules) {
     for (const group of rule.apiGroups) {
@@ -82,7 +82,7 @@ function computeResourceRules(
     }
   }
 
-  optimizeNamespacePermissions(permissions);
+  permissions = optimizeNamespacePermissions(permissions);
 
   return permissions;
 }
@@ -107,9 +107,30 @@ function appendKeyToNamespacePermissions(
   permissions[key] = Array.from(uniqueVerbs);
 }
 
-function optimizeNamespacePermissions(permissions: INamespacePermissions) {
+function optimizeNamespacePermissions(
+  permissions: INamespacePermissions
+): INamespacePermissions {
+  const newPermissions: INamespacePermissions = Object.assign({}, permissions);
+
   for (const key of Object.keys(permissions)) {
     const [group, resource, resourceName] = key.split(':');
+
+    /**
+     * If the user has access to everything,
+     * there's no need to store anything else.
+     */
+    if (
+      group === '*' &&
+      resource === '*' &&
+      resourceName === '*' &&
+      newPermissions[key].length === 1 &&
+      newPermissions[key][0] === '*'
+    ) {
+      return {
+        [key]: ['*'],
+      };
+    }
+
     const wildcardPermissionsKeys: string[] = [];
 
     if (group.length > 0) {
@@ -135,15 +156,17 @@ function optimizeNamespacePermissions(permissions: INamespacePermissions) {
      * @example `:apps:*` and `:apps:some-app`
      */
     for (const wildcardKey of wildcardPermissionsKeys) {
-      if (permissions.hasOwnProperty(wildcardKey)) {
+      if (newPermissions.hasOwnProperty(wildcardKey)) {
         appendKeyToNamespacePermissions(
           key,
-          permissions[wildcardKey],
-          permissions
+          newPermissions[wildcardKey],
+          newPermissions
         );
       }
     }
   }
+
+  return newPermissions;
 }
 
 /**
