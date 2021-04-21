@@ -413,10 +413,13 @@ export function fetchPermissions(
   orgNames: string[]
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch) => {
-    const requests = orgNames.map(async (orgName) => {
+    const namespaces = orgNames.map(getOrgNamespaceFromOrgName);
+    // Also get permissions for the default namespace.
+    namespaces.push('default');
+
+    const requests = namespaces.map(async (namespace) => {
       const client = new HttpClientImpl();
 
-      const namespace = getOrgNamespaceFromOrgName(orgName);
       const rulesReview: authorizationv1.ISelfSubjectRulesReview = {
         apiVersion: 'authorization.k8s.io/v1',
         kind: 'SelfSubjectRulesReview',
