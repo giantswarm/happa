@@ -3,6 +3,7 @@ import { PropertiesOf } from 'shared/types';
 import { IState } from 'stores/state';
 
 import { LoggedInUserTypes } from './types';
+import { hasNamespacePermission, hasPermission } from './utils';
 
 export function getUserIsAdmin(state: IState) {
   return getLoggedInUser(state)?.isAdmin ?? false;
@@ -86,15 +87,49 @@ export function getLoggedInUser(state: IState): ILoggedInUser | null {
   return state.main.loggedInUser;
 }
 
-export function getHasAccessToResources(state: IState): boolean {
+export function selectHasPermission(
+  namespace: string,
+  verb: string,
+  group: string,
+  resource: string,
+  resourceName?: string
+) {
+  return (state: IState) => {
+    return hasPermission(
+      state.main.permissions,
+      namespace,
+      verb,
+      group,
+      resource,
+      resourceName
+    );
+  };
+}
+
+export function selectHasAppAccess(state: IState): boolean {
   const user = getLoggedInUser(state);
   if (!user) return false;
+  if (user.type !== LoggedInUserTypes.MAPI) return true;
 
-  const organizations = Object.values(state.entities.organizations.items);
-
-  if (user.type === LoggedInUserTypes.MAPI && organizations.length < 1) {
-    return false;
+  const { permissions } = state.main;
+  const namespaces = Object.keys(permissions);
+  for (const namespace of namespaces) {
+    switch (true) {
+      case hasNamespacePermission(
+        permissions[namespace],
+        'list',
+        'cluster.x-k8s.io',
+        'clusters'
+      ):
+      case hasNamespacePermission(
+        permissions[namespace],
+        'get',
+        'cluster.x-k8s.io',
+        'clusters'
+      ):
+        return true;
+    }
   }
 
-  return true;
+  return false;
 }

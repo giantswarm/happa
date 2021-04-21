@@ -38,7 +38,7 @@ import {
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
-import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin, selectHasAppAccess } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -76,8 +76,8 @@ export function batchedLayout(
           await dispatch(organizationsLoad());
         }
       } catch (err) {
-        const hasAccessToResources = getHasAccessToResources(getState());
-        if (!hasAccessToResources) {
+        const hasAppAccess = selectHasAppAccess(getState());
+        if (!hasAppAccess) {
           dispatch(globalLoadFinish());
 
           return;
