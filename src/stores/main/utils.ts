@@ -166,10 +166,17 @@ export function hasNamespacePermission(
   resource: string,
   resourceName: string = '*'
 ): boolean {
-  const key = hashPermissionKey(group, resource, resourceName);
-  if (!permissions.hasOwnProperty(key)) return false;
+  let verbs: string[] = [];
 
-  const verbs = permissions[key];
+  const key = hashPermissionKey(group, resource, resourceName);
+  if (permissions.hasOwnProperty(key)) {
+    verbs = permissions[key];
+  } else {
+    const wildcardKey = hashPermissionKey('*', '*', '*');
+    if (!permissions.hasOwnProperty(wildcardKey)) return false;
+
+    verbs = permissions[wildcardKey];
+  }
 
   if (verbs.length === 1 && verbs[0] === '*') return true;
 

@@ -1,6 +1,6 @@
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 
-import { computePermissions } from '../utils';
+import { computePermissions, hasPermission } from '../utils';
 
 describe('main::utils', () => {
   describe('computePermissions', () => {
@@ -335,6 +335,52 @@ describe('main::utils', () => {
         expect(permissions).toStrictEqual(expected);
       });
     }
+  });
+
+  describe('hasPermission', () => {
+    const permissions: IPermissionMap = {
+      'org-test': {
+        ':pods:*': ['list'],
+        'something.k8s.io:ducks:*': ['patch', 'delete'],
+      },
+      'org-giantswarm': {
+        'frogs.k8s.io:apps:app2': ['list'],
+      },
+      'org-test2': {
+        '*:*:*': ['*'],
+      },
+      'org-test3': {
+        '*:*:*': ['get', 'list'],
+      },
+    };
+
+    test.each`
+      namespace            | verb        | group                 | resource    | resourceName | expected
+      ${''}                | ${''}       | ${''}                 | ${''}       | ${undefined} | ${false}
+      ${'org-test'}        | ${'get'}    | ${''}                 | ${'pods'}   | ${undefined} | ${false}
+      ${'org-test'}        | ${'patch'}  | ${'something.k8s.io'} | ${'ducks'}  | ${undefined} | ${true}
+      ${'org-test'}        | ${'get'}    | ${'something.k8s.io'} | ${'ducks'}  | ${undefined} | ${false}
+      ${'org-giantswarm'}  | ${'list'}   | ${'frogs.k8s.io'}     | ${'apps'}   | ${'app1'}    | ${false}
+      ${'org-giantswarm'}  | ${'list'}   | ${'frogs.k8s.io'}     | ${'apps'}   | ${'app2'}    | ${true}
+      ${'org-nonexistent'} | ${'list'}   | ${'frogs.k8s.io'}     | ${'apps'}   | ${undefined} | ${false}
+      ${'org-test2'}       | ${'delete'} | ${'dogs.k8s.io'}      | ${'houses'} | ${undefined} | ${true}
+      ${'org-test3'}       | ${'get'}    | ${'dogs.k8s.io'}      | ${'houses'} | ${undefined} | ${true}
+      ${'org-test3'}       | ${'patch'}  | ${'dogs.k8s.io'}      | ${'houses'} | ${undefined} | ${false}
+    `(
+      `gets permission for verb '$verb' in namespace '$namespace' for '$group'/'$resource'/'$resourceName'`,
+      ({ namespace, verb, group, resource, resourceName, expected }) => {
+        const result = hasPermission(
+          permissions,
+          namespace,
+          verb,
+          group,
+          resource,
+          resourceName
+        );
+
+        expect(result).toEqual(expected);
+      }
+    );
   });
 });
 
