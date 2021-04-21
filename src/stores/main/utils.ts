@@ -107,9 +107,7 @@ function appendKeyToNamespacePermissions(
   permissions[key] = Array.from(uniqueVerbs);
 }
 
-function optimizeNamespacePermissions(
-  permissions: INamespacePermissions
-): INamespacePermissions {
+function optimizeNamespacePermissions(permissions: INamespacePermissions) {
   for (const key of Object.keys(permissions)) {
     const [group, resource, resourceName] = key.split(':');
     const commonPermissionsKeys: string[] = [];
@@ -146,8 +144,6 @@ function optimizeNamespacePermissions(
       }
     }
   }
-
-  return permissions;
 }
 
 /**
