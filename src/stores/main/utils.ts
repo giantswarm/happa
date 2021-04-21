@@ -234,13 +234,19 @@ export function hasPermission(
 
 /**
  * Compute an organization namespace from the given organization name.
+ * This also makes the org name follow the [DNS label standard](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
  * @param name
  */
 export function getNamespaceFromOrgName(name: string): string {
   if (name.length < 1) return '';
 
+  const prefix = 'org-';
   const nameChars = [];
   for (const char of name.toLowerCase()) {
+    // Allow maximum 63 chars.
+    // eslint-disable-next-line no-magic-numbers
+    if (nameChars.length === 63 - prefix.length) break;
+
     if ((char >= '0' && char <= '9') || (char >= 'a' && char <= 'z')) {
       nameChars.push(char);
     } else if (
