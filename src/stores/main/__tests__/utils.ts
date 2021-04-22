@@ -421,7 +421,7 @@ describe('main::utils', () => {
 });
 
 function makeRulesReview(
-  status?: authorizationv1.ISelfSubjectRulesReviewStatus
+  status: authorizationv1.ISelfSubjectRulesReviewStatus
 ): authorizationv1.ISelfSubjectRulesReview {
   return {
     apiVersion: 'authorization.k8s.io/v1',

@@ -52,7 +52,7 @@ export interface ISelfSubjectRulesReview {
   kind: 'SelfSubjectRulesReview';
   metadata?: metav1.IObjectMeta;
   spec: ISelfSubjectRulesReviewSpec;
-  status?: ISelfSubjectRulesReviewStatus;
+  status: ISelfSubjectRulesReviewStatus;
 }
 
 export interface ISelfSubjectAccessReview {

@@ -29,7 +29,7 @@ export function computePermissions(
   const permissions: IPermissionMap = {};
 
   for (const [namespace, review] of ruleReviews) {
-    if (!review.status || review.status.incomplete) {
+    if (review.status.incomplete) {
       continue;
     }
 

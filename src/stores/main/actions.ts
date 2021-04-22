@@ -428,7 +428,7 @@ export function fetchPermissions(
         spec: {
           namespace,
         },
-      };
+      } as authorizationv1.ISelfSubjectRulesReview;
 
       const review = await authorizationv1.createSelfSubjectRulesReview(
         client,

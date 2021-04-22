@@ -138,7 +138,7 @@ export function organizationsLoadMAPI(
           spec: {
             namespace: 'default',
           },
-        };
+        } as authorizationv1.ISelfSubjectRulesReview;
 
         // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
         // which ones they can get.
