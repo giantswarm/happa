@@ -49,7 +49,7 @@ const ComponentChangelog = (props) => {
       {changes.map((change, index) => {
         return (
           <ChangeItems key={index}>
-            <ReactMarkdown renderers={{ link: LinkRenderer }}>
+            <ReactMarkdown components={{ a: LinkRenderer }}>
               {change}
             </ReactMarkdown>
           </ChangeItems>
