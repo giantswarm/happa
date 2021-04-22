@@ -261,7 +261,7 @@ export function getNamespaceFromOrgName(name: string): string {
 
   // Remove trailing `-` char if it exists.
   if (nameChars[nameChars.length - 1] === '-') {
-    nameChars.splice(nameChars.length - 1, 1);
+    nameChars.pop();
   }
 
   return `org-${nameChars.join('')}`;
