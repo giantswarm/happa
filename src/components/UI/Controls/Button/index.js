@@ -134,7 +134,27 @@ const Wrapper = styled.div`
   }
 `;
 
-const Button = (props) => {
+/**
+ * @typedef {object} IButtonProps
+ * @property {'button' | 'submit' | 'reset'} [type]
+ * @property {'primary' | 'danger' | 'default' | 'link' | 'warning'} [bsStyle]
+ * @property {'sm' | 'lg'} [bsSize]
+ * @property {boolean} [disabled]
+ * @property {boolean} [loading]
+ * @property {'left'} [loadingPosition]
+ * @property {React.ReactNode} [children]
+ * @property {string} [className]
+ * @property {number} [loadingTimeout]
+ * @property {string} [href]
+ * @property {'_blank'} [target]
+ * @property {string} [rel]
+ * @property {React.MouseEventHandler<HTMLElement>} [onClick]
+ */
+
+/**
+ * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<IButtonProps> & React.RefAttributes<HTMLElement>>}
+ */
+const Button = React.forwardRef((props, ref) => {
   const {
     loadingPosition,
     loading,
@@ -149,7 +169,7 @@ const Button = (props) => {
   } = props;
 
   return (
-    <Wrapper className='button-wrapper'>
+    <Wrapper ref={ref} className='button-wrapper'>
       {loadingPosition === 'left' ? (
         <LoadingIndicator
           loading={loading}
@@ -179,7 +199,7 @@ const Button = (props) => {
       ) : undefined}
     </Wrapper>
   );
-};
+});
 
 Button.propTypes = {
   type: PropTypes.string,

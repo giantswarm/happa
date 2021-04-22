@@ -59,7 +59,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
   });
 
   const confirmAddKeyPair = async (
-    e: React.FormEvent<HTMLFormElement>
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>
   ): Promise<void> => {
     e.preventDefault();
 
