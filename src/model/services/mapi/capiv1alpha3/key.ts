@@ -16,3 +16,9 @@ export function getReleaseVersion(cluster: ICluster): string {
 
   return release;
 }
+
+export function getNodeCount(_cluster: ICluster): number {
+  // TODO(axbarsan): Add logic here when CAPI adds support for HA Masters.
+
+  return 1;
+}
