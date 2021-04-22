@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const process = require('process');
@@ -119,6 +118,7 @@ const makeFeatureFlags = () => {
 };
 
 module.exports = {
+  amd: false,
   entry: ['react-hot-loader/patch', './src/components/index.tsx'],
   context: __dirname,
   output: {
@@ -219,11 +219,6 @@ module.exports = {
             },
           },
         ],
-      },
-      {
-        parser: {
-          amd: false, // required so giantswarm-v4 sub-modules can be found
-        },
       },
     ],
   },

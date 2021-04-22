@@ -1,5 +1,7 @@
 import { ICluster } from './';
 
+export const labelOrganization = 'giantswarm.io/organization';
+
 export function getClusterDescription(cluster: ICluster): string {
   let name =
     cluster.metadata.annotations?.['cluster.giantswarm.io/description'];

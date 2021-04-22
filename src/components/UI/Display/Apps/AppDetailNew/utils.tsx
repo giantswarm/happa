@@ -1,7 +1,12 @@
 import React from 'react';
+import { Constants } from 'shared/constants';
 
 interface IHeadingProps extends React.ComponentPropsWithoutRef<'h1'> {
-  level: 1 | 2 | 3 | 4 | 5 | 6;
+  level: number;
+}
+
+export interface IATagProps extends React.ComponentPropsWithoutRef<'a'> {
+  href?: string;
 }
 
 // https://github.com/remarkjs/react-markdown/issues/69
@@ -45,11 +50,40 @@ export function flatten(text: string, child: React.ReactNode): string {
 
 // urlFor(url) turns relative links from the readme into absolute links that will
 // work, and leaves absolute links alone.
-export function urlFor(href: string, readmeBaseURL: string) {
+// if it starts with a # though, that means the link references a anchor in the
+// readme itself, and can be returned as is.
+export function urlFor(href: string, baseURL: string) {
+  if (href.charAt(0) === '#') {
+    return href;
+  }
+
   const absoluteURLMatch = /^https?:\/\/|^\/\//i;
   if (absoluteURLMatch.test(href)) {
     return href;
   }
 
-  return readmeBaseURL + href;
+  return baseURL + href;
+}
+
+// Generates a working base url for relative links in the readmes.
+export function readmeBaseURL(readmeURL: string): string {
+  if (!readmeURL) return '';
+
+  // https://github.com/giantswarm/efk-stack-app/v0.3.2/README.md
+  let r = readmeURL.replace(
+    'https://raw.githubusercontent.com/',
+    'https://github.com/'
+  );
+
+  const l = Constants.README_FILE.length;
+
+  // https://github.com/giantswarm/efk-stack-app/v0.3.2/
+  r = r.substring(0, readmeURL.length - l);
+
+  // https://github.com/giantswarm/efk-stack-app/blob/v0.3.2/
+  const readmeURLParts = r.split('/');
+  const insertPoint = -2;
+  readmeURLParts.splice(insertPoint, 0, 'blob');
+
+  return readmeURLParts.join('/');
 }

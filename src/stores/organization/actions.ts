@@ -130,7 +130,9 @@ export function organizationsLoadMAPI(
         // The user can list all orgs. So list them all and dispatch the action that
         // updates the global state with all the orgs
         const orgListResponse = await getOrganizationList(client, auth);
-        orgs = orgListResponse.items.map((o) => getOrganizationUIName(o));
+        orgs = orgListResponse.items
+          .filter((org) => !org.metadata.deletionTimestamp)
+          .map((o) => getOrganizationUIName(o));
       } else {
         const rulesReview: authorizationv1.ISelfSubjectRulesReview = {
           apiVersion: 'authorization.k8s.io/v1',

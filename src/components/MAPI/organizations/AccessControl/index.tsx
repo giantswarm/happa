@@ -13,11 +13,11 @@ import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControl
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
+import { extractErrorMessage } from '../utils';
 import {
   appendSubjectsToRoleItem,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
-  extractErrorMessage,
   getRoleItems,
   getRoleItemsKey,
 } from './utils';

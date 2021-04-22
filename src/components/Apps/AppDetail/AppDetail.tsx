@@ -44,9 +44,9 @@ const AppDetail: React.FC = () => {
     }
   }, [catalog, app, dispatch]);
 
-  let readmeURL = false;
+  let readmeURL: string | undefined = '';
   if (app) {
-    readmeURL = Boolean(selectReadmeURL(app));
+    readmeURL = selectReadmeURL(app);
   }
 
   const selectedClusterID = useSelector(
@@ -91,7 +91,7 @@ const AppDetail: React.FC = () => {
           description={app.description}
           website={app.home}
           keywords={app.keywords}
-          hasReadme={readmeURL}
+          readmeURL={readmeURL}
           readmeError={readmeErrorMessage}
           readme={app.readme}
           selectVersion={selectVersion}
