@@ -12,8 +12,10 @@ import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
+import * as ui from 'UI/Display/Organizations/types';
 
 import { extractErrorMessage } from '../utils';
+import { fetchClustersSummary, fetchClustersSummaryKey } from './utils';
 
 interface IOrganizationDetailGeneralProps {
   organizationName: string;
@@ -75,11 +77,20 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   };
 
+  const { data: clustersSummary } = useSWR<
+    ui.IOrganizationDetailClustersSummary,
+    GenericResponse
+  >(
+    () => fetchClustersSummaryKey(clusterList?.items),
+    () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
+  );
+
   return (
     <OrganizationDetailPage
       organizationName={organizationName}
       onDelete={handleDelete}
       clusterCount={clusterList?.items.length}
+      clustersSummary={clustersSummary}
     />
   );
 };

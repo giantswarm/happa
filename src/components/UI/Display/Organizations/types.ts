@@ -1,10 +1,8 @@
 export interface IOrganizationDetailClustersSummary {
   nodesCount?: number;
-  nodesMemory?: number;
-  nodesCPU: number;
   workerNodesCount?: number;
   workerNodesMemory?: number;
-  workerNodesCPU: number;
+  workerNodesCPU?: number;
 }
 
 export interface IOrganizationDetailReleasesSummary {
