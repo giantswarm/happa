@@ -2,8 +2,17 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as ui from 'UI/Display/Organizations/types';
 
+/**
+ * Get various statistics about the given clusters.
+ * @param httpClientFactory
+ * @param auth
+ * @param clusters
+ */
 export async function fetchClustersSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -18,6 +27,10 @@ export async function fetchClustersSummary(
   return mergeClusterSummaries(response);
 }
 
+/**
+ * The key used for caching the clusters summary.
+ * @param clusters
+ */
 export function fetchClustersSummaryKey(
   clusters?: capiv1alpha3.ICluster[]
 ): string | null {
@@ -65,12 +78,12 @@ async function fetchSingleClusterSummary(
   auth: IOAuth2Provider,
   cluster: capiv1alpha3.ICluster
 ): Promise<ui.IOrganizationDetailClustersSummary> {
-  const summary: ui.IOrganizationDetailClustersSummary = {};
-
-  summary.nodesCount = capiv1alpha3.getNodeCount(cluster);
+  const summary: ui.IOrganizationDetailClustersSummary = {
+    nodesCount: capiv1alpha3.getNodeCount(cluster),
+  };
 
   try {
-    const [_, nodePoolList] = await Promise.all([
+    const [machineTypes, nodePoolList] = await Promise.all([
       fetchMachineTypes(httpClientFactory, auth),
       fetchNodePoolListForCluster(httpClientFactory, auth, cluster),
     ]);
@@ -79,6 +92,34 @@ async function fetchSingleClusterSummary(
       if (typeof nodePool.status?.readyReplicas !== 'undefined') {
         summary.workerNodesCount ??= 0;
         summary.workerNodesCount += nodePool.status.readyReplicas;
+      }
+    }
+
+    const providerSpecificNodePools = await fetchProviderNodePoolsForNodePools(
+      httpClientFactory,
+      auth,
+      nodePoolList.items
+    );
+
+    for (let i = 0; i < providerSpecificNodePools.length; i++) {
+      const vmSize = providerSpecificNodePools[i].spec?.template.vmSize;
+      const readyReplicas = nodePoolList.items[i].status?.readyReplicas;
+
+      if (
+        typeof vmSize !== 'undefined' &&
+        typeof readyReplicas !== 'undefined'
+      ) {
+        const machineTypeProperties = machineTypes[vmSize];
+        if (!machineTypeProperties) {
+          throw new Error('Invalid machine type.');
+        }
+
+        summary.workerNodesCPU ??= 0;
+        summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
+
+        summary.workerNodesMemory ??= 0;
+        summary.workerNodesMemory +=
+          machineTypeProperties.memory * readyReplicas;
       }
     }
   } catch (err) {
@@ -146,6 +187,9 @@ async function fetchNodePoolListForCluster(
   }
 
   switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
+      return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth);
+
     // TODO(axbarsan): Use CAPA type once available.
     case 'AWSCluster':
       return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth);
@@ -153,4 +197,36 @@ async function fetchNodePoolListForCluster(
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
+}
+
+async function fetchProviderNodePoolsForNodePools(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
+) {
+  return Promise.all(
+    nodePools.map(
+      (np: capiv1alpha3.IMachineDeployment | capiexpv1alpha3.IMachinePool) => {
+        const infrastructureRef = np.spec?.template.spec.infrastructureRef;
+        if (!infrastructureRef) {
+          return Promise.reject(
+            new Error('There is no infrastructure reference defined.')
+          );
+        }
+
+        switch (infrastructureRef.kind) {
+          case capzexpv1alpha3.AzureMachinePool:
+            return capzexpv1alpha3.getAzureMachinePool(
+              httpClientFactory(),
+              auth,
+              np.metadata.namespace!,
+              infrastructureRef.name
+            );
+
+          default:
+            return Promise.reject(new Error('Unsupported provider.'));
+        }
+      }
+    )
+  );
 }
