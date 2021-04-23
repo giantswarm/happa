@@ -61,7 +61,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       const client = clientFactory();
 
       const org = await securityv1alpha1.getOrganization(
-        clientFactory(),
+        client,
         auth,
         organizationName
       );
