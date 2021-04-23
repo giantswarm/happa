@@ -5,7 +5,9 @@ import { validatePassword } from 'lib/passwordValidation';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import { bindActionCreators } from 'redux';
+import { Dispatch } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
@@ -19,7 +21,40 @@ import TermsOfService from './TermsOfService';
 
 const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
-export class SignUp extends React.Component {
+interface MatchParams {
+  token: string;
+}
+
+interface ISignUpProps extends RouteComponentProps<MatchParams> {
+  actions: typeof mainActions;
+  dispatch: Dispatch;
+}
+
+interface FieldValue {
+  value: string | boolean;
+  valid: boolean;
+}
+
+interface ISignUpState {
+  statusMessage: string;
+  checkInviteStatus: string;
+  email: string | undefined;
+  passwordField: FieldValue;
+  passwordConfirmationField: FieldValue;
+  termsOfServiceField: FieldValue;
+  formValid: boolean | undefined;
+  submitting: boolean;
+  buttonText: string[];
+  formSteps: string[];
+  currentStep: number;
+  advancable: boolean;
+}
+
+export class SignUp extends React.Component<ISignUpProps, ISignUpState> {
+  public static propTypes = {};
+  private password: HTMLInputElement | null = null;
+  private passwordConfirmation: HTMLInputElement | null = null;
+
   isComponentMounted = false;
 
   state = {
@@ -101,7 +136,7 @@ export class SignUp extends React.Component {
       });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: ISignUpProps) {
     if (prevProps.match.params.token !== this.props.match.params.token) {
       this.resetForm();
       this.componentDidMount();
@@ -125,16 +160,16 @@ export class SignUp extends React.Component {
       },
       () => {
         if (nextStep === 1) {
-          this.password.focus();
+          this.password?.focus();
         } else if (nextStep === 2) {
-          this.passwordConfirmation.focus();
+          this.passwordConfirmation?.focus();
           // eslint-disable-next-line no-magic-numbers
         } else if (nextStep === 3) {
           this.setState({
             statusMessage: 'tos_intro',
           });
 
-          this.passwordConfirmation.blur();
+          this.passwordConfirmation?.blur();
         }
       }
     );
@@ -156,7 +191,7 @@ export class SignUp extends React.Component {
     }, transitionDelay);
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (this.state.formValid) {
@@ -171,14 +206,15 @@ export class SignUp extends React.Component {
           password: this.state.passwordField.value,
         })
         .then((data) => {
-          const userData = {
-            username: data.username,
+          const userData: ILoggedInUser = {
             email: data.email,
+            type: LoggedInUserTypes.GS,
+            isAdmin: false,
+
             auth: {
               scheme: AuthorizationTypes.GS,
               token: data.token,
             },
-            type: LoggedInUserTypes.GS,
           };
 
           this.props.actions.loginSuccess(userData);
@@ -200,7 +236,7 @@ export class SignUp extends React.Component {
     }
   };
 
-  tosChanged = (e) => {
+  tosChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
 
     this.setState(
@@ -236,7 +272,7 @@ export class SignUp extends React.Component {
     );
   };
 
-  passwordEditingCompleted = (password) => {
+  passwordEditingCompleted = (password: string) => {
     const validationResult = validatePassword(password);
 
     this.setState({
@@ -250,7 +286,7 @@ export class SignUp extends React.Component {
     this.validateForm();
   };
 
-  passwordConfirmationEditingCompleted = (passwordConfirmation) => {
+  passwordConfirmationEditingCompleted = (passwordConfirmation: string) => {
     let statusMessage = this.state.statusMessage;
     let valid = this.state.passwordConfirmationField.valid;
 
@@ -332,20 +368,11 @@ export class SignUp extends React.Component {
   render() {
     return (
       <div className='signup--container'>
-        <h1
-          ref={(t) => {
-            this.title = t;
-          }}
-        >
-          Create Your Giant Swarm Account
-        </h1>
+        <h1>Create Your Giant Swarm Account</h1>
 
         <form
           className={`step-${this.state.currentStep}`}
           onSubmit={this.handleSubmit}
-          ref={(f) => {
-            this.signupForm = f;
-          }}
         >
           <div id='passwordGroup'>
             <p className='subtitle'>
@@ -396,7 +423,6 @@ export class SignUp extends React.Component {
               bsStyle='primary'
               disabled={!this.state.advancable || this.state.submitting}
               loading={this.state.submitting}
-              title='Next'
               type='submit'
             >
               {this.state.buttonText[this.state.currentStep]}
@@ -416,7 +442,7 @@ SignUp.propTypes = {
   actions: PropTypes.object,
 };
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
   return {
     actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,
