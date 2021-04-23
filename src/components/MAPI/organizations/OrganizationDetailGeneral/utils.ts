@@ -106,7 +106,13 @@ async function fetchMasterListForCluster(
 
   switch (infrastructureRef.kind) {
     case capzv1alpha3.AzureCluster:
-      return capzv1alpha3.getAzureMachineList(httpClientFactory(), auth);
+      return capzv1alpha3.getAzureMachineList(httpClientFactory(), auth, {
+        labelSelector: {
+          matchingLabels: {
+            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+          },
+        },
+      });
 
     default:
       return Promise.reject(new Error('Unsupported provider.'));
@@ -152,11 +158,23 @@ async function fetchNodePoolListForCluster(
 
   switch (infrastructureRef.kind) {
     case capzv1alpha3.AzureCluster:
-      return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth);
+      return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth, {
+        labelSelector: {
+          matchingLabels: {
+            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+          },
+        },
+      });
 
     // TODO(axbarsan): Use CAPA type once available.
     case 'AWSCluster':
-      return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth);
+      return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth, {
+        labelSelector: {
+          matchingLabels: {
+            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+          },
+        },
+      });
 
     default:
       return Promise.reject(new Error('Unsupported provider.'));
