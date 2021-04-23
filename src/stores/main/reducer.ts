@@ -11,6 +11,7 @@ import {
   LOGOUT_SUCCESS,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_SUCCESS,
+  SET_PERMISSIONS,
 } from 'stores/main/constants';
 import { IMainState, MainActions } from 'stores/main/types';
 import {
@@ -29,6 +30,7 @@ const initialState = (): IMainState => ({
   selectedClusterID: null,
   firstLoadComplete: false,
   loggedInUser: fetchUserFromStorage(),
+  permissions: {},
   info: {
     general: {
       installation_name: '',
@@ -97,6 +99,11 @@ const makeMainReducer = () => {
 
         case CLUSTER_SELECT:
           draft.selectedClusterID = action.clusterID;
+
+          break;
+
+        case SET_PERMISSIONS:
+          draft.permissions = action.permissions;
 
           break;
       }

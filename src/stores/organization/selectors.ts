@@ -12,6 +12,6 @@ export const selectOrganizationByID = (id: string) => (
 
 export const selectOrganizations = () => (
   state: IState
-): Record<string, IOrganization> | undefined => {
+): Record<string, IOrganization> => {
   return state.entities.organizations.items;
 };

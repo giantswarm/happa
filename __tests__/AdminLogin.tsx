@@ -2,7 +2,10 @@ import { screen } from '@testing-library/react';
 import { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
-import { createSelfSubjectAccessReview } from 'model/services/mapi/authorizationv1';
+import {
+  createSelfSubjectAccessReview,
+  createSelfSubjectRulesReview,
+} from 'model/services/mapi/authorizationv1';
 import { getOrganizationList } from 'model/services/mapi/securityv1alpha1/getOrganizationList';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { MainRoutes } from 'shared/constants/routes';
@@ -13,6 +16,7 @@ import {
   metadataResponse,
   releasesResponse,
   selfSubjectAccessReviewCanListOrgs,
+  selfSubjectRulesReviewWithSomeOrgs,
 } from 'testUtils/mockHttpCalls';
 import {
   createInitialHistory,
@@ -26,6 +30,9 @@ describe('AdminLogin', () => {
     );
     (createSelfSubjectAccessReview as jest.Mock).mockResolvedValue(
       selfSubjectAccessReviewCanListOrgs
+    );
+    (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
+      selfSubjectRulesReviewWithSomeOrgs
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
@@ -65,6 +72,9 @@ describe('AdminLogin', () => {
     handleLoginResponseMockFn.mockImplementation(() => {
       return Promise.reject(new Error('Authentication failed.'));
     });
+    (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
+      selfSubjectRulesReviewWithSomeOrgs
+    );
 
     renderRouteWithStore(
       MainRoutes.AdminLogin,
