@@ -8,6 +8,18 @@ import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 import OrganizationDetailStatistic from './OrganizationDetailStatistic';
 import { IOrganizationDetailClustersSummary } from './types';
 
+function formatMemory(value?: number): string | undefined {
+  if (typeof value === 'undefined') return undefined;
+
+  return `${Math.round(value)} GB`;
+}
+
+function formatCPU(value?: number): number | undefined {
+  if (typeof value === 'undefined') return undefined;
+
+  return Math.round(value);
+}
+
 interface IOrganizationDetailPageProps {
   organizationName: string;
   onDelete: () => Promise<void>;
@@ -54,16 +66,16 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
               {clustersSummary?.workerNodesCount}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
-              {clustersSummary?.nodesMemory}
+              {formatMemory(clustersSummary?.nodesMemory)}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
-              {clustersSummary?.workerNodesMemory}
+              {formatMemory(clustersSummary?.workerNodesMemory)}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
-              {clustersSummary?.nodesCPU}
+              {formatCPU(clustersSummary?.nodesCPU)}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
-              {clustersSummary?.workerNodesCPU}
+              {formatCPU(clustersSummary?.workerNodesCPU)}
             </OrganizationDetailStatistic>
           </Box>
         </Box>

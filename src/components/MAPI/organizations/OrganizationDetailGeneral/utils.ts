@@ -283,6 +283,16 @@ function mergeClusterSummaries(
         acc.nodesCount += currItem.nodesCount;
       }
 
+      if (currItem.nodesCPU) {
+        acc.nodesCPU ??= 0;
+        acc.nodesCPU += currItem.nodesCPU;
+      }
+
+      if (currItem.nodesMemory) {
+        acc.nodesMemory ??= 0;
+        acc.nodesMemory += currItem.nodesMemory;
+      }
+
       if (currItem.workerNodesCount) {
         acc.workerNodesCount ??= 0;
         acc.workerNodesCount += currItem.workerNodesCount;
