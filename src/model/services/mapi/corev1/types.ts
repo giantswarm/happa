@@ -41,3 +41,8 @@ export interface IConfigMap {
   data?: Record<string, string>;
   binaryData?: Record<string, string>;
 }
+
+export interface INodeAddress {
+  type: string;
+  address: string;
+}

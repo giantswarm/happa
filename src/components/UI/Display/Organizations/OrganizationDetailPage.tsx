@@ -5,17 +5,37 @@ import React from 'react';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
+import OrganizationDetailStatistic from './OrganizationDetailStatistic';
+import { IOrganizationDetailClustersSummary } from './types';
+
+function formatMemory(value?: number): string | undefined {
+  if (typeof value === 'undefined') return undefined;
+
+  return `${Math.round(value)} GB`;
+}
+
+function formatCPU(value?: number): number | undefined {
+  if (typeof value === 'undefined') return undefined;
+
+  return Math.round(value);
+}
 
 interface IOrganizationDetailPageProps {
   organizationName: string;
   onDelete: () => Promise<void>;
   clusterCount?: number;
+  clusterCountLoading?: boolean;
+  clustersSummary?: IOrganizationDetailClustersSummary;
+  clustersSummaryLoading?: boolean;
 }
 
 const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   organizationName,
   onDelete,
   clusterCount,
+  clusterCountLoading,
+  clustersSummary,
+  clustersSummaryLoading,
 }) => {
   return (
     <Box direction='column' gap='large'>
@@ -36,25 +56,27 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>{clusterCount ?? <NotAvailable />}</Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <OrganizationDetailStatistic isLoading={clusterCountLoading}>
+              {clusterCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {clustersSummary?.nodesCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {clustersSummary?.workerNodesCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {formatMemory(clustersSummary?.nodesMemory)}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {formatMemory(clustersSummary?.workerNodesMemory)}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {formatCPU(clustersSummary?.nodesCPU)}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {formatCPU(clustersSummary?.workerNodesCPU)}
+            </OrganizationDetailStatistic>
           </Box>
         </Box>
       </Box>
@@ -139,6 +161,9 @@ OrganizationDetailPage.propTypes = {
   organizationName: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
   clusterCount: PropTypes.number,
+  clusterCountLoading: PropTypes.bool,
+  clustersSummary: PropTypes.object,
+  clustersSummaryLoading: PropTypes.bool,
 };
 
 export default OrganizationDetailPage;
