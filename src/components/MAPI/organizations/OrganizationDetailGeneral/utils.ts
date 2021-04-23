@@ -39,40 +39,6 @@ export function fetchClustersSummaryKey(
   return clusters.map(fetchSingleClusterSummaryKey).join();
 }
 
-function mergeClusterSummaries(
-  summaries: ui.IOrganizationDetailClustersSummary[]
-) {
-  return summaries.reduce(
-    (
-      acc: ui.IOrganizationDetailClustersSummary,
-      currItem: ui.IOrganizationDetailClustersSummary
-    ) => {
-      if (currItem.nodesCount) {
-        acc.nodesCount ??= 0;
-        acc.nodesCount += currItem.nodesCount;
-      }
-
-      if (currItem.workerNodesCount) {
-        acc.workerNodesCount ??= 0;
-        acc.workerNodesCount += currItem.workerNodesCount;
-      }
-
-      if (currItem.workerNodesCPU) {
-        acc.workerNodesCPU ??= 0;
-        acc.workerNodesCPU += currItem.workerNodesCPU;
-      }
-
-      if (currItem.workerNodesMemory) {
-        acc.workerNodesMemory ??= 0;
-        acc.workerNodesMemory += currItem.workerNodesMemory;
-      }
-
-      return acc;
-    },
-    {}
-  );
-}
-
 async function fetchSingleClusterSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -83,45 +49,27 @@ async function fetchSingleClusterSummary(
   };
 
   try {
-    const [machineTypes, nodePoolList] = await Promise.all([
-      fetchMachineTypes(httpClientFactory, auth),
-      fetchNodePoolListForCluster(httpClientFactory, auth, cluster),
-    ]);
+    const nodePoolList = await fetchNodePoolListForCluster(
+      httpClientFactory,
+      auth,
+      cluster
+    );
 
-    for (const nodePool of nodePoolList.items) {
-      if (typeof nodePool.status?.readyReplicas !== 'undefined') {
-        summary.workerNodesCount ??= 0;
-        summary.workerNodesCount += nodePool.status.readyReplicas;
-      }
-    }
+    appendNodePoolsStats(nodePoolList.items, summary);
 
+    const machineTypes = await fetchMachineTypes(httpClientFactory, auth);
     const providerSpecificNodePools = await fetchProviderNodePoolsForNodePools(
       httpClientFactory,
       auth,
       nodePoolList.items
     );
 
-    for (let i = 0; i < providerSpecificNodePools.length; i++) {
-      const vmSize = providerSpecificNodePools[i].spec?.template.vmSize;
-      const readyReplicas = nodePoolList.items[i].status?.readyReplicas;
-
-      if (
-        typeof vmSize !== 'undefined' &&
-        typeof readyReplicas !== 'undefined'
-      ) {
-        const machineTypeProperties = machineTypes[vmSize];
-        if (!machineTypeProperties) {
-          throw new Error('Invalid machine type.');
-        }
-
-        summary.workerNodesCPU ??= 0;
-        summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
-
-        summary.workerNodesMemory ??= 0;
-        summary.workerNodesMemory +=
-          machineTypeProperties.memory * readyReplicas;
-      }
-    }
+    appendProviderNodePoolsStats(
+      nodePoolList.items,
+      providerSpecificNodePools,
+      machineTypes,
+      summary
+    );
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
   }
@@ -131,6 +79,100 @@ async function fetchSingleClusterSummary(
 
 function fetchSingleClusterSummaryKey(cluster: capiv1alpha3.ICluster): string {
   return `fetchSingleClusterSummary/${cluster.metadata.namespace}/${cluster.metadata.name}`;
+}
+
+async function fetchNodePoolListForCluster(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: capiv1alpha3.ICluster
+) {
+  const { infrastructureRef } = cluster.spec;
+  if (!infrastructureRef) {
+    return Promise.reject(
+      new Error('There is no infrastructure reference defined.')
+    );
+  }
+
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
+      return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth);
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth);
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
+}
+
+function appendNodePoolsStats(
+  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[],
+  summary: ui.IOrganizationDetailClustersSummary
+) {
+  for (const nodePool of nodePools) {
+    if (typeof nodePool.status?.readyReplicas !== 'undefined') {
+      summary.workerNodesCount ??= 0;
+      summary.workerNodesCount += nodePool.status.readyReplicas;
+    }
+  }
+}
+
+async function fetchProviderNodePoolsForNodePools(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
+) {
+  return Promise.all(
+    nodePools.map(
+      (np: capiv1alpha3.IMachineDeployment | capiexpv1alpha3.IMachinePool) => {
+        const infrastructureRef = np.spec?.template.spec.infrastructureRef;
+        if (!infrastructureRef) {
+          return Promise.reject(
+            new Error('There is no infrastructure reference defined.')
+          );
+        }
+
+        switch (infrastructureRef.kind) {
+          case capzexpv1alpha3.AzureMachinePool:
+            return capzexpv1alpha3.getAzureMachinePool(
+              httpClientFactory(),
+              auth,
+              np.metadata.namespace!,
+              infrastructureRef.name
+            );
+
+          default:
+            return Promise.reject(new Error('Unsupported provider.'));
+        }
+      }
+    )
+  );
+}
+
+function appendProviderNodePoolsStats(
+  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[],
+  providerNodePools: capzexpv1alpha3.IAzureMachinePool[],
+  machineTypes: Record<string, IMachineType>,
+  summary: ui.IOrganizationDetailClustersSummary
+) {
+  for (let i = 0; i < providerNodePools.length; i++) {
+    const vmSize = providerNodePools[i].spec?.template.vmSize;
+    const readyReplicas = nodePools[i].status?.readyReplicas;
+
+    if (typeof vmSize !== 'undefined' && typeof readyReplicas !== 'undefined') {
+      const machineTypeProperties = machineTypes[vmSize];
+      if (!machineTypeProperties) {
+        throw new Error('Invalid machine type.');
+      }
+
+      summary.workerNodesCPU ??= 0;
+      summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
+
+      summary.workerNodesMemory ??= 0;
+      summary.workerNodesMemory += machineTypeProperties.memory * readyReplicas;
+    }
+  }
 }
 
 interface IMachineType {
@@ -174,59 +216,36 @@ async function fetchMachineTypes(
   return Promise.resolve(machineTypes);
 }
 
-async function fetchNodePoolListForCluster(
-  httpClientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  cluster: capiv1alpha3.ICluster
+function mergeClusterSummaries(
+  summaries: ui.IOrganizationDetailClustersSummary[]
 ) {
-  const { infrastructureRef } = cluster.spec;
-  if (!infrastructureRef) {
-    return Promise.reject(
-      new Error('There is no infrastructure reference defined.')
-    );
-  }
-
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
-      return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth);
-
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
-      return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth);
-
-    default:
-      return Promise.reject(new Error('Unsupported provider.'));
-  }
-}
-
-async function fetchProviderNodePoolsForNodePools(
-  httpClientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
-) {
-  return Promise.all(
-    nodePools.map(
-      (np: capiv1alpha3.IMachineDeployment | capiexpv1alpha3.IMachinePool) => {
-        const infrastructureRef = np.spec?.template.spec.infrastructureRef;
-        if (!infrastructureRef) {
-          return Promise.reject(
-            new Error('There is no infrastructure reference defined.')
-          );
-        }
-
-        switch (infrastructureRef.kind) {
-          case capzexpv1alpha3.AzureMachinePool:
-            return capzexpv1alpha3.getAzureMachinePool(
-              httpClientFactory(),
-              auth,
-              np.metadata.namespace!,
-              infrastructureRef.name
-            );
-
-          default:
-            return Promise.reject(new Error('Unsupported provider.'));
-        }
+  return summaries.reduce(
+    (
+      acc: ui.IOrganizationDetailClustersSummary,
+      currItem: ui.IOrganizationDetailClustersSummary
+    ) => {
+      if (currItem.nodesCount) {
+        acc.nodesCount ??= 0;
+        acc.nodesCount += currItem.nodesCount;
       }
-    )
+
+      if (currItem.workerNodesCount) {
+        acc.workerNodesCount ??= 0;
+        acc.workerNodesCount += currItem.workerNodesCount;
+      }
+
+      if (currItem.workerNodesCPU) {
+        acc.workerNodesCPU ??= 0;
+        acc.workerNodesCPU += currItem.workerNodesCPU;
+      }
+
+      if (currItem.workerNodesMemory) {
+        acc.workerNodesMemory ??= 0;
+        acc.workerNodesMemory += currItem.workerNodesMemory;
+      }
+
+      return acc;
+    },
+    {}
   );
 }
