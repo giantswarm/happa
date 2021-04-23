@@ -12,17 +12,19 @@ interface IOrganizationDetailPageProps {
   organizationName: string;
   onDelete: () => Promise<void>;
   clusterCount?: number;
+  clusterCountLoading?: boolean;
   clustersSummary?: IOrganizationDetailClustersSummary;
+  clustersSummaryLoading?: boolean;
 }
 
 const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   organizationName,
   onDelete,
   clusterCount,
+  clusterCountLoading,
   clustersSummary,
+  clustersSummaryLoading,
 }) => {
-  const isLoadingSummary = !clustersSummary;
-
   return (
     <Box direction='column' gap='large'>
       <Box direction='row' gap='large'>
@@ -40,19 +42,19 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clusterCountLoading}>
               {clusterCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={isLoadingSummary}>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
               {clustersSummary?.nodesCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={isLoadingSummary}>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
               {clustersSummary?.workerNodesCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={isLoadingSummary}>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
               {clustersSummary?.workerNodesMemory}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={isLoadingSummary}>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
               {clustersSummary?.workerNodesCPU}
             </OrganizationDetailStatistic>
           </Box>
@@ -139,7 +141,9 @@ OrganizationDetailPage.propTypes = {
   organizationName: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
   clusterCount: PropTypes.number,
+  clusterCountLoading: PropTypes.bool,
   clustersSummary: PropTypes.object,
+  clustersSummaryLoading: PropTypes.bool,
 };
 
 export default OrganizationDetailPage;

@@ -77,7 +77,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   };
 
-  const { data: clustersSummary } = useSWR<
+  const { data: clustersSummary, error: clustersSummaryError } = useSWR<
     ui.IOrganizationDetailClustersSummary,
     GenericResponse
   >(
@@ -90,7 +90,13 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       organizationName={organizationName}
       onDelete={handleDelete}
       clusterCount={clusterList?.items.length}
+      clusterCountLoading={
+        typeof clusterList === 'undefined' && !clusterListError
+      }
       clustersSummary={clustersSummary}
+      clustersSummaryLoading={
+        typeof clustersSummary === 'undefined' && !clustersSummaryError
+      }
     />
   );
 };
