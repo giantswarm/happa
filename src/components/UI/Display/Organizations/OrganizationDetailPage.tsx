@@ -40,7 +40,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <OrganizationDetailStatistic isLoading={isLoadingSummary}>
+            <OrganizationDetailStatistic>
               {clusterCount}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={isLoadingSummary}>
