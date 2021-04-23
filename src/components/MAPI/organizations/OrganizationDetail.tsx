@@ -6,7 +6,6 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -17,13 +16,11 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
-import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 
-import { extractErrorMessage } from './utils';
+import OrganizationDetailGeneral from './OrganizationDetailGeneral';
 
 function computePaths(orgName: string) {
   return {
@@ -84,54 +81,6 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
     }
   }, [error, orgId, dispatch, data]);
 
-  const handleDelete = async () => {
-    try {
-      const client = clientFactory();
-
-      const org = await securityv1alpha1.getOrganization(
-        clientFactory(),
-        auth,
-        orgId
-      );
-      await securityv1alpha1.deleteOrganization(client, auth, org);
-
-      await dispatch(organizationsLoadMAPI(auth));
-
-      return Promise.resolve();
-    } catch (err: unknown) {
-      const errorMessage = extractErrorMessage(err);
-
-      return Promise.reject(new Error(errorMessage));
-    }
-  };
-
-  const clusterListClient = useRef(clientFactory());
-  const getOptions: capiv1alpha3.IGetClusterListOptions = useMemo(() => {
-    return {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: orgId },
-      },
-    };
-  }, [orgId]);
-  const { data: clusterList, error: clusterListError } = useSWR<
-    capiv1alpha3.IClusterList,
-    GenericResponse
-  >(
-    () => (data ? capiv1alpha3.getClusterListKey(getOptions) : null),
-    () =>
-      capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
-  );
-
-  useEffect(() => {
-    if (clusterListError) {
-      new FlashMessage(
-        'There was a problem loading clusters in this organization.',
-        messageType.ERROR,
-        messageTTL.FOREVER
-      );
-    }
-  }, [clusterListError]);
-
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
@@ -144,10 +93,8 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
             </Heading>
             <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
               <Tab eventKey={paths.Detail} title='General'>
-                <OrganizationDetailPage
+                <OrganizationDetailGeneral
                   organizationName={data.metadata.name}
-                  onDelete={handleDelete}
-                  clusterCount={clusterList?.items.length}
                 />
               </Tab>
               <Tab eventKey={paths.AccessControl} title='Access control'>
