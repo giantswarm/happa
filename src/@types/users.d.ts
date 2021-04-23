@@ -34,3 +34,18 @@ interface IInvitation {
   organizations: string;
   status: string;
 }
+
+type PermissionVerb =
+  | 'get'
+  | 'watch'
+  | 'list'
+  | 'create'
+  | 'update'
+  | 'patch'
+  | 'delete'
+  | '*'
+  | string;
+
+interface INamespacePermissions extends Record<string, PermissionVerb[]> {}
+
+interface IPermissionMap extends Record<string, INamespacePermissions> {}

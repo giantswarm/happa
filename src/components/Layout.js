@@ -16,10 +16,7 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
-import {
-  getHasAccessToResources,
-  getLoggedInUser,
-} from 'stores/main/selectors';
+import { getLoggedInUser, selectHasAppAccess } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -57,7 +54,7 @@ class Layout extends React.Component {
     return (
       <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
-          {this.props.hasAccessToResources ? (
+          {this.props.hasAppAccess ? (
             <>
               <Modals />
               <Navigation
@@ -120,7 +117,7 @@ Layout.propTypes = {
   catalogs: PropTypes.object,
   firstLoadComplete: PropTypes.bool,
   authProvider: PropTypes.object,
-  hasAccessToResources: PropTypes.bool,
+  hasAppAccess: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -130,7 +127,7 @@ function mapStateToProps(state) {
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,
-    hasAccessToResources: getHasAccessToResources(state),
+    hasAppAccess: selectHasAppAccess(state),
   };
 }
 

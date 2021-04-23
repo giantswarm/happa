@@ -32,7 +32,7 @@ const LoadingOverlayInner = styled.div`
 function LoadingOverlay(props) {
   if (props.loading) {
     return (
-      <LoadingOverlayOuter>
+      <LoadingOverlayOuter role='progressbar' aria-label='Loading…'>
         <LoadingOverlayInner>
           <img className='loader' src='/images/loader_oval_light.svg' />
         </LoadingOverlayInner>

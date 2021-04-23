@@ -2,11 +2,7 @@ import GiantSwarm, { V4Organization } from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpClientImpl } from 'model/clients/HttpClient';
-import { createSelfSubjectRulesReview } from 'model/services/mapi/authorizationv1';
-import {
-  createSelfSubjectAccessReview,
-  ISelfSubjectAccessReviewSpec,
-} from 'model/services/mapi/authorizationv1/';
+import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import {
   getOrganization,
   getOrganizationList,
@@ -111,7 +107,7 @@ export function organizationsLoadMAPI(
 
       // Can I LIST Organization CR's ?
       let canList = false;
-      const request: ISelfSubjectAccessReviewSpec = {
+      const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
         resourceAttributes: {
           namespace: 'default',
           verb: 'list',
@@ -119,7 +115,7 @@ export function organizationsLoadMAPI(
           resource: 'organizations',
         },
       };
-      const accessReviewResponse = await createSelfSubjectAccessReview(
+      const accessReviewResponse = await authorizationv1.createSelfSubjectAccessReview(
         client,
         auth,
         request
@@ -138,17 +134,27 @@ export function organizationsLoadMAPI(
           .filter((org) => !org.metadata.deletionTimestamp)
           .map((o) => getOrganizationUIName(o));
       } else {
+        const rulesReview: authorizationv1.ISelfSubjectRulesReview = {
+          apiVersion: 'authorization.k8s.io/v1',
+          kind: 'SelfSubjectRulesReview',
+          spec: {
+            namespace: 'default',
+          },
+        } as authorizationv1.ISelfSubjectRulesReview;
+
         // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
         // which ones they can get.
-        const rulesReviewResponse = await createSelfSubjectRulesReview(
+        const rulesReviewResponse = await authorizationv1.createSelfSubjectRulesReview(
           client,
-          auth
+          auth,
+          rulesReview
         );
 
         rulesReviewResponse.status?.resourceRules.forEach((rule) => {
           if (
             rule.verbs.includes('get') &&
-            rule.resources.includes('organizations')
+            rule.resources.includes('organizations') &&
+            rule.resourceNames
           ) {
             orgs.push(...rule.resourceNames);
           }

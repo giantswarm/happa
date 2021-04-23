@@ -30,6 +30,7 @@ import {
   CLUSTER_LOAD_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
 import {
+  fetchPermissions,
   globalLoadError,
   globalLoadFinish,
   globalLoadStart,
@@ -37,7 +38,7 @@ import {
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
-import { getHasAccessToResources, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -65,22 +66,12 @@ export function batchedLayout(
     try {
       await dispatch(resumeLogin(auth));
 
-      try {
-        const user = getLoggedInUser(getState());
-        if (user?.type === LoggedInUserTypes.MAPI) {
-          await dispatch(organizationsLoadMAPI(auth));
-        } else {
-          await dispatch(organizationsLoad());
-        }
-      } catch (err) {
-        const hasAccessToResources = getHasAccessToResources(getState());
-        if (!hasAccessToResources) {
-          dispatch(globalLoadFinish());
-
-          return;
-        }
-
-        throw err;
+      const user = getLoggedInUser(getState())!;
+      if (user.type === LoggedInUserTypes.MAPI) {
+        await dispatch(organizationsLoadMAPI(auth));
+        await dispatch(fetchPermissions(auth));
+      } else {
+        await dispatch(organizationsLoad());
       }
 
       await dispatch(refreshUserInfo());

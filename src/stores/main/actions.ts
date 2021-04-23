@@ -11,7 +11,9 @@ import Passage, {
 } from 'lib/passageClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
+import { HttpClientImpl } from 'model/clients/HttpClient';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
+import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
@@ -35,10 +37,12 @@ import {
   REFRESH_USER_INFO_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
   SET_NEW_PASSWORD,
+  SET_PERMISSIONS,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
 import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
+import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import {
   fetchUserFromStorage,
@@ -47,6 +51,7 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
+import { computePermissions, getNamespaceFromOrgName } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -401,5 +406,49 @@ export function mapiLogin(
       dispatch(loginError(err.message));
       dispatch(push(MainRoutes.Login));
     }
+  };
+}
+
+export function fetchPermissions(
+  auth: IOAuth2Provider
+): ThunkAction<Promise<void>, IState, void, MainActions> {
+  return async (dispatch, getState) => {
+    const orgNames = Object.keys(selectOrganizations()(getState()));
+
+    const namespaces = orgNames.map(getNamespaceFromOrgName);
+    // Also get permissions for the default namespace.
+    namespaces.push('default');
+
+    const requests = namespaces.map(async (namespace) => {
+      const client = new HttpClientImpl();
+
+      const rulesReview: authorizationv1.ISelfSubjectRulesReview = {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectRulesReview',
+        spec: {
+          namespace,
+        },
+      } as authorizationv1.ISelfSubjectRulesReview;
+
+      const review = await authorizationv1.createSelfSubjectRulesReview(
+        client,
+        auth,
+        rulesReview
+      );
+
+      return [namespace, review] as [typeof namespace, typeof review];
+    });
+
+    const reviews = await Promise.all(requests);
+    const permissions = computePermissions(reviews);
+
+    dispatch(setPermissions(permissions));
+  };
+}
+
+export function setPermissions(permissions: IPermissionMap): MainActions {
+  return {
+    type: SET_PERMISSIONS,
+    permissions,
   };
 }

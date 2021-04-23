@@ -6,13 +6,14 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import DocumentTitle from 'shared/DocumentTitle';
+import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-import { extractErrorMessage, getOrgNamespaceFromOrgName } from '../utils';
+import { extractErrorMessage } from '../utils';
 import {
   appendSubjectsToRoleItem,
   createRoleBindingWithSubjects,
@@ -30,7 +31,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   organizationName,
   ...props
 }) => {
-  const orgNamespace = getOrgNamespaceFromOrgName(organizationName);
+  const orgNamespace = getNamespaceFromOrgName(organizationName);
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
