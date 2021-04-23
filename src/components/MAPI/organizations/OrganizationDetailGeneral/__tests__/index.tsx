@@ -8,35 +8,26 @@ import {
 import axios from 'axios';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
-import RoutePath from 'lib/routePath';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import { cache, SWRConfig } from 'swr';
 import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
-import OrganizationDetail from '../OrganizationDetail';
+import OrganizationDetailGeneral from '../';
 
 function getComponent(
-  props: React.ComponentPropsWithoutRef<typeof OrganizationDetail>
+  props: React.ComponentPropsWithoutRef<typeof OrganizationDetailGeneral>
 ) {
-  const path = RoutePath.createUsablePath(OrganizationsRoutes.Detail, {
-    orgId: 'org1',
-  });
-
-  const history = createMemoryHistory({
-    initialEntries: [path],
-    initialIndex: 0,
-  });
+  const history = createMemoryHistory();
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
     <SWRConfig value={{ dedupingInterval: 0 }}>
-      <OrganizationDetail {...p} />
+      <OrganizationDetailGeneral {...p} />
     </SWRConfig>
   );
 
@@ -61,7 +52,7 @@ jest.unmock(
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
-describe('OrganizationDetail', () => {
+describe('OrganizationDetailGeneral', () => {
   beforeAll(() => {
     axios.defaults.adapter = require('axios/lib/adapters/http');
   });
@@ -70,20 +61,16 @@ describe('OrganizationDetail', () => {
     axios.defaults.adapter = require('axios/lib/adapters/xhr');
   });
 
-  beforeEach(() => {
-    nock(window.config.mapiEndpoint)
-      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
-      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
-  });
-
   afterEach(() => {
     cache.clear();
   });
 
-  it('renders without crashing', async () => {
-    render(getComponent({}));
-
-    await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
+  it('renders without crashing', () => {
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
   });
 
   it('provides the ability to delete an organization', async () => {
@@ -114,9 +101,11 @@ describe('OrganizationDetail', () => {
         kind: 'ClusterList',
       });
 
-    render(getComponent({}));
-
-    await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
 
     const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
@@ -159,9 +148,11 @@ describe('OrganizationDetail', () => {
         kind: 'ClusterList',
       });
 
-    render(getComponent({}));
-
-    await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
 
     const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
@@ -191,9 +182,11 @@ describe('OrganizationDetail', () => {
         kind: 'ClusterList',
       });
 
-    render(getComponent({}));
-
-    await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
 
     const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
@@ -255,9 +248,11 @@ describe('OrganizationDetail', () => {
         kind: 'ClusterList',
       });
 
-    render(getComponent({}));
-
-    await waitForElementToBeRemoved(screen.getByTitle('Loading...'));
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
 
     const deleteButton = screen.getByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
