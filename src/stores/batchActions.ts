@@ -85,7 +85,6 @@ export function batchedLayout(
         messageType.WARNING,
         messageTTL.MEDIUM
       );
-      ErrorReporter.getInstance().notify(err);
 
       return;
     }
