@@ -38,7 +38,9 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>Workload clusters</Text>
             <Text>Nodes</Text>
             <Text>Worker nodes</Text>
+            <Text>Memory in nodes</Text>
             <Text>Memory in worker nodes</Text>
+            <Text>CPU in nodes</Text>
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
@@ -52,7 +54,13 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
               {clustersSummary?.workerNodesCount}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {clustersSummary?.nodesMemory}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
               {clustersSummary?.workerNodesMemory}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+              {clustersSummary?.nodesCPU}
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
               {clustersSummary?.workerNodesCPU}

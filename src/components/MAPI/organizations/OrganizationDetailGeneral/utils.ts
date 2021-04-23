@@ -44,9 +44,21 @@ async function fetchSingleClusterSummary(
   auth: IOAuth2Provider,
   cluster: capiv1alpha3.ICluster
 ): Promise<ui.IOrganizationDetailClustersSummary> {
-  const summary: ui.IOrganizationDetailClustersSummary = {
-    nodesCount: capiv1alpha3.getNodeCount(cluster),
-  };
+  const summary: ui.IOrganizationDetailClustersSummary = {};
+
+  const machineTypes = getMachineTypes();
+
+  try {
+    const masterList = await fetchMasterListForCluster(
+      httpClientFactory,
+      auth,
+      cluster
+    );
+
+    appendMasterStats(masterList.items, machineTypes, summary);
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+  }
 
   try {
     const nodePoolList = await fetchNodePoolListForCluster(
@@ -57,7 +69,6 @@ async function fetchSingleClusterSummary(
 
     appendNodePoolsStats(nodePoolList.items, summary);
 
-    const machineTypes = await fetchMachineTypes(httpClientFactory, auth);
     const providerSpecificNodePools = await fetchProviderNodePoolsForNodePools(
       httpClientFactory,
       auth,
@@ -79,6 +90,52 @@ async function fetchSingleClusterSummary(
 
 function fetchSingleClusterSummaryKey(cluster: capiv1alpha3.ICluster): string {
   return `fetchSingleClusterSummary/${cluster.metadata.namespace}/${cluster.metadata.name}`;
+}
+
+async function fetchMasterListForCluster(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: capiv1alpha3.ICluster
+) {
+  const { infrastructureRef } = cluster.spec;
+  if (!infrastructureRef) {
+    return Promise.reject(
+      new Error('There is no infrastructure reference defined.')
+    );
+  }
+
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
+      return capzv1alpha3.getAzureMachineList(httpClientFactory(), auth);
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
+}
+
+function appendMasterStats(
+  masters: capzv1alpha3.IAzureMachine[],
+  machineTypes: Record<string, IMachineType>,
+  summary: ui.IOrganizationDetailClustersSummary
+) {
+  summary.nodesCount = masters.length;
+
+  for (const master of masters) {
+    const vmSize = master.spec?.vmSize;
+
+    if (typeof vmSize !== 'undefined') {
+      const machineTypeProperties = machineTypes[vmSize];
+      if (!machineTypeProperties) {
+        throw new Error('Invalid machine type.');
+      }
+
+      summary.nodesCPU ??= 0;
+      summary.nodesCPU += machineTypeProperties.cpu;
+
+      summary.nodesMemory ??= 0;
+      summary.nodesMemory += machineTypeProperties.memory;
+    }
+  }
 }
 
 async function fetchNodePoolListForCluster(
@@ -180,10 +237,7 @@ interface IMachineType {
   memory: number;
 }
 
-async function fetchMachineTypes(
-  _httpClientFactory: HttpClientFactory,
-  _auth: IOAuth2Provider
-): Promise<Record<string, IMachineType>> {
+function getMachineTypes(): Record<string, IMachineType> {
   const machineTypes: Record<string, IMachineType> = {};
 
   if (window.config.awsCapabilitiesJSON) {
@@ -213,7 +267,7 @@ async function fetchMachineTypes(
     }
   }
 
-  return Promise.resolve(machineTypes);
+  return machineTypes;
 }
 
 function mergeClusterSummaries(

@@ -1,80 +1,25 @@
 import * as capiv1alpha3 from '../../capiv1alpha3';
 import * as metav1 from '../../metav1';
-import { Tags } from '../types';
-
-export interface IAzureMachinePoolTemplateImageSharedGallery {
-  subscriptionID: string;
-  resourceGroup: string;
-  gallery: string;
-  name: string;
-  version: string;
-}
-
-export interface IAzureMachinePoolTemplateImageMarketplace {
-  publisher: string;
-  offer: string;
-  sku: string;
-  version: string;
-  thirdPatyImage: string;
-}
-
-export interface IAzureMachinePoolTemplateImage {
-  id?: string;
-  sharedGallery?: IAzureMachinePoolTemplateImageSharedGallery;
-  marketplace?: IAzureMachinePoolTemplateImageMarketplace;
-}
-
-export interface IAzureMachinePoolTemplateOSDiskManagedDiskEncryptionSet {
-  id?: string;
-}
-
-export interface IAzureMachinePoolTemplateManagedDisk {
-  storageAccountType: string;
-  diskEncryptionSet?: IAzureMachinePoolTemplateOSDiskManagedDiskEncryptionSet;
-}
-
-export interface IAzureMachinePoolTemplateOSDiskDiffDiskSettings {
-  option: string;
-}
-
-export interface IAzureMachinePoolTemplateOSDisk {
-  osType: string;
-  diskSizeGB: number;
-  managedDisk: IAzureMachinePoolTemplateManagedDisk;
-  diffDiskSettings?: IAzureMachinePoolTemplateOSDiskDiffDiskSettings;
-  cachingType?: string;
-}
-
-export interface IAzureMachinePoolTemplateDataDisk {
-  nameSuffix: string;
-  diskSizeGB: number;
-  managedDisk?: IAzureMachinePoolTemplateManagedDisk;
-  lun?: number;
-  cachingType?: string;
-}
-
-export interface IAzureMachinePoolTemplateSecurityProfile {
-  encryptionAtHost?: boolean;
-}
-
-export interface IAzureMachinePoolTemplateSpotVMOptions {
-  maxPrice?: number | string;
-}
+import {
+  IDataDisk,
+  IImage,
+  IOSDisk,
+  ISecurityProfile,
+  ISpotVMOptions,
+  IUserAssignedIdentity,
+  Tags,
+} from '../types';
 
 export interface IAzureMachinePoolTemplate {
   vmSize: string;
-  osDisk: IAzureMachinePoolTemplateOSDisk;
-  image?: IAzureMachinePoolTemplateImage;
-  dataDisks?: IAzureMachinePoolTemplateDataDisk[];
+  osDisk: IOSDisk;
+  image?: IImage;
+  dataDisks?: IDataDisk[];
   sshPublicKey?: string;
   acceleratedNetworking?: boolean;
   terminateNotificationTimeout?: number;
-  securityProfile?: IAzureMachinePoolTemplateSecurityProfile;
-  spotVMOptions?: IAzureMachinePoolTemplateSpotVMOptions;
-}
-
-export interface IAzureMachinePoolSpecUserAssignedIdentity {
-  providerID: string;
+  securityProfile?: ISecurityProfile;
+  spotVMOptions?: ISpotVMOptions;
 }
 
 export interface IAzureMachinePoolSpec {
@@ -85,7 +30,7 @@ export interface IAzureMachinePoolSpec {
   providerIDList?: string[];
   identity?: string;
   roleAssignmentName?: string;
-  userAssignedIdentities?: IAzureMachinePoolSpecUserAssignedIdentity[];
+  userAssignedIdentities?: IUserAssignedIdentity[];
 }
 
 export interface IAzureMachinePoolInstance {
