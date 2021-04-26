@@ -3,7 +3,7 @@ import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 
 import { LoggedInUserTypes } from './types';
 
-const MAPI_ADMIN_GROUP = 'giantswarm:giantswarm-admins';
+const MAPI_ADMIN_GROUP = 'giantswarm:giantswarm:giantswarm-admins';
 
 export function mapOAuth2UserToUser(user: IOAuth2User): ILoggedInUser {
   const isAdmin = user.groups.includes(MAPI_ADMIN_GROUP);
