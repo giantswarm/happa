@@ -37,10 +37,11 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       },
     };
   }, [organizationName]);
-  const { data: clusterList, error: clusterListError } = useSWR<
-    capiv1alpha3.IClusterList,
-    GenericResponse
-  >(
+  const {
+    data: clusterList,
+    error: clusterListError,
+    isValidating: clusterListIsValidating,
+  } = useSWR<capiv1alpha3.IClusterList, GenericResponse>(
     () => capiv1alpha3.getClusterListKey(getOptions),
     () =>
       capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
@@ -77,10 +78,10 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   };
 
-  const { data: clustersSummary, error: clustersSummaryError } = useSWR<
-    ui.IOrganizationDetailClustersSummary,
-    GenericResponse
-  >(
+  const {
+    data: clustersSummary,
+    isValidating: clustersSummaryIsValidating,
+  } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponse>(
     () => fetchClustersSummaryKey(clusterList?.items),
     () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
   );
@@ -91,11 +92,11 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       onDelete={handleDelete}
       clusterCount={clusterList?.items.length}
       clusterCountLoading={
-        typeof clusterList === 'undefined' && !clusterListError
+        typeof clusterList === 'undefined' && clusterListIsValidating
       }
       clustersSummary={clustersSummary}
       clustersSummaryLoading={
-        typeof clustersSummary === 'undefined' && !clustersSummaryError
+        typeof clustersSummary === 'undefined' && clustersSummaryIsValidating
       }
     />
   );
