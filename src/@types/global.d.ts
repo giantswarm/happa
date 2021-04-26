@@ -14,6 +14,7 @@ interface IGlobalConfig {
   ingressBaseDomain: string;
   passageEndpoint: string;
   mapiAuthRedirectURL: string;
+  mapiAuthAdminGroup: string;
 }
 
 interface IFeatureFlags {

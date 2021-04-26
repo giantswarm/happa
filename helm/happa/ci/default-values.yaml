@@ -60,3 +60,6 @@ Installation:
       RestrictAccess:
         GuestAPI:
           Public: false
+    Kubernetes:
+      Auth:
+        ControlPlaneAdminTargetGroup: ""
