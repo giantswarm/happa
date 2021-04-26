@@ -6,7 +6,10 @@ import NotAvailable from 'UI/Display/NotAvailable';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 import OrganizationDetailStatistic from './OrganizationDetailStatistic';
-import { IOrganizationDetailClustersSummary } from './types';
+import {
+  IOrganizationDetailClustersSummary,
+  IOrganizationDetailReleasesSummary,
+} from './types';
 
 function formatMemory(value?: number): string | undefined {
   if (typeof value === 'undefined') return undefined;
@@ -27,6 +30,8 @@ interface IOrganizationDetailPageProps {
   clusterCountLoading?: boolean;
   clustersSummary?: IOrganizationDetailClustersSummary;
   clustersSummaryLoading?: boolean;
+  releasesSummary?: IOrganizationDetailReleasesSummary;
+  releasesSummaryLoading?: boolean;
 }
 
 const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
@@ -36,6 +41,8 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   clusterCountLoading,
   clustersSummary,
   clustersSummaryLoading,
+  releasesSummary,
+  releasesSummaryLoading,
 }) => {
   return (
     <Box direction='column' gap='large'>
@@ -94,20 +101,30 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
           </Box>
           <Box direction='column' gap='xsmall'>
             <Box direction='row' gap='small'>
-              <Text>
-                <NotAvailable />
-              </Text>
-              <KubernetesVersionLabel hidePatchVersion={true} />
+              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+                {releasesSummary?.oldestReleaseVersion}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+                <KubernetesVersionLabel
+                  version={releasesSummary?.oldestReleaseK8sVersion}
+                  hidePatchVersion={true}
+                />
+              </OrganizationDetailStatistic>
             </Box>
             <Box direction='row' gap='small'>
-              <Text>
-                <NotAvailable />
-              </Text>
-              <KubernetesVersionLabel hidePatchVersion={true} />
+              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+                {releasesSummary?.newestReleaseVersion}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+                <KubernetesVersionLabel
+                  version={releasesSummary?.newestReleaseK8sVersion}
+                  hidePatchVersion={true}
+                />
+              </OrganizationDetailStatistic>
             </Box>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+              {releasesSummary?.releasesInUseCount}
+            </OrganizationDetailStatistic>
           </Box>
         </Box>
       </Box>
@@ -164,6 +181,8 @@ OrganizationDetailPage.propTypes = {
   clusterCountLoading: PropTypes.bool,
   clustersSummary: PropTypes.object,
   clustersSummaryLoading: PropTypes.bool,
+  releasesSummary: PropTypes.object,
+  releasesSummaryLoading: PropTypes.bool,
 };
 
 export default OrganizationDetailPage;
