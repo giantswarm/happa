@@ -109,6 +109,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: mapi-auth-redirect-url
+        - name: MAPI_AUTH_ADMIN_GROUP
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: mapi-auth-admin-group
         - name: ENVIRONMENT
           value: kubernetes
         - name: FEATURE_MAPI_AUTH
