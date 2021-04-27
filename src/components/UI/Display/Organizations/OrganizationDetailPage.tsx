@@ -67,25 +67,46 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <OrganizationDetailStatistic isLoading={clusterCountLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clusterCountLoading}
+              aria-label='Workload clusters'
+            >
               {clusterCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Nodes'
+            >
               {clustersSummary?.nodesCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Worker nodes'
+            >
               {clustersSummary?.workerNodesCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Memory in nodes'
+            >
               {formatMemory(clustersSummary?.nodesMemory)}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Memory in worker nodes'
+            >
               {formatMemory(clustersSummary?.workerNodesMemory)}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='CPU in nodes'
+            >
               {formatCPU(clustersSummary?.nodesCPU)}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={clustersSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='CPU in worker nodes'
+            >
               {formatCPU(clustersSummary?.workerNodesCPU)}
             </OrganizationDetailStatistic>
           </Box>
@@ -105,10 +126,16 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
           </Box>
           <Box direction='column' gap='xsmall'>
             <Box direction='row' gap='small'>
-              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Oldest release'
+              >
                 {releasesSummary?.oldestReleaseVersion}
               </OrganizationDetailStatistic>
-              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Oldest release Kubernetes version'
+              >
                 <KubernetesVersionLabel
                   version={releasesSummary?.oldestReleaseK8sVersion}
                   hidePatchVersion={true}
@@ -116,17 +143,26 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
               </OrganizationDetailStatistic>
             </Box>
             <Box direction='row' gap='small'>
-              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Newest release'
+              >
                 {releasesSummary?.newestReleaseVersion}
               </OrganizationDetailStatistic>
-              <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Newest release Kubernetes version'
+              >
                 <KubernetesVersionLabel
                   version={releasesSummary?.newestReleaseK8sVersion}
                   hidePatchVersion={true}
                 />
               </OrganizationDetailStatistic>
             </Box>
-            <OrganizationDetailStatistic isLoading={releasesSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={releasesSummaryLoading}
+              aria-label='Releases in use'
+            >
               {releasesSummary?.releasesInUseCount}
             </OrganizationDetailStatistic>
           </Box>
@@ -144,10 +180,16 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>App deployments</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <OrganizationDetailStatistic isLoading={appsSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={appsSummaryLoading}
+              aria-label='Apps in use'
+            >
               {appsSummary?.appsInUseCount}
             </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic isLoading={appsSummaryLoading}>
+            <OrganizationDetailStatistic
+              isLoading={appsSummaryLoading}
+              aria-label='App deployments'
+            >
               {appsSummary?.appDeploymentsCount}
             </OrganizationDetailStatistic>
           </Box>
