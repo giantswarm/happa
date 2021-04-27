@@ -15,11 +15,13 @@ const OrganizationDetailStatistic: React.FC<IOrganizationDetailStatisticProps> =
   isLoading,
   ...props
 }) => {
-  if (isLoading) return <OrganizationDetailStatisticPlaceholder />;
-
-  if (!children) return <NotAvailable />;
-
-  return <Text {...props}>{children}</Text>;
+  return (
+    <Text {...props}>
+      {isLoading && <OrganizationDetailStatisticPlaceholder />}
+      {!children && !isLoading && <NotAvailable />}
+      {children && children}
+    </Text>
+  );
 };
 
 OrganizationDetailStatistic.propTypes = {
