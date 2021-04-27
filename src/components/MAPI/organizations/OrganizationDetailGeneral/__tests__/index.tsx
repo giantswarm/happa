@@ -513,10 +513,10 @@ describe('OrganizationDetailGeneral', () => {
 
     // Apps summary.
     await waitFor(() =>
-      expect(screen.getByLabelText('Apps in use')).toHaveTextContent('n/a')
+      expect(screen.getByLabelText('Apps in use')).toHaveTextContent('0')
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('App deployments')).toHaveTextContent('n/a')
+      expect(screen.getByLabelText('App deployments')).toHaveTextContent('0')
     );
   });
 });
