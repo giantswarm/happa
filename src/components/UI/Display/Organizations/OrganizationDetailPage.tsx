@@ -2,11 +2,11 @@ import { Box, Text } from 'grommet';
 import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
 import PropTypes from 'prop-types';
 import React from 'react';
-import NotAvailable from 'UI/Display/NotAvailable';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 import OrganizationDetailStatistic from './OrganizationDetailStatistic';
 import {
+  IOrganizationDetailAppsSummary,
   IOrganizationDetailClustersSummary,
   IOrganizationDetailReleasesSummary,
 } from './types';
@@ -32,6 +32,8 @@ interface IOrganizationDetailPageProps {
   clustersSummaryLoading?: boolean;
   releasesSummary?: IOrganizationDetailReleasesSummary;
   releasesSummaryLoading?: boolean;
+  appsSummary?: IOrganizationDetailAppsSummary;
+  appsSummaryLoading?: boolean;
 }
 
 const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
@@ -43,6 +45,8 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   clustersSummaryLoading,
   releasesSummary,
   releasesSummaryLoading,
+  appsSummary,
+  appsSummaryLoading,
 }) => {
   return (
     <Box direction='column' gap='large'>
@@ -140,12 +144,12 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             <Text>App deployments</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <OrganizationDetailStatistic isLoading={appsSummaryLoading}>
+              {appsSummary?.appsInUseCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic isLoading={appsSummaryLoading}>
+              {appsSummary?.appDeploymentsCount}
+            </OrganizationDetailStatistic>
           </Box>
         </Box>
       </Box>
@@ -183,6 +187,8 @@ OrganizationDetailPage.propTypes = {
   clustersSummaryLoading: PropTypes.bool,
   releasesSummary: PropTypes.object,
   releasesSummaryLoading: PropTypes.bool,
+  appsSummary: PropTypes.object,
+  appsSummaryLoading: PropTypes.bool,
 };
 
 export default OrganizationDetailPage;

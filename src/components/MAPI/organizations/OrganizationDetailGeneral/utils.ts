@@ -2,6 +2,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -409,4 +410,65 @@ export function fetchReleasesSummaryKey(
   );
 
   return `fetchReleasesSummary/${clusterKeys.join()}`;
+}
+
+/**
+ * Get various statistics about the apps installed in the given clusters.
+ * @param httpClientFactory
+ * @param auth
+ * @param clusters
+ */
+export async function fetchAppsSummary(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusters: capiv1alpha3.ICluster[]
+): Promise<ui.IOrganizationDetailAppsSummary> {
+  const summary: ui.IOrganizationDetailAppsSummary = {};
+
+  // The key is the app name, and the value is the number of deployments.
+  const apps: Record<string, number> = {};
+
+  try {
+    // Get all apps that belong to all clusters.
+    const appLists = await Promise.all(
+      clusters.map((cluster) => {
+        return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
+          namespace: cluster.metadata.name,
+        });
+      })
+    );
+
+    for (const appList of appLists) {
+      for (const app of appList.items) {
+        apps[app.spec.name] ??= 0;
+        apps[app.spec.name] += 1;
+      }
+    }
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+  }
+
+  summary.appsInUseCount = Object.keys(apps).length;
+  summary.appDeploymentsCount = Object.values(apps).reduce(
+    (acc, curr) => acc + curr,
+    0
+  );
+
+  return summary;
+}
+
+/**
+ * The key used for caching the releases summary.
+ * @param clusters
+ */
+export function fetchAppsSummaryKey(
+  clusters?: capiv1alpha3.ICluster[]
+): string | null {
+  if (!clusters) return null;
+
+  const clusterKeys = clusters.map(
+    (c) => `${c.metadata.namespace}/${c.metadata.name}`
+  );
+
+  return `fetchAppsSummary/${clusterKeys.join()}`;
 }
