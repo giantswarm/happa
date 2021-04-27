@@ -18,8 +18,8 @@ const OrganizationDetailStatistic: React.FC<IOrganizationDetailStatisticProps> =
   return (
     <Text {...props}>
       {isLoading && <OrganizationDetailStatisticPlaceholder />}
-      {!children && !isLoading && <NotAvailable />}
-      {children && children}
+      {typeof children === 'undefined' && !isLoading && <NotAvailable />}
+      {typeof children !== 'undefined' && !isLoading && children}
     </Text>
   );
 };
