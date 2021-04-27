@@ -71,7 +71,7 @@ export interface IAppSpec {
   namespace: string;
   version: string;
   catalog: string;
-  kubeConfig: string;
+  kubeConfig: IAppSpecKubeConfig;
   config?: IAppSpecConfig;
   install?: IAppSpecInstall;
   namespaceConfig?: IAppSpecNamespaceConfig;

@@ -100,7 +100,7 @@ async function fetchMasterListForCluster(
   auth: IOAuth2Provider,
   cluster: capiv1alpha3.ICluster
 ) {
-  const { infrastructureRef } = cluster.spec;
+  const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
       new Error('There is no infrastructure reference defined.')
@@ -152,7 +152,7 @@ async function fetchNodePoolListForCluster(
   auth: IOAuth2Provider,
   cluster: capiv1alpha3.ICluster
 ) {
-  const { infrastructureRef } = cluster.spec;
+  const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
       new Error('There is no infrastructure reference defined.')
