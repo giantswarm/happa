@@ -348,9 +348,14 @@ export async function fetchReleasesSummary(
 ): Promise<ui.IOrganizationDetailReleasesSummary> {
   const summary: ui.IOrganizationDetailReleasesSummary = {};
 
-  const releases = clusters
-    .map((c) => capiv1alpha3.getReleaseVersion(c))
-    .sort(compare);
+  let releases: string[] = [];
+  for (const cluster of clusters) {
+    const version = capiv1alpha3.getReleaseVersion(cluster);
+    if (!version) continue;
+
+    releases.push(version);
+  }
+  releases = releases.sort(compare);
 
   summary.releasesInUseCount = releases.length;
 
