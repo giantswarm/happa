@@ -16,6 +16,8 @@ import * as ui from 'UI/Display/Organizations/types';
 
 import { extractErrorMessage } from '../utils';
 import {
+  fetchAppsSummary,
+  fetchAppsSummaryKey,
   fetchClustersSummary,
   fetchClustersSummaryKey,
   fetchReleasesSummary,
@@ -99,6 +101,14 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
   );
 
+  const { data: appsSummary, isValidating: appsSummaryIsValidating } = useSWR<
+    ui.IOrganizationDetailAppsSummary,
+    GenericResponse
+  >(
+    () => fetchAppsSummaryKey(clusterList?.items),
+    () => fetchAppsSummary(clientFactory, auth, clusterList!.items)
+  );
+
   return (
     <OrganizationDetailPage
       organizationName={organizationName}
@@ -114,6 +124,10 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       releasesSummary={releasesSummary}
       releasesSummaryLoading={
         typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
+      }
+      appsSummary={appsSummary}
+      appsSummaryLoading={
+        typeof appsSummary === 'undefined' && appsSummaryIsValidating
       }
     />
   );

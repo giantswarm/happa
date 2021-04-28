@@ -2,12 +2,15 @@ import * as corev1 from '../corev1';
 import * as k8sUrl from '../k8sUrl';
 import * as metav1 from '../metav1';
 
+export interface IClusterNetworkNetworkRanges {
+  cidrBlocks: string[] | null;
+}
+
 export interface IClusterNetwork {
-  apiServerPort: number;
-  serviceDomain: string;
-  services: {
-    cidrBlocks: string[];
-  };
+  apiServerPort?: number;
+  serviceDomain?: string;
+  services?: IClusterNetworkNetworkRanges;
+  pods?: IClusterNetworkNetworkRanges;
 }
 
 export interface IApiEndpoint {
@@ -16,10 +19,11 @@ export interface IApiEndpoint {
 }
 
 export interface IClusterSpec {
-  clusterNetwork: IClusterNetwork;
-  controlPlaneEndpoint: IApiEndpoint;
+  clusterNetwork?: IClusterNetwork;
+  controlPlaneEndpoint?: IApiEndpoint;
   controlPlaneRef?: corev1.IObjectReference;
   infrastructureRef?: corev1.IObjectReference;
+  paused?: boolean;
 }
 
 export interface IStatusCondition {
@@ -48,26 +52,30 @@ export interface ICondition {
 }
 
 export interface IClusterStatus {
-  conditions: IStatusCondition[];
-  controlPlaneInitialized: boolean;
-  controlPlaneReady: boolean;
-  infrastructureReady: boolean;
-  observedGeneration: number;
-  phase: string;
+  conditions?: IStatusCondition[];
+  controlPlaneInitialized?: boolean;
+  controlPlaneReady?: boolean;
+  infrastructureReady?: boolean;
+  observedGeneration?: number;
+  phase?: string;
 }
-
-export interface ICluster {
-  apiVersion: string;
-  kind: string;
-  metadata: metav1.IObjectMeta;
-  spec: IClusterSpec;
-  status: IClusterStatus;
-}
-
-export interface IClusterList extends metav1.IList<ICluster> {}
 
 export const Cluster = 'Cluster';
+
+export interface ICluster {
+  apiVersion: 'cluster.x-k8s.io/v1alpha3';
+  kind: typeof Cluster;
+  metadata: metav1.IObjectMeta;
+  spec?: IClusterSpec;
+  status?: IClusterStatus;
+}
+
 export const ClusterList = 'ClusterList';
+
+export interface IClusterList extends metav1.IList<ICluster> {
+  apiVersion: 'cluster.x-k8s.io/v1alpha3';
+  kind: typeof ClusterList;
+}
 
 export interface IMachineDeploymentTemplateSpecBootstrap {
   configRef?: corev1.IObjectReference;
