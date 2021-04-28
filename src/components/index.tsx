@@ -36,7 +36,7 @@ const store: Store = configureStore({} as IState, history, auth);
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();
 
-if (window.config.environment !== GlobalEnvironment.Dev) {
+if (window.config.environment !== 'development') {
   const errorReporter = ErrorReporter.getInstance();
   errorReporter.notifier = new SentryErrorNotifier({
     projectName: 'happa',

@@ -35,14 +35,14 @@ export default function configureStore(
   ];
 
   const enhancers: StoreEnhancer[] = [applyMiddleware(...middleware)];
-  if (window.config.environment !== GlobalEnvironment.Dev) {
+  if (window.config.environment !== 'development') {
     enhancers.push(SentryErrorNotifier.createReduxEnhancer());
   }
 
   store = createStore(
     rootReducer(history),
     initialState,
-    composeEnhancers(enhancers)
+    composeEnhancers(...enhancers)
   );
 
   return store;
