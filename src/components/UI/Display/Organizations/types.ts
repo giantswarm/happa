@@ -17,5 +17,5 @@ export interface IOrganizationDetailReleasesSummary {
 
 export interface IOrganizationDetailAppsSummary {
   appsInUseCount?: number;
-  appDeployments?: number;
+  appDeploymentsCount?: number;
 }

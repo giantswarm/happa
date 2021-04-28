@@ -24,7 +24,7 @@ export interface IReleaseSpecComponent {
 
 export interface IReleaseSpec {
   apps: IReleaseSpecApp[] | null;
-  components: IReleaseComponent[];
+  components: IReleaseSpecComponent[];
   state: ReleaseState;
   date: string;
   endOfLifeDate?: string;
