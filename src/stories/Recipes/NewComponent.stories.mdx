@@ -1,0 +1,31 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+
+<Meta title='Development/Recipes/New Component' />
+
+# Creating a new component
+
+To create a new component, first of all you need to create a new file, with the name of the component, and the `.tsx` (TypeScript JSX) extension. In this example we'll use `ExampleComponent.tsx`
+
+After that, this is the basic component structure:
+
+```tsx
+import PropTypes from 'prop-types';
+import React from 'react';
+
+interface IExampleComponentProps {
+  name: string;
+}
+
+const ExampleComponent: React.FC<IExampleComponentProps> = ({ name }) => {
+  return <h1>Hello {name}!</h1>;
+};
+
+ExampleComponent.propTypes = {
+  name: PropTypes.string.isRequired,
+};
+
+export default ExampleComponent;
+
+```
+
+Replace `ExampleComponent` with your desired name.
