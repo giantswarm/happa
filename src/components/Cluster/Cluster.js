@@ -1,5 +1,6 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Switch } from 'react-router-dom';
+import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import ClusterDetail from './ClusterDetail/ClusterDetail';

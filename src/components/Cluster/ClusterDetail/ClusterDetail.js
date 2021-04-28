@@ -3,7 +3,8 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Switch, useRouteMatch } from 'react-router-dom';
+import Route from 'Route';
 import { MainRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
 

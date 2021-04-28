@@ -1,5 +1,11 @@
 declare module '*.md';
 
+enum GlobalEnvironment {
+  Dev = 'development',
+  Kubernetes = 'kubernetes',
+  Docker = 'docker-container',
+}
+
 interface IGlobalConfig {
   apiEndpoint: string;
   audience: string;

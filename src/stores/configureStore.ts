@@ -1,5 +1,6 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
+import { SentryErrorNotifier } from 'lib/errors/SentryErrorNotifier';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import {
   applyMiddleware,
@@ -7,6 +8,7 @@ import {
   createStore,
   Middleware,
   Store,
+  StoreEnhancer,
 } from 'redux';
 import thunk from 'redux-thunk';
 import { mainAuthMiddleware } from 'stores/main/middleware';
@@ -32,10 +34,15 @@ export default function configureStore(
     callAPIMiddleware,
   ];
 
+  const enhancers: StoreEnhancer[] = [applyMiddleware(...middleware)];
+  if (window.config.environment !== GlobalEnvironment.Dev) {
+    enhancers.push(SentryErrorNotifier.createReduxEnhancer());
+  }
+
   store = createStore(
     rootReducer(history),
     initialState,
-    composeEnhancers(applyMiddleware(...middleware))
+    composeEnhancers(enhancers)
   );
 
   return store;

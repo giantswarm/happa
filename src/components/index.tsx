@@ -27,12 +27,6 @@ import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric } from 'web-vitals';
 
 import App from './App';
 
-enum GlobalEnvironment {
-  Dev = 'development',
-  Kubernetes = 'kubernetes',
-  Docker = 'docker-container',
-}
-
 const authConfig = makeDefaultConfig();
 const auth = new MapiAuth(authConfig);
 
@@ -49,6 +43,7 @@ if (window.config.environment !== GlobalEnvironment.Dev) {
     dsn: window.config.sentryDsn,
     releaseVersion: window.config.sentryReleaseVersion,
     environment: window.config.sentryEnvironment,
+    history,
   });
 }
 
