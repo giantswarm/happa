@@ -25,13 +25,7 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
   public async notify(
     error: Error | string | Record<string, unknown>
   ): Promise<void> {
-    switch (true) {
-      case typeof error === 'string':
-        Sentry.captureMessage(error as string);
-        break;
-      default:
-        Sentry.captureException(error);
-    }
+    Sentry.captureException(error);
 
     return Promise.resolve();
   }
