@@ -23,6 +23,9 @@ data:
   provider: {{ .Values.Installation.V1.Provider.Kind }}
   mapi-auth-redirect-url: {{ .Values.Installation.V1.GiantSwarm.OIDC.StaticClients.Happa.Address }}
   mapi-auth-admin-group: {{ .Values.Installation.V1.Kubernetes.Auth.ControlPlaneAdminTargetGroup }}
+  sentry-dsn: https://e2d0c60518114bf1b920f3cac4ee3f26@o346224.ingest.sentry.io/5739870
+  sentry-environment: {{ .Values.Installation.V1.Name }}
+  sentry-release-version: {{ .Values.image.tag }}
 
   # Enables real user monitoring (RUM)
   {{ if eq .Values.Installation.V1.GiantSwarm.Happa.EnableUserMonitoring true }}

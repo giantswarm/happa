@@ -114,6 +114,21 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: mapi-auth-admin-group
+        - name: SENTRY_DSN
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: sentry-dsn
+        - name: SENTRY_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: sentry-environment
+        - name: SENTRY_RELEASE_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: sentry-release-version
         - name: ENVIRONMENT
           value: kubernetes
         - name: FEATURE_MAPI_AUTH

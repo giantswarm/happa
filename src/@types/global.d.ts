@@ -15,6 +15,9 @@ interface IGlobalConfig {
   passageEndpoint: string;
   mapiAuthRedirectURL: string;
   mapiAuthAdminGroup: string;
+  sentryDsn: string;
+  sentryEnvironemnt: string;
+  sentryReleaseVersion: string;
 }
 
 interface IFeatureFlags {

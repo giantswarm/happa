@@ -42,13 +42,12 @@ const store: Store = configureStore({} as IState, history, auth);
 // Generate session ID for real user monitoring.
 const sessionID: string = uuidv4();
 
-if (window.config.environment === GlobalEnvironment.Dev) {
+if (window.config.environment !== GlobalEnvironment.Dev) {
   const errorReporter = ErrorReporter.getInstance();
   errorReporter.notifier = new SentryErrorNotifier({
-    dsn:
-      'https://e2d0c60518114bf1b920f3cac4ee3f26@o346224.ingest.sentry.io/5739870',
-    releaseVersion: 'development',
-    environment: 'testing',
+    dsn: window.config.sentryDsn,
+    releaseVersion: window.config.sentryReleaseVersion,
+    environment: window.config.environment,
   });
 }
 
