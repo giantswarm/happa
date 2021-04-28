@@ -4,6 +4,7 @@ import { Integrations } from '@sentry/tracing';
 import { IErrorReporterNotifier } from './ErrorReporter';
 
 export interface ISentryErrorNotifierConfig {
+  projectName: string;
   dsn: string;
   releaseVersion: string;
   environment: string;
@@ -13,7 +14,7 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
   constructor(config: ISentryErrorNotifierConfig) {
     Sentry.init({
       dsn: config.dsn,
-      release: `happa@${config.releaseVersion}`,
+      release: `${config.projectName}@${config.releaseVersion}`,
       integrations: [new Integrations.BrowserTracing()],
       tracesSampleRate: 0.2,
       environment: config.environment,

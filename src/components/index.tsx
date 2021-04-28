@@ -45,6 +45,7 @@ const sessionID: string = uuidv4();
 if (window.config.environment !== GlobalEnvironment.Dev) {
   const errorReporter = ErrorReporter.getInstance();
   errorReporter.notifier = new SentryErrorNotifier({
+    projectName: 'happa',
     dsn: window.config.sentryDsn,
     releaseVersion: window.config.sentryReleaseVersion,
     environment: window.config.sentryEnvironment,
