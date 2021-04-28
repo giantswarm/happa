@@ -16,7 +16,7 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
       dsn: config.dsn,
       release: `${config.projectName}@${config.releaseVersion}`,
       integrations: [new Integrations.BrowserTracing()],
-      tracesSampleRate: 0.2,
+      tracesSampleRate: 0.5,
       environment: config.environment,
     });
   }
