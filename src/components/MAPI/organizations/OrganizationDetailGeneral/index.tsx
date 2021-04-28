@@ -15,7 +15,12 @@ import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailP
 import * as ui from 'UI/Display/Organizations/types';
 
 import { extractErrorMessage } from '../utils';
-import { fetchClustersSummary, fetchClustersSummaryKey } from './utils';
+import {
+  fetchClustersSummary,
+  fetchClustersSummaryKey,
+  fetchReleasesSummary,
+  fetchReleasesSummaryKey,
+} from './utils';
 
 interface IOrganizationDetailGeneralProps {
   organizationName: string;
@@ -37,10 +42,11 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       },
     };
   }, [organizationName]);
-  const { data: clusterList, error: clusterListError } = useSWR<
-    capiv1alpha3.IClusterList,
-    GenericResponse
-  >(
+  const {
+    data: clusterList,
+    error: clusterListError,
+    isValidating: clusterListIsValidating,
+  } = useSWR<capiv1alpha3.IClusterList, GenericResponse>(
     () => capiv1alpha3.getClusterListKey(getOptions),
     () =>
       capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
@@ -77,12 +83,20 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   };
 
-  const { data: clustersSummary, error: clustersSummaryError } = useSWR<
-    ui.IOrganizationDetailClustersSummary,
-    GenericResponse
-  >(
+  const {
+    data: clustersSummary,
+    isValidating: clustersSummaryIsValidating,
+  } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponse>(
     () => fetchClustersSummaryKey(clusterList?.items),
     () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
+  );
+
+  const {
+    data: releasesSummary,
+    isValidating: releasesSummaryIsValidating,
+  } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponse>(
+    () => fetchReleasesSummaryKey(clusterList?.items),
+    () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
   );
 
   return (
@@ -91,11 +105,15 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       onDelete={handleDelete}
       clusterCount={clusterList?.items.length}
       clusterCountLoading={
-        typeof clusterList === 'undefined' && !clusterListError
+        typeof clusterList === 'undefined' && clusterListIsValidating
       }
       clustersSummary={clustersSummary}
       clustersSummaryLoading={
-        typeof clustersSummary === 'undefined' && !clustersSummaryError
+        typeof clustersSummary === 'undefined' && clustersSummaryIsValidating
+      }
+      releasesSummary={releasesSummary}
+      releasesSummaryLoading={
+        typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
       }
     />
   );

@@ -1,10 +1,12 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { compare } from 'lib/semver';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as ui from 'UI/Display/Organizations/types';
 
 /**
@@ -330,4 +332,81 @@ function mergeClusterSummaries(
     },
     {}
   );
+}
+
+/**
+ * Get various statistics about the release versions of the given clusters.
+ * @param httpClientFactory
+ * @param auth
+ * @param clusters
+ */
+export async function fetchReleasesSummary(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusters: capiv1alpha3.ICluster[]
+): Promise<ui.IOrganizationDetailReleasesSummary> {
+  const summary: ui.IOrganizationDetailReleasesSummary = {};
+
+  const releases = clusters
+    .map((c) => capiv1alpha3.getReleaseVersion(c))
+    .sort(compare);
+
+  summary.releasesInUseCount = releases.length;
+
+  if (summary.releasesInUseCount < 1) return Promise.resolve(summary);
+
+  summary.oldestReleaseVersion = releases[0];
+  summary.newestReleaseVersion = releases[releases.length - 1];
+
+  try {
+    const [
+      oldestReleasePromise,
+      newestReleasePromise,
+    ] = await Promise.allSettled([
+      releasev1alpha1.getRelease(
+        httpClientFactory(),
+        auth,
+        `v${summary.oldestReleaseVersion}`
+      ),
+      releasev1alpha1.getRelease(
+        httpClientFactory(),
+        auth,
+        `v${summary.newestReleaseVersion}`
+      ),
+    ]);
+
+    if (oldestReleasePromise.status === 'rejected') {
+      throw oldestReleasePromise.reason;
+    }
+    summary.oldestReleaseK8sVersion = releasev1alpha1.getK8sVersion(
+      oldestReleasePromise.value
+    );
+
+    if (newestReleasePromise.status === 'rejected') {
+      throw newestReleasePromise.reason;
+    }
+    summary.newestReleaseK8sVersion = releasev1alpha1.getK8sVersion(
+      newestReleasePromise.value
+    );
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+  }
+
+  return summary;
+}
+
+/**
+ * The key used for caching the releases summary.
+ * @param clusters
+ */
+export function fetchReleasesSummaryKey(
+  clusters?: capiv1alpha3.ICluster[]
+): string | null {
+  if (!clusters) return null;
+
+  const clusterKeys = clusters.map(
+    (c) => `${c.metadata.namespace}/${c.metadata.name}`
+  );
+
+  return `fetchReleasesSummary/${clusterKeys.join()}`;
 }

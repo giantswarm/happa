@@ -54,6 +54,10 @@ if [ -n "$MAPI_AUTH_REDIRECT_URL" ]; then
   sed -i "s|mapiAuthRedirectURL: .*|mapiAuthRedirectURL: '$MAPI_AUTH_REDIRECT_URL',|" /www/index.html
 fi
 
+if [ -n "$MAPI_AUTH_ADMIN_GROUP" ]; then
+  sed -i "s|mapiAuthAdminGroup: .*|mapiAuthAdminGroup: '$MAPI_AUTH_ADMIN_GROUP',|" /www/index.html
+fi
+
 if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
   sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: true,|" /www/index.html
 else
