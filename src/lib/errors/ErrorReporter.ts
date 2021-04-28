@@ -1,5 +1,5 @@
 export interface IErrorReporterNotifier {
-  notify(error: Error | string | Record<string, unknown>): Promise<unknown>;
+  notify(error: Error | string | Record<string, unknown>): Promise<void>;
 }
 
 /**
