@@ -16,7 +16,7 @@ interface IGlobalConfig {
   mapiAuthRedirectURL: string;
   mapiAuthAdminGroup: string;
   sentryDsn: string;
-  sentryEnvironemnt: string;
+  sentryEnvironment: string;
   sentryReleaseVersion: string;
 }
 

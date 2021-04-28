@@ -47,7 +47,7 @@ if (window.config.environment !== GlobalEnvironment.Dev) {
   errorReporter.notifier = new SentryErrorNotifier({
     dsn: window.config.sentryDsn,
     releaseVersion: window.config.sentryReleaseVersion,
-    environment: window.config.environment,
+    environment: window.config.sentryEnvironment,
   });
 }
 
