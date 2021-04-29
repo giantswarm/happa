@@ -24,7 +24,7 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
           routingInstrumentation: Sentry.reactRouterV5Instrumentation(config.history),
         }),
       ],
-      tracesSampleRate: 1.0,
+      tracesSampleRate: 0.3,
       environment: config.environment,
     });
   }
