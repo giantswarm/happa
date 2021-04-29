@@ -8,10 +8,8 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { Dispatch } from 'redux';
-import { AuthorizationTypes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
-import { LoggedInUserTypes } from 'stores/main/types';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
@@ -206,23 +204,16 @@ export class SignUp extends React.Component<ISignUpProps, ISignUpState> {
           password: this.state.passwordField.value,
         })
         .then((data) => {
-          const userData: ILoggedInUser = {
-            email: data.email,
-            type: LoggedInUserTypes.GS,
-            isAdmin: false,
-
-            auth: {
-              scheme: AuthorizationTypes.GS,
-              token: data.token,
-            },
-          };
-
-          this.props.actions.loginSuccess(userData);
-
           this.setState({
             statusMessage: 'create_account_completed',
           });
 
+          return this.props.actions.giantswarmLogin(
+            data.email,
+            this.state.passwordField.value
+          );
+        })
+        .then(() => {
           this.accountCreated();
         })
         .catch(() => {
