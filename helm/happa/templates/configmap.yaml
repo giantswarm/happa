@@ -27,7 +27,7 @@ data:
   sentry-environment: {{ .Values.Installation.V1.Name }}
   sentry-release-version: {{ .Values.image.tag }}
   sentry-debug: 'FALSE'
-  sentry-sample-rate: 0.3
+  sentry-sample-rate: '0.3'
 
   # Enables real user monitoring (RUM)
   {{ if eq .Values.Installation.V1.GiantSwarm.Happa.EnableUserMonitoring true }}

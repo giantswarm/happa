@@ -77,7 +77,7 @@ else
 fi
 
 if [ -n "$SENTRY_SAMPLE_RATE" ]; then
-  sed -i "s|sentrySampleRate: .*|sentrySampleRate: '$SENTRY_SAMPLE_RATE',|" /www/index.html
+  sed -i "s|sentrySampleRate: .*|sentrySampleRate: $SENTRY_SAMPLE_RATE,|" /www/index.html
 fi
 
 if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
