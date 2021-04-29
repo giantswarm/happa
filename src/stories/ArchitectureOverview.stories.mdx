@@ -1,0 +1,104 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import Mermaid from 'UI/Display/Documentation/Mermaid';
+
+<Meta title='Development/Architecture overview' />
+
+# Architecture overview
+
+### What is happa?
+
+happa is a client-side web application. Its purpose is to enable customers and GS staff to manage their workload clusters, install applications and define access and permissions for other users.
+
+### How does it communicate with external services (such as the REST API or the Management API)?
+
+It sends HTTP requests from the user's browser to that specific service.
+
+### What language is it written in and which notable libraries does it use?
+
+It's written mainly in TypeScript. There are still older parts that are written in JavaScript, but we stick to TypeScript for new code.
+As for libraries, the UI is rendered using [`React`](https://github.com/facebook/react), and we use [`Redux`](https://github.com/reduxjs/redux) for global state management.
+
+You can take a look at [the code](https://github.com/giantswarm/happa).
+
+### How does the architecture look like?
+
+happa uses the MVVM architecture pattern.
+
+#### The architecture for REST API features
+
+<Mermaid
+  config={{
+    width: '100%',
+    theme: 'neutral',
+  }}
+  chart={`
+        flowchart TB
+            subgraph INTERNET[Internet]
+                API[GS REST API]
+                PASSAGE[Passage]
+            end
+            subgraph HAPPA[Happa]
+                subgraph VIEWMODEL[ViewModel]
+                    BINDING[Binding - react-redux]
+                    SMART_COMPS[Smart React components]
+                end
+                subgraph MODEL[Model]
+                    CLIENT[HTTP client]
+                    REDUCERS[Redux reducers]
+                    STATE[Redux state]
+                    ACTIONS[Redux actions]
+                end
+                subgraph VIEW[View]
+                    DUMB_COMPS[Dumb React components]
+                end
+            end
+            subgraph STORAGE[Persistent storage]
+                LOCAL_STORAGE[Local Storage API]
+            end
+            STATE-->BINDING
+            CLIENT-->INTERNET
+            ACTIONS-->STORAGE
+            BINDING-->ACTIONS
+            ACTIONS-->REDUCERS
+            SMART_COMPS-->DUMB_COMPS
+            DUMB_COMPS-->SCREEN((Your screen))
+            ACTIONS-->CLIENT
+            REDUCERS-->STATE
+            BINDING-->SMART_COMPS
+        `}
+/>
+
+#### The architecture for Management API features
+
+<Mermaid
+  config={{
+    width: '100%',
+    theme: 'neutral',
+  }}
+  chart={`
+        flowchart TB
+            subgraph HAPPA[Happa]
+                subgraph MODEL[Model]
+                    CLIENT[HTTP client]
+                end
+                subgraph VIEWMODEL[ViewModel]
+                    CACHE{SWR Cache}
+                    SWR[SWR library]
+                    SMART_COMPS[Smart React components]
+                end
+                subgraph VIEW[View]
+                    DUMB_COMPS[Dumb React components]
+                end
+            end
+            subgraph INTERNET[Internet]
+                API[Management API]
+                ATHENA[Athena]
+            end
+            CLIENT-->INTERNET
+            SMART_COMPS-->SWR
+            SWR-->CACHE
+            CACHE-->|Needs revalidation?| CLIENT
+            SMART_COMPS-->DUMB_COMPS
+            DUMB_COMPS-->SCREEN((Your screen))
+        `}
+/>

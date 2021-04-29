@@ -111,7 +111,7 @@ export interface IImageMarketplace {
   offer: string;
   sku: string;
   version: string;
-  thirdPatyImage: string;
+  thirdPartyImage: boolean;
 }
 
 export interface IImage {

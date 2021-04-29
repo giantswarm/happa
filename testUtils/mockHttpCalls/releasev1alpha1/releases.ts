@@ -1,0 +1,409 @@
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+
+export const v14_1_5: releasev1alpha1.IRelease = {
+  apiVersion: 'release.giantswarm.io/v1alpha1',
+  kind: releasev1alpha1.Release,
+  metadata: {
+    annotations: {
+      'giantswarm.io/docs':
+        'https://docs.giantswarm.io/reference/cp-k8s-api/releases.release.giantswarm.io/',
+      'giantswarm.io/release-notes':
+        'https://github.com/giantswarm/releases/tree/master/azure/v14.1.5',
+      'meta.helm.sh/release-name': 'releases-azure-unique',
+      'meta.helm.sh/release-namespace': 'giantswarm',
+    },
+    creationTimestamp: '2021-04-26T13:16:42Z',
+    finalizers: ['operatorkit.giantswarm.io/release-operator-release'],
+    generation: 1,
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+    },
+    name: 'v14.1.5',
+    resourceVersion: '294195041',
+    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/v14.1.5',
+    uid: '7b8cc075-55a3-400c-9ada-82ca976fc47c',
+  },
+  spec: {
+    apps: [
+      {
+        catalog: 'default',
+        name: 'cert-exporter',
+        version: '1.6.0',
+      },
+      {
+        catalog: 'default',
+        name: 'chart-operator',
+        version: '2.12.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.6.5',
+        name: 'coredns',
+        version: '1.2.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '0.7.6',
+        name: 'external-dns',
+        version: '2.3.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.9.7',
+        name: 'kube-state-metrics',
+        version: '1.3.0',
+      },
+      {
+        catalog: 'default',
+        name: 'metrics-server',
+        version: '1.2.1',
+      },
+      {
+        catalog: 'default',
+        name: 'net-exporter',
+        version: '1.9.2',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.0.1',
+        name: 'node-exporter',
+        version: '1.7.1',
+      },
+      {
+        catalog: 'default',
+        name: 'cluster-autoscaler',
+        version: '1.19.1',
+      },
+      {
+        catalog: 'default',
+        name: 'azure-scheduled-events',
+        version: '0.4.0',
+      },
+    ],
+    components: [
+      {
+        catalog: 'control-plane-catalog',
+        name: 'app-operator',
+        releaseOperatorDeploy: true,
+        version: '3.2.1',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'azure-operator',
+        releaseOperatorDeploy: true,
+        version: '5.5.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cert-operator',
+        reference: '0.1.0-2',
+        releaseOperatorDeploy: true,
+        version: '0.1.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-operator',
+        releaseOperatorDeploy: true,
+        version: '0.23.22',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'kubernetes',
+        version: '1.19.10',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'containerlinux',
+        version: '2765.2.2',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'calico',
+        version: '3.15.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'etcd',
+        version: '3.4.14',
+      },
+    ],
+    date: '2021-04-26T09:18:37Z',
+    state: 'active',
+  },
+  status: {
+    inUse: true,
+    ready: true,
+  },
+};
+
+export const v14_0_1: releasev1alpha1.IRelease = {
+  apiVersion: 'release.giantswarm.io/v1alpha1',
+  kind: releasev1alpha1.Release,
+  metadata: {
+    annotations: {
+      'giantswarm.io/docs':
+        'https://docs.giantswarm.io/reference/cp-k8s-api/releases.release.giantswarm.io/',
+      'giantswarm.io/release-notes':
+        'https://github.com/giantswarm/releases/tree/master/azure/v14.0.1',
+      'meta.helm.sh/release-name': 'releases-azure-unique',
+      'meta.helm.sh/release-namespace': 'giantswarm',
+    },
+    creationTimestamp: '2021-04-26T13:16:42Z',
+    finalizers: ['operatorkit.giantswarm.io/release-operator-release'],
+    generation: 1,
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+    },
+    name: 'v14.0.1',
+    resourceVersion: '294195041',
+    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/v14.0.1',
+    uid: '7b8cc075-55a3-400c-9ada-82ca976fc47c',
+  },
+  spec: {
+    apps: [
+      {
+        catalog: 'default',
+        name: 'cert-exporter',
+        version: '1.6.0',
+      },
+      {
+        catalog: 'default',
+        name: 'chart-operator',
+        version: '2.12.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.6.5',
+        name: 'coredns',
+        version: '1.2.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '0.7.6',
+        name: 'external-dns',
+        version: '2.3.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.9.7',
+        name: 'kube-state-metrics',
+        version: '1.3.0',
+      },
+      {
+        catalog: 'default',
+        name: 'metrics-server',
+        version: '1.2.1',
+      },
+      {
+        catalog: 'default',
+        name: 'net-exporter',
+        version: '1.9.2',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.0.1',
+        name: 'node-exporter',
+        version: '1.7.1',
+      },
+      {
+        catalog: 'default',
+        name: 'cluster-autoscaler',
+        version: '1.19.1',
+      },
+      {
+        catalog: 'default',
+        name: 'azure-scheduled-events',
+        version: '0.4.0',
+      },
+    ],
+    components: [
+      {
+        catalog: 'control-plane-catalog',
+        name: 'app-operator',
+        releaseOperatorDeploy: true,
+        version: '3.2.1',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'azure-operator',
+        releaseOperatorDeploy: true,
+        version: '5.5.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cert-operator',
+        reference: '0.1.0-2',
+        releaseOperatorDeploy: true,
+        version: '0.1.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-operator',
+        releaseOperatorDeploy: true,
+        version: '0.23.22',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'kubernetes',
+        version: '1.18.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'containerlinux',
+        version: '2765.2.2',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'calico',
+        version: '3.15.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'etcd',
+        version: '3.4.14',
+      },
+    ],
+    date: '2021-04-26T09:18:37Z',
+    state: 'active',
+  },
+  status: {
+    inUse: true,
+    ready: true,
+  },
+};
+
+export const v13_1_0: releasev1alpha1.IRelease = {
+  apiVersion: 'release.giantswarm.io/v1alpha1',
+  kind: releasev1alpha1.Release,
+  metadata: {
+    annotations: {
+      'giantswarm.io/docs':
+        'https://docs.giantswarm.io/reference/cp-k8s-api/releases.release.giantswarm.io/',
+      'giantswarm.io/release-notes':
+        'https://github.com/giantswarm/releases/tree/master/azure/v13.1.0',
+      'meta.helm.sh/release-name': 'releases-azure-unique',
+      'meta.helm.sh/release-namespace': 'giantswarm',
+    },
+    creationTimestamp: '2021-04-26T13:16:42Z',
+    finalizers: ['operatorkit.giantswarm.io/release-operator-release'],
+    generation: 1,
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+    },
+    name: 'v13.1.0',
+    resourceVersion: '294195041',
+    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/v13.1.0',
+    uid: '7b8cc075-55a3-400c-9ada-82ca976fc47c',
+  },
+  spec: {
+    apps: [
+      {
+        catalog: 'default',
+        name: 'cert-exporter',
+        version: '1.6.0',
+      },
+      {
+        catalog: 'default',
+        name: 'chart-operator',
+        version: '2.12.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.6.5',
+        name: 'coredns',
+        version: '1.2.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '0.7.6',
+        name: 'external-dns',
+        version: '2.3.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.9.7',
+        name: 'kube-state-metrics',
+        version: '1.3.0',
+      },
+      {
+        catalog: 'default',
+        name: 'metrics-server',
+        version: '1.2.1',
+      },
+      {
+        catalog: 'default',
+        name: 'net-exporter',
+        version: '1.9.2',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.0.1',
+        name: 'node-exporter',
+        version: '1.7.1',
+      },
+      {
+        catalog: 'default',
+        name: 'cluster-autoscaler',
+        version: '1.19.1',
+      },
+      {
+        catalog: 'default',
+        name: 'azure-scheduled-events',
+        version: '0.4.0',
+      },
+    ],
+    components: [
+      {
+        catalog: 'control-plane-catalog',
+        name: 'app-operator',
+        releaseOperatorDeploy: true,
+        version: '3.2.1',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'azure-operator',
+        releaseOperatorDeploy: true,
+        version: '5.5.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cert-operator',
+        reference: '0.1.0-2',
+        releaseOperatorDeploy: true,
+        version: '0.1.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-operator',
+        releaseOperatorDeploy: true,
+        version: '0.23.22',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'kubernetes',
+        version: '1.17.6',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'containerlinux',
+        version: '2765.2.2',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'calico',
+        version: '3.15.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'etcd',
+        version: '3.4.14',
+      },
+    ],
+    date: '2021-04-26T09:18:37Z',
+    state: 'active',
+  },
+  status: {
+    inUse: true,
+    ready: true,
+  },
+};

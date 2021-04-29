@@ -13,7 +13,13 @@ import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
+import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
+import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
+import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
+import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
+import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -260,5 +266,257 @@ describe('OrganizationDetailGeneral', () => {
     await waitFor(() => expect(nock.isDone()).toBeTruthy());
 
     expect(deleteButton).toBeDisabled();
+  });
+
+  it('displays various stats about the resources that belong to the organization', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
+      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList2);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList3);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/release.giantswarm.io/v1alpha1/releases/${releasev1alpha1Mocks.v14_1_5.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.v14_1_5);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/release.giantswarm.io/v1alpha1/releases/${releasev1alpha1Mocks.v13_1_0.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.v13_1_0);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiexpv1alpha3Mocks.randomCluster1MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster1AzureMachinePool2.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzexpv1alpha3Mocks.randomCluster1AzureMachinePool2
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiexpv1alpha3Mocks.randomCluster2MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster2AzureMachinePool1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzexpv1alpha3Mocks.randomCluster2AzureMachinePool1
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiexpv1alpha3Mocks.randomCluster3MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster1AppsList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster2AppsList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster3.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster3AppsList);
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
+
+    // Clusters summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('3')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Nodes')).toHaveTextContent('3')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('12')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in nodes')).toHaveTextContent(
+        '52 GB'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
+        '206 GB'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in nodes')).toHaveTextContent('24')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
+        '96'
+      )
+    );
+
+    // Releases summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Oldest release')).toHaveTextContent(
+        '13.1.0'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Oldest release Kubernetes version')
+      ).toHaveTextContent('1.17')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Newest release')).toHaveTextContent(
+        '14.1.5'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Newest release Kubernetes version')
+      ).toHaveTextContent('1.19')
+    );
+
+    // Apps summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Apps in use')).toHaveTextContent('12')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('App deployments')).toHaveTextContent('14')
+    );
+  });
+
+  it('displays various stats about the resources that belong to the organization', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
+      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+      })
+    );
+
+    // Clusters summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('3')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Nodes')).toHaveTextContent('n/a')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('n/a')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in nodes')).toHaveTextContent('n/a')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
+        'n/a'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in nodes')).toHaveTextContent('n/a')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
+        'n/a'
+      )
+    );
+
+    // Releases summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Oldest release')).toHaveTextContent(
+        '13.1.0'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Oldest release Kubernetes version')
+      ).toHaveTextContent('n/a')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Newest release')).toHaveTextContent(
+        '14.1.5'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Newest release Kubernetes version')
+      ).toHaveTextContent('n/a')
+    );
+
+    // Apps summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Apps in use')).toHaveTextContent('0')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('App deployments')).toHaveTextContent('0')
+    );
   });
 });
