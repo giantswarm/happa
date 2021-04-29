@@ -356,6 +356,7 @@ jobs:
               -e ENVIRONMENT=test-in-ci \
               -e ENABLE_RUM=TRUE \
               -e MAPI_AUTH_REDIRECT_URL=test \
+              -e MAPI_AUTH_ADMIN_GROUP=test \
               -e FEATURE_MAPI_AUTH=TRUE \
               -p 8000:8000 \
               -d \

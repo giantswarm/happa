@@ -1,6 +1,8 @@
 import { ICluster } from './';
 
 export const labelOrganization = 'giantswarm.io/organization';
+export const labelCluster = 'giantswarm.io/cluster';
+export const labelReleaseVersion = 'release.giantswarm.io/version';
 
 export function getClusterDescription(cluster: ICluster): string {
   let name =
@@ -10,9 +12,6 @@ export function getClusterDescription(cluster: ICluster): string {
   return name;
 }
 
-export function getReleaseVersion(cluster: ICluster): string {
-  let release = cluster.metadata.labels?.['release.giantswarm.io/version'];
-  release ??= '1.0.0';
-
-  return release;
+export function getReleaseVersion(cluster: ICluster): string | undefined {
+  return cluster.metadata.labels?.[labelReleaseVersion];
 }
