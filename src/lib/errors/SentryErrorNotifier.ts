@@ -21,10 +21,10 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
       release: `${config.projectName}@${config.releaseVersion}`,
       integrations: [
         new Integrations.BrowserTracing({
-          routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
+          routingInstrumentation: Sentry.reactRouterV5Instrumentation(config.history),
         }),
       ],
-      tracesSampleRate: 0.5,
+      tracesSampleRate: 1.0,
       environment: config.environment,
     });
   }
