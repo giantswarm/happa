@@ -1,5 +1,10 @@
 export interface IErrorReporterNotifier {
-  notify(error: Error | string | Record<string, unknown>): Promise<void>;
+  notify(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    error: Error | string | Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    extraInfo?: Record<string, any>
+  ): Promise<void>;
 }
 
 /**
@@ -33,8 +38,13 @@ class ErrorReporter {
    * Report an error.
    * error - The error to report.
    */
-  async notify(error: Error | string | Record<string, unknown>): Promise<void> {
-    await this.notifier?.notify(error);
+  async notify(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    error: Error | string | Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    extraInfo?: Record<string, any>
+  ): Promise<void> {
+    await this.notifier?.notify(error, extraInfo);
   }
 }
 

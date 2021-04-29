@@ -3,6 +3,7 @@ import { Integrations } from '@sentry/tracing';
 import { History } from 'history';
 import React from 'react';
 import { RouteProps } from 'react-router-dom';
+import { AnyAction } from 'redux';
 
 import { IErrorReporterNotifier } from './ErrorReporter';
 
@@ -21,25 +22,58 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
       release: `${config.projectName}@${config.releaseVersion}`,
       integrations: [
         new Integrations.BrowserTracing({
-          routingInstrumentation: Sentry.reactRouterV5Instrumentation(config.history),
+          routingInstrumentation: Sentry.reactRouterV5Instrumentation(
+            config.history
+          ),
         }),
       ],
       tracesSampleRate: 0.3,
+      debug: true,
       environment: config.environment,
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
   public async notify(
-    error: Error | string | Record<string, unknown>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    error: Error | string | Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    extraInfo?: Record<string, any>
   ): Promise<void> {
-    Sentry.captureException(error);
+    switch (true) {
+      case error instanceof Error:
+        Sentry.captureException(error, { extra: extraInfo });
+        break;
+
+      case typeof error === 'string':
+        Sentry.captureException(new Error(error as string), {
+          extra: extraInfo,
+        });
+        break;
+
+      default:
+        Sentry.captureException(error, { extra: extraInfo });
+        break;
+    }
 
     return Promise.resolve();
   }
 
   public static createReduxEnhancer() {
-    return Sentry.createReduxEnhancer();
+    return Sentry.createReduxEnhancer({
+      actionTransformer(action: AnyAction) {
+        // Exclude any possibly sensitive information.
+        if (action.type.toLowerCase().includes('password')) {
+          return null;
+        }
+
+        return action;
+      },
+      stateTransformer() {
+        // Don't send the current state.
+        return null;
+      },
+    });
   }
 
   public static decorateComponent<T>(component: React.FC<T>) {

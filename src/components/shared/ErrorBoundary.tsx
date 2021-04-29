@@ -34,9 +34,9 @@ export default class ErrorBoundary extends Component<
     hasError: false,
   };
 
-  componentDidCatch(error: Error) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (this.props.reportError) {
-      ErrorReporter.getInstance().notify(error);
+      ErrorReporter.getInstance().notify(error, errorInfo);
     }
   }
 
