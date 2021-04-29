@@ -43,6 +43,8 @@ if (window.config.environment !== 'development') {
     dsn: window.config.sentryDsn,
     releaseVersion: window.config.sentryReleaseVersion,
     environment: window.config.sentryEnvironment,
+    debug: window.config.sentryDebug,
+    sampleRate: window.config.sentrySampleRate,
     history,
   });
 }

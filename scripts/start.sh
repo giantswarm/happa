@@ -70,6 +70,16 @@ if [ -n "$SENTRY_RELEASE_VERSION" ]; then
   sed -i "s|sentryReleaseVersion: .*|sentryReleaseVersion: '$SENTRY_RELEASE_VERSION',|" /www/index.html
 fi
 
+if [ "$SENTRY_DEBUG" = "TRUE" ]; then
+  sed -i "s|sentryDebug: .*|sentryDebug: true,|" /www/index.html
+else
+  sed -i "s|sentryDebug: .*|sentryDebug: false,|" /www/index.html
+fi
+
+if [ -n "$SENTRY_SAMPLE_RATE" ]; then
+  sed -i "s|sentrySampleRate: .*|sentrySampleRate: '$SENTRY_SAMPLE_RATE',|" /www/index.html
+fi
+
 if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
   sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: true,|" /www/index.html
 else

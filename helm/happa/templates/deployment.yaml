@@ -129,6 +129,16 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: sentry-release-version
+        - name: SENTRY_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: sentry-debug
+        - name: SENTRY_SAMPLE_RATE
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: sentry-sample-rate
         - name: ENVIRONMENT
           value: kubernetes
         - name: FEATURE_MAPI_AUTH

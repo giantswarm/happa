@@ -20,6 +20,8 @@ interface IGlobalConfig {
   sentryDsn: string;
   sentryEnvironment: string;
   sentryReleaseVersion: string;
+  sentryDebug: boolean;
+  sentrySampleRate: number;
 }
 
 interface IFeatureFlags {

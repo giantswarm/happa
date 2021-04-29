@@ -13,6 +13,8 @@ export interface ISentryErrorNotifierConfig {
   releaseVersion: string;
   environment: string;
   history: History<History.LocationState>;
+  debug?: boolean;
+  sampleRate?: number;
 }
 
 export class SentryErrorNotifier implements IErrorReporterNotifier {
@@ -27,8 +29,8 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
           ),
         }),
       ],
-      tracesSampleRate: 0.3,
-      debug: true,
+      tracesSampleRate: config.sampleRate,
+      debug: config.debug,
       environment: config.environment,
     });
   }
