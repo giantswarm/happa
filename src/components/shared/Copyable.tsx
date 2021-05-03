@@ -36,7 +36,11 @@ const Content = styled.div`
   display: inherit;
 `;
 
-const Copyable = ({ children, copyText }) => {
+interface ICopyableProps extends React.ComponentPropsWithoutRef<'div'> {
+  copyText: string;
+}
+
+const Copyable: React.FC<ICopyableProps> = ({ children, copyText }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const handleCopyToClipboard = () => {
@@ -78,7 +82,7 @@ const Copyable = ({ children, copyText }) => {
 
 Copyable.propTypes = {
   children: PropTypes.node,
-  copyText: PropTypes.string,
+  copyText: PropTypes.string.isRequired,
 };
 
 export default Copyable;
