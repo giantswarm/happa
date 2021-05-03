@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'UI/Controls/Button';
+import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 
 const Overview = (props) => (
   <>
@@ -20,13 +21,13 @@ const Overview = (props) => (
       ))}
     </ol>
 
-    <div className='component_slider--nav'>
+    <GettingStartedBottomNav>
       <Link to={props.steps[0].url}>
         <Button bsStyle='primary'>
           Start <i className='fa fa-chevron-right' />
         </Button>
       </Link>
-    </div>
+    </GettingStartedBottomNav>
   </>
 );
 
