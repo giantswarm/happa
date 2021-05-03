@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import { CodeBlock, Output, Prompt } from 'UI/Display/Documentation/CodeBlock';
+import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 import Aside from 'UI/Layout/Aside';
 
 class SimpleExample extends React.Component {
@@ -295,7 +296,7 @@ class SimpleExample extends React.Component {
             </Output>
           </CodeBlock>
 
-          <div className='component_slider--nav'>
+          <GettingStartedBottomNav>
             <Link to={this.props.steps[this.props.stepIndex - 1].url}>
               <Button bsStyle='default'>
                 <i className='fa fa-chevron-left' /> Back
@@ -307,7 +308,7 @@ class SimpleExample extends React.Component {
                 Finish <i className='fa fa-chevron-right' />
               </Button>
             </Link>
-          </div>
+          </GettingStartedBottomNav>
         </>
       </Breadcrumb>
     );
