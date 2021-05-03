@@ -3,8 +3,40 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from 'styled-components';
 
-const Copyable = ({ children, copyText, className }) => {
+const TooltipWrapper = styled.div`
+  top: 0px;
+  right: 0px;
+  position: absolute;
+  display: inline-block;
+  opacity: 0;
+`;
+
+const Wrapper = styled.div`
+  .copyable {
+    padding-right: 20px;
+    position: relative;
+    overflow: inherit;
+    text-overflow: inherit;
+    display: inherit;
+
+    &:hover {
+      ${TooltipWrapper} {
+        opacity: 0.7;
+      }
+    }
+  }
+`;
+
+const Content = styled.div`
+  position: relative;
+  overflow: inherit;
+  text-overflow: inherit;
+  display: inherit;
+`;
+
+const Copyable = ({ children, copyText }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const handleCopyToClipboard = () => {
@@ -16,16 +48,15 @@ const Copyable = ({ children, copyText, className }) => {
   };
 
   return (
-    <div
-      className={`copyable ${className}`}
+    <Wrapper
       onClick={handleCopyToClipboard}
       onMouseLeave={handleDisplayCopyingDone}
       style={{ cursor: 'pointer' }}
       title='Copy content to clipboard'
     >
-      <div className='copyable-content'>{children}</div>
+      <Content>{children}</Content>
 
-      <div className='copyable-tooltip'>
+      <TooltipWrapper>
         {hasContentInClipboard ? (
           <i
             aria-hidden='true'
@@ -40,15 +71,14 @@ const Copyable = ({ children, copyText, className }) => {
             <i aria-hidden='true' className='fa fa-content-copy' />
           </OverlayTrigger>
         )}
-      </div>
-    </div>
+      </TooltipWrapper>
+    </Wrapper>
   );
 };
 
 Copyable.propTypes = {
   children: PropTypes.node,
   copyText: PropTypes.string,
-  className: PropTypes.string,
 };
 
 export default Copyable;
