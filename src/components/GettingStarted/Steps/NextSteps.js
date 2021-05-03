@@ -6,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
+import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 
 const NextSteps = (props) => {
   const pathParams = {
@@ -91,13 +92,13 @@ const NextSteps = (props) => {
           that help you set up basic metrics, RBAC, and more.
         </p>
 
-        <div className='component_slider--nav'>
+        <GettingStartedBottomNav>
           <Link to={clusterGuideExamplePath}>
             <Button bsStyle='default'>
               <i className='fa fa-chevron-left' /> Back
             </Button>
           </Link>
-        </div>
+        </GettingStartedBottomNav>
       </>
     </Breadcrumb>
   );
