@@ -9,9 +9,11 @@ import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import {
+  authTokenResponse,
   AWSInfoResponse,
   getMockCall,
   metadataResponse,
+  postMockCall,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -98,7 +100,6 @@ describe('Signup', () => {
       findByText,
       getByLabelText,
       findByLabelText,
-      findByTitle,
     } = renderRouteWithStore(verifyingRoute);
 
     await findByText(
@@ -108,7 +109,7 @@ describe('Signup', () => {
       )
     );
 
-    const nextButton = await findByTitle(/next/i);
+    const nextButton = await findByText(/^Next$/i);
     let fieldToValidate = getByLabelText(/set a password/i);
 
     // Input validation
@@ -212,6 +213,8 @@ describe('Signup', () => {
         token: 'testtoken001230',
       });
 
+    postMockCall('/v4/auth-tokens/', authTokenResponse);
+
     fireEvent.click(nextButton);
 
     await findByText(/creating account.../i);
@@ -234,10 +237,9 @@ describe('Signup', () => {
       findByText,
       getByLabelText,
       findByLabelText,
-      findByTitle,
     } = renderRouteWithStore(verifyingRoute);
 
-    const nextButton = await findByTitle(/next/i);
+    const nextButton = await findByText(/^Next$/i);
     let fieldToUse = getByLabelText(/set a password/i);
 
     // Input validation
