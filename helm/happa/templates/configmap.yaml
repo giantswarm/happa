@@ -22,6 +22,7 @@ data:
   default-request-timeout-seconds: '{{ .Values.Installation.V1.GiantSwarm.Happa.DefaultRequestTimeoutSeconds }}'
   provider: {{ .Values.Installation.V1.Provider.Kind }}
   mapi-auth-redirect-url: {{ .Values.Installation.V1.GiantSwarm.OIDC.StaticClients.Happa.Address }}
+  mapi-auth-admin-group: {{ .Values.Installation.V1.Kubernetes.Auth.ControlPlaneAdminTargetGroup }}
 
   # Enables real user monitoring (RUM)
   {{ if eq .Values.Installation.V1.GiantSwarm.Happa.EnableUserMonitoring true }}

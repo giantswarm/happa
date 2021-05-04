@@ -1,7 +1,7 @@
 import * as metav1 from '../metav1';
 
 export interface ISelfSubjectRulesReviewSpec {
-  namespace: string;
+  namespace?: string;
 }
 
 // https://github.com/kubernetes/kubernetes/blob/2eb6911e832152abb1cbfd31ae15ceceb4e844a0/pkg/apis/authorization/types.go#L179
@@ -17,8 +17,8 @@ export interface IResourceRule {
   // Resources is a list of resources this rule applies to.  "*" means all in the specified apiGroups.
   //  "*/foo" represents the subresource 'foo' for all resources in the specified apiGroups.
   resources: string[];
-  // ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.  "*" means all.
-  resourceNames: string[];
+  // ResourceNames is an optional list of allowed of names that the rule applies to.  An empty set means that everything is allowed.  "*" means all.
+  resourceNames?: string[];
 }
 
 // NonResourceRule holds information that describes a rule for the non-resource
@@ -44,15 +44,15 @@ export interface ISelfSubjectRulesReviewStatus {
   // EvaluationError can appear in combination with Rules. It indicates an error occurred during
   // rule evaluation, such as an authorizer that doesn't support rule evaluation, and that
   // ResourceRules and/or NonResourceRules may be incomplete.
-  evaluationError: string;
+  evaluationError?: string;
 }
 
 export interface ISelfSubjectRulesReview {
-  apiVersion: string;
-  kind: string;
+  apiVersion: 'authorization.k8s.io/v1';
+  kind: 'SelfSubjectRulesReview';
   metadata?: metav1.IObjectMeta;
   spec: ISelfSubjectRulesReviewSpec;
-  status?: ISelfSubjectRulesReviewStatus;
+  status: ISelfSubjectRulesReviewStatus;
 }
 
 export interface ISelfSubjectAccessReview {

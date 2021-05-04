@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
+import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 import Aside from 'UI/Layout/Aside';
 
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
@@ -334,7 +335,7 @@ class ConfigKubeCtl extends React.Component {
             cluster and dig a little deeper.
           </p>
 
-          <div className='component_slider--nav'>
+          <GettingStartedBottomNav>
             <Link to={clusterGuideOverviewPath}>
               <Button bsStyle='default'>
                 <i className='fa fa-chevron-left' /> Back
@@ -346,7 +347,7 @@ class ConfigKubeCtl extends React.Component {
                 Continue <i className='fa fa-chevron-right' />
               </Button>
             </Link>
-          </div>
+          </GettingStartedBottomNav>
         </div>
       </Breadcrumb>
     );

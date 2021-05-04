@@ -80,7 +80,10 @@ describe('AccessControlRolePermissions', () => {
             content: 'pods',
           },
           { content: 'All' },
-          { tooltipContent: 'All', labelContent: 'Supported verbs: All' },
+          {
+            tooltipContent: 'All (*)',
+            labelContent: 'Supported verbs: All (*)',
+          },
         ],
       },
       {
@@ -217,8 +220,8 @@ describe('AccessControlRolePermissions', () => {
           },
           { content: 'All' },
           {
-            tooltipContent: 'All',
-            labelContent: 'Supported verbs: All',
+            tooltipContent: 'All (*)',
+            labelContent: 'Supported verbs: All (*)',
           },
         ],
       },

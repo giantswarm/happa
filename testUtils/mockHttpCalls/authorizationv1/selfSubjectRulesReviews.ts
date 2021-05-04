@@ -36,6 +36,11 @@ export const selfSubjectRulesReviewWithSomeOrgs = {
         apiGroups: ['authorization.k8s.io'],
         resources: ['selfsubjectaccessreviews', 'selfsubjectrulesreviews'],
       },
+      {
+        verbs: ['list'],
+        apiGroups: ['cluster.x-k8s.io'],
+        resources: ['clusters'],
+      },
     ],
     nonResourceRules: [
       {

@@ -9,7 +9,7 @@ export function getClusterInfraRef(
   auth: IOAuth2Provider,
   cluster: ICluster
 ) {
-  const { infrastructureRef } = cluster.spec;
+  const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
       new Error('There is no infrastructure reference defined.')
@@ -31,7 +31,7 @@ export function getClusterInfraRef(
 }
 
 export function getClusterInfraRefKey(cluster: ICluster) {
-  const { infrastructureRef } = cluster.spec;
+  const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) return null;
 
   switch (infrastructureRef.kind) {
