@@ -3,7 +3,6 @@ import { ConnectedRouter } from 'connected-react-router';
 import Footer from 'Footer/Footer';
 import { Box, Heading, Text } from 'grommet';
 import { History } from 'history';
-import { SentryErrorNotifier } from 'lib/errors/SentryErrorNotifier';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -72,4 +71,4 @@ App.propTypes = {
   auth: PropTypes.object.isRequired,
 };
 
-export default hot(module)(SentryErrorNotifier.decorateComponent(App));
+export default hot(module)(App);
