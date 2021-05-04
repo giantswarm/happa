@@ -127,7 +127,7 @@ const InstallAppModal = (props) => {
   };
 
   const updateValuesYAML = (files) => {
-    if (files.length < 1) {
+    if (!files || files.length < 1) {
       setValuesYAML(null);
       setValuesYAMLError('');
 
@@ -150,7 +150,7 @@ const InstallAppModal = (props) => {
   };
 
   const updateSecretsYAML = (files) => {
-    if (files.length < 1) {
+    if (!files || files.length < 1) {
       setSecretsYAML(null);
       setSecretsYAMLError('');
 
@@ -285,11 +285,7 @@ const InstallAppModal = (props) => {
                   namespace={namespace}
                   namespaceError={namespaceError}
                   version={version}
-                  availableVersions={props.app.versions.map((v) => ({
-                    chartVersion: v.version,
-                    includedVersion: v.appVersion,
-                    created: v.created,
-                  }))}
+                  availableVersions={props.app.versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}

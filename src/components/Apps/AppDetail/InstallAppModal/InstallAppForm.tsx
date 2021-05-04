@@ -5,7 +5,24 @@ import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import FileInput from 'UI/Inputs/FileInput';
 import TextInput from 'UI/Inputs/TextInput';
 
-const InstallAppForm = ({
+interface IInstallAppFormProps {
+  appName: string;
+  name: string;
+  nameError: string;
+  namespace: string;
+  namespaceError: string;
+  valuesYAMLError: string;
+  version: string;
+  availableVersions: IAppCatalogAppVersion[];
+  secretsYAMLError: string;
+  onChangeName: (newName: string) => void;
+  onChangeNamespace: (newNS: string) => void;
+  onChangeVersion: (newVersion: string) => void;
+  onChangeValuesYAML: (files: FileList | null) => void;
+  onChangeSecretsYAML: (files: FileList | null) => void;
+}
+
+const InstallAppForm: React.FC<IInstallAppFormProps> = ({
   onChangeNamespace,
   onChangeName,
   onChangeValuesYAML,
@@ -21,28 +38,22 @@ const InstallAppForm = ({
   valuesYAMLError,
   secretsYAMLError,
 }) => {
-  const updateName = (newName) => {
-    if (onChangeName) {
-      onChangeName(newName);
-    }
+  const updateName = (newName: string) => {
+    onChangeName?.(newName);
   };
 
-  const updateValuesYAML = (e) => {
-    if (onChangeValuesYAML) {
-      onChangeValuesYAML(e.target.files);
-    }
+  const updateValuesYAML = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeValuesYAML?.(e.target.files);
   };
 
-  const updateSecretsYAML = (e) => {
-    if (onChangeSecretsYAML) {
-      onChangeSecretsYAML(e.target.files);
-    }
+  const updateSecretsYAML = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeSecretsYAML?.(e.target.files);
   };
 
-  const updateVersion = (newVersion) => {
-    if (onChangeVersion) {
-      onChangeVersion(newVersion);
-    }
+  const updateVersion = (newVersion?: string) => {
+    if (typeof newVersion === 'undefined') return;
+
+    onChangeVersion?.(newVersion);
   };
 
   const updateNamespace = useCallback(
@@ -60,13 +71,14 @@ const InstallAppForm = ({
   });
 
   useEffect(() => {
-    const hasFixedNamespace = false;
+    let hasFixedNamespace = false;
     let appNamespace = '';
 
     // Some apps have special rules about what namespace they are allowed to be in.
     if (appName === 'nginx-ingress-controller-app') {
       appNamespace = 'kube-system';
       updateNamespace(appNamespace);
+      hasFixedNamespace = true;
     }
 
     setFormAbilities({
@@ -95,21 +107,25 @@ const InstallAppForm = ({
         }}
       >
         <VersionPicker
-          id='chart-version'
           onChange={updateVersion}
           selectedVersion={version}
-          versions={availableVersions}
+          versions={availableVersions.map((v) => ({
+            chartVersion: v.version,
+            includesVersion: v.appVersion,
+            created: v.created,
+            test: false,
+          }))}
         />
       </FormField>
 
       {formAbilities.hasFixedNamespace ? (
         <TextInput
-          help={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
+          help={`This app must be installed in the ${formAbilities.appNamespace} namespace`}
           key='fixed-namespace'
           label='Namespace'
           id='fixed-namespace'
           readOnly={true}
-          value={formAbilities.fixedNamespace}
+          value={formAbilities.appNamespace}
           margin={{ bottom: 'large' }}
         />
       ) : (
@@ -145,20 +161,20 @@ const InstallAppForm = ({
 };
 
 InstallAppForm.propTypes = {
-  appName: PropTypes.string,
-  name: PropTypes.string,
-  nameError: PropTypes.string,
-  namespace: PropTypes.string,
-  namespaceError: PropTypes.string,
-  valuesYAMLError: PropTypes.string,
-  version: PropTypes.string,
-  availableVersions: PropTypes.array,
-  secretsYAMLError: PropTypes.string,
-  onChangeName: PropTypes.func,
-  onChangeNamespace: PropTypes.func,
-  onChangeValuesYAML: PropTypes.func,
-  onChangeVersion: PropTypes.func,
-  onChangeSecretsYAML: PropTypes.func,
+  appName: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  nameError: PropTypes.string.isRequired,
+  namespace: PropTypes.string.isRequired,
+  namespaceError: PropTypes.string.isRequired,
+  valuesYAMLError: PropTypes.string.isRequired,
+  version: PropTypes.string.isRequired,
+  availableVersions: PropTypes.array.isRequired,
+  secretsYAMLError: PropTypes.string.isRequired,
+  onChangeName: PropTypes.func.isRequired,
+  onChangeNamespace: PropTypes.func.isRequired,
+  onChangeValuesYAML: PropTypes.func.isRequired,
+  onChangeVersion: PropTypes.func.isRequired,
+  onChangeSecretsYAML: PropTypes.func.isRequired,
 };
 
 export default InstallAppForm;
