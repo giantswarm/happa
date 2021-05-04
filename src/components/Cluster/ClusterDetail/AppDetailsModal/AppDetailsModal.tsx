@@ -178,7 +178,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     case ModalPanes.EditChartVersion:
       return (
         <GenericModal
-          aria-label='App details - Edit chart'
+          aria-label='App details - Edit chart version'
           title={
             <>
               Change Chart Version for {appName} on{' '}

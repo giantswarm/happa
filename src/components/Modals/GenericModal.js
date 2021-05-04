@@ -13,7 +13,9 @@ const GenericModal = (props) => {
       <BootstrapModal.Header closeButton>
         <BootstrapModal.Title>{props.title}</BootstrapModal.Title>
       </BootstrapModal.Header>
-      <BootstrapModal.Body>{props.children}</BootstrapModal.Body>
+      <BootstrapModal.Body aria-label={props['aria-label']}>
+        {props.children}
+      </BootstrapModal.Body>
       <BootstrapModal.Footer>
         {props.footer ? (
           props.footer
@@ -34,6 +36,7 @@ GenericModal.propTypes = {
   title: PropTypes.node,
   visible: PropTypes.bool,
   className: PropTypes.string,
+  'aria-label': PropTypes.string,
 };
 
 export default GenericModal;

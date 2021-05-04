@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { fireEvent, waitFor, within } from '@testing-library/react';
+import {
+  fireEvent,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -40,25 +44,31 @@ const clusterDetailPath = RoutePath.createUsablePath(
 
 describe('Installed app detail pane', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getConfiguration.mockResolvedValueOnce(metadataResponse);
+    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
+    (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
 
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCallTimes('/v4/user/', userResponse as never);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse as never);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/`,
+      v4AWSClusterResponse as never
+    );
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
+      v4AWSClusterStatusResponse as never
     );
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/`,
+      v4AWSClusterResponse as never
+    );
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
+      v4AWSClusterStatusResponse as never
     );
 
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
@@ -102,7 +112,9 @@ describe('Installed app detail pane', () => {
       const fileInputPlaceholder = getByText(
         /User level config values have been set/i
       );
-      const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
+      const fileInput = fileInputPlaceholder.parentNode!.querySelector(
+        'input'
+      )!;
       const file = new Blob(
         [
           JSON.stringify({
@@ -112,7 +124,6 @@ describe('Installed app detail pane', () => {
         ],
         {
           type: 'application/json',
-          name: 'config2.json',
         }
       );
 
@@ -123,6 +134,10 @@ describe('Installed app detail pane', () => {
       });
 
       await findByText(/has successfully been updated./i);
+
+      await waitForElementToBeRemoved(() =>
+        screen.getByLabelText(/App details/i)
+      );
     });
 
     it('deletes the config map of an already installed app', async () => {
@@ -152,9 +167,9 @@ describe('Installed app detail pane', () => {
       const fileInputPlaceholder = getByText(
         /User level config values have been set/i
       );
-      let deleteButton = fileInputPlaceholder.parentNode.querySelector(
+      let deleteButton = fileInputPlaceholder.parentNode!.querySelector(
         '.btn-danger'
-      );
+      )!;
       fireEvent.click(deleteButton);
 
       // Confirm deletion
@@ -197,7 +212,9 @@ describe('Installed app detail pane', () => {
       const fileInputPlaceholder = getByText(
         /user level secret values have been set/i
       );
-      const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
+      const fileInput = fileInputPlaceholder.parentNode!.querySelector(
+        'input'
+      )!;
       const file = new Blob(
         [
           JSON.stringify({
@@ -207,7 +224,6 @@ describe('Installed app detail pane', () => {
         ],
         {
           type: 'application/json',
-          name: 'secret.json',
         }
       );
       fireEvent.change(fileInput, {
@@ -216,6 +232,8 @@ describe('Installed app detail pane', () => {
         },
       });
 
+      await screen.findByText('User level secret values have been set');
+
       await waitFor(() => {
         expect(
           queryByText(/delete user level secret values/i)
@@ -223,6 +241,10 @@ describe('Installed app detail pane', () => {
       });
 
       await findByText(/has successfully been updated./i);
+
+      await waitForElementToBeRemoved(() =>
+        screen.getByLabelText(/App details/i)
+      );
     });
 
     it('deletes secrets of an already installed app', async () => {
@@ -252,9 +274,9 @@ describe('Installed app detail pane', () => {
       const fileInputPlaceholder = getByText(
         /user level secret values have been set/i
       );
-      let deleteButton = fileInputPlaceholder.parentNode.querySelector(
+      let deleteButton = fileInputPlaceholder.parentNode!.querySelector(
         '.btn-danger'
-      );
+      )!;
       fireEvent.click(deleteButton);
 
       // Confirm deletion
@@ -357,12 +379,9 @@ describe('Installed app detail pane', () => {
       .get('/giantswarm-catalog/index.yaml')
       .reply(StatusCodes.Ok, catalogIndexResponse);
 
-    const {
-      findByTestId,
-      findByText,
-      getByText,
-      getByLabelText,
-    } = renderRouteWithStore(clusterDetailPath);
+    const { findByTestId, findByText, getByText } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
     const clusterDetailsView = await findByTestId('cluster-details-view');
     const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -373,7 +392,7 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appLabel);
 
     // Wait for the version picker to load.
-    const modal = getByLabelText('App details');
+    const modal = screen.getByLabelText('App details');
     const versionDropdown = await within(modal).findByText(/0.0.1/i);
     fireEvent.click(versionDropdown);
 
