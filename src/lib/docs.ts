@@ -24,6 +24,10 @@ export const clusterUpgradeChecklistURL =
 export const exposingWorkloadsURL =
   'https://docs.giantswarm.io/getting-started/exposing-workloads/';
 
+// About installing the CA Cert
+export const installingCACert =
+  'https://docs.giantswarm.io/getting-started/ca-certificate/';
+
 // Getting started section
 export const gettingStartedURL = 'https://docs.giantswarm.io/getting-started/';
 
