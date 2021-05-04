@@ -80,7 +80,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   }
 
   function showEditChartVersionPane(version?: string) {
-    if (!version) return;
+    if (typeof version === 'undefined') return;
 
     setDesiredVersion(version);
     setPane(ModalPanes.EditChartVersion);
