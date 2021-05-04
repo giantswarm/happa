@@ -58,7 +58,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   const { errorMessage } = useError(updateClusterApp().types.error);
 
   const appName = app.metadata.name;
-  const appVersions = catalog?.apps?.[app.spec.name];
+  const appVersions = catalog?.apps?.[app.spec.name] ?? [];
 
   const [pane, setPane] = useState(ModalPanes.Initial);
   const [desiredVersion, setDesiredVersion] = useState(app.spec.version);
@@ -79,7 +79,9 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     };
   }
 
-  function showEditChartVersionPane(version: string) {
+  function showEditChartVersionPane(version?: string) {
+    if (!version) return;
+
     setDesiredVersion(version);
     setPane(ModalPanes.EditChartVersion);
   }
@@ -151,7 +153,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   switch (pane) {
     case ModalPanes.Initial:
       return (
-        <GenericModal title={appName} onClose={handleClose} visible={visible}>
+        <GenericModal
+          aria-label='App details'
+          title={appName}
+          onClose={handleClose}
+          visible={visible}
+        >
           <InitialPane
             app={app}
             catalogNotFound={!catalog}
@@ -171,6 +178,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     case ModalPanes.EditChartVersion:
       return (
         <GenericModal
+          aria-label='App details - Edit chart'
           title={
             <>
               Change Chart Version for {appName} on{' '}
@@ -205,6 +213,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     case ModalPanes.DeleteAppConfig:
       return (
         <GenericModal
+          aria-label='App details - Delete app config'
           title={
             <>
               Delete user level config values for {appName} on{' '}
@@ -234,6 +243,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     case ModalPanes.DeleteAppSecret:
       return (
         <GenericModal
+          aria-label='App details - Delete app secret'
           title={
             <>
               Delete user level secret values for {appName} on{' '}
@@ -263,6 +273,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     case ModalPanes.DeleteApp:
       return (
         <GenericModal
+          aria-label='App details - Delete app'
           title={
             <>
               Delete {appName} on

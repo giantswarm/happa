@@ -21,9 +21,25 @@ const Upper = styled.div`
   }
 `;
 
-const InitialPane = (props) => {
+type ConfigChangeHandler = (values: string, done: () => void) => void;
+
+interface IInitialPaneProps {
+  app: IInstalledApp;
+  appVersions: IAppCatalogAppVersion[];
+  dispatchCreateAppConfig: ConfigChangeHandler;
+  dispatchCreateAppSecret: ConfigChangeHandler;
+  dispatchUpdateAppConfig: ConfigChangeHandler;
+  dispatchUpdateAppSecret: ConfigChangeHandler;
+  showDeleteAppConfigPane: () => void;
+  showDeleteAppPane: () => void;
+  showDeleteAppSecretPane: () => void;
+  showEditChartVersionPane: (version?: string) => void;
+  catalogNotFound?: boolean;
+}
+
+const InitialPane: React.FC<IInitialPaneProps> = (props) => {
   return (
-    <div data-testid='app-details-modal'>
+    <div>
       <Upper>
         <DetailItem title='CATALOG' className='code'>
           <span>{props.app.spec.catalog}</span>
@@ -63,7 +79,8 @@ const InitialPane = (props) => {
               versions={props.appVersions.map((v) => ({
                 chartVersion: v.version,
                 created: v.created,
-                includedVersion: v.appVersion,
+                includesVersion: v.appVersion,
+                test: false,
               }))}
               onChange={props.showEditChartVersionPane}
             />
@@ -162,17 +179,17 @@ const InitialPane = (props) => {
 };
 
 InitialPane.propTypes = {
-  app: PropTypes.object,
+  app: (PropTypes.object as PropTypes.Requireable<IInstalledApp>).isRequired,
+  appVersions: PropTypes.array.isRequired,
+  dispatchCreateAppConfig: PropTypes.func.isRequired,
+  dispatchCreateAppSecret: PropTypes.func.isRequired,
+  dispatchUpdateAppConfig: PropTypes.func.isRequired,
+  dispatchUpdateAppSecret: PropTypes.func.isRequired,
+  showDeleteAppConfigPane: PropTypes.func.isRequired,
+  showDeleteAppPane: PropTypes.func.isRequired,
+  showDeleteAppSecretPane: PropTypes.func.isRequired,
+  showEditChartVersionPane: PropTypes.func.isRequired,
   catalogNotFound: PropTypes.bool,
-  appVersions: PropTypes.array,
-  dispatchCreateAppConfig: PropTypes.func,
-  dispatchCreateAppSecret: PropTypes.func,
-  dispatchUpdateAppConfig: PropTypes.func,
-  dispatchUpdateAppSecret: PropTypes.func,
-  showDeleteAppConfigPane: PropTypes.func,
-  showDeleteAppPane: PropTypes.func,
-  showDeleteAppSecretPane: PropTypes.func,
-  showEditChartVersionPane: PropTypes.func,
 };
 
 export default InitialPane;

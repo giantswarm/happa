@@ -361,7 +361,7 @@ describe('Installed app detail pane', () => {
       findByTestId,
       findByText,
       getByText,
-      getByTestId,
+      getByLabelText,
     } = renderRouteWithStore(clusterDetailPath);
 
     const clusterDetailsView = await findByTestId('cluster-details-view');
@@ -373,7 +373,7 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appLabel);
 
     // Wait for the version picker to load.
-    const modal = getByTestId('app-details-modal');
+    const modal = getByLabelText('App details');
     const versionDropdown = await within(modal).findByText(/0.0.1/i);
     fireEvent.click(versionDropdown);
 
