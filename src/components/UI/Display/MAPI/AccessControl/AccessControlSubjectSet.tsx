@@ -1,8 +1,17 @@
 import { Box } from 'grommet';
-import { parseSubjects } from 'MAPI/organizations/AccessControl/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
+
+function gatherSubjectUsage(acc: Record<string, number>, currValue: string) {
+  if (acc.hasOwnProperty(currValue)) {
+    acc[currValue]++;
+  } else {
+    acc[currValue] = 1;
+  }
+
+  return acc;
+}
 
 export interface IAccessControlSubjectSetRenderer
   extends React.ComponentPropsWithoutRef<typeof Box> {
@@ -27,6 +36,7 @@ interface IAccessControlSubjectSetProps
   onDeleteItem: (name: string) => void;
   isAdding?: boolean;
   isLoading?: boolean;
+  inputSuggestions?: string[];
 }
 
 const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
@@ -37,6 +47,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
   onDeleteItem,
   isAdding,
   isLoading,
+  inputSuggestions,
   ...props
 }) => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -45,34 +56,41 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
   };
 
   const validateSubjects = (values: string[]): string => {
-    const existingNames = [];
+    /**
+     * Gather how many times each value is used in the whole set,
+     * including the ones in the input
+     * */
+    let valueUsage = values.reduce(gatherSubjectUsage, {});
+    valueUsage = items
+      .map((i) => i.name)
+      .reduce(gatherSubjectUsage, valueUsage);
 
-    for (const item of items) {
-      if (values.includes(item.name)) {
-        existingNames.push(item.name);
+    // Only take names that are used more than once.
+    const duplicatedNames = [];
+    for (const [name, usage] of Object.entries(valueUsage)) {
+      if (usage > 1) {
+        duplicatedNames.push(name);
       }
     }
 
-    if (existingNames.length === 1) {
-      return `Subject '${existingNames[0]}' already exists.`;
-    } else if (existingNames.length > 1) {
-      return `Subjects '${existingNames.join(', ')}' already exist.`;
+    if (duplicatedNames.length === 1) {
+      return `Subject '${duplicatedNames[0]}' already exists.`;
+    } else if (duplicatedNames.length > 1) {
+      return `Subjects '${duplicatedNames.join(`', '`)}' already exist.`;
     }
 
     return '';
   };
 
-  const handleAdd = (newValue: string) => {
-    const values = parseSubjects(newValue);
-
-    const error = validateSubjects(values);
+  const handleAdd = (newValue: string[]) => {
+    const error = validateSubjects(newValue);
     if (error) {
       setErrorMessage(error);
 
       return;
     }
 
-    onAdd(values);
+    onAdd(newValue);
   };
 
   return (
@@ -95,6 +113,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
         onToggleAdding={onToggleAdding}
         errorMessage={errorMessage}
         onClearError={clearError}
+        suggestions={inputSuggestions}
       />
     </Box>
   );
@@ -109,6 +128,7 @@ AccessControlSubjectSet.propTypes = {
   onDeleteItem: PropTypes.func.isRequired,
   isAdding: PropTypes.bool,
   isLoading: PropTypes.bool,
+  inputSuggestions: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AccessControlSubjectSet.defaultProps = {

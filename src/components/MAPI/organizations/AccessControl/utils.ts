@@ -7,7 +7,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-const subjectDelimiterRegexp = /\s*(?:[,\s;])\s*/;
+const subjectDelimiterRegexp = /\s*(?:[,\s;])+\s*/;
 
 /**
  * Parse subjects from a serialized value (e.g. an user input).
@@ -17,7 +17,15 @@ export function parseSubjects(from: string): string[] {
   const trimmed = from.trim();
   if (trimmed.length < 1) return [];
 
-  return trimmed.split(subjectDelimiterRegexp);
+  return trimmed.split(subjectDelimiterRegexp).filter((s) => s.length > 0);
+}
+
+/**
+ * Check if a string is a separator between subjects.
+ * @param value
+ */
+export function isSubjectDelimiter(value: string): boolean {
+  return subjectDelimiterRegexp.test(value);
 }
 
 /**
@@ -142,7 +150,9 @@ export function appendSubjectsToRoleItem(
 export function getRolePermissions(
   role: rbacv1.IClusterRole | rbacv1.IRole
 ): ui.IAccessControlRoleItemPermission[] {
-  const permissions: ui.IAccessControlRoleItemPermission[] = [];
+  if (!role.rules) return [];
+
+  const permissions: Record<string, ui.IAccessControlRoleItemPermission> = {};
 
   for (const rule of role.rules) {
     if (
@@ -153,23 +163,55 @@ export function getRolePermissions(
       continue;
     }
 
-    permissions.push({
-      verbs: rule.verbs,
-      apiGroups: rule.apiGroups ?? [],
-      resourceNames: rule.resourcesNames ?? [],
-      resources: rule.resources ?? [],
-    });
+    const hashKey = [
+      rule.apiGroups?.join(),
+      rule.resources?.join(),
+      rule.resourcesNames?.join(),
+    ].join();
+
+    if (permissions.hasOwnProperty(hashKey)) {
+      // Aggregate verbs for similar rules.
+      permissions[hashKey].verbs.push(...rule.verbs);
+    } else {
+      permissions[hashKey] = {
+        verbs: rule.verbs,
+        apiGroups: rule.apiGroups ?? [],
+        resources: rule.resources ?? [],
+        resourceNames: rule.resourcesNames ?? [],
+      };
+    }
   }
 
-  return permissions;
+  const permissionCollection = Object.values(permissions);
+
+  return permissionCollection.sort(sortPermissions);
 }
 
 /**
- * Compute an organization namespace from the given organization name.
- * @param name
+ * Sort permissions by:
+ * - apiGroups
+ * - resources
+ * - resourceNames
+ * @param a
+ * @param b
  */
-export function getOrgNamespaceFromOrgName(name: string): string {
-  return `org-${name}`;
+export function sortPermissions(
+  a: ui.IAccessControlRoleItemPermission,
+  b: ui.IAccessControlRoleItemPermission
+): number {
+  const sortRules = [
+    () => a.apiGroups.join().localeCompare(b.apiGroups.join()),
+    () => a.resources.join().localeCompare(b.resources.join()),
+    () => a.resourceNames.join().localeCompare(b.resourceNames.join()),
+  ];
+
+  let ruleResult = 0;
+  for (const rule of sortRules) {
+    ruleResult = rule();
+    if (ruleResult !== 0) return ruleResult;
+  }
+
+  return ruleResult;
 }
 
 /**
@@ -248,9 +290,24 @@ export function filterRoles(
   if (!searchQuery) return roles;
 
   return roles.filter((role) => {
-    const value = role.name.toLowerCase();
+    const valuesToCheck: string[] = [
+      role.name,
+      ...Object.keys(role.groups),
+      ...Object.keys(role.users),
+      ...Object.keys(role.serviceAccounts),
+    ];
 
-    return value.includes(searchQuery);
+    for (const permission of role.permissions) {
+      valuesToCheck.push(
+        ...permission.apiGroups,
+        ...permission.resources,
+        ...permission.resourceNames
+      );
+    }
+
+    return valuesToCheck.some((value: string) => {
+      return value.toLowerCase().includes(searchQuery);
+    });
   });
 }
 
@@ -357,15 +414,11 @@ export async function createRoleBindingWithSubjects(
     };
 
     if (subject.kind === rbacv1.SubjectKinds.ServiceAccount) {
-      // We need to create a `ServiceAccount` resource first.
-      const serviceAccount = makeServiceAccount(subject.name);
-      serviceAccount.metadata.namespace = namespace;
-
       subject.apiGroup = '';
       subject.namespace = namespace;
 
       subjectCreationRequests.push(
-        corev1.createServiceAccount(clientFactory(), auth, serviceAccount)
+        ensureServiceAccount(clientFactory(), auth, subject.name, namespace)
       );
     }
 
@@ -375,27 +428,6 @@ export async function createRoleBindingWithSubjects(
   await Promise.all(subjectCreationRequests);
 
   return rbacv1.createRoleBinding(clientFactory(), auth, roleBinding);
-}
-
-/**
- * Delete the service account derived from the given subject.
- * @param client
- * @param auth
- * @param subject
- */
-export async function deleteServiceAccountFromSubject(
-  client: IHttpClient,
-  auth: IOAuth2Provider,
-  subject: rbacv1.ISubject
-) {
-  const serviceAccount = await corev1.getServiceAccount(
-    client,
-    auth,
-    subject.name,
-    subject.namespace!
-  );
-
-  return corev1.deleteServiceAccount(client, auth, serviceAccount);
 }
 
 /**
@@ -424,25 +456,12 @@ export async function deleteSubjectFromRoleBinding(
     namespace
   );
 
-  const subjectDeletionRequests: Promise<corev1.IServiceAccount>[] = [];
-
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {
     const isSubject = s.kind === subjectKind && s.name === subject.name;
-    if (isSubject) {
-      if (s.kind === rbacv1.SubjectKinds.ServiceAccount) {
-        subjectDeletionRequests.push(
-          deleteServiceAccountFromSubject(clientFactory(), auth, s)
-        );
-      }
 
-      return false;
-    }
-
-    return true;
+    return !isSubject;
   });
-
-  await Promise.all(subjectDeletionRequests);
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
@@ -537,4 +556,153 @@ export function extractErrorMessage(
   message ||= fallback;
 
   return message;
+}
+
+/**
+ * Check if an existing account exists. If it does,
+ * return it, and if it doesn't, create one.
+ * @param client
+ * @param auth
+ * @param name
+ * @param namespace
+ */
+export async function ensureServiceAccount(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  name: string,
+  namespace: string
+): Promise<corev1.IServiceAccount> {
+  try {
+    const account = await corev1.getServiceAccount(
+      client,
+      auth,
+      name,
+      namespace
+    );
+
+    return account;
+  } catch (err: unknown) {
+    // If the service account is not found, we'll create it.
+    if (
+      !metav1.isStatusError(
+        (err as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      return Promise.reject(err);
+    }
+  }
+
+  const serviceAccount = makeServiceAccount(name);
+  serviceAccount.metadata.namespace = namespace;
+
+  return corev1.createServiceAccount(client, auth, serviceAccount);
+}
+
+/**
+ * Filter subject suggestions based on the
+ * existing value.
+ * @param existing
+ * @param suggestions
+ * @param limit
+ */
+export function filterSubjectSuggestions(
+  existing: string,
+  suggestions: string[],
+  limit: number
+): string[] {
+  const isLastCharDelimiter = isSubjectDelimiter(existing.slice(-1));
+
+  const subjects = parseSubjects(existing);
+  const uniqueSuggestions = suggestions.filter((suggestion) => {
+    for (let i = 0; i < subjects.length; i++) {
+      // Include the subject if the user is trying to get auto-completion.
+      if (!isLastCharDelimiter && i === subjects.length - 1) {
+        return true;
+      }
+
+      // Don't include existing subjects.
+      if (suggestion === subjects[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  /**
+   * There isn't any value here, let's just return
+   * the full suggestion list.
+   * If the latest char is a delimiter, it means
+   * that the user is trying to add a new value, and
+   * doesn't need filtering based on a search query.
+   */
+  if (subjects.length < 1 || isLastCharDelimiter) {
+    return uniqueSuggestions.slice(0, limit);
+  }
+
+  /**
+   * Consider the last entry as a search query,
+   * and try to find suggestions that fit.
+   */
+  const searchQuery = subjects[subjects.length - 1].toLowerCase();
+  const newSuggestions = uniqueSuggestions.filter((suggestion) => {
+    return suggestion.toLowerCase().startsWith(searchQuery);
+  });
+
+  return newSuggestions.slice(0, limit);
+}
+
+/**
+ * Append a subject suggestion to a serialized
+ * collection of subjects.
+ * @param value
+ * @param suggestion
+ */
+export function appendSubjectSuggestionToValue(
+  value: string,
+  suggestion: string
+): string {
+  if (value.length < 1 && suggestion.length < 1) return '';
+
+  const subjects = parseSubjects(value);
+
+  let newValue = value;
+  if (subjects.length > 0 && !isSubjectDelimiter(newValue.slice(-1))) {
+    const latestSubjectLength = subjects[subjects.length - 1].length;
+    newValue = newValue.substr(0, newValue.length - latestSubjectLength);
+  }
+
+  return `${newValue}${suggestion}, `;
+}
+
+/**
+ * Fetch all the service accounts in a namespace, and map them
+ * into a list of names.
+ * @param client
+ * @param auth
+ * @param namespace
+ */
+export async function fetchServiceAccountSuggestions(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string = 'default'
+): Promise<string[]> {
+  const serviceAccounts = await corev1.getServiceAccountList(
+    client,
+    auth,
+    namespace
+  );
+
+  return serviceAccounts.items.map((account) => account.metadata.name);
+}
+
+/**
+ * The unique cache key for the service account suggestion fetcher.
+ * @param namespace
+ */
+export function fetchServiceAccountSuggestionsKey(
+  namespace: string = 'default'
+): string {
+  return corev1.getServiceAccountListKey(namespace);
 }

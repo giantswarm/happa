@@ -2,22 +2,25 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Tab } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
-import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
+
+import OrganizationDetailGeneral from './OrganizationDetailGeneral';
 
 function computePaths(orgName: string) {
   return {
@@ -37,19 +40,21 @@ interface IOrganizationDetailProps {}
 
 const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const { orgId } = useParams<{ orgId: string }>();
+
   const paths = useMemo(() => computePaths(orgId), [orgId]);
 
-  const client = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const orgClient = useRef(clientFactory());
   const { data, error } = useSWR<
     securityv1alpha1.IOrganization,
     GenericResponse
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
-    securityv1alpha1.getOrganization(client, auth, orgId)
+    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   useEffect(() => {
     if (
@@ -88,7 +93,9 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
             </Heading>
             <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
               <Tab eventKey={paths.Detail} title='General'>
-                <OrganizationDetailPage />
+                <OrganizationDetailGeneral
+                  organizationName={data.metadata.name}
+                />
               </Tab>
               <Tab eventKey={paths.AccessControl} title='Access control'>
                 <AccessControlPage organizationName={data.metadata.name} />

@@ -19,6 +19,7 @@ export default {
     selectedClusterID: null,
     firstLoadComplete: false,
     loggedInUser: null,
+    permissions: {},
     info: {
       general: {
         installation_name: '',

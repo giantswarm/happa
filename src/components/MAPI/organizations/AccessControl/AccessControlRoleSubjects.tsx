@@ -1,7 +1,11 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useEffect, useReducer } from 'react';
+import useSWR from 'swr';
 import AccessControlSubjectSet, {
   IAccessControlSubjectSetItem,
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
@@ -12,7 +16,11 @@ import {
   IAccessControlRoleItem,
   IAccessControlRoleSubjectItem,
 } from '../../../UI/Display/MAPI/AccessControl/types';
-import { getUserNameParts } from './utils';
+import {
+  fetchServiceAccountSuggestions,
+  fetchServiceAccountSuggestionsKey,
+  getUserNameParts,
+} from './utils';
 
 interface IStateValue {
   isAdding: boolean;
@@ -144,11 +152,13 @@ interface IAccessControlRoleSubjectsProps
   extends Pick<IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'>,
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
+  namespace: string;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
+  namespace,
   roleName,
   groups,
   users,
@@ -245,6 +255,14 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       });
     };
   }, [roleName]);
+
+  const client = useHttpClient();
+  const auth = useAuthProvider();
+
+  const { data: serviceAccountSuggestions } = useSWR<string[], GenericResponse>(
+    fetchServiceAccountSuggestionsKey(namespace),
+    () => fetchServiceAccountSuggestions(client, auth, namespace)
+  );
 
   const groupType = state[AccessControlSubjectTypes.Group];
   const userType = state[AccessControlSubjectTypes.User];
@@ -348,6 +366,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           )}
           isAdding={serviceAccountType.isAdding}
           isLoading={serviceAccountType.isLoading}
+          inputSuggestions={serviceAccountSuggestions}
         />
         {serviceAccountType.isAdding && (
           <Box>
@@ -370,6 +389,7 @@ AccessControlRoleSubjects.propTypes = {
   users: PropTypes.object.isRequired,
   // @ts-expect-error
   serviceAccounts: PropTypes.object.isRequired,
+  namespace: PropTypes.string.isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

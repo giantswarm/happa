@@ -9,6 +9,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 
 const StyledInstallIngressButton = styled(InstallIngressButton)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;
@@ -67,7 +68,7 @@ const InstallIngress = (props) => {
 
         <StyledInstallIngressButton cluster={props.cluster} />
 
-        <div className='component_slider--nav'>
+        <GettingStartedBottomNav>
           <Link to={clusterGuideConfigurationPath}>
             <Button bsStyle='default'>
               <i className='fa fa-chevron-left' /> Back
@@ -79,7 +80,7 @@ const InstallIngress = (props) => {
               Continue <i className='fa fa-chevron-right' />
             </Button>
           </Link>
-        </div>
+        </GettingStartedBottomNav>
       </>
     </Breadcrumb>
   );

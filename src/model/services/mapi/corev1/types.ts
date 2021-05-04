@@ -23,3 +23,26 @@ export interface IServiceAccount {
   imagePullSecrets?: ILocalObjectReference[];
   automountServiceAccountToken?: boolean;
 }
+
+export const ServiceAccountList = 'ServiceAccountList';
+
+export interface IServiceAccountList extends metav1.IList<IServiceAccount> {
+  apiVersion: 'v1';
+  kind: typeof ServiceAccountList;
+}
+
+export const ConfigMap = 'ConfigMap';
+
+export interface IConfigMap {
+  apiVersion: 'v1';
+  kind: typeof ConfigMap;
+  metadata: metav1.IObjectMeta;
+  immutable?: boolean;
+  data?: Record<string, string>;
+  binaryData?: Record<string, string>;
+}
+
+export interface INodeAddress {
+  type: string;
+  address: string;
+}

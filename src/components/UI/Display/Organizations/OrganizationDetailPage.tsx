@@ -1,13 +1,53 @@
 import { Box, Text } from 'grommet';
+import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
+import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'UI/Controls/Button';
-import NotAvailable from 'UI/Display/NotAvailable';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
+import OrganizationDetailStatistic from './OrganizationDetailStatistic';
+import {
+  IOrganizationDetailAppsSummary,
+  IOrganizationDetailClustersSummary,
+  IOrganizationDetailReleasesSummary,
+} from './types';
 
-interface IOrganizationDetailPageProps {}
+function formatMemory(value?: number): string | undefined {
+  if (typeof value === 'undefined') return undefined;
 
-const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
+  return `${Math.round(value)} GB`;
+}
+
+function formatCPU(value?: number): number | undefined {
+  if (typeof value === 'undefined') return undefined;
+
+  return Math.round(value);
+}
+
+interface IOrganizationDetailPageProps {
+  organizationName: string;
+  onDelete: () => Promise<void>;
+  clusterCount?: number;
+  clusterCountLoading?: boolean;
+  clustersSummary?: IOrganizationDetailClustersSummary;
+  clustersSummaryLoading?: boolean;
+  releasesSummary?: IOrganizationDetailReleasesSummary;
+  releasesSummaryLoading?: boolean;
+  appsSummary?: IOrganizationDetailAppsSummary;
+  appsSummaryLoading?: boolean;
+}
+
+const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
+  organizationName,
+  onDelete,
+  clusterCount,
+  clusterCountLoading,
+  clustersSummary,
+  clustersSummaryLoading,
+  releasesSummary,
+  releasesSummaryLoading,
+  appsSummary,
+  appsSummaryLoading,
+}) => {
   return (
     <Box direction='column' gap='large'>
       <Box direction='row' gap='large'>
@@ -27,27 +67,48 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <OrganizationDetailStatistic
+              isLoading={clusterCountLoading}
+              aria-label='Workload clusters'
+            >
+              {clusterCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Nodes'
+            >
+              {clustersSummary?.nodesCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Worker nodes'
+            >
+              {clustersSummary?.workerNodesCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Memory in nodes'
+            >
+              {formatMemory(clustersSummary?.nodesMemory)}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='Memory in worker nodes'
+            >
+              {formatMemory(clustersSummary?.workerNodesMemory)}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='CPU in nodes'
+            >
+              {formatCPU(clustersSummary?.nodesCPU)}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={clustersSummaryLoading}
+              aria-label='CPU in worker nodes'
+            >
+              {formatCPU(clustersSummary?.workerNodesCPU)}
+            </OrganizationDetailStatistic>
           </Box>
         </Box>
       </Box>
@@ -65,20 +126,45 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
           </Box>
           <Box direction='column' gap='xsmall'>
             <Box direction='row' gap='small'>
-              <Text>
-                <NotAvailable />
-              </Text>
-              <KubernetesVersionLabel hidePatchVersion={true} />
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Oldest release'
+              >
+                {releasesSummary?.oldestReleaseVersion}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Oldest release Kubernetes version'
+              >
+                <KubernetesVersionLabel
+                  version={releasesSummary?.oldestReleaseK8sVersion}
+                  hidePatchVersion={true}
+                />
+              </OrganizationDetailStatistic>
             </Box>
             <Box direction='row' gap='small'>
-              <Text>
-                <NotAvailable />
-              </Text>
-              <KubernetesVersionLabel hidePatchVersion={true} />
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Newest release'
+              >
+                {releasesSummary?.newestReleaseVersion}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Newest release Kubernetes version'
+              >
+                <KubernetesVersionLabel
+                  version={releasesSummary?.newestReleaseK8sVersion}
+                  hidePatchVersion={true}
+                />
+              </OrganizationDetailStatistic>
             </Box>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <OrganizationDetailStatistic
+              isLoading={releasesSummaryLoading}
+              aria-label='Releases in use'
+            >
+              {releasesSummary?.releasesInUseCount}
+            </OrganizationDetailStatistic>
           </Box>
         </Box>
       </Box>
@@ -94,12 +180,18 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             <Text>App deployments</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
-            <Text>
-              <NotAvailable />
-            </Text>
-            <Text>
-              <NotAvailable />
-            </Text>
+            <OrganizationDetailStatistic
+              isLoading={appsSummaryLoading}
+              aria-label='Apps in use'
+            >
+              {appsSummary?.appsInUseCount}
+            </OrganizationDetailStatistic>
+            <OrganizationDetailStatistic
+              isLoading={appsSummaryLoading}
+              aria-label='App deployments'
+            >
+              {appsSummary?.appDeploymentsCount}
+            </OrganizationDetailStatistic>
           </Box>
         </Box>
       </Box>
@@ -116,14 +208,11 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
             </Text>
           </Box>
           <Box>
-            <Button bsStyle='danger' disabled={true}>
-              <i
-                className='fa fa-delete'
-                role='presentation'
-                aria-hidden={true}
-              />{' '}
-              Delete Organization
-            </Button>
+            <OrganizationDetailDelete
+              organizationName={organizationName}
+              onDelete={onDelete}
+              clusterCount={clusterCount}
+            />
           </Box>
         </Box>
       </Box>
@@ -131,6 +220,17 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = () => {
   );
 };
 
-OrganizationDetailPage.propTypes = {};
+OrganizationDetailPage.propTypes = {
+  organizationName: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  clusterCount: PropTypes.number,
+  clusterCountLoading: PropTypes.bool,
+  clustersSummary: PropTypes.object,
+  clustersSummaryLoading: PropTypes.bool,
+  releasesSummary: PropTypes.object,
+  releasesSummaryLoading: PropTypes.bool,
+  appsSummary: PropTypes.object,
+  appsSummaryLoading: PropTypes.bool,
+};
 
 export default OrganizationDetailPage;

@@ -47,6 +47,7 @@ describe('ClusterManagement', () => {
 
   /************ TESTS ************/
   it('creates a v5 cluster and redirect to details view', async () => {
+    jest.setTimeout(20000);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/releases/', releasesResponse);

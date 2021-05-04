@@ -6,6 +6,7 @@ import AccessControlRoleDetail from '../AccessControlRoleDetail';
 describe('AccessControlRoleDetail', () => {
   it('renders without crashing', () => {
     renderWithStore(AccessControlRoleDetail, {
+      namespace: 'org-test',
       activeRole: {
         name: '',
         namespace: '',
@@ -22,6 +23,7 @@ describe('AccessControlRoleDetail', () => {
 
   it('renders role details correctly', () => {
     const initialProps = {
+      namespace: 'org-test',
       activeRole: {
         name: 'test-role',
         namespace: '',
@@ -70,6 +72,7 @@ describe('AccessControlRoleDetail', () => {
 
   it('renders a loader if there is no data yet', () => {
     const { rerender } = renderWithStore(AccessControlRoleDetail, {
+      namespace: 'org-test',
       activeRole: undefined,
       onAdd: jest.fn(),
       onDelete: jest.fn(),
@@ -79,6 +82,7 @@ describe('AccessControlRoleDetail', () => {
 
     rerender(
       getComponentWithStore(AccessControlRoleDetail, {
+        namespace: 'org-test',
         activeRole: {
           name: 'test-role',
           namespace: '',

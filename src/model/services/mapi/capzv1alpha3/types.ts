@@ -97,3 +97,111 @@ export interface IAzureClusterList extends metav1.IList<IAzureCluster> {}
 
 export const AzureCluster = 'AzureCluster';
 export const AzureClusterList = 'AzureClusterList';
+
+export interface IImageSharedGallery {
+  subscriptionID: string;
+  resourceGroup: string;
+  gallery: string;
+  name: string;
+  version: string;
+}
+
+export interface IImageMarketplace {
+  publisher: string;
+  offer: string;
+  sku: string;
+  version: string;
+  thirdPartyImage: boolean;
+}
+
+export interface IImage {
+  id?: string;
+  sharedGallery?: IImageSharedGallery;
+  marketplace?: IImageMarketplace;
+}
+
+export interface IOSDiskManagedDiskEncryptionSet {
+  id?: string;
+}
+
+export interface IManagedDisk {
+  storageAccountType: string;
+  diskEncryptionSet?: IOSDiskManagedDiskEncryptionSet;
+}
+
+export interface IOSDiskDiffDiskSettings {
+  option: string;
+}
+
+export interface IOSDisk {
+  osType: string;
+  diskSizeGB: number;
+  managedDisk: IManagedDisk;
+  diffDiskSettings?: IOSDiskDiffDiskSettings;
+  cachingType?: string;
+}
+
+export interface IDataDisk {
+  nameSuffix: string;
+  diskSizeGB: number;
+  managedDisk?: IManagedDisk;
+  lun?: number;
+  cachingType?: string;
+}
+
+export interface IUserAssignedIdentity {
+  providerID: string;
+}
+
+export interface ISpotVMOptions {
+  maxPrice?: number | string;
+}
+
+export interface ISecurityProfile {
+  encryptionAtHost?: boolean;
+}
+
+export interface IAzureMachineSpec {
+  vmSize: string;
+  osDisk: IOSDisk;
+  sshPublicKey: string;
+  providerID?: string;
+  failureDomain?: string;
+  image?: IImage;
+  identity?: string;
+  roleAssignmentName?: string;
+  dataDisks?: IDataDisk[];
+  additionalTags?: Tags;
+  allocatePublicIP?: boolean;
+  enableIPForwarding?: boolean;
+  acceleratedNetworking?: boolean;
+  userAssignedIdentities?: IUserAssignedIdentity[];
+  spotVMOptions?: ISpotVMOptions;
+  securityProfile?: ISecurityProfile;
+}
+
+export interface IAzureMachineStatus {
+  ready?: boolean;
+  addresses?: corev1.INodeAddress[];
+  vmState?: string;
+  failureReason?: string;
+  failureMessage?: string;
+  conditions?: capiv1alpha3.ICondition[];
+}
+
+export const AzureMachine = 'AzureMachine';
+
+export interface IAzureMachine {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3';
+  kind: typeof AzureMachine;
+  metadata: metav1.IObjectMeta;
+  spec?: IAzureMachineSpec;
+  status?: IAzureMachineStatus;
+}
+
+export const AzureMachineList = 'AzureMachineList';
+
+export interface IAzureMachineList extends metav1.IList<IAzureMachine> {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3';
+  kind: typeof AzureMachineList;
+}

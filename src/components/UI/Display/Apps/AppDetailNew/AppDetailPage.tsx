@@ -12,7 +12,7 @@ import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
 
-import { HeadingRenderer, urlFor } from './utils';
+import { HeadingRenderer, IATagProps, readmeBaseURL, urlFor } from './utils';
 
 const Header = styled.div`
   display: flex;
@@ -190,14 +190,14 @@ export interface IAppDetailPageProps {
   keywords?: string[];
   readme?: string;
   readmeError?: string;
-  hasReadme: boolean;
+  readmeURL?: string;
   installAppModal: ReactElement;
   selectVersion: (version: string) => void;
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
   return (
-    <Wrapper className={props.hasReadme ? '' : 'no-readme'}>
+    <Wrapper className={props.readmeURL ? '' : 'no-readme'}>
       <Link to='/apps'>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to Apps
@@ -234,19 +234,27 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         />
       </VersionPickerRow>
       <Body>
-        {props.hasReadme && (
+        {props.readmeURL && (
           <Readme>
             {props.readme && (
               <ReactMarkdown
                 plugins={[gfm]}
                 skipHtml
                 className='markdown'
-                renderers={{
-                  heading: HeadingRenderer,
-                  link: (p) => (
+                components={{
+                  h1: HeadingRenderer,
+                  h2: HeadingRenderer,
+                  h3: HeadingRenderer,
+                  h4: HeadingRenderer,
+                  h5: HeadingRenderer,
+                  h6: HeadingRenderer,
+                  a: (p: IATagProps) => (
                     <a
-                      href={urlFor(p.href, 'http://google.com')}
-                      target='_blank'
+                      href={urlFor(
+                        p.href || '',
+                        readmeBaseURL(props.readmeURL!)
+                      )}
+                      target={p.href?.charAt(0) === '#' ? '' : '_blank'}
                       rel='noreferrer'
                     >
                       {p.children}
@@ -326,8 +334,8 @@ AppDetail.propTypes = {
   website: PropTypes.string.isRequired,
   keywords: PropTypes.arrayOf(PropTypes.string.isRequired),
   readme: PropTypes.string,
+  readmeURL: PropTypes.string,
   readmeError: PropTypes.string,
-  hasReadme: PropTypes.bool.isRequired,
   installAppModal: PropTypes.element.isRequired,
   otherVersions: PropTypes.array.isRequired,
   selectVersion: PropTypes.func.isRequired,

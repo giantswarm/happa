@@ -32,7 +32,7 @@ WithReadme.args = {
   website: 'github.com/giantswarm/efk-stack-app',
   keywords: ['elk', 'database', 'fluentd', 'logging', 'search'],
   readme: markdownSample,
-  hasReadme: true,
+  readmeURL: 'https://example.com',
   otherVersions: [],
   installAppModal: <Button>Install</Button>,
 };
@@ -49,7 +49,6 @@ WithoutReadme.args = {
   description: 'Open Distro for ElasticSearch',
   website: 'github.com/giantswarm/efk-stack-app',
   keywords: ['elk', 'database', 'fluentd', 'logging', 'search'],
-  hasReadme: false,
   otherVersions: [],
   installAppModal: <Button>Install</Button>,
 };

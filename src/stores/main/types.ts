@@ -17,6 +17,7 @@ import {
   REFRESH_USER_INFO_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
   SET_NEW_PASSWORD,
+  SET_PERMISSIONS,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
 
@@ -28,6 +29,7 @@ export enum LoggedInUserTypes {
 export interface IMainState {
   loggedInUser: ILoggedInUser | null;
   info: IInstallationInfo;
+  permissions: IPermissionMap;
   selectedOrganization: string | null;
   firstLoadComplete: boolean;
   selectedClusterID: string | null;
@@ -118,6 +120,11 @@ export interface IMainSetNewPasswordAction {
   type: typeof SET_NEW_PASSWORD;
 }
 
+export interface IMainSetPermissionsAction {
+  type: typeof SET_PERMISSIONS;
+  permissions: IPermissionMap;
+}
+
 export type MainActions =
   | IMainSelectClusterAction
   | IMainInfoLoadRequestAction
@@ -137,4 +144,5 @@ export type MainActions =
   | IMainRefreshUserInfoSuccessAction
   | IMainRequestPasswordRecoveryTokenAction
   | IMainVerifyPasswordRecoveryTokenAction
-  | IMainSetNewPasswordAction;
+  | IMainSetNewPasswordAction
+  | IMainSetPermissionsAction;
