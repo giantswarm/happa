@@ -1,4 +1,4 @@
-import { exposingWorkloadsURL } from 'lib/docs';
+import { installingCACert } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
@@ -22,6 +22,26 @@ const KeyPairFlashMessage = styled(FlashMessageComponent)`
   display: inline;
   position: relative;
   top: 10px;
+`;
+
+const CreateKeyPairPlaceHolder = styled.div`
+  background-color: ${({ theme }) => theme.colors.darkBlueDarker1};
+  padding: 100px 150px;
+  padding-top: 150px;
+  text-align: center;
+  margin: 20px 0px;
+  border-radius: 10px;
+`;
+
+const KubeconfigAndDownloadButtons = styled.div`
+  background-color: ${({ theme }) => theme.colors.darkBlueDarker1};
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+
+  .codeblock--container {
+    margin: 0px;
+  }
 `;
 
 class ConfigKubeCtl extends React.Component {
@@ -120,7 +140,11 @@ class ConfigKubeCtl extends React.Component {
 
   kubeConfig() {
     return (
-      <div className='created-key-pair'>
+      <KubeconfigAndDownloadButtons>
+        <p>
+          In the block below is your kubeconfig file. You can download or copy
+          it to your clipboard using the buttons in the top right of the block.
+        </p>
         <FileBlock fileName='giantswarm-kubeconfig'>
           {`
           apiVersion: v1
@@ -147,47 +171,47 @@ class ConfigKubeCtl extends React.Component {
               client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
           `}
         </FileBlock>
-        <div className='well'>
-          <h4>Certificate and Key Download</h4>
-          <div className='cert-downloads'>
-            <a
-              download='ca.crt'
-              href={window.URL.createObjectURL(
-                new Blob([this.state.keyPair.data.certificate_authority_data], {
-                  type: 'application/plain;charset=utf-8',
-                })
-              )}
-            >
-              <Button bsStyle='default'>CA CERTIFICATE</Button>
-            </a>
-            <a
-              download='client.crt'
-              href={window.URL.createObjectURL(
-                new Blob([this.state.keyPair.data.client_certificate_data], {
-                  type: 'application/plain;charset=utf-8',
-                })
-              )}
-            >
-              <Button bsStyle='default'>CLIENT CERTIFICATE</Button>
-            </a>
-            <a
-              download='client.key'
-              href={window.URL.createObjectURL(
-                new Blob([this.state.keyPair.data.client_key_data], {
-                  type: 'application/plain;charset=utf-8',
-                })
-              )}
-            >
-              <Button bsStyle='default'>CLIENT KEY</Button>
-            </a>
-          </div>
-          <p>
-            These files resemble the certificates in the configuration file
-            above. They facilitate authenticated access to services using a web
-            browser. <a href={exposingWorkloadsURL}>Read more in our Docs.</a>
-          </p>
+        <hr />
+        <p>
+          If needed, you can also individually download the certificates and key
+          pair embeded in the configuration file above. Installing the CA
+          Certificate enables authenticated access to services using a web
+          browser.
+          <br /> <a href={installingCACert}>Read more in our Docs.</a>
+        </p>
+        <div className='cert-downloads'>
+          <a
+            download='ca.crt'
+            href={window.URL.createObjectURL(
+              new Blob([this.state.keyPair.data.certificate_authority_data], {
+                type: 'application/plain;charset=utf-8',
+              })
+            )}
+          >
+            <Button bsStyle='default'>CA CERTIFICATE</Button>
+          </a>
+          <a
+            download='client.crt'
+            href={window.URL.createObjectURL(
+              new Blob([this.state.keyPair.data.client_certificate_data], {
+                type: 'application/plain;charset=utf-8',
+              })
+            )}
+          >
+            <Button bsStyle='default'>CLIENT CERTIFICATE</Button>
+          </a>
+          <a
+            download='client.key'
+            href={window.URL.createObjectURL(
+              new Blob([this.state.keyPair.data.client_key_data], {
+                type: 'application/plain;charset=utf-8',
+              })
+            )}
+          >
+            <Button bsStyle='default'>CLIENT KEY</Button>
+          </a>
         </div>
-      </div>
+      </KubeconfigAndDownloadButtons>
     );
   }
 
@@ -217,7 +241,7 @@ class ConfigKubeCtl extends React.Component {
         {this.state.keyPair.generated ? (
           this.kubeConfig()
         ) : (
-          <div className='create-key-pair'>
+          <CreateKeyPairPlaceHolder>
             <Button
               bsStyle='primary'
               loading={this.state.keyPair.generating}
@@ -237,7 +261,7 @@ class ConfigKubeCtl extends React.Component {
                 </KeyPairFlashMessage>
               ) : null}
             </KeyPairError>
-          </div>
+          </CreateKeyPairPlaceHolder>
         )}
 
         <p>
