@@ -71,18 +71,16 @@ const InstallAppForm: React.FC<IInstallAppFormProps> = ({
   });
 
   useEffect(() => {
-    let hasFixedNamespace = false;
     let appNamespace = '';
 
     // Some apps have special rules about what namespace they are allowed to be in.
     if (appName === 'nginx-ingress-controller-app') {
       appNamespace = 'kube-system';
       updateNamespace(appNamespace);
-      hasFixedNamespace = true;
     }
 
     setFormAbilities({
-      hasFixedNamespace,
+      hasFixedNamespace: false,
       appNamespace,
     });
   }, [appName, updateNamespace]);
