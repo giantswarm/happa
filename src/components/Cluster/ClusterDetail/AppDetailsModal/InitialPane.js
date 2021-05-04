@@ -9,7 +9,7 @@ import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import DetailItem from 'UI/Layout/DetailList';
 import Truncated from 'UI/Util/Truncated';
 
-import YAMLFileUpload from './YamlFileUpload';
+import YAMLFileUpload from './YAMLFileUpload';
 
 const Upper = styled.div`
   display: flex;

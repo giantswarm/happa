@@ -89,11 +89,6 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     onClose();
   }
 
-  async function loadAppsAndClose() {
-    handleClose();
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-  }
-
   async function editChartVersion() {
     const { error } = await dispatch(
       updateAppAction({ appName, clusterId, version: desiredVersion })
@@ -103,58 +98,54 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       return;
     }
 
-    await loadAppsAndClose();
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    handleClose();
   }
 
   async function deleteAppConfig() {
     await dispatch(deleteAppConfigAction(appName, clusterId));
-    await loadAppsAndClose();
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    handleClose();
   }
 
   async function deleteAppSecret() {
     await dispatch(deleteAppSecretAction(appName, clusterId));
-    await loadAppsAndClose();
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    handleClose();
   }
 
   async function deleteApp() {
     await dispatch(deleteAppAction({ appName, clusterId }));
-    await loadAppsAndClose();
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    handleClose();
   }
 
   async function createAppConfig(values: string, done: () => void) {
-    try {
-      await dispatch(createAppConfigAction(appName, clusterId, values));
-      await loadAppsAndClose();
-    } finally {
-      done();
-    }
+    await dispatch(createAppConfigAction(appName, clusterId, values));
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    done();
+    handleClose();
   }
 
   async function updateAppConfig(values: string, done: () => void) {
-    try {
-      await dispatch(updateAppConfigAction(appName, clusterId, values));
-      await loadAppsAndClose();
-    } finally {
-      done();
-    }
+    await dispatch(updateAppConfigAction(appName, clusterId, values));
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    done();
+    handleClose();
   }
 
   async function createAppSecret(values: string, done: () => void) {
-    try {
-      await dispatch(createAppSecretAction(appName, clusterId, values));
-      await loadAppsAndClose();
-    } finally {
-      done();
-    }
+    await dispatch(createAppSecretAction(appName, clusterId, values));
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    done();
+    handleClose();
   }
 
   async function updateAppSecret(values: string, done: () => void) {
-    try {
-      await dispatch(updateAppSecretAction(appName, clusterId, values));
-      await loadAppsAndClose();
-    } finally {
-      done();
-    }
+    await dispatch(updateAppSecretAction(appName, clusterId, values));
+    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    done();
+    handleClose();
   }
 
   switch (pane) {
