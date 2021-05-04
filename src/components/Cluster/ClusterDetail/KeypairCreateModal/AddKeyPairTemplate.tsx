@@ -1,9 +1,9 @@
-import ExpiryHoursPicker from 'Cluster/ClusterDetail/ExpiryHoursPicker';
 import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import ExpiryHoursPicker from 'UI/Controls/ExpiryHoursPicker';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
