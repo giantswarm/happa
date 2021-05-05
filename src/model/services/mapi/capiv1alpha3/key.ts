@@ -15,3 +15,7 @@ export function getClusterDescription(cluster: ICluster): string {
 export function getReleaseVersion(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelReleaseVersion];
 }
+
+export function getClusterOrganization(cluster: ICluster): string | undefined {
+  return cluster.metadata.labels?.[labelOrganization];
+}
