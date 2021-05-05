@@ -1,3 +1,4 @@
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -148,13 +149,13 @@ export interface IAppConfig {
  * Install an app in a cluster, as well as create
  * the required ConfigMap and Secret resources to
  * fully configure it.
- * @param client
+ * @param clientFactory
  * @param auth
  * @param clusterID
  * @param appConfig
  */
 export async function createApp(
-  client: IHttpClient,
+  clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   clusterID: string,
   appConfig: IAppConfig
@@ -206,14 +207,14 @@ export async function createApp(
 
   const [userConfigMap, userSecret] = await Promise.all([
     ensureAppUserConfigMap(
-      client,
+      clientFactory(),
       auth,
       clusterID,
       userConfigMapName,
       appConfig.configMapContents
     ),
     ensureAppUserSecret(
-      client,
+      clientFactory(),
       auth,
       clusterID,
       userSecretName,
@@ -235,7 +236,7 @@ export async function createApp(
     };
   }
 
-  return applicationv1alpha1.createApp(client, auth, app);
+  return applicationv1alpha1.createApp(clientFactory(), auth, app);
 }
 
 /**

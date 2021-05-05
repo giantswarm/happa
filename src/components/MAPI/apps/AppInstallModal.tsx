@@ -239,7 +239,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     try {
       setLoading(true);
 
-      await createApp(clientFactory(), auth, clusterID, {
+      await createApp(clientFactory, auth, clusterID, {
         name: name,
         catalogName: props.app.catalog,
         chartName: props.app.name,
