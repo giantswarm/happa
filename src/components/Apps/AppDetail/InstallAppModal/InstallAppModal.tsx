@@ -2,27 +2,71 @@ import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
+import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
-import React, { useCallback, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { installApp } from 'stores/appcatalog/actions';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectOrganizationByID } from 'stores/organization/selectors';
+import { IState } from 'stores/state';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import ClusterPicker from './ClusterPicker';
 import InstallAppForm from './InstallAppForm';
 
-const InstallAppModal = (props) => {
-  const CLUSTER_PICKER_PAGE = 'CLUSTER_PICKER_PAGE';
-  const APP_FORM_PAGE = 'APP_FORM_PAGE';
+function selectClusters(state: IState) {
+  const clusters: Record<
+    string,
+    React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0]
+  > = {};
 
-  const pages = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
+  for (const cluster of Object.values(state.entities.clusters.items)) {
+    if (cluster.delete_date) continue;
+
+    const isUpdating =
+      isClusterUpdating(cluster) ||
+      selectIsClusterAwaitingUpgrade(cluster.id)(state);
+    const isCreatingOrUpdating = isClusterCreating(cluster) || isUpdating;
+
+    const organizationID =
+      selectOrganizationByID(cluster.owner)(state)?.id ?? cluster.owner;
+
+    clusters[cluster.id] = {
+      id: cluster.id,
+      name: cluster.name!,
+      owner: organizationID,
+      isAvailable: !isCreatingOrUpdating,
+    };
+  }
+
+  return clusters;
+}
+
+const SEARCH_DEBOUNCE_RATE = 250; // In ms.
+
+const CLUSTER_PICKER_PAGE = 0;
+const APP_FORM_PAGE = 1;
+const pages: ReadonlyArray<number> = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
+
+interface IInstallAppModalApp {
+  catalog: string;
+  name: string;
+  versions: IAppCatalogAppVersion[];
+}
+
+interface IInstallAppModalProps {
+  app: IInstallAppModalApp;
+  selectedClusterID: string | null;
+}
+
+const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
   const [clusterID, setClusterID] = useState(props.selectedClusterID);
@@ -33,16 +77,20 @@ const InstallAppModal = (props) => {
   const [namespace, setNamespace] = useState('');
   const [namespaceError, setNamespaceError] = useState('');
 
-  const [valuesYAML, setValuesYAML] = useState(null);
+  const [valuesYAML, setValuesYAML] = useState<string | null>(null);
   const [valuesYAMLError, setValuesYAMLError] = useState('');
 
-  const [secretsYAML, setSecretsYAML] = useState(null);
+  const [secretsYAML, setSecretsYAML] = useState<string | null>(null);
   const [secretsYAMLError, setSecretsYAMLError] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
 
+  const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
+
   const [version, setVersion] = useState(props.app.versions[0].version);
+
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   const next = () => {
     if (page < pages.length - 1) {
@@ -73,36 +121,48 @@ const InstallAppModal = (props) => {
     setVisible(true);
   };
 
-  const onSelectCluster = (newClusterID) => {
+  const onSelectCluster = (newClusterID: string) => {
     setClusterID(newClusterID);
     next();
   };
 
-  const lunrIndex = lunr(function () {
-    // eslint-disable-next-line react/no-this-in-sfc
-    this.ref('id');
-    // eslint-disable-next-line react/no-this-in-sfc
-    this.field('name');
-    // eslint-disable-next-line react/no-this-in-sfc
-    this.field('owner');
-    // eslint-disable-next-line react/no-this-in-sfc
-    this.field('id');
+  const clusters = useSelector(selectClusters);
+  const [filteredClusters, setFilteredClusters] = useState<
+    React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters']
+  >([]);
 
-    props.clusters.forEach(function (cluster) {
-      // eslint-disable-next-line react/no-this-in-sfc
-      this.add(cluster);
-    }, this);
-  });
+  const lunrIndex = useMemo(
+    () =>
+      lunr(function (this: lunr.Builder) {
+        // eslint-disable-next-line react/no-this-in-sfc
+        this.ref('id');
+        // eslint-disable-next-line react/no-this-in-sfc
+        this.field('name');
+        // eslint-disable-next-line react/no-this-in-sfc
+        this.field('owner');
+        // eslint-disable-next-line react/no-this-in-sfc
+        this.field('id');
 
-  let clusters = props.clusters;
+        for (const cluster of Object.values(clusters)) {
+          this.add(cluster);
+        }
+      }),
+    [clusters]
+  );
 
-  if (query !== '') {
-    clusters = lunrIndex
-      .search(`${query.trim()} ${query.trim()}*`)
-      .map((result) => {
-        return props.clusters.find((cluster) => cluster.id === result.ref);
-      });
-  }
+  useEffect(() => {
+    if (debouncedQuery.length < 1) {
+      setFilteredClusters(Object.values(clusters));
+
+      return;
+    }
+
+    const clusterCollection = lunrIndex
+      .search(`${debouncedQuery.trim()} ${debouncedQuery.trim()}*`)
+      .map((result) => clusters[result.ref]);
+
+    setFilteredClusters(clusterCollection);
+  }, [lunrIndex, debouncedQuery, clusters]);
 
   const updateNamespace = useCallback(
     (ns) => {
@@ -112,7 +172,7 @@ const InstallAppModal = (props) => {
     [setNamespace, setNamespaceError]
   );
 
-  const updateName = (newName) => {
+  const updateName = (newName: string) => {
     if (namespace === name) {
       // If name and namespace are synced up, keep them that way.
       updateNamespace(newName);
@@ -122,12 +182,12 @@ const InstallAppModal = (props) => {
     setNameError(validateAppName(newName).message);
   };
 
-  const updateVersion = (newVersion) => {
+  const updateVersion = (newVersion: string) => {
     setVersion(newVersion);
   };
 
-  const updateValuesYAML = (files) => {
-    if (files.length < 1) {
+  const updateValuesYAML = (files: FileList | null) => {
+    if (!files || files.length < 1) {
       setValuesYAML(null);
       setValuesYAMLError('');
 
@@ -138,7 +198,8 @@ const InstallAppModal = (props) => {
 
     reader.onload = (e) => {
       try {
-        const parsedYAML = yaml.load(e.target.result);
+        const input = (e.target?.result as string) ?? '';
+        const parsedYAML = yaml.load(input) as string;
         setValuesYAML(parsedYAML);
         setValuesYAMLError('');
       } catch {
@@ -149,8 +210,8 @@ const InstallAppModal = (props) => {
     reader.readAsText(files[0]);
   };
 
-  const updateSecretsYAML = (files) => {
-    if (files.length < 1) {
+  const updateSecretsYAML = (files: FileList | null) => {
+    if (!files || files.length < 1) {
       setSecretsYAML(null);
       setSecretsYAMLError('');
 
@@ -161,7 +222,8 @@ const InstallAppModal = (props) => {
 
     reader.onload = (e) => {
       try {
-        const parsedYAML = yaml.load(e.target.result);
+        const input = (e.target?.result as string) ?? '';
+        const parsedYAML = yaml.load(input) as string;
         setSecretsYAML(parsedYAML);
         setSecretsYAMLError('');
       } catch {
@@ -180,11 +242,13 @@ const InstallAppModal = (props) => {
     return false;
   };
 
-  const createApp = () => {
+  const createApp = async () => {
+    if (!clusterID) return;
+
     setLoading(true);
 
-    props
-      .dispatch(
+    try {
+      await dispatch(
         installApp({
           app: {
             name: name,
@@ -192,28 +256,27 @@ const InstallAppModal = (props) => {
             chartName: props.app.name,
             version: version,
             namespace: namespace,
-            valuesYAML: valuesYAML,
-            secretsYAML: secretsYAML,
+            valuesYAML: valuesYAML ?? '',
+            secretsYAML: secretsYAML ?? '',
           },
           clusterId: clusterID,
         })
-      )
-      .then(() => {
-        const installedApp = props.clusters.find((c) => c.id === clusterID);
-        const clusterDetailPath = RoutePath.createUsablePath(
-          OrganizationsRoutes.Clusters.Detail.Apps,
-          {
-            orgId: installedApp.owner,
-            clusterId: clusterID,
-          }
-        );
+      );
 
-        onClose();
-        props.dispatch(push(clusterDetailPath));
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+      const cluster = clusters[clusterID];
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail.Apps,
+        {
+          orgId: cluster.owner,
+          clusterId: clusterID,
+        }
+      );
+
+      onClose();
+      dispatch(push(clusterDetailPath));
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -238,7 +301,7 @@ const InstallAppModal = (props) => {
                 visible={visible}
               >
                 <ClusterPicker
-                  clusters={clusters}
+                  clusters={filteredClusters}
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
@@ -285,19 +348,13 @@ const InstallAppModal = (props) => {
                   namespace={namespace}
                   namespaceError={namespaceError}
                   version={version}
-                  availableVersions={props.app.versions.map((v) => ({
-                    chartVersion: v.version,
-                    includedVersion: v.appVersion,
-                    created: v.created,
-                  }))}
+                  availableVersions={props.app.versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}
                   onChangeValuesYAML={updateValuesYAML}
                   onChangeVersion={updateVersion}
-                  secretsYAML={secretsYAML}
                   secretsYAMLError={secretsYAMLError}
-                  valuesYAML={valuesYAML}
                   valuesYAMLError={valuesYAMLError}
                 />
               </GenericModal>
@@ -311,42 +368,9 @@ const InstallAppModal = (props) => {
 };
 
 InstallAppModal.propTypes = {
-  app: PropTypes.object,
-  clusters: PropTypes.array,
-  dispatch: PropTypes.func,
+  app: (PropTypes.object as PropTypes.Requireable<IInstallAppModalApp>)
+    .isRequired,
   selectedClusterID: PropTypes.string,
 };
 
-function mapStateToProps(state) {
-  const clusters = Object.keys(state.entities.clusters.items)
-    .map((clusterID) => {
-      const cluster = state.entities.clusters.items[clusterID];
-
-      const isUpdating =
-        isClusterUpdating(cluster) ||
-        selectIsClusterAwaitingUpgrade(clusterID)(state);
-      const isCreatingOrUpdating = isClusterCreating(cluster) || isUpdating;
-
-      const organizationID =
-        selectOrganizationByID(cluster.owner)(state)?.id ?? cluster.owner;
-
-      return {
-        id: clusterID,
-        name: cluster.name,
-        owner: organizationID,
-        isAvailable: !cluster.status || !isCreatingOrUpdating,
-        isDeleted: Boolean(cluster.delete_date),
-      };
-    })
-    .filter(({ isDeleted }) => !isDeleted);
-
-  return { clusters };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(InstallAppModal);
+export default InstallAppModal;

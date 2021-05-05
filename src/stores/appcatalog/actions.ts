@@ -345,7 +345,7 @@ export function createAppConfig(
     try {
       if (!values) {
         // Skip creating an empty app config.
-        return Promise.resolve();
+        return;
       }
 
       dispatch({
@@ -381,8 +381,6 @@ export function createAppConfig(
         messageType.SUCCESS,
         messageTTL.LONG
       );
-
-      return Promise.resolve();
     } catch (err) {
       dispatch({
         type: CLUSTER_CREATE_APP_CONFIG_ERROR,
@@ -409,8 +407,6 @@ export function createAppConfig(
           messageTTL.LONG
         );
       }
-
-      return Promise.reject(err);
     }
   };
 }
@@ -522,8 +518,6 @@ export function updateAppSecret(
         messageType.SUCCESS,
         messageTTL.LONG
       );
-
-      return Promise.resolve();
     } catch (err) {
       dispatch({
         type: CLUSTER_UPDATE_APP_SECRET_ERROR,
@@ -550,8 +544,6 @@ export function updateAppSecret(
           messageTTL.LONG
         );
       }
-
-      return Promise.reject(err);
     }
   };
 }
@@ -565,7 +557,7 @@ export function createAppSecret(
     try {
       if (!values) {
         // Skip creating an empty app secret.
-        return Promise.resolve();
+        return;
       }
 
       dispatch({
@@ -599,8 +591,6 @@ export function createAppSecret(
         messageType.SUCCESS,
         messageTTL.LONG
       );
-
-      return Promise.resolve();
     } catch (err) {
       dispatch({
         type: CLUSTER_CREATE_APP_SECRET_ERROR,
@@ -627,8 +617,6 @@ export function createAppSecret(
           messageTTL.LONG
         );
       }
-
-      return Promise.resolve();
     }
   };
 }
