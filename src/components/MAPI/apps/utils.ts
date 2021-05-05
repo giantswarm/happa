@@ -144,6 +144,15 @@ export interface IAppConfig {
   secretContents: string;
 }
 
+/**
+ * Install an app in a cluster, as well as create
+ * the required ConfigMap and Secret resources to
+ * fully configure it.
+ * @param client
+ * @param auth
+ * @param clusterID
+ * @param appConfig
+ */
 export async function createApp(
   client: IHttpClient,
   auth: IOAuth2Provider,
