@@ -92,7 +92,7 @@ class ForgotPassword extends React.Component {
 
   success = () => {
     return (
-      <div className='forgot-password--token-sent'>
+      <div>
         <h1>
           <i className='fa fa-email' /> Check your mail!
         </h1>
