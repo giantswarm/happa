@@ -14,12 +14,22 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
+import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
 import StatusMessage from '../SignUp/StatusMessage';
+
+const TokenValidatingBox = styled.div`
+  text-align: center;
+  padding: 30px;
+  border: 1px solid #4e5962;
+  border-radius: 5px;
+  margin-top: 20px;
+  background-color: #4e5962;
+`;
 
 class SetPassword extends React.Component {
   state = {
@@ -257,19 +267,18 @@ class SetPassword extends React.Component {
     }
     if (this.state.verifyingToken) {
       return (
-        <div className='forgot-password--token-validating'>
+        <TokenValidatingBox>
           <img className='loader' src={spinner} />
           <br />
+          <br />
           Validating your token...
-        </div>
+        </TokenValidatingBox>
       );
     }
 
     return (
       <>
-        <div className='forgot-password--token-validating'>
-          Something went wrong.
-        </div>
+        <TokenValidatingBox>Something went wrong.</TokenValidatingBox>
         <br />
         <Link to={MainRoutes.ForgotPassword}>Request a new token</Link>
       </>
