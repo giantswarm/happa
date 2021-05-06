@@ -6,3 +6,8 @@ export * from './createServiceAccount';
 export * from './getConfigMap';
 export * from './deleteConfigMap';
 export * from './createConfigMap';
+export * from './updateConfigMap';
+export * from './getSecret';
+export * from './deleteSecret';
+export * from './createSecret';
+export * from './updateSecret';
