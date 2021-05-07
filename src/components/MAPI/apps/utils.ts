@@ -456,3 +456,21 @@ export async function deleteAppWithName(
 
   return Promise.resolve();
 }
+
+export async function updateAppVersion(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string,
+  appName: string,
+  version: string
+) {
+  const app = await applicationv1alpha1.getApp(
+    client,
+    auth,
+    namespace,
+    appName
+  );
+  app.spec.version = version;
+
+  return applicationv1alpha1.updateApp(client, auth, app);
+}

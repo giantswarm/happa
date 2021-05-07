@@ -27,6 +27,7 @@ import {
   deleteSecretForApp,
   ensureConfigMapForApp,
   ensureSecretForApp,
+  updateAppVersion,
 } from '../utils';
 import AppDetailsModalInitialPane from './AppDetailsModalInitialPane';
 
@@ -153,19 +154,35 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     onClose();
   }
 
-  function editChartVersion() {
-    // const { error } = await dispatch(
-    //   updateAppAction({ appName, clusterId, version: desiredVersion })
-    // );
+  async function editChartVersion() {
+    try {
+      setAppUpdateIsLoading(true);
 
-    // if (error) {
-    //   return;
-    // }
+      const updatedApp = await updateAppVersion(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName,
+        desiredVersion
+      );
 
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    handleClose();
+      mutateApp(updatedApp);
+      // TODO(axbarsan): Mutate apps list, once that request exists.
+
+      setAppUpdateIsLoading(false);
+      handleClose();
+
+      new FlashMessage(
+        `App <code>${appName}</code> on <code>${clusterId}</code> has been updated. Changes might take some time to take effect.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      setAppUpdateIsLoading(false);
+
+      const errorMessage = extractErrorMessage(err);
+      setAppUpdateError(errorMessage);
+    }
   }
 
   async function deleteAppConfig() {
