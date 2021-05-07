@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteConfirmFooter';
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
 import GenericModal from 'components/Modals/GenericModal';
+import yaml from 'js-yaml';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
@@ -20,6 +21,12 @@ import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
+import {
+  deleteConfigMapForApp,
+  deleteSecretForApp,
+  ensureConfigMapForApp,
+  ensureSecretForApp,
+} from '../utils';
 import AppDetailsModalInitialPane from './AppDetailsModalInitialPane';
 
 enum ModalPanes {
@@ -49,7 +56,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   const auth = useAuthProvider();
 
   const appClient = useRef(clientFactory());
-  const { data: app, error: appError } = useSWR<
+  const { data: app, error: appError, mutate: mutateApp } = useSWR<
     applicationv1alpha1.IApp,
     GenericResponse
   >(applicationv1alpha1.getAppKey(clusterId, appName), () =>
@@ -160,20 +167,64 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     handleClose();
   }
 
-  function deleteAppConfig() {
-    // await dispatch(deleteAppConfigAction(appName, clusterId));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    handleClose();
+  async function deleteAppConfig() {
+    try {
+      const updatedApp = await deleteConfigMapForApp(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName
+      );
+
+      mutateApp(updatedApp);
+
+      handleClose();
+
+      new FlashMessage(
+        `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterId}</code> has been deleted.`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to delete the ConfigMap containing your values.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
-  function deleteAppSecret() {
-    // await dispatch(deleteAppSecretAction(appName, clusterId));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    handleClose();
+  async function deleteAppSecret() {
+    try {
+      const updatedApp = await deleteSecretForApp(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName
+      );
+
+      mutateApp(updatedApp);
+
+      handleClose();
+
+      new FlashMessage(
+        `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterId}</code> has been deleted.`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to delete the Secret containing your values.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
   function deleteApp() {
@@ -184,40 +235,152 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     handleClose();
   }
 
-  function createAppConfig(_values: string, done: () => void) {
-    // await dispatch(createAppConfigAction(appName, clusterId, values));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    done();
-    handleClose();
+  async function createAppConfig(values: string, done: () => void) {
+    try {
+      const contents = yaml.dump(values);
+      const updatedApp = await ensureConfigMapForApp(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName,
+        contents
+      );
+
+      if (updatedApp) {
+        mutateApp(updatedApp);
+      }
+
+      done();
+      handleClose();
+
+      new FlashMessage(
+        `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterId}</code> has successfully been created.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      done();
+
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to create a ConfigMap to store your values.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
-  function updateAppConfig(_values: string, done: () => void) {
-    // await dispatch(updateAppConfigAction(appName, clusterId, values));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    done();
-    handleClose();
+  async function updateAppConfig(values: string, done: () => void) {
+    try {
+      const contents = yaml.dump(values);
+      const updatedApp = await ensureConfigMapForApp(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName,
+        contents
+      );
+
+      if (updatedApp) {
+        mutateApp(updatedApp);
+      }
+
+      done();
+      handleClose();
+
+      new FlashMessage(
+        `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterId}</code> has successfully been updated.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      done();
+
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to update the ConfigMap containing user level config values.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
-  function createAppSecret(_values: string, done: () => void) {
-    // await dispatch(createAppSecretAction(appName, clusterId, values));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    done();
-    handleClose();
+  async function createAppSecret(values: string, done: () => void) {
+    try {
+      const contents = yaml.dump(values);
+      const updatedApp = await ensureSecretForApp(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName,
+        contents
+      );
+
+      if (updatedApp) {
+        mutateApp(updatedApp);
+      }
+
+      done();
+      handleClose();
+
+      new FlashMessage(
+        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterId}</code> has successfully been updated.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      done();
+
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to create a Secret to store your values.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
-  function updateAppSecret(_values: string, done: () => void) {
-    // await dispatch(updateAppSecretAction(appName, clusterId, values));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    done();
-    handleClose();
+  async function updateAppSecret(values: string, done: () => void) {
+    try {
+      const contents = yaml.dump(values);
+      const updatedApp = await ensureSecretForApp(
+        clientFactory(),
+        auth,
+        clusterId,
+        appName,
+        contents
+      );
+
+      if (updatedApp) {
+        mutateApp(updatedApp);
+      }
+
+      done();
+      handleClose();
+
+      new FlashMessage(
+        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterId}</code> has successfully been updated.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      done();
+
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to update the Secret containing user level secret values.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
   if (!app) {
