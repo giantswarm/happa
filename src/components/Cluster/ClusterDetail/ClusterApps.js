@@ -2,6 +2,7 @@ import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
+import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -15,6 +16,8 @@ import {
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -184,7 +187,7 @@ class ClusterApps extends React.Component {
         return {
           appDetailsModal: {
             visible: false,
-            app: null,
+            appName: '',
           },
         };
       }
@@ -221,7 +224,7 @@ class ClusterApps extends React.Component {
   state = {
     appDetailsModal: {
       visible: false,
-      app: null,
+      appName: '',
     },
   };
 
@@ -336,7 +339,7 @@ class ClusterApps extends React.Component {
     if (this.isComponentMounted) {
       this.setState({
         appDetailsModal: {
-          appName: null,
+          appName: '',
           visible: false,
         },
       });
@@ -494,7 +497,14 @@ class ClusterApps extends React.Component {
           )}
         </div>
 
-        {selectedApp && (
+        {selectedApp && this.props.user.type === LoggedInUserTypes.MAPI ? (
+          <AppDetailsModalMAPI
+            app={selectedApp}
+            clusterId={this.props.clusterId}
+            onClose={this.hideAppModal}
+            visible={this.state.appDetailsModal.visible}
+          />
+        ) : (
           <AppDetailsModal
             // Instead of just assigning the selected app to the state of this component,
             // this ensures any updates to the apps continue to flow down into the modal.
@@ -520,6 +530,7 @@ ClusterApps.propTypes = {
   clusterIsUpdating: PropTypes.bool,
   clusterIsAwaitingUpgrade: PropTypes.bool,
   clusterIsCreating: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 function mapStateToProps(state, props) {
@@ -537,6 +548,7 @@ function mapStateToProps(state, props) {
       state
     ),
     clusterIsCreating: cluster ? isClusterCreating(cluster) : false,
+    user: getLoggedInUser(state),
   };
 }
 
