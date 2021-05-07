@@ -22,6 +22,7 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import {
+  deleteAppWithName,
   deleteConfigMapForApp,
   deleteSecretForApp,
   ensureConfigMapForApp,
@@ -227,12 +228,28 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     }
   }
 
-  function deleteApp() {
-    // await dispatch(deleteAppAction({ appName, clusterId }));
-    // await dispatch(loadClusterApps({ clusterId: clusterId }));
-    setAppUpdateIsLoading(true);
-    setAppUpdateIsLoading(false);
-    handleClose();
+  async function deleteApp() {
+    try {
+      await deleteAppWithName(clientFactory(), auth, clusterId, appName);
+
+      // TODO(axbarsan): Mutate apps list, once that request exists.
+      handleClose();
+
+      new FlashMessage(
+        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterId}</code>. This may take a couple of minutes.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `Something went wrong while trying to delete your app.`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
   }
 
   async function createAppConfig(values: string, done: () => void) {

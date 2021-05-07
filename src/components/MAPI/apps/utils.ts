@@ -428,3 +428,31 @@ export async function deleteSecretForApp(
 
   return app;
 }
+
+export async function deleteAppWithName(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string,
+  appName: string
+) {
+  try {
+    const app = await applicationv1alpha1.getApp(
+      client,
+      auth,
+      namespace,
+      appName
+    );
+    await applicationv1alpha1.deleteApp(client, auth, app);
+  } catch (err) {
+    if (
+      !metav1.isStatusError(
+        (err as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      return Promise.reject(err);
+    }
+  }
+
+  return Promise.resolve();
+}
