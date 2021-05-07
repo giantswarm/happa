@@ -112,7 +112,7 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
       </Upper>
 
       <DetailItem title='user level config values' className='well'>
-        {props.app.spec.userConfig?.configMap?.name !== '' ? (
+        {props.app.spec.userConfig?.configMap?.name ? (
           <>
             <span>User level config values have been set</span>
 
