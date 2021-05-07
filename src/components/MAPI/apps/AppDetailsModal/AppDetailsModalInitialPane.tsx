@@ -1,5 +1,7 @@
 import YAMLFileUpload from 'Cluster/ClusterDetail/AppDetailsModal/YAMLFileUpload';
 import { spinner } from 'images';
+import { VersionImpl } from 'lib/Version';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -20,11 +22,17 @@ const Upper = styled.div`
   }
 `;
 
+function isTestRelease(releaseVersion: string): boolean {
+  const version = new VersionImpl(releaseVersion);
+
+  return version.getPreRelease().length > 0;
+}
+
 type ConfigChangeHandler = (values: string, done: () => void) => void;
 
 interface IAppDetailsModalInitialPaneProps {
-  app: IInstalledApp;
-  appVersions: IAppCatalogAppVersion[];
+  app: applicationv1alpha1.IApp;
+  appCatalogEntriesIsLoading: boolean;
   dispatchCreateAppConfig: ConfigChangeHandler;
   dispatchCreateAppSecret: ConfigChangeHandler;
   dispatchUpdateAppConfig: ConfigChangeHandler;
@@ -33,7 +41,7 @@ interface IAppDetailsModalInitialPaneProps {
   showDeleteAppPane: () => void;
   showDeleteAppSecretPane: () => void;
   showEditChartVersionPane: (version?: string) => void;
-  catalogNotFound?: boolean;
+  appCatalogEntries?: applicationv1alpha1.IAppCatalogEntry[];
 }
 
 const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
@@ -47,41 +55,35 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
         </DetailItem>
 
         <DetailItem title='CHART VERSION'>
-          {/* If we have a catalog, but we're still loading the appVersions
-              then show a loading spinner.
-           */}
-          {!props.catalogNotFound && !props.appVersions && (
+          {props.appCatalogEntriesIsLoading && (
             <img className='loader' width='25px' src={spinner} />
           )}
 
-          {/* If we don't have a catalog, don't show a version picker because
-              we wil never know what versions are available.
-           */}
-          {props.catalogNotFound && (
-            <OverlayTrigger
-              overlay={
-                <Tooltip id='tooltip'>
-                  Unable to fetch versions for this app. Could not find the
-                  corresponding catalog. Changing versions is disabled.
-                </Tooltip>
-              }
-              placement='top'
-            >
-              <span>
-                {props.app.spec.version} <i className='fa fa-warning' />
-              </span>
-            </OverlayTrigger>
-          )}
+          {typeof props.appCatalogEntries === 'undefined' &&
+            !props.appCatalogEntriesIsLoading && (
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id='tooltip'>
+                    Unable to fetch versions for this app. Could not find the
+                    corresponding catalog. Changing versions is disabled.
+                  </Tooltip>
+                }
+                placement='top'
+              >
+                <span>
+                  {props.app.spec.version} <i className='fa fa-warning' />
+                </span>
+              </OverlayTrigger>
+            )}
 
-          {/* If we have app versions loaded, show the VersionPicker */}
-          {props.appVersions && (
+          {props.appCatalogEntries && (
             <VersionPicker
               selectedVersion={props.app.spec.version}
-              versions={props.appVersions.map((v) => ({
-                chartVersion: v.version,
-                created: v.created,
-                includesVersion: v.appVersion,
-                test: false,
+              versions={props.appCatalogEntries.map((e) => ({
+                chartVersion: e.spec.version,
+                created: e.spec.dateCreated ?? '',
+                includesVersion: e.spec.appVersion,
+                test: isTestRelease(e.spec.version),
               }))}
               onChange={props.showEditChartVersionPane}
             />
@@ -93,10 +95,10 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
         </DetailItem>
 
         <DetailItem title='APP VERSION' className='code'>
-          {props.app.status.app_version === '' ? (
-            <span>Information pending...</span>
+          {props.app.status?.appVersion ? (
+            <Truncated as='span'>{props.app.status?.appVersion}</Truncated>
           ) : (
-            <Truncated as='span'>{props.app.status.app_version}</Truncated>
+            <span>Information pending...</span>
           )}
         </DetailItem>
 
@@ -110,7 +112,7 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
       </Upper>
 
       <DetailItem title='user level config values' className='well'>
-        {props.app.spec.user_config.configmap.name !== '' ? (
+        {props.app.spec.userConfig?.configMap?.name !== '' ? (
           <>
             <span>User level config values have been set</span>
 
@@ -140,7 +142,7 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
       </DetailItem>
 
       <DetailItem title='user level secret values' className='well'>
-        {props.app.spec.user_config.secret.name !== '' ? (
+        {props.app.spec.userConfig?.secret?.name ? (
           <>
             <span>User level secret values have been set</span>
 
@@ -180,8 +182,9 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
 };
 
 AppDetailsModalInitialPane.propTypes = {
-  app: (PropTypes.object as PropTypes.Requireable<IInstalledApp>).isRequired,
-  appVersions: PropTypes.array.isRequired,
+  app: (PropTypes.object as PropTypes.Requireable<applicationv1alpha1.IApp>)
+    .isRequired,
+  appCatalogEntriesIsLoading: PropTypes.bool.isRequired,
   dispatchCreateAppConfig: PropTypes.func.isRequired,
   dispatchCreateAppSecret: PropTypes.func.isRequired,
   dispatchUpdateAppConfig: PropTypes.func.isRequired,
@@ -190,7 +193,7 @@ AppDetailsModalInitialPane.propTypes = {
   showDeleteAppPane: PropTypes.func.isRequired,
   showDeleteAppSecretPane: PropTypes.func.isRequired,
   showEditChartVersionPane: PropTypes.func.isRequired,
-  catalogNotFound: PropTypes.bool,
+  appCatalogEntries: PropTypes.array,
 };
 
 export default AppDetailsModalInitialPane;

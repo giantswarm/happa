@@ -497,23 +497,25 @@ class ClusterApps extends React.Component {
           )}
         </div>
 
-        {selectedApp && this.props.user.type === LoggedInUserTypes.MAPI ? (
-          <AppDetailsModalMAPI
-            app={selectedApp}
-            clusterId={this.props.clusterId}
-            onClose={this.hideAppModal}
-            visible={this.state.appDetailsModal.visible}
-          />
-        ) : (
-          <AppDetailsModal
-            // Instead of just assigning the selected app to the state of this component,
-            // this ensures any updates to the apps continue to flow down into the modal.
-            app={selectedApp}
-            clusterId={this.props.clusterId}
-            onClose={this.hideAppModal}
-            visible={this.state.appDetailsModal.visible}
-          />
-        )}
+        {selectedApp &&
+          (this.props.user.type === LoggedInUserTypes.MAPI ? (
+            <AppDetailsModalMAPI
+              appName={selectedApp.metadata.name}
+              catalog={selectedApp.spec.catalog}
+              clusterId={this.props.clusterId}
+              onClose={this.hideAppModal}
+              visible={this.state.appDetailsModal.visible}
+            />
+          ) : (
+            <AppDetailsModal
+              // Instead of just assigning the selected app to the state of this component,
+              // this ensures any updates to the apps continue to flow down into the modal.
+              app={selectedApp}
+              clusterId={this.props.clusterId}
+              onClose={this.hideAppModal}
+              visible={this.state.appDetailsModal.visible}
+            />
+          ))}
       </>
     );
   }

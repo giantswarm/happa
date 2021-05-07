@@ -1,26 +1,22 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteConfirmFooter';
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
 import GenericModal from 'components/Modals/GenericModal';
-import useError from 'lib/hooks/useError';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as metav1 from 'model/services/mapi/metav1';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  catalogLoadIndex,
-  createAppConfig as createAppConfigAction,
-  createAppSecret as createAppSecretAction,
-  deleteAppConfig as deleteAppConfigAction,
-  deleteAppSecret as deleteAppSecretAction,
-  deleteClusterApp as deleteAppAction,
-  loadClusterApps,
-  updateAppConfig as updateAppConfigAction,
-  updateAppSecret as updateAppSecretAction,
-  updateClusterApp as updateAppAction,
-  updateClusterApp,
-} from 'stores/appcatalog/actions';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { IState } from 'stores/state';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
@@ -35,46 +31,104 @@ enum ModalPanes {
 }
 
 interface IAppDetailsModalProps {
-  app: IInstalledApp;
+  appName: string;
+  catalog: string;
   clusterId: string;
   onClose: () => void;
   visible?: boolean;
 }
 
 const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
-  app,
+  appName,
+  catalog,
   clusterId,
   onClose,
   visible,
 }) => {
-  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-  const catalog = useSelector<IState, IAppCatalog | undefined>(
-    (state) => state.entities.catalogs.items[app.spec.catalog]
-  );
-  const isLoading = useSelector((state: IState) =>
-    selectLoadingFlagByAction(state, updateAppAction().types.request)
-  );
-  const { errorMessage } = useError(updateClusterApp().types.error);
-
-  const appName = app.metadata.name;
-  const appVersions = catalog?.apps?.[app.spec.name] ?? [];
-
-  const [pane, setPane] = useState(ModalPanes.Initial);
-  const [desiredVersion, setDesiredVersion] = useState(app.spec.version);
-  const { clear: clearUpdateAppError } = useError(
-    updateAppAction().types.error
+  const appClient = useRef(clientFactory());
+  const { data: app, error: appError } = useSWR<
+    applicationv1alpha1.IApp,
+    GenericResponse
+  >(applicationv1alpha1.getAppKey(clusterId, appName), () =>
+    applicationv1alpha1.getApp(appClient.current, auth, clusterId, appName)
   );
 
   useEffect(() => {
-    if (catalog && !catalog.apps) {
-      dispatch(catalogLoadIndex(catalog.metadata.name));
+    if (
+      metav1.isStatusError(
+        appError?.data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      new FlashMessage(
+        `App <code>${appName}</code> not found`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        'Please make sure the app exists and that you have access to it.'
+      );
+
+      onClose();
+    } else if (appError) {
+      const message = extractErrorMessage(appError);
+
+      new FlashMessage(
+        `There was a problem loading app <code>${appName}</code>`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        message
+      );
+
+      if (!app) {
+        onClose();
+      }
     }
-  }, [catalog, app, dispatch]);
+  }, [app, appError, appName, onClose]);
+
+  const appCatalogEntryListClient = useRef(clientFactory());
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
+    return {
+      labelSelector: {
+        matchingLabels: {
+          [applicationv1alpha1.labelAppName]: appName,
+          [applicationv1alpha1.labelAppCatalog]: catalog,
+        },
+      },
+    };
+  }, [appName, catalog]);
+  const {
+    data: appCatalogEntryList,
+    isValidating: appCatalogEntryListIsValidating,
+  } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponse>(
+    applicationv1alpha1.getAppCatalogEntryListKey(
+      appCatalogEntryListGetOptions
+    ),
+    () =>
+      applicationv1alpha1.getAppCatalogEntryList(
+        appCatalogEntryListClient.current,
+        auth,
+        appCatalogEntryListGetOptions
+      )
+  );
+
+  const [pane, setPane] = useState(ModalPanes.Initial);
+
+  const [desiredVersion, setDesiredVersion] = useState('');
+  useLayoutEffect(() => {
+    // Set desired version once app is loaded.
+    if (desiredVersion.length < 1 && app) {
+      setDesiredVersion(app.spec.version);
+    }
+  }, [app, desiredVersion]);
+
+  const [appUpdateIsLoading, setAppUpdateIsLoading] = useState(false);
+  const [appUpdateError, setAppUpdateError] = useState('');
 
   function showPane(paneToShow: ModalPanes) {
     return () => {
-      clearUpdateAppError();
+      setAppUpdateError('');
       setPane(paneToShow);
     };
   }
@@ -91,63 +145,83 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     onClose();
   }
 
-  async function editChartVersion() {
-    const { error } = await dispatch(
-      updateAppAction({ appName, clusterId, version: desiredVersion })
-    );
+  function editChartVersion() {
+    // const { error } = await dispatch(
+    //   updateAppAction({ appName, clusterId, version: desiredVersion })
+    // );
 
-    if (error) {
-      return;
-    }
+    // if (error) {
+    //   return;
+    // }
 
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     handleClose();
   }
 
-  async function deleteAppConfig() {
-    await dispatch(deleteAppConfigAction(appName, clusterId));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function deleteAppConfig() {
+    // await dispatch(deleteAppConfigAction(appName, clusterId));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     handleClose();
   }
 
-  async function deleteAppSecret() {
-    await dispatch(deleteAppSecretAction(appName, clusterId));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function deleteAppSecret() {
+    // await dispatch(deleteAppSecretAction(appName, clusterId));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     handleClose();
   }
 
-  async function deleteApp() {
-    await dispatch(deleteAppAction({ appName, clusterId }));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function deleteApp() {
+    // await dispatch(deleteAppAction({ appName, clusterId }));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     handleClose();
   }
 
-  async function createAppConfig(values: string, done: () => void) {
-    await dispatch(createAppConfigAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function createAppConfig(_values: string, done: () => void) {
+    // await dispatch(createAppConfigAction(appName, clusterId, values));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     done();
     handleClose();
   }
 
-  async function updateAppConfig(values: string, done: () => void) {
-    await dispatch(updateAppConfigAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function updateAppConfig(_values: string, done: () => void) {
+    // await dispatch(updateAppConfigAction(appName, clusterId, values));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     done();
     handleClose();
   }
 
-  async function createAppSecret(values: string, done: () => void) {
-    await dispatch(createAppSecretAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function createAppSecret(_values: string, done: () => void) {
+    // await dispatch(createAppSecretAction(appName, clusterId, values));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     done();
     handleClose();
   }
 
-  async function updateAppSecret(values: string, done: () => void) {
-    await dispatch(updateAppSecretAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
+  function updateAppSecret(_values: string, done: () => void) {
+    // await dispatch(updateAppSecretAction(appName, clusterId, values));
+    // await dispatch(loadClusterApps({ clusterId: clusterId }));
+    setAppUpdateIsLoading(true);
+    setAppUpdateIsLoading(false);
     done();
     handleClose();
+  }
+
+  if (!app) {
+    return null;
   }
 
   switch (pane) {
@@ -161,8 +235,11 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         >
           <AppDetailsModalInitialPane
             app={app}
-            catalogNotFound={!catalog}
-            appVersions={appVersions}
+            appCatalogEntries={appCatalogEntryList?.items}
+            appCatalogEntriesIsLoading={
+              typeof appCatalogEntryList === 'undefined' &&
+              appCatalogEntryListIsValidating
+            }
             dispatchCreateAppConfig={createAppConfig}
             dispatchCreateAppSecret={createAppSecret}
             dispatchUpdateAppConfig={updateAppConfig}
@@ -190,7 +267,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
               <Button
                 bsStyle='primary'
                 onClick={editChartVersion}
-                loading={isLoading}
+                loading={appUpdateIsLoading}
               >
                 Update Chart Version
               </Button>
@@ -205,7 +282,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           <EditChartVersionPane
             currentVersion={app.spec.version}
             desiredVersion={desiredVersion}
-            errorMessage={errorMessage}
+            errorMessage={appUpdateError}
           />
         </GenericModal>
       );
@@ -306,7 +383,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 };
 
 AppDetailsModal.propTypes = {
-  app: (PropTypes.object as PropTypes.Requireable<IInstalledApp>).isRequired,
+  appName: PropTypes.string.isRequired,
+  catalog: PropTypes.string.isRequired,
   clusterId: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   visible: PropTypes.bool,
