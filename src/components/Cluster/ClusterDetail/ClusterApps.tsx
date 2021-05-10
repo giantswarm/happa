@@ -1,11 +1,10 @@
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Constants } from 'shared/constants';
+import { AppConstants, Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import { loadClusterApps } from 'stores/appcatalog/actions';
 import {
@@ -27,8 +26,11 @@ import NotAvailable from 'UI/Display/NotAvailable';
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
 
-function formatAppVersion(release: IRelease, app: IAppMetaApp) {
-  const { name, version } = app;
+function formatAppVersion(
+  release: IRelease,
+  appMeta: AppConstants.IAppMetaApp
+) {
+  const { name, version } = appMeta;
 
   if (name === 'kubernetes' && release.k8sVersionEOLDate) {
     const { isEol } = getKubernetesReleaseEOLStatus(release.k8sVersionEOLDate);
@@ -43,137 +45,6 @@ function formatAppVersion(release: IRelease, app: IAppMetaApp) {
 
   return version;
 }
-
-interface IAppMetaApp {
-  name: string;
-  logoUrl: string;
-  category: 'essentials' | 'management' | 'ingress';
-  version?: string;
-}
-
-// The `appMetas` object below is a mapping of known
-// release component names to logos and categories.
-const appMetas: Record<
-  string,
-  IAppMetaApp | ((version: string) => IAppMetaApp)
-> = {
-  'aws-cni': {
-    name: 'aws-cni',
-    logoUrl: '/images/app_icons/awscni@2x.png',
-    category: 'essentials',
-  },
-  calico: {
-    name: 'calico',
-    logoUrl: '/images/app_icons/calico@2x.png',
-    category: 'essentials',
-  },
-  'cluster-autoscaler': {
-    name: 'cluster-autoscaler',
-    logoUrl: '/images/app_icons/cluster_autoscaler@2x.png',
-    category: 'essentials',
-  },
-  containerlinux: (version: string) => {
-    const component: IAppMetaApp = {
-      name: 'containerlinux',
-      logoUrl: '/images/app_icons/container_linux@2x.png',
-      category: 'essentials',
-    };
-
-    if (compare(version, Constants.FLATCAR_CONTAINERLINUX_SINCE) >= 0) {
-      component.logoUrl = '/images/app_icons/flatcar_linux@2x.png';
-    }
-
-    return component;
-  },
-  coredns: {
-    name: 'coredns',
-    logoUrl: '/images/app_icons/coredns@2x.png',
-    category: 'essentials',
-  },
-  docker: {
-    name: 'docker',
-    logoUrl: '/images/app_icons/docker@2x.png',
-    category: 'essentials',
-  },
-  etcd: {
-    name: 'etcd',
-    logoUrl: '/images/app_icons/etcd@2x.png',
-    category: 'essentials',
-  },
-  kubernetes: {
-    name: 'kubernetes',
-    logoUrl: '/images/app_icons/kubernetes@2x.png',
-    category: 'essentials',
-  },
-  'metrics-server': {
-    name: 'metrics-server',
-    logoUrl: '/images/app_icons/metrics_server@2x.png',
-    category: 'essentials',
-  },
-  'kube-state-metrics': {
-    name: 'kube-state-metrics',
-    logoUrl: '/images/app_icons/kube_state_metrics@2x.png',
-    category: 'management',
-  },
-  'chart-operator': {
-    name: 'chart-operator',
-    logoUrl: '/images/app_icons/chart_operator@2x.png',
-    category: 'management',
-  },
-  'cert-exporter': {
-    name: 'cert-exporter',
-    logoUrl: '/images/app_icons/cert_exporter@2x.png',
-    category: 'management',
-  },
-  'net-exporter': {
-    name: 'net-exporter',
-    logoUrl: '/images/app_icons/net_exporter@2x.png',
-    category: 'management',
-  },
-  'node-exporter': {
-    name: 'node-exporter',
-    logoUrl: '/images/app_icons/node_exporter@2x.png',
-    category: 'management',
-  },
-  'nginx-ingress-controller': {
-    name: 'nginx-ingress-controller',
-    logoUrl: '/images/app_icons/nginx_ingress_controller@2x.png',
-    category: 'ingress',
-  },
-  kiam: {
-    name: 'kiam',
-    logoUrl: '/images/app_icons/kiam@2x.png',
-    category: 'essentials',
-  },
-  'external-dns': {
-    name: 'external-dns',
-    logoUrl: '/images/app_icons/external_dns@2x.png',
-    category: 'essentials',
-  },
-  'cert-manager': {
-    name: 'cert-manager',
-    logoUrl: '/images/app_icons/cert_manager@2x.png',
-    category: 'essentials',
-  },
-};
-
-const defaultAppMetas: Record<string, IAppMetaApp> = {
-  'cert-exporter': {
-    name: 'cert-exporter',
-    logoUrl: '/images/app_icons/cert_exporter@2x.png',
-    category: 'management',
-  },
-  'net-exporter': {
-    name: 'net-exporter',
-    logoUrl: '/images/app_icons/net_exporter@2x.png',
-    category: 'management',
-  },
-  'RBAC and PSP defaults': {
-    name: 'RBAC and PSP defaults',
-    logoUrl: '/images/app_icons/rbac_and_psp_defaults@2x.png',
-    category: 'essentials',
-  },
-};
 
 const SmallHeading = styled.h6`
   font-size: 12px;
@@ -252,7 +123,10 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
   // It combines information from the release endpoint with the latest info
   // coming from App CRs.
   const preInstalledApps = useMemo(() => {
-    const displayApps: Record<string, Record<string, IAppMetaApp>> = {
+    const displayApps: Record<
+      string,
+      Record<string, AppConstants.IAppMetaApp>
+    > = {
       essentials: {},
       management: {},
       ingress: {},
@@ -260,9 +134,9 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
 
     if (release?.components) {
       for (const { name, version } of release.components) {
-        if (!appMetas.hasOwnProperty(name)) continue;
+        if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
 
-        let appMeta = appMetas[name];
+        let appMeta = AppConstants.appMetas[name];
         if (typeof appMeta === 'function') {
           appMeta = appMeta(version);
         }
@@ -276,7 +150,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
       }
     }
 
-    for (const appMeta of Object.values(defaultAppMetas)) {
+    for (const appMeta of Object.values(AppConstants.defaultAppMetas)) {
       // Make sure that the app is not already in the list
       if (displayApps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
 
