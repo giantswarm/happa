@@ -39,13 +39,19 @@ const InstalledApps = styled.div`
   }
 `;
 
-interface IUserInstallerAppsProps extends React.PropsWithChildren<{}> {
-  apps: IInstalledApp[];
+interface IUserInstalledApp {
+  name: string;
+  version: string;
+  logoUrl?: string;
+}
+
+interface IUserInstalledAppsProps extends React.PropsWithChildren<{}> {
+  apps: IUserInstalledApp[];
   error: string | null;
   onShowDetail: (appName: string) => void;
 }
 
-const UserInstalledApps: React.FC<IUserInstallerAppsProps> = ({
+const UserInstalledApps: React.FC<IUserInstalledAppsProps> = ({
   apps,
   error,
   onShowDetail,
@@ -91,16 +97,18 @@ const UserInstalledApps: React.FC<IUserInstallerAppsProps> = ({
                 return (
                   <BaseTransition
                     in={false}
-                    key={app.metadata.name}
+                    key={app.name}
                     appear={true}
                     exit={true}
                     timeout={{ enter: 500, appear: 500, exit: 500 }}
                     classNames='app'
                   >
                     <InstalledApp
-                      app={app}
+                      name={app.name}
+                      version={app.version}
+                      iconErrors={iconErrors}
                       onIconError={onIconError}
-                      onClick={() => onShowDetail(app.metadata.name)}
+                      onClick={() => onShowDetail(app.name)}
                     />
                   </BaseTransition>
                 );
@@ -117,7 +125,7 @@ const UserInstalledApps: React.FC<IUserInstallerAppsProps> = ({
 
 UserInstalledApps.propTypes = {
   apps: PropTypes.arrayOf(
-    PropTypes.object as PropTypes.Validator<IInstalledApp>
+    PropTypes.object as PropTypes.Validator<IUserInstalledApp>
   ).isRequired,
   onShowDetail: PropTypes.func.isRequired,
   error: PropTypes.string,

@@ -380,7 +380,10 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
     <>
       {showInstalledAppsBlock && (
         <UserInstalledApps
-          apps={userInstalledApps}
+          apps={userInstalledApps.map((a) => ({
+            name: a.metadata.name,
+            version: a.spec.version,
+          }))}
           error={appsLoadError}
           onShowDetail={showAppDetail}
         >
@@ -389,9 +392,9 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
               onClick={openAppCatalog}
               disabled={isUpdatingOrCreating}
             >
-              <i className='fa fa-add-circle' />
-              Install App
+              <i className='fa fa-add-circle' /> Install App
             </BrowseButton>
+
             {isUpdatingOrCreating && (
               <span>
                 Please wait for cluster{' '}
