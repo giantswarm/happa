@@ -48,6 +48,9 @@ it('renders a block for installed apps if there are some', () => {
           name: 'test-app',
           labels: {},
         },
+        spec: {
+          version: '',
+        },
       },
     ],
   };
