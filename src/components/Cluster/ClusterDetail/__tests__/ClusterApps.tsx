@@ -6,11 +6,11 @@ import { getComponentWithStore } from 'testUtils/renderUtils';
 import ClusterApps from '../ClusterApps';
 
 it('renders without crashing', () => {
-  render(getComponentWithStore(ClusterApps));
+  render(getComponentWithStore(ClusterApps, { clusterId: 'test' }));
 });
 
-it('doesnt show the installed apps section at all when showInstalledAppsBlock is false', () => {
-  const props = { showInstalledAppsBlock: false };
+it('does not show the installed apps section at all when showInstalledAppsBlock is false', () => {
+  const props = { clusterId: 'test', showInstalledAppsBlock: false };
   const { queryByTestId } = render(getComponentWithStore(ClusterApps, props));
 
   expect(queryByTestId('installed-apps-section')).toBeNull();
@@ -19,8 +19,8 @@ it('doesnt show the installed apps section at all when showInstalledAppsBlock is
   expect(queryByTestId('no-apps-found')).toBeNull();
 });
 
-it('doesnt render a block for installed apps if there are none', () => {
-  const props = { installedApps: [] };
+it('does not render a block for installed apps if there are none', () => {
+  const props = { clusterId: 'test', installedApps: [] };
   const { queryByTestId } = render(getComponentWithStore(ClusterApps, props));
 
   expect(queryByTestId('installed-apps')).toBeNull();
@@ -29,7 +29,8 @@ it('doesnt render a block for installed apps if there are none', () => {
 });
 
 it('renders a block for installed apps if there are some', () => {
-  const someApps = {
+  const props = {
+    clusterId: 'test',
     installedApps: [
       {
         metadata: {
@@ -39,9 +40,7 @@ it('renders a block for installed apps if there are some', () => {
       },
     ],
   };
-  const { queryByTestId } = render(
-    getComponentWithStore(ClusterApps, someApps)
-  );
+  const { queryByTestId } = render(getComponentWithStore(ClusterApps, props));
 
   expect(queryByTestId('installed-apps')).toBeDefined();
   expect(queryByTestId('error-loading-apps')).toBeNull();
