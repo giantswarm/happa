@@ -116,6 +116,9 @@ export const appMetas: Record<
   },
 };
 
+/**
+ * Apps installed by default in a cluster.
+ */
 export const defaultAppMetas: Record<string, IAppMetaApp> = {
   'cert-exporter': {
     name: 'cert-exporter',
