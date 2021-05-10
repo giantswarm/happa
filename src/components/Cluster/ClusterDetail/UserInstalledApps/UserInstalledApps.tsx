@@ -39,7 +39,13 @@ const InstalledApps = styled.div`
   }
 `;
 
-const UserInstalledApps = ({
+interface IUserInstallerAppsProps extends React.PropsWithChildren<{}> {
+  apps: IInstalledApp[];
+  error: string | null;
+  onShowDetail: (appName: string) => void;
+}
+
+const UserInstalledApps: React.FC<IUserInstallerAppsProps> = ({
   apps,
   error,
   onShowDetail,
@@ -48,7 +54,7 @@ const UserInstalledApps = ({
 }) => {
   const [iconErrors, setIconErrors] = useState({});
 
-  const onIconError = (e) => {
+  const onIconError = (e: React.BaseSyntheticEvent) => {
     const imageUrl = e.target.src;
     const errors = Object.assign({}, iconErrors, {
       [imageUrl]: true,
@@ -58,11 +64,11 @@ const UserInstalledApps = ({
   };
 
   return (
-    <InstalledAppsWrapper data-testid='installed-apps-section' {...rest}>
+    <InstalledAppsWrapper {...rest}>
       <h3 className='table-label'>Installed Apps</h3>
       <>
         {error && (
-          <p className='well' data-testid='error-loading-apps'>
+          <p className='well'>
             <b>Error Loading Apps:</b>
             <br />
             We had some trouble loading the list of apps you&apos;ve installed
@@ -71,7 +77,7 @@ const UserInstalledApps = ({
         )}
 
         {apps.length === 0 && !error && (
-          <p className='well' data-testid='no-apps-found' id='no-apps-found'>
+          <p className='well'>
             <b>No apps installed on this cluster</b>
             <br />
             Browse the App Catalogs to find any apps to install.
@@ -79,11 +85,12 @@ const UserInstalledApps = ({
         )}
 
         {apps.length > 0 && (
-          <InstalledApps data-testid='installed-apps'>
+          <InstalledApps aria-label='Apps installed by user'>
             <TransitionGroup>
               {apps.map((app) => {
                 return (
                   <BaseTransition
+                    in={false}
                     key={app.metadata.name}
                     appear={true}
                     exit={true}
@@ -109,9 +116,11 @@ const UserInstalledApps = ({
 };
 
 UserInstalledApps.propTypes = {
-  apps: PropTypes.arrayOf(PropTypes.object),
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  onShowDetail: PropTypes.func,
+  apps: PropTypes.arrayOf(
+    PropTypes.object as PropTypes.Validator<IInstalledApp>
+  ).isRequired,
+  onShowDetail: PropTypes.func.isRequired,
+  error: PropTypes.string,
   children: PropTypes.node,
 };
 

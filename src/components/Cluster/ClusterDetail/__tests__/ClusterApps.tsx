@@ -1,6 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
-
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import ClusterApps from '../ClusterApps';
@@ -11,26 +9,39 @@ it('renders without crashing', () => {
 
 it('does not show the installed apps section at all when showInstalledAppsBlock is false', () => {
   const props = { clusterId: 'test', showInstalledAppsBlock: false };
-  const { queryByTestId } = render(getComponentWithStore(ClusterApps, props));
+  render(getComponentWithStore(ClusterApps, props));
 
-  expect(queryByTestId('installed-apps-section')).toBeNull();
-  expect(queryByTestId('installed-apps')).toBeNull();
-  expect(queryByTestId('error-loading-apps')).toBeNull();
-  expect(queryByTestId('no-apps-found')).toBeNull();
+  expect(
+    screen.queryByLabelText('Apps installed by user')
+  ).not.toBeInTheDocument();
+  expect(screen.queryByText('Error Loading Apps:')).not.toBeInTheDocument();
+  expect(
+    screen.queryByText('No apps installed on this cluster')
+  ).not.toBeInTheDocument();
 });
 
 it('does not render a block for installed apps if there are none', () => {
-  const props = { clusterId: 'test', installedApps: [] };
-  const { queryByTestId } = render(getComponentWithStore(ClusterApps, props));
+  const props = {
+    clusterId: 'test',
+    installedApps: [],
+    showInstalledAppsBlock: true,
+  };
+  render(getComponentWithStore(ClusterApps, props));
 
-  expect(queryByTestId('installed-apps')).toBeNull();
-  expect(queryByTestId('error-loading-apps')).toBeNull();
-  expect(queryByTestId('no-apps-found')).toBeDefined();
+  expect(
+    screen.getByText('No apps installed on this cluster')
+  ).toBeInTheDocument();
+
+  expect(
+    screen.queryByLabelText('Apps installed by user')
+  ).not.toBeInTheDocument();
+  expect(screen.queryByText('Error Loading Apps:')).not.toBeInTheDocument();
 });
 
 it('renders a block for installed apps if there are some', () => {
   const props = {
     clusterId: 'test',
+    showInstalledAppsBlock: true,
     installedApps: [
       {
         metadata: {
@@ -40,9 +51,12 @@ it('renders a block for installed apps if there are some', () => {
       },
     ],
   };
-  const { queryByTestId } = render(getComponentWithStore(ClusterApps, props));
+  render(getComponentWithStore(ClusterApps, props));
 
-  expect(queryByTestId('installed-apps')).toBeDefined();
-  expect(queryByTestId('error-loading-apps')).toBeNull();
-  expect(queryByTestId('no-apps-found')).toBeNull();
+  expect(screen.getByLabelText('Apps installed by user')).toBeInTheDocument();
+
+  expect(screen.queryByText('Error Loading Apps:')).not.toBeInTheDocument();
+  expect(
+    screen.queryByText('No apps installed on this cluster')
+  ).not.toBeInTheDocument();
 });

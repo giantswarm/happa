@@ -51,7 +51,7 @@ interface IApp {
 interface IInstalledAppProps {
   app: IApp;
   iconErrors?: object;
-  onIconError: () => void;
+  onIconError: React.ReactEventHandler<HTMLImageElement>;
   onClick: (e: React.MouseEvent) => void;
 }
 

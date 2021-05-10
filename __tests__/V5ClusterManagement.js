@@ -463,15 +463,20 @@ scales node pools correctly`, async () => {
       }
     );
 
-    const { queryByTestId } = renderRouteWithStore(clusterDetailPath, {
+    renderRouteWithStore(clusterDetailPath, {
       errorsByEntity: {
         [V5_CLUSTER.id]: { CLUSTER_LOAD_APPS: 'Error loading apps' },
       },
     });
 
-    expect(queryByTestId('error-loading-apps')).toBeDefined();
-    expect(queryByTestId('installed-apps')).toBeNull();
-    expect(queryByTestId('no-apps-found')).toBeNull();
+    expect(screen.getByText('Error Loading Apps:')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('No apps installed on this cluster')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText('Apps installed by user')
+    ).not.toBeInTheDocument();
   });
 
   it(`renders the master nodes row for an unsupported release version`, async () => {

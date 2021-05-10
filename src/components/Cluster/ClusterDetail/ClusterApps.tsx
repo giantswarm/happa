@@ -205,12 +205,6 @@ interface IClusterAppsProps {
   showInstalledAppsBlock?: boolean;
   release?: IRelease;
   installedApps?: IInstalledApp[];
-
-  dispatch: () => void;
-  appsLoadError: string;
-  clusterIsUpdating: boolean;
-  clusterIsAwaitingUpgrade: boolean;
-  clusterIsCreating: boolean;
 }
 
 const ClusterApps: React.FC<IClusterAppsProps> = ({
