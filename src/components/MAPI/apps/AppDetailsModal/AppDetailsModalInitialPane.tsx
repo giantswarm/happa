@@ -71,7 +71,8 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
                 placement='top'
               >
                 <span>
-                  {props.app.spec.version} <i className='fa fa-warning' />
+                  <Truncated as='span'>{props.app.spec.version}</Truncated>{' '}
+                  <i className='fa fa-warning' />
                 </span>
               </OverlayTrigger>
             )}
