@@ -3,7 +3,7 @@ import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
@@ -30,11 +30,7 @@ import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
 function formatAppVersion(release: IRelease, app: IAppMetaApp) {
   const { name, version } = app;
 
-  if (
-    name === 'kubernetes' &&
-    release.k8sVersionEOLDate &&
-    !version?.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
-  ) {
+  if (name === 'kubernetes' && release.k8sVersionEOLDate) {
     const { isEol } = getKubernetesReleaseEOLStatus(release.k8sVersionEOLDate);
     if (isEol) {
       return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
@@ -161,7 +157,23 @@ const appMetas: Record<
   },
 };
 
-const OptionalIngressNotice = styled.div``;
+const defaultAppMetas: Record<string, IAppMetaApp> = {
+  'cert-exporter': {
+    name: 'cert-exporter',
+    logoUrl: '/images/app_icons/cert_exporter@2x.png',
+    category: 'management',
+  },
+  'net-exporter': {
+    name: 'net-exporter',
+    logoUrl: '/images/app_icons/net_exporter@2x.png',
+    category: 'management',
+  },
+  'RBAC and PSP defaults': {
+    name: 'RBAC and PSP defaults',
+    logoUrl: '/images/app_icons/rbac_and_psp_defaults@2x.png',
+    category: 'essentials',
+  },
+};
 
 const SmallHeading = styled.h6`
   font-size: 12px;
@@ -217,93 +229,62 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
   const [detailsModalIsVisible, setDetailsModalIsVisible] = useState(false);
   const [detailsModalAppName, setDetailsModalAppName] = useState('');
 
-  useLayoutEffect(() => {
-    if (!detailsModalIsVisible) return;
-
-    const appToDisplay = installedApps?.find(
+  const appToDisplay = useMemo(() => {
+    return installedApps?.find(
       (app) => app.metadata.name === detailsModalAppName
     );
-    if (!appToDisplay) {
-      new FlashMessage(
-        'The app you were looking at was deleted from the cluster by someone else.',
-        messageType.ERROR,
-        messageTTL.LONG
-      );
+  }, [installedApps, detailsModalAppName]);
 
-      setDetailsModalIsVisible(false);
-      setDetailsModalAppName('');
-    }
-  }, [detailsModalIsVisible, detailsModalAppName, installedApps]);
+  useLayoutEffect(() => {
+    if (!detailsModalIsVisible || appToDisplay) return;
 
-  // Since some components are not yet in the release endpoint output, but we do
-  // still want to see them on this page, we manually add them to the release endpoint
-  // response before running the mapping.
+    new FlashMessage(
+      'The app you were looking at was deleted from the cluster by someone else.',
+      messageType.ERROR,
+      messageTTL.LONG
+    );
 
-  // manuallyAddAppMetas represent all the components we currently do not
-  // have in the release endpoint response, but that we still want to show in
-  // Happa.
-  const manuallyAddAppMetas = useRef<IAppMetaApp[]>([
-    {
-      name: 'cert-exporter',
-      logoUrl: '/images/app_icons/cert_exporter@2x.png',
-      category: 'management',
-    },
-    {
-      name: 'net-exporter',
-      logoUrl: '/images/app_icons/net_exporter@2x.png',
-      category: 'management',
-    },
-    {
-      name: 'RBAC and PSP defaults',
-      logoUrl: '/images/app_icons/rbac_and_psp_defaults@2x.png',
-      category: 'essentials',
-    },
-  ]);
+    setDetailsModalIsVisible(false);
+    setDetailsModalAppName('');
+  }, [detailsModalIsVisible, appToDisplay, installedApps]);
 
   // This makes a list of apps that are installed as part of the cluster creation.
   // It combines information from the release endpoint with the latest info
   // coming from App CRs.
-  const getPreInstalledApps = (): Record<string, IAppMetaApp[]> => {
-    const displayApps: Record<string, IAppMetaApp[]> = {
-      essentials: [],
-      management: [],
-      ingress: [],
+  const preInstalledApps = useMemo(() => {
+    const displayApps: Record<string, Record<string, IAppMetaApp>> = {
+      essentials: {},
+      management: {},
+      ingress: {},
     };
 
     if (release?.components) {
-      for (const { name, version } of release?.components) {
-        // Remove component that is now present in the release response
-        // from the manuallyAddAppMetas list to avoid showing them twice.
-        manuallyAddAppMetas.current = manuallyAddAppMetas.current.filter(
-          (app) => {
-            return app.name !== name;
-          }
-        );
+      for (const { name, version } of release.components) {
+        if (!appMetas.hasOwnProperty(name)) continue;
 
-        // Find the component in the mapping above. If it's not there, then
-        // it isn't something we want to show here.
-        if (appMetas[name]) {
-          let appMeta = appMetas[name];
-
-          if (typeof appMeta === 'function') {
-            appMeta = appMeta(version);
-          }
-          // Add the app to the list of apps we'll show in the interface, in the
-          // correct category.
-          displayApps[appMeta.category].push({
-            ...appMeta,
-            version,
-          });
+        let appMeta = appMetas[name];
+        if (typeof appMeta === 'function') {
+          appMeta = appMeta(version);
         }
+
+        // Add the app to the list of apps we'll show in the interface, in the
+        // correct category.
+        displayApps[appMeta.category][appMeta.name] = {
+          ...appMeta,
+          version,
+        };
       }
     }
 
-    for (const appMeta of manuallyAddAppMetas.current) {
-      displayApps[appMeta.category].push(appMeta);
+    for (const appMeta of Object.values(defaultAppMetas)) {
+      // Make sure that the app is not already in the list
+      if (displayApps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
+
+      displayApps[appMeta.category][appMeta.name] = appMeta;
     }
 
     return displayApps;
-  };
+  }, [release?.components]);
 
   const dispatch = useDispatch();
 
@@ -322,29 +303,18 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
     setDetailsModalAppName('');
   };
 
-  /**
-   * Returns a list of just the apps that the user installed
-   * since the list of apps in a cluster also includes apps that were installed
-   * automatically.
-   */
-  const getUserInstalledApps = (apps?: IInstalledApp[]) => {
-    if (!apps) {
+  const userInstalledApps = useMemo(() => {
+    if (!installedApps) {
       return [];
     }
 
-    const filteredApps = apps.filter((app) => {
-      let isManagedByClusterOperator = false;
-      if (app.metadata.labels) {
-        isManagedByClusterOperator =
-          app.metadata.labels['giantswarm.io/managed-by'] ===
-          'cluster-operator';
-      }
-
+    const filteredApps = installedApps.filter((app) => {
       switch (true) {
         case hasOptionalIngress &&
           app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
           return true;
-        case isManagedByClusterOperator:
+        case app.metadata.labels?.['giantswarm.io/managed-by'] ===
+          'cluster-operator':
           return false;
         default:
           return true;
@@ -352,28 +322,23 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
     });
 
     return filteredApps;
-  };
+  }, [installedApps, hasOptionalIngress]);
 
   const cluster = useSelector((state: IState) =>
     selectClusterById(state, clusterId)
   );
-  const appsLoadError = useSelector((state: IState) =>
-    selectErrorByIdAndAction(state, clusterId, loadClusterApps().types.request)
-  );
+
+  const clusterIsUpdating = cluster && isClusterUpdating(cluster);
+  const clusterIsCreating = cluster && isClusterCreating(cluster);
   const clusterIsAwaitingUpgrade = useSelector((state: IState) =>
     selectIsClusterAwaitingUpgrade(clusterId)(state)
   );
-  const clusterIsUpdating = cluster ? isClusterUpdating(cluster) : false;
-  const clusterIsCreating = cluster ? isClusterCreating(cluster) : false;
-
-  const userInstalledApps = getUserInstalledApps(installedApps);
-  const preInstalledApps = getPreInstalledApps();
 
   const isUpdating = clusterIsUpdating || clusterIsAwaitingUpgrade;
   const isUpdatingOrCreating = clusterIsCreating || isUpdating;
 
-  const selectedApp = installedApps?.find(
-    (x) => x.metadata.name === detailsModalAppName
+  const appsLoadError = useSelector((state: IState) =>
+    selectErrorByIdAndAction(state, clusterId, loadClusterApps().types.request)
   );
 
   return (
@@ -417,7 +382,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
           <PreinstalledApps>
             <div key='essentials'>
               <SmallHeading>essentials</SmallHeading>
-              {preInstalledApps.essentials.map((app) => (
+              {Object.values(preInstalledApps.essentials).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}
                   name={app.name}
@@ -429,7 +394,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
 
             <div key='management'>
               <SmallHeading>management</SmallHeading>
-              {preInstalledApps.management.map((app) => (
+              {Object.values(preInstalledApps.management).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}
                   name={app.name}
@@ -442,7 +407,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
             <div key='ingress'>
               <SmallHeading>ingress</SmallHeading>
               {hasOptionalIngress && (
-                <OptionalIngressNotice>
+                <div>
                   <Disclaimer>
                     The ingress controller is optional on this cluster.
                     <br />
@@ -458,9 +423,9 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
                       installing an ingress controller guide.
                     </a>
                   </Disclaimer>
-                </OptionalIngressNotice>
+                </div>
               )}
-              {preInstalledApps.ingress.map((app) => (
+              {Object.values(preInstalledApps.ingress).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}
                   name={app.name}
@@ -478,11 +443,11 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
         )}
       </div>
 
-      {selectedApp && (
+      {appToDisplay && (
         <AppDetailsModal
           // Instead of just assigning the selected app to the state of this component,
           // this ensures any updates to the apps continue to flow down into the modal.
-          app={selectedApp}
+          app={appToDisplay}
           clusterId={clusterId}
           onClose={hideAppModal}
           visible={detailsModalIsVisible}
