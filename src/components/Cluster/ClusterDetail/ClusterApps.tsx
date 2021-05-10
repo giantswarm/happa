@@ -1,6 +1,7 @@
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +15,8 @@ import {
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
+import { getLoggedInUser } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
@@ -215,6 +218,8 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
     selectErrorByIdAndAction(state, clusterId, loadClusterApps().types.request)
   );
 
+  const user = useSelector(getLoggedInUser);
+
   return (
     <>
       {showInstalledAppsBlock && (
@@ -317,16 +322,25 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
         )}
       </div>
 
-      {appToDisplay && (
-        <AppDetailsModal
-          // Instead of just assigning the selected app to the state of this component,
-          // this ensures any updates to the apps continue to flow down into the modal.
-          app={appToDisplay}
-          clusterId={clusterId}
-          onClose={hideAppModal}
-          visible={detailsModalIsVisible}
-        />
-      )}
+      {appToDisplay &&
+        (user?.type === LoggedInUserTypes.MAPI ? (
+          <AppDetailsModalMAPI
+            appName={appToDisplay.metadata.name}
+            catalog={appToDisplay.spec.catalog}
+            clusterId={clusterId}
+            onClose={hideAppModal}
+            visible={detailsModalIsVisible}
+          />
+        ) : (
+          <AppDetailsModal
+            // Instead of just assigning the selected app to the state of this component,
+            // this ensures any updates to the apps continue to flow down into the modal.
+            app={appToDisplay}
+            clusterId={clusterId}
+            onClose={hideAppModal}
+            visible={detailsModalIsVisible}
+          />
+        ))}
     </>
   );
 };
