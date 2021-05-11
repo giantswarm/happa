@@ -16,7 +16,7 @@ The Giant Swarm web user interface. It lets users:
 
 Happa is intended to be deployed to Giant Swarm management clusters and acts as a client to the Giant Swarm API.
 
-![Screenshot of Happa](https://user-images.githubusercontent.com/455309/51164968-a5320780-18d9-11e9-91c5-10ad144d7ada.png)
+![Screenshot of Happa](https://user-images.githubusercontent.com/273727/117794608-aecf9e00-b24d-11eb-8d3d-7a7b9a9f270f.png)
 
 Happa is a single page JavaScript application using React+Redux and runs in modern browsers.
 
