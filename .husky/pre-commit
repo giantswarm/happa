@@ -1,3 +1,5 @@
 # .husky/pre-commit (v5)
 
-yarn typecheck && yarn precommit
+# typecheck and lint
+./node_modules/.bin/tsc && \
+   ./node_modules/.bin/lint-staged
