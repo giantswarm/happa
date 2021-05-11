@@ -1,3 +1,4 @@
+import * as AppConstants from './apps';
 import * as AuthorizationTypes from './authorizationTypes';
 import { CSSBreakpoints } from './cssBreakpoints';
 import * as FallbackMessages from './fallbackMessages';
@@ -10,6 +11,7 @@ export {
   StatusCodes,
   FallbackMessages,
   CSSBreakpoints,
+  AppConstants,
 };
 
 export const Constants = {

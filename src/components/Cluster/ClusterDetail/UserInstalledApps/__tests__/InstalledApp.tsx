@@ -5,11 +5,8 @@ import InstalledApp from '../InstalledApp';
 describe('InstalledApp', () => {
   it('renders without crashing', () => {
     renderWithTheme(InstalledApp, {
-      app: {
-        metadata: {
-          name: 'app-name',
-        },
-      },
+      name: 'app-name',
+      version: '',
       onIconError: jest.fn(),
       onClick: jest.fn(),
     } as React.ComponentPropsWithoutRef<typeof InstalledApp>);
