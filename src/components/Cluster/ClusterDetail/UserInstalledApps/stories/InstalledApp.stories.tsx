@@ -9,27 +9,22 @@ const Template: Story<ComponentPropsWithoutRef<typeof InstalledApp>> = (
 
 export const Simple = Template.bind({});
 Simple.args = {
-  app: {
-    metadata: { name: 'here-goes-the-app-name' },
-    spec: { version: 'v4.3.2' },
-  },
+  name: 'here-goes-the-app-name',
+  version: 'v4.3.2',
 };
 
 export const WithIcon = Template.bind({});
 WithIcon.args = {
-  app: {
-    logoUrl: 'https://s.giantswarm.io/app-icons/1/png/app-mesh-app-light.png',
-    metadata: { name: 'here-goes-the-app-name' },
-    spec: { version: 'v4.3.2' },
-  },
+  name: 'here-goes-the-app-name',
+  version: 'v4.3.2',
+  logoUrl: 'https://s.giantswarm.io/app-icons/1/png/app-mesh-app-light.png',
 };
 
 export const WithoutVersion = Template.bind({});
 WithoutVersion.args = {
-  app: {
-    metadata: { name: 'app-without-version' },
-    spec: {},
-  },
+  name: 'app-without-version',
+  logoUrl: 'https://s.giantswarm.io/app-icons/1/png/app-mesh-app-light.png',
+  version: '',
 };
 
 export default {
