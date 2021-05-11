@@ -241,7 +241,8 @@
     "kind-of": "^6.0.3",
     "lodash": "^4.17.21",
     "http-proxy": "^1.18.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "trim": "^0.0.3"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
