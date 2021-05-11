@@ -176,22 +176,20 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
 
   return (
     <>
-      {appList && (
-        <UserInstalledApps
-          apps={userInstalledApps.map((a) => ({
-            name: a.metadata.name,
-            version: a.spec.version,
-          }))}
-          error={extractErrorMessage(appListError) ?? null}
-          onShowDetail={showAppDetail}
-        >
-          <BrowseButtonContainer>
-            <BrowseButton onClick={openAppCatalog} disabled={appListIsLoading}>
-              <i className='fa fa-add-circle' /> Install App
-            </BrowseButton>
-          </BrowseButtonContainer>
-        </UserInstalledApps>
-      )}
+      <UserInstalledApps
+        apps={userInstalledApps.map((a) => ({
+          name: a.metadata.name,
+          version: a.spec.version,
+        }))}
+        error={extractErrorMessage(appListError) ?? null}
+        onShowDetail={showAppDetail}
+      >
+        <BrowseButtonContainer>
+          <BrowseButton onClick={openAppCatalog} disabled={appListIsLoading}>
+            <i className='fa fa-add-circle' /> Install App
+          </BrowseButton>
+        </BrowseButtonContainer>
+      </UserInstalledApps>
 
       <div className='row'>
         <h3>Preinstalled Apps</h3>
