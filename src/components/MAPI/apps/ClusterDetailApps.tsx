@@ -191,7 +191,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         </BrowseButtonContainer>
       </UserInstalledApps>
 
-      <div className='row'>
+      <div>
         <h3>Preinstalled Apps</h3>
         <Disclaimer>
           These apps and services are preinstalled on your cluster and managed
