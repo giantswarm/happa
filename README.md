@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/master.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/master)
-[![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status?token=f90886ab-d4af-4c3f-b814-45bc317c2cd6 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
+[![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
 [![Known Vulnerabilities](https://snyk.io/test/github/giantswarm/happa/badge.svg?targetFile=package.json)](https://snyk.io/test/github/giantswarm/happa?targetFile=package.json)
 
@@ -16,32 +16,55 @@ The Giant Swarm web user interface. It lets users:
 
 Happa is intended to be deployed to Giant Swarm management clusters and acts as a client to the Giant Swarm API.
 
-![Screenshot of Happa](https://user-images.githubusercontent.com/455309/51164968-a5320780-18d9-11e9-91c5-10ad144d7ada.png)
+![Screenshot of Happa](https://user-images.githubusercontent.com/273727/117794608-aecf9e00-b24d-11eb-8d3d-7a7b9a9f270f.png)
 
 Happa is a single page JavaScript application using React+Redux and runs in modern browsers.
 
-## Getting started with development / demoing
+## Getting started with development
 
-Running Happa locally requires [NodeJS 12](https://nodejs.org/) and [Yarn](https://yarnpkg.com/).
+### Prerequisites
 
-You must have [opsctl](https://github.com/giantswarm/opsctl) installed and configured properly.
-opsctl is our internal tool for managing access to clusters and performing ops related tasks.
+To run happa locally, you need:
 
-Bring up Happa and have it speak to the 'ginger' installation by using the following
+- [NodeJS 12](https://nodejs.org/)
+- [`yarn`](https://yarnpkg.com/)
+- [`opsctl`](https://github.com/giantswarm/opsctl) - Required configured properly
+in order to execute happa against a Giant Swarm installation. (`opsctl` is our internal tool for
+managing access to clusters and performing ops related tasks.)
+
+### Quick start
+
+Install dependencies:
+
+```nohighlight
+yarn install
+```
+
+Some warnings regarding unmatched dependency versions are expected and can be ignored.
+
+Then, to bring up Happa connected to the `ginger` installation, use the following
 command:
 
-```
+```nohighlight
 HAPPA_PROXY_INSTALLATION=ginger yarn start
 ```
 
-## Running tests
+### Running tests
 
-We have a few tests, and are adding more. Run them with `yarn test`
+Execute the test suite using
 
-## Deploying / Releasing
+```nohighlight
+yarn test
+```
 
-Tagged releases are continuously deployed to all installations. For details
-see [Release.md](docs/Release.md)
+## Releasing
+
+Tagged releases are continuously deployed to all installations, both test and production.
+For details see [Release.md](docs/Release.md)
+
+## User interface components
+
+We are maintaining a [Storybook](https://fe-docs.giantswarm.io/) showcasing more and more of our UI components.
 
 ## Configuration
 
@@ -91,24 +114,28 @@ state.
 
 Happa uses a custom icon pack which we can manage at https://fortawesome.com
 Login details are in keypass, search for 'fortawesome'.
-The `<script src="https://use.fonticons.com/d940f7eb.js"></script>` line in
-index.html is what includes the file for us.
+The line
+
+```html
+<script src="https://use.fonticons.com/d940f7eb.js"></script>
+```
+
+in `src/index.ejs` is what includes the fonts for us.
 
 More information about our font kit and how to use it can be found here:
 https://fortawesome.com/kits/d940f7eb/docs
 
-## Checking for outdated dependencies
+## Updating dependencies
 
-Dependabot is configured to automatically create PR's that update our dependencies
-when they go stale. Keep an eye on the PR's, dependabot creates them on Mondays.
+Dependabot is configured to automatically create pull requests (PRs) that update our dependencies
+when they go stale. After approval and a `@dependabot merge` comment, dependabot
+automatically merges open PRs.
 
-# Code Style
+## Coding style
 
-Happa's Code Style is determined by `prettier`. Please make sure files in the
-`src` directory have passed through `prettier` before committing them to the repo.
-
-A CI step will enforce that this has happened, failing the CI if it detects that
-`prettier` would make any changes.
+Happa's code style is determined by `prettier`. There is a pre-commit hook enforcing that
+the coding style rules are met. A CI step will also avoid building any code that does not
+match expectations, which then surfaces in the pull request checks in Github.
 
 You can run `prettier` on the whole codebase using `yarn prettier`.
 
@@ -118,12 +145,8 @@ We use the following config params:
 - `--single-quote`
 - `--trailing-comma es5`
 
-### Pre commit hooks
+## Pre-commit hooks
 
 To avoid pushing code that will fail the CI due to codestyle issues, we've added a pre-commit hook using [`husky`](https://github.com/typicode/husky/).
 
 This runs before every commit, and it will not let commits go through if the `prettier` check has not passed.
-
-### Publishing a Release
-
-See [docs/Release.md](https://github.com/giantswarm/happa/blob/master/docs/Release.md)
