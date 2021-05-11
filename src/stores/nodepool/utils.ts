@@ -53,7 +53,7 @@ export function supportsOptionalIngress(
   releaseVersion: string
 ): boolean {
   switch (true) {
-    case provider === Providers.AWS && compare(releaseVersion, '11.0.0') >= 0:
+    case provider === Providers.AWS && compare(releaseVersion, '10.1.0') >= 0:
     case provider === Providers.AZURE && compare(releaseVersion, '12.0.0') >= 0:
     case provider === Providers.KVM && compare(releaseVersion, '12.2.0') >= 0:
       return true;
