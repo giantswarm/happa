@@ -1,42 +1,36 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import UserInstalledApps from 'Cluster/ClusterDetail/UserInstalledApps/UserInstalledApps';
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useLayoutEffect, useMemo, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppConstants, Constants } from 'shared/constants';
+import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
-import { loadClusterApps } from 'stores/appcatalog/actions';
-import {
-  selectClusterById,
-  selectIsClusterAwaitingUpgrade,
-} from 'stores/cluster/selectors';
-import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
-import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
-import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
-import { IState } from 'stores/state';
+import { getProvider } from 'stores/main/selectors';
+import { supportsOptionalIngress } from 'stores/nodepool/utils';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
+import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
 
-function formatAppVersion(
-  release: IRelease,
-  appMeta: AppConstants.IAppMetaApp
-) {
-  const { name, version } = appMeta;
+import { filterUserInstalledApps, mapDefaultApps } from './utils';
 
-  if (name === 'kubernetes' && release.k8sVersionEOLDate) {
-    const { isEol } = getKubernetesReleaseEOLStatus(release.k8sVersionEOLDate);
-    if (isEol) {
-      return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
-    }
-  }
+function formatAppVersion(appMeta: AppConstants.IAppMetaApp) {
+  const { version } = appMeta;
+
+  // TODO(axbarsan): Handle K8s version EOL dates once available.
 
   if (!version) {
     return <NotAvailable />;
@@ -83,27 +77,42 @@ const PreinstalledApps = styled.div`
 
 interface IClusterDetailApps {
   clusterId: string;
-  hasOptionalIngress?: boolean;
-  showInstalledAppsBlock?: boolean;
-  release?: IRelease;
-  installedApps?: IInstalledApp[];
+  releaseVersion: string;
 }
 
 const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   clusterId,
-  hasOptionalIngress,
-  showInstalledAppsBlock,
-  release,
-  installedApps,
+  releaseVersion,
 }) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const appListClient = useRef(clientFactory());
+  const appListGetOptions = { namespace: clusterId };
+  const {
+    data: appList,
+    error: appListError,
+    isValidating: appListIsValidating,
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
+    applicationv1alpha1.getAppListKey(appListGetOptions),
+    () =>
+      applicationv1alpha1.getAppList(
+        appListClient.current,
+        auth,
+        appListGetOptions
+      )
+  );
+  const appListIsLoading =
+    typeof appList === 'undefined' && appListIsValidating;
+
   const [detailsModalIsVisible, setDetailsModalIsVisible] = useState(false);
   const [detailsModalAppName, setDetailsModalAppName] = useState('');
 
   const appToDisplay = useMemo(() => {
-    return installedApps?.find(
+    return appList?.items.find(
       (app) => app.metadata.name === detailsModalAppName
     );
-  }, [installedApps, detailsModalAppName]);
+  }, [appList, detailsModalAppName]);
 
   useLayoutEffect(() => {
     if (!detailsModalIsVisible || appToDisplay) return;
@@ -116,48 +125,29 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
 
     setDetailsModalIsVisible(false);
     setDetailsModalAppName('');
-  }, [detailsModalIsVisible, appToDisplay, installedApps]);
+  }, [detailsModalIsVisible, appToDisplay]);
+
+  const releaseClient = useRef(clientFactory());
+  const {
+    data: release,
+    error: releaseError,
+    isValidating: releaseIsValidating,
+  } = useSWR<releasev1alpha1.IRelease, GenericResponse>(
+    releasev1alpha1.getReleaseKey(releaseVersion),
+    () =>
+      releasev1alpha1.getRelease(
+        releaseClient.current,
+        auth,
+        `v${releaseVersion}`
+      )
+  );
+  const releaseIsLoading =
+    typeof release === 'undefined' && releaseIsValidating;
 
   // This makes a list of apps that are installed as part of the cluster creation.
   // It combines information from the release endpoint with the latest info
   // coming from App CRs.
-  const preInstalledApps = useMemo(() => {
-    const displayApps: Record<
-      string,
-      Record<string, AppConstants.IAppMetaApp>
-    > = {
-      essentials: {},
-      management: {},
-      ingress: {},
-    };
-
-    if (release?.components) {
-      for (const { name, version } of release.components) {
-        if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
-
-        let appMeta = AppConstants.appMetas[name];
-        if (typeof appMeta === 'function') {
-          appMeta = appMeta(version);
-        }
-
-        // Add the app to the list of apps we'll show in the interface, in the
-        // correct category.
-        displayApps[appMeta.category][appMeta.name] = {
-          ...appMeta,
-          version,
-        };
-      }
-    }
-
-    for (const appMeta of Object.values(AppConstants.defaultAppMetas)) {
-      // Make sure that the app is not already in the list
-      if (displayApps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
-
-      displayApps[appMeta.category][appMeta.name] = appMeta;
-    }
-
-    return displayApps;
-  }, [release?.components]);
+  const preInstalledApps = useMemo(() => mapDefaultApps(release), [release]);
 
   const dispatch = useDispatch();
 
@@ -176,110 +166,71 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     setDetailsModalAppName('');
   };
 
-  const userInstalledApps = useMemo(() => {
-    if (!installedApps) {
-      return [];
-    }
+  const provider = useSelector(getProvider);
+  const hasOptionalIngress = supportsOptionalIngress(provider, releaseVersion);
 
-    const filteredApps = installedApps.filter((app) => {
-      switch (true) {
-        case hasOptionalIngress &&
-          app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
-          return true;
-        case app.metadata.labels?.['giantswarm.io/managed-by'] ===
-          'cluster-operator':
-          return false;
-        default:
-          return true;
-      }
-    });
-
-    return filteredApps;
-  }, [installedApps, hasOptionalIngress]);
-
-  const cluster = useSelector((state: IState) =>
-    selectClusterById(state, clusterId)
-  );
-
-  const clusterIsUpdating = cluster && isClusterUpdating(cluster);
-  const clusterIsCreating = cluster && isClusterCreating(cluster);
-  const clusterIsAwaitingUpgrade = useSelector((state: IState) =>
-    selectIsClusterAwaitingUpgrade(clusterId)(state)
-  );
-
-  const isUpdating = clusterIsUpdating || clusterIsAwaitingUpgrade;
-  const isUpdatingOrCreating = clusterIsCreating || isUpdating;
-
-  const appsLoadError = useSelector((state: IState) =>
-    selectErrorByIdAndAction(state, clusterId, loadClusterApps().types.request)
+  const userInstalledApps = useMemo(
+    () => filterUserInstalledApps(appList?.items ?? [], hasOptionalIngress),
+    [appList, hasOptionalIngress]
   );
 
   return (
     <>
-      {showInstalledAppsBlock && (
+      {appList && (
         <UserInstalledApps
           apps={userInstalledApps.map((a) => ({
             name: a.metadata.name,
             version: a.spec.version,
           }))}
-          error={appsLoadError}
+          error={extractErrorMessage(appListError) ?? null}
           onShowDetail={showAppDetail}
         >
           <BrowseButtonContainer>
-            <BrowseButton
-              onClick={openAppCatalog}
-              disabled={isUpdatingOrCreating}
-            >
+            <BrowseButton onClick={openAppCatalog} disabled={appListIsLoading}>
               <i className='fa fa-add-circle' /> Install App
             </BrowseButton>
-
-            {isUpdatingOrCreating && (
-              <span>
-                Please wait for cluster{' '}
-                {clusterIsCreating ? 'creation' : 'upgrade'} to be completed
-                before installing any app.
-              </span>
-            )}
           </BrowseButtonContainer>
         </UserInstalledApps>
       )}
 
-      <div className='row cluster-apps'>
-        <h3 className='table-label'>Preinstalled Apps</h3>
+      <div className='row'>
+        <h3>Preinstalled Apps</h3>
         <Disclaimer>
           These apps and services are preinstalled on your cluster and managed
           by Giant Swarm.
         </Disclaimer>
 
-        {release ? (
-          <PreinstalledApps>
-            <div key='essentials'>
-              <SmallHeading>essentials</SmallHeading>
-              {Object.values(preInstalledApps.essentials).map((app) => (
+        <PreinstalledApps>
+          <div key='essentials'>
+            <SmallHeading>essentials</SmallHeading>
+            {!releaseIsLoading &&
+              Object.values(preInstalledApps.essentials).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}
                   name={app.name}
-                  version={formatAppVersion(release, app)}
+                  version={formatAppVersion(app)}
                   key={app.name}
                 />
               ))}
-            </div>
+          </div>
 
-            <div key='management'>
-              <SmallHeading>management</SmallHeading>
-              {Object.values(preInstalledApps.management).map((app) => (
+          <div key='management'>
+            <SmallHeading>management</SmallHeading>
+            {!releaseIsLoading &&
+              Object.values(preInstalledApps.management).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}
                   name={app.name}
-                  version={formatAppVersion(release, app)}
+                  version={formatAppVersion(app)}
                   key={app.name}
                 />
               ))}
-            </div>
+          </div>
 
-            <div key='ingress'>
-              <SmallHeading>ingress</SmallHeading>
-              {hasOptionalIngress && (
+          <div key='ingress'>
+            <SmallHeading>ingress</SmallHeading>
+            {hasOptionalIngress &&
+              Object.values(preInstalledApps.ingress).length < 1 && (
                 <div>
                   <Disclaimer>
                     The ingress controller is optional on this cluster.
@@ -298,17 +249,20 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
                   </Disclaimer>
                 </div>
               )}
-              {Object.values(preInstalledApps.ingress).map((app) => (
+
+            {!releaseIsLoading &&
+              Object.values(preInstalledApps.ingress).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}
                   name={app.name}
-                  version={formatAppVersion(release, app)}
+                  version={formatAppVersion(app)}
                   key={app.name}
                 />
               ))}
-            </div>
-          </PreinstalledApps>
-        ) : (
+          </div>
+        </PreinstalledApps>
+
+        {typeof releaseError !== 'undefined' && !releaseIsLoading && (
           <FlashMessageComponent type={FlashMessageType.Danger}>
             Unable to load the list of preinstalled apps. Please try again later
             or contact support: support@giantswarm.io
@@ -331,10 +285,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
 
 ClusterDetailApps.propTypes = {
   clusterId: PropTypes.string.isRequired,
-  release: PropTypes.object as PropTypes.Validator<IRelease>,
-  installedApps: PropTypes.array,
-  showInstalledAppsBlock: PropTypes.bool,
-  hasOptionalIngress: PropTypes.bool,
+  releaseVersion: PropTypes.string.isRequired,
 };
 
 export default ClusterDetailApps;

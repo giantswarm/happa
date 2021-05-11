@@ -6,6 +6,8 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { AppConstants, Constants } from 'shared/constants';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;
@@ -473,4 +475,65 @@ export async function updateAppVersion(
   app.spec.version = version;
 
   return applicationv1alpha1.updateApp(client, auth, app);
+}
+
+export function filterUserInstalledApps(
+  apps: applicationv1alpha1.IApp[],
+  supportsOptionalIngress: boolean
+): applicationv1alpha1.IApp[] {
+  return apps.filter((app) => {
+    switch (true) {
+      case typeof app.metadata.deletionTimestamp !== 'undefined':
+        return false;
+
+      case supportsOptionalIngress &&
+        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
+        return true;
+
+      case app.metadata.labels?.[applicationv1alpha1.labelManagedBy] ===
+        'cluster-operator':
+        return false;
+
+      default:
+        return true;
+    }
+  });
+}
+
+export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
+  const displayApps: Record<
+    string,
+    Record<string, AppConstants.IAppMetaApp>
+  > = {
+    essentials: {},
+    management: {},
+    ingress: {},
+  };
+
+  if (release?.spec?.components) {
+    for (const { name, version } of release.spec.components) {
+      if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
+
+      let appMeta = AppConstants.appMetas[name];
+      if (typeof appMeta === 'function') {
+        appMeta = appMeta(version);
+      }
+
+      // Add the app to the list of apps we'll show in the interface, in the
+      // correct category.
+      displayApps[appMeta.category][appMeta.name] = {
+        ...appMeta,
+        version,
+      };
+    }
+  }
+
+  for (const appMeta of Object.values(AppConstants.defaultAppMetas)) {
+    // Make sure that the app is not already in the list
+    if (displayApps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
+
+    displayApps[appMeta.category][appMeta.name] = appMeta;
+  }
+
+  return displayApps;
 }

@@ -8,6 +8,7 @@ import {
   supportsAlikeInstances,
   supportsNodePoolAutoscaling,
   supportsNodePoolSpotInstances,
+  supportsOptionalIngress,
 } from 'stores/nodepool/utils';
 import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
@@ -266,31 +267,18 @@ export const computeCapabilities = (state: IState) => (
   releaseVersion: string,
   provider: PropertiesOf<typeof Providers>
 ): IClusterCapabilities => {
-  let hasOptionalIngress = false;
   let supportsHAMasters = false;
 
   const minHAMastersVersion = getMinHAMastersVersion(state);
 
   switch (provider) {
     case Providers.AWS:
-      hasOptionalIngress = compare(releaseVersion, '10.0.99') === 1;
       supportsHAMasters = compare(releaseVersion, minHAMastersVersion) >= 0;
-
-      break;
-
-    case Providers.AZURE:
-      hasOptionalIngress = compare(releaseVersion, '12.0.0') >= 0;
-
-      break;
-
-    case Providers.KVM:
-      hasOptionalIngress = compare(releaseVersion, '12.2.0') >= 0;
 
       break;
   }
 
   return {
-    hasOptionalIngress,
     supportsHAMasters,
     supportsNodePoolAutoscaling: supportsNodePoolAutoscaling(
       provider,
@@ -301,6 +289,7 @@ export const computeCapabilities = (state: IState) => (
       releaseVersion
     ),
     supportsAlikeInstances: supportsAlikeInstances(provider, releaseVersion),
+    hasOptionalIngress: supportsOptionalIngress(provider, releaseVersion),
   };
 };
 

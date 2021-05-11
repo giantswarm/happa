@@ -4,7 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
-import ClusterDetailApps from 'MAPI/clusters/ClusterDetail/ClusterDetailApps';
+import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
@@ -384,13 +384,7 @@ class ClusterDetailView extends React.Component {
                 {this.props.user?.type === LoggedInUserTypes.MAPI ? (
                   <ClusterDetailApps
                     clusterId={id}
-                    dispatch={dispatch}
-                    installedApps={cluster.apps}
-                    release={release}
-                    showInstalledAppsBlock={
-                      Object.keys(this.props.catalogs.items).length > 0
-                    }
-                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                    releaseVersion={release_version}
                   />
                 ) : (
                   <ClusterApps
