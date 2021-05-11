@@ -129,7 +129,7 @@ https://fortawesome.com/kits/d940f7eb/docs
 
 Dependabot is configured to automatically create pull requests (PRs) that update our dependencies
 when they go stale. After approval and a `@dependabot merge` comment, dependabot
-autoamtically merges open PRs.
+automatically merges open PRs.
 
 ## Coding style
 
