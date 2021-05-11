@@ -4,6 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
+import ClusterDetailApps from 'MAPI/clusters/ClusterDetail/ClusterDetailApps';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
@@ -31,6 +32,7 @@ import {
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
@@ -379,16 +381,29 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                <ClusterApps
-                  clusterId={id}
-                  dispatch={dispatch}
-                  installedApps={cluster.apps}
-                  release={release}
-                  showInstalledAppsBlock={
-                    Object.keys(this.props.catalogs.items).length > 0
-                  }
-                  hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
-                />
+                {this.props.user?.type === LoggedInUserTypes.MAPI ? (
+                  <ClusterDetailApps
+                    clusterId={id}
+                    dispatch={dispatch}
+                    installedApps={cluster.apps}
+                    release={release}
+                    showInstalledAppsBlock={
+                      Object.keys(this.props.catalogs.items).length > 0
+                    }
+                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                  />
+                ) : (
+                  <ClusterApps
+                    clusterId={id}
+                    dispatch={dispatch}
+                    installedApps={cluster.apps}
+                    release={release}
+                    showInstalledAppsBlock={
+                      Object.keys(this.props.catalogs.items).length > 0
+                    }
+                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                  />
+                )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
                 <Ingress
@@ -433,7 +448,7 @@ ClusterDetailView.contextTypes = {
 
 ClusterDetailView.propTypes = {
   cluster: PropTypes.object,
-
+  user: PropTypes.object,
   canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,

@@ -1,6 +1,8 @@
+import UserInstalledApps from 'Cluster/ClusterDetail/UserInstalledApps/UserInstalledApps';
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,9 +24,6 @@ import Button from 'UI/Controls/Button';
 import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
-
-import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
-import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
 
 function formatAppVersion(
   release: IRelease,
@@ -82,7 +81,7 @@ const PreinstalledApps = styled.div`
   }
 `;
 
-interface IClusterAppsProps {
+interface IClusterDetailApps {
   clusterId: string;
   hasOptionalIngress?: boolean;
   showInstalledAppsBlock?: boolean;
@@ -90,7 +89,7 @@ interface IClusterAppsProps {
   installedApps?: IInstalledApp[];
 }
 
-const ClusterApps: React.FC<IClusterAppsProps> = ({
+const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   clusterId,
   hasOptionalIngress,
   showInstalledAppsBlock,
@@ -318,10 +317,9 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
       </div>
 
       {appToDisplay && (
-        <AppDetailsModal
-          // Instead of just assigning the selected app to the state of this component,
-          // this ensures any updates to the apps continue to flow down into the modal.
-          app={appToDisplay}
+        <AppDetailsModalMAPI
+          appName={appToDisplay.metadata.name}
+          catalog={appToDisplay.spec.catalog}
           clusterId={clusterId}
           onClose={hideAppModal}
           visible={detailsModalIsVisible}
@@ -331,7 +329,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
   );
 };
 
-ClusterApps.propTypes = {
+ClusterDetailApps.propTypes = {
   clusterId: PropTypes.string.isRequired,
   release: PropTypes.object as PropTypes.Validator<IRelease>,
   installedApps: PropTypes.array,
@@ -339,4 +337,4 @@ ClusterApps.propTypes = {
   hasOptionalIngress: PropTypes.bool,
 };
 
-export default ClusterApps;
+export default ClusterDetailApps;
