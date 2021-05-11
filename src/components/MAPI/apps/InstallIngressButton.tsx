@@ -1,26 +1,26 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import { extractErrorMessage } from 'MAPI/organizations/AccessControl/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
-import {
-  installLatestIngress,
-  prepareIngressTabData,
-} from 'stores/appcatalog/actions';
-import {
-  selectIngressAppFromCluster,
-  selectIngressAppToInstall,
-} from 'stores/appcatalog/selectors';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
-import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { IState } from 'stores/state';
 import styled from 'styled-components';
+import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+
+import {
+  createIngressApp,
+  findIngressApp,
+  getIngressAppCatalogEntry,
+  getIngressAppCatalogEntryKey,
+} from './utils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,123 +41,140 @@ const StyledLink = styled(Link)`
 
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  cluster: Cluster;
+  clusterID: string;
 }
 
 const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
-  cluster,
-  ...rest
+  clusterID,
 }) => {
-  const [isNew, setIsNew] = useState(true);
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-  const isInstalling = useSelector<IState, boolean | null>((state) =>
-    selectLoadingFlagByAction(state, installLatestIngress().types.request)
+  const appListClient = useRef(clientFactory());
+  const appListGetOptions = { namespace: clusterID };
+  const {
+    data: appList,
+    isValidating: appListIsValidating,
+    mutate: mutateAppList,
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
+    applicationv1alpha1.getAppListKey(appListGetOptions),
+    () =>
+      applicationv1alpha1.getAppList(
+        appListClient.current,
+        auth,
+        appListGetOptions
+      )
   );
-  const isPreparingIngressTabData = useSelector<IState, boolean | null>(
-    (state) =>
-      selectLoadingFlagByAction(state, prepareIngressTabData().types.request)
+
+  // TODO(axbarsan): Handle app list error.
+
+  const installedIngressApp = useMemo(() => findIngressApp(appList?.items), [
+    appList?.items,
+  ]);
+
+  const appCatalogEntryClient = useRef(clientFactory());
+  const {
+    data: ingressAppToInstall,
+    isValidating: ingressAppToInstallIsValidating,
+  } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponse>(
+    getIngressAppCatalogEntryKey(appList?.items),
+    () => getIngressAppCatalogEntry(appCatalogEntryClient.current, auth)
   );
 
-  const installedIngressApp = selectIngressAppFromCluster(cluster);
-  const ingressAppToInstall = useSelector(selectIngressAppToInstall);
+  // TODO(axbarsan): Handle app entry error.
 
-  const ingressAppDetailPath = useMemo(() => {
-    if (ingressAppToInstall) {
-      const { name, version } = ingressAppToInstall;
+  const [isInstalling, setIsInstalling] = useState(false);
 
+  const isLoading =
+    isInstalling ||
+    (typeof appList === 'undefined' && appListIsValidating) ||
+    (typeof ingressAppToInstall === 'undefined' &&
+      ingressAppToInstallIsValidating);
+
+  const handleClick = async () => {
+    if (!ingressAppToInstall) return Promise.resolve();
+
+    try {
+      setIsInstalling(true);
+
+      await createIngressApp(
+        clientFactory,
+        auth,
+        clusterID,
+        ingressAppToInstall
+      );
+
+      mutateAppList();
+
+      setIsInstalling(false);
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to install the ingress controller app.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+
+      setIsInstalling(false);
+    }
+
+    return Promise.resolve();
+  };
+
+  const appDetailPath = useMemo(() => {
+    if (installedIngressApp) {
       return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
         catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
-        app: name,
-        version,
+        app: installedIngressApp.spec.name,
+        version: installedIngressApp.spec.version,
+      });
+    } else if (ingressAppToInstall) {
+      return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        app: ingressAppToInstall.spec.appName,
+        version: ingressAppToInstall.spec.version,
       });
     }
 
     return '';
-  }, [ingressAppToInstall]);
-
-  const isLoading =
-    isNew === true ||
-    isPreparingIngressTabData === true ||
-    isInstalling === true ||
-    !ingressAppToInstall?.version;
-
-  const clusterId: string = cluster.id;
-
-  const dispatch: IAsynchronousDispatch<IState> = useDispatch();
-
-  useEffect(() => {
-    const prepare = async () => {
-      await dispatch(prepareIngressTabData({ clusterId }));
-      setIsNew(false);
-    };
-
-    prepare();
-  }, [dispatch, clusterId]);
-
-  const installIngressController = () =>
-    dispatch(installLatestIngress({ clusterId }));
-
-  const clusterIsCreating = isClusterCreating(cluster);
-  const clusterIsUpdating =
-    useSelector(selectIsClusterAwaitingUpgrade(clusterId)) ||
-    isClusterUpdating(cluster);
-  const clusterIsNotReady = clusterIsCreating || clusterIsUpdating;
-
-  const additionalText = useMemo(() => {
-    if (installedIngressApp) {
-      return '🎉 Ingress controller installed. Please continue to the next step.';
-    }
-
-    if (ingressAppToInstall) {
-      return (
-        <>
-          This will install the{' '}
-          <StyledLink to={ingressAppDetailPath} href={ingressAppDetailPath}>
-            NGINX Ingress Controller app {ingressAppToInstall.version}
-          </StyledLink>{' '}
-          on cluster <ClusterIDLabel clusterID={clusterId} />
-          {clusterIsNotReady && (
-            <>
-              {' '}
-              once cluster {clusterIsCreating ? 'creation' : 'upgrade'} has
-              finished
-            </>
-          )}
-        </>
-      );
-    }
-
-    return '';
-  }, [
-    installedIngressApp,
-    clusterIsNotReady,
-    ingressAppToInstall,
-    ingressAppDetailPath,
-    clusterId,
-    clusterIsCreating,
-  ]);
+  }, [installedIngressApp, ingressAppToInstall]);
 
   return (
-    <Wrapper {...rest}>
+    <Wrapper>
       {!installedIngressApp && (
         <Button
           loading={isLoading}
           bsStyle='primary'
           loadingTimeout={0}
-          onClick={installIngressController}
+          onClick={handleClick}
         >
           Install Ingress Controller
         </Button>
       )}
 
-      {!isLoading && <Text>{additionalText}</Text>}
+      {installedIngressApp && (
+        <Text>
+          🎉 Ingress controller installed. Please continue to the next step.
+        </Text>
+      )}
+
+      {ingressAppToInstall && (
+        <Text>
+          This will install the{' '}
+          <StyledLink to={appDetailPath} href={appDetailPath}>
+            NGINX Ingress Controller app {ingressAppToInstall.spec.version}
+          </StyledLink>{' '}
+          on cluster <ClusterIDLabel clusterID={clusterID} />
+        </Text>
+      )}
     </Wrapper>
   );
 };
 
 InstallIngressButton.propTypes = {
-  // @ts-ignore
-  cluster: PropTypes.object.isRequired,
+  clusterID: PropTypes.string.isRequired,
 };
 
 export default InstallIngressButton;

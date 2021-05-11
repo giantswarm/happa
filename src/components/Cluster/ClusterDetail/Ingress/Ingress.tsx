@@ -53,7 +53,7 @@ const Ingress: React.FC<IIngressProps> = ({
 
       {!hasIngress &&
         (user?.type === LoggedInUserTypes.MAPI ? (
-          <InstallIngressButtonMAPI cluster={cluster} />
+          <InstallIngressButtonMAPI clusterID={cluster.id} />
         ) : (
           <InstallIngressButton cluster={cluster} />
         ))}

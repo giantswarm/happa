@@ -6,6 +6,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
+import { Constants } from 'shared/constants';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;
@@ -473,4 +474,73 @@ export async function updateAppVersion(
   app.spec.version = version;
 
   return applicationv1alpha1.updateApp(client, auth, app);
+}
+
+export function findIngressApp(
+  apps?: applicationv1alpha1.IApp[]
+): applicationv1alpha1.IApp | null {
+  const ingressApp = apps?.find((app) => {
+    return (
+      app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME &&
+      app.spec.catalog === Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME
+    );
+  });
+
+  if (!ingressApp) return null;
+
+  return ingressApp;
+}
+
+const ingressAppCatalogEntryListGetOptions = {
+  labelSelector: {
+    matchingLabels: {
+      [applicationv1alpha1.labelAppName]:
+        Constants.INSTALL_INGRESS_TAB_APP_NAME,
+      [applicationv1alpha1.labelAppCatalog]:
+        Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+      [applicationv1alpha1.labelLatest]: 'true',
+    },
+  },
+};
+
+export async function getIngressAppCatalogEntry(
+  client: IHttpClient,
+  auth: IOAuth2Provider
+) {
+  const appList = await applicationv1alpha1.getAppCatalogEntryList(
+    client,
+    auth,
+    ingressAppCatalogEntryListGetOptions
+  );
+  if (appList.items.length < 1) return null;
+
+  return appList.items[0];
+}
+
+export function getIngressAppCatalogEntryKey(
+  existingApps?: applicationv1alpha1.IApp[]
+) {
+  const existingIngressApp = findIngressApp(existingApps);
+  if (existingIngressApp) return null;
+
+  return applicationv1alpha1.getAppCatalogEntryListKey(
+    ingressAppCatalogEntryListGetOptions
+  );
+}
+
+export function createIngressApp(
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusterID: string,
+  ingressAppCatalogEntry: applicationv1alpha1.IAppCatalogEntry
+) {
+  return createApp(clientFactory, auth, clusterID, {
+    name: ingressAppCatalogEntry.spec.appName,
+    catalogName: ingressAppCatalogEntry.spec.catalog.name,
+    chartName: ingressAppCatalogEntry.spec.appName,
+    version: ingressAppCatalogEntry.spec.version,
+    namespace: 'kube-system',
+    configMapContents: '',
+    secretContents: '',
+  });
 }

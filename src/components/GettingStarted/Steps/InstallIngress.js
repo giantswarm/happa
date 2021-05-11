@@ -73,7 +73,7 @@ const InstallIngress = (props) => {
 
         <InstallIngressButtonWrapper>
           {user?.type === LoggedInUserTypes.MAPI ? (
-            <InstallIngressButtonMAPI cluster={props.cluster} />
+            <InstallIngressButtonMAPI clusterID={props.cluster.id} />
           ) : (
             <InstallIngressButton cluster={props.cluster} />
           )}
