@@ -9,7 +9,7 @@ import { Constants } from 'shared/constants';
 //               & IsQualifiedName for label keys
 
 interface IisDNS1123Subdomain {
-  (value: string): boolean;
+  (value: string):  boolean;
 }
 
 const labelValueMaxLength = 63;
