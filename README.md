@@ -22,7 +22,7 @@ Happa is a single page JavaScript application using React+Redux and runs in mode
 
 ## Getting started with development / demoing
 
-Running Happa locally requires [NodeJS 12](https://nodejs.org/) and [Yarn](https://yarnpkg.com/).
+Running Happa locally requires [NodeJS v14](https://nodejs.org/) and [Yarn](https://yarnpkg.com/).
 
 You must have [opsctl](https://github.com/giantswarm/opsctl) installed and configured properly.
 opsctl is our internal tool for managing access to clusters and performing ops related tasks.
