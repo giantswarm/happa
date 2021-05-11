@@ -28,7 +28,7 @@ import NotAvailable from 'UI/Display/NotAvailable';
 import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';
 import { filterUserInstalledApps, mapDefaultApps } from './utils';
 
-const LOADING_COMPONENTS = new Array(6).fill(0).map((_, idx) => idx);
+const LOADING_COMPONENTS = new Array(6).fill(0);
 
 function formatAppVersion(appMeta: AppConstants.IAppMetaApp) {
   const { version } = appMeta;
@@ -206,7 +206,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
           <div key='essentials'>
             <SmallHeading>essentials</SmallHeading>
             {releaseIsLoading &&
-              LOADING_COMPONENTS.map((i) => (
+              LOADING_COMPONENTS.map((_, i) => (
                 <ClusterDetailAppLoadingPlaceholder
                   key={i}
                   margin={{ bottom: 'small' }}
@@ -226,7 +226,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
           <div key='management'>
             <SmallHeading>management</SmallHeading>
             {releaseIsLoading &&
-              LOADING_COMPONENTS.map((i) => (
+              LOADING_COMPONENTS.map((_, i) => (
                 <ClusterDetailAppLoadingPlaceholder
                   key={i}
                   margin={{ bottom: 'small' }}
@@ -266,13 +266,15 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
                   </Disclaimer>
                 </div>
               )}
+
             {releaseIsLoading &&
-              LOADING_COMPONENTS.map((i) => (
+              LOADING_COMPONENTS.map((_, i) => (
                 <ClusterDetailAppLoadingPlaceholder
                   key={i}
                   margin={{ bottom: 'small' }}
                 />
               ))}
+
             {!releaseIsLoading &&
               Object.values(preInstalledApps.ingress).map((app) => (
                 <ClusterDetailPreinstalledApp
