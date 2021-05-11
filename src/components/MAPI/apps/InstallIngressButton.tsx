@@ -154,11 +154,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
         </Button>
       )}
 
-      {installedIngressApp && (
-        <Text>
-          🎉 Ingress controller installed. Please continue to the next step.
-        </Text>
-      )}
+      {installedIngressApp && <Text>🎉 Ingress controller installed.</Text>}
 
       {ingressAppToInstall && (
         <Text>
