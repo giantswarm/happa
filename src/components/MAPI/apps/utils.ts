@@ -483,9 +483,6 @@ export function filterUserInstalledApps(
 ): applicationv1alpha1.IApp[] {
   return apps.filter((app) => {
     switch (true) {
-      case typeof app.metadata.deletionTimestamp !== 'undefined':
-        return false;
-
       case supportsOptionalIngress &&
         app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
         return true;

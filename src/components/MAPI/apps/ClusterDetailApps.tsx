@@ -184,6 +184,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         apps={userInstalledApps.map((a) => ({
           name: a.metadata.name,
           version: a.spec.version,
+          deletionTimestamp: a.metadata.deletionTimestamp,
         }))}
         error={extractErrorMessage(appListError) ?? null}
         onShowDetail={showAppDetail}

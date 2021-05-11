@@ -1,3 +1,5 @@
+import { Text } from 'grommet';
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -40,6 +42,7 @@ interface IInstalledAppProps {
   onIconError: React.ReactEventHandler<HTMLImageElement>;
   onClick: (e: React.MouseEvent) => void;
   logoUrl?: string;
+  deletionTimestamp?: string;
   iconErrors?: Record<string, boolean>;
 }
 
@@ -47,6 +50,7 @@ const InstalledApp: React.FC<IInstalledAppProps> = ({
   name,
   logoUrl,
   version,
+  deletionTimestamp,
   iconErrors,
   onIconError,
   onClick,
@@ -61,6 +65,12 @@ const InstalledApp: React.FC<IInstalledAppProps> = ({
 
         <span>{name}</span>
 
+        {deletionTimestamp && (
+          <Text size='xsmall' margin={{ left: 'xsmall' }} color='text-xweak'>
+            deleted {relativeDate(deletionTimestamp)}
+          </Text>
+        )}
+
         <small>Chart version: {version || <NotAvailable />}</small>
       </div>
     </App>
@@ -73,6 +83,7 @@ InstalledApp.propTypes = {
   onIconError: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   logoUrl: PropTypes.string,
+  deletionTimestamp: PropTypes.string,
   iconErrors: PropTypes.object as PropTypes.Requireable<
     Record<string, boolean>
   >,

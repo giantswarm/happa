@@ -43,6 +43,7 @@ interface IUserInstalledApp {
   name: string;
   version: string;
   logoUrl?: string;
+  deletionTimestamp?: string;
 }
 
 interface IUserInstalledAppsProps extends React.PropsWithChildren<{}> {
@@ -106,6 +107,7 @@ const UserInstalledApps: React.FC<IUserInstalledAppsProps> = ({
                     <InstalledApp
                       name={app.name}
                       version={app.version}
+                      deletionTimestamp={app.deletionTimestamp}
                       iconErrors={iconErrors}
                       onIconError={onIconError}
                       onClick={() => onShowDetail(app.name)}
