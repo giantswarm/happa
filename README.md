@@ -127,3 +127,4 @@ This runs before every commit, and it will not let commits go through if the `pr
 ### Publishing a Release
 
 See [docs/Release.md](https://github.com/giantswarm/happa/blob/master/docs/Release.md)
+
