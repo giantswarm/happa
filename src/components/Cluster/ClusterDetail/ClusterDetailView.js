@@ -286,6 +286,7 @@ class ClusterDetailView extends React.Component {
       loadingCluster,
       isAdmin,
       clusterIsAwaitingUpgrade,
+      user,
     } = this.props;
 
     const loading = loadingNodePools || loadingCluster;
@@ -393,6 +394,7 @@ class ClusterDetailView extends React.Component {
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
                 <Ingress
                   cluster={cluster}
+                  user={user}
                   provider={provider}
                   k8sEndpoint={cluster.api_endpoint}
                   kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
@@ -433,7 +435,7 @@ ClusterDetailView.contextTypes = {
 
 ClusterDetailView.propTypes = {
   cluster: PropTypes.object,
-
+  user: PropTypes.object,
   canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,

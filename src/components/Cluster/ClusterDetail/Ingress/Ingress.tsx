@@ -1,10 +1,12 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
+import InstallIngressButtonMAPI from 'MAPI/apps/InstallIngressButton';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { selectIngressAppFromCluster } from 'stores/appcatalog/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import styled from 'styled-components';
 
 import { Text } from './Components';
@@ -13,6 +15,7 @@ const IngressWrapper = styled.div``;
 
 interface IIngressProps extends React.ComponentPropsWithoutRef<'div'> {
   cluster: Cluster;
+  user: ILoggedInUser | null;
   provider?: PropertiesOf<typeof Providers>;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
@@ -21,6 +24,7 @@ interface IIngressProps extends React.ComponentPropsWithoutRef<'div'> {
 
 const Ingress: React.FC<IIngressProps> = ({
   cluster,
+  user,
   provider,
   k8sEndpoint,
   kvmTCPHTTPPort,
@@ -38,16 +42,21 @@ const Ingress: React.FC<IIngressProps> = ({
           : 'In order to expose services via Ingress, you must have external-dns and an Ingress controller installed. Giant Swarm provides the NGINX Ingress Controller as a managed app.'}
       </Text>
 
-      {hasIngress ? (
+      {hasIngress && (
         <Instructions
           provider={provider}
           k8sEndpoint={k8sEndpoint}
           kvmTCPHTTPPort={kvmTCPHTTPPort}
           kvmTCPHTTPSPort={kvmTCPHTTPSPort}
         />
-      ) : (
-        <InstallIngressButton cluster={cluster} />
       )}
+
+      {!hasIngress &&
+        (user?.type === LoggedInUserTypes.MAPI ? (
+          <InstallIngressButtonMAPI cluster={cluster} />
+        ) : (
+          <InstallIngressButton cluster={cluster} />
+        ))}
     </IngressWrapper>
   );
 };
@@ -55,6 +64,7 @@ const Ingress: React.FC<IIngressProps> = ({
 Ingress.propTypes = {
   // @ts-ignore
   cluster: PropTypes.object.isRequired,
+  user: PropTypes.object as PropTypes.Validator<ILoggedInUser>,
   provider: PropTypes.oneOf(Object.values(Providers)),
   k8sEndpoint: PropTypes.string,
   kvmTCPHTTPPort: PropTypes.number,

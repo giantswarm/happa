@@ -1,17 +1,20 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import RoutePath from 'lib/routePath';
+import InstallIngressButtonMAPI from 'MAPI/apps/InstallIngressButton';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 
-const StyledInstallIngressButton = styled(InstallIngressButton)`
+const InstallIngressButtonWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;
 `;
 
@@ -35,6 +38,8 @@ const InstallIngress = (props) => {
     OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
     pathParams
   );
+
+  const user = useSelector(getLoggedInUser);
 
   return (
     <Breadcrumb
@@ -66,7 +71,13 @@ const InstallIngress = (props) => {
           controller on your cluster.
         </p>
 
-        <StyledInstallIngressButton cluster={props.cluster} />
+        <InstallIngressButtonWrapper>
+          {user?.type === LoggedInUserTypes.MAPI ? (
+            <InstallIngressButtonMAPI cluster={props.cluster} />
+          ) : (
+            <InstallIngressButton cluster={props.cluster} />
+          )}
+        </InstallIngressButtonWrapper>
 
         <GettingStartedBottomNav>
           <Link to={clusterGuideConfigurationPath}>
