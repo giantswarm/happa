@@ -25,7 +25,10 @@ import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreins
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
 
+import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';
 import { filterUserInstalledApps, mapDefaultApps } from './utils';
+
+const LOADING_COMPONENTS = new Array(6).fill(0).map((_, idx) => idx);
 
 function formatAppVersion(appMeta: AppConstants.IAppMetaApp) {
   const { version } = appMeta;
@@ -64,9 +67,10 @@ const Disclaimer = styled.p`
 
 const PreinstalledApps = styled.div`
   display: flex;
+  flex-wrap: wrap;
 
   & > div {
-    flex: 1;
+    flex: 1 0 300px;
     margin-right: 15px;
 
     &:last-child {
@@ -201,6 +205,13 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         <PreinstalledApps>
           <div key='essentials'>
             <SmallHeading>essentials</SmallHeading>
+            {releaseIsLoading &&
+              LOADING_COMPONENTS.map((i) => (
+                <ClusterDetailAppLoadingPlaceholder
+                  key={i}
+                  margin={{ bottom: 'small' }}
+                />
+              ))}
             {!releaseIsLoading &&
               Object.values(preInstalledApps.essentials).map((app) => (
                 <ClusterDetailPreinstalledApp
@@ -214,6 +225,13 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
 
           <div key='management'>
             <SmallHeading>management</SmallHeading>
+            {releaseIsLoading &&
+              LOADING_COMPONENTS.map((i) => (
+                <ClusterDetailAppLoadingPlaceholder
+                  key={i}
+                  margin={{ bottom: 'small' }}
+                />
+              ))}
             {!releaseIsLoading &&
               Object.values(preInstalledApps.management).map((app) => (
                 <ClusterDetailPreinstalledApp
@@ -228,6 +246,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
           <div key='ingress'>
             <SmallHeading>ingress</SmallHeading>
             {hasOptionalIngress &&
+              !releaseIsLoading &&
               Object.values(preInstalledApps.ingress).length < 1 && (
                 <div>
                   <Disclaimer>
@@ -247,7 +266,13 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
                   </Disclaimer>
                 </div>
               )}
-
+            {releaseIsLoading &&
+              LOADING_COMPONENTS.map((i) => (
+                <ClusterDetailAppLoadingPlaceholder
+                  key={i}
+                  margin={{ bottom: 'small' }}
+                />
+              ))}
             {!releaseIsLoading &&
               Object.values(preInstalledApps.ingress).map((app) => (
                 <ClusterDetailPreinstalledApp
