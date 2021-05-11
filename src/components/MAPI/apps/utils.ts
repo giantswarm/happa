@@ -501,39 +501,47 @@ export function filterUserInstalledApps(
 }
 
 export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
-  const displayApps: Record<
-    string,
-    Record<string, AppConstants.IAppMetaApp>
-  > = {
+  const apps: Record<string, Record<string, AppConstants.IAppMetaApp>> = {
     essentials: {},
     management: {},
     ingress: {},
   };
 
-  if (release?.spec?.components) {
-    for (const { name, version } of release.spec.components) {
-      if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
+  const releaseComponents: (
+    | releasev1alpha1.IReleaseSpecComponent
+    | releasev1alpha1.IReleaseSpecApp
+  )[] = [];
 
-      let appMeta = AppConstants.appMetas[name];
-      if (typeof appMeta === 'function') {
-        appMeta = appMeta(version);
-      }
+  if (release?.spec.components) {
+    releaseComponents.push(...release.spec.components);
+  }
 
-      // Add the app to the list of apps we'll show in the interface, in the
-      // correct category.
-      displayApps[appMeta.category][appMeta.name] = {
-        ...appMeta,
-        version,
-      };
+  if (release?.spec.apps) {
+    releaseComponents.push(...release.spec.apps);
+  }
+
+  for (const { name, version } of releaseComponents) {
+    if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
+
+    let appMeta = AppConstants.appMetas[name];
+    if (typeof appMeta === 'function') {
+      appMeta = appMeta(version);
     }
+
+    // Add the app to the list of apps we'll show in the interface, in the
+    // correct category.
+    apps[appMeta.category][appMeta.name] = {
+      ...appMeta,
+      version,
+    };
   }
 
   for (const appMeta of Object.values(AppConstants.defaultAppMetas)) {
     // Make sure that the app is not already in the list
-    if (displayApps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
+    if (apps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
 
-    displayApps[appMeta.category][appMeta.name] = appMeta;
+    apps[appMeta.category][appMeta.name] = appMeta;
   }
 
-  return displayApps;
+  return apps;
 }
