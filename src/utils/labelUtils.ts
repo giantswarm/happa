@@ -164,3 +164,4 @@ export const validateLabelKey: IValidationFunction = (key) => {
 
   return isQualifiedName(strKey);
 };
+
