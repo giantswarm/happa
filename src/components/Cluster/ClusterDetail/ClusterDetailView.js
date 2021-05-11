@@ -292,7 +292,7 @@ class ClusterDetailView extends React.Component {
 
     if (!cluster) return null;
     const { id, owner, release_version } = cluster;
-    const release = releases[release_version] ?? null;
+    const release = releases[release_version];
     const tabsPaths = this.getPathsForTabs(id, owner);
 
     const clusterIsCreating = isClusterCreating(cluster);
