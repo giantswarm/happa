@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
@@ -43,6 +44,7 @@ interface IUserInstalledApp {
   name: string;
   version: string;
   logoUrl?: string;
+  deletionTimestamp?: string;
 }
 
 interface IUserInstalledAppsProps extends React.PropsWithChildren<{}> {
@@ -91,30 +93,39 @@ const UserInstalledApps: React.FC<IUserInstalledAppsProps> = ({
         )}
 
         {apps.length > 0 && (
-          <InstalledApps aria-label='Apps installed by user'>
-            <TransitionGroup>
-              {apps.map((app) => {
-                return (
-                  <BaseTransition
-                    in={false}
-                    key={app.name}
-                    appear={true}
-                    exit={true}
-                    timeout={{ enter: 500, appear: 500, exit: 500 }}
-                    classNames='app'
-                  >
-                    <InstalledApp
-                      name={app.name}
-                      version={app.version}
-                      iconErrors={iconErrors}
-                      onIconError={onIconError}
-                      onClick={() => onShowDetail(app.name)}
-                    />
-                  </BaseTransition>
-                );
-              })}
-            </TransitionGroup>
-          </InstalledApps>
+          <Keyboard
+            onSpace={(e) => {
+              e.preventDefault();
+
+              (e.target as HTMLElement).click();
+            }}
+          >
+            <InstalledApps aria-label='Apps installed by user'>
+              <TransitionGroup>
+                {apps.map((app) => {
+                  return (
+                    <BaseTransition
+                      in={false}
+                      key={app.name}
+                      appear={true}
+                      exit={true}
+                      timeout={{ enter: 500, appear: 500, exit: 500 }}
+                      classNames='app'
+                    >
+                      <InstalledApp
+                        name={app.name}
+                        version={app.version}
+                        deletionTimestamp={app.deletionTimestamp}
+                        iconErrors={iconErrors}
+                        onIconError={onIconError}
+                        onClick={() => onShowDetail(app.name)}
+                      />
+                    </BaseTransition>
+                  );
+                })}
+              </TransitionGroup>
+            </InstalledApps>
+          </Keyboard>
         )}
 
         {children}

@@ -6,7 +6,8 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
-import { Constants } from 'shared/constants';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { AppConstants, Constants } from 'shared/constants';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;
@@ -474,6 +475,72 @@ export async function updateAppVersion(
   app.spec.version = version;
 
   return applicationv1alpha1.updateApp(client, auth, app);
+}
+
+export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
+  const apps: Record<string, Record<string, AppConstants.IAppMetaApp>> = {
+    essentials: {},
+    management: {},
+    ingress: {},
+  };
+
+  const releaseComponents: (
+    | releasev1alpha1.IReleaseSpecComponent
+    | releasev1alpha1.IReleaseSpecApp
+  )[] = [];
+
+  if (release?.spec.components) {
+    releaseComponents.push(...release.spec.components);
+  }
+
+  if (release?.spec.apps) {
+    releaseComponents.push(...release.spec.apps);
+  }
+
+  for (const { name, version } of releaseComponents) {
+    if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
+
+    let appMeta = AppConstants.appMetas[name];
+    if (typeof appMeta === 'function') {
+      appMeta = appMeta(version);
+    }
+
+    // Add the app to the list of apps we'll show in the interface, in the
+    // correct category.
+    apps[appMeta.category][appMeta.name] = {
+      ...appMeta,
+      version,
+    };
+  }
+
+  for (const appMeta of Object.values(AppConstants.defaultAppMetas)) {
+    // Make sure that the app is not already in the list
+    if (apps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
+
+    apps[appMeta.category][appMeta.name] = appMeta;
+  }
+
+  return apps;
+}
+
+export function filterUserInstalledApps(
+  apps: applicationv1alpha1.IApp[],
+  supportsOptionalIngress: boolean
+): applicationv1alpha1.IApp[] {
+  return apps.filter((app) => {
+    switch (true) {
+      case supportsOptionalIngress &&
+        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
+        return true;
+
+      case app.metadata.labels?.[applicationv1alpha1.labelManagedBy] ===
+        'cluster-operator':
+        return false;
+
+      default:
+        return true;
+    }
+  });
 }
 
 export function findIngressApp(

@@ -4,6 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
+import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -382,16 +383,23 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                <ClusterApps
-                  clusterId={id}
-                  dispatch={dispatch}
-                  installedApps={cluster.apps}
-                  release={release}
-                  showInstalledAppsBlock={
-                    Object.keys(this.props.catalogs.items).length > 0
-                  }
-                  hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
-                />
+                {user?.type === LoggedInUserTypes.MAPI ? (
+                  <ClusterDetailApps
+                    clusterId={id}
+                    releaseVersion={release_version}
+                  />
+                ) : (
+                  <ClusterApps
+                    clusterId={id}
+                    dispatch={dispatch}
+                    installedApps={cluster.apps}
+                    release={release}
+                    showInstalledAppsBlock={
+                      Object.keys(this.props.catalogs.items).length > 0
+                    }
+                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                  />
+                )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
                 {user?.type === LoggedInUserTypes.MAPI ? (
