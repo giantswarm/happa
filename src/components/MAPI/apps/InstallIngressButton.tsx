@@ -98,12 +98,20 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
   const [isInstalling, setIsInstalling] = useState(false);
 
-  const isLoading =
-    !errorMessage &&
-    (isInstalling ||
-      (typeof appList === 'undefined' && appListIsValidating) ||
-      (typeof ingressAppToInstall === 'undefined' &&
-        ingressAppToInstallIsValidating));
+  let isLoading = false;
+  switch (true) {
+    case !errorMessage && isInstalling:
+      isLoading = true;
+      break;
+    case !errorMessage && typeof appList === 'undefined' && appListIsValidating:
+      isLoading = true;
+      break;
+    case !errorMessage &&
+      typeof ingressAppToInstall === 'undefined' &&
+      ingressAppToInstallIsValidating:
+      isLoading = true;
+      break;
+  }
 
   const handleClick = async () => {
     if (!ingressAppToInstall) return Promise.resolve();
