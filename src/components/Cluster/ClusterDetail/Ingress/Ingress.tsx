@@ -38,16 +38,16 @@ const Ingress: React.FC<IIngressProps> = ({
           : 'In order to expose services via Ingress, you must have external-dns and an Ingress controller installed. Giant Swarm provides the NGINX Ingress Controller as a managed app.'}
       </Text>
 
-      {hasIngress && (
+      {hasIngress ? (
         <Instructions
           provider={provider}
           k8sEndpoint={k8sEndpoint}
           kvmTCPHTTPPort={kvmTCPHTTPPort}
           kvmTCPHTTPSPort={kvmTCPHTTPSPort}
         />
+      ) : (
+        <InstallIngressButton cluster={cluster} />
       )}
-
-      {!hasIngress && <InstallIngressButton cluster={cluster} />}
     </IngressWrapper>
   );
 };
