@@ -17,7 +17,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
@@ -167,7 +167,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       );
 
       mutateApp(updatedApp);
-      // TODO(axbarsan): Mutate apps list, once that request exists.
+      mutate(applicationv1alpha1.getAppListKey({ namespace: clusterId }));
 
       setAppUpdateIsLoading(false);
       handleClose();
@@ -249,7 +249,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     try {
       await deleteAppWithName(clientFactory(), auth, clusterId, appName);
 
-      // TODO(axbarsan): Mutate apps list, once that request exists.
+      mutate(applicationv1alpha1.getAppListKey({ namespace: clusterId }));
       handleClose();
 
       new FlashMessage(

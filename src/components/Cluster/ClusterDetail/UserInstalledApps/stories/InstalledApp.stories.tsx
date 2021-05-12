@@ -27,6 +27,14 @@ WithoutVersion.args = {
   version: '',
 };
 
+export const WithDeletionTimestamp = Template.bind({});
+WithDeletionTimestamp.args = {
+  name: 'app-with-deletion-timestamp',
+  logoUrl: 'https://s.giantswarm.io/app-icons/1/png/app-mesh-app-light.png',
+  version: 'v14.0.1',
+  deletionTimestamp: '2020-08-08',
+};
+
 export default {
   title: 'Display/Apps/InstalledApp',
   component: InstalledApp,

@@ -1,45 +1,37 @@
+import { Box, Text } from 'grommet';
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
 
-const App = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.foreground};
-  margin-bottom: 14px;
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.colors.foreground};
-
-  &:hover {
-    cursor: pointer;
-    border: 1px solid rgb(92, 127, 154);
+const Wrapper = styled(Box)`
+  :hover {
+    box-shadow: ${({ theme }) => `0 0 0 1px ${theme.global.colors.text.dark}`};
   }
 
-  img {
-    width: 36px;
-    height: 36px;
-    margin-right: 16px;
-    float: left;
-    position: relative;
-    top: 3px;
-    border-radius: 5px;
-    background-color: #fff;
-  }
+  &[aria-disabled='true'] {
+    cursor: default;
 
-  small {
-    font-size: 12px;
+    :hover {
+      box-shadow: ${({ theme }) => `0 0 0 0 ${theme.global.colors.text.dark}`};
+    }
   }
 `;
 
-interface IInstalledAppProps {
+const AppIcon = styled.img`
+  width: 36px;
+  height: 36px;
+`;
+
+interface IInstalledAppProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {
   name: string;
   version: string;
   onIconError: React.ReactEventHandler<HTMLImageElement>;
   onClick: (e: React.MouseEvent) => void;
   logoUrl?: string;
+  deletionTimestamp?: string;
   iconErrors?: Record<string, boolean>;
 }
 
@@ -47,23 +39,54 @@ const InstalledApp: React.FC<IInstalledAppProps> = ({
   name,
   logoUrl,
   version,
+  deletionTimestamp,
   iconErrors,
   onIconError,
   onClick,
   ...rest
 }) => {
+  const isDeleting = typeof deletionTimestamp !== 'undefined';
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isDeleting) return;
+
+    onClick(e);
+  };
+
   return (
-    <App onClick={onClick} {...rest}>
-      <div className='details'>
+    <Wrapper
+      role='button'
+      aria-disabled={isDeleting}
+      tabIndex={isDeleting ? -1 : 0}
+      onClick={handleClick}
+      direction='row'
+      gap='small'
+      align='center'
+      pad='small'
+      round='xsmall'
+      background={isDeleting ? 'background-back' : 'background-front'}
+      {...rest}
+    >
+      <Box overflow='hidden' round='xsmall' background='white'>
         {logoUrl && !iconErrors?.hasOwnProperty(logoUrl) && (
-          <img alt={`${name} icon`} onError={onIconError} src={logoUrl} />
+          <AppIcon alt={`${name} icon`} onError={onIconError} src={logoUrl} />
         )}
+      </Box>
 
-        <span>{name}</span>
+      <Box>
+        <Text>{name}</Text>
 
-        <small>Chart version: {version || <NotAvailable />}</small>
-      </div>
-    </App>
+        {!isDeleting ? (
+          <Text size='xsmall' color='text-weak'>
+            Chart version: {version || <NotAvailable />}
+          </Text>
+        ) : (
+          <Text size='xsmall' color='text-xweak'>
+            Deleted {relativeDate(deletionTimestamp)}
+          </Text>
+        )}
+      </Box>
+    </Wrapper>
   );
 };
 
@@ -73,6 +96,7 @@ InstalledApp.propTypes = {
   onIconError: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   logoUrl: PropTypes.string,
+  deletionTimestamp: PropTypes.string,
   iconErrors: PropTypes.object as PropTypes.Requireable<
     Record<string, boolean>
   >,
