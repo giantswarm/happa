@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { Box, Text } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
@@ -11,9 +12,11 @@ import { Link } from 'react-router-dom';
 import { Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
+import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 
 import {
   createIngressApp,
@@ -22,6 +25,10 @@ import {
   getIngressAppCatalogEntryKey,
 } from './utils';
 
+const StyledFlashMessageComponent = styled(FlashMessageComponent)`
+  flex: 1 1 0;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -29,10 +36,6 @@ const Wrapper = styled.div`
   border-radius: ${({ theme }) => theme.border_radius};
   padding: ${({ theme }) => theme.spacingPx * 5}px;
   height: 90px;
-`;
-
-const Text = styled.span`
-  margin-left: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
 const StyledLink = styled(Link)`
@@ -55,6 +58,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const {
     data: appList,
     isValidating: appListIsValidating,
+    error: appListError,
     mutate: mutateAppList,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
     applicationv1alpha1.getAppListKey(appListGetOptions),
@@ -66,8 +70,6 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
       )
   );
 
-  // TODO(axbarsan): Handle app list error.
-
   const installedIngressApp = useMemo(() => findIngressApp(appList?.items), [
     appList?.items,
   ]);
@@ -75,21 +77,33 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const appCatalogEntryClient = useRef(clientFactory());
   const {
     data: ingressAppToInstall,
+    error: ingressAppToInstallError,
     isValidating: ingressAppToInstallIsValidating,
   } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponse>(
     getIngressAppCatalogEntryKey(appList?.items),
     () => getIngressAppCatalogEntry(appCatalogEntryClient.current, auth)
   );
 
-  // TODO(axbarsan): Handle app entry error.
+  const errorMessage = useMemo(() => {
+    if (appListError) {
+      return extractErrorMessage(appListError);
+    }
+
+    if (ingressAppToInstallError) {
+      return extractErrorMessage(ingressAppToInstallError);
+    }
+
+    return '';
+  }, [appListError, ingressAppToInstallError]);
 
   const [isInstalling, setIsInstalling] = useState(false);
 
   const isLoading =
-    isInstalling ||
-    (typeof appList === 'undefined' && appListIsValidating) ||
-    (typeof ingressAppToInstall === 'undefined' &&
-      ingressAppToInstallIsValidating);
+    !errorMessage &&
+    (isInstalling ||
+      (typeof appList === 'undefined' && appListIsValidating) ||
+      (typeof ingressAppToInstall === 'undefined' &&
+        ingressAppToInstallIsValidating));
 
   const handleClick = async () => {
     if (!ingressAppToInstall) return Promise.resolve();
@@ -108,13 +122,13 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
       setIsInstalling(false);
     } catch (err) {
-      const errorMessage = extractErrorMessage(err);
+      const message = extractErrorMessage(err);
 
       new FlashMessage(
         'Something went wrong while trying to install the ingress controller app.',
         messageType.ERROR,
         messageTTL.LONG,
-        errorMessage
+        message
       );
 
       setIsInstalling(false);
@@ -141,6 +155,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     return '';
   }, [installedIngressApp, ingressAppToInstall]);
 
+  const installationIsDisabled = Boolean(errorMessage) || !ingressAppToInstall;
+
   return (
     <Wrapper>
       {!installedIngressApp && (
@@ -148,16 +164,30 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           loading={isLoading}
           bsStyle='primary'
           loadingTimeout={0}
+          disabled={installationIsDisabled}
           onClick={handleClick}
         >
           Install Ingress Controller
         </Button>
       )}
 
-      {installedIngressApp && <Text>🎉 Ingress controller installed.</Text>}
+      {errorMessage && (
+        <StyledFlashMessageComponent type={FlashMessageType.Danger}>
+          <Box>
+            <Text weight='bold'>
+              There was a problem fetching apps in the cluster&apos;s namespace.
+            </Text>
+            <Text>{errorMessage}</Text>
+          </Box>
+        </StyledFlashMessageComponent>
+      )}
 
-      {ingressAppToInstall && (
-        <Text>
+      {!errorMessage && installedIngressApp && (
+        <Text>🎉 Ingress controller installed.</Text>
+      )}
+
+      {!errorMessage && ingressAppToInstall && (
+        <Text margin={{ left: 'small' }}>
           This will install the{' '}
           <StyledLink to={appDetailPath} href={appDetailPath}>
             NGINX Ingress Controller app {ingressAppToInstall.spec.version}
