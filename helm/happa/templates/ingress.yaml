@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: happa
@@ -23,10 +23,13 @@ spec:
   - host: {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
     http:
       paths:
-      - backend:
-          serviceName: happa
-          servicePort: 8000
-        path: /
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: happa
+            port:
+              number: 8000
   tls:
   - hosts:
     - {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
