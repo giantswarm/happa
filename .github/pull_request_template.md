@@ -1,31 +1,23 @@
-**IMPORTANT: The changelog for the next release is generated automatically, based on pull requests merged to `master`. In order to properly categorize the changes made, you should allocate a proper label to your pull request:**
+Release notes for happa are generated automatically, based on pull request titles and labels. Please provide a nice title and select the right labels for this PR. Thank you!
 
-- Introducing a new feature
+Relevant labels are:
 
+- Introduction of a new feature:
   - `kind/feature`
-
-- Changing existing functionality
-
+- Changes in existing functionality:
   - `kind/change`
   - `kind/ux-enhancement`
-
-- Soon-to-be removed features
-
+- Soon-to-be removed features:
   - `kind/deprecation`
-
-- Removing features
-
+- Removal of a user-facing feature:
   - `kind/removal`
-
-- Fixing bugs
-
+- Bugfix:
   - `kind/bug`
-
-- Fixing vulnerabilities
+- Mitigation of security vulnerabilities:
   - `kind/security`
 
-**Excluded from changelog**
+Excluded from changelog:
 
-- `dependencies` (Updating dependencies)
-- `kind/dev-change` (Changing development commands, file structure, etc.)
-- `kind/refactor` (Improving the implementation of a specific part of the codebase, without changing its functionality)
+- `dependencies` - Updating dependencies
+- `kind/dev-change` - Changing development commands, file structure, etc.
+- `kind/refactor` - Improving the implementation of a specific part of the codebase, without changing its functionality
