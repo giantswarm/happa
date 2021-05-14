@@ -16,7 +16,7 @@ Relevant labels are:
 - Mitigation of security vulnerabilities:
   - `kind/security`
 
-Excluded from changelog:
+PRs with any of these labels will be excluded from the release notes:
 
 - `dependencies` - Updating dependencies
 - `kind/dev-change` - Changing development commands, file structure, etc.
