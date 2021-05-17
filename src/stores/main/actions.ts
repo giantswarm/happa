@@ -326,8 +326,6 @@ export function resumeLogin(
     // Try to resume GS user first.
     const user = fetchUserFromStorage();
     if (user) {
-      // Remove MAPI user if it exists.
-      await auth.logout();
       dispatch(loginSuccess(user));
 
       return Promise.resolve();

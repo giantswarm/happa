@@ -26,10 +26,15 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
 }) => {
   const dispatch = useDispatch();
 
+  const onUserInvalid = useCallback(() => {
+    dispatch(push(MainRoutes.Login));
+    dispatch(logoutSuccess());
+  }, [dispatch]);
+
   const onUserLoaded = useCallback(
     (event: CustomEvent<IOAuth2User | null>) => {
       if (!event.detail) {
-        dispatch(logoutSuccess());
+        onUserInvalid();
 
         return;
       }
@@ -37,13 +42,8 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
       const user = mapOAuth2UserToUser(event.detail);
       dispatch(loginSuccess(user));
     },
-    [dispatch]
+    [onUserInvalid, dispatch]
   );
-
-  const onUserInvalid = useCallback(() => {
-    dispatch(push(MainRoutes.Login));
-    dispatch(logoutSuccess());
-  }, [dispatch]);
 
   useEffect(() => {
     auth.addEventListener(OAuth2Events.UserLoaded, onUserLoaded);
