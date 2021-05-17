@@ -1,7 +1,6 @@
 import { isJwtExpired } from 'lib/helpers';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { Middleware } from 'redux';
-import { logout } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 
 import { LoggedInUserTypes } from './types';
@@ -9,6 +8,10 @@ import { LoggedInUserTypes } from './types';
 export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
   // eslint-disable-next-line consistent-return
   return (store) => (next) => async (action) => {
+    if (action.type?.startsWith('LOGOUT_')) {
+      return next(action);
+    }
+
     const loggedInUser = getLoggedInUser(store.getState());
     if (!loggedInUser) {
       return next(action);
@@ -32,7 +35,7 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
 
       return next(action);
     } catch (err) {
-      await logout(auth)(next, store.getState);
+      await auth.logout();
     }
   };
 }
