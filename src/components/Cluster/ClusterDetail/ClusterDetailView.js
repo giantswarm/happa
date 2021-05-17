@@ -5,6 +5,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
+import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
@@ -288,6 +289,7 @@ class ClusterDetailView extends React.Component {
       loadingCluster,
       isAdmin,
       clusterIsAwaitingUpgrade,
+      user,
     } = this.props;
 
     const loading = loadingNodePools || loadingCluster;
@@ -381,7 +383,7 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                {this.props.user?.type === LoggedInUserTypes.MAPI ? (
+                {user?.type === LoggedInUserTypes.MAPI ? (
                   <ClusterDetailApps
                     clusterId={id}
                     releaseVersion={release_version}
@@ -400,13 +402,23 @@ class ClusterDetailView extends React.Component {
                 )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                <Ingress
-                  cluster={cluster}
-                  provider={provider}
-                  k8sEndpoint={cluster.api_endpoint}
-                  kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                  kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
-                />
+                {user?.type === LoggedInUserTypes.MAPI ? (
+                  <ClusterDetailIngress
+                    clusterID={cluster.id}
+                    provider={provider}
+                    k8sEndpoint={cluster.api_endpoint}
+                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                  />
+                ) : (
+                  <Ingress
+                    cluster={cluster}
+                    provider={provider}
+                    k8sEndpoint={cluster.api_endpoint}
+                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                  />
+                )}
               </Tab>
             </Tabs>
             {!isV5Cluster && (
