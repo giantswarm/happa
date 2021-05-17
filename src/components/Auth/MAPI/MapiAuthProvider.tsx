@@ -1,3 +1,4 @@
+import { push } from 'connected-react-router';
 import { IOAuth2Provider, OAuth2Events } from 'lib/OAuth2/OAuth2';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import PropTypes from 'prop-types';
@@ -9,6 +10,7 @@ import React, {
   useMemo,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { MainRoutes } from 'shared/constants/routes';
 import { loginSuccess, logoutSuccess } from 'stores/main/actions';
 import { mapOAuth2UserToUser } from 'stores/main/utils';
 
@@ -39,6 +41,7 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
   );
 
   const onUserInvalid = useCallback(() => {
+    dispatch(push(MainRoutes.Login));
     dispatch(logoutSuccess());
   }, [dispatch]);
 
@@ -46,11 +49,13 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
     auth.addEventListener(OAuth2Events.UserLoaded, onUserLoaded);
     auth.addEventListener(OAuth2Events.UserUnloaded, onUserInvalid);
     auth.addEventListener(OAuth2Events.SilentRenewError, onUserInvalid);
+    auth.addEventListener(OAuth2Events.UserSignedOut, onUserInvalid);
 
     return () => {
       auth.removeEventListener(OAuth2Events.UserLoaded, onUserLoaded);
       auth.removeEventListener(OAuth2Events.UserUnloaded, onUserInvalid);
       auth.removeEventListener(OAuth2Events.SilentRenewError, onUserInvalid);
+      auth.removeEventListener(OAuth2Events.UserSignedOut, onUserInvalid);
     };
   }, [onUserLoaded, onUserInvalid, auth]);
 
