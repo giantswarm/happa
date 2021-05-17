@@ -1,3 +1,4 @@
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { isJwtExpired } from 'lib/helpers';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { Middleware } from 'redux';
@@ -36,6 +37,13 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
       return next(action);
     } catch (err) {
       await auth.logout();
+
+      new FlashMessage(
+        'Your authentication token could not be renewed',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please log in again. If the problem persists, contact support: support@giantswarm.io'
+      );
     }
   };
 }

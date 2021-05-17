@@ -369,6 +369,8 @@ export function logout(
           const authTokensApi = new GiantSwarm.AuthTokensApi();
           await authTokensApi.deleteAuthToken();
 
+          dispatch(logoutSuccess());
+
           break;
         }
         case LoggedInUserTypes.MAPI:
@@ -376,8 +378,6 @@ export function logout(
 
           break;
       }
-
-      dispatch(logoutSuccess());
 
       return Promise.resolve();
     } catch (err) {
