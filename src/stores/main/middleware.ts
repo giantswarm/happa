@@ -11,9 +11,9 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
     const loggedInUser = getLoggedInUser(store.getState());
     switch (true) {
       case loggedInUser === null:
-      case loggedInUser!.type !== LoggedInUserTypes.MAPI:
+      case loggedInUser?.type !== LoggedInUserTypes.MAPI:
       case action.type?.startsWith('LOGOUT_'):
-      case !isJwtExpired(loggedInUser!.auth.token):
+      case loggedInUser && !isJwtExpired(loggedInUser.auth.token):
         return next(action);
     }
 
