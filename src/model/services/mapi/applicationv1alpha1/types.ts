@@ -94,3 +94,95 @@ export interface IAppList extends metav1.IList<IApp> {
   apiVersion: 'application.giantswarm.io/v1alpha1';
   kind: typeof AppList;
 }
+
+export interface IAppCatalogSpecStorage {
+  type: string;
+  URL: string;
+}
+
+export interface IAppCatalogSpecConfigSecret {
+  name: string;
+  namespace: string;
+}
+
+export interface IAppCatalogSpecConfigConfigMap {
+  name: string;
+  namespace: string;
+}
+
+export interface IAppCatalogSpecConfig {
+  configMap?: IAppCatalogSpecConfigConfigMap;
+  secret?: IAppCatalogSpecConfigSecret;
+}
+
+export interface IAppCatalogSpec {
+  title: string;
+  description: string;
+  logoURL: string;
+  storage: IAppCatalogSpecStorage;
+  config?: IAppCatalogSpecConfig;
+}
+
+export const AppCatalog = 'AppCatalog';
+
+export interface IAppCatalog {
+  apiVersion: 'application.giantswarm.io/v1alpha1';
+  kind: typeof AppCatalog;
+  metadata: metav1.IObjectMeta;
+  spec: IAppCatalogSpec;
+}
+
+export const AppCatalogList = 'AppCatalogList';
+
+export interface IAppCatalogList extends metav1.IList<IAppCatalog> {
+  apiVersion: 'application.giantswarm.io/v1alpha1';
+  kind: typeof AppCatalogList;
+}
+
+export type Provider = 'aws' | 'azure' | 'kvm';
+
+export interface IAppCatalogEntrySpecRestrictions {
+  clusterSingleton?: boolean;
+  fixedNamespace?: string;
+  gpuInstance?: string;
+  compatibleProviders?: Provider[];
+  namespaceSingleton?: boolean;
+}
+
+export interface IAppCatalogEntrySpecChart {
+  apiVersion: string;
+  home?: string;
+  icon?: string;
+}
+
+export interface IAppCatalogEntrySpecCatalog {
+  name: string;
+  namespace?: string;
+}
+
+export interface IAppCatalogEntrySpec {
+  appName: string;
+  appVersion: string;
+  version: string;
+  catalog: IAppCatalogEntrySpecCatalog;
+  chart: IAppCatalogEntrySpecChart;
+  dateCreated: string | null;
+  dateUpdated: string | null;
+  restrictions?: IAppCatalogEntrySpecRestrictions;
+}
+
+export const AppCatalogEntry = 'AppCatalogEntry';
+
+export interface IAppCatalogEntry {
+  apiVersion: 'application.giantswarm.io/v1alpha1';
+  kind: typeof AppCatalogEntry;
+  metadata: metav1.IObjectMeta;
+  spec: IAppCatalogEntrySpec;
+}
+
+export const AppCatalogEntryList = 'AppCatalogEntryList';
+
+export interface IAppCatalogEntryList extends metav1.IList<IAppCatalogEntry> {
+  apiVersion: 'application.giantswarm.io/v1alpha1';
+  kind: typeof AppCatalogEntryList;
+}

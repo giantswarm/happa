@@ -1,0 +1,214 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { Box, Text } from 'grommet';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import RoutePath from 'lib/routePath';
+import { extractErrorMessage } from 'MAPI/organizations/AccessControl/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import PropTypes from 'prop-types';
+import React, { useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Constants } from 'shared/constants';
+import { AppsRoutes } from 'shared/constants/routes';
+import styled from 'styled-components';
+import { FlashMessageType } from 'styles';
+import useSWR from 'swr';
+import Button from 'UI/Controls/Button';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
+
+import {
+  createIngressApp,
+  findIngressApp,
+  getIngressAppCatalogEntry,
+  getIngressAppCatalogEntryKey,
+} from './utils';
+
+const StyledFlashMessageComponent = styled(FlashMessageComponent)`
+  flex: 1 1 0;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.darkBlueLighter1};
+  border-radius: ${({ theme }) => theme.border_radius};
+  padding: ${({ theme }) => theme.spacingPx * 5}px;
+  height: 90px;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: underline;
+`;
+
+interface IInstallIngressButtonProps
+  extends React.ComponentPropsWithoutRef<'div'> {
+  clusterID: string;
+}
+
+const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
+  clusterID,
+}) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const appListClient = useRef(clientFactory());
+  const appListGetOptions = { namespace: clusterID };
+  const {
+    data: appList,
+    isValidating: appListIsValidating,
+    error: appListError,
+    mutate: mutateAppList,
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
+    applicationv1alpha1.getAppListKey(appListGetOptions),
+    () =>
+      applicationv1alpha1.getAppList(
+        appListClient.current,
+        auth,
+        appListGetOptions
+      )
+  );
+
+  const installedIngressApp = useMemo(() => findIngressApp(appList?.items), [
+    appList?.items,
+  ]);
+
+  const appCatalogEntryClient = useRef(clientFactory());
+  const {
+    data: ingressAppToInstall,
+    error: ingressAppToInstallError,
+    isValidating: ingressAppToInstallIsValidating,
+  } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponse>(
+    getIngressAppCatalogEntryKey(appList?.items),
+    () => getIngressAppCatalogEntry(appCatalogEntryClient.current, auth)
+  );
+
+  const errorMessage = useMemo(() => {
+    if (appListError) {
+      return extractErrorMessage(appListError);
+    }
+
+    if (ingressAppToInstallError) {
+      return extractErrorMessage(ingressAppToInstallError);
+    }
+
+    return '';
+  }, [appListError, ingressAppToInstallError]);
+
+  const [isInstalling, setIsInstalling] = useState(false);
+
+  let isLoading = false;
+  switch (true) {
+    case !errorMessage && isInstalling:
+      isLoading = true;
+      break;
+    case !errorMessage && typeof appList === 'undefined' && appListIsValidating:
+      isLoading = true;
+      break;
+    case !errorMessage &&
+      typeof ingressAppToInstall === 'undefined' &&
+      ingressAppToInstallIsValidating:
+      isLoading = true;
+      break;
+  }
+
+  const handleClick = async () => {
+    if (!ingressAppToInstall) return Promise.resolve();
+
+    try {
+      setIsInstalling(true);
+
+      await createIngressApp(
+        clientFactory,
+        auth,
+        clusterID,
+        ingressAppToInstall
+      );
+
+      mutateAppList();
+
+      setIsInstalling(false);
+    } catch (err) {
+      const message = extractErrorMessage(err);
+
+      new FlashMessage(
+        'Something went wrong while trying to install the ingress controller app.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        message
+      );
+
+      setIsInstalling(false);
+    }
+
+    return Promise.resolve();
+  };
+
+  const appDetailPath = useMemo(() => {
+    if (installedIngressApp) {
+      return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        app: installedIngressApp.spec.name,
+        version: installedIngressApp.spec.version,
+      });
+    } else if (ingressAppToInstall) {
+      return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        app: ingressAppToInstall.spec.appName,
+        version: ingressAppToInstall.spec.version,
+      });
+    }
+
+    return '';
+  }, [installedIngressApp, ingressAppToInstall]);
+
+  const installationIsDisabled = Boolean(errorMessage) || !ingressAppToInstall;
+
+  return (
+    <Wrapper>
+      {!installedIngressApp && (
+        <Button
+          loading={isLoading}
+          bsStyle='primary'
+          loadingTimeout={0}
+          disabled={installationIsDisabled}
+          onClick={handleClick}
+        >
+          Install Ingress Controller
+        </Button>
+      )}
+
+      {errorMessage && (
+        <StyledFlashMessageComponent type={FlashMessageType.Danger}>
+          <Box>
+            <Text weight='bold'>
+              There was a problem fetching apps in the cluster&apos;s namespace.
+            </Text>
+            <Text>{errorMessage}</Text>
+          </Box>
+        </StyledFlashMessageComponent>
+      )}
+
+      {!errorMessage && installedIngressApp && (
+        <Text>🎉 Ingress controller installed.</Text>
+      )}
+
+      {!errorMessage && ingressAppToInstall && (
+        <Text margin={{ left: 'small' }}>
+          This will install the{' '}
+          <StyledLink to={appDetailPath} href={appDetailPath}>
+            NGINX Ingress Controller app {ingressAppToInstall.spec.version}
+          </StyledLink>{' '}
+          on cluster <ClusterIDLabel clusterID={clusterID} />
+        </Text>
+      )}
+    </Wrapper>
+  );
+};
+
+InstallIngressButton.propTypes = {
+  clusterID: PropTypes.string.isRequired,
+};
+
+export default InstallIngressButton;

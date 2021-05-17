@@ -46,3 +46,17 @@ export interface INodeAddress {
   type: string;
   address: string;
 }
+
+export type SecretType = string;
+
+export const Secret = 'Secret';
+
+export interface ISecret {
+  apiVersion: 'v1';
+  kind: typeof Secret;
+  metadata: metav1.IObjectMeta;
+  immutable?: boolean;
+  data?: Record<string, string>;
+  stringData?: Record<string, string>;
+  type?: SecretType;
+}

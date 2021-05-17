@@ -266,31 +266,18 @@ export const computeCapabilities = (state: IState) => (
   releaseVersion: string,
   provider: PropertiesOf<typeof Providers>
 ): IClusterCapabilities => {
-  let hasOptionalIngress = false;
   let supportsHAMasters = false;
 
   const minHAMastersVersion = getMinHAMastersVersion(state);
 
   switch (provider) {
     case Providers.AWS:
-      hasOptionalIngress = compare(releaseVersion, '10.0.99') === 1;
       supportsHAMasters = compare(releaseVersion, minHAMastersVersion) >= 0;
-
-      break;
-
-    case Providers.AZURE:
-      hasOptionalIngress = compare(releaseVersion, '12.0.0') >= 0;
-
-      break;
-
-    case Providers.KVM:
-      hasOptionalIngress = compare(releaseVersion, '12.2.0') >= 0;
 
       break;
   }
 
   return {
-    hasOptionalIngress,
     supportsHAMasters,
     supportsNodePoolAutoscaling: supportsNodePoolAutoscaling(
       provider,
@@ -301,6 +288,7 @@ export const computeCapabilities = (state: IState) => (
       releaseVersion
     ),
     supportsAlikeInstances: supportsAlikeInstances(provider, releaseVersion),
+    hasOptionalIngress: supportsOptionalIngress(provider, releaseVersion),
   };
 };
 
@@ -470,4 +458,19 @@ export function reconcileClustersAwaitingUpgrade(
   }
 
   return awaitingUpgrade;
+}
+
+export function supportsOptionalIngress(
+  provider: PropertiesOf<typeof Providers>,
+  releaseVersion: string
+): boolean {
+  switch (true) {
+    case provider === Providers.AWS && compare(releaseVersion, '10.1.0') >= 0:
+    case provider === Providers.AZURE && compare(releaseVersion, '12.0.0') >= 0:
+    case provider === Providers.KVM && compare(releaseVersion, '12.2.0') >= 0:
+      return true;
+
+    default:
+      return false;
+  }
 }

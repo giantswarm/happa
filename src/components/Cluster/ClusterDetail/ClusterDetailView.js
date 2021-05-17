@@ -4,6 +4,8 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
+import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
+import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
@@ -31,6 +33,7 @@ import {
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
+import { LoggedInUserTypes } from 'stores/main/types';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
@@ -286,13 +289,14 @@ class ClusterDetailView extends React.Component {
       loadingCluster,
       isAdmin,
       clusterIsAwaitingUpgrade,
+      user,
     } = this.props;
 
     const loading = loadingNodePools || loadingCluster;
 
     if (!cluster) return null;
     const { id, owner, release_version } = cluster;
-    const release = releases[release_version] ?? null;
+    const release = releases[release_version];
     const tabsPaths = this.getPathsForTabs(id, owner);
 
     const clusterIsCreating = isClusterCreating(cluster);
@@ -379,25 +383,42 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                <ClusterApps
-                  clusterId={id}
-                  dispatch={dispatch}
-                  installedApps={cluster.apps}
-                  release={release}
-                  showInstalledAppsBlock={
-                    Object.keys(this.props.catalogs.items).length > 0
-                  }
-                  hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
-                />
+                {user?.type === LoggedInUserTypes.MAPI ? (
+                  <ClusterDetailApps
+                    clusterId={id}
+                    releaseVersion={release_version}
+                  />
+                ) : (
+                  <ClusterApps
+                    clusterId={id}
+                    dispatch={dispatch}
+                    installedApps={cluster.apps}
+                    release={release}
+                    showInstalledAppsBlock={
+                      Object.keys(this.props.catalogs.items).length > 0
+                    }
+                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
+                  />
+                )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                <Ingress
-                  cluster={cluster}
-                  provider={provider}
-                  k8sEndpoint={cluster.api_endpoint}
-                  kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                  kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
-                />
+                {user?.type === LoggedInUserTypes.MAPI ? (
+                  <ClusterDetailIngress
+                    clusterID={cluster.id}
+                    provider={provider}
+                    k8sEndpoint={cluster.api_endpoint}
+                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                  />
+                ) : (
+                  <Ingress
+                    cluster={cluster}
+                    provider={provider}
+                    k8sEndpoint={cluster.api_endpoint}
+                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                  />
+                )}
               </Tab>
             </Tabs>
             {!isV5Cluster && (
@@ -433,7 +454,7 @@ ClusterDetailView.contextTypes = {
 
 ClusterDetailView.propTypes = {
   cluster: PropTypes.object,
-
+  user: PropTypes.object,
   canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,

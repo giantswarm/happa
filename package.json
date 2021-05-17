@@ -181,7 +181,7 @@
     "@types/serialize-javascript": "^5.0.0",
     "@types/styled-components": "^5.1.9",
     "@types/superagent": "^4.1.10",
-    "@types/underscore": "^1.11.0",
+    "@types/underscore": "^1.11.1",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "4.21.0",
     "@typescript-eslint/parser": "4.22.0",
@@ -242,7 +242,9 @@
     "kind-of": "^6.0.3",
     "lodash": "^4.17.21",
     "http-proxy": "^1.18.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "trim": "^0.0.3",
+    "underscore": "1.13.1"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [

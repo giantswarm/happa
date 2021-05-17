@@ -123,8 +123,8 @@ const theme = deepMerge(generate(16), {
         light: '#234a61',
       },
       'background-back': {
-        dark: 'background',
-        light: 'background',
+        dark: '#204358',
+        light: '#204358',
       },
       'background-front': {
         dark: '#375b70',

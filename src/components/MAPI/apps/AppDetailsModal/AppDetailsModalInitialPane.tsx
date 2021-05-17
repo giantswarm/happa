@@ -1,4 +1,7 @@
+import YAMLFileUpload from 'Cluster/ClusterDetail/AppDetailsModal/YAMLFileUpload';
 import { spinner } from 'images';
+import { VersionImpl } from 'lib/Version';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -8,8 +11,6 @@ import Button from 'UI/Controls/Button';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import DetailItem from 'UI/Layout/DetailList';
 import Truncated from 'UI/Util/Truncated';
-
-import YAMLFileUpload from './YamlFileUpload';
 
 const Upper = styled.div`
   display: flex;
@@ -21,49 +22,69 @@ const Upper = styled.div`
   }
 `;
 
-const InitialPane = (props) => {
+function isTestRelease(releaseVersion: string): boolean {
+  const version = new VersionImpl(releaseVersion);
+
+  return version.getPreRelease().length > 0;
+}
+
+type ConfigChangeHandler = (values: string, done: () => void) => void;
+
+interface IAppDetailsModalInitialPaneProps {
+  app: applicationv1alpha1.IApp;
+  appCatalogEntriesIsLoading: boolean;
+  dispatchCreateAppConfig: ConfigChangeHandler;
+  dispatchCreateAppSecret: ConfigChangeHandler;
+  dispatchUpdateAppConfig: ConfigChangeHandler;
+  dispatchUpdateAppSecret: ConfigChangeHandler;
+  showDeleteAppConfigPane: () => void;
+  showDeleteAppPane: () => void;
+  showDeleteAppSecretPane: () => void;
+  showEditChartVersionPane: (version?: string) => void;
+  appCatalogEntries?: applicationv1alpha1.IAppCatalogEntry[];
+}
+
+const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
+  props
+) => {
   return (
-    <div data-testid='app-details-modal'>
+    <div>
       <Upper>
         <DetailItem title='CATALOG' className='code'>
           <span>{props.app.spec.catalog}</span>
         </DetailItem>
 
         <DetailItem title='CHART VERSION'>
-          {/* If we have a catalog, but we're still loading the appVersions
-              then show a loading spinner.
-           */}
-          {!props.catalogNotFound && !props.appVersions && (
+          {props.appCatalogEntriesIsLoading && (
             <img className='loader' width='25px' src={spinner} />
           )}
 
-          {/* If we don't have a catalog, don't show a version picker because
-              we wil never know what versions are available.
-           */}
-          {props.catalogNotFound && (
-            <OverlayTrigger
-              overlay={
-                <Tooltip id='tooltip'>
-                  Unable to fetch versions for this app. Could not find the
-                  corresponding catalog. Changing versions is disabled.
-                </Tooltip>
-              }
-              placement='top'
-            >
-              <span>
-                {props.app.spec.version} <i className='fa fa-warning' />
-              </span>
-            </OverlayTrigger>
-          )}
+          {typeof props.appCatalogEntries === 'undefined' &&
+            !props.appCatalogEntriesIsLoading && (
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id='tooltip'>
+                    Unable to fetch versions for this app. Could not find the
+                    corresponding catalog. Changing versions is disabled.
+                  </Tooltip>
+                }
+                placement='top'
+              >
+                <span>
+                  <Truncated as='span'>{props.app.spec.version}</Truncated>{' '}
+                  <i className='fa fa-warning' />
+                </span>
+              </OverlayTrigger>
+            )}
 
-          {/* If we have app versions loaded, show the VersionPicker */}
-          {props.appVersions && (
+          {props.appCatalogEntries && (
             <VersionPicker
               selectedVersion={props.app.spec.version}
-              versions={props.appVersions.map((v) => ({
-                chartVersion: v.version,
-                created: v.created,
-                includedVersion: v.appVersion,
+              versions={props.appCatalogEntries.map((e) => ({
+                chartVersion: e.spec.version,
+                created: e.spec.dateCreated ?? '',
+                includesVersion: e.spec.appVersion,
+                test: isTestRelease(e.spec.version),
               }))}
               onChange={props.showEditChartVersionPane}
             />
@@ -75,10 +96,10 @@ const InitialPane = (props) => {
         </DetailItem>
 
         <DetailItem title='APP VERSION' className='code'>
-          {props.app.status.app_version === '' ? (
-            <span>Information pending...</span>
+          {props.app.status?.appVersion ? (
+            <Truncated as='span'>{props.app.status?.appVersion}</Truncated>
           ) : (
-            <Truncated as='span'>{props.app.status.app_version}</Truncated>
+            <span>Information pending...</span>
           )}
         </DetailItem>
 
@@ -92,7 +113,7 @@ const InitialPane = (props) => {
       </Upper>
 
       <DetailItem title='user level config values' className='well'>
-        {props.app.spec.user_config.configmap.name !== '' ? (
+        {props.app.spec.userConfig?.configMap?.name ? (
           <>
             <span>User level config values have been set</span>
 
@@ -122,7 +143,7 @@ const InitialPane = (props) => {
       </DetailItem>
 
       <DetailItem title='user level secret values' className='well'>
-        {props.app.spec.user_config.secret.name !== '' ? (
+        {props.app.spec.userConfig?.secret?.name ? (
           <>
             <span>User level secret values have been set</span>
 
@@ -161,18 +182,19 @@ const InitialPane = (props) => {
   );
 };
 
-InitialPane.propTypes = {
-  app: PropTypes.object,
-  catalogNotFound: PropTypes.bool,
-  appVersions: PropTypes.array,
-  dispatchCreateAppConfig: PropTypes.func,
-  dispatchCreateAppSecret: PropTypes.func,
-  dispatchUpdateAppConfig: PropTypes.func,
-  dispatchUpdateAppSecret: PropTypes.func,
-  showDeleteAppConfigPane: PropTypes.func,
-  showDeleteAppPane: PropTypes.func,
-  showDeleteAppSecretPane: PropTypes.func,
-  showEditChartVersionPane: PropTypes.func,
+AppDetailsModalInitialPane.propTypes = {
+  app: (PropTypes.object as PropTypes.Requireable<applicationv1alpha1.IApp>)
+    .isRequired,
+  appCatalogEntriesIsLoading: PropTypes.bool.isRequired,
+  dispatchCreateAppConfig: PropTypes.func.isRequired,
+  dispatchCreateAppSecret: PropTypes.func.isRequired,
+  dispatchUpdateAppConfig: PropTypes.func.isRequired,
+  dispatchUpdateAppSecret: PropTypes.func.isRequired,
+  showDeleteAppConfigPane: PropTypes.func.isRequired,
+  showDeleteAppPane: PropTypes.func.isRequired,
+  showDeleteAppSecretPane: PropTypes.func.isRequired,
+  showEditChartVersionPane: PropTypes.func.isRequired,
+  appCatalogEntries: PropTypes.array,
 };
 
-export default InitialPane;
+export default AppDetailsModalInitialPane;

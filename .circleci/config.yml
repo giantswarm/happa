@@ -5,7 +5,7 @@ orbs:
 defaults: &defaults
   working_directory: ~/happa
   docker:
-    - image: circleci/node:12-buster
+    - image: circleci/node:14-buster
 
 job_filters: &job_filters
   filters:

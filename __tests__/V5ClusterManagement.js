@@ -452,26 +452,24 @@ scales node pools correctly`, async () => {
     expect(newNodePool).toBeInTheDocument();
   });
 
-  it('renders an error message if there was an error loading apps', () => {
+  it('renders an error message if there was an error loading apps', async () => {
     getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
 
     const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail.Home,
+      OrganizationsRoutes.Clusters.Detail.Apps,
       {
         orgId: ORGANIZATION,
         clusterId: V5_CLUSTER.id,
       }
     );
 
-    const { queryByTestId } = renderRouteWithStore(clusterDetailPath, {
+    renderRouteWithStore(clusterDetailPath, {
       errorsByEntity: {
-        [V5_CLUSTER.id]: { CLUSTER_LOAD_APPS: 'Error loading apps' },
+        [V5_CLUSTER.id]: { LOAD_CLUSTER_APPS: 'Error loading apps' },
       },
     });
 
-    expect(queryByTestId('error-loading-apps')).toBeDefined();
-    expect(queryByTestId('installed-apps')).toBeNull();
-    expect(queryByTestId('no-apps-found')).toBeNull();
+    expect(await screen.findByText('Error Loading Apps:')).toBeInTheDocument();
   });
 
   it(`renders the master nodes row for an unsupported release version`, async () => {
