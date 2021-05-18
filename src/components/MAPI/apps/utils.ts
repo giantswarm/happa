@@ -477,26 +477,6 @@ export async function updateAppVersion(
   return applicationv1alpha1.updateApp(client, auth, app);
 }
 
-export function filterUserInstalledApps(
-  apps: applicationv1alpha1.IApp[],
-  supportsOptionalIngress: boolean
-): applicationv1alpha1.IApp[] {
-  return apps.filter((app) => {
-    switch (true) {
-      case supportsOptionalIngress &&
-        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
-        return true;
-
-      case app.metadata.labels?.[applicationv1alpha1.labelManagedBy] ===
-        'cluster-operator':
-        return false;
-
-      default:
-        return true;
-    }
-  });
-}
-
 export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
   const apps: Record<string, Record<string, AppConstants.IAppMetaApp>> = {
     essentials: {},
@@ -541,4 +521,93 @@ export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
   }
 
   return apps;
+}
+
+export function filterUserInstalledApps(
+  apps: applicationv1alpha1.IApp[],
+  supportsOptionalIngress: boolean
+): applicationv1alpha1.IApp[] {
+  return apps.filter((app) => {
+    switch (true) {
+      case supportsOptionalIngress &&
+        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
+        return true;
+
+      case app.metadata.labels?.[applicationv1alpha1.labelManagedBy] ===
+        'cluster-operator':
+        return false;
+
+      default:
+        return true;
+    }
+  });
+}
+
+export function findIngressApp(
+  apps?: applicationv1alpha1.IApp[]
+): applicationv1alpha1.IApp | null {
+  const ingressApp = apps?.find((app) => {
+    return (
+      app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME &&
+      app.spec.catalog === Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME
+    );
+  });
+
+  if (!ingressApp) return null;
+
+  return ingressApp;
+}
+
+const ingressAppCatalogEntryListGetOptions = {
+  labelSelector: {
+    matchingLabels: {
+      [applicationv1alpha1.labelAppName]:
+        Constants.INSTALL_INGRESS_TAB_APP_NAME,
+      [applicationv1alpha1.labelAppCatalog]:
+        Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+      [applicationv1alpha1.labelLatest]: 'true',
+    },
+  },
+};
+
+export async function getIngressAppCatalogEntry(
+  client: IHttpClient,
+  auth: IOAuth2Provider
+) {
+  const appList = await applicationv1alpha1.getAppCatalogEntryList(
+    client,
+    auth,
+    ingressAppCatalogEntryListGetOptions
+  );
+  if (appList.items.length < 1) return null;
+
+  return appList.items[0];
+}
+
+export function getIngressAppCatalogEntryKey(
+  existingApps?: applicationv1alpha1.IApp[]
+) {
+  const existingIngressApp = findIngressApp(existingApps);
+  if (existingIngressApp) return null;
+
+  return applicationv1alpha1.getAppCatalogEntryListKey(
+    ingressAppCatalogEntryListGetOptions
+  );
+}
+
+export function createIngressApp(
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusterID: string,
+  ingressAppCatalogEntry: applicationv1alpha1.IAppCatalogEntry
+) {
+  return createApp(clientFactory, auth, clusterID, {
+    name: ingressAppCatalogEntry.spec.appName,
+    catalogName: ingressAppCatalogEntry.spec.catalog.name,
+    chartName: ingressAppCatalogEntry.spec.appName,
+    version: ingressAppCatalogEntry.spec.version,
+    namespace: 'kube-system',
+    configMapContents: '',
+    secretContents: '',
+  });
 }

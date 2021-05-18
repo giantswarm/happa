@@ -54,7 +54,7 @@ class TestOAuth2 implements IOAuth2Provider {
 
   public async logout(): Promise<void> {
     this.loggedInUser = null;
-    this.dispatchEvent(OAuth2Events.UserSignedOut);
+    this.dispatchEvent(OAuth2Events.UserUnloaded);
 
     return Promise.resolve();
   }
