@@ -140,7 +140,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.13.16",
-    "@babel/preset-env": "7.13.12",
+    "@babel/preset-env": "7.14.2",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
     "@sentry/webpack-plugin": "^1.15.1",
