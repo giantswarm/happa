@@ -143,6 +143,7 @@
     "@babel/preset-env": "7.13.12",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
+    "@sentry/webpack-plugin": "^1.15.1",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-docs": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
