@@ -20,6 +20,7 @@ whitelist: &whitelist
     - storybook-static/*
     - node_modules/*
     - VERSION
+    - .sentry_release_version
 
 image_name: &image_name quay.io/giantswarm/happa
 image_name_fe_docs: &image_name_fe_docs quay.io/giantswarm/fe-docs
@@ -30,6 +31,10 @@ workflows:
   build:
     jobs:
       - checkout:
+          <<: *job_filters
+      - gather-facts:
+          requires:
+            - checkout
           <<: *job_filters
       - test:
           requires:
@@ -49,7 +54,7 @@ workflows:
           <<: *job_filters
       - build:
           requires:
-            - checkout
+            - gather-facts
           <<: *job_filters
       - build-container:
           requires:
@@ -231,6 +236,31 @@ jobs:
           root: ~/happa
           <<: *whitelist
 
+  gather-facts:
+    executor: architect/architect
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
+
+      - run:
+          name: Create VERSION file
+          command: |
+            echo -n "$(architect project version)" > VERSION
+            echo "$(cat VERSION)"
+
+      - run:
+          name: Determine Sentry project release version
+          command: |
+            echo -n "happa@$(cat VERSION)" > .sentry_release_version
+            echo "$(cat .sentry_release_version)"
+
+      - persist_to_workspace:
+          root: ~/happa
+          <<: *whitelist
+
   typecheck:
     <<: *defaults
 
@@ -285,7 +315,7 @@ jobs:
           command: yarn run test
 
   build:
-    executor: architect/architect
+    <<: *defaults
     resource_class: xlarge
 
     steps:
@@ -293,18 +323,6 @@ jobs:
 
       - attach_workspace:
           at: ~/happa
-
-      - run:
-          name: Create VERSION file
-          command: |
-            echo -n "$(architect project version)" > VERSION
-            echo "$(cat VERSION)"
-
-      - run:
-          name: Determine Sentry project release version
-          command: |
-            echo -n "happa@$(cat VERSION)" > .sentry_release_version
-            echo "$(cat .sentry_release_version)"
 
       - run:
           name: Build web application
