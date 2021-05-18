@@ -295,19 +295,23 @@ jobs:
           at: ~/happa
 
       - run:
+          name: Determine version
+          command: |
+            echo 'export HAPPA_VERSION=$(architect project version)' >> $BASH_ENV
+            source $BASH_ENV
+            echo $HAPPA_VERSION
+
+      - run:
           name: Build web application
-          command: NODE_ENV=production yarn run dist
+          command: yarn run dist
+          environment:
+            NODE_ENV: production
+            SENTRY_UPLOAD_SOURCEMAPS: 'true'
 
       - run:
           name: Create VERSION file
           command: |
-            tag=$(git tag --points-at HEAD)
-            if [ -z "$tag" ]
-            then
-              git rev-parse HEAD > VERSION
-            else
-              git tag --points-at HEAD | tr '\n' ' ' > VERSION
-            fi
+            echo -n "${HAPPA_VERSION}" > VERSION
 
       - persist_to_workspace:
           root: ~/happa
