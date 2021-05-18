@@ -302,6 +302,13 @@ jobs:
             echo $HAPPA_VERSION
 
       - run:
+          name: Determine Sentry project release version
+          command: |
+            echo 'export SENTRY_RELEASE_VERSION="happa@${HAPPA_VERSION}"' >> $BASH_ENV
+            source $BASH_ENV
+            echo $SENTRY_RELEASE_VERSION
+
+      - run:
           name: Build web application
           command: yarn run dist
           environment:
