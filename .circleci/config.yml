@@ -295,30 +295,24 @@ jobs:
           at: ~/happa
 
       - run:
-          name: Determine version
+          name: Create VERSION file
           command: |
-            echo 'export HAPPA_VERSION=$(architect project version)' >> $BASH_ENV
-            source $BASH_ENV
-            echo $HAPPA_VERSION
+            echo -n "$(architect project version)" > VERSION
+            echo "$(cat VERSION)"
 
       - run:
           name: Determine Sentry project release version
           command: |
-            echo 'export SENTRY_RELEASE_VERSION="happa@${HAPPA_VERSION}"' >> $BASH_ENV
-            source $BASH_ENV
-            echo $SENTRY_RELEASE_VERSION
+            echo -n "happa@$(cat VERSION)" > .sentry_release_version
+            echo "$(cat .sentry_release_version)"
 
       - run:
           name: Build web application
-          command: yarn run dist
+          command: SENTRY_RELEASE_VERSION="$(cat .sentry_release_version)" yarn run dist
           environment:
             NODE_ENV: production
             SENTRY_UPLOAD_SOURCEMAPS: 'true'
 
-      - run:
-          name: Create VERSION file
-          command: |
-            echo -n "${HAPPA_VERSION}" > VERSION
 
       - persist_to_workspace:
           root: ~/happa
@@ -341,7 +335,7 @@ jobs:
             IMAGE_NAME: *image_name
           name: Generate container image tag
           command: |
-            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name
+            echo -n "${IMAGE_NAME}:$(cat VERSION)" > .docker_image_name
 
       - run:
           name: Build Docker image
