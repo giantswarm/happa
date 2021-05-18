@@ -1,31 +1,41 @@
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { VersionImpl } from 'lib/Version';
 import { Constants } from 'shared/constants';
 
-export function isCommitHash(version: string): boolean {
-  // eslint-disable-next-line no-magic-numbers
-  return version.length > 30;
-}
-
 export function formatVersion(version: string): string {
-  if (isCommitHash(version)) {
-    // eslint-disable-next-line no-magic-numbers
-    return version.substring(0, 5);
-  }
+  try {
+    const semverVersion = new VersionImpl(version);
 
-  return version;
+    if (semverVersion.getPreRelease().length > 0) {
+      return [
+        semverVersion.getMajor(),
+        '.',
+        semverVersion.getMinor(),
+        '.',
+        semverVersion.getPatch(),
+        '-',
+        semverVersion.getPreRelease().slice(0, 5),
+      ].join('');
+    }
+
+    return version;
+  } catch {
+    return 'development';
+  }
 }
 
 export function getReleaseURL(version: string): string {
-  let URL = '';
-  const isHash = isCommitHash(version);
+  try {
+    const semverVersion = new VersionImpl(version);
 
-  if (isHash) {
-    URL = `https://github.com/giantswarm/happa/commit/${version}`;
-  } else {
-    URL = `https://docs.giantswarm.io/changes/web-ui/happa/${version}/`;
+    if (semverVersion.getPreRelease().length > 0) {
+      return `https://github.com/giantswarm/happa/commit/${semverVersion.getPreRelease()}`;
+    }
+
+    return `https://docs.giantswarm.io/changes/web-ui/happa/${version}/`;
+  } catch {
+    return 'https://github.com/giantswarm/happa';
   }
-
-  return URL;
 }
 
 export function getVersionTooltipMessage(

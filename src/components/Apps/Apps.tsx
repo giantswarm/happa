@@ -1,6 +1,7 @@
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import Route from 'Route';
 import { AppsRoutes } from 'shared/constants/routes';
 
 import AppDetail from './AppDetail/AppDetail';

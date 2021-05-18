@@ -1,5 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import Route from 'Route';
 import { MainRoutes } from 'shared/constants/routes';
 
 import AdminLogin from './Auth/AdminLogin';

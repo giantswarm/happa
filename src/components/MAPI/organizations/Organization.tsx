@@ -1,13 +1,8 @@
 import Cluster from 'Cluster/Cluster';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router';
+import { Redirect, Switch, useParams, useRouteMatch } from 'react-router';
+import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import OrganizationDetail from './OrganizationDetail';

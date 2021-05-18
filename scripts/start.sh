@@ -58,6 +58,28 @@ if [ -n "$MAPI_AUTH_ADMIN_GROUP" ]; then
   sed -i "s|mapiAuthAdminGroup: .*|mapiAuthAdminGroup: '$MAPI_AUTH_ADMIN_GROUP',|" /www/index.html
 fi
 
+if [ -n "$SENTRY_DSN" ]; then
+  sed -i "s|sentryDsn: .*|sentryDsn: '$SENTRY_DSN',|" /www/index.html
+fi
+
+if [ -n "$SENTRY_ENVIRONMENT" ]; then
+  sed -i "s|sentryEnvironment: .*|sentryEnvironment: '$SENTRY_ENVIRONMENT',|" /www/index.html
+fi
+
+if [ -n "$SENTRY_RELEASE_VERSION" ]; then
+  sed -i "s|sentryReleaseVersion: .*|sentryReleaseVersion: '$SENTRY_RELEASE_VERSION',|" /www/index.html
+fi
+
+if [ "$SENTRY_DEBUG" = "TRUE" ]; then
+  sed -i "s|sentryDebug: .*|sentryDebug: true,|" /www/index.html
+else
+  sed -i "s|sentryDebug: .*|sentryDebug: false,|" /www/index.html
+fi
+
+if [ -n "$SENTRY_SAMPLE_RATE" ]; then
+  sed -i "s|sentrySampleRate: .*|sentrySampleRate: $SENTRY_SAMPLE_RATE,|" /www/index.html
+fi
+
 if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
   sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: true,|" /www/index.html
 else

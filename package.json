@@ -82,8 +82,9 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "@airbrake/browser": "2.1.4",
     "@hot-loader/react-dom": "17.0.1",
+    "@sentry/react": "6.4.0",
+    "@sentry/tracing": "6.4.0",
     "axios": "0.21.1",
     "bootstrap": "3.4.1",
     "bowser": "^2.11.0",
@@ -142,6 +143,7 @@
     "@babel/preset-env": "7.14.2",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
+    "@sentry/webpack-plugin": "^1.15.1",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-docs": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
