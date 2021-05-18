@@ -326,8 +326,6 @@ export function resumeLogin(
     // Try to resume GS user first.
     const user = fetchUserFromStorage();
     if (user) {
-      // Remove MAPI user if it exists.
-      await auth.logout();
       dispatch(loginSuccess(user));
 
       return Promise.resolve();
@@ -369,6 +367,8 @@ export function logout(
           const authTokensApi = new GiantSwarm.AuthTokensApi();
           await authTokensApi.deleteAuthToken();
 
+          dispatch(logoutSuccess());
+
           break;
         }
         case LoggedInUserTypes.MAPI:
@@ -376,8 +376,6 @@ export function logout(
 
           break;
       }
-
-      dispatch(logoutSuccess());
 
       return Promise.resolve();
     } catch (err) {
