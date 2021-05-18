@@ -20,7 +20,7 @@ whitelist: &whitelist
     - storybook-static/*
     - node_modules/*
     - VERSION
-    - .sentry_release_version
+    - ".sentry_release_version"
 
 image_name: &image_name quay.io/giantswarm/happa
 image_name_fe_docs: &image_name_fe_docs quay.io/giantswarm/fe-docs
@@ -239,6 +239,7 @@ jobs:
   gather-facts:
     executor: architect/architect
 
+    working_directory: ~/happa
     steps:
       - checkout
 
