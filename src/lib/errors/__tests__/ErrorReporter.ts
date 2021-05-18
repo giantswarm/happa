@@ -26,6 +26,6 @@ describe('ErrorReporter', () => {
 
     reporter.notify(errMessage);
 
-    expect(testNotifier.notify).toBeCalledWith(errMessage);
+    expect(testNotifier.notify).toBeCalledWith(errMessage, undefined);
   });
 });

@@ -53,6 +53,11 @@
         defaultRequestTimeoutSeconds: 10,
         mapiAuthRedirectURL: window.location.origin,
         mapiAuthAdminGroup: 'giantswarm:giantswarm:giantswarm-admins',
+        sentryDsn: '',
+        sentryEnvironment: 'development',
+        sentryReleaseVersion: 'development',
+        sentryDebug: false,
+        sentrySampleRate: 0.5,
       };
       window.config = config;
 
