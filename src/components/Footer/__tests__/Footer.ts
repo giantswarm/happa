@@ -61,11 +61,11 @@ describe('Footer', () => {
     expect(getByText(/Using latest version./i)).toBeInTheDocument();
   });
 
-  it('displays the version correctly if it is a commit hash', async () => {
-    mockGetConfiguration('asd123djas123asdasdu98cnas9d81723asd98asy9812');
+  it('displays the version correctly if it is a pre-release', async () => {
+    mockGetConfiguration('0.0.1-asd123djas123asdasdu98cnas9d81723asd98asy9812');
     const { findByText } = renderWithStore(Footer);
 
-    const versionWrapper: HTMLElement = await findByText(/asd12/i);
+    const versionWrapper: HTMLElement = await findByText(/0.0.1-asd12/i);
     expect(versionWrapper).toBeInTheDocument();
 
     // Expect to be redirected to the github release page
