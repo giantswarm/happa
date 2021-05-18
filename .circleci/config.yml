@@ -285,7 +285,7 @@ jobs:
           command: yarn run test
 
   build:
-    <<: *defaults
+    executor: architect/architect
     resource_class: xlarge
 
     steps:
