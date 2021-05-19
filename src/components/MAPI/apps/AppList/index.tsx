@@ -1,27 +1,19 @@
-import { catalogsToFacets, searchApps } from 'Apps/AppsList/utils';
 import useDebounce from 'lib/hooks/useDebounce';
+import usePrevious from 'lib/hooks/usePrevious';
 import RoutePath from 'lib/routePath';
-import React, { useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppsRoutes } from 'shared/constants/routes';
-import {
-  disableCatalog,
-  enableCatalog,
-  setAppSearchQuery,
-  setAppSortOrder,
-} from 'stores/appcatalog/actions';
+import { catalogLoadIndex } from 'stores/appcatalog/actions';
 import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
-import {
-  selectApps,
-  selectAppSearchQuery,
-  selectAppsLastUpdated,
-  selectAppSortOrder,
-  selectCatalogs,
-  selectSelectedCatalogs,
-} from 'stores/appcatalog/selectors';
+import { selectCatalogs } from 'stores/appcatalog/selectors';
+import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { selectErrorsByIdsAndAction } from 'stores/entityerror/selectors';
 import { getUserIsAdmin } from 'stores/main/selectors';
-import AppListPage from 'UI/Display/Apps/AppList/AppsListPage';
+import { IState } from 'stores/state';
+import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
+
+import { catalogsToFacets, searchApps, selectApps } from './utils';
 
 const SEARCH_THROTTLE_RATE_MS = 250;
 
@@ -54,12 +46,36 @@ const sortFuncs: {
   latest: sortByLatest,
 };
 
-const AppList: React.FC<{}> = () => {
-  const dispatch = useDispatch();
-  const isAdmin = useSelector(getUserIsAdmin);
-  const catalogs = useSelector(selectCatalogs);
-  const searchQuery = useSelector(selectAppSearchQuery);
+type SelectedCatalogsState = Record<string, boolean>;
 
+interface ISelectedCatalogsAction {
+  type: 'selectCatalog' | 'deselectCatalog';
+  name: string;
+}
+
+const selectedCatalogsReducer: React.Reducer<
+  SelectedCatalogsState,
+  ISelectedCatalogsAction
+> = (state: SelectedCatalogsState, action: ISelectedCatalogsAction) => {
+  switch (action.type) {
+    case 'selectCatalog':
+      return Object.assign({}, state, { [action.name]: true });
+    case 'deselectCatalog': {
+      const nextSelectedCatalogs = Object.assign({}, state);
+      delete nextSelectedCatalogs[action.name];
+
+      return nextSelectedCatalogs;
+    }
+    default:
+      return state;
+  }
+};
+
+const AppList: React.FC<{}> = () => {
+  const isAdmin = useSelector(getUserIsAdmin);
+
+  const catalogs = useSelector(selectCatalogs);
+  const prevCatalogItems = usePrevious(catalogs.items);
   const catalogErrors = useSelector(
     selectErrorsByIdsAndAction(
       Object.keys(catalogs.items),
@@ -67,43 +83,76 @@ const AppList: React.FC<{}> = () => {
     )
   );
 
+  const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(
     searchQuery,
     SEARCH_THROTTLE_RATE_MS
   );
 
-  const allApps = useSelector(selectApps);
-  const selectedCatalogs = useSelector(selectSelectedCatalogs);
-  const memoSelectedCatalogs = selectedCatalogs.join('');
-  const sortOrder = useSelector(selectAppSortOrder);
-  const lastUpdated = useSelector(selectAppsLastUpdated);
+  const [sortOrder, setSortOrder] = useState('name');
+
+  const [selectedCatalogs, dispatchSelectedCatalogs] = useReducer(
+    selectedCatalogsReducer,
+    {}
+  );
+
+  useLayoutEffect(() => {
+    if (
+      Object.keys(selectedCatalogs).length > 0 ||
+      typeof prevCatalogItems !== 'undefined'
+    ) {
+      return;
+    }
+
+    // Pre-select all catalogs except `helm-stable`.
+    for (const catalogName of Object.keys(catalogs.items)) {
+      if (catalogName === 'helm-stable') continue;
+
+      dispatchSelectedCatalogs({
+        type: 'selectCatalog',
+        name: catalogName,
+      });
+    }
+
+    // We don't need to run this again if the selected catalogs change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalogs.items, prevCatalogItems]);
 
   const apps = useMemo(() => {
-    const appCollection = searchApps(debouncedSearchQuery, allApps);
+    const appCollection = searchApps(
+      debouncedSearchQuery,
+      selectApps(catalogs.items, selectedCatalogs)
+    );
     appCollection.sort(sortFuncs[sortOrder]);
 
     return appCollection;
-  }, [debouncedSearchQuery, memoSelectedCatalogs, sortOrder, lastUpdated]);
+  }, [debouncedSearchQuery, selectedCatalogs, sortOrder, catalogs.items]);
+
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   return (
-    <AppListPage
+    <AppsListPage
       matchCount={apps.length}
-      onChangeSearchQuery={(value: string) => {
-        dispatch(setAppSearchQuery(value));
-      }}
+      onChangeSearchQuery={setSearchQuery}
       searchQuery={searchQuery}
       onChangeFacets={(value, checked) => {
         if (checked) {
-          dispatch(enableCatalog(value));
+          dispatchSelectedCatalogs({
+            type: 'selectCatalog',
+            name: value,
+          });
+
+          dispatch(catalogLoadIndex(value));
         } else {
-          dispatch(disableCatalog(value));
+          dispatchSelectedCatalogs({
+            type: 'deselectCatalog',
+            name: value,
+          });
         }
       }}
       sortOrder={sortOrder}
-      onChangeSortOrder={(value: string) => {
-        dispatch(setAppSortOrder(value));
-      }}
-      onResetSearch={() => dispatch(setAppSearchQuery(''))}
+      onChangeSortOrder={setSortOrder}
+      onResetSearch={() => setSearchQuery('')}
       apps={apps.map((app) => ({
         name: app.name,
         appIconURL: app.appIconURL,
@@ -116,7 +165,12 @@ const AppList: React.FC<{}> = () => {
         }),
         catalogIconUrl: app.catalogIconURL,
       }))}
-      facetOptions={catalogsToFacets(catalogs, catalogErrors, isAdmin)}
+      facetOptions={catalogsToFacets(
+        catalogs.items,
+        selectedCatalogs,
+        catalogErrors,
+        isAdmin
+      )}
     />
   );
 };
