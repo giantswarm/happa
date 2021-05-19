@@ -49,7 +49,6 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
     new SentryCliPlugin({
       include: './dist',
       authToken: SENTRY_API_KEY,
-      ignoreFile: '.sentrycliignore',
       ignore: ['index.js'],
       org: 'giantswarm',
       project: 'happa',
