@@ -39,7 +39,7 @@ const plugins = [
   new CopyPlugin({
     patterns: [
       { from: 'src/metadata.json', to: 'metadata.json' },
-      { from: 'src/images/**/*.{png,jpg,jpeg,svg,webp}', to: 'images' },
+      { from: 'src/images', to: 'images' },
     ],
   }),
 ];
