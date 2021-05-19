@@ -32,7 +32,7 @@ export function getReleaseURL(version: string): string {
       return `https://github.com/giantswarm/happa/commit/${semverVersion.getPreRelease()}`;
     }
 
-    return `https://docs.giantswarm.io/changes/web-ui/happa/${version}/`;
+    return `https://docs.giantswarm.io/changes/web-ui/happa/v${version}/`;
   } catch {
     return 'https://github.com/giantswarm/happa';
   }
