@@ -52,9 +52,9 @@ export interface IAppsListPageProps {
   facetOptions: IFacetOption[];
   searchQuery: string;
   sortOrder: string;
+  apps: IAppProps[];
   facetsIsLoading?: boolean;
   appsIsLoading?: boolean;
-  apps: IAppProps[];
 }
 
 const AppsList: React.FC<IAppsListPageProps> = (props) => {
