@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import TextInput from 'UI/Inputs/TextInput';
 
 import SortingDropdown from './SortingDropdown';
@@ -35,6 +36,16 @@ const Sort = styled.div`
   align-items: center;
 `;
 
+const StyledLoadingIndicator = styled(LoadingIndicator)`
+  display: inline-block;
+
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+  }
+`;
+
 function matchCountMessage(count: number) {
   if (count === 1) {
     return `Showing 1 app matching your query`;
@@ -54,6 +65,7 @@ interface IToolbarProps {
   searchQuery: string;
   onChangeSortOrder: (value: string) => void;
   sortOrder: string;
+  isLoading?: boolean;
 }
 
 const Toolbar: React.FC<IToolbarProps> = (props) => {
@@ -72,9 +84,14 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
           data-testid='app-search-input'
           margin={{ bottom: 'none', right: 'small' }}
           icon={<i className='fa fa-search' />}
+          readOnly={props.isLoading}
         />
 
-        {matchCountMessage(props.matchCount)}
+        {props.isLoading && (
+          <StyledLoadingIndicator loading={true} loadingPosition='right' />
+        )}
+
+        {!props.isLoading && matchCountMessage(props.matchCount)}
 
         {props.searchQuery !== '' && (
           <ClearSearch
@@ -107,6 +124,7 @@ Toolbar.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   onChangeSortOrder: PropTypes.func.isRequired,
   sortOrder: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool,
 };
 
 export default Toolbar;
