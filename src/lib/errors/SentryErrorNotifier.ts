@@ -85,6 +85,6 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
   public static decorateRoute<T extends RouteProps>(
     routeComponent: React.FC<T>
   ): React.FC<T> {
-    return Sentry.withSentryRouting(routeComponent as never) as React.FC<T>;
+    return Sentry.withSentryRouting(routeComponent as never);
   }
 }

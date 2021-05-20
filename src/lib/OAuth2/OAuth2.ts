@@ -142,6 +142,8 @@ class OAuth2 implements IOAuth2Provider {
 
     const newUser = getUserFromOIDCUser(origUser);
 
+    this.userManager.events.load(origUser);
+
     return newUser;
   }
 
@@ -149,6 +151,8 @@ class OAuth2 implements IOAuth2Provider {
     const origUser = await this.userManager.signinSilent();
 
     const newUser = getUserFromOIDCUser(origUser);
+
+    this.userManager.events.load(origUser);
 
     return newUser;
   }

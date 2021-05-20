@@ -255,6 +255,7 @@ export function filterClusters(
 
   return clusters.filter((cluster) => {
     switch (true) {
+      case typeof cluster.metadata.deletionTimestamp === 'undefined':
       case cluster.metadata.name.includes(normalizedQuery):
       case capiv1alpha3
         .getClusterDescription(cluster)

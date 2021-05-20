@@ -39,7 +39,7 @@ const plugins = [
   new CopyPlugin({
     patterns: [
       { from: 'src/metadata.json', to: 'metadata.json' },
-      { from: 'src/images/**/*.{png,jpg,jpeg,svg,webp}', to: 'images' },
+      { from: 'src/images', to: 'images' },
     ],
   }),
 ];
@@ -49,7 +49,7 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
     new SentryCliPlugin({
       include: './dist',
       authToken: SENTRY_API_KEY,
-      ignoreFile: '.sentrycliignore',
+      ignore: ['index.js'],
       org: 'giantswarm',
       project: 'happa',
       release: SENTRY_RELEASE_VERSION,

@@ -119,6 +119,7 @@ const UserInstalledApps: React.FC<IUserInstalledAppsProps> = ({
                         iconErrors={iconErrors}
                         onIconError={onIconError}
                         onClick={() => onShowDetail(app.name)}
+                        margin={{ bottom: 'small' }}
                       />
                     </BaseTransition>
                   );
