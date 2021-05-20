@@ -6,7 +6,10 @@ import Button from 'UI/Controls/Button';
 import App, { IAppProps } from 'UI/Display/Apps/AppList/App';
 import Facets, { IFacetOption } from 'UI/Inputs/Facets';
 
+import AppListAppLoadingPlaceholder from './AppListAppLoadingPlaceholder';
 import Toolbar from './Toolbar';
+
+const LOADING_COMPONENTS = new Array(9).fill(0);
 
 const Wrapper = styled.div``;
 
@@ -17,6 +20,7 @@ const ListAndFacets = styled.div`
 const List = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-auto-rows: max-content;
   gap: 20px;
   border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
   width: 100%;
@@ -80,7 +84,13 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
           isLoading={props.facetsIsLoading}
         />
 
-        {props.appsIsLoading && <EmptyState />}
+        {props.appsIsLoading && (
+          <List>
+            {LOADING_COMPONENTS.map((_, i) => (
+              <AppListAppLoadingPlaceholder key={i} />
+            ))}
+          </List>
+        )}
 
         {!props.appsIsLoading && props.apps.length === 0 && (
           <EmptyState>
