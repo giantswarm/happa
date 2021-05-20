@@ -1,48 +1,132 @@
+import yaml from 'js-yaml';
+import { compareDates } from 'lib/helpers';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import RoutePath from 'lib/routePath';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
-import { IAppCatalogsMap } from 'stores/appcatalog/types';
+import { AppsRoutes } from 'shared/constants/routes';
+import { normalizeAppCatalogIndexURL } from 'stores/appcatalog/utils';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 
-// Determines if a catalog is an internal catalog or not.
-// We changed the location of this information at some point, so happa currently
-// supports both. TODO: Check if there are any catalogs left with the old label
-// if not, simplify this code.
-export const isInternal = (catalog: IAppCatalog): boolean => {
-  const labels = catalog.metadata.labels;
+interface IAppCatalogIndexAppVersion {
+  apiVersion: string;
+  appVersion: string;
+  version: string;
+  created: string;
+  digest: string;
+  home: string;
+  icon: string;
+  name: string;
+  urls: string[];
+  description?: string;
+  sources?: string[];
+  annotations?: Record<string, string>;
+  keywords?: string[];
+}
 
-  if (labels) {
-    const catalogType = labels['application.giantswarm.io/catalog-type'];
-    const catalogVisibility =
-      labels['application.giantswarm.io/catalog-visibility'];
+export interface IAppCatalogIndexApp {
+  name: string;
+  catalogName: string;
+  catalogTitle: string;
+  catalogIconUrl: string;
+  catalogIsManaged: boolean;
+  to: string;
+  versions: IAppCatalogIndexAppVersion[];
+}
 
-    return catalogType === 'internal' || catalogVisibility === 'internal';
+export interface IAppCatalogIndex {
+  apiVersion: string;
+  entries: Record<string, IAppCatalogIndexApp>;
+}
+
+export interface IAppCatalogIndexList {
+  items: IAppCatalogIndex[];
+  errors: Record<string, string>;
+}
+
+function isAppCatalogVisibleToUsers(
+  appCatalog: applicationv1alpha1.IAppCatalog
+) {
+  return (
+    applicationv1alpha1.isAppCatalogPublic(appCatalog) &&
+    applicationv1alpha1.isAppCatalogStable(appCatalog)
+  );
+}
+
+function compareAppCatalogIndexAppsByName(
+  a: IAppCatalogIndexApp,
+  b: IAppCatalogIndexApp
+) {
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+
+  return 0;
+}
+
+function compareAppCatalogIndexAppsByAppCatalog(
+  a: IAppCatalogIndexApp,
+  b: IAppCatalogIndexApp
+) {
+  if (a.catalogTitle < b.catalogTitle) return -1;
+  if (a.catalogTitle > b.catalogTitle) return 1;
+
+  return 0;
+}
+
+function compareAppCatalogIndexAppsByLatest(
+  a: IAppCatalogIndexApp,
+  b: IAppCatalogIndexApp
+) {
+  return compareDates(b.versions[0]?.created ?? 0, a.versions[0]?.created ?? 0);
+}
+
+export const compareAppCatalogIndexAppsFns: Record<
+  string,
+  (a: IAppCatalogIndexApp, b: IAppCatalogIndexApp) => number
+> = {
+  name: compareAppCatalogIndexAppsByName,
+  catalog: compareAppCatalogIndexAppsByAppCatalog,
+  latest: compareAppCatalogIndexAppsByLatest,
+};
+
+export function computeAppCatalogUITitle(
+  catalog: applicationv1alpha1.IAppCatalog
+): string {
+  const prefix = 'Giant Swarm ';
+
+  if (
+    !isAppCatalogVisibleToUsers(catalog) &&
+    catalog.spec.title.startsWith(prefix)
+  ) {
+    return catalog.spec.title.slice(prefix.length);
   }
 
-  return false;
-};
+  return catalog.spec.title;
+}
 
-// Admins can see all catalogs.
-// Non admins can only see non internal catalogs.
-export const filterFunc = (isAdmin: boolean) => {
-  return ([_, catalog]: [string, IAppCatalog]) => {
-    if (isAdmin) {
-      return true;
-    }
+/**
+ * Sort catalogs in an alphabetical order, but group
+ * managed catalogs together at the top.
+ * @param a
+ * @param b
+ */
+function compareAppCatalogs(
+  a: applicationv1alpha1.IAppCatalog,
+  b: applicationv1alpha1.IAppCatalog
+) {
+  const aIsVisible = isAppCatalogVisibleToUsers(a);
+  const bIsVisible = isAppCatalogVisibleToUsers(b);
 
-    return !isInternal(catalog);
-  };
-};
+  if (aIsVisible && !bIsVisible) {
+    return -1;
+  } else if (!aIsVisible && bIsVisible) {
+    return 1;
+  }
 
-// Group internal catalogs together, but sort the groups alphabetically.
-// This makes internal catalogs appear at the bottom, and normal catalogs
-// appear at the top. And within those groups the catalogs are alphabetically
-// sorted.
-const sortFunc = (
-  [, , a]: [string, IAppCatalog, string],
-  [, , b]: [string, IAppCatalog, string]
-) => {
-  const aTitle = a;
-  const bTitle = b;
+  const aTitle = computeAppCatalogUITitle(a);
+  const bTitle = computeAppCatalogUITitle(b);
 
   if (aTitle < bTitle) {
     return -1;
@@ -51,97 +135,154 @@ const sortFunc = (
   }
 
   return 0;
-};
-
-function computeShortTitle([key, catalog]: [string, IAppCatalog]): [
-  key: string,
-  catalog: IAppCatalog,
-  shortTitle: string
-] {
-  let shortTitle = catalog.spec.title;
-
-  if (isInternal(catalog) && catalog.spec.title.startsWith('Giant Swarm ')) {
-    shortTitle = catalog.spec.title.replace('Giant Swarm ', '');
-  }
-
-  return [key, catalog, shortTitle];
 }
 
-export function catalogsToFacets(
-  catalogs: IAppCatalogsMap,
-  selectedCatalogs: Record<string, boolean>,
-  catalogErrors: { [key: string]: string },
-  isAdmin: boolean
+export function mapAppCatalogsToFacets(
+  appCatalogs: applicationv1alpha1.IAppCatalog[] = [],
+  selectedAppCatalogs: Record<string, boolean> = {},
+  appCatalogErrors: Record<string, string> = {}
 ): IFacetOption[] {
-  return Object.entries(catalogs)
-    .filter(filterFunc(isAdmin))
-    .map(computeShortTitle)
-    .sort(sortFunc)
-    .map(([key, catalog, shortTitle]) => {
-      return {
-        value: key,
-        checked: selectedCatalogs.hasOwnProperty(key),
-        label: (
-          <CatalogLabel
-            catalogName={shortTitle}
-            iconUrl={catalog.spec.logoURL}
-            description={catalog.spec.description}
-            error={catalogErrors[catalog.metadata.name]}
-          />
-        ),
-      };
-    });
+  return appCatalogs.sort(compareAppCatalogs).map((appCatalog) => {
+    const uiTitle = computeAppCatalogUITitle(appCatalog);
+
+    return {
+      value: appCatalog.metadata.name,
+      checked: selectedAppCatalogs.hasOwnProperty(appCatalog.metadata.name),
+      label: (
+        <CatalogLabel
+          catalogName={uiTitle}
+          iconUrl={appCatalog.spec.logoURL}
+          description={appCatalog.spec.description}
+          error={appCatalogErrors[appCatalog.metadata.name]}
+        />
+      ),
+    };
+  });
 }
 
-export const searchApps = (searchQuery: string, allApps: IAppCatalogApp[]) => {
-  const fieldsToCheck: string[] = ['name', 'description', 'keywords'];
-  const trimmedSearchQuery = searchQuery.trim().toLowerCase();
+export function filterAppCatalogIndexApps(
+  searchQuery: string,
+  indexApps: IAppCatalogIndexApp[]
+) {
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  if (normalizedQuery.length < 1) return indexApps;
 
-  let filteredApps = [];
+  return indexApps.filter((indexApp) => {
+    return indexApp.versions.some((version) => {
+      switch (true) {
+        case version.name.toLowerCase().includes(normalizedQuery):
+        case version.description &&
+          version.description.toLowerCase().includes(normalizedQuery):
+        case version.keywords &&
+          version.keywords.join(',').toLowerCase().includes(normalizedQuery):
+          return true;
 
-  if (trimmedSearchQuery === '') return allApps;
-
-  filteredApps = allApps.filter((app) => {
-    // Go through all the app versions
-    return app.versions.some((appVersion) => {
-      // Check if any of the checked fields include the search query
-      return fieldsToCheck.some((field) => {
-        let appVersionsField = appVersion[field as keyof IAppCatalogAppVersion];
-
-        appVersionsField = appVersionsField ? String(appVersionsField) : '';
-
-        const appVersionsFieldValue = appVersionsField.toLowerCase();
-
-        return appVersionsFieldValue.includes(trimmedSearchQuery);
-      });
+        default:
+          return false;
+      }
     });
   });
+}
 
-  return filteredApps;
-};
+export function filterAppCatalogIndexAppsBySelectedAppCatalogs(
+  indexApps: IAppCatalogIndexApp[],
+  selectedAppCatalogs: Record<string, boolean>
+): IAppCatalogIndexApp[] {
+  return indexApps.filter((indexApp) => {
+    return selectedAppCatalogs.hasOwnProperty(indexApp.catalogName);
+  });
+}
 
-export function selectApps(
-  catalogs: IAppCatalogsMap,
-  selectedCatalogs: Record<string, boolean>
-): IAppCatalogApp[] {
-  const allApps: IAppCatalogApp[] = [];
+function makeAppPath(
+  name: string,
+  version: string,
+  catalogName: string
+): string {
+  return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+    app: name,
+    catalogName,
+    version,
+  });
+}
 
-  for (const catalogName of Object.keys(selectedCatalogs)) {
-    const catalog = catalogs[catalogName];
+interface IAppCatalogIndexResponse {
+  apiVersion: string;
+  entries: Record<string, IAppCatalogIndexAppVersion[]>;
+}
 
-    if (catalog && catalog.apps) {
-      allApps.push(
-        ...Object.entries(catalog.apps).map(([appName, appVersions]) => ({
-          name: appName,
-          appIconURL: appVersions[0].icon,
-          catalogTitle: catalog.spec.title,
-          catalogName: catalog.metadata.name,
-          catalogIconURL: catalog.spec.logoURL,
-          versions: appVersions,
-        }))
-      );
-    }
+async function fetchAppCatalogIndex(
+  fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
+  _auth: IOAuth2Provider,
+  catalog: applicationv1alpha1.IAppCatalog
+): Promise<IAppCatalogIndex> {
+  const url = normalizeAppCatalogIndexURL(catalog.spec.storage.URL);
+
+  const response = await fetchFunc(url, { mode: 'cors' });
+  const responseText = await response.text();
+  const catalogIndexResponse = yaml.load(
+    responseText
+  ) as IAppCatalogIndexResponse;
+
+  const catalogIndex: IAppCatalogIndex = {
+    apiVersion: catalogIndexResponse.apiVersion,
+    entries: {},
+  };
+
+  for (const [appName, versions] of Object.entries(
+    catalogIndexResponse.entries
+  )) {
+    const version = versions[0]?.version ?? 'n/a';
+
+    catalogIndex.entries[appName] = {
+      catalogName: catalog.metadata.name,
+      catalogTitle: computeAppCatalogUITitle(catalog),
+      catalogIconUrl: catalog.spec.logoURL ?? '',
+      catalogIsManaged: isAppCatalogVisibleToUsers(catalog),
+      name: appName,
+      to: makeAppPath(appName, version, catalog.metadata.name),
+      versions,
+    };
   }
 
-  return allApps;
+  return catalogIndex;
+}
+
+export async function getAppCatalogsIndexList(
+  fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
+  auth: IOAuth2Provider,
+  catalogs: applicationv1alpha1.IAppCatalog[]
+): Promise<IAppCatalogIndexList> {
+  const requests = catalogs.map((catalog) =>
+    fetchAppCatalogIndex(fetchFunc, auth, catalog)
+  );
+
+  const responses = await Promise.allSettled(requests);
+
+  const indexList: IAppCatalogIndexList = {
+    items: [],
+    errors: {},
+  };
+  for (let i = 0; i < responses.length; i++) {
+    const response = responses[i];
+
+    if (response.status === 'rejected') {
+      const catalogName = catalogs[i].metadata.name;
+      indexList.errors[catalogName] = extractErrorMessage(response.reason);
+      continue;
+    }
+    indexList.items.push(response.value);
+  }
+
+  return indexList;
+}
+
+export function getAppCatalogsIndexListKey(
+  catalogs?: applicationv1alpha1.IAppCatalog[]
+) {
+  if (!catalogs) return null;
+
+  return catalogs
+    .sort(compareAppCatalogs)
+    .map((c) => c.metadata.name)
+    .join();
 }

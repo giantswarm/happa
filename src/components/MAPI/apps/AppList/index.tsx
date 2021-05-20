@@ -1,50 +1,37 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import usePrevious from 'lib/hooks/usePrevious';
-import RoutePath from 'lib/routePath';
-import React, { useLayoutEffect, useMemo, useReducer, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppsRoutes } from 'shared/constants/routes';
-import { catalogLoadIndex } from 'stores/appcatalog/actions';
-import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
-import { selectCatalogs } from 'stores/appcatalog/selectors';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectErrorsByIdsAndAction } from 'stores/entityerror/selectors';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import { useSelector } from 'react-redux';
 import { getUserIsAdmin } from 'stores/main/selectors';
-import { IState } from 'stores/state';
+import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
-import { catalogsToFacets, searchApps, selectApps } from './utils';
+import {
+  compareAppCatalogIndexAppsFns,
+  filterAppCatalogIndexApps,
+  filterAppCatalogIndexAppsBySelectedAppCatalogs,
+  getAppCatalogsIndexList,
+  getAppCatalogsIndexListKey,
+  IAppCatalogIndex,
+  IAppCatalogIndexApp,
+  IAppCatalogIndexList,
+  mapAppCatalogsToFacets,
+} from './utils';
 
 const SEARCH_THROTTLE_RATE_MS = 250;
-
-function sortByName(a: IAppCatalogApp, b: IAppCatalogApp) {
-  if (a.name < b.name) return -1;
-  if (a.name > b.name) return 1;
-
-  return 0;
-}
-
-function sortByCatalog(a: IAppCatalogApp, b: IAppCatalogApp) {
-  if (a.catalogTitle < b.catalogTitle) return -1;
-  if (a.catalogTitle > b.catalogTitle) return 1;
-
-  return 0;
-}
-
-function sortByLatest(a: IAppCatalogApp, b: IAppCatalogApp) {
-  return (
-    new Date(b.versions[0].created).getTime() -
-    new Date(a.versions[0].created).getTime()
-  );
-}
-
-const sortFuncs: {
-  [key: string]: (a: IAppCatalogApp, b: IAppCatalogApp) => number;
-} = {
-  name: sortByName,
-  catalog: sortByCatalog,
-  latest: sortByLatest,
-};
 
 type SelectedCatalogsState = Record<string, boolean>;
 
@@ -74,22 +61,59 @@ const selectedCatalogsReducer: React.Reducer<
 const AppList: React.FC<{}> = () => {
   const isAdmin = useSelector(getUserIsAdmin);
 
-  const catalogs = useSelector(selectCatalogs);
-  const prevCatalogItems = usePrevious(catalogs.items);
-  const catalogErrors = useSelector(
-    selectErrorsByIdsAndAction(
-      Object.keys(catalogs.items),
-      CATALOG_LOAD_INDEX_REQUEST
-    )
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const appCatalogListClient = useRef(clientFactory());
+  const appCatalogListGetOptions: applicationv1alpha1.IGetAppCatalogListOptions = useMemo(() => {
+    if (isAdmin) return {};
+
+    return {
+      labelSelector: {
+        matchingLabels: {
+          [applicationv1alpha1.labelCatalogVisibility]: 'public',
+          [applicationv1alpha1.labelCatalogType]: 'stable',
+        },
+      },
+    };
+  }, [isAdmin]);
+
+  const {
+    data: appCatalogList,
+    error: appCatalogListError,
+    isValidating: appCatalogListIsValidating,
+  } = useSWR<applicationv1alpha1.IAppCatalogList, GenericResponse>(
+    applicationv1alpha1.getAppCatalogListKey(appCatalogListGetOptions),
+    () =>
+      applicationv1alpha1.getAppCatalogList(
+        appCatalogListClient.current,
+        auth,
+        appCatalogListGetOptions
+      )
   );
+  const prevAppCatalogList = usePrevious(appCatalogList);
+
+  useEffect(() => {
+    if (appCatalogListError) {
+      const errorMessage = extractErrorMessage(appCatalogListError);
+
+      new FlashMessage(
+        'There was a problem loading app catalogs.',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+    }
+  }, [appCatalogListError]);
+
+  const appCatalogListIsLoading =
+    typeof appCatalogList === 'undefined' && appCatalogListIsValidating;
 
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(
     searchQuery,
     SEARCH_THROTTLE_RATE_MS
   );
-
-  const [sortOrder, setSortOrder] = useState('name');
 
   const [selectedCatalogs, dispatchSelectedCatalogs] = useReducer(
     selectedCatalogsReducer,
@@ -99,78 +123,85 @@ const AppList: React.FC<{}> = () => {
   useLayoutEffect(() => {
     if (
       Object.keys(selectedCatalogs).length > 0 ||
-      typeof prevCatalogItems !== 'undefined'
+      typeof prevAppCatalogList !== 'undefined' ||
+      typeof appCatalogList === 'undefined'
     ) {
       return;
     }
 
     // Pre-select all catalogs except `helm-stable`.
-    for (const catalogName of Object.keys(catalogs.items)) {
-      if (catalogName === 'helm-stable') continue;
+    for (const catalog of appCatalogList.items) {
+      if (catalog.metadata.name === 'helm-stable') continue;
 
       dispatchSelectedCatalogs({
         type: 'selectCatalog',
-        name: catalogName,
+        name: catalog.metadata.name,
       });
     }
 
     // We don't need to run this again if the selected catalogs change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalogs.items, prevCatalogItems]);
+  }, [appCatalogList?.items, prevAppCatalogList]);
+
+  const {
+    data: appCatalogIndexList,
+    isValidating: appCatalogIndexListIsValidating,
+  } = useSWR<IAppCatalogIndexList, GenericResponse>(
+    getAppCatalogsIndexListKey(appCatalogList?.items),
+    () => getAppCatalogsIndexList(fetch, auth, appCatalogList!.items)
+  );
+
+  const appCatalogIndexListIsLoading =
+    appCatalogListIsLoading ||
+    (typeof appCatalogIndexList === 'undefined' &&
+      appCatalogIndexListIsValidating);
+
+  const [sortOrder, setSortOrder] = useState('name');
 
   const apps = useMemo(() => {
-    const appCollection = searchApps(
-      debouncedSearchQuery,
-      selectApps(catalogs.items, selectedCatalogs)
+    if (!appCatalogIndexList) return [];
+
+    const allApps = appCatalogIndexList.items.reduce(
+      (agg: IAppCatalogIndexApp[], index: IAppCatalogIndex) => {
+        return [...agg, ...Object.values(index.entries)];
+      },
+      []
     );
-    appCollection.sort(sortFuncs[sortOrder]);
+
+    const appCollection = filterAppCatalogIndexApps(
+      debouncedSearchQuery,
+      filterAppCatalogIndexAppsBySelectedAppCatalogs(allApps, selectedCatalogs)
+    );
+
+    appCollection.sort(compareAppCatalogIndexAppsFns[sortOrder]);
 
     return appCollection;
-  }, [debouncedSearchQuery, selectedCatalogs, sortOrder, catalogs.items]);
+  }, [debouncedSearchQuery, selectedCatalogs, sortOrder, appCatalogIndexList]);
 
-  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
+  const handleChangeFacets = (value: string, checked: boolean) => {
+    dispatchSelectedCatalogs({
+      type: checked ? 'selectCatalog' : 'deselectCatalog',
+      name: value,
+    });
+  };
 
   return (
     <AppsListPage
-      matchCount={apps.length}
       onChangeSearchQuery={setSearchQuery}
       searchQuery={searchQuery}
-      onChangeFacets={(value, checked) => {
-        if (checked) {
-          dispatchSelectedCatalogs({
-            type: 'selectCatalog',
-            name: value,
-          });
-
-          dispatch(catalogLoadIndex(value));
-        } else {
-          dispatchSelectedCatalogs({
-            type: 'deselectCatalog',
-            name: value,
-          });
-        }
-      }}
+      onChangeFacets={handleChangeFacets}
       sortOrder={sortOrder}
       onChangeSortOrder={setSortOrder}
       onResetSearch={() => setSearchQuery('')}
-      apps={apps.map((app) => ({
-        name: app.name,
-        appIconURL: app.appIconURL,
-        catalogName: app.catalogName,
-        catalogTitle: app.catalogTitle,
-        to: RoutePath.createUsablePath(AppsRoutes.AppDetail, {
-          catalogName: app.catalogName,
-          app: app.name,
-          version: app.versions[0].version,
-        }),
-        catalogIconUrl: app.catalogIconURL,
-      }))}
-      facetOptions={catalogsToFacets(
-        catalogs.items,
+      matchCount={apps.length}
+      apps={apps}
+      facetOptions={mapAppCatalogsToFacets(
+        appCatalogList?.items,
         selectedCatalogs,
-        catalogErrors,
-        isAdmin
+        appCatalogIndexList?.errors
       )}
+      facetsIsLoading={appCatalogListIsLoading}
+      appsIsLoading={appCatalogIndexListIsLoading}
     />
   );
 };
