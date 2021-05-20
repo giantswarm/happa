@@ -65,6 +65,7 @@ import { v4orV5 } from 'stores/cluster/utils';
 import { IState } from 'stores/state';
 
 import { createAsynchronousAction } from '../asynchronousAction';
+import { normalizeAppCatalogIndexURL } from './utils';
 
 export const listCatalogs = createAsynchronousAction<
   undefined,
@@ -139,24 +140,7 @@ export function catalogLoadIndex(
 }
 
 async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
-  let indexURL = `${catalog.spec.storage.URL}index.yaml`;
-
-  // If we are trying to reach the Helm Stable catalog at it's old location,
-  // route the request through a proxy in Happa's container which adds necessary
-  // CORS headers.
-  if (
-    catalog.spec.storage.URL ===
-    'https://kubernetes-charts.storage.googleapis.com/'
-  ) {
-    indexURL = `/catalogs?url=${indexURL}`;
-  }
-
-  // If we are trying to reach the Helm Stable catalog at it's new location,
-  // it's url structure is a bit different.
-  // We need to remove /packages/ from the URL before adding /index.yaml.
-  if (catalog.spec.storage.URL === 'https://charts.helm.sh/stable/packages/') {
-    indexURL = 'https://charts.helm.sh/stable/index.yaml';
-  }
+  const indexURL = normalizeAppCatalogIndexURL(catalog.spec.storage.URL);
 
   const response = await fetch(indexURL, { mode: 'cors' });
   if (response.status !== StatusCodes.Ok) {
