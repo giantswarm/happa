@@ -190,12 +190,13 @@ export function filterAppCatalogIndexApps(
   selectedAppCatalogs: Record<string, boolean>
 ) {
   const normalizedQuery = searchQuery.trim().toLowerCase();
-  if (normalizedQuery.length < 1) return indexApps;
 
   return indexApps.filter((indexApp) => {
     if (!selectedAppCatalogs.hasOwnProperty(indexApp.catalogName)) return false;
-    if (indexApp.versions.length < 1) return false;
 
+    if (normalizedQuery.length < 1) return true;
+
+    if (indexApp.versions.length < 1) return false;
     const version = indexApp.versions[0];
 
     switch (true) {
