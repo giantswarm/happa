@@ -2,6 +2,7 @@ import yaml from 'js-yaml';
 import { compareDates } from 'lib/helpers';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
+import { compare } from 'lib/semver';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
@@ -206,6 +207,13 @@ function makeAppPath(
   });
 }
 
+function compareVersions(
+  a: IAppCatalogIndexAppVersion,
+  b: IAppCatalogIndexAppVersion
+) {
+  return compare(b.version, a.version);
+}
+
 interface IAppCatalogIndexResponse {
   apiVersion: string;
   entries: Record<string, IAppCatalogIndexAppVersion[]>;
@@ -232,6 +240,8 @@ async function fetchAppCatalogIndex(
   for (const [appName, versions] of Object.entries(
     catalogIndexResponse.entries
   )) {
+    const sortedVersions = versions.sort(compareVersions);
+
     const version = versions[0]?.version ?? 'n/a';
     const iconURL = versions[0]?.icon ?? '';
 
@@ -243,7 +253,7 @@ async function fetchAppCatalogIndex(
       appIconURL: iconURL,
       name: appName,
       to: makeAppPath(appName, version, catalog.metadata.name),
-      versions,
+      versions: sortedVersions,
     };
   }
 
