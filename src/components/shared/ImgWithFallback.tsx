@@ -1,5 +1,15 @@
 import PropTypes from 'prop-types';
-import React, { FC, ImgHTMLAttributes, useState } from 'react';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const Image = styled.img`
+  opacity: 0;
+`;
+
+const LabelWrapper = styled.div<{ backgroundColor: string; textColor: string }>`
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  color: ${({ textColor }) => textColor};
+`;
 
 interface IFallback {
   label: string;
@@ -7,11 +17,11 @@ interface IFallback {
   textColor: string;
 }
 
-interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
+interface IImgWithFallbackProps extends React.ComponentPropsWithoutRef<'img'> {
   fallback: IFallback;
 }
 
-const ImgWithFallback: FC<IImgWithFallback> = (props) => {
+const ImgWithFallback: React.FC<IImgWithFallbackProps> = (props) => {
   const [loadError, setLoadError] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +29,8 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
 
   if (loading && restProps.src) {
     return (
-      <img
+      <Image
+        key='image'
         {...restProps}
         onError={() => {
           setLoadError(true);
@@ -29,26 +40,24 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
           setLoadError(false);
           setLoading(false);
         }}
-        style={{ opacity: 0 }}
       />
     );
   }
 
   if (loadError || !restProps.src) {
     return (
-      <div
+      <LabelWrapper
+        key='label'
         {...restProps}
-        style={{
-          backgroundColor: fallback.backgroundColor,
-          color: fallback.textColor,
-        }}
+        backgroundColor={fallback.backgroundColor}
+        textColor={fallback.textColor}
       >
         {fallback.label}
-      </div>
+      </LabelWrapper>
     );
   }
 
-  return <img {...restProps} onLoad={() => setLoadError(false)} />;
+  return <img key='image' {...restProps} onLoad={() => setLoadError(false)} />;
 };
 
 ImgWithFallback.propTypes = {
