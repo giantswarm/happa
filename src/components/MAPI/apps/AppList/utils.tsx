@@ -84,6 +84,10 @@ function compareAppCatalogIndexAppsByLatest(
   return compareDates(b.versions[0]?.created ?? 0, a.versions[0]?.created ?? 0);
 }
 
+/**
+ * The comparison functions used for sorting apps,
+ * used by the `Sort by` dropdown.
+ */
 export const compareAppCatalogIndexAppsFns: Record<
   string,
   (a: IAppCatalogIndexApp, b: IAppCatalogIndexApp) => number
@@ -93,6 +97,11 @@ export const compareAppCatalogIndexAppsFns: Record<
   latest: compareAppCatalogIndexAppsByLatest,
 };
 
+/**
+ * Remove the `Giant Swarm` prefix from
+ * internal catalogs, to ease cognitive load.
+ * @param catalog
+ */
 export function computeAppCatalogUITitle(
   catalog: applicationv1alpha1.IAppCatalog
 ): string {
@@ -139,6 +148,13 @@ function compareAppCatalogs(
   return 0;
 }
 
+/**
+ * Transform the app catalogs data structures into
+ * ones that can be used by the catalog sidebar.
+ * @param appCatalogs
+ * @param selectedAppCatalogs - The catalogs that are currently enabled in the sidebar.
+ * @param appCatalogErrors - Errors that occured during loading each catalog.
+ */
 export function mapAppCatalogsToFacets(
   appCatalogs: applicationv1alpha1.IAppCatalog[] = [],
   selectedAppCatalogs: Record<string, boolean> = {},
@@ -162,6 +178,11 @@ export function mapAppCatalogsToFacets(
   });
 }
 
+/**
+ * Search through the apps and find one that matches the search query.
+ * @param searchQuery
+ * @param indexApps
+ */
 export function filterAppCatalogIndexApps(
   searchQuery: string,
   indexApps: IAppCatalogIndexApp[]
@@ -186,6 +207,11 @@ export function filterAppCatalogIndexApps(
   });
 }
 
+/**
+ * Only return the apps from the selected catalogs.
+ * @param indexApps
+ * @param selectedAppCatalogs
+ */
 export function filterAppCatalogIndexAppsBySelectedAppCatalogs(
   indexApps: IAppCatalogIndexApp[],
   selectedAppCatalogs: Record<string, boolean>
@@ -219,6 +245,12 @@ interface IAppCatalogIndexResponse {
   entries: Record<string, IAppCatalogIndexAppVersion[]>;
 }
 
+/**
+ * Fetch the catalog index from the URL saved in the catalog CR.
+ * @param fetchFunc
+ * @param _auth
+ * @param catalog
+ */
 async function fetchAppCatalogIndex(
   fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
   _auth: IOAuth2Provider,
@@ -226,6 +258,7 @@ async function fetchAppCatalogIndex(
 ): Promise<IAppCatalogIndex> {
   const url = normalizeAppCatalogIndexURL(catalog.spec.storage.URL);
 
+  // Enforce client-side CORS.
   const response = await fetchFunc(url, { mode: 'cors' });
   const responseText = await response.text();
   const catalogIndexResponse = yaml.load(
@@ -283,6 +316,7 @@ export async function getAppCatalogsIndexList(
       indexList.errors[catalogName] = extractErrorMessage(response.reason);
       continue;
     }
+
     indexList.items.push(response.value);
   }
 

@@ -66,6 +66,7 @@ const AppList: React.FC<{}> = () => {
 
   const appCatalogListClient = useRef(clientFactory());
   const appCatalogListGetOptions: applicationv1alpha1.IGetAppCatalogListOptions = useMemo(() => {
+    // Admins can see any type of catalogs.
     if (isAdmin) return {};
 
     return {
@@ -121,6 +122,7 @@ const AppList: React.FC<{}> = () => {
   );
 
   useLayoutEffect(() => {
+    // Only execute this after the initial catalog load.
     if (
       Object.keys(selectedCatalogs).length > 0 ||
       typeof prevAppCatalogList !== 'undefined' ||
@@ -148,6 +150,7 @@ const AppList: React.FC<{}> = () => {
     isValidating: appCatalogIndexListIsValidating,
   } = useSWR<IAppCatalogIndexList, GenericResponse>(
     getAppCatalogsIndexListKey(appCatalogList?.items),
+    // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
     () => getAppCatalogsIndexList(fetch, auth, appCatalogList!.items)
   );
 
@@ -161,6 +164,7 @@ const AppList: React.FC<{}> = () => {
   const apps = useMemo(() => {
     if (!appCatalogIndexList) return [];
 
+    // Move all apps into a single data structure.
     const allApps = appCatalogIndexList.items.reduce(
       (agg: IAppCatalogIndexApp[], index: IAppCatalogIndex) => {
         return [...agg, ...Object.values(index.entries)];
@@ -168,6 +172,7 @@ const AppList: React.FC<{}> = () => {
       []
     );
 
+    // Filter apps by the search query.
     const appCollection = filterAppCatalogIndexApps(
       debouncedSearchQuery,
       filterAppCatalogIndexAppsBySelectedAppCatalogs(allApps, selectedCatalogs)
