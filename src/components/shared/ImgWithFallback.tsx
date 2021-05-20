@@ -1,15 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import styled from 'styled-components';
-
-const Image = styled.img`
-  opacity: 0;
-`;
-
-const LabelWrapper = styled.div<{ backgroundColor: string; textColor: string }>`
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  color: ${({ textColor }) => textColor};
-`;
+import React, { FC, ImgHTMLAttributes, useState } from 'react';
 
 interface IFallback {
   label: string;
@@ -17,11 +7,11 @@ interface IFallback {
   textColor: string;
 }
 
-interface IImgWithFallbackProps extends React.ComponentPropsWithoutRef<'img'> {
+interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
   fallback: IFallback;
 }
 
-const ImgWithFallback: React.FC<IImgWithFallbackProps> = (props) => {
+const ImgWithFallback: FC<IImgWithFallback> = (props) => {
   const [loadError, setLoadError] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -29,8 +19,7 @@ const ImgWithFallback: React.FC<IImgWithFallbackProps> = (props) => {
 
   if (loading && restProps.src) {
     return (
-      <Image
-        key='image'
+      <img
         {...restProps}
         onError={() => {
           setLoadError(true);
@@ -40,24 +29,26 @@ const ImgWithFallback: React.FC<IImgWithFallbackProps> = (props) => {
           setLoadError(false);
           setLoading(false);
         }}
+        style={{ opacity: 0 }}
       />
     );
   }
 
   if (loadError || !restProps.src) {
     return (
-      <LabelWrapper
-        key='label'
+      <div
         {...restProps}
-        backgroundColor={fallback.backgroundColor}
-        textColor={fallback.textColor}
+        style={{
+          backgroundColor: fallback.backgroundColor,
+          color: fallback.textColor,
+        }}
       >
         {fallback.label}
-      </LabelWrapper>
+      </div>
     );
   }
 
-  return <img key='image' {...restProps} onLoad={() => setLoadError(false)} />;
+  return <img {...restProps} onLoad={() => setLoadError(false)} />;
 };
 
 ImgWithFallback.propTypes = {
