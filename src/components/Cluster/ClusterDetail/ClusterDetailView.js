@@ -383,7 +383,8 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                {user?.type === LoggedInUserTypes.MAPI ? (
+                {user?.type === LoggedInUserTypes.MAPI &&
+                provider !== Providers.KVM ? (
                   <ClusterDetailApps
                     clusterId={id}
                     releaseVersion={release_version}
@@ -402,7 +403,8 @@ class ClusterDetailView extends React.Component {
                 )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                {user?.type === LoggedInUserTypes.MAPI ? (
+                {user?.type === LoggedInUserTypes.MAPI &&
+                provider !== Providers.KVM ? (
                   <ClusterDetailIngress
                     clusterID={cluster.id}
                     provider={provider}
