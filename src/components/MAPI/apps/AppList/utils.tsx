@@ -43,8 +43,8 @@ export interface IAppCatalogIndex {
   entries: Record<string, IAppCatalogIndexApp>;
 }
 
-export interface IAppCatalogIndexList {
-  items: IAppCatalogIndex[];
+export interface IAppCatalogIndexAppList {
+  items: IAppCatalogIndexApp[];
   errors: Record<string, string>;
 }
 
@@ -179,45 +179,36 @@ export function mapAppCatalogsToFacets(
 }
 
 /**
- * Search through the apps and find one that matches the search query.
+ * Search through the apps and find one that is in the
+ * selected catalogs, and that matches the search query.
  * @param searchQuery
  * @param indexApps
  */
 export function filterAppCatalogIndexApps(
   searchQuery: string,
-  indexApps: IAppCatalogIndexApp[]
+  indexApps: IAppCatalogIndexApp[],
+  selectedAppCatalogs: Record<string, boolean>
 ) {
   const normalizedQuery = searchQuery.trim().toLowerCase();
   if (normalizedQuery.length < 1) return indexApps;
 
   return indexApps.filter((indexApp) => {
-    return indexApp.versions.some((version) => {
-      switch (true) {
-        case version.name.toLowerCase().includes(normalizedQuery):
-        case version.description &&
-          version.description.toLowerCase().includes(normalizedQuery):
-        case version.keywords &&
-          version.keywords.join(',').toLowerCase().includes(normalizedQuery):
-          return true;
+    if (!selectedAppCatalogs.hasOwnProperty(indexApp.catalogName)) return false;
+    if (indexApp.versions.length < 1) return false;
 
-        default:
-          return false;
-      }
-    });
-  });
-}
+    const version = indexApp.versions[0];
 
-/**
- * Only return the apps from the selected catalogs.
- * @param indexApps
- * @param selectedAppCatalogs
- */
-export function filterAppCatalogIndexAppsBySelectedAppCatalogs(
-  indexApps: IAppCatalogIndexApp[],
-  selectedAppCatalogs: Record<string, boolean>
-): IAppCatalogIndexApp[] {
-  return indexApps.filter((indexApp) => {
-    return selectedAppCatalogs.hasOwnProperty(indexApp.catalogName);
+    switch (true) {
+      case version.name.toLowerCase().includes(normalizedQuery):
+      case version.description &&
+        version.description.toLowerCase().includes(normalizedQuery):
+      case version.keywords &&
+        version.keywords.join(',').toLowerCase().includes(normalizedQuery):
+        return true;
+
+      default:
+        return false;
+    }
   });
 }
 
@@ -293,18 +284,18 @@ async function fetchAppCatalogIndex(
   return catalogIndex;
 }
 
-export async function getAppCatalogsIndexList(
+export async function getAppCatalogsIndexAppList(
   fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
   auth: IOAuth2Provider,
   catalogs: applicationv1alpha1.IAppCatalog[]
-): Promise<IAppCatalogIndexList> {
+): Promise<IAppCatalogIndexAppList> {
   const requests = catalogs.map((catalog) =>
     fetchAppCatalogIndex(fetchFunc, auth, catalog)
   );
 
   const responses = await Promise.allSettled(requests);
 
-  const indexList: IAppCatalogIndexList = {
+  const indexList: IAppCatalogIndexAppList = {
     items: [],
     errors: {},
   };
@@ -317,13 +308,13 @@ export async function getAppCatalogsIndexList(
       continue;
     }
 
-    indexList.items.push(response.value);
+    indexList.items.push(...Object.values(response.value.entries));
   }
 
   return indexList;
 }
 
-export function getAppCatalogsIndexListKey(
+export function getAppCatalogsIndexAppListKey(
   catalogs?: applicationv1alpha1.IAppCatalog[]
 ) {
   if (!catalogs) return null;

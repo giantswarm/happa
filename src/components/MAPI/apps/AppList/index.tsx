@@ -22,12 +22,9 @@ import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 import {
   compareAppCatalogIndexAppsFns,
   filterAppCatalogIndexApps,
-  filterAppCatalogIndexAppsBySelectedAppCatalogs,
-  getAppCatalogsIndexList,
-  getAppCatalogsIndexListKey,
-  IAppCatalogIndex,
-  IAppCatalogIndexApp,
-  IAppCatalogIndexList,
+  getAppCatalogsIndexAppList,
+  getAppCatalogsIndexAppListKey,
+  IAppCatalogIndexAppList,
   mapAppCatalogsToFacets,
 } from './utils';
 
@@ -146,42 +143,41 @@ const AppList: React.FC<{}> = () => {
   }, [appCatalogList?.items, prevAppCatalogList]);
 
   const {
-    data: appCatalogIndexList,
-    isValidating: appCatalogIndexListIsValidating,
-  } = useSWR<IAppCatalogIndexList, GenericResponse>(
-    getAppCatalogsIndexListKey(appCatalogList?.items),
+    data: appCatalogIndexAppList,
+    isValidating: appCatalogIndexAppListIsValidating,
+  } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
+    getAppCatalogsIndexAppListKey(appCatalogList?.items),
     // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
-    () => getAppCatalogsIndexList(fetch, auth, appCatalogList!.items)
+    () => getAppCatalogsIndexAppList(fetch, auth, appCatalogList!.items)
   );
 
   const appCatalogIndexListIsLoading =
     appCatalogListIsLoading ||
-    (typeof appCatalogIndexList === 'undefined' &&
-      appCatalogIndexListIsValidating);
+    (typeof appCatalogIndexAppList === 'undefined' &&
+      appCatalogIndexAppListIsValidating);
 
   const [sortOrder, setSortOrder] = useState('name');
 
   const apps = useMemo(() => {
-    if (!appCatalogIndexList) return [];
-
-    // Move all apps into a single data structure.
-    const allApps = appCatalogIndexList.items.reduce(
-      (agg: IAppCatalogIndexApp[], index: IAppCatalogIndex) => {
-        return [...agg, ...Object.values(index.entries)];
-      },
-      []
-    );
+    if (!appCatalogIndexAppList) return [];
 
     // Filter apps by the search query.
     const appCollection = filterAppCatalogIndexApps(
       debouncedSearchQuery,
-      filterAppCatalogIndexAppsBySelectedAppCatalogs(allApps, selectedCatalogs)
+      appCatalogIndexAppList.items,
+      selectedCatalogs
     );
 
+    // Sort apps by the selected sorting criteria.
     appCollection.sort(compareAppCatalogIndexAppsFns[sortOrder]);
 
     return appCollection;
-  }, [debouncedSearchQuery, selectedCatalogs, sortOrder, appCatalogIndexList]);
+  }, [
+    debouncedSearchQuery,
+    selectedCatalogs,
+    sortOrder,
+    appCatalogIndexAppList,
+  ]);
 
   const handleChangeFacets = (value: string, checked: boolean) => {
     dispatchSelectedCatalogs({
@@ -203,7 +199,7 @@ const AppList: React.FC<{}> = () => {
       facetOptions={mapAppCatalogsToFacets(
         appCatalogList?.items,
         selectedCatalogs,
-        appCatalogIndexList?.errors
+        appCatalogIndexAppList?.errors
       )}
       facetsIsLoading={appCatalogListIsLoading}
       appsIsLoading={appCatalogIndexListIsLoading}
