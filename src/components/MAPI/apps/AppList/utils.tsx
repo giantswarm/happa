@@ -32,6 +32,7 @@ export interface IAppCatalogIndexApp {
   catalogTitle: string;
   catalogIconUrl: string;
   catalogIsManaged: boolean;
+  appIconURL: string;
   to: string;
   versions: IAppCatalogIndexAppVersion[];
 }
@@ -232,12 +233,14 @@ async function fetchAppCatalogIndex(
     catalogIndexResponse.entries
   )) {
     const version = versions[0]?.version ?? 'n/a';
+    const iconURL = versions[0]?.icon ?? '';
 
     catalogIndex.entries[appName] = {
       catalogName: catalog.metadata.name,
       catalogTitle: computeAppCatalogUITitle(catalog),
       catalogIconUrl: catalog.spec.logoURL ?? '',
       catalogIsManaged: isAppCatalogVisibleToUsers(catalog),
+      appIconURL: iconURL,
       name: appName,
       to: makeAppPath(appName, version, catalog.metadata.name),
       versions,
