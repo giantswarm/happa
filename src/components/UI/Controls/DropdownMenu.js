@@ -64,7 +64,7 @@ const MenuWrapper = styled.div`
 
 function DropdownMenu(props) {
   const [isOpen, setIsOpen] = useState(false);
-  const timeOutId = useRef(null);
+  const timeOutId = useRef(0);
 
   useEffect(() => {
     return () => {
