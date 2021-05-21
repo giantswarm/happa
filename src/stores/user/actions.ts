@@ -179,8 +179,6 @@ export function invitationsLoad(): ThunkAction<
         type: INVITATIONS_LOAD_SUCCESS,
         invites,
       });
-
-      return Promise.resolve();
     } catch (err) {
       new FlashMessage(
         'Something went wrong while trying to load invitations',
@@ -192,9 +190,9 @@ export function invitationsLoad(): ThunkAction<
       dispatch({
         type: INVITATIONS_LOAD_ERROR,
       });
-
-      return Promise.reject(err);
     }
+
+    return Promise.resolve();
   };
 }
 
