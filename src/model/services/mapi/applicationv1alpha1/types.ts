@@ -118,8 +118,8 @@ export interface IAppCatalogSpecConfig {
 export interface IAppCatalogSpec {
   title: string;
   description: string;
-  logoURL: string;
   storage: IAppCatalogSpecStorage;
+  logoURL?: string;
   config?: IAppCatalogSpecConfig;
 }
 
