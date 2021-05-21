@@ -194,6 +194,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
       const errorMessage = extractErrorMessage(err);
       setAppUpdateError(errorMessage);
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -224,6 +226,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -254,6 +258,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -278,6 +284,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -315,6 +323,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -352,6 +362,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -389,6 +401,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -426,6 +440,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 

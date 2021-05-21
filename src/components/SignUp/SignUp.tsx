@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage from 'lib/passageClient';
 import { validatePassword } from 'lib/passwordValidation';
@@ -131,6 +132,8 @@ export class SignUp extends React.Component<ISignUpProps, ISignUpState> {
         this.setState({
           statusMessage: statusMessage,
         });
+
+        ErrorReporter.getInstance().notify(error);
       });
   }
 
@@ -216,11 +219,13 @@ export class SignUp extends React.Component<ISignUpProps, ISignUpState> {
         .then(() => {
           this.accountCreated();
         })
-        .catch(() => {
+        .catch((err) => {
           this.setState({
             statusMessage: 'create_account_failed',
             submitting: false,
           });
+
+          ErrorReporter.getInstance().notify(err);
         });
     } else {
       this.advanceForm();

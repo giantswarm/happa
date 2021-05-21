@@ -153,6 +153,8 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
       );
 
       setIsInstalling(false);
+
+      ErrorReporter.getInstance().notify(err);
     }
 
     return Promise.resolve();

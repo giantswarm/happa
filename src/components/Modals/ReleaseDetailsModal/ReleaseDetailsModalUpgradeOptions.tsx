@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { ReleaseHelper } from 'lib/ReleaseHelper';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
@@ -72,7 +73,9 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
       );
 
       return supportedUpgradeReleases;
-    } catch {
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+
       return [];
     }
   }, [releases, currentVersion, provider, isAdmin]);

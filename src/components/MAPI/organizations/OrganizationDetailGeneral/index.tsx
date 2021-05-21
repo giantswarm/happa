@@ -82,6 +82,8 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
       return Promise.resolve();
     } catch (err: unknown) {
+      ErrorReporter.getInstance().notify(err as never);
+
       const errorMessage = extractErrorMessage(err);
 
       return Promise.reject(new Error(errorMessage));

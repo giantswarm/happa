@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router';
 import { Box, Drop, Heading, Keyboard, Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
@@ -73,6 +74,8 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
         messageTTL.LONG,
         message
       );
+
+      ErrorReporter.getInstance().notify(err as never);
     }
   };
 

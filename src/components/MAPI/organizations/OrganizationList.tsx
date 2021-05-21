@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
@@ -50,6 +51,8 @@ const OrganizationIndex: React.FC = () => {
             await createOrganization(client, auth, orgName);
             await dispatch(organizationsLoadMAPI(auth));
           } catch (error) {
+            ErrorReporter.getInstance().notify(error);
+
             if (error?.config?.data?.message) {
               new FlashMessage(
                 `Unable to create organization "${orgName}"`,

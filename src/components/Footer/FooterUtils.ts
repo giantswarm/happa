@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { VersionImpl } from 'lib/Version';
 import { Constants } from 'shared/constants';
@@ -19,7 +20,9 @@ export function formatVersion(version: string): string {
     }
 
     return version;
-  } catch {
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+
     return 'development';
   }
 }
@@ -33,7 +36,9 @@ export function getReleaseURL(version: string): string {
     }
 
     return `https://docs.giantswarm.io/changes/web-ui/happa/v${version}/`;
-  } catch {
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+
     return 'https://github.com/giantswarm/happa';
   }
 }

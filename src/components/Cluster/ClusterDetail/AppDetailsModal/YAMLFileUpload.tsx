@@ -1,4 +1,5 @@
 import yaml from 'js-yaml';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
@@ -44,6 +45,8 @@ const YAMLFileUpload: React.FC<IYAMLFileUploadProps> = ({
         );
 
         setFileUploading(false);
+
+        ErrorReporter.getInstance().notify(err);
       }
     };
 

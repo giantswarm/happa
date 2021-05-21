@@ -3,6 +3,7 @@ import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5Cluster
 import formatDistance from 'date-fns/fp/formatDistance';
 import produce from 'immer';
 import { nodePoolsURL } from 'lib/docs';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -325,9 +326,16 @@ class V5ClusterDetailTable extends React.Component {
     );
 
     this.toggleAddNodePoolForm();
-    await this.props.dispatch(
-      nodePoolsCreate(this.props.cluster.id, data, { withFlashMessages: true })
-    );
+
+    try {
+      await this.props.dispatch(
+        nodePoolsCreate(this.props.cluster.id, data, {
+          withFlashMessages: true,
+        })
+      );
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   };
 
   patchCluster(payload) {

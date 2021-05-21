@@ -2,6 +2,7 @@ import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
@@ -202,8 +203,10 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         const parsedYAML = yaml.load(input) as string;
         setValuesYAML(parsedYAML);
         setValuesYAMLError('');
-      } catch {
+      } catch (err) {
         setValuesYAMLError('Unable to parse valid YAML from this file.');
+
+        ErrorReporter.getInstance().notify(err);
       }
     };
 
@@ -226,8 +229,10 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         const parsedYAML = yaml.load(input) as string;
         setSecretsYAML(parsedYAML);
         setSecretsYAMLError('');
-      } catch {
+      } catch (err) {
         setSecretsYAMLError('Unable to parse valid YAML from this file.');
+
+        ErrorReporter.getInstance().notify(err);
       }
     };
 
@@ -276,6 +281,8 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
       dispatch(push(clusterDetailPath));
     } catch (err) {
       setLoading(false);
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 

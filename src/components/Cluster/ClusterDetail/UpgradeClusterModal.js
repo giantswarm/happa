@@ -1,5 +1,6 @@
 import diff from 'deep-diff';
 import { clusterUpgradeChecklistURL } from 'lib/docs';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -268,10 +269,12 @@ class UpgradeClusterModal extends React.Component {
 
             this.close();
           })
-          .catch(() => {
+          .catch((err) => {
             this.setState({
               loading: false,
             });
+
+            ErrorReporter.getInstance().notify(err);
           });
       }
     );

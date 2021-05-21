@@ -215,6 +215,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err as never);
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type });
     }
@@ -245,6 +247,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         messageTTL.LONG,
         message
       );
+
+      ErrorReporter.getInstance().notify(err as never);
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type, subjectName: name });
     }

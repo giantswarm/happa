@@ -1,6 +1,7 @@
 import { CallHistoryMethodAction, push, replace } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
@@ -403,6 +404,8 @@ export function mapiLogin(
     } catch (err) {
       dispatch(loginError(err.message));
       dispatch(push(MainRoutes.Login));
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
