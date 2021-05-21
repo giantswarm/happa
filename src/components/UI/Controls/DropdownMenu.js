@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 /*
@@ -64,23 +64,23 @@ const MenuWrapper = styled.div`
 
 function DropdownMenu(props) {
   const [isOpen, setIsOpen] = useState(false);
-  let timeOutId = null;
+  const timeOutId = useRef(null);
 
   useEffect(() => {
-    return function cleanup() {
-      clearTimeout(timeOutId);
+    return () => {
+      clearTimeout(timeOutId.current);
     };
-  });
+  }, []);
 
   const onBlurHandler = () => {
-    timeOutId = setTimeout(() => {
+    timeOutId.current = setTimeout(() => {
       setIsOpen(false);
     });
   };
 
   // If a child receives focus, do not close the popover.
   const onFocusHandler = () => {
-    clearTimeout(timeOutId);
+    clearTimeout(timeOutId.current);
   };
 
   const onKeyDownHandler = (event) => {
