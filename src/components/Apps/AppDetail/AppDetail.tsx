@@ -8,11 +8,12 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
+import { Providers } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import { loadAppReadme } from 'stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'stores/appcatalog/selectors';
-import { getLoggedInUser } from 'stores/main/selectors';
+import { getLoggedInUser, getProvider } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { IState } from 'stores/state';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
@@ -69,8 +70,9 @@ const AppDetail: React.FC = () => {
   };
 
   const user = useSelector(getLoggedInUser);
+  const provider = useSelector(getProvider);
   let AppInstallComponent = InstallAppModal;
-  if (user?.type === LoggedInUserTypes.MAPI) {
+  if (user?.type === LoggedInUserTypes.MAPI && provider !== Providers.KVM) {
     AppInstallComponent = AppInstallModal;
   }
 

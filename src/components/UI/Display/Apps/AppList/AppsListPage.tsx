@@ -6,7 +6,10 @@ import Button from 'UI/Controls/Button';
 import App, { IAppProps } from 'UI/Display/Apps/AppList/App';
 import Facets, { IFacetOption } from 'UI/Inputs/Facets';
 
+import AppListAppLoadingPlaceholder from './AppListAppLoadingPlaceholder';
 import Toolbar from './Toolbar';
+
+const LOADING_COMPONENTS = new Array(9).fill(0);
 
 const Wrapper = styled.div``;
 
@@ -17,6 +20,7 @@ const ListAndFacets = styled.div`
 const List = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-auto-rows: max-content;
   gap: 20px;
   border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
   width: 100%;
@@ -41,7 +45,7 @@ const EmptyState = styled.div`
 
 export interface IAppsListPageProps {
   matchCount: number;
-  onChangeFacets: (value: string, checked: Boolean) => void;
+  onChangeFacets: (value: string, checked: boolean) => void;
   onChangeSearchQuery: (value: string) => void;
   onChangeSortOrder: (value: string) => void;
   onResetSearch: () => void;
@@ -49,6 +53,8 @@ export interface IAppsListPageProps {
   searchQuery: string;
   sortOrder: string;
   apps: IAppProps[];
+  facetsIsLoading?: boolean;
+  appsIsLoading?: boolean;
 }
 
 const AppsList: React.FC<IAppsListPageProps> = (props) => {
@@ -69,13 +75,24 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
         matchCount={props.matchCount}
         onChangeSortOrder={props.onChangeSortOrder}
         sortOrder={props.sortOrder}
+        isLoading={props.appsIsLoading}
       />
       <ListAndFacets>
-        <Facets onChange={props.onChangeFacets} options={props.facetOptions} />
+        <Facets
+          onChange={props.onChangeFacets}
+          options={props.facetOptions}
+          isLoading={props.facetsIsLoading}
+        />
 
-        {!props.apps && <EmptyState />}
+        {props.appsIsLoading && (
+          <List>
+            {LOADING_COMPONENTS.map((_, i) => (
+              <AppListAppLoadingPlaceholder key={i} />
+            ))}
+          </List>
+        )}
 
-        {props.apps && props.apps.length === 0 && (
+        {!props.appsIsLoading && props.apps.length === 0 && (
           <EmptyState>
             <div>
               <h3>No apps found for your search</h3>
@@ -90,7 +107,7 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
           </EmptyState>
         )}
 
-        {props.apps && props.apps.length > 0 && (
+        {!props.appsIsLoading && props.apps.length > 0 && (
           <List>
             {props.apps.map((app, i) => (
               <App
@@ -119,6 +136,8 @@ AppsList.propTypes = {
   facetOptions: PropTypes.array.isRequired,
   searchQuery: PropTypes.string.isRequired,
   apps: PropTypes.array.isRequired,
+  appsIsLoading: PropTypes.bool,
+  facetsIsLoading: PropTypes.bool,
 };
 
 export default AppsList;

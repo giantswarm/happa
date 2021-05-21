@@ -1,5 +1,7 @@
 declare module '*.md';
 
+type GlobalEnvironment = 'development' | 'kubernetes' | 'docker-container';
+
 interface IGlobalConfig {
   apiEndpoint: string;
   audience: string;
@@ -15,6 +17,11 @@ interface IGlobalConfig {
   passageEndpoint: string;
   mapiAuthRedirectURL: string;
   mapiAuthAdminGroup: string;
+  sentryDsn: string;
+  sentryEnvironment: string;
+  sentryReleaseVersion: string;
+  sentryDebug: boolean;
+  sentrySampleRate: number;
 }
 
 interface IFeatureFlags {

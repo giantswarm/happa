@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
+import FacetListItemLoadingPlaceholder from './FacetListItemLoadingPlaceholder';
+
+const LOADING_COMPONENTS = new Array(6).fill(0);
+
 const StyledButton = styled(Button)`
   margin-left: 0px;
 `;
@@ -28,9 +32,10 @@ const ListItem = styled.li`
 `;
 
 interface IFacetsProps {
-  errorMessage?: string;
   options: IFacetOption[];
   onChange: (value: string, checked: boolean) => void;
+  errorMessage?: string;
+  isLoading?: boolean;
 }
 
 export interface IFacetOption {
@@ -72,16 +77,24 @@ const Facets: React.FC<IFacetsProps> = (props) => {
       <br />
       <br />
       <CatalogList>
-        {props.options.map((o) => (
-          <ListItem key={o.value}>
-            <CheckBoxInput
-              checked={o.checked}
-              onChange={onChangeFacet.bind(this, o.value)}
-              label={o.label}
-              margin={{ bottom: 'none' }}
-            />
-          </ListItem>
-        ))}
+        {props.isLoading &&
+          LOADING_COMPONENTS.map((_, i) => (
+            <ListItem key={i}>
+              <FacetListItemLoadingPlaceholder margin={{ bottom: 'medium' }} />
+            </ListItem>
+          ))}
+
+        {!props.isLoading &&
+          props.options.map((o) => (
+            <ListItem key={o.value}>
+              <CheckBoxInput
+                checked={o.checked}
+                onChange={onChangeFacet.bind(this, o.value)}
+                label={o.label}
+                margin={{ bottom: 'none' }}
+              />
+            </ListItem>
+          ))}
       </CatalogList>
       {props.errorMessage && <span>{props.errorMessage}</span>}
     </Wrapper>
@@ -89,9 +102,10 @@ const Facets: React.FC<IFacetsProps> = (props) => {
 };
 
 Facets.propTypes = {
-  errorMessage: PropTypes.string,
   options: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  isLoading: PropTypes.bool,
 };
 
 export default Facets;

@@ -1,5 +1,6 @@
 import YAMLFileUpload from 'Cluster/ClusterDetail/AppDetailsModal/YAMLFileUpload';
 import { spinner } from 'images';
+import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
@@ -9,8 +10,29 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import DetailItem from 'UI/Layout/DetailList';
 import Truncated from 'UI/Util/Truncated';
+import { memoize } from 'underscore';
+
+const mapCatalogEntriesToReleasePickerItem = memoize(
+  (catalogEntries: applicationv1alpha1.IAppCatalogEntry[]): IVersion[] => {
+    return catalogEntries
+      .map((e) => ({
+        chartVersion: e.spec.version,
+        created: e.spec.dateCreated ?? '',
+        includesVersion: e.spec.appVersion,
+        test: isTestRelease(e.spec.version),
+      }))
+      .sort((a, b) => compare(b.chartVersion, a.chartVersion));
+  }
+);
+
+function isTestRelease(releaseVersion: string): boolean {
+  const version = new VersionImpl(releaseVersion);
+
+  return version.getPreRelease().length > 0;
+}
 
 const Upper = styled.div`
   display: flex;
@@ -21,12 +43,6 @@ const Upper = styled.div`
     width: 50%;
   }
 `;
-
-function isTestRelease(releaseVersion: string): boolean {
-  const version = new VersionImpl(releaseVersion);
-
-  return version.getPreRelease().length > 0;
-}
 
 type ConfigChangeHandler = (values: string, done: () => void) => void;
 
@@ -80,12 +96,9 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
           {props.appCatalogEntries && (
             <VersionPicker
               selectedVersion={props.app.spec.version}
-              versions={props.appCatalogEntries.map((e) => ({
-                chartVersion: e.spec.version,
-                created: e.spec.dateCreated ?? '',
-                includesVersion: e.spec.appVersion,
-                test: isTestRelease(e.spec.version),
-              }))}
+              versions={mapCatalogEntriesToReleasePickerItem(
+                props.appCatalogEntries
+              )}
               onChange={props.showEditChartVersionPane}
             />
           )}
