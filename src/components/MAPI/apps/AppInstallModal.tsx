@@ -5,6 +5,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
@@ -131,6 +132,8 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         messageType.ERROR,
         messageTTL.FOREVER
       );
+
+      ErrorReporter.getInstance().notify(clusterListError);
     }
   }, [clusterListError]);
 

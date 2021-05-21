@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -61,6 +62,8 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
         messageType.ERROR,
         messageTTL.FOREVER
       );
+
+      ErrorReporter.getInstance().notify(clusterListError);
     }
   }, [clusterListError]);
 
@@ -88,26 +91,47 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   const {
     data: clustersSummary,
     isValidating: clustersSummaryIsValidating,
+    error: clustersSummaryError,
   } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponse>(
     () => fetchClustersSummaryKey(clusterList?.items),
     () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
   );
 
+  useEffect(() => {
+    if (clustersSummaryError) {
+      ErrorReporter.getInstance().notify(clustersSummaryError);
+    }
+  }, [clustersSummaryError]);
+
   const {
     data: releasesSummary,
     isValidating: releasesSummaryIsValidating,
+    error: releasesSummaryError,
   } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponse>(
     () => fetchReleasesSummaryKey(clusterList?.items),
     () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
   );
 
-  const { data: appsSummary, isValidating: appsSummaryIsValidating } = useSWR<
-    ui.IOrganizationDetailAppsSummary,
-    GenericResponse
-  >(
+  useEffect(() => {
+    if (releasesSummaryError) {
+      ErrorReporter.getInstance().notify(releasesSummaryError);
+    }
+  }, [releasesSummaryError]);
+
+  const {
+    data: appsSummary,
+    isValidating: appsSummaryIsValidating,
+    error: appsSummaryError,
+  } = useSWR<ui.IOrganizationDetailAppsSummary, GenericResponse>(
     () => fetchAppsSummaryKey(clusterList?.items),
     () => fetchAppsSummary(clientFactory, auth, clusterList!.items)
   );
+
+  useEffect(() => {
+    if (appsSummaryError) {
+      ErrorReporter.getInstance().notify(appsSummaryError);
+    }
+  }, [appsSummaryError]);
 
   return (
     <OrganizationDetailPage

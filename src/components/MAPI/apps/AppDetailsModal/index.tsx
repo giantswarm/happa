@@ -3,6 +3,7 @@ import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteCon
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
 import GenericModal from 'components/Modals/GenericModal';
 import yaml from 'js-yaml';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
@@ -66,6 +67,10 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   );
 
   useEffect(() => {
+    if (appError) {
+      ErrorReporter.getInstance().notify(appError);
+    }
+
     if (
       metav1.isStatusError(
         appError?.data,
@@ -109,6 +114,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   }, [appName, catalog]);
   const {
     data: appCatalogEntryList,
+    error: appCatalogEntryListError,
     isValidating: appCatalogEntryListIsValidating,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponse>(
     applicationv1alpha1.getAppCatalogEntryListKey(
@@ -121,6 +127,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         appCatalogEntryListGetOptions
       )
   );
+
+  useEffect(() => {
+    if (appCatalogEntryListError) {
+      ErrorReporter.getInstance().notify(appCatalogEntryListError);
+    }
+  }, [appCatalogEntryListError]);
 
   const [pane, setPane] = useState(ModalPanes.Initial);
 
