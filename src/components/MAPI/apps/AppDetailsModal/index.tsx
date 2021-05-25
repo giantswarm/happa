@@ -41,7 +41,6 @@ enum ModalPanes {
 
 interface IAppDetailsModalProps {
   appName: string;
-  catalog: string;
   clusterId: string;
   onClose: () => void;
   visible?: boolean;
@@ -49,7 +48,6 @@ interface IAppDetailsModalProps {
 
 const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   appName,
-  catalog,
   clusterId,
   onClose,
   visible,
@@ -98,15 +96,17 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
   const appCatalogEntryListClient = useRef(clientFactory());
   const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
+    if (!app) return {};
+
     return {
       labelSelector: {
         matchingLabels: {
-          [applicationv1alpha1.labelAppName]: appName,
-          [applicationv1alpha1.labelAppCatalog]: catalog,
+          [applicationv1alpha1.labelAppName]: app.spec.name,
+          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
         },
       },
     };
-  }, [appName, catalog]);
+  }, [app]);
   const {
     data: appCatalogEntryList,
     isValidating: appCatalogEntryListIsValidating,
@@ -581,7 +581,6 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
 AppDetailsModal.propTypes = {
   appName: PropTypes.string.isRequired,
-  catalog: PropTypes.string.isRequired,
   clusterId: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   visible: PropTypes.bool,
