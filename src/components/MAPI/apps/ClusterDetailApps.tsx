@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import UserInstalledApps from 'Cluster/ClusterDetail/UserInstalledApps/UserInstalledApps';
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
@@ -10,7 +11,13 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
@@ -109,6 +116,12 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   const appListIsLoading =
     typeof appList === 'undefined' && appListIsValidating;
 
+  useEffect(() => {
+    if (appListError) {
+      ErrorReporter.getInstance().notify(appListError);
+    }
+  }, [appListError]);
+
   const [detailsModalIsVisible, setDetailsModalIsVisible] = useState(false);
   const [detailsModalAppName, setDetailsModalAppName] = useState('');
 
@@ -147,6 +160,12 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   );
   const releaseIsLoading =
     typeof release === 'undefined' && releaseIsValidating;
+
+  useEffect(() => {
+    if (releaseError) {
+      ErrorReporter.getInstance().notify(releaseError);
+    }
+  }, [releaseError]);
 
   // This makes a list of apps that are installed as part of the cluster creation.
   // It combines information from the release endpoint with the latest info
@@ -299,7 +318,6 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       {appToDisplay && (
         <AppDetailsModalMAPI
           appName={appToDisplay.metadata.name}
-          catalog={appToDisplay.spec.catalog}
           clusterId={clusterId}
           onClose={hideAppModal}
           visible={detailsModalIsVisible}

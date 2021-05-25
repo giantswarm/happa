@@ -1,5 +1,6 @@
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
   PasswordStatusMessage,
   validatePassword,
@@ -157,6 +158,8 @@ class ChangePassword extends React.Component {
           buttonVisible: false,
           errorMessage: errorMessage,
         });
+
+        ErrorReporter.getInstance().notify(error);
       });
   };
 

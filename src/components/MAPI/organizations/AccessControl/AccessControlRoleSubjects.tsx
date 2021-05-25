@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -214,6 +215,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err as never);
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type });
     }
@@ -223,7 +226,11 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     name: string
   ) => {
     try {
-      dispatch({ type: 'startLoading', subjectType: type, subjectName: name });
+      dispatch({
+        type: 'startLoading',
+        subjectType: type,
+        subjectName: name,
+      });
       await onDelete(type, name);
 
       new FlashMessage(
@@ -240,6 +247,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         messageTTL.LONG,
         message
       );
+
+      ErrorReporter.getInstance().notify(err as never);
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type, subjectName: name });
     }
@@ -259,10 +268,19 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   const client = useHttpClient();
   const auth = useAuthProvider();
 
-  const { data: serviceAccountSuggestions } = useSWR<string[], GenericResponse>(
+  const {
+    data: serviceAccountSuggestions,
+    error: serviceAccountSuggestionsError,
+  } = useSWR<string[], GenericResponse>(
     fetchServiceAccountSuggestionsKey(namespace),
     () => fetchServiceAccountSuggestions(client, auth, namespace)
   );
+
+  useEffect(() => {
+    if (serviceAccountSuggestionsError) {
+      ErrorReporter.getInstance().notify(serviceAccountSuggestionsError);
+    }
+  }, [serviceAccountSuggestionsError]);
 
   const groupType = state[AccessControlSubjectTypes.Group];
   const userType = state[AccessControlSubjectTypes.User];

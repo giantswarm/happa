@@ -1,3 +1,5 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
+
 export function callAPIMiddleware({ dispatch, getState }) {
   return (next) => (action) => {
     const { types, doPerform, throwOnError } = action;
@@ -40,6 +42,8 @@ export function callAPIMiddleware({ dispatch, getState }) {
         if (throwOnError) {
           throw error;
         }
+
+        ErrorReporter.getInstance().notify(error);
 
         // TODO: Remove this, this supports a pattern we want to factor out
         // eventually.

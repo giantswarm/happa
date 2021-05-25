@@ -3,6 +3,7 @@ import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteCon
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
 import GenericModal from 'components/Modals/GenericModal';
 import yaml from 'js-yaml';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
@@ -41,7 +42,6 @@ enum ModalPanes {
 
 interface IAppDetailsModalProps {
   appName: string;
-  catalog: string;
   clusterId: string;
   onClose: () => void;
   visible?: boolean;
@@ -49,7 +49,6 @@ interface IAppDetailsModalProps {
 
 const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   appName,
-  catalog,
   clusterId,
   onClose,
   visible,
@@ -66,6 +65,10 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   );
 
   useEffect(() => {
+    if (appError) {
+      ErrorReporter.getInstance().notify(appError);
+    }
+
     if (
       metav1.isStatusError(
         appError?.data,
@@ -98,17 +101,20 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
   const appCatalogEntryListClient = useRef(clientFactory());
   const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
+    if (!app) return {};
+
     return {
       labelSelector: {
         matchingLabels: {
-          [applicationv1alpha1.labelAppName]: appName,
-          [applicationv1alpha1.labelAppCatalog]: catalog,
+          [applicationv1alpha1.labelAppName]: app.spec.name,
+          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
         },
       },
     };
-  }, [appName, catalog]);
+  }, [app]);
   const {
     data: appCatalogEntryList,
+    error: appCatalogEntryListError,
     isValidating: appCatalogEntryListIsValidating,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponse>(
     applicationv1alpha1.getAppCatalogEntryListKey(
@@ -121,6 +127,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         appCatalogEntryListGetOptions
       )
   );
+
+  useEffect(() => {
+    if (appCatalogEntryListError) {
+      ErrorReporter.getInstance().notify(appCatalogEntryListError);
+    }
+  }, [appCatalogEntryListError]);
 
   const [pane, setPane] = useState(ModalPanes.Initial);
 
@@ -182,6 +194,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
       const errorMessage = extractErrorMessage(err);
       setAppUpdateError(errorMessage);
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -212,6 +226,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -242,6 +258,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -266,6 +284,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -303,6 +323,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -340,6 +362,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -377,6 +401,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -414,6 +440,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         messageTTL.LONG,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
   }
 
@@ -581,7 +609,6 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
 AppDetailsModal.propTypes = {
   appName: PropTypes.string.isRequired,
-  catalog: PropTypes.string.isRequired,
   clusterId: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   visible: PropTypes.bool,

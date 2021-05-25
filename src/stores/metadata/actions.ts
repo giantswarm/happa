@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { SelfClient } from 'model/clients/SelfClient';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { Dispatch } from 'redux';
@@ -62,8 +63,8 @@ const checkForUpdates = createAsynchronousAction<() => void, IState, void>({
           version: newVersion,
         });
       }
-    } catch {
-      // Do nothing
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
     } finally {
       callback?.();
     }

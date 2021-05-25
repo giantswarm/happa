@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
@@ -101,6 +102,8 @@ const AppList: React.FC<{}> = () => {
         messageTTL.FOREVER,
         errorMessage
       );
+
+      ErrorReporter.getInstance().notify(appCatalogListError);
     }
   }, [appCatalogListError]);
 
@@ -144,12 +147,19 @@ const AppList: React.FC<{}> = () => {
 
   const {
     data: appCatalogIndexAppList,
+    error: appCatalogIndexAppListError,
     isValidating: appCatalogIndexAppListIsValidating,
   } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
     getAppCatalogsIndexAppListKey(appCatalogList?.items),
     // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
     () => getAppCatalogsIndexAppList(fetch, auth, appCatalogList!.items)
   );
+
+  useEffect(() => {
+    if (appCatalogIndexAppListError) {
+      ErrorReporter.getInstance().notify(appCatalogIndexAppListError);
+    }
+  }, [appCatalogIndexAppListError]);
 
   const appCatalogIndexListIsLoading =
     appCatalogListIsLoading ||
