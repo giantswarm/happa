@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { isJwtExpired } from 'lib/helpers';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
@@ -26,7 +27,11 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
 
       return next(action);
     } catch (err) {
-      await auth.logout();
+      try {
+        await auth.logout();
+      } catch (logoutError) {
+        ErrorReporter.getInstance().notify(logoutError);
+      }
 
       new FlashMessage(
         'Your authentication token could not be renewed',
@@ -34,6 +39,8 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
         messageTTL.LONG,
         'Please log in again. If the problem persists, contact support: support@giantswarm.io'
       );
+
+      ErrorReporter.getInstance().notify(err);
     }
 
     return Promise.resolve();

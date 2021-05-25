@@ -134,6 +134,8 @@ export function catalogLoadIndex(
         id: catalogName,
       });
 
+      ErrorReporter.getInstance().notify(err);
+
       return Promise.resolve();
     }
   };
@@ -217,6 +219,8 @@ export function loadAppReadme(
         appVersion,
         error: errorMessage,
       });
+
+      ErrorReporter.getInstance().notify(error);
 
       return Promise.resolve();
     }
@@ -316,6 +320,8 @@ export function updateAppConfig(
           messageTTL.LONG
         );
       }
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -391,6 +397,8 @@ export function createAppConfig(
           messageTTL.LONG
         );
       }
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -458,6 +466,8 @@ export function deleteAppConfig(
           messageTTL.LONG
         );
       }
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -528,6 +538,8 @@ export function updateAppSecret(
           messageTTL.LONG
         );
       }
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -601,6 +613,8 @@ export function createAppSecret(
           messageTTL.LONG
         );
       }
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }

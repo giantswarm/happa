@@ -1,5 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -74,8 +75,10 @@ class Users extends React.Component {
       .then(() => {
         this.closeModal();
       })
-      .catch(() => {
+      .catch((err) => {
         this.closeModal();
+
+        ErrorReporter.getInstance().notify(err);
       });
   };
 
@@ -104,8 +107,10 @@ class Users extends React.Component {
       .then(() => {
         this.closeModal();
       })
-      .catch(() => {
+      .catch((err) => {
         this.closeModal();
+
+        ErrorReporter.getInstance().notify(err);
       });
   };
 
@@ -143,8 +148,10 @@ class Users extends React.Component {
           },
         });
       })
-      .catch(() => {
+      .catch((err) => {
         this.closeModal();
+
+        ErrorReporter.getInstance().notify(err);
       });
   };
 

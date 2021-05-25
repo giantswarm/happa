@@ -1,4 +1,5 @@
 import GiantSwarm from 'giantswarm';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage, {
   IPassageCreateInvitationResponse,
@@ -62,7 +63,7 @@ export function usersLoad(): ThunkAction<
       });
 
       return Promise.resolve();
-    } catch {
+    } catch (err) {
       new FlashMessage(
         'Something went wrong while trying to load all users',
         messageType.ERROR,
@@ -73,6 +74,8 @@ export function usersLoad(): ThunkAction<
       dispatch({
         type: USERS_LOAD_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
 
       return Promise.resolve();
     }
@@ -101,7 +104,7 @@ export function userRemoveExpiration(
         type: USERS_REMOVE_EXPIRATION_SUCCESS,
         user,
       });
-    } catch {
+    } catch (err) {
       new FlashMessage(
         'Something went wrong while trying to remove expiration from this user',
         messageType.ERROR,
@@ -111,6 +114,8 @@ export function userRemoveExpiration(
       dispatch({
         type: USERS_REMOVE_EXPIRATION_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -129,7 +134,7 @@ export function userDelete(
         type: USERS_DELETE_SUCCESS,
         email,
       });
-    } catch {
+    } catch (err) {
       new FlashMessage(
         'Something went wrong while trying to delete this user',
         messageType.ERROR,
@@ -140,6 +145,8 @@ export function userDelete(
       dispatch({
         type: USERS_DELETE_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -190,6 +197,8 @@ export function invitationsLoad(): ThunkAction<
       dispatch({
         type: INVITATIONS_LOAD_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
 
     return Promise.resolve();

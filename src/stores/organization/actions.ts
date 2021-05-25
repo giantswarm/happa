@@ -1,4 +1,5 @@
 import GiantSwarm, { V4Organization } from 'giantswarm';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpClientImpl } from 'model/clients/HttpClient';
@@ -338,7 +339,7 @@ export function organizationDeleteConfirmed(
       dispatch(organizationDeleteSuccess(orgId));
 
       return true;
-    } catch {
+    } catch (err) {
       new FlashMessage(
         `Could not delete organization <code>${orgId}</code>.`,
         messageType.ERROR,
@@ -349,6 +350,8 @@ export function organizationDeleteConfirmed(
       dispatch({
         type: ORGANIZATION_DELETE_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
 
       return false;
     }
@@ -400,7 +403,7 @@ export function organizationCreateConfirmed(
         type: ORGANIZATION_CREATE_SUCCESS,
       });
       await dispatch(organizationsLoad());
-    } catch {
+    } catch (err) {
       new FlashMessage(
         `Could not create organization <code>${orgId}</code>`,
         messageType.ERROR,
@@ -411,6 +414,8 @@ export function organizationCreateConfirmed(
       dispatch({
         type: ORGANIZATION_CREATE_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     } finally {
       dispatch(modalHide());
     }
@@ -466,12 +471,14 @@ export function organizationAddMemberConfirmed(
 
       await dispatch(organizationsLoad());
       dispatch(modalHide());
-    } catch {
+    } catch (err) {
       dispatch({
         type: ORGANIZATION_ADD_MEMBER_ERROR,
         orgId,
         errorMessage: `Could not add ${email} to organization ${orgId}.`,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -503,7 +510,7 @@ export function organizationRemoveMemberConfirmed(
       );
 
       await dispatch(organizationsLoad());
-    } catch {
+    } catch (err) {
       new FlashMessage(
         `Error removing <code>${email}</code> from organization <code>${orgId}</code>`,
         messageType.ERROR,
@@ -513,6 +520,8 @@ export function organizationRemoveMemberConfirmed(
       dispatch({
         type: ORGANIZATION_REMOVE_MEMBER_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     } finally {
       dispatch(modalHide());
     }
@@ -545,7 +554,7 @@ export function organizationCredentialsLoad(
         type: ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
         credentials: Array.from(credentials),
       });
-    } catch {
+    } catch (err) {
       new FlashMessage(
         `Could not load credentials for <code>${orgId}</code>.`,
         messageType.ERROR,
@@ -556,6 +565,8 @@ export function organizationCredentialsLoad(
       dispatch({
         type: ORGANIZATION_CREDENTIALS_LOAD_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }
@@ -632,7 +643,7 @@ export function organizationCredentialsSetConfirmed(
       });
 
       await dispatch(organizationCredentialsLoad(orgId));
-    } catch {
+    } catch (err) {
       new FlashMessage(
         `Could not set credentials for organization <code>${orgId}</code>.`,
         messageType.ERROR,
@@ -643,6 +654,8 @@ export function organizationCredentialsSetConfirmed(
       dispatch({
         type: ORGANIZATION_CREDENTIALS_SET_ERROR,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }

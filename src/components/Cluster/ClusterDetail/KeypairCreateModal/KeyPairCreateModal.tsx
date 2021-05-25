@@ -11,6 +11,7 @@ import {
   MODAL_CHANGE_TIMEOUT,
   VALIDATION_DEBOUNCE_RATE,
 } from 'Cluster/ClusterDetail/KeypairCreateModal/Utils';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { makeKubeConfigTextFile } from 'lib/helpers';
 import useDebounce from 'lib/hooks/useDebounce';
 import PropTypes from 'prop-types';
@@ -99,6 +100,8 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
           status: KeypairCreateModalStatus.Adding,
         });
       }, MODAL_CHANGE_TIMEOUT);
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 

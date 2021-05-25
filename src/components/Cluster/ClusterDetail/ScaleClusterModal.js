@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
@@ -120,6 +121,8 @@ class ScaleClusterModal extends React.Component {
               loading: false,
               error: error,
             });
+
+            ErrorReporter.getInstance().notify(error);
           });
       }
     );

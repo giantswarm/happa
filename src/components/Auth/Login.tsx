@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router';
 import { Anchor, Box, Heading, Paragraph } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
   clearQueues,
   FlashMessage,
@@ -145,6 +146,8 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             messageTTL.LONG,
             message
           );
+
+          ErrorReporter.getInstance().notify(error);
         });
     }
   };

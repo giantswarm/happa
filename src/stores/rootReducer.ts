@@ -29,7 +29,7 @@ const entityReducers: ReducersMapObject<IState['entities']> = {
 const entities = combineReducers(entityReducers);
 
 const rootReducer = (history: History<History.LocationState>) =>
-  combineReducers({
+  combineReducers<IState>({
     router: connectRouter(history),
     main: makeMainReducer(),
     metadata,

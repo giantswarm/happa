@@ -1,4 +1,5 @@
 import { installingCACert } from 'lib/docs';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
@@ -80,7 +81,7 @@ class ConfigKubeCtl extends React.Component {
           },
         });
       })
-      .catch(() => {
+      .catch((err) => {
         const keyPairChangeDelay = 200;
 
         setTimeout(() => {
@@ -92,6 +93,8 @@ class ConfigKubeCtl extends React.Component {
             },
           });
         }, keyPairChangeDelay);
+
+        ErrorReporter.getInstance().notify(err);
       });
   };
 
@@ -122,7 +125,7 @@ class ConfigKubeCtl extends React.Component {
             loading: false,
           });
         })
-        .catch(() => {
+        .catch((err) => {
           new FlashMessage(
             'Something went wrong while trying to load cluster details.',
             messageType.ERROR,
@@ -134,6 +137,8 @@ class ConfigKubeCtl extends React.Component {
             // eslint-disable-next-line react/no-unused-state
             loading: 'failed',
           });
+
+          ErrorReporter.getInstance().notify(err);
         });
     }
   }

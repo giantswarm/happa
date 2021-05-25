@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
   clearQueues,
   FlashMessage,
@@ -104,6 +105,8 @@ class SetPassword extends React.Component {
           verifyingToken: false,
           tokenValid: false,
         });
+
+        ErrorReporter.getInstance().notify(error);
       });
   }
 
@@ -125,6 +128,8 @@ class SetPassword extends React.Component {
         const [heading, message] = parseErrorMessages(error);
 
         new FlashMessage(heading, messageType.ERROR, messageTTL.LONG, message);
+
+        ErrorReporter.getInstance().notify(error);
       });
   }
 

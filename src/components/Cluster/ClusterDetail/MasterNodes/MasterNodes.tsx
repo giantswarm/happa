@@ -1,5 +1,6 @@
 import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
@@ -67,8 +68,8 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
       if (isMounted.current) {
         setIsConverting(false);
       }
-    } catch {
-      // Skipping because we're handling the error in the action.
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
     } finally {
       if (isMounted.current) {
         setIsLoading(false);
