@@ -6,6 +6,7 @@ import {
   compose,
   createStore,
   Middleware,
+  PreloadedState,
   Store,
 } from 'redux';
 import thunk from 'redux-thunk';
@@ -17,7 +18,12 @@ import { callAPIMiddleware } from './callAPIMiddleware';
 
 let store = {} as Store<IState>;
 
-// @ts-ignore
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default function configureStore(
@@ -34,7 +40,7 @@ export default function configureStore(
 
   store = createStore(
     rootReducer(history),
-    initialState,
+    initialState as PreloadedState<IState>,
     composeEnhancers(applyMiddleware(...middleware))
   );
 
