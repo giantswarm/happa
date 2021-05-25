@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { AppsRoutes } from 'shared/constants/routes';
+import DocumentTitle from 'shared/DocumentTitle';
 import { loadAppReadme } from 'stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'stores/appcatalog/selectors';
@@ -66,48 +67,50 @@ const AppDetail: React.FC<{}> = () => {
   };
 
   return (
-    <Breadcrumb
-      data={{
-        title: app?.name.toUpperCase(),
-        pathname: match.url,
-      }}
-    >
-      {app && catalog && (
-        <AppDetailPage
-          appTitle={app.name}
-          appIconURL={app.icon}
-          catalogName={catalog.spec.title}
-          catalogDescription={catalog.spec.description}
-          catalogIcon={catalog.spec.logoURL}
-          otherVersions={otherVersions.map((v) => ({
-            chartVersion: v.version,
-            created: v.created,
-            includesVersion: v.appVersion,
-            test: false,
-          }))}
-          chartVersion={app.version}
-          createDate={app.created}
-          includesVersion={app.appVersion}
-          description={app.description}
-          website={app.home}
-          keywords={app.keywords}
-          readmeURL={readmeURL}
-          readmeError={readmeErrorMessage}
-          readme={app.readme}
-          selectVersion={selectVersion}
-          installAppModal={
-            <AppInstallModal
-              app={{
-                catalog: catalog.metadata.name,
-                name: app.name,
-                versions: otherVersions,
-              }}
-              selectedClusterID={selectedClusterID}
-            />
-          }
-        />
-      )}
-    </Breadcrumb>
+    <DocumentTitle title={`App Details | ${app?.name}`}>
+      <Breadcrumb
+        data={{
+          title: app?.name.toUpperCase(),
+          pathname: match.url,
+        }}
+      >
+        {app && catalog && (
+          <AppDetailPage
+            appTitle={app.name}
+            appIconURL={app.icon}
+            catalogName={catalog.spec.title}
+            catalogDescription={catalog.spec.description}
+            catalogIcon={catalog.spec.logoURL}
+            otherVersions={otherVersions.map((v) => ({
+              chartVersion: v.version,
+              created: v.created,
+              includesVersion: v.appVersion,
+              test: false,
+            }))}
+            chartVersion={app.version}
+            createDate={app.created}
+            includesVersion={app.appVersion}
+            description={app.description}
+            website={app.home}
+            keywords={app.keywords}
+            readmeURL={readmeURL}
+            readmeError={readmeErrorMessage}
+            readme={app.readme}
+            selectVersion={selectVersion}
+            installAppModal={
+              <AppInstallModal
+                app={{
+                  catalog: catalog.metadata.name,
+                  name: app.name,
+                  versions: otherVersions,
+                }}
+                selectedClusterID={selectedClusterID}
+              />
+            }
+          />
+        )}
+      </Breadcrumb>
+    </DocumentTitle>
   );
 };
 
