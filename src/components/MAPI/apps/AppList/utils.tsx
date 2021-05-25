@@ -6,8 +6,12 @@ import { compare } from 'lib/semver';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
+import { Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
-import { normalizeAppCatalogIndexURL } from 'stores/appcatalog/utils';
+import {
+  fixTestAppReadmeURLs,
+  normalizeAppCatalogIndexURL,
+} from 'stores/appcatalog/utils';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 
@@ -324,4 +328,38 @@ export function getAppCatalogsIndexAppListKey(
     .sort(compareAppCatalogs)
     .map((c) => c.metadata.name)
     .join();
+}
+
+export function getAppCatalogIndexAppVersionReadmeURL(
+  appVersion?: IAppCatalogIndexAppVersion
+): string | undefined {
+  return (
+    appVersion?.annotations?.[applicationv1alpha1.annotationReadme] ||
+    appVersion?.sources?.find((url) => url.endsWith(Constants.README_FILE))
+  );
+}
+
+/**
+ * Retrieve the contents of an application's README.md
+ * from a given URL.
+ * @param fetchFunc
+ * @param _auth
+ * @param fromURL
+ */
+export async function fetchAppCatalogIndexAppVersionReadme(
+  fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
+  _auth: IOAuth2Provider,
+  fromURL: string
+): Promise<string> {
+  const url = fixTestAppReadmeURLs(fromURL);
+
+  // Enforce client-side CORS.
+  const response = await fetchFunc(url, { mode: 'cors' });
+  const responseText = await response.text();
+
+  return responseText;
+}
+
+export function fetchAppCatalogIndexAppVersionReadmeKey(fromURL?: string) {
+  return fromURL ?? null;
 }

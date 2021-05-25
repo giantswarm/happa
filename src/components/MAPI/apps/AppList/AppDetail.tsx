@@ -23,6 +23,9 @@ import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
 import { isTestRelease } from '../utils';
 import {
+  fetchAppCatalogIndexAppVersionReadme,
+  fetchAppCatalogIndexAppVersionReadmeKey,
+  getAppCatalogIndexAppVersionReadmeURL,
   getAppCatalogsIndexAppList,
   getAppCatalogsIndexAppListKey,
   IAppCatalogIndexAppList,
@@ -131,11 +134,6 @@ const AppDetail: React.FC<{}> = () => {
     );
   }, [appCatalogIndexAppList, match.params.app]);
 
-  // TODO(axbarsan): Fetch app readme.
-  const readme = '';
-  const readmeURL = '';
-  const readmeError = '';
-
   const selectedClusterID = useSelector(
     (state: IState) => state.main.selectedClusterID
   );
@@ -175,6 +173,16 @@ const AppDetail: React.FC<{}> = () => {
     }
   }, [app, selectedVersion, match.params, dispatch]);
 
+  const readmeURL = getAppCatalogIndexAppVersionReadmeURL(selectedVersion);
+
+  const { data: appReadme, error: appReadmeError } = useSWR<
+    string,
+    GenericResponse
+  >(fetchAppCatalogIndexAppVersionReadmeKey(readmeURL), () =>
+    // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
+    fetchAppCatalogIndexAppVersionReadme(fetch, auth, readmeURL!)
+  );
+
   if (!app || !selectedVersion) return null;
 
   return (
@@ -200,8 +208,8 @@ const AppDetail: React.FC<{}> = () => {
             website={selectedVersion.home}
             keywords={selectedVersion.keywords}
             readmeURL={readmeURL}
-            readmeError={readmeError}
-            readme={readme}
+            readmeError={extractErrorMessage(appReadmeError)}
+            readme={appReadme}
             selectVersion={selectVersion}
             installAppModal={
               <AppInstallModal
