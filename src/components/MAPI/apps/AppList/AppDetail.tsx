@@ -201,7 +201,7 @@ const AppDetail: React.FC<{}> = () => {
               <AppInstallModal
                 appName={selectedVersion.name}
                 chartName={selectedVersion.name}
-                catalogName={appCatalog!.spec.title ?? app!.catalogName}
+                catalogName={appCatalog!.spec.title}
                 versions={otherVersions}
                 selectedClusterID={selectedClusterID}
               />
