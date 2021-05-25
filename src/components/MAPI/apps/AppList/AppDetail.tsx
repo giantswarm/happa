@@ -175,7 +175,7 @@ const AppDetail: React.FC<{}> = () => {
     <DocumentTitle title={app && `App Details | ${app.name}`}>
       <Breadcrumb
         data={{
-          title: app?.name.toUpperCase(),
+          title: app?.name.toUpperCase() ?? 'Loading…',
           pathname: match.url,
         }}
       >
