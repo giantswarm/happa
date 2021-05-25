@@ -171,6 +171,12 @@ const AppDetail: React.FC<{}> = () => {
     fetchAppCatalogIndexAppVersionReadme(fetch, auth, readmeURL!)
   );
 
+  useEffect(() => {
+    if (appReadmeError) {
+      ErrorReporter.getInstance().notify(appReadmeError);
+    }
+  }, [appReadmeError]);
+
   return (
     <DocumentTitle title={app && `App Details | ${app.name}`}>
       <Breadcrumb
