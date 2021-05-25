@@ -1,4 +1,5 @@
 import GenericModal from 'components/Modals/GenericModal';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import useError from 'lib/hooks/useError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -92,62 +93,96 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   }
 
   async function editChartVersion() {
-    const { error } = await dispatch(
-      updateAppAction({ appName, clusterId, version: desiredVersion })
-    );
+    try {
+      const { error } = await dispatch(
+        updateAppAction({ appName, clusterId, version: desiredVersion })
+      );
 
-    if (error) {
-      return;
+      if (error) {
+        ErrorReporter.getInstance().notify(error);
+
+        return;
+      }
+
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
     }
-
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    handleClose();
   }
 
   async function deleteAppConfig() {
-    await dispatch(deleteAppConfigAction(appName, clusterId));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    handleClose();
+    try {
+      await dispatch(deleteAppConfigAction(appName, clusterId));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   async function deleteAppSecret() {
-    await dispatch(deleteAppSecretAction(appName, clusterId));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    handleClose();
+    try {
+      await dispatch(deleteAppSecretAction(appName, clusterId));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   async function deleteApp() {
-    await dispatch(deleteAppAction({ appName, clusterId }));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    handleClose();
+    try {
+      await dispatch(deleteAppAction({ appName, clusterId }));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   async function createAppConfig(values: string, done: () => void) {
-    await dispatch(createAppConfigAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    done();
-    handleClose();
+    try {
+      await dispatch(createAppConfigAction(appName, clusterId, values));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      done();
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   async function updateAppConfig(values: string, done: () => void) {
-    await dispatch(updateAppConfigAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    done();
-    handleClose();
+    try {
+      await dispatch(updateAppConfigAction(appName, clusterId, values));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      done();
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   async function createAppSecret(values: string, done: () => void) {
-    await dispatch(createAppSecretAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    done();
-    handleClose();
+    try {
+      await dispatch(createAppSecretAction(appName, clusterId, values));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      done();
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   async function updateAppSecret(values: string, done: () => void) {
-    await dispatch(updateAppSecretAction(appName, clusterId, values));
-    await dispatch(loadClusterApps({ clusterId: clusterId }));
-    done();
-    handleClose();
+    try {
+      await dispatch(updateAppSecretAction(appName, clusterId, values));
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+      done();
+      handleClose();
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   }
 
   switch (pane) {

@@ -1,4 +1,5 @@
 import GiantSwarm from 'giantswarm';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -100,6 +101,8 @@ class ChangeEmailForm extends React.Component {
             isButtonVisible: false,
             errorMessage: errorMessage,
           });
+
+          ErrorReporter.getInstance().notify(error);
         });
     }
   };

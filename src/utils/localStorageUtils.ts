@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { AuthorizationTypes } from 'shared/constants';
 import { LoggedInUserTypes } from 'stores/main/types';
 
@@ -13,8 +14,8 @@ export function fetchUserFromStorage(): ILoggedInUser | null {
   let user: ILoggedInUser | null = null;
   try {
     user = JSON.parse(String(localStorage.getItem('user')));
-  } catch {
-    // Ignore error.
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
   }
   if (!user) return null;
 

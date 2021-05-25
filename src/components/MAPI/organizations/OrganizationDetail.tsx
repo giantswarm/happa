@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
@@ -57,6 +58,10 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   useEffect(() => {
+    if (error) {
+      ErrorReporter.getInstance().notify(error);
+    }
+
     if (
       metav1.isStatusError(error?.data, metav1.K8sStatusErrorReasons.NotFound)
     ) {

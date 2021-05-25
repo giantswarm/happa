@@ -1,6 +1,7 @@
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
 import { spinner } from 'images';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -111,7 +112,7 @@ class KeyPairs extends React.Component {
         this.props.cluster.api_endpoint
       ).hostname;
     } catch (error) {
-      throw Error(`Api endpoint: ${this.props.cluster.api_endpoint}`);
+      ErrorReporter.getInstance().notify(error);
     }
   }
 

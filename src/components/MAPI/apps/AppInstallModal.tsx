@@ -5,6 +5,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
@@ -131,6 +132,8 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         messageType.ERROR,
         messageTTL.FOREVER
       );
+
+      ErrorReporter.getInstance().notify(clusterListError);
     }
   }, [clusterListError]);
 
@@ -185,8 +188,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         const parsedYAML = yaml.load(input) as string;
         setValuesYAML(yaml.dump(parsedYAML));
         setValuesYAMLError('');
-      } catch {
+      } catch (err) {
         setValuesYAMLError('Unable to parse valid YAML from this file.');
+
+        ErrorReporter.getInstance().notify(err);
       }
     };
 
@@ -209,8 +214,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         const parsedYAML = yaml.load(input) as string;
         setSecretsYAML(yaml.dump(parsedYAML));
         setSecretsYAMLError('');
-      } catch {
+      } catch (err) {
         setSecretsYAMLError('Unable to parse valid YAML from this file.');
+
+        ErrorReporter.getInstance().notify(err);
       }
     };
 
@@ -262,6 +269,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
       dispatch(push(clusterDetailPath));
     } catch (error) {
+      if (error) {
+        ErrorReporter.getInstance().notify(error);
+      }
+
       let errorMessage = '';
       switch (true) {
         case metav1.isStatusError(

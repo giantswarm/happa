@@ -1,4 +1,5 @@
 import GiantSwarm from 'giantswarm';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
@@ -54,6 +55,8 @@ export function clusterNodePoolsLoad(
         nodePoolIDs,
       });
     } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+
       if (err.response?.status === StatusCodes.NotFound) {
         /**
          * If the status code is 404, it means that the cluster
@@ -217,6 +220,8 @@ export function nodePoolDeleteConfirmed(
         nodePoolID: nodePool.id,
         error: err,
       });
+
+      ErrorReporter.getInstance().notify(err);
     }
   };
 }

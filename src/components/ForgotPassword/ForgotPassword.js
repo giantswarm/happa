@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
   clearQueues,
   FlashMessage,
@@ -75,6 +76,8 @@ class ForgotPassword extends React.Component {
           submitting: false,
           tokenRequested: false,
         });
+
+        ErrorReporter.getInstance().notify(error);
       });
   };
 

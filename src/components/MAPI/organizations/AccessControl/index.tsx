@@ -1,10 +1,11 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import produce from 'immer';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
-import React, { useLayoutEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import DocumentTitle from 'shared/DocumentTitle';
 import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
@@ -41,6 +42,12 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   >(getRoleItemsKey(orgNamespace), () =>
     getRoleItems(clientFactory, auth, orgNamespace)
   );
+
+  useEffect(() => {
+    if (error) {
+      ErrorReporter.getInstance().notify(error);
+    }
+  }, [error]);
 
   const [activeRoleName, setActiveRoleName] = useState('');
   const activeRole = useMemo(
@@ -82,6 +89,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 
       return Promise.resolve();
     } catch (err: unknown) {
+      ErrorReporter.getInstance().notify(err as never);
+
       const errorMessage = extractErrorMessage(err);
 
       return Promise.reject(new Error(errorMessage));
@@ -126,6 +135,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 
       return Promise.resolve();
     } catch (err: unknown) {
+      ErrorReporter.getInstance().notify(err as never);
+
       const errorMessage = extractErrorMessage(err);
 
       return Promise.reject(new Error(errorMessage));

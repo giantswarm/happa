@@ -1,13 +1,14 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import { Box, Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
 import { extractErrorMessage } from 'MAPI/organizations/AccessControl/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
@@ -61,6 +62,12 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
   );
   const appListIsLoading =
     typeof appList === 'undefined' && appListIsValidating && !appListError;
+
+  useEffect(() => {
+    if (appListError) {
+      ErrorReporter.getInstance().notify(appListError);
+    }
+  }, [appListError]);
 
   const hasIngress = useMemo(() => {
     const app = findIngressApp(appList?.items);

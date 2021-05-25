@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -87,15 +88,24 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
   useEffect(() => {
     const prepare = async () => {
-      await dispatch(prepareIngressTabData({ clusterId }));
-      setIsNew(false);
+      try {
+        await dispatch(prepareIngressTabData({ clusterId }));
+        setIsNew(false);
+      } catch (err) {
+        ErrorReporter.getInstance().notify(err);
+      }
     };
 
     prepare();
   }, [dispatch, clusterId]);
 
-  const installIngressController = () =>
-    dispatch(installLatestIngress({ clusterId }));
+  const installIngressController = async () => {
+    try {
+      await dispatch(installLatestIngress({ clusterId }));
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
 
   const clusterIsCreating = isClusterCreating(cluster);
   const clusterIsUpdating =
