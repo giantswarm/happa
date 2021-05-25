@@ -2,7 +2,7 @@ import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAp
 import { push } from 'connected-react-router';
 import useError from 'lib/hooks/useError';
 import RoutePath from 'lib/routePath';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -65,6 +65,17 @@ const AppDetail: React.FC = () => {
     }
   };
 
+  const versions = useMemo(
+    () =>
+      otherVersions.map((v) => ({
+        chartVersion: v.version,
+        created: v.created,
+        includesVersion: v.appVersion,
+        test: false,
+      })),
+    [otherVersions]
+  );
+
   return (
     <Breadcrumb
       data={{
@@ -79,12 +90,7 @@ const AppDetail: React.FC = () => {
           catalogName={catalog.spec.title}
           catalogDescription={catalog.spec.description}
           catalogIcon={catalog.spec.logoURL}
-          otherVersions={otherVersions.map((v) => ({
-            chartVersion: v.version,
-            created: v.created,
-            includesVersion: v.appVersion,
-            test: false,
-          }))}
+          otherVersions={versions}
           chartVersion={app.version}
           createDate={app.created}
           includesVersion={app.appVersion}
@@ -100,7 +106,7 @@ const AppDetail: React.FC = () => {
               app={{
                 catalog: catalog.metadata.name,
                 name: app.name,
-                versions: otherVersions,
+                versions,
               }}
               selectedClusterID={selectedClusterID}
             />
