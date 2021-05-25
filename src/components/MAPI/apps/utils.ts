@@ -1,5 +1,7 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { VersionImpl } from 'lib/Version';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -611,4 +613,16 @@ export function createIngressApp(
     configMapContents: '',
     secretContents: '',
   });
+}
+
+export function isTestRelease(releaseVersion: string): boolean {
+  try {
+    const version = new VersionImpl(releaseVersion);
+
+    return version.getPreRelease().length > 0;
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+
+    return false;
+  }
 }
