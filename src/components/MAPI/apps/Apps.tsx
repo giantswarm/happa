@@ -7,7 +7,7 @@ import { AppsRoutes } from 'shared/constants/routes';
 
 import AppDetail from './AppList/AppDetail';
 
-const Apps: React.FC = () => {
+const Apps: React.FC<{}> = () => {
   return (
     <Breadcrumb
       data={{
