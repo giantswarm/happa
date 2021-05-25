@@ -33,8 +33,10 @@ import {
 } from './utils';
 
 function mapAppCatalogIndexAppVersionsToReleasePickerItems(
-  appVersions: IAppCatalogIndexAppVersion[]
-): IVersion[] {
+  appVersions?: IAppCatalogIndexAppVersion[]
+): IVersion[] | undefined {
+  if (!appVersions) return undefined;
+
   return appVersions
     .map((e) => ({
       chartVersion: e.version,
@@ -56,19 +58,16 @@ const AppDetail: React.FC<{}> = () => {
   const auth = useAuthProvider();
 
   const appCatalogClient = useRef(clientFactory());
-  const {
-    data: appCatalog,
-    error: appCatalogError,
-    // isValidating: appCatalogIsValidating,
-  } = useSWR<applicationv1alpha1.IAppCatalog, GenericResponse>(
-    applicationv1alpha1.getAppCatalogKey('', match.params.catalogName),
-    () =>
-      applicationv1alpha1.getAppCatalog(
-        appCatalogClient.current,
-        auth,
-        '',
-        match.params.catalogName
-      )
+  const { data: appCatalog, error: appCatalogError } = useSWR<
+    applicationv1alpha1.IAppCatalog,
+    GenericResponse
+  >(applicationv1alpha1.getAppCatalogKey('', match.params.catalogName), () =>
+    applicationv1alpha1.getAppCatalog(
+      appCatalogClient.current,
+      auth,
+      '',
+      match.params.catalogName
+    )
   );
 
   const dispatch = useDispatch();
@@ -90,15 +89,11 @@ const AppDetail: React.FC<{}> = () => {
     }
   }, [appCatalogError, dispatch]);
 
-  // const appCatalogIsLoading =
-  //   typeof appCatalog === 'undefined' && appCatalogIsValidating;
-
   const appCatalogList = appCatalog ? [appCatalog] : undefined;
 
   const {
     data: appCatalogIndexAppList,
     error: appCatalogIndexAppListError,
-    // isValidating: appCatalogIndexAppListIsValidating,
   } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
     getAppCatalogsIndexAppListKey(appCatalogList),
     // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
@@ -122,12 +117,6 @@ const AppDetail: React.FC<{}> = () => {
     }
   }, [appCatalogIndexAppListError, dispatch]);
 
-  // TODO(axbarsan): Add loading animation using this.
-  // const appCatalogIndexListIsLoading =
-  //   appCatalogIsLoading ||
-  //   (typeof appCatalogIndexAppList === 'undefined' &&
-  //     appCatalogIndexAppListIsValidating);
-
   const app = useMemo(() => {
     return appCatalogIndexAppList?.items.find(
       (a) => a.name === match.params.app
@@ -150,11 +139,10 @@ const AppDetail: React.FC<{}> = () => {
     dispatch(push(path));
   };
 
-  const otherVersions = useMemo(() => {
-    if (!app) return [];
-
-    return mapAppCatalogIndexAppVersionsToReleasePickerItems(app.versions);
-  }, [app]);
+  const otherVersions = useMemo(
+    () => mapAppCatalogIndexAppVersionsToReleasePickerItems(app?.versions),
+    [app]
+  );
 
   const selectedVersion = useMemo(
     () => app?.versions?.find((a) => a.version === match.params.version),
@@ -183,45 +171,43 @@ const AppDetail: React.FC<{}> = () => {
     fetchAppCatalogIndexAppVersionReadme(fetch, auth, readmeURL!)
   );
 
-  if (!app || !selectedVersion) return null;
-
   return (
-    <DocumentTitle title={`App Details | ${app.name}`}>
+    <DocumentTitle title={app && `App Details | ${app.name}`}>
       <Breadcrumb
         data={{
-          title: app.name.toUpperCase(),
+          title: app?.name.toUpperCase(),
           pathname: match.url,
         }}
       >
-        {app && (
-          <AppDetailPage
-            catalogName={appCatalog!.spec.title ?? app.catalogName}
-            catalogIcon={appCatalog!.spec.logoURL}
-            catalogDescription={appCatalog!.spec.description}
-            otherVersions={otherVersions}
-            appTitle={selectedVersion.name}
-            appIconURL={selectedVersion.icon}
-            chartVersion={selectedVersion.version}
-            createDate={selectedVersion.created}
-            includesVersion={selectedVersion.appVersion}
-            description={selectedVersion.description ?? ''}
-            website={selectedVersion.home}
-            keywords={selectedVersion.keywords}
-            readmeURL={readmeURL}
-            readmeError={extractErrorMessage(appReadmeError)}
-            readme={appReadme}
-            selectVersion={selectVersion}
-            installAppModal={
+        <AppDetailPage
+          catalogName={appCatalog?.spec.title}
+          catalogIcon={appCatalog?.spec.logoURL}
+          catalogDescription={appCatalog?.spec.description}
+          otherVersions={otherVersions}
+          appTitle={selectedVersion?.name}
+          appIconURL={selectedVersion?.icon}
+          chartVersion={selectedVersion?.version}
+          createDate={selectedVersion?.created}
+          includesVersion={selectedVersion?.appVersion}
+          description={selectedVersion?.description ?? ''}
+          website={selectedVersion?.home}
+          keywords={selectedVersion?.keywords}
+          readmeURL={readmeURL}
+          readmeError={extractErrorMessage(appReadmeError)}
+          readme={appReadme}
+          selectVersion={selectVersion}
+          installAppModal={
+            selectedVersion && otherVersions ? (
               <AppInstallModal
                 appName={selectedVersion.name}
                 chartName={selectedVersion.name}
-                catalogName={appCatalog!.spec.title ?? app.catalogName}
+                catalogName={appCatalog!.spec.title ?? app!.catalogName}
                 versions={otherVersions}
                 selectedClusterID={selectedClusterID}
               />
-            }
-          />
-        )}
+            ) : undefined
+          }
+        />
       </Breadcrumb>
     </DocumentTitle>
   );
