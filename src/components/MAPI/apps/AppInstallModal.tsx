@@ -73,7 +73,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
 
-  const [version, setVersion] = useState(props.versions[0].chartVersion);
+  const [version, setVersion] = useState(props.versions[0]?.chartVersion ?? '');
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
