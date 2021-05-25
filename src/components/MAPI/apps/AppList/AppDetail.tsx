@@ -158,9 +158,24 @@ const AppDetail: React.FC<{}> = () => {
     return mapAppCatalogIndexAppVersionsToReleasePickerItems(app.versions);
   }, [app]);
 
-  const latestVersion = app?.versions?.[0];
+  const selectedVersion = useMemo(
+    () => app?.versions?.find((a) => a.version === match.params.version),
+    [app, match.params.version]
+  );
 
-  if (!app || !latestVersion) return null;
+  useEffect(() => {
+    if (app && !selectedVersion) {
+      new FlashMessage(
+        `Couldn't find version <code>${match.params.version}</code> for <code>${match.params.app}</code>`,
+        messageType.ERROR,
+        messageTTL.FOREVER
+      );
+
+      dispatch(push(AppsRoutes.Home));
+    }
+  }, [app, selectedVersion, match.params, dispatch]);
+
+  if (!app || !selectedVersion) return null;
 
   return (
     <DocumentTitle title={`App Details | ${app.name}`}>
@@ -172,27 +187,27 @@ const AppDetail: React.FC<{}> = () => {
       >
         {app && (
           <AppDetailPage
-            appTitle={app.name}
-            appIconURL={app.appIconURL}
-            catalogName={app.catalogName}
+            catalogName={appCatalog!.spec.title ?? app.catalogName}
+            catalogIcon={appCatalog!.spec.logoURL}
             catalogDescription={appCatalog!.spec.description}
-            catalogIcon={app.catalogIconUrl}
             otherVersions={otherVersions}
-            chartVersion={latestVersion.version}
-            createDate={latestVersion.created}
-            includesVersion={latestVersion.appVersion}
-            description={latestVersion.description ?? ''}
-            website={latestVersion.home}
-            keywords={latestVersion.keywords}
+            appTitle={selectedVersion.name}
+            appIconURL={selectedVersion.icon}
+            chartVersion={selectedVersion.version}
+            createDate={selectedVersion.created}
+            includesVersion={selectedVersion.appVersion}
+            description={selectedVersion.description ?? ''}
+            website={selectedVersion.home}
+            keywords={selectedVersion.keywords}
             readmeURL={readmeURL}
             readmeError={readmeError}
             readme={readme}
             selectVersion={selectVersion}
             installAppModal={
               <AppInstallModal
-                appName={app.name}
-                chartName={latestVersion.name}
-                catalogName={app.catalogName}
+                appName={selectedVersion.name}
+                chartName={selectedVersion.name}
+                catalogName={appCatalog!.spec.title ?? app.catalogName}
                 versions={otherVersions}
                 selectedClusterID={selectedClusterID}
               />
