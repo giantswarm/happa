@@ -11,7 +11,7 @@ import { normalizeAppCatalogIndexURL } from 'stores/appcatalog/utils';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 
-interface IAppCatalogIndexAppVersion {
+export interface IAppCatalogIndexAppVersion {
   apiVersion: string;
   appVersion: string;
   version: string;

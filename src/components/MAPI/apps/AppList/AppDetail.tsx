@@ -18,6 +18,7 @@ import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
 import { isTestRelease } from '../utils';
@@ -25,7 +26,21 @@ import {
   getAppCatalogsIndexAppList,
   getAppCatalogsIndexAppListKey,
   IAppCatalogIndexAppList,
+  IAppCatalogIndexAppVersion,
 } from './utils';
+
+function mapAppCatalogIndexAppVersionsToReleasePickerItems(
+  appVersions: IAppCatalogIndexAppVersion[]
+): IVersion[] {
+  return appVersions
+    .map((e) => ({
+      chartVersion: e.version,
+      created: e.created,
+      includesVersion: e.appVersion,
+      test: isTestRelease(e.version),
+    }))
+    .sort((a, b) => compare(b.chartVersion, a.chartVersion));
+}
 
 const AppDetail: React.FC<{}> = () => {
   const match = useRouteMatch<{
@@ -89,7 +104,14 @@ const AppDetail: React.FC<{}> = () => {
 
   useEffect(() => {
     if (appCatalogIndexAppListError) {
-      // TODO(axbarsan): Display this error in the UI.
+      const errorMessage = extractErrorMessage(appCatalogIndexAppListError);
+
+      new FlashMessage(
+        'There was a problem loading the app catalog index.',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
 
       ErrorReporter.getInstance().notify(appCatalogIndexAppListError);
 
@@ -119,34 +141,26 @@ const AppDetail: React.FC<{}> = () => {
   );
 
   const selectVersion = (v: string) => {
-    if (v.length > 0 && app) {
-      const path = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
-        catalogName: app.catalogName,
-        app: app.name,
-        version: v,
-      });
+    if (v.length < 1 || !app) return;
 
-      dispatch(push(path));
-    }
+    const path = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+      catalogName: app.catalogName,
+      app: app.name,
+      version: v,
+    });
+
+    dispatch(push(path));
   };
 
   const otherVersions = useMemo(() => {
     if (!app) return [];
 
-    return app.versions
-      .map((e) => ({
-        chartVersion: e.version,
-        created: e.created,
-        includesVersion: e.appVersion,
-        test: isTestRelease(e.version),
-      }))
-      .sort((a, b) => compare(b.chartVersion, a.chartVersion));
+    return mapAppCatalogIndexAppVersionsToReleasePickerItems(app.versions);
   }, [app]);
 
-  if (!app) return null;
+  const latestVersion = app?.versions?.[0];
 
-  // TODO(axbarsan): Check if this exists.
-  const latestVersion = app.versions[0];
+  if (!app || !latestVersion) return null;
 
   return (
     <DocumentTitle title={`App Details | ${app.name}`}>
