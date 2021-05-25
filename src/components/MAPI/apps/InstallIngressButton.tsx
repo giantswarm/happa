@@ -10,7 +10,6 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
@@ -163,13 +162,13 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   const appDetailPath = useMemo(() => {
     if (installedIngressApp) {
       return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
-        catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        catalogName: installedIngressApp.spec.catalog,
         app: installedIngressApp.spec.name,
         version: installedIngressApp.spec.version,
       });
     } else if (ingressAppToInstall) {
       return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
-        catalogName: Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME,
+        catalogName: ingressAppToInstall.spec.catalog.name,
         app: ingressAppToInstall.spec.appName,
         version: ingressAppToInstall.spec.version,
       });

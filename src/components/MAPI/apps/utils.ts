@@ -548,10 +548,7 @@ export function findIngressApp(
   apps?: applicationv1alpha1.IApp[]
 ): applicationv1alpha1.IApp | null {
   const ingressApp = apps?.find((app) => {
-    return (
-      app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME &&
-      app.spec.catalog === Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME
-    );
+    return app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME;
   });
 
   if (!ingressApp) return null;
