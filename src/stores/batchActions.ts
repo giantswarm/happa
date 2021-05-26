@@ -6,8 +6,8 @@ import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { supportsMapiApps } from 'shared/featureSupport';
 import { INodePool } from 'shared/types';
 import {
   enableCatalog,
@@ -95,7 +95,7 @@ export function batchedLayout(
       const user = getLoggedInUser(getState())!;
       const provider = getProvider(getState())!;
 
-      if (user.type !== LoggedInUserTypes.MAPI || provider === Providers.KVM) {
+      if (!supportsMapiApps(user, provider)) {
         const catalogs = await dispatch(listCatalogs());
 
         Object.entries(catalogs)
@@ -256,7 +256,7 @@ export function batchedClusterDetailView(
 
       const user = getLoggedInUser(getState())!;
       const provider = getProvider(getState());
-      if (user.type !== LoggedInUserTypes.MAPI || provider === Providers.KVM) {
+      if (!supportsMapiApps(user, provider)) {
         dispatch(loadClusterApps({ clusterId }));
       }
 
@@ -313,7 +313,7 @@ export function batchedRefreshClusterDetailView(
       const provider = getProvider(getState());
 
       if (
-        (user.type !== LoggedInUserTypes.MAPI || provider === Providers.KVM) &&
+        !supportsMapiApps(user, provider) &&
         Object.keys(cluster).length > 0
       ) {
         dispatch(loadClusterApps({ clusterId }));

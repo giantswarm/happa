@@ -18,6 +18,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import { supportsMapiApps } from 'shared/featureSupport';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
 import {
   getLoggedInUser,
@@ -76,8 +77,7 @@ class Layout extends React.Component {
                   <Switch>
                     <Route component={Home} exact path={MainRoutes.Home} />
 
-                    {user.type === LoggedInUserTypes.MAPI &&
-                    provider !== Providers.KVM ? (
+                    {supportsMapiApps(user, provider) ? (
                       <Route component={AppsMAPI} path={AppsRoutes.Home} />
                     ) : (
                       <Route component={Apps} path={AppsRoutes.Home} />
