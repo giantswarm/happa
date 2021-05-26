@@ -4,10 +4,12 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { StatusCodes } from 'shared/constants';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { IState } from 'stores/state';
@@ -27,10 +29,12 @@ import {
 
 interface IOrganizationDetailGeneralProps {
   organizationName: string;
+  organizationNamespace: string;
 }
 
 const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   organizationName,
+  organizationNamespace,
 }) => {
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
@@ -56,15 +60,26 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   );
 
   useEffect(() => {
-    if (clusterListError) {
-      new FlashMessage(
-        'There was a problem loading clusters in this organization.',
-        messageType.ERROR,
-        messageTTL.FOREVER
-      );
+    if (!clusterListError) return;
 
-      ErrorReporter.getInstance().notify(clusterListError);
+    if (
+      clusterListError.status === StatusCodes.NotFound &&
+      !metav1.isStatusError(
+        clusterListError.data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      // The `v1alpha3.Cluster` CRD is not ensured.
+      return;
     }
+
+    new FlashMessage(
+      'There was a problem loading clusters in this organization.',
+      messageType.ERROR,
+      messageTTL.FOREVER
+    );
+
+    ErrorReporter.getInstance().notify(clusterListError);
   }, [clusterListError]);
 
   const handleDelete = async () => {
@@ -82,8 +97,6 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
       return Promise.resolve();
     } catch (err: unknown) {
-      ErrorReporter.getInstance().notify(err as never);
-
       const errorMessage = extractErrorMessage(err);
 
       return Promise.reject(new Error(errorMessage));
@@ -138,6 +151,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   return (
     <OrganizationDetailPage
       organizationName={organizationName}
+      organizationNamespace={organizationNamespace}
       onDelete={handleDelete}
       clusterCount={clusterList?.items.length}
       clusterCountLoading={
@@ -161,6 +175,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
 OrganizationDetailGeneral.propTypes = {
   organizationName: PropTypes.string.isRequired,
+  organizationNamespace: PropTypes.string.isRequired,
 };
 
 export default OrganizationDetailGeneral;

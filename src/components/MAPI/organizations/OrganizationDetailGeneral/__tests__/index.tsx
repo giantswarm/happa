@@ -75,6 +75,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
   });
@@ -110,6 +111,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
@@ -157,6 +159,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
@@ -191,6 +194,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
@@ -257,6 +261,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
@@ -383,6 +388,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
@@ -459,6 +465,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 

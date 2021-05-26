@@ -8,20 +8,19 @@ import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 
-import { getOrgNamespaceFromOrgName } from './utils';
-
 interface IOrganizationDetailDeleteProps {
   organizationName: string;
+  organizationNamespace: string;
   onDelete: () => Promise<void>;
   clusterCount?: number;
 }
 
 const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   organizationName,
+  organizationNamespace,
   onDelete,
   clusterCount,
 }) => {
-  const organizationNamespace = getOrgNamespaceFromOrgName(organizationName);
   const deleteButtonRef = useRef<HTMLElement>(null);
 
   const dispatch = useDispatch();
@@ -144,6 +143,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
 
 OrganizationDetailDelete.propTypes = {
   organizationName: PropTypes.string.isRequired,
+  organizationNamespace: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
   clusterCount: PropTypes.number,
 };
