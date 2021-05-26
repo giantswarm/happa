@@ -90,7 +90,6 @@ const ConfirmationPrompt = React.forwardRef<
                     bsStyle='default'
                     onClick={handleCancel}
                     ref={cancelButtonRef}
-                    tabIndex={0}
                     className='cancel-button'
                   >
                     {cancelButtonText}
