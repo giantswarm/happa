@@ -10,6 +10,8 @@ export const labelCatalogVisibility =
   'application.giantswarm.io/catalog-visibility';
 export const labelCatalogType = 'application.giantswarm.io/catalog-type';
 
+export const annotationReadme = 'application.giantswarm.io/readme';
+
 export function isAppCatalogPublic(catalog: IAppCatalog): boolean {
   const visibility = catalog.metadata.labels?.[labelCatalogVisibility];
 

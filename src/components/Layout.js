@@ -2,12 +2,14 @@ import { withAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import MapiUnauthorized from 'Auth/MAPI/MapiUnauthorized';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
+import AppsMAPI from 'MAPI/apps/Apps';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
+import { Providers } from 'shared/constants';
 import {
   AccountSettingsRoutes,
   AppsRoutes,
@@ -17,7 +19,11 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
-import { getLoggedInUser, selectHasAppAccess } from 'stores/main/selectors';
+import {
+  getLoggedInUser,
+  getProvider,
+  selectHasAppAccess,
+} from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -50,7 +56,7 @@ class Layout extends React.Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { user, provider } = this.props;
 
     return (
       <DocumentTitle>
@@ -68,12 +74,18 @@ class Layout extends React.Component {
               <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
                 <div className='main' data-testid='main'>
                   <Switch>
-                    {/*prettier-ignore*/}
                     <Route component={Home} exact path={MainRoutes.Home} />
-                    <Route component={Apps} path={AppsRoutes.Home} />
+
+                    {user.type === LoggedInUserTypes.MAPI &&
+                    provider !== Providers.KVM ? (
+                      <Route component={AppsMAPI} path={AppsRoutes.Home} />
+                    ) : (
+                      <Route component={Apps} path={AppsRoutes.Home} />
+                    )}
+
                     <Route component={Users} exact path={UsersRoutes.Home} />
 
-                    {this.props.user.type === LoggedInUserTypes.MAPI ? (
+                    {user.type === LoggedInUserTypes.MAPI ? (
                       <Route
                         component={MAPIOrganizations}
                         path={OrganizationsRoutes.Home}
@@ -112,6 +124,7 @@ class Layout extends React.Component {
 
 Layout.propTypes = {
   user: PropTypes.object,
+  provider: PropTypes.oneOf(Object.values(Providers)),
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
@@ -125,6 +138,7 @@ function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
     user: getLoggedInUser(state),
+    provider: getProvider(state),
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,

@@ -12,6 +12,7 @@ import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
 
+import AppDetailsLoadingPlaceholder from './AppDetailsLoadingPlaceholder';
 import { HeadingRenderer, IATagProps, readmeBaseURL, urlFor } from './utils';
 
 const Header = styled.div`
@@ -176,23 +177,23 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 `;
 
 export interface IAppDetailPageProps {
-  appTitle: string;
-  appIconURL?: string;
-  catalogName: string;
-  catalogDescription: string;
-  otherVersions: IVersion[];
+  selectVersion: (version: string) => void;
+  appTitle?: string;
+  catalogName?: string;
+  catalogDescription?: string;
+  otherVersions?: IVersion[];
+  chartVersion?: string;
+  createDate?: string;
+  includesVersion?: string;
+  description?: string;
+  website?: string;
+  installAppModal?: ReactElement;
   catalogIcon?: string;
-  chartVersion: string;
-  createDate: string;
-  includesVersion: string;
-  description: string;
-  website: string;
+  appIconURL?: string;
   keywords?: string[];
   readme?: string;
   readmeError?: string;
   readmeURL?: string;
-  installAppModal: ReactElement;
-  selectVersion: (version: string) => void;
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
@@ -205,33 +206,41 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
 
       <Header>
         <AppIconWrapper>
-          <StyledAppIcon src={props.appIconURL} name={props.appTitle} />
+          <StyledAppIcon src={props.appIconURL} name={props.appTitle ?? ''} />
         </AppIconWrapper>
         <HeaderDetails>
           <Upper>
-            <h1>{props.appTitle}</h1>
+            <h1>{props.appTitle ?? <AppDetailsLoadingPlaceholder />}</h1>
             {props.installAppModal}
           </Upper>
           <Lower>
-            <CatalogLabel
-              catalogName={props.catalogName}
-              description={props.catalogDescription}
-              iconUrl={props.catalogIcon}
-            />
+            {props.catalogName ? (
+              <CatalogLabel
+                catalogName={props.catalogName}
+                description={props.catalogDescription}
+                iconUrl={props.catalogIcon}
+              />
+            ) : (
+              <AppDetailsLoadingPlaceholder />
+            )}
           </Lower>
         </HeaderDetails>
       </Header>
       <VersionPickerRow>
         <span>Information for:</span>
-        <VersionPicker
-          onChange={(v) => {
-            if (v) {
-              props.selectVersion(v);
-            }
-          }}
-          selectedVersion={props.chartVersion}
-          versions={props.otherVersions}
-        />
+        {props.otherVersions ? (
+          <VersionPicker
+            onChange={(v) => {
+              if (v) {
+                props.selectVersion(v);
+              }
+            }}
+            selectedVersion={props.chartVersion}
+            versions={props.otherVersions}
+          />
+        ) : (
+          <AppDetailsLoadingPlaceholder />
+        )}
       </VersionPickerRow>
       <Body>
         {props.readmeURL && (
@@ -277,30 +286,52 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <DetailGroup>
             <Detail>
               <small>CHART VERSION</small>
-              <Truncated as='span'>{props.chartVersion}</Truncated>
+              {props.chartVersion ? (
+                <Truncated as='span'>{props.chartVersion}</Truncated>
+              ) : (
+                <AppDetailsLoadingPlaceholder />
+              )}
             </Detail>
 
             <Detail>
               <small>CREATED</small>
-              {relativeDate(props.createDate)}
+              {props.createDate ? (
+                relativeDate(props.createDate)
+              ) : (
+                <AppDetailsLoadingPlaceholder />
+              )}
             </Detail>
 
             <Detail>
               <small>INCLUDES VERSION</small>
-              <Truncated as='span'>{props.includesVersion}</Truncated>
+
+              {props.includesVersion ? (
+                <Truncated as='span'>{props.includesVersion}</Truncated>
+              ) : (
+                <AppDetailsLoadingPlaceholder />
+              )}
             </Detail>
           </DetailGroup>
 
           <Detail>
             <small>DESCRIPTION</small>
-            {props.description}
+
+            {props.description ? (
+              props.description
+            ) : (
+              <AppDetailsLoadingPlaceholder />
+            )}
           </Detail>
 
           <Detail>
             <small>WEBSITE</small>
-            <a href={props.website} target='_blank' rel='noopener noreferrer'>
-              {props.website}
-            </a>
+            {props.website ? (
+              <a href={props.website} target='_blank' rel='noopener noreferrer'>
+                {props.website}
+              </a>
+            ) : (
+              <AppDetailsLoadingPlaceholder />
+            )}
           </Detail>
 
           {props.keywords!.length > 0 && (
@@ -322,23 +353,23 @@ AppDetail.defaultProps = {
 };
 
 AppDetail.propTypes = {
-  appTitle: PropTypes.string.isRequired,
+  selectVersion: PropTypes.func.isRequired,
+  appTitle: PropTypes.string,
   appIconURL: PropTypes.string,
-  catalogName: PropTypes.string.isRequired,
-  catalogDescription: PropTypes.string.isRequired,
+  catalogName: PropTypes.string,
+  catalogDescription: PropTypes.string,
   catalogIcon: PropTypes.string,
-  chartVersion: PropTypes.string.isRequired,
-  createDate: PropTypes.string.isRequired,
-  includesVersion: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  website: PropTypes.string.isRequired,
+  chartVersion: PropTypes.string,
+  createDate: PropTypes.string,
+  includesVersion: PropTypes.string,
+  description: PropTypes.string,
+  website: PropTypes.string,
   keywords: PropTypes.arrayOf(PropTypes.string.isRequired),
   readme: PropTypes.string,
   readmeURL: PropTypes.string,
   readmeError: PropTypes.string,
-  installAppModal: PropTypes.element.isRequired,
-  otherVersions: PropTypes.array.isRequired,
-  selectVersion: PropTypes.func.isRequired,
+  installAppModal: PropTypes.element,
+  otherVersions: PropTypes.array,
 };
 
 export default AppDetail;

@@ -21,6 +21,7 @@ import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import { createApp, filterClusters } from './utils';
@@ -42,14 +43,11 @@ const CLUSTER_PICKER_PAGE = 0;
 const APP_FORM_PAGE = 1;
 const pages: ReadonlyArray<number> = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
 
-interface IAppInstallModalApp {
-  catalog: string;
-  name: string;
-  versions: IAppCatalogAppVersion[];
-}
-
 interface IAppInstallModalProps {
-  app: IAppInstallModalApp;
+  appName: string;
+  chartName: string;
+  catalogName: string;
+  versions: IVersion[];
   selectedClusterID: string | null;
 }
 
@@ -75,7 +73,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
 
-  const [version, setVersion] = useState(props.app.versions[0].version);
+  const [version, setVersion] = useState(props.versions[0]?.chartVersion ?? '');
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -101,9 +99,9 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     } else {
       setPage(0);
     }
-    setName(props.app.name);
+    setName(props.appName);
     setNameError('');
-    setNamespace(props.app.name);
+    setNamespace(props.appName);
     setNamespaceError('');
     setVisible(true);
   };
@@ -248,8 +246,8 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
       await createApp(clientFactory, auth, clusterID, {
         name: name,
-        catalogName: props.app.catalog,
-        chartName: props.app.name,
+        catalogName: props.catalogName,
+        chartName: props.chartName,
         version: version,
         namespace: namespace,
         configMapContents: valuesYAML ?? '',
@@ -326,7 +324,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   </Button>
                 }
                 onClose={onClose}
-                title={`Install ${props.app.name}: Pick a cluster`}
+                title={`Install ${props.chartName}: Pick a cluster`}
                 visible={visible}
               >
                 <ClusterPicker
@@ -363,20 +361,20 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                 onClose={onClose}
                 title={
                   <>
-                    {`Install ${props.app.name} on`}{' '}
+                    {`Install ${props.chartName} on`}{' '}
                     <ClusterIDLabel clusterID={clusterID} />
                   </>
                 }
                 visible={visible}
               >
                 <InstallAppForm
-                  appName={props.app.name}
+                  appName={props.chartName}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
                   version={version}
-                  availableVersions={props.app.versions}
+                  availableVersions={props.versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}
@@ -396,8 +394,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 };
 
 AppInstallModal.propTypes = {
-  app: (PropTypes.object as PropTypes.Requireable<IAppInstallModalApp>)
-    .isRequired,
+  appName: PropTypes.string.isRequired,
+  chartName: PropTypes.string.isRequired,
+  catalogName: PropTypes.string.isRequired,
+  versions: PropTypes.array.isRequired,
   selectedClusterID: PropTypes.string,
 };
 
