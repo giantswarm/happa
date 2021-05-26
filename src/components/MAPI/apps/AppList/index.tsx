@@ -11,7 +11,6 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useReducer,
   useRef,
   useState,
 } from 'react';
@@ -20,6 +19,7 @@ import { getUserIsAdmin } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
+import { useAppsContext } from '../AppsProvider';
 import {
   compareAppCatalogIndexAppsFns,
   filterAppCatalogIndexApps,
@@ -30,31 +30,6 @@ import {
 } from './utils';
 
 const SEARCH_THROTTLE_RATE_MS = 250;
-
-type SelectedCatalogsState = Record<string, boolean>;
-
-interface ISelectedCatalogsAction {
-  type: 'selectCatalog' | 'deselectCatalog';
-  name: string;
-}
-
-const selectedCatalogsReducer: React.Reducer<
-  SelectedCatalogsState,
-  ISelectedCatalogsAction
-> = (state: SelectedCatalogsState, action: ISelectedCatalogsAction) => {
-  switch (action.type) {
-    case 'selectCatalog':
-      return Object.assign({}, state, { [action.name]: true });
-    case 'deselectCatalog': {
-      const nextSelectedCatalogs = Object.assign({}, state);
-      delete nextSelectedCatalogs[action.name];
-
-      return nextSelectedCatalogs;
-    }
-    default:
-      return state;
-  }
-};
 
 const AppList: React.FC<{}> = () => {
   const isAdmin = useSelector(getUserIsAdmin);
@@ -116,10 +91,7 @@ const AppList: React.FC<{}> = () => {
     SEARCH_THROTTLE_RATE_MS
   );
 
-  const [selectedCatalogs, dispatchSelectedCatalogs] = useReducer(
-    selectedCatalogsReducer,
-    {}
-  );
+  const { selectedCatalogs, selectCatalog, deselectCatalog } = useAppsContext();
 
   useLayoutEffect(() => {
     // Only execute this after the initial catalog load.
@@ -135,10 +107,7 @@ const AppList: React.FC<{}> = () => {
     for (const catalog of appCatalogList.items) {
       if (catalog.metadata.name === 'helm-stable') continue;
 
-      dispatchSelectedCatalogs({
-        type: 'selectCatalog',
-        name: catalog.metadata.name,
-      });
+      selectCatalog(catalog.metadata.name);
     }
 
     // We don't need to run this again if the selected catalogs change.
@@ -190,10 +159,11 @@ const AppList: React.FC<{}> = () => {
   ]);
 
   const handleChangeFacets = (value: string, checked: boolean) => {
-    dispatchSelectedCatalogs({
-      type: checked ? 'selectCatalog' : 'deselectCatalog',
-      name: value,
-    });
+    if (checked) {
+      selectCatalog(value);
+    } else {
+      deselectCatalog(value);
+    }
   };
 
   return (
