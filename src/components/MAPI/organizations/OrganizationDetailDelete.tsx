@@ -104,8 +104,9 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
 
           {typeof clusterCount !== 'undefined' && (
             <Text key='org-deletion-disclaimer'>
-              This organization&apos;s namespace with all resources in it and
-              the Organization CR will be deleted from the Management API. There
+              The <code>{organizationName}</code> Organization CR and the
+              namespace <code>{organizationNamespace}</code> with all the
+              resources in it will be deleted from the management cluster. There
               is no way to undo this action.
             </Text>
           )}
