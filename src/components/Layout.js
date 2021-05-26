@@ -59,6 +59,10 @@ class Layout extends React.Component {
   render() {
     const { user, provider } = this.props;
 
+    const supportsAppsViaMapi = user && supportsMapiApps(user, provider);
+    const showApps =
+      supportsAppsViaMapi || Object.keys(this.props.catalogs.items).length > 0;
+
     return (
       <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
@@ -69,7 +73,7 @@ class Layout extends React.Component {
                 onSelectOrganization={this.selectOrganization}
                 organizations={this.props.organizations}
                 selectedOrganization={this.props.selectedOrganization}
-                showApps={Object.keys(this.props.catalogs.items).length > 0}
+                showApps={showApps}
                 user={user}
               />
               <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
@@ -77,7 +81,7 @@ class Layout extends React.Component {
                   <Switch>
                     <Route component={Home} exact path={MainRoutes.Home} />
 
-                    {supportsMapiApps(user, provider) ? (
+                    {supportsAppsViaMapi ? (
                       <Route component={AppsMAPI} path={AppsRoutes.Home} />
                     ) : (
                       <Route component={Apps} path={AppsRoutes.Home} />

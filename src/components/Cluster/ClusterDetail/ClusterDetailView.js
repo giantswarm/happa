@@ -303,6 +303,8 @@ class ClusterDetailView extends React.Component {
     const clusterIsUpdating =
       isClusterUpdating(cluster) || clusterIsAwaitingUpgrade;
 
+    const supporsAppsViaMapi = supportsMapiApps(user, provider);
+
     return (
       <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
         <LoadingOverlay loading={loading}>
@@ -383,7 +385,7 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                {supportsMapiApps(user, provider) ? (
+                {supporsAppsViaMapi ? (
                   <ClusterDetailApps
                     clusterId={id}
                     releaseVersion={release_version}
@@ -402,7 +404,7 @@ class ClusterDetailView extends React.Component {
                 )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                {supportsMapiApps(user, provider) ? (
+                {supporsAppsViaMapi ? (
                   <ClusterDetailIngress
                     clusterID={cluster.id}
                     provider={provider}
