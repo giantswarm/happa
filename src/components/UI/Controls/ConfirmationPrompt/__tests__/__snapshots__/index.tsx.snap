@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfirmationPrompt renders a component with buttons 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+  >
+    <div
+      aria-hidden="true"
+      class="StyledBox-sc-13pk1d4-0 hvUCKZ Collapsible__AnimatedBox-sc-15kniua-0 irPKSt"
+    />
+  </div>
+</div>
+`;
+
+exports[`ConfirmationPrompt renders a simple component 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+  >
+    <div
+      aria-hidden="true"
+      class="StyledBox-sc-13pk1d4-0 hvUCKZ Collapsible__AnimatedBox-sc-15kniua-0 irPKSt"
+    />
+  </div>
+</div>
+`;
