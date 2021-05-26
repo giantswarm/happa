@@ -155,7 +155,9 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       onDelete={handleDelete}
       clusterCount={clusterList?.items.length}
       clusterCountLoading={
-        typeof clusterList === 'undefined' && clusterListIsValidating
+        typeof clusterList === 'undefined' &&
+        typeof clusterListError === 'undefined' &&
+        clusterListIsValidating
       }
       clustersSummary={clustersSummary}
       clustersSummaryLoading={
