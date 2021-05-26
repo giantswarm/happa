@@ -199,28 +199,13 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
       </Box>
 
       {!clusterCountLoading && (
-        <Box direction='row' pad={{ top: 'medium' }} border='top'>
-          <Box direction='column' gap='medium'>
-            <Text weight='bold' size='large' margin='none'>
-              Delete this organization
-            </Text>
-            <Box width='large'>
-              <Text>
-                This organization’s namespace with all resources in it and the
-                Organization CR will be deleted from the Management API. There
-                is no way to undo this action.
-              </Text>
-            </Box>
-            <Box>
-              <OrganizationDetailDelete
-                organizationName={organizationName}
-                organizationNamespace={organizationNamespace}
-                onDelete={onDelete}
-                clusterCount={clusterCount}
-              />
-            </Box>
-          </Box>
-        </Box>
+        <OrganizationDetailDelete
+          organizationName={organizationName}
+          organizationNamespace={organizationNamespace}
+          onDelete={onDelete}
+          clusterCount={clusterCount}
+          border='top'
+        />
       )}
     </Box>
   );

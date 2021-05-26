@@ -8,7 +8,8 @@ import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 
-interface IOrganizationDetailDeleteProps {
+interface IOrganizationDetailDeleteProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {
   organizationName: string;
   organizationNamespace: string;
   onDelete: () => Promise<void>;
@@ -20,6 +21,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   organizationNamespace,
   onDelete,
   clusterCount,
+  ...props
 }) => {
   const deleteButtonRef = useRef<HTMLElement>(null);
 
@@ -81,62 +83,77 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   const canDelete = typeof clusterCount !== 'undefined' && clusterCount < 1;
 
   return (
-    <Box>
-      <Button
-        ref={deleteButtonRef}
-        bsStyle='danger'
-        onClick={showConfirmation}
-        loading={isLoading}
-        disabled={!canDelete}
-      >
-        <i
-          className='fa fa-delete'
-          role='presentation'
-          aria-hidden={true}
-          aria-label='Delete'
-        />{' '}
-        Delete organization
-      </Button>
-
-      {confirmationVisible && deleteButtonRef.current && (
-        <Keyboard onEsc={hideConfirmation}>
-          <Drop
-            align={{ bottom: 'top', left: 'left' }}
-            target={deleteButtonRef.current}
-            plain={true}
-            trapFocus={true}
+    <Box direction='row' pad={{ top: 'medium' }} {...props}>
+      <Box direction='column' gap='medium'>
+        <Text weight='bold' size='large' margin='none'>
+          Delete this organization
+        </Text>
+        <Box width='large'>
+          <Text>
+            This organization’s namespace with all resources in it and the
+            Organization CR will be deleted from the Management API. There is no
+            way to undo this action.
+          </Text>
+        </Box>
+        <Box>
+          <Button
+            ref={deleteButtonRef}
+            bsStyle='danger'
+            onClick={showConfirmation}
+            loading={isLoading}
+            disabled={!canDelete}
           >
-            <Box
-              background='background-front'
-              pad='medium'
-              round='small'
-              width='large'
-              direction='column'
-              gap='small'
-              border={{ color: 'text-xweak' }}
-            >
-              <Box>
-                <Heading level={4} margin={{ top: 'none' }}>
-                  Are you sure?
-                </Heading>
-                <Text>
-                  Deleting <code>{organizationName}</code> implies deleting the{' '}
-                  <code>{organizationNamespace}</code> namespace. This means
-                  that all the resources in this namespace will be also deleted.
-                </Text>
-              </Box>
-              <Box direction='row' margin={{ top: 'small' }}>
-                <Button bsStyle='danger' onClick={handleDelete}>
-                  Yes, delete it
-                </Button>
-                <Button bsStyle='link' onClick={hideConfirmation}>
-                  Cancel
-                </Button>
-              </Box>
-            </Box>
-          </Drop>
-        </Keyboard>
-      )}
+            <i
+              className='fa fa-delete'
+              role='presentation'
+              aria-hidden={true}
+              aria-label='Delete'
+            />{' '}
+            Delete organization
+          </Button>
+
+          {confirmationVisible && deleteButtonRef.current && (
+            <Keyboard onEsc={hideConfirmation}>
+              <Drop
+                align={{ bottom: 'top', left: 'left' }}
+                target={deleteButtonRef.current}
+                plain={true}
+                trapFocus={true}
+              >
+                <Box
+                  background='background-front'
+                  pad='medium'
+                  round='small'
+                  width='large'
+                  direction='column'
+                  gap='small'
+                  border={{ color: 'text-xweak' }}
+                >
+                  <Box>
+                    <Heading level={4} margin={{ top: 'none' }}>
+                      Are you sure?
+                    </Heading>
+                    <Text>
+                      Deleting <code>{organizationName}</code> implies deleting
+                      the <code>{organizationNamespace}</code> namespace. This
+                      means that all the resources in this namespace will be
+                      also deleted.
+                    </Text>
+                  </Box>
+                  <Box direction='row' margin={{ top: 'small' }}>
+                    <Button bsStyle='danger' onClick={handleDelete}>
+                      Yes, delete it
+                    </Button>
+                    <Button bsStyle='link' onClick={hideConfirmation}>
+                      Cancel
+                    </Button>
+                  </Box>
+                </Box>
+              </Drop>
+            </Keyboard>
+          )}
+        </Box>
+      </Box>
     </Box>
   );
 };
