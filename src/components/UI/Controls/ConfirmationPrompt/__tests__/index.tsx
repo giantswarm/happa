@@ -18,4 +18,12 @@ describe('ConfirmationPrompt', () => {
     });
     expect(container.firstChild).toMatchSnapshot();
   });
+
+  it('renders a component with a title', () => {
+    const { container } = renderWithTheme(ConfirmationPrompt, {
+      children: 'Welcome to my prompt',
+      title: 'Hi friends',
+    });
+    expect(container.firstChild).toMatchSnapshot();
+  });
 });

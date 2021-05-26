@@ -118,8 +118,8 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
             open={confirmationVisible}
             onConfirm={handleDelete}
             onCancel={hideConfirmation}
-            confirmButtonText={
-              <>
+            confirmButton={
+              <Button bsStyle='danger' onClick={handleDelete}>
                 <i
                   className='fa fa-delete'
                   role='presentation'
@@ -127,12 +127,10 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
                   aria-label='Delete'
                 />{' '}
                 Delete {organizationName}
-              </>
+              </Button>
             }
+            title={`Do you really want to delete organization ${organizationName}?`}
           >
-            <Text weight='bold' margin={{ bottom: 'small' }}>
-              Do you really want to delete organization {organizationName}?
-            </Text>
             <Text>
               As you might have read in the text above, this means that there is
               no way back.

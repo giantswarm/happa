@@ -5,7 +5,7 @@ import Button from 'UI/Controls/Button';
 
 import ConfirmationPrompt from '..';
 
-export const WithButtons: Story<
+export const WithTitle: Story<
   ComponentPropsWithoutRef<typeof ConfirmationPrompt>
 > = (args) => {
   const [open, setIsOpen] = useState(false);
@@ -22,21 +22,13 @@ export const WithButtons: Story<
   );
 };
 
-WithButtons.argTypes = {
-  confirmButton: {
-    description: 'The text displayed in the confirmation button',
+WithTitle.argTypes = {
+  title: {
+    description: 'The text displayed in the title',
     control: { type: 'text' },
   },
-  cancelButton: {
-    description: 'The text displayed in the cancel button',
-    control: { type: 'text' },
-  },
-  onConfirm: {
-    description: 'The action executed when pressing the confirmation button',
-    action: 'click',
-  },
-  onCancel: {
-    description: 'The action executed when pressing the cancel button',
-    action: 'click',
-  },
+};
+
+WithTitle.args = {
+  title: 'Hello friends',
 };

@@ -1,15 +1,16 @@
-import { Box, Collapsible, Keyboard } from 'grommet';
+import { Box, Collapsible, Keyboard, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 
 import Button from '../Button';
 
 interface IConfirmationPromptProps
-  extends React.ComponentPropsWithRef<typeof Collapsible> {
+  extends Omit<React.ComponentPropsWithRef<typeof Collapsible>, 'title'> {
+  title?: React.ReactNode;
+  confirmButton?: React.ReactNode;
+  cancelButton?: React.ReactNode;
   onConfirm?: () => void;
   onCancel?: () => void;
-  confirmButtonText?: React.ReactNode;
-  cancelButtonText?: React.ReactNode;
 }
 
 const ConfirmationPrompt = React.forwardRef<
@@ -19,10 +20,11 @@ const ConfirmationPrompt = React.forwardRef<
   (
     {
       children,
+      title,
+      confirmButton,
+      cancelButton,
       onConfirm,
       onCancel,
-      confirmButtonText,
-      cancelButtonText,
       ...props
     },
     ref
@@ -40,10 +42,10 @@ const ConfirmationPrompt = React.forwardRef<
 
         if (cancelButtonRef.current) {
           // Focus on the cancel button if it exists.
-          const cancelButton = cancelButtonRef.current.querySelector<HTMLDivElement>(
+          const cancelButtonElement = cancelButtonRef.current.querySelector<HTMLButtonElement>(
             '.cancel-button'
           );
-          cancelButton?.focus();
+          cancelButtonElement?.focus();
         } else if (wrapperRef.current) {
           // Otherwise focus on the wrapper element.
           wrapperRef.current.focus();
@@ -75,26 +77,40 @@ const ConfirmationPrompt = React.forwardRef<
             pad='medium'
             tabIndex={-1}
           >
+            {typeof title === 'string' ? (
+              <Text weight='bold' margin={{ bottom: 'small' }}>
+                {title}
+              </Text>
+            ) : (
+              title
+            )}
+
             {children}
 
             {(onConfirm || onCancel) && (
               <Box direction='row' margin={{ top: 'medium' }} justify='center'>
-                {onConfirm && (
-                  <Button bsStyle='danger' onClick={handleConfirm}>
-                    {confirmButtonText}
-                  </Button>
-                )}
+                {onConfirm &&
+                  (typeof confirmButton === 'string' ? (
+                    <Button bsStyle='danger' onClick={handleConfirm}>
+                      {confirmButton}
+                    </Button>
+                  ) : (
+                    confirmButton
+                  ))}
 
-                {onCancel && (
-                  <Button
-                    bsStyle='default'
-                    onClick={handleCancel}
-                    ref={cancelButtonRef}
-                    className='cancel-button'
-                  >
-                    {cancelButtonText}
-                  </Button>
-                )}
+                {onCancel &&
+                  (typeof cancelButton === 'string' ? (
+                    <Button
+                      bsStyle='default'
+                      onClick={handleCancel}
+                      ref={cancelButtonRef}
+                      className='cancel-button'
+                    >
+                      {cancelButton}
+                    </Button>
+                  ) : (
+                    cancelButton
+                  ))}
               </Box>
             )}
           </Box>
@@ -107,15 +123,16 @@ const ConfirmationPrompt = React.forwardRef<
 ConfirmationPrompt.propTypes = {
   open: PropTypes.bool,
   children: PropTypes.node,
+  title: PropTypes.node,
+  confirmButton: PropTypes.node,
+  cancelButton: PropTypes.node,
   onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
-  confirmButtonText: PropTypes.node,
-  cancelButtonText: PropTypes.node,
 };
 
 ConfirmationPrompt.defaultProps = {
-  confirmButtonText: 'Confirm',
-  cancelButtonText: 'Cancel',
+  confirmButton: 'Confirm',
+  cancelButton: 'Cancel',
 };
 
 export default ConfirmationPrompt;

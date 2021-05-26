@@ -1,5 +1,5 @@
 import { Story } from '@storybook/react/types-6-0';
-import { Box, Heading, Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -16,9 +16,6 @@ export const Simple: Story<
         <Button onClick={() => setIsOpen(!open)}>Open prompt</Button>
       </Box>
       <ConfirmationPrompt {...args} open={open}>
-        <Heading level={4} margin='none'>
-          Hi friends 👋
-        </Heading>
         <Text>Check out this awesome component!</Text>
       </ConfirmationPrompt>
     </Box>
