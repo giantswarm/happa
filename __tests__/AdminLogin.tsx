@@ -37,7 +37,6 @@ describe('AdminLogin', () => {
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/');
-    getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
 
     const history = createInitialHistory(MainRoutes.AdminLogin);
