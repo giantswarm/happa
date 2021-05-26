@@ -102,7 +102,14 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
             </Text>
           )}
 
-          {typeof clusterCount !== 'undefined' && (
+          {typeof clusterCount !== 'undefined' && clusterCount > 0 && (
+            <Text key='org-deletion-disclaimer'>
+              To delete this organization, there must not be any clusters owned
+              by it. Please delete the clusters first.
+            </Text>
+          )}
+
+          {typeof clusterCount !== 'undefined' && clusterCount < 1 && (
             <Text key='org-deletion-disclaimer'>
               The <code>{organizationName}</code> Organization CR and the
               namespace <code>{organizationNamespace}</code> with all the
@@ -112,21 +119,22 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
           )}
         </Box>
         <Box>
-          <Button
-            ref={deleteButtonRef}
-            bsStyle='danger'
-            onClick={showConfirmation}
-            loading={isLoading}
-            disabled={!canDelete}
-          >
-            <i
-              className='fa fa-delete'
-              role='presentation'
-              aria-hidden={true}
-              aria-label='Delete'
-            />{' '}
-            Delete organization
-          </Button>
+          {canDelete && (
+            <Button
+              ref={deleteButtonRef}
+              bsStyle='danger'
+              onClick={showConfirmation}
+              loading={isLoading}
+            >
+              <i
+                className='fa fa-delete'
+                role='presentation'
+                aria-hidden={true}
+                aria-label='Delete'
+              />{' '}
+              Delete organization
+            </Button>
+          )}
 
           {confirmationVisible && deleteButtonRef.current && (
             <Keyboard onEsc={hideConfirmation}>
