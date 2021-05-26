@@ -17,6 +17,7 @@ import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import Button from 'UI/Controls/Button';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import ClusterPicker from './ClusterPicker';
@@ -59,7 +60,7 @@ const pages: ReadonlyArray<number> = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
 interface IInstallAppModalApp {
   catalog: string;
   name: string;
-  versions: IAppCatalogAppVersion[];
+  versions: IVersion[];
 }
 
 interface IInstallAppModalProps {
@@ -89,7 +90,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
 
-  const [version, setVersion] = useState(props.app.versions[0].version);
+  const [version, setVersion] = useState(props.app.versions[0].chartVersion);
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 

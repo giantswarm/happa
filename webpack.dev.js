@@ -27,7 +27,10 @@ module.exports = merge(common, {
     hotOnly: true,
     port: 7000,
     host: 'localhost',
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '/',
+      disableDotRule: true,
+    },
     // used for app catalogs proxy /catalogs?url=
     proxy: {
       '/catalogs': {

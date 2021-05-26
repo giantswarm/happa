@@ -2,6 +2,7 @@ import { Box, FormField } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
+import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import FileInput from 'UI/Inputs/FileInput';
 import TextInput from 'UI/Inputs/TextInput';
 
@@ -13,7 +14,7 @@ interface IInstallAppFormProps {
   namespaceError: string;
   valuesYAMLError: string;
   version: string;
-  availableVersions: IAppCatalogAppVersion[];
+  availableVersions: IVersion[];
   secretsYAMLError: string;
   onChangeName: (newName: string) => void;
   onChangeNamespace: (newNS: string) => void;
@@ -107,12 +108,7 @@ const InstallAppForm: React.FC<IInstallAppFormProps> = ({
         <VersionPicker
           onChange={updateVersion}
           selectedVersion={version}
-          versions={availableVersions.map((v) => ({
-            chartVersion: v.version,
-            includesVersion: v.appVersion,
-            created: v.created,
-            test: false,
-          }))}
+          versions={availableVersions}
         />
       </FormField>
 
