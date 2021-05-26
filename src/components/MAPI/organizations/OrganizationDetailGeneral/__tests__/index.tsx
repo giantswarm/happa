@@ -119,10 +119,9 @@ describe('OrganizationDetailGeneral', () => {
     expect(deleteButton).toBeInTheDocument();
 
     fireEvent.click(deleteButton);
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Delete org1'));
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(deleteButton).toBeDisabled();
 
     expect(
       await screen.findByText('Organization org1 deleted successfully.')
@@ -165,10 +164,9 @@ describe('OrganizationDetailGeneral', () => {
     expect(deleteButton).toBeInTheDocument();
 
     fireEvent.click(deleteButton);
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Delete org1'));
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(deleteButton).toBeDisabled();
 
     expect(
       await screen.findByText('Could not delete organization org1:')
@@ -200,7 +198,9 @@ describe('OrganizationDetailGeneral', () => {
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByText('Cancel'));
 
-    await waitForElementToBeRemoved(screen.getByText('Are you sure?'));
+    await waitForElementToBeRemoved(
+      screen.getByText('Do you really want to delete organization org1?')
+    );
   });
 
   it('cannot delete the organization if there are still clusters that belong to it', async () => {
@@ -302,10 +302,9 @@ describe('OrganizationDetailGeneral', () => {
     expect(deleteButton).toBeInTheDocument();
 
     fireEvent.click(deleteButton);
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Delete org1'));
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(deleteButton).toBeDisabled();
 
     expect(
       await screen.findByText('Organization org1 deleted successfully.')
