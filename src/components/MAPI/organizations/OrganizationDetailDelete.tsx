@@ -80,7 +80,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
     }
   };
 
-  const canDelete = typeof clusterCount !== 'undefined' && clusterCount < 1;
+  const canDelete = typeof clusterCount === 'undefined' || clusterCount < 1;
 
   return (
     <Box direction='row' pad={{ top: 'medium' }} {...props}>
@@ -89,11 +89,26 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
           Delete this organization
         </Text>
         <Box width='large'>
-          <Text>
-            This organization’s namespace with all resources in it and the
-            Organization CR will be deleted from the Management API. There is no
-            way to undo this action.
-          </Text>
+          {typeof clusterCount === 'undefined' && (
+            <Text key='org-deletion-disclaimer'>
+              <i
+                className='fa fa-warning'
+                aria-hidden={true}
+                role='presentation'
+              />{' '}
+              In case there are any clusters owned by this organization, please
+              delete them first. Otherwise, you will lose them when deleting the
+              organization.
+            </Text>
+          )}
+
+          {typeof clusterCount !== 'undefined' && (
+            <Text key='org-deletion-disclaimer'>
+              This organization&apos;s namespace with all resources in it and
+              the Organization CR will be deleted from the Management API. There
+              is no way to undo this action.
+            </Text>
+          )}
         </Box>
         <Box>
           <Button
