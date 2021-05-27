@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectClusterById } from 'stores/cluster/selectors';
 import { getLoggedInUser, getProvider } from 'stores/main/selectors';
-import { LoggedInUserTypes } from 'stores/main/types';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
@@ -73,8 +72,7 @@ const InstallIngress = (props) => {
         </p>
 
         <InstallIngressButtonWrapper>
-          {user?.type === LoggedInUserTypes.MAPI &&
-          provider !== Providers.KVM ? (
+          {supportsMapiApps(user, provider) ? (
             <InstallIngressButtonMAPI clusterID={props.cluster.id} />
           ) : (
             <InstallIngressButton cluster={props.cluster} />

@@ -7,7 +7,6 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
@@ -26,21 +25,21 @@ import {
 interface IAccessControlProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   organizationName: string;
+  organizationNamespace: string;
 }
 
 const AccessControl: React.FC<IAccessControlProps> = ({
   organizationName,
+  organizationNamespace,
   ...props
 }) => {
-  const orgNamespace = getNamespaceFromOrgName(organizationName);
-
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
   const { data, mutate, error } = useSWR<
     ui.IAccessControlRoleItem[],
     GenericResponse
-  >(getRoleItemsKey(orgNamespace), () =>
-    getRoleItems(clientFactory, auth, orgNamespace)
+  >(getRoleItemsKey(organizationNamespace), () =>
+    getRoleItems(clientFactory, auth, organizationNamespace)
   );
 
   useEffect(() => {
@@ -73,7 +72,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         auth,
         type,
         names,
-        orgNamespace,
+        organizationNamespace,
         activeRole
       );
 
@@ -109,7 +108,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         auth,
         name,
         type,
-        orgNamespace,
+        organizationNamespace,
         activeRole
       );
 
@@ -172,7 +171,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
             activeRole={activeRole}
             onAdd={handleAdd}
             onDelete={handleDelete}
-            namespace={orgNamespace}
+            namespace={organizationNamespace}
           />
         </Box>
       </Box>
@@ -182,6 +181,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 
 AccessControl.propTypes = {
   organizationName: PropTypes.string.isRequired,
+  organizationNamespace: PropTypes.string.isRequired,
 };
 
 export default AccessControl;

@@ -71,6 +71,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -126,6 +127,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -221,6 +223,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -310,6 +313,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -401,6 +405,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -515,6 +520,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -602,6 +608,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -731,6 +738,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -818,6 +826,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -921,6 +930,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1004,6 +1014,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1045,6 +1056,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1182,6 +1194,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1293,6 +1306,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1388,6 +1402,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1513,6 +1528,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
@@ -1599,6 +1615,7 @@ describe('AccessControl', () => {
     render(
       getComponent({
         organizationName: 'giantswarm',
+        organizationNamespace: 'org-giantswarm',
       })
     );
 
