@@ -91,7 +91,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
                 aria-hidden={true}
                 role='presentation'
               />{' '}
-              In case there are any clusters owned by this organization, please
+              In case there are any clusters associated with this organization, please
               delete them first. Otherwise, you will lose them when deleting the
               organization.
             </Text>
