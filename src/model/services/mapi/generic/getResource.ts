@@ -13,6 +13,7 @@ export function getResource<T>(
     method: HttpRequestMethods.GET,
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
   });
 

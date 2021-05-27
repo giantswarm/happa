@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
@@ -14,14 +13,6 @@ describe('utils', () => {
   let clientFactory: HttpClientFactory;
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let authProvider: IOAuth2Provider;
-
-  beforeAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
-  afterAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/xhr');
-  });
 
   beforeEach(() => {
     clientFactory = () => new HttpClientImpl();

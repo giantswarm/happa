@@ -1,5 +1,4 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -19,11 +18,6 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('PasswordReset', () => {
-  beforeAll(() => {
-    // Use axios' node http adapter, so we could mock requests.
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
   beforeEach(() => {
     getConfiguration.mockResolvedValueOnce(metadataResponse);
   });

@@ -12,6 +12,7 @@ export function updateResource<
     method: HttpRequestMethods.PUT,
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
     data,
   });

@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -27,11 +26,6 @@ const verifyingRoute = RoutePath.createUsablePath(MainRoutes.SignUp, {
 });
 
 describe('Signup', () => {
-  beforeAll(() => {
-    // Use axios' node http adapter, so we could mock requests.
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
   beforeEach(() => {
     getConfiguration.mockResolvedValueOnce(metadataResponse);
   });
