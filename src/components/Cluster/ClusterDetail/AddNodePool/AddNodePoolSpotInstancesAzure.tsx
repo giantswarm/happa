@@ -12,7 +12,7 @@ const AzureSpotInstances = styled.div`
 const CheckboxWrapper = styled.div`
   position: absolute;
   left: 170px;
-  bottom: 5px;
+  top: 73px;
 `;
 
 interface IAddNodePoolSpotInstancesAzureProps {
