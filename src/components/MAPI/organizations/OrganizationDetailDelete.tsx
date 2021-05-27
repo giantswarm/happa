@@ -99,8 +99,8 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
 
           {typeof clusterCount !== 'undefined' && clusterCount > 0 && (
             <Text key='org-deletion-disclaimer'>
-              To delete this organization, there must not be any clusters owned
-              by it. Please delete the clusters first.
+              To delete this organization, there must not be any clusters associated
+              with it. Please delete the clusters first.
             </Text>
           )}
 
