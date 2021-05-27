@@ -214,7 +214,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             {props.installAppModal}
           </Upper>
           <Lower>
-            {props.catalogName ? (
+            {typeof props.catalogName !== 'undefined' ? (
               <CatalogLabel
                 catalogName={props.catalogName}
                 description={props.catalogDescription}
@@ -228,7 +228,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
       </Header>
       <VersionPickerRow>
         <span>Information for:</span>
-        {props.otherVersions ? (
+        {typeof props.otherVersions !== 'undefined' ? (
           <VersionPicker
             onChange={(v) => {
               if (v) {
@@ -243,9 +243,9 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         )}
       </VersionPickerRow>
       <Body>
-        {props.readmeURL && (
+        {typeof props.readmeURL !== 'undefined' && (
           <Readme>
-            {props.readme && (
+            {typeof props.readme !== 'undefined' && (
               <ReactMarkdown
                 plugins={[gfm]}
                 skipHtml
@@ -275,9 +275,10 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
               </ReactMarkdown>
             )}
 
-            {!props.readme && !props.readmeError && (
-              <StyledLoadingIndicator loading={true} />
-            )}
+            {typeof props.readme === 'undefined' &&
+              typeof props.readmeError === 'undefined' && (
+                <StyledLoadingIndicator loading={true} />
+              )}
 
             {props.readmeError}
           </Readme>
@@ -286,7 +287,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <DetailGroup>
             <Detail>
               <small>CHART VERSION</small>
-              {props.chartVersion ? (
+              {typeof props.chartVersion !== 'undefined' ? (
                 <Truncated as='span'>{props.chartVersion}</Truncated>
               ) : (
                 <AppDetailsLoadingPlaceholder />
@@ -295,7 +296,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
 
             <Detail>
               <small>CREATED</small>
-              {props.createDate ? (
+              {typeof props.createDate !== 'undefined' ? (
                 relativeDate(props.createDate)
               ) : (
                 <AppDetailsLoadingPlaceholder />
@@ -305,7 +306,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             <Detail>
               <small>INCLUDES VERSION</small>
 
-              {props.includesVersion ? (
+              {typeof props.includesVersion !== 'undefined' ? (
                 <Truncated as='span'>{props.includesVersion}</Truncated>
               ) : (
                 <AppDetailsLoadingPlaceholder />
@@ -316,7 +317,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <Detail>
             <small>DESCRIPTION</small>
 
-            {props.description ? (
+            {typeof props.description !== 'undefined' ? (
               props.description
             ) : (
               <AppDetailsLoadingPlaceholder />
@@ -325,7 +326,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
 
           <Detail>
             <small>WEBSITE</small>
-            {props.website ? (
+            {typeof props.website !== 'undefined' ? (
               <a href={props.website} target='_blank' rel='noopener noreferrer'>
                 {props.website}
               </a>

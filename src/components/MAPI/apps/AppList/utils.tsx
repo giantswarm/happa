@@ -17,14 +17,14 @@ import { IFacetOption } from 'UI/Inputs/Facets';
 
 export interface IAppCatalogIndexAppVersion {
   apiVersion: string;
-  appVersion: string;
   version: string;
   created: string;
   digest: string;
-  home: string;
   icon: string;
   name: string;
   urls: string[];
+  home?: string;
+  appVersion?: string;
   description?: string;
   sources?: string[];
   annotations?: Record<string, string>;
