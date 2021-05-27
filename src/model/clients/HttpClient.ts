@@ -337,9 +337,7 @@ async function getResponseData(response: Response): Promise<HttpBody> {
 
   try {
     data = await response.text();
-
-    const jsonData = JSON.parse(data);
-    data = jsonData;
+    data = JSON.parse(data);
   } catch {
     // Ignore errors.
   }
