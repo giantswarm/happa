@@ -41,7 +41,7 @@ function mapAppCatalogIndexAppVersionsToReleasePickerItems(
     .map((e) => ({
       chartVersion: e.version,
       created: e.created,
-      includesVersion: e.appVersion,
+      includesVersion: e.appVersion ?? 'n/a',
       test: isTestRelease(e.version),
     }))
     .sort((a, b) => compare(b.chartVersion, a.chartVersion));
@@ -195,7 +195,7 @@ const AppDetail: React.FC<{}> = () => {
           chartVersion={selectedVersion?.version}
           createDate={selectedVersion?.created}
           includesVersion={selectedVersion?.appVersion}
-          description={selectedVersion?.description ?? ''}
+          description={selectedVersion?.description}
           website={selectedVersion?.home}
           keywords={selectedVersion?.keywords}
           readmeURL={readmeURL}
@@ -207,7 +207,7 @@ const AppDetail: React.FC<{}> = () => {
               <AppInstallModal
                 appName={selectedVersion.name}
                 chartName={selectedVersion.name}
-                catalogName={appCatalog!.spec.title}
+                catalogName={appCatalog!.metadata.name}
                 versions={otherVersions}
                 selectedClusterID={selectedClusterID}
               />

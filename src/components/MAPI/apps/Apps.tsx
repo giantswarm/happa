@@ -6,6 +6,7 @@ import Route from 'Route';
 import { AppsRoutes } from 'shared/constants/routes';
 
 import AppDetail from './AppList/AppDetail';
+import AppsProvider from './AppsProvider';
 
 const Apps: React.FC<{}> = () => {
   return (
@@ -15,10 +16,16 @@ const Apps: React.FC<{}> = () => {
         pathname: AppsRoutes.Home,
       }}
     >
-      <Switch>
-        <Route exact={true} path={AppsRoutes.AppDetail} component={AppDetail} />
-        <Route path={AppsRoutes.Home} component={AppList} />
-      </Switch>
+      <AppsProvider>
+        <Switch>
+          <Route
+            exact={true}
+            path={AppsRoutes.AppDetail}
+            component={AppDetail}
+          />
+          <Route path={AppsRoutes.Home} component={AppList} />
+        </Switch>
+      </AppsProvider>
     </Breadcrumb>
   );
 };

@@ -12,6 +12,7 @@ import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
 
+import AppDetailPageOptionalValue from './AppDetailPageOptionalValue';
 import AppDetailsLoadingPlaceholder from './AppDetailsLoadingPlaceholder';
 import { HeadingRenderer, IATagProps, readmeBaseURL, urlFor } from './utils';
 
@@ -210,25 +211,30 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         </AppIconWrapper>
         <HeaderDetails>
           <Upper>
-            <h1>{props.appTitle ?? <AppDetailsLoadingPlaceholder />}</h1>
+            <h1>
+              <AppDetailPageOptionalValue value={props.appTitle}>
+                {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+                {(value) => <>{value}</>}
+              </AppDetailPageOptionalValue>
+            </h1>
             {props.installAppModal}
           </Upper>
           <Lower>
-            {props.catalogName ? (
-              <CatalogLabel
-                catalogName={props.catalogName}
-                description={props.catalogDescription}
-                iconUrl={props.catalogIcon}
-              />
-            ) : (
-              <AppDetailsLoadingPlaceholder />
-            )}
+            <AppDetailPageOptionalValue value={props.catalogName}>
+              {(value) => (
+                <CatalogLabel
+                  catalogName={value}
+                  description={props.catalogDescription}
+                  iconUrl={props.catalogIcon}
+                />
+              )}
+            </AppDetailPageOptionalValue>
           </Lower>
         </HeaderDetails>
       </Header>
       <VersionPickerRow>
         <span>Information for:</span>
-        {props.otherVersions ? (
+        {typeof props.otherVersions !== 'undefined' ? (
           <VersionPicker
             onChange={(v) => {
               if (v) {
@@ -243,9 +249,9 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         )}
       </VersionPickerRow>
       <Body>
-        {props.readmeURL && (
+        {typeof props.readmeURL !== 'undefined' && (
           <Readme>
-            {props.readme && (
+            {typeof props.readme !== 'undefined' && (
               <ReactMarkdown
                 plugins={[gfm]}
                 skipHtml
@@ -275,9 +281,10 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
               </ReactMarkdown>
             )}
 
-            {!props.readme && !props.readmeError && (
-              <StyledLoadingIndicator loading={true} />
-            )}
+            {typeof props.readme === 'undefined' &&
+              typeof props.readmeError === 'undefined' && (
+                <StyledLoadingIndicator loading={true} />
+              )}
 
             {props.readmeError}
           </Readme>
@@ -286,52 +293,43 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <DetailGroup>
             <Detail>
               <small>CHART VERSION</small>
-              {props.chartVersion ? (
-                <Truncated as='span'>{props.chartVersion}</Truncated>
-              ) : (
-                <AppDetailsLoadingPlaceholder />
-              )}
+              <AppDetailPageOptionalValue value={props.chartVersion}>
+                {(value) => <Truncated as='span'>{value}</Truncated>}
+              </AppDetailPageOptionalValue>
             </Detail>
 
             <Detail>
               <small>CREATED</small>
-              {props.createDate ? (
-                relativeDate(props.createDate)
-              ) : (
-                <AppDetailsLoadingPlaceholder />
-              )}
+              <AppDetailPageOptionalValue value={props.createDate}>
+                {(value) => relativeDate(value)}
+              </AppDetailPageOptionalValue>
             </Detail>
 
             <Detail>
               <small>INCLUDES VERSION</small>
-
-              {props.includesVersion ? (
-                <Truncated as='span'>{props.includesVersion}</Truncated>
-              ) : (
-                <AppDetailsLoadingPlaceholder />
-              )}
+              <AppDetailPageOptionalValue value={props.includesVersion}>
+                {(value) => <Truncated as='span'>{value}</Truncated>}
+              </AppDetailPageOptionalValue>
             </Detail>
           </DetailGroup>
 
           <Detail>
             <small>DESCRIPTION</small>
-
-            {props.description ? (
-              props.description
-            ) : (
-              <AppDetailsLoadingPlaceholder />
-            )}
+            <AppDetailPageOptionalValue value={props.description}>
+              {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+              {(value) => <>{value}</>}
+            </AppDetailPageOptionalValue>
           </Detail>
 
           <Detail>
             <small>WEBSITE</small>
-            {props.website ? (
-              <a href={props.website} target='_blank' rel='noopener noreferrer'>
-                {props.website}
-              </a>
-            ) : (
-              <AppDetailsLoadingPlaceholder />
-            )}
+            <AppDetailPageOptionalValue value={props.website}>
+              {(value) => (
+                <a href={value} target='_blank' rel='noopener noreferrer'>
+                  {value}
+                </a>
+              )}
+            </AppDetailPageOptionalValue>
           </Detail>
 
           {props.keywords!.length > 0 && (

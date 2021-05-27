@@ -7,19 +7,13 @@ import usePrevious from 'lib/hooks/usePrevious';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
+import { useAppsContext } from '../AppsProvider';
 import {
   compareAppCatalogIndexAppsFns,
   filterAppCatalogIndexApps,
@@ -30,31 +24,6 @@ import {
 } from './utils';
 
 const SEARCH_THROTTLE_RATE_MS = 250;
-
-type SelectedCatalogsState = Record<string, boolean>;
-
-interface ISelectedCatalogsAction {
-  type: 'selectCatalog' | 'deselectCatalog';
-  name: string;
-}
-
-const selectedCatalogsReducer: React.Reducer<
-  SelectedCatalogsState,
-  ISelectedCatalogsAction
-> = (state: SelectedCatalogsState, action: ISelectedCatalogsAction) => {
-  switch (action.type) {
-    case 'selectCatalog':
-      return Object.assign({}, state, { [action.name]: true });
-    case 'deselectCatalog': {
-      const nextSelectedCatalogs = Object.assign({}, state);
-      delete nextSelectedCatalogs[action.name];
-
-      return nextSelectedCatalogs;
-    }
-    default:
-      return state;
-  }
-};
 
 const AppList: React.FC<{}> = () => {
   const isAdmin = useSelector(getUserIsAdmin);
@@ -110,15 +79,19 @@ const AppList: React.FC<{}> = () => {
   const appCatalogListIsLoading =
     typeof appCatalogList === 'undefined' && appCatalogListIsValidating;
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const {
+    selectedCatalogs,
+    selectCatalog,
+    deselectCatalog,
+    searchQuery,
+    setSearchQuery,
+    sortOrder,
+    setSortOrder,
+  } = useAppsContext();
+
   const debouncedSearchQuery = useDebounce(
     searchQuery,
     SEARCH_THROTTLE_RATE_MS
-  );
-
-  const [selectedCatalogs, dispatchSelectedCatalogs] = useReducer(
-    selectedCatalogsReducer,
-    {}
   );
 
   useLayoutEffect(() => {
@@ -135,10 +108,7 @@ const AppList: React.FC<{}> = () => {
     for (const catalog of appCatalogList.items) {
       if (catalog.metadata.name === 'helm-stable') continue;
 
-      dispatchSelectedCatalogs({
-        type: 'selectCatalog',
-        name: catalog.metadata.name,
-      });
+      selectCatalog(catalog.metadata.name);
     }
 
     // We don't need to run this again if the selected catalogs change.
@@ -166,8 +136,6 @@ const AppList: React.FC<{}> = () => {
     (typeof appCatalogIndexAppList === 'undefined' &&
       appCatalogIndexAppListIsValidating);
 
-  const [sortOrder, setSortOrder] = useState('name');
-
   const apps = useMemo(() => {
     if (!appCatalogIndexAppList) return [];
 
@@ -190,10 +158,11 @@ const AppList: React.FC<{}> = () => {
   ]);
 
   const handleChangeFacets = (value: string, checked: boolean) => {
-    dispatchSelectedCatalogs({
-      type: checked ? 'selectCatalog' : 'deselectCatalog',
-      name: value,
-    });
+    if (checked) {
+      selectCatalog(value);
+    } else {
+      deselectCatalog(value);
+    }
   };
 
   return (
