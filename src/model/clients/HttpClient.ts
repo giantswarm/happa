@@ -287,8 +287,6 @@ export class HttpClientImpl implements IHttpClient {
 
       if (!response.ok) throw response;
 
-      // TODO(axbarsan): Add support for timeout.
-
       const res = new GenericResponse<T>();
       res.data = (await getResponseData(response)) as T;
       res.requestConfig = currRequestConfig;
