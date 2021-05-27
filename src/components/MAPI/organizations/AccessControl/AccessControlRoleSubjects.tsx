@@ -12,11 +12,7 @@ import AccessControlSubjectSet, {
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 import AccessControlSubjectSetItem from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSetItem';
 
-import {
-  AccessControlSubjectTypes,
-  IAccessControlRoleItem,
-  IAccessControlRoleSubjectItem,
-} from '../../../UI/Display/MAPI/AccessControl/types';
+import * as ui from '../../../UI/Display/MAPI/AccessControl/types';
 import {
   fetchServiceAccountSuggestions,
   fetchServiceAccountSuggestionsKey,
@@ -29,26 +25,26 @@ interface IStateValue {
   namesLoading: string[];
 }
 
-type State = Record<AccessControlSubjectTypes, IStateValue>;
+type State = Record<ui.AccessControlSubjectTypes, IStateValue>;
 
 interface IAction {
   type: 'startAdding' | 'stopAdding' | 'startLoading' | 'stopLoading' | 'reset';
-  subjectType: AccessControlSubjectTypes;
+  subjectType: ui.AccessControlSubjectTypes;
   subjectName?: string;
 }
 
 const initialState: State = {
-  [AccessControlSubjectTypes.Group]: {
+  [ui.AccessControlSubjectTypes.Group]: {
     isAdding: false,
     isLoading: false,
     namesLoading: [],
   },
-  [AccessControlSubjectTypes.User]: {
+  [ui.AccessControlSubjectTypes.User]: {
     isAdding: false,
     isLoading: false,
     namesLoading: [],
   },
-  [AccessControlSubjectTypes.ServiceAccount]: {
+  [ui.AccessControlSubjectTypes.ServiceAccount]: {
     isAdding: false,
     isLoading: false,
     namesLoading: [],
@@ -138,7 +134,7 @@ const reducer: React.Reducer<State, IAction> = (state, action) => {
 };
 
 const mapValueToSetItem = (stateValue: IStateValue) => (
-  value: IAccessControlRoleSubjectItem
+  value: ui.IAccessControlRoleSubjectItem
 ): IAccessControlSubjectSetItem => {
   const isLoading = stateValue.namesLoading.includes(value.name);
 
@@ -150,12 +146,15 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
 };
 
 interface IAccessControlRoleSubjectsProps
-  extends Pick<IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'>,
+  extends Pick<
+      ui.IAccessControlRoleItem,
+      'groups' | 'users' | 'serviceAccounts'
+    >,
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
   namespace: string;
-  onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
-  onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
+  onAdd: (type: ui.AccessControlSubjectTypes, names: string[]) => Promise<void>;
+  onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
 const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
@@ -170,7 +169,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleToggleAdding = (type: AccessControlSubjectTypes) => () => {
+  const handleToggleAdding = (type: ui.AccessControlSubjectTypes) => () => {
     if (state[type].isAdding) {
       dispatch({ type: 'stopAdding', subjectType: type });
     } else {
@@ -178,7 +177,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   };
 
-  const handleAdd = (type: AccessControlSubjectTypes) => async (
+  const handleAdd = (type: ui.AccessControlSubjectTypes) => async (
     values: string[]
   ) => {
     if (values.length < 1) {
@@ -222,7 +221,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   };
 
-  const handleDeleting = (type: AccessControlSubjectTypes) => async (
+  const handleDeleting = (type: ui.AccessControlSubjectTypes) => async (
     name: string
   ) => {
     try {
@@ -256,11 +255,17 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
   useEffect(() => {
     return () => {
-      dispatch({ type: 'reset', subjectType: AccessControlSubjectTypes.Group });
-      dispatch({ type: 'reset', subjectType: AccessControlSubjectTypes.User });
       dispatch({
         type: 'reset',
-        subjectType: AccessControlSubjectTypes.ServiceAccount,
+        subjectType: ui.AccessControlSubjectTypes.Group,
+      });
+      dispatch({
+        type: 'reset',
+        subjectType: ui.AccessControlSubjectTypes.User,
+      });
+      dispatch({
+        type: 'reset',
+        subjectType: ui.AccessControlSubjectTypes.ServiceAccount,
       });
     };
   }, [roleName]);
@@ -282,9 +287,9 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   }, [serviceAccountSuggestionsError]);
 
-  const groupType = state[AccessControlSubjectTypes.Group];
-  const userType = state[AccessControlSubjectTypes.User];
-  const serviceAccountType = state[AccessControlSubjectTypes.ServiceAccount];
+  const groupType = state[ui.AccessControlSubjectTypes.Group];
+  const userType = state[ui.AccessControlSubjectTypes.User];
+  const serviceAccountType = state[ui.AccessControlSubjectTypes.ServiceAccount];
 
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
@@ -303,9 +308,11 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
               {...params}
             />
           )}
-          onAdd={handleAdd(AccessControlSubjectTypes.Group)}
-          onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.Group)}
-          onDeleteItem={handleDeleting(AccessControlSubjectTypes.Group)}
+          onAdd={handleAdd(ui.AccessControlSubjectTypes.Group)}
+          onToggleAdding={handleToggleAdding(
+            ui.AccessControlSubjectTypes.Group
+          )}
+          onDeleteItem={handleDeleting(ui.AccessControlSubjectTypes.Group)}
           isAdding={groupType.isAdding}
           isLoading={groupType.isLoading}
         />
@@ -343,9 +350,9 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
               />
             );
           }}
-          onAdd={handleAdd(AccessControlSubjectTypes.User)}
-          onToggleAdding={handleToggleAdding(AccessControlSubjectTypes.User)}
-          onDeleteItem={handleDeleting(AccessControlSubjectTypes.User)}
+          onAdd={handleAdd(ui.AccessControlSubjectTypes.User)}
+          onToggleAdding={handleToggleAdding(ui.AccessControlSubjectTypes.User)}
+          onDeleteItem={handleDeleting(ui.AccessControlSubjectTypes.User)}
           isAdding={userType.isAdding}
           isLoading={userType.isLoading}
         />
@@ -375,12 +382,12 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
               {...params}
             />
           )}
-          onAdd={handleAdd(AccessControlSubjectTypes.ServiceAccount)}
+          onAdd={handleAdd(ui.AccessControlSubjectTypes.ServiceAccount)}
           onToggleAdding={handleToggleAdding(
-            AccessControlSubjectTypes.ServiceAccount
+            ui.AccessControlSubjectTypes.ServiceAccount
           )}
           onDeleteItem={handleDeleting(
-            AccessControlSubjectTypes.ServiceAccount
+            ui.AccessControlSubjectTypes.ServiceAccount
           )}
           isAdding={serviceAccountType.isAdding}
           isLoading={serviceAccountType.isLoading}
