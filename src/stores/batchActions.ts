@@ -7,6 +7,7 @@ import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { supportsMapiApps } from 'shared/featureSupport';
 import { INodePool } from 'shared/types';
 import {
   enableCatalog,
@@ -37,8 +38,7 @@ import {
   refreshUserInfo,
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
-import { getLoggedInUser } from 'stores/main/selectors';
-import { getUserIsAdmin } from 'stores/main/selectors';
+import { getLoggedInUser, getProvider } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -92,16 +92,20 @@ export function batchedLayout(
     }
 
     try {
-      const catalogs = await dispatch(listCatalogs());
-      const userIsAdmin = getUserIsAdmin(getState());
+      const user = getLoggedInUser(getState())!;
+      const provider = getProvider(getState())!;
 
-      Object.entries(catalogs)
-        .filter(filterFunc(userIsAdmin))
-        .forEach(([key]) => {
-          if (key !== 'helm-stable') {
-            dispatch(enableCatalog(key));
-          }
-        });
+      if (!supportsMapiApps(user, provider)) {
+        const catalogs = await dispatch(listCatalogs());
+
+        Object.entries(catalogs)
+          .filter(filterFunc(user.isAdmin))
+          .forEach(([key]) => {
+            if (key !== 'helm-stable') {
+              dispatch(enableCatalog(key));
+            }
+          });
+      }
 
       dispatch(loadReleases());
       await dispatch(
@@ -241,19 +245,23 @@ export function batchedClusterDetailView(
   clusterId: string,
   isV5Cluster: boolean
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       dispatch({
         type: CLUSTER_LOAD_DETAILS_REQUEST,
         id: clusterId,
       });
 
-      // Lets use Promise.all when we have a series of async calls that not depend
-      // on each another. It's faster and it's best from an error handling perspective.
+      dispatch(loadReleases());
+
+      const user = getLoggedInUser(getState())!;
+      const provider = getProvider(getState());
+      if (!supportsMapiApps(user, provider)) {
+        dispatch(loadClusterApps({ clusterId }));
+      }
+
       await Promise.all([
         dispatch(organizationCredentialsLoad(organizationId)),
-        dispatch(loadReleases()),
-        dispatch(loadClusterApps({ clusterId: clusterId })),
         dispatch(clusterLoadKeyPairs(clusterId)),
       ]);
 
@@ -301,10 +309,14 @@ export function batchedRefreshClusterDetailView(
         );
       }
 
-      // If cluster is an empty object, it means that it has been removed.
-      // We don't want to load apps in this scenario.
-      if (Object.keys(cluster).length > 0) {
-        dispatch(loadClusterApps({ clusterId: clusterId }));
+      const user = getLoggedInUser(getState())!;
+      const provider = getProvider(getState());
+
+      if (
+        !supportsMapiApps(user, provider) &&
+        Object.keys(cluster).length > 0
+      ) {
+        dispatch(loadClusterApps({ clusterId }));
       }
     } catch (err) {
       ErrorReporter.getInstance().notify(err);

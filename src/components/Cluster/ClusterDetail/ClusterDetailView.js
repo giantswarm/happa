@@ -14,6 +14,7 @@ import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
 import { Constants, Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { supportsMapiApps } from 'shared/featureSupport';
 import Tabs from 'shared/Tabs';
 import {
   batchedClusterDetailView,
@@ -33,7 +34,6 @@ import {
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
-import { LoggedInUserTypes } from 'stores/main/types';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectNodePools } from 'stores/nodepool/selectors';
@@ -303,6 +303,8 @@ class ClusterDetailView extends React.Component {
     const clusterIsUpdating =
       isClusterUpdating(cluster) || clusterIsAwaitingUpgrade;
 
+    const supporsAppsViaMapi = supportsMapiApps(user, provider);
+
     return (
       <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
         <LoadingOverlay loading={loading}>
@@ -383,8 +385,7 @@ class ClusterDetailView extends React.Component {
                 </LoadingOverlay>
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
-                {user?.type === LoggedInUserTypes.MAPI &&
-                provider !== Providers.KVM ? (
+                {supporsAppsViaMapi ? (
                   <ClusterDetailApps
                     clusterId={id}
                     releaseVersion={release_version}
@@ -403,8 +404,7 @@ class ClusterDetailView extends React.Component {
                 )}
               </Tab>
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
-                {user?.type === LoggedInUserTypes.MAPI &&
-                provider !== Providers.KVM ? (
+                {supporsAppsViaMapi ? (
                   <ClusterDetailIngress
                     clusterID={cluster.id}
                     provider={provider}
