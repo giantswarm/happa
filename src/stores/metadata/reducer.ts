@@ -10,7 +10,7 @@ import { IMetadataState, MetadataAction } from 'stores/metadata/types';
 
 const initialState: IMetadataState = {
   version: {
-    current: 'VERSION',
+    current: '',
     new: null,
     lastCheck: 0,
     timer: 0,
