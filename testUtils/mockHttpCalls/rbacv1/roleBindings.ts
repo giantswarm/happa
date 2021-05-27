@@ -124,6 +124,57 @@ export const coolRoleBinding = {
   },
 };
 
+export const haveFunRoleBinding = {
+  metadata: {
+    name: 'have-fun',
+    namespace: 'org-giantswarm',
+    selfLink:
+      '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/have-fun',
+    uid: '157dba11-6610-4124-899d-ed98f0f81505',
+    resourceVersion: '281804540',
+    creationTimestamp: '2021-03-22T16:28:27Z',
+    labels: {
+      'giantswarm.io/managed-by': 'rbac-operator',
+    },
+    finalizers: [
+      'operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller',
+    ],
+    managedFields: [
+      {
+        manager: 'rbac-operator',
+        operation: 'Update',
+        apiVersion: 'rbac.authorization.k8s.io/v1',
+        time: '2021-03-25T16:05:55Z',
+        fieldsType: 'FieldsV1',
+        fieldsV1: {
+          'f:metadata': {
+            'f:finalizers': {
+              '.': {},
+              'v:"operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller"': {},
+            },
+            'f:labels': { '.': {}, 'f:giantswarm.io/managed-by': {} },
+          },
+          'f:roleRef': { 'f:apiGroup': {}, 'f:kind': {}, 'f:name': {} },
+          'f:subjects': {},
+        },
+      },
+    ],
+  },
+  subjects: [
+    {
+      kind: 'ServiceAccount',
+      apiGroup: 'rbac.authorization.k8s.io',
+      name: 'some-random-account',
+      namespace: 'org-giantswarm',
+    },
+  ],
+  roleRef: {
+    apiGroup: 'rbac.authorization.k8s.io',
+    kind: 'ClusterRole',
+    name: 'cluster-admin',
+  },
+};
+
 export const roleBindingList = {
   kind: 'RoleBindingList',
   apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -132,5 +183,10 @@ export const roleBindingList = {
       '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/',
     resourceVersion: '284086409',
   },
-  items: [writeAllCustomerRoleBinding, editAllRoleBinding, coolRoleBinding],
+  items: [
+    writeAllCustomerRoleBinding,
+    editAllRoleBinding,
+    coolRoleBinding,
+    haveFunRoleBinding,
+  ],
 };

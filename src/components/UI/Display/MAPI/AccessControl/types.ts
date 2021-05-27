@@ -42,3 +42,13 @@ export interface IAccessControlRoleItem {
   serviceAccounts: Record<string, IAccessControlRoleSubjectItem>;
   permissions: IAccessControlRoleItemPermission[];
 }
+
+export interface IAccessControlSubjectPermissions {
+  canAdd: boolean;
+  canDelete: boolean;
+  canList: boolean;
+}
+
+export interface IAccessControlPermissions {
+  subjects: Record<AccessControlSubjectTypes, IAccessControlSubjectPermissions>;
+}
