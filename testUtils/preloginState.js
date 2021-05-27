@@ -40,7 +40,7 @@ export default {
   errors: {},
   metadata: {
     version: {
-      current: 'VERSION',
+      current: '',
       new: null,
       lastCheck: 0,
       timer: 0,

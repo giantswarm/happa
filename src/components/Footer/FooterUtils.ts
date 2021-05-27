@@ -4,6 +4,8 @@ import { VersionImpl } from 'lib/Version';
 import { Constants } from 'shared/constants';
 
 export function formatVersion(version: string): string {
+  if (version.length < 1) return 'VERSION';
+
   try {
     const semverVersion = new VersionImpl(version);
 
@@ -18,13 +20,11 @@ export function formatVersion(version: string): string {
         semverVersion.getPreRelease().slice(0, 5),
       ].join('');
     }
-
-    return version;
   } catch (err) {
     ErrorReporter.getInstance().notify(err);
-
-    return 'development';
   }
+
+  return version;
 }
 
 export function getReleaseURL(version: string): string {
