@@ -121,8 +121,7 @@ const AppList: React.FC<{}> = () => {
     isValidating: appCatalogIndexAppListIsValidating,
   } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
     getAppCatalogsIndexAppListKey(appCatalogList?.items),
-    // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
-    () => getAppCatalogsIndexAppList(fetch, auth, appCatalogList!.items)
+    () => getAppCatalogsIndexAppList(clientFactory, auth, appCatalogList!.items)
   );
 
   useEffect(() => {

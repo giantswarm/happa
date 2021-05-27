@@ -96,8 +96,7 @@ const AppDetail: React.FC<{}> = () => {
     error: appCatalogIndexAppListError,
   } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
     getAppCatalogsIndexAppListKey(appCatalogList),
-    // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
-    () => getAppCatalogsIndexAppList(fetch, auth, appCatalogList!)
+    () => getAppCatalogsIndexAppList(clientFactory, auth, appCatalogList!)
   );
 
   useEffect(() => {
@@ -161,14 +160,18 @@ const AppDetail: React.FC<{}> = () => {
     }
   }, [app, selectedVersion, match.params, dispatch]);
 
+  const appReadmeClient = useRef(clientFactory());
   const readmeURL = getAppCatalogIndexAppVersionReadmeURL(selectedVersion);
 
   const { data: appReadme, error: appReadmeError } = useSWR<
     string,
     GenericResponse
   >(fetchAppCatalogIndexAppVersionReadmeKey(readmeURL), () =>
-    // TODO(axbarsan): Find a more elegant solution for passing `fetch` here.
-    fetchAppCatalogIndexAppVersionReadme(fetch, auth, readmeURL!)
+    fetchAppCatalogIndexAppVersionReadme(
+      appReadmeClient.current,
+      auth,
+      readmeURL!
+    )
   );
 
   useEffect(() => {

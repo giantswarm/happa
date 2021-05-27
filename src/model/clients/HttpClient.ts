@@ -19,6 +19,7 @@ export interface IHttpClientConfig {
   method: HttpRequestMethods;
   data?: HttpBody;
   baseURL?: string;
+  forceCORS?: boolean;
 }
 
 export interface IHttpClient {
@@ -253,7 +254,14 @@ export class HttpClientImpl implements IHttpClient {
 
   async execute<T = HttpBody>(): Promise<GenericResponse<T>> {
     const currRequestConfig = this.getRequestConfig();
-    const { baseURL, headers, url, method, data } = currRequestConfig;
+    const {
+      baseURL,
+      headers,
+      url,
+      method,
+      data,
+      forceCORS,
+    } = currRequestConfig;
 
     try {
       await this.onBeforeRequest(currRequestConfig);
@@ -263,13 +271,13 @@ export class HttpClientImpl implements IHttpClient {
         method,
         headers,
         body: JSON.stringify(data),
+        mode: forceCORS ? 'cors' : undefined,
       });
 
       const response = await fetch(req);
       if (!response.ok) throw response;
 
       // TODO(axbarsan): Add support for timeout.
-      // TODO(axbarsan): Add support for cors.
 
       const res = new GenericResponse<T>();
       res.data = (await getResponseData(response)) as T;
