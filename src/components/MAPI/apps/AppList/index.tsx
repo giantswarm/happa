@@ -85,13 +85,18 @@ const AppList: React.FC<{}> = () => {
   const appCatalogListIsLoading =
     typeof appCatalogList === 'undefined' && appCatalogListIsValidating;
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const {
+    selectedCatalogs,
+    selectCatalog,
+    deselectCatalog,
+    searchQuery,
+    setSearchQuery,
+  } = useAppsContext();
+
   const debouncedSearchQuery = useDebounce(
     searchQuery,
     SEARCH_THROTTLE_RATE_MS
   );
-
-  const { selectedCatalogs, selectCatalog, deselectCatalog } = useAppsContext();
 
   useLayoutEffect(() => {
     // Only execute this after the initial catalog load.

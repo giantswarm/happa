@@ -14,6 +14,8 @@ export interface IAppsContext {
   selectedCatalogs: SelectedCatalogs;
   selectCatalog: (catalogName: string) => void;
   deselectCatalog: (catalogName: string) => void;
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
 }
 
 const appsContext = createContext<IAppsContext | null>(null);
@@ -28,14 +30,24 @@ interface IDeselectCatalogAction {
   name: string;
 }
 
-type AppsAction = ISelectCatalogAction | IDeselectCatalogAction;
+interface ISetSearchQueryAction {
+  type: 'setSearchQuery';
+  value: string;
+}
+
+type AppsAction =
+  | ISelectCatalogAction
+  | IDeselectCatalogAction
+  | ISetSearchQueryAction;
 
 interface IAppsState {
   selectedCatalogs: SelectedCatalogs;
+  searchQuery: string;
 }
 
 const initialState: IAppsState = {
   selectedCatalogs: {},
+  searchQuery: '',
 };
 
 const reducer: React.Reducer<IAppsState, AppsAction> = produce(
@@ -47,6 +59,10 @@ const reducer: React.Reducer<IAppsState, AppsAction> = produce(
 
       case 'deselectCatalog':
         delete draft.selectedCatalogs[action.name];
+        break;
+
+      case 'setSearchQuery':
+        draft.searchQuery = action.value;
         break;
     }
   },
@@ -74,12 +90,23 @@ const AppsProvider: React.FC<{}> = ({ children }) => {
     });
   }, []);
 
+  const searchQuery = useMemo(() => state.searchQuery, [state.searchQuery]);
+
+  const setSearchQuery = useCallback((value: string) => {
+    dispatch({
+      type: 'setSearchQuery',
+      value,
+    });
+  }, []);
+
   return (
     <appsContext.Provider
       value={{
         selectedCatalogs,
         selectCatalog,
         deselectCatalog,
+        searchQuery,
+        setSearchQuery,
       }}
     >
       {children}
