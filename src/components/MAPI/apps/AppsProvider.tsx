@@ -16,6 +16,8 @@ export interface IAppsContext {
   deselectCatalog: (catalogName: string) => void;
   searchQuery: string;
   setSearchQuery: (value: string) => void;
+  sortOrder: string;
+  setSortOrder: (orderBy: string) => void;
 }
 
 const appsContext = createContext<IAppsContext | null>(null);
@@ -35,19 +37,27 @@ interface ISetSearchQueryAction {
   value: string;
 }
 
+interface ISetSortOrderAction {
+  type: 'setSortOrder';
+  value: string;
+}
+
 type AppsAction =
   | ISelectCatalogAction
   | IDeselectCatalogAction
-  | ISetSearchQueryAction;
+  | ISetSearchQueryAction
+  | ISetSortOrderAction;
 
 interface IAppsState {
   selectedCatalogs: SelectedCatalogs;
   searchQuery: string;
+  sortOrder: string;
 }
 
 const initialState: IAppsState = {
   selectedCatalogs: {},
   searchQuery: '',
+  sortOrder: 'name',
 };
 
 const reducer: React.Reducer<IAppsState, AppsAction> = produce(
@@ -63,6 +73,10 @@ const reducer: React.Reducer<IAppsState, AppsAction> = produce(
 
       case 'setSearchQuery':
         draft.searchQuery = action.value;
+        break;
+
+      case 'setSortOrder':
+        draft.sortOrder = action.value;
         break;
     }
   },
@@ -99,6 +113,15 @@ const AppsProvider: React.FC<{}> = ({ children }) => {
     });
   }, []);
 
+  const sortOrder = useMemo(() => state.sortOrder, [state.sortOrder]);
+
+  const setSortOrder = useCallback((value: string) => {
+    dispatch({
+      type: 'setSortOrder',
+      value,
+    });
+  }, []);
+
   return (
     <appsContext.Provider
       value={{
@@ -107,6 +130,8 @@ const AppsProvider: React.FC<{}> = ({ children }) => {
         deselectCatalog,
         searchQuery,
         setSearchQuery,
+        sortOrder,
+        setSortOrder,
       }}
     >
       {children}

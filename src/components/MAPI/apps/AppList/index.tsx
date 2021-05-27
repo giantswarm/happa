@@ -7,13 +7,7 @@ import usePrevious from 'lib/hooks/usePrevious';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserIsAdmin } from 'stores/main/selectors';
 import useSWR from 'swr';
@@ -91,6 +85,8 @@ const AppList: React.FC<{}> = () => {
     deselectCatalog,
     searchQuery,
     setSearchQuery,
+    sortOrder,
+    setSortOrder,
   } = useAppsContext();
 
   const debouncedSearchQuery = useDebounce(
@@ -139,8 +135,6 @@ const AppList: React.FC<{}> = () => {
     appCatalogListIsLoading ||
     (typeof appCatalogIndexAppList === 'undefined' &&
       appCatalogIndexAppListIsValidating);
-
-  const [sortOrder, setSortOrder] = useState('name');
 
   const apps = useMemo(() => {
     if (!appCatalogIndexAppList) return [];
