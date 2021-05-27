@@ -12,6 +12,7 @@ import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import Truncated from 'UI/Util/Truncated';
 
+import AppDetailPageOptionalValue from './AppDetailPageOptionalValue';
 import AppDetailsLoadingPlaceholder from './AppDetailsLoadingPlaceholder';
 import { HeadingRenderer, IATagProps, readmeBaseURL, urlFor } from './utils';
 
@@ -210,19 +211,24 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         </AppIconWrapper>
         <HeaderDetails>
           <Upper>
-            <h1>{props.appTitle ?? <AppDetailsLoadingPlaceholder />}</h1>
+            <h1>
+              <AppDetailPageOptionalValue value={props.appTitle}>
+                {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+                {(value) => <>{value}</>}
+              </AppDetailPageOptionalValue>
+            </h1>
             {props.installAppModal}
           </Upper>
           <Lower>
-            {typeof props.catalogName !== 'undefined' ? (
-              <CatalogLabel
-                catalogName={props.catalogName}
-                description={props.catalogDescription}
-                iconUrl={props.catalogIcon}
-              />
-            ) : (
-              <AppDetailsLoadingPlaceholder />
-            )}
+            <AppDetailPageOptionalValue value={props.catalogName}>
+              {(value) => (
+                <CatalogLabel
+                  catalogName={value}
+                  description={props.catalogDescription}
+                  iconUrl={props.catalogIcon}
+                />
+              )}
+            </AppDetailPageOptionalValue>
           </Lower>
         </HeaderDetails>
       </Header>
@@ -287,52 +293,43 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <DetailGroup>
             <Detail>
               <small>CHART VERSION</small>
-              {typeof props.chartVersion !== 'undefined' ? (
-                <Truncated as='span'>{props.chartVersion}</Truncated>
-              ) : (
-                <AppDetailsLoadingPlaceholder />
-              )}
+              <AppDetailPageOptionalValue value={props.chartVersion}>
+                {(value) => <Truncated as='span'>{value}</Truncated>}
+              </AppDetailPageOptionalValue>
             </Detail>
 
             <Detail>
               <small>CREATED</small>
-              {typeof props.createDate !== 'undefined' ? (
-                relativeDate(props.createDate)
-              ) : (
-                <AppDetailsLoadingPlaceholder />
-              )}
+              <AppDetailPageOptionalValue value={props.createDate}>
+                {(value) => relativeDate(value)}
+              </AppDetailPageOptionalValue>
             </Detail>
 
             <Detail>
               <small>INCLUDES VERSION</small>
-
-              {typeof props.includesVersion !== 'undefined' ? (
-                <Truncated as='span'>{props.includesVersion}</Truncated>
-              ) : (
-                <AppDetailsLoadingPlaceholder />
-              )}
+              <AppDetailPageOptionalValue value={props.includesVersion}>
+                {(value) => <Truncated as='span'>{value}</Truncated>}
+              </AppDetailPageOptionalValue>
             </Detail>
           </DetailGroup>
 
           <Detail>
             <small>DESCRIPTION</small>
-
-            {typeof props.description !== 'undefined' ? (
-              props.description
-            ) : (
-              <AppDetailsLoadingPlaceholder />
-            )}
+            <AppDetailPageOptionalValue value={props.description}>
+              {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+              {(value) => <>{value}</>}
+            </AppDetailPageOptionalValue>
           </Detail>
 
           <Detail>
             <small>WEBSITE</small>
-            {typeof props.website !== 'undefined' ? (
-              <a href={props.website} target='_blank' rel='noopener noreferrer'>
-                {props.website}
-              </a>
-            ) : (
-              <AppDetailsLoadingPlaceholder />
-            )}
+            <AppDetailPageOptionalValue value={props.website}>
+              {(value) => (
+                <a href={value} target='_blank' rel='noopener noreferrer'>
+                  {value}
+                </a>
+              )}
+            </AppDetailPageOptionalValue>
           </Detail>
 
           {props.keywords!.length > 0 && (

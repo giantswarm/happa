@@ -17,15 +17,15 @@ import { IFacetOption } from 'UI/Inputs/Facets';
 
 export interface IAppCatalogIndexAppVersion {
   apiVersion: string;
+  appVersion: string;
   version: string;
   created: string;
   digest: string;
+  home: string;
   icon: string;
   name: string;
   urls: string[];
-  home?: string;
-  appVersion?: string;
-  description?: string;
+  description: string;
   sources?: string[];
   annotations?: Record<string, string>;
   keywords?: string[];
@@ -205,8 +205,7 @@ export function filterAppCatalogIndexApps(
 
     switch (true) {
       case version.name.toLowerCase().includes(normalizedQuery):
-      case version.description &&
-        version.description.toLowerCase().includes(normalizedQuery):
+      case version.description.toLowerCase().includes(normalizedQuery):
       case version.keywords &&
         version.keywords.join(',').toLowerCase().includes(normalizedQuery):
         return true;
@@ -269,7 +268,23 @@ async function fetchAppCatalogIndex(
   for (const [appName, versions] of Object.entries(
     catalogIndexResponse.entries
   )) {
-    const sortedVersions = versions.sort(compareVersions);
+    let sortedVersions = versions.sort(compareVersions);
+    sortedVersions = sortedVersions.map((v) => {
+      // There might be some old versions that don't have all the right values.
+      if (typeof v.home === 'undefined') {
+        v.home = '';
+      }
+
+      if (typeof v.appVersion === 'undefined') {
+        v.appVersion = '';
+      }
+
+      if (typeof v.description === 'undefined') {
+        v.description = '';
+      }
+
+      return v;
+    });
 
     const version = versions[0]?.version ?? 'n/a';
     const iconURL = versions[0]?.icon ?? '';
