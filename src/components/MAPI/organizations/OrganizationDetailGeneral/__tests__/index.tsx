@@ -75,6 +75,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
   });
@@ -110,19 +111,17 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
-    const deleteButton = screen.getByText('Delete organization');
+    const deleteButton = await screen.findByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
 
-    await waitFor(() => expect(deleteButton).toBeEnabled());
-
     fireEvent.click(deleteButton);
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Delete org1'));
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(deleteButton).toBeDisabled();
 
     expect(
       await screen.findByText('Organization org1 deleted successfully.')
@@ -157,19 +156,17 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
-    const deleteButton = screen.getByText('Delete organization');
+    const deleteButton = await screen.findByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
 
-    await waitFor(() => expect(deleteButton).toBeEnabled());
-
     fireEvent.click(deleteButton);
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Delete org1'));
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(deleteButton).toBeDisabled();
 
     expect(
       await screen.findByText('Could not delete organization org1:')
@@ -191,18 +188,19 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
-    const deleteButton = screen.getByText('Delete organization');
+    const deleteButton = await screen.findByText('Delete organization');
     expect(deleteButton).toBeInTheDocument();
-
-    await waitFor(() => expect(deleteButton).toBeEnabled());
 
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByText('Cancel'));
 
-    await waitForElementToBeRemoved(screen.getByText('Are you sure?'));
+    await waitForElementToBeRemoved(
+      screen.getByText('Do you really want to delete organization org1?')
+    );
   });
 
   it('cannot delete the organization if there are still clusters that belong to it', async () => {
@@ -257,15 +255,60 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
-    const deleteButton = screen.getByText('Delete organization');
-    expect(deleteButton).toBeInTheDocument();
+    await screen.findByText('Delete this organization');
+
+    const deleteButton = screen.queryByText('Delete organization');
+    expect(deleteButton).not.toBeInTheDocument();
 
     await waitFor(() => expect(nock.isDone()).toBeTruthy());
+  });
 
-    expect(deleteButton).toBeDisabled();
+  it('can delete the organization if the cluster CRD is not ensured', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .delete('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/')
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListOrgs
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
+      )
+      .reply(StatusCodes.NotFound);
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    const deleteButton = await screen.findByText('Delete organization');
+    expect(deleteButton).toBeInTheDocument();
+
+    fireEvent.click(deleteButton);
+    fireEvent.click(screen.getByText('Delete org1'));
+
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+
+    expect(
+      await screen.findByText('Organization org1 deleted successfully.')
+    ).toBeInTheDocument();
   });
 
   it('displays various stats about the resources that belong to the organization', async () => {
@@ -383,6 +426,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 
@@ -459,6 +503,7 @@ describe('OrganizationDetailGeneral', () => {
     render(
       getComponent({
         organizationName: 'org1',
+        organizationNamespace: 'org-org1',
       })
     );
 

@@ -25,6 +25,7 @@ function formatCPU(value?: number): number | undefined {
 
 interface IOrganizationDetailPageProps {
   organizationName: string;
+  organizationNamespace: string;
   onDelete: () => Promise<void>;
   clusterCount?: number;
   clusterCountLoading?: boolean;
@@ -38,6 +39,7 @@ interface IOrganizationDetailPageProps {
 
 const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   organizationName,
+  organizationNamespace,
   onDelete,
   clusterCount,
   clusterCountLoading,
@@ -195,33 +197,23 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
           </Box>
         </Box>
       </Box>
-      <Box direction='row' pad={{ top: 'medium' }} border='top'>
-        <Box direction='column' gap='medium'>
-          <Text weight='bold' size='large' margin='none'>
-            Delete this organization
-          </Text>
-          <Box width='large'>
-            <Text>
-              This organization’s namespace with all resources in it and the
-              Organization CR will be deleted from the Management API. There is
-              no way to undo this action.
-            </Text>
-          </Box>
-          <Box>
-            <OrganizationDetailDelete
-              organizationName={organizationName}
-              onDelete={onDelete}
-              clusterCount={clusterCount}
-            />
-          </Box>
-        </Box>
-      </Box>
+
+      {!clusterCountLoading && (
+        <OrganizationDetailDelete
+          organizationName={organizationName}
+          organizationNamespace={organizationNamespace}
+          onDelete={onDelete}
+          clusterCount={clusterCount}
+          border='top'
+        />
+      )}
     </Box>
   );
 };
 
 OrganizationDetailPage.propTypes = {
   organizationName: PropTypes.string.isRequired,
+  organizationNamespace: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
   clusterCount: PropTypes.number,
   clusterCountLoading: PropTypes.bool,
