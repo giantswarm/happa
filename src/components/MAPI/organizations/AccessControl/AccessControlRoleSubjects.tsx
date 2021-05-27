@@ -11,9 +11,10 @@ import AccessControlSubjectSet, {
   IAccessControlSubjectSetItem,
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 import AccessControlSubjectSetItem from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSetItem';
+import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-import * as ui from '../../../UI/Display/MAPI/AccessControl/types';
 import {
+  canListSubjects,
   fetchServiceAccountSuggestions,
   fetchServiceAccountSuggestionsKey,
   getUserNameParts,
@@ -153,6 +154,7 @@ interface IAccessControlRoleSubjectsProps
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
   namespace: string;
+  permissions: ui.IAccessControlPermissions;
   onAdd: (type: ui.AccessControlSubjectTypes, names: string[]) => Promise<void>;
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
@@ -163,6 +165,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   groups,
   users,
   serviceAccounts,
+  permissions,
   onAdd,
   onDelete,
   ...props
@@ -287,121 +290,145 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   }, [serviceAccountSuggestionsError]);
 
+  const groupCollection = Object.values(groups);
+  const userCollection = Object.values(users);
+  const serviceAccountCollection = Object.values(serviceAccounts);
+
   const groupType = state[ui.AccessControlSubjectTypes.Group];
   const userType = state[ui.AccessControlSubjectTypes.User];
   const serviceAccountType = state[ui.AccessControlSubjectTypes.ServiceAccount];
 
+  const groupPermissions =
+    permissions.subjects[ui.AccessControlSubjectTypes.Group];
+  const userPermissions =
+    permissions.subjects[ui.AccessControlSubjectTypes.User];
+  const serviceAccountPermissions =
+    permissions.subjects[ui.AccessControlSubjectTypes.ServiceAccount];
+
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
-      <Box gap='small' direction='column' aria-label='Groups'>
-        <Box>
-          <Text size='medium' weight='bold'>
-            <i className='fa fa-group' /> Groups
-          </Text>
-        </Box>
-        <AccessControlSubjectSet
-          items={Object.values(groups).map(mapValueToSetItem(groupType))}
-          renderItem={(params) => (
-            <AccessControlSubjectSetItem
-              aria-label={params.name}
-              deleteTooltipMessage="Remove this group's binding to this role"
-              {...params}
-            />
-          )}
-          onAdd={handleAdd(ui.AccessControlSubjectTypes.Group)}
-          onToggleAdding={handleToggleAdding(
-            ui.AccessControlSubjectTypes.Group
-          )}
-          onDeleteItem={handleDeleting(ui.AccessControlSubjectTypes.Group)}
-          isAdding={groupType.isAdding}
-          isLoading={groupType.isLoading}
-        />
-        {groupType.isAdding && (
+      {canListSubjects(groupCollection, groupPermissions) && (
+        <Box gap='small' direction='column' aria-label='Groups'>
           <Box>
-            <Text>
-              Enter one or more group identifiers, exactly as defined in your
-              identity provider, including upper/lowercase spelling.
+            <Text size='medium' weight='bold'>
+              <i className='fa fa-group' /> Groups
             </Text>
           </Box>
-        )}
-      </Box>
-      <Box gap='small' direction='column' aria-label='Users'>
-        <Box>
-          <Text size='medium' weight='bold'>
-            <i className='fa fa-user' /> Users
-          </Text>
-        </Box>
-        <AccessControlSubjectSet
-          items={Object.values(users).map(mapValueToSetItem(userType))}
-          renderItem={(params) => {
-            const [name, domain] = getUserNameParts(params.name);
-
-            return (
+          <AccessControlSubjectSet
+            items={groupCollection.map(mapValueToSetItem(groupType))}
+            permissions={groupPermissions}
+            renderItem={(params) => (
               <AccessControlSubjectSetItem
                 aria-label={params.name}
-                deleteTooltipMessage="Remove this user's binding to this role"
+                deleteTooltipMessage="Remove this group's binding to this role"
                 {...params}
-                name={
-                  <Box direction='row'>
-                    <Text color='text-weak'>{name}</Text>
-                    {domain && <Text color='text-xweak'>{`@${domain}`}</Text>}
-                  </Box>
-                }
               />
-            );
-          }}
-          onAdd={handleAdd(ui.AccessControlSubjectTypes.User)}
-          onToggleAdding={handleToggleAdding(ui.AccessControlSubjectTypes.User)}
-          onDeleteItem={handleDeleting(ui.AccessControlSubjectTypes.User)}
-          isAdding={userType.isAdding}
-          isLoading={userType.isLoading}
-        />
-        {userType.isAdding && (
-          <Box>
-            <Text>
-              Enter one or more email addresses, exactly as defined in your
-              identity provider, including upper/lowercase spelling.
-            </Text>
-          </Box>
-        )}
-      </Box>
-      <Box gap='small' direction='column' aria-label='Service accounts'>
-        <Box>
-          <Text size='medium' weight='bold'>
-            <i className='fa fa-service-account' /> Service accounts
-          </Text>
+            )}
+            onAdd={handleAdd(ui.AccessControlSubjectTypes.Group)}
+            onToggleAdding={handleToggleAdding(
+              ui.AccessControlSubjectTypes.Group
+            )}
+            onDeleteItem={handleDeleting(ui.AccessControlSubjectTypes.Group)}
+            isAdding={groupType.isAdding}
+            isLoading={groupType.isLoading}
+          />
+          {groupType.isAdding && (
+            <Box>
+              <Text>
+                Enter one or more group identifiers, exactly as defined in your
+                identity provider, including upper/lowercase spelling.
+              </Text>
+            </Box>
+          )}
         </Box>
-        <AccessControlSubjectSet
-          items={Object.values(serviceAccounts).map(
-            mapValueToSetItem(serviceAccountType)
-          )}
-          renderItem={(params) => (
-            <AccessControlSubjectSetItem
-              aria-label={params.name}
-              deleteTooltipMessage="Remove this service account's binding to this role"
-              {...params}
-            />
-          )}
-          onAdd={handleAdd(ui.AccessControlSubjectTypes.ServiceAccount)}
-          onToggleAdding={handleToggleAdding(
-            ui.AccessControlSubjectTypes.ServiceAccount
-          )}
-          onDeleteItem={handleDeleting(
-            ui.AccessControlSubjectTypes.ServiceAccount
-          )}
-          isAdding={serviceAccountType.isAdding}
-          isLoading={serviceAccountType.isLoading}
-          inputSuggestions={serviceAccountSuggestions}
-        />
-        {serviceAccountType.isAdding && (
+      )}
+
+      {canListSubjects(userCollection, userPermissions) && (
+        <Box gap='small' direction='column' aria-label='Users'>
           <Box>
-            <Text>
-              Enter one or more account identifiers, including upper/lowercase
-              spelling.
+            <Text size='medium' weight='bold'>
+              <i className='fa fa-user' /> Users
             </Text>
           </Box>
-        )}
-      </Box>
+          <AccessControlSubjectSet
+            items={userCollection.map(mapValueToSetItem(userType))}
+            permissions={userPermissions}
+            renderItem={(params) => {
+              const [name, domain] = getUserNameParts(params.name);
+
+              return (
+                <AccessControlSubjectSetItem
+                  aria-label={params.name}
+                  deleteTooltipMessage="Remove this user's binding to this role"
+                  {...params}
+                  name={
+                    <Box direction='row'>
+                      <Text color='text-weak'>{name}</Text>
+                      {domain && <Text color='text-xweak'>{`@${domain}`}</Text>}
+                    </Box>
+                  }
+                />
+              );
+            }}
+            onAdd={handleAdd(ui.AccessControlSubjectTypes.User)}
+            onToggleAdding={handleToggleAdding(
+              ui.AccessControlSubjectTypes.User
+            )}
+            onDeleteItem={handleDeleting(ui.AccessControlSubjectTypes.User)}
+            isAdding={userType.isAdding}
+            isLoading={userType.isLoading}
+          />
+          {userType.isAdding && (
+            <Box>
+              <Text>
+                Enter one or more email addresses, exactly as defined in your
+                identity provider, including upper/lowercase spelling.
+              </Text>
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {canListSubjects(serviceAccountCollection, serviceAccountPermissions) && (
+        <Box gap='small' direction='column' aria-label='Service accounts'>
+          <Box>
+            <Text size='medium' weight='bold'>
+              <i className='fa fa-service-account' /> Service accounts
+            </Text>
+          </Box>
+          <AccessControlSubjectSet
+            items={serviceAccountCollection.map(
+              mapValueToSetItem(serviceAccountType)
+            )}
+            permissions={serviceAccountPermissions}
+            renderItem={(params) => (
+              <AccessControlSubjectSetItem
+                aria-label={params.name}
+                deleteTooltipMessage="Remove this service account's binding to this role"
+                {...params}
+              />
+            )}
+            onAdd={handleAdd(ui.AccessControlSubjectTypes.ServiceAccount)}
+            onToggleAdding={handleToggleAdding(
+              ui.AccessControlSubjectTypes.ServiceAccount
+            )}
+            onDeleteItem={handleDeleting(
+              ui.AccessControlSubjectTypes.ServiceAccount
+            )}
+            isAdding={serviceAccountType.isAdding}
+            isLoading={serviceAccountType.isLoading}
+            inputSuggestions={serviceAccountSuggestions}
+          />
+          {serviceAccountType.isAdding && (
+            <Box>
+              <Text>
+                Enter one or more account identifiers, including upper/lowercase
+                spelling.
+              </Text>
+            </Box>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };
@@ -415,6 +442,8 @@ AccessControlRoleSubjects.propTypes = {
   // @ts-expect-error
   serviceAccounts: PropTypes.object.isRequired,
   namespace: PropTypes.string.isRequired,
+  permissions: (PropTypes.object as PropTypes.Requireable<ui.IAccessControlPermissions>)
+    .isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

@@ -6,6 +6,7 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
@@ -16,6 +17,7 @@ import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import { extractErrorMessage } from '../utils';
 import {
   appendSubjectsToRoleItem,
+  computePermissions,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
   getRoleItems,
@@ -142,6 +144,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     }
   };
 
+  const permissions = useSelector(computePermissions);
+
   return (
     <DocumentTitle title={`Access control | ${organizationName}`}>
       <Box {...props}>
@@ -172,6 +176,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
             onAdd={handleAdd}
             onDelete={handleDelete}
             namespace={organizationNamespace}
+            permissions={permissions}
           />
         </Box>
       </Box>

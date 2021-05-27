@@ -8,7 +8,11 @@ import Tabs from 'shared/Tabs';
 import AccessControlRoleDetailLoadingPlaceholder from './AccessControlRoleDetailLoadingPlaceholder';
 import AccessControlRolePermissions from './AccessControlRolePermissions';
 import AccessControlRoleType from './AccessControlRoleType';
-import { AccessControlSubjectTypes, IAccessControlRoleItem } from './types';
+import {
+  AccessControlSubjectTypes,
+  IAccessControlPermissions,
+  IAccessControlRoleItem,
+} from './types';
 
 export function formatManagedBy(managedBy?: string): string {
   if (!managedBy) return 'you';
@@ -19,6 +23,7 @@ export function formatManagedBy(managedBy?: string): string {
 interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   namespace: string;
+  permissions: IAccessControlPermissions;
   onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
@@ -26,6 +31,7 @@ interface IAccessControlRoleDetailProps
 
 const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   namespace,
+  permissions,
   activeRole,
   onAdd,
   onDelete,
@@ -56,6 +62,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
                   users={activeRole.users}
                   serviceAccounts={activeRole.serviceAccounts}
                   namespace={namespace}
+                  permissions={permissions}
                 />
               </Tab>
               <Tab eventKey='2' title='Permissions'>
@@ -73,6 +80,8 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
 
 AccessControlRoleDetail.propTypes = {
   namespace: PropTypes.string.isRequired,
+  permissions: (PropTypes.object as PropTypes.Requireable<IAccessControlPermissions>)
+    .isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   // @ts-expect-error

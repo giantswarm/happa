@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
 
+import { IAccessControlSubjectPermissions } from './types';
+
 function gatherSubjectUsage(acc: Record<string, number>, currValue: string) {
   if (acc.hasOwnProperty(currValue)) {
     acc[currValue]++;
@@ -30,6 +32,7 @@ export interface IAccessControlSubjectSetItem {
 interface IAccessControlSubjectSetProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   items: IAccessControlSubjectSetItem[];
+  permissions: IAccessControlSubjectPermissions;
   renderItem: (params: IAccessControlSubjectSetRenderer) => React.ReactNode;
   onAdd: (values: string[]) => void;
   onToggleAdding: () => void;
@@ -41,6 +44,7 @@ interface IAccessControlSubjectSetProps
 
 const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
   items,
+  permissions,
   renderItem,
   onAdd,
   onToggleAdding,
@@ -99,22 +103,25 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
         <React.Fragment key={name}>
           {renderItem({
             name,
-            isEditable,
+            isEditable: permissions.canDelete && isEditable,
             isLoading: isItemLoading,
             onDelete: () => onDeleteItem(name),
           })}
         </React.Fragment>
       ))}
-      <AccessControlSubjectAddForm
-        margin={{ right: 'small', bottom: 'small' }}
-        isAdding={isAdding}
-        isLoading={isLoading}
-        onAdd={handleAdd}
-        onToggleAdding={onToggleAdding}
-        errorMessage={errorMessage}
-        onClearError={clearError}
-        suggestions={inputSuggestions}
-      />
+
+      {permissions.canAdd && (
+        <AccessControlSubjectAddForm
+          margin={{ right: 'small', bottom: 'small' }}
+          isAdding={isAdding}
+          isLoading={isLoading}
+          onAdd={handleAdd}
+          onToggleAdding={onToggleAdding}
+          errorMessage={errorMessage}
+          onClearError={clearError}
+          suggestions={inputSuggestions}
+        />
+      )}
     </Box>
   );
 };
@@ -122,6 +129,8 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
 AccessControlSubjectSet.propTypes = {
   // @ts-expect-error
   items: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  permissions: (PropTypes.object as PropTypes.Requireable<IAccessControlSubjectPermissions>)
+    .isRequired,
   renderItem: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
   onToggleAdding: PropTypes.func.isRequired,

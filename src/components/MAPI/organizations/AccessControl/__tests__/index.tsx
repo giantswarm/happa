@@ -109,7 +109,6 @@ describe('AccessControl', () => {
       within(content).getByLabelText('Groups')
     ).getByLabelText('Admins');
     expect(group).toBeInTheDocument();
-    expect(within(group).getByTitle('Delete')).toBeInTheDocument();
 
     fireEvent.click(within(content).getByText('Permissions'));
 
@@ -163,13 +162,11 @@ describe('AccessControl', () => {
     expect(section).toBeInTheDocument();
     let subject = within(section).getByLabelText('Admins');
     expect(subject).toBeInTheDocument();
-    expect(within(subject).getByTitle('Delete')).toBeInTheDocument();
 
     section = within(content).getByLabelText('Users');
     expect(section).toBeInTheDocument();
     subject = within(section).getByLabelText('test@test.com');
     expect(subject).toBeInTheDocument();
-    expect(within(subject).getByTitle('Delete')).toBeInTheDocument();
     subject = within(section).getByLabelText('system:boss');
     expect(subject).toBeInTheDocument();
     expect(within(subject).queryByTitle('Delete')).not.toBeInTheDocument();
@@ -178,7 +175,6 @@ describe('AccessControl', () => {
     expect(section).toBeInTheDocument();
     subject = within(section).getByLabelText('el-toro');
     expect(subject).toBeInTheDocument();
-    expect(within(subject).getByTitle('Delete')).toBeInTheDocument();
 
     fireEvent.click(within(content).getByText('Permissions'));
 
@@ -232,7 +228,7 @@ describe('AccessControl', () => {
     ).toBeInTheDocument();
   });
 
-  it('can create groups', async () => {
+  it.skip('can create groups', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -350,7 +346,7 @@ describe('AccessControl', () => {
     ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 
-  it('displays an error if creating groups fails', async () => {
+  it.skip('displays an error if creating groups fails', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -449,7 +445,7 @@ describe('AccessControl', () => {
     ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 
-  it('can create users', async () => {
+  it.skip('can create users', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -558,7 +554,7 @@ describe('AccessControl', () => {
     ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 
-  it('displays an error if creating users fails', async () => {
+  it.skip('displays an error if creating users fails', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -649,7 +645,7 @@ describe('AccessControl', () => {
     ((Date.now as unknown) as jest.SpyInstance).mockClear();
   });
 
-  it('can delete a group', async () => {
+  it.skip('can delete a group', async () => {
     const putRequest = {
       metadata: {
         name: 'edit-all-group',
@@ -764,7 +760,7 @@ describe('AccessControl', () => {
     expect(within(section).queryByLabelText('Admins')).not.toBeInTheDocument();
   });
 
-  it('displays an error if deleting a group fails', async () => {
+  it.skip('displays an error if deleting a group fails', async () => {
     const putRequest = {
       metadata: {
         name: 'edit-all-group',
@@ -853,7 +849,7 @@ describe('AccessControl', () => {
     expect(within(section).getByLabelText('Admins')).toBeInTheDocument();
   });
 
-  it('can delete a user', async () => {
+  it.skip('can delete a user', async () => {
     const putRequest = {
       metadata: {
         name: 'cool',
@@ -958,7 +954,7 @@ describe('AccessControl', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('displays an error if deleting a user fails', async () => {
+  it.skip('displays an error if deleting a user fails', async () => {
     const putRequest = {
       metadata: {
         name: 'cool',
@@ -1043,15 +1039,15 @@ describe('AccessControl', () => {
   it('deletes the whole rolebinding when deleting the last subject in it', async () => {
     nock(window.config.mapiEndpoint)
       .delete(
-        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/write-all-customer-group/'
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/have-fun/'
       )
-      .reply(StatusCodes.Ok, rbacv1Mocks.writeAllCustomerRoleBinding);
+      .reply(StatusCodes.Ok, rbacv1Mocks.haveFunRoleBinding);
 
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/write-all-customer-group/'
+        '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/have-fun/'
       )
-      .reply(StatusCodes.Ok, rbacv1Mocks.writeAllCustomerRoleBinding);
+      .reply(StatusCodes.Ok, rbacv1Mocks.haveFunRoleBinding);
 
     render(
       getComponent({
@@ -1069,17 +1065,21 @@ describe('AccessControl', () => {
     fireEvent.click(currentRole);
 
     const content = screen.getByRole('main', { name: 'Role details' });
-    const section = within(content).getByLabelText('Groups');
-    const subject = within(section).getByLabelText('Admins');
+    const section = within(content).getByLabelText('Service accounts');
+    const subject = within(section).getByLabelText('some-random-account');
     fireEvent.click(within(subject).getByTitle('Delete'));
     fireEvent.click(screen.getByText('Yes, delete it'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(/Subject Admins deleted successfully./)
+      await screen.findByText(
+        /Subject some-random-account deleted successfully./
+      )
     ).toBeInTheDocument();
 
-    expect(within(section).queryByLabelText('Admins')).not.toBeInTheDocument();
+    expect(
+      within(section).queryByLabelText('some-random-account')
+    ).not.toBeInTheDocument();
   });
 
   it('can create service accounts', async () => {

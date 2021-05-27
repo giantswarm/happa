@@ -15,6 +15,7 @@ import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
 import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
+import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 import AccessControlRoleSubjects from '../AccessControlRoleSubjects';
 
@@ -40,6 +41,26 @@ function getComponent(
   );
 }
 
+const defaultPermissions: ui.IAccessControlPermissions = {
+  subjects: {
+    [ui.AccessControlSubjectTypes.Group]: {
+      canAdd: true,
+      canDelete: true,
+      canList: true,
+    },
+    [ui.AccessControlSubjectTypes.User]: {
+      canAdd: true,
+      canDelete: true,
+      canList: true,
+    },
+    [ui.AccessControlSubjectTypes.ServiceAccount]: {
+      canAdd: true,
+      canDelete: true,
+      canList: true,
+    },
+  },
+};
+
 describe('AccessControlRoleSubjects', () => {
   beforeAll(() => {
     axios.defaults.adapter = require('axios/lib/adapters/http');
@@ -57,6 +78,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {},
         users: {},
         serviceAccounts: {},
@@ -71,6 +93,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -146,6 +169,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -234,6 +258,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {},
         users: {},
         serviceAccounts: {},
@@ -321,6 +346,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -376,6 +402,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -420,6 +447,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {},
         users: {},
         serviceAccounts: {},
@@ -474,6 +502,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -516,6 +545,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {},
         users: {},
         serviceAccounts: {},
@@ -549,6 +579,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -598,6 +629,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {
           'test-group1': {
             name: 'test-group1',
@@ -656,6 +688,7 @@ describe('AccessControlRoleSubjects', () => {
     render(
       getComponent({
         namespace: 'org-test',
+        permissions: defaultPermissions,
         groups: {},
         users: {},
         serviceAccounts: {},

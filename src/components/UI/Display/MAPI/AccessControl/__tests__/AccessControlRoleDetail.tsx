@@ -2,11 +2,33 @@ import { screen } from '@testing-library/react';
 import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
 
 import AccessControlRoleDetail from '../AccessControlRoleDetail';
+import { AccessControlSubjectTypes, IAccessControlPermissions } from '../types';
+
+const defaultPermissions: IAccessControlPermissions = {
+  subjects: {
+    [AccessControlSubjectTypes.Group]: {
+      canAdd: true,
+      canDelete: true,
+      canList: true,
+    },
+    [AccessControlSubjectTypes.User]: {
+      canAdd: true,
+      canDelete: true,
+      canList: true,
+    },
+    [AccessControlSubjectTypes.ServiceAccount]: {
+      canAdd: true,
+      canDelete: true,
+      canList: true,
+    },
+  },
+};
 
 describe('AccessControlRoleDetail', () => {
   it('renders without crashing', () => {
     renderWithStore(AccessControlRoleDetail, {
       namespace: 'org-test',
+      permissions: defaultPermissions,
       activeRole: {
         name: '',
         namespace: '',
@@ -24,6 +46,7 @@ describe('AccessControlRoleDetail', () => {
   it('renders role details correctly', () => {
     const initialProps = {
       namespace: 'org-test',
+      permissions: defaultPermissions,
       activeRole: {
         name: 'test-role',
         namespace: '',
@@ -73,6 +96,7 @@ describe('AccessControlRoleDetail', () => {
   it('renders a loader if there is no data yet', () => {
     const { rerender } = renderWithStore(AccessControlRoleDetail, {
       namespace: 'org-test',
+      permissions: defaultPermissions,
       activeRole: undefined,
       onAdd: jest.fn(),
       onDelete: jest.fn(),
@@ -83,6 +107,7 @@ describe('AccessControlRoleDetail', () => {
     rerender(
       getComponentWithStore(AccessControlRoleDetail, {
         namespace: 'org-test',
+        permissions: defaultPermissions,
         activeRole: {
           name: 'test-role',
           namespace: '',
