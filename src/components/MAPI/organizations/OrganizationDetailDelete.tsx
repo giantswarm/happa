@@ -1,5 +1,5 @@
 import { push } from 'connected-react-router';
-import { Box, Drop, Heading, Keyboard, Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
@@ -7,21 +7,23 @@ import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
+import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 
-import { getOrgNamespaceFromOrgName } from './utils';
-
-interface IOrganizationDetailDeleteProps {
+interface IOrganizationDetailDeleteProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {
   organizationName: string;
+  organizationNamespace: string;
   onDelete: () => Promise<void>;
   clusterCount?: number;
 }
 
 const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   organizationName,
+  organizationNamespace,
   onDelete,
   clusterCount,
+  ...props
 }) => {
-  const organizationNamespace = getOrgNamespaceFromOrgName(organizationName);
   const deleteButtonRef = useRef<HTMLElement>(null);
 
   const dispatch = useDispatch();
@@ -35,19 +37,13 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
     setConfirmationVisible(true);
   };
 
-  const hideConfirmation = (
-    e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
-  ) => {
-    e?.preventDefault();
-
+  const hideConfirmation = () => {
     window.setTimeout(() => {
       setConfirmationVisible(false);
     });
   };
 
-  const handleDelete = async (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-
+  const handleDelete = async () => {
     setIsLoading(true);
     setConfirmationVisible(false);
 
@@ -79,71 +75,95 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
     }
   };
 
-  const canDelete = typeof clusterCount !== 'undefined' && clusterCount < 1;
+  const canDelete = typeof clusterCount === 'undefined' || clusterCount < 1;
 
   return (
-    <Box>
-      <Button
-        ref={deleteButtonRef}
-        bsStyle='danger'
-        onClick={showConfirmation}
-        loading={isLoading}
-        disabled={!canDelete}
-      >
-        <i
-          className='fa fa-delete'
-          role='presentation'
-          aria-hidden={true}
-          aria-label='Delete'
-        />{' '}
-        Delete organization
-      </Button>
+    <Box direction='row' pad={{ top: 'medium' }} {...props}>
+      <Box direction='column' gap='medium'>
+        <Text weight='bold' size='large' margin='none'>
+          Delete this organization
+        </Text>
+        <Box width='large'>
+          {typeof clusterCount === 'undefined' && (
+            <Text key='org-deletion-disclaimer'>
+              <i
+                className='fa fa-warning'
+                aria-hidden={true}
+                role='presentation'
+              />{' '}
+              In case there are any clusters associated with this organization,
+              please delete them first. Otherwise, you will lose them when
+              deleting the organization.
+            </Text>
+          )}
 
-      {confirmationVisible && deleteButtonRef.current && (
-        <Keyboard onEsc={hideConfirmation}>
-          <Drop
-            align={{ bottom: 'top', left: 'left' }}
-            target={deleteButtonRef.current}
-            plain={true}
-            trapFocus={true}
+          {typeof clusterCount !== 'undefined' && clusterCount > 0 && (
+            <Text key='org-deletion-disclaimer'>
+              To delete this organization, there must not be any clusters
+              associated with it. Please delete the clusters first.
+            </Text>
+          )}
+
+          {typeof clusterCount !== 'undefined' && clusterCount < 1 && (
+            <Text key='org-deletion-disclaimer'>
+              The <code>{organizationName}</code> Organization CR and the
+              namespace <code>{organizationNamespace}</code> with all the
+              resources in it will be deleted from the management cluster. There
+              is no way to undo this action.
+            </Text>
+          )}
+        </Box>
+        <Box>
+          <ConfirmationPrompt
+            open={confirmationVisible}
+            onConfirm={handleDelete}
+            onCancel={hideConfirmation}
+            confirmButton={
+              <Button bsStyle='danger' onClick={handleDelete}>
+                <i
+                  className='fa fa-delete'
+                  role='presentation'
+                  aria-hidden={true}
+                  aria-label='Delete'
+                />{' '}
+                Delete {organizationName}
+              </Button>
+            }
+            title={`Do you really want to delete organization ${organizationName}?`}
           >
-            <Box
-              background='background-front'
-              pad='medium'
-              round='small'
-              width='large'
-              direction='column'
-              gap='small'
-              border={{ color: 'text-xweak' }}
-            >
-              <Box>
-                <Heading level={4} margin={{ top: 'none' }}>
-                  Are you sure?
-                </Heading>
-                <Text>
-                  Deleting <code>{organizationName}</code> implies deleting the{' '}
-                  <code>{organizationNamespace}</code> namespace. This means
-                  that all the resources in this namespace will be also deleted.
-                </Text>
-              </Box>
-              <Box direction='row' margin={{ top: 'small' }}>
-                <Button bsStyle='danger' onClick={handleDelete}>
-                  Yes, delete it
-                </Button>
-                <Button bsStyle='link' onClick={hideConfirmation}>
-                  Cancel
-                </Button>
-              </Box>
+            <Text>
+              As you might have read in the text above, this means that there is
+              no way back.
+            </Text>
+          </ConfirmationPrompt>
+
+          {canDelete && !confirmationVisible && (
+            <Box animation={{ type: 'fadeIn', duration: 300 }}>
+              <Button
+                ref={deleteButtonRef}
+                bsStyle='danger'
+                onClick={showConfirmation}
+                loading={isLoading}
+              >
+                <i
+                  className='fa fa-delete'
+                  role='presentation'
+                  aria-hidden={true}
+                  aria-label='Delete'
+                />{' '}
+                Delete organization
+              </Button>
             </Box>
-          </Drop>
-        </Keyboard>
-      )}
+          )}
+        </Box>
+      </Box>
     </Box>
   );
 };
 
 OrganizationDetailDelete.propTypes = {
   organizationName: PropTypes.string.isRequired,
+  organizationNamespace: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
   clusterCount: PropTypes.number,
 };
