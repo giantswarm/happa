@@ -1,3 +1,5 @@
+import { StatusCodes } from 'shared/constants';
+
 import { GenericResponse } from './GenericResponse';
 import { GenericResponseError } from './GenericResponseError';
 
@@ -261,10 +263,14 @@ export class HttpClientImpl implements IHttpClient {
       method,
       data,
       forceCORS,
+      timeout,
     } = currRequestConfig;
 
     try {
       await this.onBeforeRequest(currRequestConfig);
+
+      const abortController = new AbortController();
+      const timer = setTimeout(() => abortController.abort(), timeout);
 
       const reqURL = new URL(url, baseURL);
       const req = new Request(reqURL.toString(), {
@@ -272,9 +278,13 @@ export class HttpClientImpl implements IHttpClient {
         headers,
         body: JSON.stringify(data),
         mode: forceCORS ? 'cors' : undefined,
+        signal: abortController.signal,
       });
 
       const response = await fetch(req);
+
+      clearTimeout(timer);
+
       if (!response.ok) throw response;
 
       // TODO(axbarsan): Add support for timeout.
@@ -293,8 +303,16 @@ export class HttpClientImpl implements IHttpClient {
     } catch (err) {
       const res = new GenericResponseError<T>();
       res.requestConfig = currRequestConfig;
-      res.status = 400;
+      res.status = StatusCodes.BadRequest;
       res.message = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
+
+      if (err.name === 'AbortError') {
+        res.status = StatusCodes.Timeout;
+        res.message = `Your request exceeded the maximum timeout of ${timeout}ms.`;
+        res.headers = Object.assign({}, headers);
+
+        return Promise.reject(res);
+      }
 
       // We got a non-2xx status code.
       if (err instanceof Response) {
