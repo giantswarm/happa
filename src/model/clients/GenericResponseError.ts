@@ -1,20 +1,9 @@
-import { HttpBody, IHttpClientConfig } from 'model/clients/HttpClient';
+import { StatusCodes } from 'shared/constants';
 
-export interface IHttpResponseConfig<T> {
-  status: number;
-  message: string;
-  data: T;
-  headers: Record<string, string>;
-  requestConfig: IHttpClientConfig | null;
-}
+import { IHttpResponseConfig } from './GenericResponse';
+import { HttpBody } from './HttpClient';
 
-/**
- * A helper class for encapsulating HTTP responses.
- */
-export class GenericResponse<T = HttpBody> {
-  /**
-   * The response's configuration.
-   */
+export class GenericResponseError<T = HttpBody> extends Error {
   protected readonly config: IHttpResponseConfig<T> = {
     status: 200,
     message: 'Request successful!',
@@ -23,13 +12,9 @@ export class GenericResponse<T = HttpBody> {
     requestConfig: null,
   };
 
-  /**
-   * Create a HTTP Response.
-   * @param status - Status Code
-   * @param data - Response data
-   */
-  // eslint-disable-next-line no-magic-numbers
-  constructor(status: number = 200, data: T = {} as T) {
+  constructor(status: number = StatusCodes.Ok, data: T = {} as T) {
+    super();
+
     this.status = status;
     this.data = data;
   }
@@ -101,26 +86,5 @@ export class GenericResponse<T = HttpBody> {
 
   get headers() {
     return Object.assign({}, this.config.headers);
-  }
-
-  /**
-   * Convert the object to a `Response` object returned by the fetch command.
-   */
-  convertToFetchResponse() {
-    // Set headers.
-    const headers = new Headers();
-    for (const [key, value] of Object.entries(this.headers)) {
-      headers.append(key, value);
-    }
-
-    const data = JSON.stringify(this.data);
-
-    const resultingResponse = new Response(data, {
-      headers: headers,
-      status: this.status,
-      statusText: this.message,
-    });
-
-    return resultingResponse;
   }
 }

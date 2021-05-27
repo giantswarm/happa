@@ -11,6 +11,7 @@ describe('GiantSwarmClient', () => {
     expect(client.getRequestConfig().baseURL).toBe(window.config.apiEndpoint);
     expect(client.getRequestConfig().headers).toStrictEqual({
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `giantswarm ${token}`,
     });
   });
