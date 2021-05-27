@@ -191,7 +191,6 @@ describe('Login', () => {
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/');
-    getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
 
     const history = createInitialHistory(MainRoutes.Login);
@@ -288,7 +287,6 @@ describe('Login', () => {
     );
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/');
-    getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
 
     const history = createInitialHistory(MainRoutes.Login);
@@ -332,7 +330,6 @@ describe('Login', () => {
     (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
 
     getMockCall('/v4/clusters/');
-    getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/releases/', releasesResponse);
 
     const history = createInitialHistory(MainRoutes.Login);
