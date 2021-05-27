@@ -318,6 +318,10 @@ export class HttpClientImpl implements IHttpClient {
         res.status = err.status;
         res.message = err.statusText;
 
+        if (res.message.length < 1 && typeof res.data === 'string') {
+          res.message = res.data;
+        }
+
         for (const [key, value] of err.headers.entries()) {
           res.setHeader(key, value);
         }
