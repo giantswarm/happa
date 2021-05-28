@@ -3,6 +3,7 @@ import { Box, Heading, Text } from 'grommet';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
+import featureFlags from 'shared/featureFlags';
 import {
   Table,
   TableBody,
@@ -15,6 +16,10 @@ import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 interface IExperimentsProps {}
 
 const Experiments: React.FC<IExperimentsProps> = () => {
+  const visibleExperiments = featureFlags.all.filter(
+    (flag) => flag.experimentName !== 'undefined'
+  );
+
   return (
     <Breadcrumb
       data={{
@@ -46,16 +51,22 @@ const Experiments: React.FC<IExperimentsProps> = () => {
             <TableHeader>
               <TableRow>
                 <TableCell>Feature name</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell align='center'>Status</TableCell>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>Customer SSO</TableCell>
-                <TableCell>
-                  <CheckBoxInput toggle={true} />
-                </TableCell>
-              </TableRow>
+              {visibleExperiments.map((experiment) => (
+                <TableRow key={experiment.experimentName}>
+                  <TableCell>{experiment.experimentName!}</TableCell>
+                  <TableCell align='center' justify='center'>
+                    <CheckBoxInput
+                      toggle={true}
+                      margin='none'
+                      defaultChecked={experiment.enabled}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Box>

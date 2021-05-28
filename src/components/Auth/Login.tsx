@@ -14,7 +14,7 @@ import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
-import { FeatureFlags } from 'shared/FeatureFlags';
+import featureFlags from 'shared/featureFlags';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import * as mainActions from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -76,7 +76,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     password: '',
     authenticating: false,
     mapiAuthenticating: false,
-    loginFormVisible: !FeatureFlags.FEATURE_MAPI_AUTH,
+    loginFormVisible: !featureFlags.CustomerSSO.enabled,
   };
 
   public onAuthenticateFailed = (message: string) => {
@@ -195,7 +195,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
               Welcome to Giant Swarm
             </Heading>
 
-            {FeatureFlags.FEATURE_MAPI_AUTH && (
+            {featureFlags.CustomerSSO.enabled && (
               <Box margin={{ bottom: 'medium' }}>
                 <Button
                   bsStyle='primary'

@@ -17,6 +17,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
+import featureFlags from 'shared/featureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
@@ -26,6 +27,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric } from 'web-vitals';
 
 import App from './App';
+
+featureFlags.init();
 
 const authConfig = makeDefaultConfig();
 const auth = new MapiAuth(authConfig);
