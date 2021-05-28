@@ -5,7 +5,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import axios from 'axios';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -59,14 +58,6 @@ jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
 describe('OrganizationDetailGeneral', () => {
-  beforeAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
-  afterAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/xhr');
-  });
-
   afterEach(() => {
     cache.clear();
   });

@@ -1,4 +1,5 @@
-const nodeFetch = require('node-fetch');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fetch = require('isomorphic-fetch');
 
 const localStorageMock = (function () {
   let store = {};
@@ -40,4 +41,4 @@ global.console = {
 };
 /* eslint-enable no-console */
 
-global.fetch = nodeFetch;
+global.fetch = fetch;

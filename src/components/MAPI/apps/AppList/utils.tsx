@@ -1,9 +1,11 @@
 import yaml from 'js-yaml';
 import { compareDates } from 'lib/helpers';
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
 import { Constants } from 'shared/constants';
@@ -242,22 +244,26 @@ interface IAppCatalogIndexResponse {
 
 /**
  * Fetch the catalog index from the URL saved in the catalog CR.
- * @param fetchFunc
+ * @param client
  * @param _auth
  * @param catalog
  */
 async function fetchAppCatalogIndex(
-  fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
+  client: IHttpClient,
   _auth: IOAuth2Provider,
   catalog: applicationv1alpha1.IAppCatalog
 ): Promise<IAppCatalogIndex> {
   const url = normalizeAppCatalogIndexURL(catalog.spec.storage.URL);
 
-  // Enforce client-side CORS.
-  const response = await fetchFunc(url, { mode: 'cors' });
-  const responseText = await response.text();
+  client.setRequestConfig({
+    forceCORS: true,
+    url,
+    headers: {},
+  });
+
+  const response = await client.execute<string>();
   const catalogIndexResponse = yaml.load(
-    responseText
+    response.data
   ) as IAppCatalogIndexResponse;
 
   const catalogIndex: IAppCatalogIndex = {
@@ -305,12 +311,12 @@ async function fetchAppCatalogIndex(
 }
 
 export async function getAppCatalogsIndexAppList(
-  fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
+  clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   catalogs: applicationv1alpha1.IAppCatalog[]
 ): Promise<IAppCatalogIndexAppList> {
   const requests = catalogs.map((catalog) =>
-    fetchAppCatalogIndex(fetchFunc, auth, catalog)
+    fetchAppCatalogIndex(clientFactory(), auth, catalog)
   );
 
   const responses = await Promise.allSettled(requests);
@@ -357,22 +363,26 @@ export function getAppCatalogIndexAppVersionReadmeURL(
 /**
  * Retrieve the contents of an application's README.md
  * from a given URL.
- * @param fetchFunc
+ * @param client
  * @param _auth
  * @param fromURL
  */
 export async function fetchAppCatalogIndexAppVersionReadme(
-  fetchFunc: (input: RequestInfo, init?: RequestInit) => Promise<Response>,
+  client: IHttpClient,
   _auth: IOAuth2Provider,
   fromURL: string
 ): Promise<string> {
   const url = fixTestAppReadmeURLs(fromURL);
 
-  // Enforce client-side CORS.
-  const response = await fetchFunc(url, { mode: 'cors' });
-  const responseText = await response.text();
+  client.setRequestConfig({
+    forceCORS: true,
+    url,
+    headers: {},
+  });
 
-  return responseText;
+  const response = await client.execute<string>();
+
+  return response.data;
 }
 
 export function fetchAppCatalogIndexAppVersionReadmeKey(fromURL?: string) {

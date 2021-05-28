@@ -5,7 +5,6 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import axios from 'axios';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import nock from 'nock';
@@ -62,14 +61,6 @@ const defaultPermissions: ui.IAccessControlPermissions = {
 };
 
 describe('AccessControlRoleSubjects', () => {
-  beforeAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
-  afterAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/xhr');
-  });
-
   afterEach(() => {
     cache.clear();
   });
