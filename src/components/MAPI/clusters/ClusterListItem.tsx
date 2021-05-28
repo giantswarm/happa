@@ -14,11 +14,15 @@ const StyledDot = styled(Dot)`
   padding-left: 0;
 `;
 
-interface IClusterListItemProps {
+interface IClusterListItemProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster: capiv1alpha3.ICluster;
 }
 
-const ClusterListItem: React.FC<IClusterListItemProps> = ({ cluster }) => {
+const ClusterListItem: React.FC<IClusterListItemProps> = ({
+  cluster,
+  ...props
+}) => {
   const description = capiv1alpha3.getClusterDescription(cluster);
   const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
 
@@ -29,6 +33,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({ cluster }) => {
       round='xsmall'
       pad='medium'
       gap='small'
+      {...props}
     >
       <Box>
         <Text size='large'>

@@ -9,3 +9,12 @@ export function supportsMapiApps(
 ): boolean {
   return user.type === LoggedInUserTypes.MAPI && provider !== Providers.KVM;
 }
+
+export function supportsMapiClusters(
+  user: ILoggedInUser,
+  provider: PropertiesOf<typeof Providers>
+) {
+  // TODO(axbarsan): Add feature flag.
+
+  return user.type === LoggedInUserTypes.MAPI && provider === Providers.AZURE;
+}
