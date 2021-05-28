@@ -7,6 +7,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { supportsMapiApps } from 'shared/featureSupport';
 import { selectClusterById } from 'stores/cluster/selectors';
 import { getLoggedInUser, getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
