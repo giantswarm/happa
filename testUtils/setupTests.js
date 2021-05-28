@@ -4,6 +4,7 @@ import { configure, waitFor } from '@testing-library/react';
 import GiantSwarm from 'giantswarm';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
+import * as featureFlags from 'shared/featureFlags';
 
 let isOnline = false;
 // Let the browser know it's online, since we're disabling internet connectivity
@@ -23,6 +24,8 @@ configure({
 });
 
 beforeAll(() => {
+  featureFlags.init();
+
   nock.disableNetConnect();
   // initialize a GiantSwarm api client
   // this is usually done trough file src/components/Layout.js
