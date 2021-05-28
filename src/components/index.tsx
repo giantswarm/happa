@@ -17,7 +17,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import featureFlags from 'shared/featureFlags';
+import * as featureFlags from 'shared/featureFlags';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';

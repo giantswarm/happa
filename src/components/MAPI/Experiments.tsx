@@ -3,7 +3,7 @@ import { Box, Heading, Text } from 'grommet';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
-import featureFlags from 'shared/featureFlags';
+import * as featureFlags from 'shared/featureFlags';
 import {
   Table,
   TableBody,
@@ -16,9 +16,17 @@ import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 interface IExperimentsProps {}
 
 const Experiments: React.FC<IExperimentsProps> = () => {
-  const visibleExperiments = featureFlags.all.filter(
-    (flag) => flag.experimentName !== 'undefined'
+  const visibleExperiments = Object.entries(featureFlags.flags).filter(
+    ([, flag]) => flag.name !== 'undefined'
   );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const featureName = e.target.name as featureFlags.Feature;
+
+    if (featureFlags.flags.hasOwnProperty(featureName)) {
+      featureFlags.flags[featureName].enabled = e.target.checked;
+    }
+  };
 
   return (
     <Breadcrumb
@@ -55,14 +63,16 @@ const Experiments: React.FC<IExperimentsProps> = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {visibleExperiments.map((experiment) => (
-                <TableRow key={experiment.experimentName}>
-                  <TableCell>{experiment.experimentName!}</TableCell>
+              {visibleExperiments.map(([name, experiment]) => (
+                <TableRow key={experiment.name}>
+                  <TableCell>{experiment.name!}</TableCell>
                   <TableCell align='center' justify='center'>
                     <CheckBoxInput
                       toggle={true}
                       margin='none'
                       defaultChecked={experiment.enabled}
+                      name={name}
+                      onChange={handleChange}
                     />
                   </TableCell>
                 </TableRow>

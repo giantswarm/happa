@@ -9,7 +9,7 @@ import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
-import featureFlags from 'shared/featureFlags';
+import * as featureFlags from 'shared/featureFlags';
 import {
   API_ENDPOINT,
   authTokenResponse,
@@ -369,8 +369,8 @@ describe('Login', () => {
   });
 
   it('hides OAuth2 support if the feature is not enabled', () => {
-    const initialMapiAuth = featureFlags.CustomerSSO.enabled;
-    featureFlags.CustomerSSO.enabled = false;
+    const initialMapiAuth = featureFlags.flags.CustomerSSO.enabled;
+    featureFlags.flags.CustomerSSO.enabled = false;
 
     renderRouteWithStore(MainRoutes.Login, {}, {});
 
@@ -381,6 +381,6 @@ describe('Login', () => {
       screen.queryByRole('button', { name: 'Proceed to l ogin' })
     ).not.toBeInTheDocument();
 
-    featureFlags.CustomerSSO.enabled = initialMapiAuth;
+    featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;
   });
 });
