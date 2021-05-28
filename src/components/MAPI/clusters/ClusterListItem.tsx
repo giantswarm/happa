@@ -6,12 +6,18 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import ClusterListItemDetails from './ClusterListItemDetails';
 
 const StyledDot = styled(Dot)`
-  padding-left: 0;
+  padding: 0;
+`;
+
+const StyledRefreshableLabel = styled(RefreshableLabel)`
+  padding: 0;
+  margin: 0;
 `;
 
 interface IClusterListItemProps
@@ -45,23 +51,27 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       </Box>
       <Box>
         <Box>
-          <RefreshableLabel value={description}>
+          {/* @ts-expect-error */}
+          <StyledRefreshableLabel value={description}>
             <Text weight='bold' size='large'>
               {description}
             </Text>
-          </RefreshableLabel>
+          </StyledRefreshableLabel>
         </Box>
-        <Box direction='row' align='center'>
-          <RefreshableLabel value={releaseVersion}>
+        <Box direction='row' align='baseline' gap='xsmall'>
+          {/* @ts-expect-error */}
+          <StyledRefreshableLabel value={releaseVersion}>
             <Text>
               <i
                 className='fa fa-version-tag'
-                title='Release version'
                 role='presentation'
+                aria-hidden='true'
               />{' '}
               {releaseVersion}
             </Text>
-          </RefreshableLabel>
+          </StyledRefreshableLabel>
+          <StyledDot />
+          <KubernetesVersionLabel />
           <StyledDot />
           <Text>
             Created {relativeDate(cluster.metadata.creationTimestamp)}

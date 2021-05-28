@@ -117,7 +117,7 @@ const Clusters: React.FC<IClustersProps> = () => {
               </Button>
             </Link>
 
-            {clusterList!.items.length > 1 && (
+            {clusterList!.items.length < 1 && (
               <Text>
                 Ready to launch your first cluster? Click the green button!
               </Text>
