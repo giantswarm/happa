@@ -1,7 +1,21 @@
 export interface IFeatureFlag {
-  init: () => boolean;
+  /**
+   * The value of the flag.
+   */
   enabled: boolean;
-  name?: string;
+  /**
+   * Instantiate the flag with a value from the environment.
+   */
+  init?: () => boolean;
+  /**
+   * When this is set, the feature will be configurable
+   * through the admin `Experiments` page.
+   */
+  experimentName?: string;
+  /**
+   * Whether the value should be persisted between
+   * sessions or not.
+   */
   persist?: boolean;
 }
 
@@ -9,27 +23,27 @@ export type Feature = 'CustomerSSO';
 
 export const flags: Record<Feature, IFeatureFlag> = {
   CustomerSSO: {
+    enabled: false,
     init: () => window.featureFlags.FEATURE_MAPI_AUTH,
-    enabled: true,
-    name: 'Customer Single Sign-On',
+    experimentName: 'Customer Single Sign-On',
     persist: true,
   },
 };
 
 export function init() {
   for (const [flagName, flagValue] of Object.entries(flags)) {
-    let value: boolean | null = null;
+    let restoredValue: string | null = null;
 
     // Try to restore the existing value if persistent storage is required.
     if (flagValue.persist) {
-      value = restoreFlagValue(flagName)?.toLowerCase() === 'true';
+      restoredValue = restoreFlagValue(flagName);
     }
 
-    if (value === null) {
-      value = flagValue.init();
+    if (restoredValue === null && flagValue.hasOwnProperty('init')) {
+      flagValue.enabled = flagValue.init!();
+    } else {
+      flagValue.enabled = restoredValue === 'true';
     }
-
-    flagValue.enabled = value;
 
     flags[flagName as Feature] = makeFlagProxy(flagName, flagValue);
   }

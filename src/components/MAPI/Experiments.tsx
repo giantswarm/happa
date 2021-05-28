@@ -17,7 +17,7 @@ interface IExperimentsProps {}
 
 const Experiments: React.FC<IExperimentsProps> = () => {
   const visibleExperiments = Object.entries(featureFlags.flags).filter(
-    ([, flag]) => flag.name !== 'undefined'
+    ([, flag]) => flag.experimentName !== 'undefined'
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,8 +64,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
             </TableHeader>
             <TableBody>
               {visibleExperiments.map(([name, experiment]) => (
-                <TableRow key={experiment.name}>
-                  <TableCell>{experiment.name!}</TableCell>
+                <TableRow key={experiment.experimentName}>
+                  <TableCell>{experiment.experimentName!}</TableCell>
                   <TableCell align='center' justify='center'>
                     <CheckBoxInput
                       toggle={true}
