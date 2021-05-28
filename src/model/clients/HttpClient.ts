@@ -1,6 +1,10 @@
-import axios from 'axios';
+import { StatusCodes } from 'shared/constants';
 
 import { GenericResponse } from './GenericResponse';
+import { GenericResponseError } from './GenericResponseError';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type HttpBody = Record<string, any> | string;
 
 export enum HttpRequestMethods {
   GET = 'GET',
@@ -15,8 +19,9 @@ export interface IHttpClientConfig {
   headers: Record<string, string>;
   url: string;
   method: HttpRequestMethods;
-  data?: Record<string, unknown>;
+  data?: HttpBody;
   baseURL?: string;
+  forceCORS?: boolean;
 }
 
 export interface IHttpClient {
@@ -50,7 +55,7 @@ export interface IHttpClient {
    * Set the request body contents.
    * @param body
    */
-  setBody(body: Record<string, unknown>): IHttpClient;
+  setBody(body: HttpBody): IHttpClient;
   /**
    * Set the request target URL.
    * @param url
@@ -78,7 +83,7 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static get<T = Record<string, unknown>>(
+  static get<T = HttpBody>(
     url: string,
     config: Partial<IHttpClientConfig>
   ): Promise<GenericResponse<T>> {
@@ -97,7 +102,7 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static post<T = Record<string, unknown>>(
+  static post<T = HttpBody>(
     url: string,
     config: Partial<IHttpClientConfig>
   ): Promise<GenericResponse<T>> {
@@ -116,7 +121,7 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static put<T = Record<string, unknown>>(
+  static put<T = HttpBody>(
     url: string,
     config: Partial<IHttpClientConfig>
   ): Promise<GenericResponse<T>> {
@@ -135,7 +140,7 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static patch<T = Record<string, unknown>>(
+  static patch<T = HttpBody>(
     url: string,
     config: Partial<IHttpClientConfig>
   ): Promise<GenericResponse<T>> {
@@ -154,7 +159,7 @@ export class HttpClientImpl implements IHttpClient {
    * @param config - The client's configuration.
    * @throws {GenericResponse} The response has a non-2xx status code or the client has a bad configuration.
    */
-  static delete<T = Record<string, unknown>>(
+  static delete<T = HttpBody>(
     url: string,
     config: Partial<IHttpClientConfig>
   ): Promise<GenericResponse<T>> {
@@ -171,7 +176,9 @@ export class HttpClientImpl implements IHttpClient {
     url: '',
     method: HttpRequestMethods.GET,
     timeout: 10000,
-    headers: {},
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
 
   /**
@@ -228,7 +235,7 @@ export class HttpClientImpl implements IHttpClient {
     return this;
   }
 
-  setBody(body: Record<string, unknown>) {
+  setBody(body: HttpBody) {
     this.requestConfig.data = body;
 
     return this;
@@ -247,45 +254,93 @@ export class HttpClientImpl implements IHttpClient {
   // eslint-disable-next-line class-methods-use-this, no-empty-function
   async onBeforeRequest(_reqConfig: IHttpClientConfig): Promise<void> {}
 
-  async execute<T = Record<string, unknown>>(): Promise<GenericResponse<T>> {
+  async execute<T = HttpBody>(): Promise<GenericResponse<T>> {
     const currRequestConfig = this.getRequestConfig();
-    const { baseURL, timeout, headers, url, method, data } = currRequestConfig;
-
-    const res = new GenericResponse<T>();
+    const {
+      baseURL,
+      headers,
+      url,
+      method,
+      data,
+      forceCORS,
+      timeout,
+    } = currRequestConfig;
 
     try {
       await this.onBeforeRequest(currRequestConfig);
 
-      const response = await axios({
-        baseURL,
-        timeout,
-        headers,
-        url,
+      const abortController = new AbortController();
+      const timer = setTimeout(() => abortController.abort(), timeout);
+
+      const reqURL = new URL(url, baseURL);
+      const req = new Request(reqURL.toString(), {
         method,
-        data,
+        headers,
+        body: JSON.stringify(data),
+        mode: forceCORS ? 'cors' : undefined,
+        signal: abortController.signal,
       });
 
+      const response = await fetch(req);
+
+      clearTimeout(timer);
+
+      if (!response.ok) throw response;
+
+      const res = new GenericResponse<T>();
+      res.data = (await getResponseData(response)) as T;
       res.requestConfig = currRequestConfig;
       res.status = response.status;
-      res.data = response.data;
       res.message = response.statusText;
-      res.headers = response.headers;
+
+      for (const [key, value] of response.headers.entries()) {
+        res.setHeader(key, value);
+      }
 
       return res;
     } catch (err) {
+      const res = new GenericResponseError<T>();
       res.requestConfig = currRequestConfig;
-      res.status = 400;
+      res.status = StatusCodes.BadRequest;
       res.message = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
 
+      if (err.name === 'AbortError') {
+        res.status = StatusCodes.Timeout;
+        res.message = `Your request exceeded the maximum timeout of ${timeout}ms.`;
+        res.headers = Object.assign({}, headers);
+
+        return Promise.reject(res);
+      }
+
       // We got a non-2xx status code.
-      if (err.response) {
-        res.status = err.response.status;
-        res.message = err.code;
-        res.headers = err.response.headers;
-        res.data = err.response.data;
+      if (err instanceof Response) {
+        res.data = (await getResponseData(err)) as T;
+        res.status = err.status;
+        res.message = err.statusText;
+
+        if (res.message.length < 1 && typeof res.data === 'string') {
+          res.message = res.data;
+        }
+
+        for (const [key, value] of err.headers.entries()) {
+          res.setHeader(key, value);
+        }
       }
 
       return Promise.reject(res);
     }
   }
+}
+
+async function getResponseData(response: Response): Promise<HttpBody> {
+  let data: HttpBody = '';
+
+  try {
+    data = await response.text();
+    data = JSON.parse(data);
+  } catch {
+    // Ignore errors.
+  }
+
+  return data;
 }

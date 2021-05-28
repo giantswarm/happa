@@ -13,6 +13,7 @@ export function deleteResource<T>(
     method: HttpRequestMethods.DELETE,
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
   });
 

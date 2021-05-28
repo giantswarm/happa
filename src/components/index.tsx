@@ -7,12 +7,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'noty/lib/noty.css';
 import 'styles/app.sass';
 
-import axios from 'axios';
 import * as Bowser from 'bowser';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { SentryErrorNotifier } from 'lib/errors/SentryErrorNotifier';
 import { makeDefaultConfig } from 'lib/MapiAuth/makeDefaultConfig';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import { HttpClientImpl } from 'model/clients/HttpClient';
 import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
@@ -86,17 +86,18 @@ async function submitCustomRUM(
   const url: string = `${window.config.apiEndpoint}/v5/analytics/`;
 
   try {
-    await axios.post(url, {
-      app_id: 'happa',
-      session_id: sessionID,
-      payload_type: payloadType,
-      payload_schema_version: payloadSchemaVersion,
-      payload: payload,
-      uri_path: location.pathname,
+    await HttpClientImpl.post(url, {
+      data: {
+        app_id: 'happa',
+        session_id: sessionID,
+        payload_type: payloadType,
+        payload_schema_version: payloadSchemaVersion,
+        payload: payload,
+        uri_path: location.pathname,
+      },
     });
-  } catch (exception) {
-    // eslint-disable-next-line no-console
-    console.log('Could not submit usage data', exception);
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
   }
 }
 

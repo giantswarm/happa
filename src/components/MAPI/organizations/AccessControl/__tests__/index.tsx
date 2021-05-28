@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import axios from 'axios';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as corev1 from 'model/services/mapi/corev1';
@@ -37,14 +36,6 @@ function getComponent(
 }
 
 describe('AccessControl', () => {
-  beforeAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
-  afterAll(() => {
-    axios.defaults.adapter = require('axios/lib/adapters/xhr');
-  });
-
   beforeEach(() => {
     nock(window.config.mapiEndpoint)
       .get(

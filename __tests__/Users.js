@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor, within } from '@testing-library/react';
-import axios from 'axios';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
@@ -29,11 +28,6 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('Users', () => {
-  beforeAll(() => {
-    // Use axios' node http adapter, so we could mock requests.
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
   // Responses to requests
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);

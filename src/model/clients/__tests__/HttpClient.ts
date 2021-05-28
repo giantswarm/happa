@@ -1,4 +1,3 @@
-import axios from 'axios';
 import nock from 'nock';
 import { generateRandomString } from 'testUtils/mockHttpCalls';
 
@@ -9,11 +8,6 @@ import {
 } from '../HttpClient';
 
 describe('HttpClient', () => {
-  beforeAll(() => {
-    // Use axios' node http adapter, so we could mock requests
-    axios.defaults.adapter = require('axios/lib/adapters/http');
-  });
-
   it('is constructed with a request config', () => {
     const client = new HttpClientImpl();
 
@@ -22,7 +16,9 @@ describe('HttpClient', () => {
       url: '',
       method: HttpRequestMethods.GET,
       timeout: 10000,
-      headers: {},
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     const config: IHttpClientConfig = {
@@ -55,6 +51,7 @@ describe('HttpClient', () => {
         TestHeader2: 'test value',
         TestHeader3: 'test value',
         Authorization: `testScheme ${token}`,
+        'Content-Type': 'application/json',
       },
       url: '/api/test',
       method: HttpRequestMethods.POST,
