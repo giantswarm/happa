@@ -90,9 +90,22 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
   );
 
-  const workerNodesError = nodePoolListError || providerNodePoolsError;
-
   const machineTypes = useRef(getMachineTypes());
+
+  const workerNodesCPU = providerNodePoolsError
+    ? -1
+    : getWorkerNodesCPU(
+        nodePoolList?.items,
+        providerNodePools,
+        machineTypes.current
+      );
+  const workerNodesMemory = providerNodePoolsError
+    ? -1
+    : getWorkerNodesMemory(
+        nodePoolList?.items,
+        providerNodePools,
+        machineTypes.current
+      );
 
   return (
     <UIClusterListItem
@@ -106,17 +119,9 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       k8sVersion={k8sVersion}
       workerNodePoolsCount={nodePoolList?.items.length}
       workerNodesCount={getWorkerNodesCount(nodePoolList?.items)}
-      workerNodesCPU={getWorkerNodesCPU(
-        nodePoolList?.items,
-        providerNodePools,
-        machineTypes.current
-      )}
-      workerNodesMemory={getWorkerNodesMemory(
-        nodePoolList?.items,
-        providerNodePools,
-        machineTypes.current
-      )}
-      workerNodesError={extractErrorMessage(workerNodesError)}
+      workerNodesCPU={workerNodesCPU}
+      workerNodesMemory={workerNodesMemory}
+      workerNodesError={extractErrorMessage(nodePoolListError)}
       {...props}
     />
   );

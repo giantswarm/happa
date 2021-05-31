@@ -76,7 +76,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
               ) : (
                 formatWorkerNodePoolsCount(value as number)
               )}{' '}
-              {pluralizeLabel(value as number, 'node pool')}
+              {pluralizeLabel(value as number, 'node pool')},
             </Text>
           )}
         </ClusterListItemOptionalValue>
@@ -111,7 +111,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
       <StyledDot />
       <ClusterListItemOptionalValue
         value={workerNodesMemory}
-        replaceEmptyValue={true}
+        replaceEmptyValue={false}
       >
         {(value) => (
           <Text>
