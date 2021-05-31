@@ -23,7 +23,9 @@ const ClusterListItemOptionalValue: React.FC<IClusterListItemOptionalValueProps>
   replaceEmptyValue,
 }) => {
   if (typeof value === 'undefined') {
-    return <ClusterListItemLoadingPlaceholder />;
+    return (
+      <ClusterListItemLoadingPlaceholder margin={{ vertical: 'xsmall' }} />
+    );
   }
 
   if (replaceEmptyValue && (value === '' || value === -1)) {

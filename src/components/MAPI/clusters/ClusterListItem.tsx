@@ -28,20 +28,26 @@ import {
 
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
-  cluster: capiv1alpha3.ICluster;
+  cluster?: capiv1alpha3.ICluster;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
   ...props
 }) => {
-  const name = cluster.metadata.name;
-  const description = capiv1alpha3.getClusterDescription(cluster);
-  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
-  const organization = capiv1alpha3.getClusterOrganization(cluster);
+  const name = cluster?.metadata.name;
+  const description = cluster
+    ? capiv1alpha3.getClusterDescription(cluster)
+    : undefined;
+  const releaseVersion = cluster
+    ? capiv1alpha3.getReleaseVersion(cluster)
+    : undefined;
+  const organization = cluster
+    ? capiv1alpha3.getClusterOrganization(cluster)
+    : undefined;
 
   const clusterPath = useMemo(() => {
-    if (!organization) return '';
+    if (!organization || !name) return '';
 
     return RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Home,
@@ -92,11 +98,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     <UIClusterListItem
       href={clusterPath}
       name={name}
-      namespace={cluster.metadata.namespace!}
+      namespace={cluster?.metadata.namespace}
       description={description}
-      creationDate={cluster.metadata.creationTimestamp ?? ''}
-      deletionDate={cluster.metadata.deletionTimestamp ?? null}
-      releaseVersion={releaseVersion ?? ''}
+      creationDate={cluster?.metadata.creationTimestamp}
+      deletionDate={cluster?.metadata.deletionTimestamp ?? null}
+      releaseVersion={releaseVersion}
       k8sVersion={k8sVersion}
       workerNodePoolsCount={nodePoolList?.items.length}
       workerNodesCount={getWorkerNodesCount(nodePoolList?.items)}
@@ -117,8 +123,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 };
 
 ClusterListItem.propTypes = {
-  // @ts-expect-error
-  cluster: PropTypes.object.isRequired,
+  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterListItem;

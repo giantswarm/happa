@@ -5,10 +5,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
-import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 import ClusterListItemMainInfo from './ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from './ClusterListItemNodeInfo';
+import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
 import { IClusterItem } from './types';
 
 const StyledLink = styled(Link)`
@@ -34,11 +34,6 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const StyledRefreshableLabel = styled(RefreshableLabel)`
-  padding: 0;
-  margin: 0;
-`;
-
 interface IClusterListItemProps
   extends IClusterItem,
     React.ComponentPropsWithoutRef<typeof Card> {
@@ -61,15 +56,16 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   workerNodesError,
   ...props
 }) => {
-  const isDeleting = deletionDate !== null;
+  const isDeleting = Boolean(deletionDate);
   const hasError = workerNodesError.length > 0;
+  const isLoading = typeof name === 'undefined';
 
   return (
     <StyledLink
-      to={isDeleting ? '' : href}
+      to={isDeleting || isLoading ? '' : href}
       aria-label={name}
-      aria-disabled={isDeleting}
-      tabIndex={isDeleting ? -1 : 0}
+      aria-disabled={isDeleting || isLoading}
+      tabIndex={isDeleting || isLoading ? -1 : 0}
     >
       <Card
         direction='row'
@@ -83,18 +79,26 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       >
         <CardBody direction='row' gap='xsmall'>
           <Box>
-            <Text size='large'>
-              <ClusterIDLabel clusterID={name} copyEnabled={true} />
-            </Text>
+            <ClusterListItemOptionalValue value={name}>
+              {(value) => (
+                <Text size='large'>
+                  <ClusterIDLabel
+                    clusterID={value as string}
+                    copyEnabled={true}
+                  />
+                </Text>
+              )}
+            </ClusterListItemOptionalValue>
           </Box>
           <Box>
             <Box>
-              {/* @ts-expect-error */}
-              <StyledRefreshableLabel value={description}>
-                <Text weight='bold' size='large'>
-                  {description}
-                </Text>
-              </StyledRefreshableLabel>
+              <ClusterListItemOptionalValue value={description}>
+                {(value) => (
+                  <Text weight='bold' size='large'>
+                    {value}
+                  </Text>
+                )}
+              </ClusterListItemOptionalValue>
             </Box>
 
             {isDeleting && (
@@ -132,12 +136,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
 ClusterListItem.propTypes = {
   href: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  creationDate: PropTypes.string.isRequired,
   workerNodesError: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  description: PropTypes.string,
+  creationDate: PropTypes.string,
   deletionDate: PropTypes.string,
-  releaseVersion: PropTypes.string.isRequired,
+  releaseVersion: PropTypes.string,
   k8sVersion: PropTypes.string,
   workerNodePoolsCount: PropTypes.number,
   workerNodesCPU: PropTypes.number,

@@ -16,28 +16,43 @@ export const BaseTransitionPropTypes = {
   ]),
 };
 
-const BaseTransition = ({ children, in: inProp, ...props }) => {
-  const delayTimeout = 500;
-  const delayedInProp = useDelayedChange(inProp, delayTimeout);
+interface IBaseTransitionProps
+  extends React.ComponentPropsWithoutRef<typeof CSSTransition> {
+  classNames: string;
+  delayTimeout?: number;
+}
+
+const BaseTransition: React.FC<IBaseTransitionProps> = ({
+  children,
+  in: inProp,
+  delayTimeout,
+  ...props
+}) => {
+  const delayedInProp = useDelayedChange(inProp, delayTimeout!);
 
   return (
-    <CSSTransition in={delayedInProp} mountOnEnter unmountOnExit {...props}>
+    // @ts-expect-error
+    <CSSTransition
+      in={delayedInProp}
+      mountOnEnter={true}
+      unmountOnExit={true}
+      {...props}
+    >
       {children}
     </CSSTransition>
   );
 };
 
 BaseTransition.defaultProps = {
-  // Disabling lines due to including in `BaseTransitionPropTypes`
-  // eslint-disable-next-line react/default-props-match-prop-types
   in: false,
-  // eslint-disable-next-line react/default-props-match-prop-types
   timeout: 200,
+  delayTimeout: 500,
 };
 
 BaseTransition.propTypes = {
   ...BaseTransitionPropTypes,
   classNames: PropTypes.string.isRequired,
+  delayTimeout: PropTypes.number,
 };
 
 export default BaseTransition;

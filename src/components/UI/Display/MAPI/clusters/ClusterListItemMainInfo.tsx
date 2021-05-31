@@ -59,8 +59,8 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
 };
 
 ClusterListItemMainInfo.propTypes = {
-  releaseVersion: PropTypes.string.isRequired,
-  creationDate: PropTypes.string.isRequired,
+  releaseVersion: PropTypes.string,
+  creationDate: PropTypes.string,
   k8sVersion: PropTypes.string,
 };
 

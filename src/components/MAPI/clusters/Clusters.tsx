@@ -7,39 +7,36 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
 import ClusterListItem from './ClusterListItem';
 
+const LOADING_COMPONENTS = new Array(6).fill(0);
+
 const AnimationWrapper = styled.div`
-  .cluster-list-item-enter,
-  .cluster-list-item-appear {
-    opacity: 0;
+  .cluster-list-item-enter {
+    opacity: 0.01;
+    transform: translate3d(-50px, 0, 0);
   }
-
-  .cluster-list-item-appear.cluster-list-item-appear-active {
-    opacity: 1;
-    transition: opacity 150ms ease-in;
-  }
-
   .cluster-list-item-enter.cluster-list-item-enter-active {
     opacity: 1;
-    transition: opacity 150ms ease-in;
+    transform: translate3d(0, 0, 0);
+    transition: 0.2s cubic-bezier(1, 0, 0, 1);
   }
-
   .cluster-list-item-exit {
     opacity: 1;
   }
-
   .cluster-list-item-exit.cluster-list-item-exit-active {
-    opacity: 0;
-    transition: opacity 150ms ease-in;
+    opacity: 0.01;
+    transform: translate3d(-50px, 0, 0);
+    transition: 0.2s cubic-bezier(1, 0, 0, 1);
   }
 `;
 
@@ -96,10 +93,6 @@ const Clusters: React.FC<IClustersProps> = () => {
     return <div>Error: {clusterListError.data}</div>;
   }
 
-  if (clusterListIsLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <DocumentTitle title={title}>
       <Box direction='column' gap='medium'>
@@ -117,7 +110,7 @@ const Clusters: React.FC<IClustersProps> = () => {
               </Button>
             </Link>
 
-            {clusterList!.items.length < 1 && (
+            {!clusterListIsLoading && clusterList!.items.length < 1 && (
               <Text>
                 Ready to launch your first cluster? Click the green button!
               </Text>
@@ -126,6 +119,11 @@ const Clusters: React.FC<IClustersProps> = () => {
         )}
 
         <Box>
+          {clusterListIsLoading &&
+            LOADING_COMPONENTS.map((_, idx) => (
+              <ClusterListItem key={idx} margin={{ bottom: 'medium' }} />
+            ))}
+
           <Keyboard
             onSpace={(e) => {
               e.preventDefault();
@@ -134,24 +132,24 @@ const Clusters: React.FC<IClustersProps> = () => {
             }}
           >
             <AnimationWrapper>
-              <TransitionGroup
-                className='cluster-list'
-                appear={true}
-                enter={true}
-              >
-                {clusterList!.items.map((cluster) => (
-                  <CSSTransition
-                    classNames='cluster-list-item'
-                    key={cluster.metadata.name}
-                    timeout={200}
-                    exit={false}
-                  >
-                    <ClusterListItem
-                      cluster={cluster}
-                      margin={{ bottom: 'medium' }}
-                    />
-                  </CSSTransition>
-                ))}
+              <TransitionGroup>
+                {!clusterListIsLoading &&
+                  clusterList!.items.map((cluster) => (
+                    <BaseTransition
+                      in={false}
+                      key={cluster.metadata.name}
+                      appear={false}
+                      exit={true}
+                      timeout={{ enter: 200, exit: 200 }}
+                      delayTimeout={0}
+                      classNames='cluster-list-item'
+                    >
+                      <ClusterListItem
+                        cluster={cluster}
+                        margin={{ bottom: 'medium' }}
+                      />
+                    </BaseTransition>
+                  ))}
               </TransitionGroup>
             </AnimationWrapper>
           </Keyboard>

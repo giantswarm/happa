@@ -46,9 +46,9 @@ export function getMachineTypes(): Record<string, IMachineType> {
 export async function fetchNodePoolListForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster: capiv1alpha3.ICluster
+  cluster?: capiv1alpha3.ICluster
 ) {
-  const infrastructureRef = cluster.spec?.infrastructureRef;
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
       new Error('There is no infrastructure reference defined.')
@@ -60,7 +60,7 @@ export async function fetchNodePoolListForCluster(
       return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth, {
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
           },
         },
       });
@@ -70,7 +70,7 @@ export async function fetchNodePoolListForCluster(
       return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth, {
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
           },
         },
       });
@@ -80,11 +80,13 @@ export async function fetchNodePoolListForCluster(
   }
 }
 
-export function fetchNodePoolListForClusterKey(cluster: capiv1alpha3.ICluster) {
-  const infrastructureRef = cluster.spec?.infrastructureRef;
+export function fetchNodePoolListForClusterKey(
+  cluster?: capiv1alpha3.ICluster
+) {
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
   if (
     !infrastructureRef ||
-    typeof cluster.metadata.deletionTimestamp !== 'undefined'
+    typeof cluster?.metadata.deletionTimestamp !== 'undefined'
   ) {
     return null;
   }
@@ -94,7 +96,7 @@ export function fetchNodePoolListForClusterKey(cluster: capiv1alpha3.ICluster) {
       return capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
           },
         },
       });
@@ -104,7 +106,7 @@ export function fetchNodePoolListForClusterKey(cluster: capiv1alpha3.ICluster) {
       return capiv1alpha3.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
           },
         },
       });
