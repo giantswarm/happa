@@ -43,6 +43,7 @@ interface IClusterListItemProps
   extends IClusterItem,
     React.ComponentPropsWithoutRef<typeof Card> {
   href: string;
+  workerNodesError: string;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
@@ -57,9 +58,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   workerNodesCPU,
   workerNodesCount,
   workerNodesMemory,
+  workerNodesError,
   ...props
 }) => {
   const isDeleting = deletionDate !== null;
+  const hasError = workerNodesError.length > 0;
 
   return (
     <StyledLink
@@ -107,13 +110,18 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                 k8sVersion={k8sVersion}
               />
             )}
-            {!isDeleting && (
+
+            {!hasError && !isDeleting && (
               <ClusterListItemNodeInfo
                 workerNodePoolsCount={workerNodePoolsCount}
                 workerNodesCPU={workerNodesCPU}
                 workerNodesCount={workerNodesCount}
                 workerNodesMemory={workerNodesMemory}
               />
+            )}
+
+            {hasError && !isDeleting && (
+              <Text color='status-critical'>{workerNodesError}</Text>
             )}
           </Box>
         </CardBody>
@@ -127,6 +135,7 @@ ClusterListItem.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   creationDate: PropTypes.string.isRequired,
+  workerNodesError: PropTypes.string.isRequired,
   deletionDate: PropTypes.string,
   releaseVersion: PropTypes.string.isRequired,
   k8sVersion: PropTypes.string,

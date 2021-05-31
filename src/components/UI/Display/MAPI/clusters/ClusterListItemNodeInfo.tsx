@@ -3,51 +3,43 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
-import RefreshableLabel from 'UI/Display/RefreshableLabel';
+import NotAvailable from 'UI/Display/NotAvailable';
 
+import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
 import { IClusterItem } from './types';
 
-function formatWorkerNodePoolsCount(value?: number): string | undefined {
-  if (typeof value === 'undefined') return undefined;
-
-  if (value > 1) {
-    return `${value} node pools`;
+function pluralizeLabel(count: number, base: string) {
+  if (count === 1) {
+    return base;
   }
 
-  return `${value} node pool`;
+  return `${base}s`;
 }
 
-function formatWorkerNodesCount(value?: number): string | undefined {
+function formatWorkerNodePoolsCount(value?: number) {
   if (typeof value === 'undefined') return undefined;
 
-  if (value > 1) {
-    return `${value} nodes`;
-  }
-
-  return `${value} node`;
+  return value;
 }
 
-function formatMemory(value?: number): string | undefined {
+function formatWorkerNodesCount(value?: number) {
   if (typeof value === 'undefined') return undefined;
 
-  return `${Math.round(value)} GB RAM`;
+  return value;
 }
 
-function formatCPU(value?: number): string | undefined {
+function formatMemory(value?: number) {
   if (typeof value === 'undefined') return undefined;
 
-  const formattedValue = Math.round(value);
-  if (formattedValue > 1) {
-    return `${formattedValue} CPU cores`;
-  }
-
-  return `${formattedValue} CPU core`;
+  // eslint-disable-next-line no-magic-numbers
+  return Math.round(value * 10) / 10;
 }
 
-const StyledRefreshableLabel = styled(RefreshableLabel)`
-  padding: 0;
-  margin: 0;
-`;
+function formatCPU(value?: number) {
+  if (typeof value === 'undefined') return undefined;
+
+  return Math.round(value);
+}
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -71,27 +63,63 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
   ...props
 }) => {
   return (
-    <Box direction='row' align='baseline' gap='xsmall' {...props}>
-      <Box direction='row' gap='xsmall'>
-        {/* @ts-expect-error */}
-        <StyledRefreshableLabel value={workerNodePoolsCount}>
-          <Text>{formatWorkerNodePoolsCount(workerNodePoolsCount)},</Text>
-        </StyledRefreshableLabel>
-        {/* @ts-expect-error */}
-        <StyledRefreshableLabel value={workerNodesCount}>
-          <Text>{formatWorkerNodesCount(workerNodesCount)}</Text>
-        </StyledRefreshableLabel>
+    <Box direction='row' align='center' gap='xsmall' {...props}>
+      <Box direction='row' gap='xsmall' align='center'>
+        <ClusterListItemOptionalValue
+          value={workerNodePoolsCount}
+          replaceEmptyValue={false}
+        >
+          {(value) => (
+            <Text>
+              {value === -1 ? (
+                <NotAvailable />
+              ) : (
+                formatWorkerNodePoolsCount(value as number)
+              )}{' '}
+              {pluralizeLabel(value as number, 'node pool')}
+            </Text>
+          )}
+        </ClusterListItemOptionalValue>
+        <ClusterListItemOptionalValue
+          value={workerNodesCount}
+          replaceEmptyValue={false}
+        >
+          {(value) => (
+            <Text>
+              {value === -1 ? (
+                <NotAvailable />
+              ) : (
+                formatWorkerNodesCount(value as number)
+              )}{' '}
+              {pluralizeLabel(value as number, 'worker node')}
+            </Text>
+          )}
+        </ClusterListItemOptionalValue>
       </Box>
       <StyledDot />
-      {/* @ts-expect-error */}
-      <StyledRefreshableLabel value={workerNodesCPU}>
-        <Text>{formatCPU(workerNodesCPU)}</Text>
-      </StyledRefreshableLabel>
+      <ClusterListItemOptionalValue
+        value={workerNodesCPU}
+        replaceEmptyValue={false}
+      >
+        {(value) => (
+          <Text>
+            {value === -1 ? <NotAvailable /> : formatCPU(value as number)}{' '}
+            {pluralizeLabel(value as number, 'CPU core')}
+          </Text>
+        )}
+      </ClusterListItemOptionalValue>
       <StyledDot />
-      {/* @ts-expect-error */}
-      <StyledRefreshableLabel value={workerNodesMemory}>
-        <Text>{formatMemory(workerNodesMemory)}</Text>
-      </StyledRefreshableLabel>
+      <ClusterListItemOptionalValue
+        value={workerNodesMemory}
+        replaceEmptyValue={true}
+      >
+        {(value) => (
+          <Text>
+            {value === -1 ? <NotAvailable /> : formatMemory(value as number)} GB
+            RAM
+          </Text>
+        )}
+      </ClusterListItemOptionalValue>
     </Box>
   );
 };

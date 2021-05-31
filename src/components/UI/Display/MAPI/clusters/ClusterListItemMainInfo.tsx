@@ -5,14 +5,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
-import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
+import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
 import { IClusterItem } from './types';
-
-const StyledRefreshableLabel = styled(RefreshableLabel)`
-  padding: 0;
-  margin: 0;
-`;
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -29,25 +24,36 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
   ...props
 }) => {
   return (
-    <Box direction='row' align='baseline' gap='xsmall' {...props}>
-      {/* @ts-expect-error */}
-      <StyledRefreshableLabel value={releaseVersion}>
-        <Text>
-          <i
-            className='fa fa-version-tag'
-            role='presentation'
-            aria-hidden='true'
-          />{' '}
-          {releaseVersion}
-        </Text>
-      </StyledRefreshableLabel>
+    <Box direction='row' align='center' gap='xsmall' {...props}>
+      <ClusterListItemOptionalValue
+        value={releaseVersion}
+        replaceEmptyValue={false}
+      >
+        {(value) => (
+          <Text>
+            <i
+              className='fa fa-version-tag'
+              role='presentation'
+              aria-hidden='true'
+            />{' '}
+            {value}
+          </Text>
+        )}
+      </ClusterListItemOptionalValue>
       <StyledDot />
-      {/* @ts-expect-error */}
-      <StyledRefreshableLabel value={k8sVersion}>
-        <KubernetesVersionLabel version={k8sVersion} />
-      </StyledRefreshableLabel>
+      <ClusterListItemOptionalValue
+        value={k8sVersion}
+        replaceEmptyValue={false}
+      >
+        {(value) => <KubernetesVersionLabel version={value as string} />}
+      </ClusterListItemOptionalValue>
       <StyledDot />
-      <Text>Created {relativeDate(creationDate)}</Text>
+      <ClusterListItemOptionalValue
+        value={creationDate}
+        replaceEmptyValue={false}
+      >
+        {(value) => <Text>Created {relativeDate(value as string)}</Text>}
+      </ClusterListItemOptionalValue>
     </Box>
   );
 };

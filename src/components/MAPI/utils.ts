@@ -82,7 +82,10 @@ export async function fetchNodePoolListForCluster(
 
 export function fetchNodePoolListForClusterKey(cluster: capiv1alpha3.ICluster) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
-  if (!infrastructureRef) {
+  if (
+    !infrastructureRef ||
+    typeof cluster.metadata.deletionTimestamp !== 'undefined'
+  ) {
     return null;
   }
 
@@ -144,8 +147,10 @@ export async function fetchProviderNodePoolsForNodePools(
 }
 
 export function fetchProviderNodePoolsForNodePoolsKey(
-  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
+  nodePools?: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
 ) {
+  if (!nodePools) return null;
+
   const keys = ['fetchProviderNodePoolsForNodePools/'];
   for (const np of nodePools) {
     if (np.spec?.template.spec.infrastructureRef) {
