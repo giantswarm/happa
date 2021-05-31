@@ -108,6 +108,23 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                     </MenuItem>
                   </li>
                 )}
+
+                {user.isAdmin && (
+                  <li role='presentation'>
+                    <MenuItem
+                      href={AccountSettingsRoutes.Experiments}
+                      to={AccountSettingsRoutes.Experiments}
+                    >
+                      <i
+                        className='fa fa-experiment'
+                        role='presentation'
+                        aria-hidden='true'
+                      />{' '}
+                      Experiments
+                    </MenuItem>
+                  </li>
+                )}
+
                 <li role='presentation'>
                   <MenuItem href={MainRoutes.Logout} to={MainRoutes.Logout}>
                     Logout

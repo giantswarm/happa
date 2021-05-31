@@ -3,6 +3,7 @@ import MapiUnauthorized from 'Auth/MAPI/MapiUnauthorized';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
+import Experiments from 'MAPI/Experiments';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -106,6 +107,15 @@ class Layout extends React.Component {
                       exact
                       path={AccountSettingsRoutes.Home}
                     />
+
+                    {user.isAdmin && (
+                      <Route
+                        component={Experiments}
+                        exact
+                        path={AccountSettingsRoutes.Experiments}
+                      />
+                    )}
+
                     <Route
                       component={ExceptionNotificationTest}
                       exact
