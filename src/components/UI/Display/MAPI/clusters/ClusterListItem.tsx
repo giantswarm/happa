@@ -1,4 +1,5 @@
 import { Box, Card, CardBody, Text } from 'grommet';
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -22,6 +23,15 @@ const StyledLink = styled(Link)`
     box-shadow: ${(props) =>
       `0 0 0 1px ${props.theme.global.colors.text.dark}`};
   }
+
+  &[aria-disabled='true'] {
+    cursor: default;
+
+    :hover,
+    :focus {
+      box-shadow: none;
+    }
+  }
 `;
 
 const StyledRefreshableLabel = styled(RefreshableLabel)`
@@ -42,19 +52,27 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   releaseVersion,
   k8sVersion,
   creationDate,
+  deletionDate,
   workerNodePoolsCount,
   workerNodesCPU,
   workerNodesCount,
   workerNodesMemory,
   ...props
 }) => {
+  const isDeleting = deletionDate !== null;
+
   return (
-    <StyledLink to={href} aria-label={name}>
+    <StyledLink
+      to={isDeleting ? '' : href}
+      aria-label={name}
+      aria-disabled={isDeleting}
+      tabIndex={isDeleting ? -1 : 0}
+    >
       <Card
         direction='row'
         elevation='none'
         overflow='visible'
-        background='background-front'
+        background={isDeleting ? 'background-back' : 'background-front'}
         round='xsmall'
         pad='medium'
         gap='small'
@@ -75,17 +93,28 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                 </Text>
               </StyledRefreshableLabel>
             </Box>
-            <ClusterListItemMainInfo
-              creationDate={creationDate}
-              releaseVersion={releaseVersion}
-              k8sVersion={k8sVersion}
-            />
-            <ClusterListItemNodeInfo
-              workerNodePoolsCount={workerNodePoolsCount}
-              workerNodesCPU={workerNodesCPU}
-              workerNodesCount={workerNodesCount}
-              workerNodesMemory={workerNodesMemory}
-            />
+
+            {isDeleting && (
+              <Text color='text-xweak'>
+                Deleted {relativeDate(deletionDate!)}
+              </Text>
+            )}
+
+            {!isDeleting && (
+              <ClusterListItemMainInfo
+                creationDate={creationDate}
+                releaseVersion={releaseVersion}
+                k8sVersion={k8sVersion}
+              />
+            )}
+            {!isDeleting && (
+              <ClusterListItemNodeInfo
+                workerNodePoolsCount={workerNodePoolsCount}
+                workerNodesCPU={workerNodesCPU}
+                workerNodesCount={workerNodesCount}
+                workerNodesMemory={workerNodesMemory}
+              />
+            )}
           </Box>
         </CardBody>
       </Card>
@@ -98,6 +127,7 @@ ClusterListItem.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   creationDate: PropTypes.string.isRequired,
+  deletionDate: PropTypes.string,
   releaseVersion: PropTypes.string.isRequired,
   k8sVersion: PropTypes.string,
   workerNodePoolsCount: PropTypes.number,
