@@ -245,7 +245,8 @@
     "http-proxy": "^1.18.1",
     "node-fetch": "^2.6.1",
     "trim": "^0.0.3",
-    "underscore": "1.13.1"
+    "underscore": "1.13.1",
+    "ws": "^7.4.6"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
