@@ -16,5 +16,5 @@ export function supportsMapiClusters(
 ) {
   // TODO(axbarsan): Add feature flag.
 
-  return user.type === LoggedInUserTypes.MAPI && provider === Providers.AZURE;
+  return user.type === LoggedInUserTypes.MAPI && provider !== Providers.KVM;
 }
