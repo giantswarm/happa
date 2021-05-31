@@ -1,24 +1,8 @@
-import { Box, Text } from 'grommet';
-import { relativeDate } from 'lib/helpers';
+import { Box } from 'grommet';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import styled from 'styled-components';
-import { Dot } from 'styles';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
-import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
-import RefreshableLabel from 'UI/Display/RefreshableLabel';
-
-import ClusterListItemDetails from './ClusterListItemDetails';
-
-const StyledDot = styled(Dot)`
-  padding: 0;
-`;
-
-const StyledRefreshableLabel = styled(RefreshableLabel)`
-  padding: 0;
-  margin: 0;
-`;
+import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterListItem';
 
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
@@ -33,54 +17,20 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
 
   return (
-    <Box
-      direction='row'
-      background='background-front'
-      round='xsmall'
-      pad='medium'
-      gap='small'
+    <UIClusterListItem
+      name={cluster.metadata.name}
+      namespace={cluster.metadata.namespace!}
+      description={description}
+      creationDate={cluster.metadata.creationTimestamp ?? ''}
+      deletionDate={cluster.metadata.deletionTimestamp ?? null}
+      releaseVersion={releaseVersion ?? ''}
+      k8sVersion='1.20.0'
+      workerNodePoolsCount={2}
+      workerNodesCount={3}
+      workerNodesCPU={34}
+      workerNodesMemory={51.634012}
       {...props}
-    >
-      <Box>
-        <Text size='large'>
-          <ClusterIDLabel
-            clusterID={cluster.metadata.name}
-            copyEnabled={true}
-          />
-        </Text>
-      </Box>
-      <Box>
-        <Box>
-          {/* @ts-expect-error */}
-          <StyledRefreshableLabel value={description}>
-            <Text weight='bold' size='large'>
-              {description}
-            </Text>
-          </StyledRefreshableLabel>
-        </Box>
-        <Box direction='row' align='baseline' gap='xsmall'>
-          {/* @ts-expect-error */}
-          <StyledRefreshableLabel value={releaseVersion}>
-            <Text>
-              <i
-                className='fa fa-version-tag'
-                role='presentation'
-                aria-hidden='true'
-              />{' '}
-              {releaseVersion}
-            </Text>
-          </StyledRefreshableLabel>
-          <StyledDot />
-          <KubernetesVersionLabel />
-          <StyledDot />
-          <Text>
-            Created {relativeDate(cluster.metadata.creationTimestamp)}
-          </Text>
-        </Box>
-
-        <ClusterListItemDetails cluster={cluster} />
-      </Box>
-    </Box>
+    />
   );
 };
 
