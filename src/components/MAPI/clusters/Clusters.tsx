@@ -1,5 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box, Text } from 'grommet';
+import { Box, Keyboard, Text } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -112,7 +112,7 @@ const Clusters: React.FC<IClustersProps> = () => {
             align='center'
           >
             <Link to={newClusterPath}>
-              <Button bsStyle='primary'>
+              <Button bsStyle='primary' tabIndex={-1}>
                 <i className='fa fa-add-circle' /> Launch New Cluster
               </Button>
             </Link>
@@ -126,27 +126,35 @@ const Clusters: React.FC<IClustersProps> = () => {
         )}
 
         <Box>
-          <AnimationWrapper>
-            <TransitionGroup
-              className='cluster-list'
-              appear={true}
-              enter={true}
-            >
-              {clusterList!.items.map((cluster) => (
-                <CSSTransition
-                  classNames='cluster-list-item'
-                  key={cluster.metadata.name}
-                  timeout={200}
-                  exit={false}
-                >
-                  <ClusterListItem
-                    cluster={cluster}
-                    margin={{ bottom: 'medium' }}
-                  />
-                </CSSTransition>
-              ))}
-            </TransitionGroup>
-          </AnimationWrapper>
+          <Keyboard
+            onSpace={(e) => {
+              e.preventDefault();
+
+              (e.target as HTMLElement).click();
+            }}
+          >
+            <AnimationWrapper>
+              <TransitionGroup
+                className='cluster-list'
+                appear={true}
+                enter={true}
+              >
+                {clusterList!.items.map((cluster) => (
+                  <CSSTransition
+                    classNames='cluster-list-item'
+                    key={cluster.metadata.name}
+                    timeout={200}
+                    exit={false}
+                  >
+                    <ClusterListItem
+                      cluster={cluster}
+                      margin={{ bottom: 'medium' }}
+                    />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
+            </AnimationWrapper>
+          </Keyboard>
         </Box>
       </Box>
     </DocumentTitle>

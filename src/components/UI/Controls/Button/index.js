@@ -149,6 +149,7 @@ const Wrapper = styled.div`
  * @property {'_blank'} [target]
  * @property {string} [rel]
  * @property {React.MouseEventHandler<HTMLElement>} [onClick]
+ * @property {number | string} [tabIndex]
  */
 
 /**

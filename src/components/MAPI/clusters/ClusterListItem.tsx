@@ -1,7 +1,9 @@
 import { Box } from 'grommet';
+import RoutePath from 'lib/routePath';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import React, { useMemo } from 'react';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterListItem';
 
 interface IClusterListItemProps
@@ -13,12 +15,27 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
   ...props
 }) => {
+  const name = cluster.metadata.name;
   const description = capiv1alpha3.getClusterDescription(cluster);
   const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  const organization = capiv1alpha3.getClusterOrganization(cluster);
+
+  const clusterPath = useMemo(() => {
+    if (!organization) return '';
+
+    return RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.Home,
+      {
+        orgId: organization,
+        clusterId: name,
+      }
+    );
+  }, [organization, name]);
 
   return (
     <UIClusterListItem
-      name={cluster.metadata.name}
+      href={clusterPath}
+      name={name}
       namespace={cluster.metadata.namespace!}
       description={description}
       creationDate={cluster.metadata.creationTimestamp ?? ''}
