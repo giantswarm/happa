@@ -102,14 +102,48 @@ interface IFeatureFlags {
 ...`}
 </FileBlock>
 
-6. Add it in the feature flags object.
+6. Add it in the internal feature flags data structure.
 
-This is the value that you'll use in your code.
+This what you'll use in your code.
 
-<FileBlock fileName='src/shared/FeatureFlags.ts'>
+Add the new flag name to the `Feature` type union.
+
+<FileBlock fileName='src/shared/featureFlags.ts'>
   {`...
-export const FeatureFlags = {
-+    FEATURE_LOGIN: window.featureFlags.FEATURE_LOGIN,
+export type Feature =
+    ...
+    | 'Login';
+...`}
+</FileBlock>
+
+Add the flag's configuration.
+
+<FileBlock fileName='src/shared/featureFlags.ts'>
+  {`...
+export const flags: Record<Feature, IFeatureFlag> = {
++    Login: {
+         // This is the default value of the flag.
++        enabled: false,
+         // This is what's setting the flag's value from the environment.
++        init: () => window.featureFlags.FEATURE_LOGIN,
++    },
+};
+...`}
+</FileBlock>
+
+If you wish to make the flag configurable through the admin `Experiments` page, you can also configure that here.
+
+<FileBlock fileName='src/shared/featureFlags.ts'>
+  {`...
+export const flags: Record<Feature, IFeatureFlag> = {
+    Login: {
+        enabled: false,
+        init: () => window.featureFlags.FEATURE_LOGIN,
+        // The name that will appear on the 'Experiments' page
++        experimentName: 'Customer Single Sign-On',
+        // Whether the value should be persisted between sessions or not.
++        persist: true,
+    },
 };
 ...`}
 </FileBlock>
@@ -171,10 +205,10 @@ workflows:
 10. Use it in code
 
 <FileBlock fileName='YourFile.ts'>
-    {`import { FeatureFlags } from 'shared/FeatureFlags';
+  {`import * as featureFlags from 'shared/featureFlags';
 ...
     function doSomething() {
-        if (FeatureFlags.FEATURE_LOGIN) {
+        if (featureFlags.flags.Login.enabled) {
             doSomeOtherThing();
         } else {
             doSomeAnotherThing();

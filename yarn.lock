@@ -1277,10 +1277,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@eslint/eslintrc@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.0.tgz#99cc0a0584d72f1df38b900fb062ba995f395547"
-  integrity sha512-2ZPCc+uNbjV5ERJr+aKSPRwZgKd2z11x0EgLvb1PURmUrn9QNRXFqje0Ldq454PfAVyaJYyrDvvIKSFP4NnBog==
+"@eslint/eslintrc@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.1.tgz#442763b88cecbe3ee0ec7ca6d6dd6168550cbf14"
+  integrity sha512-5v7TDE9plVhvxQeWLXDTvFvJBdH6pEsdnl2g/dAptmuFEPedQ4Erq5rsDsX+mvAM610IhNaO2W5V1dOOnDKxkQ==
   dependencies:
     ajv "^6.12.4"
     debug "^4.1.1"
@@ -3434,22 +3434,22 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@webpack-cli/configtest@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@webpack-cli/configtest/-/configtest-1.0.2.tgz#2a20812bfb3a2ebb0b27ee26a52eeb3e3f000836"
-  integrity sha512-3OBzV2fBGZ5TBfdW50cha1lHDVf9vlvRXnjpVbJBa20pSZQaSkMJZiwA8V2vD9ogyeXn8nU5s5A6mHyf5jhMzA==
+"@webpack-cli/configtest@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@webpack-cli/configtest/-/configtest-1.0.3.tgz#204bcff87cda3ea4810881f7ea96e5f5321b87b9"
+  integrity sha512-WQs0ep98FXX2XBAfQpRbY0Ma6ADw8JR6xoIkaIiJIzClGOMqVRvPCWqndTxf28DgFopWan0EKtHtg/5W1h0Zkw==
 
-"@webpack-cli/info@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@webpack-cli/info/-/info-1.2.3.tgz#ef819d10ace2976b6d134c7c823a3e79ee31a92c"
-  integrity sha512-lLek3/T7u40lTqzCGpC6CAbY6+vXhdhmwFRxZLMnRm6/sIF/7qMpT8MocXCRQfz0JAh63wpbXLMnsQ5162WS7Q==
+"@webpack-cli/info@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@webpack-cli/info/-/info-1.2.4.tgz#7381fd41c9577b2d8f6c2594fad397ef49ad5573"
+  integrity sha512-ogE2T4+pLhTTPS/8MM3IjHn0IYplKM4HbVNMCWA9N4NrdPzunwenpCsqKEXyejMfRu6K8mhauIPYf8ZxWG5O6g==
   dependencies:
     envinfo "^7.7.3"
 
-"@webpack-cli/serve@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-1.3.1.tgz#911d1b3ff4a843304b9c3bacf67bb34672418441"
-  integrity sha512-0qXvpeYO6vaNoRBI52/UsbcaBydJCggoBBnIo/ovQQdn6fug0BgwsjorV1hVS7fMqGVTZGcVxv8334gjmbj5hw==
+"@webpack-cli/serve@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-1.4.0.tgz#f84fd07bcacefe56ce762925798871092f0f228e"
+  integrity sha512-xgT/HqJ+uLWGX+Mzufusl3cgjAcnqYYskaB7o0vRcwOEfuu6hMzSILQpnIzFMGsTaeaX4Nnekl+6fadLbl1/Vg==
 
 "@webpack-contrib/schema-utils@^1.0.0-beta.0":
   version "1.0.0-beta.0"
@@ -3920,11 +3920,6 @@ async-foreach@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/async-foreach/-/async-foreach-0.1.3.tgz#36121f845c0578172de419a97dbeb1d16ec34542"
   integrity sha1-NhIfhFwFeBct5Bmpfb6x0W7DRUI=
-
-async-limiter@~1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
-  integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
 
 async@^2.6.2:
   version "2.6.3"
@@ -7381,25 +7376,27 @@ eslint-visitor-keys@^2.0.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-2.0.0.tgz#21fdc8fbcd9c795cc0321f0563702095751511a8"
   integrity sha512-QudtT6av5WXels9WjIM7qz1XD1cWGvX4gGXvp/zBn9nXG02D0utdU3Em2m/QjTnrsk6bBjmCygl3rmj118msQQ==
 
-eslint@7.24.0:
-  version "7.24.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.24.0.tgz#2e44fa62d93892bfdb100521f17345ba54b8513a"
-  integrity sha512-k9gaHeHiFmGCDQ2rEfvULlSLruz6tgfA8DEn+rY9/oYPFFTlz55mM/Q/Rij1b2Y42jwZiK3lXvNTw6w6TXzcKQ==
+eslint@7.27.0:
+  version "7.27.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.27.0.tgz#665a1506d8f95655c9274d84bd78f7166b07e9c7"
+  integrity sha512-JZuR6La2ZF0UD384lcbnd0Cgg6QJjiCwhMD6eU4h/VGPcVGwawNNzKU41tgokGXnfjOOyI6QIffthhJTPzzuRA==
   dependencies:
     "@babel/code-frame" "7.12.11"
-    "@eslint/eslintrc" "^0.4.0"
+    "@eslint/eslintrc" "^0.4.1"
     ajv "^6.10.0"
     chalk "^4.0.0"
     cross-spawn "^7.0.2"
     debug "^4.0.1"
     doctrine "^3.0.0"
     enquirer "^2.3.5"
+    escape-string-regexp "^4.0.0"
     eslint-scope "^5.1.1"
     eslint-utils "^2.1.0"
     eslint-visitor-keys "^2.0.0"
     espree "^7.3.1"
     esquery "^1.4.0"
     esutils "^2.0.2"
+    fast-deep-equal "^3.1.3"
     file-entry-cache "^6.0.1"
     functional-red-black-tree "^1.0.1"
     glob-parent "^5.0.0"
@@ -7411,7 +7408,7 @@ eslint@7.24.0:
     js-yaml "^3.13.1"
     json-stable-stringify-without-jsonify "^1.0.1"
     levn "^0.4.1"
-    lodash "^4.17.21"
+    lodash.merge "^4.6.2"
     minimatch "^3.0.4"
     natural-compare "^1.4.0"
     optionator "^0.9.1"
@@ -7420,7 +7417,7 @@ eslint@7.24.0:
     semver "^7.2.1"
     strip-ansi "^6.0.0"
     strip-json-comments "^3.1.0"
-    table "^6.0.4"
+    table "^6.0.9"
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
@@ -10594,11 +10591,6 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
-lodash.flatten@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/lodash.flatten/-/lodash.flatten-4.4.0.tgz#f31c22225a9632d2bbf8e4addbef240aa765a61f"
-  integrity sha1-8xwiIlqWMtK7+OSt2+8kCqdlph8=
-
 lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
@@ -10618,6 +10610,11 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
+
+lodash.merge@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
+  integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
 lodash.set@^4.3.2:
   version "4.3.2"
@@ -15465,14 +15462,13 @@ symbol.prototype.description@^1.0.0:
     has-symbols "^1.0.1"
     object.getownpropertydescriptors "^2.1.2"
 
-table@^6.0.4, table@^6.6.0:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/table/-/table-6.6.0.tgz#905654b79df98d9e9a973de1dd58682532c40e8e"
-  integrity sha512-iZMtp5tUvcnAdtHpZTWLPF0M7AgiQsURR2DwmxnJwSy8I3+cY+ozzVvYha3BOLG2TB+L0CqjIz+91htuj6yCXg==
+table@^6.0.9, table@^6.6.0:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/table/-/table-6.7.1.tgz#ee05592b7143831a8c94f3cee6aae4c1ccef33e2"
+  integrity sha512-ZGum47Yi6KOOFDE8m223td53ath2enHcYLgOCjGr5ngu8bdIARQk6mN/wRMv4yMRcHnCSnHbCEha4sobQx5yWg==
   dependencies:
     ajv "^8.0.1"
     lodash.clonedeep "^4.5.0"
-    lodash.flatten "^4.4.0"
     lodash.truncate "^4.4.2"
     slice-ansi "^4.0.0"
     string-width "^4.2.0"
@@ -16461,18 +16457,17 @@ webidl-conversions@^6.1.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-6.1.0.tgz#9111b4d7ea80acd40f5270d666621afa78b69514"
   integrity sha512-qBIvFLGiBpLjfwmYAaHPXsn+ho5xZnGvyGvsarywGNc8VyQJUMHJ8OBKGGrPER0okBeMDaan4mNBlgBROxuI8w==
 
-webpack-cli@4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-4.6.0.tgz#27ae86bfaec0cf393fcfd58abdc5a229ad32fd16"
-  integrity sha512-9YV+qTcGMjQFiY7Nb1kmnupvb1x40lfpj8pwdO/bom+sQiP4OBMKjHq29YQrlDWDPZO9r/qWaRRywKaRDKqBTA==
+webpack-cli@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-4.7.0.tgz#3195a777f1f802ecda732f6c95d24c0004bc5a35"
+  integrity sha512-7bKr9182/sGfjFm+xdZSwgQuFjgEcy0iCTIBxRUeteJ2Kr8/Wz0qNJX+jw60LU36jApt4nmMkep6+W5AKhok6g==
   dependencies:
     "@discoveryjs/json-ext" "^0.5.0"
-    "@webpack-cli/configtest" "^1.0.2"
-    "@webpack-cli/info" "^1.2.3"
-    "@webpack-cli/serve" "^1.3.1"
+    "@webpack-cli/configtest" "^1.0.3"
+    "@webpack-cli/info" "^1.2.4"
+    "@webpack-cli/serve" "^1.4.0"
     colorette "^1.2.1"
     commander "^7.0.0"
-    enquirer "^2.3.6"
     execa "^5.0.0"
     fastest-levenshtein "^1.0.12"
     import-local "^3.0.2"
@@ -16820,17 +16815,10 @@ write-file-atomic@^3.0.0, write-file-atomic@^3.0.3:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-ws@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
-  integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
-  dependencies:
-    async-limiter "~1.0.0"
-
-ws@^7.4.4:
-  version "7.4.5"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.5.tgz#a484dd851e9beb6fdb420027e3885e8ce48986c1"
-  integrity sha512-xzyu3hFvomRfXKH8vOFMU3OguG6oOvhXMo3xsGy3xWExqaM2dxBbVxuD99O7m3ZUFMvvscsZDqxfgMaRr/Nr1g==
+ws@^6.2.1, ws@^7.4.4, ws@^7.4.6:
+  version "7.4.6"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.6.tgz#5654ca8ecdeee47c33a9a4bf6d28e2be2980377c"
+  integrity sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==
 
 xml-name-validator@^3.0.0:
   version "3.0.0"
