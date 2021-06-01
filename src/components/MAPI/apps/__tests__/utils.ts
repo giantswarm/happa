@@ -30,7 +30,7 @@ describe('utils', () => {
         labels: { 'app-operator.giantswarm.io/version': '1.0.0' },
       },
       spec: {
-        name: 'cool-app',
+        name: 'cool-app-chart',
         namespace: 'cool-app-ns',
         version: '1.2.3',
         catalog: 'cool-apps-123',

@@ -182,7 +182,7 @@ export async function createApp(
       },
     },
     spec: {
-      name: appConfig.name,
+      name: appConfig.chartName,
       namespace: appConfig.namespace,
       version: appConfig.version,
       catalog: appConfig.catalogName,
