@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -10,11 +10,15 @@ import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
+import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import ClusterListEmptyPlaceholder from 'UI/Display/MAPI/clusters/ClusterListEmptyPlaceholder';
+import ClusterListErrorPlaceholder from 'UI/Display/MAPI/clusters/ClusterListErrorPlaceholder';
+import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterListNoOrgsPlaceholder';
 
 import ClusterListItem from './ClusterListItem';
 import { compareClusters } from './utils';
@@ -69,8 +73,9 @@ const Clusters: React.FC<IClustersProps> = () => {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<capiv1alpha3.IClusterList, GenericResponse>(clusterListKey, () =>
-    capiv1alpha3.getClusterList(client, auth, getOptions)
+  } = useSWR<capiv1alpha3.IClusterList, GenericResponseError>(
+    clusterListKey,
+    () => capiv1alpha3.getClusterList(client, auth, getOptions)
   );
 
   const clusterListIsLoading =
@@ -95,9 +100,21 @@ const Clusters: React.FC<IClustersProps> = () => {
     ? `Cluster Overview | ${selectedOrgName}`
     : 'Cluster Overview';
 
-  if (clusterListError) {
-    return <div>Error: {clusterListError.data}</div>;
-  }
+  const organizations = Object.values(useSelector(selectOrganizations()));
+
+  const hasOrgs = organizations.length > 0;
+
+  const hasNoClusters =
+    hasOrgs &&
+    selectedOrgName &&
+    !clusterListIsLoading &&
+    sortedClusters?.length === 0;
+
+  const hasError =
+    hasOrgs &&
+    selectedOrgName &&
+    typeof clusterListError !== 'undefined' &&
+    typeof sortedClusters === 'undefined';
 
   return (
     <DocumentTitle title={title}>
@@ -116,7 +133,7 @@ const Clusters: React.FC<IClustersProps> = () => {
               </Button>
             </Link>
 
-            {!clusterListIsLoading && clusterList!.items.length < 1 && (
+            {hasNoClusters && (
               <Text>
                 Ready to launch your first cluster? Click the green button!
               </Text>
@@ -125,6 +142,16 @@ const Clusters: React.FC<IClustersProps> = () => {
         )}
 
         <Box>
+          {hasError && (
+            <ClusterListErrorPlaceholder organizationName={selectedOrgName!} />
+          )}
+
+          {hasNoClusters && (
+            <ClusterListEmptyPlaceholder organizationName={selectedOrgName!} />
+          )}
+
+          {!hasOrgs && <ClusterListNoOrgsPlaceholder />}
+
           {clusterListIsLoading &&
             LOADING_COMPONENTS.map((_, idx) => (
               <ClusterListItem key={idx} margin={{ bottom: 'medium' }} />
@@ -140,7 +167,7 @@ const Clusters: React.FC<IClustersProps> = () => {
             <AnimationWrapper>
               <TransitionGroup>
                 {!clusterListIsLoading &&
-                  sortedClusters!.map((cluster) => (
+                  sortedClusters?.map((cluster) => (
                     <BaseTransition
                       in={false}
                       key={cluster.metadata.name}
