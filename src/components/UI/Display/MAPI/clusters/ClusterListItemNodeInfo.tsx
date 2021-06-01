@@ -70,7 +70,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
           replaceEmptyValue={false}
         >
           {(value) => (
-            <Text>
+            <Text aria-label='Cluster worker node pools count'>
               {value === -1 ? (
                 <NotAvailable />
               ) : (
@@ -85,7 +85,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
           replaceEmptyValue={false}
         >
           {(value) => (
-            <Text>
+            <Text aria-label='Cluster worker nodes count'>
               {value === -1 ? (
                 <NotAvailable />
               ) : (
@@ -102,7 +102,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
         replaceEmptyValue={false}
       >
         {(value) => (
-          <Text>
+          <Text aria-label='Cluster worker node CPU cores count'>
             {value === -1 ? <NotAvailable /> : formatCPU(value as number)}{' '}
             {pluralizeLabel(value as number, 'CPU core')}
           </Text>
@@ -114,7 +114,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
         replaceEmptyValue={false}
       >
         {(value) => (
-          <Text>
+          <Text aria-label='Cluster worker node memory amount'>
             {value === -1 ? <NotAvailable /> : formatMemory(value as number)} GB
             RAM
           </Text>

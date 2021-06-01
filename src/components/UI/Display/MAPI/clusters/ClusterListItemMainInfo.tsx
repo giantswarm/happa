@@ -30,7 +30,7 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
         replaceEmptyValue={false}
       >
         {(value) => (
-          <Text>
+          <Text aria-label='Cluster release version'>
             <i
               className='fa fa-version-tag'
               role='presentation'
@@ -52,7 +52,11 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
         value={creationDate}
         replaceEmptyValue={false}
       >
-        {(value) => <Text>Created {relativeDate(value as string)}</Text>}
+        {(value) => (
+          <Text aria-label='Cluster creation date'>
+            Created {relativeDate(value as string)}
+          </Text>
+        )}
       </ClusterListItemOptionalValue>
     </Box>
   );

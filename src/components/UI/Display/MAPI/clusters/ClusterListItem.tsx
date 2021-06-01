@@ -89,7 +89,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   return (
     <StyledLink
       to={isDeleting || isLoading ? '' : href}
-      aria-label={name}
+      aria-label={isLoading ? 'Loading cluster...' : `Cluster ${name}`}
       aria-disabled={isDeleting || isLoading}
       tabIndex={isDeleting || isLoading ? -1 : 0}
     >
@@ -107,7 +107,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
           <Box>
             <ClusterListItemOptionalValue value={name}>
               {(value) => (
-                <Text size='large'>
+                <Text size='large' aria-label='Cluster name'>
                   <ClusterIDLabel
                     clusterID={value as string}
                     copyEnabled={true}
@@ -120,7 +120,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
             <Box>
               <ClusterListItemOptionalValue value={description}>
                 {(value) => (
-                  <Text weight='bold' size='large'>
+                  <Text
+                    weight='bold'
+                    size='large'
+                    aria-label='Cluster description'
+                  >
                     {value}
                   </Text>
                 )}
@@ -128,7 +132,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
             </Box>
 
             {isDeleting && (
-              <Text color='text-xweak'>
+              <Text color='text-xweak' aria-label='Cluster deletion date'>
                 Deleted {relativeDate(deletionDate!)}
               </Text>
             )}
@@ -151,7 +155,9 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
             )}
 
             {hasError && !isDeleting && (
-              <Text color='status-critical'>{workerNodesError}</Text>
+              <Text color='status-critical' aria-label='Cluster load error'>
+                {workerNodesError}
+              </Text>
             )}
           </Box>
 
