@@ -97,6 +97,7 @@ const makeEndpoints = () => {
 const makeFeatureFlags = () => {
   const defaults = {
     FEATURE_MAPI_AUTH: false,
+    FEATURE_MAPI_CLUSTERS: false,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);

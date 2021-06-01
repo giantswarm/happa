@@ -19,13 +19,19 @@ export interface IFeatureFlag {
   persist?: boolean;
 }
 
-export type Feature = 'CustomerSSO';
+export type Feature = 'CustomerSSO' | 'NextGenClusters';
 
 export const flags: Record<Feature, IFeatureFlag> = {
   CustomerSSO: {
     enabled: false,
     init: () => window.featureFlags.FEATURE_MAPI_AUTH,
     experimentName: 'Customer Single Sign-On',
+    persist: true,
+  },
+  NextGenClusters: {
+    enabled: false,
+    init: () => window.featureFlags.FEATURE_MAPI_CLUSTERS,
+    experimentName: 'Next-Gen Clusters',
     persist: true,
   },
 };

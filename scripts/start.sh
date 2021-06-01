@@ -86,6 +86,12 @@ else
   sed -i "s|FEATURE_MAPI_AUTH: .*|FEATURE_MAPI_AUTH: false,|" /www/index.html
 fi
 
+if [ "$FEATURE_MAPI_CLUSTERS" = "TRUE" ]; then
+  sed -i "s|FEATURE_MAPI_CLUSTERS: .*|FEATURE_MAPI_CLUSTERS: true,|" /www/index.html
+else
+  sed -i "s|FEATURE_MAPI_CLUSTERS: .*|FEATURE_MAPI_CLUSTERS: false,|" /www/index.html
+fi
+
 # This sets the VERSION placeholder in the footer to the version specified in the
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')

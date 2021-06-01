@@ -26,6 +26,7 @@ interface IGlobalConfig {
 
 interface IFeatureFlags {
   FEATURE_MAPI_AUTH: boolean;
+  FEATURE_MAPI_CLUSTERS: boolean;
 }
 
 interface Window {
