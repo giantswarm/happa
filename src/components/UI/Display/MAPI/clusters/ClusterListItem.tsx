@@ -47,6 +47,7 @@ interface IClusterListItemProps
   href: string;
   workerNodesError: string;
   onGetStartedClick: () => void;
+  additionalTitle?: React.ReactNode;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
@@ -63,6 +64,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   workerNodesMemory,
   workerNodesError,
   onGetStartedClick,
+  additionalTitle,
   ...props
 }) => {
   const isDeleting = Boolean(deletionDate);
@@ -117,7 +119,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
             </ClusterListItemOptionalValue>
           </Box>
           <Box basis='80%'>
-            <Box>
+            <Box direction='row' align='center' wrap={true} gap='small'>
               <ClusterListItemOptionalValue value={description}>
                 {(value) => (
                   <Text
@@ -129,6 +131,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                   </Text>
                 )}
               </ClusterListItemOptionalValue>
+              {additionalTitle}
             </Box>
 
             {isDeleting && (
@@ -193,6 +196,7 @@ ClusterListItem.propTypes = {
   workerNodesCPU: PropTypes.number,
   workerNodesCount: PropTypes.number,
   workerNodesMemory: PropTypes.number,
+  additionalTitle: PropTypes.node,
 };
 
 export default ClusterListItem;

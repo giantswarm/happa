@@ -20,6 +20,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR from 'swr';
 import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterListItem';
 
+import ClusterListItemStatus from './ClusterListItemStatus';
 import {
   formatReleaseVersion,
   getK8sVersion,
@@ -141,6 +142,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       workerNodesMemory={workerNodesMemory}
       workerNodesError={extractErrorMessage(nodePoolListError)}
       onGetStartedClick={handleGetStartedClick}
+      additionalTitle={<ClusterListItemStatus cluster={cluster} />}
       {...props}
     />
   );

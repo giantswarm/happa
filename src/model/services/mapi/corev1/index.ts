@@ -1,4 +1,5 @@
 export * from './types';
+export * from './key';
 export * from './getServiceAccount';
 export * from './getServiceAccountList';
 export * from './deleteServiceAccount';
