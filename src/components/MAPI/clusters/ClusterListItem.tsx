@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
@@ -13,7 +14,8 @@ import {
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR from 'swr';
 import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterListItem';
@@ -107,6 +109,22 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
         machineTypes.current
       );
 
+  const dispatch = useDispatch();
+
+  const handleGetStartedClick = useCallback(() => {
+    if (!organization || !name) return;
+
+    const path = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.Overview,
+      {
+        orgId: organization,
+        clusterId: name,
+      }
+    );
+
+    dispatch(push(path));
+  }, [dispatch, name, organization]);
+
   return (
     <UIClusterListItem
       href={clusterPath}
@@ -122,6 +140,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       workerNodesCPU={workerNodesCPU}
       workerNodesMemory={workerNodesMemory}
       workerNodesError={extractErrorMessage(nodePoolListError)}
+      onGetStartedClick={handleGetStartedClick}
       {...props}
     />
   );
