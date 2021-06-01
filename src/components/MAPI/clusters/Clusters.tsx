@@ -1,10 +1,11 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React, { useMemo } from 'react';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import React, { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
@@ -54,7 +55,7 @@ const Clusters: React.FC<IClustersProps> = () => {
   const organizations = Object.values(useSelector(selectOrganizations()));
   const hasOrgs = organizations.length > 0;
 
-  const client = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const getOptions: capiv1alpha3.IGetClusterListOptions = React.useMemo(() => {
@@ -71,6 +72,7 @@ const Clusters: React.FC<IClustersProps> = () => {
     selectedOrgName && hasOrgs
       ? capiv1alpha3.getClusterListKey(getOptions)
       : null;
+  const clusterListClient = useRef(clientFactory());
 
   const {
     data: clusterList,
@@ -78,7 +80,8 @@ const Clusters: React.FC<IClustersProps> = () => {
     isValidating: clusterListIsValidating,
   } = useSWR<capiv1alpha3.IClusterList, GenericResponseError>(
     clusterListKey,
-    () => capiv1alpha3.getClusterList(client, auth, getOptions)
+    () =>
+      capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
   );
 
   const clusterListIsLoading =
@@ -114,6 +117,12 @@ const Clusters: React.FC<IClustersProps> = () => {
     selectedOrgName &&
     typeof clusterListError !== 'undefined' &&
     typeof sortedClusters === 'undefined';
+
+  const releaseListClient = useRef(clientFactory());
+  const { data: releaseList } = useSWR(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
 
   return (
     <DocumentTitle title={title}>
@@ -178,6 +187,7 @@ const Clusters: React.FC<IClustersProps> = () => {
                     >
                       <ClusterListItem
                         cluster={cluster}
+                        releases={releaseList?.items}
                         margin={{ bottom: 'medium' }}
                       />
                     </BaseTransition>

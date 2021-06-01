@@ -15,15 +15,14 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
 import useSWR from 'swr';
 import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterListItem';
 
 import ClusterListItemStatus from './ClusterListItemStatus';
 import {
-  formatReleaseVersion,
-  getK8sVersion,
   getWorkerNodesCount,
   getWorkerNodesCPU,
   getWorkerNodesMemory,
@@ -32,10 +31,12 @@ import {
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster?: capiv1alpha3.ICluster;
+  releases?: releasev1alpha1.IRelease[];
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
+  releases,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -64,20 +65,19 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const formattedReleaseVersion = formatReleaseVersion(cluster);
-  const releaseKey = formattedReleaseVersion
-    ? releasev1alpha1.getReleaseKey(formattedReleaseVersion)
-    : null;
-  const releaseClient = useRef(clientFactory());
-  const { data: release, error: releaseError } = useSWR(releaseKey, () =>
-    releasev1alpha1.getRelease(
-      releaseClient.current,
-      auth,
-      formattedReleaseVersion!
-    )
-  );
+  const k8sVersion = useMemo(() => {
+    const formattedReleaseVersion = `v${releaseVersion}`;
 
-  const k8sVersion = getK8sVersion(release, releaseError);
+    const release = releases?.find(
+      (r) => r.metadata.name === formattedReleaseVersion
+    );
+    if (!release) return undefined;
+
+    const version = releasev1alpha1.getK8sVersion(release);
+    if (typeof version === 'undefined') return '';
+
+    return version;
+  }, [releases, releaseVersion]);
 
   const {
     data: nodePoolList,
@@ -126,6 +126,9 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     dispatch(push(path));
   }, [dispatch, name, organization]);
 
+  const isAdmin = useSelector(getUserIsAdmin);
+  const provider = useSelector(getProvider);
+
   return (
     <UIClusterListItem
       href={clusterPath}
@@ -142,7 +145,16 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       workerNodesMemory={workerNodesMemory}
       workerNodesError={extractErrorMessage(nodePoolListError)}
       onGetStartedClick={handleGetStartedClick}
-      additionalTitle={<ClusterListItemStatus cluster={cluster} />}
+      additionalTitle={
+        cluster && (
+          <ClusterListItemStatus
+            cluster={cluster}
+            provider={provider}
+            isAdmin={isAdmin}
+            releases={releases}
+          />
+        )
+      }
       {...props}
     />
   );
@@ -150,6 +162,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
 ClusterListItem.propTypes = {
   cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
+  releases: PropTypes.array,
 };
 
 export default ClusterListItem;

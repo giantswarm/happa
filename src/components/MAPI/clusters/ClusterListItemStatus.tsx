@@ -1,21 +1,31 @@
 import { Box, Text } from 'grommet';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import React, { useMemo } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
 
+import { isClusterUpgradable } from './utils';
+
 interface IClusterListItemStatusProps {
-  cluster?: capiv1alpha3.ICluster;
+  cluster: capiv1alpha3.ICluster;
+  isAdmin: boolean;
+  provider: PropertiesOf<typeof Providers>;
+  releases?: releasev1alpha1.IRelease[];
 }
 
 const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   cluster,
+  releases,
+  isAdmin,
+  provider,
 }) => {
   const theme = useTheme();
 
   const isCreating =
-    cluster &&
     capiv1alpha3.isConditionTrue(cluster, capiv1alpha3.conditionTypeCreating) &&
     capiv1alpha3.isConditionFalse(
       cluster,
@@ -25,7 +35,6 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
     );
 
   const isUpgrading =
-    cluster &&
     capiv1alpha3.isConditionTrue(
       cluster,
       capiv1alpha3.conditionTypeUpgrading,
@@ -38,8 +47,10 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       capiv1alpha3.withReasonUpgradeCompleted()
     );
 
-  // TODO(axbarsan): Check if the cluster can be upgraded.
-  const isUpgradable = false as boolean;
+  const isUpgradable = useMemo(
+    () => isClusterUpgradable(cluster, provider, isAdmin, releases),
+    [cluster, provider, isAdmin, releases]
+  );
 
   let color = theme.colors.yellow1;
   let iconClassName = '';
@@ -47,18 +58,10 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   let tooltip = '';
 
   switch (true) {
-    case typeof cluster === 'undefined':
     case typeof cluster?.metadata.deletionTimestamp !== 'undefined':
       return null;
 
-    case isUpgradable:
-      iconClassName = 'fa fa-warning';
-      message = 'Upgrade available';
-      tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
-      break;
-
-    case typeof cluster !== 'undefined' &&
-      typeof cluster!.status === 'undefined':
+    case typeof cluster.status === 'undefined':
     case isCreating:
       color = theme.colors.gray;
       iconClassName = 'fa fa-change-in-progress';
@@ -73,6 +76,12 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       tooltip =
         'The cluster is currently upgrading. This step usually takes about 30 minutes.';
       break;
+
+    case isUpgradable:
+      iconClassName = 'fa fa-warning';
+      message = 'Upgrade available';
+      tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
+      break;
   }
 
   return (
@@ -80,10 +89,7 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       overlay={<Tooltip id='tooltip'>{tooltip}</Tooltip>}
       placement='top'
     >
-      <Box
-        //   onClick={handleClick}
-        aria-label={message}
-      >
+      <Box aria-label='Cluster status'>
         <Text color={color}>
           <i className={iconClassName} role='presentation' aria-hidden='true' />{' '}
           {message}
@@ -94,7 +100,11 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
 };
 
 ClusterListItemStatus.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
+  cluster: (PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>)
+    .isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
+  releases: PropTypes.array,
 };
 
 export default ClusterListItemStatus;

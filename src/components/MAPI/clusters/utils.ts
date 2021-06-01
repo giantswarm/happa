@@ -1,8 +1,12 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
+import { IRelease, ReleaseHelper } from 'lib/ReleaseHelper';
 import { IMachineType } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 
 export function getWorkerNodesCount(
   nodePools?: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
@@ -75,35 +79,6 @@ export function getWorkerNodesMemory(
   return count;
 }
 
-export function getK8sVersion(
-  release?: releasev1alpha1.IRelease,
-  releaseError?: unknown
-): string | undefined {
-  switch (true) {
-    case Boolean(release):
-      return releasev1alpha1.getK8sVersion(release!) ?? '';
-    case Boolean(releaseError):
-      return '';
-    default:
-      return undefined;
-  }
-}
-
-export function formatReleaseVersion(
-  cluster?: capiv1alpha3.ICluster
-): string | undefined {
-  const releaseVersion = cluster ? capiv1alpha3.getReleaseVersion(cluster) : '';
-
-  switch (true) {
-    case cluster?.metadata.deletionTimestamp !== undefined:
-      return undefined;
-    case Boolean(releaseVersion):
-      return `v${releaseVersion}`;
-    default:
-      return undefined;
-  }
-}
-
 export function compareClusters(
   a: capiv1alpha3.ICluster,
   b: capiv1alpha3.ICluster
@@ -128,4 +103,47 @@ export function compareClusters(
 
   // If descriptions are the same, sort by resource name.
   return a.metadata.name.localeCompare(b.metadata.name);
+}
+
+export function isClusterUpgradable(
+  cluster: capiv1alpha3.ICluster,
+  provider: PropertiesOf<typeof Providers>,
+  isAdmin: boolean,
+  releases?: releasev1alpha1.IRelease[]
+): boolean {
+  if (!releases) return false;
+
+  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  if (!releaseVersion) return false;
+
+  try {
+    const mappedReleases = releases.reduce(
+      (acc: Record<string, IRelease>, r: releasev1alpha1.IRelease) => {
+        // Remove the `v` prefix.
+        const normalizedVersion = r.metadata.name.slice(1);
+
+        acc[normalizedVersion] = {
+          version: normalizedVersion,
+          active: r.spec.state === 'active',
+        };
+
+        return acc;
+      },
+      {}
+    );
+
+    const releaseHelper = new ReleaseHelper({
+      availableReleases: mappedReleases,
+      provider,
+      currentReleaseVersion: releaseVersion,
+      isAdmin,
+      ignorePreReleases: true,
+    });
+
+    return releaseHelper.getNextVersion() !== null;
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+
+    return false;
+  }
 }
