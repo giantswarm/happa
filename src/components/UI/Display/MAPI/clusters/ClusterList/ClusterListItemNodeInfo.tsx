@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import NotAvailable from 'UI/Display/NotAvailable';
 
+import { IClusterItem } from '../types';
 import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
-import { IClusterItem } from './types';
 
 function pluralizeLabel(count: number, base: string) {
   if (count === 1) {

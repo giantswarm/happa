@@ -19,14 +19,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
 import useSWR from 'swr';
-import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterListItem';
+import UIClusterListItem from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItem';
 
-import ClusterListItemStatus from './ClusterListItemStatus';
 import {
   getWorkerNodesCount,
   getWorkerNodesCPU,
   getWorkerNodesMemory,
-} from './utils';
+} from '../utils';
+import ClusterListItemStatus from './ClusterListItemStatus';
 
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {

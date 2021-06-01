@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 
+import { IClusterItem } from '../types';
 import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
-import { IClusterItem } from './types';
 
 const StyledDot = styled(Dot)`
   padding: 0;

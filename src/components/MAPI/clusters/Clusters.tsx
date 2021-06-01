@@ -17,11 +17,11 @@ import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import ClusterListEmptyPlaceholder from 'UI/Display/MAPI/clusters/ClusterListEmptyPlaceholder';
-import ClusterListErrorPlaceholder from 'UI/Display/MAPI/clusters/ClusterListErrorPlaceholder';
-import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterListNoOrgsPlaceholder';
+import ClusterListEmptyPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListEmptyPlaceholder';
+import ClusterListErrorPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListErrorPlaceholder';
+import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListNoOrgsPlaceholder';
 
-import ClusterListItem from './ClusterListItem';
+import ClusterListItem from './ClusterList/ClusterListItem';
 import { compareClusters } from './utils';
 
 const LOADING_COMPONENTS = new Array(6).fill(0);

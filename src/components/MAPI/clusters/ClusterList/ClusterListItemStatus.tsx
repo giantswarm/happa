@@ -8,7 +8,7 @@ import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
 
-import { isClusterUpgradable } from './utils';
+import { isClusterUpgradable } from '../utils';
 
 interface IClusterListItemStatusProps {
   cluster: capiv1alpha3.ICluster;

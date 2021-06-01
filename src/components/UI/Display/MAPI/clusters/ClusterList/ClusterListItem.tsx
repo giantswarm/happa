@@ -9,10 +9,10 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
+import { IClusterItem } from '../types';
 import ClusterListItemMainInfo from './ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from './ClusterListItemNodeInfo';
 import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
-import { IClusterItem } from './types';
 
 const StyledLink = styled(Link)`
   transition: box-shadow 0.1s ease-in-out;
