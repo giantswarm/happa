@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
@@ -14,7 +15,7 @@ import {
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
@@ -86,12 +87,24 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
+  useEffect(() => {
+    if (nodePoolListError) {
+      ErrorReporter.getInstance().notify(nodePoolListError);
+    }
+  }, [nodePoolListError]);
+
   const {
     data: providerNodePools,
     error: providerNodePoolsError,
   } = useSWR(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
     fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
   );
+
+  useEffect(() => {
+    if (providerNodePoolsError) {
+      ErrorReporter.getInstance().notify(providerNodePoolsError);
+    }
+  }, [providerNodePoolsError]);
 
   const machineTypes = useRef(getMachineTypes());
 

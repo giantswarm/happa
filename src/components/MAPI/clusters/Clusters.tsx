@@ -1,11 +1,12 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
@@ -46,9 +47,7 @@ const AnimationWrapper = styled.div`
   }
 `;
 
-interface IClustersProps {}
-
-const Clusters: React.FC<IClustersProps> = () => {
+const Clusters: React.FC<{}> = () => {
   const selectedOrgName = useSelector(
     (state: IState) => state.main.selectedOrganization
   );
@@ -83,6 +82,12 @@ const Clusters: React.FC<IClustersProps> = () => {
     () =>
       capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
   );
+
+  useEffect(() => {
+    if (clusterListError) {
+      ErrorReporter.getInstance().notify(clusterListError);
+    }
+  }, [clusterListError]);
 
   const clusterListIsLoading =
     typeof clusterList === 'undefined' &&
@@ -119,10 +124,18 @@ const Clusters: React.FC<IClustersProps> = () => {
     typeof sortedClusters === 'undefined';
 
   const releaseListClient = useRef(clientFactory());
-  const { data: releaseList } = useSWR(
-    releasev1alpha1.getReleaseListKey(),
-    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const {
+    data: releaseList,
+    error: releaseListError,
+  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
 
   return (
     <DocumentTitle title={title}>
