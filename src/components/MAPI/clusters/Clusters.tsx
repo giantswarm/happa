@@ -17,6 +17,7 @@ import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
 import ClusterListItem from './ClusterListItem';
+import { compareClusters } from './utils';
 
 const LOADING_COMPONENTS = new Array(6).fill(0);
 
@@ -77,6 +78,11 @@ const Clusters: React.FC<IClustersProps> = () => {
     typeof clusterListError === 'undefined' &&
     clusterListIsValidating;
 
+  const sortedClusters = useMemo(
+    () => clusterList?.items.sort(compareClusters),
+    [clusterList?.items]
+  );
+
   const newClusterPath = useMemo(() => {
     if (!selectedOrgName) return '';
 
@@ -134,7 +140,7 @@ const Clusters: React.FC<IClustersProps> = () => {
             <AnimationWrapper>
               <TransitionGroup>
                 {!clusterListIsLoading &&
-                  clusterList!.items.map((cluster) => (
+                  sortedClusters!.map((cluster) => (
                     <BaseTransition
                       in={false}
                       key={cluster.metadata.name}

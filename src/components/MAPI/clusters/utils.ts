@@ -103,3 +103,29 @@ export function formatReleaseVersion(
       return undefined;
   }
 }
+
+export function compareClusters(
+  a: capiv1alpha3.ICluster,
+  b: capiv1alpha3.ICluster
+) {
+  // Move clusters that are currently deleting to the end of the list.
+  const aIsDeleting = typeof a.metadata.deletionTimestamp !== 'undefined';
+  const bIsDeleting = typeof b.metadata.deletionTimestamp !== 'undefined';
+
+  if (aIsDeleting && !bIsDeleting) {
+    return 1;
+  } else if (!aIsDeleting && bIsDeleting) {
+    return -1;
+  }
+
+  // Sort by description.
+  const descriptionComparison = capiv1alpha3
+    .getClusterDescription(a)
+    .localeCompare(capiv1alpha3.getClusterDescription(b));
+  if (descriptionComparison !== 0) {
+    return descriptionComparison;
+  }
+
+  // If descriptions are the same, sort by resource name.
+  return a.metadata.name.localeCompare(b.metadata.name);
+}
