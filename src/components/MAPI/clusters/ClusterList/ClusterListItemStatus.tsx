@@ -58,7 +58,7 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   let tooltip = '';
 
   switch (true) {
-    case typeof cluster?.metadata.deletionTimestamp !== 'undefined':
+    case typeof cluster.metadata.deletionTimestamp !== 'undefined':
       return null;
 
     case typeof cluster.status === 'undefined':
