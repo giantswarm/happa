@@ -51,23 +51,26 @@ const Clusters: React.FC<IClustersProps> = () => {
   const selectedOrgName = useSelector(
     (state: IState) => state.main.selectedOrganization
   );
+  const organizations = Object.values(useSelector(selectOrganizations()));
+  const hasOrgs = organizations.length > 0;
 
   const client = useHttpClient();
   const auth = useAuthProvider();
 
   const getOptions: capiv1alpha3.IGetClusterListOptions = React.useMemo(() => {
-    if (!selectedOrgName) return {};
+    if (!selectedOrgName || !hasOrgs) return {};
 
     return {
       labelSelector: {
         matchingLabels: { [capiv1alpha3.labelOrganization]: selectedOrgName },
       },
     };
-  }, [selectedOrgName]);
+  }, [selectedOrgName, hasOrgs]);
 
-  const clusterListKey = selectedOrgName
-    ? capiv1alpha3.getClusterListKey(getOptions)
-    : null;
+  const clusterListKey =
+    selectedOrgName && hasOrgs
+      ? capiv1alpha3.getClusterListKey(getOptions)
+      : null;
 
   const {
     data: clusterList,
@@ -99,10 +102,6 @@ const Clusters: React.FC<IClustersProps> = () => {
   const title = selectedOrgName
     ? `Cluster Overview | ${selectedOrgName}`
     : 'Cluster Overview';
-
-  const organizations = Object.values(useSelector(selectOrganizations()));
-
-  const hasOrgs = organizations.length > 0;
 
   const hasNoClusters =
     hasOrgs &&
