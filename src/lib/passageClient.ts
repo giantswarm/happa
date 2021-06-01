@@ -118,9 +118,6 @@ class Passage {
         invite_token: params.inviteToken,
         password: params.password,
       },
-      headers: {
-        ContentType: 'application/json',
-      },
     });
 
     return res.data;
@@ -143,9 +140,6 @@ class Passage {
         timeout: this.config.timeout_ms,
         data: {
           email: params.email,
-        },
-        headers: {
-          ContentType: 'application/json',
         },
       }
     );
@@ -181,9 +175,6 @@ class Passage {
         data: {
           email: params.email,
         },
-        headers: {
-          ContentType: 'application/json',
-        },
       }
     );
     if (!res.data.is_valid) {
@@ -218,9 +209,6 @@ class Passage {
         email: params.email,
         password: params.password,
       },
-      headers: {
-        ContentType: 'application/json',
-      },
     });
 
     return res.data;
@@ -236,7 +224,7 @@ class Passage {
     const res = await HttpClientImpl.get<IPassageInvitation[]>(url, {
       timeout: this.config.timeout_ms,
       headers: {
-        ContentType: 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,
       },
     });
@@ -277,7 +265,7 @@ class Passage {
           send_email: invitation.sendEmail,
         },
         headers: {
-          ContentType: 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
       }
