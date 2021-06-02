@@ -99,10 +99,6 @@
     "web-vitals": "^1.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.2",
-    "@babel/preset-react": "7.13.13",
-    "@babel/preset-typescript": "7.13.0",
     "@sentry/webpack-plugin": "^1.15.1",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-docs": "^6.2.9",
@@ -111,7 +107,6 @@
     "@storybook/builder-webpack5": "^6.2.9",
     "@storybook/react": "^6.2.9",
     "@swc/core": "^1.2.59",
-    "@swc/cli": "^0.1.45",
     "@swc/helpers": "^0.2.12",
     "@swc/jest": "^0.1.2",
     "@testing-library/jest-dom": "5.11.9",
