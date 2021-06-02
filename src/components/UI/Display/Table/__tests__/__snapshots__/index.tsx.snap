@@ -5,10 +5,10 @@ exports[`Table renders a simple table 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="sc-gKckTs izRacH"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
   >
     <table
-      class="StyledTable-sc-1m3u5g-6 edWzfw"
+      class="StyledTable-sc-1m3u5g-6 cKwhRE"
     >
       <caption
         class="StyledTable__StyledTableDataCaption-sc-1m3u5g-1 fseUYw"
@@ -22,7 +22,7 @@ exports[`Table renders a simple table 1`] = `
           class="StyledTable__StyledTableRow-sc-1m3u5g-2"
         >
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 ipgMXr"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 evqPcn"
           >
             <div
               class="StyledBox-sc-13pk1d4-0 hvUCKZ"
@@ -31,7 +31,7 @@ exports[`Table renders a simple table 1`] = `
             </div>
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 ipgMXr"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 evqPcn"
           >
             <div
               class="StyledBox-sc-13pk1d4-0 hvUCKZ"
@@ -40,7 +40,7 @@ exports[`Table renders a simple table 1`] = `
             </div>
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 ipgMXr"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 evqPcn"
           >
             <div
               class="StyledBox-sc-13pk1d4-0 hvUCKZ"
