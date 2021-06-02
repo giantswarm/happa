@@ -110,7 +110,6 @@
     "@storybook/addon-links": "^6.2.9",
     "@storybook/builder-webpack5": "^6.2.9",
     "@storybook/react": "^6.2.9",
-    "@swc/core": "^1.2.59",
     "@swc/helpers": "^0.2.12",
     "@swc/jest": "^0.1.2",
     "@testing-library/jest-dom": "5.11.9",
@@ -195,6 +194,10 @@
     "webpack-cli": "4.7.0",
     "webpack-dev-server": "3.11.2",
     "webpack-merge": "5.7.3"
+  },
+  "optionalDependencies": {
+    "@swc/core-linux": "^1.2.42",
+    "@swc/core": "^1.2.59"
   },
   "resolutions": {
     "kind-of": "^6.0.3",

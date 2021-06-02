@@ -2508,6 +2508,11 @@
   resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.2.59.tgz#5fcad14e1731a50a807b1f7dfc4fdd99fa0baba1"
   integrity sha512-vssTkwI/Z1tT99KzQsDI34ZVkI/62zJelGSOn+Nj5mnuZcMRvtlS/dnWe5yUtC5wmPdYyVQi6+b9GxiUVG9wmg==
 
+"@swc/core-linux@^1.2.42":
+  version "1.2.42"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux/-/core-linux-1.2.42.tgz#501c612b5b5c1c77efdf12295714ab3559ae8422"
+  integrity sha512-+YXRdbp5JaSzpTROVb2HzuW5fWEIL/PR53UWLo72P8gwoy9XJQOc1Yk+kJ/VAMdxZ0vjIQiBwt0u1NUvnvVD4A==
+
 "@swc/core-win32-ia32-msvc@^1.2.59":
   version "1.2.59"
   resolved "https://registry.yarnpkg.com/@swc/core-win32-ia32-msvc/-/core-win32-ia32-msvc-1.2.59.tgz#66897da0c645e651cc385e05e4dcb13c64c9bbff"
