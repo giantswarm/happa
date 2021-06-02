@@ -31,7 +31,7 @@ export const flags: Record<Feature, IFeatureFlag> = {
   NextGenClusters: {
     enabled: false,
     init: () => window.featureFlags.FEATURE_MAPI_CLUSTERS,
-    experimentName: 'Next-Gen Clusters',
+    experimentName: 'Use Management API for the list of clusters',
     persist: true,
   },
 };
