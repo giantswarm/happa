@@ -151,6 +151,7 @@ module.exports = {
                   runtime: 'automatic',
                 },
               },
+              externalHelpers: true,
             },
             env: {
               targets: '> 0.25%, not dead',
