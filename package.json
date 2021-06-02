@@ -196,6 +196,9 @@
     "webpack-dev-server": "3.11.2",
     "webpack-merge": "5.7.3"
   },
+  "optionalDependencies": {
+    "@swc/core-linux-musl": "1.2.42"
+  },
   "resolutions": {
     "kind-of": "^6.0.3",
     "lodash": "^4.17.21",
