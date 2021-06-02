@@ -2468,6 +2468,20 @@
     remark "^13.0.0"
     unist-util-find-all-after "^3.0.2"
 
+"@swc-node/core@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-1.5.0.tgz#6dab4b50cb71d67983ef4597a750f1ae32468e89"
+  integrity sha512-Lstr9ExBqkkVA9AQe6FN6By97s1MxyCy7hbw9YkEgCIRCQonmKz5TnrfxIgDr4KdneZVCkdYcdpCijJ2YhFZbQ==
+  dependencies:
+    "@swc/core" "^1.2.58"
+
+"@swc-node/jest@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-1.3.0.tgz#64cb1c5c81cf4e1b41776adf8b1a53f28e552089"
+  integrity sha512-T1BfZIY7jTm+E753cCuondxARiNeMIQFdedqM/xrQU1attmy5REKigQOYOgQptsli+nhFXhHuePaaWomx/k5CQ==
+  dependencies:
+    "@swc-node/core" "^1.5.0"
+
 "@swc/core-android-arm64@^1.2.59":
   version "1.2.59"
   resolved "https://registry.yarnpkg.com/@swc/core-android-arm64/-/core-android-arm64-1.2.59.tgz#0c4fef0b5be7a9f4008bbd2c7d527da2f4717a70"
@@ -2518,7 +2532,7 @@
   resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.2.59.tgz#64f06fd0d47c24b2c7b253f76749ea48fdf47041"
   integrity sha512-8uLWzcSnIj8D1IY+Pgr0etPz1PwtcmMeWqhPJ+9hJDK3mYMOmBfOUyIJkQZguXrb1cCLUfDhztkke8uB3evlaQ==
 
-"@swc/core@^1.2.30", "@swc/core@^1.2.52", "@swc/core@^1.2.59":
+"@swc/core@^1.2.52", "@swc/core@^1.2.58", "@swc/core@^1.2.59":
   version "1.2.59"
   resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.2.59.tgz#3d81380c5a1bc27ebf124ad797a9bfa09c16775a"
   integrity sha512-cJMdaoUQShGC3dtohgEyuBmA8iIdMhikmFlzuCmcd5kWso36/ZnKHvcB09UTf3pFw4w8y4yoWDX9nLT2nqfWyg==
@@ -2540,13 +2554,6 @@
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.2.12.tgz#cd54624dd685f7832b50dd7ce119ddc4eb2585ad"
   integrity sha512-hsPGC/U/0xe/WghMeSgyFsq9nNPfA5oY1Il2AaeAJcu/vTm4Bv8o9ev4eAgxcA61i5WWp72amN20XVyxWwM5aQ==
-
-"@swc/jest@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.1.2.tgz#5195f2439c60430dff661b4a7b5c904483791eb7"
-  integrity sha512-14ju3wkSsTeKFivYzH222j4/y5UQWY5Wk9fOvPit6wyuZNyo4fP6AVYWwVzogmqQNe06IMs+aPJGQ3FbErRZjQ==
-  dependencies:
-    "@swc/core" "^1.2.30"
 
 "@testing-library/dom@^7.28.1":
   version "7.30.3"
