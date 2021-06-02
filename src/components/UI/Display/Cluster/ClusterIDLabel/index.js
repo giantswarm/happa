@@ -11,7 +11,8 @@ const colorHash = new CachingColorHash();
 const Wrapper = styled.span`
   display: inline-block;
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     i {
       opacity: 0.7;
     }
@@ -24,7 +25,8 @@ const Wrapper = styled.span`
     margin-right: 5px;
     opacity: 0;
 
-    &:hover {
+    &:hover,
+    &:focus {
       opacity: 1;
       text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
@@ -74,16 +76,23 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
 
       {copyEnabled &&
         (hasContentInClipboard ? (
-          <i aria-hidden='true' className='fa fa-done' />
+          <i
+            key='cluster-id-copy-button'
+            aria-hidden='true'
+            className='fa fa-done'
+          />
         ) : (
           <OverlayTrigger
             overlay={<Tooltip id='tooltip'>Copy ID to clipboard</Tooltip>}
             placement='top'
           >
             <i
+              key='cluster-id-copy-button'
               aria-hidden='true'
               className='fa fa-content-copy'
               onClick={copyToClipboard}
+              role='button'
+              tabIndex={0}
             />
           </OverlayTrigger>
         ))}

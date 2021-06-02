@@ -146,6 +146,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: feature-mapi-auth
+        - name: FEATURE_MAPI_CLUSTERS
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: feature-mapi-clusters
         livenessProbe:
           httpGet:
             path: /

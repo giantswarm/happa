@@ -42,3 +42,4 @@ data:
   {{ else }}
   feature-mapi-auth: 'FALSE'
   {{ end }}
+  feature-mapi-clusters: 'FALSE'

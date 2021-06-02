@@ -3,9 +3,14 @@ import { PropertiesOf } from 'shared/types';
 
 import { IVersion, VersionImpl } from './Version';
 
+export interface IRelease {
+  version: string;
+  active: boolean;
+}
+
 export interface ReleaseHelperConfig {
   currentReleaseVersion: string;
-  availableReleases: IReleases;
+  availableReleases: Record<string, IRelease>;
   provider: PropertiesOf<typeof Providers>;
   ignorePreReleases?: boolean;
   isAdmin?: boolean;
@@ -158,7 +163,7 @@ export class ReleaseHelper {
     this.versions = versions;
   }
 
-  protected availableReleases: IReleases = {};
+  protected availableReleases: Record<string, IRelease> = {};
   protected isAdmin: boolean = false;
   protected ignorePreReleases: boolean = false;
   protected provider: PropertiesOf<typeof Providers>;

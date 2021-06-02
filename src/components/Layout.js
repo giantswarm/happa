@@ -3,6 +3,7 @@ import MapiUnauthorized from 'Auth/MAPI/MapiUnauthorized';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
+import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -19,7 +20,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
-import { supportsMapiApps } from 'shared/featureSupport';
+import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
 import {
   getLoggedInUser,
@@ -80,7 +81,15 @@ class Layout extends React.Component {
               <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
                 <div className='main' data-testid='main'>
                   <Switch>
-                    <Route component={Home} exact path={MainRoutes.Home} />
+                    {supportsMapiClusters(user, provider) ? (
+                      <Route
+                        component={Clusters}
+                        exact
+                        path={MainRoutes.Home}
+                      />
+                    ) : (
+                      <Route component={Home} exact path={MainRoutes.Home} />
+                    )}
 
                     {supportsAppsViaMapi ? (
                       <Route component={AppsMAPI} path={AppsRoutes.Home} />

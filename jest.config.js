@@ -43,6 +43,7 @@ module.exports = {
     },
     featureFlags: {
       FEATURE_MAPI_AUTH: true,
+      FEATURE_MAPI_CLUSTERS: true,
     },
   },
 };
