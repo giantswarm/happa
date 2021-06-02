@@ -1,8 +1,18 @@
 const { transformSync } = require('@swc/core');
+const { createHash } = require('crypto');
+
+const transformCache = new Map();
 
 module.exports = {
   process(src, path) {
-    return transformSync(src, {
+    const cacheHash = createHash('sha1').update(src).digest('hex');
+    const cacheKey = `${path}-${cacheHash}`;
+
+    if (transformCache.has(cacheKey)) {
+      return transformCache.get(cacheKey);
+    }
+
+    const output = transformSync(src, {
       filename: path,
       jsc: {
         transform: {
@@ -29,5 +39,9 @@ module.exports = {
       },
       sourceFileName: path,
     });
+
+    transformCache.set(cacheKey, output);
+
+    return output;
   },
 };
