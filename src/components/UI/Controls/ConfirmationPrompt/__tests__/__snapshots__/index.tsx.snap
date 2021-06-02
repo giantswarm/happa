@@ -5,7 +5,7 @@ exports[`ConfirmationPrompt renders a component with a title 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       aria-hidden="true"
@@ -20,7 +20,7 @@ exports[`ConfirmationPrompt renders a component with buttons 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       aria-hidden="true"
@@ -35,7 +35,7 @@ exports[`ConfirmationPrompt renders a simple component 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       aria-hidden="true"

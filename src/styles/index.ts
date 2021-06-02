@@ -1,5 +1,3 @@
-import 'styled-components';
-
 import { CSSBreakpoints } from 'shared/constants';
 import { css } from 'styled-components';
 import styled from 'styled-components';
