@@ -8,7 +8,7 @@
     "lint:fix": "yarn lint --fix",
     "lint:css": "./node_modules/.bin/stylelint './src/**/*.{js,ts,tsx}'",
     "start": "./node_modules/.bin/webpack serve --open --progress --config ./webpack.dev.js",
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest --maxWorkers 4",
     "test:watch": "yarn test --watch",
     "test:clean-cache": "yarn test --clearCache",
     "test:coverage": "yarn test --collect-coverage",
@@ -34,49 +34,10 @@
     ".circleci",
     "scripts"
   ],
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react",
-      [
-        "@babel/preset-typescript",
-        {
-          "allExtensions": true,
-          "isTSX": true
-        }
-      ]
-    ],
-    "plugins": [
-      "transform-class-properties",
-      "babel-plugin-styled-components",
-      "react-hot-loader/babel"
-    ],
-    "env": {
-      "test": {
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "current"
-              }
-            }
-          ],
-          "@babel/preset-react"
-        ]
-      }
-    }
-  },
   "prettier": {
     "singleQuote": true,
     "jsxSingleQuote": true,
     "trailingComma": "es5"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./src/setupTests.js"
-    ]
   },
   "dist": "dist",
   "mainInput": "main",
@@ -149,6 +110,8 @@
     "@storybook/addon-links": "^6.2.9",
     "@storybook/builder-webpack5": "^6.2.9",
     "@storybook/react": "^6.2.9",
+    "@swc/core": "^1.2.59",
+    "@swc/jest": "^0.1.2",
     "@testing-library/jest-dom": "5.11.9",
     "@testing-library/react": "11.2.6",
     "@testing-library/react-hooks": "5.1.1",
@@ -185,15 +148,7 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "4.21.0",
     "@typescript-eslint/parser": "4.25.0",
-    "babel-cli": "6.26.0",
-    "babel-eslint": "10.1.0",
-    "babel-jest": "26.6.3",
-    "babel-loader": "8.2.2",
-    "babel-plugin-styled-components": "^1.12.0",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-react-jsx": "6.24.1",
-    "babel-polyfill": "6.26.0",
-    "babel-preset-env": "1.7.0",
+    "browserlist": "^1.0.1",
     "chalk": "^4.1.0",
     "clean-webpack-plugin": "3.0.0",
     "command-line-args": "^5.0.2",
@@ -231,6 +186,7 @@
     "stylelint-config-standard": "21.0.0",
     "stylelint-config-styled-components": "0.1.1",
     "stylelint-processor-styled-components": "1.10.0",
+    "swc-loader": "^0.1.14",
     "terser-webpack-plugin": "^5.1.1",
     "typescript": "4.2.4",
     "url-loader": "4.1.1",
