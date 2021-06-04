@@ -8,7 +8,7 @@
     "lint:fix": "yarn lint --fix",
     "lint:css": "./node_modules/.bin/stylelint './src/**/*.{js,ts,tsx}'",
     "start": "./node_modules/.bin/webpack serve --open --progress --config ./webpack.dev.js",
-    "test": "./node_modules/.bin/jest --maxWorkers 4",
+    "test": "./node_modules/.bin/jest",
     "test:watch": "yarn test --watch",
     "test:clean-cache": "yarn test --clearCache",
     "test:coverage": "yarn test --collect-coverage",
