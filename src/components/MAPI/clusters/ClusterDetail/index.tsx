@@ -84,10 +84,24 @@ const ClusterDetail: React.FC<{}> = () => {
       );
 
       if (!cluster) {
-        dispatch(push(OrganizationsRoutes.Home));
+        dispatch(push(MainRoutes.Home));
       }
     }
   }, [cluster, clusterError, clusterId, dispatch]);
+
+  useEffect(() => {
+    if (typeof cluster?.metadata.deletionTimestamp !== 'undefined') {
+      new FlashMessage(
+        `Cluster <code>${cluster.metadata.name}</code> is currently being deleted`,
+        messageType.INFO,
+        messageTTL.MEDIUM
+      );
+
+      if (!cluster) {
+        dispatch(push(MainRoutes.Home));
+      }
+    }
+  }, [cluster, dispatch]);
 
   return (
     <Breadcrumb
