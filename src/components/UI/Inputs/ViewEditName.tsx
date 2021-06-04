@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, {
@@ -180,6 +181,12 @@ class ViewAndEditName extends Component<
     }
   };
 
+  handleFocusKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    ((e.target as HTMLElement).firstChild as HTMLElement)?.click();
+  };
+
   render() {
     const {
       typeLabel,
@@ -233,18 +240,23 @@ class ViewAndEditName extends Component<
 
     // View mode
     return (
-      <span {...rest}>
-        <OverlayTrigger
-          overlay={
-            <Tooltip id='tooltip'>Click to edit {typeLabel} name</Tooltip>
-          }
-          placement='top'
-        >
-          <NameLabel onClick={this.activateEditMode}>
-            {this.state.value}
-          </NameLabel>
-        </OverlayTrigger>
-      </span>
+      <Keyboard
+        onSpace={this.handleFocusKeyDown}
+        onEnter={this.handleFocusKeyDown}
+      >
+        <span tabIndex={0} {...rest}>
+          <OverlayTrigger
+            overlay={
+              <Tooltip id='tooltip'>Click to edit {typeLabel} name</Tooltip>
+            }
+            placement='top'
+          >
+            <NameLabel onClick={this.activateEditMode}>
+              {this.state.value}
+            </NameLabel>
+          </OverlayTrigger>
+        </span>
+      </Keyboard>
     );
   }
 }

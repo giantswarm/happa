@@ -1,8 +1,9 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import { Box, Heading } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import {
   extractErrorMessage,
@@ -11,7 +12,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Tab } from 'react-bootstrap';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
@@ -20,8 +21,11 @@ import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
 import useSWR from 'swr';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailOverview from './ClusterDetailOverview';
+import { updateClusterDescription } from './utils';
 
 function computePaths(orgName: string, clusterName: string) {
   return {
@@ -43,16 +47,17 @@ const ClusterDetail: React.FC<{}> = () => {
     clusterId,
   ]);
 
-  const client = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const namespace = getOrgNamespaceFromOrgName(orgId);
 
-  const { data: cluster, error: clusterError } = useSWR<
+  const clusterClient = useRef(clientFactory());
+  const { data: cluster, error: clusterError, mutate: mutateCluster } = useSWR<
     capiv1alpha3.ICluster,
     GenericResponseError
   >(capiv1alpha3.getClusterKey(namespace, clusterId), () =>
-    capiv1alpha3.getCluster(client, auth, namespace, clusterId)
+    capiv1alpha3.getCluster(clusterClient.current, auth, namespace, clusterId)
   );
 
   useEffect(() => {
@@ -103,6 +108,43 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [cluster, dispatch]);
 
+  const clusterDescription = cluster
+    ? capiv1alpha3.getClusterDescription(cluster)
+    : undefined;
+
+  const updateDescription = async (newValue: string) => {
+    if (!cluster) return;
+
+    try {
+      const updatedCluster = await updateClusterDescription(
+        clientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        cluster.metadata.name,
+        newValue
+      );
+
+      mutateCluster(updatedCluster);
+
+      new FlashMessage(
+        `Successfully updated the cluster's description`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `There was a problem updating the cluster's description`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
+
   return (
     <Breadcrumb
       data={{
@@ -111,6 +153,19 @@ const ClusterDetail: React.FC<{}> = () => {
       }}
     >
       <>
+        <Box margin={{ bottom: 'small' }}>
+          <Heading level={1}>
+            <ClusterIDLabel clusterID={clusterId} copyEnabled={true} />{' '}
+            {clusterDescription && (
+              <ViewAndEditName
+                value={clusterDescription}
+                typeLabel='cluster'
+                onSave={updateDescription}
+                aria-label={clusterDescription}
+              />
+            )}
+          </Heading>
+        </Box>
         <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
           <Tab eventKey={paths.Home} title='Overview' />
         </Tabs>

@@ -9,7 +9,8 @@ import CachingColorHash from 'utils/cachingColorHash';
 const colorHash = new CachingColorHash();
 
 const Wrapper = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 
   &:hover,
   &:focus-within {
