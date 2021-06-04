@@ -1,4 +1,5 @@
 import NewClusterWrapper from 'Cluster/NewCluster/NewClusterWrapper';
+import GettingStarted from 'GettingStarted/GettingStarted';
 import React from 'react';
 import { Redirect, Switch } from 'react-router';
 import Route from 'Route';
@@ -13,6 +14,10 @@ const Cluster: React.FC<{}> = () => {
         component={NewClusterWrapper}
         exact
         path={OrganizationsRoutes.Clusters.New}
+      />
+      <Route
+        path={OrganizationsRoutes.Clusters.GettingStarted.Overview}
+        component={GettingStarted}
       />
       <Route
         component={ClusterDetail}
