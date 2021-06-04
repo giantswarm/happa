@@ -152,7 +152,7 @@ const ClusterDetail: React.FC<{}> = () => {
         pathname: match.url,
       }}
     >
-      <>
+      <Box>
         <Box margin={{ bottom: 'small' }}>
           <Heading level={1}>
             <ClusterIDLabel clusterID={clusterId} copyEnabled={true} />{' '}
@@ -175,7 +175,7 @@ const ClusterDetail: React.FC<{}> = () => {
             component={ClusterDetailOverview}
           />
         </Switch>
-      </>
+      </Box>
     </Breadcrumb>
   );
 };
