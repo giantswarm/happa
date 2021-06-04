@@ -1,6 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
-import { Box } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import {
@@ -14,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { MainRoutes } from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
-import ClusterDetailOverviewDelete from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverviewDelete';
+import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
 import { deleteCluster } from './utils';
 
@@ -78,17 +77,23 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   };
 
+  const description = cluster
+    ? capiv1alpha3.getClusterDescription(cluster)
+    : undefined;
+  const releaseVersion = cluster
+    ? capiv1alpha3.getReleaseVersion(cluster)
+    : undefined;
+
   return (
-    <Box>
-      {cluster && (
-        <ClusterDetailOverviewDelete
-          clusterName={cluster.metadata.name}
-          onDelete={handleDelete}
-          border='top'
-          margin={{ top: 'medium' }}
-        />
-      )}
-    </Box>
+    <UIClusterDetailOverview
+      name={cluster?.metadata.name}
+      namespace={cluster?.metadata.namespace}
+      description={description}
+      creationDate={cluster?.metadata.creationTimestamp}
+      deletionDate={cluster?.metadata.deletionTimestamp ?? null}
+      releaseVersion={releaseVersion}
+      onDelete={handleDelete}
+    />
   );
 };
 
