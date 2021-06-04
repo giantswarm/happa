@@ -27,3 +27,19 @@ export async function updateClusterDescription(
 
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
 }
+
+export async function deleteCluster(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string,
+  name: string
+) {
+  const cluster = await capiv1alpha3.getCluster(
+    httpClient,
+    auth,
+    namespace,
+    name
+  );
+
+  return capiv1alpha3.deleteCluster(httpClient, auth, cluster);
+}

@@ -102,9 +102,7 @@ const ClusterDetail: React.FC<{}> = () => {
         messageTTL.MEDIUM
       );
 
-      if (!cluster) {
-        dispatch(push(MainRoutes.Home));
-      }
+      dispatch(push(MainRoutes.Home));
     }
   }, [cluster, dispatch]);
 
