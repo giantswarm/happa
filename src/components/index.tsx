@@ -1,7 +1,3 @@
-import 'babel-polyfill';
-// CSS Imports
-// Keep the blank lines to allow for a certain ordering!
-// eslint-disable-next-line sort-imports
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'noty/lib/noty.css';

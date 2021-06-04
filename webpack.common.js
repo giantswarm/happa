@@ -131,14 +131,33 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js(x?)$/,
+        test: /\.(js|ts)(x?)$/,
         exclude: /node_modules/,
-        use: ['babel-loader'],
-      },
-      {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader'],
+        use: {
+          loader: 'swc-loader',
+          options: {
+            jsc: {
+              target: 'es2015',
+              parser: {
+                syntax: 'typescript',
+                tsx: true,
+                decorators: true,
+                dynamicImport: true,
+              },
+              transform: {
+                legacyDecorator: true,
+                decoratorMetadata: true,
+                react: {
+                  runtime: 'automatic',
+                },
+              },
+              externalHelpers: true,
+            },
+            env: {
+              targets: '> 0.25%, not dead',
+            },
+          },
+        },
       },
       {
         test: /\.m?js/,

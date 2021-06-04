@@ -303,7 +303,7 @@ jobs:
 
   test:
     <<: *defaults
-    resource_class: xlarge
+    resource_class: large
 
     steps:
       - checkout
@@ -313,11 +313,10 @@ jobs:
 
       - run:
           name: Run tests
-          command: yarn run test
+          command: yarn run test --maxWorkers 4
 
   build:
     <<: *defaults
-    resource_class: xlarge
 
     steps:
       - checkout
