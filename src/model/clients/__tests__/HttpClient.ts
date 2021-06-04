@@ -325,7 +325,7 @@ describe('HttpClient', () => {
       );
     } catch (err) {
       expect(err.message).toStrictEqual(
-        `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`
+        `We couldn't execute a request. Please try again in a few moments.`
       );
     }
   });
@@ -343,7 +343,7 @@ describe('HttpClient', () => {
       await client.execute();
     } catch (err) {
       expect(err.message).toStrictEqual(
-        `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`
+        `We couldn't execute a request. Please try again in a few moments.`
       );
     }
   });

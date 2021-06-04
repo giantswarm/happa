@@ -302,7 +302,7 @@ export class HttpClientImpl implements IHttpClient {
       const res = new GenericResponseError<T>();
       res.requestConfig = currRequestConfig;
       res.status = StatusCodes.BadRequest;
-      res.message = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
+      res.message = `We couldn't execute a request. Please try again in a few moments.`;
 
       if (err.name === 'AbortError') {
         res.status = StatusCodes.Timeout;
