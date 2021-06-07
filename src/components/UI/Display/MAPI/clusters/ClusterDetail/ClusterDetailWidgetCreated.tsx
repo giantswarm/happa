@@ -40,7 +40,7 @@ const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = (
         {(value) => <Text>{relativeDate(value as string)}</Text>}
       </ClusterDetailWidgetOptionalValue>
       <StyledDot />
-      <ClusterDetailWidgetOptionalValue value={creationDate}>
+      <ClusterDetailWidgetOptionalValue value={creationDate} loaderWidth={150}>
         {(value) => <Text>{formatDate(value as string)}</Text>}
       </ClusterDetailWidgetOptionalValue>
     </ClusterDetailWidget>

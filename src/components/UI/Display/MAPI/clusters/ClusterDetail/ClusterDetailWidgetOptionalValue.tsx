@@ -15,16 +15,24 @@ interface IClusterDetailWidgetOptionalValueProps {
   children: (value: string | number) => React.ReactElement;
   value?: string | number;
   replaceEmptyValue?: boolean;
+  loaderHeight?: number;
+  loaderWidth?: number;
 }
 
 const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalValueProps> = ({
   value,
   children,
   replaceEmptyValue,
+  loaderHeight,
+  loaderWidth,
 }) => {
   if (typeof value === 'undefined') {
     return (
-      <ClusterDetailWidgetLoadingPlaceholder margin={{ vertical: 'xsmall' }} />
+      <ClusterDetailWidgetLoadingPlaceholder
+        margin={{ vertical: 'xsmall' }}
+        height={loaderHeight}
+        width={loaderWidth}
+      />
     );
   }
 
@@ -44,6 +52,8 @@ ClusterDetailWidgetOptionalValue.propTypes = {
   children: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   replaceEmptyValue: PropTypes.bool,
+  loaderHeight: PropTypes.number,
+  loaderWidth: PropTypes.number,
 };
 
 ClusterDetailWidgetOptionalValue.defaultProps = {
