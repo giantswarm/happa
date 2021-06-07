@@ -35,7 +35,7 @@ const ClusterDetailWidget: React.FC<IClusterDetailOverviewProps> = ({
         flex={{ grow: 0, shrink: 1 }}
         margin='small'
       >
-        <Title>{title}</Title>
+        <Title color='text-weak'>{title}</Title>
       </CardHeader>
       <CardBody
         direction='row'
