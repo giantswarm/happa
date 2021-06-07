@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
@@ -7,15 +8,27 @@ import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
 } from 'MAPI/organizations/utils';
+import {
+  fetchNodePoolListForCluster,
+  fetchNodePoolListForClusterKey,
+  fetchProviderNodePoolsForNodePools,
+  fetchProviderNodePoolsForNodePoolsKey,
+  getMachineTypes,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
 import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
+import {
+  getWorkerNodesCount,
+  getWorkerNodesCPU,
+  getWorkerNodesMemory,
+} from '../utils';
 import { deleteCluster } from './utils';
 
 const ClusterDetailOverview: React.FC<{}> = () => {
@@ -97,16 +110,73 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     [orgId, clusterId]
   );
 
+  const {
+    data: nodePoolList,
+    error: nodePoolListError,
+  } = useSWR(fetchNodePoolListForClusterKey(cluster), () =>
+    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  );
+
+  useEffect(() => {
+    if (nodePoolListError) {
+      ErrorReporter.getInstance().notify(nodePoolListError);
+    }
+  }, [nodePoolListError]);
+
+  const {
+    data: providerNodePools,
+    error: providerNodePoolsError,
+  } = useSWR(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
+    fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
+  );
+
+  useEffect(() => {
+    if (providerNodePoolsError) {
+      ErrorReporter.getInstance().notify(providerNodePoolsError);
+    }
+  }, [providerNodePoolsError]);
+
+  const machineTypes = useRef(getMachineTypes());
+
+  const workerNodesCPU = providerNodePoolsError
+    ? -1
+    : getWorkerNodesCPU(
+        nodePoolList?.items,
+        providerNodePools,
+        machineTypes.current
+      );
+  const workerNodesMemory = providerNodePoolsError
+    ? -1
+    : getWorkerNodesMemory(
+        nodePoolList?.items,
+        providerNodePools,
+        machineTypes.current
+      );
+
+  const workerNodesPath = useMemo(
+    () =>
+      RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail.WorkerNodes,
+        { orgId, clusterId }
+      ),
+    [orgId, clusterId]
+  );
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
       gettingStartedPath={gettingStartedPath}
+      workerNodesPath={workerNodesPath}
       name={cluster?.metadata.name}
       namespace={cluster?.metadata.namespace}
       description={description}
       creationDate={cluster?.metadata.creationTimestamp}
       deletionDate={cluster?.metadata.deletionTimestamp ?? null}
       releaseVersion={releaseVersion}
+      workerNodePoolsCount={nodePoolList?.items.length}
+      workerNodesCount={getWorkerNodesCount(nodePoolList?.items)}
+      workerNodesCPU={workerNodesCPU}
+      workerNodesMemory={workerNodesMemory}
       k8sApiURL={k8sApiURL}
     />
   );
