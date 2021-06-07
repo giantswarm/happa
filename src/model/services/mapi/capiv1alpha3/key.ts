@@ -32,6 +32,15 @@ export function getClusterOrganization(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelOrganization];
 }
 
+export function getKubernetesAPIEndpointURL(
+  cluster: ICluster
+): string | undefined {
+  const hostname = cluster.spec?.controlPlaneEndpoint?.host;
+  if (!hostname) return undefined;
+
+  return `https://${hostname}`;
+}
+
 export function getCondition(
   cluster: ICluster,
   type: string

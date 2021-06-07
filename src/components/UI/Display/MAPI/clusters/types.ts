@@ -10,4 +10,5 @@ export interface IClusterItem {
   workerNodesCount?: number;
   workerNodesCPU?: number;
   workerNodesMemory?: number; // In gigabytes.
+  k8sApiURL?: string;
 }

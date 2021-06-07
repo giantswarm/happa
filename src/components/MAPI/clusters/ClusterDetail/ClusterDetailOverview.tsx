@@ -2,16 +2,17 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import RoutePath from 'lib/routePath';
 import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
 } from 'MAPI/organizations/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
-import { MainRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
 import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
@@ -83,16 +84,30 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const releaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;
+  const k8sApiURL = cluster
+    ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
+    : undefined;
+
+  const gettingStartedPath = useMemo(
+    () =>
+      RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.GettingStarted.Overview,
+        { orgId, clusterId }
+      ),
+    [orgId, clusterId]
+  );
 
   return (
     <UIClusterDetailOverview
+      onDelete={handleDelete}
+      gettingStartedPath={gettingStartedPath}
       name={cluster?.metadata.name}
       namespace={cluster?.metadata.namespace}
       description={description}
       creationDate={cluster?.metadata.creationTimestamp}
       deletionDate={cluster?.metadata.deletionTimestamp ?? null}
       releaseVersion={releaseVersion}
-      onDelete={handleDelete}
+      k8sApiURL={k8sApiURL}
     />
   );
 };
