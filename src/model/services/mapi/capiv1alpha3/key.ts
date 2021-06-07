@@ -6,6 +6,8 @@ export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
 export const labelReleaseVersion = 'release.giantswarm.io/version';
 
+export const annotationClusterDescription = 'cluster.giantswarm.io/description';
+
 export const conditionTypeCreating = 'Creating';
 export const conditionTypeUpgrading = 'Upgrading';
 
@@ -16,8 +18,7 @@ export const conditionReasonUpgradeNotStarted = 'UpgradeNotStarted';
 export const conditionReasonUpgradePending = 'UpgradePending';
 
 export function getClusterDescription(cluster: ICluster): string {
-  let name =
-    cluster.metadata.annotations?.['cluster.giantswarm.io/description'];
+  let name = cluster.metadata.annotations?.[annotationClusterDescription];
   name ??= 'Unnamed cluster';
 
   return name;
@@ -29,6 +30,15 @@ export function getReleaseVersion(cluster: ICluster): string | undefined {
 
 export function getClusterOrganization(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelOrganization];
+}
+
+export function getKubernetesAPIEndpointURL(
+  cluster: ICluster
+): string | undefined {
+  const hostname = cluster.spec?.controlPlaneEndpoint?.host;
+  if (!hostname) return undefined;
+
+  return `https://${hostname}`;
 }
 
 export function getCondition(

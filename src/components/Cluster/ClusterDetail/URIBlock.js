@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -22,7 +23,8 @@ const CopyButton = styled.div`
   display: flex;
   align-items: center;
 
-  &:hover {
+  &:hover,
+  &:focus {
     ${StatusIcon} {
       text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
@@ -35,11 +37,13 @@ const BlockWrapper = styled.div`
   align-items: center;
   max-width: 100%;
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     ${CopyButton} {
       opacity: 0.7;
 
-      &:hover {
+      &:hover,
+      &:focus {
         opacity: 1;
       }
     }
@@ -88,33 +92,39 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
   };
   const handleMouseLeave = () => setClipboardContent(null);
 
+  const handleOnFocusKeyDown = (e) => {
+    e.preventDefault();
+
+    e.target.click();
+  };
+
   return (
     <BlockWrapper {...props} onMouseLeave={handleMouseLeave}>
       {title && <Title>{title}</Title>}
 
-      <CopyContent>
-        <StyledCode>
-          <CodeWrapper>{children}</CodeWrapper>
-        </StyledCode>
+      <Keyboard onSpace={handleOnFocusKeyDown} onEnter={handleOnFocusKeyDown}>
+        <CopyContent>
+          <StyledCode>
+            <CodeWrapper>{children}</CodeWrapper>
+          </StyledCode>
 
-        {hasContentInClipboard ? (
-          <StatusIcon
-            aria-hidden='true'
-            className='fa fa-done'
-            title='Content copied to clipboard'
-          />
-        ) : (
-          <OverlayTrigger placement='top' overlay={getTooltip(content)}>
-            <CopyButton onClick={copyToClipboard}>
-              <StatusIcon
-                aria-hidden='true'
-                className='fa fa-content-copy'
-                title='Copy content to clipboard'
-              />
-            </CopyButton>
-          </OverlayTrigger>
-        )}
-      </CopyContent>
+          {hasContentInClipboard ? (
+            <StatusIcon
+              className='fa fa-done'
+              title='Content copied to clipboard'
+            />
+          ) : (
+            <OverlayTrigger placement='top' overlay={getTooltip(content)}>
+              <CopyButton onClick={copyToClipboard} role='button' tabIndex={0}>
+                <StatusIcon
+                  className='fa fa-content-copy'
+                  title='Copy content to clipboard'
+                />
+              </CopyButton>
+            </OverlayTrigger>
+          )}
+        </CopyContent>
+      </Keyboard>
     </BlockWrapper>
   );
 };

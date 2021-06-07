@@ -1,12 +1,14 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { push } from 'connected-react-router';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
-import { Redirect, Switch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Switch, useParams } from 'react-router-dom';
 import Route from 'Route';
-import { OrganizationsRoutes } from 'shared/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { selectClusterById } from 'stores/cluster/selectors';
 import styled from 'styled-components';
 
 import ConfigureKubeCTL from './Steps/ConfigureKubectl';
@@ -21,9 +23,31 @@ const Wrapper = styled.div`
 `;
 
 const GettingStarted = (props) => {
+  const { clusterId, orgId } = useParams();
+
+  const selectedCluster = useSelector((state) =>
+    selectClusterById(state, clusterId)
+  );
+
+  const clusterExists =
+    typeof selectedCluster !== 'undefined' && selectedCluster !== null;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!clusterExists) {
+      new FlashMessage(
+        `Cluster <code>${clusterId}</code> no longer exists.`,
+        messageType.INFO,
+        messageTTL.MEDIUM
+      );
+
+      dispatch(push(MainRoutes.Home));
+    }
+  }, [clusterExists, clusterId, dispatch]);
+
   const pathParams = {
-    orgId: props.match.params.orgId,
-    clusterId: props.match.params.clusterId,
+    orgId,
+    clusterId,
   };
 
   const clusterGuideConfigurationPath = RoutePath.createUsablePath(
@@ -83,7 +107,7 @@ const GettingStarted = (props) => {
     component: InstallIngress,
   };
 
-  if (props.hasOptionalIngress) {
+  if (selectedCluster?.capabilities?.hasOptionalIngress) {
     steps.splice(1, 0, ingressStep);
   }
 
@@ -94,10 +118,7 @@ const GettingStarted = (props) => {
           title: 'GETTING STARTED',
           pathname: RoutePath.createUsablePath(
             OrganizationsRoutes.Clusters.GettingStarted.Overview,
-            {
-              clusterId: props.match.params.clusterId,
-              orgId: props.match.params.orgId,
-            }
+            { clusterId, orgId }
           ),
         }}
       >
@@ -129,18 +150,6 @@ const GettingStarted = (props) => {
   );
 };
 
-GettingStarted.propTypes = {
-  match: PropTypes.object,
-  hasOptionalIngress: PropTypes.bool,
-};
+GettingStarted.propTypes = {};
 
-function mapStateToProps(state, ownProps) {
-  const selectedCluster =
-    state.entities.clusters.items[ownProps.match.params.clusterId];
-
-  return {
-    hasOptionalIngress: selectedCluster?.capabilities?.hasOptionalIngress,
-  };
-}
-
-export default connect(mapStateToProps)(GettingStarted);
+export default GettingStarted;
