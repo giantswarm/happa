@@ -26,7 +26,15 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
 
   return (
     <Box>
-      <ClusterDetailWidget title='Created' inline={true}>
+      <ClusterDetailWidget
+        title='Created'
+        inline={true}
+        contentProps={{
+          direction: 'row',
+          gap: 'xsmall',
+          wrap: true,
+        }}
+      >
         <Text>{relativeDate(creationDate)}</Text>
         <StyledDot />
         <Text>{formatDate(creationDate)}</Text>

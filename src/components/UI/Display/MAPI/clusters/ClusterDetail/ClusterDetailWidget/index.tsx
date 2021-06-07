@@ -11,12 +11,14 @@ interface IClusterDetailOverviewProps
   extends React.ComponentPropsWithoutRef<typeof Card> {
   title: string;
   inline?: boolean;
+  contentProps?: React.ComponentPropsWithoutRef<typeof CardBody>;
 }
 
 const ClusterDetailWidget: React.FC<IClusterDetailOverviewProps> = ({
   title,
   children,
   inline,
+  contentProps,
   ...props
 }) => {
   return (
@@ -38,12 +40,10 @@ const ClusterDetailWidget: React.FC<IClusterDetailOverviewProps> = ({
         <Title color='text-weak'>{title}</Title>
       </CardHeader>
       <CardBody
-        direction='row'
-        gap='xsmall'
-        wrap={true}
         basis='200px'
         flex={{ grow: 1, shrink: 0 }}
         margin='small'
+        {...contentProps}
       >
         {children}
       </CardBody>
@@ -55,6 +55,9 @@ ClusterDetailWidget.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
   inline: PropTypes.bool,
+  contentProps: PropTypes.object as PropTypes.Requireable<
+    IClusterDetailOverviewProps['contentProps']
+  >,
 };
 
 ClusterDetailWidget.defaultProps = {
