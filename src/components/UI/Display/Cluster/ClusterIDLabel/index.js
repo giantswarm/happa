@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -71,33 +72,40 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
     </Label>
   );
 
-  return (
-    <Wrapper onMouseLeave={() => setClipboardContent(null)}>
-      {labelComponent}
+  const handleOnFocusKeyDown = (e) => {
+    e.preventDefault();
 
-      {copyEnabled &&
-        (hasContentInClipboard ? (
-          <i
-            key='cluster-id-copy-button'
-            aria-hidden='true'
-            className='fa fa-done'
-          />
-        ) : (
-          <OverlayTrigger
-            overlay={<Tooltip id='tooltip'>Copy ID to clipboard</Tooltip>}
-            placement='top'
-          >
+    e.target.click();
+  };
+
+  return (
+    <Keyboard onSpace={handleOnFocusKeyDown} onEnter={handleOnFocusKeyDown}>
+      <Wrapper onMouseLeave={() => setClipboardContent(null)}>
+        {labelComponent}
+
+        {copyEnabled &&
+          (hasContentInClipboard ? (
             <i
               key='cluster-id-copy-button'
               aria-hidden='true'
-              className='fa fa-content-copy'
-              onClick={copyToClipboard}
-              role='button'
-              tabIndex={0}
+              className='fa fa-done'
             />
-          </OverlayTrigger>
-        ))}
-    </Wrapper>
+          ) : (
+            <OverlayTrigger
+              overlay={<Tooltip id='tooltip'>Copy ID to clipboard</Tooltip>}
+              placement='top'
+            >
+              <i
+                key='cluster-id-copy-button'
+                className='fa fa-content-copy'
+                onClick={copyToClipboard}
+                role='button'
+                tabIndex={0}
+              />
+            </OverlayTrigger>
+          ))}
+      </Wrapper>
+    </Keyboard>
   );
 };
 

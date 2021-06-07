@@ -46,12 +46,12 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<IClusterDetailWidgetKubernetesA
         loaderHeight={24}
       >
         {/* @ts-expect-error */}
-        {(value) => <URIBlock copyContent={true}>{value}</URIBlock>}
+        {(value) => <URIBlock>{value}</URIBlock>}
       </ClusterDetailWidgetOptionalValue>
 
       {typeof k8sApiURL !== 'undefined' && (
         <Link to={gettingStartedPath}>
-          <GetStartedButton>
+          <GetStartedButton tabIndex={-1}>
             <i className='fa fa-start' aria-hidden={true} role='presentation' />
             Get Started
           </GetStartedButton>
