@@ -20,8 +20,10 @@ import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import styled from 'styled-components';
 import useSWR from 'swr';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailOverview from './ClusterDetailOverview';
@@ -35,6 +37,12 @@ function computePaths(orgName: string, clusterName: string) {
     }),
   };
 }
+
+const StyledViewAndEditName = styled(ViewAndEditName)`
+  input {
+    font-size: 100%;
+  }
+`;
 
 const ClusterDetail: React.FC<{}> = () => {
   const dispatch = useDispatch();
@@ -151,19 +159,25 @@ const ClusterDetail: React.FC<{}> = () => {
       }}
     >
       <Box>
-        <Box margin={{ bottom: 'small' }}>
-          <Heading level={1}>
+        <Heading level={1} margin={{ bottom: 'large' }}>
+          <Box direction='row' align='center'>
             <ClusterIDLabel clusterID={clusterId} copyEnabled={true} />{' '}
-            {clusterDescription && (
-              <ViewAndEditName
-                value={clusterDescription}
-                typeLabel='cluster'
-                onSave={updateDescription}
-                aria-label={clusterDescription}
-              />
-            )}
-          </Heading>
-        </Box>
+            <ClusterDetailWidgetOptionalValue
+              value={clusterDescription}
+              loaderHeight={35}
+              loaderWidth={300}
+            >
+              {(value) => (
+                <StyledViewAndEditName
+                  value={value as string}
+                  typeLabel='cluster'
+                  onSave={updateDescription}
+                  aria-label={value as string}
+                />
+              )}
+            </ClusterDetailWidgetOptionalValue>
+          </Box>
+        </Heading>
         <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
           <Tab eventKey={paths.Home} title='Overview' />
         </Tabs>
