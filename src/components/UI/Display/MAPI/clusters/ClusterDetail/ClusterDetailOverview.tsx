@@ -1,17 +1,10 @@
-import { Box, Text } from 'grommet';
-import { formatDate, relativeDate } from 'lib/helpers';
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
-import { Dot } from 'styles';
 
 import { IClusterItem } from '../types';
 import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
-import ClusterDetailWidget from './ClusterDetailWidget';
-
-const StyledDot = styled(Dot)`
-  padding: 0;
-`;
+import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 
 interface IClusterDetailOverviewProps extends IClusterItem {
   onDelete: () => Promise<void>;
@@ -22,29 +15,19 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   name,
   creationDate,
 }) => {
-  if (!name || !creationDate) return null;
+  const isLoading = typeof name === 'undefined';
 
   return (
     <Box>
-      <ClusterDetailWidget
-        title='Created'
-        inline={true}
-        contentProps={{
-          direction: 'row',
-          gap: 'xsmall',
-          wrap: true,
-        }}
-      >
-        <Text>{relativeDate(creationDate)}</Text>
-        <StyledDot />
-        <Text>{formatDate(creationDate)}</Text>
-      </ClusterDetailWidget>
-      <ClusterDetailOverviewDelete
-        clusterName={name}
-        onDelete={onDelete}
-        border='top'
-        margin={{ top: 'medium' }}
-      />
+      <ClusterDetailWidgetCreated creationDate={creationDate} />
+      {!isLoading && (
+        <ClusterDetailOverviewDelete
+          clusterName={name!}
+          onDelete={onDelete}
+          border='top'
+          margin={{ top: 'medium' }}
+        />
+      )}
     </Box>
   );
 };
