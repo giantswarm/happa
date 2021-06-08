@@ -13,5 +13,6 @@ export interface IClusterItem {
   appsCount?: number;
   appsUniqueCount?: number;
   appsDeployedCount?: number;
+  activeKeyPairsCount?: number;
   k8sApiURL?: string;
 }

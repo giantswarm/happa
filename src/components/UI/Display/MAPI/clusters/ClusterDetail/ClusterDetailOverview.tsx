@@ -2,6 +2,7 @@ import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import ClusterDetailWidgetKeyPairs from 'UI/Display/MAPI/keypairs/ClusterDetailWidgetKeyPairs';
 
 import ClusterDetailWidgetApps from '../../apps/ClusterDetailWidgetApps';
 import { IClusterItem } from '../types';
@@ -19,6 +20,7 @@ interface IClusterDetailOverviewProps extends IClusterItem {
   gettingStartedPath: string;
   workerNodesPath: string;
   appsPath: string;
+  createKeyPairPath: string;
 }
 
 const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
@@ -36,6 +38,8 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   appsCount,
   appsUniqueCount,
   appsDeployedCount,
+  createKeyPairPath,
+  activeKeyPairsCount,
 }) => {
   const isLoading = typeof name === 'undefined';
 
@@ -55,7 +59,13 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
         appsCount={appsCount}
         appsUniqueCount={appsUniqueCount}
         appsDeployedCount={appsDeployedCount}
-        basis='400px'
+        basis='350px'
+        flex={{ grow: 1, shrink: 1 }}
+      />
+      <ClusterDetailWidgetKeyPairs
+        createKeyPairPath={createKeyPairPath}
+        activeKeyPairsCount={activeKeyPairsCount}
+        basis='200px'
         flex={{ grow: 1, shrink: 1 }}
       />
       <ClusterDetailWidgetKubernetesAPI
@@ -82,6 +92,7 @@ ClusterDetailOverview.propTypes = {
   gettingStartedPath: PropTypes.string.isRequired,
   workerNodesPath: PropTypes.string.isRequired,
   appsPath: PropTypes.string.isRequired,
+  createKeyPairPath: PropTypes.string.isRequired,
   name: PropTypes.string,
   creationDate: PropTypes.string,
   k8sApiURL: PropTypes.string,
@@ -92,6 +103,7 @@ ClusterDetailOverview.propTypes = {
   appsCount: PropTypes.number,
   appsUniqueCount: PropTypes.number,
   appsDeployedCount: PropTypes.number,
+  activeKeyPairsCount: PropTypes.number,
 };
 
 export default ClusterDetailOverview;

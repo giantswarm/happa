@@ -1,10 +1,12 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import * as docs from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import * as appsUtils from 'MAPI/apps/utils';
+import * as keyPairsUtils from 'MAPI/keypairs/utils';
 import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
@@ -19,6 +21,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -189,6 +192,12 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     typeof appListError === 'undefined' &&
     appListIsValidating;
 
+  useEffect(() => {
+    if (appListError) {
+      ErrorReporter.getInstance().notify(appListError);
+    }
+  }, [appListError]);
+
   const appCounters = useMemo(() => {
     if (appListIsLoading) {
       return {
@@ -206,12 +215,33 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     return appsUtils.computeAppsCategorizedCounters(userInstalledApps);
   }, [appList, appListIsLoading]);
 
+  const keyPairListClient = useRef(clientFactory());
+  const { data: keyPairList, error: keyPairListError } = useSWR<
+    legacyKeyPairs.IKeyPairList,
+    GenericResponseError
+  >(legacyKeyPairs.getKeyPairListKey(clusterId), () =>
+    legacyKeyPairs.getKeyPairList(keyPairListClient.current, auth, clusterId)
+  );
+
+  useEffect(() => {
+    if (keyPairListError) {
+      ErrorReporter.getInstance().notify(keyPairListError);
+    }
+  }, [keyPairListError]);
+
+  const activeKeyPairs = useMemo(() => {
+    if (!keyPairList) return undefined;
+
+    return keyPairList.items.filter(keyPairsUtils.isKeyPairActive);
+  }, [keyPairList]);
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
       gettingStartedPath={gettingStartedPath}
       workerNodesPath={workerNodesPath}
       appsPath={AppsRoutes.Home}
+      createKeyPairPath={docs.gsctlCreateKubeconfigURL}
       name={cluster?.metadata.name}
       namespace={cluster?.metadata.namespace}
       description={description}
@@ -225,6 +255,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       appsCount={appCounters.apps}
       appsUniqueCount={appCounters.uniqueApps}
       appsDeployedCount={appCounters.deployed}
+      activeKeyPairsCount={activeKeyPairs?.length}
       k8sApiURL={k8sApiURL}
     />
   );
