@@ -58,6 +58,7 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
         direction: 'row',
         gap: 'small',
         wrap: true,
+        justify: hasNoNodePools ? 'start' : 'around',
       }}
       {...props}
     >

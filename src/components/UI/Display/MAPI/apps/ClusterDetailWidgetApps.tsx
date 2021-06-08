@@ -37,6 +37,7 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = ({
         direction: 'row',
         gap: 'small',
         wrap: true,
+        justify: hasNoApps ? 'start' : 'around',
       }}
       {...props}
     >
