@@ -37,12 +37,12 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = ({
         direction: 'row',
         gap: 'small',
         wrap: true,
-        justify: hasNoApps ? 'start' : 'around',
+        justify: 'around',
       }}
       {...props}
     >
       {hasNoApps && (
-        <Box pad={{ bottom: 'xsmall' }}>
+        <Box fill={true} pad={{ bottom: 'xsmall' }}>
           <Text margin={{ bottom: 'small' }}>No apps installed</Text>
           <Text size='small'>
             To find apps to install, browse our{' '}

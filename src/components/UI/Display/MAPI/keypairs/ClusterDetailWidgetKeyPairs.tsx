@@ -35,12 +35,12 @@ const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
         direction: 'row',
         gap: 'small',
         wrap: true,
-        justify: hasNoKeyPairs ? 'start' : 'around',
+        justify: 'around',
       }}
       {...props}
     >
       {hasNoKeyPairs && (
-        <Box pad={{ bottom: 'xsmall' }}>
+        <Box fill={true} pad={{ bottom: 'xsmall' }}>
           <Text margin={{ bottom: 'small' }}>No key pairs</Text>
           <Text size='small'>
             Use{' '}

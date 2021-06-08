@@ -58,12 +58,12 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
         direction: 'row',
         gap: 'small',
         wrap: true,
-        justify: hasNoNodePools ? 'start' : 'around',
+        justify: 'around',
       }}
       {...props}
     >
       {hasNoNodePools && (
-        <Box pad={{ bottom: 'xsmall' }}>
+        <Box fill={true} pad={{ bottom: 'xsmall' }}>
           <Text color='status-warning' margin={{ bottom: 'small' }}>
             No node pools
           </Text>
