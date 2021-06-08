@@ -147,14 +147,22 @@ const ClusterDetailOverview: React.FC<{}> = () => {
 
   const machineTypes = useRef(getMachineTypes());
 
-  const workerNodesCPU = providerNodePoolsError
+  const nodePoolsError = nodePoolListError ?? providerNodePoolsError;
+
+  const workerNodePoolsCount = nodePoolListError
+    ? -1
+    : nodePoolList?.items.length;
+  const workerNodesCount = nodePoolsError
+    ? -1
+    : getWorkerNodesCount(nodePoolList?.items);
+  const workerNodesCPU = nodePoolsError
     ? -1
     : getWorkerNodesCPU(
         nodePoolList?.items,
         providerNodePools,
         machineTypes.current
       );
-  const workerNodesMemory = providerNodePoolsError
+  const workerNodesMemory = nodePoolsError
     ? -1
     : getWorkerNodesMemory(
         nodePoolList?.items,
@@ -173,24 +181,16 @@ const ClusterDetailOverview: React.FC<{}> = () => {
 
   const appListClient = useRef(clientFactory());
   const appListGetOptions = { namespace: clusterId };
-  const {
-    data: appList,
-    error: appListError,
-    isValidating: appListIsValidating,
-  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
-    applicationv1alpha1.getAppListKey(appListGetOptions),
-    () =>
-      applicationv1alpha1.getAppList(
-        appListClient.current,
-        auth,
-        appListGetOptions
-      )
+  const { data: appList, error: appListError } = useSWR<
+    applicationv1alpha1.IAppList,
+    GenericResponseError
+  >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
+    applicationv1alpha1.getAppList(
+      appListClient.current,
+      auth,
+      appListGetOptions
+    )
   );
-
-  const appListIsLoading =
-    typeof appList === 'undefined' &&
-    typeof appListError === 'undefined' &&
-    appListIsValidating;
 
   useEffect(() => {
     if (appListError) {
@@ -199,7 +199,15 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   }, [appListError]);
 
   const appCounters = useMemo(() => {
-    if (appListIsLoading) {
+    if (appListError) {
+      return {
+        apps: -1,
+        uniqueApps: -1,
+        deployed: -1,
+      };
+    }
+
+    if (!appList) {
       return {
         apps: undefined,
         uniqueApps: undefined,
@@ -208,12 +216,12 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
 
     const userInstalledApps = appsUtils.filterUserInstalledApps(
-      appList!.items,
+      appList.items,
       true
     );
 
     return appsUtils.computeAppsCategorizedCounters(userInstalledApps);
-  }, [appList, appListIsLoading]);
+  }, [appList, appListError]);
 
   const keyPairListClient = useRef(clientFactory());
   const { data: keyPairList, error: keyPairListError } = useSWR<
@@ -229,11 +237,12 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   }, [keyPairListError]);
 
-  const activeKeyPairs = useMemo(() => {
+  const activeKeyPairsCount = useMemo(() => {
+    if (keyPairListError) return -1;
     if (!keyPairList) return undefined;
 
-    return keyPairList.items.filter(keyPairsUtils.isKeyPairActive);
-  }, [keyPairList]);
+    return keyPairList.items.filter(keyPairsUtils.isKeyPairActive).length;
+  }, [keyPairList, keyPairListError]);
 
   return (
     <UIClusterDetailOverview
@@ -248,14 +257,14 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       creationDate={cluster?.metadata.creationTimestamp}
       deletionDate={cluster?.metadata.deletionTimestamp ?? null}
       releaseVersion={releaseVersion}
-      workerNodePoolsCount={nodePoolList?.items.length}
-      workerNodesCount={getWorkerNodesCount(nodePoolList?.items)}
+      workerNodePoolsCount={workerNodePoolsCount}
+      workerNodesCount={workerNodesCount}
       workerNodesCPU={workerNodesCPU}
       workerNodesMemory={workerNodesMemory}
       appsCount={appCounters.apps}
       appsUniqueCount={appCounters.uniqueApps}
       appsDeployedCount={appCounters.deployed}
-      activeKeyPairsCount={activeKeyPairs?.length}
+      activeKeyPairsCount={activeKeyPairsCount}
       k8sApiURL={k8sApiURL}
     />
   );
