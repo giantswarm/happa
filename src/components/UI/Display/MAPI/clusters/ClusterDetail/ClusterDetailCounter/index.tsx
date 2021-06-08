@@ -38,7 +38,7 @@ const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
       : `Loading ${formattedLabel}...`;
 
   return (
-    <Box align='center' basis='150px' flex={{ grow: 1, shrink: 1 }} {...props}>
+    <Box align='center' basis='100px' flex={{ grow: 1, shrink: 1 }} {...props}>
       <Box margin={{ bottom: 'xsmall' }}>
         <ClusterDetailWidgetOptionalValue
           value={value}

@@ -4,6 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import * as appsUtils from 'MAPI/apps/utils';
 import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
@@ -16,11 +17,16 @@ import {
   getMachineTypes,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import {
+  AppsRoutes,
+  MainRoutes,
+  OrganizationsRoutes,
+} from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
 import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
@@ -162,11 +168,50 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     [orgId, clusterId]
   );
 
+  const appListClient = useRef(clientFactory());
+  const appListGetOptions = { namespace: clusterId };
+  const {
+    data: appList,
+    error: appListError,
+    isValidating: appListIsValidating,
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
+    applicationv1alpha1.getAppListKey(appListGetOptions),
+    () =>
+      applicationv1alpha1.getAppList(
+        appListClient.current,
+        auth,
+        appListGetOptions
+      )
+  );
+
+  const appListIsLoading =
+    typeof appList === 'undefined' &&
+    typeof appListError === 'undefined' &&
+    appListIsValidating;
+
+  const appCounters = useMemo(() => {
+    if (appListIsLoading) {
+      return {
+        apps: undefined,
+        uniqueApps: undefined,
+        deployed: undefined,
+      };
+    }
+
+    const userInstalledApps = appsUtils.filterUserInstalledApps(
+      appList!.items,
+      true
+    );
+
+    return appsUtils.computeAppsCategorizedCounters(userInstalledApps);
+  }, [appList, appListIsLoading]);
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
       gettingStartedPath={gettingStartedPath}
       workerNodesPath={workerNodesPath}
+      appsPath={AppsRoutes.Home}
       name={cluster?.metadata.name}
       namespace={cluster?.metadata.namespace}
       description={description}
@@ -177,6 +222,9 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       workerNodesCount={getWorkerNodesCount(nodePoolList?.items)}
       workerNodesCPU={workerNodesCPU}
       workerNodesMemory={workerNodesMemory}
+      appsCount={appCounters.apps}
+      appsUniqueCount={appCounters.uniqueApps}
+      appsDeployedCount={appCounters.deployed}
       k8sApiURL={k8sApiURL}
     />
   );
