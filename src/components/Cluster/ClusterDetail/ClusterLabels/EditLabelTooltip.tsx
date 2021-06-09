@@ -65,9 +65,6 @@ const Buttons = styled(GridCell)`
 `;
 
 const AddLabelButton = styled(Button)`
-  padding: 6px 8px;
-  font-size: 12px;
-  line-height: 12px;
   text-transform: uppercase;
 `;
 
