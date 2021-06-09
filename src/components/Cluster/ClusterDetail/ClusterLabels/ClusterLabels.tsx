@@ -1,22 +1,10 @@
-import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateClusterLabels } from 'stores/clusterlabels/actions';
-import {
-  getClusterLabelsError,
-  getClusterLabelsLoading,
-} from 'stores/clusterlabels/selectors';
 import styled from 'styled-components';
 import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
 
 import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';
-
-interface IClusterLabelsProps extends ComponentPropsWithoutRef<'div'> {
-  clusterId: string;
-  labels?: V5ClusterLabelsProperty;
-}
 
 const ClusterLabelsWrapper = styled.div`
   display: grid;
@@ -63,35 +51,36 @@ const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
   margin-left: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
+interface IClusterLabelsProps
+  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+  onChange: (patch: ILabelChange) => void;
+  labels?: Record<string, string>;
+  isLoading?: boolean;
+  errorMessage?: string;
+}
+
 const ClusterLabels: FC<IClusterLabelsProps> = ({
-  className,
-  clusterId,
   labels,
+  onChange,
+  isLoading,
+  errorMessage,
+  ...props
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
 
   const noLabels = !labels || Object.keys(labels).length === 0;
 
-  const dispatch = useDispatch();
-
-  const loading = useSelector(getClusterLabelsLoading);
-  const error = useSelector(getClusterLabelsError);
-
-  const save: (change: ILabelChange) => void = (change) => {
-    dispatch(updateClusterLabels({ clusterId, ...change }));
-  };
-
   return (
-    <ClusterLabelsWrapper className={className}>
+    <ClusterLabelsWrapper {...props}>
       <LabelsTitle>Labels:</LabelsTitle>
       {noLabels ? (
         <NoLabels>
           This cluster has no labels.
           <NoLabelsEditLabelTooltip
-            allowInteraction={!loading && allowEditing}
+            allowInteraction={!isLoading && allowEditing}
             label=''
             onOpen={(isOpen) => setAllowEditing(isOpen)}
-            onSave={save}
+            onSave={onChange}
             value=''
           />
         </NoLabels>
@@ -102,17 +91,17 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
               Object.entries(labels).map(([label, value]) => (
                 <LabelWrapper key={label}>
                   <EditLabelTooltip
-                    allowInteraction={!loading && allowEditing}
+                    allowInteraction={!isLoading && allowEditing}
                     label={label}
                     onOpen={(isOpen) => setAllowEditing(isOpen)}
-                    onSave={save}
+                    onSave={onChange}
                     value={value}
                   />
                   <DeleteLabelButton
-                    allowInteraction={!loading && allowEditing}
+                    allowInteraction={!isLoading && allowEditing}
                     onOpen={(isOpen) => setAllowEditing(isOpen)}
                     onDelete={() => {
-                      save({ key: label, value: null });
+                      onChange({ key: label, value: null });
                     }}
                     role='button'
                     aria-label={`Delete '${label}' label`}
@@ -122,14 +111,14 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
                 </LabelWrapper>
               ))}
             <EditLabelTooltip
-              allowInteraction={!loading && allowEditing}
+              allowInteraction={!isLoading && allowEditing}
               label=''
               onOpen={(isOpen) => setAllowEditing(isOpen)}
-              onSave={save}
+              onSave={onChange}
               value=''
             />
           </LabelsWrapper>
-          {error ? (
+          {errorMessage ? (
             <ErrorText>Could not save labels. Please try again.</ErrorText>
           ) : (
             <HelpText>
@@ -143,10 +132,10 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
 };
 
 ClusterLabels.propTypes = {
-  className: PropTypes.string,
-  clusterId: PropTypes.string.isRequired,
-  // @ts-ignore
-  labels: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
+  labels: PropTypes.object as PropTypes.Requireable<Record<string, string>>,
+  isLoading: PropTypes.bool,
+  errorMessage: PropTypes.string,
 };
 
 export default ClusterLabels;
