@@ -6,10 +6,12 @@ import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
 import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';
 
-const ClusterLabelsWrapper = styled.div`
+const ClusterLabelsWrapper = styled.div<{ showTitle?: boolean }>`
   display: grid;
-  grid-template: 'title labels' '. bottom';
-  grid-template-columns: 203px 1fr;
+  grid-template: ${({ showTitle }) =>
+    showTitle ? `'title labels' '. bottom'` : `'labels' '. bottom`};
+  grid-template-columns: ${({ showTitle }) =>
+    showTitle ? '203px 1fr' : 'auto'};
 `;
 
 const LabelsWrapper = styled.div`
@@ -48,7 +50,7 @@ const NoLabels = styled.div`
 `;
 
 const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
-  margin-left: ${({ theme }) => theme.spacingPx * 2}px;
+  margin-left: ${({ theme }) => theme.global.edgeSize.medium};
 `;
 
 interface IClusterLabelsProps
@@ -57,6 +59,7 @@ interface IClusterLabelsProps
   labels?: Record<string, string>;
   isLoading?: boolean;
   errorMessage?: string;
+  showTitle?: boolean;
 }
 
 const ClusterLabels: FC<IClusterLabelsProps> = ({
@@ -64,6 +67,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
   onChange,
   isLoading,
   errorMessage,
+  showTitle,
   ...props
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
@@ -71,8 +75,8 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
   const noLabels = !labels || Object.keys(labels).length === 0;
 
   return (
-    <ClusterLabelsWrapper {...props}>
-      <LabelsTitle>Labels:</LabelsTitle>
+    <ClusterLabelsWrapper showTitle={showTitle} {...props}>
+      {showTitle && <LabelsTitle>Labels:</LabelsTitle>}
       {noLabels ? (
         <NoLabels>
           This cluster has no labels.
@@ -136,6 +140,11 @@ ClusterLabels.propTypes = {
   labels: PropTypes.object as PropTypes.Requireable<Record<string, string>>,
   isLoading: PropTypes.bool,
   errorMessage: PropTypes.string,
+  showTitle: PropTypes.bool,
+};
+
+ClusterLabels.defaultProps = {
+  showTitle: true,
 };
 
 export default ClusterLabels;
