@@ -15,7 +15,6 @@ const StyledButton = styled(Button)`
 `;
 
 const DeleteLabelButton: FC<IButtonProps> = (props) => (
-  // @ts-ignore
   <StyledButton bsSize='sm' bsStyle='link' {...props} />
 );
 
