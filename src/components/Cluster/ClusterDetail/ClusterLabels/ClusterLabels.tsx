@@ -9,7 +9,7 @@ import EditLabelTooltip from './EditLabelTooltip';
 const ClusterLabelsWrapper = styled.div<{ showTitle?: boolean }>`
   display: grid;
   grid-template: ${({ showTitle }) =>
-    showTitle ? `'title labels' '. bottom'` : `'labels' '. bottom`};
+    showTitle ? '"title labels" ". bottom"' : '"labels" "bottom"'};
   grid-template-columns: ${({ showTitle }) =>
     showTitle ? '203px 1fr' : 'auto'};
 `;
