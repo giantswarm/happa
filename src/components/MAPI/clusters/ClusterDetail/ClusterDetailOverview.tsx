@@ -17,7 +17,7 @@ import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
 import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
-import { deleteCluster, updateClusterLabels } from './utils';
+import { deleteCluster, getVisibleLabels, updateClusterLabels } from './utils';
 
 const ClusterDetailOverview: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
@@ -88,7 +88,6 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const k8sApiURL = cluster
     ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
     : undefined;
-  const labels = cluster ? capiv1alpha3.getClusterLabels(cluster) : undefined;
 
   const gettingStartedPath = useMemo(
     () =>
@@ -98,6 +97,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       ),
     [orgId, clusterId]
   );
+
+  const labels = useMemo(() => getVisibleLabels(cluster), [cluster]);
 
   const [labelsError, setLabelsError] = useState('');
   const [labelsIsLoading, setLabelsIsLoading] = useState(false);

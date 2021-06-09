@@ -1,6 +1,7 @@
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import { filterLabels } from 'stores/cluster/utils';
 
 export async function updateClusterDescription(
   httpClient: IHttpClient,
@@ -42,6 +43,14 @@ export async function deleteCluster(
   );
 
   return capiv1alpha3.deleteCluster(httpClient, auth, cluster);
+}
+
+export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  const existingLabels = capiv1alpha3.getClusterLabels(cluster);
+
+  return filterLabels(existingLabels);
 }
 
 export async function updateClusterLabels(
