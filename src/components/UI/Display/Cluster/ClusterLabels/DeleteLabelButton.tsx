@@ -1,17 +1,22 @@
 import React, { ComponentPropsWithRef, FC } from 'react';
-import BsButton from 'react-bootstrap/lib/Button';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 
 interface IButtonProps extends ComponentPropsWithRef<'button'> {}
 
-const StyledButton = styled(BsButton)<{ ref?: string }>`
+const StyledButton = styled(Button)`
   margin: 0;
   padding: 0;
+  font-size: 1rem;
+
+  &.btn.btn-sm {
+    margin-left: 0;
+  }
 `;
 
 const DeleteLabelButton: FC<IButtonProps> = (props) => (
   // @ts-ignore
-  <StyledButton bsStyle='link' {...props} />
+  <StyledButton bsSize='sm' bsStyle='link' {...props} />
 );
 
 export default DeleteLabelButton;

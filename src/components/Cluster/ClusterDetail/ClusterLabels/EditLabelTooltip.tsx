@@ -1,4 +1,4 @@
-import { Text } from 'grommet';
+import { Keyboard, Text } from 'grommet';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
@@ -135,12 +135,22 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
     }
   };
 
-  const keyHandler: KeyboardEventHandler<HTMLInputElement> = ({ key }) => {
-    if (key === 'Escape') {
+  const keyHandler: KeyboardEventHandler<HTMLElement> = (
+    e: React.KeyboardEvent<HTMLElement>
+  ) => {
+    e.preventDefault();
+
+    if (e.key === 'Escape') {
       onClose();
-    } else if (keyIsValid && valueIsValid && key === 'Enter') {
+    } else if (e.key === 'Enter' && keyIsValid && valueIsValid) {
       save();
     }
+  };
+
+  const handleLabelKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    open();
   };
 
   return (
@@ -154,15 +164,20 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           <i className='fa fa-add-circle' /> Add label
         </AddLabelButton>
       ) : (
-        <StyledValueLabel
-          onClick={open}
-          label={
-            <Editable allowInteraction={allowInteraction}>{label}</Editable>
-          }
-          value={
-            <Editable allowInteraction={allowInteraction}>{value}</Editable>
-          }
-        />
+        <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
+          <StyledValueLabel
+            onClick={open}
+            label={
+              <Editable allowInteraction={allowInteraction}>{label}</Editable>
+            }
+            value={
+              <Editable allowInteraction={allowInteraction}>{value}</Editable>
+            }
+            tabIndex={0}
+            aria-label={`Label ${label} with value ${value}`}
+            role='button'
+          />
+        </Keyboard>
       )}
       <Overlay
         target={divElement.current as HTMLDivElement}
@@ -172,51 +187,56 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
         animation={false}
       >
         <EditValueTooltip id='add-label-tooltip'>
-          <FormWrapper>
-            <KeyInputWrapper>
-              <TextInput
-                label={<Text size='small'>Label key</Text>}
-                onChange={({ target: { value: newRawValue } }) =>
-                  setInternalKeyValue(newRawValue)
-                }
-                value={internalKeyValue}
-                onKeyUp={keyHandler}
-                id='label-key-input'
-                size='xsmall'
-                formFieldProps={{
-                  margin: { bottom: 'none' },
-                }}
-              />
-            </KeyInputWrapper>
-            <Separator>:</Separator>
-            <ValueInputWrapper>
-              <TextInput
-                label={<Text size='small'>Label value</Text>}
-                onChange={({ target: { value: newRawValue } }) =>
-                  setInternalValueValue(newRawValue)
-                }
-                value={internalValueValue}
-                onKeyUp={keyHandler}
-                id='label-value-input'
-                size='xsmall'
-                formFieldProps={{
-                  margin: { bottom: 'none' },
-                }}
-              />
-            </ValueInputWrapper>
-            <Buttons>
-              <Button
-                bsStyle='primary'
-                disabled={!keyIsValid || !valueIsValid}
-                onClick={save}
-              >
-                Save
-              </Button>
-              <Button bsStyle='link' onClick={onClose}>
-                Cancel
-              </Button>
-            </Buttons>
-          </FormWrapper>
+          <Keyboard onEsc={keyHandler} onEnter={keyHandler}>
+            <FormWrapper>
+              <KeyInputWrapper>
+                <TextInput
+                  label={<Text size='small'>Label key</Text>}
+                  onChange={({ target: { value: newRawValue } }) =>
+                    setInternalKeyValue(newRawValue)
+                  }
+                  value={internalKeyValue}
+                  id='label-key-input'
+                  size='xsmall'
+                  formFieldProps={{
+                    margin: { bottom: 'none' },
+                  }}
+                  autoFocus={
+                    internalKeyValue.length > 0 ||
+                    internalValueValue.length >= 0
+                  }
+                />
+              </KeyInputWrapper>
+              <Separator>:</Separator>
+              <ValueInputWrapper>
+                <TextInput
+                  label={<Text size='small'>Label value</Text>}
+                  onChange={({ target: { value: newRawValue } }) =>
+                    setInternalValueValue(newRawValue)
+                  }
+                  value={internalValueValue}
+                  id='label-value-input'
+                  size='xsmall'
+                  formFieldProps={{
+                    margin: { bottom: 'none' },
+                  }}
+                  autoFocus={internalValueValue.length > 0}
+                />
+              </ValueInputWrapper>
+              <Buttons>
+                <Button
+                  bsStyle='primary'
+                  disabled={!keyIsValid || !valueIsValid}
+                  onClick={save}
+                >
+                  Save
+                </Button>
+                <Button bsStyle='link' onClick={onClose}>
+                  Cancel
+                </Button>
+              </Buttons>
+            </FormWrapper>
+          </Keyboard>
           <ValidationError isValid={keyIsValid && valueIsValid}>
             {[keyValidationError, valueValidationError]
               .filter((err) => err)

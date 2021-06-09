@@ -10,7 +10,6 @@ const defaultThemeColor = 'shade5';
 const Wrapper = styled.div`
   display: inline-block;
   margin-bottom: 8px;
-  margin-right: 5px;
   white-space: nowrap;
 `;
 
@@ -41,24 +40,16 @@ const ValueWrapper = styled.span`
   color: #eee;
 `;
 
-interface IValueLabelProps {
+interface IValueLabelProps extends React.ComponentPropsWithoutRef<'div'> {
   label: ReactNode;
   value: ReactNode;
 
-  className?: string;
   color?: string;
-  onClick?(): void;
 }
 
-const ValueLabel = ({
-  label,
-  value,
-  className,
-  color,
-  onClick,
-}: IValueLabelProps) => {
+const ValueLabel = ({ label, value, color, ...props }: IValueLabelProps) => {
   return (
-    <Wrapper className={className} onClick={onClick}>
+    <Wrapper {...props}>
       <LabelWrapper color={color}>{label}</LabelWrapper>
       <ValueWrapper color={color}>{value}</ValueWrapper>
     </Wrapper>
