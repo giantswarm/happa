@@ -11,9 +11,12 @@ const StyledRefreshableLabel = styled(RefreshableLabel)`
   margin: 0;
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Value = string | number | Record<string, any>;
+
 interface IClusterDetailWidgetOptionalValueProps {
-  children: (value: string | number) => React.ReactElement;
-  value?: string | number;
+  children: (value: Value) => React.ReactElement;
+  value?: Value;
   replaceEmptyValue?: boolean;
   loaderHeight?: number;
   loaderWidth?: number;
@@ -40,9 +43,11 @@ const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalVal
     return <NotAvailable />;
   }
 
+  const refreshableKey = JSON.stringify(value);
+
   return (
     // @ts-expect-error
-    <StyledRefreshableLabel value={value}>
+    <StyledRefreshableLabel value={refreshableKey}>
       {children(value)}
     </StyledRefreshableLabel>
   );
@@ -50,7 +55,11 @@ const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalVal
 
 ClusterDetailWidgetOptionalValue.propTypes = {
   children: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.object,
+  ]),
   replaceEmptyValue: PropTypes.bool,
   loaderHeight: PropTypes.number,
   loaderWidth: PropTypes.number,

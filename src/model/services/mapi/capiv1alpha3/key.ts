@@ -41,6 +41,12 @@ export function getKubernetesAPIEndpointURL(
   return `https://${hostname}`;
 }
 
+export function getClusterLabels(cluster: ICluster): Record<string, string> {
+  if (!cluster.metadata.labels) return {};
+
+  return cluster.metadata.labels;
+}
+
 export function getCondition(
   cluster: ICluster,
   type: string

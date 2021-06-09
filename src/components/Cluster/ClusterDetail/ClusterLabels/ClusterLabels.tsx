@@ -53,6 +53,10 @@ const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
   margin-left: ${({ theme }) => theme.global.edgeSize.medium};
 `;
 
+const Dotted = styled.span`
+  border-bottom: 1px dotted;
+`;
+
 interface IClusterLabelsProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   onChange: (patch: ILabelChange) => void;
@@ -126,7 +130,8 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
             <ErrorText>Could not save labels. Please try again.</ErrorText>
           ) : (
             <HelpText>
-              Click the <u>underlined</u> text to modify label keys and values.
+              Click the <Dotted>underlined</Dotted> text to modify label keys
+              and values.
             </HelpText>
           )}
         </>

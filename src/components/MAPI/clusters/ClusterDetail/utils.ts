@@ -43,3 +43,32 @@ export async function deleteCluster(
 
   return capiv1alpha3.deleteCluster(httpClient, auth, cluster);
 }
+
+export async function updateClusterLabels(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string,
+  name: string,
+  patch: ILabelChange
+) {
+  const cluster = await capiv1alpha3.getCluster(
+    httpClient,
+    auth,
+    namespace,
+    name
+  );
+
+  cluster.metadata.labels ??= {};
+
+  if (patch.replaceLabelWithKey) {
+    delete cluster.metadata.labels[patch.replaceLabelWithKey];
+  }
+
+  if (patch.value === null) {
+    delete cluster.metadata.labels[patch.key];
+  } else {
+    cluster.metadata.labels[patch.key] = patch.value;
+  }
+
+  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+}

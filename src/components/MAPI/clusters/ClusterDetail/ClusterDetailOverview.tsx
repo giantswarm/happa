@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
@@ -9,14 +10,14 @@ import {
 } from 'MAPI/organizations/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
 import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
-import { deleteCluster } from './utils';
+import { deleteCluster, updateClusterLabels } from './utils';
 
 const ClusterDetailOverview: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
@@ -87,6 +88,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const k8sApiURL = cluster
     ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
     : undefined;
+  const labels = cluster ? capiv1alpha3.getClusterLabels(cluster) : undefined;
 
   const gettingStartedPath = useMemo(
     () =>
@@ -96,6 +98,58 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       ),
     [orgId, clusterId]
   );
+
+  const [labelsError, setLabelsError] = useState('');
+  const [labelsIsLoading, setLabelsIsLoading] = useState(false);
+
+  const handleLabelsChange = async (patch: ILabelChange) => {
+    if (!cluster) return;
+
+    setLabelsError('');
+    setLabelsIsLoading(true);
+
+    try {
+      const updatedCluster = await updateClusterLabels(
+        clientFactory(),
+        auth,
+        namespace,
+        cluster.metadata.name,
+        patch
+      );
+
+      mutateCluster(updatedCluster);
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelOrganization]: orgId,
+            },
+          },
+        })
+      );
+
+      new FlashMessage(
+        `Successfully updated the cluster's labels`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `There was a problem updating the cluster's labels`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      setLabelsError(errorMessage);
+
+      ErrorReporter.getInstance().notify(err);
+    } finally {
+      setLabelsIsLoading(false);
+    }
+  };
 
   return (
     <UIClusterDetailOverview
@@ -108,6 +162,10 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       deletionDate={cluster?.metadata.deletionTimestamp ?? null}
       releaseVersion={releaseVersion}
       k8sApiURL={k8sApiURL}
+      labels={labels}
+      labelsOnChange={handleLabelsChange}
+      labelsErrorMessage={labelsError}
+      labelsIsLoading={labelsIsLoading}
     />
   );
 };
