@@ -9,7 +9,7 @@ module.exports = {
       '@swc-node/jest',
       {
         dynamicImport: true,
-        target: 'es5',
+        target: 'es2015',
         sourcemap: true,
         jsx: true,
         experimentalDecorators: true,
