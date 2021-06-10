@@ -2468,6 +2468,20 @@
     remark "^13.0.0"
     unist-util-find-all-after "^3.0.2"
 
+"@swc-node/core@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-1.5.1.tgz#f56be4ac8b4defc782963a59dbc49e0c0d12c90a"
+  integrity sha512-H424sTzhvgc+mKm9E4C115UYKgegM4LeX5F1UPBGTvLs4KSS9eU/wH0sly7+mUk0I8QZjjn3NgtWLAE8NxM37Q==
+  dependencies:
+    "@swc/core" "^1.2.59"
+
+"@swc-node/jest@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-1.3.1.tgz#75c8c9775540d3dde362ca7c89e523baaa3cce25"
+  integrity sha512-L7sXL4vFdXyLQz0EWuKZxDtqWcmkl24h7PiRbToQsNuXi7vYpF9ApydbZ80OdODRUa5tl8qNKSyyLejl1Y0C3Q==
+  dependencies:
+    "@swc-node/core" "^1.5.1"
+
 "@swc/core-android-arm64@^1.2.59":
   version "1.2.59"
   resolved "https://registry.yarnpkg.com/@swc/core-android-arm64/-/core-android-arm64-1.2.59.tgz#0c4fef0b5be7a9f4008bbd2c7d527da2f4717a70"
@@ -2596,7 +2610,7 @@
     "@swc/core-win32-ia32-msvc" "^1.2.59"
     "@swc/core-win32-x64-msvc" "^1.2.59"
 
-"@swc/core@^1.2.60":
+"@swc/core@^1.2.59", "@swc/core@^1.2.60":
   version "1.2.60"
   resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.2.60.tgz#37064d03e216cd6ab94a882b1dd6eeca27b39a56"
   integrity sha512-nDAUgwGHFY5bDpz13F18/87vAj311wITDz9b+bDix8zwnrtCHIPD0YS5hz8zdC0jiQAUJ98TVAEbfvT1M+rEHQ==
@@ -4324,7 +4338,7 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
-babel-jest@26.6.3, babel-jest@^26.6.3:
+babel-jest@^26.6.3:
   version "26.6.3"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-26.6.3.tgz#d87d25cb0037577a0c89f82e5755c5d293c01056"
   integrity sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==
