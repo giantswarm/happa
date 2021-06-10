@@ -28,7 +28,7 @@ const { SENTRY_UPLOAD_SOURCEMAPS, SENTRY_API_KEY, SENTRY_RELEASE_VERSION } =
 
 const plugins = [
   new webpack.SourceMapDevToolPlugin({
-    filename: 'assets/[file].map[query]',
+    filename: '[file].map[query]',
     append: '//# sourceMappingURL=[url]',
   }),
   new MiniCssExtractPlugin({
