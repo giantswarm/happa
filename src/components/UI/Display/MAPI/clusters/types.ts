@@ -12,3 +12,8 @@ export interface IClusterItem {
   workerNodesMemory?: number; // In gigabytes.
   k8sApiURL?: string;
 }
+
+export interface IControlPlaneNodeItem {
+  availabilityZone: string;
+  isReady: boolean;
+}

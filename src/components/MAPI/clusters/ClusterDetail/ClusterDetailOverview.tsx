@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
@@ -7,16 +8,24 @@ import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
 } from 'MAPI/organizations/utils';
+import { ControlPlaneNodeList } from 'MAPI/types';
+import {
+  fetchMasterListForCluster,
+  fetchMasterListForClusterKey,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR, { mutate } from 'swr';
 import UIClusterDetailOverview from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailOverview';
 
-import { deleteCluster } from './utils';
+import {
+  deleteCluster,
+  mapControlPlaneNodeToUIControlPlaneNode,
+} from './utils';
 
 const ClusterDetailOverview: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
@@ -97,6 +106,28 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     [orgId, clusterId]
   );
 
+  const controlPlaneNodesKey = cluster
+    ? fetchMasterListForClusterKey(cluster)
+    : null;
+  const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
+    ControlPlaneNodeList,
+    GenericResponseError
+  >(controlPlaneNodesKey, () =>
+    fetchMasterListForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
+
+  const controlPlaneNodeCollection = useMemo(() => {
+    if (typeof controlPlaneNodes === 'undefined') return undefined;
+
+    return controlPlaneNodes.items.map(mapControlPlaneNodeToUIControlPlaneNode);
+  }, [controlPlaneNodes]);
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
@@ -108,6 +139,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       deletionDate={cluster?.metadata.deletionTimestamp ?? null}
       releaseVersion={releaseVersion}
       k8sApiURL={k8sApiURL}
+      controlPlaneNodes={controlPlaneNodeCollection}
+      controlPlaneNodesError={extractErrorMessage(controlPlaneNodesError)}
     />
   );
 };

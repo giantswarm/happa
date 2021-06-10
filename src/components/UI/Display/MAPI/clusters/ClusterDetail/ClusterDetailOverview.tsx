@@ -2,14 +2,17 @@ import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { IClusterItem } from '../types';
+import { IClusterItem, IControlPlaneNodeItem } from '../types';
 import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
+import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
 
 interface IClusterDetailOverviewProps extends IClusterItem {
   onDelete: () => Promise<void>;
   gettingStartedPath: string;
+  controlPlaneNodes?: IControlPlaneNodeItem[];
+  controlPlaneNodesError?: string;
 }
 
 const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
@@ -18,11 +21,17 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   name,
   creationDate,
   k8sApiURL,
+  controlPlaneNodes,
+  controlPlaneNodesError,
 }) => {
   const isLoading = typeof name === 'undefined';
 
   return (
     <Box direction='column' gap='small'>
+      <ClusterDetailWidgetControlPlaneNodes
+        nodes={controlPlaneNodes}
+        errorMessage={controlPlaneNodesError}
+      />
       <ClusterDetailWidgetKubernetesAPI
         gettingStartedPath={gettingStartedPath}
         k8sApiURL={k8sApiURL}
@@ -46,6 +55,8 @@ ClusterDetailOverview.propTypes = {
   name: PropTypes.string,
   creationDate: PropTypes.string,
   k8sApiURL: PropTypes.string,
+  controlPlaneNodes: PropTypes.array,
+  controlPlaneNodesError: PropTypes.string,
 };
 
 export default ClusterDetailOverview;
