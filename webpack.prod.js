@@ -5,8 +5,6 @@
  * This file is set up for serving the distribution version. It will be compiled to dist/ by default
  */
 
-process.traceDeprecation = true;
-
 const webpack = require('webpack');
 const merge = require('webpack-merge').merge;
 const common = require('./webpack.common.js');
