@@ -5,12 +5,14 @@
  * This file is set up for serving the distribution version. It will be compiled to dist/ by default
  */
 
+process.traceDeprecation = true;
+
 const webpack = require('webpack');
 const merge = require('webpack-merge').merge;
 const common = require('./webpack.common.js');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 const envFileVars = require('dotenv').config().parsed;
@@ -28,7 +30,7 @@ const { SENTRY_UPLOAD_SOURCEMAPS, SENTRY_API_KEY, SENTRY_RELEASE_VERSION } =
 
 const plugins = [
   new webpack.SourceMapDevToolPlugin({
-    filename: '[name].[hash].js.map',
+    filename: 'assets/[file].map[query]',
     append: '//# sourceMappingURL=[url]',
   }),
   new MiniCssExtractPlugin({
@@ -39,7 +41,13 @@ const plugins = [
   new CopyPlugin({
     patterns: [
       { from: 'src/metadata.json', to: 'metadata.json' },
-      { from: 'src/images', to: 'images' },
+      {
+        from: 'src/images',
+        globOptions: {
+          ignore: ['**/*.sketch'],
+        },
+        to: 'images',
+      },
     ],
   }),
 ];
@@ -47,9 +55,9 @@ const plugins = [
 if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
   plugins.push(
     new SentryCliPlugin({
-      include: './dist',
+      include: './dist/assets',
       authToken: SENTRY_API_KEY,
-      ignore: ['index.js'],
+      ignore: ['./dist/assets/images/index.js'],
       org: 'giantswarm',
       project: 'happa',
       release: SENTRY_RELEASE_VERSION,
@@ -66,13 +74,23 @@ module.exports = merge(common, {
     reasons: true,
   },
   optimization: {
-    // Terser is a substitution for AgressiveMergingPlugin
     minimizer: [
       new TerserPlugin({
         extractComments: 'some',
       }),
-      new OptimizeCSSAssetsPlugin({}),
+      new CssMinimizerPlugin(),
     ],
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
   },
   plugins,
   module: {
@@ -80,6 +98,10 @@ module.exports = merge(common, {
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.(scss|sass)$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
   },

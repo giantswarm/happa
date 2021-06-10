@@ -19,8 +19,9 @@ const ProxyPlugin = require('./scripts/webpack/proxyPlugin');
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
+  cache: true,
   output: {
-    filename: 'assets/[name].[contenthash].js',
+    filename: 'assets/[name].js',
   },
   devServer: {
     contentBase: './src',
@@ -72,6 +73,10 @@ module.exports = merge(common, {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.sass$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
