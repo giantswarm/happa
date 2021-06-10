@@ -1,6 +1,6 @@
 import * as corev1 from 'model/services/mapi/corev1';
 
-import { ICluster, IStatusCondition } from './';
+import { ICluster, ICondition } from './';
 
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
@@ -8,6 +8,7 @@ export const labelReleaseVersion = 'release.giantswarm.io/version';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
 
+export const conditionTypeReady = 'Ready';
 export const conditionTypeCreating = 'Creating';
 export const conditionTypeUpgrading = 'Upgrading';
 
@@ -41,26 +42,32 @@ export function getKubernetesAPIEndpointURL(
   return `https://${hostname}`;
 }
 
+interface IConditionGetter {
+  status?: {
+    conditions?: ICondition[];
+  };
+}
+
 export function getCondition(
-  cluster: ICluster,
+  cr: IConditionGetter,
   type: string
-): IStatusCondition | undefined {
-  const conditions = cluster.status?.conditions;
+): ICondition | undefined {
+  const conditions = cr.status?.conditions;
   if (!conditions) return undefined;
 
   return conditions.find((c) => c.type === type);
 }
 
-export function hasCondition(cluster: ICluster, type: string): boolean {
-  return typeof getCondition(cluster, type) !== 'undefined';
+export function hasCondition(cr: IConditionGetter, type: string): boolean {
+  return typeof getCondition(cr, type) !== 'undefined';
 }
 
 export function isConditionTrue(
-  cluster: ICluster,
+  cr: IConditionGetter,
   type: string,
   ...checkOptions: CheckOption[]
 ): boolean {
-  const condition = getCondition(cluster, type);
+  const condition = getCondition(cr, type);
   if (!condition) return false;
 
   if (condition.status === corev1.conditionTrue) {
@@ -75,11 +82,11 @@ export function isConditionTrue(
 }
 
 export function isConditionFalse(
-  cluster: ICluster,
+  cr: IConditionGetter,
   type: string,
   ...checkOptions: CheckOption[]
 ): boolean {
-  const condition = getCondition(cluster, type);
+  const condition = getCondition(cr, type);
   if (!condition) return false;
 
   if (condition.status === corev1.conditionFalse) {
@@ -94,11 +101,11 @@ export function isConditionFalse(
 }
 
 export function isConditionUnknown(
-  cluster: ICluster,
+  cr: IConditionGetter,
   type: string,
   ...checkOptions: CheckOption[]
 ): boolean {
-  const condition = getCondition(cluster, type);
+  const condition = getCondition(cr, type);
   if (!condition) return false;
 
   if (condition.status === corev1.conditionUnknown) {
@@ -112,29 +119,29 @@ export function isConditionUnknown(
   return false;
 }
 
-export type CheckOption = (condition: IStatusCondition) => boolean;
+export type CheckOption = (condition: ICondition) => boolean;
 
 export function withReasonCreationCompleted(): CheckOption {
-  return (condition: IStatusCondition) =>
+  return (condition: ICondition) =>
     condition.reason === conditionReasonCreationCompleted;
 }
 
 export function withReasonExistingObject(): CheckOption {
-  return (condition: IStatusCondition) =>
+  return (condition: ICondition) =>
     condition.reason === conditionReasonExistingObject;
 }
 
 export function withReasonUpgradeCompleted(): CheckOption {
-  return (condition: IStatusCondition) =>
+  return (condition: ICondition) =>
     condition.reason === conditionReasonUpgradeCompleted;
 }
 
 export function withReasonUpgradeNotStarted(): CheckOption {
-  return (condition: IStatusCondition) =>
+  return (condition: ICondition) =>
     condition.reason === conditionReasonUpgradeNotStarted;
 }
 
 export function withReasonUpgradePending(): CheckOption {
-  return (condition: IStatusCondition) =>
+  return (condition: ICondition) =>
     condition.reason === conditionReasonUpgradePending;
 }
