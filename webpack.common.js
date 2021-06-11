@@ -120,13 +120,13 @@ const makeFeatureFlags = () => {
 
 module.exports = {
   amd: false,
-  entry: ['react-hot-loader/patch', './src/components/index.tsx'],
+  entry: ['./src/components/index.tsx'],
   context: __dirname,
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
     filename: 'assets/[name].[chunkhash:12].js',
-    chunkFilename: '[name].bundle.js',
+    chunkFilename: 'assets/[id].[chunkhash:12].js',
   },
   module: {
     rules: [
@@ -164,21 +164,6 @@ module.exports = {
         resolve: {
           fullySpecified: false,
         },
-      },
-      {
-        test: /\.sass$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                outputStyle: 'expanded',
-              },
-            },
-          },
-        ],
       },
       {
         test: /\.(png|jpg)$/,
@@ -256,6 +241,8 @@ module.exports = {
       fs: false,
       path: false,
     },
+    symlinks: false,
+    cacheWithContext: false,
   },
   plugins: [
     new CleanWebpackPlugin(),
