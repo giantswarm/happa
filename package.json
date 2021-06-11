@@ -249,7 +249,7 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "bash -c yarn typecheck",
+      "bash -c \"yarn typecheck\"",
       "yarn lint:staged",
       "yarn format:staged"
     ]
