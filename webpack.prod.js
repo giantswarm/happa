@@ -56,6 +56,7 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
       include: './dist/assets',
       authToken: SENTRY_API_KEY,
       ignore: ['./dist/assets/images/index.js'],
+      ext: ['js', 'js.map'],
       org: 'giantswarm',
       project: 'happa',
       release: SENTRY_RELEASE_VERSION,
