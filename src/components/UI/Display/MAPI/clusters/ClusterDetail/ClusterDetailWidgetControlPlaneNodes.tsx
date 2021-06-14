@@ -22,13 +22,13 @@ function formatNodesCountLabel(readyCount?: number, totalCount?: number) {
 
   switch (true) {
     case readyCount < totalCount && totalCount !== 1:
-      return `${readyCount} of ${totalCount} control plane nodes ready`;
+      return `${readyCount} of ${totalCount} control plane nodes`;
     case readyCount < totalCount:
-      return `${readyCount} of ${totalCount} control plane node ready`;
+      return `${readyCount} of ${totalCount} control plane node`;
     case totalCount === 1:
-      return 'Control plane node ready';
+      return 'Control plane node';
     default:
-      return `All ${totalCount} control plane nodes ready`;
+      return `All ${totalCount} control plane nodes`;
   }
 }
 
@@ -101,10 +101,12 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       >
         {(value) =>
           value ? (
-            <Text>{value}</Text>
+            <Text>
+              {value} <code>Ready</code>
+            </Text>
           ) : (
             <Text>
-              <NotAvailable /> control plane nodes ready
+              <NotAvailable /> control plane nodes <code>Ready</code>
             </Text>
           )
         }
