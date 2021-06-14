@@ -5,7 +5,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 eUwwzg"
@@ -14,7 +14,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
         class="StyledBox-sc-13pk1d4-0 eITwkI"
       >
         <div
-          class="RefreshableLabel__Wrapper-sc-1joylxa-0 jSwuWB ClusterDetailWidgetOptionalValue__StyledRefreshableLabel-cndk54-0 faHvJH"
+          class="sc-gsNhcj gulqcI sc-gLEgUG fgYvVM"
         >
           <span
             aria-label="35 dogs"
@@ -25,7 +25,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 bTNMGz ClusterDetailCounter__Label-qai318-0 lgOlNu"
+        class="StyledText-sc-1sadyjn-0 bTNMGz sc-gwNCcr brrgFV"
       >
         dogs
       </span>
@@ -39,7 +39,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 eUwwzg"
@@ -48,7 +48,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
         class="StyledBox-sc-13pk1d4-0 eITwkI"
       >
         <div
-          class="RefreshableLabel__Wrapper-sc-1joylxa-0 jSwuWB ClusterDetailWidgetOptionalValue__StyledRefreshableLabel-cndk54-0 faHvJH"
+          class="sc-gsNhcj gulqcI sc-gLEgUG fgYvVM"
         >
           <span
             aria-label="1 dog"
@@ -59,7 +59,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 bTNMGz ClusterDetailCounter__Label-qai318-0 lgOlNu"
+        class="StyledText-sc-1sadyjn-0 bTNMGz sc-gwNCcr brrgFV"
       >
         dog
       </span>
