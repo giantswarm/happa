@@ -623,3 +623,34 @@ export function isTestRelease(releaseVersion: string): boolean {
     return false;
   }
 }
+
+export function computeAppsCategorizedCounters(
+  appCollection: applicationv1alpha1.IApp[]
+): {
+  apps: number;
+  uniqueApps: number;
+  deployed: number;
+} {
+  const apps: Record<string, boolean> = {};
+
+  let totalAppCount = 0;
+  let deployedAppCount = 0;
+
+  for (const app of appCollection) {
+    // Consider each catalog/app pair as unique.
+    const key = `${app.spec.catalog}/${app.spec.name}`;
+    apps[key] = true;
+
+    if (app.status?.release.status?.toLowerCase() === 'deployed') {
+      deployedAppCount++;
+    }
+
+    totalAppCount++;
+  }
+
+  return {
+    apps: totalAppCount,
+    uniqueApps: Object.values(apps).length,
+    deployed: deployedAppCount,
+  };
+}
