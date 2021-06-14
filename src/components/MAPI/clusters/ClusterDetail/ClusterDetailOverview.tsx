@@ -11,7 +11,10 @@ import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
 } from 'MAPI/organizations/utils';
+import { ControlPlaneNodeList } from 'MAPI/types';
 import {
+  fetchMasterListForCluster,
+  fetchMasterListForClusterKey,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
   fetchProviderNodePoolsForNodePools,
@@ -38,7 +41,10 @@ import {
   getWorkerNodesCPU,
   getWorkerNodesMemory,
 } from '../utils';
-import { deleteCluster } from './utils';
+import {
+  deleteCluster,
+  mapControlPlaneNodeToUIControlPlaneNode,
+} from './utils';
 
 const ClusterDetailOverview: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
@@ -244,6 +250,28 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     return keyPairList.items.filter(keyPairsUtils.isKeyPairActive).length;
   }, [keyPairList, keyPairListError]);
 
+  const controlPlaneNodesKey = cluster
+    ? fetchMasterListForClusterKey(cluster)
+    : null;
+  const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
+    ControlPlaneNodeList,
+    GenericResponseError
+  >(controlPlaneNodesKey, () =>
+    fetchMasterListForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
+
+  const controlPlaneNodeCollection = useMemo(() => {
+    if (typeof controlPlaneNodes === 'undefined') return undefined;
+
+    return controlPlaneNodes.items.map(mapControlPlaneNodeToUIControlPlaneNode);
+  }, [controlPlaneNodes]);
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
@@ -266,6 +294,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       appsDeployedCount={appCounters.deployed}
       activeKeyPairsCount={activeKeyPairsCount}
       k8sApiURL={k8sApiURL}
+      controlPlaneNodes={controlPlaneNodeCollection}
+      controlPlaneNodesError={extractErrorMessage(controlPlaneNodesError)}
     />
   );
 };

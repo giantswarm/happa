@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import ClusterDetailWidgetKeyPairs from 'UI/Display/MAPI/keypairs/ClusterDetailWidgetKeyPairs';
 
 import ClusterDetailWidgetApps from '../../apps/ClusterDetailWidgetApps';
-import { IClusterItem } from '../types';
+import { IClusterItem, IControlPlaneNodeItem } from '../types';
 import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
+import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
 import ClusterDetailWidgetWorkerNodes from './ClusterDetailWidgetWorkerNodes';
@@ -21,6 +22,8 @@ interface IClusterDetailOverviewProps extends IClusterItem {
   workerNodesPath: string;
   appsPath: string;
   createKeyPairPath: string;
+  controlPlaneNodes?: IControlPlaneNodeItem[];
+  controlPlaneNodesError?: string;
 }
 
 const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
@@ -40,6 +43,8 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   appsDeployedCount,
   createKeyPairPath,
   activeKeyPairsCount,
+  controlPlaneNodes,
+  controlPlaneNodesError,
 }) => {
   const isLoading = typeof name === 'undefined';
 
@@ -67,6 +72,11 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
         activeKeyPairsCount={activeKeyPairsCount}
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
+      />
+      <ClusterDetailWidgetControlPlaneNodes
+        nodes={controlPlaneNodes}
+        errorMessage={controlPlaneNodesError}
+        basis='100%'
       />
       <ClusterDetailWidgetKubernetesAPI
         gettingStartedPath={gettingStartedPath}
@@ -104,6 +114,8 @@ ClusterDetailOverview.propTypes = {
   appsUniqueCount: PropTypes.number,
   appsDeployedCount: PropTypes.number,
   activeKeyPairsCount: PropTypes.number,
+  controlPlaneNodes: PropTypes.array,
+  controlPlaneNodesError: PropTypes.string,
 };
 
 export default ClusterDetailOverview;

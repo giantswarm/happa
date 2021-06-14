@@ -5,6 +5,8 @@ import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 
+import { ControlPlaneNodeList } from './types';
+
 export interface IMachineType {
   cpu: number;
   memory: number;
@@ -167,7 +169,7 @@ export async function fetchMasterListForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cluster: capiv1alpha3.ICluster
-) {
+): Promise<ControlPlaneNodeList> {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
@@ -181,6 +183,7 @@ export async function fetchMasterListForCluster(
         labelSelector: {
           matchingLabels: {
             [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capzv1alpha3.labelControlPlane]: 'true',
           },
         },
       });

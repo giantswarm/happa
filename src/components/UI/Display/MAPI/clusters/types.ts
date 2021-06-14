@@ -16,3 +16,8 @@ export interface IClusterItem {
   activeKeyPairsCount?: number;
   k8sApiURL?: string;
 }
+
+export interface IControlPlaneNodeItem {
+  availabilityZone: string;
+  isReady: boolean;
+}

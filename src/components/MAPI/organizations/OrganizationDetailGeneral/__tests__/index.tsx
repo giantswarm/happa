@@ -314,19 +314,19 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList2);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList3);
 
