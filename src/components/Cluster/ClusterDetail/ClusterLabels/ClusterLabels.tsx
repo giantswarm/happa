@@ -1,27 +1,17 @@
-import { V5ClusterLabelsProperty } from 'giantswarm';
 import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateClusterLabels } from 'stores/clusterlabels/actions';
-import {
-  getClusterLabelsError,
-  getClusterLabelsLoading,
-} from 'stores/clusterlabels/selectors';
 import styled from 'styled-components';
 import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
 
 import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';
 
-interface IClusterLabelsProps extends ComponentPropsWithoutRef<'div'> {
-  clusterId: string;
-  labels?: V5ClusterLabelsProperty;
-}
-
-const ClusterLabelsWrapper = styled.div`
+const ClusterLabelsWrapper = styled.div<{ showTitle?: boolean }>`
   display: grid;
-  grid-template: 'title labels' '. bottom';
-  grid-template-columns: 203px 1fr;
+  grid-template: ${({ showTitle }) =>
+    showTitle ? '"title labels" ". bottom"' : '"labels" "bottom"'};
+  grid-template-columns: ${({ showTitle }) =>
+    showTitle ? '203px 1fr' : 'auto'};
 `;
 
 const LabelsWrapper = styled.div`
@@ -60,38 +50,45 @@ const NoLabels = styled.div`
 `;
 
 const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
-  margin-left: ${({ theme }) => theme.spacingPx * 2}px;
+  margin-left: ${({ theme }) => theme.global.edgeSize.medium};
 `;
 
+const Dotted = styled.span`
+  border-bottom: 1px dotted;
+`;
+
+interface IClusterLabelsProps
+  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+  onChange: (patch: ILabelChange) => void;
+  labels?: Record<string, string>;
+  isLoading?: boolean;
+  errorMessage?: string;
+  showTitle?: boolean;
+}
+
 const ClusterLabels: FC<IClusterLabelsProps> = ({
-  className,
-  clusterId,
   labels,
+  onChange,
+  isLoading,
+  errorMessage,
+  showTitle,
+  ...props
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
 
   const noLabels = !labels || Object.keys(labels).length === 0;
 
-  const dispatch = useDispatch();
-
-  const loading = useSelector(getClusterLabelsLoading);
-  const error = useSelector(getClusterLabelsError);
-
-  const save: (change: ILabelChange) => void = (change) => {
-    dispatch(updateClusterLabels({ clusterId, ...change }));
-  };
-
   return (
-    <ClusterLabelsWrapper className={className}>
-      <LabelsTitle>Labels:</LabelsTitle>
+    <ClusterLabelsWrapper showTitle={showTitle} {...props}>
+      {showTitle && <LabelsTitle>Labels:</LabelsTitle>}
       {noLabels ? (
         <NoLabels>
           This cluster has no labels.
           <NoLabelsEditLabelTooltip
-            allowInteraction={!loading && allowEditing}
+            allowInteraction={!isLoading && allowEditing}
             label=''
             onOpen={(isOpen) => setAllowEditing(isOpen)}
-            onSave={save}
+            onSave={onChange}
             value=''
           />
         </NoLabels>
@@ -102,17 +99,17 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
               Object.entries(labels).map(([label, value]) => (
                 <LabelWrapper key={label}>
                   <EditLabelTooltip
-                    allowInteraction={!loading && allowEditing}
+                    allowInteraction={!isLoading && allowEditing}
                     label={label}
                     onOpen={(isOpen) => setAllowEditing(isOpen)}
-                    onSave={save}
+                    onSave={onChange}
                     value={value}
                   />
                   <DeleteLabelButton
-                    allowInteraction={!loading && allowEditing}
+                    allowInteraction={!isLoading && allowEditing}
                     onOpen={(isOpen) => setAllowEditing(isOpen)}
                     onDelete={() => {
-                      save({ key: label, value: null });
+                      onChange({ key: label, value: null });
                     }}
                     role='button'
                     aria-label={`Delete '${label}' label`}
@@ -122,18 +119,19 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
                 </LabelWrapper>
               ))}
             <EditLabelTooltip
-              allowInteraction={!loading && allowEditing}
+              allowInteraction={!isLoading && allowEditing}
               label=''
               onOpen={(isOpen) => setAllowEditing(isOpen)}
-              onSave={save}
+              onSave={onChange}
               value=''
             />
           </LabelsWrapper>
-          {error ? (
+          {errorMessage ? (
             <ErrorText>Could not save labels. Please try again.</ErrorText>
           ) : (
             <HelpText>
-              Click the <u>underlined</u> text to modify label keys and values.
+              Click the <Dotted>underlined</Dotted> text to modify label keys
+              and values.
             </HelpText>
           )}
         </>
@@ -143,10 +141,15 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
 };
 
 ClusterLabels.propTypes = {
-  className: PropTypes.string,
-  clusterId: PropTypes.string.isRequired,
-  // @ts-ignore
-  labels: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
+  labels: PropTypes.object as PropTypes.Requireable<Record<string, string>>,
+  isLoading: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  showTitle: PropTypes.bool,
+};
+
+ClusterLabels.defaultProps = {
+  showTitle: true,
 };
 
 export default ClusterLabels;

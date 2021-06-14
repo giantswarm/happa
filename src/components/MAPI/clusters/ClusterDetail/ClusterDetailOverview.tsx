@@ -25,7 +25,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import {
@@ -43,7 +43,9 @@ import {
 } from '../utils';
 import {
   deleteCluster,
+  getVisibleLabels,
   mapControlPlaneNodeToUIControlPlaneNode,
+  updateClusterLabels,
 } from './utils';
 
 const ClusterDetailOverview: React.FC<{}> = () => {
@@ -272,6 +274,60 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     return controlPlaneNodes.items.map(mapControlPlaneNodeToUIControlPlaneNode);
   }, [controlPlaneNodes]);
 
+  const labels = useMemo(() => getVisibleLabels(cluster), [cluster]);
+
+  const [labelsError, setLabelsError] = useState('');
+  const [labelsIsLoading, setLabelsIsLoading] = useState(false);
+
+  const handleLabelsChange = async (patch: ILabelChange) => {
+    if (!cluster) return;
+
+    setLabelsError('');
+    setLabelsIsLoading(true);
+
+    try {
+      const updatedCluster = await updateClusterLabels(
+        clientFactory(),
+        auth,
+        namespace,
+        cluster.metadata.name,
+        patch
+      );
+
+      mutateCluster(updatedCluster);
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelOrganization]: orgId,
+            },
+          },
+        })
+      );
+
+      new FlashMessage(
+        `Successfully updated the cluster's labels`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `There was a problem updating the cluster's labels`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      setLabelsError(errorMessage);
+
+      ErrorReporter.getInstance().notify(err);
+    } finally {
+      setLabelsIsLoading(false);
+    }
+  };
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
@@ -296,6 +352,10 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       k8sApiURL={k8sApiURL}
       controlPlaneNodes={controlPlaneNodeCollection}
       controlPlaneNodesError={extractErrorMessage(controlPlaneNodesError)}
+      labels={labels}
+      labelsOnChange={handleLabelsChange}
+      labelsErrorMessage={labelsError}
+      labelsIsLoading={labelsIsLoading}
     />
   );
 };

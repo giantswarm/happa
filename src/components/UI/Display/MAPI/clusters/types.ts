@@ -6,6 +6,7 @@ export interface IClusterItem {
   deletionDate?: string | null;
   releaseVersion?: string;
   k8sVersion?: string;
+  labels?: Record<string, string>;
   workerNodePoolsCount?: number;
   workerNodesCount?: number;
   workerNodesCPU?: number;

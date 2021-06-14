@@ -15,6 +15,11 @@ import * as Providers from 'shared/constants/providers';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import * as clusterActions from 'stores/cluster/actions';
 import { isClusterCreating } from 'stores/cluster/utils';
+import { updateClusterLabels } from 'stores/clusterlabels/actions';
+import {
+  getClusterLabelsError,
+  getClusterLabelsLoading,
+} from 'stores/clusterlabels/selectors';
 import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
 import { nodePoolsCreate } from 'stores/nodepool/actions';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
@@ -398,6 +403,12 @@ class V5ClusterDetailTable extends React.Component {
       supportsNodePoolSpotInstances
     );
 
+    const handleLabelChange = (patch) => {
+      this.props.dispatch(
+        updateClusterLabels({ clusterId: cluster.id, ...patch })
+      );
+    };
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
@@ -435,7 +446,12 @@ class V5ClusterDetailTable extends React.Component {
             canBeConverted={canBeConvertedToHAMasters}
           />
         )}
-        <LabelsRow labels={labels} clusterId={cluster.id} />
+        <LabelsRow
+          labels={labels}
+          onChange={handleLabelChange}
+          errorMessage={this.props.labelsErrorMessage}
+          isLoading={this.props.labelsIsLoading}
+        />
         <KubernetesURIWrapper>
           <StyledURIBlock title='Kubernetes endpoint URI:'>
             {api_endpoint}
@@ -623,6 +639,8 @@ V5ClusterDetailTable.propTypes = {
   clusterIsUpdating: PropTypes.bool,
   isAdmin: PropTypes.bool,
   releases: PropTypes.object,
+  labelsIsLoading: PropTypes.bool,
+  labelsErrorMessage: PropTypes.string,
 };
 
 // We use this wrapper function because we want different references for each cluster
@@ -633,6 +651,8 @@ const makeMapStateToProps = () => {
     return {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
+      labelsIsLoading: getClusterLabelsLoading(state),
+      labelsErrorMessage: getClusterLabelsError(state) ?? undefined,
       loadingNodePools: selectLoadingFlagByIdAndAction(
         state,
         props.cluster.id,

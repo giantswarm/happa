@@ -3,6 +3,7 @@ import { ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import { filterLabels } from 'stores/cluster/utils';
 import * as ui from 'UI/Display/MAPI/clusters/types';
 
 export async function updateClusterDescription(
@@ -66,4 +67,41 @@ export function mapControlPlaneNodeToUIControlPlaneNode(
         availabilityZone: '',
       };
   }
+}
+
+export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  const existingLabels = capiv1alpha3.getClusterLabels(cluster);
+
+  return filterLabels(existingLabels);
+}
+
+export async function updateClusterLabels(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string,
+  name: string,
+  patch: ILabelChange
+) {
+  const cluster = await capiv1alpha3.getCluster(
+    httpClient,
+    auth,
+    namespace,
+    name
+  );
+
+  cluster.metadata.labels ??= {};
+
+  if (patch.replaceLabelWithKey) {
+    delete cluster.metadata.labels[patch.replaceLabelWithKey];
+  }
+
+  if (patch.value === null) {
+    delete cluster.metadata.labels[patch.key];
+  } else {
+    cluster.metadata.labels[patch.key] = patch.value;
+  }
+
+  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
 }

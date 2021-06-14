@@ -6,7 +6,7 @@ import {
 
 export interface IClusterLabelsState {
   requestInProgress: boolean;
-  error: Error | null;
+  error: string | null;
 }
 
 export interface ILabelChangeActionPayload extends ILabelChange {
@@ -29,7 +29,7 @@ export interface ILabelChangeSuccessAction {
 
 export interface ILabelChangeErrorAction {
   type: typeof UPDATE_CLUSTER_LABELS_ERROR;
-  error: Error;
+  error: string;
 }
 
 export type ClusterLabelsActions =

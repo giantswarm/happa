@@ -10,6 +10,7 @@ import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
+import ClusterDetailWidgetLabels from './ClusterDetailWidgetLabels';
 import ClusterDetailWidgetWorkerNodes from './ClusterDetailWidgetWorkerNodes';
 
 const StyledBox = styled(Box)`
@@ -19,11 +20,16 @@ const StyledBox = styled(Box)`
 interface IClusterDetailOverviewProps extends IClusterItem {
   onDelete: () => Promise<void>;
   gettingStartedPath: string;
+  labelsOnChange: React.ComponentPropsWithoutRef<
+    typeof ClusterDetailWidgetLabels
+  >['onChange'];
   workerNodesPath: string;
   appsPath: string;
   createKeyPairPath: string;
   controlPlaneNodes?: IControlPlaneNodeItem[];
   controlPlaneNodesError?: string;
+  labelsErrorMessage?: string;
+  labelsIsLoading?: boolean;
 }
 
 const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
@@ -45,6 +51,10 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   activeKeyPairsCount,
   controlPlaneNodes,
   controlPlaneNodesError,
+  labels,
+  labelsOnChange,
+  labelsErrorMessage,
+  labelsIsLoading,
 }) => {
   const isLoading = typeof name === 'undefined';
 
@@ -73,6 +83,13 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
       />
+      <ClusterDetailWidgetLabels
+        labels={labels}
+        onChange={labelsOnChange}
+        errorMessage={labelsErrorMessage}
+        isLoading={labelsIsLoading}
+        basis='100%'
+      />
       <ClusterDetailWidgetControlPlaneNodes
         nodes={controlPlaneNodes}
         errorMessage={controlPlaneNodesError}
@@ -100,6 +117,7 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
 ClusterDetailOverview.propTypes = {
   onDelete: PropTypes.func.isRequired,
   gettingStartedPath: PropTypes.string.isRequired,
+  labelsOnChange: PropTypes.func.isRequired,
   workerNodesPath: PropTypes.string.isRequired,
   appsPath: PropTypes.string.isRequired,
   createKeyPairPath: PropTypes.string.isRequired,
@@ -116,6 +134,11 @@ ClusterDetailOverview.propTypes = {
   activeKeyPairsCount: PropTypes.number,
   controlPlaneNodes: PropTypes.array,
   controlPlaneNodesError: PropTypes.string,
+  labels: PropTypes.object as PropTypes.Requireable<
+    IClusterDetailOverviewProps['labels']
+  >,
+  labelsErrorMessage: PropTypes.string,
+  labelsIsLoading: PropTypes.bool,
 };
 
 export default ClusterDetailOverview;
