@@ -4,6 +4,24 @@ const path = require('path');
 process.env.DEBUG_PRINT_LIMIT = 10000;
 
 module.exports = {
+  transform: {
+    '^.+\\.(js|ts)(x?)$': [
+      '@swc-node/jest',
+      {
+        dynamicImport: true,
+        target: 'es2015',
+        sourcemap: true,
+        jsx: true,
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+        esModuleInterop: true,
+        react: {
+          runtime: 'automatic',
+          development: true,
+        },
+      },
+    ],
+  },
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
   setupFiles: [
@@ -19,8 +37,9 @@ module.exports = {
   ],
   moduleNameMapper: {
     '\\.css$': require.resolve('./testUtils/assetsMock.js'),
-    '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      require.resolve('./testUtils/assetsMock.js'),
+    '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
+      './testUtils/assetsMock.js'
+    ),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
