@@ -3,6 +3,7 @@ import { ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { filterLabels } from 'stores/cluster/utils';
 import * as ui from 'UI/Display/MAPI/clusters/types';
 
@@ -104,4 +105,69 @@ export async function updateClusterLabels(
   }
 
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+}
+
+export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return 'Azure region';
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return 'AWS region';
+
+    default:
+      return '';
+  }
+}
+
+export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return 'Subscription ID';
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return 'Account ID';
+
+    default:
+      return '';
+  }
+}
+
+export function getClusterAccountIDPath(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return 'https://portal.azure.com/';
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return 'https://console.aws.amazon.com/';
+
+    default:
+      return '';
+  }
+}
+
+export function getCredentialsAccountID(
+  credentials?: legacyCredentials.ICredential[]
+) {
+  if (!credentials) return undefined;
+  if (credentials.length < 1) return '';
+
+  const mainCredential = credentials[0];
+  switch (true) {
+    case mainCredential.hasOwnProperty('azureSubscriptionID'):
+      return mainCredential.azureSubscriptionID;
+    case mainCredential.hasOwnProperty('awsOperatorRole'):
+      return mainCredential.awsOperatorRole;
+    default:
+      return '';
+  }
 }
