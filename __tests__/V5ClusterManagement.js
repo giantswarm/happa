@@ -153,7 +153,7 @@ describe('V5ClusterManagement', () => {
     const nodePools = getAllByTestId('node-pool-id');
 
     // Is this NP the first in the list?
-    expect(nodePools[0]).toContainHTML(nodePoolNameEl);
+    expect(nodePools[0]).toContainHTML(nodePoolNameEl.toString());
     fireEvent.click(nodePoolNameEl);
 
     await waitFor(() => {
