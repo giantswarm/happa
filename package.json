@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx ./src/",
     "lint:fix": "yarn lint --fix",
+    "lint:staged": "./node_modules/.bin/eslint --fix",
     "start": "./node_modules/.bin/webpack serve --open --progress --config ./webpack.dev.js",
     "test": "./node_modules/.bin/jest",
     "test:watch": "yarn test --watch",
@@ -13,6 +14,7 @@
     "test:coverage": "yarn test --collect-coverage",
     "test:update-snapshots": "yarn test --update-snapshot",
     "format": "./node_modules/.bin/prettier \"src/**/*.{js,ts,tsx}\"",
+    "format:staged": "./node_modules/.bin/prettier --write",
     "prettier": "yarn format --write",
     "validate-prettier": "yarn format --version; yarn format --no-color --check",
     "precommit": "./node_modules/.bin/lint-staged",
@@ -227,8 +229,9 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "yarn lint:fix",
-      "yarn prettier"
+      "bash -c \"yarn typecheck\"",
+      "yarn lint:staged",
+      "yarn format:staged"
     ]
   }
 }
