@@ -2902,10 +2902,10 @@
   dependencies:
     "@types/unist" "*"
 
-"@types/mermaid@^8.2.5":
-  version "8.2.5"
-  resolved "https://registry.yarnpkg.com/@types/mermaid/-/mermaid-8.2.5.tgz#85ef5be8a1532c0f596a920972a6242f009a6ce8"
-  integrity sha512-sVKakt9BN2T2qaEHsmQPtV77QAyu5kZh0CErCEaUW4ThBn4VJ47xYuLuvJttmeuSeKfdP/ACi5h184H4gWt4gA==
+"@types/mermaid@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@types/mermaid/-/mermaid-8.2.6.tgz#86e324dad1e77bbadd66e8f7d1d8b91b2d983a02"
+  integrity sha512-tWbg1SQQnRkFIDNS2KPnO53vfe0PwgvnKiwozRpevmPQ3AcwCVzSuAxwqx7Mb8nwNES3OvzkwrA0uE2NR3RqrA==
 
 "@types/micromatch@^4.0.1":
   version "4.0.1"
