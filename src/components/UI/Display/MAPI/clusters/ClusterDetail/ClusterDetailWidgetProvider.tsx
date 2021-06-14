@@ -63,23 +63,21 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
       </ClusterDetailWidgetOptionalValue>
       <ClusterDetailWidgetOptionalValue value={accountID}>
         {(value) => (
-          <Text>
-            <StyledLink
-              color='text-weak'
-              href={accountIDPath}
-              rel='noopener noreferrer'
-              target='_blank'
-            >
-              <code>
-                {value}
-                <i
-                  className='fa fa-open-in-new'
-                  aria-hidden={true}
-                  role='presentation'
-                />
-              </code>
-            </StyledLink>
-          </Text>
+          <StyledLink
+            color='text-weak'
+            href={accountIDPath}
+            rel='noopener noreferrer'
+            target='_blank'
+          >
+            <code>
+              {value}
+              <i
+                className='fa fa-open-in-new'
+                aria-hidden={true}
+                role='presentation'
+              />
+            </code>
+          </StyledLink>
         )}
       </ClusterDetailWidgetOptionalValue>
     </ClusterDetailWidget>
