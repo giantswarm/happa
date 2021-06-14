@@ -1,7 +1,10 @@
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import { filterLabels } from 'stores/cluster/utils';
+import * as ui from 'UI/Display/MAPI/clusters/types';
 
 export async function updateClusterDescription(
   httpClient: IHttpClient,
@@ -43,6 +46,27 @@ export async function deleteCluster(
   );
 
   return capiv1alpha3.deleteCluster(httpClient, auth, cluster);
+}
+
+export function mapControlPlaneNodeToUIControlPlaneNode(
+  node: ControlPlaneNode
+): ui.IControlPlaneNodeItem {
+  switch (node.kind) {
+    case capzv1alpha3.AzureMachine:
+      return {
+        isReady: capiv1alpha3.isConditionTrue(
+          node,
+          capiv1alpha3.conditionTypeReady
+        ),
+        availabilityZone: node.spec?.failureDomain ?? '',
+      };
+
+    default:
+      return {
+        isReady: false,
+        availabilityZone: '',
+      };
+  }
 }
 
 export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {

@@ -55,11 +55,7 @@ const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalVal
 
 ClusterDetailWidgetOptionalValue.propTypes = {
   children: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.object,
-  ]),
+  value: PropTypes.any,
   replaceEmptyValue: PropTypes.bool,
   loaderHeight: PropTypes.number,
   loaderWidth: PropTypes.number,

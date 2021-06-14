@@ -5,7 +5,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -51,7 +51,7 @@ exports[`DateInput renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -86,7 +86,7 @@ exports[`DateInput renders a disabled input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 hsHiVz"
+            class="StyledMaskedInput-sc-99vkfa-0 hjvnQn"
             disabled=""
             id="dob"
             placeholder="yyyy-mm-dd"
@@ -104,7 +104,7 @@ exports[`DateInput renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -133,7 +133,7 @@ exports[`DateInput renders a simple input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 cLTyQO"
+            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
             placeholder="yyyy-mm-dd"
             value=""
           />
@@ -149,7 +149,7 @@ exports[`DateInput renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -189,7 +189,7 @@ exports[`DateInput renders an input with a help message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 cLTyQO"
+            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -206,7 +206,7 @@ exports[`DateInput renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -241,7 +241,7 @@ exports[`DateInput renders an input with a label 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 cLTyQO"
+            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -258,7 +258,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -293,7 +293,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 cLTyQO"
+            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -315,7 +315,7 @@ exports[`DateInput renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 hSiATR"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 bLmXgB"
+    class="sc-gKckTs izRacH"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
@@ -350,7 +350,7 @@ exports[`DateInput renders an input with an info message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 cLTyQO"
+            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
