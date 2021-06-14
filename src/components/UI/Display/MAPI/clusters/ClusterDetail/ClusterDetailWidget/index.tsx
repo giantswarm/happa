@@ -7,14 +7,14 @@ const Title = styled(Text)`
   text-transform: uppercase;
 `;
 
-interface IClusterDetailOverviewProps
+interface IClusterDetailWidgetProps
   extends React.ComponentPropsWithoutRef<typeof Card> {
   title: string;
   inline?: boolean;
   contentProps?: React.ComponentPropsWithoutRef<typeof CardBody>;
 }
 
-const ClusterDetailWidget: React.FC<IClusterDetailOverviewProps> = ({
+const ClusterDetailWidget: React.FC<IClusterDetailWidgetProps> = ({
   title,
   children,
   inline,
@@ -56,7 +56,7 @@ ClusterDetailWidget.propTypes = {
   children: PropTypes.node,
   inline: PropTypes.bool,
   contentProps: PropTypes.object as PropTypes.Requireable<
-    IClusterDetailOverviewProps['contentProps']
+    IClusterDetailWidgetProps['contentProps']
   >,
 };
 

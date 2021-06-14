@@ -26,15 +26,6 @@ export interface IClusterSpec {
   paused?: boolean;
 }
 
-export interface IStatusCondition {
-  lastTransitionTime: string;
-  status: string;
-  type: string;
-  message?: string;
-  reason?: string;
-  severity?: string;
-}
-
 export type FailureDomains = Record<string, IFailureDomainSpec>;
 
 export interface IFailureDomainSpec {
@@ -44,7 +35,10 @@ export interface IFailureDomainSpec {
 
 export interface ICondition {
   type: string;
-  status: 'True' | 'False' | 'Unknown';
+  status:
+    | typeof corev1.conditionTrue
+    | typeof corev1.conditionFalse
+    | typeof corev1.conditionUnknown;
   severity?: 'Error' | 'Warning' | 'Info' | '';
   lastTransitionTime?: string;
   reason?: string;
@@ -52,7 +46,7 @@ export interface ICondition {
 }
 
 export interface IClusterStatus {
-  conditions?: IStatusCondition[];
+  conditions?: ICondition[];
   controlPlaneInitialized?: boolean;
   controlPlaneReady?: boolean;
   infrastructureReady?: boolean;

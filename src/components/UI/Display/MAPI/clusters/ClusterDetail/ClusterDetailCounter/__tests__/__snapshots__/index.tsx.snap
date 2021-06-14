@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+>
+  <div
+    class="sc-gKckTs izRacH"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 eUwwzg"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 eITwkI"
+      >
+        <div
+          class="sc-gsNhcj gulqcI sc-gwNCcr bZMXBj"
+        >
+          <span
+            aria-label="35 dogs"
+            class="StyledText-sc-1sadyjn-0 kQovFR"
+          >
+            35
+          </span>
+        </div>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 bTNMGz sc-cOLXIz YedtW"
+      >
+        dogs
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ClusterDetailCounter renders a simple counter 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+>
+  <div
+    class="sc-gKckTs izRacH"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 eUwwzg"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 eITwkI"
+      >
+        <div
+          class="sc-gsNhcj gulqcI sc-gwNCcr bZMXBj"
+        >
+          <span
+            aria-label="1 dog"
+            class="StyledText-sc-1sadyjn-0 kQovFR"
+          >
+            1
+          </span>
+        </div>
+      </div>
+      <span
+        class="StyledText-sc-1sadyjn-0 bTNMGz sc-cOLXIz YedtW"
+      >
+        dog
+      </span>
+    </div>
+  </div>
+</div>
+`;
