@@ -15,16 +15,19 @@ const CopyPlugin = require('copy-webpack-plugin');
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 const envFileVars = require('dotenv').config().parsed;
 
-const { SENTRY_UPLOAD_SOURCEMAPS, SENTRY_API_KEY, SENTRY_RELEASE_VERSION } =
-  Object.assign(
-    {
-      SENTRY_UPLOAD_SOURCEMAPS: 'false',
-      SENTRY_API_KEY: '',
-      SENTRY_RELEASE_VERSION: 'happa@development',
-    },
-    envFileVars,
-    process.env
-  );
+const {
+  SENTRY_UPLOAD_SOURCEMAPS,
+  SENTRY_API_KEY,
+  SENTRY_RELEASE_VERSION,
+} = Object.assign(
+  {
+    SENTRY_UPLOAD_SOURCEMAPS: 'false',
+    SENTRY_API_KEY: '',
+    SENTRY_RELEASE_VERSION: 'happa@development',
+  },
+  envFileVars,
+  process.env
+);
 
 const plugins = [
   new webpack.SourceMapDevToolPlugin({

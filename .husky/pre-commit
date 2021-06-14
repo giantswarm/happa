@@ -1,8 +1,3 @@
 # .husky/pre-commit (v5)
 
-git diff --cached --quiet -- "./src/**.js" "./src/**.ts" "./src/**.tsx"
-
-if [ "$?" -eq "1" ]
-then
-   yarn typecheck && yarn precommit
-fi
+yarn precommit
