@@ -60,3 +60,10 @@ export interface ISecret {
   stringData?: Record<string, string>;
   type?: SecretType;
 }
+
+export const SecretList = 'SecretList';
+
+export interface ISecretList extends metav1.IList<ISecret> {
+  apiVersion: 'v1';
+  kind: typeof SecretList;
+}

@@ -3,6 +3,7 @@ import { ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { filterLabels } from 'stores/cluster/utils';
 import * as ui from 'UI/Display/MAPI/clusters/types';
@@ -106,6 +107,82 @@ export async function updateClusterLabels(
   }
 
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+}
+
+export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return 'Azure region';
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return 'AWS region';
+
+    default:
+      return '';
+  }
+}
+
+export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
+  if (!cluster) return undefined;
+
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return 'Subscription ID';
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return 'Account ID';
+
+    default:
+      return '';
+  }
+}
+
+export function getClusterAccountIDPath(
+  cluster?: capiv1alpha3.ICluster,
+  accountID?: string
+) {
+  if (!cluster || !accountID) return undefined;
+
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return 'https://portal.azure.com/';
+
+    // TODO(axbarsan): Use CAPA type once available.
+    case 'AWSCluster':
+      return `https://${accountID}.signin.aws.amazon.com/console`;
+
+    default:
+      return '';
+  }
+}
+
+export function getCredentialsAccountID(
+  credentials?: legacyCredentials.ICredential[]
+) {
+  if (!credentials) return undefined;
+  if (credentials.length < 1) return '';
+
+  const mainCredential = credentials.find((credential, _, collection) => {
+    // If only the default credential is present, display it.
+    if (collection.length === 1) return true;
+
+    // If there are custom credentials, display the first one.
+    return credential.name !== legacyCredentials.defaultCredentialName;
+  });
+  if (!mainCredential) return '';
+
+  switch (true) {
+    case mainCredential.hasOwnProperty('azureSubscriptionID'):
+      return mainCredential.azureSubscriptionID;
+    case mainCredential.hasOwnProperty('awsOperatorRole'):
+      return mainCredential.awsOperatorRole;
+    default:
+      return '';
+  }
 }
 
 export function mapReleasesToUIReleases(

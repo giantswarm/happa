@@ -12,6 +12,7 @@ import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPl
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
 import ClusterDetailWidgetLabels from './ClusterDetailWidgetLabels';
+import ClusterDetailWidgetProvider from './ClusterDetailWidgetProvider';
 import ClusterDetailWidgetRelease from './ClusterDetailWidgetRelease';
 import ClusterDetailWidgetWorkerNodes from './ClusterDetailWidgetWorkerNodes';
 
@@ -32,6 +33,9 @@ interface IClusterDetailOverviewProps extends IClusterItem {
   controlPlaneNodesError?: string;
   labelsErrorMessage?: string;
   labelsIsLoading?: boolean;
+  regionLabel?: string;
+  accountIDLabel?: string;
+  accountIDPath?: string;
   currentRelease?: IRelease;
   currentReleaseError?: string;
 }
@@ -59,6 +63,11 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   labelsOnChange,
   labelsErrorMessage,
   labelsIsLoading,
+  region,
+  regionLabel,
+  accountID,
+  accountIDLabel,
+  accountIDPath,
   currentRelease,
   currentReleaseError,
 }) => {
@@ -111,6 +120,14 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
         k8sApiURL={k8sApiURL}
         basis='100%'
       />
+      <ClusterDetailWidgetProvider
+        region={region}
+        regionLabel={regionLabel}
+        accountID={accountID}
+        accountIDLabel={accountIDLabel}
+        accountIDPath={accountIDPath}
+        basis='100%'
+      />
       <ClusterDetailWidgetCreated creationDate={creationDate} basis='100%' />
       {!isLoading && (
         <ClusterDetailOverviewDelete
@@ -150,6 +167,11 @@ ClusterDetailOverview.propTypes = {
   >,
   labelsErrorMessage: PropTypes.string,
   labelsIsLoading: PropTypes.bool,
+  region: PropTypes.string,
+  regionLabel: PropTypes.string,
+  accountID: PropTypes.string,
+  accountIDLabel: PropTypes.string,
+  accountIDPath: PropTypes.string,
   currentRelease: PropTypes.object as PropTypes.Requireable<
     IClusterDetailOverviewProps['currentRelease']
   >,

@@ -1,3 +1,6 @@
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
+
 export interface IClusterItem {
   name?: string;
   namespace?: string;
@@ -15,6 +18,9 @@ export interface IClusterItem {
   appsDeployedCount?: number;
   activeKeyPairsCount?: number;
   k8sApiURL?: string;
+  provider?: PropertiesOf<typeof Providers>;
+  region?: string;
+  accountID?: string;
 }
 
 export interface IControlPlaneNodeItem {

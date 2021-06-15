@@ -213,3 +213,47 @@ export function fetchMasterListForClusterKey(cluster: capiv1alpha3.ICluster) {
       return null;
   }
 }
+
+export function fetchProviderClusterForCluster(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: capiv1alpha3.ICluster
+) {
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return Promise.reject(
+      new Error('There is no infrastructure reference defined.')
+    );
+  }
+
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
+      return capzv1alpha3.getAzureCluster(
+        httpClientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
+}
+
+export function fetchProviderClusterForClusterKey(
+  cluster: capiv1alpha3.ICluster
+) {
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) return null;
+
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
+      return capzv1alpha3.getAzureClusterKey(
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    default:
+      return null;
+  }
+}
