@@ -17,6 +17,8 @@ import {
   fetchMasterListForClusterKey,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
+  fetchProviderClusterForCluster,
+  fetchProviderClusterForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   getMachineTypes,
@@ -24,6 +26,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -43,6 +46,10 @@ import {
 } from '../utils';
 import {
   deleteCluster,
+  getClusterAccountIDLabel,
+  getClusterAccountIDPath,
+  getClusterRegionLabel,
+  getCredentialsAccountID,
   getVisibleLabels,
   mapControlPlaneNodeToUIControlPlaneNode,
   updateClusterLabels,
@@ -328,6 +335,39 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   };
 
+  const providerClusterKey = cluster
+    ? fetchProviderClusterForClusterKey(cluster)
+    : null;
+
+  const {
+    data: providerCluster,
+    error: providerClusterError,
+  } = useSWR(providerClusterKey, () =>
+    fetchProviderClusterForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (providerClusterError) {
+      ErrorReporter.getInstance().notify(providerClusterError);
+    }
+  }, [providerClusterError]);
+
+  const credentialsClient = useRef(clientFactory());
+  const {
+    data: credentials,
+    error: credentialsError,
+  } = useSWR(legacyCredentials.getCredentialListKey(orgId), () =>
+    legacyCredentials.getCredentialList(credentialsClient.current, auth, orgId)
+  );
+
+  useEffect(() => {
+    if (credentialsError) {
+      ErrorReporter.getInstance().notify(credentialsError);
+    }
+  }, [credentialsError]);
+
+  const accountID = getCredentialsAccountID(credentials?.items);
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
@@ -356,6 +396,11 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       labelsOnChange={handleLabelsChange}
       labelsErrorMessage={labelsError}
       labelsIsLoading={labelsIsLoading}
+      region={providerCluster?.spec.location}
+      regionLabel={getClusterRegionLabel(cluster)}
+      accountID={accountID}
+      accountIDLabel={getClusterAccountIDLabel(cluster)}
+      accountIDPath={getClusterAccountIDPath(cluster, accountID)}
     />
   );
 };

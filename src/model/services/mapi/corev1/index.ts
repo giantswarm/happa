@@ -9,6 +9,7 @@ export * from './deleteConfigMap';
 export * from './createConfigMap';
 export * from './updateConfigMap';
 export * from './getSecret';
+export * from './getSecretList';
 export * from './deleteSecret';
 export * from './createSecret';
 export * from './updateSecret';
