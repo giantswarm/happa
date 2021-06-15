@@ -1,13 +1,14 @@
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
+import RoutePath from 'lib/routePath';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-
-import { IClusterItem } from '../types';
-import ClusterDetailWidget from './ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from './ClusterDetailWidgetOptionalValue';
+import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
+import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 
 const GetStartedButton = styled(Button)`
   text-transform: uppercase;
@@ -15,18 +16,32 @@ const GetStartedButton = styled(Button)`
 
 interface IClusterDetailWidgetKubernetesAPIProps
   extends Omit<
-      React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-      'title'
-    >,
-    Pick<IClusterItem, 'k8sApiURL'> {
-  gettingStartedPath: string;
+    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+    'title'
+  > {
+  cluster?: capiv1alpha3.ICluster;
 }
 
 const ClusterDetailWidgetKubernetesAPI: React.FC<IClusterDetailWidgetKubernetesAPIProps> = ({
-  k8sApiURL,
-  gettingStartedPath,
+  cluster,
   ...props
 }) => {
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
+
+  const k8sApiURL = cluster
+    ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
+    : undefined;
+
+  const gettingStartedPath = useMemo(() => {
+    return RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.Overview,
+      { orgId, clusterId }
+    );
+  }, [orgId, clusterId]);
+
   return (
     <ClusterDetailWidget
       title='Kubernetes API'
@@ -62,8 +77,7 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<IClusterDetailWidgetKubernetesA
 };
 
 ClusterDetailWidgetKubernetesAPI.propTypes = {
-  gettingStartedPath: PropTypes.string.isRequired,
-  k8sApiURL: PropTypes.string,
+  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetKubernetesAPI;
