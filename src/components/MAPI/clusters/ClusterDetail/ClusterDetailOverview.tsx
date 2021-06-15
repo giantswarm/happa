@@ -28,6 +28,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -52,6 +53,7 @@ import {
   getCredentialsAccountID,
   getVisibleLabels,
   mapControlPlaneNodeToUIControlPlaneNode,
+  mapReleasesToUIReleases,
   updateClusterLabels,
 } from './utils';
 
@@ -334,7 +336,6 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       setLabelsIsLoading(false);
     }
   };
-
   const providerClusterKey = cluster
     ? fetchProviderClusterForClusterKey(cluster)
     : null;
@@ -367,6 +368,30 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   }, [credentialsError]);
 
   const accountID = getCredentialsAccountID(credentials?.items);
+
+  const releaseListClient = useRef(clientFactory());
+  const {
+    data: releaseList,
+    error: releaseListError,
+  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const releases = useMemo(() => mapReleasesToUIReleases(releaseList?.items), [
+    releaseList?.items,
+  ]);
+
+  const currentRelease = useMemo(() => {
+    if (!releases || !releaseVersion) return undefined;
+
+    return releases[releaseVersion];
+  }, [releases, releaseVersion]);
 
   return (
     <UIClusterDetailOverview
@@ -401,6 +426,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       accountID={accountID}
       accountIDLabel={getClusterAccountIDLabel(cluster)}
       accountIDPath={getClusterAccountIDPath(cluster, accountID)}
+      currentRelease={currentRelease}
+      currentReleaseError={extractErrorMessage(releaseListError)}
     />
   );
 };

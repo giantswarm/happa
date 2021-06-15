@@ -14,8 +14,10 @@ const StyledDot = styled(Dot)`
 `;
 
 interface IClusterListItemMainInfoProps
-  extends Pick<IClusterItem, 'releaseVersion' | 'creationDate' | 'k8sVersion'>,
-    React.ComponentPropsWithoutRef<typeof Box> {}
+  extends Pick<IClusterItem, 'releaseVersion' | 'creationDate'>,
+    React.ComponentPropsWithoutRef<typeof Box> {
+  k8sVersion?: string;
+}
 
 const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
   releaseVersion,

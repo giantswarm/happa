@@ -4,8 +4,10 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { filterLabels } from 'stores/cluster/utils';
 import * as ui from 'UI/Display/MAPI/clusters/types';
+import * as releasesUI from 'UI/Display/MAPI/releases/types';
 
 export async function updateClusterDescription(
   httpClient: IHttpClient,
@@ -181,4 +183,31 @@ export function getCredentialsAccountID(
     default:
       return '';
   }
+}
+
+export function mapReleasesToUIReleases(
+  releases?: releasev1alpha1.IRelease[]
+): Record<string, releasesUI.IRelease> {
+  if (!releases) return {};
+
+  return releases.reduce(
+    (
+      acc: Record<string, releasesUI.IRelease>,
+      currItem: releasev1alpha1.IRelease
+    ) => {
+      // Remove the `v` prefix.
+      const normalizedVersion =
+        currItem.metadata.name[0] === 'v'
+          ? currItem.metadata.name.slice(1)
+          : currItem.metadata.name;
+
+      acc[normalizedVersion] = {
+        version: normalizedVersion,
+        k8sVersion: releasev1alpha1.getK8sVersion(currItem),
+      };
+
+      return acc;
+    },
+    {}
+  );
 }
