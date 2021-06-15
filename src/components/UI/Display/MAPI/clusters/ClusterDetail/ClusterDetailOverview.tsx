@@ -5,12 +5,14 @@ import styled from 'styled-components';
 import ClusterDetailWidgetKeyPairs from 'UI/Display/MAPI/keypairs/ClusterDetailWidgetKeyPairs';
 
 import ClusterDetailWidgetApps from '../../apps/ClusterDetailWidgetApps';
+import { IRelease } from '../../releases/types';
 import { IClusterItem, IControlPlaneNodeItem } from '../types';
 import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
 import ClusterDetailWidgetLabels from './ClusterDetailWidgetLabels';
+import ClusterDetailWidgetRelease from './ClusterDetailWidgetRelease';
 import ClusterDetailWidgetWorkerNodes from './ClusterDetailWidgetWorkerNodes';
 
 const StyledBox = styled(Box)`
@@ -30,6 +32,8 @@ interface IClusterDetailOverviewProps extends IClusterItem {
   controlPlaneNodesError?: string;
   labelsErrorMessage?: string;
   labelsIsLoading?: boolean;
+  currentRelease?: IRelease;
+  currentReleaseError?: string;
 }
 
 const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
@@ -55,6 +59,8 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
   labelsOnChange,
   labelsErrorMessage,
   labelsIsLoading,
+  currentRelease,
+  currentReleaseError,
 }) => {
   const isLoading = typeof name === 'undefined';
 
@@ -82,6 +88,11 @@ const ClusterDetailOverview: React.FC<IClusterDetailOverviewProps> = ({
         activeKeyPairsCount={activeKeyPairsCount}
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
+      />
+      <ClusterDetailWidgetRelease
+        currentRelease={currentRelease}
+        currentReleaseErrorMessage={currentReleaseError}
+        basis='100%'
       />
       <ClusterDetailWidgetLabels
         labels={labels}
@@ -139,6 +150,10 @@ ClusterDetailOverview.propTypes = {
   >,
   labelsErrorMessage: PropTypes.string,
   labelsIsLoading: PropTypes.bool,
+  currentRelease: PropTypes.object as PropTypes.Requireable<
+    IClusterDetailOverviewProps['currentRelease']
+  >,
+  currentReleaseError: PropTypes.string,
 };
 
 export default ClusterDetailOverview;

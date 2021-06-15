@@ -25,6 +25,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -45,6 +46,7 @@ import {
   deleteCluster,
   getVisibleLabels,
   mapControlPlaneNodeToUIControlPlaneNode,
+  mapReleasesToUIReleases,
   updateClusterLabels,
 } from './utils';
 
@@ -328,6 +330,30 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   };
 
+  const releaseListClient = useRef(clientFactory());
+  const {
+    data: releaseList,
+    error: releaseListError,
+  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const releases = useMemo(() => mapReleasesToUIReleases(releaseList?.items), [
+    releaseList?.items,
+  ]);
+
+  const currentRelease = useMemo(() => {
+    if (!releases || !releaseVersion) return undefined;
+
+    return releases[releaseVersion];
+  }, [releases, releaseVersion]);
+
   return (
     <UIClusterDetailOverview
       onDelete={handleDelete}
@@ -356,6 +382,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       labelsOnChange={handleLabelsChange}
       labelsErrorMessage={labelsError}
       labelsIsLoading={labelsIsLoading}
+      currentRelease={currentRelease}
+      currentReleaseError={extractErrorMessage(releaseListError)}
     />
   );
 };
