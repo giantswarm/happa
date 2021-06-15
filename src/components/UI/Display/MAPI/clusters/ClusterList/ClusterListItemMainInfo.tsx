@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 
-import { IClusterItem } from '../types';
 import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
 
 const StyledDot = styled(Dot)`
@@ -14,8 +13,9 @@ const StyledDot = styled(Dot)`
 `;
 
 interface IClusterListItemMainInfoProps
-  extends Pick<IClusterItem, 'releaseVersion' | 'creationDate'>,
-    React.ComponentPropsWithoutRef<typeof Box> {
+  extends React.ComponentPropsWithoutRef<typeof Box> {
+  releaseVersion?: string;
+  creationDate?: string;
   k8sVersion?: string;
 }
 
