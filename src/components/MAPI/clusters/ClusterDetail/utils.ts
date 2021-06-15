@@ -139,8 +139,11 @@ export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
   }
 }
 
-export function getClusterAccountIDPath(cluster?: capiv1alpha3.ICluster) {
-  if (!cluster) return undefined;
+export function getClusterAccountIDPath(
+  cluster?: capiv1alpha3.ICluster,
+  accountID?: string
+) {
+  if (!cluster || !accountID) return undefined;
 
   switch (cluster.spec?.infrastructureRef?.kind) {
     case capzv1alpha3.AzureCluster:
@@ -148,7 +151,7 @@ export function getClusterAccountIDPath(cluster?: capiv1alpha3.ICluster) {
 
     // TODO(axbarsan): Use CAPA type once available.
     case 'AWSCluster':
-      return 'https://console.aws.amazon.com/';
+      return `https://${accountID}.signin.aws.amazon.com/console`;
 
     default:
       return '';

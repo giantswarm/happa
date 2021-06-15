@@ -400,7 +400,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       regionLabel={getClusterRegionLabel(cluster)}
       accountID={accountID}
       accountIDLabel={getClusterAccountIDLabel(cluster)}
-      accountIDPath={getClusterAccountIDPath(cluster)}
+      accountIDPath={getClusterAccountIDPath(cluster, accountID)}
     />
   );
 };
