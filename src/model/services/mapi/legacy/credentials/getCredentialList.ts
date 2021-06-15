@@ -4,6 +4,7 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 
 import { credentialsNamespace, ICredential, ICredentialList } from './';
+import { decodeCredential } from './key';
 
 export async function getCredentialList(
   client: IHttpClient,
@@ -38,14 +39,21 @@ export async function getCredentialList(
     newCredential.name = secret.metadata.name;
 
     // AWS-specific options.
-    newCredential.awsAdminRole = secret.data['aws.admin.arn'];
-    newCredential.awsOperatorRole = secret.data['aws.awsoperator.arn'];
+    newCredential.awsAdminRole = decodeCredential(secret.data['aws.admin.arn']);
+    newCredential.awsOperatorRole = decodeCredential(
+      secret.data['aws.awsoperator.arn']
+    );
 
     // Azure-specific options.
-    newCredential.azureSubscriptionID =
-      secret.data['azure.azureoperator.subscriptionid'];
-    newCredential.azureTenantID = secret.data['azure.azureoperator.tenantid'];
-    newCredential.azureClientID = secret.data['azure.azureoperator.clientid'];
+    newCredential.azureSubscriptionID = decodeCredential(
+      secret.data['azure.azureoperator.subscriptionid']
+    );
+    newCredential.azureTenantID = decodeCredential(
+      secret.data['azure.azureoperator.tenantid']
+    );
+    newCredential.azureClientID = decodeCredential(
+      secret.data['azure.azureoperator.clientid']
+    );
 
     credentialList.items.push(newCredential);
   }
