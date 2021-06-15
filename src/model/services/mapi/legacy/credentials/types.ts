@@ -1,5 +1,6 @@
 export interface ICredential {
   id: string;
+  name: string;
 
   awsAdminRole?: string;
   awsOperatorRole?: string;

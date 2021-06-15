@@ -61,7 +61,7 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
       <ClusterDetailWidgetOptionalValue value={accountIDLabel}>
         {(value) => <Text>{value}</Text>}
       </ClusterDetailWidgetOptionalValue>
-      <ClusterDetailWidgetOptionalValue value={accountID}>
+      <ClusterDetailWidgetOptionalValue value={accountID} loaderWidth={300}>
         {(value) => (
           <StyledLink
             color='text-weak'

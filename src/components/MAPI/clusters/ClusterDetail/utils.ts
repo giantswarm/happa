@@ -164,7 +164,15 @@ export function getCredentialsAccountID(
   if (!credentials) return undefined;
   if (credentials.length < 1) return '';
 
-  const mainCredential = credentials[0];
+  const mainCredential = credentials.find((credential, _, collection) => {
+    // If only the default credential is present, display it.
+    if (collection.length === 1) return true;
+
+    // If there are custom credentials, display the first one.
+    return credential.name !== legacyCredentials.defaultCredentialName;
+  });
+  if (!mainCredential) return '';
+
   switch (true) {
     case mainCredential.hasOwnProperty('azureSubscriptionID'):
       return mainCredential.azureSubscriptionID;

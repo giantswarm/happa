@@ -3,12 +3,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 
-import {
-  credentialsNamespace,
-  defaultCredentialName,
-  ICredential,
-  ICredentialList,
-} from './';
+import { credentialsNamespace, ICredential, ICredentialList } from './';
 
 export async function getCredentialList(
   client: IHttpClient,
@@ -35,13 +30,12 @@ export async function getCredentialList(
   };
 
   for (const secret of credentialsSecrets.items) {
-    // We don't want to show the default credential.
-    if (secret.metadata.name === defaultCredentialName) continue;
-
     const newCredential: ICredential = {} as ICredential;
 
     newCredential.id = secret.metadata.name.split('-')[1] ?? '';
     if (newCredential.id.length === 0 || !secret.data) continue;
+
+    newCredential.name = secret.metadata.name;
 
     // AWS-specific options.
     newCredential.awsAdminRole = secret.data['aws.admin.arn'];
