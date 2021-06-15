@@ -69,14 +69,12 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
             rel='noopener noreferrer'
             target='_blank'
           >
-            <code>
-              {value}
-              <i
-                className='fa fa-open-in-new'
-                aria-hidden={true}
-                role='presentation'
-              />
-            </code>
+            <code>{value}</code>
+            <i
+              className='fa fa-open-in-new'
+              aria-hidden={true}
+              role='presentation'
+            />
           </StyledLink>
         )}
       </ClusterDetailWidgetOptionalValue>
