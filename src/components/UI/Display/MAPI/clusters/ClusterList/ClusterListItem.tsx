@@ -48,6 +48,7 @@ interface IClusterListItemProps
   workerNodesError: string;
   onGetStartedClick: () => void;
   additionalTitle?: React.ReactNode;
+  k8sVersion?: string;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
