@@ -5,6 +5,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
@@ -32,6 +33,10 @@ import { updateClusterDescription } from './utils';
 function computePaths(orgName: string, clusterName: string) {
   return {
     Home: RoutePath.createUsablePath(OrganizationsRoutes.Clusters.Detail.Home, {
+      orgId: orgName,
+      clusterId: clusterName,
+    }),
+    Apps: RoutePath.createUsablePath(OrganizationsRoutes.Clusters.Detail.Apps, {
       orgId: orgName,
       clusterId: clusterName,
     }),
@@ -117,6 +122,9 @@ const ClusterDetail: React.FC<{}> = () => {
   const clusterDescription = cluster
     ? capiv1alpha3.getClusterDescription(cluster)
     : undefined;
+  const clusterReleaseVersion = cluster
+    ? capiv1alpha3.getReleaseVersion(cluster)
+    : undefined;
 
   const updateDescription = async (newValue: string) => {
     if (!cluster) return;
@@ -180,8 +188,17 @@ const ClusterDetail: React.FC<{}> = () => {
         </Heading>
         <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
           <Tab eventKey={paths.Home} title='Overview' />
+          <Tab eventKey={paths.Apps} title='Apps' />
         </Tabs>
         <Switch>
+          <Route
+            path={OrganizationsRoutes.Clusters.Detail.Apps}
+            render={() =>
+              cluster && (
+                <ClusterDetailApps releaseVersion={clusterReleaseVersion!} />
+              )
+            }
+          />
           <Route
             path={OrganizationsRoutes.Clusters.Detail.Home}
             component={ClusterDetailOverview}

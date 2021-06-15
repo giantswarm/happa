@@ -19,6 +19,7 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
@@ -86,15 +87,16 @@ const PreinstalledApps = styled.div`
   }
 `;
 
+// FIXME(axbarsan): Fetch cluster by ID in URL params once AWS has namespaced clusters.
 interface IClusterDetailApps {
-  clusterId: string;
   releaseVersion: string;
 }
 
 const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
-  clusterId,
   releaseVersion,
 }) => {
+  const { clusterId } = useParams<{ clusterId: string }>();
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -328,7 +330,6 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
 };
 
 ClusterDetailApps.propTypes = {
-  clusterId: PropTypes.string.isRequired,
   releaseVersion: PropTypes.string.isRequired,
 };
 
