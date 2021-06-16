@@ -35,7 +35,7 @@ const Steps = styled.ol`
   }
 `;
 
-enum IngressPathPrefixes {
+const enum IngressPathPrefixes {
   Pattern = 'YOUR_PREFIX',
   LoadBalancer = 'ingress',
   Example = 'example',

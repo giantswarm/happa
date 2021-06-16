@@ -1,3 +1,3 @@
-export enum GiantSwarmPaths {
+export const enum GiantSwarmPaths {
   Info = '/v4/info/',
 }

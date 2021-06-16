@@ -27,7 +27,7 @@ import DeleteConfirmFooter from './DeleteConfirmFooter';
 import EditChartVersionPane from './EditChartVersionPane';
 import InitialPane from './InitialPane';
 
-enum ModalPanes {
+const enum ModalPanes {
   Initial,
   DeleteAppConfig,
   DeleteAppSecret,

@@ -1,4 +1,4 @@
-export enum PasswordStatusMessage {
+export const enum PasswordStatusMessage {
   TooShort = 'password_too_short',
   JustNumbers = 'password_not_just_numbers',
   JustLetters = 'password_not_just_letters',

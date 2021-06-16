@@ -32,7 +32,7 @@ import {
 } from '../utils';
 import AppDetailsModalInitialPane from './AppDetailsModalInitialPane';
 
-enum ModalPanes {
+const enum ModalPanes {
   Initial,
   DeleteAppConfig,
   DeleteAppSecret,

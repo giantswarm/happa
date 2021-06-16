@@ -1,4 +1,4 @@
-export enum OrganizationNameStatusMessage {
+export const enum OrganizationNameStatusMessage {
   TooShort = 'Must be at least 4 characters long',
   StartAndEndWithAlphaNumeric = 'Must start and end with an alphanumeric character (a-z, 0-9)',
   CharacterSet = 'Must contain only a-z, 0-9, and hyphens and underscores',

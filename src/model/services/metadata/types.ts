@@ -1,4 +1,4 @@
-export enum MetadataPaths {
+export const enum MetadataPaths {
   Configuration = '/metadata.json',
 }
 

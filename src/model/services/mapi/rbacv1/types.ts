@@ -14,7 +14,7 @@ export interface IRoleRef {
   name: string;
 }
 
-export enum SubjectKinds {
+export const enum SubjectKinds {
   User = 'User',
   Group = 'Group',
   ServiceAccount = 'ServiceAccount',

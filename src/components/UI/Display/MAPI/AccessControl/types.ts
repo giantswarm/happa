@@ -1,4 +1,4 @@
-export enum AccessControlSubjectTypes {
+export const enum AccessControlSubjectTypes {
   Group,
   User,
   ServiceAccount,

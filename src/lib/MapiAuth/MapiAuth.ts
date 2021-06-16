@@ -2,7 +2,7 @@
 
 import OAuth2 from 'lib/OAuth2/OAuth2';
 
-export enum MapiAuthConnectors {
+export const enum MapiAuthConnectors {
   Customer = 'customer',
   GiantSwarm = 'giantswarm',
 }

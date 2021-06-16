@@ -6,7 +6,7 @@ import { GenericResponseError } from './GenericResponseError';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type HttpBody = Record<string, any> | string;
 
-export enum HttpRequestMethods {
+export const enum HttpRequestMethods {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',

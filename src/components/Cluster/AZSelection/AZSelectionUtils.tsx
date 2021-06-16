@@ -6,7 +6,7 @@ export enum AvailabilityZoneSelection {
   NotSpecified,
 }
 
-export enum AZSelectionVariants {
+export const enum AZSelectionVariants {
   Master,
   NodePool,
 }

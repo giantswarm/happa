@@ -57,7 +57,8 @@ const FlashMessage: FC<IFlashMessageProps> = ({
 };
 
 FlashMessage.propTypes = {
-  type: PropTypes.oneOf(Object.values(FlashMessageType)).isRequired,
+  type: (PropTypes.string as PropTypes.Requireable<FlashMessageType>)
+    .isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
 };

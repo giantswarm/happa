@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import theme from './theme';
 
-export enum FlashMessageType {
+export const enum FlashMessageType {
   Danger = 'danger',
   Success = 'success',
   Warning = 'warning',

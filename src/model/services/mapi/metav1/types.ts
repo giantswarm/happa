@@ -24,7 +24,7 @@ export interface IList<T> {
   items: T[];
 }
 
-export enum K8sStatusErrorReasons {
+export const enum K8sStatusErrorReasons {
   /**
    * The server has declined to indicate a specific reason.
    */
@@ -134,12 +134,12 @@ export enum K8sStatusErrorReasons {
   ServiceUnavailable = 'ServiceUnavailable',
 }
 
-export enum K8sStatuses {
+export const enum K8sStatuses {
   Success = 'Success',
   Failure = 'Failure',
 }
 
-export enum K8sStatusDetailsCauseTypes {
+export const enum K8sStatusDetailsCauseTypes {
   FieldValueNotFound = 'FieldValueNotFound',
   FieldValueRequired = 'FieldValueRequired',
   FieldValueDuplicate = 'FieldValueDuplicate',

@@ -21,7 +21,7 @@ import {
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
 
-export enum LoggedInUserTypes {
+export const enum LoggedInUserTypes {
   GS,
   MAPI,
 }

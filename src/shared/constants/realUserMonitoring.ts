@@ -1,4 +1,4 @@
-export enum RUMActions {
+export const enum RUMActions {
   WindowResize = 'WINDOW_RESIZE',
   WindowLoad = 'WINDOW_LOAD',
   WebVitals = 'WEB_VITALS',

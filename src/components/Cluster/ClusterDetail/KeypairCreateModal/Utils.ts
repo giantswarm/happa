@@ -1,7 +1,7 @@
 export const MODAL_CHANGE_TIMEOUT = 200;
 export const VALIDATION_DEBOUNCE_RATE = 1000;
 
-export enum KeypairCreateModalStatus {
+export const enum KeypairCreateModalStatus {
   Adding,
   Success,
 }

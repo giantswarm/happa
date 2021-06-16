@@ -13,7 +13,7 @@ import {
 
 import { getUserFromOIDCUser, IOAuth2User } from './OAuth2User';
 
-export enum OAuth2Events {
+export const enum OAuth2Events {
   UserLoaded = 'userLoaded',
   TokenExpired = 'tokenExpired',
   TokenExpiring = 'tokenExpiring',
