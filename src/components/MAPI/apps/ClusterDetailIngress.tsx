@@ -9,6 +9,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
@@ -31,9 +32,9 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
   }
 `;
 
+// FIXME(axbarsan): Fetch cluster by ID in URL params once AWS has namespaced clusters.
 interface IClusterDetailIngressProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  clusterID: string;
   provider?: PropertiesOf<typeof Providers>;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
@@ -41,17 +42,18 @@ interface IClusterDetailIngressProps
 }
 
 const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
-  clusterID,
   provider,
   k8sEndpoint,
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
   ...rest
 }) => {
+  const { clusterId } = useParams<{ clusterId: string }>();
+
   const auth = useAuthProvider();
 
   const appListClient = useHttpClient();
-  const appListGetOptions = { namespace: clusterID };
+  const appListGetOptions = { namespace: clusterId };
   const {
     data: appList,
     error: appListError,
@@ -112,7 +114,7 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
       )}
 
       {!hasIngress && !appListIsLoading && !appListError && (
-        <InstallIngressButton clusterID={clusterID} />
+        <InstallIngressButton clusterID={clusterId} />
       )}
 
       {appListError && (
@@ -130,7 +132,6 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
 };
 
 ClusterDetailIngress.propTypes = {
-  clusterID: PropTypes.string.isRequired,
   provider: PropTypes.oneOf(Object.values(Providers)),
   k8sEndpoint: PropTypes.string,
   kvmTCPHTTPPort: PropTypes.number,

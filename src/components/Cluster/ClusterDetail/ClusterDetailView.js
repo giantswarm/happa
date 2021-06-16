@@ -386,10 +386,7 @@ class ClusterDetailView extends React.Component {
               </Tab>
               <Tab eventKey={tabsPaths.Apps} title='Apps'>
                 {supporsAppsViaMapi ? (
-                  <ClusterDetailApps
-                    clusterId={id}
-                    releaseVersion={release_version}
-                  />
+                  <ClusterDetailApps releaseVersion={release_version} />
                 ) : (
                   <ClusterApps
                     clusterId={id}
@@ -406,7 +403,6 @@ class ClusterDetailView extends React.Component {
               <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
                 {supporsAppsViaMapi ? (
                   <ClusterDetailIngress
-                    clusterID={cluster.id}
                     provider={provider}
                     k8sEndpoint={cluster.api_endpoint}
                     kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
