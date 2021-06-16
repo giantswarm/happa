@@ -126,6 +126,17 @@ window.addEventListener('load', () => {
   });
 });
 
+// Log each URI visited
+let lastURI = '';
+history.listen((evt) => {
+  if (lastURI !== evt.pathname) {
+    lastURI = evt.pathname;
+    submitCustomRUM(RUMActions.URIChange, 1, {
+      pathname: evt.pathname,
+    });
+  }
+});
+
 // Log core web vitals.
 const recorded: Record<string, boolean> = {};
 
