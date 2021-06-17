@@ -2,12 +2,8 @@ import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
-import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { filterLabels } from 'stores/cluster/utils';
-import * as ui from 'UI/Display/MAPI/clusters/types';
-import * as releasesUI from 'UI/Display/MAPI/releases/types';
 
 export async function updateClusterDescription(
   httpClient: IHttpClient,
@@ -51,27 +47,6 @@ export async function deleteCluster(
   return capiv1alpha3.deleteCluster(httpClient, auth, cluster);
 }
 
-export function mapControlPlaneNodeToUIControlPlaneNode(
-  node: ControlPlaneNode
-): ui.IControlPlaneNodeItem {
-  switch (node.kind) {
-    case capzv1alpha3.AzureMachine:
-      return {
-        isReady: capiv1alpha3.isConditionTrue(
-          node,
-          capiv1alpha3.conditionTypeReady
-        ),
-        availabilityZone: node.spec?.failureDomain ?? '',
-      };
-
-    default:
-      return {
-        isReady: false,
-        availabilityZone: '',
-      };
-  }
-}
-
 export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
@@ -109,57 +84,6 @@ export async function updateClusterLabels(
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
 }
 
-export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
-  if (!cluster) return undefined;
-
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
-      return 'Azure region';
-
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
-      return 'AWS region';
-
-    default:
-      return '';
-  }
-}
-
-export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
-  if (!cluster) return undefined;
-
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
-      return 'Subscription ID';
-
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
-      return 'Account ID';
-
-    default:
-      return '';
-  }
-}
-
-export function getClusterAccountIDPath(
-  cluster?: capiv1alpha3.ICluster,
-  accountID?: string
-) {
-  if (!cluster || !accountID) return undefined;
-
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
-      return 'https://portal.azure.com/';
-
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
-      return `https://${accountID}.signin.aws.amazon.com/console`;
-
-    default:
-      return '';
-  }
-}
-
 export function getCredentialsAccountID(
   credentials?: legacyCredentials.ICredential[]
 ) {
@@ -185,29 +109,30 @@ export function getCredentialsAccountID(
   }
 }
 
-export function mapReleasesToUIReleases(
-  releases?: releasev1alpha1.IRelease[]
-): Record<string, releasesUI.IRelease> {
-  if (!releases) return {};
+export interface IControlPlaneNodesStats {
+  totalCount: number;
+  readyCount: number;
+  availabilityZones: string[];
+}
 
-  return releases.reduce(
-    (
-      acc: Record<string, releasesUI.IRelease>,
-      currItem: releasev1alpha1.IRelease
-    ) => {
-      // Remove the `v` prefix.
-      const normalizedVersion =
-        currItem.metadata.name[0] === 'v'
-          ? currItem.metadata.name.slice(1)
-          : currItem.metadata.name;
+export function computeControlPlaneNodesStats(
+  nodes: ControlPlaneNode[]
+): IControlPlaneNodesStats {
+  const stats: IControlPlaneNodesStats = {
+    totalCount: nodes.length,
+    readyCount: 0,
+    availabilityZones: [],
+  };
 
-      acc[normalizedVersion] = {
-        version: normalizedVersion,
-        k8sVersion: releasev1alpha1.getK8sVersion(currItem),
-      };
+  for (const node of nodes) {
+    if (capiv1alpha3.isConditionTrue(node, capiv1alpha3.conditionTypeReady)) {
+      stats.readyCount++;
+    }
 
-      return acc;
-    },
-    {}
-  );
+    if (node.spec?.failureDomain) {
+      stats.availabilityZones.push(node.spec.failureDomain);
+    }
+  }
+
+  return stats;
 }

@@ -1,14 +1,24 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
-import PropTypes, { string } from 'prop-types';
-import React, { useMemo } from 'react';
+import ErrorReporter from 'lib/errors/ErrorReporter';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { ControlPlaneNodeList } from 'MAPI/types';
+import {
+  fetchMasterListForCluster,
+  fetchMasterListForClusterKey,
+} from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import PropTypes from 'prop-types';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
+import useSWR from 'swr';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
+import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
+import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
 
-import { IControlPlaneNodeItem } from '../types';
-import ClusterDetailWidget from './ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from './ClusterDetailWidgetOptionalValue';
 import { computeControlPlaneNodesStats } from './utils';
 
 function formatNodesCountLabel(readyCount?: number, totalCount?: number) {
@@ -51,19 +61,36 @@ interface IClusterDetailWidgetControlPlaneNodesProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  nodes?: IControlPlaneNodeItem[];
-  errorMessage?: string;
+  cluster?: capiv1alpha3.ICluster;
 }
 
 const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControlPlaneNodesProps> = ({
-  nodes,
-  errorMessage,
+  cluster,
   ...props
 }) => {
-  const hasError = Boolean(errorMessage);
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const controlPlaneNodeListKey = cluster
+    ? fetchMasterListForClusterKey(cluster)
+    : null;
+
+  const {
+    data: controlPlaneNodeList,
+    error: controlPlaneNodeListError,
+  } = useSWR<ControlPlaneNodeList, GenericResponseError>(
+    controlPlaneNodeListKey,
+    () => fetchMasterListForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (controlPlaneNodeListError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodeListError);
+    }
+  }, [controlPlaneNodeListError]);
 
   const stats = useMemo(() => {
-    if (hasError) {
+    if (typeof controlPlaneNodeListError !== 'undefined') {
       return {
         totalCount: -1,
         readyCount: -1,
@@ -71,7 +98,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       };
     }
 
-    if (!nodes) {
+    if (!controlPlaneNodeList) {
       return {
         totalCount: undefined,
         readyCount: undefined,
@@ -79,8 +106,8 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       };
     }
 
-    return computeControlPlaneNodesStats(nodes);
-  }, [nodes, hasError]);
+    return computeControlPlaneNodesStats(controlPlaneNodeList.items);
+  }, [controlPlaneNodeList, controlPlaneNodeListError]);
 
   return (
     <ClusterDetailWidget
@@ -129,8 +156,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
 };
 
 ClusterDetailWidgetControlPlaneNodes.propTypes = {
-  nodes: PropTypes.array,
-  errorMessage: string,
+  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetControlPlaneNodes;

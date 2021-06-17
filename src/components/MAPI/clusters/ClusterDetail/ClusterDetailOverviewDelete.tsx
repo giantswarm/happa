@@ -1,22 +1,36 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router';
+import { MainRoutes } from 'shared/constants/routes';
+import { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 
+import { deleteCluster } from './utils';
+
 interface IClusterDetailOverviewDeleteProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
-  clusterName: string;
-  onDelete: () => Promise<void>;
+  cluster: capiv1alpha3.ICluster;
 }
 
 const ClusterDetailOverviewDelete: React.FC<IClusterDetailOverviewDeleteProps> = ({
-  clusterName,
-  onDelete,
+  cluster,
   ...props
 }) => {
+  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
+
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [confirmationVisible, setConfirmationVisible] = useState(false);
@@ -33,25 +47,61 @@ const ClusterDetailOverviewDelete: React.FC<IClusterDetailOverviewDeleteProps> =
     });
   };
 
+  const dispatch = useDispatch();
+
   const handleDelete = async () => {
+    if (!cluster) return;
+
     setIsLoading(true);
     setConfirmationVisible(false);
 
     try {
-      await onDelete();
-    } catch (err: unknown) {
-      const message = (err as Error).message;
+      const client = clientFactory();
 
-      setIsLoading(false);
+      const updatedCluster = await deleteCluster(
+        client,
+        auth,
+        cluster.metadata.namespace!,
+        cluster.metadata.name
+      );
 
       new FlashMessage(
-        `Could not delete cluster ${clusterName}:`,
+        `Cluster ${updatedCluster.metadata.name} deleted successfully.`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+
+      dispatch(push(MainRoutes.Home));
+
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        updatedCluster
+      );
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelOrganization]: orgId,
+            },
+          },
+        })
+      );
+    } catch (err: unknown) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `Could not delete cluster ${cluster.metadata.name}:`,
         messageType.ERROR,
         messageTTL.LONG,
-        message
+        errorMessage
       );
 
       ErrorReporter.getInstance().notify(err as never);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,10 +129,10 @@ const ClusterDetailOverviewDelete: React.FC<IClusterDetailOverviewDeleteProps> =
                 aria-hidden={true}
                 aria-label='Delete'
               />{' '}
-              Delete {clusterName}
+              Delete {cluster.metadata.name}
             </Button>
           }
-          title={`Do you really want to delete cluster ${clusterName}?`}
+          title={`Do you really want to delete cluster ${cluster.metadata.name}?`}
         >
           <Text>
             As you might have read in the text above, this means that there is
@@ -113,8 +163,8 @@ const ClusterDetailOverviewDelete: React.FC<IClusterDetailOverviewDeleteProps> =
 };
 
 ClusterDetailOverviewDelete.propTypes = {
-  clusterName: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  cluster: (PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>)
+    .isRequired,
 };
 
 export default ClusterDetailOverviewDelete;
