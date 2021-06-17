@@ -80,7 +80,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
   return (
     <Wrapper {...rest}>
       <TitleWrapper>
-        <span>Master nodes:</span>
+        <span>Control plane nodes:</span>
       </TitleWrapper>
       <InfoWrapper>
         <SlideTransition

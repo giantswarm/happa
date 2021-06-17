@@ -35,21 +35,21 @@ describe('MasterNodesUtils', () => {
     it('returns the correct value for a maximum node count of 3 and a current value less than the maximum', () => {
       // eslint-disable-next-line no-magic-numbers
       let result = getReadinessLabel(0, 3);
-      expect(result).toBe('0 of 3 master nodes ready');
+      expect(result).toBe('0 of 3 control plane nodes ready');
 
       // eslint-disable-next-line no-magic-numbers
       result = getReadinessLabel(1, 3);
-      expect(result).toBe('1 of 3 master nodes ready');
+      expect(result).toBe('1 of 3 control plane nodes ready');
 
       // eslint-disable-next-line no-magic-numbers
       result = getReadinessLabel(2, 3);
-      expect(result).toBe('2 of 3 master nodes ready');
+      expect(result).toBe('2 of 3 control plane nodes ready');
     });
 
     it('returns the correct value for a maximum node count of 3 and a current value equal to the maximum', () => {
       // eslint-disable-next-line no-magic-numbers
       const result = getReadinessLabel(3, 3);
-      expect(result).toBe('All 3 master nodes ready');
+      expect(result).toBe('All 3 control plane nodes ready');
     });
 
     it('returns the correct value for an unknown current node count', () => {

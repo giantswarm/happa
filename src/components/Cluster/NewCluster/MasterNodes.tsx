@@ -24,7 +24,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
 
   return (
     <InputGroup
-      label='Master nodes'
+      label='Control plane nodes'
       contentProps={{
         gap: 'medium',
       }}
@@ -43,14 +43,14 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           formFieldProps={{ margin: { bottom: 'none' } }}
         />
         <InputSubtitle>
-          Three master nodes, each placed in a separate availability zone,
-          selected at random. Preferred for production clusters.
+          Three control plane nodes, each placed in a separate availability
+          zone, selected at random. Preferred for production clusters.
         </InputSubtitle>
       </fieldset>
       <fieldset>
         <RadioInput
           id='single-master'
-          label='Single master'
+          label='Single control plane node'
           checked={!isHighAvailability}
           value='false'
           name='high-availability'
@@ -58,7 +58,8 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           formFieldProps={{ margin: { bottom: 'none' } }}
         />
         <InputSubtitle>
-          One master node, placed in an availability zone selected at random.
+          One control plane node, placed in an availability zone selected at
+          random.
         </InputSubtitle>
       </fieldset>
     </InputGroup>
