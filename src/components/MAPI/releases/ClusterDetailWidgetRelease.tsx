@@ -2,14 +2,18 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { isClusterUpgradable, isClusterUpgrading } from 'MAPI/clusters/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR from 'swr';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import ClusterDetailStatus from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailStatus';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
@@ -64,6 +68,18 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     return version;
   }, [releaseList?.items, releaseVersion]);
 
+  const provider = useSelector(getProvider);
+  const isAdmin = useSelector(getUserIsAdmin);
+
+  const isDeleting =
+    cluster && typeof cluster.metadata.deletionTimestamp !== 'undefined';
+  const isUpgrading = cluster && isClusterUpgrading(cluster);
+  const isUpgradable = useMemo(() => {
+    if (!releaseList || !cluster) return false;
+
+    return isClusterUpgradable(cluster, provider, isAdmin, releaseList.items);
+  }, [cluster, provider, isAdmin, releaseList]);
+
   return (
     <ClusterDetailWidget
       title='Release'
@@ -103,6 +119,15 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
           />
         )}
       </ClusterDetailWidgetOptionalValue>
+
+      {cluster && (
+        <ClusterDetailStatus
+          isDeleting={isDeleting}
+          isUpgrading={isUpgrading}
+          isUpgradable={isUpgradable}
+          margin={{ left: 'small' }}
+        />
+      )}
     </ClusterDetailWidget>
   );
 };

@@ -147,3 +147,19 @@ export function isClusterUpgradable(
     return false;
   }
 }
+
+export function isClusterUpgrading(cluster: capiv1alpha3.ICluster): boolean {
+  return (
+    capiv1alpha3.isConditionTrue(
+      cluster,
+      capiv1alpha3.conditionTypeUpgrading,
+      capiv1alpha3.withReasonUpgradePending()
+    ) &&
+    capiv1alpha3.isConditionFalse(
+      cluster,
+      capiv1alpha3.conditionTypeUpgrading,
+      capiv1alpha3.withReasonUpgradeNotStarted(),
+      capiv1alpha3.withReasonUpgradeCompleted()
+    )
+  );
+}
