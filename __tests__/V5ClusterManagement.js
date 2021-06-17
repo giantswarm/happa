@@ -472,7 +472,7 @@ scales node pools correctly`, async () => {
     expect(await screen.findByText('Error Loading Apps:')).toBeInTheDocument();
   });
 
-  it(`renders the master nodes row for an unsupported release version`, async () => {
+  it(`renders the control plane nodes row for an unsupported release version`, async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
       release_version: '11.0.0',
     });
@@ -490,7 +490,7 @@ scales node pools correctly`, async () => {
     expect(
       await screen.findByText(/kubernetes endpoint uri/i)
     ).toBeInTheDocument();
-    expect(screen.getByText(/master nodes/i)).toBeInTheDocument();
+    expect(screen.getByText(/control plane nodes/i)).toBeInTheDocument();
     expect(
       screen.queryByText(/switch to high availability…/i)
     ).not.toBeInTheDocument();
@@ -534,10 +534,12 @@ scales node pools correctly`, async () => {
     await waitForElementToBeRemoved(() =>
       screen.getByText(/^switch to high availability$/i)
     );
-    expect(screen.getByText(/1 of 3 master nodes ready/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/1 of 3 control plane nodes ready/i)
+    ).toBeInTheDocument();
   });
 
-  it(`can't convert a cluster that is not ready to HA masters`, async () => {
+  it(`can't convert a cluster that is not ready to HA control plane`, async () => {
     const clusterResponse = Object.assign({}, v5ClusterResponse, {
       conditions: [
         {
