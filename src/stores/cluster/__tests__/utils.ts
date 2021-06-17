@@ -113,7 +113,7 @@ describe('cluster::utils', () => {
       expect(getNumberOfNodes(cluster)).toBe(0);
     });
 
-    it('returns the number of total worker nodes, discarding master nodes', () => {
+    it('returns the number of total worker nodes, discarding control plane nodes', () => {
       const cluster: V4.ICluster = {
         api_endpoint: '',
         create_date: null,
