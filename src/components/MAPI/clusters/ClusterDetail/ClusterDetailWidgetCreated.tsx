@@ -1,13 +1,12 @@
 import { Text } from 'grommet';
 import { formatDate, relativeDate } from 'lib/helpers';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
-
-import { IClusterItem } from '../types';
-import ClusterDetailWidget from './ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from './ClusterDetailWidgetOptionalValue';
+import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
+import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -15,15 +14,18 @@ const StyledDot = styled(Dot)`
 
 interface IClusterDetailWidgetCreatedProps
   extends Omit<
-      React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-      'title'
-    >,
-    Pick<IClusterItem, 'creationDate'> {}
+    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+    'title'
+  > {
+  cluster?: capiv1alpha3.ICluster;
+}
 
 const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = ({
-  creationDate,
+  cluster,
   ...props
 }) => {
+  const creationDate = cluster?.metadata.creationTimestamp;
+
   return (
     <ClusterDetailWidget
       title='Created'
@@ -48,7 +50,7 @@ const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = (
 };
 
 ClusterDetailWidgetCreated.propTypes = {
-  creationDate: PropTypes.string,
+  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetCreated;

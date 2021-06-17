@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import NotAvailable from 'UI/Display/NotAvailable';
 
-import { IClusterItem } from '../types';
 import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
 
 function pluralizeLabel(count: number, base: string) {
@@ -46,14 +45,12 @@ const StyledDot = styled(Dot)`
 `;
 
 interface IClusterListItemNodeInfoProps
-  extends Pick<
-      IClusterItem,
-      | 'workerNodePoolsCount'
-      | 'workerNodesCPU'
-      | 'workerNodesCount'
-      | 'workerNodesMemory'
-    >,
-    React.ComponentPropsWithoutRef<typeof Box> {}
+  extends React.ComponentPropsWithoutRef<typeof Box> {
+  workerNodePoolsCount?: number;
+  workerNodesCPU?: number;
+  workerNodesCount?: number;
+  workerNodesMemory?: number;
+}
 
 const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
   workerNodePoolsCount,
