@@ -10,12 +10,14 @@ describe('MasterNodes', () => {
   it('renders 2 radio inputs with labels that have detailed explanations', () => {
     renderWithTheme(MasterNodes, {});
 
-    const haLabel = /Three master nodes, each placed in a separate availability zone, selected at random. Preferred for production clusters./i;
+    const haLabel = /Three control plane nodes, each placed in a separate availability zone, selected at random. Preferred for production clusters./i;
     expect(screen.getByLabelText(/high availability/i)).toBeInTheDocument();
     expect(screen.getByText(haLabel)).toBeInTheDocument();
 
-    const singleMasterLabel = /One master node, placed in an availability zone selected at random./i;
-    expect(screen.getByLabelText(/single master/i)).toBeInTheDocument();
+    const singleMasterLabel = /One control plane node, placed in an availability zone selected at random./i;
+    expect(
+      screen.getByLabelText(/single control plane node/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(singleMasterLabel)).toBeInTheDocument();
   });
 
@@ -27,7 +29,7 @@ describe('MasterNodes', () => {
     let haInput = screen.getByLabelText(/high availability/i);
     expect(haInput).toBeChecked();
 
-    let singleMasterInput = screen.getByLabelText(/single master/i);
+    let singleMasterInput = screen.getByLabelText(/single control plane node/i);
     expect(singleMasterInput).not.toBeChecked();
 
     rerender(getComponentWithTheme(MasterNodes, { isHighAvailability: false }));
@@ -35,7 +37,7 @@ describe('MasterNodes', () => {
     haInput = screen.getByLabelText(/high availability/i);
     expect(haInput).not.toBeChecked();
 
-    singleMasterInput = screen.getByLabelText(/single master/i);
+    singleMasterInput = screen.getByLabelText(/single control plane node/i);
     expect(singleMasterInput).toBeChecked();
   });
 
@@ -57,7 +59,7 @@ describe('MasterNodes', () => {
       })
     );
 
-    fireEvent.click(screen.getByLabelText(/single master/i));
+    fireEvent.click(screen.getByLabelText(/single control plane node/i));
     expect(changeCallbackMock).toBeCalledWith(false);
   });
 });

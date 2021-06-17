@@ -5,6 +5,8 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
+import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
@@ -15,11 +17,12 @@ import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Tab } from 'react-bootstrap';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Tabs from 'shared/Tabs';
+import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
@@ -35,6 +38,17 @@ function computePaths(orgName: string, clusterName: string) {
       orgId: orgName,
       clusterId: clusterName,
     }),
+    Apps: RoutePath.createUsablePath(OrganizationsRoutes.Clusters.Detail.Apps, {
+      orgId: orgName,
+      clusterId: clusterName,
+    }),
+    Ingress: RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.Ingress,
+      {
+        orgId: orgName,
+        clusterId: clusterName,
+      }
+    ),
   };
 }
 
@@ -117,6 +131,12 @@ const ClusterDetail: React.FC<{}> = () => {
   const clusterDescription = cluster
     ? capiv1alpha3.getClusterDescription(cluster)
     : undefined;
+  const clusterReleaseVersion = cluster
+    ? capiv1alpha3.getReleaseVersion(cluster)
+    : undefined;
+  const clusterK8sApiURL = cluster
+    ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
+    : undefined;
 
   const updateDescription = async (newValue: string) => {
     if (!cluster) return;
@@ -151,6 +171,8 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   };
 
+  const provider = useSelector(getProvider);
+
   return (
     <Breadcrumb
       data={{
@@ -180,8 +202,29 @@ const ClusterDetail: React.FC<{}> = () => {
         </Heading>
         <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
           <Tab eventKey={paths.Home} title='Overview' />
+          <Tab eventKey={paths.Apps} title='Apps' />
+          <Tab eventKey={paths.Ingress} title='Ingress' />
         </Tabs>
         <Switch>
+          <Route
+            path={OrganizationsRoutes.Clusters.Detail.Apps}
+            render={() =>
+              cluster && (
+                <ClusterDetailApps releaseVersion={clusterReleaseVersion!} />
+              )
+            }
+          />
+          <Route
+            path={OrganizationsRoutes.Clusters.Detail.Ingress}
+            render={() =>
+              cluster && (
+                <ClusterDetailIngress
+                  provider={provider}
+                  k8sEndpoint={clusterK8sApiURL}
+                />
+              )
+            }
+          />
           <Route
             path={OrganizationsRoutes.Clusters.Detail.Home}
             component={ClusterDetailOverview}

@@ -39,8 +39,8 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
     <div {...rest}>
       <p>
         <Strong>
-          Do you want to convert this cluster to use three master nodes instead
-          of one?
+          Do you want to convert this cluster to use three control plane nodes
+          instead of one?
         </Strong>
       </p>
       <p>
