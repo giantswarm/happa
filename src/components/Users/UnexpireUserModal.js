@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import UsersModal, { UsersModalPropTypes } from './UsersModal';
+import UsersModal from './UsersModal';
 
 const UnexpireUserModal = ({ forUser, isLoading, ...props }) => {
   const confirmButtonText = isLoading
@@ -28,7 +28,16 @@ UnexpireUserModal.defaultProps = {
 };
 
 UnexpireUserModal.propTypes = {
-  ...UsersModalPropTypes,
+  show: PropTypes.bool,
+  title: PropTypes.string,
+  onClose: PropTypes.func,
+  onConfirm: PropTypes.func,
+  isLoading: PropTypes.bool,
+  children: PropTypes.node,
+  confirmText: PropTypes.string,
+  confirmDisabled: PropTypes.bool,
+  confirmHidden: PropTypes.bool,
+  cancelText: PropTypes.string,
   forUser: PropTypes.string,
 };
 

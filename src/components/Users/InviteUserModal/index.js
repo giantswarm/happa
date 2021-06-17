@@ -2,7 +2,7 @@ import usePrevious from 'lib/hooks/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
-import UsersModal, { UsersModalPropTypes } from '../UsersModal';
+import UsersModal from '../UsersModal';
 import InviteUserForm from './InviteUserForm';
 import InviteUserSuccess from './InviteUserSuccess';
 
@@ -143,7 +143,16 @@ InviteUserModal.defaultProps = {
 };
 
 InviteUserModal.propTypes = {
-  ...UsersModalPropTypes,
+  show: PropTypes.bool,
+  title: PropTypes.string,
+  onClose: PropTypes.func,
+  onConfirm: PropTypes.func,
+  isLoading: PropTypes.bool,
+  children: PropTypes.node,
+  confirmText: PropTypes.string,
+  confirmDisabled: PropTypes.bool,
+  confirmHidden: PropTypes.bool,
+  cancelText: PropTypes.string,
   organizations: PropTypes.object,
   initiallySelectedOrganizations: PropTypes.arrayOf(PropTypes.string),
   invitationResult: PropTypes.object,

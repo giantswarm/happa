@@ -17,7 +17,7 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import ProxyPlugin from './scripts/webpack/proxyPlugin';
-import common from './webpack.common';
+import common, { compilerConfig } from './webpack.common';
 
 const config: webpack.Configuration = merge(common, {
   mode: 'development',
@@ -75,6 +75,14 @@ const config: webpack.Configuration = merge(common, {
   ],
   module: {
     rules: [
+      {
+        test: /\.(js|ts)(x?)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: require.resolve('swc-loader'),
+          options: compilerConfig,
+        },
+      },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],

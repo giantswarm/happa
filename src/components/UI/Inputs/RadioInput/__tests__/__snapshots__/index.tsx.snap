@@ -8,7 +8,7 @@ exports[`RadioInput renders a disabled input 1`] = `
     class="sc-gKckTs izRacH"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-cvlWAi bTKjhc"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-fTQuIj gnLcAf"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -50,7 +50,7 @@ exports[`RadioInput renders a simple input 1`] = `
     class="sc-gKckTs izRacH"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-cvlWAi bTKjhc"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-fTQuIj gnLcAf"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -90,7 +90,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
     class="sc-gKckTs izRacH"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-cvlWAi bTKjhc"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-fTQuIj gnLcAf"
     >
       <label
         class="StyledText-sc-1sadyjn-0 weZKr"
@@ -138,7 +138,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
     class="sc-gKckTs izRacH"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-cvlWAi bTKjhc"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-fTQuIj gnLcAf"
     >
       <span
         class="StyledText-sc-1sadyjn-0 hosPKv"
@@ -183,7 +183,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
     class="sc-gKckTs izRacH"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-cvlWAi bTKjhc"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-fTQuIj gnLcAf"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -228,7 +228,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
     class="sc-gKckTs izRacH"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-cvlWAi bTKjhc"
+      class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-fTQuIj gnLcAf"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"

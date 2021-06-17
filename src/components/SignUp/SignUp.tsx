@@ -49,8 +49,13 @@ interface ISignUpState {
   advancable: boolean;
 }
 
-export class SignUp extends React.Component<ISignUpProps, ISignUpState> {
-  public static propTypes = {};
+class SignUp extends React.Component<ISignUpProps, ISignUpState> {
+  public static propTypes = {
+    match: PropTypes.object,
+    dispatch: PropTypes.func,
+    actions: PropTypes.object,
+  };
+
   private password: HTMLInputElement | null = null;
   private passwordConfirmation: HTMLInputElement | null = null;
 
@@ -432,12 +437,6 @@ export class SignUp extends React.Component<ISignUpProps, ISignUpState> {
   }
 }
 
-SignUp.propTypes = {
-  match: PropTypes.object,
-  dispatch: PropTypes.func,
-  actions: PropTypes.object,
-};
-
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
     actions: bindActionCreators(mainActions, dispatch),
@@ -445,4 +444,5 @@ function mapDispatchToProps(dispatch: Dispatch) {
   };
 }
 
+// @ts-expect-error
 export default connect(null, mapDispatchToProps)(SignUp);

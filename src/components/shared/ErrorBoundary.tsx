@@ -12,7 +12,7 @@ interface IErrorBoundaryState {
   hasError: boolean;
 }
 
-export default class ErrorBoundary extends Component<
+class ErrorBoundary extends Component<
   IErrorBoundaryProps,
   IErrorBoundaryState
 > {
@@ -48,3 +48,5 @@ export default class ErrorBoundary extends Component<
     return this.props.children;
   }
 }
+
+export default ErrorBoundary;

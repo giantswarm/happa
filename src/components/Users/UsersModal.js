@@ -65,7 +65,7 @@ UsersModal.defaultProps = {
   cancelText: 'Cancel',
 };
 
-export const UsersModalPropTypes = {
+UsersModal.propTypes = {
   show: PropTypes.bool,
   title: PropTypes.string,
   onClose: PropTypes.func,
@@ -77,7 +77,5 @@ export const UsersModalPropTypes = {
   confirmHidden: PropTypes.bool,
   cancelText: PropTypes.string,
 };
-
-UsersModal.propTypes = UsersModalPropTypes;
 
 export default UsersModal;

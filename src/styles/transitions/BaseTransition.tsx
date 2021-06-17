@@ -3,19 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-export const BaseTransitionPropTypes = {
-  in: PropTypes.bool,
-  children: PropTypes.node.isRequired,
-  timeout: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      appear: PropTypes.number,
-      enter: PropTypes.number,
-      exit: PropTypes.number,
-    }),
-  ]),
-};
-
 interface IBaseTransitionProps
   extends React.ComponentPropsWithoutRef<typeof CSSTransition> {
   classNames: string;
@@ -50,7 +37,16 @@ BaseTransition.defaultProps = {
 };
 
 BaseTransition.propTypes = {
-  ...BaseTransitionPropTypes,
+  in: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+  timeout: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
+  ]),
   classNames: PropTypes.string.isRequired,
   delayTimeout: PropTypes.number,
 };
