@@ -1,12 +1,14 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-magic-numbers, no-console */
 
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const process = require('process');
-const dotenv = require('dotenv');
-const getServiceURL = require('./scripts/webpack/getServiceURL');
-const chalk = require('chalk');
+import chalk from 'chalk';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import dotenv from 'dotenv';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import path from 'path';
+import process from 'process';
+import webpack from 'webpack';
+
+import getServiceURL from './scripts/webpack/getServiceURL';
 
 const envFileVars = dotenv.config().parsed;
 
@@ -47,7 +49,7 @@ const determineAudienceURL = () => {
   return apiAudienceUrl;
 };
 
-function makeMapiEndpointURL(currentValue, apiEndpoint) {
+function makeMapiEndpointURL(currentValue: string, apiEndpoint: string) {
   if (!apiEndpoint.includes('localhost')) {
     return apiEndpoint.replace('api', 'happaapi');
   }
@@ -55,7 +57,7 @@ function makeMapiEndpointURL(currentValue, apiEndpoint) {
   return currentValue;
 }
 
-function makeMapiAudienceURL(currentValue, mapiEndpoint) {
+function makeMapiAudienceURL(currentValue: string, mapiEndpoint: string) {
   if (!mapiEndpoint.includes('localhost')) {
     return mapiEndpoint.replace('happaapi', 'dex');
   }
@@ -101,7 +103,7 @@ const makeFeatureFlags = () => {
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
-  const flags = {};
+  const flags: Record<string, boolean> = {};
   for (const flagName of Object.keys(defaults)) {
     const flagValue = dirtyFlags[flagName];
     switch (typeof flagValue) {
@@ -118,7 +120,7 @@ const makeFeatureFlags = () => {
   return flags;
 };
 
-module.exports = {
+const config: webpack.Configuration = {
   amd: false,
   entry: ['./src/components/index.tsx'],
   context: __dirname,
@@ -245,7 +247,7 @@ module.exports = {
     cacheWithContext: false,
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    (new CleanWebpackPlugin() as unknown) as webpack.WebpackPluginInstance,
     new HtmlWebpackPlugin({
       template: 'src/index.ejs',
       templateParameters: {
@@ -255,3 +257,5 @@ module.exports = {
     }),
   ],
 };
+
+export default config;
