@@ -1,19 +1,23 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-magic-numbers, no-console */
+
 /*
  * Webpack distribution configuration
  *
  * This file is set up for serving the distribution version. It will be compiled to dist/ by default
  */
 
-const webpack = require('webpack');
-const merge = require('webpack-merge').merge;
-const common = require('./webpack.common.js');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const SentryCliPlugin = require('@sentry/webpack-plugin');
-const envFileVars = require('dotenv').config().parsed;
+import SentryCliPlugin from '@sentry/webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import dotenv from 'dotenv';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import webpack from 'webpack';
+import { merge } from 'webpack-merge';
+
+import common from './webpack.common';
+
+const envFileVars = dotenv.config().parsed;
 
 const {
   SENTRY_UPLOAD_SOURCEMAPS,
@@ -29,17 +33,16 @@ const {
   process.env
 );
 
-const plugins = [
+const plugins: webpack.WebpackPluginInstance[] = [
   new webpack.SourceMapDevToolPlugin({
     filename: '[file].map[query]',
     append: '//# sourceMappingURL=[url]',
   }),
-  new MiniCssExtractPlugin({
+  (new MiniCssExtractPlugin({
     filename: 'assets/[name].[chunkhash:12].css',
     chunkFilename: 'assets/[id].[chunkhash:12].css',
-  }),
-  // Momentary solution until we do code splitting
-  new CopyPlugin({
+  }) as unknown) as webpack.WebpackPluginInstance,
+  (new CopyPlugin({
     patterns: [
       { from: 'src/metadata.json', to: 'metadata.json' },
       {
@@ -50,7 +53,7 @@ const plugins = [
         to: 'images',
       },
     ],
-  }),
+  }) as unknown) as webpack.WebpackPluginInstance,
 ];
 
 if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
@@ -67,7 +70,7 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
   );
 }
 
-module.exports = merge(common, {
+const config: webpack.Configuration = merge(common, {
   mode: 'production',
   devtool: false,
   stats: {
@@ -76,10 +79,10 @@ module.exports = merge(common, {
   },
   optimization: {
     minimizer: [
-      new TerserPlugin({
+      (new TerserPlugin({
         extractComments: 'some',
-      }),
-      new CssMinimizerPlugin(),
+      }) as unknown) as webpack.WebpackPluginInstance,
+      (new CssMinimizerPlugin() as unknown) as webpack.WebpackPluginInstance,
     ],
     moduleIds: 'deterministic',
     runtimeChunk: 'single',
@@ -107,3 +110,5 @@ module.exports = merge(common, {
     ],
   },
 });
+
+export default config;
