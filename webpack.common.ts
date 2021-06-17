@@ -1,5 +1,6 @@
 /* eslint-disable no-magic-numbers, no-console */
 
+import { Config, ReactConfig } from '@swc/core';
 import chalk from 'chalk';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import dotenv from 'dotenv';
@@ -120,6 +121,29 @@ const makeFeatureFlags = () => {
   return flags;
 };
 
+export const compilerConfig: Config = {
+  jsc: {
+    target: 'es2015',
+    parser: {
+      syntax: 'typescript',
+      tsx: true,
+      decorators: true,
+      dynamicImport: true,
+    },
+    transform: {
+      legacyDecorator: true,
+      decoratorMetadata: true,
+      react: {
+        runtime: 'automatic',
+      } as ReactConfig,
+    },
+    externalHelpers: true,
+  },
+  env: {
+    targets: '> 0.25%, not dead',
+  },
+};
+
 const config: webpack.Configuration = {
   amd: false,
   entry: ['./src/components/index.tsx'],
@@ -132,35 +156,6 @@ const config: webpack.Configuration = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js|ts)(x?)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'swc-loader',
-          options: {
-            jsc: {
-              target: 'es2015',
-              parser: {
-                syntax: 'typescript',
-                tsx: true,
-                decorators: true,
-                dynamicImport: true,
-              },
-              transform: {
-                legacyDecorator: true,
-                decoratorMetadata: true,
-                react: {
-                  runtime: 'automatic',
-                },
-              },
-              externalHelpers: true,
-            },
-            env: {
-              targets: '> 0.25%, not dead',
-            },
-          },
-        },
-      },
       {
         test: /\.m?js/,
         resolve: {
