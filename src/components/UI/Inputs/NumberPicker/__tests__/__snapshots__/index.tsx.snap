@@ -29,7 +29,7 @@ exports[`NumberPicker renders a simple input 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dkAuoK sc-hgKjYe fWsLrn"
+            class="StyledTextInput-sc-1x30a0s-0 dkAuoK sc-fivbrB kxfvwa"
             id="money"
             step="1"
             type="number"
@@ -37,18 +37,18 @@ exports[`NumberPicker renders a simple input 1`] = `
           />
         </div>
         <div
-          class="sc-fivbrB djFteD"
+          class="sc-lgasUg bYwzvj"
         >
           <div
             aria-label="Decrement"
-            class="sc-lgasUg knPBPk"
+            class="sc-hKTJL idEaiu"
             role="button"
           >
             –
           </div>
           <div
             aria-label="Increment"
-            class="sc-lgasUg knPBPk"
+            class="sc-hKTJL idEaiu"
             role="button"
           >
             +

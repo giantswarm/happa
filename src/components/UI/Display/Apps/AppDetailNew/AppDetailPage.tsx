@@ -30,6 +30,10 @@ const HeaderDetails = styled.div`
   flex: 1;
 `;
 
+const NonBreakingLink = styled.a`
+  white-space: nowrap;
+`;
+
 const Upper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -325,9 +329,13 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             <small>WEBSITE</small>
             <AppDetailPageOptionalValue value={props.website}>
               {(value) => (
-                <a href={value} target='_blank' rel='noopener noreferrer'>
-                  {value}
-                </a>
+                <NonBreakingLink
+                  href={value}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {value} <i className='fa fa-open-in-new' />
+                </NonBreakingLink>
               )}
             </AppDetailPageOptionalValue>
           </Detail>
