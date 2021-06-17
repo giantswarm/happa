@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires, no-magic-numbers, no-console */
+/* eslint-disable no-magic-numbers, no-console */
 
 /*
  * Webpack development server configuration
@@ -11,18 +11,22 @@
  * HAPPA_PROXY_INSTALLATION=ginger yarn start
  */
 
-const merge = require('webpack-merge').merge;
-const common = require('./webpack.common.js');
-const webpack = require('webpack');
-const ProxyPlugin = require('./scripts/webpack/proxyPlugin');
+import 'webpack-dev-server';
 
-module.exports = merge(common, {
+import webpack from 'webpack';
+import merge from 'webpack-merge';
+
+import ProxyPlugin from './scripts/webpack/proxyPlugin';
+import common from './webpack.common';
+
+const config: webpack.Configuration = merge(common, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
   cache: true,
   output: {
     filename: 'assets/[name].js',
   },
+  // @ts-expect-error
   devServer: {
     contentBase: './src',
     hotOnly: true,
@@ -37,9 +41,10 @@ module.exports = merge(common, {
       '/catalogs': {
         target: 'https://cors-anywhere.herokuapp.com/',
         changeOrigin: true,
-        onProxyReq: (proxyReq) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onProxyReq: (proxyReq: Record<string, any>) => {
           const wantedUrl = proxyReq.path.substr(
-            proxyReq.path.indexOf('?url=') + 5
+            (proxyReq.path as string).indexOf('?url=') + 5
           );
           proxyReq.path = `/${wantedUrl}`;
           proxyReq.setHeader('origin', 'http://localhost:7000');
@@ -81,3 +86,5 @@ module.exports = merge(common, {
     ],
   },
 });
+
+export default config;

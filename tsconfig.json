@@ -24,5 +24,10 @@
     },
     "typeRoots": ["node_modules/@types", "src/@types"]
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
   "include": ["./*.**", "src", "testUtils", "__tests__"]
 }
