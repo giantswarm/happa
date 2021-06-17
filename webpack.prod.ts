@@ -7,15 +7,17 @@
  */
 
 import SentryCliPlugin from '@sentry/webpack-plugin';
+import { Program } from '@swc/core';
 import CopyPlugin from 'copy-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import dotenv from 'dotenv';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-import { merge } from 'webpack-merge';
+import merge from 'webpack-merge';
 
-import common from './webpack.common';
+import PropTypesStripper from './scripts/swc/PropTypesStripper';
+import common, { compilerConfig } from './webpack.common';
 
 const envFileVars = dotenv.config().parsed;
 
@@ -99,6 +101,16 @@ const config: webpack.Configuration = merge(common, {
   plugins,
   module: {
     rules: [
+      {
+        test: /\.(js|ts)(x?)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: require.resolve('swc-loader'),
+          options: Object.assign({}, compilerConfig, {
+            plugin: (m: Program) => new PropTypesStripper().visitProgram(m),
+          }),
+        },
+      },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],

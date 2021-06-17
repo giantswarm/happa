@@ -7,5 +7,5 @@
       "__tests__/*": ["./__tests__/*"]
     }
   },
-  "include": ["src", "testUtils", "__tests__"]
+  "include": ["src", "testUtils", "__tests__", "scripts"]
 }

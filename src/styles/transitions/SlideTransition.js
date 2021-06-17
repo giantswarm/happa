@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import BaseTransition, { BaseTransitionPropTypes } from './BaseTransition';
+import BaseTransition from './BaseTransition';
 
 const SlideTransition = ({ direction, children, ...props }) => {
   return (
@@ -16,7 +16,16 @@ SlideTransition.defaultProps = {
 };
 
 SlideTransition.propTypes = {
-  ...BaseTransitionPropTypes,
+  in: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+  timeout: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
+  ]),
   direction: PropTypes.oneOf(['up', 'down', 'right', 'left']),
 };
 

@@ -446,10 +446,6 @@ class ClusterDetailView extends React.Component {
   }
 }
 
-ClusterDetailView.contextTypes = {
-  router: PropTypes.object,
-};
-
 ClusterDetailView.propTypes = {
   cluster: PropTypes.object,
   user: PropTypes.object,
