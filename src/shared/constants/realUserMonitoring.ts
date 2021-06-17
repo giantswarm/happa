@@ -2,6 +2,7 @@ export enum RUMActions {
   WindowResize = 'WINDOW_RESIZE',
   WindowLoad = 'WINDOW_LOAD',
   WebVitals = 'WEB_VITALS',
+  URIChange = 'URI_CHANGE',
 
   ClickMainNavLogo = 'CLICK_MAINNAV_LOGO',
 

@@ -21,12 +21,12 @@ export function getReadinessLabel(
       return 'Not ready';
     }
 
-    return `${currentNodeCount} of ${maxNodeCount} master nodes ready`;
+    return `${currentNodeCount} of ${maxNodeCount} control plane nodes ready`;
   }
 
   if (maxNodeCount === 1) {
     return 'Ready';
   }
 
-  return `All ${maxNodeCount} master nodes ready`;
+  return `All ${maxNodeCount} control plane nodes ready`;
 }

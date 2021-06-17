@@ -38,7 +38,9 @@ describe('MasterNodes', () => {
       supportsReadyNodes: true,
     });
 
-    expect(screen.getByText(/all 3 master nodes ready/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/all 3 control plane nodes ready/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(/availability zones/i)).toBeInTheDocument();
     expect(screen.getByText(/^b$/i)).toBeInTheDocument();
     expect(screen.getByText(/^c$/i)).toBeInTheDocument();
@@ -54,7 +56,9 @@ describe('MasterNodes', () => {
       supportsReadyNodes: true,
     });
 
-    expect(screen.getByText(/all 3 master nodes ready/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/all 3 control plane nodes ready/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(/availability zone/i)).toBeInTheDocument();
     expect(screen.getByText(/^n\/a$/i)).toBeInTheDocument();
   });
@@ -77,7 +81,7 @@ describe('MasterNodes', () => {
     fireEvent.click(switchButton);
 
     const converterLabel = await screen.findByText(
-      /Do you want to convert this cluster to use three master nodes instead of one\?/i
+      /Do you want to convert this cluster to use three control plane nodes instead of one\?/i
     );
     expect(converterLabel).toBeInTheDocument();
 
@@ -108,7 +112,7 @@ describe('MasterNodes', () => {
 
     expect(
       await screen.findByText(
-        /Do you want to convert this cluster to use three master nodes instead of one\?/i
+        /Do you want to convert this cluster to use three control plane nodes instead of one\?/i
       )
     ).toBeInTheDocument();
 
