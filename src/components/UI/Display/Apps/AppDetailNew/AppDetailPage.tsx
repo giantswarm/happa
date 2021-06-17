@@ -326,8 +326,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             <AppDetailPageOptionalValue value={props.website}>
               {(value) => (
                 <a href={value} target='_blank' rel='noopener noreferrer'>
-                  {value}&nbsp;
-                  <i className='fa fa-open-in-new' />
+                  {value} <i className='fa fa-open-in-new' />
                 </a>
               )}
             </AppDetailPageOptionalValue>
