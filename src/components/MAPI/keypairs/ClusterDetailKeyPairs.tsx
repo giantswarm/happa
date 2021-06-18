@@ -8,7 +8,7 @@ import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import Copyable from 'shared/Copyable';
 import useSWR from 'swr';
@@ -24,6 +24,7 @@ import {
 } from 'UI/Display/Table';
 import Truncated from 'UI/Util/Truncated';
 
+import ClusterDetailKeyPairDetailsModal from './ClusterDetailKeyPairDetailsModal';
 import { getKeyPairExpirationDate, isKeyPairExpiringSoon } from './utils';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
@@ -94,6 +95,35 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     }
   }, [keyPairListError]);
 
+  const [selectedKeyPairSerial, setSelectedKeyPairSerial] = useState('');
+
+  const selectedKeyPair = useMemo(() => {
+    if (!keyPairList) return undefined;
+
+    return keyPairList.items.find(
+      (i) => i.serial_number === selectedKeyPairSerial
+    );
+  }, [keyPairList, selectedKeyPairSerial]);
+
+  const [selectedKeyPairExpirationDate, isSelectedKeyPairExpiringSoon] =
+    useMemo(() => {
+      if (!selectedKeyPair) return [undefined, false];
+
+      const expirationDate =
+        getKeyPairExpirationDate(selectedKeyPair).toISOString();
+      const isExpiringSoon = isKeyPairExpiringSoon(selectedKeyPair);
+
+      return [expirationDate, isExpiringSoon];
+    }, [selectedKeyPair]);
+
+  const handleOpenDetails = (serial: string) => () => {
+    setSelectedKeyPairSerial(serial);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedKeyPairSerial('');
+  };
+
   return (
     <Box>
       <Box>
@@ -148,7 +178,12 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                   {formatExpirationDate(keyPair)}
                 </TableCell>
                 <TableCell size='xsmall'>
-                  <Button bsSize='sm'>Details</Button>
+                  <Button
+                    bsSize='sm'
+                    onClick={handleOpenDetails(keyPair.serial_number)}
+                  >
+                    Details
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -164,6 +199,18 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
           )}
         </TableBody>
       </Table>
+
+      <ClusterDetailKeyPairDetailsModal
+        id={selectedKeyPair?.serial_number}
+        commonName={selectedKeyPair?.common_name}
+        organizations={selectedKeyPair?.certificate_organizations}
+        creationDate={selectedKeyPair?.create_date}
+        expirationDate={selectedKeyPairExpirationDate}
+        isExpiringSoon={isSelectedKeyPairExpiringSoon}
+        description={selectedKeyPair?.description}
+        onClose={handleCloseDetails}
+        visible={typeof selectedKeyPair !== 'undefined'}
+      />
     </Box>
   );
 };
