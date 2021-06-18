@@ -204,7 +204,7 @@ export function compareDates(
  * @param date
  */
 // TODO(axbarsan): Refactor a part of this into a UI component.
-export function relativeDate(date?: string): ReactElement {
+export function relativeDate(date?: string | number | Date): ReactElement {
   if (!date) {
     return <NotAvailable />;
   }
