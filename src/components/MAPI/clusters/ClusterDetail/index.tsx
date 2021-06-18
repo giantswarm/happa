@@ -7,6 +7,7 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
+import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
 import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
@@ -44,6 +45,13 @@ function computePaths(orgName: string, clusterName: string) {
     }),
     Ingress: RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Ingress,
+      {
+        orgId: orgName,
+        clusterId: clusterName,
+      }
+    ),
+    KeyPairs: RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.KeyPairs,
       {
         orgId: orgName,
         clusterId: clusterName,
@@ -203,6 +211,7 @@ const ClusterDetail: React.FC<{}> = () => {
         <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
           <Tab eventKey={paths.Home} title='Overview' />
           <Tab eventKey={paths.Apps} title='Apps' />
+          <Tab eventKey={paths.KeyPairs} title='Key pairs' />
           <Tab eventKey={paths.Ingress} title='Ingress' />
         </Tabs>
         <Switch>
@@ -213,6 +222,10 @@ const ClusterDetail: React.FC<{}> = () => {
                 <ClusterDetailApps releaseVersion={clusterReleaseVersion!} />
               )
             }
+          />
+          <Route
+            path={OrganizationsRoutes.Clusters.Detail.KeyPairs}
+            component={ClusterDetailKeyPairs}
           />
           <Route
             path={OrganizationsRoutes.Clusters.Detail.Ingress}
