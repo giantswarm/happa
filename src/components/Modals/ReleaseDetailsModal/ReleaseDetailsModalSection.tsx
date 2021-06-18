@@ -14,9 +14,10 @@ interface IReleaseDetailsModalSectionProps
 const ReleaseDetailsModalSection: React.FC<IReleaseDetailsModalSectionProps> = ({
   title,
   children,
+  ...props
 }) => {
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       {title && (
         <h5>
           <strong>{title}</strong>
