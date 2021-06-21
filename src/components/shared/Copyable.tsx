@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,17 +15,16 @@ const TooltipWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  .copyable {
-    padding-right: 20px;
-    position: relative;
-    overflow: inherit;
-    text-overflow: inherit;
-    display: inherit;
+  padding-right: 20px;
+  position: relative;
+  overflow: inherit;
+  text-overflow: inherit;
+  display: inherit;
 
-    &:hover {
-      ${TooltipWrapper} {
-        opacity: 0.7;
-      }
+  &:hover,
+  &:focus-visible {
+    ${TooltipWrapper} {
+      opacity: 0.7;
     }
   }
 `;
@@ -51,32 +51,41 @@ const Copyable: React.FC<ICopyableProps> = ({ children, copyText }) => {
     setClipboardContent(null);
   };
 
-  return (
-    <Wrapper
-      onClick={handleCopyToClipboard}
-      onMouseLeave={handleDisplayCopyingDone}
-      style={{ cursor: 'pointer' }}
-      title='Copy content to clipboard'
-    >
-      <Content>{children}</Content>
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
 
-      <TooltipWrapper>
-        {hasContentInClipboard ? (
-          <i
-            aria-hidden='true'
-            className='fa fa-done'
-            title='Content copied to clipboard'
-          />
-        ) : (
-          <OverlayTrigger
-            overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
-            placement='top'
-          >
-            <i aria-hidden='true' className='fa fa-content-copy' />
-          </OverlayTrigger>
-        )}
-      </TooltipWrapper>
-    </Wrapper>
+    handleCopyToClipboard();
+  };
+
+  return (
+    <Keyboard onSpace={handleKeyDown} onEnter={handleKeyDown}>
+      <Wrapper
+        onClick={handleCopyToClipboard}
+        onMouseLeave={handleDisplayCopyingDone}
+        style={{ cursor: 'pointer' }}
+        title='Copy content to clipboard'
+        tabIndex={0}
+      >
+        <Content>{children}</Content>
+
+        <TooltipWrapper>
+          {hasContentInClipboard ? (
+            <i
+              aria-hidden='true'
+              className='fa fa-done'
+              title='Content copied to clipboard'
+            />
+          ) : (
+            <OverlayTrigger
+              overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
+              placement='top'
+            >
+              <i aria-hidden='true' className='fa fa-content-copy' />
+            </OverlayTrigger>
+          )}
+        </TooltipWrapper>
+      </Wrapper>
+    </Keyboard>
   );
 };
 

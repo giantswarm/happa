@@ -14,7 +14,7 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
         class="StyledBox-sc-13pk1d4-0 dLeNOM"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 iFfteu sc-fDMmKd etDSMI"
+          class="StyledText-sc-1sadyjn-0 iFfteu sc-lVUNM hWEZKB"
         >
           Some widget
         </span>
@@ -47,7 +47,7 @@ exports[`ClusterDetailWidget renders a simple widget 1`] = `
         class="StyledBox-sc-13pk1d4-0 kYALZS"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 iFfteu sc-fDMmKd etDSMI"
+          class="StyledText-sc-1sadyjn-0 iFfteu sc-lVUNM hWEZKB"
         >
           Some widget
         </span>
