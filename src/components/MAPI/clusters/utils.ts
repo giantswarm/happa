@@ -1,5 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { IRelease, ReleaseHelper } from 'lib/ReleaseHelper';
+import * as releasesUtils from 'MAPI/releases/utils';
 import { IMachineType } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
@@ -117,28 +117,12 @@ export function isClusterUpgradable(
   if (!releaseVersion) return false;
 
   try {
-    const mappedReleases = releases.reduce(
-      (acc: Record<string, IRelease>, r: releasev1alpha1.IRelease) => {
-        // Remove the `v` prefix.
-        const normalizedVersion = r.metadata.name.slice(1);
-
-        acc[normalizedVersion] = {
-          version: normalizedVersion,
-          active: r.spec.state === 'active',
-        };
-
-        return acc;
-      },
-      {}
-    );
-
-    const releaseHelper = new ReleaseHelper({
-      availableReleases: mappedReleases,
+    const releaseHelper = releasesUtils.getReleaseHelper(
+      releaseVersion,
       provider,
-      currentReleaseVersion: releaseVersion,
       isAdmin,
-      ignorePreReleases: true,
-    });
+      releases
+    );
 
     return releaseHelper.getNextVersion() !== null;
   } catch (err) {
