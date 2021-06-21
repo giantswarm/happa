@@ -30,3 +30,13 @@ export interface IReleaseComponentsDiff {
     | IReleaseComponentsDiffChangeDelete
   )[];
 }
+
+export enum ReleaseVersionStatus {
+  Stable,
+  PreRelease,
+}
+
+export interface IReleaseVersion {
+  version: string;
+  status: ReleaseVersionStatus;
+}

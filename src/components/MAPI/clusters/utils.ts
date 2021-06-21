@@ -147,3 +147,15 @@ export function isClusterUpgrading(cluster: capiv1alpha3.ICluster): boolean {
     )
   );
 }
+
+export function isClusterCreating(cluster: capiv1alpha3.ICluster): boolean {
+  return (
+    capiv1alpha3.isConditionTrue(cluster, capiv1alpha3.conditionTypeCreating) &&
+    capiv1alpha3.isConditionFalse(
+      cluster,
+      capiv1alpha3.conditionTypeCreating,
+      capiv1alpha3.withReasonCreationCompleted(),
+      capiv1alpha3.withReasonExistingObject()
+    )
+  );
+}

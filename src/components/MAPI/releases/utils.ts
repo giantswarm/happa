@@ -1,7 +1,9 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { IRelease, ReleaseHelper } from 'lib/ReleaseHelper';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import * as ui from 'UI/Display/MAPI/releases/types';
 
 export function getReleaseHelper(
   currVersion: string,
@@ -34,4 +36,38 @@ export function getReleaseHelper(
   });
 
   return releaseHelper;
+}
+
+export function getSupportedUpgradeVersions(
+  currVersion: string,
+  provider: PropertiesOf<typeof Providers>,
+  isAdmin: boolean,
+  releases: releasev1alpha1.IRelease[]
+): ui.IReleaseVersion[] {
+  try {
+    const releaseHelper = getReleaseHelper(
+      currVersion,
+      provider,
+      isAdmin,
+      releases
+    );
+
+    const availableReleases = releaseHelper.getSupportedUpgradeVersions();
+
+    return availableReleases.map((r) => {
+      const status =
+        r.getPreRelease().length > 0
+          ? ui.ReleaseVersionStatus.PreRelease
+          : ui.ReleaseVersionStatus.Stable;
+
+      return {
+        version: r.toString(),
+        status,
+      };
+    });
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err);
+
+    return [];
+  }
 }
