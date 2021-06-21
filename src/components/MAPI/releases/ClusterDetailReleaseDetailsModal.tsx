@@ -71,9 +71,15 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
 
         {releaseNotesURL && (
           <StyledReleaseDetailsModalSection title='Release notes'>
-            <a href={releaseNotesURL} rel='noopener noreferrer' target='_blank'>
-              {releaseNotesURL}
-            </a>
+            <Text>
+              <a
+                href={releaseNotesURL}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                {releaseNotesURL}
+              </a>
+            </Text>
           </StyledReleaseDetailsModalSection>
         )}
       </Box>
