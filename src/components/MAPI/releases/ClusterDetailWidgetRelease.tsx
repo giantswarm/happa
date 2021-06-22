@@ -190,6 +190,14 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     setUpgradeModalVisible(true);
   };
 
+  const handleUpgradeVersionSelect = (version: string) => {
+    if (!currentRelease) return;
+
+    handleVersionModalClose();
+    setTargetVersion(version);
+    setUpgradeModalVisible(true);
+  };
+
   const upgradeCluster = async () => {
     if (!cluster) return;
 
@@ -305,6 +313,10 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
           creationDate={currentRelease?.metadata.creationTimestamp}
           components={releaseComponents}
           releaseNotesURL={releaseNotesURL}
+          supportedUpgradeVersions={
+            !isCreating ? supportedUpgradeVersions : undefined
+          }
+          onUpgradeVersionSelect={handleUpgradeVersionSelect}
         />
       )}
 

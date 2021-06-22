@@ -7,12 +7,14 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import ClusterDetailReleaseDetailsUpgradeOptions from 'UI/Display/MAPI/releases/ClusterDetailReleaseDetailsUpgradeOptions';
+import * as ui from 'UI/Display/MAPI/releases/types';
 
 const StyledReleaseDetailsModalSection = styled(ReleaseDetailsModalSection)`
   margin-top: 0;
 `;
 
-export interface IClusterDetailReleaseDetailsModalComponent {
+interface IClusterDetailReleaseDetailsModalComponent {
   name: string;
   version: string;
 }
@@ -20,19 +22,23 @@ export interface IClusterDetailReleaseDetailsModalComponent {
 interface IClusterDetailReleaseDetailsModalProps {
   version: string;
   onClose: () => void;
+  onUpgradeVersionSelect: (version: string) => void;
   visible?: boolean;
   creationDate?: string;
   components?: IClusterDetailReleaseDetailsModalComponent[];
   releaseNotesURL?: string;
+  supportedUpgradeVersions?: ui.IReleaseVersion[];
 }
 
 const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsModalProps> = ({
   version,
   onClose,
+  onUpgradeVersionSelect,
   visible,
   creationDate,
   components,
   releaseNotesURL,
+  supportedUpgradeVersions,
 }) => {
   const title = `Details for release v${version}`;
 
@@ -82,6 +88,15 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
             </Text>
           </StyledReleaseDetailsModalSection>
         )}
+
+        {supportedUpgradeVersions && supportedUpgradeVersions.length > 0 && (
+          <StyledReleaseDetailsModalSection title='Upgrade options'>
+            <ClusterDetailReleaseDetailsUpgradeOptions
+              supportedVersions={supportedUpgradeVersions}
+              onVersionClick={onUpgradeVersionSelect}
+            />
+          </StyledReleaseDetailsModalSection>
+        )}
       </Box>
     </GenericModal>
   );
@@ -90,10 +105,12 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
 ClusterDetailReleaseDetailsModal.propTypes = {
   version: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
+  onUpgradeVersionSelect: PropTypes.func.isRequired,
   visible: PropTypes.bool,
   components: PropTypes.array,
   creationDate: PropTypes.string,
   releaseNotesURL: PropTypes.string,
+  supportedUpgradeVersions: PropTypes.array,
 };
 
 export default ClusterDetailReleaseDetailsModal;
