@@ -1,9 +1,12 @@
 import GenericModal from 'Modals/GenericModal';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Button from 'UI/Controls/Button';
+import ClusterDetailUpgradeModalChangelog from 'UI/Display/MAPI/releases/ClusterDetailUpgradeModalChangelog';
 import ClusterDetailUpgradeModalDisclaimer from 'UI/Display/MAPI/releases/ClusterDetailUpgradeModalDisclaimer';
+
+import { getReleaseComponentsDiff } from './utils';
 
 enum ClusterDetailUpgradeModalPane {
   Disclaimer,
@@ -43,6 +46,28 @@ function formatPrimaryButtonText(pane: ClusterDetailUpgradeModalPane) {
   }
 }
 
+function formatVisiblePane(
+  pane: ClusterDetailUpgradeModalPane,
+  fromRelease: releasev1alpha1.IRelease,
+  toRelease: releasev1alpha1.IRelease
+) {
+  switch (pane) {
+    case ClusterDetailUpgradeModalPane.Disclaimer:
+      return <ClusterDetailUpgradeModalDisclaimer />;
+
+    case ClusterDetailUpgradeModalPane.Changelog:
+      return (
+        <ClusterDetailUpgradeModalChangelog
+          releaseNotesURL={releasev1alpha1.getReleaseNotesURL(toRelease)}
+          componentsDiff={getReleaseComponentsDiff(fromRelease, toRelease)}
+        />
+      );
+
+    default:
+      return null;
+  }
+}
+
 interface IClusterDetailUpgradeModalProps {
   fromRelease: releasev1alpha1.IRelease;
   toRelease: releasev1alpha1.IRelease;
@@ -60,8 +85,15 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
     ClusterDetailUpgradeModalPane.Disclaimer
   );
 
-  const title = formatModalTitle(currentPane, fromRelease, toRelease);
+  const title = useMemo(
+    () => formatModalTitle(currentPane, fromRelease, toRelease),
+    [currentPane, fromRelease, toRelease]
+  );
   const primaryButtonText = formatPrimaryButtonText(currentPane);
+  const visiblePane = useMemo(
+    () => formatVisiblePane(currentPane, fromRelease, toRelease),
+    [currentPane, fromRelease, toRelease]
+  );
 
   const handlePrimaryButtonClick = () => {
     if (currentPane === ClusterDetailUpgradeModalPane.Disclaimer) {
@@ -86,9 +118,7 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
       aria-label={title}
       visible={visible}
     >
-      {currentPane === ClusterDetailUpgradeModalPane.Disclaimer && (
-        <ClusterDetailUpgradeModalDisclaimer />
-      )}
+      {visiblePane}
     </GenericModal>
   );
 };
