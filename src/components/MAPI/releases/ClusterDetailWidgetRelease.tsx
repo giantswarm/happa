@@ -132,6 +132,8 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   const isUpgradable = typeof nextVersion !== 'undefined';
   const isCreating = cluster && isClusterCreating(cluster);
 
+  const canUpgrade = !isUpgrading && !isCreating && isUpgradable;
+
   const [versionModalVisible, setVersionModalVisible] = useState(false);
 
   const handleVersionClick = (
@@ -299,7 +301,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
         )}
       </Box>
 
-      {!isCreating && isUpgradable && (
+      {canUpgrade && (
         <Box margin={{ top: 'small' }}>
           <Button onClick={handleUpgradeButtonClick}>Upgrade cluster…</Button>
         </Box>
@@ -314,7 +316,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
           components={releaseComponents}
           releaseNotesURL={releaseNotesURL}
           supportedUpgradeVersions={
-            !isCreating ? supportedUpgradeVersions : undefined
+            canUpgrade ? supportedUpgradeVersions : undefined
           }
           onUpgradeVersionSelect={handleUpgradeVersionSelect}
         />
