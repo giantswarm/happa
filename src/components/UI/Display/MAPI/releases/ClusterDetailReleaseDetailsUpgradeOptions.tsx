@@ -1,4 +1,4 @@
-import { Box, Paragraph } from 'grommet';
+import { Box, Keyboard, Paragraph } from 'grommet';
 import ReleaseDetailsModalUpgradeOptionsBetaDisclaimer from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalUpgradeOptionsBetaDisclaimer';
 import ReleaseDetailsModalUpgradeOptionsVersion from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalUpgradeOptionsVersion';
 import PropTypes from 'prop-types';
@@ -23,21 +23,36 @@ const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<IClusterDetailReleaseD
     onVersionClick(version);
   };
 
+  const handleKeyDown = (version: string) => (
+    e: React.KeyboardEvent<HTMLElement>
+  ) => {
+    e.preventDefault();
+
+    handleVersionClick(version)();
+  };
+
   const containsBetaReleases = useMemo(() => {
     return supportedVersions.some(isReleaseBeta);
   }, [supportedVersions]);
 
   if (supportedVersions.length === 1) {
+    const release = supportedVersions[0];
+
     return (
       <>
         <Paragraph fill={true}>
           This cluster can be upgraded to{' '}
-          <ReleaseDetailsModalUpgradeOptionsVersion
-            version={supportedVersions[0].version}
-            isBeta={isReleaseBeta(supportedVersions[0])}
-            onClick={handleVersionClick(supportedVersions[0].version)}
-            tabIndex={0}
-          />
+          <Keyboard
+            onSpace={handleKeyDown(release.version)}
+            onEnter={handleKeyDown(release.version)}
+          >
+            <ReleaseDetailsModalUpgradeOptionsVersion
+              version={release.version}
+              isBeta={isReleaseBeta(release)}
+              onClick={handleVersionClick(release.version)}
+              tabIndex={0}
+            />
+          </Keyboard>
           .
         </Paragraph>
         {containsBetaReleases && (
@@ -56,12 +71,17 @@ const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<IClusterDetailReleaseD
       </Paragraph>
       {supportedVersions.map((release) => (
         <Box key={release.version}>
-          <ReleaseDetailsModalUpgradeOptionsVersion
-            version={release.version}
-            isBeta={isReleaseBeta(release)}
-            onClick={handleVersionClick(release.version)}
-            tabIndex={0}
-          />
+          <Keyboard
+            onSpace={handleKeyDown(release.version)}
+            onEnter={handleKeyDown(release.version)}
+          >
+            <ReleaseDetailsModalUpgradeOptionsVersion
+              version={release.version}
+              isBeta={isReleaseBeta(release)}
+              onClick={handleVersionClick(release.version)}
+              tabIndex={0}
+            />
+          </Keyboard>
         </Box>
       ))}
       {containsBetaReleases && (
