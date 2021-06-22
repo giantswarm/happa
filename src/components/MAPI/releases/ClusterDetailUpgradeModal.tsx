@@ -71,6 +71,7 @@ function formatVisiblePane(
 interface IClusterDetailUpgradeModalProps {
   fromRelease: releasev1alpha1.IRelease;
   toRelease: releasev1alpha1.IRelease;
+  onUpgrade: () => Promise<void>;
   onClose?: () => void;
   visible?: boolean;
 }
@@ -78,6 +79,7 @@ interface IClusterDetailUpgradeModalProps {
 const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
   fromRelease,
   toRelease,
+  onUpgrade,
   visible,
   onClose,
 }) => {
@@ -96,8 +98,13 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
   );
 
   const handlePrimaryButtonClick = () => {
-    if (currentPane === ClusterDetailUpgradeModalPane.Disclaimer) {
-      setCurrentPane(currentPane + 1);
+    switch (currentPane) {
+      case ClusterDetailUpgradeModalPane.Disclaimer:
+        setCurrentPane(currentPane + 1);
+        break;
+      case ClusterDetailUpgradeModalPane.Changelog:
+        onUpgrade();
+        break;
     }
   };
 
@@ -128,6 +135,7 @@ ClusterDetailUpgradeModal.propTypes = {
     .isRequired,
   toRelease: (PropTypes.object as PropTypes.Requireable<releasev1alpha1.IRelease>)
     .isRequired,
+  onUpgrade: PropTypes.func.isRequired,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
 };

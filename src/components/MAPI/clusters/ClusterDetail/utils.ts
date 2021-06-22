@@ -136,3 +136,27 @@ export function computeControlPlaneNodesStats(
 
   return stats;
 }
+
+export async function updateClusterReleaseVersion(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  namespace: string,
+  name: string,
+  newVersion: string
+) {
+  const cluster = await capiv1alpha3.getCluster(
+    httpClient,
+    auth,
+    namespace,
+    name
+  );
+  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  if (releaseVersion === newVersion) {
+    return cluster;
+  }
+
+  cluster.metadata.labels ??= {};
+  cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
+
+  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+}

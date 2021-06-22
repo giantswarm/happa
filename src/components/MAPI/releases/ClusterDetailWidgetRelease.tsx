@@ -1,18 +1,22 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import { isClusterCreating, isClusterUpgrading } from 'MAPI/clusters/utils';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ClusterDetailStatus from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailStatus';
@@ -58,14 +62,17 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   cluster,
   ...props
 }) => {
-  const releaseListClient = useHttpClient();
+  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
+
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const releaseListClient = useRef(clientFactory());
   const {
     data: releaseList,
     error: releaseListError,
   } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
-    releasev1alpha1.getReleaseList(releaseListClient, auth)
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {
@@ -183,6 +190,58 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     setUpgradeModalVisible(true);
   };
 
+  const upgradeCluster = async () => {
+    if (!cluster) return;
+
+    try {
+      const updatedCluster = await clusterDetailUtils.updateClusterReleaseVersion(
+        clientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        cluster.metadata.name,
+        targetVersion
+      );
+
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        updatedCluster
+      );
+
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelOrganization]: orgId,
+            },
+          },
+        })
+      );
+
+      new FlashMessage(
+        'Cluster upgrade initiated.',
+        messageType.INFO,
+        messageTTL.MEDIUM,
+        'Keep an eye on <code>kubectl get nodes</code> to follow the upgrade progress.'
+      );
+
+      handleUpgradeModalClose();
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'There was a problem initiating the cluster upgrade.',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
+
   return (
     <ClusterDetailWidget title='Release' inline={true} {...props}>
       <Box direction='row' gap='xsmall' wrap={true} align='center'>
@@ -255,6 +314,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
           onClose={handleUpgradeModalClose}
           fromRelease={currentRelease}
           toRelease={targetRelease}
+          onUpgrade={upgradeCluster}
         />
       )}
     </ClusterDetailWidget>
