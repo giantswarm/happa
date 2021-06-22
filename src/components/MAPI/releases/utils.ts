@@ -1,6 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { IRelease, ReleaseHelper } from 'lib/ReleaseHelper';
-import { compare } from 'lib/semver';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -128,7 +127,7 @@ export function getReleaseComponentsDiff(
       continue;
     }
 
-    if (compare(oldVersion, newVersion) !== 0) {
+    if (oldVersion !== newVersion) {
       // A component's version has changed.
       diff.changes.push({
         component: component.name,
