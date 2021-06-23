@@ -1,24 +1,32 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Keyboard, Text } from 'grommet';
+import { Box, Keyboard, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
-import { isClusterUpgradable, isClusterUpgrading } from 'MAPI/clusters/utils';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
+import { isClusterCreating, isClusterUpgrading } from 'MAPI/clusters/utils';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
+import * as releasesUtils from 'MAPI/releases/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
+import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ClusterDetailStatus from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailStatus';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import * as ui from 'UI/Display/MAPI/releases/types';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 import ClusterDetailReleaseDetailsModal from './ClusterDetailReleaseDetailsModal';
+import ClusterDetailUpgradeModal from './ClusterDetailUpgradeModal';
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -54,14 +62,17 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   cluster,
   ...props
 }) => {
-  const releaseListClient = useHttpClient();
+  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
+
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const releaseListClient = useRef(clientFactory());
   const {
     data: releaseList,
     error: releaseListError,
   } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
-    releasev1alpha1.getReleaseList(releaseListClient, auth)
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {
@@ -98,14 +109,30 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   const provider = useSelector(getProvider);
   const isAdmin = useSelector(getUserIsAdmin);
 
+  const supportedUpgradeVersions: ui.IReleaseVersion[] = useMemo(() => {
+    if (!releaseList || !releaseVersion) return [];
+
+    return releasesUtils.getSupportedUpgradeVersions(
+      releaseVersion,
+      provider,
+      isAdmin,
+      releaseList.items
+    );
+  }, [isAdmin, provider, releaseList, releaseVersion]);
+
+  const nextVersion = useMemo(() => {
+    return supportedUpgradeVersions.find(
+      (r) => r.status !== ui.ReleaseVersionStatus.PreRelease
+    )?.version;
+  }, [supportedUpgradeVersions]);
+
   const isDeleting =
     cluster && typeof cluster.metadata.deletionTimestamp !== 'undefined';
   const isUpgrading = cluster && isClusterUpgrading(cluster);
-  const isUpgradable = useMemo(() => {
-    if (!releaseList || !cluster) return false;
+  const isUpgradable = typeof nextVersion !== 'undefined';
+  const isCreating = cluster && isClusterCreating(cluster);
 
-    return isClusterUpgradable(cluster, provider, isAdmin, releaseList.items);
-  }, [cluster, provider, isAdmin, releaseList]);
+  const canUpgrade = !isUpgrading && !isCreating && isUpgradable;
 
   const [versionModalVisible, setVersionModalVisible] = useState(false);
 
@@ -134,61 +161,150 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     ? releasev1alpha1.getReleaseNotesURL(currentRelease)
     : undefined;
 
+  const [targetVersion, setTargetVersion] = useState('');
+  const targetRelease = useMemo(() => {
+    if (!releaseList) return undefined;
+
+    return releaseList.items.find(
+      (v) => v.metadata.name.slice(1) === targetVersion
+    );
+  }, [releaseList, targetVersion]);
+
+  const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
+
+  const handleUpgradeModalClose = () => {
+    setUpgradeModalVisible(false);
+
+    /**
+     * Reset target version only after modal closes,
+     * to prevent flashes in the modal's content
+     */
+    setTimeout(() => {
+      setTargetVersion('');
+      // eslint-disable-next-line no-magic-numbers
+    }, 200);
+  };
+
+  const handleUpgradeButtonClick = () => {
+    if (!currentRelease || !nextVersion) return;
+
+    setTargetVersion(nextVersion);
+    setUpgradeModalVisible(true);
+  };
+
+  const handleUpgradeVersionSelect = (version: string) => {
+    if (!currentRelease) return;
+
+    handleVersionModalClose();
+    setTargetVersion(version);
+    setUpgradeModalVisible(true);
+  };
+
+  const upgradeCluster = async () => {
+    if (!cluster) return;
+
+    try {
+      const updatedCluster = await clusterDetailUtils.updateClusterReleaseVersion(
+        clientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        cluster.metadata.name,
+        targetVersion
+      );
+
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        updatedCluster
+      );
+
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelOrganization]: orgId,
+            },
+          },
+        })
+      );
+
+      new FlashMessage(
+        'Cluster upgrade initiated.',
+        messageType.INFO,
+        messageTTL.MEDIUM,
+        'Keep an eye on <code>kubectl get nodes</code> to follow the upgrade progress.'
+      );
+
+      handleUpgradeModalClose();
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        'There was a problem initiating the cluster upgrade.',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
+
   return (
-    <ClusterDetailWidget
-      title='Release'
-      inline={true}
-      contentProps={{
-        direction: 'row',
-        gap: 'xsmall',
-        wrap: true,
-        align: 'center',
-      }}
-      {...props}
-    >
-      <ClusterDetailWidgetOptionalValue
-        value={releaseVersion}
-        replaceEmptyValue={false}
-      >
-        {(value) => (
-          <Keyboard onSpace={handleVersionClick}>
-            <StyledLink
-              href='#'
-              aria-label={`Cluster release version ${value}`}
-              onClick={handleVersionClick}
-            >
-              <Text>
-                <i
-                  className='fa fa-version-tag'
-                  role='presentation'
-                  aria-hidden='true'
-                />
-              </Text>{' '}
-              <VersionLabel>{value || <NotAvailable />}</VersionLabel>
-            </StyledLink>
-          </Keyboard>
-        )}
-      </ClusterDetailWidgetOptionalValue>
-      <StyledDot />
-      <ClusterDetailWidgetOptionalValue
-        value={k8sVersion}
-        replaceEmptyValue={false}
-      >
-        {(value) => (
-          <KubernetesVersionLabel
-            hidePatchVersion={false}
-            version={value as string}
+    <ClusterDetailWidget title='Release' inline={true} {...props}>
+      <Box direction='row' gap='xsmall' wrap={true} align='center'>
+        <ClusterDetailWidgetOptionalValue
+          value={releaseVersion}
+          replaceEmptyValue={false}
+        >
+          {(value) => (
+            <Keyboard onSpace={handleVersionClick}>
+              <StyledLink
+                href='#'
+                aria-label={`Cluster release version ${value}`}
+                onClick={handleVersionClick}
+              >
+                <Text>
+                  <i
+                    className='fa fa-version-tag'
+                    role='presentation'
+                    aria-hidden='true'
+                  />
+                </Text>{' '}
+                <VersionLabel>{value || <NotAvailable />}</VersionLabel>
+              </StyledLink>
+            </Keyboard>
+          )}
+        </ClusterDetailWidgetOptionalValue>
+        <StyledDot />
+        <ClusterDetailWidgetOptionalValue
+          value={k8sVersion}
+          replaceEmptyValue={false}
+        >
+          {(value) => (
+            <KubernetesVersionLabel
+              hidePatchVersion={false}
+              version={value as string}
+            />
+          )}
+        </ClusterDetailWidgetOptionalValue>
+
+        {cluster && (
+          <ClusterDetailStatus
+            isDeleting={isDeleting}
+            isUpgrading={isUpgrading}
+            isUpgradable={isUpgradable}
+            margin={{ left: 'small' }}
           />
         )}
-      </ClusterDetailWidgetOptionalValue>
+      </Box>
 
-      {cluster && (
-        <ClusterDetailStatus
-          isDeleting={isDeleting}
-          isUpgrading={isUpgrading}
-          isUpgradable={isUpgradable}
-          margin={{ left: 'small' }}
-        />
+      {canUpgrade && (
+        <Box margin={{ top: 'small' }}>
+          <Button onClick={handleUpgradeButtonClick}>Upgrade cluster…</Button>
+        </Box>
       )}
 
       {releaseVersion && (
@@ -199,6 +315,20 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
           creationDate={currentRelease?.metadata.creationTimestamp}
           components={releaseComponents}
           releaseNotesURL={releaseNotesURL}
+          supportedUpgradeVersions={
+            canUpgrade ? supportedUpgradeVersions : undefined
+          }
+          onUpgradeVersionSelect={handleUpgradeVersionSelect}
+        />
+      )}
+
+      {currentRelease && targetRelease && (
+        <ClusterDetailUpgradeModal
+          visible={upgradeModalVisible}
+          onClose={handleUpgradeModalClose}
+          fromRelease={currentRelease}
+          toRelease={targetRelease}
+          onUpgrade={upgradeCluster}
         />
       )}
     </ClusterDetailWidget>
