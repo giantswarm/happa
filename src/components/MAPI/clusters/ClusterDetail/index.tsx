@@ -12,6 +12,7 @@ import {
   extractErrorMessage,
   getOrgNamespaceFromOrgName,
 } from 'MAPI/organizations/utils';
+import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -52,6 +53,13 @@ function computePaths(orgName: string, clusterName: string) {
     ),
     KeyPairs: RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.KeyPairs,
+      {
+        orgId: orgName,
+        clusterId: clusterName,
+      }
+    ),
+    WorkerNodes: RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.WorkerNodes,
       {
         orgId: orgName,
         clusterId: clusterName,
@@ -210,11 +218,16 @@ const ClusterDetail: React.FC<{}> = () => {
         </Heading>
         <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
           <Tab eventKey={paths.Home} title='Overview' />
-          <Tab eventKey={paths.Apps} title='Apps' />
+          <Tab eventKey={paths.WorkerNodes} title='Worker nodes' />
           <Tab eventKey={paths.KeyPairs} title='Key pairs' />
+          <Tab eventKey={paths.Apps} title='Apps' />
           <Tab eventKey={paths.Ingress} title='Ingress' />
         </Tabs>
         <Switch>
+          <Route
+            path={OrganizationsRoutes.Clusters.Detail.WorkerNodes}
+            component={ClusterDetailWorkerNodes}
+          />
           <Route
             path={OrganizationsRoutes.Clusters.Detail.Apps}
             render={() =>
