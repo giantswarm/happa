@@ -1,4 +1,9 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   getNodePoolAvailabilityZones,
@@ -8,16 +13,18 @@ import {
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import PropTypes from 'prop-types';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import { Code } from 'styles';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
+import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
+import { updateNodePoolDescription } from './utils';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
@@ -59,6 +66,9 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   additionalColumns,
   ...props
 }) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
   const description = nodePool ? getNodePoolDescription(nodePool) : undefined;
   const availabilityZones = nodePool
     ? getNodePoolAvailabilityZones(nodePool)
@@ -74,7 +84,45 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
   const isScalingInProgress = scaling && scaling.desired !== scaling.current;
 
+  const viewAndEditNameRef = useRef<
+    { activateEditMode: () => boolean } & HTMLElement
+  >(null);
+
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+
+  const onStartEditingDescription = () => {
+    viewAndEditNameRef.current?.activateEditMode();
+  };
+
+  const updateDescription = async (newValue: string) => {
+    if (!nodePool) return;
+
+    try {
+      await updateNodePoolDescription(
+        clientFactory(),
+        auth,
+        nodePool,
+        newValue
+      );
+
+      new FlashMessage(
+        `Successfully updated the node pool's description`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `There was a problem updating the node pool's description`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
 
   return (
     <Row
@@ -106,6 +154,8 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               typeLabel='node pool'
               onToggleEditingState={setIsEditingDescription}
               aria-label='Node pool description'
+              onSave={updateDescription}
+              ref={viewAndEditNameRef}
             />
           )}
         </ClusterDetailWidgetOptionalValue>
@@ -200,7 +250,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
             </Box>
           ))}
 
-          <Box align='center' />
+          <Box align='center'>
+            <WorkerNodesNodePoolActions
+              onRenameClick={onStartEditingDescription}
+            />
+          </Box>
         </>
       )}
     </Row>

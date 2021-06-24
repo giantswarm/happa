@@ -34,7 +34,8 @@ export const Link = styled.a`
   font-weight: 400;
   padding: 7px 15px;
   width: 100%;
-  &:hover {
+  &:hover,
+  &:focus {
     background: ${(props) => props.theme.colors.shade9};
   }
 `;
