@@ -5,7 +5,12 @@ import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 
-import { ControlPlaneNodeList } from './types';
+import {
+  ControlPlaneNodeList,
+  NodePool,
+  NodePoolList,
+  ProviderNodePool,
+} from './types';
 
 export interface IMachineType {
   cpu: number;
@@ -49,7 +54,7 @@ export async function fetchNodePoolListForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cluster?: capiv1alpha3.ICluster
-) {
+): Promise<NodePoolList> {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
@@ -122,7 +127,7 @@ export async function fetchProviderNodePoolsForNodePools(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
-) {
+): Promise<ProviderNodePool[]> {
   return Promise.all(
     nodePools.map(
       (np: capiv1alpha3.IMachineDeployment | capiexpv1alpha3.IMachinePool) => {
@@ -255,5 +260,66 @@ export function fetchProviderClusterForClusterKey(
 
     default:
       return null;
+  }
+}
+
+export function getNodePoolDescription(nodePool: NodePool): string {
+  switch (nodePool.kind) {
+    case capiexpv1alpha3.MachinePool:
+      return capiexpv1alpha3.getMachinePoolDescription(nodePool);
+    default:
+      return 'Unnamed node pool';
+  }
+}
+
+export function getProviderNodePoolMachineType(
+  providerNodePool: ProviderNodePool
+): string {
+  switch (providerNodePool.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+      return providerNodePool.spec?.template.vmSize ?? '';
+    default:
+      return '';
+  }
+}
+
+interface INodesStatus {
+  min: number;
+  max: number;
+  desired: number;
+  current: number;
+}
+
+export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
+  switch (nodePool.kind) {
+    case capiexpv1alpha3.MachinePool: {
+      const status: INodesStatus = {
+        min: -1,
+        max: -1,
+        desired: -1,
+        current: -1,
+      };
+
+      [status.min, status.max] = capiexpv1alpha3.getMachinePoolScaling(
+        nodePool
+      );
+
+      status.desired = nodePool.status?.replicas ?? -1;
+      status.current = nodePool.status?.readyReplicas ?? -1;
+
+      return status;
+    }
+
+    default:
+      return { min: -1, max: -1, desired: -1, current: -1 };
+  }
+}
+
+export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
+  switch (nodePool.kind) {
+    case capiexpv1alpha3.MachinePool:
+      return nodePool.spec?.failureDomains ?? [];
+    default:
+      return [];
   }
 }
