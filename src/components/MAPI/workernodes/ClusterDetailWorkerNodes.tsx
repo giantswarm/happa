@@ -30,6 +30,7 @@ import useSWR from 'swr';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 
 import { IWorkerNodesAdditionalColumn } from './types';
+import WorkerNodesAzureMachinePoolSpotInstances from './WorkerNodesAzureMachinePoolSpotInstances';
 import WorkerNodesNodePoolItem from './WorkerNodesNodePoolItem';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
@@ -38,7 +39,18 @@ function getAdditionalColumns(
   provider: PropertiesOf<typeof Providers>
 ): IWorkerNodesAdditionalColumn[] {
   if (provider === Providers.AZURE) {
-    return [];
+    return [
+      {
+        title: 'Spot instances',
+        render: (_, providerNodePool) => {
+          return (
+            <WorkerNodesAzureMachinePoolSpotInstances
+              providerNodePool={providerNodePool}
+            />
+          );
+        },
+      },
+    ];
   }
 
   return [];
@@ -64,8 +76,9 @@ const Header = styled(Box)<{ additionalColumnsCount?: number }>`
   color: #ccc;
 `;
 
-const ColumnInfo = styled(Box)`
-  ${NodePoolGridRow()}
+const ColumnInfo = styled(Box)<{ additionalColumnsCount?: number }>`
+  ${({ additionalColumnsCount }) => NodePoolGridRow(additionalColumnsCount)}
+
   padding-bottom: 0;
   margin-bottom: -5px;
 
@@ -76,7 +89,7 @@ const ColumnInfo = styled(Box)`
 `;
 
 const NodesInfo = styled.div`
-  grid-column: 5/9;
+  grid-column: 5 / span 4;
   position: relative;
   display: flex;
   justify-content: center;
@@ -225,7 +238,10 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
           the pool is labeled by the node pool&apos;s name.
         </Text>
       </Box>
-      <ColumnInfo margin={{ top: 'xsmall' }}>
+      <ColumnInfo
+        additionalColumnsCount={additionalColumns.length}
+        margin={{ top: 'xsmall' }}
+      >
         <NodesInfo>
           <NodesInfoText color='text-weak' textAlign='center' size='small'>
             Nodes
@@ -266,7 +282,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
 
         <Box />
       </Header>
-      <Box margin={{ bottom: 'small' }}>
+      <Box margin={{ top: 'xsmall' }}>
         {nodePoolListIsLoading &&
           LOADING_COMPONENTS.map((_, idx) => (
             <WorkerNodesNodePoolItem
