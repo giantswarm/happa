@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
+// Covers the background in a darker color.
+
 const ShadowMask = styled.div`
-  background-color: #152531;
+  background-color: ${(props) => props.theme.colors.darkBlueDarker5};
   opacity: 1;
   top: 0px;
   bottom: 0px;
