@@ -26,6 +26,7 @@ import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
 import { deleteNodePool, updateNodePoolDescription } from './utils';
+import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
@@ -132,11 +133,30 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   const isDeleting =
     typeof nodePool?.metadata.deletionTimestamp !== 'undefined';
 
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const onDelete = () => {
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const onCancelDelete = () => {
+    setIsDeleteConfirmOpen(false);
+  };
+
   const handleDelete = async () => {
     if (!nodePool) return;
 
+    setIsDeleteLoading(true);
+
     try {
       await deleteNodePool(clientFactory(), auth, nodePool);
+
+      setIsDeleteConfirmOpen(false);
+      setTimeout(() => {
+        setIsDeleteLoading(false);
+        // eslint-disable-next-line no-magic-numbers
+      }, 200);
 
       new FlashMessage(
         `Node pool <code>${nodePool.metadata.name}</code> deleted successfully`,
@@ -144,6 +164,8 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         messageTTL.SHORT
       );
     } catch (err) {
+      setIsDeleteLoading(false);
+
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
@@ -158,149 +180,165 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   };
 
   return (
-    <Row
-      background={isDeleting ? 'background-back' : 'background-front'}
-      round='xsmall'
-      additionalColumnsCount={additionalColumns?.length}
-      {...props}
-    >
-      <Box align='center'>
-        <ClusterDetailWidgetOptionalValue
-          value={nodePool?.metadata.name}
-          loaderWidth={70}
-          loaderHeight={26}
-        >
-          {(value) => (
-            <Copyable copyText={value as string}>
-              <Text aria-label='Node pool name'>
-                <Code>{value}</Code>
-              </Text>
-            </Copyable>
-          )}
-        </ClusterDetailWidgetOptionalValue>
-      </Box>
-      <StyledDescriptionWrapper full={isDeleting}>
-        <ClusterDetailWidgetOptionalValue value={description} loaderWidth={150}>
-          {(value) =>
-            isDeleting ? (
-              <Box direction='row' gap='medium' align='baseline'>
-                <Text>{value}</Text>
-                <Text size='small' color='text-xweak'>
-                  Deleted {relativeDate(nodePool!.metadata.deletionTimestamp)}
+    <Box {...props}>
+      <Row
+        background={isDeleting ? 'background-back' : 'background-front'}
+        round='xsmall'
+        additionalColumnsCount={additionalColumns?.length}
+      >
+        <Box align='center'>
+          <ClusterDetailWidgetOptionalValue
+            value={nodePool?.metadata.name}
+            loaderWidth={70}
+            loaderHeight={26}
+          >
+            {(value) => (
+              <Copyable copyText={value as string}>
+                <Text aria-label='Node pool name'>
+                  <Code>{value}</Code>
                 </Text>
-              </Box>
-            ) : (
-              <StyledViewAndEditName
-                value={value as string}
-                typeLabel='node pool'
-                onToggleEditingState={setIsEditingDescription}
-                aria-label='Node pool description'
-                onSave={updateDescription}
-                ref={viewAndEditNameRef}
-              />
-            )
-          }
-        </ClusterDetailWidgetOptionalValue>
-      </StyledDescriptionWrapper>
-      {!isDeleting && !isEditingDescription && (
-        <>
-          <Box align='center'>
-            <ClusterDetailWidgetOptionalValue
-              value={machineType}
-              loaderWidth={130}
-            >
-              {(value) => (
-                <Code aria-label={formatMachineTypeLabel(providerNodePool)}>
-                  {value}
-                </Code>
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-          <Box align='center'>
-            <ClusterDetailWidgetOptionalValue
-              value={availabilityZones}
-              loaderHeight={26}
-            >
-              {(value) => (
-                <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-          <Box align='center'>
-            <ClusterDetailWidgetOptionalValue
-              value={scaling?.min}
-              loaderWidth={30}
-            >
-              {(value) => (
-                <Text aria-label='Node pool autoscaler minimum node count'>
-                  {value}
-                </Text>
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-          <Box align='center'>
-            <ClusterDetailWidgetOptionalValue
-              value={scaling?.max}
-              loaderWidth={30}
-            >
-              {(value) => (
-                <Text aria-label='Node pool autoscaler maximum node count'>
-                  {value}
-                </Text>
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-          <Box align='center'>
-            <ClusterDetailWidgetOptionalValue
-              value={scaling?.desired}
-              loaderWidth={30}
-            >
-              {(value) => (
-                <Text aria-label='Node pool autoscaler target node count'>
-                  {value}
-                </Text>
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-          <Box align='center'>
-            <ClusterDetailWidgetOptionalValue
-              value={scaling?.current}
-              loaderWidth={30}
-            >
-              {(value) => (
-                <Box
-                  pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-                  round='xsmall'
-                  background={
-                    isScalingInProgress ? 'status-warning' : undefined
-                  }
-                >
-                  <Text
-                    aria-label='Node pool autoscaler current node count'
-                    color={isScalingInProgress ? 'background' : undefined}
-                  >
-                    {value}
+              </Copyable>
+            )}
+          </ClusterDetailWidgetOptionalValue>
+        </Box>
+        <StyledDescriptionWrapper full={isDeleting}>
+          <ClusterDetailWidgetOptionalValue
+            value={description}
+            loaderWidth={150}
+          >
+            {(value) =>
+              isDeleting ? (
+                <Box direction='row' gap='medium' align='baseline'>
+                  <Text>{value}</Text>
+                  <Text size='small' color='text-xweak'>
+                    Deleted {relativeDate(nodePool!.metadata.deletionTimestamp)}
                   </Text>
                 </Box>
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-
-          {additionalColumns?.map((column) => (
-            <Box key={column.title} align='center'>
-              {column.render(nodePool, providerNodePool)}
+              ) : (
+                <StyledViewAndEditName
+                  value={value as string}
+                  typeLabel='node pool'
+                  onToggleEditingState={setIsEditingDescription}
+                  aria-label='Node pool description'
+                  onSave={updateDescription}
+                  ref={viewAndEditNameRef}
+                />
+              )
+            }
+          </ClusterDetailWidgetOptionalValue>
+        </StyledDescriptionWrapper>
+        {!isDeleting && !isEditingDescription && (
+          <>
+            <Box align='center'>
+              <ClusterDetailWidgetOptionalValue
+                value={machineType}
+                loaderWidth={130}
+              >
+                {(value) => (
+                  <Code aria-label={formatMachineTypeLabel(providerNodePool)}>
+                    {value}
+                  </Code>
+                )}
+              </ClusterDetailWidgetOptionalValue>
             </Box>
-          ))}
+            <Box align='center'>
+              <ClusterDetailWidgetOptionalValue
+                value={availabilityZones}
+                loaderHeight={26}
+              >
+                {(value) => (
+                  <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+                )}
+              </ClusterDetailWidgetOptionalValue>
+            </Box>
+            <Box align='center'>
+              <ClusterDetailWidgetOptionalValue
+                value={scaling?.min}
+                loaderWidth={30}
+              >
+                {(value) => (
+                  <Text aria-label='Node pool autoscaler minimum node count'>
+                    {value}
+                  </Text>
+                )}
+              </ClusterDetailWidgetOptionalValue>
+            </Box>
+            <Box align='center'>
+              <ClusterDetailWidgetOptionalValue
+                value={scaling?.max}
+                loaderWidth={30}
+              >
+                {(value) => (
+                  <Text aria-label='Node pool autoscaler maximum node count'>
+                    {value}
+                  </Text>
+                )}
+              </ClusterDetailWidgetOptionalValue>
+            </Box>
+            <Box align='center'>
+              <ClusterDetailWidgetOptionalValue
+                value={scaling?.desired}
+                loaderWidth={30}
+              >
+                {(value) => (
+                  <Text aria-label='Node pool autoscaler target node count'>
+                    {value}
+                  </Text>
+                )}
+              </ClusterDetailWidgetOptionalValue>
+            </Box>
+            <Box align='center'>
+              <ClusterDetailWidgetOptionalValue
+                value={scaling?.current}
+                loaderWidth={30}
+              >
+                {(value) => (
+                  <Box
+                    pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
+                    round='xsmall'
+                    background={
+                      isScalingInProgress ? 'status-warning' : undefined
+                    }
+                  >
+                    <Text
+                      aria-label='Node pool autoscaler current node count'
+                      color={isScalingInProgress ? 'background' : undefined}
+                    >
+                      {value}
+                    </Text>
+                  </Box>
+                )}
+              </ClusterDetailWidgetOptionalValue>
+            </Box>
 
-          <Box align='center'>
-            <WorkerNodesNodePoolActions
-              onRenameClick={onStartEditingDescription}
-              onDeleteClick={handleDelete}
-            />
-          </Box>
-        </>
+            {additionalColumns?.map((column) => (
+              <Box key={column.title} align='center'>
+                {column.render(nodePool, providerNodePool)}
+              </Box>
+            ))}
+
+            <Box align='center'>
+              <WorkerNodesNodePoolActions
+                onRenameClick={onStartEditingDescription}
+                onDeleteClick={onDelete}
+              />
+            </Box>
+          </>
+        )}
+      </Row>
+
+      {nodePool && (
+        <Box margin={{ top: isDeleteConfirmOpen ? 'small' : undefined }}>
+          <WorkerNodesNodePoolItemDelete
+            nodePoolName={nodePool.metadata.name}
+            onConfirm={handleDelete}
+            onCancel={onCancelDelete}
+            open={isDeleteConfirmOpen}
+            isLoading={isDeleteLoading}
+          />
+        </Box>
       )}
-    </Row>
+    </Box>
   );
 };
 
