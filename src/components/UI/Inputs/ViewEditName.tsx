@@ -1,12 +1,7 @@
 import { Keyboard } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
-import React, {
-  Component,
-  FormEvent,
-  GetDerivedStateFromProps,
-  KeyboardEventHandler,
-} from 'react';
+import React, { Component, FormEvent, GetDerivedStateFromProps } from 'react';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -167,7 +162,7 @@ class ViewAndEditName extends Component<
     }
   };
 
-  handleKey: KeyboardEventHandler<HTMLInputElement> = (e) => {
+  handleKey = (e: React.KeyboardEvent<HTMLElement>) => {
     switch (e.key) {
       case 'Escape':
         this.handleCancel();
@@ -208,7 +203,7 @@ class ViewAndEditName extends Component<
               autoComplete='off'
               autoFocus={true}
               onChange={this.handleChange}
-              onKeyUp={this.handleKey}
+              onKeyDown={this.handleKey}
               value={this.state.value}
               formFieldProps={{
                 margin: {
