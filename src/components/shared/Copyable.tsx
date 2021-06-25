@@ -9,8 +9,10 @@ import styled from 'styled-components';
 const TooltipWrapper = styled.div`
   top: 0px;
   right: 0px;
+  height: 100%;
   position: absolute;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   opacity: 0;
 `;
 
