@@ -1,6 +1,7 @@
 import produce from 'immer';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { NodePool } from 'MAPI/types';
+import { compareNodePools } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
@@ -105,6 +106,8 @@ export async function deleteNodePool(
             draft.items[i] = machinePool;
           }
         }
+
+        draft.items = draft.items.sort(compareNodePools);
 
         return draft;
       }),

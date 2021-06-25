@@ -50,6 +50,34 @@ export function getMachineTypes(): Record<string, IMachineType> {
   return machineTypes;
 }
 
+export function compareNodePools(a: NodePool, b: NodePool) {
+  // Move node pools that are currently deleting to the end of the list.
+  const aIsDeleting = typeof a.metadata.deletionTimestamp !== 'undefined';
+  const bIsDeleting = typeof b.metadata.deletionTimestamp !== 'undefined';
+
+  if (aIsDeleting && !bIsDeleting) {
+    return 1;
+  } else if (!aIsDeleting && bIsDeleting) {
+    return -1;
+  }
+
+  if (
+    a.kind === capiexpv1alpha3.MachinePool &&
+    b.kind === capiexpv1alpha3.MachinePool
+  ) {
+    // Sort by description.
+    const descriptionComparison = capiexpv1alpha3
+      .getMachinePoolDescription(a)
+      .localeCompare(capiexpv1alpha3.getMachinePoolDescription(b));
+    if (descriptionComparison !== 0) {
+      return descriptionComparison;
+    }
+  }
+
+  // If descriptions are the same, sort by resource name.
+  return a.metadata.name.localeCompare(b.metadata.name);
+}
+
 export async function fetchNodePoolListForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -62,30 +90,48 @@ export async function fetchNodePoolListForCluster(
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let list: NodePoolList;
+
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster: {
-      return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth, {
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+    case capzv1alpha3.AzureCluster:
+      list = await capiexpv1alpha3.getMachinePoolList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+            },
           },
-        },
-      });
-    }
+        }
+      );
+
+      break;
 
     // TODO(axbarsan): Use CAPA type once available.
     case 'AWSCluster':
-      return capiv1alpha3.getMachineDeploymentList(httpClientFactory(), auth, {
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+      list = await capiv1alpha3.getMachineDeploymentList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+            },
           },
-        },
-      });
+        }
+      );
+
+      break;
 
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
+
+  list.items = list.items.sort(compareNodePools);
+
+  return list;
 }
 
 export function fetchNodePoolListForClusterKey(
