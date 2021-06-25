@@ -63,7 +63,7 @@ export async function fetchNodePoolListForCluster(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1alpha3.AzureCluster: {
       return capiexpv1alpha3.getMachinePoolList(httpClientFactory(), auth, {
         labelSelector: {
           matchingLabels: {
@@ -71,6 +71,7 @@ export async function fetchNodePoolListForCluster(
           },
         },
       });
+    }
 
     // TODO(axbarsan): Use CAPA type once available.
     case 'AWSCluster':
@@ -128,7 +129,7 @@ export async function fetchProviderNodePoolsForNodePools(
   auth: IOAuth2Provider,
   nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
 ): Promise<ProviderNodePool[]> {
-  return Promise.all(
+  const responses = await Promise.allSettled(
     nodePools.map(
       (np: capiv1alpha3.IMachineDeployment | capiexpv1alpha3.IMachinePool) => {
         const infrastructureRef = np.spec?.template.spec.infrastructureRef;
@@ -153,6 +154,16 @@ export async function fetchProviderNodePoolsForNodePools(
       }
     )
   );
+
+  const providerNodePools: ProviderNodePool[] = responses.map((r) => {
+    if (r.status === 'rejected') {
+      return undefined;
+    }
+
+    return r.value;
+  });
+
+  return providerNodePools;
 }
 
 export function fetchProviderNodePoolsForNodePoolsKey(
@@ -275,7 +286,7 @@ export function getNodePoolDescription(nodePool: NodePool): string {
 export function getProviderNodePoolMachineType(
   providerNodePool: ProviderNodePool
 ): string {
-  switch (providerNodePool.kind) {
+  switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
       return providerNodePool.spec?.template.vmSize ?? '';
     default:
