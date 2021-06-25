@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
@@ -24,7 +25,7 @@ import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesN
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
-import { updateNodePoolDescription } from './utils';
+import { deleteNodePool, updateNodePoolDescription } from './utils';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
@@ -51,6 +52,10 @@ const StyledViewAndEditName = styled(ViewAndEditName)`
     top: 0;
     display: flex;
   }
+`;
+
+const StyledDescriptionWrapper = styled(Box)<{ full?: boolean }>`
+  ${({ full }) => (full ? 'grid-column: 2 / fit-content' : undefined)}
 `;
 
 interface IWorkerNodesNodePoolItemProps
@@ -124,9 +129,37 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     }
   };
 
+  const isDeleting =
+    typeof nodePool?.metadata.deletionTimestamp !== 'undefined';
+
+  const handleDelete = async () => {
+    if (!nodePool) return;
+
+    try {
+      await deleteNodePool(clientFactory(), auth, nodePool);
+
+      new FlashMessage(
+        `Node pool <code>${nodePool.metadata.name}</code> deleted successfully`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `Could not delete node pool <code>${nodePool.metadata.name}</code>`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(err);
+    }
+  };
+
   return (
     <Row
-      background='background-front'
+      background={isDeleting ? 'background-back' : 'background-front'}
       round='xsmall'
       additionalColumnsCount={additionalColumns?.length}
       {...props}
@@ -146,21 +179,30 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
           )}
         </ClusterDetailWidgetOptionalValue>
       </Box>
-      <Box>
+      <StyledDescriptionWrapper full={isDeleting}>
         <ClusterDetailWidgetOptionalValue value={description} loaderWidth={150}>
-          {(value) => (
-            <StyledViewAndEditName
-              value={value as string}
-              typeLabel='node pool'
-              onToggleEditingState={setIsEditingDescription}
-              aria-label='Node pool description'
-              onSave={updateDescription}
-              ref={viewAndEditNameRef}
-            />
-          )}
+          {(value) =>
+            isDeleting ? (
+              <Box direction='row' gap='medium' align='baseline'>
+                <Text>{value}</Text>
+                <Text size='small' color='text-xweak'>
+                  Deleted {relativeDate(nodePool!.metadata.deletionTimestamp)}
+                </Text>
+              </Box>
+            ) : (
+              <StyledViewAndEditName
+                value={value as string}
+                typeLabel='node pool'
+                onToggleEditingState={setIsEditingDescription}
+                aria-label='Node pool description'
+                onSave={updateDescription}
+                ref={viewAndEditNameRef}
+              />
+            )
+          }
         </ClusterDetailWidgetOptionalValue>
-      </Box>
-      {!isEditingDescription && (
+      </StyledDescriptionWrapper>
+      {!isDeleting && !isEditingDescription && (
         <>
           <Box align='center'>
             <ClusterDetailWidgetOptionalValue
@@ -253,6 +295,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
           <Box align='center'>
             <WorkerNodesNodePoolActions
               onRenameClick={onStartEditingDescription}
+              onDeleteClick={handleDelete}
             />
           </Box>
         </>
