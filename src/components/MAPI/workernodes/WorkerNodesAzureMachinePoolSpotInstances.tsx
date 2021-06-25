@@ -19,13 +19,13 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
     headline = 'Spot instances enabled';
   }
 
-  let maxPriceRow = '';
+  let maxPriceText = '';
   if (featureEnabled) {
     const maxPrice = providerNodePool?.spec?.template.spotVMOptions?.maxPrice;
     if (maxPrice && maxPrice > 0) {
-      maxPriceRow = `Using maximum price: $${maxPrice}`;
+      maxPriceText = `Using maximum price: $${maxPrice}`;
     } else {
-      maxPriceRow = `Using current on-demand pricing as maximum`;
+      maxPriceText = `Using current on-demand pricing as maximum`;
     }
   }
 
@@ -44,10 +44,10 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
               }-spot-instances-tooltip`}
             >
               <Box width='small'>
-                <Text size='small'>{headline}</Text>
-                {maxPriceRow && (
-                  <Text size='small' margin={{ top: 'xsmall' }}>
-                    {maxPriceRow}
+                <Text size='xsmall'>{headline}</Text>
+                {maxPriceText && (
+                  <Text size='xsmall' margin={{ top: 'xsmall' }}>
+                    {maxPriceText}
                   </Text>
                 )}
               </Box>
