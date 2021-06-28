@@ -1,9 +1,9 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import * as releasesUtils from 'MAPI/releases/utils';
+import { NodePool, ProviderNodePool } from 'MAPI/types';
 import { IMachineType } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -24,10 +24,8 @@ export function getWorkerNodesCount(
 }
 
 export function getWorkerNodesCPU(
-  nodePools?:
-    | capiv1alpha3.IMachineDeployment[]
-    | capiexpv1alpha3.IMachinePool[],
-  providerNodePools?: capzexpv1alpha3.IAzureMachinePool[],
+  nodePools?: NodePool[],
+  providerNodePools?: ProviderNodePool[],
   machineTypes?: Record<string, IMachineType>
 ) {
   if (!nodePools || !providerNodePools || !machineTypes) return undefined;
@@ -35,7 +33,7 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i].spec?.template.vmSize;
+    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
     const readyReplicas = nodePools[i].status?.readyReplicas;
 
     if (typeof vmSize !== 'undefined' && typeof readyReplicas !== 'undefined') {
@@ -52,10 +50,8 @@ export function getWorkerNodesCPU(
 }
 
 export function getWorkerNodesMemory(
-  nodePools?:
-    | capiv1alpha3.IMachineDeployment[]
-    | capiexpv1alpha3.IMachinePool[],
-  providerNodePools?: capzexpv1alpha3.IAzureMachinePool[],
+  nodePools?: NodePool[],
+  providerNodePools?: ProviderNodePool[],
   machineTypes?: Record<string, IMachineType>
 ) {
   if (!nodePools || !providerNodePools || !machineTypes) return undefined;
@@ -63,7 +59,7 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i].spec?.template.vmSize;
+    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
     const readyReplicas = nodePools[i].status?.readyReplicas;
 
     if (typeof vmSize !== 'undefined' && typeof readyReplicas !== 'undefined') {
