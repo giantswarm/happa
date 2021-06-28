@@ -69,7 +69,7 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
                         onBlurHandler();
                       }}
                     >
-                      Rename
+                      <Text>Rename</Text>
                     </Link>
                   </li>
                 )}
