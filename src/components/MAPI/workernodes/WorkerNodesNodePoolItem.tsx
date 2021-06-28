@@ -27,6 +27,7 @@ import ViewAndEditName from 'UI/Inputs/ViewEditName';
 import { IWorkerNodesAdditionalColumn } from './types';
 import { deleteNodePool, updateNodePoolDescription } from './utils';
 import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
+import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
@@ -179,6 +180,16 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     }
   };
 
+  const [isScaleConfirmOpen, setIsScaleConfirmOpen] = useState(false);
+
+  const onScale = () => {
+    setIsScaleConfirmOpen(true);
+  };
+
+  const onCancelScale = () => {
+    setIsScaleConfirmOpen(false);
+  };
+
   return (
     <Box {...props}>
       <Row
@@ -321,6 +332,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               <WorkerNodesNodePoolActions
                 onRenameClick={onStartEditingDescription}
                 onDeleteClick={onDelete}
+                onScaleClick={onScale}
               />
             </Box>
           </>
@@ -335,6 +347,17 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
             onCancel={onCancelDelete}
             open={isDeleteConfirmOpen}
             isLoading={isDeleteLoading}
+          />
+        </Box>
+      )}
+
+      {nodePool && (
+        <Box margin={{ top: isScaleConfirmOpen ? 'small' : undefined }}>
+          <WorkerNodesNodePoolItemScale
+            nodePool={nodePool}
+            onConfirm={onCancelScale}
+            onCancel={onCancelScale}
+            open={isScaleConfirmOpen}
           />
         </Box>
       )}

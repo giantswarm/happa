@@ -16,11 +16,13 @@ interface IWorkerNodesNodePoolActionsProps
   extends React.ComponentPropsWithoutRef<'div'> {
   onRenameClick?: () => void;
   onDeleteClick?: () => void;
+  onScaleClick?: () => void;
 }
 
 const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = ({
   onRenameClick,
   onDeleteClick,
+  onScaleClick,
   ...props
 }) => {
   const handleListKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -73,6 +75,21 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
                     </Link>
                   </li>
                 )}
+                {onScaleClick && (
+                  <li>
+                    <Link
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        onScaleClick();
+                        onBlurHandler();
+                      }}
+                    >
+                      <Text>Edit scaling limits</Text>
+                    </Link>
+                  </li>
+                )}
                 {onDeleteClick && (
                   <li>
                     <Link
@@ -100,6 +117,7 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
 WorkerNodesNodePoolActions.propTypes = {
   onRenameClick: PropTypes.func,
   onDeleteClick: PropTypes.func,
+  onScaleClick: PropTypes.func,
 };
 
 export default WorkerNodesNodePoolActions;
