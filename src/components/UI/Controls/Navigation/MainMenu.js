@@ -17,13 +17,13 @@ import Hamburger from './Hamburger';
 
 // Derive grafana URL from the OIDC audience URL.
 // We remove the dev port :8000 in case it's there.
-const mapiURL = new URL(window.config.audience);
-const hostnameParts = mapiURL.host.split('.');
+const audienceURL = new URL(window.config.audience);
+const hostnameParts = audienceURL.host.split('.');
 hostnameParts[0] = 'grafana';
-mapiURL.host = hostnameParts.join('.');
-mapiURL.pathname = '/';
-mapiURL.search = '?orgId=1';
-const monitoringURL = mapiURL.toString();
+audienceURL.host = hostnameParts.join('.');
+audienceURL.pathname = '/';
+audienceURL.search = '?orgId=1';
+const monitoringURL = audienceURL.toString();
 
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
