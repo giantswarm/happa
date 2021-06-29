@@ -111,7 +111,7 @@ function MainMenu({ showApps, isUserAdmin }) {
             Users
           </StyledNavLink>
         ) : undefined}
-        {monitoringURL ? (
+        {monitoringURL && (
           <StyledExternalNavLink
             href={monitoringURL}
             rel='noopener noreferrer'
@@ -119,7 +119,7 @@ function MainMenu({ showApps, isUserAdmin }) {
           >
             Monitoring <i className='fa fa-open-in-new' />
           </StyledExternalNavLink>
-        ) : undefined}
+        )}
         <StyledExternalNavLink
           href={homeURL}
           rel='noopener noreferrer'
@@ -186,7 +186,7 @@ function MainMenu({ showApps, isUserAdmin }) {
                     </DropdownNavLink>
                   </li>
                 ) : undefined}
-                {monitoringURL ? (
+                {monitoringURL && (
                   <li>
                     <DropdownAnchor
                       href={monitoringURL}
@@ -197,7 +197,7 @@ function MainMenu({ showApps, isUserAdmin }) {
                       Monitoring <i className='fa fa-open-in-new' />
                     </DropdownAnchor>
                   </li>
-                ) : undefined}
+                )}
                 <li>
                   <DropdownAnchor
                     href={homeURL}
