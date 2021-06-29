@@ -98,9 +98,12 @@ const makeEndpoints = () => {
 };
 
 const makeFeatureFlags = () => {
+  const { SHARED_INSTALLATION } = Object.assign({}, envFileVars, process.env);
+
   const defaults = {
     FEATURE_MAPI_AUTH: false,
     FEATURE_MAPI_CLUSTERS: false,
+    SHARED_INSTALLATION: SHARED_INSTALLATION,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
