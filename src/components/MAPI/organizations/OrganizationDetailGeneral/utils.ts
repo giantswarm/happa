@@ -2,6 +2,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
+import { NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   fetchMasterListForCluster,
   fetchNodePoolListForCluster,
@@ -11,9 +12,7 @@ import {
 } from 'MAPI/utils';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as ui from 'UI/Display/Organizations/types';
 
@@ -128,7 +127,7 @@ function appendMasterStats(
 }
 
 function appendNodePoolsStats(
-  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[],
+  nodePools: NodePool[],
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (const nodePool of nodePools) {
@@ -140,13 +139,13 @@ function appendNodePoolsStats(
 }
 
 function appendProviderNodePoolsStats(
-  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[],
-  providerNodePools: capzexpv1alpha3.IAzureMachinePool[],
+  nodePools: NodePool[],
+  providerNodePools: ProviderNodePool[],
   machineTypes: Record<string, IMachineType>,
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i].spec?.template.vmSize;
+    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
     const readyReplicas = nodePools[i].status?.readyReplicas;
 
     if (typeof vmSize !== 'undefined' && typeof readyReplicas !== 'undefined') {
