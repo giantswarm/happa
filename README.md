@@ -81,9 +81,10 @@ Use environment variables to adjust the behavior of this application in producti
 | AWS_CAPABILITIES_JSON   | A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information |                        |
 | AZURE_CAPABILITIES_JSON | A JSON array representing all the details of Azure vm sizes. This has been extracted so that we have a single point of truth for this information     |                        |
 | ENVIRONMENT             | A string that indicates where Happa is running.                                                                                                       | development            |
-| SHARED_INSTALLATION     | "true" if the installation is shared between several customers. "false" otherwise. | "false" |
+| SHARED_INSTALLATION     | "TRUE" if the installation is shared between several customers. "FALSE" otherwise. | "FALSE" |
 
-These environment variables affect the config object in `index.html`.
+These environment variables affect the config object in `index.html` (which is
+created from `index.ejs`).
 A startup script (`start.sh`) applies the values from the environment variables
 to `index.html` by editing the file. This way Happa remains a fully static website
 that can be served by nginx.

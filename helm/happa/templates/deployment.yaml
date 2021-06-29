@@ -55,10 +55,10 @@ spec:
               key: azure-capabilities-json
         {{- end }}
         - name: SHARED_INSTALLATION
-        {{- if and (eq .Values.Installation.V1.Customer "giantswarm") (eq .Values.Installation.V1.Infra.TestingEnvironment true) }}
-          value: "false"
+        {{- if and (eq .Values.Installation.V1.Customer "giantswarm") (eq .Values.Installation.V1.Infra.TestingEnvironment false) }}
+          value: "TRUE"
         {{- else }}
-          value: "true"
+          value: "FALSE"
         {{- end }}
         - name: PASSAGE_ENDPOINT
           valueFrom:
