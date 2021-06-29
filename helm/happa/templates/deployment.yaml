@@ -55,7 +55,7 @@ spec:
               key: azure-capabilities-json
         {{- end }}
         - name: SHARED_INSTALLATION
-        {{- if (eq .Values.Installation.V1.Customer "giantswarm") and (eq .Values.Installation.V1.Infra.TestingEnvironment "false") }}
+        {{- if eq .Values.Installation.V1.Customer "giantswarm" and eq .Values.Installation.V1.Infra.TestingEnvironment "false" }}
           value: "true"
         {{- else }}
           value: "false"
