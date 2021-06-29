@@ -9,6 +9,9 @@ groupID: 101
 
 Installation:
   V1:
+    Customer: giantswarm
+    Infra:
+      TestingEnvironment: "false"
     Registry:
       Domain: quay.io
 
