@@ -11,7 +11,7 @@ Installation:
   V1:
     Customer: giantswarm
     Infra:
-      TestingEnvironment: "false"
+      TestingEnvironment: false
     Registry:
       Domain: quay.io
 
