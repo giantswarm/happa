@@ -1,5 +1,7 @@
 import { IMachinePool } from './types';
 
+export const labelMachinePool = 'giantswarm.io/machine-pool';
+
 export const annotationMachinePoolDescription =
   'machine-pool.giantswarm.io/name';
 export const annotationMachinePoolMinSize =
