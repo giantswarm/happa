@@ -19,6 +19,6 @@ export type NodePoolList =
   | capiv1alpha3.IMachineDeploymentList
   | capiexpv1alpha3.IMachinePoolList;
 
-export type ProviderNodePool = capzexpv1alpha3.IAzureMachinePool;
+export type ProviderNodePool = capzexpv1alpha3.IAzureMachinePool | undefined;
 
 export type ProviderNodePoolList = capzexpv1alpha3.IAzureMachinePoolList;

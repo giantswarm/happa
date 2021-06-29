@@ -1,4 +1,4 @@
-import { Keyboard } from 'grommet';
+import { Keyboard, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -15,10 +15,12 @@ const StyledDropdownTrigger = styled(DropdownTrigger)`
 interface IWorkerNodesNodePoolActionsProps
   extends React.ComponentPropsWithoutRef<'div'> {
   onRenameClick?: () => void;
+  onDeleteClick?: () => void;
 }
 
 const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = ({
   onRenameClick,
+  onDeleteClick,
   ...props
 }) => {
   const handleListKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -71,6 +73,21 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
                     </Link>
                   </li>
                 )}
+                {onDeleteClick && (
+                  <li>
+                    <Link
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        onDeleteClick();
+                        onBlurHandler();
+                      }}
+                    >
+                      <Text color='status-critical'>Delete</Text>
+                    </Link>
+                  </li>
+                )}
               </List>
             </Keyboard>
           )}
@@ -82,6 +99,7 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
 
 WorkerNodesNodePoolActions.propTypes = {
   onRenameClick: PropTypes.func,
+  onDeleteClick: PropTypes.func,
 };
 
 export default WorkerNodesNodePoolActions;
