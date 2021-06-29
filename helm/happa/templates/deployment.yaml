@@ -54,6 +54,12 @@ spec:
               name: happa-configmap
               key: azure-capabilities-json
         {{- end }}
+        - name: SHARED_INSTALLATION
+        {{- if (eq .Values.Installation.V1.Customer "giantswarm") and (eq .Values.Installation.V1.Infra.TestingEnvironment "false") }}
+          value: "true"
+        {{- else }}
+          value: "false"
+        {{- end }}
         - name: PASSAGE_ENDPOINT
           valueFrom:
             configMapKeyRef:

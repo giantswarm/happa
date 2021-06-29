@@ -73,14 +73,15 @@ Use environment variables to adjust the behavior of this application in producti
 | Variable Name           | Description                                                                                                                                           | Default                |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | API_ENDPOINT            | URL to Giant Swarm's API.                                                                                                                             | http://localhost:8000  |
-| MAPI_ENDPOINT         | URL to Giant Swarm's K8s Management API.                                                                                                           |                        |
+| MAPI_ENDPOINT           | URL to Giant Swarm's K8s Management API.                                                                                                              |                        |
 | AUDIENCE                | The Audience claim that our oauth library will use when requesting a token.                                                                           | API_ENDPOINT           |
-| MAPI_AUDIENCE             | The Audience claim that our oauth library will use when requesting a token for logging into the Management API.                                    | http://localhost:9999  |
+| MAPI_AUDIENCE           | The Audience claim that our oauth library will use when requesting a token for logging into the Management API.                                       | http://localhost:9999  |
 | PASSAGE_ENDPOINT        | URL to Passage, which helps users when they lose their password or have been invited to create an account.                                            | http://localhost:5001  |
 | INGRESS_BASE_DOMAIN     | The ingress base domain of the installation that Happa is on. This affects the getting started guide.                                                 | k8s.sample.io          |
 | AWS_CAPABILITIES_JSON   | A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information |                        |
 | AZURE_CAPABILITIES_JSON | A JSON array representing all the details of Azure vm sizes. This has been extracted so that we have a single point of truth for this information     |                        |
 | ENVIRONMENT             | A string that indicates where Happa is running.                                                                                                       | development            |
+| SHARED_INSTALLATION     | "true" if the installation is shared between several customers. "false" otherwise. | "false" |
 
 These environment variables affect the config object in `index.html`.
 A startup script (`start.sh`) applies the values from the environment variables
