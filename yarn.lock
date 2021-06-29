@@ -8695,15 +8695,14 @@ grommet-styles@^0.2.0:
   resolved "https://registry.yarnpkg.com/grommet-styles/-/grommet-styles-0.2.0.tgz#b2eac2b7e2747cb523434d21728ce5234f8ce4f4"
   integrity sha512-0OMSYuGeyifYKpg4Gv2HzL8rUdd0ddnJ5LbCBKgDuloC71XIwr9g/Fxa6rs737MbPV7OZ4pEm4wvrjH4epzf1A==
 
-grommet@^2.17.1:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.17.1.tgz#b12fb0a693bdb452beb3523641c28f27b46cea1e"
-  integrity sha512-ULHivqDHiMtHMXfPiyyL9yct0n9a6S9V+Azs9B4Ukjy6Zvp02gTzVve3K/q/IyBagD7EP3AGHuqwMZUxiJL15w==
+grommet@^2.17.3:
+  version "2.17.3"
+  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.17.3.tgz#7522a58db86ed54dc31e37cae9e492b8d4d049fb"
+  integrity sha512-33q28/bBTkhC68pL7LOyJmR8XF/izChGxYOMW+2SS5SojqGpR4yvhMTLFdEA0F20+tAZ9AqIvMGJmsyMbyDVXg==
   dependencies:
     grommet-icons "^4.5.0"
     hoist-non-react-statics "^3.2.0"
     markdown-to-jsx "^6.11.4"
-    polished "^3.4.1"
     prop-types "^15.7.2"
     react-desc "^4.1.3"
 
@@ -12522,13 +12521,6 @@ pnp-webpack-plugin@1.6.4:
   integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
   dependencies:
     ts-pnp "^1.1.6"
-
-polished@^3.4.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/polished/-/polished-3.7.1.tgz#d1addc87ee16eb5b413c6165eda37600cccb9c11"
-  integrity sha512-/QgHrNGYwIA4mwxJ/7FSvalUJsm7KNfnXiScVSEG2Xa5qxDeBn4nmdjN2pW00mkM2Tts64ktc47U8F7Ed1BRAA==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
 
 polished@^4.0.5:
   version "4.1.1"
