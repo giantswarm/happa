@@ -80,10 +80,10 @@ if [ -n "$SENTRY_SAMPLE_RATE" ]; then
   sed -i "s|sentrySampleRate: .*|sentrySampleRate: $SENTRY_SAMPLE_RATE,|" /www/index.html
 fi
 
-if [ "$SHARED_INSTALLATION" = "TRUE" ]; then
-  sed -i "s|sharedInstallation: .*|sharedInstallation: true,|" /www/index.html
+if [ "$FEATURE_MONITORING" = "TRUE" ]; then
+  sed -i "s|FEATURE_MONITORING: .*|FEATURE_MONITORING: true,|" /www/index.html
 else
-  sed -i "s|sharedInstallation: .*|sharedInstallation: false,|" /www/index.html
+  sed -i "s|FEATURE_MONITORING: .*|FEATURE_MONITORING: false,|" /www/index.html
 fi
 
 if [ "$FEATURE_MAPI_AUTH" = "TRUE" ]; then
