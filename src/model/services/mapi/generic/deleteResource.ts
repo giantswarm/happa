@@ -1,9 +1,10 @@
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
+import * as metav1 from 'model/services/mapi/metav1';
 
 import { executeRequest } from './executeRequest';
 
-export function deleteResource<T>(
+export function deleteResource(
   client: IHttpClient,
   auth: IOAuth2Provider,
   url: string
@@ -17,5 +18,5 @@ export function deleteResource<T>(
     },
   });
 
-  return executeRequest<T>(client, auth);
+  return executeRequest<metav1.IK8sStatus>(client, auth);
 }

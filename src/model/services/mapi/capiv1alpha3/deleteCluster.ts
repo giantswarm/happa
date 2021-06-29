@@ -18,5 +18,5 @@ export function deleteCluster(
     name: cluster.metadata.name,
   } as k8sUrl.IK8sDeleteOptions);
 
-  return deleteResource<ICluster>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }
