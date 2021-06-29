@@ -393,6 +393,17 @@ export function getProviderClusterLocation(
   }
 }
 
+export function getProviderNodePoolLocation(
+  providerNodePool: ProviderNodePool
+): string {
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+      return providerNodePool.spec?.location ?? '';
+    default:
+      return '';
+  }
+}
+
 const uidRegexp = /^[a-z]([a-z][0-9]|[0-9][a-z])+$/;
 const supportedUIDChars = '023456789abcdefghijkmnopqrstuvwxyz';
 

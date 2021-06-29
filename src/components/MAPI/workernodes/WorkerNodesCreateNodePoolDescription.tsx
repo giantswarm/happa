@@ -21,10 +21,9 @@ function validateValue(newValue: string): string {
 
 interface IWorkerNodesCreateNodePoolDescriptionProps
   extends INodePoolPropertyProps,
-    Omit<
-      React.ComponentPropsWithoutRef<typeof InputGroup>,
-      'onChange' | 'id'
-    > {}
+    Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
+  autoFocus?: boolean;
+}
 
 const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolDescriptionProps> = ({
   id,
@@ -32,6 +31,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
   onChange,
   readOnly,
   disabled,
+  autoFocus,
   ...props
 }) => {
   const [validationError, setValidationError] = useState('');
@@ -59,6 +59,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
         help='Pick a description that helps team mates to understand what these nodes are here for. You can change this later. Each node pool also gets a unique identifier.'
         readOnly={readOnly}
         disabled={disabled}
+        autoFocus={autoFocus}
       />
     </InputGroup>
   );
@@ -70,6 +71,7 @@ WorkerNodesCreateNodePoolDescription.propTypes = {
   onChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
   disabled: PropTypes.bool,
+  autoFocus: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolDescription;

@@ -233,7 +233,7 @@ export function createDefaultSpark(config: {
         [capiv1alpha3.labelClusterName]: config.clusterName,
       },
     },
-    spec: {} as gscorev1alpha1.ISparkSpec,
+    spec: {},
     status: {} as gscorev1alpha1.ISparkStatus,
   };
 }
@@ -245,6 +245,7 @@ export function createDefaultProviderNodePool(
     name: string;
     clusterName: string;
     organization: string;
+    location: string;
   }
 ) {
   if (provider === Providers.AZURE) {
@@ -259,6 +260,7 @@ export function createDefaultAzureMachinePool(config: {
   name: string;
   clusterName: string;
   organization: string;
+  location: string;
 }): capzexpv1alpha3.IAzureMachinePool {
   return {
     apiVersion: 'exp.infrastructure.cluster.x-k8s.io/v1alpha3',
@@ -274,11 +276,19 @@ export function createDefaultAzureMachinePool(config: {
       },
     },
     spec: {
+      location: config.location,
       template: {
         sshPublicKey: '',
         vmSize: 'Standard_D4s_v3',
-      } as capzexpv1alpha3.IAzureMachinePoolTemplate,
-    } as capzexpv1alpha3.IAzureMachinePoolSpec,
+        osDisk: {
+          diskSizeGB: 0,
+          managedDisk: {
+            storageAccountType: '',
+          },
+          osType: '',
+        },
+      },
+    },
   };
 }
 
@@ -336,4 +346,80 @@ function createDefaultMachinePool(config: {
       },
     },
   };
+}
+
+export async function createNodePool(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  config: {
+    nodePool: NodePool;
+    providerNodePool: ProviderNodePool;
+    bootstrapConfig: BootstrapConfig;
+  }
+): Promise<{
+  nodePool: NodePool;
+  providerNodePool: ProviderNodePool;
+  bootstrapConfig: BootstrapConfig;
+}> {
+  if (config.providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
+    const bootstrapConfig = await gscorev1alpha1.createSpark(
+      httpClient,
+      auth,
+      config.bootstrapConfig
+    );
+
+    const providerNodePool = await capzexpv1alpha3.createAzureMachinePool(
+      httpClient,
+      auth,
+      config.providerNodePool
+    );
+
+    mutate(
+      capzexpv1alpha3.getAzureMachinePoolKey(
+        providerNodePool.metadata.namespace!,
+        providerNodePool.metadata.name
+      ),
+      providerNodePool,
+      false
+    );
+
+    const nodePool = await capiexpv1alpha3.createMachinePool(
+      httpClient,
+      auth,
+      config.nodePool as capiexpv1alpha3.IMachinePool
+    );
+
+    mutate(
+      capiexpv1alpha3.getMachinePoolKey(
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      ),
+      nodePool,
+      false
+    );
+
+    // Add the created node pool to the existing list.
+    mutate(
+      capiexpv1alpha3.getMachinePoolListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1alpha3.labelCluster]: nodePool.metadata.labels![
+              capiv1alpha3.labelCluster
+            ],
+          },
+        },
+      }),
+      produce((draft: capiexpv1alpha3.IMachinePoolList) => {
+        draft.items.push(nodePool);
+        draft.items = draft.items.sort(compareNodePools);
+
+        return draft;
+      }),
+      false
+    );
+
+    return { nodePool, providerNodePool, bootstrapConfig };
+  }
+
+  return Promise.reject(new Error('Unsupported provider.'));
 }
