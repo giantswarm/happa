@@ -9,6 +9,7 @@ import {
   ControlPlaneNodeList,
   NodePool,
   NodePoolList,
+  ProviderCluster,
   ProviderNodePool,
 } from './types';
 
@@ -378,6 +379,17 @@ export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
       return nodePool.spec?.failureDomains ?? [];
     default:
       return [];
+  }
+}
+
+export function getProviderClusterLocation(
+  providerCluster: ProviderCluster
+): string {
+  switch (providerCluster?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return providerCluster.spec?.location ?? '';
+    default:
+      return '';
   }
 }
 
