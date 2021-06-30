@@ -36,7 +36,7 @@ const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
         name={id}
         checked={value === type}
         onChange={() => onChange(type!)}
-        tabIndex={0}
+        tabIndex={-1}
         {...rest}
       />
     </RUMActionTarget>
