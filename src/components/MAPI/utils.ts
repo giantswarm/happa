@@ -5,6 +5,7 @@ import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import { Constants } from 'shared/constants';
+import { IState } from 'stores/state';
 
 import {
   ControlPlaneNodeList,
@@ -402,6 +403,71 @@ export function getProviderNodePoolLocation(
       return providerNodePool.spec?.location ?? '';
     default:
       return '';
+  }
+}
+
+// TODO(axbarsan): Get this info from the environment, rather than the info response.
+export function getSupportedAvailabilityZones(
+  state: IState
+): {
+  minCount: number;
+  maxCount: number;
+  defaultCount: number;
+  all: string[];
+} {
+  const zonesStats = state.main.info.general.availability_zones;
+
+  return {
+    minCount: 1,
+    maxCount: zonesStats?.max ?? 1,
+    defaultCount: zonesStats?.default ?? 1,
+    all: zonesStats?.zones ?? [],
+  };
+}
+
+/**
+ * Determine a random list list of availability zones,
+ * based on a given collection of available zones and
+ * a required number of elements.
+ * @param count - The maximum number of zones.
+ * @param fromList - The available zones.
+ * @param existing - Some zones that must be included in the output.
+ */
+export function determineRandomAZs(
+  count: number,
+  fromList: string[],
+  existing?: string[]
+): string[] {
+  if (fromList.length < 1 || count < 1 || Number.isNaN(count)) {
+    return [];
+  } else if (fromList.length <= count) {
+    return fromList.slice().sort();
+  }
+
+  const available = new Set(fromList);
+  const azs = new Set<string>();
+
+  if (existing) {
+    for (const entry of existing) {
+      if (available.has(entry)) {
+        azs.add(entry);
+      }
+    }
+
+    if (azs.size === count) {
+      return Array.from(azs).sort();
+    }
+  }
+
+  for (;;) {
+    const nextAz = fromList[Math.ceil((fromList.length - 1) * Math.random())];
+    if (azs.has(nextAz)) continue;
+
+    azs.add(nextAz);
+
+    if (azs.size === count) {
+      return Array.from(azs).sort();
+    }
   }
 }
 

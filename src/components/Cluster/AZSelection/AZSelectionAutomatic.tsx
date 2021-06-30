@@ -39,7 +39,7 @@ const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
   let automaticAZSelectionMessage =
     'Availability zones will be selected randomly.';
   if (numOfZones < 2) {
-    automaticAZSelectionMessage = `Covering one availability zone, the worker nodes of this node pool will be placed in the same availability zone as the cluster's master node.`;
+    automaticAZSelectionMessage = `Covering one availability zone, the worker nodes of this node pool will be placed in the same availability zone as the cluster's control plane node.`;
   }
 
   return (
