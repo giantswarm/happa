@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import {
   useAllowedInstanceTypes,
   useInstanceTypeCapabilities,
@@ -59,6 +60,13 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
     }
   };
 
+  const handleKeyDownCancel = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setCollapsed(true);
+  };
+
   return (
     <>
       <SelectedWrapper>
@@ -99,31 +107,33 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         </RUMActionTarget>
       </div>
       {!collapsed && (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell />
-              <TableCell>Name</TableCell>
-              <TableCell align='center'>CPU</TableCell>
-              <TableCell align='center'>Memory</TableCell>
-              <TableCell>Description</TableCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            role='radiogroup'
-            tabIndex={-1}
-            aria-labelledby='machine-type-selector__toggler'
-          >
-            {allowedInstanceTypes.map((instanceType) => (
-              <InstanceTypeRow
-                key={instanceType.name}
-                {...instanceType}
-                isSelected={instanceType.name === selectedInstanceType}
-                selectInstanceType={selectInstanceType}
-              />
-            ))}
-          </TableBody>
-        </Table>
+        <Keyboard onEsc={handleKeyDownCancel}>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableCell />
+                <TableCell>Name</TableCell>
+                <TableCell align='center'>CPU</TableCell>
+                <TableCell align='center'>Memory</TableCell>
+                <TableCell>Description</TableCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              role='radiogroup'
+              tabIndex={-1}
+              aria-labelledby='machine-type-selector__toggler'
+            >
+              {allowedInstanceTypes.map((instanceType) => (
+                <InstanceTypeRow
+                  key={instanceType.name}
+                  {...instanceType}
+                  isSelected={instanceType.name === selectedInstanceType}
+                  selectInstanceType={selectInstanceType}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </Keyboard>
       )}
     </>
   );

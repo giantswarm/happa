@@ -34,11 +34,13 @@ import {
   createNodePool,
 } from './utils';
 import WorkerNodesCreateNodePoolDescription from './WorkerNodesCreateNodePoolDescription';
+import WorkerNodesCreateNodePoolMachineType from './WorkerNodesCreateNodePoolMachineType';
 import WorkerNodesCreateNodePoolName from './WorkerNodesCreateNodePoolName';
 
 enum NodePoolPropertyField {
   Name,
   Description,
+  MachineType,
 }
 
 interface IApplyPatchAction {
@@ -111,6 +113,7 @@ function makeInitialState(
     validationResults: {
       [NodePoolPropertyField.Name]: true,
       [NodePoolPropertyField.Description]: true,
+      [NodePoolPropertyField.MachineType]: true,
     },
     isCreating: false,
   };
@@ -275,6 +278,12 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 providerNodePool={state.providerNodePool}
                 onChange={handleChange(NodePoolPropertyField.Description)}
                 autoFocus={true}
+              />
+              <WorkerNodesCreateNodePoolMachineType
+                id={`node-pool-${id}-${NodePoolPropertyField.MachineType}`}
+                nodePool={state.nodePool}
+                providerNodePool={state.providerNodePool}
+                onChange={handleChange(NodePoolPropertyField.MachineType)}
               />
               <Box direction='row' margin={{ top: 'medium' }}>
                 <Button
