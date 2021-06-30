@@ -38,7 +38,7 @@ function getSubmitButtonAttributes(fromValue: {
   max: number;
   maxValid: boolean;
   initialScaling: ReturnType<typeof getNodePoolScaling>;
-}): { disabled: boolean; style?: 'primary' | 'danger'; label?: string } {
+}): { disabled: boolean; label: string; style?: 'primary' | 'danger' } {
   const { min, minValid, max, maxValid, initialScaling } = fromValue;
 
   const nodesDifference = getWorkerNodesDifference(
@@ -47,7 +47,10 @@ function getSubmitButtonAttributes(fromValue: {
     initialScaling.desired
   );
 
-  const isValid = minValid && maxValid;
+  const isValid =
+    minValid &&
+    maxValid &&
+    (min !== initialScaling.min || max !== initialScaling.max);
 
   if (nodesDifference > 0 && initialScaling.desired > 0) {
     return {
@@ -65,17 +68,10 @@ function getSubmitButtonAttributes(fromValue: {
     };
   }
 
-  if (min !== initialScaling.min || max !== initialScaling.max) {
-    return {
-      label: 'Apply',
-      style: 'primary',
-      disabled: !isValid,
-    };
-  }
-
   return {
+    label: 'Apply',
     style: 'primary',
-    disabled: true,
+    disabled: !isValid,
   };
 }
 
@@ -198,7 +194,7 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
 
   return (
     <ConfirmationPrompt
-      onConfirm={submitButtonAttributes.label ? handleScale : undefined}
+      onConfirm={handleScale}
       confirmButton={
         <Button
           bsStyle={submitButtonAttributes.style}
@@ -210,7 +206,7 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
         </Button>
       }
       onCancel={!isLoading ? handleCancel : undefined}
-      title={`Edit scaling settings for ${nodePool.metadata.name}`}
+      title='Edit scaling limits'
       open={open}
       {...props}
     >
@@ -235,7 +231,7 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
       </Box>
 
       {nodesDifference < 0 && (
-        <Box margin={{ top: 'small' }}>
+        <Box margin={{ top: 'small' }} width={{ max: 'large' }}>
           <Text color='status-warning'>
             <i
               className='fa fa-warning'
