@@ -268,9 +268,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderWidth={30}
               >
                 {(value) => (
-                  <Text aria-label='Node pool autoscaler minimum node count'>
-                    {value}
-                  </Text>
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label='Node pool autoscaler minimum node count'>
+                      {value}
+                    </Text>
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
@@ -280,9 +282,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderWidth={30}
               >
                 {(value) => (
-                  <Text aria-label='Node pool autoscaler maximum node count'>
-                    {value}
-                  </Text>
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label='Node pool autoscaler maximum node count'>
+                      {value}
+                    </Text>
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
@@ -292,9 +296,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderWidth={30}
               >
                 {(value) => (
-                  <Text aria-label='Node pool autoscaler target node count'>
-                    {value}
-                  </Text>
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label='Node pool autoscaler target node count'>
+                      {value}
+                    </Text>
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
