@@ -11,7 +11,7 @@ exports[`TextArea renders a disabled input 1`] = `
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jxtDLa FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hMVFGJ FormField__FormFieldContentBox-m9hood-1"
       >
         <textarea
           class="StyledTextArea-sc-17i3mwp-0 hUZXuj"

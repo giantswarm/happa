@@ -41,14 +41,14 @@ exports[`NumberPicker renders a simple input 1`] = `
         >
           <div
             aria-label="Decrement"
-            class="sc-ckRYGt ibbKCf"
+            class="sc-ckRYGt ixUnxL"
             role="button"
           >
             –
           </div>
           <div
             aria-label="Increment"
-            class="sc-ckRYGt ibbKCf"
+            class="sc-ckRYGt ixUnxL"
             role="button"
           >
             +
