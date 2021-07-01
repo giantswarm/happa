@@ -54,8 +54,9 @@ export async function updateNodePoolDescription(
       capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]:
-              machinePool.metadata.labels![capiv1alpha3.labelCluster],
+            [capiv1alpha3.labelCluster]: machinePool.metadata.labels![
+              capiv1alpha3.labelCluster
+            ],
           },
         },
       })
@@ -99,8 +100,9 @@ export async function deleteNodePool(
       capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]:
-              machinePool.metadata.labels![capiv1alpha3.labelCluster],
+            [capiv1alpha3.labelCluster]: machinePool.metadata.labels![
+              capiv1alpha3.labelCluster
+            ],
           },
         },
       }),
@@ -177,8 +179,9 @@ export async function updateNodePoolScaling(
       capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]:
-              machinePool.metadata.labels![capiv1alpha3.labelCluster],
+            [capiv1alpha3.labelCluster]: machinePool.metadata.labels![
+              capiv1alpha3.labelCluster
+            ],
           },
         },
       }),
@@ -309,10 +312,12 @@ function createDefaultMachinePool(config: {
 }): capiexpv1alpha3.IMachinePool {
   const namespace = config.providerNodePool!.metadata.namespace;
   const name = config.providerNodePool!.metadata.name;
-  const organization =
-    config.providerNodePool!.metadata.labels![capiv1alpha3.labelOrganization];
-  const clusterName =
-    config.providerNodePool!.metadata.labels![capiv1alpha3.labelClusterName];
+  const organization = config.providerNodePool!.metadata.labels![
+    capiv1alpha3.labelOrganization
+  ];
+  const clusterName = config.providerNodePool!.metadata.labels![
+    capiv1alpha3.labelClusterName
+  ];
 
   return {
     apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
