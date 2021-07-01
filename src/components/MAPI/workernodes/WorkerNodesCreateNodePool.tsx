@@ -37,12 +37,14 @@ import WorkerNodesCreateNodePoolAvailabilityZones from './WorkerNodesCreateNodeP
 import WorkerNodesCreateNodePoolDescription from './WorkerNodesCreateNodePoolDescription';
 import WorkerNodesCreateNodePoolMachineType from './WorkerNodesCreateNodePoolMachineType';
 import WorkerNodesCreateNodePoolName from './WorkerNodesCreateNodePoolName';
+import WorkerNodesCreateNodePoolScale from './WorkerNodesCreateNodePoolScale';
 
 enum NodePoolPropertyField {
   Name,
   Description,
   MachineType,
   AvailabilityZones,
+  Scale,
 }
 
 interface IApplyPatchAction {
@@ -117,6 +119,7 @@ function makeInitialState(
       [NodePoolPropertyField.Description]: true,
       [NodePoolPropertyField.MachineType]: true,
       [NodePoolPropertyField.AvailabilityZones]: false,
+      [NodePoolPropertyField.Scale]: true,
     },
     isCreating: false,
   };
@@ -295,6 +298,12 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 onChange={handleChange(NodePoolPropertyField.AvailabilityZones)}
                 cluster={cluster}
                 margin={{ top: 'small' }}
+              />
+              <WorkerNodesCreateNodePoolScale
+                id={`node-pool-${id}-${NodePoolPropertyField.Scale}`}
+                nodePool={state.nodePool}
+                providerNodePool={state.providerNodePool}
+                onChange={handleChange(NodePoolPropertyField.Scale)}
               />
               <Box direction='row' margin={{ top: 'medium' }}>
                 <Button

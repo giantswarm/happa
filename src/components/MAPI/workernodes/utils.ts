@@ -331,10 +331,13 @@ function createDefaultMachinePool(config: {
       annotations: {
         [capiexpv1alpha3.annotationMachinePoolDescription]:
           Constants.DEFAULT_NODEPOOL_DESCRIPTION,
+        [capiexpv1alpha3.annotationMachinePoolMinSize]: Constants.NP_DEFAULT_MIN_SCALING.toString(),
+        [capiexpv1alpha3.annotationMachinePoolMaxSize]: Constants.NP_DEFAULT_MAX_SCALING.toString(),
       },
     },
     spec: {
       clusterName,
+      replicas: Constants.NP_DEFAULT_MIN_SCALING,
       template: {
         metadata: {} as metav1.IObjectMeta,
         spec: {

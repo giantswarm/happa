@@ -16,10 +16,6 @@ const DEFAULT_VALUE_CONSTRAINTS = {
  * max values for scaling limits.
  */
 class NodeCountSelector extends React.Component {
-  handleFormSubmit = (e) => {
-    e.preventDefault();
-  };
-
   updateValue(valuesToAdd) {
     const nextScalingValue = Object.assign({}, this.props.scaling, valuesToAdd);
 
@@ -57,7 +53,7 @@ class NodeCountSelector extends React.Component {
 
     if (this.props.autoscalingEnabled === true) {
       return (
-        <form onSubmit={this.handleFormSubmit}>
+        <div>
           <TwoInputArea>
             <InnerTwoInputArea>
               <NumberPicker
@@ -95,12 +91,12 @@ class NodeCountSelector extends React.Component {
               ? 'To enable autoscaling, set minimum and maximum to different values.'
               : 'To disable autoscaling, set both numbers to the same value.'}
           </Text>
-        </form>
+        </div>
       );
     }
 
     return (
-      <form onSubmit={this.handleFormSubmit}>
+      <div>
         <NumberPicker
           min={minValue}
           max={maxValue}
@@ -114,7 +110,7 @@ class NodeCountSelector extends React.Component {
             width: 'small',
           }}
         />
-      </form>
+      </div>
     );
   }
 }
