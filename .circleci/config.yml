@@ -385,6 +385,7 @@ jobs:
               -e SENTRY_RELEASE_VERSION=test \
               -e SENTRY_DEBUG=FALSE \
               -e SENTRY_SAMPLE_RATE='0.0' \
+              -e FEATURE_MONITORING=TRUE \
               -e FEATURE_MAPI_AUTH=TRUE \
               -e FEATURE_MAPI_CLUSTERS=TRUE \
               -p 8000:8000 \

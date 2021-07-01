@@ -1,3 +1,4 @@
+import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import NumberPicker from 'UI/Inputs/NumberPicker';
@@ -89,11 +90,11 @@ class NodeCountSelector extends React.Component {
               />
             </InnerTwoInputArea>
           </TwoInputArea>
-          <p data-testid='node-count-selector-autoscaling-label'>
+          <Text data-testid='node-count-selector-autoscaling-label'>
             {scaling.min === scaling.max
               ? 'To enable autoscaling, set minimum and maximum to different values.'
               : 'To disable autoscaling, set both numbers to the same value.'}
-          </p>
+          </Text>
         </form>
       );
     }

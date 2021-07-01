@@ -90,7 +90,7 @@ describe('ViewEditName', () => {
     });
 
     // Press enter
-    fireEvent.keyUp(input, {
+    fireEvent.keyDown(input, {
       key: 'Enter',
     });
 
@@ -113,7 +113,7 @@ describe('ViewEditName', () => {
     });
 
     // Press escape
-    fireEvent.keyUp(input, {
+    fireEvent.keyDown(input, {
       key: 'Escape',
     });
 
@@ -162,7 +162,7 @@ describe('ViewEditName', () => {
     expect(submitButton).toBeDisabled();
 
     // Press enter
-    fireEvent.keyUp(input, {
+    fireEvent.keyDown(input, {
       key: 'Enter',
     });
 
