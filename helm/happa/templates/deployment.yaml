@@ -151,6 +151,13 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: feature-mapi-clusters
+        - name: FEATURE_MONITORING
+        {{- if and (eq .Values.Installation.V1.Customer "giantswarm") (eq .Values.Installation.V1.Infra.TestingEnvironment false) }}
+          # Shared installations don't get the Monitoring feature
+          value: "FALSE"
+        {{- else }}
+          value: "TRUE"
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /

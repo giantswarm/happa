@@ -15,6 +15,19 @@ import DropdownMenu, { List } from 'UI/Controls/DropdownMenu';
 
 import Hamburger from './Hamburger';
 
+// Derive grafana URL from the OIDC audience URL.
+// We remove the dev port :8000 in case it's there.
+let monitoringURL = null;
+if (window.featureFlags.FEATURE_MONITORING) {
+  const audienceURL = new URL(window.config.audience);
+  const hostnameParts = audienceURL.host.split('.');
+  hostnameParts[0] = 'grafana';
+  audienceURL.host = hostnameParts.join('.');
+  audienceURL.pathname = '/';
+  audienceURL.search = '?orgId=1';
+  monitoringURL = audienceURL.toString();
+}
+
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: ${(props) => props.theme.colors.white4};
@@ -27,6 +40,11 @@ const StyledNavLink = styled(NavLink)`
   &:hover {
     color: ${(props) => props.theme.colors.white1};
   }
+`;
+
+const StyledExternalNavLink = styled.a`
+  display: inline-block;
+  margin-right: 18px;
 `;
 
 const NavDiv = styled.div`
@@ -93,9 +111,22 @@ function MainMenu({ showApps, isUserAdmin }) {
             Users
           </StyledNavLink>
         ) : undefined}
-        <a href={homeURL} rel='noopener noreferrer' target='_blank'>
+        {monitoringURL && (
+          <StyledExternalNavLink
+            href={monitoringURL}
+            rel='noopener noreferrer'
+            target='_blank'
+          >
+            Monitoring <i className='fa fa-open-in-new' />
+          </StyledExternalNavLink>
+        )}
+        <StyledExternalNavLink
+          href={homeURL}
+          rel='noopener noreferrer'
+          target='_blank'
+        >
           Documentation <i className='fa fa-open-in-new' />
-        </a>
+        </StyledExternalNavLink>
       </NavDiv>
       {/* Mobile menu */}
       <DropdownMenuStyled
@@ -155,6 +186,18 @@ function MainMenu({ showApps, isUserAdmin }) {
                     </DropdownNavLink>
                   </li>
                 ) : undefined}
+                {monitoringURL && (
+                  <li>
+                    <DropdownAnchor
+                      href={monitoringURL}
+                      rel='noopener noreferrer'
+                      target='_blank'
+                      onClick={onClickHandler}
+                    >
+                      Monitoring <i className='fa fa-open-in-new' />
+                    </DropdownAnchor>
+                  </li>
+                )}
                 <li>
                   <DropdownAnchor
                     href={homeURL}
