@@ -56,7 +56,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
         placeholder='Unnamed node pool'
         error={validationError}
         onChange={handleChange}
-        help='Pick a description that helps team mates to understand what these nodes are here for. You can change this later. Each node pool also gets a unique identifier.'
+        help='Pick a description that helps team mates to understand what these nodes are here for. You can change this later.'
         readOnly={readOnly}
         disabled={disabled}
         autoFocus={autoFocus}
