@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
+import ShadowMask from 'shared/ShadowMask';
 import * as mainActions from 'stores/main/actions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
@@ -153,7 +154,7 @@ class ForgotPassword extends React.Component {
   render() {
     return (
       <>
-        <div className='login_form--mask' />
+        <ShadowMask />
 
         <SlideTransition in={true} appear={true} direction='down'>
           <LoginFormContainer>

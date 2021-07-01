@@ -27,6 +27,7 @@ import ViewAndEditName from 'UI/Inputs/ViewEditName';
 import { IWorkerNodesAdditionalColumn } from './types';
 import { deleteNodePool, updateNodePoolDescription } from './utils';
 import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
+import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
@@ -179,6 +180,16 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     }
   };
 
+  const [isScaleConfirmOpen, setIsScaleConfirmOpen] = useState(false);
+
+  const onScale = () => {
+    setIsScaleConfirmOpen(true);
+  };
+
+  const onCancelScale = () => {
+    setIsScaleConfirmOpen(false);
+  };
+
   return (
     <Box {...props}>
       <Row
@@ -257,9 +268,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderWidth={30}
               >
                 {(value) => (
-                  <Text aria-label='Node pool autoscaler minimum node count'>
-                    {value}
-                  </Text>
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label='Node pool autoscaler minimum node count'>
+                      {value}
+                    </Text>
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
@@ -269,9 +282,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderWidth={30}
               >
                 {(value) => (
-                  <Text aria-label='Node pool autoscaler maximum node count'>
-                    {value}
-                  </Text>
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label='Node pool autoscaler maximum node count'>
+                      {value}
+                    </Text>
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
@@ -281,9 +296,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderWidth={30}
               >
                 {(value) => (
-                  <Text aria-label='Node pool autoscaler target node count'>
-                    {value}
-                  </Text>
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label='Node pool autoscaler target node count'>
+                      {value}
+                    </Text>
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
@@ -321,6 +338,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               <WorkerNodesNodePoolActions
                 onRenameClick={onStartEditingDescription}
                 onDeleteClick={onDelete}
+                onScaleClick={onScale}
               />
             </Box>
           </>
@@ -335,6 +353,17 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
             onCancel={onCancelDelete}
             open={isDeleteConfirmOpen}
             isLoading={isDeleteLoading}
+          />
+        </Box>
+      )}
+
+      {nodePool && (
+        <Box margin={{ top: isScaleConfirmOpen ? 'small' : undefined }}>
+          <WorkerNodesNodePoolItemScale
+            nodePool={nodePool}
+            onConfirm={onCancelScale}
+            onCancel={onCancelScale}
+            open={isScaleConfirmOpen}
           />
         </Box>
       )}
