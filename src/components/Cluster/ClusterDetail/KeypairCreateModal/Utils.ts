@@ -7,7 +7,7 @@ export enum KeypairCreateModalStatus {
 }
 
 export function getDefaultDescription(email: string): string {
-  return `Added by user ${email} using Happa web interface`;
+  return `Added by user ${email} using the Giant Swarm web interface`;
 }
 
 export function getModalTitle(status: KeypairCreateModalStatus): string {

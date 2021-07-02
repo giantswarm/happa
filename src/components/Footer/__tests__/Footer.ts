@@ -87,10 +87,10 @@ describe('Footer', () => {
     jest.runAllTimers();
 
     await findByText(/0.0.1/i);
-    await findAllByText(/update happa now/i);
+    await findAllByText(/update the web interface now/i);
     // Check for the flash message
     expect(
-      getByText(/There's a new version of happa available/i)
+      getByText(/There's a new version of the web interface available/i)
     ).toBeInTheDocument();
 
     const versionWrapper = getByText(/0.0.1/i);
@@ -130,16 +130,16 @@ describe('Footer', () => {
     // Fast-forward until all timers have been executed
     jest.runAllTimers();
 
-    await findAllByText(/update happa now/i);
+    await findAllByText(/update the web interface now/i);
     expect(
-      getByText(/There's a new version of happa available/i)
+      getByText(/There's a new version of the web interface available/i)
     ).toBeInTheDocument();
 
     // Fast-forward until all timers have been executed
     jest.runAllTimers();
 
     expect(
-      getByText(/There's a new version of happa available/i)
+      getByText(/There's a new version of the web interface available/i)
     ).toBeInTheDocument();
   });
 
@@ -166,11 +166,11 @@ describe('Footer', () => {
     // Fast-forward until all timers have been executed
     jest.runAllTimers();
 
-    await findAllByText(/update happa now/i);
+    await findAllByText(/update the web interface now/i);
 
     const updateButton = within(
       document.querySelector('footer') as HTMLElement
-    ).getByText(/update happa now/i);
+    ).getByText(/update the web interface now/i);
     fireEvent.click(updateButton);
 
     expect(getByText(/updating.../i)).toBeInTheDocument();
