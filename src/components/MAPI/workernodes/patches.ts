@@ -1,5 +1,6 @@
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 
 export type NodePoolPatch = (
   nodePool: NodePool,
@@ -27,6 +28,14 @@ export function withNodePoolDescription(newDescription: string): NodePoolPatch {
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolDescription
       ] = newDescription;
+    }
+  };
+}
+
+export function withNodePoolMachineType(newMachineType: string): NodePoolPatch {
+  return (_, providerNodePool: ProviderNodePool) => {
+    if (providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
+      providerNodePool.spec!.template.vmSize = newMachineType;
     }
   };
 }
