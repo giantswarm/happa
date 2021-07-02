@@ -141,6 +141,7 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
         draft.bootstrapConfig = newState.bootstrapConfig;
+        draft.validationResults = newState.validationResults;
         draft.isCreating = false;
         break;
       }
