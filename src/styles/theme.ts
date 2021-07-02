@@ -166,7 +166,7 @@ const theme = deepMerge(generate(16), {
       'status-warning': '#FFAA15',
       'status-ok': '#00C781',
       'status-unknown': '#CCCCCC',
-      'status-disabled': '#CCCCCC',
+      'status-disabled': '#3a5f7b',
       'graph-0': 'brand',
       'graph-1': 'status-warning',
       'input-background': '#32526a',

@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import RoutePath from 'lib/routePath';
 import {
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
@@ -11,8 +12,8 @@ import {
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -54,6 +55,11 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
   cluster,
   ...props
 }) => {
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -111,6 +117,15 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
   const hasNoNodePools =
     typeof workerNodePoolsCount === 'number' && workerNodePoolsCount === 0;
 
+  const workerNodesPath = useMemo(
+    () =>
+      RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail.WorkerNodes,
+        { orgId, clusterId }
+      ),
+    [clusterId, orgId]
+  );
+
   return (
     <ClusterDetailWidget
       title='Worker nodes'
@@ -129,10 +144,7 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
           </Text>
           <Text size='small'>
             To create node pools, switch to the{' '}
-            <StyledLink to={OrganizationsRoutes.Clusters.Detail.WorkerNodes}>
-              worker nodes
-            </StyledLink>{' '}
-            tab.
+            <StyledLink to={workerNodesPath}>worker nodes</StyledLink> tab.
           </Text>
         </Box>
       )}

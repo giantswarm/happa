@@ -1,4 +1,8 @@
+import { Constants } from 'shared/constants';
+
 import { IMachinePool } from './types';
+
+export const labelMachinePool = 'giantswarm.io/machine-pool';
 
 export const annotationMachinePoolDescription =
   'machine-pool.giantswarm.io/name';
@@ -10,7 +14,7 @@ export const annotationMachinePoolMaxSize =
 export function getMachinePoolDescription(machinePool: IMachinePool): string {
   let name =
     machinePool.metadata.annotations?.[annotationMachinePoolDescription];
-  name ??= 'Unnamed node pool';
+  name ??= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
 
   return name;
 }

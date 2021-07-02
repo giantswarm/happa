@@ -466,7 +466,11 @@ export async function deleteSubjectFromRoleBinding(
 
   // If there's no subject left, we can delete the resource.
   if (bindingResource.subjects.length < 1) {
-    return rbacv1.deleteRoleBinding(clientFactory(), auth, bindingResource);
+    await rbacv1.deleteRoleBinding(clientFactory(), auth, bindingResource);
+
+    bindingResource.metadata.deletionTimestamp = new Date().toISOString();
+
+    return bindingResource;
   }
 
   // There are other subjects there, let's keep the resource.

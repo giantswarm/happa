@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as featureFlags from 'shared/featureFlags';
+import ShadowMask from 'shared/ShadowMask';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import * as mainActions from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -187,7 +188,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
     return (
       <>
-        <div className='login_form--mask' />
+        <ShadowMask />
 
         <SlideTransition appear={true} in={true} direction='down'>
           <StyledBox width='large' margin='auto'>

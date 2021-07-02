@@ -18,5 +18,5 @@ export function deleteRoleBinding(
     namespace: roleBinding.metadata.namespace!,
   });
 
-  return deleteResource<IRoleBinding>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }

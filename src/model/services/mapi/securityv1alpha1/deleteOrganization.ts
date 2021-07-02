@@ -18,5 +18,5 @@ export function deleteOrganization(
     namespace: organization.metadata.namespace!,
   });
 
-  return deleteResource<IOrganization>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }

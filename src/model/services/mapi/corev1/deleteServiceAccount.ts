@@ -18,5 +18,5 @@ export function deleteServiceAccount(
     namespace: serviceAccount.metadata.namespace!,
   });
 
-  return deleteResource<IServiceAccount>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }

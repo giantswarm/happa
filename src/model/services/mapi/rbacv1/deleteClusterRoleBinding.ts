@@ -18,5 +18,5 @@ export function deleteClusterRoleBinding(
     namespace: '',
   });
 
-  return deleteResource<IClusterRoleBinding>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }

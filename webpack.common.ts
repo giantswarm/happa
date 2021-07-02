@@ -101,6 +101,7 @@ const makeFeatureFlags = () => {
   const defaults = {
     FEATURE_MAPI_AUTH: false,
     FEATURE_MAPI_CLUSTERS: false,
+    FEATURE_MONITORING: true,
   };
 
   const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);

@@ -63,7 +63,7 @@ exports[`DateInput renders a disabled input 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 jxtDLa FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hMVFGJ FormField__FormFieldContentBox-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 jMpcQp"
@@ -73,7 +73,7 @@ exports[`DateInput renders a disabled input 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-ofa7kd-0 fpngbb"
+              class="StyledIcon-ofa7kd-0 jaReTX"
               viewBox="0 0 24 24"
             >
               <path
