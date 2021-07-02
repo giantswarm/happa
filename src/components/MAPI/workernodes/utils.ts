@@ -74,25 +74,24 @@ export async function deleteNodePool(
   nodePool: NodePool
 ) {
   if (nodePool.kind === capiexpv1alpha3.MachinePool) {
-    let machinePool = await capiexpv1alpha3.getMachinePool(
+    const machinePool = await capiexpv1alpha3.getMachinePool(
       httpClient,
       auth,
       nodePool.metadata.namespace!,
       nodePool.metadata.name
     );
 
-    machinePool = await capiexpv1alpha3.deleteMachinePool(
-      httpClient,
-      auth,
-      machinePool
-    );
+    await capiexpv1alpha3.deleteMachinePool(httpClient, auth, machinePool);
+
+    machinePool.metadata.deletionTimestamp = new Date().toISOString();
 
     mutate(
       capiexpv1alpha3.getMachinePoolKey(
         machinePool.metadata.namespace!,
         machinePool.metadata.name
       ),
-      machinePool
+      machinePool,
+      false
     );
 
     // Update the deleted machine pool in place.
@@ -114,8 +113,6 @@ export async function deleteNodePool(
         }
 
         draft.items = draft.items.sort(compareNodePools);
-
-        return draft;
       }),
       false
     );

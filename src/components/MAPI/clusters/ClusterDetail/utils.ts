@@ -44,7 +44,11 @@ export async function deleteCluster(
     name
   );
 
-  return capiv1alpha3.deleteCluster(httpClient, auth, cluster);
+  await capiv1alpha3.deleteCluster(httpClient, auth, cluster);
+
+  cluster.metadata.deletionTimestamp = new Date().toISOString();
+
+  return cluster;
 }
 
 export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
