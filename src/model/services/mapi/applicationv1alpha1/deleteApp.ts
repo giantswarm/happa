@@ -18,5 +18,5 @@ export function deleteApp(
     namespace: app.metadata.namespace!,
   });
 
-  return deleteResource<IApp>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }
