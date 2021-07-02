@@ -212,8 +212,6 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         setSecretsYAMLError('');
       } catch (err) {
         setSecretsYAMLError('Unable to parse valid YAML from this file.');
-
-        ErrorReporter.getInstance().notify(err);
       }
     };
 
