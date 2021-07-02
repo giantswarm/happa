@@ -4,6 +4,7 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import { Constants } from 'shared/constants';
 
 import {
   ControlPlaneNodeList,
@@ -326,7 +327,7 @@ export function getNodePoolDescription(nodePool: NodePool): string {
     case capiexpv1alpha3.MachinePool:
       return capiexpv1alpha3.getMachinePoolDescription(nodePool);
     default:
-      return 'Unnamed node pool';
+      return Constants.DEFAULT_NODEPOOL_DESCRIPTION;
   }
 }
 

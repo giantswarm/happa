@@ -9,7 +9,7 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as metav1 from 'model/services/mapi/metav1';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
 
@@ -332,7 +332,8 @@ function createDefaultMachinePool(config: {
         [capiv1alpha3.labelOrganization]: organization,
       },
       annotations: {
-        [capiexpv1alpha3.annotationMachinePoolDescription]: 'Unnamed node pool',
+        [capiexpv1alpha3.annotationMachinePoolDescription]:
+          Constants.DEFAULT_NODEPOOL_DESCRIPTION,
       },
     },
     spec: {

@@ -53,7 +53,6 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
       <TextInput
         value={value}
         id={id}
-        placeholder='Unnamed node pool'
         error={validationError}
         onChange={handleChange}
         help='Pick a description that helps team mates to understand what these nodes are here for. You can change this later.'
