@@ -15,7 +15,7 @@ declare module 'grommet' {
   }
 
   interface SelectProps {
-    ref?: React.Ref<HTMLSelectElement>;
+    ref?: React.Ref<HTMLButtonElement>;
   }
 
   interface RadioButtonProps {

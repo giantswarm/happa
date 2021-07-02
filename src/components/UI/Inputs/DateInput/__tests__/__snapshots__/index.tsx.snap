@@ -15,7 +15,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 ffRano"
+          class="StyledButton-sc-323bzc-0 kCBMzp"
           id="dob"
           type="button"
         >
@@ -86,7 +86,7 @@ exports[`DateInput renders a disabled input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 hjvnQn"
+            class="StyledMaskedInput-sc-99vkfa-0 OlCfI"
             disabled=""
             id="dob"
             placeholder="yyyy-mm-dd"
@@ -133,7 +133,7 @@ exports[`DateInput renders a simple input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
+            class="StyledMaskedInput-sc-99vkfa-0 kErxdN"
             placeholder="yyyy-mm-dd"
             value=""
           />
@@ -189,7 +189,7 @@ exports[`DateInput renders an input with a help message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
+            class="StyledMaskedInput-sc-99vkfa-0 kErxdN"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -241,7 +241,7 @@ exports[`DateInput renders an input with a label 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
+            class="StyledMaskedInput-sc-99vkfa-0 kErxdN"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -293,7 +293,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
+            class="StyledMaskedInput-sc-99vkfa-0 kErxdN"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -350,7 +350,7 @@ exports[`DateInput renders an input with an info message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 elywpK"
+            class="StyledMaskedInput-sc-99vkfa-0 kErxdN"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""

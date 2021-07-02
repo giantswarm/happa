@@ -49,7 +49,10 @@ const customTheme: ThemeType = {
 };
 
 interface IBaseProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Input>, 'inputProps'> {}
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof Input>,
+    'inputProps' | 'size' | 'onBlur'
+  > {}
 
 interface IDateInputProps
   extends IBaseProps,
@@ -91,9 +94,13 @@ interface IDateInputProps
    * Whether the input should have some extra padding or not.
    */
   pad?: FormFieldProps['pad'];
+  /**
+   * How big should the input and its contents be.
+   */
+  size?: MaskedInputType['size'];
 }
 
-const DateInput = React.forwardRef<HTMLElement, IDateInputProps>(
+const DateInput = React.forwardRef<HTMLInputElement, IDateInputProps>(
   (
     {
       id,
@@ -137,7 +144,6 @@ const DateInput = React.forwardRef<HTMLElement, IDateInputProps>(
           {...formFieldProps}
         >
           <Input
-            // @ts-expect-error
             ref={ref}
             id={id}
             name={name}

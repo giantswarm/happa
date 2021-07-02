@@ -27,7 +27,6 @@ function isWholeNumber(value: number) {
 
 const customTheme: ThemeType = {
   formField: {
-    // @ts-expect-error
     extend: css`
       & > div {
         position: relative;
