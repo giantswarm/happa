@@ -39,7 +39,7 @@ interface IMultiSelectProps
   disabled?: boolean;
 }
 
-const MultiSelect = React.forwardRef<HTMLSelectElement, IMultiSelectProps>(
+const MultiSelect = React.forwardRef<HTMLButtonElement, IMultiSelectProps>(
   (
     {
       placeholder,

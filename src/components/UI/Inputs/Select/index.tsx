@@ -100,7 +100,7 @@ interface ISelectProps extends React.ComponentPropsWithoutRef<typeof Input> {
   label?: FormFieldProps['label'];
 }
 
-const Select = React.forwardRef<HTMLSelectElement, ISelectProps>(
+const Select = React.forwardRef<HTMLButtonElement, ISelectProps>(
   (
     {
       id,
