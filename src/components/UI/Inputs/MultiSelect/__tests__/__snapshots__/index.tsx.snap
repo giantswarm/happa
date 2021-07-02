@@ -21,7 +21,7 @@ exports[`MultiSelect renders a simple input 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 ffRhrh Select__StyledSelectDropButton-sc-17idtfo-1 ebsyNc"
+          class="StyledButton-sc-323bzc-0 vlAyA Select__StyledSelectDropButton-sc-17idtfo-2 ebPMTj"
           id="pet"
           type="button"
         >
@@ -36,7 +36,7 @@ exports[`MultiSelect renders a simple input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 kbHwFk Select__SelectTextInput-sc-17idtfo-0 kMNVoA"
+                  class="StyledTextInput-sc-1x30a0s-0 cGkgHG Select__SelectTextInput-sc-17idtfo-0 kMNVoA"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""

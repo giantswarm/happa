@@ -14,7 +14,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fIEhEb"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bxNiUu"
           disabled=""
         >
           <div
@@ -56,7 +56,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dga-dbC"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cQbRDX"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 iZuiQS StyledCheckBox-sc-1dbk5ju-6 fJLUFg"
@@ -104,7 +104,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dga-dbC"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cQbRDX"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 iZuiQS StyledCheckBox-sc-1dbk5ju-6 fJLUFg"
@@ -155,7 +155,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dga-dbC"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cQbRDX"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 iZuiQS StyledCheckBox-sc-1dbk5ju-6 fJLUFg"
@@ -198,7 +198,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dga-dbC"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cQbRDX"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 iZuiQS StyledCheckBox-sc-1dbk5ju-6 fJLUFg"
@@ -236,7 +236,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dga-dbC"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cQbRDX"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 iZuiQS StyledCheckBox-sc-1dbk5ju-6 fJLUFg"
@@ -279,7 +279,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 dga-dbC"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 cQbRDX"
         >
           <div
             class="StyledBox-sc-13pk1d4-0 iZuiQS StyledCheckBox-sc-1dbk5ju-6 fJLUFg"
