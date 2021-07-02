@@ -1,4 +1,5 @@
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
+import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -9,12 +10,6 @@ import {
   AZSelectionZonesUpdater,
   AZSelectorWrapper,
 } from './AZSelectionUtils';
-
-const ErrorMessage = styled.p`
-  color: ${({ theme }) => theme.colors.error};
-  font-weight: 400;
-  margin-bottom: 0;
-`;
 
 const ManualAZSelector = styled.div`
   font-size: 16px;
@@ -57,7 +52,9 @@ const AZSelectionManual: React.FC<IAZSelectionManualProps> = ({
 
   return (
     <>
-      <p>{descriptionMessage}</p>
+      <Box margin={{ bottom: 'small' }}>
+        <Text>{descriptionMessage}</Text>
+      </Box>
       <AZSelectorWrapper>
         <ManualAZSelector>
           <AvailabilityZonesParser
@@ -73,7 +70,7 @@ const AZSelectionManual: React.FC<IAZSelectionManualProps> = ({
           />
         </ManualAZSelector>
 
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {errorMessage && <Text color='status-critical'>{errorMessage}</Text>}
       </AZSelectorWrapper>
     </>
   );

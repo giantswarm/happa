@@ -24,7 +24,6 @@ const StyledPanel = styled(Panel)`
 `;
 
 const StyledPanelCollapse = styled(PanelCollapse)`
-  font-size: 14px;
   padding: ${({ theme }) => theme.spacingPx * 2}px 0 0
     ${({ theme }) => theme.spacingPx * 7}px;
   opacity: 0;

@@ -1,6 +1,8 @@
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
+import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import {
   AvailabilityZoneSelection,
@@ -8,6 +10,10 @@ import {
   AZSelectionZonesUpdater,
   AZSelectorWrapper,
 } from './AZSelectionUtils';
+
+const StyledAZSelectorWrapper = styled(AZSelectorWrapper)`
+  align-items: baseline;
+`;
 
 interface IAZSelectionAutomaticProps {
   onUpdateZones: AZSelectionZonesUpdater;
@@ -30,9 +36,9 @@ const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
 }) => {
   if (variant === AZSelectionVariants.Master) {
     return (
-      <p>
+      <Text>
         An Availabilty Zone will be automatically chosen from the existing ones.
-      </p>
+      </Text>
     );
   }
 
@@ -44,8 +50,10 @@ const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
 
   return (
     <>
-      <AZSelectorWrapper>
-        <p>Number of availability zones to use:</p>
+      <StyledAZSelectorWrapper>
+        <Box>
+          <Text>Number of availability zones to use</Text>
+        </Box>
         <AvailabilityZonesParser
           min={minNumOfZones}
           max={maxNumOfZones}
@@ -56,8 +64,8 @@ const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
           )}
           isLabels={false}
         />
-      </AZSelectorWrapper>
-      <p>{automaticAZSelectionMessage}</p>
+      </StyledAZSelectorWrapper>
+      <Text>{automaticAZSelectionMessage}</Text>
     </>
   );
 };
