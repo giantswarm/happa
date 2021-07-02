@@ -19,7 +19,7 @@ const StyledFormField = styled(FormField)`
 `;
 
 interface ICheckBoxInputProps
-  extends React.ComponentPropsWithoutRef<typeof Input> {
+  extends Omit<React.ComponentPropsWithoutRef<typeof Input>, 'pad'> {
   /**
    * The description text displayed on the side of the check box.
    */
