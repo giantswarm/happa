@@ -74,7 +74,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
 
   return (
     <footer {...props}>
-      <FooterGroup>Happa</FooterGroup>
+      <FooterGroup>Giant Swarm web interface</FooterGroup>
       <FooterGroup>
         <OverlayTrigger
           overlay={<Tooltip id='tooltip'>{tooltipMessage}</Tooltip>}

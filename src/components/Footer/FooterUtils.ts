@@ -89,7 +89,7 @@ export function hasUpdateReady(
 
 export function showUpdateToast(callback?: () => void) {
   new FlashMessage(
-    `There's a new version of happa available!`,
+    `There's a new version of the web interface available.`,
     messageType.INFO,
     messageTTL.FOREVER,
     `Please press the <code>${Constants.METADATA_UPDATE_LABEL}</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
