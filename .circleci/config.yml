@@ -393,7 +393,7 @@ jobs:
               "$(cat .docker_image_name)"
             sleep 2
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
-            echo "${CURL_OUTPUT}" | grep Happa
+            echo "${CURL_OUTPUT}" | grep "Giant Swarm web interface"
 
   build-fe-docs:
     <<: *defaults
