@@ -1,19 +1,11 @@
+import { Text } from 'grommet';
 import styled from 'styled-components';
 
-const TextBase = styled.span`
-  font-size: 14px;
-  i {
-    font-size: 16px;
-  }
-`;
-
-export const SelectedItem = styled(TextBase)`
+export const SelectedItem = styled(Text)`
   margin-right: ${({ theme }) => theme.spacingPx * 9}px;
 `;
 
-export const SelectedDescription = styled(TextBase)`
-  font-weight: 300;
-`;
+export const SelectedDescription = styled(Text)``;
 
 export const SelectedWrapper = styled.div`
   display: flex;
@@ -21,9 +13,8 @@ export const SelectedWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
-export const ListToggler = styled(TextBase)<{ collapsible?: boolean }>`
+export const ListToggler = styled(Text)<{ collapsible?: boolean }>`
   cursor: ${({ collapsible }) => (collapsible ? 'pointer' : 'default')};
-  font-weight: 300;
   padding: ${({ theme }) => theme.spacingPx * 2}px 0;
   color: ${({ theme }) => theme.colors.white4};
   user-select: none;
@@ -32,6 +23,6 @@ export const ListToggler = styled(TextBase)<{ collapsible?: boolean }>`
   }
   i {
     margin-right: ${({ theme }) => theme.spacingPx}px;
-    width: 14px;
+    width: 16px;
   }
 `;
