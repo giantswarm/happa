@@ -206,8 +206,6 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         setValuesYAMLError('');
       } catch (err) {
         setValuesYAMLError('Unable to parse valid YAML from this file.');
-
-        ErrorReporter.getInstance().notify(err);
       }
     };
 
