@@ -114,7 +114,9 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
                 <TableCell />
                 <TableCell>Name</TableCell>
                 <TableCell align='center'>CPU</TableCell>
-                <TableCell align='center'>Memory</TableCell>
+                <TableCell width='xsmall' align='center'>
+                  Memory
+                </TableCell>
                 <TableCell>Description</TableCell>
               </TableRow>
             </TableHeader>

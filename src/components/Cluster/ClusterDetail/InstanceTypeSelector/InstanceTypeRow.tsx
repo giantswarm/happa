@@ -1,3 +1,4 @@
+import { Text } from 'grommet';
 import { IInstanceType } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
@@ -22,6 +23,10 @@ const StyledTableRow = styled(TableRow)`
   .button-wrapper {
     margin-right: 0;
   }
+`;
+
+const Name = styled(Text)`
+  font-family: ${({ theme }) => theme.fontFamilies.console};
 `;
 
 interface IInstanceTypeRow extends IInstanceType {
@@ -70,10 +75,18 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
           />
         </RUMActionTarget>
       </TableCell>
-      <TableCell>{name}</TableCell>
-      <TableCell align='center'>{cpu}</TableCell>
-      <TableCell align='center'>{ram} GB</TableCell>
-      <TableCell>{description}</TableCell>
+      <TableCell>
+        <Name>{name}</Name>
+      </TableCell>
+      <TableCell align='center'>
+        <Text>{cpu}</Text>
+      </TableCell>
+      <TableCell width='xsmall' align='center'>
+        <Text>{ram} GB</Text>
+      </TableCell>
+      <TableCell>
+        <Text>{description}</Text>
+      </TableCell>
     </StyledTableRow>
   );
 };
