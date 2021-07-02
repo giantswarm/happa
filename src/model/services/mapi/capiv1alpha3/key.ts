@@ -4,6 +4,7 @@ import { ICluster, ICondition } from './';
 
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
+export const labelClusterName = 'cluster.x-k8s.io/cluster-name';
 export const labelReleaseVersion = 'release.giantswarm.io/version';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';

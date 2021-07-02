@@ -4,11 +4,13 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import { Constants } from 'shared/constants';
 
 import {
   ControlPlaneNodeList,
   NodePool,
   NodePoolList,
+  ProviderCluster,
   ProviderNodePool,
 } from './types';
 
@@ -325,7 +327,7 @@ export function getNodePoolDescription(nodePool: NodePool): string {
     case capiexpv1alpha3.MachinePool:
       return capiexpv1alpha3.getMachinePoolDescription(nodePool);
     default:
-      return 'Unnamed node pool';
+      return Constants.DEFAULT_NODEPOOL_DESCRIPTION;
   }
 }
 
@@ -378,5 +380,55 @@ export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
       return nodePool.spec?.failureDomains ?? [];
     default:
       return [];
+  }
+}
+
+export function getProviderClusterLocation(
+  providerCluster: ProviderCluster
+): string {
+  switch (providerCluster?.kind) {
+    case capzv1alpha3.AzureCluster:
+      return providerCluster.spec?.location ?? '';
+    default:
+      return '';
+  }
+}
+
+export function getProviderNodePoolLocation(
+  providerNodePool: ProviderNodePool
+): string {
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+      return providerNodePool.spec?.location ?? '';
+    default:
+      return '';
+  }
+}
+
+const uidRegexp = /^[a-z]([a-z][0-9]|[0-9][a-z])+$/;
+const supportedUIDChars = '023456789abcdefghijkmnopqrstuvwxyz';
+
+/**
+ * Generate unique resource names, that can be used for node pool or cluster names.
+ * @param length
+ */
+export function generateUID(length: number): string {
+  const id = new Array(length);
+
+  for (;;) {
+    for (let i = 0; i < id.length; i++) {
+      const nextCharIdx = Math.ceil(
+        (supportedUIDChars.length - 1) * Math.random()
+      );
+
+      id[i] = supportedUIDChars[nextCharIdx];
+    }
+
+    const idString = id.join('');
+    if (!uidRegexp.test(idString)) {
+      continue;
+    }
+
+    return idString;
   }
 }
