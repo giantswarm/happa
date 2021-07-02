@@ -18,5 +18,5 @@ export function deleteSecret(
     namespace: secret.metadata.namespace!,
   });
 
-  return deleteResource<ISecret>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }

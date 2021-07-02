@@ -18,5 +18,5 @@ export function deleteConfigMap(
     namespace: configMap.metadata.namespace!,
   });
 
-  return deleteResource<IConfigMap>(client, auth, url.toString());
+  return deleteResource(client, auth, url.toString());
 }
