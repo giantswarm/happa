@@ -99,7 +99,7 @@
     "react-router-dom": "5.2.0",
     "react-test-renderer": "^17.0.1",
     "react-timeout": "2.0.1",
-    "react-transition-group": "4.4.1",
+    "react-transition-group": "4.4.2",
     "react-virtualized": "9.22.3",
     "react-window": "1.8.6",
     "redux": "4.1.0",
