@@ -187,7 +187,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     };
 
     useEffect(() => {
-      if (prevMax !== max || prevMin !== min) {
+      if ((prevMax && prevMax !== max) || (prevMin && prevMin !== min)) {
         const error = validateInput(currValue, min, max);
         updateValue(currValue, error);
       }

@@ -47,3 +47,19 @@ export function withNodePoolAvailabilityZones(zones?: string[]): NodePoolPatch {
     }
   };
 }
+
+export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
+  return (nodePool: NodePool) => {
+    if (nodePool.kind === capiexpv1alpha3.MachinePool) {
+      nodePool.spec!.replicas = min;
+
+      nodePool.metadata.annotations ??= {};
+      nodePool.metadata.annotations[
+        capiexpv1alpha3.annotationMachinePoolMinSize
+      ] = min.toString();
+      nodePool.metadata.annotations[
+        capiexpv1alpha3.annotationMachinePoolMaxSize
+      ] = max.toString();
+    }
+  };
+}

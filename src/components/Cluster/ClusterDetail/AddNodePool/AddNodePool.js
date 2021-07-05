@@ -287,7 +287,7 @@ class AddNodePool extends Component {
       aws,
       azure,
     } = this.state;
-    const { provider } = this.props;
+    const { provider, capabilities } = this.props;
 
     const nodePoolDefinition = {
       availability_zones: {},
@@ -358,11 +358,17 @@ class AddNodePool extends Component {
       }
     }
 
-    // Add scaling setup.
-    nodePoolDefinition.scaling = {
-      min: scaling.min,
-      max: scaling.max,
-    };
+    if (capabilities.supportsNodePoolAutoscaling) {
+      nodePoolDefinition.scaling = {
+        min: scaling.min,
+        max: scaling.max,
+      };
+    } else {
+      nodePoolDefinition.scaling = {
+        min: scaling.min,
+        max: scaling.min,
+      };
+    }
 
     const isValid = this.validate();
 
