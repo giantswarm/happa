@@ -220,3 +220,5 @@ export interface IK8sStatusErrorCodeMapping {
   [K8sStatusErrorReasons.ServiceUnavailable]: 503;
 }
 /* eslint-enable no-magic-numbers */
+
+export type Quantity = string;

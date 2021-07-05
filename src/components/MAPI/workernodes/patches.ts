@@ -66,7 +66,7 @@ export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
 
 export interface INodePoolSpotInstancesConfigAzure {
   enabled: boolean;
-  maxPrice: number;
+  maxPrice: string;
 }
 
 export interface INodePoolSpotInstancesConfigAWS {
@@ -90,7 +90,7 @@ export function withNodePoolSpotInstances(
 
       providerNodePool.spec!.template.spotVMOptions ??= {};
       providerNodePool.spec!.template.spotVMOptions.maxPrice = (config as INodePoolSpotInstancesConfigAzure).maxPrice;
-      providerNodePool.spec!.template.spotVMOptions.maxPrice ??= -1;
+      providerNodePool.spec!.template.spotVMOptions.maxPrice ??= '-1';
     }
   };
 }

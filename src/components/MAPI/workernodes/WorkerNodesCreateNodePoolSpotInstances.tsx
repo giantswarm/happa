@@ -97,7 +97,7 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
     const validationResult = validateMaxPrice(newPrice);
     setValidationError(validationResult);
 
-    (patchConfig.current as INodePoolSpotInstancesConfigAzure).maxPrice = newPrice;
+    (patchConfig.current as INodePoolSpotInstancesConfigAzure).maxPrice = newPrice.toString();
 
     appendChanges(patchConfig.current, validationResult);
   };
@@ -109,7 +109,7 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
       ? -1
       : Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN;
 
-    (patchConfig.current as INodePoolSpotInstancesConfigAzure).maxPrice = nextPrice;
+    (patchConfig.current as INodePoolSpotInstancesConfigAzure).maxPrice = nextPrice.toString();
 
     appendChanges(patchConfig.current);
   };

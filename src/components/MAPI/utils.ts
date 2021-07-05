@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -5,6 +6,7 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { IState } from 'stores/state';
@@ -382,15 +384,27 @@ export function getProviderNodePoolSpotInstances(
 ): INodePoolSpotInstancesAzure | INodePoolSpotInstancesAWS {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool: {
-      let maxPrice =
-        providerNodePool.spec?.template.spotVMOptions?.maxPrice ?? -1;
-      maxPrice = typeof maxPrice === 'number' ? maxPrice : parseFloat(maxPrice);
+      try {
+        const maxPriceQty =
+          providerNodePool.spec?.template.spotVMOptions?.maxPrice;
+        const maxPrice = maxPriceQty ? metav1.quantityToScalar(maxPriceQty) : 0;
 
-      return {
-        enabled:
-          typeof providerNodePool.spec?.template.spotVMOptions !== 'undefined',
-        maxPrice,
-      };
+        return {
+          enabled:
+            typeof providerNodePool.spec?.template.spotVMOptions !==
+            'undefined',
+          maxPrice: maxPrice as number,
+        };
+      } catch (err) {
+        ErrorReporter.getInstance().notify(err);
+
+        return {
+          enabled:
+            typeof providerNodePool.spec?.template.spotVMOptions !==
+            'undefined',
+          maxPrice: 0,
+        };
+      }
     }
     default:
       return {

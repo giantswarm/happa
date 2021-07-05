@@ -1,4 +1,8 @@
 import { Box, Text } from 'grommet';
+import {
+  getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAzure,
+} from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -21,7 +25,9 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
 
   let maxPriceText = '';
   if (featureEnabled) {
-    const maxPrice = providerNodePool?.spec?.template.spotVMOptions?.maxPrice;
+    const maxPrice = (getProviderNodePoolSpotInstances(
+      providerNodePool
+    ) as INodePoolSpotInstancesAzure).maxPrice;
     if (maxPrice && maxPrice > 0) {
       maxPriceText = `Using maximum price: $${maxPrice}`;
     } else {

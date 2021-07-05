@@ -154,7 +154,7 @@ export interface IUserAssignedIdentity {
 }
 
 export interface ISpotVMOptions {
-  maxPrice?: number | string;
+  maxPrice?: metav1.Quantity;
 }
 
 export interface ISecurityProfile {
