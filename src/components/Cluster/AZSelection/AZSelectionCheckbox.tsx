@@ -1,3 +1,4 @@
+import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -16,6 +17,7 @@ interface IAZSelectionCheckboxProps
   value?: AvailabilityZoneSelection;
   uniqueIdentifier?: string;
   baseActionName?: string;
+  label?: string;
 }
 
 const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
@@ -24,6 +26,7 @@ const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
   value,
   uniqueIdentifier,
   baseActionName,
+  label,
   ...rest
 }) => {
   const typeName = AvailabilityZoneSelection[type as AvailabilityZoneSelection];
@@ -36,7 +39,12 @@ const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
         name={id}
         checked={value === type}
         onChange={() => onChange(type!)}
-        tabIndex={0}
+        tabIndex={-1}
+        label={
+          <Text weight='normal' color='text'>
+            {label}
+          </Text>
+        }
         {...rest}
       />
     </RUMActionTarget>
@@ -49,6 +57,7 @@ AZSelectionCheckbox.propTypes = {
   type: PropTypes.number,
   uniqueIdentifier: PropTypes.string,
   baseActionName: PropTypes.string,
+  label: PropTypes.string,
 };
 
 AZSelectionCheckbox.defaultProps = {

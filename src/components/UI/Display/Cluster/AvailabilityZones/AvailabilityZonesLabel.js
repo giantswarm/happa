@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -115,16 +116,25 @@ function AvailabilityZonesLabel({
     }
   };
 
+  const handleSelectKeyDown = (e) => {
+    e.preventDefault();
+
+    toggleChecked();
+  };
+
   return (
     <RUMActionTarget name={RUMActions.ToggleAZ}>
-      <Wrapper
-        className={classNames}
-        title={title}
-        bgColor={color}
-        onClick={toggleChecked}
-      >
-        {label}
-      </Wrapper>
+      <Keyboard onSpace={handleSelectKeyDown} onEnter={handleSelectKeyDown}>
+        <Wrapper
+          className={classNames}
+          title={title}
+          bgColor={color}
+          onClick={toggleChecked}
+          tabIndex={0}
+        >
+          {label}
+        </Wrapper>
+      </Keyboard>
     </RUMActionTarget>
   );
 }

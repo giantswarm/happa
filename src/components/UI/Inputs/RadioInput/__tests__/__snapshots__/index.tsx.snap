@@ -9,6 +9,7 @@ exports[`RadioInput renders a disabled input 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-hRMXGO fouCKV"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -24,6 +25,7 @@ exports[`RadioInput renders a disabled input 1`] = `
               class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 kVpJxN"
               disabled=""
               name="some-input"
+              tabindex="-1"
               type="radio"
             />
             <div
@@ -51,6 +53,7 @@ exports[`RadioInput renders a simple input 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-hRMXGO fouCKV"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -64,6 +67,7 @@ exports[`RadioInput renders a simple input 1`] = `
             <input
               class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 kGVKvV"
               name="some-input"
+              tabindex="-1"
               type="radio"
             />
             <div
@@ -91,6 +95,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-hRMXGO fouCKV"
+      tabindex="0"
     >
       <label
         class="StyledText-sc-1sadyjn-0 weZKr"
@@ -112,6 +117,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
               class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 kGVKvV"
               id="some-input"
               name="some-input"
+              tabindex="-1"
               type="radio"
             />
             <div
@@ -139,6 +145,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-hRMXGO fouCKV"
+      tabindex="0"
     >
       <span
         class="StyledText-sc-1sadyjn-0 hosPKv"
@@ -157,6 +164,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
             <input
               class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 kGVKvV"
               name="some-input"
+              tabindex="-1"
               type="radio"
             />
             <div
@@ -184,6 +192,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-hRMXGO fouCKV"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -197,6 +206,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
             <input
               class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 kGVKvV"
               name="some-input"
+              tabindex="-1"
               type="radio"
             />
             <div
@@ -229,6 +239,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-hRMXGO fouCKV"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -242,6 +253,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
             <input
               class="StyledRadioButton__StyledRadioButtonInput-g1f6ld-1 kGVKvV"
               name="some-input"
+              tabindex="-1"
               type="radio"
             />
             <div

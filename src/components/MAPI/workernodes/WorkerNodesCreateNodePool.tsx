@@ -33,6 +33,7 @@ import {
   createDefaultProviderNodePool,
   createNodePool,
 } from './utils';
+import WorkerNodesCreateNodePoolAvailabilityZones from './WorkerNodesCreateNodePoolAvailabilityZones';
 import WorkerNodesCreateNodePoolDescription from './WorkerNodesCreateNodePoolDescription';
 import WorkerNodesCreateNodePoolMachineType from './WorkerNodesCreateNodePoolMachineType';
 import WorkerNodesCreateNodePoolName from './WorkerNodesCreateNodePoolName';
@@ -41,6 +42,7 @@ enum NodePoolPropertyField {
   Name,
   Description,
   MachineType,
+  AvailabilityZones,
 }
 
 interface IApplyPatchAction {
@@ -114,6 +116,7 @@ function makeInitialState(
       [NodePoolPropertyField.Name]: true,
       [NodePoolPropertyField.Description]: true,
       [NodePoolPropertyField.MachineType]: true,
+      [NodePoolPropertyField.AvailabilityZones]: false,
     },
     isCreating: false,
   };
@@ -284,6 +287,14 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 nodePool={state.nodePool}
                 providerNodePool={state.providerNodePool}
                 onChange={handleChange(NodePoolPropertyField.MachineType)}
+              />
+              <WorkerNodesCreateNodePoolAvailabilityZones
+                id={`node-pool-${id}-${NodePoolPropertyField.AvailabilityZones}`}
+                nodePool={state.nodePool}
+                providerNodePool={state.providerNodePool}
+                onChange={handleChange(NodePoolPropertyField.AvailabilityZones)}
+                cluster={cluster}
+                margin={{ top: 'small' }}
               />
               <Box direction='row' margin={{ top: 'medium' }}>
                 <Button

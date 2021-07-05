@@ -1,12 +1,14 @@
 import {
   FormField,
   FormFieldProps,
+  Keyboard,
   RadioButton as Input,
   RadioButtonProps,
 } from 'grommet';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { setMultipleRefs } from 'utils/componentUtils';
 
 const StyledFormField = styled(FormField)`
   & input {
@@ -83,6 +85,15 @@ const RadioInput = React.forwardRef<HTMLInputElement, IRadioInputProps>(
     },
     ref
   ) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
+    const handleSelectKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+      e.preventDefault();
+
+      if (!inputRef.current) return;
+      inputRef.current.click();
+    };
+
     const patchedContentProps = Object.assign(
       {},
       {
@@ -97,30 +108,34 @@ const RadioInput = React.forwardRef<HTMLInputElement, IRadioInputProps>(
     );
 
     return (
-      <StyledFormField
-        htmlFor={id}
-        contentProps={patchedContentProps}
-        disabled={disabled}
-        required={required}
-        name={name}
-        error={error}
-        info={info}
-        help={help}
-        margin={margin}
-        pad={pad}
-        label={fieldLabel}
-        {...formFieldProps}
-      >
-        <Input
-          {...props}
-          id={id}
-          ref={ref}
+      <Keyboard onSpace={handleSelectKeyDown} onEnter={handleSelectKeyDown}>
+        <StyledFormField
+          htmlFor={id}
+          contentProps={patchedContentProps}
           disabled={disabled}
           required={required}
           name={name}
-          label={label}
-        />
-      </StyledFormField>
+          error={error}
+          info={info}
+          help={help}
+          margin={margin}
+          pad={pad}
+          label={fieldLabel}
+          tabIndex={0}
+          {...formFieldProps}
+        >
+          <Input
+            {...props}
+            id={id}
+            ref={setMultipleRefs(inputRef, ref)}
+            disabled={disabled}
+            required={required}
+            name={name}
+            label={label}
+            tabIndex={-1}
+          />
+        </StyledFormField>
+      </Keyboard>
     );
   }
 );

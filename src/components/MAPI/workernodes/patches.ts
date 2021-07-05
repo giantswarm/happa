@@ -39,3 +39,11 @@ export function withNodePoolMachineType(newMachineType: string): NodePoolPatch {
     }
   };
 }
+
+export function withNodePoolAvailabilityZones(zones?: string[]): NodePoolPatch {
+  return (nodePool: NodePool) => {
+    if (nodePool.kind === capiexpv1alpha3.MachinePool) {
+      nodePool.spec!.failureDomains = zones;
+    }
+  };
+}
