@@ -1,5 +1,6 @@
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
 import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolSpotInstances';
+import { Text } from 'grommet';
 import { ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolSpotInstances,
@@ -122,7 +123,11 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
         id={id}
         checked={value.enabled}
         onChange={handleToggleFeature}
-        label={getToggleLabel(providerNodePool)}
+        label={
+          <Text weight='normal' color='text'>
+            {getToggleLabel(providerNodePool)}
+          </Text>
+        }
       />
       {value.enabled && (
         <AddNodePoolSpotInstances
