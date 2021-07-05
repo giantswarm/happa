@@ -364,6 +364,41 @@ export function getProviderNodePoolMachineType(
   }
 }
 
+export interface INodePoolSpotInstancesAzure {
+  enabled: boolean;
+  maxPrice: number;
+}
+
+export interface INodePoolSpotInstancesAWS {
+  enabled: boolean;
+}
+
+export type NodePoolSpotInstances =
+  | INodePoolSpotInstancesAzure
+  | INodePoolSpotInstancesAWS;
+
+export function getProviderNodePoolSpotInstances(
+  providerNodePool: ProviderNodePool
+): INodePoolSpotInstancesAzure | INodePoolSpotInstancesAWS {
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool: {
+      let maxPrice =
+        providerNodePool.spec?.template.spotVMOptions?.maxPrice ?? -1;
+      maxPrice = typeof maxPrice === 'number' ? maxPrice : parseFloat(maxPrice);
+
+      return {
+        enabled:
+          typeof providerNodePool.spec?.template.spotVMOptions !== 'undefined',
+        maxPrice,
+      };
+    }
+    default:
+      return {
+        enabled: false,
+      };
+  }
+}
+
 interface INodesStatus {
   min: number;
   max: number;
@@ -402,6 +437,15 @@ export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
       return nodePool.spec?.failureDomains ?? [];
     default:
       return [];
+  }
+}
+
+export function getClusterReleaseVersion(cluster: Cluster) {
+  switch (cluster.apiVersion) {
+    case 'cluster.x-k8s.io/v1alpha3':
+      return capiv1alpha3.getReleaseVersion(cluster);
+    default:
+      return undefined;
   }
 }
 
