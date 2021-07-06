@@ -23,6 +23,7 @@ import DocumentTitle from 'shared/DocumentTitle';
 import { getProvider } from 'stores/main/selectors';
 import useSWR from 'swr';
 import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedGetAccess';
+import GettingStartedInstallIngress from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
 import GettingStartedNavigation from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNavigation';
 import GettingStartedOverview from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedOverview';
 
@@ -59,7 +60,7 @@ function computeSteps(
         pathParams
       ),
       path: OrganizationsRoutes.Clusters.GettingStarted.InstallIngress,
-      component: () => null,
+      component: GettingStartedInstallIngress,
     },
     {
       title: 'Run a simple example',
