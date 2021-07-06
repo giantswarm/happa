@@ -28,7 +28,7 @@ const AccountSettings = (props) => (
             </p>
 
             <ChangeEmailForm
-              actions={props.actions}
+              refreshUserInfo={props.actions.refreshUserInfo}
               user={props.user}
               data-testid='account-settings/change-email'
             />
@@ -36,7 +36,7 @@ const AccountSettings = (props) => (
         </Section>
 
         <ChangePasswordForm
-          actions={props.actions}
+          giantswarmLogin={props.actions.giantswarmLogin}
           user={props.user}
           data-testid='account-settings/change-password'
         />
