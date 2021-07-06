@@ -25,6 +25,7 @@ import useSWR from 'swr';
 import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedGetAccess';
 import GettingStartedInstallIngress from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
 import GettingStartedNavigation from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNavigation';
+import GettingStartedNextSteps from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNextSteps';
 import GettingStartedOverview from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedOverview';
 import GettingStartedSimpleExample from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedSimpleExample';
 
@@ -82,7 +83,7 @@ function computeSteps(
         pathParams
       ),
       path: OrganizationsRoutes.Clusters.GettingStarted.NextSteps,
-      component: () => null,
+      component: GettingStartedNextSteps,
     },
   ];
 
