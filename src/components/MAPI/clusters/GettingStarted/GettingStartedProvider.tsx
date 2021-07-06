@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types';
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
+
+export enum GettingStartedPlatform {
+  Linux,
+  MacOS,
+  Windows,
+}
 
 export interface IGettingStartedStep {
   title: string;
@@ -16,6 +22,8 @@ export interface IGettingStartedContext {
   currentStepIdx: number;
   prevStepPath: string | null;
   nextStepPath: string | null;
+  selectedPlatform: GettingStartedPlatform;
+  setSelectedPlatform: (platform: GettingStartedPlatform) => void;
 }
 
 const gettingStartedContext = createContext<IGettingStartedContext | null>(
@@ -55,6 +63,10 @@ const GettingStartedProvider: React.FC<
     return steps[nextIdx].url;
   }, [currentStepIdx, steps]);
 
+  const [selectedPlatform, setSelectedPlatform] = useState(
+    GettingStartedPlatform.Linux
+  );
+
   return (
     <gettingStartedContext.Provider
       value={{
@@ -63,6 +75,8 @@ const GettingStartedProvider: React.FC<
         prevStepPath,
         nextStepPath,
         steps,
+        selectedPlatform,
+        setSelectedPlatform,
       }}
     >
       {children}

@@ -22,6 +22,7 @@ import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { getProvider } from 'stores/main/selectors';
 import useSWR from 'swr';
+import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedGetAccess';
 import GettingStartedNavigation from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNavigation';
 import GettingStartedOverview from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedOverview';
 
@@ -48,7 +49,7 @@ function computeSteps(
         pathParams
       ),
       path: OrganizationsRoutes.Clusters.GettingStarted.ConfigureKubeCtl,
-      component: () => null,
+      component: GettingStartedGetAccess,
     },
     {
       title: 'Install an ingress controller',
