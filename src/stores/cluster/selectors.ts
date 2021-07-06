@@ -8,7 +8,6 @@ import {
   isClusterCreating,
   isClusterUpdating,
 } from 'stores/cluster/utils';
-import { getUserIsAdmin } from 'stores/main/selectors';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
@@ -82,8 +81,6 @@ export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
 
   const releases = Object.assign({}, state.entities.releases.items);
   const clusterReleaseVersion = cluster.release_version ?? '';
-  const isAdmin = getUserIsAdmin(state);
-
   if (!releases[clusterReleaseVersion]) {
     releases[clusterReleaseVersion] = {} as IRelease;
   }
@@ -106,10 +103,6 @@ export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
       nextVersion = availableVersions[i];
 
       break;
-    }
-
-    if (isAdmin && !nextVersion) {
-      nextVersion = availableVersions[i];
     }
   }
 
