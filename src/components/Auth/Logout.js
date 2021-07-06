@@ -3,10 +3,27 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import ShadowMask from 'shared/ShadowMask';
 import * as mainActions from 'stores/main/actions';
-import BaseTransition from 'styles/transitions/BaseTransition';
+import styled from 'styled-components';
 
 import { withAuthProvider } from './MAPI/MapiAuthProvider';
+
+const CenteredSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  position: fixed;
+
+  img {
+    vertical-align: middle;
+    width: 25px;
+  }
+`;
 
 class Logout extends React.Component {
   componentDidMount() {
@@ -18,21 +35,11 @@ class Logout extends React.Component {
   render() {
     return (
       <>
-        <BaseTransition
-          in={true}
-          appear={true}
-          timeout={{
-            appear: 400,
-            enter: 200,
-            exit: 200,
-          }}
-          classNames='logout--mask--transition'
-        >
-          <div className='logout--mask' />
-        </BaseTransition>
-        <div className='logout--container'>
+        <ShadowMask />
+
+        <CenteredSpinner>
           <img className='loader' src={spinner} />
-        </div>
+        </CenteredSpinner>
       </>
     );
   }
