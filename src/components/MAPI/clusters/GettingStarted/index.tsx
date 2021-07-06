@@ -26,6 +26,7 @@ import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/Get
 import GettingStartedInstallIngress from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
 import GettingStartedNavigation from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNavigation';
 import GettingStartedOverview from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedOverview';
+import GettingStartedSimpleExample from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedSimpleExample';
 
 import GettingStartedProvider, {
   IGettingStartedStep,
@@ -70,7 +71,7 @@ function computeSteps(
         pathParams
       ),
       path: OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
-      component: () => null,
+      component: GettingStartedSimpleExample,
     },
     {
       title: 'Next steps',
