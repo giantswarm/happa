@@ -30,10 +30,17 @@ import {
   createDefaultProviderCluster,
   findLatestReleaseVersion,
 } from '../utils';
-import { ClusterPatch, withClusterReleaseVersion } from './patches';
+import WorkerNodesCreateClusterDescription from './CreateClusterDescription';
+import CreateClusterName from './CreateClusterName';
+import {
+  ClusterPatch,
+  IClusterPropertyValue,
+  withClusterReleaseVersion,
+} from './patches';
 
 enum ClusterPropertyField {
   Name,
+  Description,
 }
 
 interface IApplyPatchAction {
@@ -104,6 +111,7 @@ function makeInitialState(
     controlPlaneNode,
     validationResults: {
       [ClusterPropertyField.Name]: true,
+      [ClusterPropertyField.Description]: true,
     },
     isCreating: false,
     latestRelease: '',
@@ -169,6 +177,21 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     dispatch({ type: 'endCreation' });
 
     globalDispatch(push(MainRoutes.Home));
+  };
+
+  const handleChange = (property: ClusterPropertyField) => (
+    newValue: IClusterPropertyValue
+  ) => {
+    dispatch({
+      type: 'applyPatch',
+      property,
+      value: newValue.patch,
+    });
+    dispatch({
+      type: 'changeValidationStatus',
+      property,
+      value: newValue.isValid,
+    });
   };
 
   const isValid =
@@ -243,10 +266,36 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>
       <DocumentTitle title={`Create Cluster | ${orgId}`}>
         <Box {...props}>
-          <Box border={{ side: 'bottom' }} margin={{ bottom: 'large' }}>
+          <Box
+            fill={true}
+            border={{ side: 'bottom' }}
+            margin={{ bottom: 'large' }}
+          >
             <Heading level={1}>Create a cluster</Heading>
           </Box>
-          <Box as='form' onSubmit={handleCreation}>
+          <Box
+            as='form'
+            onSubmit={handleCreation}
+            width={{ max: '100%', width: 'large' }}
+            gap='small'
+            margin='auto'
+          >
+            <CreateClusterName
+              id={`cluster-${ClusterPropertyField.Name}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNode={state.controlPlaneNode}
+              onChange={handleChange(ClusterPropertyField.Name)}
+              disabled={true}
+            />
+            <WorkerNodesCreateClusterDescription
+              id={`cluster-${ClusterPropertyField.Description}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNode={state.controlPlaneNode}
+              onChange={handleChange(ClusterPropertyField.Description)}
+              autoFocus={true}
+            />
             <Box direction='row' margin={{ top: 'medium' }}>
               <Button
                 bsStyle='primary'

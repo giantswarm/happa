@@ -430,9 +430,8 @@ export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
         current: -1,
       };
 
-      [status.min, status.max] = capiexpv1alpha3.getMachinePoolScaling(
-        nodePool
-      );
+      [status.min, status.max] =
+        capiexpv1alpha3.getMachinePoolScaling(nodePool);
 
       status.desired = nodePool.status?.replicas ?? -1;
       status.current = nodePool.status?.readyReplicas ?? -1;
@@ -463,6 +462,15 @@ export function getClusterReleaseVersion(cluster: Cluster) {
   }
 }
 
+export function getClusterDescription(cluster: Cluster): string {
+  switch (cluster.kind) {
+    case capiv1alpha3.Cluster:
+      return capiv1alpha3.getClusterDescription(cluster);
+    default:
+      return Constants.DEFAULT_CLUSTER_DESCRIPTION;
+  }
+}
+
 export function getProviderClusterLocation(
   providerCluster: ProviderCluster
 ): string {
@@ -486,9 +494,7 @@ export function getProviderNodePoolLocation(
 }
 
 // TODO(axbarsan): Get this info from the environment, rather than the info response.
-export function getSupportedAvailabilityZones(
-  state: IState
-): {
+export function getSupportedAvailabilityZones(state: IState): {
   minCount: number;
   maxCount: number;
   defaultCount: number;

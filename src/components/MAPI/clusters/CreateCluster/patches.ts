@@ -13,6 +13,7 @@ export interface IClusterPropertyValue {
 }
 
 export interface IClusterPropertyProps {
+  id: string;
   cluster: Cluster;
   providerCluster: ProviderCluster;
   controlPlaneNode: ControlPlaneNode;
@@ -35,5 +36,14 @@ export function withClusterReleaseVersion(newVersion: string): ClusterPatch {
     controlPlaneNode.metadata.labels[
       capiv1alpha3.labelReleaseVersion
     ] = newVersion;
+  };
+}
+
+export function withClusterDescription(newDescription: string): ClusterPatch {
+  return (cluster) => {
+    cluster.metadata.annotations ??= {};
+    cluster.metadata.annotations[
+      capiv1alpha3.annotationClusterDescription
+    ] = newDescription;
   };
 }
