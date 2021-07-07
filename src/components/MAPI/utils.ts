@@ -430,8 +430,9 @@ export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
         current: -1,
       };
 
-      [status.min, status.max] =
-        capiexpv1alpha3.getMachinePoolScaling(nodePool);
+      [status.min, status.max] = capiexpv1alpha3.getMachinePoolScaling(
+        nodePool
+      );
 
       status.desired = nodePool.status?.replicas ?? -1;
       status.current = nodePool.status?.readyReplicas ?? -1;
@@ -494,7 +495,9 @@ export function getProviderNodePoolLocation(
 }
 
 // TODO(axbarsan): Get this info from the environment, rather than the info response.
-export function getSupportedAvailabilityZones(state: IState): {
+export function getSupportedAvailabilityZones(
+  state: IState
+): {
   minCount: number;
   maxCount: number;
   defaultCount: number;
