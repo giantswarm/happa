@@ -86,14 +86,17 @@ export interface IAzureClusterStatus {
 }
 
 export interface IAzureCluster {
-  apiVersion: string;
-  kind: string;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3';
+  kind: typeof AzureCluster;
   metadata: metav1.IObjectMeta;
   spec: IAzureClusterSpec;
-  status: capiv1alpha3.IClusterStatus;
+  status?: capiv1alpha3.IClusterStatus;
 }
 
-export interface IAzureClusterList extends metav1.IList<IAzureCluster> {}
+export interface IAzureClusterList extends metav1.IList<IAzureCluster> {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3';
+  kind: typeof AzureClusterList;
+}
 
 export const AzureCluster = 'AzureCluster';
 export const AzureClusterList = 'AzureClusterList';
