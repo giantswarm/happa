@@ -3,8 +3,6 @@ import styled from 'styled-components';
 const Styles = styled.div`
   .codeblock--container {
     font-family: 'Inconsolata';
-    margin-bottom: 25px;
-    margin-top: 25px;
     line-height: 24px;
   }
   .codeblock--container:hover pre {
