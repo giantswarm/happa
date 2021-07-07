@@ -46,7 +46,7 @@ function getExplanation(provider: PropertiesOf<typeof Providers>) {
 function getTabLabel(provider: PropertiesOf<typeof Providers>) {
   switch (provider) {
     case Providers.AZURE:
-      return 'Spot instances';
+      return 'Spot VMs';
     case Providers.AWS:
       return 'Spot count';
     default:

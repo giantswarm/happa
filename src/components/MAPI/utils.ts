@@ -1,3 +1,4 @@
+import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -5,6 +6,7 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { IState } from 'stores/state';
@@ -364,6 +366,53 @@ export function getProviderNodePoolMachineType(
   }
 }
 
+export interface INodePoolSpotInstancesAzure {
+  enabled: boolean;
+  maxPrice: number;
+}
+
+export interface INodePoolSpotInstancesAWS {
+  enabled: boolean;
+}
+
+export type NodePoolSpotInstances =
+  | INodePoolSpotInstancesAzure
+  | INodePoolSpotInstancesAWS;
+
+export function getProviderNodePoolSpotInstances(
+  providerNodePool: ProviderNodePool
+): INodePoolSpotInstancesAzure | INodePoolSpotInstancesAWS {
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool: {
+      try {
+        const maxPriceQty =
+          providerNodePool.spec?.template.spotVMOptions?.maxPrice;
+        const maxPrice = maxPriceQty ? metav1.quantityToScalar(maxPriceQty) : 0;
+
+        return {
+          enabled:
+            typeof providerNodePool.spec?.template.spotVMOptions !==
+            'undefined',
+          maxPrice: maxPrice as number,
+        };
+      } catch (err) {
+        ErrorReporter.getInstance().notify(err);
+
+        return {
+          enabled:
+            typeof providerNodePool.spec?.template.spotVMOptions !==
+            'undefined',
+          maxPrice: 0,
+        };
+      }
+    }
+    default:
+      return {
+        enabled: false,
+      };
+  }
+}
+
 interface INodesStatus {
   min: number;
   max: number;
@@ -402,6 +451,15 @@ export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
       return nodePool.spec?.failureDomains ?? [];
     default:
       return [];
+  }
+}
+
+export function getClusterReleaseVersion(cluster: Cluster) {
+  switch (cluster.apiVersion) {
+    case 'cluster.x-k8s.io/v1alpha3':
+      return capiv1alpha3.getReleaseVersion(cluster);
+    default:
+      return undefined;
   }
 }
 
