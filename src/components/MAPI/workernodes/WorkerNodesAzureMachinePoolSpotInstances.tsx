@@ -18,9 +18,9 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
 }) => {
   const featureEnabled =
     typeof providerNodePool?.spec?.template.spotVMOptions !== 'undefined';
-  let headline = 'Spot instances disabled';
+  let headline = 'Spot virtual machines disabled';
   if (featureEnabled) {
-    headline = 'Spot instances enabled';
+    headline = 'Spot virtual machines enabled';
   }
 
   let maxPriceText = '';
@@ -61,7 +61,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
           }
           placement='top'
         >
-          <Text aria-label='Node pool spot instances status'>
+          <Text aria-label='Node pool spot virtual machines status'>
             <i
               role='presentation'
               className={featureEnabled ? 'fa fa-done' : 'fa fa-close'}

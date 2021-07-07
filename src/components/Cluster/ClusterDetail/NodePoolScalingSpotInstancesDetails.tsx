@@ -43,9 +43,9 @@ const NodePoolScalingSpotInstancesDetails: React.FC<INodePoolScalingSpotInstance
   } else if (provider === Providers.AZURE) {
     const spotInstancesEnabled =
       nodePool.node_spec?.azure?.spot_instances?.enabled ?? false;
-    let headline = 'Spot instances disabled';
+    let headline = 'Spot virtual machines disabled';
     if (spotInstancesEnabled) {
-      headline = 'Spot instances enabled';
+      headline = 'Spot virtual machines enabled';
     }
 
     let maxPriceRow = '';

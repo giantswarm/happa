@@ -25,7 +25,7 @@ import {
 function getLabel(providerNodePool: ProviderNodePool): string {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
-      return 'Spot instances';
+      return 'Spot virtual machines';
     default:
       return '';
   }
