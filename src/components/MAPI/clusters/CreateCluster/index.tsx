@@ -1,13 +1,16 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import produce from 'immer';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import { generateUID } from 'MAPI/utils';
-import React, { useReducer } from 'react';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import React, { useEffect, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -17,14 +20,17 @@ import DocumentTitle from 'shared/DocumentTitle';
 import { PropertiesOf } from 'shared/types';
 import { getProvider } from 'stores/main/selectors';
 import { getNamespaceFromOrgName } from 'stores/main/utils';
+import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
 import {
+  createCluster,
   createDefaultCluster,
   createDefaultControlPlaneNode,
   createDefaultProviderCluster,
+  findLatestReleaseVersion,
 } from '../utils';
-import { ClusterPatch } from './patches';
+import { ClusterPatch, withClusterReleaseVersion } from './patches';
 
 enum ClusterPropertyField {
   Name,
@@ -50,11 +56,17 @@ interface IEndCreationAction {
   type: 'endCreation';
 }
 
+interface ISetLatestReleaseAction {
+  type: 'setLatestRelease';
+  value: string;
+}
+
 type ClusterAction =
   | IApplyPatchAction
   | IChangeValidationResultAction
   | IStartCreationAction
-  | IEndCreationAction;
+  | IEndCreationAction
+  | ISetLatestReleaseAction;
 
 interface IClusterState {
   provider: PropertiesOf<typeof Providers>;
@@ -63,12 +75,12 @@ interface IClusterState {
   controlPlaneNode: ControlPlaneNode;
   validationResults: Record<ClusterPropertyField, boolean>;
   isCreating: boolean;
+  latestRelease: string;
 }
 
 interface IReducerConfig {
   namespace: string;
   organization: string;
-  releaseVersion: string;
 }
 
 function makeInitialState(
@@ -77,7 +89,7 @@ function makeInitialState(
 ): IClusterState {
   const name = generateUID(5);
 
-  const resourceConfig = { ...config, name };
+  const resourceConfig = { ...config, name, releaseVersion: '' };
   const controlPlaneNode = createDefaultControlPlaneNode(
     provider,
     resourceConfig
@@ -99,6 +111,7 @@ function makeInitialState(
       [ClusterPropertyField.Name]: true,
     },
     isCreating: false,
+    latestRelease: '',
   };
 }
 
@@ -118,10 +131,21 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
       case 'startCreation':
         draft.isCreating = true;
         break;
-      case 'endCreation': {
+      case 'endCreation':
         draft.isCreating = false;
         break;
-      }
+      case 'setLatestRelease':
+        // Apply the version to the CRs if no version was set before.
+        if (!draft.latestRelease) {
+          withClusterReleaseVersion(action.value)(
+            draft.cluster,
+            draft.providerCluster,
+            draft.controlPlaneNode
+          );
+        }
+
+        draft.latestRelease = action.value;
+        break;
     }
   }
 );
@@ -134,9 +158,6 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const { orgId } = match.params;
   const namespace = getNamespaceFromOrgName(orgId);
 
-  // TODO(axbarsan): Compute latest release.
-  const latestRelease = '';
-
   const provider = useSelector(getProvider);
 
   const [state, dispatch] = useReducer(
@@ -144,7 +165,6 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     makeInitialState(provider, {
       namespace,
       organization: orgId,
-      releaseVersion: latestRelease,
     })
   );
 
@@ -156,15 +176,43 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     globalDispatch(push(MainRoutes.Home));
   };
 
-  const isValid = Object.values(state.validationResults).every((r) => r);
+  const isValid =
+    state.latestRelease &&
+    Object.values(state.validationResults).every((r) => r);
 
-  const handleCreation = (e: React.FormEvent<HTMLElement>) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const releaseListClient = useRef(clientFactory());
+  const {
+    data: releaseList,
+    error: releaseListError,
+  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  useEffect(() => {
+    const latestRelease = findLatestReleaseVersion(releaseList?.items ?? []);
+
+    dispatch({
+      type: 'setLatestRelease',
+      value: latestRelease ?? '',
+    });
+  }, [releaseList?.items]);
+
+  const handleCreation = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
 
     dispatch({ type: 'startCreation' });
 
     try {
-      // TODO(axbarsan): Actually create the cluster.
+      await createCluster(clientFactory(), auth, state);
 
       dispatch({ type: 'endCreation' });
 

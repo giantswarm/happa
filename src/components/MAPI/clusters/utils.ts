@@ -1,7 +1,16 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { compare } from 'lib/semver';
 import * as releasesUtils from 'MAPI/releases/utils';
-import { NodePool, ProviderCluster, ProviderNodePool } from 'MAPI/types';
-import { IMachineType } from 'MAPI/utils';
+import {
+  Cluster,
+  ControlPlaneNode,
+  NodePool,
+  ProviderCluster,
+  ProviderNodePool,
+} from 'MAPI/types';
+import { fetchProviderClusterForClusterKey, IMachineType } from 'MAPI/utils';
+import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -9,6 +18,7 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { mutate } from 'swr';
 
 export function getWorkerNodesCount(
   nodePools?: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
@@ -231,10 +241,12 @@ function createDefaultV1Alpha3Cluster(config: {
 }): capiv1alpha3.ICluster {
   const namespace = config.providerCluster.metadata.namespace;
   const name = config.providerCluster.metadata.name;
-  const organization =
-    config.providerCluster.metadata.labels![capiv1alpha3.labelOrganization];
-  const releaseVersion =
-    config.providerCluster.metadata.labels![capiv1alpha3.labelReleaseVersion];
+  const organization = config.providerCluster.metadata.labels![
+    capiv1alpha3.labelOrganization
+  ];
+  const releaseVersion = config.providerCluster.metadata.labels![
+    capiv1alpha3.labelReleaseVersion
+  ];
 
   return {
     apiVersion: 'cluster.x-k8s.io/v1alpha3',
@@ -323,4 +335,84 @@ function createDefaultAzureMachine(config: {
       },
     },
   };
+}
+
+export async function createCluster(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  config: {
+    cluster: Cluster;
+    providerCluster: ProviderCluster;
+    controlPlaneNode: ControlPlaneNode;
+  }
+): Promise<{
+  cluster: Cluster;
+  providerCluster: ProviderCluster;
+  controlPlaneNode: ControlPlaneNode;
+}> {
+  if (config.providerCluster.kind === capzv1alpha3.AzureCluster) {
+    const providerCluster = await capzv1alpha3.createAzureCluster(
+      httpClient,
+      auth,
+      config.providerCluster
+    );
+
+    mutate(
+      fetchProviderClusterForClusterKey(config.cluster),
+      providerCluster,
+      false
+    );
+
+    const controlPlaneNode = await capzv1alpha3.createAzureMachine(
+      httpClient,
+      auth,
+      config.controlPlaneNode
+    );
+
+    const cluster = await capiv1alpha3.createCluster(
+      httpClient,
+      auth,
+      config.cluster
+    );
+
+    mutate(
+      capiv1alpha3.getClusterKey(
+        cluster.metadata.namespace!,
+        cluster.metadata.name
+      ),
+      cluster,
+      false
+    );
+
+    // Add the created cluster to the existing list.
+    mutate(
+      capiv1alpha3.getClusterListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1alpha3.labelOrganization]: cluster.metadata.labels![
+              capiv1alpha3.labelOrganization
+            ],
+          },
+        },
+      }),
+      (draft?: capiv1alpha3.IClusterList) => {
+        draft?.items.push(cluster);
+      },
+      false
+    );
+
+    return { cluster, providerCluster, controlPlaneNode };
+  }
+
+  return Promise.reject(new Error('Unsupported provider.'));
+}
+
+export function findLatestReleaseVersion(
+  releases: releasev1alpha1.IRelease[]
+): string | undefined {
+  const sortedReleases = releases
+    .map((r) => r.metadata.name.slice(1))
+    .sort((a, b) => compare(b, a));
+
+  return sortedReleases[0];
 }
