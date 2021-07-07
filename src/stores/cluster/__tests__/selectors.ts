@@ -125,44 +125,6 @@ describe('cluster::selectors', () => {
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.2');
     });
-
-    it('returns the next inactive version, if the user is an admin and there is no newer active version', () => {
-      const initialState = createInitialState(
-        {
-          '1.0.0': createRelease('1.0.0', true),
-          '2.0.0': createRelease('2.0.0', false),
-          '2.0.1': createRelease('2.0.1', false),
-          '2.0.2': createRelease('2.0.2', true),
-          '3.0.0': createRelease('3.0.0', true),
-          '3.0.1': createRelease('3.0.1', false),
-        },
-        true
-      );
-      const cluster = (Object.assign({}, v5ClusterResponse, {
-        release_version: '3.0.0',
-      }) as unknown) as V5.ICluster;
-      const releaseVersion = selectTargetRelease(initialState, cluster);
-      expect(releaseVersion).toBe('3.0.1');
-    });
-
-    it('returns the next pre-release version, if the user is an admin and there is no newer active version', () => {
-      const initialState = createInitialState(
-        {
-          '1.0.0': createRelease('1.0.0', true),
-          '2.0.0': createRelease('2.0.0', false),
-          '2.0.1': createRelease('2.0.1', false),
-          '2.0.2': createRelease('2.0.2', true),
-          '3.0.0': createRelease('3.0.0', true),
-          '3.0.1-alpha': createRelease('3.0.1-alpha', true),
-        },
-        true
-      );
-      const cluster = (Object.assign({}, v5ClusterResponse, {
-        release_version: '3.0.0',
-      }) as unknown) as V5.ICluster;
-      const releaseVersion = selectTargetRelease(initialState, cluster);
-      expect(releaseVersion).toBe('3.0.1-alpha');
-    });
   });
 
   describe('selectIsClusterAwaitingUpgrade', () => {
