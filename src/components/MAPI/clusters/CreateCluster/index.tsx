@@ -90,17 +90,12 @@ function makeInitialState(
   const name = generateUID(5);
 
   const resourceConfig = { ...config, name, releaseVersion: '' };
-  const controlPlaneNode = createDefaultControlPlaneNode(
-    provider,
-    resourceConfig
-  );
   const providerCluster = createDefaultProviderCluster(
     provider,
     resourceConfig
   );
-  const cluster = createDefaultCluster({
-    providerCluster,
-  });
+  const controlPlaneNode = createDefaultControlPlaneNode({ providerCluster });
+  const cluster = createDefaultCluster({ providerCluster });
 
   return {
     provider,

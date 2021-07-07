@@ -275,16 +275,10 @@ function createDefaultV1Alpha3Cluster(config: {
   };
 }
 
-export function createDefaultControlPlaneNode(
-  provider: PropertiesOf<typeof Providers>,
-  config: {
-    namespace: string;
-    name: string;
-    organization: string;
-    releaseVersion: string;
-  }
-) {
-  if (provider === Providers.AZURE) {
+export function createDefaultControlPlaneNode(config: {
+  providerCluster: ProviderCluster;
+}) {
+  if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
     return createDefaultAzureMachine(config);
   }
 
@@ -292,23 +286,29 @@ export function createDefaultControlPlaneNode(
 }
 
 function createDefaultAzureMachine(config: {
-  namespace: string;
-  name: string;
-  organization: string;
-  releaseVersion: string;
+  providerCluster: ProviderCluster;
 }): capzv1alpha3.IAzureMachine {
+  const namespace = config.providerCluster.metadata.namespace;
+  const name = config.providerCluster.metadata.name;
+  const organization = config.providerCluster.metadata.labels![
+    capiv1alpha3.labelOrganization
+  ];
+  const releaseVersion = config.providerCluster.metadata.labels![
+    capiv1alpha3.labelReleaseVersion
+  ];
+
   return {
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
     kind: capzv1alpha3.AzureMachine,
     metadata: {
-      namespace: config.namespace,
-      name: `${config.name}-master-0`,
+      namespace: namespace,
+      name: `${name}-master-0`,
       labels: {
-        [capiv1alpha3.labelCluster]: config.name,
-        [capiv1alpha3.labelClusterName]: config.name,
+        [capiv1alpha3.labelCluster]: name,
+        [capiv1alpha3.labelClusterName]: name,
         [capiv1alpha3.labelMachineControlPlane]: 'true',
-        [capiv1alpha3.labelOrganization]: config.organization,
-        [capiv1alpha3.labelReleaseVersion]: config.releaseVersion,
+        [capiv1alpha3.labelOrganization]: organization,
+        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
       },
     },
     spec: {
