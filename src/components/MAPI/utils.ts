@@ -1,13 +1,16 @@
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import { Constants } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import { IState } from 'stores/state';
 
 import {
+  Cluster,
   ControlPlaneNodeList,
   NodePool,
   NodePoolList,
@@ -228,6 +231,24 @@ export function fetchProviderNodePoolsForNodePoolsKey(
   }
 
   return keys.join();
+}
+
+export async function fetchCluster(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  _provider: PropertiesOf<typeof Providers>,
+  namespace: string,
+  name: string
+): Promise<Cluster> {
+  return capiv1alpha3.getCluster(httpClient, auth, namespace, name);
+}
+
+export function fetchClusterKey(
+  _provider: PropertiesOf<typeof Providers>,
+  namespace: string,
+  name: string
+): string {
+  return capiv1alpha3.getClusterKey(namespace, name);
 }
 
 export async function fetchMasterListForCluster(
