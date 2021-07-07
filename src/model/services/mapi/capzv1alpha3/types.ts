@@ -74,7 +74,7 @@ export interface IAzureClusterSpec {
   networkSpec?: INetworkSpec;
   resourceGroup?: string;
   subscriptionID?: string;
-  contronPlaneEndpoint?: capiv1alpha3.IApiEndpoint;
+  controlPlaneEndpoint?: capiv1alpha3.IApiEndpoint;
   additionalTags?: Tags;
   identityRef?: corev1.IObjectReference;
 }
@@ -168,6 +168,10 @@ export interface IAzureMachineSpec {
   vmSize: string;
   osDisk: IOSDisk;
   sshPublicKey: string;
+  /**
+   * @deprecated
+   *  */
+  location: string;
   providerID?: string;
   failureDomain?: string;
   image?: IImage;

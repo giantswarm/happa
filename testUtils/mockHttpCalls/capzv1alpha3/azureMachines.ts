@@ -28,6 +28,7 @@ export const randomAzureMachine1: capzv1alpha3.IAzureMachine = {
     uid: '9f42172b-f87e-41ac-8fb6-49e0247ad1dc',
   },
   spec: {
+    location: 'westeurope',
     failureDomain: '2',
     identity: 'None',
     image: {
@@ -116,6 +117,7 @@ export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
     uid: '9f42172b-f87e-41ac-8fb6-49e0247ad1dc',
   },
   spec: {
+    location: 'westeurope',
     failureDomain: '2',
     identity: 'None',
     image: {
@@ -204,6 +206,7 @@ export const randomAzureMachine3: capzv1alpha3.IAzureMachine = {
     uid: '9f42172b-f87e-41ac-8fb6-49e0247ad1dc',
   },
   spec: {
+    location: 'westeurope',
     failureDomain: '2',
     identity: 'None',
     image: {

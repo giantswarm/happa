@@ -1,11 +1,13 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import * as releasesUtils from 'MAPI/releases/utils';
-import { NodePool, ProviderNodePool } from 'MAPI/types';
+import { NodePool, ProviderCluster, ProviderNodePool } from 'MAPI/types';
 import { IMachineType } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as corev1 from 'model/services/mapi/corev1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 
 export function getWorkerNodesCount(
@@ -154,4 +156,171 @@ export function isClusterCreating(cluster: capiv1alpha3.ICluster): boolean {
       capiv1alpha3.withReasonExistingObject()
     )
   );
+}
+
+export function createDefaultProviderCluster(
+  provider: PropertiesOf<typeof Providers>,
+  config: {
+    namespace: string;
+    name: string;
+    organization: string;
+    releaseVersion: string;
+  }
+) {
+  if (provider === Providers.AZURE) {
+    return createDefaultAzureCluster(config);
+  }
+
+  throw new Error('Unsupported provider.');
+}
+
+function createDefaultAzureCluster(config: {
+  namespace: string;
+  name: string;
+  organization: string;
+  releaseVersion: string;
+}): capzv1alpha3.IAzureCluster {
+  return {
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+    kind: capzv1alpha3.AzureCluster,
+    metadata: {
+      namespace: config.namespace,
+      name: config.name,
+      labels: {
+        [capiv1alpha3.labelCluster]: config.name,
+        [capiv1alpha3.labelClusterName]: config.name,
+        [capiv1alpha3.labelOrganization]: config.organization,
+        [capiv1alpha3.labelReleaseVersion]: config.releaseVersion,
+      },
+    },
+    spec: {
+      location: '',
+      resourceGroup: config.name,
+      controlPlaneEndpoint: {
+        host: '',
+        port: 0,
+      },
+      networkSpec: {
+        apiServerLB: {
+          name: `${config.name}-API-PublicLoadBalancer`,
+          sku: 'Standard',
+          type: 'Public',
+          frontendIPs: [
+            {
+              name: `${config.name}-API-PublicLoadBalancer-Frontend`,
+            },
+          ],
+        },
+      },
+    },
+  };
+}
+
+export function createDefaultCluster(config: {
+  providerCluster: ProviderCluster;
+}) {
+  if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
+    return createDefaultV1Alpha3Cluster(config);
+  }
+
+  throw new Error('Unsupported provider.');
+}
+
+function createDefaultV1Alpha3Cluster(config: {
+  providerCluster: ProviderCluster;
+}): capiv1alpha3.ICluster {
+  const namespace = config.providerCluster.metadata.namespace;
+  const name = config.providerCluster.metadata.name;
+  const organization =
+    config.providerCluster.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster.metadata.labels![capiv1alpha3.labelReleaseVersion];
+
+  return {
+    apiVersion: 'cluster.x-k8s.io/v1alpha3',
+    kind: capiv1alpha3.Cluster,
+    metadata: {
+      name,
+      namespace,
+      labels: {
+        [capiv1alpha3.labelCluster]: name,
+        [capiv1alpha3.labelClusterName]: name,
+        [capiv1alpha3.labelOrganization]: organization,
+        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
+      },
+      annotations: {
+        [capiv1alpha3.annotationClusterDescription]:
+          Constants.DEFAULT_CLUSTER_DESCRIPTION,
+      },
+    },
+    spec: {
+      infrastructureRef: corev1.getObjectReference(config.providerCluster),
+      controlPlaneEndpoint: {
+        host: '',
+        port: 0,
+      },
+    },
+  };
+}
+
+export function createDefaultControlPlaneNode(
+  provider: PropertiesOf<typeof Providers>,
+  config: {
+    namespace: string;
+    name: string;
+    organization: string;
+    releaseVersion: string;
+  }
+) {
+  if (provider === Providers.AZURE) {
+    return createDefaultAzureMachine(config);
+  }
+
+  throw new Error('Unsupported provider.');
+}
+
+function createDefaultAzureMachine(config: {
+  namespace: string;
+  name: string;
+  organization: string;
+  releaseVersion: string;
+}): capzv1alpha3.IAzureMachine {
+  return {
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+    kind: capzv1alpha3.AzureMachine,
+    metadata: {
+      namespace: config.namespace,
+      name: `${config.name}-master-0`,
+      labels: {
+        [capiv1alpha3.labelCluster]: config.name,
+        [capiv1alpha3.labelClusterName]: config.name,
+        [capiv1alpha3.labelMachineControlPlane]: 'true',
+        [capiv1alpha3.labelOrganization]: config.organization,
+        [capiv1alpha3.labelReleaseVersion]: config.releaseVersion,
+      },
+    },
+    spec: {
+      vmSize: Constants.AZURE_CONTROL_PLANE_DEFAULT_VM_SIZE,
+      failureDomain: '',
+      location: '',
+      sshPublicKey: '',
+      image: {
+        marketplace: {
+          publisher: 'kinvolk',
+          offer: 'flatcar-container-linux-free',
+          sku: 'stable',
+          version: '2345.3.1',
+          thirdPartyImage: false,
+        },
+      },
+      osDisk: {
+        osType: 'Linux',
+        cachingType: 'ReadWrite',
+        diskSizeGB: 50,
+        managedDisk: {
+          storageAccountType: 'Premium_LRS',
+        },
+      },
+    },
+  };
 }
