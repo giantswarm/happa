@@ -1,6 +1,7 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
+import { VersionImpl } from 'lib/Version';
 import * as releasesUtils from 'MAPI/releases/utils';
 import {
   Cluster,
@@ -410,9 +411,24 @@ export async function createCluster(
 export function findLatestReleaseVersion(
   releases: releasev1alpha1.IRelease[]
 ): string | undefined {
-  const sortedReleases = releases
-    .map((r) => r.metadata.name.slice(1))
-    .sort((a, b) => compare(b, a));
+  const versions: string[] = [];
+  for (const release of releases) {
+    if (release.spec.state !== 'active') continue;
 
-  return sortedReleases[0];
+    try {
+      const version = new VersionImpl(release.metadata.name.slice(1));
+      if (version.getPreRelease().length > 1) continue;
+
+      versions.push(version.toString());
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+
+      continue;
+    }
+  }
+
+  // Sort versions in a descending order, taking into account the SemVer formatting.
+  const sortedVersions = versions.sort((a, b) => compare(b, a));
+
+  return sortedVersions[0];
 }
