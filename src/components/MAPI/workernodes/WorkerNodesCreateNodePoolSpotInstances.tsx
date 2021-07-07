@@ -48,6 +48,12 @@ function validateMaxPrice(maxPrice: number): string {
   return '';
 }
 
+function formatMaxPrice(maxPrice: number, useOnDemandPricing: boolean): number {
+  if (useOnDemandPricing && maxPrice < 0) return 0;
+
+  return maxPrice;
+}
+
 const notImplementedCallback = () => {};
 
 interface IWorkerNodesCreateNodePoolSpotInstancesProps
@@ -117,6 +123,11 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
 
   const provider = useSelector(getProvider);
 
+  const formattedMaxPrice = formatMaxPrice(
+    (value as INodePoolSpotInstancesAzure).maxPrice,
+    useOnDemandPricing
+  );
+
   return (
     <InputGroup htmlFor={id} label={getLabel(providerNodePool)} {...props}>
       <CheckBoxInput
@@ -136,7 +147,7 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
           setSpotPercentage={notImplementedCallback}
           onDemandBaseCapacity={-1}
           setOnDemandBaseCapacity={notImplementedCallback}
-          maxPrice={(value as INodePoolSpotInstancesAzure).maxPrice}
+          maxPrice={formattedMaxPrice}
           setMaxPrice={handleSetMaxPrice}
           maxPriceValidationError={validationError}
           useOnDemandPricing={useOnDemandPricing}
