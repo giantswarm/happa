@@ -303,7 +303,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
                 type='submit'
                 loading={state.isCreating}
               >
-                Create Cluster
+                Create cluster
               </Button>
 
               {!state.isCreating && (
