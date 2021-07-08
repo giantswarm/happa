@@ -2,7 +2,7 @@ import { hasAppropriateLength } from 'lib/helpers';
 import { Cluster } from 'MAPI/types';
 import { getClusterDescription } from 'MAPI/utils';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
@@ -48,6 +48,17 @@ const WorkerNodesCreateClusterDescription: React.FC<IWorkerNodesCreateClusterDes
 
   const value = getClusterDescription(cluster);
 
+  const textInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!textInputRef.current || !autoFocus) return;
+
+    textInputRef.current.select();
+
+    // Only run for the initial render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <InputGroup htmlFor={id} label='Description' {...props}>
       <TextInput
@@ -59,6 +70,7 @@ const WorkerNodesCreateClusterDescription: React.FC<IWorkerNodesCreateClusterDes
         readOnly={readOnly}
         disabled={disabled}
         autoFocus={autoFocus}
+        ref={textInputRef}
       />
     </InputGroup>
   );
