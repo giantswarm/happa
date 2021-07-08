@@ -1,21 +1,13 @@
-import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
-import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router';
+import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
-import useSWR from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
-
-import { getCredentialsAccountID } from './utils';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
@@ -90,27 +82,9 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
   providerCluster,
   ...props
 }) => {
-  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
-
-  const credentialsClient = useHttpClient();
-  const auth = useAuthProvider();
-
-  const {
-    data: credentials,
-    error: credentialsError,
-  } = useSWR(legacyCredentials.getCredentialListKey(orgId), () =>
-    legacyCredentials.getCredentialList(credentialsClient, auth, orgId)
-  );
-
-  useEffect(() => {
-    if (credentialsError) {
-      ErrorReporter.getInstance().notify(credentialsError);
-    }
-  }, [credentialsError]);
-
-  const accountID = getCredentialsAccountID(credentials?.items);
-
   const region = providerCluster?.spec.location;
+
+  const accountID = providerCluster?.spec.subscriptionID;
   const accountIDPath = getClusterAccountIDPath(cluster, accountID);
 
   return (
