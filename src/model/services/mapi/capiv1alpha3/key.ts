@@ -39,7 +39,7 @@ export function getKubernetesAPIEndpointURL(
   cluster: ICluster
 ): string | undefined {
   const hostname = cluster.spec?.controlPlaneEndpoint?.host;
-  if (!hostname) return undefined;
+  if (!hostname) return '';
 
   return `https://${hostname}`;
 }
