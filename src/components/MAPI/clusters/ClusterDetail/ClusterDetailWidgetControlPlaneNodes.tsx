@@ -128,7 +128,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       >
         {(value) =>
           value ? (
-            <Text>
+            <Text aria-label={`${value} ready`}>
               {value} <code>Ready</code>
             </Text>
           ) : (
