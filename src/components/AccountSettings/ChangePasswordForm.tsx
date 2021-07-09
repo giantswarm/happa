@@ -183,7 +183,7 @@ class ChangePassword extends React.Component<
             // eslint-disable-next-line no-magic-numbers
             error.body.code === 'PERMISSION_DENIED'
           ) {
-            errorMessage = "Your current password doesn't seem to be right.";
+            errorMessage = `Your current password doesn't seem to be right.`;
           } else {
             errorMessage =
               'Something went wrong while trying to set your password. Could you try again later, or contact support at support@giantswarm.io';
