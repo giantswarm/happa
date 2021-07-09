@@ -283,7 +283,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
             as='form'
             onSubmit={handleCreation}
             width={{ max: '100%', width: 'large' }}
-            gap='small'
+            gap='medium'
             margin='auto'
           >
             <CreateClusterName
@@ -315,27 +315,29 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               controlPlaneNode={state.controlPlaneNode}
               onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
             />
-            <Box direction='row' margin={{ top: 'medium' }}>
-              <Button
-                bsStyle='primary'
-                disabled={!isValid}
-                type='submit'
-                loading={state.isCreating}
-              >
-                Create cluster
-              </Button>
-
-              {!state.isCreating && (
-                <Button bsStyle='default' onClick={handleCancel}>
-                  Cancel
-                </Button>
-              )}
-            </Box>
             <Box margin={{ top: 'medium' }}>
-              <Text color='text-weak'>
-                Note that it takes around 30 minutes on average until a new
-                cluster is fully available.
-              </Text>
+              <Box direction='row'>
+                <Button
+                  bsStyle='primary'
+                  disabled={!isValid}
+                  type='submit'
+                  loading={state.isCreating}
+                >
+                  Create cluster
+                </Button>
+
+                {!state.isCreating && (
+                  <Button bsStyle='default' onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
+              <Box margin={{ top: 'medium' }}>
+                <Text color='text-weak'>
+                  Note that it takes around 30 minutes on average until a new
+                  cluster is fully available.
+                </Text>
+              </Box>
             </Box>
           </Box>
         </Box>
