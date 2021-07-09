@@ -30,7 +30,7 @@ import {
   createDefaultProviderCluster,
   findLatestReleaseVersion,
 } from '../utils';
-import WorkerNodesCreateClusterDescription from './CreateClusterDescription';
+import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
 import {
   ClusterPatch,
@@ -287,7 +287,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               controlPlaneNode={state.controlPlaneNode}
               onChange={handleChange(ClusterPropertyField.Name)}
             />
-            <WorkerNodesCreateClusterDescription
+            <CreateClusterDescription
               id={`cluster-${ClusterPropertyField.Description}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
