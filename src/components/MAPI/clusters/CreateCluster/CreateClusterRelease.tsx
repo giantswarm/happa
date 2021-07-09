@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserIsAdmin } from 'stores/main/selectors';
+import { isPreRelease } from 'stores/releases/utils';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
 
@@ -30,6 +31,8 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
   onChange,
   ...props
 }) => {
+  const isAdmin = useSelector(getUserIsAdmin);
+
   const releaseListClient = useHttpClient();
   const auth = useAuthProvider();
 
@@ -57,7 +60,13 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
     return releaseList.items.reduce(
       (acc: Record<string, IRelease>, curr: releasev1alpha1.IRelease) => {
+        const isActive = curr.spec.state === 'active';
         const normalizedVersion = curr.metadata.name.slice(1);
+
+        if (!isAdmin && (!isActive || isPreRelease(normalizedVersion))) {
+          return acc;
+        }
+
         const components = curr.spec.components.slice();
         if (curr.spec.apps) {
           components.push(...curr.spec.apps);
@@ -65,7 +74,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
         acc[normalizedVersion] = {
           version: normalizedVersion,
-          active: curr.spec.state === 'active',
+          active: isActive,
           timestamp: curr.metadata.creationTimestamp ?? '',
           components,
           kubernetesVersion: releasev1alpha1.getK8sVersion(curr),
@@ -76,9 +85,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
       },
       {}
     );
-  }, [releaseList]);
-
-  const isAdmin = useSelector(getUserIsAdmin);
+  }, [isAdmin, releaseList]);
 
   const handleChange = (newVersion: string) => {
     onChange({
