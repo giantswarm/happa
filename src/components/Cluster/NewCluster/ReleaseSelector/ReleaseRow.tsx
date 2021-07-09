@@ -179,7 +179,11 @@ const ReleaseRow: FC<IReleaseRow> = ({
       {!collapsed && (
         <TableRow>
           <TableCell colSpan={6}>
-            <Box wrap={true} direction='row'>
+            <Box
+              wrap={true}
+              direction='row'
+              data-testid={`components-${version}`}
+            >
               {components
                 .slice()
                 .sort((a, b) => a.name.localeCompare(b.name))
