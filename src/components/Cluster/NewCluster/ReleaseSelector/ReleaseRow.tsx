@@ -164,6 +164,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
               target='_blank'
               rel='noopener noreferrer'
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              disabled={!releaseNotesURL}
             >
               <i
                 className='fa fa-open-in-new'
