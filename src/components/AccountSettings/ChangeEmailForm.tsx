@@ -4,10 +4,18 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 
 const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+// ButtonPlaceholder avoids the page from jumping in height when the hidden
+// button is revealed.
+const ButtonPlaceholder = styled('div')`
+  height: 45px;
+`;
 
 interface IChangeEmailFormPropsUser {
   email: string;
@@ -18,7 +26,14 @@ interface IChangeEmailFormProps {
   refreshUserInfo: () => {};
 }
 
-interface IChangeEmailFormState {}
+interface IChangeEmailFormState {
+  emailValue: string;
+  error: boolean;
+  isValid: boolean;
+  isButtonVisible: boolean;
+  isSubmitting: boolean;
+  isSuccess: boolean;
+}
 
 class ChangeEmailForm extends React.Component<
   IChangeEmailFormProps,
@@ -33,6 +48,7 @@ class ChangeEmailForm extends React.Component<
     emailValue: this.props.user.email,
     error: false,
     isValid: false,
+    isButtonVisible: false,
     isSubmitting: false,
     isSuccess: false,
   };
@@ -50,6 +66,7 @@ class ChangeEmailForm extends React.Component<
         emailRegexp.test(email) && this.props.user.email !== e.target.value,
       error: false,
       emailValue: email,
+      isButtonVisible: true,
     });
   };
 
@@ -73,6 +90,7 @@ class ChangeEmailForm extends React.Component<
         .then(() => {
           this.setState({
             isSubmitting: false,
+            isButtonVisible: false,
             isSuccess: true,
             isValid: false,
           });
@@ -127,14 +145,18 @@ class ChangeEmailForm extends React.Component<
             value={this.state.emailValue}
           />
 
-          <Button
-            bsStyle='primary'
-            disabled={!this.state.isValid}
-            loading={this.state.isSubmitting}
-            type='submit'
-          >
-            Set New Email
-          </Button>
+          <ButtonPlaceholder>
+            <SlideTransition direction='left' in={this.state.isButtonVisible}>
+              <Button
+                bsStyle='primary'
+                disabled={!this.state.isValid}
+                loading={this.state.isSubmitting}
+                type='submit'
+              >
+                Set New Email
+              </Button>
+            </SlideTransition>
+          </ButtonPlaceholder>
         </Form>
       </div>
     );
