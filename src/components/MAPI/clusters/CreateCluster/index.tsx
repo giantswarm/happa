@@ -30,6 +30,7 @@ import {
   createDefaultProviderCluster,
   findLatestReleaseVersion,
 } from '../utils';
+import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
 import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
 import CreateClusterRelease from './CreateClusterRelease';
@@ -43,6 +44,7 @@ enum ClusterPropertyField {
   Name,
   Description,
   Release,
+  ControlPlaneNodeAZs,
 }
 
 interface IApplyPatchAction {
@@ -115,6 +117,7 @@ function makeInitialState(
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
       [ClusterPropertyField.Release]: true,
+      [ClusterPropertyField.ControlPlaneNodeAZs]: true,
     },
     isCreating: false,
     latestRelease: '',
@@ -304,6 +307,13 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               providerCluster={state.providerCluster}
               controlPlaneNode={state.controlPlaneNode}
               onChange={handleChange(ClusterPropertyField.Release)}
+            />
+            <CreateClusterControlPlaneNodeAZs
+              id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNode={state.controlPlaneNode}
+              onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
             />
             <Box direction='row' margin={{ top: 'medium' }}>
               <Button
