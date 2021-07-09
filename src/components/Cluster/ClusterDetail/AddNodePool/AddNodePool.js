@@ -399,7 +399,7 @@ class AddNodePool extends Component {
       ? 'Scaling range'
       : 'Node count';
 
-    let spotInstancesLabel = 'Spot instances';
+    let spotInstancesLabel = 'Spot virtual machines';
     if (provider === Providers.AWS) {
       spotInstancesLabel = 'Instance distribution';
     }

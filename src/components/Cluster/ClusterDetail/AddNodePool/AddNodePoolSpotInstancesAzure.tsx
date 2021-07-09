@@ -40,10 +40,10 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
         min={0}
         max={Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MAX}
         precision={Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_PRECISION}
-        label='Maximum price per hour'
+        label='Price limit'
         error={maxPriceValidationError}
         disabled={useOnDemandPricing}
-        help='The maximum price per hour that a single node pool VM instance can reach before it is deallocated.'
+        help='The highest amount per hour (in USD) you are willing to pay, per virtual machine.'
         contentProps={{
           width: 'small',
         }}
@@ -52,7 +52,7 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
         <CheckBoxInput
           checked={useOnDemandPricing}
           onChange={(e) => setUseOnDemandPricing(e.target.checked)}
-          label='Use current on-demand pricing as max'
+          label='Use the on-demand price as limit'
         />
       </CheckboxWrapper>
     </AzureSpotInstances>

@@ -1,4 +1,8 @@
 import { Box, Text } from 'grommet';
+import {
+  getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAzure,
+} from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,14 +18,16 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
 }) => {
   const featureEnabled =
     typeof providerNodePool?.spec?.template.spotVMOptions !== 'undefined';
-  let headline = 'Spot instances disabled';
+  let headline = 'Spot virtual machines disabled';
   if (featureEnabled) {
-    headline = 'Spot instances enabled';
+    headline = 'Spot virtual machines enabled';
   }
 
   let maxPriceText = '';
   if (featureEnabled) {
-    const maxPrice = providerNodePool?.spec?.template.spotVMOptions?.maxPrice;
+    const maxPrice = (getProviderNodePoolSpotInstances(
+      providerNodePool
+    ) as INodePoolSpotInstancesAzure).maxPrice;
     if (maxPrice && maxPrice > 0) {
       maxPriceText = `Using maximum price: $${maxPrice}`;
     } else {
@@ -55,7 +61,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
           }
           placement='top'
         >
-          <Text aria-label='Node pool spot instances status'>
+          <Text aria-label='Node pool spot virtual machines status'>
             <i
               role='presentation'
               className={featureEnabled ? 'fa fa-done' : 'fa fa-close'}

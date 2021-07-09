@@ -63,3 +63,34 @@ export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
     }
   };
 }
+
+export interface INodePoolSpotInstancesConfigAzure {
+  enabled: boolean;
+  maxPrice: string;
+}
+
+export interface INodePoolSpotInstancesConfigAWS {
+  enabled: boolean;
+}
+
+export type NodePoolSpotInstancesConfig =
+  | INodePoolSpotInstancesConfigAzure
+  | INodePoolSpotInstancesConfigAWS;
+
+export function withNodePoolSpotInstances(
+  config: NodePoolSpotInstancesConfig
+): NodePoolPatch {
+  return (_, providerNodePool: ProviderNodePool) => {
+    if (providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
+      if (!config.enabled) {
+        providerNodePool.spec!.template.spotVMOptions = undefined;
+
+        return;
+      }
+
+      providerNodePool.spec!.template.spotVMOptions ??= {};
+      providerNodePool.spec!.template.spotVMOptions.maxPrice = (config as INodePoolSpotInstancesConfigAzure).maxPrice;
+      providerNodePool.spec!.template.spotVMOptions.maxPrice ??= '-1';
+    }
+  };
+}
