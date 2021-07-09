@@ -13,6 +13,8 @@ import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
 
+import { IRelease } from './ReleaseSelector';
+
 const INACTIVE_OPACITY = 0.4;
 
 const FixedWidthTableButton = styled(TableButton)`

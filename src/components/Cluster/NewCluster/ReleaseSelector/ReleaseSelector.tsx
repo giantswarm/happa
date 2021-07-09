@@ -1,16 +1,9 @@
+import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import { getUserIsAdmin } from 'stores/main/selectors';
-import {
-  getReleases,
-  getReleasesError,
-  getReleasesIsFetching,
-  getSortedReleaseVersions,
-} from 'stores/releases/selectors';
 import {
   getKubernetesReleaseEOLStatus,
   isPreRelease,
@@ -34,13 +27,19 @@ import {
 
 import ReleaseRow from './ReleaseRow';
 
-interface IReleaseSelector {
-  selectRelease(releaseVersion: string): void;
+function getLatestReleaseVersion(
+  releaseVersions: string[],
+  releases: Record<string, IRelease>
+): string | null {
+  if (releaseVersions.length < 1) return null;
 
-  selectedRelease: string;
-  collapsible?: boolean;
-  autoSelectLatest?: boolean;
-  versionFilter?: (version: string) => boolean;
+  for (const version of releaseVersions) {
+    if (releases[version]?.active && !isPreRelease(version)) {
+      return version;
+    }
+  }
+
+  return releaseVersions[0];
 }
 
 const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
@@ -48,32 +47,63 @@ const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
   margin-bottom: 0;
 `;
 
-const ReleaseSelector: FC<IReleaseSelector> = ({
+export interface IReleaseComponent {
+  name: string;
+  version: string;
+}
+
+export interface IRelease {
+  components: IReleaseComponent[];
+  version: string;
+  active: boolean;
+  timestamp: string;
+  kubernetesVersion?: string;
+  releaseNotesURL?: string;
+  k8sVersionEOLDate?: string;
+}
+
+interface IReleaseSelectorProps {
+  selectRelease: (releaseVersion: string) => void;
+  releases: Record<string, IRelease>;
+  selectedRelease: string;
+  isLoading?: boolean;
+  errorMessage?: string;
+  isAdmin?: boolean;
+  collapsible?: boolean;
+  autoSelectLatest?: boolean;
+  versionFilter?: (version: string) => boolean;
+}
+
+const ReleaseSelector: FC<IReleaseSelectorProps> = ({
   selectRelease,
   selectedRelease,
   collapsible,
   autoSelectLatest,
   versionFilter,
+  releases,
+  isLoading,
+  errorMessage,
+  isAdmin,
 }) => {
-  const allReleases = useSelector(getReleases);
-  let sortedReleaseVersions = useSelector(getSortedReleaseVersions);
-  const releasesIsFetching = useSelector(getReleasesIsFetching);
-  const releasesError = useSelector(getReleasesError);
+  const sortedReleaseVersions = useMemo(() => {
+    let releaseCollection = Object.keys(releases);
+    if (versionFilter) {
+      releaseCollection = releaseCollection.filter(versionFilter);
+    }
 
-  const isAdmin = useSelector(getUserIsAdmin);
+    return releaseCollection.sort((a, b) => compare(b, a));
+  }, [releases, versionFilter]);
 
-  let releases = allReleases;
-  if (versionFilter) {
-    releases = Object.keys(releases)
-      .filter(versionFilter)
-      .reduce((acc: typeof releases, releaseVersion: string) => {
+  const allReleases = useMemo(() => {
+    return sortedReleaseVersions.reduce(
+      (acc: typeof releases, releaseVersion: string) => {
         acc[releaseVersion] = releases[releaseVersion];
 
         return acc;
-      }, {});
-
-    sortedReleaseVersions = sortedReleaseVersions.filter(versionFilter);
-  }
+      },
+      {}
+    );
+  }, [releases, sortedReleaseVersions]);
 
   const selectedKubernetesVersion = useMemo(() => {
     const currentRelease = allReleases[selectedRelease];
@@ -122,13 +152,13 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
     }
   };
 
-  if (releasesError) {
+  if (errorMessage) {
     return (
       <div>
         <p>
           There was an error loading releases.
           <br />
-          {releasesError.toString()}
+          {errorMessage}
           <br />
           Please try again later or contact support: support@giantswarm.io
         </p>
@@ -143,7 +173,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
   }
 
   return (
-    <LoadingOverlay loading={releasesIsFetching}>
+    <LoadingOverlay loading={isLoading}>
       <SelectedWrapper>
         <SelectedItem
           aria-label={`The currently selected version is ${selectedRelease}`}
@@ -214,7 +244,7 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
               {sortedReleaseVersions.map((version) => (
                 <ReleaseRow
                   key={version}
-                  {...releases[version]}
+                  {...allReleases[version]}
                   isSelected={version === selectedRelease}
                   selectRelease={selectRelease}
                 />
@@ -230,6 +260,12 @@ const ReleaseSelector: FC<IReleaseSelector> = ({
 ReleaseSelector.propTypes = {
   selectRelease: PropTypes.func.isRequired,
   selectedRelease: PropTypes.string.isRequired,
+  releases: (PropTypes.object as PropTypes.Requireable<
+    IReleaseSelectorProps['releases']
+  >).isRequired,
+  isLoading: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  isAdmin: PropTypes.bool,
   collapsible: PropTypes.bool,
   autoSelectLatest: PropTypes.bool,
   versionFilter: PropTypes.func,
@@ -241,18 +277,3 @@ ReleaseSelector.defaultProps = {
 };
 
 export default ReleaseSelector;
-
-function getLatestReleaseVersion(
-  releaseVersions: string[],
-  releaseMap: IReleases
-): string | null {
-  if (releaseVersions.length < 1) return null;
-
-  for (const version of releaseVersions) {
-    if (releaseMap[version]?.active && !isPreRelease(version)) {
-      return version;
-    }
-  }
-
-  return releaseVersions[0];
-}

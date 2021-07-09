@@ -13,7 +13,16 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Constants, Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
-import { getFirstNodePoolsRelease, getProvider } from 'stores/main/selectors';
+import {
+  getFirstNodePoolsRelease,
+  getProvider,
+  getUserIsAdmin,
+} from 'stores/main/selectors';
+import {
+  getReleases,
+  getReleasesError,
+  getReleasesIsFetching,
+} from 'stores/releases/selectors';
 import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
@@ -91,6 +100,12 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
     dispatch(push(MainRoutes.Home));
   };
 
+  const releases = useSelector(getReleases);
+  const releasesIsFetching = useSelector(getReleasesIsFetching);
+  const releasesError = useSelector(getReleasesError);
+
+  const isAdmin = useSelector(getUserIsAdmin);
+
   return (
     <Breadcrumb
       data={{
@@ -116,6 +131,10 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
                 <ReleaseSelector
                   selectRelease={setSelectedRelease}
                   selectedRelease={selectedRelease}
+                  releases={releases}
+                  errorMessage={releasesError?.toString()}
+                  isAdmin={isAdmin}
+                  isLoading={releasesIsFetching}
                 />
               </InputGroup>
             </Box>
