@@ -23,9 +23,9 @@ export interface IClusterPropertyProps {
 }
 
 export function withClusterReleaseVersion(newVersion: string): ClusterPatch {
-  return (nodePool, providerCluster, controlPlaneNode) => {
-    nodePool.metadata.labels ??= {};
-    nodePool.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
+  return (cluster, providerCluster, controlPlaneNode) => {
+    cluster.metadata.labels ??= {};
+    cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
 
     providerCluster.metadata.labels ??= {};
     providerCluster.metadata.labels[

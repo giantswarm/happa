@@ -32,6 +32,7 @@ import {
 } from '../utils';
 import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
+import CreateClusterRelease from './CreateClusterRelease';
 import {
   ClusterPatch,
   IClusterPropertyValue,
@@ -41,6 +42,7 @@ import {
 enum ClusterPropertyField {
   Name,
   Description,
+  Release,
 }
 
 interface IApplyPatchAction {
@@ -112,6 +114,7 @@ function makeInitialState(
     validationResults: {
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
+      [ClusterPropertyField.Release]: true,
     },
     isCreating: false,
     latestRelease: '',
@@ -294,6 +297,13 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               controlPlaneNode={state.controlPlaneNode}
               onChange={handleChange(ClusterPropertyField.Description)}
               autoFocus={true}
+            />
+            <CreateClusterRelease
+              id={`cluster-${ClusterPropertyField.Release}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNode={state.controlPlaneNode}
+              onChange={handleChange(ClusterPropertyField.Release)}
             />
             <Box direction='row' margin={{ top: 'medium' }}>
               <Button
