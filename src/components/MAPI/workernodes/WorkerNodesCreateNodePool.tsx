@@ -14,6 +14,7 @@ import {
 } from 'MAPI/types';
 import {
   generateUID,
+  getClusterReleaseVersion,
   getProviderClusterLocation,
   getProviderNodePoolLocation,
 } from 'MAPI/utils';
@@ -24,6 +25,7 @@ import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { getProvider } from 'stores/main/selectors';
+import { supportsNodePoolSpotInstances } from 'stores/nodepool/utils';
 import Button from 'UI/Controls/Button';
 
 import { INodePoolPropertyValue, NodePoolPatch } from './patches';
@@ -38,6 +40,7 @@ import WorkerNodesCreateNodePoolDescription from './WorkerNodesCreateNodePoolDes
 import WorkerNodesCreateNodePoolMachineType from './WorkerNodesCreateNodePoolMachineType';
 import WorkerNodesCreateNodePoolName from './WorkerNodesCreateNodePoolName';
 import WorkerNodesCreateNodePoolScale from './WorkerNodesCreateNodePoolScale';
+import WorkerNodesCreateNodePoolSpotInstances from './WorkerNodesCreateNodePoolSpotInstances';
 
 enum NodePoolPropertyField {
   Name,
@@ -45,6 +48,7 @@ enum NodePoolPropertyField {
   MachineType,
   AvailabilityZones,
   Scale,
+  SpotInstances,
 }
 
 interface IApplyPatchAction {
@@ -120,6 +124,7 @@ function makeInitialState(
       [NodePoolPropertyField.MachineType]: true,
       [NodePoolPropertyField.AvailabilityZones]: false,
       [NodePoolPropertyField.Scale]: true,
+      [NodePoolPropertyField.SpotInstances]: true,
     },
     isCreating: false,
   };
@@ -248,6 +253,11 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     }
   };
 
+  const clusterReleaseVersion = getClusterReleaseVersion(cluster);
+  const supportsSpotInstances = clusterReleaseVersion
+    ? supportsNodePoolSpotInstances(provider, clusterReleaseVersion)
+    : false;
+
   return (
     <Collapsible {...props}>
       <Keyboard onEsc={handleCancel}>
@@ -299,6 +309,16 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 cluster={cluster}
                 margin={{ top: 'small' }}
               />
+
+              {supportsSpotInstances && (
+                <WorkerNodesCreateNodePoolSpotInstances
+                  id={`node-pool-${id}-${NodePoolPropertyField.SpotInstances}`}
+                  nodePool={state.nodePool}
+                  providerNodePool={state.providerNodePool}
+                  onChange={handleChange(NodePoolPropertyField.SpotInstances)}
+                />
+              )}
+
               <WorkerNodesCreateNodePoolScale
                 id={`node-pool-${id}-${NodePoolPropertyField.Scale}`}
                 nodePool={state.nodePool}

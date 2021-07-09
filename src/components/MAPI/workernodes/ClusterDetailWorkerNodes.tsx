@@ -46,7 +46,7 @@ function getAdditionalColumns(
   if (provider === Providers.AZURE) {
     return [
       {
-        title: 'Spot instances',
+        title: 'Spot VMs',
         render: (_, providerNodePool) => {
           return (
             <WorkerNodesAzureMachinePoolSpotInstances

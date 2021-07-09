@@ -3,7 +3,8 @@ import React, { ReactNode } from 'react';
 import BootstrapTabs from 'react-bootstrap/lib/Tabs';
 import { useHistory, useLocation } from 'react-router';
 
-interface ITabsProps {
+interface ITabsProps
+  extends React.ComponentPropsWithoutRef<typeof BootstrapTabs> {
   defaultActiveKey: string;
   children: ReactNode;
   useRoutes?: boolean;
@@ -13,6 +14,7 @@ const Tabs: React.FC<ITabsProps> = ({
   defaultActiveKey,
   children,
   useRoutes,
+  ...props
 }) => {
   const history = useHistory();
   const { pathname } = useLocation();
@@ -38,6 +40,7 @@ const Tabs: React.FC<ITabsProps> = ({
       id='tabs'
       mountOnEnter={true}
       unmountOnExit={true}
+      {...props}
     >
       {children}
     </BootstrapTabs>

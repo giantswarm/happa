@@ -1,11 +1,11 @@
 import NewClusterWrapper from 'Cluster/NewCluster/NewClusterWrapper';
-import GettingStarted from 'GettingStarted/GettingStarted';
 import React from 'react';
 import { Redirect, Switch } from 'react-router';
 import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import ClusterDetail from './ClusterDetail';
+import GettingStarted from './GettingStarted';
 
 const Cluster: React.FC<{}> = () => {
   return (

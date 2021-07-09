@@ -9,6 +9,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -24,6 +25,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 TEVFi"
               disabled=""
+              tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
@@ -51,6 +53,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -63,6 +66,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
           >
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 xGwgC"
+              tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
@@ -89,6 +93,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <label
         class="StyledText-sc-1sadyjn-0 weZKr"
@@ -111,6 +116,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
           >
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 xGwgC"
+              tabindex="-1"
               type="checkbox"
             />
             <span
@@ -145,6 +151,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <label
         class="StyledText-sc-1sadyjn-0 weZKr"
@@ -162,6 +169,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
           >
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 xGwgC"
+              tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
@@ -188,6 +196,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <span
         class="StyledText-sc-1sadyjn-0 hosPKv"
@@ -205,6 +214,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
           >
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 xGwgC"
+              tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
@@ -231,6 +241,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -243,6 +254,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
           >
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 xGwgC"
+              tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
@@ -274,6 +286,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
   >
     <div
       class="StyledBox-sc-13pk1d4-0 erPdoW FormField__FormFieldBox-m9hood-0 gWgpjB sc-kfPtPH cAAOBn"
+      tabindex="0"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 nMYKY FormField__FormFieldContentBox-m9hood-1"
@@ -286,6 +299,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
           >
             <input
               class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 xGwgC"
+              tabindex="-1"
               type="checkbox"
               value="Hi people"
             />

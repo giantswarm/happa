@@ -78,7 +78,9 @@ describe('NodePoolScaling', () => {
 
       // Hover over the column.
       fireEvent.mouseEnter(spotInstancesTab);
-      expect(screen.getByText('Spot instances disabled')).toBeInTheDocument();
+      expect(
+        screen.getByText('Spot virtual machines disabled')
+      ).toBeInTheDocument();
       fireEvent.mouseLeave(spotInstancesTab);
     });
 
@@ -120,7 +122,9 @@ describe('NodePoolScaling', () => {
 
       // Hover over the column.
       fireEvent.mouseEnter(spotInstancesTab);
-      expect(screen.getByText(/spot instances enabled/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/spot virtual machines enabled/i)
+      ).toBeInTheDocument();
       expect(
         screen.getByText(/using current on-demand pricing as maximum/i)
       ).toBeInTheDocument();
@@ -165,7 +169,9 @@ describe('NodePoolScaling', () => {
 
       // Hover over the column.
       fireEvent.mouseEnter(spotInstancesTab);
-      expect(screen.getByText(/spot instances enabled/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/spot virtual machines enabled/i)
+      ).toBeInTheDocument();
       expect(
         screen.getByText(/using maximum price: \$0.00035/i)
       ).toBeInTheDocument();
