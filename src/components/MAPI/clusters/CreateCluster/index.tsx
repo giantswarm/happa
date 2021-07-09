@@ -286,7 +286,6 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               providerCluster={state.providerCluster}
               controlPlaneNode={state.controlPlaneNode}
               onChange={handleChange(ClusterPropertyField.Name)}
-              disabled={true}
             />
             <WorkerNodesCreateClusterDescription
               id={`cluster-${ClusterPropertyField.Description}`}

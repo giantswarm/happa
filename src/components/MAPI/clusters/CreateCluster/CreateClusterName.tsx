@@ -1,17 +1,14 @@
+import { Box, Text } from 'grommet';
 import { Cluster } from 'MAPI/types';
 import PropTypes from 'prop-types';
 import React from 'react';
-import InputGroup from 'UI/Inputs/InputGroup';
-import TextInput from 'UI/Inputs/TextInput';
+import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import { IClusterPropertyProps } from './patches';
 
 interface ICreateClusterNameProps
   extends IClusterPropertyProps,
-    Omit<
-      React.ComponentPropsWithoutRef<typeof InputGroup>,
-      'onChange' | 'id'
-    > {}
+    Omit<React.ComponentPropsWithoutRef<typeof Box>, 'onChange' | 'id'> {}
 
 const CreateClusterName: React.FC<ICreateClusterNameProps> = ({
   id,
@@ -22,14 +19,12 @@ const CreateClusterName: React.FC<ICreateClusterNameProps> = ({
   ...props
 }) => {
   return (
-    <InputGroup htmlFor={id} label='Name' {...props}>
-      <TextInput
-        value={cluster.metadata.name}
-        id={id}
-        readOnly={readOnly}
-        disabled={disabled}
-      />
-    </InputGroup>
+    <Box direction='row' gap='small' align='center' {...props}>
+      <Text size='large' weight='bold'>
+        Name
+      </Text>
+      <ClusterIDLabel clusterID={cluster.metadata.name} />
+    </Box>
   );
 };
 
