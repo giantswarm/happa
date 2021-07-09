@@ -1,13 +1,11 @@
+import { Box, Keyboard, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
-import {
-  ComponentsWrapper,
-  TableButton,
-} from 'UI/Controls/ExpandableSelector/Items';
+import { TableButton } from 'UI/Controls/ExpandableSelector/Items';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import { TableCell, TableRow } from 'UI/Display/Table';
@@ -69,6 +67,13 @@ const ReleaseRow: FC<IReleaseRow> = ({
     }
   };
 
+  const handleButtonKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    (e.target as HTMLElement).click();
+  };
+
   return (
     <>
       <StyledTableRow
@@ -89,14 +94,17 @@ const ReleaseRow: FC<IReleaseRow> = ({
               onChange={() => selectRelease(version)}
               formFieldProps={{
                 margin: 'none',
+                tabIndex: -1,
               }}
               tabIndex={-1}
             />
           </RUMActionTarget>
         </TableCell>
-        <StyledTableCell active={active}>{version}</StyledTableCell>
-        <StyledTableCell active={active} align='center'>
-          {relativeDate(timestamp)}
+        <StyledTableCell size='small' active={active}>
+          <Text>{version}</Text>
+        </StyledTableCell>
+        <StyledTableCell size='medium' active={active} align='center'>
+          <Text>{relativeDate(timestamp)}</Text>
         </StyledTableCell>
         <StyledTableCell active={active} align='center'>
           <KubernetesVersionLabel
@@ -120,17 +128,26 @@ const ReleaseRow: FC<IReleaseRow> = ({
                 : RUMActions.HideReleaseDetails
             }
           >
-            <FixedWidthTableButton
-              data-testid={`show-components-${version}`}
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setCollapsed(!collapsed);
-              }}
+            <Keyboard
+              onEnter={handleButtonKeyDown}
+              onSpace={handleButtonKeyDown}
             >
-              <i className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`} />
-              {collapsed ? 'Show' : 'Hide'}
-            </FixedWidthTableButton>
+              <FixedWidthTableButton
+                data-testid={`show-components-${version}`}
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setCollapsed(!collapsed);
+                }}
+              >
+                <i
+                  role='presentation'
+                  aria-hidden={true}
+                  className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`}
+                />
+                {collapsed ? 'Show' : 'Hide'}
+              </FixedWidthTableButton>
+            </Keyboard>
           </RUMActionTarget>
         </TableCell>
         <TableCell
@@ -140,33 +157,43 @@ const ReleaseRow: FC<IReleaseRow> = ({
             e.stopPropagation()
           }
         >
-          <TableButton
-            data-testid={`open-changelog-${version}`}
-            href={releaseNotesURL}
-            target='_blank'
-            rel='noopener noreferrer'
-            onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          >
-            <i className='fa fa-open-in-new' />
-            Open
-          </TableButton>
+          <Keyboard onEnter={handleButtonKeyDown} onSpace={handleButtonKeyDown}>
+            <TableButton
+              data-testid={`open-changelog-${version}`}
+              href={releaseNotesURL}
+              target='_blank'
+              rel='noopener noreferrer'
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            >
+              <i
+                className='fa fa-open-in-new'
+                aria-hidden={true}
+                role='presentation'
+              />
+              Open
+            </TableButton>
+          </Keyboard>
         </TableCell>
       </StyledTableRow>
       {!collapsed && (
         <TableRow>
           <TableCell colSpan={6}>
-            <ComponentsWrapper data-testid={`components-${version}`}>
+            <Box wrap={true} direction='row'>
               {components
                 .slice()
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((component) => (
-                  <ReleaseComponentLabel
+                  <Box
                     key={component.name}
-                    name={component.name}
-                    version={component.version}
-                  />
+                    margin={{ right: 'xsmall', bottom: 'xsmall' }}
+                  >
+                    <ReleaseComponentLabel
+                      name={component.name}
+                      version={component.version}
+                    />
+                  </Box>
                 ))}
-            </ComponentsWrapper>
+            </Box>
           </TableCell>
         </TableRow>
       )}

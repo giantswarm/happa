@@ -1,3 +1,4 @@
+import { Box, Keyboard, Text } from 'grommet';
 import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
@@ -152,22 +153,31 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
     }
   };
 
+  const handleKeyDownCancel = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setCollapsed(true);
+  };
+
   if (errorMessage) {
     return (
       <div>
-        <p>
+        <Text>
           There was an error loading releases.
           <br />
           {errorMessage}
           <br />
           Please try again later or contact support: support@giantswarm.io
-        </p>
+        </Text>
       </div>
     );
   } else if (!selectedKubernetesVersion) {
     return (
       <div>
-        <p>There is no active release currently available for this platform.</p>
+        <Text>
+          There is no active release currently available for this platform.
+        </Text>
       </div>
     );
   }
@@ -220,37 +230,46 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
       {!collapsed && (
         <>
           {isAdmin && (
-            <p>
-              <i className='fa fa-warning' /> Light font color indicates an
-              inactive or wip release only available to Giant Swarm staff
-            </p>
+            <Box margin={{ vertical: 'xsmall' }}>
+              <Text size='small' color='text-weak'>
+                <i
+                  className='fa fa-warning'
+                  aria-hidden={true}
+                  role='presentation'
+                />{' '}
+                Light font color indicates an inactive or wip release only
+                available to Giant Swarm staff
+              </Text>
+            </Box>
           )}
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableCell />
-                <TableCell>Version</TableCell>
-                <TableCell align='center'>Released</TableCell>
-                <TableCell align='center'>Kubernetes</TableCell>
-                <TableCell align='center'>Components</TableCell>
-                <TableCell align='center'>Notes</TableCell>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              role='radiogroup'
-              tabIndex={-1}
-              aria-labelledby='release-selector__toggler'
-            >
-              {sortedReleaseVersions.map((version) => (
-                <ReleaseRow
-                  key={version}
-                  {...allReleases[version]}
-                  isSelected={version === selectedRelease}
-                  selectRelease={selectRelease}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          <Keyboard onEsc={handleKeyDownCancel}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Version</TableCell>
+                  <TableCell align='center'>Released</TableCell>
+                  <TableCell align='center'>Kubernetes</TableCell>
+                  <TableCell align='center'>Components</TableCell>
+                  <TableCell align='center'>Notes</TableCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody
+                role='radiogroup'
+                tabIndex={-1}
+                aria-labelledby='release-selector__toggler'
+              >
+                {sortedReleaseVersions.map((version) => (
+                  <ReleaseRow
+                    key={version}
+                    {...allReleases[version]}
+                    isSelected={version === selectedRelease}
+                    selectRelease={selectRelease}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </Keyboard>
         </>
       )}
     </LoadingOverlay>

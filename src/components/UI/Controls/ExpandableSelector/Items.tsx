@@ -12,10 +12,6 @@ export const TableButton = styled(Button)`
   }
 `;
 
-export const ComponentsWrapper = styled.div`
-  margin-left: ${({ theme }) => theme.spacingPx * 9}px;
-`;
-
 export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
   background-color: ${({ isSelected, theme }) =>
     isSelected ? theme.colors.foreground : 'transparent'};
