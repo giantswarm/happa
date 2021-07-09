@@ -1,0 +1,27 @@
+import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { IHttpClient } from 'model/clients/HttpClient';
+import * as k8sUrl from 'model/services/mapi/k8sUrl';
+
+import { createResource } from '../generic/createResource';
+import { IAzureCluster } from './';
+
+export function createAzureCluster(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  azureCluster: IAzureCluster
+) {
+  const url = k8sUrl.create({
+    baseUrl: window.config.mapiEndpoint,
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+    kind: 'azureclusters',
+    namespace: azureCluster.metadata.namespace!,
+    name: azureCluster.metadata.name,
+  } as k8sUrl.IK8sCreateOptions);
+
+  return createResource<IAzureCluster>(
+    client,
+    auth,
+    url.toString(),
+    azureCluster
+  );
+}

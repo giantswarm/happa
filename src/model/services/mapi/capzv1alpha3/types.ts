@@ -74,7 +74,7 @@ export interface IAzureClusterSpec {
   networkSpec?: INetworkSpec;
   resourceGroup?: string;
   subscriptionID?: string;
-  contronPlaneEndpoint?: capiv1alpha3.IApiEndpoint;
+  controlPlaneEndpoint?: capiv1alpha3.IApiEndpoint;
   additionalTags?: Tags;
   identityRef?: corev1.IObjectReference;
 }
@@ -86,14 +86,17 @@ export interface IAzureClusterStatus {
 }
 
 export interface IAzureCluster {
-  apiVersion: string;
-  kind: string;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3';
+  kind: typeof AzureCluster;
   metadata: metav1.IObjectMeta;
   spec: IAzureClusterSpec;
-  status: capiv1alpha3.IClusterStatus;
+  status?: capiv1alpha3.IClusterStatus;
 }
 
-export interface IAzureClusterList extends metav1.IList<IAzureCluster> {}
+export interface IAzureClusterList extends metav1.IList<IAzureCluster> {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3';
+  kind: typeof AzureClusterList;
+}
 
 export const AzureCluster = 'AzureCluster';
 export const AzureClusterList = 'AzureClusterList';
@@ -165,6 +168,10 @@ export interface IAzureMachineSpec {
   vmSize: string;
   osDisk: IOSDisk;
   sshPublicKey: string;
+  /**
+   * @deprecated
+   *  */
+  location: string;
   providerID?: string;
   failureDomain?: string;
   image?: IImage;

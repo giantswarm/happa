@@ -463,6 +463,15 @@ export function getClusterReleaseVersion(cluster: Cluster) {
   }
 }
 
+export function getClusterDescription(cluster: Cluster): string {
+  switch (cluster.kind) {
+    case capiv1alpha3.Cluster:
+      return capiv1alpha3.getClusterDescription(cluster);
+    default:
+      return Constants.DEFAULT_CLUSTER_DESCRIPTION;
+  }
+}
+
 export function getProviderClusterLocation(
   providerCluster: ProviderCluster
 ): string {
