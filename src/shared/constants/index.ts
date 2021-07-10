@@ -23,7 +23,9 @@ export const Constants = {
 
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
   DEFAULT_NODEPOOL_DESCRIPTION: 'Please add description',
+  DEFAULT_CLUSTER_DESCRIPTION: 'Please add description',
   AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
+  AZURE_CONTROL_PLANE_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AWS_V5_VERSION: '10.0.0',
   AZURE_V5_VERSION: '13.0.0-alpha',
 

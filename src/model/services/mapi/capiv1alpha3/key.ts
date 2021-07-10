@@ -6,6 +6,7 @@ export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
 export const labelClusterName = 'cluster.x-k8s.io/cluster-name';
 export const labelReleaseVersion = 'release.giantswarm.io/version';
+export const labelMachineControlPlane = 'cluster.x-k8s.io/control-plane';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
 
