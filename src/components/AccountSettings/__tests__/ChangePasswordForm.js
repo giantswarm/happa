@@ -32,7 +32,7 @@ const validationErrors = {
 };
 
 const statusMessages = {
-  Success: 'Password set succesfully',
+  Success: 'Your password has been updated',
   CurrPwdWrong: `Your current password doesn't seem to be right.`,
   ServerError: 'Something went wrong while trying to set your password.',
 };
@@ -215,9 +215,7 @@ describe('ChangePasswordForm', () => {
       user: {
         email: USER_EMAIL,
       },
-      actions: {
-        giantswarmLogin: loginFn,
-      },
+      giantswarmLogin: loginFn,
     });
 
     const currPasswordInput = getByLabelText(elementLabels.CurrPassword);

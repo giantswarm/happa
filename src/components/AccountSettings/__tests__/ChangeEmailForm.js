@@ -10,7 +10,7 @@ const inputInitialValue = USER_EMAIL;
 const buttonLabel = 'Set New Email';
 
 const statusMessages = {
-  Success: 'Saved Succesfully',
+  Success: 'Your email has been updated',
   EmailAlreadyInUse:
     'This e-mail is in already in use by a different user. Please choose a different e-mail address',
   ServerError:
@@ -112,9 +112,7 @@ describe('ChangeEmailForm', () => {
       .reply(StatusCodes.Ok, {});
 
     const { getByDisplayValue, findByText } = renderWithProps({
-      actions: {
-        refreshUserInfo: refreshUserInfoFn,
-      },
+      refreshUserInfo: refreshUserInfoFn,
     });
     const inputElement = getByDisplayValue(inputInitialValue);
 
