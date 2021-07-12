@@ -4,7 +4,7 @@ import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
 import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
 
-import Tabs from '../Tabs';
+import { Tabs } from '../Tabs';
 
 describe('Tabs', () => {
   const renderComponent = (

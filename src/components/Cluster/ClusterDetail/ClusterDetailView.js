@@ -8,14 +8,13 @@ import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
 import { Constants, Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps } from 'shared/featureSupport';
-import Tabs from 'shared/Tabs';
+import { Tab, Tabs } from 'shared/Tabs';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -317,7 +316,7 @@ class ClusterDetailView extends React.Component {
               </SlideTransition>
             )}
             <Tabs useRoutes={true}>
-              <Tab eventKey={tabsPaths.Home} title='General'>
+              <Tab path={tabsPaths.Home} title='General'>
                 {isV5Cluster ? (
                   <V5ClusterDetailTable
                     accessCluster={this.accessCluster}
@@ -353,12 +352,12 @@ class ClusterDetailView extends React.Component {
                   />
                 )}
               </Tab>
-              <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
+              <Tab path={tabsPaths.KeyPairs} title='Key Pairs'>
                 <LoadingOverlay loading={this.props.loadingCluster}>
                   <KeyPairs cluster={cluster} />
                 </LoadingOverlay>
               </Tab>
-              <Tab eventKey={tabsPaths.Apps} title='Apps'>
+              <Tab path={tabsPaths.Apps} title='Apps'>
                 {supporsAppsViaMapi ? (
                   <ClusterDetailApps releaseVersion={release_version} />
                 ) : (
@@ -374,7 +373,7 @@ class ClusterDetailView extends React.Component {
                   />
                 )}
               </Tab>
-              <Tab eventKey={tabsPaths.Ingress} title='Ingress'>
+              <Tab path={tabsPaths.Ingress} title='Ingress'>
                 {supporsAppsViaMapi ? (
                   <ClusterDetailIngress
                     provider={provider}

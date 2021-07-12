@@ -262,8 +262,8 @@ const AppDetails = (props) => {
         <Install>{children}</Install>
       </Header>
 
-      <Tabs defaultActiveKey={1}>
-        <Tab eventKey={1} title='About'>
+      <Tabs defaultActiveIndex={0}>
+        <Tab title='About'>
           <About>
             {readme && (
               <Readme>
@@ -298,7 +298,7 @@ const AppDetails = (props) => {
           </About>
         </Tab>
 
-        <Tab eventKey={2} title='Other Versions'>
+        <Tab title='Other Versions'>
           <ChartVersionsTable appVersions={appVersions} />
         </Tab>
       </Tabs>

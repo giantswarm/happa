@@ -1,12 +1,8 @@
 import { Box } from 'grommet';
-import {
-  GettingStartedPlatform,
-  useGettingStartedContext,
-} from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
+import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Tab } from 'react-bootstrap';
-import Tabs from 'shared/Tabs';
+import { Tab, Tabs } from 'shared/Tabs';
 import styled from 'styled-components';
 
 const StyledTab = styled(Tab)`
@@ -33,26 +29,16 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
   return (
     <Box {...props}>
       <Tabs
-        defaultActiveKey={selectedPlatform as never}
-        activeKey={selectedPlatform}
+        defaultActiveIndex={selectedPlatform as never}
+        activeIndex={selectedPlatform}
         onSelect={setSelectedPlatform as never}
       >
-        {linuxContent && (
-          <StyledTab eventKey={GettingStartedPlatform.Linux} title='Linux'>
-            {linuxContent}
-          </StyledTab>
-        )}
+        {linuxContent && <StyledTab title='Linux'>{linuxContent}</StyledTab>}
 
-        {macOSContent && (
-          <StyledTab eventKey={GettingStartedPlatform.MacOS} title='macOS'>
-            {macOSContent}
-          </StyledTab>
-        )}
+        {macOSContent && <StyledTab title='macOS'>{macOSContent}</StyledTab>}
 
         {windowsContent && (
-          <StyledTab eventKey={GettingStartedPlatform.Windows} title='Windows'>
-            {windowsContent}
-          </StyledTab>
+          <StyledTab title='Windows'>{windowsContent}</StyledTab>
         )}
       </Tabs>
     </Box>
