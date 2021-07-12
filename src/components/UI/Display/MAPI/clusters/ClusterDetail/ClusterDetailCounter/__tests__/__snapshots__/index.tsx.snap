@@ -25,7 +25,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fTVibh sc-lMZDC rhkUX"
+        class="StyledText-sc-1sadyjn-0 fTVibh sc-cdlubJ jPQraZ"
       >
         dogs
       </span>
@@ -59,7 +59,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fTVibh sc-lMZDC rhkUX"
+        class="StyledText-sc-1sadyjn-0 fTVibh sc-cdlubJ jPQraZ"
       >
         dog
       </span>
