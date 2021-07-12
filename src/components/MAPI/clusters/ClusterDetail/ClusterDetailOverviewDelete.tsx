@@ -99,9 +99,9 @@ const ClusterDetailOverviewDelete: React.FC<IClusterDetailOverviewDeleteProps> =
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err as never);
-    } finally {
       setIsLoading(false);
+
+      ErrorReporter.getInstance().notify(err as never);
     }
   };
 

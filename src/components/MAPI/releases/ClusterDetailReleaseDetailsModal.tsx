@@ -40,7 +40,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
   releaseNotesURL,
   supportedUpgradeVersions,
 }) => {
-  const title = `Details for release v${version}`;
+  const title = `Details for release ${version}`;
 
   const sortedComponents = useMemo(() => {
     if (!components) return [];

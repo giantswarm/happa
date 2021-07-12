@@ -118,7 +118,6 @@ export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
   },
   spec: {
     location: 'westeurope',
-    failureDomain: '2',
     identity: 'None',
     image: {
       marketplace: {
@@ -142,19 +141,6 @@ export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
   },
   status: {
     conditions: [
-      {
-        lastTransitionTime: '2021-04-26T15:18:58Z',
-        status: 'True',
-        type: 'Ready',
-      },
-      {
-        lastTransitionTime: '2021-04-26T15:20:26Z',
-        message: 'Creation has been completed in 15m0.120533613s',
-        reason: 'CreationCompleted',
-        severity: 'Info',
-        status: 'False',
-        type: 'Creating',
-      },
       {
         lastTransitionTime: '2021-04-26T15:09:11Z',
         status: 'True',

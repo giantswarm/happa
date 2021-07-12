@@ -5,6 +5,19 @@ import theme from 'styles/theme';
 import ValueLabel from 'UI/Display/ValueLabel';
 import Truncated from 'UI/Util/Truncated';
 
+function formatValueLabel(component, oldVersion, newVersion) {
+  switch (true) {
+    case Boolean(oldVersion) && Boolean(newVersion):
+      return `${component} version ${oldVersion} is upgraded to version ${newVersion}`;
+    case Boolean(newVersion):
+      return `${component} version ${newVersion}`;
+    case !oldVersion && !newVersion:
+      return `${component} is removed`;
+    default:
+      return '';
+  }
+}
+
 const OldVersion = styled.span`
   color: ${(p) => p.theme.colors.redOld};
 `;
@@ -23,30 +36,18 @@ const VersionLabel = (props) => {
   if (oldVersion) {
     return (
       <>
-        <Truncated as={OldVersion} aria-label={`version ${oldVersion}`}>
-          {oldVersion}
-        </Truncated>
-        <ChangeArrow aria-label='is upgraded to'>➞</ChangeArrow>
-        <Truncated as={NewVersion} aria-label={`version ${newVersion}`}>
-          {newVersion}
-        </Truncated>
+        <Truncated as={OldVersion}>{oldVersion}</Truncated>
+        <ChangeArrow>➞</ChangeArrow>
+        <Truncated as={NewVersion}>{newVersion}</Truncated>
       </>
     );
   } else if (isRemoved) {
     return 'removed';
   } else if (isAdded) {
-    return (
-      <Truncated as='span' aria-label={`version ${newVersion}`}>
-        {newVersion} (added)
-      </Truncated>
-    );
+    return <Truncated as='span'>{newVersion} (added)</Truncated>;
   }
 
-  return (
-    <Truncated as='span' aria-label={`version ${newVersion}`}>
-      {newVersion}
-    </Truncated>
-  );
+  return <Truncated as='span'>{newVersion}</Truncated>;
 };
 
 VersionLabel.propTypes = {
@@ -73,6 +74,7 @@ const ReleaseComponentLabel = (props) => {
           oldVersion={oldVersion}
         />
       }
+      aria-label={formatValueLabel(name, oldVersion, version)}
     />
   );
 };

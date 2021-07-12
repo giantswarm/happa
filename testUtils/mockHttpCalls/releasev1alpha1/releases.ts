@@ -541,3 +541,13 @@ export const v15_0_0: releasev1alpha1.IRelease = {
     ready: true,
   },
 };
+
+export const releasesList: releasev1alpha1.IReleaseList = {
+  apiVersion: 'release.giantswarm.io/v1alpha1',
+  kind: 'ReleaseList',
+  metadata: {
+    resourceVersion: '294659579',
+    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/',
+  },
+  items: [v13_1_0, v14_0_1, v14_1_5, v15_0_0],
+};

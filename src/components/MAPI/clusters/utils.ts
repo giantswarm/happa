@@ -49,7 +49,9 @@ export function getWorkerNodesCPU(
     const vmSize = providerNodePools[i]?.spec?.template.vmSize;
     const readyReplicas = nodePools[i].status?.readyReplicas;
 
-    if (typeof vmSize !== 'undefined' && typeof readyReplicas !== 'undefined') {
+    if (!vmSize) return -1;
+
+    if (typeof readyReplicas !== 'undefined') {
       const machineTypeProperties = machineTypes[vmSize];
       if (!machineTypeProperties) {
         return -1;
@@ -75,7 +77,9 @@ export function getWorkerNodesMemory(
     const vmSize = providerNodePools[i]?.spec?.template.vmSize;
     const readyReplicas = nodePools[i].status?.readyReplicas;
 
-    if (typeof vmSize !== 'undefined' && typeof readyReplicas !== 'undefined') {
+    if (!vmSize) return -1;
+
+    if (typeof readyReplicas !== 'undefined') {
       const machineTypeProperties = machineTypes[vmSize];
       if (!machineTypeProperties) {
         return -1;

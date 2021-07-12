@@ -34,7 +34,7 @@ export const randomCluster1: capiv1alpha3.ICluster = {
       },
     },
     controlPlaneEndpoint: {
-      host: '',
+      host: 'test.k8s.gs.com',
       port: 0,
     },
     infrastructureRef: {
@@ -86,7 +86,7 @@ export const randomCluster2: capiv1alpha3.ICluster = {
       },
     },
     controlPlaneEndpoint: {
-      host: '',
+      host: 'test.k8s.gs.com',
       port: 0,
     },
     infrastructureRef: {
@@ -138,7 +138,7 @@ export const randomCluster3: capiv1alpha3.ICluster = {
       },
     },
     controlPlaneEndpoint: {
-      host: '',
+      host: 'test.k8s.gs.com',
       port: 0,
     },
     infrastructureRef: {

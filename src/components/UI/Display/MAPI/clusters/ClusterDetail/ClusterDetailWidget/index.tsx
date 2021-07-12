@@ -30,6 +30,7 @@ const ClusterDetailWidget: React.FC<IClusterDetailWidgetProps> = ({
       round='xsmall'
       pad='xsmall'
       wrap={true}
+      aria-label={title}
       {...props}
     >
       <CardHeader

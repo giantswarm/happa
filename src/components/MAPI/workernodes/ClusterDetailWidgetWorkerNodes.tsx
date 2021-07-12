@@ -24,7 +24,7 @@ import {
   getWorkerNodesCount,
   getWorkerNodesCPU,
   getWorkerNodesMemory,
-} from '../utils';
+} from '../clusters/utils';
 
 function formatMemory(value?: number) {
   if (typeof value === 'undefined') return undefined;

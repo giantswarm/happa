@@ -17,13 +17,13 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import ClusterDetailWidgetKeyPairs from '../../keypairs/ClusterDetailWidgetKeyPairs';
+import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidgetWorkerNodes';
 import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
 import ClusterDetailWidgetLabels from './ClusterDetailWidgetLabels';
 import ClusterDetailWidgetProvider from './ClusterDetailWidgetProvider';
-import ClusterDetailWidgetWorkerNodes from './ClusterDetailWidgetWorkerNodes';
 
 const StyledBox = styled(Box)`
   gap: ${({ theme }) => theme.global.edgeSize.small};
