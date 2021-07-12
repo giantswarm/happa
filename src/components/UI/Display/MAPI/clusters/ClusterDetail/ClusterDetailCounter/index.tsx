@@ -32,10 +32,13 @@ const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
   ...props
 }) => {
   const formattedLabel = pluralize ? pluralizeLabel(value, label) : label;
-  const a11yLabel =
-    typeof value === 'number' && value >= 0
-      ? `${value} ${formattedLabel}`
-      : `Loading ${formattedLabel}...`;
+
+  let a11yLabel = `Loading ${formattedLabel}...`;
+  if (typeof value === 'number' && value >= 0) {
+    a11yLabel = `${value} ${formattedLabel}`;
+  } else if (typeof value === 'number' && value < 0) {
+    a11yLabel = `${formattedLabel} not available`;
+  }
 
   return (
     <Box align='center' basis='100px' flex={{ grow: 0, shrink: 1 }} {...props}>
