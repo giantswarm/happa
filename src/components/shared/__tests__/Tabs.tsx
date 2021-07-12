@@ -1,14 +1,16 @@
 import { fireEvent, render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import Tab from 'react-bootstrap/lib/Tab';
 import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
 
-import { Tabs } from '../Tabs';
+import { Tab, Tabs } from '../Tabs';
 
 describe('Tabs', () => {
   const renderComponent = (
-    props: Partial<React.ComponentProps<typeof Tabs>> = {},
+    props: Partial<React.ComponentProps<typeof Tabs>> = {
+      defaultActiveIndex: 0,
+      children: [],
+    },
     history = createMemoryHistory()
   ) => {
     return render(
@@ -22,14 +24,15 @@ describe('Tabs', () => {
 
   it('renders only the first tab', () => {
     const { queryByText } = renderComponent({
+      defaultActiveIndex: 0,
       children: [
-        <Tab key={1} eventKey={1} title='first'>
+        <Tab key='tab-1' title='first'>
           <h1>First Tab</h1>
         </Tab>,
-        <Tab key={2} eventKey={2} title='second'>
+        <Tab key='tab-2' title='second'>
           <h1>Second Tab</h1>
         </Tab>,
-        <Tab key={3} eventKey={3} title='third'>
+        <Tab key='tab-3' title='third'>
           <h1>Third Tab</h1>
         </Tab>,
       ],
@@ -44,14 +47,15 @@ describe('Tabs', () => {
     const history = createMemoryHistory();
     const { getByText } = renderComponent(
       {
+        defaultActiveIndex: 0,
         children: [
-          <Tab key={1} eventKey='/' title='First tab'>
+          <Tab key='tab-1' path='/' title='First tab'>
             <h1>First Content</h1>
           </Tab>,
-          <Tab key={2} eventKey='/second-tab' title='Second Tab'>
+          <Tab key='tab-2' path='/second-tab' title='Second Tab'>
             <h1>Second Content</h1>
           </Tab>,
-          <Tab key={3} eventKey='/third-tab' title='Third Tab'>
+          <Tab key='tab-3' path='/third-tab' title='Third Tab'>
             <h1>Third Content</h1>
           </Tab>,
         ],

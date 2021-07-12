@@ -315,7 +315,7 @@ class ClusterDetailView extends React.Component {
                 </NotReadyNotice>
               </SlideTransition>
             )}
-            <Tabs useRoutes={true}>
+            <Tabs defaultActiveIndex={0} useRoutes={true}>
               <Tab path={tabsPaths.Home} title='General'>
                 {isV5Cluster ? (
                   <V5ClusterDetailTable

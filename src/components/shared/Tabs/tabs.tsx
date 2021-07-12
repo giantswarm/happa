@@ -1,6 +1,6 @@
 import { Tabs as GromTabs } from 'grommet';
 import PropTypes from 'prop-types';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 
 interface ITabsProps extends React.ComponentPropsWithoutRef<typeof GromTabs> {
@@ -38,6 +38,30 @@ const Tabs: React.FC<ITabsProps> = ({
     // Replace the path to the desiredPath.
     history.replace(desiredPath);
   };
+
+  const goToTabByPath = (path: string) => {
+    // If we are not usingRoutes then skip.
+    if (!useRoutes) return;
+
+    // A bit of type narrowing / hinting to satisfy the compiler.
+    const tabs = React.Children.toArray(children);
+
+    let desiredIndex = 0;
+
+    for (let i = 0; i < tabs.length; i++) {
+      const tab = tabs[i] as React.ReactElement;
+
+      if (tab.props.path === path) {
+        desiredIndex = i;
+      }
+    }
+
+    setActiveIndex(desiredIndex);
+  };
+
+  useEffect(() => {
+    goToTabByPath(currentPath);
+  }, []);
 
   return (
     <GromTabs
