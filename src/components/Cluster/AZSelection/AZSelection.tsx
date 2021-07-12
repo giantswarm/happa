@@ -103,7 +103,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
               onChange={onChange}
               value={value}
               uniqueIdentifier={uniqueIdentifier}
-              label='Automatic'
+              label='Automatic selection'
               type={AvailabilityZoneSelection.Automatic}
               baseActionName={baseActionName}
             />
@@ -127,7 +127,7 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
               onChange={onChange}
               value={value}
               uniqueIdentifier={uniqueIdentifier}
-              label='Manual'
+              label='Manual selection'
               type={AvailabilityZoneSelection.Manual}
               baseActionName={baseActionName}
             />

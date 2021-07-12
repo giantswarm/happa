@@ -95,11 +95,7 @@ const CreateClusterControlPlaneNodeAZs: React.FC<ICreateClusterControlPlaneNodeA
   }, [azSelector, manualZones, manualZonesIsValid]);
 
   return (
-    <InputGroup
-      htmlFor={id}
-      label='Control plane node availability zone selection'
-      {...props}
-    >
+    <InputGroup htmlFor={id} label='Control plane availability zone' {...props}>
       <AZSelection
         variant={AZSelectionVariants.Master}
         baseActionName={RUMActions.SelectMasterAZSelection}

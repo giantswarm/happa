@@ -247,7 +247,7 @@ class CreateNodePoolsCluster extends Component {
                 onChange={this.updateMasterNodesHighAvailability}
               />
             ) : (
-              <InputGroup label='Master node availability zones selection'>
+              <InputGroup label='Master node availability zones'>
                 <AZSelection
                   variant={AZSelectionVariants.Master}
                   baseActionName={RUMActions.SelectMasterAZSelection}
