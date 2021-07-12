@@ -4,11 +4,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Tab, Tabs } from 'shared/Tabs';
 import styled from 'styled-components';
+import theme from 'styles/theme';
+
+const StyledTabs = styled(Tabs)`
+  border: 1px #fff dashed;
+  border-color: ${({ theme: t }) => t.global.colors['background-front'].dark};
+  background-color: ${({ theme: t }) =>
+    t.global.colors['background-front'].dark};
+
+  padding: 15px 18px;
+  border-radius: 8px;
+`;
 
 const StyledTab = styled(Tab)`
-  padding: ${({ theme }) => theme.global.edgeSize.medium};
-  background: ${({ theme }) => theme.global.colors['background-front'].dark};
-  border-radius: ${({ theme }) => theme.rounding}px;
+  border-bottom: 0px;
 `;
 
 interface IGettingStartedPlatformTabsProps
@@ -25,13 +34,15 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
   ...props
 }) => {
   const { selectedPlatform, setSelectedPlatform } = useGettingStartedContext();
+  console.log(selectedPlatform);
 
   return (
     <Box {...props}>
-      <Tabs
+      <StyledTabs
         defaultActiveIndex={selectedPlatform as never}
-        activeIndex={selectedPlatform}
-        onSelect={setSelectedPlatform as never}
+        controlledActiveIndex={selectedPlatform}
+        onActive={setSelectedPlatform as never}
+        backgroundColor={theme.global.colors['background-front'].dark}
       >
         {linuxContent && <StyledTab title='Linux'>{linuxContent}</StyledTab>}
 
@@ -40,7 +51,7 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
         {windowsContent && (
           <StyledTab title='Windows'>{windowsContent}</StyledTab>
         )}
-      </Tabs>
+      </StyledTabs>
     </Box>
   );
 };

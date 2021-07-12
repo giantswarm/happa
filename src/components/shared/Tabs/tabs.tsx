@@ -15,20 +15,30 @@ const ActiveTabWrapper = styled('div')`
 
 interface ITabsProps extends React.ComponentPropsWithoutRef<typeof GromTabs> {
   defaultActiveIndex: number;
+  controlledActiveIndex?: number;
   children: ReactNode;
   useRoutes?: boolean;
+
+  // This is to override the background color that the tab
+  // is intended to be shown on. It is used primarily in the getting started guide
+  // where the tabs need to be on top of a lighter background.
+  backgroundColor?: string;
 }
 
 const Tabs: React.FC<ITabsProps> = ({
   defaultActiveIndex,
+  controlledActiveIndex,
   children,
+  backgroundColor,
   useRoutes,
   ...props
 }) => {
   const history = useHistory();
   const { pathname: currentPath } = useLocation();
 
-  const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
+  const [activeIndex, setActiveIndex] = useState(
+    controlledActiveIndex || defaultActiveIndex
+  );
 
   const handleTabChange = (index: number) => {
     // Set the active index so the grommet tab updates to the right page.
@@ -70,6 +80,12 @@ const Tabs: React.FC<ITabsProps> = ({
   };
 
   useEffect(() => {
+    if (typeof controlledActiveIndex === 'number') {
+      handleTabChange(controlledActiveIndex);
+    }
+  }, [controlledActiveIndex]);
+
+  useEffect(() => {
     goToTabByPath(currentPath);
   }, []);
 
@@ -85,7 +101,9 @@ const Tabs: React.FC<ITabsProps> = ({
         if (React.isValidElement(Tab)) {
           if (i === activeIndex) {
             return (
-              <ActiveTabWrapper>
+              <ActiveTabWrapper
+                style={{ borderBottom: `1px solid ${backgroundColor}` }}
+              >
                 {React.cloneElement(Tab, { plain: true })}
               </ActiveTabWrapper>
             );
@@ -103,7 +121,9 @@ const Tabs: React.FC<ITabsProps> = ({
 Tabs.propTypes = {
   children: PropTypes.node,
   defaultActiveIndex: PropTypes.number.isRequired,
+  controlledActiveIndex: PropTypes.number,
   useRoutes: PropTypes.bool,
+  backgroundColor: PropTypes.string,
 };
 
 Tabs.defaultProps = {
