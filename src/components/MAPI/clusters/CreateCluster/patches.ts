@@ -1,5 +1,6 @@
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 
 export type ClusterPatch = (
   cluster: Cluster,
@@ -23,9 +24,9 @@ export interface IClusterPropertyProps {
 }
 
 export function withClusterReleaseVersion(newVersion: string): ClusterPatch {
-  return (nodePool, providerCluster, controlPlaneNode) => {
-    nodePool.metadata.labels ??= {};
-    nodePool.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
+  return (cluster, providerCluster, controlPlaneNode) => {
+    cluster.metadata.labels ??= {};
+    cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
 
     providerCluster.metadata.labels ??= {};
     providerCluster.metadata.labels[
@@ -45,5 +46,12 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
     cluster.metadata.annotations[
       capiv1alpha3.annotationClusterDescription
     ] = newDescription;
+  };
+}
+
+export function withClusterControlPlaneNodeAZs(zones?: string[]): ClusterPatch {
+  return (_, _p, controlPlaneNode) => {
+    if (controlPlaneNode.kind === capzv1alpha3.AzureMachine)
+      controlPlaneNode.spec!.failureDomain = zones?.[0];
   };
 }

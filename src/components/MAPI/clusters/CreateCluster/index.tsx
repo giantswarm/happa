@@ -30,8 +30,10 @@ import {
   createDefaultProviderCluster,
   findLatestReleaseVersion,
 } from '../utils';
-import WorkerNodesCreateClusterDescription from './CreateClusterDescription';
+import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
+import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
+import CreateClusterRelease from './CreateClusterRelease';
 import {
   ClusterPatch,
   IClusterPropertyValue,
@@ -41,6 +43,8 @@ import {
 enum ClusterPropertyField {
   Name,
   Description,
+  Release,
+  ControlPlaneNodeAZs,
 }
 
 interface IApplyPatchAction {
@@ -112,6 +116,8 @@ function makeInitialState(
     validationResults: {
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
+      [ClusterPropertyField.Release]: true,
+      [ClusterPropertyField.ControlPlaneNodeAZs]: true,
     },
     isCreating: false,
     latestRelease: '',
@@ -277,7 +283,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
             as='form'
             onSubmit={handleCreation}
             width={{ max: '100%', width: 'large' }}
-            gap='small'
+            gap='medium'
             margin='auto'
           >
             <CreateClusterName
@@ -287,7 +293,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               controlPlaneNode={state.controlPlaneNode}
               onChange={handleChange(ClusterPropertyField.Name)}
             />
-            <WorkerNodesCreateClusterDescription
+            <CreateClusterDescription
               id={`cluster-${ClusterPropertyField.Description}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
@@ -295,27 +301,43 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               onChange={handleChange(ClusterPropertyField.Description)}
               autoFocus={true}
             />
-            <Box direction='row' margin={{ top: 'medium' }}>
-              <Button
-                bsStyle='primary'
-                disabled={!isValid}
-                type='submit'
-                loading={state.isCreating}
-              >
-                Create cluster
-              </Button>
-
-              {!state.isCreating && (
-                <Button bsStyle='default' onClick={handleCancel}>
-                  Cancel
-                </Button>
-              )}
-            </Box>
+            <CreateClusterRelease
+              id={`cluster-${ClusterPropertyField.Release}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNode={state.controlPlaneNode}
+              onChange={handleChange(ClusterPropertyField.Release)}
+            />
+            <CreateClusterControlPlaneNodeAZs
+              id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNode={state.controlPlaneNode}
+              onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
+            />
             <Box margin={{ top: 'medium' }}>
-              <Text color='text-weak'>
-                Note that it takes around 30 minutes on average until a new
-                cluster is fully available.
-              </Text>
+              <Box direction='row'>
+                <Button
+                  bsStyle='primary'
+                  disabled={!isValid}
+                  type='submit'
+                  loading={state.isCreating}
+                >
+                  Create cluster
+                </Button>
+
+                {!state.isCreating && (
+                  <Button bsStyle='default' onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
+              <Box margin={{ top: 'medium' }}>
+                <Text color='text-weak'>
+                  It will take around 15 minutes for the control plane to become
+                  available.
+                </Text>
+              </Box>
             </Box>
           </Box>
         </Box>

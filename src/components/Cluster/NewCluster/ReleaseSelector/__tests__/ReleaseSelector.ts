@@ -41,47 +41,22 @@ const mockReleases: IReleases = {
   },
 };
 
-const mockSortedReleaseVersions = Object.keys(mockReleases);
-
 const defaultProps = {
   selectRelease: () => {},
-  selectedRelease: mockSortedReleaseVersions[1],
-};
-
-const defaultStoreState = {
-  entities: {
-    releases: {
-      isFetching: false,
-      items: mockReleases,
-      sortedVersions: mockSortedReleaseVersions,
-    },
-  },
+  selectedRelease: '1000.0.0',
+  releases: mockReleases,
 };
 
 describe('ReleaseSelector', () => {
   it('renders without crashing', () => {
-    renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps },
-      { ...defaultStoreState }
-    );
+    renderWithStore(ReleaseSelector, { ...defaultProps });
   });
 
   it('renders an empty state', () => {
-    renderWithStore(
-      ReleaseSelector,
-      {
-        ...defaultProps,
-      },
-      {
-        ...defaultStoreState,
-        ...{
-          entities: {
-            releases: { isFetching: false, items: {}, sortedVersions: [] },
-          },
-        },
-      }
-    );
+    renderWithStore(ReleaseSelector, {
+      ...defaultProps,
+      releases: {},
+    });
 
     expect(
       screen.getByText(
@@ -91,19 +66,16 @@ describe('ReleaseSelector', () => {
   });
 
   it('renders the currently selected version & k8s version', () => {
-    renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps },
-      { ...defaultStoreState }
-    );
+    const version = '1000.0.0';
 
-    expect(screen.getByText(mockSortedReleaseVersions[1])).toBeInTheDocument();
+    renderWithStore(ReleaseSelector, { ...defaultProps });
+
+    expect(screen.getByText(version)).toBeInTheDocument();
     expect(screen.getByText(/This release contains:/i)).toBeInTheDocument();
     expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
     expect(
       screen.getByText(
-        mockReleases[mockReleases[mockSortedReleaseVersions[1]].version]
-          .kubernetesVersion as string
+        mockReleases[mockReleases[version].version].kubernetesVersion as string
       )
     ).toBeInTheDocument();
   });
@@ -111,11 +83,7 @@ describe('ReleaseSelector', () => {
   const tableHeadings = [/Version/i, /Released/i, /Components/i, /Notes/i];
 
   it('renders initial state collapsed', () => {
-    renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps },
-      { ...defaultStoreState }
-    );
+    renderWithStore(ReleaseSelector, { ...defaultProps });
 
     expect(screen.getByText(/Available releases/i)).toBeInTheDocument();
     // Table headings
@@ -125,11 +93,7 @@ describe('ReleaseSelector', () => {
   });
 
   it('renders expanded once clicked', () => {
-    const { container } = renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps },
-      { ...defaultStoreState }
-    );
+    const { container } = renderWithStore(ReleaseSelector, { ...defaultProps });
 
     const clickTarget = screen.getByText(/Available releases/i);
     expect(clickTarget).toBeInTheDocument();
@@ -146,7 +110,7 @@ describe('ReleaseSelector', () => {
 
     const table = container.querySelector('table');
 
-    for (const release of mockSortedReleaseVersions) {
+    for (const release of Object.keys(mockReleases)) {
       expect(
         within(table as HTMLTableElement).getByText(release)
       ).toBeInTheDocument();
@@ -160,11 +124,7 @@ describe('ReleaseSelector', () => {
   });
 
   it('renders expanded components once clicked', () => {
-    renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps },
-      { ...defaultStoreState }
-    );
+    renderWithStore(ReleaseSelector, { ...defaultProps });
 
     fireEvent.click(screen.getByText(/Available releases/i));
 
@@ -183,15 +143,14 @@ describe('ReleaseSelector', () => {
   it('allows to select a release', () => {
     const selectReleaseCallbackMock = jest.fn();
 
-    const { rerender } = renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps, selectRelease: selectReleaseCallbackMock },
-      { ...defaultStoreState }
-    );
+    const { rerender } = renderWithStore(ReleaseSelector, {
+      ...defaultProps,
+      selectRelease: selectReleaseCallbackMock,
+    });
 
     fireEvent.click(screen.getByText(/Available releases/i));
 
-    const versionToSelect = mockSortedReleaseVersions[1];
+    const versionToSelect = '1000.0.0';
     fireEvent.click(
       screen.getByTitle(new RegExp(`Select release ${versionToSelect}`, 'i'))
     );
@@ -199,15 +158,11 @@ describe('ReleaseSelector', () => {
     expect(selectReleaseCallbackMock).toBeCalledWith(versionToSelect);
 
     rerender(
-      getComponentWithStore(
-        ReleaseSelector,
-        {
-          ...defaultProps,
-          selectRelease: selectReleaseCallbackMock,
-          selectedRelease: versionToSelect,
-        },
-        { ...defaultStoreState }
-      )
+      getComponentWithStore(ReleaseSelector, {
+        ...defaultProps,
+        selectRelease: selectReleaseCallbackMock,
+        selectedRelease: versionToSelect,
+      })
     );
 
     // Collapse
@@ -222,14 +177,7 @@ describe('ReleaseSelector', () => {
   });
 
   it('shows a notice to admin users indicating inactive versions', () => {
-    renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps },
-      {
-        ...defaultStoreState,
-        ...{ main: { loggedInUser: { isAdmin: true } } },
-      }
-    );
+    renderWithStore(ReleaseSelector, { ...defaultProps, isAdmin: true });
 
     fireEvent.click(screen.getByText(/Available releases/i));
 
@@ -241,61 +189,54 @@ describe('ReleaseSelector', () => {
   });
 
   it('has a caret icon if the selector is collapsible', () => {
-    const { rerender } = renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps, collapsible: true },
-      { ...defaultStoreState }
-    );
+    const { rerender } = renderWithStore(ReleaseSelector, {
+      ...defaultProps,
+      collapsible: true,
+    });
     expect(screen.getByLabelText(/toggle/i)).toBeInTheDocument();
 
     rerender(
-      getComponentWithStore(
-        ReleaseSelector,
-        { ...defaultProps, collapsible: false },
-        { ...defaultStoreState }
-      )
+      getComponentWithStore(ReleaseSelector, {
+        ...defaultProps,
+        collapsible: false,
+      })
     );
     expect(screen.queryByLabelText(/toggle/i)).not.toBeInTheDocument();
   });
 
   it('can filter releases based on a provided filter function', () => {
+    const version = '1000.0.0';
+    const releaseVersions = Object.keys(mockReleases);
+
     const filterFn = jest.fn((currentRelease) => {
-      return currentRelease === mockSortedReleaseVersions[1];
+      return currentRelease === version;
     });
 
-    renderWithStore(
-      ReleaseSelector,
-      { ...defaultProps, versionFilter: filterFn, collapsible: false },
-      { ...defaultStoreState }
-    );
+    renderWithStore(ReleaseSelector, {
+      ...defaultProps,
+      versionFilter: filterFn,
+      collapsible: false,
+    });
 
     expect(filterFn).toBeCalled();
 
     // Skip the first 2 versions.
-    for (let i = 2; i < mockSortedReleaseVersions.length; i++) {
-      expect(
-        screen.queryByText(mockSortedReleaseVersions[i])
-      ).not.toBeInTheDocument();
+    for (let i = 2; i < releaseVersions.length; i++) {
+      expect(screen.queryByText(releaseVersions[i])).not.toBeInTheDocument();
     }
   });
 
   it('automatically selects the newest active version when automatic selection is enabled', () => {
     const mockSelectReleaseFn = jest.fn();
 
-    renderWithStore(
-      ReleaseSelector,
-      {
-        ...defaultProps,
-        collapsible: false,
-        autoSelectLatest: true,
-        selectedRelease: '',
-        selectRelease: mockSelectReleaseFn,
-      },
-      { ...defaultStoreState }
-    );
+    renderWithStore(ReleaseSelector, {
+      ...defaultProps,
+      collapsible: false,
+      autoSelectLatest: true,
+      selectedRelease: '',
+      selectRelease: mockSelectReleaseFn,
+    });
 
-    expect(mockSelectReleaseFn).toHaveBeenCalledWith(
-      mockSortedReleaseVersions[1]
-    );
+    expect(mockSelectReleaseFn).toHaveBeenCalledWith('1000.0.0');
   });
 });

@@ -19,13 +19,13 @@ function validateValue(newValue: string): string {
   return message;
 }
 
-interface IWorkerNodesCreateClusterDescriptionProps
+interface ICreateClusterDescriptionProps
   extends IClusterPropertyProps,
     Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
   autoFocus?: boolean;
 }
 
-const WorkerNodesCreateClusterDescription: React.FC<IWorkerNodesCreateClusterDescriptionProps> = ({
+const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
   id,
   cluster,
   onChange,
@@ -76,7 +76,7 @@ const WorkerNodesCreateClusterDescription: React.FC<IWorkerNodesCreateClusterDes
   );
 };
 
-WorkerNodesCreateClusterDescription.propTypes = {
+CreateClusterDescription.propTypes = {
   id: PropTypes.string.isRequired,
   cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
   onChange: PropTypes.func.isRequired,
@@ -85,4 +85,4 @@ WorkerNodesCreateClusterDescription.propTypes = {
   autoFocus: PropTypes.bool,
 };
 
-export default WorkerNodesCreateClusterDescription;
+export default CreateClusterDescription;

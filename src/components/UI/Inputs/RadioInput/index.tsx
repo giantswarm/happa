@@ -33,7 +33,7 @@ interface IRadioInputProps
   /**
    * Props to be passed to the form field.
    */
-  formFieldProps?: FormFieldProps & { className?: string };
+  formFieldProps?: FormFieldProps & { className?: string; tabIndex?: number };
   /**
    * Whether the input is required or not.
    */

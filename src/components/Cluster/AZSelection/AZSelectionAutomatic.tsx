@@ -37,7 +37,7 @@ const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
   if (variant === AZSelectionVariants.Master) {
     return (
       <Text>
-        An Availabilty Zone will be automatically chosen from the existing ones.
+        An availabilty zone will be automatically chosen from the existing ones.
       </Text>
     );
   }
