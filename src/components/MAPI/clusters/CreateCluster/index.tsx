@@ -334,8 +334,8 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               </Box>
               <Box margin={{ top: 'medium' }}>
                 <Text color='text-weak'>
-                  Note that it takes around 30 minutes on average until a new
-                  cluster is fully available.
+                  It will take around 15 minutes for the control plane to become
+                  available.
                 </Text>
               </Box>
             </Box>
