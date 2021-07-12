@@ -118,7 +118,6 @@ export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
   },
   spec: {
     location: 'westeurope',
-    failureDomain: '2',
     identity: 'None',
     image: {
       marketplace: {

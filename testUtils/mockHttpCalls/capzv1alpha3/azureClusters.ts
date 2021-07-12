@@ -25,7 +25,7 @@ export const randomAzureCluster1: capzv1alpha3.IAzureCluster = {
     uid: 'a4eeba9e-6a58-4151-b8ad-d1389ae1e223',
   },
   spec: {
-    contronPlaneEndpoint: {
+    controlPlaneEndpoint: {
       host: '',
       port: 443,
     },
@@ -117,7 +117,7 @@ export const randomCluster2: capzv1alpha3.IAzureCluster = {
     uid: 'a4eeba9e-6a58-4151-b8ad-d1389ae1e223',
   },
   spec: {
-    contronPlaneEndpoint: {
+    controlPlaneEndpoint: {
       host: '',
       port: 443,
     },
@@ -209,7 +209,7 @@ export const randomCluster3: capzv1alpha3.IAzureCluster = {
     uid: 'a4eeba9e-6a58-4151-b8ad-d1389ae1e223',
   },
   spec: {
-    contronPlaneEndpoint: {
+    controlPlaneEndpoint: {
       host: '',
       port: 443,
     },
