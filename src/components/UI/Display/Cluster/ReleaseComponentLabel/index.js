@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import ValueLabel from 'UI/Display/ValueLabel';
+import Truncated from 'UI/Util/Truncated';
 
 const OldVersion = styled.span`
   color: ${(p) => p.theme.colors.redOld};
@@ -22,24 +23,30 @@ const VersionLabel = (props) => {
   if (oldVersion) {
     return (
       <>
-        <OldVersion aria-label={`version ${oldVersion}`}>
+        <Truncated as={OldVersion} aria-label={`version ${oldVersion}`}>
           {oldVersion}
-        </OldVersion>
+        </Truncated>
         <ChangeArrow aria-label='is upgraded to'>➞</ChangeArrow>
-        <NewVersion aria-label={`version ${newVersion}`}>
+        <Truncated as={NewVersion} aria-label={`version ${newVersion}`}>
           {newVersion}
-        </NewVersion>
+        </Truncated>
       </>
     );
   } else if (isRemoved) {
     return 'removed';
   } else if (isAdded) {
     return (
-      <span aria-label={`version ${newVersion}`}>{newVersion} (added)</span>
+      <Truncated as='span' aria-label={`version ${newVersion}`}>
+        {newVersion} (added)
+      </Truncated>
     );
   }
 
-  return <span aria-label={`version ${newVersion}`}>{newVersion}</span>;
+  return (
+    <Truncated as='span' aria-label={`version ${newVersion}`}>
+      {newVersion}
+    </Truncated>
+  );
 };
 
 VersionLabel.propTypes = {
