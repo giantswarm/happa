@@ -839,6 +839,27 @@ const theme = deepMerge(generate(16), {
       small: '16px',
     },
   },
+  tabs: {
+    header: {
+      extend: {
+        borderBottom: '1px solid #fff',
+        marginBottom: '22px',
+      },
+    },
+    extend: {},
+  },
+  tab: {
+    extend: {
+      padding: '10px 15px',
+      border: '1px',
+      borderTopRightRadius: '5px',
+      borderTopLeftRadius: '5px',
+      margin: '0px',
+      marginRight: '2px',
+      position: 'relative',
+      top: '1px',
+    },
+  },
   table: {
     row: {
       hover: {

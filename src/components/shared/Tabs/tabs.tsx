@@ -2,6 +2,16 @@ import { Tabs as GromTabs } from 'grommet';
 import PropTypes from 'prop-types';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
+import styled from 'styled-components';
+
+const ActiveTabWrapper = styled('div')`
+  border: 1px solid #fff;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.darkBlue};
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  position: relative;
+  top: 1px;
+`;
 
 interface ITabsProps extends React.ComponentPropsWithoutRef<typeof GromTabs> {
   defaultActiveIndex: number;
@@ -68,9 +78,24 @@ const Tabs: React.FC<ITabsProps> = ({
       activeIndex={activeIndex}
       onActive={handleTabChange as never}
       id='tabs'
+      justify='start'
       {...props}
     >
-      {children}
+      {React.Children.map(children, (Tab, i) => {
+        if (React.isValidElement(Tab)) {
+          if (i === activeIndex) {
+            return (
+              <ActiveTabWrapper>
+                {React.cloneElement(Tab, { plain: true })}
+              </ActiveTabWrapper>
+            );
+          }
+
+          return React.cloneElement(Tab, { plain: true });
+        }
+
+        return null;
+      })}
     </GromTabs>
   );
 };
