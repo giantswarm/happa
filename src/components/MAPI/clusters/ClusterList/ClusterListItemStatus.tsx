@@ -67,7 +67,7 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       iconClassName = 'fa fa-change-in-progress';
       message = 'Cluster creating…';
       tooltip =
-        'The cluster is currently creating. This step usually takes about 30 minutes.';
+        'The cluster is currently creating. This step usually takes about 15 minutes.';
       break;
 
     case isUpgrading:
@@ -89,7 +89,7 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       overlay={<Tooltip id='tooltip'>{tooltip}</Tooltip>}
       placement='top'
     >
-      <Box aria-label='Cluster status'>
+      <Box>
         <Text color={color}>
           <i className={iconClassName} role='presentation' aria-hidden='true' />{' '}
           {message}
