@@ -21,9 +21,10 @@ function validateValue(newValue: string): string {
 
 interface ICreateClusterDescriptionProps
   extends IClusterPropertyProps,
-    Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
-  autoFocus?: boolean;
-}
+    Omit<
+      React.ComponentPropsWithoutRef<typeof InputGroup>,
+      'onChange' | 'id'
+    > {}
 
 const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
   id,

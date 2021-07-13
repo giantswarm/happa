@@ -131,6 +131,7 @@ function AvailabilityZonesLabel({
           bgColor={color}
           onClick={toggleChecked}
           tabIndex={0}
+          aria-label={`Availability zone ${value}`}
         >
           {label}
         </Wrapper>
