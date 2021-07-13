@@ -8,7 +8,7 @@ exports[`RadioInput renders a disabled input 1`] = `
     class="sc-iCoGMd hFJToB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-ByBTK eRdTXy"
+      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-lfRxJW drifBB"
       tabindex="0"
     >
       <div
@@ -52,7 +52,7 @@ exports[`RadioInput renders a simple input 1`] = `
     class="sc-iCoGMd hFJToB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-ByBTK eRdTXy"
+      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-lfRxJW drifBB"
       tabindex="0"
     >
       <div
@@ -94,7 +94,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
     class="sc-iCoGMd hFJToB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-ByBTK eRdTXy"
+      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-lfRxJW drifBB"
       tabindex="0"
     >
       <label
@@ -144,7 +144,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
     class="sc-iCoGMd hFJToB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-ByBTK eRdTXy"
+      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-lfRxJW drifBB"
       tabindex="0"
     >
       <span
@@ -191,7 +191,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
     class="sc-iCoGMd hFJToB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-ByBTK eRdTXy"
+      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-lfRxJW drifBB"
       tabindex="0"
     >
       <div
@@ -238,7 +238,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
     class="sc-iCoGMd hFJToB"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-ByBTK eRdTXy"
+      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz sc-lfRxJW drifBB"
       tabindex="0"
     >
       <div
