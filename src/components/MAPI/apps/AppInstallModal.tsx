@@ -358,7 +358,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                 title={
                   <>
                     {`Install ${props.chartName} on`}{' '}
-                    <ClusterIDLabel clusterID={clusterID} />
+                    <ClusterIDLabel clusterID={clusterID!} />
                   </>
                 }
                 visible={visible}
