@@ -32,10 +32,18 @@ import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
-      return 'Node pool VM size';
+      return `VM size: ${getProviderNodePoolMachineType(providerNodePool)}`;
     default:
       return undefined;
   }
+}
+
+function formatAvailabilityZonesLabel(zones: string[]) {
+  if (zones.length < 1) {
+    return 'Availability zones: not available';
+  }
+
+  return `Availability zones: ${zones.join(', ')}`;
 }
 
 const Row = styled(Box)<{ additionalColumnsCount?: number }>`
@@ -205,7 +213,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
           >
             {(value) => (
               <Copyable copyText={value as string}>
-                <Text aria-label='Node pool name'>
+                <Text aria-label={`Name: ${value}`}>
                   <Code>{value}</Code>
                 </Text>
               </Copyable>
@@ -230,7 +238,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                   value={value as string}
                   typeLabel='node pool'
                   onToggleEditingState={setIsEditingDescription}
-                  aria-label='Node pool description'
+                  aria-label={`Description: ${value}`}
                   onSave={updateDescription}
                   ref={viewAndEditNameRef}
                 />
@@ -258,7 +266,12 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 loaderHeight={26}
               >
                 {(value) => (
-                  <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+                  <Box
+                    direction='row'
+                    aria-label={formatAvailabilityZonesLabel(value as string[])}
+                  >
+                    <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+                  </Box>
                 )}
               </ClusterDetailWidgetOptionalValue>
             </Box>
@@ -269,7 +282,9 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               >
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text aria-label='Node pool autoscaler minimum node count'>
+                    <Text
+                      aria-label={`Autoscaler minimum node count: ${value}`}
+                    >
                       {value}
                     </Text>
                   </Box>
@@ -283,7 +298,9 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               >
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text aria-label='Node pool autoscaler maximum node count'>
+                    <Text
+                      aria-label={`Autoscaler maximum node count: ${value}`}
+                    >
                       {value}
                     </Text>
                   </Box>
@@ -297,7 +314,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               >
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text aria-label='Node pool autoscaler target node count'>
+                    <Text aria-label={`Autoscaler target node count: ${value}`}>
                       {value}
                     </Text>
                   </Box>
@@ -318,7 +335,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     }
                   >
                     <Text
-                      aria-label='Node pool autoscaler current node count'
+                      aria-label={`Autoscaler current node count: ${value}`}
                       color={isScalingInProgress ? 'background' : undefined}
                     >
                       {value}

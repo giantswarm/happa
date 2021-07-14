@@ -40,7 +40,7 @@ import WorkerNodesNodePoolItem from './WorkerNodesNodePoolItem';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
 
-function getAdditionalColumns(
+export function getAdditionalColumns(
   provider: PropertiesOf<typeof Providers>
 ): IWorkerNodesAdditionalColumn[] {
   if (provider === Providers.AZURE) {

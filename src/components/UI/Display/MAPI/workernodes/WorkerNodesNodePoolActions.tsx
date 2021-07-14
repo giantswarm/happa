@@ -49,6 +49,7 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
             onClick={onClickHandler}
             onKeyDown={onKeyDownHandler}
             type='button'
+            aria-label='Actions'
           >
             &bull;&bull;&bull;
           </StyledDropdownTrigger>
@@ -59,7 +60,7 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
               onSpace={handleListKeyDown}
               onEnter={handleListKeyDown}
             >
-              <List aria-label='Node pool actions' role='menu'>
+              <List role='menu'>
                 {onRenameClick && (
                   <li>
                     <Link

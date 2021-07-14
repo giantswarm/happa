@@ -61,7 +61,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
           }
           placement='top'
         >
-          <Text aria-label='Node pool spot virtual machines status'>
+          <Text>
             <i
               role='presentation'
               className={featureEnabled ? 'fa fa-done' : 'fa fa-close'}
