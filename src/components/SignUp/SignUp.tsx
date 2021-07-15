@@ -11,12 +11,96 @@ import { bindActionCreators } from 'redux';
 import { Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as mainActions from 'stores/main/actions';
+import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
 
 import StatusMessage from './StatusMessage';
 import TermsOfService from './TermsOfService';
+
+const Wrapper = styled('div')`
+  position: relative;
+  margin: auto;
+  margin-top: 50px;
+  text-align: left;
+  max-width: 600px;
+
+  > h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  p.subtitle {
+    font-size: 22px;
+    margin-top: 0px;
+  }
+
+  .loader {
+    width: 25px;
+    height: 25px;
+  }
+
+  #passwordConfirmationGroup,
+  #passwordGroup,
+  #TOSGroup {
+    max-height: 0;
+    overflow-y: hidden;
+    transition-property: all;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  }
+
+  .step-1,
+  .step-2,
+  .step-3 {
+    #passwordGroup {
+      max-height: 500px;
+    }
+  }
+
+  .step-2,
+  .step-3 {
+    #passwordConfirmationGroup {
+      max-height: 500px;
+    }
+  }
+
+  .step-3 {
+    #TOSGroup {
+      max-height: 500px;
+    }
+  }
+
+  .signup--status {
+    text-align: center;
+  }
+
+  .signup--status-text {
+    font-family: Inconsolata, monospace;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #333333;
+    border: 0px;
+    padding: 8px 12px;
+    font-weight: 400;
+    outline: 0;
+    color: #fff;
+    margin-bottom: 30px;
+    color: #f0f0f0;
+    border-radius: 4px;
+    text-align: left;
+
+    .success {
+      color: #23c451;
+    }
+
+    .error {
+      color: #fc1e70;
+      background-color: transparent;
+    }
+  }
+`;
 
 const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
@@ -368,7 +452,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
 
   render() {
     return (
-      <div className='signup--container'>
+      <Wrapper>
         <h1>Create Your Giant Swarm Account</h1>
 
         <form
@@ -432,7 +516,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
             ''
           )}
         </form>
-      </div>
+      </Wrapper>
     );
   }
 }
