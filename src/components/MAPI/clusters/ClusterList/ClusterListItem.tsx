@@ -221,7 +221,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
           <Box>
             <ClusterListItemOptionalValue value={name}>
               {(value) => (
-                <Text size='large' aria-label='Cluster name'>
+                <Text size='large' aria-label={`Name: ${value}`}>
                   <ClusterIDLabel
                     clusterID={value as string}
                     copyEnabled={true}
@@ -237,7 +237,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                   <Text
                     weight='bold'
                     size='large'
-                    aria-label='Cluster description'
+                    aria-label={`Description: ${value}`}
                   >
                     {value}
                   </Text>
@@ -255,7 +255,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
             </Box>
 
             {isDeleting ? (
-              <Text color='text-xweak' aria-label='Cluster deletion date'>
+              <Text color='text-xweak'>
                 Deleted {relativeDate(deletionDate)}
               </Text>
             ) : (

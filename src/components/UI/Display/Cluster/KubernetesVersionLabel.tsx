@@ -59,10 +59,16 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
         onMouseLeave={tryToToggleTooltip(false)}
         onFocus={tryToToggleTooltip(true)}
         onBlur={tryToToggleTooltip(false)}
+        aria-label={`Kubernetes version: ${versionLabel}`}
       >
         {!hideIcon && (
           <>
-            <i className='fa fa-kubernetes' title='Kubernetes version' />{' '}
+            <i
+              className='fa fa-kubernetes'
+              title='Kubernetes version'
+              role='presentation'
+              aria-hidden={true}
+            />{' '}
           </>
         )}
 
