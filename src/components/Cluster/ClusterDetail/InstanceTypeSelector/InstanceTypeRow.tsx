@@ -1,5 +1,8 @@
 import { Text } from 'grommet';
-import { IInstanceType } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
+import {
+  IInstanceType,
+  useInstanceTypeSelectionLabels,
+} from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -43,6 +46,8 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
   isSelected,
   selectInstanceType,
 }) => {
+  const { singular } = useInstanceTypeSelectionLabels();
+
   const handleTabSelect = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
     // Handle tapping the space bar.
     if (e.key === ' ') {
@@ -58,6 +63,7 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
       role='radio'
       aria-checked={isSelected}
       onKeyDown={handleTabSelect}
+      aria-label={`${singular} ${name}`}
     >
       <TableCell>
         <RUMActionTarget name={RUMActions.SelectInstanceType}>
