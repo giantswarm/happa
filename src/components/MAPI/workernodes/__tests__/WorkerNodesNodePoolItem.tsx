@@ -7,6 +7,7 @@ import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
+import { withMarkup } from 'testUtils/assertUtils';
 import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
 import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -224,19 +225,10 @@ describe('WorkerNodesNodePoolItem', () => {
     ).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Delete t6yo9' }));
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === 'Node pool t6yo9 deleted successfully';
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await withMarkup(screen.findByText)(
+        'Node pool t6yo9 deleted successfully'
+      )
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
@@ -268,19 +260,10 @@ describe('WorkerNodesNodePoolItem', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'OK' }));
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === `Successfully updated the node pool's description`;
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await screen.findByText(
+        `Successfully updated the node pool's description`
+      )
     ).toBeInTheDocument();
   });
 
@@ -312,19 +295,10 @@ describe('WorkerNodesNodePoolItem', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'OK' }));
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === `Successfully updated the node pool's description`;
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await screen.findByText(
+        `Successfully updated the node pool's description`
+      )
     ).toBeInTheDocument();
   });
 
@@ -411,19 +385,10 @@ describe('WorkerNodesNodePoolItem', () => {
 
     fireEvent.click(submitButton);
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === `Node pool t6yo9 updated successfully`;
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await withMarkup(screen.findByText)(
+        'Node pool t6yo9 updated successfully'
+      )
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
