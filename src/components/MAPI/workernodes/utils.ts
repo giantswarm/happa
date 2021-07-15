@@ -105,7 +105,9 @@ export async function deleteNodePool(
           },
         },
       }),
-      produce((draft: capiexpv1alpha3.IMachinePoolList) => {
+      produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
+        if (!draft) return;
+
         for (let i = 0; i < draft.items.length; i++) {
           if (draft.items[i].metadata.name === machinePool.metadata.name) {
             draft.items[i] = machinePool;
@@ -171,7 +173,7 @@ export async function updateNodePoolScaling(
       machinePool
     );
 
-    // Update the deleted machine pool in place.
+    // Update the updated machine pool in place.
     mutate(
       capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
@@ -182,7 +184,9 @@ export async function updateNodePoolScaling(
           },
         },
       }),
-      produce((draft: capiexpv1alpha3.IMachinePoolList) => {
+      produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
+        if (!draft) return;
+
         for (let i = 0; i < draft.items.length; i++) {
           if (draft.items[i].metadata.name === machinePool.metadata.name) {
             draft.items[i] = machinePool;
@@ -190,8 +194,6 @@ export async function updateNodePoolScaling(
         }
 
         draft.items = draft.items.sort(compareNodePools);
-
-        return draft;
       }),
       false
     );
@@ -415,11 +417,11 @@ export async function createNodePool(
           },
         },
       }),
-      produce((draft: capiexpv1alpha3.IMachinePoolList) => {
+      produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
+        if (!draft) return;
+
         draft.items.push(nodePool);
         draft.items = draft.items.sort(compareNodePools);
-
-        return draft;
       }),
       false
     );

@@ -7,7 +7,7 @@ export const randomCluster1MachinePool1: capiexpv1alpha3.IMachinePool = {
     annotations: {
       'cluster.k8s.io/cluster-api-autoscaler-node-group-max-size': '10',
       'cluster.k8s.io/cluster-api-autoscaler-node-group-min-size': '3',
-      'machine-pool.giantswarm.io/name': 'Unnamed node pool',
+      'machine-pool.giantswarm.io/name': 'Some node pool',
       'release.giantswarm.io/last-deployed-version': '14.1.5',
     },
     creationTimestamp: '2021-04-27T16:07:38Z',
