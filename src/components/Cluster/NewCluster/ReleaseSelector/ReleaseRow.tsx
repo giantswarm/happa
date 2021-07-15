@@ -82,6 +82,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         aria-checked={isSelected}
         onClick={() => selectRelease(version)}
         onKeyDown={handleTabSelect}
+        aria-label={`Release version ${version}`}
       >
         <TableCell>
           <RUMActionTarget name={RUMActions.SelectRelease}>

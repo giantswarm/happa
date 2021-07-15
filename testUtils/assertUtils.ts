@@ -1,23 +1,29 @@
-import { MatcherFunction, Nullish } from '@testing-library/react';
+import {
+  BoundFunction,
+  Nullish,
+  Queries,
+  queries,
+} from '@testing-library/react';
 
-type Query = (matcher: MatcherFunction) => HTMLElement;
+type BoundQuery<Q extends Queries = typeof queries> = BoundFunction<Q[keyof Q]>;
 
 /**
  * Decorate an existing query to match text across multiple
  * elements.
  * @param query
  */
-export function withMarkup(query: Query) {
+export function withMarkup<T extends BoundQuery>(query: T) {
   return (text: string) => {
     return query((_, node: Nullish<Element>) => {
       if (!node) return false;
 
       const hasText = (n: Element) => n.textContent === text;
-      const hasTextInChildren = Array.from(node.children).some((child) =>
-        hasText(child)
-      );
+      if (!hasText(node)) return false;
 
-      return hasText(node) && !hasTextInChildren;
+      const hasTextInChildren = Array.from(node.children).some(hasText);
+      if (hasTextInChildren) return false;
+
+      return true;
     });
   };
 }

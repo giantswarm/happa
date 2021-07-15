@@ -23,7 +23,10 @@ const CreateClusterName: React.FC<ICreateClusterNameProps> = ({
       <Text size='large' weight='bold'>
         Name
       </Text>
-      <ClusterIDLabel clusterID={cluster.metadata.name} />
+      <ClusterIDLabel
+        clusterID={cluster.metadata.name}
+        aria-label={`Cluster name: ${cluster.metadata.name}`}
+      />
     </Box>
   );
 };

@@ -35,17 +35,26 @@ const Wrapper = styled.span`
   }
 `;
 
-const Label = styled.span`
+const Label = styled.span<{ clusterID: string }>`
   background-color: ${(props) => colorHash.calculateColor(props.clusterID)};
   font-family: ${(props) => props.theme.fontFamilies.console};
   padding: 0.2em 0.4em;
   border-radius: 0.2em;
 `;
 
-const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
+interface IClusterIDLabelProps extends React.ComponentPropsWithoutRef<'span'> {
+  clusterID: string;
+  copyEnabled?: boolean;
+}
+
+const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
+  clusterID,
+  copyEnabled,
+  ...props
+}) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
-  const copyToClipboard = (e) => {
+  const copyToClipboard = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -72,15 +81,15 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
     </Label>
   );
 
-  const handleOnFocusKeyDown = (e) => {
+  const handleOnFocusKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     e.preventDefault();
 
-    e.target.click();
+    (e.target as HTMLElement).click();
   };
 
   return (
     <Keyboard onSpace={handleOnFocusKeyDown} onEnter={handleOnFocusKeyDown}>
-      <Wrapper onMouseLeave={() => setClipboardContent(null)}>
+      <Wrapper onMouseLeave={() => setClipboardContent(null)} {...props}>
         {labelComponent}
 
         {copyEnabled &&
@@ -110,7 +119,7 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
 };
 
 ClusterIDLabel.propTypes = {
-  clusterID: PropTypes.string,
+  clusterID: PropTypes.string.isRequired,
   copyEnabled: PropTypes.bool,
 };
 

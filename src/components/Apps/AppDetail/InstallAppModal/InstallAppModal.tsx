@@ -340,7 +340,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
                 title={
                   <>
                     {`Install ${props.app.name} on`}{' '}
-                    <ClusterIDLabel clusterID={clusterID} />
+                    <ClusterIDLabel clusterID={clusterID!} />
                   </>
                 }
                 visible={visible}
