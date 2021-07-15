@@ -77,7 +77,7 @@ interface IComponent {
   version: string;
 }
 
-function reduceReleaseToComponents(
+export function reduceReleaseToComponents(
   release: releasev1alpha1.IRelease
 ): Record<string, IComponent> {
   const components: Record<string, IComponent> = {};
@@ -93,7 +93,7 @@ function reduceReleaseToComponents(
     for (const component of release.spec.apps) {
       components[component.name] = {
         name: component.name,
-        version: component.version,
+        version: component.componentVersion ?? component.version,
       };
     }
   }
