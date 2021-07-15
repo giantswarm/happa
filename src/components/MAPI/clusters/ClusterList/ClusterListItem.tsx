@@ -108,10 +108,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const k8sVersion = useMemo(() => {
     const formattedReleaseVersion = `v${releaseVersion}`;
 
-    const release = releases?.find(
+    if (!releases) return undefined;
+
+    const release = releases.find(
       (r) => r.metadata.name === formattedReleaseVersion
     );
-    if (!release) return undefined;
+    if (!release) return '';
 
     const version = releasev1alpha1.getK8sVersion(release);
     if (typeof version === 'undefined') return '';
