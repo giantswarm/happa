@@ -7,6 +7,7 @@ import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
+import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
 import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
@@ -127,19 +128,8 @@ describe('ClusterCreate', () => {
       })
     );
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === 'Cluster j5y9m created successfully';
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await withMarkup(screen.findByText)('Cluster j5y9m created successfully')
     ).toBeInTheDocument();
 
     createClusterMockFn.mockRestore();
@@ -203,19 +193,8 @@ describe('ClusterCreate', () => {
       })
     );
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === 'Cluster j5y9m created successfully';
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await withMarkup(screen.findByText)('Cluster j5y9m created successfully')
     ).toBeInTheDocument();
 
     createClusterMockFn.mockRestore();
@@ -258,19 +237,8 @@ describe('ClusterCreate', () => {
       })
     );
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === 'Cluster j5y9m created successfully';
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await withMarkup(screen.findByText)('Cluster j5y9m created successfully')
     ).toBeInTheDocument();
 
     createClusterMockFn.mockRestore();
@@ -309,19 +277,8 @@ describe('ClusterCreate', () => {
 
     fireEvent.click(createButton);
 
-    // TODO(axbarsan): Replace with assertion utility.
     expect(
-      await screen.findByText((_, node) => {
-        if (!node) return false;
-
-        const hasText = (n: Element) =>
-          n.textContent === 'Cluster j5y9m created successfully';
-        const hasTextInChildren = Array.from(node.children).some((child) =>
-          hasText(child)
-        );
-
-        return hasText(node) && !hasTextInChildren;
-      })
+      await withMarkup(screen.findByText)('Cluster j5y9m created successfully')
     ).toBeInTheDocument();
   });
 });
