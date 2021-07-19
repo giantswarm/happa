@@ -48,7 +48,7 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
   selectedInstanceType,
 }) => {
   const [collapsed, setCollapsed] = useState(true);
-  const { plural } = useInstanceTypeSelectionLabels();
+  const { singular, plural } = useInstanceTypeSelectionLabels();
   const { cpu, ram } = useInstanceTypeCapabilities(selectedInstanceType);
   const allowedInstanceTypes = useAllowedInstanceTypes();
 
@@ -70,7 +70,9 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
   return (
     <>
       <SelectedWrapper>
-        <SelectedInstanceTypeItem>
+        <SelectedInstanceTypeItem
+          aria-label={`The currently selected ${singular} is ${selectedInstanceType}`}
+        >
           <SelectedInstanceType>{selectedInstanceType}</SelectedInstanceType>
         </SelectedInstanceTypeItem>
         <SelectedDescription>

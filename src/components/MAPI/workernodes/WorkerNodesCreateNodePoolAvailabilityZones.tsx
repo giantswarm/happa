@@ -149,7 +149,7 @@ const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<IWorkerNodesCreateNod
   };
 
   return (
-    <InputGroup htmlFor={id} label='Availability zones selection' {...props}>
+    <InputGroup htmlFor={id} label='Availability zones' {...props}>
       {controlPlaneZones && (
         <AZSelection
           variant={AZSelectionVariants.NodePool}
