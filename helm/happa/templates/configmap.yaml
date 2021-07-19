@@ -6,38 +6,34 @@ metadata:
   labels:
     app: happa
 data:
-  passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
-  api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
-  mapi-endpoint: {{ .Values.Installation.V1.GiantSwarm.Happa.API.Address }}
-  audience: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
-  mapi-audience: {{ .Values.Installation.V1.GiantSwarm.OIDC.IssuerAddress }}
-  ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
-  installation-name: {{ .Values.Installation.V1.Name }}
-  {{- if eq .Values.Installation.V1.Provider.Kind "aws" }}
-  aws-capabilities-json: '{{ .Values.Installation.V1.Provider.AWS.EC2.Instance.Capabilities | toJson }}'
+  passage-endpoint: {{ .Values.passage.address }}
+  api-endpoint: {{ .Values.api.address }}
+  mapi-endpoint: {{ .Values.happaapi.address }}
+  audience: {{ .Values.api.address }}
+  mapi-audience: {{ .Values.oidc.issuerAddress }}
+  ingress-base-domain: {{ .Values.guestCluster.base }}
+  installation-name: {{ .Values.managementCluster.name }}
+  {{- if eq .Values.managementCluster.provider.kind "aws" }}
+  aws-capabilities-json: '{{ .Values.aws.instance.capabilities | toJson }}'
   {{- end }}
-  {{- if eq .Values.Installation.V1.Provider.Kind "azure" }}
-  azure-capabilities-json: '{{ .Values.Installation.V1.Provider.Azure.VM.VmSize.Capabilities | toJson }}'
+  {{- if eq .Values.managementCluster.provider.kind "azure" }}
+  azure-capabilities-json: '{{ .Values.azure.vm.vmSize.capabilities | toJson }}'
   {{- end }}
-  default-request-timeout-seconds: '{{ .Values.Installation.V1.GiantSwarm.Happa.DefaultRequestTimeoutSeconds }}'
-  provider: {{ .Values.Installation.V1.Provider.Kind }}
-  mapi-auth-redirect-url: {{ .Values.Installation.V1.GiantSwarm.OIDC.StaticClients.Happa.Address }}
-  mapi-auth-admin-group: {{ .Values.Installation.V1.Kubernetes.Auth.ControlPlaneAdminTargetGroup }}
+  default-request-timeout-seconds: '10'
+  provider: {{ .Values.managementCluster.provider.kind }}
+  mapi-auth-redirect-url: {{ .Values.happa.address }}
+  mapi-auth-admin-group: {{ .Values.kubernetes.auth.controlPlaneAdminTargetGroup }}
   sentry-dsn: https://e2d0c60518114bf1b920f3cac4ee3f26@o346224.ingest.sentry.io/5739870
-  sentry-environment: {{ .Values.Installation.V1.Name }}
+  sentry-environment: {{ .Values.managementCluster.name }}
   sentry-release-version: {{ .Values.image.tag }}
   sentry-debug: 'FALSE'
   sentry-sample-rate: '0.5'
 
   # Enables real user monitoring (RUM)
-  {{ if eq .Values.Installation.V1.GiantSwarm.Happa.EnableUserMonitoring true }}
   enable-rum: 'TRUE'
-  {{ else }}
-  enable-rum: 'FALSE'
-  {{ end }}
 
   # Feature flags
-  {{ if eq .Values.Installation.V1.Infra.TestingEnvironment true }}
+  {{ if eq .Values.managementCluster.pipeline "testing" }}
   feature-mapi-auth: 'TRUE'
   {{ else }}
   feature-mapi-auth: 'FALSE'
