@@ -70,5 +70,3 @@ security:
     customer:
       public: ""
       private: ""
-
-
