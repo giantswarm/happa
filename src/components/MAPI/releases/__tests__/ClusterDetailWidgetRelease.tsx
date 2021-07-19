@@ -6,6 +6,7 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import * as releasesUtils from 'MAPI/releases/utils';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
@@ -92,11 +93,10 @@ describe('ClusterDetailWidgetRelease', () => {
 
     expect(await screen.findByText('Details for release 14.1.5'));
 
-    const components = [
-      ...releasev1alpha1Mocks.v14_1_5.spec.components,
-      ...releasev1alpha1Mocks.v14_1_5.spec.apps!,
-    ];
-    for (const component of components) {
+    const components = releasesUtils.reduceReleaseToComponents(
+      releasev1alpha1Mocks.v14_1_5
+    );
+    for (const component of Object.values(components)) {
       expect(
         screen.getByLabelText(`${component.name} version ${component.version}`)
       ).toBeInTheDocument();

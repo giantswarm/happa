@@ -230,20 +230,8 @@ describe('releases::utils', () => {
           {
             changeType: 1,
             component: 'coredns',
-            newVersion: '1.4.1',
-            oldVersion: '1.2.0',
-          },
-          {
-            changeType: 1,
-            component: 'external-dns',
-            newVersion: '2.3.1',
-            oldVersion: '2.3.0',
-          },
-          {
-            changeType: 1,
-            component: 'kube-state-metrics',
-            newVersion: '1.3.1',
-            oldVersion: '1.3.0',
+            newVersion: '1.8.0',
+            oldVersion: '1.6.5',
           },
           {
             changeType: 1,
@@ -262,12 +250,6 @@ describe('releases::utils', () => {
             component: 'net-exporter',
             newVersion: '1.10.1',
             oldVersion: '1.9.2',
-          },
-          {
-            changeType: 1,
-            component: 'node-exporter',
-            newVersion: '1.7.2',
-            oldVersion: '1.7.1',
           },
         ],
       } as ui.IReleaseComponentsDiff);

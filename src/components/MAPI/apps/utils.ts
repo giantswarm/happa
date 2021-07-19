@@ -2,6 +2,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { VersionImpl } from 'lib/Version';
+import * as releasesUtils from 'MAPI/releases/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -487,20 +488,11 @@ export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
     ingress: {},
   };
 
-  const releaseComponents: (
-    | releasev1alpha1.IReleaseSpecComponent
-    | releasev1alpha1.IReleaseSpecApp
-  )[] = [];
+  const releaseComponents = release
+    ? releasesUtils.reduceReleaseToComponents(release)
+    : {};
 
-  if (release?.spec.components) {
-    releaseComponents.push(...release.spec.components);
-  }
-
-  if (release?.spec.apps) {
-    releaseComponents.push(...release.spec.apps);
-  }
-
-  for (const { name, version } of releaseComponents) {
+  for (const { name, version } of Object.values(releaseComponents)) {
     if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
 
     let appMeta = AppConstants.appMetas[name];
