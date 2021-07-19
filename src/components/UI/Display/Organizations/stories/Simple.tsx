@@ -18,10 +18,6 @@ Simple.args = {
     { name: 'security', clusterCount: 0 },
   ],
   onClickRow: () => {},
-  onCreateOrg: () =>
-    new Promise((resolve) => {
-      resolve();
-    }),
 };
 
 Simple.argTypes = {};
