@@ -5,6 +5,7 @@ import ReleaseSelector, {
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
+import * as releasesUtils from 'MAPI/releases/utils';
 import { Cluster } from 'MAPI/types';
 import { getClusterReleaseVersion } from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -67,16 +68,13 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
           return acc;
         }
 
-        const components = curr.spec.components.slice();
-        if (curr.spec.apps) {
-          components.push(...curr.spec.apps);
-        }
+        const components = releasesUtils.reduceReleaseToComponents(curr);
 
         acc[normalizedVersion] = {
           version: normalizedVersion,
           active: isActive,
           timestamp: curr.metadata.creationTimestamp ?? '',
-          components,
+          components: Object.values(components),
           kubernetesVersion: releasev1alpha1.getK8sVersion(curr),
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
         };
