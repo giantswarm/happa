@@ -46,8 +46,8 @@ export const kubernetesResourcesURL =
 export const nodePoolsURL = 'https://docs.giantswarm.io/advanced/node-pools/';
 
 // Organization concept docs.
-// TODO: @oponder,@marians find a meaningful target for this documentation link.
-export const organizationsExplainedURL = 'https://docs.giantswarm.io/';
+export const organizationsExplainedURL =
+  'https://docs.giantswarm.io/general/organizations/';
 
 export const gsctlCreateKubeconfigURL =
   'https://docs.giantswarm.io/ui-api/gsctl/create-kubeconfig/';

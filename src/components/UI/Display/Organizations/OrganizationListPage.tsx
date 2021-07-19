@@ -1,156 +1,157 @@
-import { Box, DataTable, Heading, Text } from 'grommet';
-import { organizationsExplainedURL } from 'lib/docs';
+import { Box, Heading, Keyboard, Text } from 'grommet';
+import * as docs from 'lib/docs';
 import useDebounce from 'lib/hooks/useDebounce';
 import {
   OrganizationNameStatusMessage,
   validateOrganizationName,
 } from 'lib/organizationValidation';
 import PropTypes from 'prop-types';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-import NotAvailable from 'UI/Display/NotAvailable';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from 'UI/Display/Table';
 import TextInput from 'UI/Inputs/TextInput';
 import Well from 'UI/Layout/Well';
-import Truncated from 'UI/Util/Truncated';
+
+import ClusterDetailWidgetOptionalValue from '../MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 
 const VALIDATION_ERROR_DEBOUNCE_MS = 500;
 
-interface IOrganizationIndexDataTableRow {
+const StyledTableRow = styled(TableRow)`
+  :hover,
+  :focus-visible {
+    background: ${({ theme }) => theme.global.colors.border.dark};
+  }
+`;
+
+interface IOrganization {
   name: string;
-  clusterCount?: string;
-  oldestRelease?: string;
-  newestRelease?: string;
-  oldestK8sVersion?: string;
-  newestK8sVersion?: string;
-  apps?: number;
-  appDeployments?: number;
+  clusterCount?: number;
 }
-interface IOrganizationIndexPageProps {
+
+interface IOrganizationIndexPageProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {
+  organizations: IOrganization[];
   onClickRow: (name: string) => void;
-  data?: IOrganizationIndexDataTableRow[];
-  createOrg: (name: string) => Promise<void>;
+  onCreateOrg: (name: string) => Promise<void>;
 }
 
-interface ITextOrNaProps {
-  text?: string | number | undefined | null;
-}
-
-// Returns 'n/a' if props.text is empty.
-const TextOrNA: React.FC<ITextOrNaProps> = (props) => {
-  return <span>{props.text ? props.text : <NotAvailable />}</span>;
-};
-
-TextOrNA.propTypes = {
-  text: PropTypes.string,
-};
-
-const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
+const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = ({
+  organizations,
+  onClickRow,
+  onCreateOrg,
+}) => {
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState('');
   const [creating, setCreating] = useState(false);
-  const orgNameInput = useRef<HTMLInputElement>(null);
-  const [firstOpen, setFirstOpen] = useState(true);
 
-  const validationResult = validateOrganizationName(newOrgName);
-  let { statusMessage } = validationResult;
-  const { valid } = validationResult;
+  const [hasTyped, setHasTyped] = useState(false);
 
-  if (firstOpen) statusMessage = OrganizationNameStatusMessage.Ok;
-  const debouncedStatusMessage = useDebounce(
-    statusMessage,
+  const validationMessage = useMemo(() => {
+    if (!hasTyped) return OrganizationNameStatusMessage.Ok;
+
+    return validateOrganizationName(newOrgName).statusMessage;
+  }, [hasTyped, newOrgName]);
+
+  const debouncedValidationMessage = useDebounce(
+    validationMessage,
     VALIDATION_ERROR_DEBOUNCE_MS
   );
+  const isValid = validationMessage.length < 1;
 
   const resetForm = () => {
-    setFirstOpen(true);
+    setHasTyped(false);
     setCreating(false);
     setCreateOrgOpen(false);
     setNewOrgName('');
   };
 
   const onChangeOrgName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFirstOpen(false);
+    if (!hasTyped) {
+      setHasTyped(true);
+    }
+
     setNewOrgName(e.target.value);
   };
 
+  const handleRowKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    (e.target as HTMLElement).click();
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    if (!isValid) return;
+
+    setCreating(true);
+    await onCreateOrg(newOrgName);
+
+    resetForm();
+  };
+
   return (
-    <>
-      <Box direction='column' gap='small' margin={{ bottom: 'large' }}>
+    <Box direction='column' gap='medium'>
+      <Box direction='column' gap='medium' margin={{ bottom: 'medium' }}>
         <Heading margin='none'>Your Organizations</Heading>
-        <Text margin={{ bottom: 'large' }}>
+        <Text>
           Organizations help you manage clusters and apps for different
           purposes, projects, or teams. Learn more in our{' '}
-          {/* TODO: @oponder,@marians find a meaningful target for this documentation link. */}
           <a
-            href={organizationsExplainedURL}
+            href={docs.organizationsExplainedURL}
             rel='noopener noreferrer'
             target='_blank'
           >
-            documentation <i className='fa fa-open-in-new' />
+            documentation{' '}
+            <i
+              className='fa fa-open-in-new'
+              aria-hidden={true}
+              role='presentation'
+              aria-label='Opens in a new tab'
+            />
           </a>
           .
         </Text>
-
-        <DataTable
-          sortable={true}
-          onClickRow={(e) => {
-            e.preventDefault();
-            props.onClickRow(e.datum.name);
-          }}
-          columns={[
-            {
-              property: 'name',
-              header: 'Name',
-              primary: true,
-              render: (datum) => <Truncated as='span'>{datum.name}</Truncated>,
-            },
-            {
-              property: 'clusters',
-              header: 'Clusters',
-              align: 'center',
-              render: (datum) => <TextOrNA text={datum.clusterCount} />,
-            },
-            // TODO: @oponder: enable these in another PR when we have the data.
-            // {
-            //   property: 'oldest_release',
-            //   header: 'Oldest release',
-            //   align: 'center',
-            //   render: (datum) => <TextOrNA text={datum.oldestRelease} />,
-            // },
-            // {
-            //   property: 'newest_release',
-            //   header: 'Newest release',
-            //   align: 'center',
-            //   render: (datum) => <TextOrNA text={datum.newestRelease} />,
-            // },
-            // {
-            //   property: 'oldest_k8s_version',
-            //   header: 'Oldest K8S Version',
-            //   align: 'center',
-            //   render: (datum) => <TextOrNA text={datum.oldestK8sVersion} />,
-            // },
-            // {
-            //   property: 'newest_k8s_version',
-            //   header: 'Newest K8S Version',
-            //   align: 'center',
-            //   render: (datum) => <TextOrNA text={datum.newestK8sVersion} />,
-            // },
-            // {
-            //   property: 'apps',
-            //   header: 'Apps',
-            //   align: 'center',
-            //   render: (datum) => <TextOrNA text={datum.apps} />,
-            // },
-            // {
-            //   property: 'app_deployments',
-            //   header: 'App Deployments',
-            //   align: 'center',
-            //   render: (datum) => <TextOrNA text={datum.appDeployments} />,
-            // },
-          ]}
-          data={props.data}
-        />
       </Box>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell size='small' align='center'>
+              Clusters
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+        <Keyboard onSpace={handleRowKeyDown} onEnter={handleRowKeyDown}>
+          <TableBody>
+            {organizations?.map((org) => (
+              <StyledTableRow
+                key={org.name}
+                role='button'
+                tabIndex={0}
+                onClick={() => onClickRow(org.name)}
+              >
+                <TableCell>{org.name}</TableCell>
+                <TableCell size='small' align='center' justify='center'>
+                  <ClusterDetailWidgetOptionalValue
+                    value={org.clusterCount}
+                    loaderWidth={18}
+                  >
+                    {(value) => <Text>{value}</Text>}
+                  </ClusterDetailWidgetOptionalValue>
+                </TableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Keyboard>
+      </Table>
 
       {createOrgOpen && (
         <Well>
@@ -167,42 +168,31 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
               This will create a new Organization CR and a namespace in the
               management cluster. Some name restrictions apply.
             </Text>
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                if (valid) {
-                  setCreating(true);
-                  await props.createOrg(newOrgName);
-                  resetForm();
-                  setNewOrgName('');
-                  if (orgNameInput && orgNameInput.current) {
-                    orgNameInput.current.blur();
-                  }
-                }
-              }}
-            >
-              <TextInput
-                label='Name'
-                onChange={onChangeOrgName}
-                value={newOrgName}
-                info={!debouncedStatusMessage && <>&nbsp;</>}
-                error={debouncedStatusMessage}
-                autoFocus={true}
-                id='orgname'
-              />
+            <form onSubmit={handleSubmit}>
+              <Box
+                margin={{
+                  bottom: !debouncedValidationMessage ? 'medium' : undefined,
+                }}
+              >
+                <TextInput
+                  label='Name'
+                  onChange={onChangeOrgName}
+                  value={newOrgName}
+                  error={debouncedValidationMessage}
+                  autoFocus={true}
+                />
+              </Box>
 
               <Box direction='row' margin={{ bottom: 'none' }}>
                 <Button
                   bsStyle='primary'
                   type='submit'
                   loading={creating}
-                  disabled={Boolean(debouncedStatusMessage) || !valid}
+                  disabled={!isValid}
                 >
                   Create
                 </Button>
-                {creating ? undefined : (
-                  <Button onClick={resetForm}>Cancel</Button>
-                )}
+                {!creating && <Button onClick={resetForm}>Cancel</Button>}
               </Box>
             </form>
           </Box>
@@ -210,23 +200,30 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = (props) => {
       )}
 
       {!createOrgOpen && (
-        <Button
-          bsStyle='default'
-          onClick={() => {
-            setCreateOrgOpen(true);
-          }}
-        >
-          <i className='fa fa-add-circle' /> Add Organization
-        </Button>
+        <Box>
+          <Button
+            bsStyle='default'
+            onClick={() => {
+              setCreateOrgOpen(true);
+            }}
+          >
+            <i
+              className='fa fa-add-circle'
+              aria-hidden={true}
+              role='presentation'
+            />{' '}
+            Add Organization
+          </Button>
+        </Box>
       )}
-    </>
+    </Box>
   );
 };
 
 OrganizationListPage.propTypes = {
+  organizations: PropTypes.array.isRequired,
   onClickRow: PropTypes.func.isRequired,
-  data: PropTypes.array,
-  createOrg: PropTypes.func.isRequired,
+  onCreateOrg: PropTypes.func.isRequired,
 };
 
 export default OrganizationListPage;
