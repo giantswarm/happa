@@ -6,7 +6,10 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import { isClusterCreating, isClusterUpgrading } from 'MAPI/clusters/utils';
 import { extractErrorMessage } from 'MAPI/organizations/utils';
-import * as releasesUtils from 'MAPI/releases/utils';
+import {
+  getSupportedUpgradeVersions,
+  reduceReleaseToComponents,
+} from 'MAPI/releases/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
@@ -112,7 +115,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   const supportedUpgradeVersions: ui.IReleaseVersion[] = useMemo(() => {
     if (!releaseList || !releaseVersion) return [];
 
-    return releasesUtils.getSupportedUpgradeVersions(
+    return getSupportedUpgradeVersions(
       releaseVersion,
       provider,
       isAdmin,
@@ -151,10 +154,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   const releaseComponents = useMemo(() => {
     if (!currentRelease) return undefined;
 
-    return [
-      ...currentRelease.spec.components,
-      ...(currentRelease.spec.apps ?? []),
-    ];
+    return Object.values(reduceReleaseToComponents(currentRelease));
   }, [currentRelease]);
 
   const releaseNotesURL = currentRelease
