@@ -7,10 +7,68 @@ image:
 userID: 101
 groupID: 101
 
-Installation:
-  V1:
-    Registry:
-      Domain: quay.io
-
 port: 8000
 protocol: TCP
+
+api:
+  address: ""
+
+aws:
+  instance:
+    capabilities: {}
+
+azure:
+  vm:
+    vmSize:
+      capabilities: {}
+
+certificate:
+  monitoring:
+    crtPem: ""
+    keyPem: ""
+
+guestCluster:
+  base: ""
+
+kubernetes:
+  auth:
+    controlPlaneAdminTargetGroup: ""
+
+happa:
+  address: ""
+  host: ""
+  letsencrypt: ""
+
+happaapi:
+  address: ""
+  host: ""
+  letsencrypt: ""
+
+managementCluster:
+  name: ""
+  customer: ""
+  pipeline: ""
+  provider:
+    kind: ""
+
+oidc:
+  issuerAddress: ""
+
+passage:
+  address: ""
+
+registry:
+  domain: quay.io
+  pullSecret:
+    dockerConfigJSON: ""
+
+security:
+  restrictAccess:
+    api: ""
+  subnet:
+    vpn: ""
+    customer:
+      public: ""
+      private: ""
+
+
