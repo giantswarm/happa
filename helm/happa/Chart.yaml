@@ -5,3 +5,5 @@ description: >-
 home: https://github.com/giantswarm/happa
 version: [[ .Version ]]
 appVersion: [[ .AppVersion ]]
+annotations:
+  config.giantswarm.io/version: 1.x.x
