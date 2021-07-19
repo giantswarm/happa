@@ -24,7 +24,7 @@ metadata:
       add_header Referrer-Policy "no-referrer-when-downgrade" always;
 spec:
   rules:
-  - host: {{ .Values.api.host }}
+  - host: {{ .Values.happa.host }}
     http:
       paths:
       - path: /
@@ -41,5 +41,5 @@ spec:
 {{ end }}
   tls:
   - hosts:
-    - {{ .Values.api.host }}
+    - {{ .Values.happa.host }}
     secretName: happa-certs
