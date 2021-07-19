@@ -20,7 +20,7 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-interface IOrganization {
+export interface IOrganization {
   name: string;
   clusterCount?: number;
 }

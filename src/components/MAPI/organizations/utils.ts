@@ -1,4 +1,6 @@
+import { Cluster } from 'MAPI/types';
 import { GenericResponse } from 'model/clients/GenericResponse';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 
 /**
@@ -87,4 +89,16 @@ export function validateOrganizationName(
         statusMessage: OrganizationNameStatusMessage.Ok,
       };
   }
+}
+
+export function computeClusterCountersForOrganizations(clusters?: Cluster[]) {
+  return clusters?.reduce((acc: Record<string, number>, cluster: Cluster) => {
+    const clusterOrg = capiv1alpha3.getClusterOrganization(cluster);
+    if (!clusterOrg) return acc;
+
+    acc[clusterOrg] ??= 0;
+    acc[clusterOrg]++;
+
+    return acc;
+  }, {});
 }
