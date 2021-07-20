@@ -1,7 +1,7 @@
-### SublimeText ###
+### Code editors ###
 *.sublime-workspace
 .vscode/*
-!vscode/launch.json
+!.vscode/*.code-snippets
 
 ### OSX ###
 .DS_Store
