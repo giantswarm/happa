@@ -7,7 +7,7 @@ import RoutePath from 'lib/routePath';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
-import { supportsMapiApps } from 'shared/featureSupport';
+import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
 import { INodePool } from 'shared/types';
 import {
   enableCatalog,
@@ -107,28 +107,32 @@ export function batchedLayout(
           });
       }
 
-      dispatch(loadReleases());
-      await dispatch(
-        clustersList({
-          withLoadingFlags: true,
-        })
-      );
+      if (!supportsMapiClusters(user, provider)) {
+        dispatch(loadReleases());
+        await dispatch(
+          clustersList({
+            withLoadingFlags: true,
+          })
+        );
+      }
 
       dispatch(globalLoadFinish());
 
-      await dispatch(
-        clustersDetails({
-          filterBySelectedOrganization: true,
-          withLoadingFlags: true,
-          initializeNodePools: true,
-        })
-      );
-      await dispatch(
-        nodePoolsLoad({
-          filterBySelectedOrganization: true,
-          withLoadingFlags: true,
-        })
-      );
+      if (!supportsMapiClusters(user, provider)) {
+        await dispatch(
+          clustersDetails({
+            filterBySelectedOrganization: true,
+            withLoadingFlags: true,
+            initializeNodePools: true,
+          })
+        );
+        await dispatch(
+          nodePoolsLoad({
+            filterBySelectedOrganization: true,
+            withLoadingFlags: true,
+          })
+        );
+      }
     } catch (err) {
       dispatch(globalLoadError());
       ErrorReporter.getInstance().notify(err);
@@ -360,21 +364,27 @@ export function batchedOrganizationSelect(
   orgId: string,
   withLoadingFlags: boolean
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       dispatch(organizationSelect(orgId));
-      dispatch(
-        clustersDetails({
-          filterBySelectedOrganization: true,
-          withLoadingFlags: withLoadingFlags,
-        })
-      );
-      await dispatch(
-        nodePoolsLoad({
-          filterBySelectedOrganization: true,
-          withLoadingFlags: withLoadingFlags,
-        })
-      );
+
+      const user = getLoggedInUser(getState())!;
+      const provider = getProvider(getState())!;
+
+      if (!supportsMapiClusters(user, provider)) {
+        dispatch(
+          clustersDetails({
+            filterBySelectedOrganization: true,
+            withLoadingFlags: withLoadingFlags,
+          })
+        );
+        await dispatch(
+          nodePoolsLoad({
+            filterBySelectedOrganization: true,
+            withLoadingFlags: withLoadingFlags,
+          })
+        );
+      }
     } catch (err) {
       ErrorReporter.getInstance().notify(err);
     }
