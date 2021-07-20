@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Collapsible, Heading, Keyboard, Text } from 'grommet';
+import * as docs from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
@@ -134,7 +135,21 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
             </Heading>
             <Text color='text-weak'>
               This will create a new Organization CR and a namespace in the
-              management cluster. Some name restrictions apply.
+              management cluster. Some{' '}
+              <a
+                href={docs.organizationsNamingConventionsURL}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                name conventions{' '}
+                <i
+                  className='fa fa-open-in-new'
+                  aria-hidden={true}
+                  role='presentation'
+                  aria-label='Opens in a new tab'
+                />
+              </a>{' '}
+              apply.
             </Text>
           </Box>
           <Box as='form' width={{ max: 'large' }} onSubmit={handleSubmit}>
