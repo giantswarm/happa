@@ -1,0 +1,89 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "js/ts.implicitProjectConfig.checkJs": true,
+    "eslint.lintTask.enable": true,
+    "debug.javascript.autoExpandGetters": true,
+    "javascript.referencesCodeLens.enabled": false,
+    "javascript.referencesCodeLens.showOnAllFunctions": false,
+    "javascript.suggest.completeFunctionCalls": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.implementationsCodeLens.enabled": false,
+    "typescript.referencesCodeLens.enabled": false,
+    "typescript.referencesCodeLens.showOnAllFunctions": false,
+    "typescript.suggest.completeFunctionCalls": true,
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+    "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+    "editor.largeFileOptimizations": true,
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "search.exclude": {
+      "**/node_modules": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "msjsdiag.debugger-for-chrome",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "redhat.vscode-yaml"
+    ],
+  },
+  "launch": {
+    "configurations": [
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Debug happa [UNSAFE MODE]",
+        "runtimeArgs": ["--disable-web-security"],
+        "url": "http://localhost:7000",
+        "webRoot": "${workspaceFolder}",
+        "console": "integratedTerminal"
+      },
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Debug happa",
+        "url": "http://localhost:7000",
+        "webRoot": "${workspaceFolder}",
+        "console": "integratedTerminal"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest All",
+        "program": "${workspaceFolder}/node_modules/.bin/jest",
+        "args": ["--runInBand", "--no-cache"],
+        "console": "integratedTerminal"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest Current File",
+        "program": "${workspaceFolder}/node_modules/.bin/jest",
+        "args": ["${relativeFile}", "--no-cache", "--config", "jest.config.js"],
+        "console": "integratedTerminal"
+      }
+    ],
+    "compounds": []
+  }
+}
