@@ -11,10 +11,10 @@ metadata:
     app: happa
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
+    {{- if .Values.happa.letsencrypt }}
     kubernetes.io/tls-acme: "true"
     {{- end }}
-    {{- if .Values.Installation.V1.Security.RestrictAccess.GSAPI }}
+    {{- if .Values.security.restrictAccess.api }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ template "whitelistCIDR" . }}
     {{- end }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -24,7 +24,7 @@ metadata:
       add_header Referrer-Policy "no-referrer-when-downgrade" always;
 spec:
   rules:
-  - host: {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
+  - host: {{ .Values.happa.host }}
     http:
       paths:
       - path: /
@@ -41,5 +41,5 @@ spec:
 {{ end }}
   tls:
   - hosts:
-    - {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
+    - {{ .Values.happa.host }}
     secretName: happa-certs

@@ -22,7 +22,7 @@ spec:
         runAsGroup: {{ .Values.groupID }}
       containers:
         - name: {{ .Values.image.name }}
-          image: "{{ .Values.Installation.V1.Registry.Domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.port }}

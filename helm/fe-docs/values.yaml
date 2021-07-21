@@ -11,7 +11,5 @@ image:
 port: 8080
 hostnames: []
 
-Installation:
-  V1:
-    Registry:
-      Domain: quay.io
+registry:
+  domain: quay.io
