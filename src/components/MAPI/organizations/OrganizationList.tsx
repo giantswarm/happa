@@ -1,76 +1,128 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
-import { createOrganization } from 'model/services/mapi/securityv1alpha1/createOrganization';
-import * as React from 'react';
+import { ClusterList } from 'MAPI/types';
+import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectClusters } from 'stores/cluster/selectors';
-import { clustersGroupedByOwner } from 'stores/cluster/utils';
-import { organizationsLoadMAPI } from 'stores/organization/actions';
+import { getProvider } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
+import useSWR from 'swr';
+import Button from 'UI/Controls/Button';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
+
+import OrganizationListCreateOrg from './OrganizationListCreateOrg';
+import {
+  computeClusterCountersForOrganizations,
+  extractErrorMessage,
+} from './utils';
 
 const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
-  const organizations = useSelector(selectOrganizations()) || {};
-  const clusters = useSelector(selectClusters());
+  const organizations = useSelector(selectOrganizations());
 
-  const clustersPerOwner = clustersGroupedByOwner(Object.values(clusters));
+  const provider = useSelector(getProvider);
 
   const client = useHttpClient();
   const auth = useAuthProvider();
 
+  const { data: clusterList, error: clusterListError } = useSWR<
+    ClusterList,
+    GenericResponseError
+  >(fetchClusterListKey(provider), () =>
+    fetchClusterList(client, auth, provider)
+  );
+
+  useEffect(() => {
+    if (clusterListError) {
+      new FlashMessage(
+        'There was a problem loading clusters.',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        extractErrorMessage(clusterListError)
+      );
+
+      ErrorReporter.getInstance().notify(clusterListError);
+    }
+  }, [clusterListError]);
+
+  const organizationList = useMemo(() => {
+    const clusterCounters = computeClusterCountersForOrganizations(
+      clusterList?.items
+    );
+
+    const orgs = Object.keys(organizations).map((orgName) => {
+      // eslint-disable-next-line @typescript-eslint/init-declarations
+      let clusterCount: number | undefined;
+      if (clusterListError) {
+        clusterCount = -1;
+      } else if (clusterCounters) {
+        clusterCount = clusterCounters[orgName] ?? 0;
+      }
+
+      return {
+        name: orgName,
+        clusterCount,
+      };
+    });
+
+    return Object.values(orgs);
+  }, [organizations, clusterList, clusterListError]);
+
+  const handleOrgClick = (name: string) => {
+    const orgPath = RoutePath.createUsablePath(OrganizationsRoutes.Detail, {
+      orgId: name,
+    });
+
+    dispatch(push(orgPath));
+  };
+
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+
+  const handleOpenCreateForm = () => {
+    setIsCreateFormOpen(true);
+  };
+
+  const handleCloseCreateForm = () => {
+    setIsCreateFormOpen(false);
+  };
+
   return (
     <DocumentTitle title='Organizations'>
       <OrganizationListPage
-        onClickRow={(name) => {
-          const orgPath = RoutePath.createUsablePath(
-            OrganizationsRoutes.Detail,
-            {
-              orgId: name,
-            }
-          );
-
-          dispatch(push(orgPath));
-        }}
-        data={Object.keys(organizations).map((orgName) => ({
-          name: orgName,
-          clusterCount: clustersPerOwner[orgName]?.length.toString() || '0',
-        }))}
-        // TODO: @oponder: Do we like this? Handling errors and doing requests and mutation in the component?
-        //                 I was generally always ok with it.. but it feels like I am breaking some rules.
-        createOrg={async (orgName) => {
-          try {
-            await createOrganization(client, auth, orgName);
-            await dispatch(organizationsLoadMAPI(auth));
-          } catch (error) {
-            ErrorReporter.getInstance().notify(error);
-
-            if (error?.config?.data?.message) {
-              new FlashMessage(
-                `Unable to create organization "${orgName}"`,
-                messageType.ERROR,
-                messageTTL.LONG,
-                error.config.data.message
-              );
-            } else {
-              new FlashMessage(
-                `Unable to create organization "${orgName}"`,
-                messageType.ERROR,
-                messageTTL.LONG,
-                'Something unexpected went wrong while trying to create this organization'
-              );
-            }
-          }
-        }}
+        organizations={organizationList}
+        onClickRow={handleOrgClick}
       />
+
+      <Box margin={{ top: 'large' }}>
+        <OrganizationListCreateOrg
+          open={isCreateFormOpen}
+          onSubmit={handleCloseCreateForm}
+          onCancel={handleCloseCreateForm}
+        />
+
+        {!isCreateFormOpen && (
+          <Box animation={{ type: 'fadeIn', duration: 300 }}>
+            <Button bsStyle='default' onClick={handleOpenCreateForm}>
+              <i
+                className='fa fa-add-circle'
+                role='presentation'
+                aria-hidden={true}
+              />{' '}
+              Add organization
+            </Button>
+          </Box>
+        )}
+      </Box>
     </DocumentTitle>
   );
 };

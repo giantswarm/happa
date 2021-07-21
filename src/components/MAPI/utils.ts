@@ -13,6 +13,7 @@ import { IState } from 'stores/state';
 
 import {
   Cluster,
+  ClusterList,
   ControlPlaneNodeList,
   NodePool,
   NodePoolList,
@@ -251,6 +252,42 @@ export function fetchClusterKey(
   name: string
 ): string {
   return capiv1alpha3.getClusterKey(namespace, name);
+}
+
+export async function fetchClusterList(
+  httpClient: IHttpClient,
+  auth: IOAuth2Provider,
+  _provider: PropertiesOf<typeof Providers>,
+  organizationName?: string
+): Promise<ClusterList> {
+  let getOptions: capiv1alpha3.IGetClusterListOptions = {};
+
+  if (organizationName) {
+    getOptions = {
+      labelSelector: {
+        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
+      },
+    };
+  }
+
+  return capiv1alpha3.getClusterList(httpClient, auth, getOptions);
+}
+
+export function fetchClusterListKey(
+  _provider: PropertiesOf<typeof Providers>,
+  organizationName?: string
+): string {
+  let getOptions: capiv1alpha3.IGetClusterListOptions = {};
+
+  if (organizationName) {
+    getOptions = {
+      labelSelector: {
+        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
+      },
+    };
+  }
+
+  return capiv1alpha3.getClusterListKey(getOptions);
 }
 
 export async function fetchMasterListForCluster(

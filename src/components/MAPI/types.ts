@@ -10,6 +10,8 @@ export type ControlPlaneNodeList = capzv1alpha3.IAzureMachineList;
 
 export type Cluster = capiv1alpha3.ICluster;
 
+export type ClusterList = capiv1alpha3.IClusterList;
+
 export type ProviderCluster = capzv1alpha3.IAzureCluster;
 
 export type ProviderClusterList = capzv1alpha3.IAzureClusterList;

@@ -1,0 +1,27 @@
+// Learn more about snippets: https://code.visualstudio.com/docs/editor/userdefinedsnippets
+{
+  "TypeScript React Component": {
+    "scope": "typescriptreact",
+    "prefix": ["import React", "component"],
+    "body": [
+      "import PropTypes from 'prop-types';",
+      "import React from 'react';",
+      "",
+      "interface I${TM_FILENAME/(.*)\\..+$/$1/}Props {",
+      "  ${2:someProp: string;}",
+      "}",
+      "",
+      "const ${TM_FILENAME/(.*)\\..+$/$1/}: React.FC<I${TM_FILENAME/(.*)\\..+$/$1/}Props> = ($0) => {",
+      "  return null;",
+      "};",
+      "",
+      "${TM_FILENAME/(.*)\\..+$/$1/}.propTypes = {",
+      "  ${3:someProp: PropTypes.string.isRequired,}",
+      "};",
+      "",
+      "export default ${TM_FILENAME/(.*)\\..+$/$1/};",
+      ""
+    ],
+    "description": "Create a new TypeScript React component."
+  }
+}
