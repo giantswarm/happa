@@ -11,6 +11,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import dotenv from 'dotenv';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
@@ -35,6 +36,7 @@ const {
 const plugins: webpack.WebpackPluginInstance[] = [
   new webpack.SourceMapDevToolPlugin({
     filename: '[file].map[query]',
+    append: '//# sourceMappingURL=[url]',
   }),
   (new MiniCssExtractPlugin({
     filename: 'assets/[name].[chunkhash:12].css',
@@ -78,6 +80,12 @@ const config: webpack.Configuration = merge(common, {
   },
   optimization: {
     minimizer: [
+      (new TerserPlugin({
+        extractComments: 'some',
+        terserOptions: {
+          sourceMap: true,
+        },
+      }) as unknown) as webpack.WebpackPluginInstance,
       (new CssMinimizerPlugin() as unknown) as webpack.WebpackPluginInstance,
     ],
     moduleIds: 'deterministic',
