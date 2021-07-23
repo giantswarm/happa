@@ -36,7 +36,6 @@ const {
 const plugins: webpack.WebpackPluginInstance[] = [
   new webpack.SourceMapDevToolPlugin({
     filename: '[file].map[query]',
-    append: '//# sourceMappingURL=[url]',
   }),
   (new MiniCssExtractPlugin({
     filename: 'assets/[name].[chunkhash:12].css',
@@ -66,6 +65,7 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
       project: 'happa',
       release: SENTRY_RELEASE_VERSION,
       validate: true,
+      urlPrefix: '~/assets/',
     })
   );
 }
