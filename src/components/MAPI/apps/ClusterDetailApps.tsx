@@ -95,7 +95,7 @@ interface IClusterDetailApps {
 const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   releaseVersion,
 }) => {
-  const { clusterId } = useParams<{ clusterId: string }>();
+  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
