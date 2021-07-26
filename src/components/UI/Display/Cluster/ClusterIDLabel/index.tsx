@@ -71,7 +71,7 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
       <OverlayTrigger
         overlay={
           <Tooltip id='idtooltip'>
-            <>Cluster ID: {clusterID}</>
+            <>Cluster name: {clusterID}</>
           </Tooltip>
         }
         placement='top'
@@ -101,7 +101,7 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
             />
           ) : (
             <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Copy ID to clipboard</Tooltip>}
+              overlay={<Tooltip id='tooltip'>Copy name to clipboard</Tooltip>}
               placement='top'
             >
               <i
