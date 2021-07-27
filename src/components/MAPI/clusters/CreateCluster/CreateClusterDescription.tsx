@@ -9,11 +9,12 @@ import TextInput from 'UI/Inputs/TextInput';
 
 import { IClusterPropertyProps, withClusterDescription } from './patches';
 
-function validateValue(newValue: string): string {
+function validateValue(newValue: string, newValueLabel: string): string {
   const { message } = hasAppropriateLength(
     newValue,
     Constants.MIN_NAME_LENGTH,
-    Constants.MAX_NAME_LENGTH
+    Constants.MAX_NAME_LENGTH,
+    newValueLabel
   );
 
   return message;
@@ -38,7 +39,7 @@ const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
   const [validationError, setValidationError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const validationResult = validateValue(e.target.value);
+    const validationResult = validateValue(e.target.value, 'Description');
     setValidationError(validationResult);
 
     onChange({

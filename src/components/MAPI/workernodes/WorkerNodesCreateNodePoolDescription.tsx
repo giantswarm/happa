@@ -9,11 +9,12 @@ import TextInput from 'UI/Inputs/TextInput';
 
 import { INodePoolPropertyProps, withNodePoolDescription } from './patches';
 
-function validateValue(newValue: string): string {
+function validateValue(newValue: string, newValueLabel: string): string {
   const { message } = hasAppropriateLength(
     newValue,
     Constants.MIN_NAME_LENGTH,
-    Constants.MAX_NAME_LENGTH
+    Constants.MAX_NAME_LENGTH,
+    newValueLabel
   );
 
   return message;
@@ -37,7 +38,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
   const [validationError, setValidationError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const validationResult = validateValue(e.target.value);
+    const validationResult = validateValue(e.target.value, 'Description');
     setValidationError(validationResult);
 
     onChange({
