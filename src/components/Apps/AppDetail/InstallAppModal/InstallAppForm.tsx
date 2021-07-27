@@ -124,7 +124,7 @@ const InstallAppForm: React.FC<IInstallAppFormProps> = ({
         />
       ) : (
         <TextInput
-          help='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
+          help='We recommend that you create a dedicated namespace. The namespace will be created if it does not exist yet.'
           key='dedicated-namespace'
           label='Namespace'
           id='dedicated-namespace'
