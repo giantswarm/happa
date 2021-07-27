@@ -1,12 +1,16 @@
 import { Meta, Story } from '@storybook/react/types-6-0';
 import React, { ComponentPropsWithoutRef } from 'react';
 
-import ClusterIDLabel from '..';
+import ClusterIDLabel, { ClusterIDLabelType } from '..';
 
 const Template: Story<ComponentPropsWithoutRef<typeof ClusterIDLabel>> = (
   args
 ) => (
-  <ClusterIDLabel clusterID={args.clusterID} copyEnabled={args.copyEnabled} />
+  <ClusterIDLabel
+    clusterID={args.clusterID}
+    copyEnabled={args.copyEnabled}
+    variant={args.variant}
+  />
 );
 
 export const Normal = Template.bind({});
@@ -29,6 +33,19 @@ export const CopyEnabledTruncated = Template.bind({});
 CopyEnabledTruncated.args = {
   clusterID: 'another-long-cluster-id',
   copyEnabled: true,
+};
+
+export const NameVariant = Template.bind({});
+NameVariant.args = {
+  clusterID: 'rh62p',
+  variant: ClusterIDLabelType.Name,
+};
+
+export const NameVariantCopyEnabled = Template.bind({});
+NameVariantCopyEnabled.args = {
+  clusterID: 'rh62p',
+  copyEnabled: true,
+  variant: ClusterIDLabelType.Name,
 };
 
 export default {

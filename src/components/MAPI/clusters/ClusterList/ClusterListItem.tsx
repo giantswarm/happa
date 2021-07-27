@@ -26,7 +26,9 @@ import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
 import ClusterListItemOptionalValue from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemOptionalValue';
@@ -226,6 +228,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                 <Text size='large' aria-label={`Name: ${value}`}>
                   <ClusterIDLabel
                     clusterID={value as string}
+                    variant={ClusterIDLabelType.Name}
                     copyEnabled={true}
                   />
                 </Text>
