@@ -42,14 +42,21 @@ const Label = styled.span<{ clusterID: string }>`
   border-radius: 0.2em;
 `;
 
+export enum ClusterIDLabelType {
+  Name = 'name',
+  ID = 'ID',
+}
+
 interface IClusterIDLabelProps extends React.ComponentPropsWithoutRef<'span'> {
   clusterID: string;
   copyEnabled?: boolean;
+  variant?: ClusterIDLabelType;
 }
 
 const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
   clusterID,
   copyEnabled,
+  variant,
   ...props
 }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
@@ -70,9 +77,7 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
     <Label clusterID={clusterID}>
       <OverlayTrigger
         overlay={
-          <Tooltip id='idtooltip'>
-            <>Cluster ID: {clusterID}</>
-          </Tooltip>
+          <Tooltip id='idtooltip'>{`Cluster ${variant}: ${clusterID}`}</Tooltip>
         }
         placement='top'
       >
@@ -101,7 +106,9 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
             />
           ) : (
             <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Copy ID to clipboard</Tooltip>}
+              overlay={
+                <Tooltip id='tooltip'>{`Copy ${variant} to clipboard`}</Tooltip>
+              }
               placement='top'
             >
               <i
@@ -121,6 +128,11 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
 ClusterIDLabel.propTypes = {
   clusterID: PropTypes.string.isRequired,
   copyEnabled: PropTypes.bool,
+  variant: PropTypes.oneOf(Object.values(ClusterIDLabelType)),
+};
+
+ClusterIDLabel.defaultProps = {
+  variant: ClusterIDLabelType.ID,
 };
 
 export default ClusterIDLabel;
