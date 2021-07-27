@@ -2,7 +2,9 @@ import { Box, Text } from 'grommet';
 import { Cluster } from 'MAPI/types';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 
 import { IClusterPropertyProps } from './patches';
 
@@ -25,6 +27,7 @@ const CreateClusterName: React.FC<ICreateClusterNameProps> = ({
       </Text>
       <ClusterIDLabel
         clusterID={cluster.metadata.name}
+        variant={ClusterIDLabelType.Name}
         aria-label={`Cluster name: ${cluster.metadata.name}`}
       />
     </Box>
