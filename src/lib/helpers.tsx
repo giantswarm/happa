@@ -354,11 +354,13 @@ export function isJwtExpired(token: string): boolean {
  * @param str - The string to check.
  * @param min - The minimum permitted length.
  * @param max - The maximum permitted length.
+ * @param strLabel - The label for the string. If provided, this customizes the returned validation message.
  */
 export function hasAppropriateLength(
   str: string,
   min: number,
-  max: number
+  max: number,
+  strLabel: string = 'Name'
 ): {
   isValid: boolean;
   message: string;
@@ -368,12 +370,12 @@ export function hasAppropriateLength(
   const trimmedStr = str.trim();
   if (trimmedStr.length < min) {
     if (trimmedStr.length > 0) {
-      message = `Name must not contain less than ${min} characters`;
+      message = `${strLabel} must not contain less than ${min} characters`;
     } else {
-      message = 'Name must not be empty';
+      message = `${strLabel} must not be empty`;
     }
   } else if (str.length > max) {
-    message = `Name must not contain more than ${max} characters`;
+    message = `${strLabel} must not contain more than ${max} characters`;
   } else {
     isValid = true;
   }
