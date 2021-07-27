@@ -537,7 +537,7 @@ token: can't be blank`)
   });
 
   describe('hasAppropriateLength', () => {
-    it('validates if a string has the length within the given cosntraints', () => {
+    it('validates if a string has the length within the given constraints', () => {
       expect(hasAppropriateLength('', 3, 5)).toStrictEqual({
         isValid: false,
         message: 'Name must not be empty',
@@ -562,9 +562,9 @@ token: can't be blank`)
     });
 
     it('returns a custom message with the string`s label, if provided', () => {
-      expect(hasAppropriateLength('', 3, 5, 'Desciption')).toStrictEqual({
+      expect(hasAppropriateLength('', 3, 5, 'Description')).toStrictEqual({
         isValid: false,
-        message: 'Desciption must not be empty',
+        message: 'Description must not be empty',
       });
     });
   });
