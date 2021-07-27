@@ -56,7 +56,7 @@ interface IClusterIDLabelProps extends React.ComponentPropsWithoutRef<'span'> {
 const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
   clusterID,
   copyEnabled,
-  variant = ClusterIDLabelType.ID,
+  variant,
   ...props
 }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
@@ -129,6 +129,10 @@ ClusterIDLabel.propTypes = {
   clusterID: PropTypes.string.isRequired,
   copyEnabled: PropTypes.bool,
   variant: PropTypes.oneOf(Object.values(ClusterIDLabelType)),
+};
+
+ClusterIDLabel.defaultProps = {
+  variant: ClusterIDLabelType.ID,
 };
 
 export default ClusterIDLabel;
