@@ -320,7 +320,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       {appToDisplay && (
         <AppDetailsModalMAPI
           appName={appToDisplay.metadata.name}
-          clusterId={clusterId}
+          clusterName={clusterId}
           onClose={hideAppModal}
           visible={detailsModalIsVisible}
         />
