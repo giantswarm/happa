@@ -560,6 +560,13 @@ token: can't be blank`)
         message: '',
       });
     });
+
+    it('returns a custom message with the string`s label, if provided', () => {
+      expect(hasAppropriateLength('', 3, 5, 'Desciption')).toStrictEqual({
+        isValid: false,
+        message: 'Desciption must not be empty',
+      });
+    });
   });
 
   describe('compareDates', () => {
