@@ -54,7 +54,7 @@ interface IAppInstallModalProps {
 const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [clusterID, setClusterID] = useState(props.selectedClusterID);
+  const [clusterName, setClusterName] = useState(props.selectedClusterID);
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState('');
@@ -94,7 +94,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   };
 
   const openModal = () => {
-    if (clusterID) {
+    if (clusterName) {
       setPage(1);
     } else {
       setPage(0);
@@ -107,7 +107,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   };
 
   const onSelectCluster = (newClusterID: string) => {
-    setClusterID(newClusterID);
+    setClusterName(newClusterID);
     next();
   };
 
@@ -118,9 +118,8 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const { data: clusterList, error: clusterListError } = useSWR<
     capiv1alpha3.IClusterList,
     GenericResponse
-  >(
-    () => capiv1alpha3.getClusterListKey(),
-    () => capiv1alpha3.getClusterList(clusterListClient.current, auth)
+  >(capiv1alpha3.getClusterListKey(), () =>
+    capiv1alpha3.getClusterList(clusterListClient.current, auth)
   );
 
   useEffect(() => {
@@ -227,10 +226,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   };
 
   const installApp = async () => {
-    if (!clusterID) return;
+    if (!clusterName) return;
 
     const cluster = clusterList?.items.find(
-      (c) => c.metadata.name === clusterID
+      (c) => c.metadata.name === clusterName
     );
     if (!cluster) return;
 
@@ -240,7 +239,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     try {
       setLoading(true);
 
-      await createApp(clientFactory, auth, clusterID, {
+      await createApp(clientFactory, auth, clusterName, {
         name: name,
         catalogName: props.catalogName,
         chartName: props.chartName,
@@ -257,11 +256,17 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         OrganizationsRoutes.Clusters.Detail.Apps,
         {
           orgId: organization,
-          clusterId: clusterID,
+          clusterId: clusterName,
         }
       );
 
       dispatch(push(clusterDetailPath));
+
+      new FlashMessage(
+        `Your app <code>${name}</code> is being installed on <code>${clusterName}</code>`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
     } catch (error) {
       if (error) {
         ErrorReporter.getInstance().notify(error);
@@ -289,7 +294,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           error?.data,
           metav1.K8sStatusErrorReasons.AlreadyExists
         ):
-          errorMessage = `An app called <code>${name}</code> already exists on cluster <code>${clusterID}</code>`;
+          errorMessage = `An app called <code>${name}</code> already exists on cluster <code>${clusterName}</code>`;
 
           break;
 
@@ -328,7 +333,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
-                  selectedClusterID={clusterID}
+                  selectedClusterID={clusterName}
                 />
               </GenericModal>
             );
@@ -358,7 +363,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                 title={
                   <>
                     {`Install ${props.chartName} on`}{' '}
-                    <ClusterIDLabel clusterID={clusterID!} />
+                    <ClusterIDLabel clusterID={clusterName!} />
                   </>
                 }
                 visible={visible}

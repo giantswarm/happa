@@ -42,14 +42,14 @@ enum ModalPanes {
 
 interface IAppDetailsModalProps {
   appName: string;
-  clusterId: string;
+  clusterName: string;
   onClose: () => void;
   visible?: boolean;
 }
 
 const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   appName,
-  clusterId,
+  clusterName,
   onClose,
   visible,
 }) => {
@@ -60,8 +60,8 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   const { data: app, error: appError, mutate: mutateApp } = useSWR<
     applicationv1alpha1.IApp,
     GenericResponse
-  >(applicationv1alpha1.getAppKey(clusterId, appName), () =>
-    applicationv1alpha1.getApp(appClient.current, auth, clusterId, appName)
+  >(applicationv1alpha1.getAppKey(clusterName, appName), () =>
+    applicationv1alpha1.getApp(appClient.current, auth, clusterName, appName)
   );
 
   useEffect(() => {
@@ -100,6 +100,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   }, [app, appError, appName, onClose]);
 
   const appCatalogEntryListClient = useRef(clientFactory());
+
   const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
     if (!app) return {};
 
@@ -112,14 +113,20 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       },
     };
   }, [app]);
+  const appCatalogEntryListKey = useMemo(() => {
+    if (!app) return null;
+
+    return applicationv1alpha1.getAppCatalogEntryListKey(
+      appCatalogEntryListGetOptions
+    );
+  }, [app, appCatalogEntryListGetOptions]);
+
   const {
     data: appCatalogEntryList,
     error: appCatalogEntryListError,
     isValidating: appCatalogEntryListIsValidating,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponse>(
-    applicationv1alpha1.getAppCatalogEntryListKey(
-      appCatalogEntryListGetOptions
-    ),
+    appCatalogEntryListKey,
     () =>
       applicationv1alpha1.getAppCatalogEntryList(
         appCatalogEntryListClient.current,
@@ -173,21 +180,21 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await updateAppVersion(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName,
         desiredVersion
       );
 
       mutateApp(updatedApp);
-      mutate(applicationv1alpha1.getAppListKey({ namespace: clusterId }));
+      mutate(applicationv1alpha1.getAppListKey({ namespace: clusterName }));
 
       setAppUpdateIsLoading(false);
       handleClose();
 
       new FlashMessage(
-        `App <code>${appName}</code> on <code>${clusterId}</code> has been updated. Changes might take some time to take effect.`,
+        `App <code>${appName}</code> on <code>${clusterName}</code> has been updated. Changes might take some time to take effect.`,
         messageType.SUCCESS,
-        messageTTL.LONG
+        messageTTL.SHORT
       );
     } catch (err) {
       setAppUpdateIsLoading(false);
@@ -204,7 +211,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await deleteConfigMapForApp(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName
       );
 
@@ -213,7 +220,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterId}</code> has been deleted.`,
+        `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterName}</code> has been deleted.`,
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -236,7 +243,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await deleteSecretForApp(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName
       );
 
@@ -245,7 +252,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterId}</code> has been deleted.`,
+        `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterName}</code> has been deleted.`,
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -265,15 +272,15 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
   async function deleteApp() {
     try {
-      await deleteAppWithName(clientFactory(), auth, clusterId, appName);
+      await deleteAppWithName(clientFactory(), auth, clusterName, appName);
 
-      mutate(applicationv1alpha1.getAppListKey({ namespace: clusterId }));
+      mutate(applicationv1alpha1.getAppListKey({ namespace: clusterName }));
       handleClose();
 
       new FlashMessage(
-        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterId}</code>. This may take a couple of minutes.`,
+        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterName}</code>. This may take a couple of minutes.`,
         messageType.SUCCESS,
-        messageTTL.LONG
+        messageTTL.SHORT
       );
     } catch (err) {
       const errorMessage = extractErrorMessage(err);
@@ -295,7 +302,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await ensureConfigMapForApp(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName,
         contents
       );
@@ -308,9 +315,9 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterId}</code> has successfully been created.`,
+        `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterName}</code> has successfully been created.`,
         messageType.SUCCESS,
-        messageTTL.LONG
+        messageTTL.SHORT
       );
     } catch (err) {
       done();
@@ -334,7 +341,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await ensureConfigMapForApp(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName,
         contents
       );
@@ -347,9 +354,9 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterId}</code> has successfully been updated.`,
+        `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
         messageType.SUCCESS,
-        messageTTL.LONG
+        messageTTL.SHORT
       );
     } catch (err) {
       done();
@@ -373,7 +380,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await ensureSecretForApp(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName,
         contents
       );
@@ -386,9 +393,9 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterId}</code> has successfully been updated.`,
+        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
         messageType.SUCCESS,
-        messageTTL.LONG
+        messageTTL.SHORT
       );
     } catch (err) {
       done();
@@ -412,7 +419,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const updatedApp = await ensureSecretForApp(
         clientFactory(),
         auth,
-        clusterId,
+        clusterName,
         appName,
         contents
       );
@@ -425,9 +432,9 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterId}</code> has successfully been updated.`,
+        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
         messageType.SUCCESS,
-        messageTTL.LONG
+        messageTTL.SHORT
       );
     } catch (err) {
       done();
@@ -484,7 +491,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           title={
             <>
               Change Chart Version for {appName} on{' '}
-              <ClusterIDLabel clusterID={clusterId} />
+              <ClusterIDLabel clusterID={clusterName} />
             </>
           }
           footer={
@@ -519,7 +526,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           title={
             <>
               Delete user level config values for {appName} on{' '}
-              <ClusterIDLabel clusterID={clusterId} />
+              <ClusterIDLabel clusterID={clusterName} />
             </>
           }
           footer={
@@ -534,7 +541,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         >
           <>
             Are you sure you want to delete user level config values for{' '}
-            {appName} on <ClusterIDLabel clusterID={clusterId} />?
+            {appName} on <ClusterIDLabel clusterID={clusterName} />?
             <br />
             <br />
             There is no undo.
@@ -549,7 +556,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           title={
             <>
               Delete user level secret values for {appName} on{' '}
-              <ClusterIDLabel clusterID={clusterId} />
+              <ClusterIDLabel clusterID={clusterName} />
             </>
           }
           footer={
@@ -564,7 +571,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         >
           <>
             Are you sure you want to delete user level secret values for{' '}
-            {appName} on <ClusterIDLabel clusterID={clusterId} />?
+            {appName} on <ClusterIDLabel clusterID={clusterName} />?
             <br />
             <br />
             There is no undo.
@@ -578,8 +585,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           aria-label='App details - Delete app'
           title={
             <>
-              Delete {appName} on
-              <ClusterIDLabel clusterID={clusterId} />
+              Delete {appName} on <ClusterIDLabel clusterID={clusterName} />
             </>
           }
           footer={
@@ -594,7 +600,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         >
           <>
             Are you sure you want to delete {appName}&nbsp; on{' '}
-            <ClusterIDLabel clusterID={clusterId} />?
+            <ClusterIDLabel clusterID={clusterName} />?
             <br />
             <br />
             There is no undo.
@@ -609,7 +615,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
 AppDetailsModal.propTypes = {
   appName: PropTypes.string.isRequired,
-  clusterId: PropTypes.string.isRequired,
+  clusterName: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   visible: PropTypes.bool,
 };
