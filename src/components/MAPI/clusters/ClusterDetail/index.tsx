@@ -27,7 +27,9 @@ import Tabs from 'shared/Tabs';
 import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
@@ -199,7 +201,11 @@ const ClusterDetail: React.FC<{}> = () => {
       <Box>
         <Heading level={1} margin={{ bottom: 'large' }}>
           <Box direction='row' align='center'>
-            <ClusterIDLabel clusterID={clusterId} copyEnabled={true} />{' '}
+            <ClusterIDLabel
+              clusterID={clusterId}
+              copyEnabled={true}
+              variant={ClusterIDLabelType.Name}
+            />{' '}
             <ClusterDetailWidgetOptionalValue
               value={clusterDescription}
               loaderHeight={35}

@@ -95,7 +95,7 @@ interface IClusterDetailApps {
 const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   releaseVersion,
 }) => {
-  const { clusterId } = useParams<{ clusterId: string }>();
+  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -320,7 +320,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       {appToDisplay && (
         <AppDetailsModalMAPI
           appName={appToDisplay.metadata.name}
-          clusterId={clusterId}
+          clusterName={clusterId}
           onClose={hideAppModal}
           visible={detailsModalIsVisible}
         />
