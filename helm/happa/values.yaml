@@ -38,6 +38,8 @@ happa:
   address: ""
   host: ""
   letsencrypt: ""
+  featureFlags:
+    mapiClusters: false
 
 happaapi:
   address: ""
