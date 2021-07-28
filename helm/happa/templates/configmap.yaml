@@ -38,4 +38,4 @@ data:
   {{ else }}
   feature-mapi-auth: 'FALSE'
   {{ end }}
-  feature-mapi-clusters: 'FALSE'
+  feature-mapi-clusters: {{ .Values.happa.featureFlags.mapiClusters | quote | upper }}
