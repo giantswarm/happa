@@ -195,7 +195,7 @@ describe('AppDetailsModal', () => {
 
     fireEvent.click(
       await screen.findByRole('button', {
-        name: 'Update Chart Version',
+        name: 'Update chart version',
       })
     );
 

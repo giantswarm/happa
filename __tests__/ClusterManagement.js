@@ -100,12 +100,12 @@ describe('ClusterManagement', () => {
     } = renderRouteWithStore(newClusterPath);
 
     await waitFor(() => {
-      getByText('Create Cluster');
+      getByText('Create cluster');
       // Is this the v5 form?
       expect(getByTestId('nodepool-cluster-creation-view')).toBeInTheDocument();
     });
 
-    fireEvent.click(getByText('Create Cluster'));
+    fireEvent.click(getByText('Create cluster'));
     await waitFor(() => getByTestId('cluster-details-view'));
 
     // Expect we have been redirected to the cluster details view
@@ -168,7 +168,7 @@ details view`, async () => {
     );
 
     // Click the create cluster button.
-    fireEvent.click(await findByText('Create Cluster'));
+    fireEvent.click(await findByText('Create cluster'));
 
     // Wait till we're on the cluster detail page.
     await findByTestId('cluster-details-view');

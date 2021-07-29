@@ -310,7 +310,7 @@ scales node pools correctly`, async () => {
     expect(modalTitle.textContent.includes(cluster.id)).toBeTruthy();
 
     // Click delete button.
-    const modalDeleteButton = getAllByText('Delete Cluster')[1];
+    const modalDeleteButton = getAllByText('Delete cluster')[1];
     fireEvent.click(modalDeleteButton);
 
     // Flash message confirming deletion.
@@ -375,8 +375,8 @@ scales node pools correctly`, async () => {
     expect(getByText(bodyTextMultipleNP)).toBeInTheDocument();
 
     // Click delete button.
-    const deleteButtonText = 'Delete Node Pool';
-    fireEvent.click(getByText(deleteButtonText));
+    const deleteButtonText = 'Delete node pool';
+    fireEvent.click(getAllByText(deleteButtonText)[1]);
 
     // Flash message confirming deletion.
     await waitFor(() => {

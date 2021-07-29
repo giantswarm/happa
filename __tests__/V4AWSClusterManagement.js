@@ -205,8 +205,8 @@ it('deletes a v4 cluster', async () => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
 
-  await waitFor(() => getByText('Delete Cluster'));
-  fireEvent.click(getByText('Delete Cluster'));
+  await waitFor(() => getByText('Delete cluster'));
+  fireEvent.click(getByText('Delete cluster'));
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
@@ -216,7 +216,7 @@ it('deletes a v4 cluster', async () => {
   expect(modalTitle.textContent.includes(cluster.id)).toBeTruthy();
 
   // Click delete button.
-  const modalDeleteButton = getAllByText('Delete Cluster')[1];
+  const modalDeleteButton = getAllByText('Delete cluster')[1];
   fireEvent.click(modalDeleteButton);
 
   // Flash message confirming deletion.

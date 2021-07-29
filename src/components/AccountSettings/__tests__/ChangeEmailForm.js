@@ -7,7 +7,7 @@ import { renderWithTheme } from 'testUtils/renderUtils';
 import ChangeEmailForm from '../ChangeEmailForm';
 
 const inputInitialValue = USER_EMAIL;
-const buttonLabel = 'Set New Email';
+const buttonLabel = 'Set new email';
 
 const statusMessages = {
   Success: 'Your email has been updated',

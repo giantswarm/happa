@@ -83,7 +83,7 @@ it('lets me create a keypair', async () => {
   fireEvent.click(keyPairTab);
 
   // And I click the create key pair button.
-  const createKeyPairButton = getByText('Create Key Pair and Kubeconfig');
+  const createKeyPairButton = getByText('Create key pair and kubeconfig');
   fireEvent.click(createKeyPairButton);
 
   // Then I should see the create key pair modal on the screen.

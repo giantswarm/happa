@@ -45,7 +45,7 @@ it('lets me get there from the dashboard and go through the pages', async () => 
 
   const { findByText } = renderRouteWithStore(MainRoutes.Home);
 
-  const getStartedButton = await findByText('Get Started');
+  const getStartedButton = await findByText('Get started');
   expect(getStartedButton).toBeInTheDocument();
 
   fireEvent.click(getStartedButton);
