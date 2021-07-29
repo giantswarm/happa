@@ -297,7 +297,7 @@ class CreateNodePoolsCluster extends Component {
           </NodePoolsTransitionGroup>
           <RUMActionTarget name={RUMActions.AddNodePool}>
             <Button onClick={this.addNodePoolForm}>
-              <i className='fa fa-add-circle' /> ADD NODE POOL
+              <i className='fa fa-add-circle' /> Add node pool
             </Button>
           </RUMActionTarget>
           <HorizontalLine />
@@ -311,7 +311,7 @@ class CreateNodePoolsCluster extends Component {
               onClick={this.createCluster}
               type='button'
             >
-              Create Cluster
+              Create cluster
             </Button>
           </RUMActionTarget>
           {/* We want to hide cancel button when the Create NP button has been clicked */}

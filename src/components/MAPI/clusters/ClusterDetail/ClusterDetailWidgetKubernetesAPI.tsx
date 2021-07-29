@@ -5,14 +5,9 @@ import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
-
-const GetStartedButton = styled(Button)`
-  text-transform: uppercase;
-`;
 
 interface IClusterDetailWidgetKubernetesAPIProps
   extends Omit<
@@ -66,10 +61,10 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<IClusterDetailWidgetKubernetesA
 
       {typeof k8sApiURL !== 'undefined' && (
         <Link to={gettingStartedPath}>
-          <GetStartedButton tabIndex={-1}>
+          <Button tabIndex={-1}>
             <i className='fa fa-start' aria-hidden={true} role='presentation' />
-            Get Started
-          </GetStartedButton>
+            Get started
+          </Button>
         </Link>
       )}
     </ClusterDetailWidget>

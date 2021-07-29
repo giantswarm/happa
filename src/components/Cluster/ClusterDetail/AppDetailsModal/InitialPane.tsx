@@ -171,7 +171,7 @@ const InitialPane: React.FC<IInitialPaneProps> = (props) => {
       <DetailItem title='Delete This App'>
         <Button bsStyle='danger' onClick={props.showDeleteAppPane}>
           <i className='fa fa-delete' />
-          Delete App
+          Delete app
         </Button>
       </DetailItem>
     </div>

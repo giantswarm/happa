@@ -222,7 +222,7 @@ class Users extends React.Component {
               <>
                 <InvitesTable invitations={invitations} />
                 <Button onClick={this.inviteUser}>
-                  <i className='fa fa-add-circle' /> INVITE USER
+                  <i className='fa fa-add-circle' /> Invite user
                 </Button>
               </>
             </Section>

@@ -63,10 +63,6 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const GetStartedButton = styled(Button)`
-  text-transform: uppercase;
-`;
-
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster?: capiv1alpha3.ICluster;
@@ -235,7 +231,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
               )}
             </ClusterListItemOptionalValue>
           </Box>
-          <Box basis='80%'>
+          <Box basis='82%'>
             <Box direction='row' align='center' wrap={true} gap='small'>
               <ClusterListItemOptionalValue value={description}>
                 {(value) => (
@@ -288,15 +284,15 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
           </Box>
 
           {shouldDisplayGetStarted && (
-            <Box basis='10%'>
-              <GetStartedButton onClick={handleGetStartedClick}>
+            <Box basis='8%'>
+              <Button onClick={handleGetStartedClick}>
                 <i
                   className='fa fa-start'
                   aria-hidden={true}
                   role='presentation'
                 />
-                Get Started
-              </GetStartedButton>
+                Get started
+              </Button>
             </Box>
           )}
         </CardBody>

@@ -214,7 +214,7 @@ class OrganizationDetail extends React.Component {
           )}
           <Link to={newClusterPath}>
             <Button bsStyle='default'>
-              <i className='fa fa-add-circle' /> Create Cluster
+              <i className='fa fa-add-circle' /> Create cluster
             </Button>
           </Link>
         </Section>
@@ -234,7 +234,7 @@ class OrganizationDetail extends React.Component {
               />
             )}
             <Button bsStyle='default' onClick={this.addMember}>
-              <i className='fa fa-add-circle' /> Add Member
+              <i className='fa fa-add-circle' /> Add member
             </Button>
           </MembersTable>
         </Section>
@@ -259,7 +259,7 @@ class OrganizationDetail extends React.Component {
             disabled={!supportsDeletion.status}
             aria-label='Delete organization'
           >
-            <i className='fa fa-delete' /> Delete Organization
+            <i className='fa fa-delete' /> Delete organization
           </Button>
         </Section>
       </DocumentTitle>

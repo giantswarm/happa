@@ -231,7 +231,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
               onClick={openAppCatalog}
               disabled={isUpdatingOrCreating}
             >
-              <i className='fa fa-add-circle' /> Install App
+              <i className='fa fa-add-circle' /> Install app
             </BrowseButton>
 
             {isUpdatingOrCreating && (
