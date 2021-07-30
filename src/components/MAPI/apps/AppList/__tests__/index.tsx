@@ -140,7 +140,7 @@ describe('AppList', () => {
 
     fireEvent.click(
       within(filterWrapperElement).getByRole('button', {
-        name: 'Select None',
+        name: 'Select none',
       })
     );
 
