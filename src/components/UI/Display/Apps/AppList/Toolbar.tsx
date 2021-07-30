@@ -85,6 +85,7 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
           margin={{ bottom: 'none', right: 'small' }}
           icon={<i className='fa fa-search' />}
           readOnly={props.isLoading}
+          aria-label='Search for a specific app'
         />
 
         {props.isLoading && (
