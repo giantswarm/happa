@@ -63,7 +63,7 @@ export interface IAppProps {
 
 const App: React.FC<IAppProps> = (props) => {
   return (
-    <Wrapper to={props.to}>
+    <Wrapper to={props.to} aria-label={props.name}>
       <IconWrapper>
         <AppIcon src={props.appIconURL} name={props.name} />
       </IconWrapper>
