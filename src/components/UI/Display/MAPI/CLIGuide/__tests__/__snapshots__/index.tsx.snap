@@ -1,0 +1,157 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLIGuide renders the contents when open 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+>
+  <div
+    class="sc-gKckTs izRacH"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 bkbNEX"
+      role="tablist"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 iuBOfw"
+      >
+        <button
+          aria-expanded="true"
+          aria-selected="true"
+          class="StyledButton-sc-323bzc-0 gUjxTZ"
+          role="tab"
+          type="button"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 hoBZOR"
+          >
+            <div
+              class="StyledBox-sc-13pk1d4-0 jrFayi"
+            >
+              <span
+                aria-hidden="true"
+                class="StyledText-sc-1sadyjn-0 cORcyl fa fa-shell"
+                role="presentation"
+              />
+              <div
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 FkBck"
+              />
+              <span
+                class="StyledText-sc-1sadyjn-0 FLjzT"
+              >
+                Get something from somewhere
+              </span>
+            </div>
+            <div
+              class="StyledBox-sc-13pk1d4-0 ibrxYb"
+            >
+              <svg
+                aria-label="FormUp"
+                class="StyledIcon-ofa7kd-0 cVihZy"
+                viewBox="0 0 24 24"
+              >
+                <polyline
+                  fill="none"
+                  points="18 9 12 15 6 9"
+                  stroke="#000"
+                  stroke-width="2"
+                  transform="matrix(1 0 0 -1 0 24)"
+                />
+              </svg>
+            </div>
+          </div>
+        </button>
+        <div
+          class="StyledBox-sc-13pk1d4-0 hvUCKZ"
+          style=""
+        >
+          <div
+            aria-hidden="false"
+            class="StyledBox-sc-13pk1d4-0 hvUCKZ Collapsible__AnimatedBox-sc-15kniua-0 bRxhUn"
+            open=""
+            style="max-height: 0;"
+          >
+            <div
+              class="StyledBox-sc-13pk1d4-0 ieolrg"
+            >
+              Just some content
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CLIGuide renders without crashing 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+>
+  <div
+    class="sc-gKckTs izRacH"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 bkbNEX"
+      role="tablist"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 iuBOfw"
+      >
+        <button
+          aria-expanded="false"
+          aria-selected="false"
+          class="StyledButton-sc-323bzc-0 gUjxTZ"
+          role="tab"
+          type="button"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 hoBZOR"
+          >
+            <div
+              class="StyledBox-sc-13pk1d4-0 jrFayi"
+            >
+              <span
+                aria-hidden="true"
+                class="StyledText-sc-1sadyjn-0 cORcyl fa fa-shell"
+                role="presentation"
+              />
+              <div
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 FkBck"
+              />
+              <span
+                class="StyledText-sc-1sadyjn-0 FLjzT"
+              >
+                Get something from somewhere
+              </span>
+            </div>
+            <div
+              class="StyledBox-sc-13pk1d4-0 ibrxYb"
+            >
+              <svg
+                aria-label="FormDown"
+                class="StyledIcon-ofa7kd-0 cVihZy"
+                viewBox="0 0 24 24"
+              >
+                <polyline
+                  fill="none"
+                  points="18 9 12 15 6 9"
+                  stroke="#000"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </button>
+        <div
+          class="StyledBox-sc-13pk1d4-0 hvUCKZ"
+        >
+          <div
+            aria-hidden="true"
+            class="StyledBox-sc-13pk1d4-0 hvUCKZ Collapsible__AnimatedBox-sc-15kniua-0 gxzVjq"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
