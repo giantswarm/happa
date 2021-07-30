@@ -189,7 +189,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           disabled={installationIsDisabled}
           onClick={handleClick}
         >
-          Install Ingress Controller
+          Install ingress controller
         </Button>
       )}
 

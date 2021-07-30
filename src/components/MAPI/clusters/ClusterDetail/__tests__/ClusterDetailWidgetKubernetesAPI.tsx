@@ -36,7 +36,7 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Get Started',
+        name: 'Get started',
       })
     ).toBeInTheDocument();
   });

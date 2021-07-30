@@ -64,10 +64,6 @@ const Buttons = styled(GridCell)`
   padding-bottom: 2px;
 `;
 
-const AddLabelButton = styled(Button)`
-  text-transform: uppercase;
-`;
-
 const Editable = styled.span<{ allowInteraction?: boolean }>`
   text-decoration: ${({ allowInteraction }) =>
     allowInteraction ? 'underline' : 'none'};
@@ -153,13 +149,13 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   return (
     <EditLabelTooltipWrapper ref={divElement} className={className}>
       {label === '' ? (
-        <AddLabelButton
+        <Button
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
           data-testid='add-label-button'
         >
           <i className='fa fa-add-circle' /> Add label
-        </AddLabelButton>
+        </Button>
       ) : (
         <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
           <StyledValueLabel

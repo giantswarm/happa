@@ -312,7 +312,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     <>
       <Button bsStyle='primary' onClick={openModal}>
         <i className='fa fa-add-circle' />
-        Install in Cluster
+        Install in cluster
       </Button>
       {(() => {
         switch (pages[page]) {
@@ -349,10 +349,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                       loading={loading}
                       onClick={installApp}
                     >
-                      Install App
+                      Install app
                     </Button>
                     <Button bsStyle='link' onClick={previous}>
-                      Pick a different Cluster
+                      Pick a different cluster
                     </Button>
                     <Button bsStyle='link' onClick={onClose}>
                       Cancel

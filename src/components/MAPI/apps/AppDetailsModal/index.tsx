@@ -501,7 +501,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
                 onClick={editChartVersion}
                 loading={appUpdateIsLoading}
               >
-                Update Chart Version
+                Update chart version
               </Button>
               <Button bsStyle='link' onClick={showPane(ModalPanes.Initial)}>
                 Cancel
@@ -590,7 +590,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           footer={
             <DeleteConfirmFooter
-              cta='Delete App'
+              cta='Delete app'
               onConfirm={deleteApp}
               onCancel={showPane(ModalPanes.Initial)}
             />

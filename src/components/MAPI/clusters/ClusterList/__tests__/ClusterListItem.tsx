@@ -98,7 +98,7 @@ describe('ClusterListItem', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Get Started' })
+      screen.getByRole('button', { name: 'Get started' })
     ).toBeInTheDocument();
 
     creationDate = sub({

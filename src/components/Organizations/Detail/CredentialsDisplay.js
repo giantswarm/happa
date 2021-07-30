@@ -17,7 +17,7 @@ const CredentialsDisplay = (props) => {
   if (props.credentials.length === 0) {
     const button = (
       <Button bsStyle='default' onClick={props.onShowForm}>
-        Set Credentials
+        Set credentials
       </Button>
     );
 

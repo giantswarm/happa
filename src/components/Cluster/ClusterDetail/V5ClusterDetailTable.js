@@ -458,7 +458,7 @@ class V5ClusterDetailTable extends React.Component {
           </StyledURIBlock>
           <GetStartedWrapper>
             <Button onClick={accessCluster}>
-              <i className='fa fa-start' /> GET STARTED
+              <i className='fa fa-start' /> Get started
             </Button>
           </GetStartedWrapper>
         </KubernetesURIWrapper>
@@ -557,7 +557,7 @@ class V5ClusterDetailTable extends React.Component {
                     onClick={this.createNodePool}
                     type='button'
                   >
-                    Create Node Pool
+                    Create node pool
                   </Button>
                   {/* We want to hide cancel button when the Create NP button has been clicked */}
                   {!nodePoolForm.isSubmitting && (
@@ -587,7 +587,7 @@ class V5ClusterDetailTable extends React.Component {
             )}
             <RUMActionTarget name={RUMActions.AddNodePool}>
               <Button onClick={this.toggleAddNodePoolForm}>
-                <i className='fa fa-add-circle' /> ADD NODE POOL
+                <i className='fa fa-add-circle' /> Add node pool
               </Button>
             </RUMActionTarget>
             {nodePools && nodePools.length === 1 && (

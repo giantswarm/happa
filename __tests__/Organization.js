@@ -121,7 +121,7 @@ describe('', () => {
         findByTestId,
       } = renderRouteWithStore(OrganizationsRoutes.Home);
 
-      const createOrgButton = await findByText('Create New Organization');
+      const createOrgButton = await findByText('Create new organization');
       fireEvent.click(createOrgButton);
 
       await findByText('Create an Organization');
@@ -133,7 +133,7 @@ describe('', () => {
         target: { value: newOrganizationId },
       });
 
-      fireEvent.click(getByText('Create Organization'));
+      fireEvent.click(getByText('Create organization'));
 
       await findByText(
         (_, element) =>
@@ -205,7 +205,7 @@ describe('', () => {
         organizationDetailsPath
       );
 
-      const addMemberButton = await findByText('Add Member');
+      const addMemberButton = await findByText('Add member');
       expect(addMemberButton).toBeInTheDocument();
 
       fireEvent.click(addMemberButton);
@@ -217,7 +217,7 @@ describe('', () => {
         target: { value: newMemberEmail },
       });
 
-      fireEvent.click(await findByText('Add Member to Organization'));
+      fireEvent.click(await findByText('Add member to organization'));
 
       expect(
         await findByText(
@@ -272,13 +272,13 @@ describe('', () => {
       expect(removalNotice).toBeInTheDocument();
 
       const removeUserButton = await findByText(
-        'Remove Member from Organization'
+        'Remove member from organization'
       );
       expect(removeUserButton).toBeInTheDocument();
 
       fireEvent.click(removeUserButton);
 
-      expect(removeUserButton.textContent).toBe('Removing Member');
+      expect(removeUserButton.textContent).toBe('Removing member');
 
       const flashMessage = await findByText(
         (_, element) =>
@@ -338,7 +338,7 @@ describe('Organization deletion', () => {
       organizationDetailsPath
     );
 
-    let deleteButton = await findByText('Delete Organization');
+    let deleteButton = await findByText('Delete organization');
     fireEvent.click(deleteButton);
 
     const modalTitle = await findByText((_, element) => {
@@ -350,7 +350,7 @@ describe('Organization deletion', () => {
     expect(modalTitle).toBeInTheDocument();
     expect(modalTitle.textContent.includes(organizationID)).toBeTruthy();
 
-    deleteButton = getAllByText('Delete Organization')[1];
+    deleteButton = getAllByText('Delete organization')[1];
     fireEvent.click(deleteButton);
 
     const flashMessages = await findAllByText((_, element) => {

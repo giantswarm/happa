@@ -374,7 +374,7 @@ class ClusterDetailView extends React.Component {
                       bsStyle='danger'
                       onClick={this.showDeleteClusterModal.bind(this, cluster)}
                     >
-                      <i className='fa fa-delete' /> Delete Cluster
+                      <i className='fa fa-delete' /> Delete cluster
                     </Button>
                   </>
                 </Section>

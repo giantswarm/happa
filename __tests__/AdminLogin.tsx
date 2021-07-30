@@ -56,7 +56,7 @@ describe('AdminLogin', () => {
       MapiAuthConnectors.GiantSwarm
     );
 
-    expect(await screen.findByText('Launch New Cluster')).toBeInTheDocument();
+    expect(await screen.findByText('Launch new cluster')).toBeInTheDocument();
     attemptLoginMockFn.mockRestore();
   });
 

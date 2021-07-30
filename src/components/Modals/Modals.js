@@ -169,8 +169,8 @@ class Modals extends React.Component {
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
-                  ? 'Deleting Organization'
-                  : 'Delete Organization'}
+                  ? 'Deleting organization'
+                  : 'Delete organization'}
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
@@ -222,8 +222,8 @@ class Modals extends React.Component {
                 disabled={this.state.organizationNameValidationError.length > 0}
               >
                 {this.props.modal.templateValues.loading
-                  ? 'Creating Organization'
-                  : 'Create Organization'}
+                  ? 'Creating organization'
+                  : 'Create organization'}
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
@@ -269,8 +269,8 @@ class Modals extends React.Component {
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
-                  ? 'Adding Member'
-                  : 'Add Member to Organization'}
+                  ? 'Adding member'
+                  : 'Add member to organization'}
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
@@ -304,8 +304,8 @@ class Modals extends React.Component {
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
-                  ? 'Removing Member'
-                  : 'Remove Member from Organization'}
+                  ? 'Removing member'
+                  : 'Remove member from organization'}
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
@@ -349,8 +349,8 @@ class Modals extends React.Component {
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
-                  ? 'Deleting Cluster'
-                  : 'Delete Cluster'}
+                  ? 'Deleting cluster'
+                  : 'Delete cluster'}
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
@@ -420,8 +420,8 @@ class Modals extends React.Component {
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
-                  ? 'Deleting Node Pool'
-                  : 'Delete Node Pool'}
+                  ? 'Deleting node pool'
+                  : 'Delete node pool'}
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (

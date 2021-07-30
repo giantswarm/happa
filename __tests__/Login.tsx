@@ -210,7 +210,7 @@ describe('Login', () => {
 
     expect(attemptLoginMockFn).toHaveBeenCalledWith(undefined);
 
-    expect(await screen.findByText('Launch New Cluster')).toBeInTheDocument();
+    expect(await screen.findByText('Launch new cluster')).toBeInTheDocument();
     attemptLoginMockFn.mockRestore();
   });
 
@@ -304,7 +304,7 @@ describe('Login', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Proceed to login' }));
 
-    const someButton = await screen.findByText('Launch New Cluster');
+    const someButton = await screen.findByText('Launch new cluster');
     expect(someButton).toBeInTheDocument();
 
     testAuth.expireUser();
@@ -350,7 +350,7 @@ describe('Login', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Proceed to login' }));
 
-    const someButton = await screen.findByText('Launch New Cluster');
+    const someButton = await screen.findByText('Launch new cluster');
     expect(someButton).toBeInTheDocument();
 
     testAuth.expireUser();

@@ -63,7 +63,7 @@ const InviteUserModal = ({
   const prevShow = usePrevious(show);
 
   const isInvited = Object.keys(invitationResult).length > 0;
-  const confirmButtonText = isLoading ? 'Inviting User' : 'Invite User';
+  const confirmButtonText = isLoading ? 'Inviting user' : 'Invite user';
   const cancelText = isInvited ? 'Close' : 'Cancel';
 
   let modalTitle = 'Invite a New User';

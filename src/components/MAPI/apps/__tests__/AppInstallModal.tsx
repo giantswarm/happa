@@ -71,7 +71,7 @@ describe('AppInstallModal', () => {
       })
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Install in Cluster' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
 
     fireEvent.click(
       await screen.findByText(capiv1alpha3Mocks.randomCluster1.metadata.name)
@@ -83,7 +83,7 @@ describe('AppInstallModal', () => {
       )
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText('Pick a different Cluster'));
+    fireEvent.click(screen.getByText('Pick a different cluster'));
 
     fireEvent.click(
       await screen.findByText(capiv1alpha3Mocks.randomCluster2.metadata.name)
@@ -152,13 +152,13 @@ describe('AppInstallModal', () => {
       })
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Install in Cluster' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
 
     fireEvent.click(
       await screen.findByText(capiv1alpha3Mocks.randomCluster1.metadata.name)
     );
 
-    fireEvent.click(await screen.findByRole('button', { name: 'Install App' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Install app' }));
 
     expect(
       await withMarkup(screen.findByText)(

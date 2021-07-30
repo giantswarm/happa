@@ -4,7 +4,7 @@ import React from 'react';
 import UsersModal from './UsersModal';
 
 const DeleteUserModal = ({ forUser, isLoading, ...props }) => {
-  const confirmButtonText = isLoading ? 'Deleting User' : 'Delete User';
+  const confirmButtonText = isLoading ? 'Deleting user' : 'Delete user';
   const modalTitle = `Delete ${forUser}`;
 
   return (

@@ -101,7 +101,7 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
                 apps from
               </p>
               <Button bsStyle='default' onClick={props.onResetSearch}>
-                RESET SEARCH
+                Reset search
               </Button>
             </div>
           </EmptyState>
