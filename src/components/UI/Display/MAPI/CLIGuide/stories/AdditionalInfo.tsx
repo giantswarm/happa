@@ -1,10 +1,10 @@
 import { Story } from '@storybook/react';
-import { Box, Text } from 'grommet';
 import React from 'react';
-import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 
 import CLIGuide from '..';
 import CLIGuideAdditionalInfo from '../CLIGuideAdditionalInfo';
+import CLIGuideStep from '../CLIGuideStep';
+import CLIGuideStepList from '../CLIGuideStepList';
 
 export const AdditionalInfo: Story<
   React.ComponentPropsWithoutRef<typeof CLIGuide>
@@ -15,20 +15,16 @@ export const AdditionalInfo: Story<
 AdditionalInfo.args = {
   title: 'Get some data from the somewhere',
   children: (
-    <Box direction='column' gap='small'>
-      <Box direction='column' gap='small'>
-        <Text>1. Make sure you are a boss</Text>
-        <CodeBlock>
-          <Prompt>some command --some-flag</Prompt>
-        </CodeBlock>
-      </Box>
-      <Box direction='column' gap='small'>
-        <Text>2. Maybe check again if you are still a boss</Text>
-        <CodeBlock>
-          <Prompt>some-other-cli checkboss</Prompt>
-        </CodeBlock>
-      </Box>
-    </Box>
+    <CLIGuideStepList>
+      <CLIGuideStep
+        title='1. Make sure you are a boss'
+        command='some command --some-flag'
+      />
+      <CLIGuideStep
+        title='2. Maybe check again if you are still a boss'
+        command='some-other-cli checkboss'
+      />
+    </CLIGuideStepList>
   ),
   footer: (
     <CLIGuideAdditionalInfo
