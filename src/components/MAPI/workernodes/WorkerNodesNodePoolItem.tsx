@@ -5,8 +5,8 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
-import { extractErrorMessage } from 'MAPI/utils';
 import {
+  extractErrorMessage,
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,
