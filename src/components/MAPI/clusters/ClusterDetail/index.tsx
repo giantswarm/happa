@@ -96,9 +96,8 @@ const ClusterDetail: React.FC<{}> = () => {
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
     securityv1alpha1.getOrganization(clusterClient.current, auth, orgId)
   );
-  const namespace = useMemo(() => org?.status?.namespace, [
-    org?.status?.namespace,
-  ]);
+
+  const namespace = org?.status?.namespace;
 
   useEffect(() => {
     if (orgError) {
