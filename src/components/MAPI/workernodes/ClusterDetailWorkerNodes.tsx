@@ -3,11 +3,9 @@ import { Box, Heading, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import {
-  extractErrorMessage,
-  getOrgNamespaceFromOrgName,
-} from 'MAPI/organizations/utils';
+import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/utils';
 import { NodePool, ProviderCluster } from 'MAPI/types';
+import { extractErrorMessage } from 'MAPI/utils';
 import {
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,

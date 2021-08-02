@@ -4,9 +4,9 @@ import ReleaseSelector, {
 } from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import { Cluster } from 'MAPI/types';
+import { extractErrorMessage } from 'MAPI/utils';
 import { getClusterReleaseVersion } from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';

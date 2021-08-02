@@ -7,6 +7,7 @@ import { useHttpClient } from 'lib/hooks/useHttpClient';
 import RoutePath from 'lib/routePath';
 import { ClusterList } from 'MAPI/types';
 import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,10 +22,7 @@ import Button from 'UI/Controls/Button';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
 
 import OrganizationListCreateOrg from './OrganizationListCreateOrg';
-import {
-  computeClusterCountersForOrganizations,
-  extractErrorMessage,
-} from './utils';
+import { computeClusterCountersForOrganizations } from './utils';
 
 const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
