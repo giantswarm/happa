@@ -1,14 +1,6 @@
 import { Cluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 
-/**
- * Compute an organization namespace from the given organization name.
- * @param name
- */
-export function getOrgNamespaceFromOrgName(name: string) {
-  return `org-${name}` as const;
-}
-
 export enum OrganizationNameStatusMessage {
   TooShort = `Must be at least 4 characters long`,
   StartAndEndWithAlphaNumeric = 'Must start and end with an alphanumeric character (a-z, 0-9)',
