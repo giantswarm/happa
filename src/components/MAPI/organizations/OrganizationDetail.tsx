@@ -17,7 +17,6 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { getNamespaceFromOrgName } from 'stores/main/utils';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
@@ -56,7 +55,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
     securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
   );
 
-  const orgNamespace = data && getNamespaceFromOrgName(data.metadata.name);
+  const orgNamespace = data?.status?.namespace;
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -92,7 +91,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
-        {!data ? (
+        {!data || !orgNamespace ? (
           <OrganizationDetailLoadingPlaceholder />
         ) : (
           <>
@@ -103,13 +102,13 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
               <Tab eventKey={paths.Detail} title='General'>
                 <OrganizationDetailGeneral
                   organizationName={data.metadata.name}
-                  organizationNamespace={orgNamespace!}
+                  organizationNamespace={orgNamespace}
                 />
               </Tab>
               <Tab eventKey={paths.AccessControl} title='Access control'>
                 <AccessControlPage
                   organizationName={data.metadata.name}
-                  organizationNamespace={orgNamespace!}
+                  organizationNamespace={orgNamespace}
                 />
               </Tab>
             </Tabs>

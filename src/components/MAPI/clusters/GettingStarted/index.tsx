@@ -5,14 +5,12 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import {
-  extractErrorMessage,
-  getOrgNamespaceFromOrgName,
-} from 'MAPI/organizations/utils';
+import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { Cluster } from 'MAPI/types';
 import { fetchCluster, fetchClusterKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -103,14 +101,44 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const namespace = getOrgNamespaceFromOrgName(orgId);
-
   const clusterClient = useRef(clientFactory());
+
+  const { data: org, error: orgError } = useSWR<
+    securityv1alpha1.IOrganization,
+    GenericResponseError
+  >(securityv1alpha1.getOrganizationKey(orgId), () =>
+    securityv1alpha1.getOrganization(clusterClient.current, auth, orgId)
+  );
+
+  const namespace = org?.status?.namespace;
+
+  useEffect(() => {
+    if (orgError) {
+      ErrorReporter.getInstance().notify(orgError);
+
+      const errorMessage = extractErrorMessage(orgError);
+      new FlashMessage(
+        `There was a problem loading cluster <code>${clusterId}</code> for <code>${orgId}</code>`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      if (!namespace) {
+        dispatch(push(MainRoutes.Home));
+      }
+    }
+  }, [namespace, orgError, orgId, clusterId, dispatch]);
+
+  const clusterKey = namespace
+    ? fetchClusterKey(provider, namespace, clusterId)
+    : null;
+
   const { data: cluster, error: clusterError } = useSWR<
     Cluster,
     GenericResponseError
-  >(fetchClusterKey(provider, namespace, clusterId), () =>
-    fetchCluster(clusterClient.current, auth, provider, namespace, clusterId)
+  >(clusterKey, () =>
+    fetchCluster(clusterClient.current, auth, provider, namespace!, clusterId)
   );
 
   useEffect(() => {
