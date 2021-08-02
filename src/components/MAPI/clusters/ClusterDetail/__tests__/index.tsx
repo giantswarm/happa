@@ -69,7 +69,7 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
@@ -85,19 +85,19 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
         ...capiv1alpha3Mocks.randomCluster1,
