@@ -134,6 +134,10 @@ const theme = deepMerge(generate(16), {
         dark: '#15253150',
         light: '#15253150',
       },
+      'background-strong': {
+        dark: '#10212c',
+        light: '#10212c',
+      },
       text: {
         dark: '#EEEEEE',
         light: '#EEEEEE',

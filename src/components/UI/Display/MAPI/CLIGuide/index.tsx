@@ -42,7 +42,7 @@ const CLIGuide: React.FC<ICLIGuideProps> = ({
 }) => {
   return (
     <ThemeContext.Extend value={customTheme}>
-      <Accordion background='background-contrast' round='xsmall' {...props}>
+      <Accordion background='background-strong' round='xsmall' {...props}>
         <AccordionPanel
           label={
             <Box
