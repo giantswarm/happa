@@ -5,4 +5,7 @@ export const getOrganizationByName = {
     name: 'org1',
   },
   spec: {},
+  status: {
+    namespace: 'org-org1',
+  },
 };
