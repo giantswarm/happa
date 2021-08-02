@@ -66,3 +66,9 @@ export const organizationCRDSchema =
 
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
+
+export const kubectlCreateRoleBindingURL =
+  'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-rolebinding-em-';
+
+export const kubectlCreateClusterRoleBindingURL =
+  'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
