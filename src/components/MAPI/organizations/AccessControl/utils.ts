@@ -538,32 +538,6 @@ export function findSubjectInRoleItem(
 }
 
 /**
- * Extract the error message from a K8s API response.
- * @param fromErr
- * @param fallback - What message to return if the message
- * could not be extracted.
- */
-export function extractErrorMessage(
-  fromErr: unknown,
-  fallback = 'Something went wrong'
-): string {
-  if (!fromErr) return '';
-
-  let message = '';
-
-  if (metav1.isStatus((fromErr as GenericResponse).data)) {
-    message =
-      (fromErr as GenericResponse<metav1.IK8sStatus>).data.message ?? '';
-  } else if (fromErr instanceof Error) {
-    message = fromErr.message;
-  }
-
-  message ||= fallback;
-
-  return message;
-}
-
-/**
  * Check if an existing account exists. If it does,
  * return it, and if it doesn't, create one.
  * @param client

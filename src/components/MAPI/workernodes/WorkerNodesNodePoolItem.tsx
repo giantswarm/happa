@@ -4,9 +4,9 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import {
+  extractErrorMessage,
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,

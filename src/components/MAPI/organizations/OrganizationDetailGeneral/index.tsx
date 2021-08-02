@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -17,7 +18,6 @@ import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';
 
-import { extractErrorMessage } from '../utils';
 import {
   fetchAppsSummary,
   fetchAppsSummaryKey,

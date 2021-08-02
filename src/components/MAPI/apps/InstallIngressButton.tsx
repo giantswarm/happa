@@ -4,7 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { extractErrorMessage } from 'MAPI/organizations/AccessControl/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';

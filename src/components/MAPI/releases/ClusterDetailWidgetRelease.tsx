@@ -5,11 +5,11 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import { isClusterCreating, isClusterUpgrading } from 'MAPI/clusters/utils';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
 } from 'MAPI/releases/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';

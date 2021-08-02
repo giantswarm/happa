@@ -6,7 +6,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';

@@ -6,7 +6,7 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
 import AppInstallModal from 'MAPI/apps/AppInstallModal';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';

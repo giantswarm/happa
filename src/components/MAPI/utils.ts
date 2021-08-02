@@ -1,6 +1,7 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
@@ -622,4 +623,30 @@ export function generateUID(length: number): string {
 
     return idString;
   }
+}
+
+/**
+ * Extract the error message from a K8s API response.
+ * @param fromErr
+ * @param fallback - What message to return if the message
+ * could not be extracted.
+ */
+export function extractErrorMessage(
+  fromErr: unknown,
+  fallback = 'Something went wrong'
+): string {
+  if (!fromErr) return '';
+
+  let message = '';
+
+  if (metav1.isStatus((fromErr as GenericResponse).data)) {
+    message =
+      (fromErr as GenericResponse<metav1.IK8sStatus>).data.message ?? '';
+  } else if (fromErr instanceof Error) {
+    message = fromErr.message;
+  }
+
+  message ||= fallback;
+
+  return message;
 }
