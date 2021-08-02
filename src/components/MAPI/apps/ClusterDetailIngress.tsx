@@ -4,7 +4,7 @@ import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
-import { extractErrorMessage } from 'MAPI/organizations/AccessControl/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
