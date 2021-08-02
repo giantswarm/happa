@@ -86,15 +86,18 @@ const ClusterDetail: React.FC<{}> = () => {
   ]);
 
   const clientFactory = useHttpClientFactory();
+  const orgClientFactory = useHttpClientFactory();
+
   const auth = useAuthProvider();
 
   const clusterClient = useRef(clientFactory());
+  const orgClient = useRef(orgClientFactory());
 
   const { data: org, error: orgError } = useSWR<
     securityv1alpha1.IOrganization,
     GenericResponseError
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
-    securityv1alpha1.getOrganization(clusterClient.current, auth, orgId)
+    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
   );
 
   const namespace = org?.status?.namespace;
