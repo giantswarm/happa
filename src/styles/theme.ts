@@ -599,23 +599,23 @@ const theme = deepMerge(generate(16), {
       },
       '5': {
         small: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
         medium: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
         large: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
         xlarge: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
       },

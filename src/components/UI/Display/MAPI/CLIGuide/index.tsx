@@ -31,9 +31,15 @@ const customTheme: ThemeType = {
 interface ICLIGuideProps
   extends React.ComponentPropsWithoutRef<typeof Accordion> {
   title: string;
+  footer?: React.ReactNode;
 }
 
-const CLIGuide: React.FC<ICLIGuideProps> = ({ children, title, ...props }) => {
+const CLIGuide: React.FC<ICLIGuideProps> = ({
+  children,
+  title,
+  footer,
+  ...props
+}) => {
   return (
     <ThemeContext.Extend value={customTheme}>
       <Accordion background='background-contrast' round='xsmall' {...props}>
@@ -59,6 +65,16 @@ const CLIGuide: React.FC<ICLIGuideProps> = ({ children, title, ...props }) => {
             width={{ max: 'xlarge' }}
           >
             {children}
+
+            {footer && (
+              <Box
+                border={{ side: 'top' }}
+                pad={{ vertical: 'small' }}
+                margin={{ top: 'medium' }}
+              >
+                {footer}
+              </Box>
+            )}
           </Box>
         </AccordionPanel>
       </Accordion>
@@ -69,6 +85,7 @@ const CLIGuide: React.FC<ICLIGuideProps> = ({ children, title, ...props }) => {
 CLIGuide.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
+  footer: PropTypes.node,
 };
 
 export default CLIGuide;
