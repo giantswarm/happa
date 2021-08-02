@@ -15,6 +15,7 @@ import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControl
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
+import InspectRoleGuide from './guides/InspectRoleGuide';
 import ListRolesGuide from './guides/ListRolesGuide';
 import {
   appendSubjectsToRoleItem,
@@ -182,6 +183,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         </Box>
         <Box margin={{ top: 'large' }} direction='column' gap='small'>
           <ListRolesGuide namespace={organizationNamespace} />
+          <InspectRoleGuide namespace={organizationNamespace} />
         </Box>
       </Box>
     </DocumentTitle>
