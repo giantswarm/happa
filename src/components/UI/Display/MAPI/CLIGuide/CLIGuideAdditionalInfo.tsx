@@ -27,7 +27,7 @@ const CLIGuideAdditionalInfo: React.FC<ICLIGuideAdditionalInfoProps> = ({
       <Box>
         <Heading level={5}>Additional information</Heading>
       </Box>
-      <Box>
+      <Box direction='column' gap='xxsmall'>
         {links?.map((link) => (
           // eslint-disable-next-line react/jsx-no-target-blank
           <StyledLink
