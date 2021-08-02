@@ -131,8 +131,12 @@ const theme = deepMerge(generate(16), {
         light: '#375b70',
       },
       'background-contrast': {
-        dark: '#15253111',
-        light: '#15253111',
+        dark: '#15253150',
+        light: '#15253150',
+      },
+      'background-strong': {
+        dark: '#10212c',
+        light: '#10212c',
       },
       text: {
         dark: '#EEEEEE',
@@ -599,23 +603,23 @@ const theme = deepMerge(generate(16), {
       },
       '5': {
         small: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
         medium: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
         large: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
         xlarge: {
-          size: '13px',
-          height: '18px',
+          size: '15px',
+          height: '20px',
           maxWidth: '267px',
         },
       },
