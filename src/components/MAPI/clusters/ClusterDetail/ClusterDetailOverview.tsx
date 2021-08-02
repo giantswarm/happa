@@ -34,12 +34,11 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const { orgId, clusterId } = match.params;
 
   const clientFactory = useHttpClientFactory();
-  const orgClientFactory = useHttpClientFactory();
 
   const auth = useAuthProvider();
 
   const clusterClient = useRef(clientFactory());
-  const orgClient = useRef(orgClientFactory());
+  const orgClient = useRef(clientFactory());
 
   const { data: org } = useSWR<
     securityv1alpha1.IOrganization,
