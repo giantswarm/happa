@@ -161,12 +161,11 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
   }>();
 
   const clientFactory = useHttpClientFactory();
-  const orgClientFactory = useHttpClientFactory();
 
   const auth = useAuthProvider();
 
   const clusterClient = useRef(clientFactory());
-  const orgClient = useRef(orgClientFactory());
+  const orgClient = useRef(clientFactory());
 
   const { data: org, error: orgError } = useSWR<
     securityv1alpha1.IOrganization,
