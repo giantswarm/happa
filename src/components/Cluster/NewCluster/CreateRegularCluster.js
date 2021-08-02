@@ -351,7 +351,7 @@ class CreateRegularCluster extends React.Component {
               onClick={this.createCluster}
               type='submit'
             >
-              Create Cluster
+              Create cluster
             </Button>
           </RUMActionTarget>
           {!isClusterCreating && (

@@ -178,7 +178,7 @@ describe('V4AzureClusterManagement', () => {
     });
     expect(azInput.value).toBe(String(maxAZCount));
 
-    const createButton = getByText('Create Cluster');
+    const createButton = getByText('Create cluster');
     expect(createButton.disabled).toBeFalsy();
     fireEvent.click(createButton);
 

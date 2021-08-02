@@ -227,7 +227,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
                 onClick={editChartVersion}
                 loading={isLoading}
               >
-                Update Chart Version
+                Update chart version
               </Button>
               <Button bsStyle='link' onClick={showPane(ModalPanes.Initial)}>
                 Cancel

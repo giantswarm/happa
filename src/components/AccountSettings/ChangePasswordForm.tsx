@@ -246,7 +246,7 @@ class ChangePassword extends React.Component<
                   loading={this.state.submitting}
                   type='submit'
                 >
-                  Set New Password
+                  Set new password
                 </Button>
               </SlideTransition>
             </div>

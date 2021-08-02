@@ -159,7 +159,7 @@ class CredentialsForm extends React.Component {
             disabled={!this.state.isValid}
             onClick={this.handleSubmit}
           >
-            Set Credentials
+            Set credentials
           </Button>
         </form>
       );
@@ -207,7 +207,7 @@ class CredentialsForm extends React.Component {
             disabled={!this.state.isValid}
             onClick={this.handleSubmit}
           >
-            Set Credentials
+            Set credentials
           </Button>
         </form>
       );

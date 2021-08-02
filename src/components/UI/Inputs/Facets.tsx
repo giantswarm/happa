@@ -69,10 +69,10 @@ const Facets: React.FC<IFacetsProps> = (props) => {
       <label>Filter by Catalog</label>
       <br />
       <StyledButton bsSize='sm' onClick={selectAll}>
-        Select All
+        Select all
       </StyledButton>{' '}
       <StyledButton bsSize='sm' onClick={selectNone}>
-        Select None
+        Select none
       </StyledButton>
       <br />
       <br />

@@ -145,7 +145,7 @@ class V4ClusterDetailTable extends React.Component {
           </StyledURIBlock>
           <GetStartedWrapper>
             <Button onClick={this.props.accessCluster}>
-              <i className='fa fa-start' /> GET STARTED
+              <i className='fa fa-start' /> Get started
             </Button>
           </GetStartedWrapper>
         </KubernetesURIWrapper>

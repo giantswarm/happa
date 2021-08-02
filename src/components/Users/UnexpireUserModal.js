@@ -5,8 +5,8 @@ import UsersModal from './UsersModal';
 
 const UnexpireUserModal = ({ forUser, isLoading, ...props }) => {
   const confirmButtonText = isLoading
-    ? 'Removing Expiration'
-    : 'Remove Expiration';
+    ? 'Removing expiration'
+    : 'Remove expiration';
   const modalTitle = `Remove Expiration Date from ${forUser}`;
 
   return (

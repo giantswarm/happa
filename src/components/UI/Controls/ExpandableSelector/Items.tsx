@@ -5,7 +5,6 @@ export const TableButton = styled(Button)`
   position: relative;
   margin-left: 0;
   padding: 0px 15px;
-  text-transform: uppercase;
 
   i {
     margin-right: 4px;

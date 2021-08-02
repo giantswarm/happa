@@ -400,7 +400,7 @@ describe('Installed app detail pane', () => {
     const desiredVersion = within(modal).getByText(/1.1.1/i);
     fireEvent.click(desiredVersion);
 
-    const confirmButton = getByText('Update Chart Version');
+    const confirmButton = getByText('Update chart version');
     fireEvent.click(confirmButton);
 
     // Expect an error.

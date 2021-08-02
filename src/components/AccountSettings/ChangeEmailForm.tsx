@@ -153,7 +153,7 @@ class ChangeEmailForm extends React.Component<
                 loading={this.state.isSubmitting}
                 type='submit'
               >
-                Set New Email
+                Set new email
               </Button>
             </SlideTransition>
           </ButtonPlaceholder>

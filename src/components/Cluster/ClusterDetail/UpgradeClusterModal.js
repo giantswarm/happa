@@ -203,7 +203,7 @@ class UpgradeClusterModal extends React.Component {
             bsStyle='primary'
             onClick={() => this.goToPage(Pages.InspectChanges)}
           >
-            Inspect Changes
+            Inspect changes
           </Button>
           <Button bsStyle='link' onClick={this.close}>
             Cancel
@@ -232,7 +232,7 @@ class UpgradeClusterModal extends React.Component {
             onClick={this.submit}
             loadingTimeout={0}
           >
-            Start Upgrade
+            Start upgrade
           </Button>
 
           {!loading && (

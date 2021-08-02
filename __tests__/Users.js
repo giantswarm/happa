@@ -82,9 +82,12 @@ describe('Users', () => {
         status: 'READY',
       });
 
-    const { findByText, getByText, getByLabelText } = renderRouteWithStore(
-      UsersRoutes.Home
-    );
+    const {
+      findByText,
+      getByText,
+      getByLabelText,
+      getAllByText,
+    } = renderRouteWithStore(UsersRoutes.Home);
 
     let inviteButton = await findByText(/invite user/i);
     expect(inviteButton).toBeInTheDocument();
@@ -134,7 +137,7 @@ describe('Users', () => {
     // Check if the warning is gone
     expect(gsDomainOnlyWarning).not.toBeInTheDocument();
 
-    inviteButton = getByText('Invite User');
+    inviteButton = getAllByText('Invite user')[1];
     fireEvent.click(inviteButton);
 
     const progressText = await findByText(

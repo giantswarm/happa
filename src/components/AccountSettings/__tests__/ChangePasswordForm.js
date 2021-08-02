@@ -14,7 +14,7 @@ const elementLabels = {
   CurrPassword: 'Current Password',
   NewPassword: 'New Password',
   ConfirmNewPassword: 'New Password (once more)',
-  SetButton: 'Set New Password',
+  SetButton: 'Set new password',
 };
 
 const textInputLabels = [

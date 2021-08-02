@@ -25,7 +25,7 @@ function ExceptionNotificationTest(): ReactNode {
       <hr />
       <h3>Uncaught Exception</h3>
       <p>Click this button to generate an uncaught exception.</p>
-      <Button onClick={generateUncaughtException}>Break Me</Button>
+      <Button onClick={generateUncaughtException}>Break me</Button>
       <hr />
       <h3>Manually Reported Exception</h3>
       <p>
@@ -34,7 +34,7 @@ function ExceptionNotificationTest(): ReactNode {
         notification, and Slack are working as expected. It does not actually
         generate an exception.
       </p>
-      <Button onClick={reportException}>Report Exception</Button>
+      <Button onClick={reportException}>Report exception</Button>
     </>
   );
 }

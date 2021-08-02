@@ -237,7 +237,7 @@ function compareVersions(
   return compare(b.version, a.version);
 }
 
-interface IAppCatalogIndexResponse {
+export interface IAppCatalogIndexResponse {
   apiVersion: string;
   entries: Record<string, IAppCatalogIndexAppVersion[]>;
 }

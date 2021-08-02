@@ -183,7 +183,7 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
       <DetailItem title='Delete This App'>
         <Button bsStyle='danger' onClick={props.showDeleteAppPane}>
           <i className='fa fa-delete' />
-          Delete App
+          Delete app
         </Button>
       </DetailItem>
     </div>

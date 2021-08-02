@@ -156,7 +156,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           loadingTimeout={0}
           onClick={installIngressController}
         >
-          Install Ingress Controller
+          Install ingress controller
         </Button>
       )}
 
