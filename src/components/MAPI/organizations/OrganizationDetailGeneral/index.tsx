@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
@@ -18,6 +19,7 @@ import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';
 
+import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';
 import {
   fetchAppsSummary,
   fetchAppsSummaryKey,
@@ -149,29 +151,34 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   }, [appsSummaryError]);
 
   return (
-    <OrganizationDetailPage
-      organizationName={organizationName}
-      organizationNamespace={organizationNamespace}
-      onDelete={handleDelete}
-      clusterCount={clusterList?.items.length}
-      clusterCountLoading={
-        typeof clusterList === 'undefined' &&
-        typeof clusterListError === 'undefined' &&
-        clusterListIsValidating
-      }
-      clustersSummary={clustersSummary}
-      clustersSummaryLoading={
-        typeof clustersSummary === 'undefined' && clustersSummaryIsValidating
-      }
-      releasesSummary={releasesSummary}
-      releasesSummaryLoading={
-        typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
-      }
-      appsSummary={appsSummary}
-      appsSummaryLoading={
-        typeof appsSummary === 'undefined' && appsSummaryIsValidating
-      }
-    />
+    <>
+      <OrganizationDetailPage
+        organizationName={organizationName}
+        organizationNamespace={organizationNamespace}
+        onDelete={handleDelete}
+        clusterCount={clusterList?.items.length}
+        clusterCountLoading={
+          typeof clusterList === 'undefined' &&
+          typeof clusterListError === 'undefined' &&
+          clusterListIsValidating
+        }
+        clustersSummary={clustersSummary}
+        clustersSummaryLoading={
+          typeof clustersSummary === 'undefined' && clustersSummaryIsValidating
+        }
+        releasesSummary={releasesSummary}
+        releasesSummaryLoading={
+          typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
+        }
+        appsSummary={appsSummary}
+        appsSummaryLoading={
+          typeof appsSummary === 'undefined' && appsSummaryIsValidating
+        }
+      />
+      <Box margin={{ top: 'large' }} direction='column' gap='small'>
+        <GetOrganizationDetailsGuide organizationName={organizationName} />
+      </Box>
+    </>
   );
 };
 
