@@ -5,6 +5,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { extractErrorMessage } from 'MAPI/utils';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -14,7 +15,6 @@ import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 
 import {
-  extractErrorMessage,
   OrganizationNameStatusMessage,
   validateOrganizationName,
 } from './utils';

@@ -4,7 +4,6 @@ import produce from 'immer';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
 import {
   BootstrapConfig,
   Cluster,
@@ -13,6 +12,7 @@ import {
   ProviderNodePool,
 } from 'MAPI/types';
 import {
+  extractErrorMessage,
   generateUID,
   getClusterReleaseVersion,
   getProviderClusterLocation,

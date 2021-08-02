@@ -7,8 +7,8 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
 import {
+  extractErrorMessage,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
   fetchProviderNodePoolsForNodePools,

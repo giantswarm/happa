@@ -4,7 +4,7 @@ import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';

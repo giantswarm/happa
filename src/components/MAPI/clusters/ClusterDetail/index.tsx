@@ -8,10 +8,8 @@ import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
-import {
-  extractErrorMessage,
-  getOrgNamespaceFromOrgName,
-} from 'MAPI/organizations/utils';
+import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';

@@ -5,7 +5,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { relativeDate } from 'lib/helpers';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
-import { extractErrorMessage } from 'MAPI/organizations/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
 import React, { useEffect, useMemo, useState } from 'react';

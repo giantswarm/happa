@@ -5,12 +5,9 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import {
-  extractErrorMessage,
-  getOrgNamespaceFromOrgName,
-} from 'MAPI/organizations/utils';
+import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/utils';
 import { Cluster } from 'MAPI/types';
-import { fetchCluster, fetchClusterKey } from 'MAPI/utils';
+import { extractErrorMessage, fetchCluster, fetchClusterKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useMemo, useRef } from 'react';

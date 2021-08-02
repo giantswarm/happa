@@ -3,6 +3,7 @@ import { Box } from 'grommet';
 import produce from 'immer';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
@@ -14,7 +15,6 @@ import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControl
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
-import { extractErrorMessage } from '../utils';
 import {
   appendSubjectsToRoleItem,
   computePermissions,
