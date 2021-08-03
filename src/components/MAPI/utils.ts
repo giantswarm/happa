@@ -650,3 +650,13 @@ export function extractErrorMessage(
 
   return message;
 }
+
+export function getK8sAPIUrl(): string {
+  const audienceURL = new URL(window.config.audience);
+  // Remove all characters until the first `.`.
+  audienceURL.host = audienceURL.host.substring(
+    audienceURL.host.indexOf('.') + 1
+  );
+
+  return audienceURL.toString();
+}

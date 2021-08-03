@@ -5,10 +5,12 @@ const Styles = styled.div`
     font-family: 'Inconsolata';
     line-height: 24px;
   }
-  .codeblock--container:hover pre {
+  .codeblock--container:hover pre,
+  .codeblock--container:focus-within pre {
     background-color: #3d3d3d;
   }
-  .codeblock--container:hover .codeblock--buttons {
+  .codeblock--container:hover .codeblock--buttons,
+  .codeblock--container:focus-within .codeblock--buttons {
     background-color: #276996;
   }
   .codeblock--container pre {
@@ -64,7 +66,8 @@ const Styles = styled.div`
     color: #aaa;
     line-height: 40px;
   }
-  .codeblock--container .codeblock--buttons a:hover {
+  .codeblock--container .codeblock--buttons a:hover,
+  .codeblock--container .codeblock--buttons a:focus-visible {
     color: #fff;
   }
   .codeblock--container .codeblock--buttons a:first-child {

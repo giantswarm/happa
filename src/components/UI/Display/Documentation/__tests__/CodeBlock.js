@@ -55,21 +55,20 @@ describe('CodeBlock', () => {
         <Output key='2'>What did you expect to happen?</Output>,
       ],
     };
-    const { getByTitle, findByTitle, queryByText, rerender } = renderWithProps(
-      componentProps
-    );
+    const {
+      getByLabelText,
+      findByTitle,
+      queryByText,
+      rerender,
+    } = renderWithProps(componentProps);
 
-    const copyButton = getByTitle(/copy content to clipboard/i);
+    const copyButton = getByLabelText(/copy content to clipboard/i);
     expect(copyButton).toBeInTheDocument();
-    fireEvent.mouseUp(copyButton);
+    fireEvent.click(copyButton);
 
     expect(setClipboardContentMockFn).toBeCalledWith(command);
 
-    /**
-     * Check if finishing the click event on the
-     * button resets the clipboard value
-     */
-    fireEvent.click(copyButton);
+    fireEvent.mouseLeave(copyButton);
     expect(setClipboardContentMockFn).toBeCalledWith(null);
 
     // Set content in clipboard

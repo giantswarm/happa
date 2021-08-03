@@ -162,6 +162,10 @@ const theme = deepMerge(generate(16), {
         dark: 'border',
         light: 'border',
       },
+      'accent-strong': {
+        dark: '#162e3d',
+        light: '#162e3d',
+      },
       'active-background': 'background-contrast',
       'active-text': 'text-strong',
       'selected-background': 'brand',
