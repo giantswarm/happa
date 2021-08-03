@@ -19,12 +19,7 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-// TODO(axbarsan): Remove type assertion once the bug is fixed in `emotion`.
-const NPViewAndEditNameStyled = styled(
-  ViewAndEditName as React.ComponentClass<
-    React.ComponentPropsWithRef<typeof ViewAndEditName>
-  >
-)`
+const NPViewAndEditNameStyled = styled(ViewAndEditName)`
   .btn-group {
     top: 0;
   }
@@ -67,6 +62,12 @@ interface INPViewAndEditName extends HTMLSpanElement {
   activateEditMode: () => boolean;
 }
 
+interface IScaleNodePoolModal {
+  reset: () => void;
+  show: () => void;
+  setNodePool: (nodePool: INodePool) => void;
+}
+
 interface IStateProps {
   nodePool: INodePool;
 }
@@ -85,12 +86,6 @@ interface INodePoolsProps extends IStateProps, IDispatchProps {
 
 interface INodePoolsState {
   isNameBeingEdited: boolean;
-}
-
-interface IScaleNodePoolModal {
-  reset: () => void;
-  show: () => void;
-  setNodePool: (nodePool: INodePool) => void;
 }
 
 class NodePool extends Component<INodePoolsProps, INodePoolsState> {
@@ -284,7 +279,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         <ScaleNodePoolModal
           cluster={cluster}
           nodePool={nodePool}
-          ref={(s: IScaleNodePoolModal): void => {
+          ref={(s) => {
             this.scaleNodePoolModal = s;
           }}
           workerNodesDesired={desired}
