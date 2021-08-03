@@ -1,4 +1,4 @@
-import { Box, Text } from 'grommet';
+import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import PropTypes from 'prop-types';
@@ -6,6 +6,7 @@ import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
+import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
 interface IListRolesGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
@@ -42,7 +43,7 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
       }
       {...props}
     >
-      <Box direction='column' gap='small'>
+      <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
           title='2. List cluster roles'
@@ -62,7 +63,7 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
           title={`3. List roles in the organization's namespace`}
           command={`kubectl get roles -n ${namespace}`}
         />
-      </Box>
+      </CLIGuideStepList>
     </CLIGuide>
   );
 };

@@ -1,4 +1,4 @@
-import { Box, Text } from 'grommet';
+import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import PropTypes from 'prop-types';
@@ -6,6 +6,7 @@ import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
+import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
 interface IGetOrganizationDetailsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
@@ -47,7 +48,7 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
       }
       {...props}
     >
-      <Box direction='column' gap='small'>
+      <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Get organization details'
@@ -55,7 +56,7 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
         >
           <Text>As a result, details of the organization CR are printed.</Text>
         </CLIGuideStep>
-      </Box>
+      </CLIGuideStepList>
     </CLIGuide>
   );
 };
