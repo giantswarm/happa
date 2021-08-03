@@ -24,6 +24,8 @@ import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
 
+import CreateOrganizationGuide from './guides/CreateOrganizationGuide';
+import ListOrganizationsGuide from './guides/ListOrganizationsGuide';
 import OrganizationListCreateOrg from './OrganizationListCreateOrg';
 import { computeClusterCountersForOrganizations } from './utils';
 
@@ -123,6 +125,11 @@ const OrganizationIndex: React.FC = () => {
             </Button>
           </Box>
         )}
+      </Box>
+
+      <Box margin={{ top: 'large' }} direction='column' gap='small'>
+        <ListOrganizationsGuide />
+        <CreateOrganizationGuide />
       </Box>
     </DocumentTitle>
   );

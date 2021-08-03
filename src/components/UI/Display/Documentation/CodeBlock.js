@@ -1,3 +1,4 @@
+import { Keyboard } from 'grommet';
 import { dedent } from 'lib/helpers';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import PropTypes from 'prop-types';
@@ -83,11 +84,16 @@ export const CodeBlock = ({ children }) => {
     return classNames.join(' ');
   };
 
-  const handleClick = (e) => {
+  const resetClipboard = (e) => {
     e.preventDefault();
-    e.stopPropagation();
 
     setClipboardContent(null);
+  };
+
+  const handleOnFocusKeyDown = (e) => {
+    e.preventDefault();
+
+    e.target.click();
   };
 
   return (
@@ -96,16 +102,24 @@ export const CodeBlock = ({ children }) => {
         <pre>
           <div className='content'>{children}</div>
           <div className='codeblock--buttons'>
-            <a
-              href='#'
-              onClick={handleClick}
-              onMouseOut={() => setHovering(false)}
-              onMouseOver={() => setHovering(true)}
-              onMouseUp={copyCodeToClipboard}
-              title='Copy content to clipboard'
+            <Keyboard
+              onSpace={handleOnFocusKeyDown}
+              onEnter={handleOnFocusKeyDown}
             >
-              <i aria-hidden='true' className='fa fa-content-copy' />
-            </a>
+              <a
+                href='#'
+                onMouseOut={() => setHovering(false)}
+                onMouseOver={() => setHovering(true)}
+                onMouseLeave={resetClipboard}
+                onClick={copyCodeToClipboard}
+              >
+                <i
+                  role='presentation'
+                  className='fa fa-content-copy'
+                  aria-label='Copy content to clipboard'
+                />
+              </a>
+            </Keyboard>
           </div>
           <BaseTransition
             in={hasContentInClipboard}
@@ -113,7 +127,7 @@ export const CodeBlock = ({ children }) => {
             classNames='checkmark'
           >
             <i
-              aria-hidden='true'
+              role='presentation'
               className='fa fa-done codeblock--checkmark'
               title='Content copied to clipboard'
             />
