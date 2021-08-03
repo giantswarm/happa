@@ -50,12 +50,12 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
           title='2. Create the organization'
           command={`
               kubectl create -f - <<EOF
-              apiVersion: security.giantswarm.io/v1alpha1
-              kind: Organization
-              metadata:
-                name: example
-              spec: {}
-              EOF
+                apiVersion: security.giantswarm.io/v1alpha1
+                kind: Organization
+                metadata:
+                  name: example
+                spec: {}
+                EOF
           `}
         >
           <Text>
