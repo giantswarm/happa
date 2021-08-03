@@ -4,26 +4,6 @@ import BsButton from 'react-bootstrap/lib/Button';
 import styled from 'styled-components';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 
-// Button
-//
-// <Button
-//   type='button|submit|reset'
-//   bsSize='sm'|undefined
-//   bsStyle='primary|danger|default|link'
-//   loading=true|false
-//   loadingPosition='left'|undefined
-//   disabled=true|false
-//   onClick=function>
-//
-//   Button Text
-// </Button>
-//
-// A basic button. Can go into a 'loading' state, which will disable the button
-// and show a spinner next to it.
-//
-// You can also disable the button by setting the disabled prop to true.
-//
-
 const Wrapper = styled.div`
   .btn {
     border: 0px;
@@ -134,82 +114,76 @@ const Wrapper = styled.div`
   }
 `;
 
-/**
- * @typedef {object} IButtonProps
- * @property {'button' | 'submit' | 'reset'} [type]
- * @property {'primary' | 'danger' | 'default' | 'link' | 'warning'} [bsStyle]
- * @property {'sm' | 'lg'} [bsSize]
- * @property {boolean} [disabled]
- * @property {boolean} [loading]
- * @property {'left'} [loadingPosition]
- * @property {React.ReactNode} [children]
- * @property {string} [className]
- * @property {number} [loadingTimeout]
- * @property {string} [href]
- * @property {'_blank'} [target]
- * @property {string} [rel]
- * @property {React.MouseEventHandler<HTMLElement>} [onClick]
- * @property {number | string} [tabIndex]
- */
+interface IButtonProps extends React.ComponentPropsWithoutRef<'button'> {
+  bsStyle?: 'primary' | 'danger' | 'default' | 'link' | 'warning';
+  bsSize?: 'sm' | 'lg';
+  loading?: boolean;
+  loadingPosition?: 'left' | 'right';
+  loadingTimeout?: number;
+  disabled?: boolean;
+  href?: string;
+  target?: '_self' | '_blank' | '_parent' | '_top' | string;
+  rel?: string;
+}
 
-/**
- * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<IButtonProps> & React.RefAttributes<HTMLElement>>}
- */
-const Button = React.forwardRef((props, ref) => {
-  const {
-    loadingPosition,
-    loading,
-    disabled,
-    bsStyle,
-    bsSize,
-    onClick,
-    type,
-    children,
-    loadingTimeout,
-    ...rest
-  } = props;
-
-  return (
-    <Wrapper ref={ref} className='button-wrapper'>
-      {loadingPosition === 'left' ? (
-        <LoadingIndicator
-          loading={loading}
-          loadingPosition={loadingPosition}
-          timeout={loadingTimeout}
-        />
-      ) : undefined}
-
-      <BsButton
-        bsSize={bsSize}
-        bsStyle={bsStyle || 'default'}
-        disabled={disabled || loading}
-        onClick={onClick}
-        type={type}
-        role='button'
-        {...rest}
+const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
+  (
+    {
+      loadingPosition,
+      loading,
+      disabled,
+      bsStyle,
+      bsSize,
+      children,
+      loadingTimeout,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <Wrapper
+        ref={ref as React.RefObject<HTMLDivElement>}
+        className='button-wrapper'
       >
-        {children}
-      </BsButton>
+        {loadingPosition === 'left' && (
+          <LoadingIndicator
+            loading={loading}
+            loadingPosition={loadingPosition}
+            timeout={loadingTimeout}
+          />
+        )}
 
-      {loadingPosition === 'right' ? (
-        <LoadingIndicator
-          loading={loading}
-          loadingPosition={loadingPosition}
-          timeout={loadingTimeout}
-        />
-      ) : undefined}
-    </Wrapper>
-  );
-});
+        <BsButton
+          bsSize={bsSize}
+          bsStyle={bsStyle}
+          disabled={disabled || loading}
+          role='button'
+          {...(props as React.ComponentPropsWithoutRef<typeof BsButton>)}
+        >
+          {children}
+        </BsButton>
+
+        {loadingPosition === 'right' && (
+          <LoadingIndicator
+            loading={loading}
+            loadingPosition={loadingPosition}
+            timeout={loadingTimeout}
+          />
+        )}
+      </Wrapper>
+    );
+  }
+);
 
 Button.propTypes = {
-  type: PropTypes.string,
-  bsStyle: PropTypes.string,
-  bsSize: PropTypes.string,
+  bsStyle: PropTypes.string as PropTypes.Requireable<IButtonProps['bsStyle']>,
+  bsSize: PropTypes.string as PropTypes.Requireable<IButtonProps['bsSize']>,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
-  loadingPosition: PropTypes.string,
+  loadingPosition: PropTypes.string as PropTypes.Requireable<
+    IButtonProps['loadingPosition']
+  >,
   children: PropTypes.node,
   className: PropTypes.string,
   loadingTimeout: PropTypes.number,
@@ -217,6 +191,7 @@ Button.propTypes = {
 
 Button.defaultProps = {
   loadingPosition: 'right',
+  bsStyle: 'default',
 };
 
 export default Button;

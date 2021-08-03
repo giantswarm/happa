@@ -24,7 +24,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   clusterCount,
   ...props
 }) => {
-  const deleteButtonRef = useRef<HTMLElement>(null);
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
   const dispatch = useDispatch();
 

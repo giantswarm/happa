@@ -244,7 +244,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                   <Button
                     bsStyle='default'
                     loading={authenticating}
-                    onClick={this.logIn}
                     type='submit'
                     disabled={mapiAuthenticating}
                   >

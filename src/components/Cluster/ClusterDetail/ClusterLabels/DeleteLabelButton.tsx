@@ -25,7 +25,8 @@ const DeleteLabelTooltipInner = styled.div`
   }
 `;
 
-interface IDeleteLabelButtonProps extends ComponentPropsWithoutRef<'button'> {
+interface IDeleteLabelButtonProps
+  extends ComponentPropsWithoutRef<typeof Button> {
   onDelete(): void;
   onOpen(isOpen: boolean): void;
 
@@ -41,7 +42,7 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const divElement = useRef<HTMLDivElement>(null);
-  const cancelButtonRef = useRef<HTMLElement>(null);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   const close = () => {
     setIsOpen(false);

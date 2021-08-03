@@ -2,7 +2,7 @@ import React, { ComponentPropsWithRef, FC } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 
-interface IButtonProps extends ComponentPropsWithRef<'button'> {}
+interface IButtonProps extends ComponentPropsWithRef<typeof Button> {}
 
 const StyledButton = styled(Button)`
   margin: 0;
