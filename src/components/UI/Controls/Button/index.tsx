@@ -1,3 +1,4 @@
+import { Button as Control } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BsButton from 'react-bootstrap/lib/Button';
@@ -130,6 +131,16 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
     { loading, disabled, bsStyle, bsSize, children, loadingTimeout, ...props },
     ref
   ) => {
+    let grommetSize = 'medium';
+    switch (bsSize) {
+      case 'sm':
+        grommetSize = 'small';
+        break;
+      case 'lg':
+        grommetSize = 'large';
+        break;
+    }
+
     return (
       <Wrapper
         ref={ref as React.RefObject<HTMLDivElement>}
@@ -144,7 +155,14 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
         >
           {children}
         </BsButton>
-
+        <Control
+          primary={bsStyle === 'primary'}
+          secondary={bsStyle === 'default'}
+          size={grommetSize as never}
+          label={children}
+          disabled={disabled || loading}
+          {...(props as React.ComponentPropsWithoutRef<typeof Control>)}
+        />
         <LoadingIndicator
           loading={loading}
           loadingPosition='right'

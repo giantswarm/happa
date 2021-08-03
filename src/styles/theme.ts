@@ -172,7 +172,7 @@ const theme = deepMerge(generate(16), {
       'selected-text': 'text-strong',
       'status-critical': '#e49090',
       'status-warning': '#FFAA15',
-      'status-ok': '#00C781',
+      'status-ok': '#2a8b29',
       'status-unknown': '#CCCCCC',
       'status-disabled': '#3a5f7b',
       'graph-0': 'brand',
@@ -294,12 +294,109 @@ const theme = deepMerge(generate(16), {
   meter: {},
   button: {
     border: {
-      width: '2px',
       radius: '4px',
     },
-    padding: {
-      vertical: '3px',
-      horizontal: '18px',
+    size: {
+      small: {
+        border: {
+          radius: '2px',
+        },
+      },
+      medium: {
+        border: {
+          radius: '4px',
+        },
+        pad: {
+          vertical: '8px',
+          horizontal: '16px',
+        },
+      },
+      large: {
+        border: {
+          radius: '4px',
+        },
+      },
+    },
+    default: {
+      background: 'transparent',
+    },
+    primary: {
+      background: 'status-ok',
+      border: {
+        color: 'status-ok',
+        width: '1px',
+      },
+      color: 'text',
+    },
+    secondary: {
+      background: 'transparent',
+      color: 'text-weak',
+      border: {
+        color: 'text-weak',
+        width: '1px',
+      },
+    },
+    hover: {
+      color: 'text',
+      default: {
+        background: {
+          color: 'text',
+          opacity: 0.1,
+        },
+        border: {
+          color: 'text',
+        },
+      },
+      secondary: {
+        background: {
+          color: 'text',
+          opacity: 0.1,
+        },
+        border: {
+          color: 'text',
+        },
+      },
+      primary: {
+        background: {
+          color: 'status-ok',
+          opacity: 0.7,
+        },
+        border: {
+          color: 'status-ok',
+          opacity: 0.7,
+        },
+      },
+    },
+    active: {
+      color: 'text',
+      default: {
+        background: {
+          color: 'text',
+          opacity: 0.3,
+        },
+        border: {
+          color: 'text',
+        },
+      },
+      secondary: {
+        background: {
+          color: 'text',
+          opacity: 0.3,
+        },
+        border: {
+          color: 'text',
+        },
+      },
+      primary: {
+        background: {
+          color: 'status-ok',
+          opacity: 0.5,
+        },
+        border: {
+          color: 'status-ok',
+          opacity: 0.5,
+        },
+      },
     },
   },
   calendar: {
