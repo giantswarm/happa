@@ -12,7 +12,8 @@ import styled, { css } from 'styled-components';
 
 const StyledAccordion = styled(Accordion)`
   code {
-    background-color: transparent;
+    background-color: ${({ theme }) =>
+      theme.global.colors['accent-strong'].dark};
     font-size: 1em;
   }
 `;
