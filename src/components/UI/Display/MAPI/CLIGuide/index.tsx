@@ -8,7 +8,14 @@ import {
 } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { css } from 'styled-components';
+import styled, { css } from 'styled-components';
+
+const StyledAccordion = styled(Accordion)`
+  code {
+    background-color: transparent;
+    font-size: 1em;
+  }
+`;
 
 const customTheme: ThemeType = {
   global: {
@@ -29,8 +36,8 @@ const customTheme: ThemeType = {
 };
 
 interface ICLIGuideProps
-  extends React.ComponentPropsWithoutRef<typeof Accordion> {
-  title: string;
+  extends Omit<React.ComponentPropsWithoutRef<typeof Accordion>, 'title'> {
+  title: React.ReactNode;
   footer?: React.ReactNode;
 }
 
@@ -42,7 +49,7 @@ const CLIGuide: React.FC<ICLIGuideProps> = ({
 }) => {
   return (
     <ThemeContext.Extend value={customTheme}>
-      <Accordion background='background-strong' round='xsmall' {...props}>
+      <StyledAccordion background='background-strong' round='xsmall' {...props}>
         <AccordionPanel
           label={
             <Box
@@ -77,7 +84,7 @@ const CLIGuide: React.FC<ICLIGuideProps> = ({
             )}
           </Box>
         </AccordionPanel>
-      </Accordion>
+      </StyledAccordion>
     </ThemeContext.Extend>
   );
 };

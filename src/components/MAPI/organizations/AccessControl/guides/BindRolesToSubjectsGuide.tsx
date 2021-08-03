@@ -19,7 +19,11 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title='Bind roles to subjects via the Management API'
+      title={
+        <>
+          Bind <code>Role</code> resources to subjects via the Management API
+        </>
+      }
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -56,7 +60,12 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Bind a Role to a user or group to grant access to resources of this organization'
+          title={
+            <>
+              2. Bind a <code>Role</code> to a user or group to grant access to
+              resources of this organization
+            </>
+          }
           command={`kubectl create rolebinding example \\
           -n ${namespace} --user example@acme.org --role read-all`}
         >
@@ -74,7 +83,12 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title='3. Bind a ClusterRole to a user or group to grant access to resources of this organization'
+          title={
+            <>
+              3. Bind a <code>ClusterRole</code> to a user or group to grant
+              access to resources of this organization
+            </>
+          }
           command={`kubectl create rolebinding example \\
            -n ${namespace} --user example@acme.org --clusterrole read-all`}
         >
@@ -92,7 +106,13 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title='4. Bind a Role or ClusterRole to a ServiceAccount to grant access to resources of this organization'
+          title={
+            <>
+              4. Bind a <code>Role</code> or <code>ClusterRole</code>to a{' '}
+              <code>ServiceAccount</code> to grant access to resources of this
+              organization
+            </>
+          }
           command={`kubectl create rolebinding example \\
           -n ${namespace} --serviceaccount ${namespace}:my-sa --role read-all`}
         >

@@ -54,7 +54,10 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
           title='2. Get organization details'
           command={`kubectl describe organization ${organizationName}`}
         >
-          <Text>As a result, details of the organization CR are printed.</Text>
+          <Text>
+            As a result, details of the <code>Organization</code> CR are
+            printed.
+          </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
     </CLIGuide>

@@ -19,7 +19,12 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title='List roles via the Management API'
+      title={
+        <>
+          List <code>Role</code> and <code>ClusterRole</code> resources via the
+          Management API
+        </>
+      }
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -46,7 +51,11 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. List cluster roles'
+          title={
+            <>
+              2. List <code>ClusterRole</code> resources
+            </>
+          }
           command='kubectl get clusterroles -l ui.giantswarm.io/display=true'
         >
           <Text>
@@ -60,7 +69,12 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title={`3. List roles in the organization's namespace`}
+          title={
+            <>
+              3. List <code>Role</code> resources in the organization&apos;s
+              namespace
+            </>
+          }
           command={`kubectl get roles -n ${namespace}`}
         />
       </CLIGuideStepList>

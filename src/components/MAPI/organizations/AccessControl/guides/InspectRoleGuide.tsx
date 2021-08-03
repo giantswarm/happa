@@ -19,7 +19,11 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title='Inspect a role via the Management API'
+      title={
+        <>
+          Inspect a <code>Role</code> via the Management API
+        </>
+      }
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -46,7 +50,11 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Inspect a cluster role'
+          title={
+            <>
+              2. Inspect a <code>ClusterRole</code> resource
+            </>
+          }
           command='kubectl describe clusterrole read-all'
         >
           <Text>
@@ -55,7 +63,12 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title={`3. Inspect a role in the organization's namespace`}
+          title={
+            <>
+              3. Inspect a <code>Role</code> resource in the organization&apos;s
+              namespace
+            </>
+          }
           command={`kubectl describe role read-all -n ${namespace}`}
         >
           <Text>
@@ -64,7 +77,12 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title='4. Find which (cluster) role bindings reference a ClusterRole'
+          title={
+            <>
+              4. Find which <code>ClusterRoleBinding</code> or{' '}
+              <code>RoleBinding</code> references a <code>ClusterRole</code>
+            </>
+          }
           command='kubectl get rolebindings,clusterrolebindings -A | grep ClusterRole/cluster-admin'
         >
           <Text>
@@ -73,7 +91,12 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title='5. Find which role bindings reference a Role'
+          title={
+            <>
+              5. Find which <code>RoleBinding</code> resources reference a{' '}
+              <code>Role</code>
+            </>
+          }
           command={`kubectl get rolebindings -n ${namespace} | grep Role/example`}
         >
           <Text>
