@@ -55,7 +55,7 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
         </CLIGuideStep>
         <CLIGuideStep
           title={`3. Inspect a role in the organization's namespace`}
-          command={`kubectl describe role example -n ${namespace}`}
+          command={`kubectl describe role read-all -n ${namespace}`}
         >
           <Text>
             <strong>Note:</strong> Replace <code>read-all</code> with the name
@@ -64,7 +64,7 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
         </CLIGuideStep>
         <CLIGuideStep
           title='4. Find which (cluster) role bindings reference a ClusterRole'
-          command='kubectl get rolebindings, clusterrolebindings -A | grep ClusterRole/cluster-admin'
+          command='kubectl get rolebindings,clusterrolebindings -A | grep ClusterRole/cluster-admin'
         >
           <Text>
             <strong>Note:</strong> Replace <code>cluster-admin</code> with the

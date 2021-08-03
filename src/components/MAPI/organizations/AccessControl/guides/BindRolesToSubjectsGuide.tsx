@@ -91,7 +91,7 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
           </Text>
         </CLIGuideStep>
         <CLIGuideStep
-          title='4. Bind a Role or CclusterRole to a ServiceAccount or grant access to resources of this organization'
+          title='4. Bind a Role or ClusterRole to a ServiceAccount to grant access to resources of this organization'
           command={`kubectl create rolebinding example \\
           -n ${namespace} --serviceaccount ${namespace}:my-sa --role read-all`}
         >
