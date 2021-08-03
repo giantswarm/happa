@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 const StyledLink = styled.a`
   color: ${({ theme }) => theme.global.colors['input-highlight']};
+  display: inline-block;
+  width: auto;
 `;
 
 interface ICLIGuideAdditionalInfoLink {
@@ -29,24 +31,24 @@ const CLIGuideAdditionalInfo: React.FC<ICLIGuideAdditionalInfoProps> = ({
       </Box>
       <Box direction='column' gap='xxsmall'>
         {links?.map((link) => (
-          // eslint-disable-next-line react/jsx-no-target-blank
-          <StyledLink
-            key={`${link.label}-${link.href}`}
-            href={link.href}
-            rel={link.external ? 'noopener noreferrer' : undefined}
-            target={link.external ? '_blank' : undefined}
-          >
-            {link.external && (
-              <Text
-                className='fa fa-open-in-new'
-                aria-hidden={true}
-                role='presentation'
-                aria-label='Opens in a new tab'
-                margin={{ right: 'xsmall' }}
-              />
-            )}
-            {link.label}
-          </StyledLink>
+          <div key={`${link.label}-${link.href}`}>
+            <StyledLink
+              href={link.href}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+              target={link.external ? '_blank' : undefined}
+            >
+              {link.external && (
+                <Text
+                  className='fa fa-open-in-new'
+                  aria-hidden={true}
+                  role='presentation'
+                  aria-label='Opens in a new tab'
+                  margin={{ right: 'xsmall' }}
+                />
+              )}
+              {link.label}
+            </StyledLink>
+          </div>
         ))}
       </Box>
     </Box>
