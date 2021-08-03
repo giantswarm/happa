@@ -3,15 +3,13 @@ import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
-import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
-import PropTypes from 'prop-types';
 import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { Constants, Providers } from 'shared/constants';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { MainRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
 import {
   getFirstNodePoolsRelease,
@@ -45,12 +43,12 @@ const clusterNameLengthValidator: IValidationFunction = (value) => {
   };
 };
 
-interface INewClusterWrapperProps extends RouteComponentProps<{}> {}
+interface INewClusterWrapperProps {}
 
-const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
-  location,
-  match,
-}) => {
+const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
+  const match = useRouteMatch<{ orgId: string }>();
+  const { orgId } = match.params;
+
   const provider = useSelector(getProvider);
   const firstNodePoolsRelease = useSelector(getFirstNodePoolsRelease);
 
@@ -85,15 +83,6 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
     [selectedRelease, provider, makeCapabilities]
   );
 
-  const selectedOrganization = useMemo(() => {
-    const route = RoutePath.parseWithTemplate(
-      OrganizationsRoutes.Clusters.New,
-      location.pathname
-    );
-
-    return route.params.orgId;
-  }, [location.pathname]);
-
   const dispatch = useDispatch();
 
   const closeForm = () => {
@@ -113,7 +102,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
         pathname: match.url,
       }}
     >
-      <DocumentTitle title={`Create Cluster | ${selectedOrganization}`}>
+      <DocumentTitle title={`Create Cluster | ${orgId}`}>
         <>
           <Headline>Create a Cluster</Headline>
           <FlexColumn>
@@ -141,7 +130,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
           </FlexColumn>
           <CreationForm
             allowSubmit={clusterNameIsValid}
-            selectedOrganization={selectedOrganization}
+            selectedOrganization={orgId}
             selectedRelease={selectedRelease}
             clusterName={clusterName}
             capabilities={creationCapabilities}
@@ -153,11 +142,6 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = ({
   );
 };
 
-NewClusterWrapper.propTypes = {
-  // @ts-ignore
-  location: PropTypes.object.isRequired,
-  // @ts-ignore
-  match: PropTypes.object.isRequired,
-};
+NewClusterWrapper.propTypes = {};
 
 export default NewClusterWrapper;

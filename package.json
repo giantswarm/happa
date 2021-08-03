@@ -108,7 +108,7 @@
     "reselect": "4.0.0",
     "serialize-javascript": "5.0.1",
     "stacktrace-js": "^2.0.2",
-    "styled-components": "^5.2.1",
+    "styled-components": "^5.3.0",
     "superagent": "6.1.0",
     "swr": "^0.5.6",
     "underscore": "1.13.1",
