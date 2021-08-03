@@ -351,7 +351,6 @@ class ScaleClusterModal extends React.Component {
             bsStyle={this.buttonProperties().style}
             disabled={this.buttonProperties().disabled}
             loading={this.state.loading}
-            loadingPosition='left'
             onClick={this.submit}
             type='submit'
           >

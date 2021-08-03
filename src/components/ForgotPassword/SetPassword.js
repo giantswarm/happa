@@ -262,7 +262,6 @@ class SetPassword extends React.Component {
             bsStyle='primary'
             disabled={this.state.submitting || !this.formIsValid()}
             loading={this.state.submitting}
-            loadingPosition='right'
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </Button>
@@ -312,7 +311,6 @@ class SetPassword extends React.Component {
           disabled={this.state.submitting}
           onClick={this.setEmail}
           loading={this.state.submitting}
-          loadingPosition='right'
         >
           {this.state.submitting ? 'Submitting ...' : 'Submit'}
         </Button>

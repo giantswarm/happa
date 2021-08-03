@@ -118,7 +118,6 @@ interface IButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   bsStyle?: 'primary' | 'danger' | 'default' | 'link' | 'warning';
   bsSize?: 'sm' | 'lg';
   loading?: boolean;
-  loadingPosition?: 'left' | 'right';
   loadingTimeout?: number;
   disabled?: boolean;
   href?: string;
@@ -128,16 +127,7 @@ interface IButtonProps extends React.ComponentPropsWithoutRef<'button'> {
 
 const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
   (
-    {
-      loadingPosition,
-      loading,
-      disabled,
-      bsStyle,
-      bsSize,
-      children,
-      loadingTimeout,
-      ...props
-    },
+    { loading, disabled, bsStyle, bsSize, children, loadingTimeout, ...props },
     ref
   ) => {
     return (
@@ -145,14 +135,6 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
         ref={ref as React.RefObject<HTMLDivElement>}
         className='button-wrapper'
       >
-        {loadingPosition === 'left' && (
-          <LoadingIndicator
-            loading={loading}
-            loadingPosition={loadingPosition}
-            timeout={loadingTimeout}
-          />
-        )}
-
         <BsButton
           bsSize={bsSize}
           bsStyle={bsStyle}
@@ -163,13 +145,11 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
           {children}
         </BsButton>
 
-        {loadingPosition === 'right' && (
-          <LoadingIndicator
-            loading={loading}
-            loadingPosition={loadingPosition}
-            timeout={loadingTimeout}
-          />
-        )}
+        <LoadingIndicator
+          loading={loading}
+          loadingPosition='right'
+          timeout={loadingTimeout}
+        />
       </Wrapper>
     );
   }
@@ -181,16 +161,12 @@ Button.propTypes = {
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
-  loadingPosition: PropTypes.string as PropTypes.Requireable<
-    IButtonProps['loadingPosition']
-  >,
   children: PropTypes.node,
   className: PropTypes.string,
   loadingTimeout: PropTypes.number,
 };
 
 Button.defaultProps = {
-  loadingPosition: 'right',
   bsStyle: 'default',
 };
 

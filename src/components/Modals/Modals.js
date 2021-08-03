@@ -155,7 +155,6 @@ class Modals extends React.Component {
               <Button
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
                 onClick={() =>
                   this.props.dispatch(
                     batchedOrganizationDeleteConfirmed(
@@ -213,7 +212,6 @@ class Modals extends React.Component {
               <Button
                 bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
                 onClick={this.createOrganisation}
                 type='submit'
                 disabled={this.state.organizationNameValidationError.length > 0}
@@ -261,7 +259,6 @@ class Modals extends React.Component {
                 bsStyle='primary'
                 disabled={this.state.emailValidationError.length > 0}
                 loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
                 onClick={this.addMember}
                 type='submit'
               >
@@ -296,7 +293,6 @@ class Modals extends React.Component {
               <Button
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
                 onClick={this.removeMember.bind(this)}
                 type='submit'
               >
@@ -362,7 +358,6 @@ class Modals extends React.Component {
               <Button
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
                 onClick={() =>
                   this.props.dispatch(
                     nodePoolDeleteConfirmed(clusterId, nodePool)
