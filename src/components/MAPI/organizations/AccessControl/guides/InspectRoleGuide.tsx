@@ -19,11 +19,7 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title={
-        <>
-          Inspect a <code>Role</code> via the Management API
-        </>
-      }
+      title='Inspect a role via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[

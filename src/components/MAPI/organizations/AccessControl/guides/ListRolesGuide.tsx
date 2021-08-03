@@ -19,12 +19,7 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title={
-        <>
-          List <code>Role</code> and <code>ClusterRole</code> resources via the
-          Management API
-        </>
-      }
+      title='List roles via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[

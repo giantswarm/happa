@@ -19,11 +19,7 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title={
-        <>
-          Bind <code>Role</code> resources to subjects via the Management API
-        </>
-      }
+      title='Bind roles to subjects via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[
