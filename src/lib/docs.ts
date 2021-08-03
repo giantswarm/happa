@@ -54,3 +54,21 @@ export const organizationsNamingConventionsURL =
 
 export const gsctlCreateKubeconfigURL =
   'https://docs.giantswarm.io/ui-api/gsctl/create-kubeconfig/';
+
+export const kubectlGSInstallationURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/installation/';
+
+export const kubectlGSLoginURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/login/';
+
+export const organizationCRDSchema =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/organizations.security.giantswarm.io/';
+
+export const managementAPIIntroduction =
+  'https://docs.giantswarm.io/ui-api/management-api/overview/';
+
+export const kubectlCreateRoleBindingURL =
+  'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-rolebinding-em-';
+
+export const kubectlCreateClusterRoleBindingURL =
+  'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
