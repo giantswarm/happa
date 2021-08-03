@@ -3,26 +3,75 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import { INodePool } from 'shared/types';
 import * as nodePoolActions from 'stores/nodepool/actions';
+import { IState } from 'stores/state';
+import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import { extractMessageFromError } from 'utils/errorUtils';
 
-class ScaleNodePoolModal extends React.Component {
+interface IDispatchProps extends DispatchProp {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  nodePoolActions: Record<string, (...args: any[]) => Promise<any>>;
+}
+
+interface IScaleNodePoolModalProps {
+  cluster: Cluster;
+  nodePool: INodePool;
+  workerNodesRunning: number;
+  workerNodesDesired: number;
+  supportsAutoscaling?: boolean;
+}
+
+interface IScaleNodePoolModalState {
+  loading: boolean;
+  error: Error | null;
+  modalVisible: boolean;
+  scaling: {
+    min: number;
+    minValid: boolean;
+    max: number;
+    maxValid: boolean;
+  };
+  nodePool: INodePool | null;
+}
+
+class ScaleNodePoolModal extends React.Component<
+  IScaleNodePoolModalProps & IDispatchProps,
+  IScaleNodePoolModalState
+> {
   // eslint-disable-next-line no-magic-numbers
   static rollupAnimationDuration = 500;
 
-  state = {
+  static propTypes = {
+    cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
+    nodePool: (PropTypes.object as PropTypes.Requireable<INodePool>).isRequired,
+    nodePoolActions: (PropTypes.object as PropTypes.Requireable<
+      IDispatchProps['nodePoolActions']
+    >).isRequired,
+    workerNodesRunning: PropTypes.number.isRequired,
+    workerNodesDesired: PropTypes.number.isRequired,
+    supportsAutoscaling: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    supportsAutoscaling: false,
+  };
+
+  public readonly state: IScaleNodePoolModalState = {
+    loading: false,
+    error: null,
     modalVisible: false,
     scaling: {
-      automatic: false,
-      min: this.props.nodePool.scaling.min,
+      min: this.props.nodePool.scaling!.min,
       minValid: true,
-      max: this.props.nodePool.scaling.max,
+      max: this.props.nodePool.scaling!.max,
       maxValid: true,
     },
     nodePool: null,
@@ -32,21 +81,20 @@ class ScaleNodePoolModal extends React.Component {
     this.setState((prevState) => ({
       scaling: {
         ...prevState.scaling,
-        min: this.props.nodePool.scaling.min,
-        max: this.props.nodePool.scaling.max,
+        min: this.props.nodePool.scaling!.min,
+        max: this.props.nodePool.scaling!.max,
       },
-      // eslint-disable-next-line react/no-unused-state
       loading: false,
       error: null,
     }));
   };
 
-  setNodePool = (nodePool) => {
+  setNodePool = (nodePool: INodePool) => {
     this.setState((prevState) => ({
       scaling: {
         ...prevState.scaling,
-        min: nodePool.scaling.min,
-        max: nodePool.scaling.max,
+        min: nodePool.scaling!.min,
+        max: nodePool.scaling!.max,
       },
       nodePool,
     }));
@@ -72,7 +120,14 @@ class ScaleNodePoolModal extends React.Component {
     });
   };
 
-  updateScaling = (nodeCountSelector) => {
+  updateScaling = (nodeCountSelector: {
+    scaling: {
+      min: number;
+      minValid: boolean;
+      max: number;
+      maxValid: boolean;
+    };
+  }) => {
     const { min, max, minValid, maxValid } = nodeCountSelector.scaling;
     this.setState({
       scaling: { min, minValid, max, maxValid },
@@ -92,7 +147,7 @@ class ScaleNodePoolModal extends React.Component {
         };
 
         this.props.nodePoolActions
-          .nodePoolPatch(this.props.cluster.id, this.state.nodePool, {
+          .nodePoolPatch(this.props.cluster.id, this.state.nodePool!, {
             scaling,
           })
           .then(() => {
@@ -124,7 +179,7 @@ class ScaleNodePoolModal extends React.Component {
     if (!supportsAutoscaling) {
       // On non-auto-scaling clusters scaling.min == scaling.max so comparing
       // only min between props and current state works.
-      return min - nodePool.scaling.min;
+      return min - nodePool.scaling!.min;
     }
 
     if (workerNodesDesired < min) return min - workerNodesDesired;
@@ -135,7 +190,7 @@ class ScaleNodePoolModal extends React.Component {
     return 0;
   };
 
-  pluralize = (nodes) => {
+  pluralize = (nodes: number) => {
     let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
@@ -152,7 +207,7 @@ class ScaleNodePoolModal extends React.Component {
     const { nodePool, workerNodesDesired, supportsAutoscaling } = this.props;
     const { min, max, minValid, maxValid } = this.state.scaling;
     // Are there any nodes already?
-    const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
+    const hasNodes = nodePool.status!.nodes && nodePool.status!.nodes_ready;
 
     if (supportsAutoscaling) {
       if (min > workerNodesDesired && hasNodes) {
@@ -160,7 +215,7 @@ class ScaleNodePoolModal extends React.Component {
 
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
-          style: 'primary',
+          style: 'primary' as const,
           disabled: !minValid,
         };
       }
@@ -172,23 +227,23 @@ class ScaleNodePoolModal extends React.Component {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
-          style: 'danger',
+          style: 'danger' as const,
           disabled: !maxValid,
         };
       }
 
-      if (min !== nodePool.scaling.min) {
+      if (min !== nodePool.scaling!.min) {
         return {
           title: 'Apply',
-          style: 'primary',
+          style: 'primary' as const,
           disabled: !(minValid && maxValid),
         };
       }
 
-      if (max !== nodePool.scaling.max) {
+      if (max !== nodePool.scaling!.max) {
         return {
           title: 'Apply',
-          style: 'primary',
+          style: 'primary' as const,
           disabled: !(minValid && maxValid),
         };
       }
@@ -201,7 +256,7 @@ class ScaleNodePoolModal extends React.Component {
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralizeWorkers}`,
-        style: 'primary',
+        style: 'primary' as const,
         disabled: !(minValid && maxValid),
       };
     }
@@ -209,7 +264,7 @@ class ScaleNodePoolModal extends React.Component {
     if (workerDelta < 0) {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralizeWorkers}`,
-        style: 'danger',
+        style: 'danger' as const,
         disabled: !(minValid && maxValid),
       };
     }
@@ -219,8 +274,8 @@ class ScaleNodePoolModal extends React.Component {
 
   render() {
     const { workerNodesRunning, supportsAutoscaling } = this.props;
-    const { error, scaling } = this.state;
-    const { max, minValid, loading } = scaling;
+    const { error, scaling, loading } = this.state;
+    const { max, minValid } = scaling;
 
     const warnings = [];
 
@@ -305,10 +360,8 @@ class ScaleNodePoolModal extends React.Component {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your node pool:</p>
-          <FlashMessageComponent type='danger'>
-            {error.body && error.body.message
-              ? error.body.message
-              : error.message}
+          <FlashMessageComponent type={FlashMessageType.Danger}>
+            {extractMessageFromError(error, 'Could not scale node pool')}
           </FlashMessageComponent>
         </BootstrapModal.Body>
       );
@@ -341,25 +394,17 @@ class ScaleNodePoolModal extends React.Component {
   }
 }
 
-ScaleNodePoolModal.propTypes = {
-  cluster: PropTypes.object,
-  nodePool: PropTypes.object,
-  nodePoolActions: PropTypes.object,
-  workerNodesRunning: PropTypes.number,
-  workerNodesDesired: PropTypes.number,
-  supportsAutoscaling: PropTypes.bool,
-};
-
-ScaleNodePoolModal.defaultProps = {
-  supportsAutoscaling: false,
-};
-
-function mapDispatchToProps(dispatch) {
-  return {
+function mapDispatchToProps(dispatch: Dispatch) {
+  return ({
     nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
-  };
+  } as unknown) as IDispatchProps;
 }
 
-export default connect(undefined, mapDispatchToProps, undefined, {
-  forwardRef: true,
-})(ScaleNodePoolModal);
+export default connect<IState, IDispatchProps, IScaleNodePoolModalProps>(
+  undefined,
+  mapDispatchToProps,
+  undefined,
+  {
+    forwardRef: true,
+  }
+)(ScaleNodePoolModal);
