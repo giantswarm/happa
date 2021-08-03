@@ -7,6 +7,7 @@ import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import ClusterDetailWorkerNodes from '../ClusterDetailWorkerNodes';
@@ -41,6 +42,8 @@ jest.mock('react-router', () => ({
   }),
 }));
 
+jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
+
 describe('ClusterDetailWorkerNodes', () => {
   afterEach(() => {
     cache.clear();
@@ -52,8 +55,12 @@ describe('ClusterDetailWorkerNodes', () => {
 
   it('displays an error message if the list of node pools could not be fetched', async () => {
     nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
@@ -79,8 +86,12 @@ describe('ClusterDetailWorkerNodes', () => {
 
   it('displays a placeholder if there are no node pools', async () => {
     nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 

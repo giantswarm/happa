@@ -3,7 +3,6 @@ import { Box, Heading, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/utils';
 import { NodePool, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -16,6 +15,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -161,19 +161,37 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
   }>();
 
   const clientFactory = useHttpClientFactory();
+
   const auth = useAuthProvider();
 
-  const namespace = getOrgNamespaceFromOrgName(orgId);
-
   const clusterClient = useRef(clientFactory());
+  const orgClient = useRef(clientFactory());
+
+  const { data: org, error: orgError } = useSWR<
+    securityv1alpha1.IOrganization,
+    GenericResponseError
+  >(securityv1alpha1.getOrganizationKey(orgId), () =>
+    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
+  );
+
+  useEffect(() => {
+    if (orgError) {
+      ErrorReporter.getInstance().notify(orgError);
+    }
+  }, [orgError]);
+
+  const namespace = org?.status?.namespace;
+
+  const clusterKey = namespace
+    ? capiv1alpha3.getClusterKey(namespace, clusterId)
+    : null;
+
   const {
     data: cluster,
     error: clusterError,
     isValidating: clusterIsValidating,
-  } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(
-    capiv1alpha3.getClusterKey(namespace, clusterId),
-    () =>
-      capiv1alpha3.getCluster(clusterClient.current, auth, namespace, clusterId)
+  } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(clusterKey, () =>
+    capiv1alpha3.getCluster(clusterClient.current, auth, namespace!, clusterId)
   );
 
   const providerClusterKey = cluster

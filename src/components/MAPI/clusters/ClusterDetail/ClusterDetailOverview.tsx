@@ -3,7 +3,6 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import ClusterDetailWidgetApps from 'MAPI/apps/ClusterDetailWidgetApps';
-import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/utils';
 import ClusterDetailWidgetRelease from 'MAPI/releases/ClusterDetailWidgetRelease';
 import {
   fetchProviderClusterForCluster,
@@ -11,6 +10,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useRef } from 'react';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
@@ -34,16 +34,35 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const { orgId, clusterId } = match.params;
 
   const clientFactory = useHttpClientFactory();
+
   const auth = useAuthProvider();
 
-  const namespace = getOrgNamespaceFromOrgName(orgId);
-
   const clusterClient = useRef(clientFactory());
+  const orgClient = useRef(clientFactory());
+
+  const { data: org } = useSWR<
+    securityv1alpha1.IOrganization,
+    GenericResponseError
+  >(securityv1alpha1.getOrganizationKey(orgId), () =>
+    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
+  );
+
+  const namespace = org?.status?.namespace;
+
+  const clusterKey = namespace
+    ? capiv1alpha3.getClusterKey(namespace, clusterId)
+    : null;
+
   // The error is handled in the parent component.
   const { data: cluster } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(
-    capiv1alpha3.getClusterKey(namespace, clusterId),
+    clusterKey,
     () =>
-      capiv1alpha3.getCluster(clusterClient.current, auth, namespace, clusterId)
+      capiv1alpha3.getCluster(
+        clusterClient.current,
+        auth,
+        namespace!,
+        clusterId
+      )
   );
 
   const providerClusterKey = cluster

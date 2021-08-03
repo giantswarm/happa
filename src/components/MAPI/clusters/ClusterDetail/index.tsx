@@ -8,12 +8,12 @@ import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
-import { getOrgNamespaceFromOrgName } from 'MAPI/organizations/utils';
 import { extractErrorMessage } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Tab } from 'react-bootstrap';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -86,16 +86,48 @@ const ClusterDetail: React.FC<{}> = () => {
   ]);
 
   const clientFactory = useHttpClientFactory();
+
   const auth = useAuthProvider();
 
-  const namespace = getOrgNamespaceFromOrgName(orgId);
-
   const clusterClient = useRef(clientFactory());
+  const orgClient = useRef(clientFactory());
+
+  const { data: org, error: orgError } = useSWR<
+    securityv1alpha1.IOrganization,
+    GenericResponseError
+  >(securityv1alpha1.getOrganizationKey(orgId), () =>
+    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
+  );
+
+  const namespace = org?.status?.namespace;
+
+  useEffect(() => {
+    if (orgError) {
+      ErrorReporter.getInstance().notify(orgError);
+
+      const errorMessage = extractErrorMessage(orgError);
+      new FlashMessage(
+        `There was a problem loading cluster <code>${clusterId}</code> for <code>${orgId}</code>`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      if (!namespace) {
+        dispatch(push(MainRoutes.Home));
+      }
+    }
+  }, [namespace, orgError, orgId, clusterId, dispatch]);
+
+  const clusterKey = namespace
+    ? capiv1alpha3.getClusterKey(namespace, clusterId)
+    : null;
+
   const { data: cluster, error: clusterError, mutate: mutateCluster } = useSWR<
     capiv1alpha3.ICluster,
     GenericResponseError
-  >(capiv1alpha3.getClusterKey(namespace, clusterId), () =>
-    capiv1alpha3.getCluster(clusterClient.current, auth, namespace, clusterId)
+  >(clusterKey, () =>
+    capiv1alpha3.getCluster(clusterClient.current, auth, namespace!, clusterId)
   );
 
   useEffect(() => {

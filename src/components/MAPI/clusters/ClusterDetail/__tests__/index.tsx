@@ -7,6 +7,7 @@ import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import ClusterDetail from '../';
@@ -44,6 +45,8 @@ jest.mock('react-router', () => ({
   }),
 }));
 
+jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
+
 describe('ClusterDetail', () => {
   afterEach(() => {
     cache.clear();
@@ -61,8 +64,12 @@ describe('ClusterDetail', () => {
 
   it(`displays the cluster's description`, async () => {
     nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
@@ -73,20 +80,24 @@ describe('ClusterDetail', () => {
 
   it(`can edit the cluster's description`, async () => {
     nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
         ...capiv1alpha3Mocks.randomCluster1,
