@@ -46,6 +46,7 @@ import ViewAndEditName from 'UI/Inputs/ViewEditName';
 import Well from 'UI/Layout/Well';
 import { memoize } from 'underscore';
 
+import ClusterActions from './ClusterActions';
 import ClusterApps from './ClusterApps';
 import Ingress from './Ingress/Ingress';
 import KeyPairs from './KeyPairs';
@@ -390,6 +391,11 @@ class ClusterDetailView extends React.Component {
                     kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
                   />
                 )}
+              </Tab>
+              <Tab eventKey={tabsPaths.Actions} title='Actions'>
+                <LoadingOverlay loading={this.props.loadingCluster}>
+                  <ClusterActions />
+                </LoadingOverlay>
               </Tab>
             </Tabs>
             {!isV5Cluster && (

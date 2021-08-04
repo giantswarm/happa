@@ -4,9 +4,11 @@ import { typeWithoutSuffix } from 'stores/utils';
 export function selectLoadingFlagByIdAndAction(
   state: IState,
   id: string,
-  actionType: string
+  actionType: string,
+  defaultValue: boolean = true
 ) {
   return (
-    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? true
+    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ??
+    defaultValue
   );
 }
