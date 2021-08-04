@@ -160,7 +160,7 @@
     "@types/react-router": "^5.1.15",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-test-renderer": "^17.0.0",
-    "@types/react-timeout": "^1.1.1",
+    "@types/react-timeout": "^1.1.2",
     "@types/react-transition-group": "^4.4.1",
     "@types/react-virtualized": "^9.21.11",
     "@types/react-window": "^1.8.3",
