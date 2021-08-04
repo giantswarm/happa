@@ -2,51 +2,51 @@
 
 exports[`CLIGuide renders the contents when open 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKckTs izRacH"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 AHCYz sc-hFxFgV ikWpeN"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-hFFCpj cJrizb"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 iuBOfw"
+        class="StyledBox-sc-13pk1d4-0 fKqrK"
       >
         <button
           aria-expanded="true"
           aria-selected="true"
-          class="StyledButton-sc-323bzc-0 gUjxTZ"
+          class="StyledButton-sc-323bzc-0 eKfunH"
           role="tab"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 hoBZOR"
+            class="StyledBox-sc-13pk1d4-0 jAWuzL"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 jrFayi"
+              class="StyledBox-sc-13pk1d4-0 dydTGA"
             >
               <span
                 aria-hidden="true"
-                class="StyledText-sc-1sadyjn-0 cORcyl fa fa-shell"
+                class="StyledText-sc-1sadyjn-0 giPNPf fa fa-shell"
                 role="presentation"
               />
               <div
-                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 FkBck"
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 cvYgSq"
               />
               <span
-                class="StyledText-sc-1sadyjn-0 FLjzT"
+                class="StyledText-sc-1sadyjn-0 KXOWt"
               >
                 Get something from somewhere
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 ibrxYb"
+              class="StyledBox-sc-13pk1d4-0 cNFWHN"
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-ofa7kd-0 cVihZy"
+                class="StyledIcon-ofa7kd-0 iMQOFA"
                 viewBox="0 0 24 24"
               >
                 <polyline
@@ -61,17 +61,17 @@ exports[`CLIGuide renders the contents when open 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 hvUCKZ"
+          class="StyledBox-sc-13pk1d4-0 kUTqHn"
           style=""
         >
           <div
             aria-hidden="false"
-            class="StyledBox-sc-13pk1d4-0 hvUCKZ Collapsible__AnimatedBox-sc-15kniua-0 bRxhUn"
+            class="StyledBox-sc-13pk1d4-0 kUTqHn Collapsible__AnimatedBox-sc-15kniua-0 bbJFop"
             open=""
             style="max-height: 0;"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 ieolrg"
+              class="StyledBox-sc-13pk1d4-0 fQRska"
             >
               Just some content
             </div>
@@ -85,51 +85,51 @@ exports[`CLIGuide renders the contents when open 1`] = `
 
 exports[`CLIGuide renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKckTs izRacH"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 AHCYz sc-hFxFgV ikWpeN"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-hFFCpj cJrizb"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 iuBOfw"
+        class="StyledBox-sc-13pk1d4-0 fKqrK"
       >
         <button
           aria-expanded="false"
           aria-selected="false"
-          class="StyledButton-sc-323bzc-0 gUjxTZ"
+          class="StyledButton-sc-323bzc-0 eKfunH"
           role="tab"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 hoBZOR"
+            class="StyledBox-sc-13pk1d4-0 jAWuzL"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 jrFayi"
+              class="StyledBox-sc-13pk1d4-0 dydTGA"
             >
               <span
                 aria-hidden="true"
-                class="StyledText-sc-1sadyjn-0 cORcyl fa fa-shell"
+                class="StyledText-sc-1sadyjn-0 giPNPf fa fa-shell"
                 role="presentation"
               />
               <div
-                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 FkBck"
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 cvYgSq"
               />
               <span
-                class="StyledText-sc-1sadyjn-0 FLjzT"
+                class="StyledText-sc-1sadyjn-0 KXOWt"
               >
                 Get something from somewhere
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 ibrxYb"
+              class="StyledBox-sc-13pk1d4-0 cNFWHN"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 cVihZy"
+                class="StyledIcon-ofa7kd-0 iMQOFA"
                 viewBox="0 0 24 24"
               >
                 <polyline
@@ -143,11 +143,11 @@ exports[`CLIGuide renders without crashing 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 hvUCKZ"
+          class="StyledBox-sc-13pk1d4-0 kUTqHn"
         >
           <div
             aria-hidden="true"
-            class="StyledBox-sc-13pk1d4-0 hvUCKZ Collapsible__AnimatedBox-sc-15kniua-0 gxzVjq"
+            class="StyledBox-sc-13pk1d4-0 kUTqHn Collapsible__AnimatedBox-sc-15kniua-0 yEhzs"
           />
         </div>
       </div>

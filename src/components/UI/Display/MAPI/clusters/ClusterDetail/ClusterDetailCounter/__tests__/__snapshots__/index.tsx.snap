@@ -2,30 +2,30 @@
 
 exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKckTs izRacH"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eUwwzg"
+      class="StyledBox-sc-13pk1d4-0 aYENS"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 eITwkI"
+        class="StyledBox-sc-13pk1d4-0 jcMcey"
       >
         <div
-          class="sc-dFtzdE eKjOri sc-iMrple ksYbfI"
+          class="sc-dFRpbK kJSiqA sc-iLCGUA fELMSE"
         >
           <span
             aria-label="35 dogs"
-            class="StyledText-sc-1sadyjn-0 kQovFR"
+            class="StyledText-sc-1sadyjn-0 cPxXuL"
           >
             35
           </span>
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 bTNMGz sc-eDtzrZ ERmKa"
+        class="StyledText-sc-1sadyjn-0 fTVibh sc-eEihID crGluz"
       >
         dogs
       </span>
@@ -36,30 +36,30 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 
 exports[`ClusterDetailCounter renders a simple counter 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 hSiATR"
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKckTs izRacH"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eUwwzg"
+      class="StyledBox-sc-13pk1d4-0 aYENS"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 eITwkI"
+        class="StyledBox-sc-13pk1d4-0 jcMcey"
       >
         <div
-          class="sc-dFtzdE eKjOri sc-iMrple ksYbfI"
+          class="sc-dFRpbK kJSiqA sc-iLCGUA fELMSE"
         >
           <span
             aria-label="1 dog"
-            class="StyledText-sc-1sadyjn-0 kQovFR"
+            class="StyledText-sc-1sadyjn-0 cPxXuL"
           >
             1
           </span>
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 bTNMGz sc-eDtzrZ ERmKa"
+        class="StyledText-sc-1sadyjn-0 fTVibh sc-eEihID crGluz"
       >
         dog
       </span>
