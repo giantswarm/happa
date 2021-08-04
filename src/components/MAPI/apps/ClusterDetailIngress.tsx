@@ -9,7 +9,8 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { useLocation, useParams } from 'react-router';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
@@ -48,6 +49,7 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
   kvmTCPHTTPSPort,
   ...rest
 }) => {
+  const { pathname } = useLocation();
   const { clusterId } = useParams<{ clusterId: string }>();
 
   const auth = useAuthProvider();
@@ -78,56 +80,64 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
   }, [appList?.items]);
 
   return (
-    <IngressWrapper {...rest}>
-      {appListIsLoading && (
-        <Box direction='row' align='center' gap='small'>
-          <StyledLoadingIndicator loading={true} />
-          <Text color='text-weak'>Loading ingress information…</Text>
-        </Box>
-      )}
-
-      {!appListIsLoading && !appListError && (
-        <Box margin={{ bottom: 'medium' }}>
-          {hasIngress ? (
-            <Text>
-              These details help you to set up Ingress for exposing services in
-              this cluster.
-            </Text>
-          ) : (
-            <Text>
-              In order to expose services via Ingress, you must have{' '}
-              <code>external-dns</code> and an Ingress controller installed.
-              Giant Swarm provides the NGINX Ingress Controller as a managed
-              app.
-            </Text>
-          )}
-        </Box>
-      )}
-
-      {hasIngress && !appListIsLoading && !appListError && (
-        <Instructions
-          provider={provider}
-          k8sEndpoint={k8sEndpoint}
-          kvmTCPHTTPPort={kvmTCPHTTPPort}
-          kvmTCPHTTPSPort={kvmTCPHTTPSPort}
-        />
-      )}
-
-      {!hasIngress && !appListIsLoading && !appListError && (
-        <InstallIngressButton clusterID={clusterId} />
-      )}
-
-      {appListError && (
-        <FlashMessage type={FlashMessageType.Danger}>
-          <Box>
-            <Text weight='bold'>
-              There was a problem fetching apps in the cluster&apos;s namespace.
-            </Text>
-            <Text>{extractErrorMessage(appListError)}</Text>
+    <Breadcrumb
+      data={{
+        title: 'INGRESS',
+        pathname,
+      }}
+    >
+      <IngressWrapper {...rest}>
+        {appListIsLoading && (
+          <Box direction='row' align='center' gap='small'>
+            <StyledLoadingIndicator loading={true} />
+            <Text color='text-weak'>Loading ingress information…</Text>
           </Box>
-        </FlashMessage>
-      )}
-    </IngressWrapper>
+        )}
+
+        {!appListIsLoading && !appListError && (
+          <Box margin={{ bottom: 'medium' }}>
+            {hasIngress ? (
+              <Text>
+                These details help you to set up Ingress for exposing services
+                in this cluster.
+              </Text>
+            ) : (
+              <Text>
+                In order to expose services via Ingress, you must have{' '}
+                <code>external-dns</code> and an Ingress controller installed.
+                Giant Swarm provides the NGINX Ingress Controller as a managed
+                app.
+              </Text>
+            )}
+          </Box>
+        )}
+
+        {hasIngress && !appListIsLoading && !appListError && (
+          <Instructions
+            provider={provider}
+            k8sEndpoint={k8sEndpoint}
+            kvmTCPHTTPPort={kvmTCPHTTPPort}
+            kvmTCPHTTPSPort={kvmTCPHTTPSPort}
+          />
+        )}
+
+        {!hasIngress && !appListIsLoading && !appListError && (
+          <InstallIngressButton clusterID={clusterId} />
+        )}
+
+        {appListError && (
+          <FlashMessage type={FlashMessageType.Danger}>
+            <Box>
+              <Text weight='bold'>
+                There was a problem fetching apps in the cluster&apos;s
+                namespace.
+              </Text>
+              <Text>{extractErrorMessage(appListError)}</Text>
+            </Box>
+          </FlashMessage>
+        )}
+      </IngressWrapper>
+    </Breadcrumb>
   );
 };
 
