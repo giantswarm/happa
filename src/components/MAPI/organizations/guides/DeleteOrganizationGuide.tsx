@@ -56,8 +56,10 @@ const DeleteOrganizationGuide: React.FC<IDeleteOrganizationGuideProps> = ({
           <Text>
             <strong>Note:</strong> if there are any clusters associated with the
             organization via the label{' '}
-            <code>giantswarm.io/organization={`${organizationName}`}</code>, the
-            organization will not be deleted.
+            <code>giantswarm.io/organization={organizationName}</code>, the
+            organization will not be deleted. Also the existence of a cloud
+            provider credentials secret for this organization will prevent
+            deletion.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
