@@ -11,7 +11,11 @@ import {
   selectClusterById,
   selectIsClusterAwaitingUpgrade,
 } from 'stores/cluster/selectors';
-import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
+import {
+  filterUserInstalledApps,
+  isClusterCreating,
+  isClusterUpdating,
+} from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { selectCluster } from 'stores/main/actions';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
@@ -182,20 +186,7 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
       return [];
     }
 
-    const filteredApps = installedApps.filter((app) => {
-      switch (true) {
-        case hasOptionalIngress &&
-          app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
-          return true;
-        case app.metadata.labels?.['giantswarm.io/managed-by'] ===
-          'cluster-operator':
-          return false;
-        default:
-          return true;
-      }
-    });
-
-    return filteredApps;
+    return filterUserInstalledApps(installedApps, hasOptionalIngress ?? false);
   }, [installedApps, hasOptionalIngress]);
 
   const cluster = useSelector((state: IState) =>
