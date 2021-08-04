@@ -308,41 +308,50 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
                   <NodesInfoText
                     color='text-weak'
                     textAlign='center'
-                    size='small'
+                    size='xsmall'
                   >
                     Nodes
                   </NodesInfoText>
                 </NodesInfo>
               </ColumnInfo>
-              <Header additionalColumnsCount={additionalColumns.length}>
+              <Header
+                additionalColumnsCount={additionalColumns.length}
+                height='xxsmall'
+              >
                 <Box align='center' margin={{ left: '-12px' }}>
-                  <Text>Name</Text>
+                  <Text size='xsmall'>Name</Text>
                 </Box>
                 <Box>
-                  <Text>Description</Text>
+                  <Text size='xsmall'>Description</Text>
                 </Box>
                 <Box align='center'>
-                  <Text>{formatMachineTypeColumnTitle(provider)}</Text>
+                  <Text size='xsmall'>
+                    {formatMachineTypeColumnTitle(provider)}
+                  </Text>
                 </Box>
                 <Box align='center'>
-                  <Text textAlign='center'>Availability zones</Text>
+                  <Text textAlign='center' size='xsmall'>
+                    Availability zones
+                  </Text>
                 </Box>
                 <Box align='center'>
-                  <Text>Min</Text>
+                  <Text size='xsmall'>Min</Text>
                 </Box>
                 <Box align='center'>
-                  <Text>Max</Text>
+                  <Text size='xsmall'>Max</Text>
                 </Box>
                 <Box align='center'>
-                  <Text>Desired</Text>
+                  <Text size='xsmall'>Desired</Text>
                 </Box>
                 <Box align='center'>
-                  <Text>Current</Text>
+                  <Text size='xsmall'>Current</Text>
                 </Box>
 
                 {additionalColumns.map((column) => (
                   <Box align='center' key={column.title}>
-                    <Text textAlign='center'>{column.title}</Text>
+                    <Text textAlign='center' size='xsmall'>
+                      {column.title}
+                    </Text>
                   </Box>
                 ))}
 

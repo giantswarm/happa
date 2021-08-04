@@ -19,6 +19,7 @@ import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';
 
+import DeleteOrganizationGuide from '../guides/DeleteOrganizationGuide';
 import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';
 import {
   fetchAppsSummary,
@@ -177,6 +178,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       />
       <Box margin={{ top: 'large' }} direction='column' gap='small'>
         <GetOrganizationDetailsGuide organizationName={organizationName} />
+        <DeleteOrganizationGuide organizationName={organizationName} />
       </Box>
     </>
   );

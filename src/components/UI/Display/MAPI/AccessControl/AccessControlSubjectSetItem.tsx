@@ -8,9 +8,10 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import { IAccessControlSubjectSetRenderer } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 
 const StyledLoadingIndicator = styled(LoadingIndicator)`
-  margin-left: 3px;
+  margin-left: 5px;
   display: block;
   height: 23px;
+  width: 18px;
 
   img {
     display: inline-block;
