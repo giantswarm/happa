@@ -12,7 +12,6 @@ import {
   CLUSTER_CREATE_KEY_PAIR_SUCCESS,
   CLUSTER_CREATE_REQUEST,
   CLUSTER_CREATE_SUCCESS,
-  CLUSTER_DELETE_CONFIRMED,
   CLUSTER_DELETE_ERROR,
   CLUSTER_DELETE_REQUEST,
   CLUSTER_DELETE_SUCCESS,
@@ -47,13 +46,6 @@ import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import { extractMessageFromError } from 'utils/errorUtils';
-
-export function clusterDelete(cluster: Cluster): ClusterActions {
-  return {
-    type: CLUSTER_DELETE_REQUEST,
-    cluster,
-  };
-}
 
 export function clustersList(opts: {
   withLoadingFlags?: boolean;
@@ -410,14 +402,14 @@ export function clusterCreate(
   };
 }
 
-export function clusterDeleteConfirmed(
+export function clusterDelete(
   cluster: Cluster
 ): ThunkAction<Promise<void>, IState, void, ClusterActions> {
   return async (dispatch) => {
     try {
       dispatch({
-        type: CLUSTER_DELETE_CONFIRMED,
-        cluster,
+        type: CLUSTER_DELETE_REQUEST,
+        id: cluster.id,
       });
 
       const clustersApi = new GiantSwarm.ClustersApi();
@@ -425,7 +417,7 @@ export function clusterDeleteConfirmed(
 
       dispatch({
         type: CLUSTER_DELETE_SUCCESS,
-        clusterId: cluster.id,
+        id: cluster.id,
         timestamp: new Date().toISOString(),
       });
 
@@ -444,7 +436,7 @@ export function clusterDeleteConfirmed(
 
       dispatch({
         type: CLUSTER_DELETE_ERROR,
-        clusterId: cluster.id,
+        id: cluster.id,
         error: err,
       });
     }

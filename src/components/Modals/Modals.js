@@ -2,10 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
-import {
-  batchedClusterDeleteConfirmed,
-  batchedOrganizationDeleteConfirmed,
-} from 'stores/batchActions';
+import { batchedOrganizationDeleteConfirmed } from 'stores/batchActions';
 import { modalHide } from 'stores/modal/actions';
 import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
 import {
@@ -316,52 +313,6 @@ class Modals extends React.Component {
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
-
-      case 'clusterDelete': {
-        const cluster = this.props.modal.templateValues.cluster;
-        const clusterId = this.props.modal.templateValues.cluster.id;
-        const clusterName = this.props.modal.templateValues.cluster.name;
-
-        return (
-          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
-            <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>
-                Are you sure you want to delete cluster{' '}
-                <strong>{clusterName}</strong>{' '}
-                <ClusterIDLabel clusterID={clusterId} />?
-              </BootstrapModal.Title>
-            </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              <p>
-                All workloads on this cluster will be terminated. Data stored on
-                the worker nodes will be lost.
-              </p>
-              <p>There is no way to undo this action.</p>
-            </BootstrapModal.Body>
-            <BootstrapModal.Footer>
-              <Button
-                bsStyle='danger'
-                loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
-                onClick={() =>
-                  this.props.dispatch(batchedClusterDeleteConfirmed(cluster))
-                }
-                type='submit'
-              >
-                {this.props.modal.templateValues.loading
-                  ? 'Deleting cluster'
-                  : 'Delete cluster'}
-              </Button>
-
-              {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close}>
-                  Cancel
-                </Button>
-              )}
-            </BootstrapModal.Footer>
-          </BootstrapModal>
-        );
-      }
 
       case 'nodePoolDelete': {
         const { nodePool, clusterId } = this.props.modal.templateValues;

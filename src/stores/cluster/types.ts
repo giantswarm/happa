@@ -9,7 +9,6 @@ import {
   CLUSTER_CREATE_KEY_PAIR_SUCCESS,
   CLUSTER_CREATE_REQUEST,
   CLUSTER_CREATE_SUCCESS,
-  CLUSTER_DELETE_CONFIRMED,
   CLUSTER_DELETE_ERROR,
   CLUSTER_DELETE_REQUEST,
   CLUSTER_DELETE_SUCCESS,
@@ -47,11 +46,6 @@ export interface IClusterState {
 
 export interface IIDsAwaitingUpgradeMap {
   [key: string]: true;
-}
-
-export interface IClusterDeleteRequestAction {
-  type: typeof CLUSTER_DELETE_REQUEST;
-  cluster: Cluster;
 }
 
 export interface IClusterListRequestAction {
@@ -174,20 +168,20 @@ export interface IBatchedClusterCreationErrorAction {
   error: string;
 }
 
-export interface IClusterDeleteConfirmedRequestAction {
-  type: typeof CLUSTER_DELETE_CONFIRMED;
-  cluster: Cluster;
+export interface IClusterDeleteRequestAction {
+  type: typeof CLUSTER_DELETE_REQUEST;
+  id: string;
 }
 
 export interface IClusterDeleteSuccessAction {
   type: typeof CLUSTER_DELETE_SUCCESS;
-  clusterId: string;
+  id: string;
   timestamp: string;
 }
 
 export interface IClusterDeleteErrorAction {
   type: typeof CLUSTER_DELETE_ERROR;
-  clusterId: string;
+  id: string;
   error: string;
 }
 
@@ -234,7 +228,6 @@ export interface IClusterCreateKeyPairErrorAction {
 }
 
 export type ClusterActions =
-  | IClusterDeleteRequestAction
   | IClusterListRequestAction
   | IClusterListSuccessAction
   | IClusterListErrorAction
@@ -258,7 +251,7 @@ export type ClusterActions =
   | IBatchedClusterCreationRequestAction
   | IBatchedClusterCreationSuccessAction
   | IBatchedClusterCreationErrorAction
-  | IClusterDeleteConfirmedRequestAction
+  | IClusterDeleteRequestAction
   | IClusterDeleteSuccessAction
   | IClusterDeleteErrorAction
   | IClusterPatchAction
