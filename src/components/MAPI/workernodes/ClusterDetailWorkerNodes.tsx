@@ -18,10 +18,12 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { TransitionGroup } from 'react-transition-group';
 import { Providers } from 'shared/constants';
+import DocumentTitle from 'shared/DocumentTitle';
 import { PropertiesOf } from 'shared/types';
 import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
@@ -155,6 +157,7 @@ const AnimationWrapper = styled.div`
 interface IClusterDetailWorkerNodesProps {}
 
 const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () => {
+  const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
     clusterId: string;
     orgId: string;
@@ -278,144 +281,160 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
   };
 
   return (
-    <Box>
-      <Box>
-        <Heading level={2}>Node pools</Heading>
-        <Text>
-          A node pool is a set of nodes within a Kubernetes cluster that share
-          the same configuration (machine type, CIDR range, etc.). Each node in
-          the pool is labeled by the node pool&apos;s name.
-        </Text>
-      </Box>
-
-      {!hasNoNodePools && (
+    <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
+      <Breadcrumb
+        data={{
+          title: 'WORKER NODES',
+          pathname,
+        }}
+      >
         <Box>
-          <ColumnInfo
-            additionalColumnsCount={additionalColumns.length}
-            margin={{ top: 'xsmall' }}
-          >
-            <NodesInfo>
-              <NodesInfoText color='text-weak' textAlign='center' size='xsmall'>
-                Nodes
-              </NodesInfoText>
-            </NodesInfo>
-          </ColumnInfo>
-          <Header
-            additionalColumnsCount={additionalColumns.length}
-            height='xxsmall'
-          >
-            <Box align='center' margin={{ left: '-12px' }}>
-              <Text size='xsmall'>Name</Text>
-            </Box>
+          <Box>
+            <Heading level={2}>Node pools</Heading>
+            <Text>
+              A node pool is a set of nodes within a Kubernetes cluster that
+              share the same configuration (machine type, CIDR range, etc.).
+              Each node in the pool is labeled by the node pool&apos;s name.
+            </Text>
+          </Box>
+
+          {!hasNoNodePools && (
             <Box>
-              <Text size='xsmall'>Description</Text>
-            </Box>
-            <Box align='center'>
-              <Text size='xsmall'>
-                {formatMachineTypeColumnTitle(provider)}
-              </Text>
-            </Box>
-            <Box align='center'>
-              <Text textAlign='center' size='xsmall'>
-                Availability zones
-              </Text>
-            </Box>
-            <Box align='center'>
-              <Text size='xsmall'>Min</Text>
-            </Box>
-            <Box align='center'>
-              <Text size='xsmall'>Max</Text>
-            </Box>
-            <Box align='center'>
-              <Text size='xsmall'>Desired</Text>
-            </Box>
-            <Box align='center'>
-              <Text size='xsmall'>Current</Text>
-            </Box>
+              <ColumnInfo
+                additionalColumnsCount={additionalColumns.length}
+                margin={{ top: 'xsmall' }}
+              >
+                <NodesInfo>
+                  <NodesInfoText
+                    color='text-weak'
+                    textAlign='center'
+                    size='xsmall'
+                  >
+                    Nodes
+                  </NodesInfoText>
+                </NodesInfo>
+              </ColumnInfo>
+              <Header
+                additionalColumnsCount={additionalColumns.length}
+                height='xxsmall'
+              >
+                <Box align='center' margin={{ left: '-12px' }}>
+                  <Text size='xsmall'>Name</Text>
+                </Box>
+                <Box>
+                  <Text size='xsmall'>Description</Text>
+                </Box>
+                <Box align='center'>
+                  <Text size='xsmall'>
+                    {formatMachineTypeColumnTitle(provider)}
+                  </Text>
+                </Box>
+                <Box align='center'>
+                  <Text textAlign='center' size='xsmall'>
+                    Availability zones
+                  </Text>
+                </Box>
+                <Box align='center'>
+                  <Text size='xsmall'>Min</Text>
+                </Box>
+                <Box align='center'>
+                  <Text size='xsmall'>Max</Text>
+                </Box>
+                <Box align='center'>
+                  <Text size='xsmall'>Desired</Text>
+                </Box>
+                <Box align='center'>
+                  <Text size='xsmall'>Current</Text>
+                </Box>
 
-            {additionalColumns.map((column) => (
-              <Box align='center' key={column.title}>
-                <Text textAlign='center' size='xsmall'>
-                  {column.title}
-                </Text>
-              </Box>
-            ))}
+                {additionalColumns.map((column) => (
+                  <Box align='center' key={column.title}>
+                    <Text textAlign='center' size='xsmall'>
+                      {column.title}
+                    </Text>
+                  </Box>
+                ))}
 
-            <Box />
-          </Header>
-          <Box margin={{ top: 'xsmall' }}>
-            {nodePoolListIsLoading &&
-              LOADING_COMPONENTS.map((_, idx) => (
-                <WorkerNodesNodePoolItem
-                  key={idx}
-                  additionalColumns={additionalColumns}
-                  margin={{ bottom: 'small' }}
-                />
-              ))}
-
-            <AnimationWrapper>
-              <TransitionGroup>
-                {!nodePoolListIsLoading &&
-                  nodePoolList?.items.map((np: NodePool, idx: number) => (
-                    <BaseTransition
-                      in={false}
-                      key={np.metadata.name}
-                      appear={false}
-                      exit={true}
-                      timeout={{ enter: 200, exit: 200 }}
-                      delayTimeout={0}
-                      classNames='nodepool-list-item'
-                    >
-                      <WorkerNodesNodePoolItem
-                        nodePool={np}
-                        providerNodePool={providerNodePools?.[idx]}
-                        additionalColumns={additionalColumns}
-                        margin={{ bottom: 'small' }}
-                      />
-                    </BaseTransition>
+                <Box />
+              </Header>
+              <Box margin={{ top: 'xsmall' }}>
+                {nodePoolListIsLoading &&
+                  LOADING_COMPONENTS.map((_, idx) => (
+                    <WorkerNodesNodePoolItem
+                      key={idx}
+                      additionalColumns={additionalColumns}
+                      margin={{ bottom: 'small' }}
+                    />
                   ))}
-              </TransitionGroup>
-            </AnimationWrapper>
+
+                <AnimationWrapper>
+                  <TransitionGroup>
+                    {!nodePoolListIsLoading &&
+                      nodePoolList?.items.map((np: NodePool, idx: number) => (
+                        <BaseTransition
+                          in={false}
+                          key={np.metadata.name}
+                          appear={false}
+                          exit={true}
+                          timeout={{ enter: 200, exit: 200 }}
+                          delayTimeout={0}
+                          classNames='nodepool-list-item'
+                        >
+                          <WorkerNodesNodePoolItem
+                            nodePool={np}
+                            providerNodePool={providerNodePools?.[idx]}
+                            additionalColumns={additionalColumns}
+                            margin={{ bottom: 'small' }}
+                          />
+                        </BaseTransition>
+                      ))}
+                  </TransitionGroup>
+                </AnimationWrapper>
+              </Box>
+            </Box>
+          )}
+
+          <Box margin={{ top: 'medium' }}>
+            {cluster && providerCluster && (
+              <WorkerNodesCreateNodePool
+                id='0'
+                open={isCreateFormOpen}
+                onCancel={handleCloseCreateForm}
+                cluster={cluster}
+                providerCluster={providerCluster}
+              />
+            )}
+
+            {!hasNoNodePools &&
+              cluster &&
+              providerCluster &&
+              !isCreateFormOpen && (
+                <Box animation={{ type: 'fadeIn', duration: 300 }}>
+                  <Button
+                    bsStyle='default'
+                    onClick={handleOpenCreateForm}
+                    disabled={!cluster || !providerCluster}
+                  >
+                    <i
+                      className='fa fa-add-circle'
+                      role='presentation'
+                      aria-hidden={true}
+                    />{' '}
+                    Add node pool
+                  </Button>
+                </Box>
+              )}
+
+            {hasNoNodePools && !isCreateFormOpen && (
+              <WorkerNodesNodePoolListPlaceholder
+                animation={{ type: 'fadeIn', duration: 300 }}
+                onCreateButtonClick={handleOpenCreateForm}
+              />
+            )}
           </Box>
         </Box>
-      )}
-
-      <Box margin={{ top: 'medium' }}>
-        {cluster && providerCluster && (
-          <WorkerNodesCreateNodePool
-            id='0'
-            open={isCreateFormOpen}
-            onCancel={handleCloseCreateForm}
-            cluster={cluster}
-            providerCluster={providerCluster}
-          />
-        )}
-
-        {!hasNoNodePools && cluster && providerCluster && !isCreateFormOpen && (
-          <Box animation={{ type: 'fadeIn', duration: 300 }}>
-            <Button
-              bsStyle='default'
-              onClick={handleOpenCreateForm}
-              disabled={!cluster || !providerCluster}
-            >
-              <i
-                className='fa fa-add-circle'
-                role='presentation'
-                aria-hidden={true}
-              />{' '}
-              Add node pool
-            </Button>
-          </Box>
-        )}
-
-        {hasNoNodePools && !isCreateFormOpen && (
-          <WorkerNodesNodePoolListPlaceholder
-            animation={{ type: 'fadeIn', duration: 300 }}
-            onCreateButtonClick={handleOpenCreateForm}
-          />
-        )}
-      </Box>
-    </Box>
+      </Breadcrumb>
+    </DocumentTitle>
   );
 };
 
