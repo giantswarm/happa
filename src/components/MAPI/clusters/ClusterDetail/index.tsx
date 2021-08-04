@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import DocumentTitle from 'shared/DocumentTitle';
 import Tabs from 'shared/Tabs';
 import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
@@ -222,78 +223,80 @@ const ClusterDetail: React.FC<{}> = () => {
   const provider = useSelector(getProvider);
 
   return (
-    <Breadcrumb
-      data={{
-        title: clusterId,
-        pathname: match.url,
-      }}
-    >
-      <Box>
-        <Heading level={1} margin={{ bottom: 'large' }}>
-          <Box direction='row' align='center'>
-            <ClusterIDLabel
-              clusterID={clusterId}
-              copyEnabled={true}
-              variant={ClusterIDLabelType.Name}
-            />{' '}
-            <ClusterDetailWidgetOptionalValue
-              value={clusterDescription}
-              loaderHeight={35}
-              loaderWidth={300}
-            >
-              {(value) => (
-                <StyledViewAndEditName
-                  value={value as string}
-                  typeLabel='cluster'
-                  onSave={updateDescription}
-                  aria-label={value as string}
-                />
-              )}
-            </ClusterDetailWidgetOptionalValue>
-          </Box>
-        </Heading>
-        <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
-          <Tab eventKey={paths.Home} title='Overview' />
-          <Tab eventKey={paths.WorkerNodes} title='Worker nodes' />
-          <Tab eventKey={paths.KeyPairs} title='Key pairs' />
-          <Tab eventKey={paths.Apps} title='Apps' />
-          <Tab eventKey={paths.Ingress} title='Ingress' />
-        </Tabs>
-        <Switch>
-          <Route
-            path={OrganizationsRoutes.Clusters.Detail.WorkerNodes}
-            component={ClusterDetailWorkerNodes}
-          />
-          <Route
-            path={OrganizationsRoutes.Clusters.Detail.Apps}
-            render={() =>
-              cluster && (
-                <ClusterDetailApps releaseVersion={clusterReleaseVersion!} />
-              )
-            }
-          />
-          <Route
-            path={OrganizationsRoutes.Clusters.Detail.KeyPairs}
-            component={ClusterDetailKeyPairs}
-          />
-          <Route
-            path={OrganizationsRoutes.Clusters.Detail.Ingress}
-            render={() =>
-              cluster && (
-                <ClusterDetailIngress
-                  provider={provider}
-                  k8sEndpoint={clusterK8sApiURL}
-                />
-              )
-            }
-          />
-          <Route
-            path={OrganizationsRoutes.Clusters.Detail.Home}
-            component={ClusterDetailOverview}
-          />
-        </Switch>
-      </Box>
-    </Breadcrumb>
+    <DocumentTitle title={`Cluster Details | ${clusterId}`}>
+      <Breadcrumb
+        data={{
+          title: clusterId,
+          pathname: match.url,
+        }}
+      >
+        <Box>
+          <Heading level={1} margin={{ bottom: 'large' }}>
+            <Box direction='row' align='center'>
+              <ClusterIDLabel
+                clusterID={clusterId}
+                copyEnabled={true}
+                variant={ClusterIDLabelType.Name}
+              />{' '}
+              <ClusterDetailWidgetOptionalValue
+                value={clusterDescription}
+                loaderHeight={35}
+                loaderWidth={300}
+              >
+                {(value) => (
+                  <StyledViewAndEditName
+                    value={value as string}
+                    typeLabel='cluster'
+                    onSave={updateDescription}
+                    aria-label={value as string}
+                  />
+                )}
+              </ClusterDetailWidgetOptionalValue>
+            </Box>
+          </Heading>
+          <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
+            <Tab eventKey={paths.Home} title='Overview' />
+            <Tab eventKey={paths.WorkerNodes} title='Worker nodes' />
+            <Tab eventKey={paths.KeyPairs} title='Key pairs' />
+            <Tab eventKey={paths.Apps} title='Apps' />
+            <Tab eventKey={paths.Ingress} title='Ingress' />
+          </Tabs>
+          <Switch>
+            <Route
+              path={OrganizationsRoutes.Clusters.Detail.WorkerNodes}
+              component={ClusterDetailWorkerNodes}
+            />
+            <Route
+              path={OrganizationsRoutes.Clusters.Detail.Apps}
+              render={() =>
+                cluster && (
+                  <ClusterDetailApps releaseVersion={clusterReleaseVersion!} />
+                )
+              }
+            />
+            <Route
+              path={OrganizationsRoutes.Clusters.Detail.KeyPairs}
+              component={ClusterDetailKeyPairs}
+            />
+            <Route
+              path={OrganizationsRoutes.Clusters.Detail.Ingress}
+              render={() =>
+                cluster && (
+                  <ClusterDetailIngress
+                    provider={provider}
+                    k8sEndpoint={clusterK8sApiURL}
+                  />
+                )
+              }
+            />
+            <Route
+              path={OrganizationsRoutes.Clusters.Detail.Home}
+              component={ClusterDetailOverview}
+            />
+          </Switch>
+        </Box>
+      </Breadcrumb>
+    </DocumentTitle>
   );
 };
 

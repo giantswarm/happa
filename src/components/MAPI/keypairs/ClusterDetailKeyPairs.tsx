@@ -12,6 +12,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import Copyable from 'shared/Copyable';
+import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterDetailWidgetLoadingPlaceholder from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetLoadingPlaceholder';
@@ -130,100 +131,102 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   };
 
   return (
-    <Breadcrumb
-      data={{
-        title: 'KEY PAIRS',
-        pathname,
-      }}
-    >
-      <Box>
+    <DocumentTitle title={`Key Pairs | ${clusterId}`}>
+      <Breadcrumb
+        data={{
+          title: 'KEY PAIRS',
+          pathname,
+        }}
+      >
         <Box>
-          <Text>
-            Key pairs consist of an RSA private key and certificate, signed by
-            the certificate authority (CA) belonging to this cluster. They are
-            used for access to the cluster via the Kubernetes API.
-          </Text>
-        </Box>
-        <Table width='100%' margin={{ top: 'medium' }}>
-          <TableHeader>
-            <TableRow>
-              <TableCell>Common Name (CN)</TableCell>
-              <TableCell>Organization (O)</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell>Expiry</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {keyPairListIsLoading &&
-              LOADING_COMPONENTS.map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell size='large'>
-                    <ClusterDetailWidgetLoadingPlaceholder width={400} />
-                  </TableCell>
-                  <TableCell size='small'>
-                    <ClusterDetailWidgetLoadingPlaceholder />
-                  </TableCell>
-                  <TableCell size='small'>
-                    <ClusterDetailWidgetLoadingPlaceholder />
-                  </TableCell>
-                  <TableCell size='small'>
-                    <ClusterDetailWidgetLoadingPlaceholder />
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            {!keyPairListIsLoading &&
-              keyPairList!.items.map((keyPair) => (
-                <TableRow key={keyPair.serial_number}>
-                  <TableCell size='large'>
-                    {formatCommonName(keyPair.common_name)}
-                  </TableCell>
-                  <TableCell size='small'>
-                    {formatOrganization(keyPair.certificate_organizations)}
-                  </TableCell>
-                  <TableCell size='small'>
-                    {relativeDate(keyPair.create_date)}
-                  </TableCell>
-                  <TableCell size='small'>
-                    {formatExpirationDate(keyPair)}
-                  </TableCell>
-                  <TableCell size='xsmall'>
-                    <Button
-                      bsSize='sm'
-                      onClick={handleOpenDetails(keyPair.serial_number)}
-                    >
-                      Details
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            {!keyPairListIsLoading && keyPairList!.items.length === 0 && (
+          <Box>
+            <Text>
+              Key pairs consist of an RSA private key and certificate, signed by
+              the certificate authority (CA) belonging to this cluster. They are
+              used for access to the cluster via the Kubernetes API.
+            </Text>
+          </Box>
+          <Table width='100%' margin={{ top: 'medium' }}>
+            <TableHeader>
               <TableRow>
-                <TableCell>
-                  <Text color='text-weak'>
-                    There are no key pairs to display.
-                  </Text>
-                </TableCell>
+                <TableCell>Common Name (CN)</TableCell>
+                <TableCell>Organization (O)</TableCell>
+                <TableCell>Created</TableCell>
+                <TableCell>Expiry</TableCell>
+                <TableCell />
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {keyPairListIsLoading &&
+                LOADING_COMPONENTS.map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell size='large'>
+                      <ClusterDetailWidgetLoadingPlaceholder width={400} />
+                    </TableCell>
+                    <TableCell size='small'>
+                      <ClusterDetailWidgetLoadingPlaceholder />
+                    </TableCell>
+                    <TableCell size='small'>
+                      <ClusterDetailWidgetLoadingPlaceholder />
+                    </TableCell>
+                    <TableCell size='small'>
+                      <ClusterDetailWidgetLoadingPlaceholder />
+                    </TableCell>
+                  </TableRow>
+                ))}
 
-        <ClusterDetailKeyPairDetailsModal
-          id={selectedKeyPair?.serial_number}
-          commonName={selectedKeyPair?.common_name}
-          organizations={selectedKeyPair?.certificate_organizations}
-          creationDate={selectedKeyPair?.create_date}
-          expirationDate={selectedKeyPairExpirationDate}
-          isExpiringSoon={isSelectedKeyPairExpiringSoon}
-          description={selectedKeyPair?.description}
-          onClose={handleCloseDetails}
-          visible={typeof selectedKeyPair !== 'undefined'}
-        />
-      </Box>
-    </Breadcrumb>
+              {!keyPairListIsLoading &&
+                keyPairList!.items.map((keyPair) => (
+                  <TableRow key={keyPair.serial_number}>
+                    <TableCell size='large'>
+                      {formatCommonName(keyPair.common_name)}
+                    </TableCell>
+                    <TableCell size='small'>
+                      {formatOrganization(keyPair.certificate_organizations)}
+                    </TableCell>
+                    <TableCell size='small'>
+                      {relativeDate(keyPair.create_date)}
+                    </TableCell>
+                    <TableCell size='small'>
+                      {formatExpirationDate(keyPair)}
+                    </TableCell>
+                    <TableCell size='xsmall'>
+                      <Button
+                        bsSize='sm'
+                        onClick={handleOpenDetails(keyPair.serial_number)}
+                      >
+                        Details
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+              {!keyPairListIsLoading && keyPairList!.items.length === 0 && (
+                <TableRow>
+                  <TableCell>
+                    <Text color='text-weak'>
+                      There are no key pairs to display.
+                    </Text>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+
+          <ClusterDetailKeyPairDetailsModal
+            id={selectedKeyPair?.serial_number}
+            commonName={selectedKeyPair?.common_name}
+            organizations={selectedKeyPair?.certificate_organizations}
+            creationDate={selectedKeyPair?.create_date}
+            expirationDate={selectedKeyPairExpirationDate}
+            isExpiringSoon={isSelectedKeyPairExpiringSoon}
+            description={selectedKeyPair?.description}
+            onClose={handleCloseDetails}
+            visible={typeof selectedKeyPair !== 'undefined'}
+          />
+        </Box>
+      </Breadcrumb>
+    </DocumentTitle>
   );
 };
 

@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
+import DocumentTitle from 'shared/DocumentTitle';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/main/actions';
 import { getProvider } from 'stores/main/selectors';
@@ -202,139 +203,144 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   );
 
   return (
-    <Breadcrumb
-      data={{
-        title: 'APPS',
-        pathname,
-      }}
-    >
-      <>
-        <UserInstalledApps
-          apps={userInstalledApps.map((a) => ({
-            name: a.metadata.name,
-            version: a.spec.version,
-            deletionTimestamp: a.metadata.deletionTimestamp,
-          }))}
-          error={extractErrorMessage(appListError) ?? null}
-          onShowDetail={showAppDetail}
-        >
-          <BrowseButtonContainer>
-            <BrowseButton onClick={openAppCatalog} disabled={appListIsLoading}>
-              <i className='fa fa-add-circle' /> Install app
-            </BrowseButton>
-          </BrowseButtonContainer>
-        </UserInstalledApps>
+    <DocumentTitle title={`Apps | ${clusterId}`}>
+      <Breadcrumb
+        data={{
+          title: 'APPS',
+          pathname,
+        }}
+      >
+        <>
+          <UserInstalledApps
+            apps={userInstalledApps.map((a) => ({
+              name: a.metadata.name,
+              version: a.spec.version,
+              deletionTimestamp: a.metadata.deletionTimestamp,
+            }))}
+            error={extractErrorMessage(appListError) ?? null}
+            onShowDetail={showAppDetail}
+          >
+            <BrowseButtonContainer>
+              <BrowseButton
+                onClick={openAppCatalog}
+                disabled={appListIsLoading}
+              >
+                <i className='fa fa-add-circle' /> Install app
+              </BrowseButton>
+            </BrowseButtonContainer>
+          </UserInstalledApps>
 
-        <div>
-          <h3>Preinstalled Apps</h3>
-          <Disclaimer>
-            These apps and services are preinstalled on your cluster and managed
-            by Giant Swarm.
-          </Disclaimer>
+          <div>
+            <h3>Preinstalled Apps</h3>
+            <Disclaimer>
+              These apps and services are preinstalled on your cluster and
+              managed by Giant Swarm.
+            </Disclaimer>
 
-          <PreinstalledApps>
-            <div key='essentials'>
-              <SmallHeading>essentials</SmallHeading>
-              {releaseIsLoading &&
-                LOADING_COMPONENTS.map((_, i) => (
-                  <ClusterDetailAppLoadingPlaceholder
-                    key={i}
-                    margin={{ bottom: 'small' }}
-                  />
-                ))}
-              {!releaseIsLoading &&
-                Object.values(preInstalledApps.essentials).map((app) => (
-                  <ClusterDetailPreinstalledApp
-                    logoUrl={app.logoUrl}
-                    name={app.name}
-                    version={formatAppVersion(app)}
-                    key={app.name}
-                  />
-                ))}
-            </div>
+            <PreinstalledApps>
+              <div key='essentials'>
+                <SmallHeading>essentials</SmallHeading>
+                {releaseIsLoading &&
+                  LOADING_COMPONENTS.map((_, i) => (
+                    <ClusterDetailAppLoadingPlaceholder
+                      key={i}
+                      margin={{ bottom: 'small' }}
+                    />
+                  ))}
+                {!releaseIsLoading &&
+                  Object.values(preInstalledApps.essentials).map((app) => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={formatAppVersion(app)}
+                      key={app.name}
+                    />
+                  ))}
+              </div>
 
-            <div key='management'>
-              <SmallHeading>management</SmallHeading>
-              {releaseIsLoading &&
-                LOADING_COMPONENTS.map((_, i) => (
-                  <ClusterDetailAppLoadingPlaceholder
-                    key={i}
-                    margin={{ bottom: 'small' }}
-                  />
-                ))}
-              {!releaseIsLoading &&
-                Object.values(preInstalledApps.management).map((app) => (
-                  <ClusterDetailPreinstalledApp
-                    logoUrl={app.logoUrl}
-                    name={app.name}
-                    version={formatAppVersion(app)}
-                    key={app.name}
-                  />
-                ))}
-            </div>
+              <div key='management'>
+                <SmallHeading>management</SmallHeading>
+                {releaseIsLoading &&
+                  LOADING_COMPONENTS.map((_, i) => (
+                    <ClusterDetailAppLoadingPlaceholder
+                      key={i}
+                      margin={{ bottom: 'small' }}
+                    />
+                  ))}
+                {!releaseIsLoading &&
+                  Object.values(preInstalledApps.management).map((app) => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={formatAppVersion(app)}
+                      key={app.name}
+                    />
+                  ))}
+              </div>
 
-            <div key='ingress'>
-              <SmallHeading>ingress</SmallHeading>
-              {hasOptionalIngress &&
-                !releaseIsLoading &&
-                Object.values(preInstalledApps.ingress).length < 1 && (
-                  <div>
-                    <Disclaimer>
-                      The ingress controller is optional on this cluster.
-                      <br />
-                      You can install one using our app catalog.
-                      <br />
-                      <br />
-                      Read more in our{' '}
-                      <a
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href={ingressControllerInstallationURL}
-                      >
-                        installing an ingress controller guide.
-                      </a>
-                    </Disclaimer>
-                  </div>
-                )}
+              <div key='ingress'>
+                <SmallHeading>ingress</SmallHeading>
+                {hasOptionalIngress &&
+                  !releaseIsLoading &&
+                  Object.values(preInstalledApps.ingress).length < 1 && (
+                    <div>
+                      <Disclaimer>
+                        The ingress controller is optional on this cluster.
+                        <br />
+                        You can install one using our app catalog.
+                        <br />
+                        <br />
+                        Read more in our{' '}
+                        <a
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          href={ingressControllerInstallationURL}
+                        >
+                          installing an ingress controller guide.
+                        </a>
+                      </Disclaimer>
+                    </div>
+                  )}
 
-              {releaseIsLoading &&
-                LOADING_COMPONENTS.map((_, i) => (
-                  <ClusterDetailAppLoadingPlaceholder
-                    key={i}
-                    margin={{ bottom: 'small' }}
-                  />
-                ))}
+                {releaseIsLoading &&
+                  LOADING_COMPONENTS.map((_, i) => (
+                    <ClusterDetailAppLoadingPlaceholder
+                      key={i}
+                      margin={{ bottom: 'small' }}
+                    />
+                  ))}
 
-              {!releaseIsLoading &&
-                Object.values(preInstalledApps.ingress).map((app) => (
-                  <ClusterDetailPreinstalledApp
-                    logoUrl={app.logoUrl}
-                    name={app.name}
-                    version={formatAppVersion(app)}
-                    key={app.name}
-                  />
-                ))}
-            </div>
-          </PreinstalledApps>
+                {!releaseIsLoading &&
+                  Object.values(preInstalledApps.ingress).map((app) => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={formatAppVersion(app)}
+                      key={app.name}
+                    />
+                  ))}
+              </div>
+            </PreinstalledApps>
 
-          {typeof releaseError !== 'undefined' && !releaseIsLoading && (
-            <FlashMessageComponent type={FlashMessageType.Danger}>
-              Unable to load the list of preinstalled apps. Please try again
-              later or contact support: support@giantswarm.io
-            </FlashMessageComponent>
+            {typeof releaseError !== 'undefined' && !releaseIsLoading && (
+              <FlashMessageComponent type={FlashMessageType.Danger}>
+                Unable to load the list of preinstalled apps. Please try again
+                later or contact support: support@giantswarm.io
+              </FlashMessageComponent>
+            )}
+          </div>
+
+          {appToDisplay && (
+            <AppDetailsModalMAPI
+              appName={appToDisplay.metadata.name}
+              clusterName={clusterId}
+              onClose={hideAppModal}
+              visible={detailsModalIsVisible}
+            />
           )}
-        </div>
-
-        {appToDisplay && (
-          <AppDetailsModalMAPI
-            appName={appToDisplay.metadata.name}
-            clusterName={clusterId}
-            onClose={hideAppModal}
-            visible={detailsModalIsVisible}
-          />
-        )}
-      </>
-    </Breadcrumb>
+        </>
+      </Breadcrumb>
+    </DocumentTitle>
   );
 };
 
