@@ -177,62 +177,6 @@ scales correctly`, async () => {
   });
 });
 
-it('deletes a v4 cluster', async () => {
-  const cluster = v4AWSClusterResponse;
-  const clusterDeleteResponse = {
-    code: 'RESOURCE_DELETION_STARTED',
-    message: `Deletion of cluster with ID '${V4_CLUSTER.id}' is in progress.`,
-  };
-
-  // Request
-  nock(API_ENDPOINT)
-    .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'DELETE')
-    .reply(StatusCodes.Ok, clusterDeleteResponse);
-
-  const clusterDetailPath = RoutePath.createUsablePath(
-    OrganizationsRoutes.Clusters.Detail.Home,
-    {
-      orgId: ORGANIZATION,
-      clusterId: V4_CLUSTER.id,
-    }
-  );
-  const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
-    clusterDetailPath
-  );
-
-  // Wait for the view to render
-  await waitFor(() => {
-    expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
-  });
-
-  await waitFor(() => getByText('Delete cluster'));
-  fireEvent.click(getByText('Delete cluster'));
-
-  // Is the modal in the document?
-  const titleText = /are you sure you want to delete/i;
-  await waitFor(() => getByText(titleText));
-  const modalTitle = getByText(titleText);
-  expect(modalTitle).toBeInTheDocument();
-  expect(modalTitle.textContent.includes(cluster.id)).toBeTruthy();
-
-  // Click delete button.
-  const modalDeleteButton = getAllByText('Delete cluster')[1];
-  fireEvent.click(modalDeleteButton);
-
-  // Flash message confirming deletion.
-  await waitFor(() => {
-    getByText(/will be deleted/i);
-  });
-  const flashElement = getByText(/will be deleted/i);
-  expect(flashElement).toBeInTheDocument();
-  expect(flashElement).toHaveTextContent(cluster.id);
-
-  // Expect the cluster is not in the clusters list.
-  await waitFor(() => {
-    expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
-  });
-});
-
 it('patches v4 cluster name correctly', async () => {
   const newClusterName = 'New cluster name';
   const clusterName = V4_CLUSTER.name;
