@@ -50,8 +50,14 @@ const DeleteOrganizationGuide: React.FC<IDeleteOrganizationGuideProps> = ({
           command={`kubectl delete organization ${organizationName}`}
         >
           <Text>
-            As a result, the organization and the associated namespace will be
-            deleted, if possible.
+            As a result, the organization and the associated namespace including
+            all resources in that namespace will be deleted.
+          </Text>
+          <Text>
+            <strong>Note:</strong> if there are any clusters associated with the
+            organization via the label{' '}
+            <code>giantswarm.io/organization={`${organizationName}`}</code>, the
+            organization will not be deleted.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
