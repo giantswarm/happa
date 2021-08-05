@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
@@ -127,23 +128,27 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
       <ClusterDetailWidgetOptionalValue
         value={accountID}
         loaderWidth={300}
-        replaceEmptyValue={true}
+        replaceEmptyValue={false}
       >
-        {(value) => (
-          <StyledLink
-            color='text-weak'
-            href={accountIDPath}
-            rel='noopener noreferrer'
-            target='_blank'
-          >
-            <code>{value}</code>
-            <i
-              className='fa fa-open-in-new'
-              aria-hidden={true}
-              role='presentation'
-            />
-          </StyledLink>
-        )}
+        {(value) =>
+          value === '' ? (
+            <NotAvailable />
+          ) : (
+            <StyledLink
+              color='text-weak'
+              href={accountIDPath}
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              <code>{value}</code>
+              <i
+                className='fa fa-open-in-new'
+                aria-hidden={true}
+                role='presentation'
+              />
+            </StyledLink>
+          )
+        }
       </ClusterDetailWidgetOptionalValue>
     </ClusterDetailWidget>
   );
