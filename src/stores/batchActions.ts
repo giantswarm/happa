@@ -17,7 +17,7 @@ import {
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import {
   clusterCreate,
-  clusterDeleteConfirmed,
+  clusterDelete,
   clusterLoadDetails,
   clusterLoadKeyPairs,
   clustersDetails,
@@ -328,14 +328,14 @@ export function batchedRefreshClusterDetailView(
   };
 }
 
-export function batchedClusterDeleteConfirmed(
+export function batchedClusterDelete(
   cluster: Cluster
 ): ThunkAction<Promise<void>, IState, void, AnyAction> {
   return async (dispatch) => {
     try {
-      await dispatch(clusterDeleteConfirmed(cluster));
+      await dispatch(clusterDelete(cluster));
+
       dispatch(push(MainRoutes.Home));
-      dispatch(modalHide());
     } catch (err) {
       ErrorReporter.getInstance().notify(err);
     }

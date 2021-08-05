@@ -1,8 +1,4 @@
 import produce from 'immer';
-import {
-  CLUSTER_DELETE_CONFIRMED,
-  CLUSTER_DELETE_REQUEST,
-} from 'stores/cluster/constants';
 import { ClusterActions } from 'stores/cluster/types';
 import { MODAL_HIDE } from 'stores/modal/constants';
 import { IModalState, ModalActions } from 'stores/modal/types';
@@ -52,26 +48,6 @@ const modalReducer = produce(
         if (!action.payload.isFirstRendering) {
           draft.visible = false;
         }
-
-        break;
-
-      case CLUSTER_DELETE_REQUEST:
-        draft.visible = true;
-        draft.templateValues = {
-          cluster: action.cluster,
-          loading: false,
-        };
-        draft.template = 'clusterDelete';
-
-        break;
-
-      case CLUSTER_DELETE_CONFIRMED:
-        draft.visible = true;
-        draft.templateValues = {
-          cluster: action.cluster,
-          loading: true,
-        };
-        draft.template = 'clusterDelete';
 
         break;
 

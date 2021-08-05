@@ -41,6 +41,7 @@ const OrganizationsRoutes = {
       Apps: '/organizations/:orgId/clusters/:clusterId/apps',
       Ingress: '/organizations/:orgId/clusters/:clusterId/ingress',
       WorkerNodes: '/organizations/:orgId/clusters/:clusterId/worker-nodes',
+      Actions: '/organizations/:orgId/clusters/:clusterId/actions',
     },
     GettingStarted: {
       Overview: '/organizations/:orgId/clusters/:clusterId/getting-started',

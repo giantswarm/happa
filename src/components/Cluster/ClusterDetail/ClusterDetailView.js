@@ -40,14 +40,13 @@ import { selectNodePools } from 'stores/nodepool/selectors';
 import { getAllReleases } from 'stores/releases/selectors';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
-import Section from 'UI/Layout/Section';
 import Well from 'UI/Layout/Well';
 import { memoize } from 'underscore';
 
+import ClusterActions from './ClusterActions';
 import ClusterApps from './ClusterApps';
 import Ingress from './Ingress/Ingress';
 import KeyPairs from './KeyPairs';
@@ -55,11 +54,6 @@ import ScaleClusterModal from './ScaleClusterModal';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
-
-const Disclaimer = styled.p`
-  margin: 0 0 20px;
-  line-height: 1.2;
-`;
 
 const NotReadyNotice = styled(Well)`
   background-color: ${({ theme }) =>
@@ -166,10 +160,6 @@ class ClusterDetailView extends React.Component {
       this.registerRefreshInterval();
     }
   };
-
-  showDeleteClusterModal(cluster) {
-    this.props.clusterActions.clusterDelete(cluster);
-  }
 
   showScalingModal = () => {
     this.scaleClusterModal.reset();
@@ -362,22 +352,6 @@ class ClusterDetailView extends React.Component {
                     workerNodesDesired={this.getDesiredNumberOfNodes()}
                   />
                 )}
-
-                <Section title='Delete This Cluster' flat>
-                  <>
-                    <Disclaimer>
-                      All workloads on this cluster will be terminated. Data
-                      stored on the worker nodes will be lost. There is no way
-                      to undo this action.
-                    </Disclaimer>
-                    <Button
-                      bsStyle='danger'
-                      onClick={this.showDeleteClusterModal.bind(this, cluster)}
-                    >
-                      <i className='fa fa-delete' /> Delete cluster
-                    </Button>
-                  </>
-                </Section>
               </Tab>
               <Tab eventKey={tabsPaths.KeyPairs} title='Key Pairs'>
                 <LoadingOverlay loading={this.props.loadingCluster}>
@@ -418,6 +392,11 @@ class ClusterDetailView extends React.Component {
                   />
                 )}
               </Tab>
+              <Tab eventKey={tabsPaths.Actions} title='Actions'>
+                <LoadingOverlay loading={this.props.loadingCluster}>
+                  <ClusterActions />
+                </LoadingOverlay>
+              </Tab>
             </Tabs>
             {!isV5Cluster && (
               <ScaleClusterModal
@@ -452,7 +431,6 @@ ClusterDetailView.propTypes = {
   canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
-  clusterActions: PropTypes.object,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
