@@ -116,7 +116,7 @@ describe('ClusterDetailDeleteAction', () => {
       screen.getByText('Are you sure you want to delete this cluster forever?')
     ).toBeInTheDocument();
     expect(
-      screen.getByText('If yes, please enter the cluster name')
+      screen.getByText('If yes, please enter the cluster name:')
     ).toBeInTheDocument();
 
     const deleteButton = screen.getByRole('button', { name: /Delete/ });
@@ -178,7 +178,7 @@ describe('ClusterDetailDeleteAction', () => {
     fireEvent.click(screen.getByRole('button', { name: /Confirm/ }));
 
     expect(
-      await screen.findByText('If yes, please enter the cluster ID')
+      await screen.findByText('If yes, please enter the cluster ID:')
     ).toBeInTheDocument();
   });
 });
