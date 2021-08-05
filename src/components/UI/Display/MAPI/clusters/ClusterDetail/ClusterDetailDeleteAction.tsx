@@ -42,6 +42,7 @@ interface IClusterDetailDeleteActionProps
   onDelete: () => void;
   isLoading?: boolean;
   variant?: ClusterDetailDeleteActionNameVariant;
+  disabled?: boolean;
 }
 
 const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
@@ -54,6 +55,7 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
   onDelete,
   isLoading,
   variant,
+  disabled,
   ...props
 }) => {
   const [confirmationStep, setConfirmationStep] = useState(
@@ -170,6 +172,7 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
               bsStyle='default'
               onClick={showConfirmation}
               loading={isLoading}
+              disabled={disabled}
             >
               <i
                 className='fa fa-delete'
@@ -196,6 +199,7 @@ ClusterDetailDeleteAction.propTypes = {
   onDelete: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
   variant: PropTypes.oneOf(Object.values(ClusterDetailDeleteActionNameVariant)),
+  disabled: PropTypes.bool,
 };
 
 ClusterDetailDeleteAction.defaultProps = {
