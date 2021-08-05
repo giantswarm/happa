@@ -18,7 +18,6 @@ import useSWR from 'swr';
 
 import ClusterDetailWidgetKeyPairs from '../../keypairs/ClusterDetailWidgetKeyPairs';
 import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidgetWorkerNodes';
-import ClusterDetailOverviewDelete from './ClusterDetailOverviewDelete';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -104,15 +103,6 @@ const ClusterDetailOverview: React.FC<{}> = () => {
         basis='100%'
       />
       <ClusterDetailWidgetCreated cluster={cluster} basis='100%' />
-
-      {cluster && (
-        <ClusterDetailOverviewDelete
-          cluster={cluster}
-          border='top'
-          margin={{ top: 'small' }}
-          basis='100%'
-        />
-      )}
     </StyledBox>
   );
 };
