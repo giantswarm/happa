@@ -95,7 +95,7 @@ const Clusters: React.FC<{}> = () => {
     clusterListIsValidating;
 
   const sortedClusters = useMemo(
-    () => clusterList?.items.sort(compareClusters),
+    () => clusterList?.items.slice().sort(compareClusters),
     [clusterList?.items]
   );
 
