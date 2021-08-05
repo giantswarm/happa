@@ -1,9 +1,11 @@
+import produce from 'immer';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { ControlPlaneNode } from 'MAPI/types';
+import { Cluster, ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { filterLabels } from 'stores/cluster/utils';
+import { mutate } from 'swr';
 
 export async function updateClusterDescription(
   httpClient: IHttpClient,
@@ -34,21 +36,55 @@ export async function updateClusterDescription(
 export async function deleteCluster(
   httpClient: IHttpClient,
   auth: IOAuth2Provider,
-  namespace: string,
-  name: string
+  cluster: Cluster
 ) {
-  const cluster = await capiv1alpha3.getCluster(
-    httpClient,
-    auth,
-    namespace,
-    name
-  );
+  if (cluster.kind === capiv1alpha3.Cluster) {
+    const updatedCluster = await capiv1alpha3.getCluster(
+      httpClient,
+      auth,
+      cluster.metadata.namespace!,
+      cluster.metadata.name
+    );
 
-  await capiv1alpha3.deleteCluster(httpClient, auth, cluster);
+    await capiv1alpha3.deleteCluster(httpClient, auth, updatedCluster);
 
-  cluster.metadata.deletionTimestamp = new Date().toISOString();
+    updatedCluster.metadata.deletionTimestamp = new Date().toISOString();
 
-  return cluster;
+    mutate(
+      capiv1alpha3.getClusterKey(
+        cluster.metadata.namespace!,
+        cluster.metadata.name
+      ),
+      updatedCluster,
+      false
+    );
+
+    mutate(
+      capiv1alpha3.getClusterListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1alpha3.labelOrganization]: updatedCluster.metadata.labels![
+              capiv1alpha3.labelOrganization
+            ],
+          },
+        },
+      }),
+      produce((draft?: capiv1alpha3.IClusterList) => {
+        if (!draft) return;
+
+        for (let i = 0; i < draft.items.length; i++) {
+          if (draft.items[i].metadata.name === updatedCluster.metadata.name) {
+            draft.items[i] = updatedCluster;
+          }
+        }
+      }),
+      false
+    );
+
+    return updatedCluster;
+  }
+
+  return Promise.reject(new Error('Unsupported provider.'));
 }
 
 export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
