@@ -505,7 +505,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
           <StatusMessage status={this.state.statusMessage} />
           {this.state.buttonText[this.state.currentStep] !== '' ? (
             <Button
-              bsStyle='primary'
+              primary={true}
               disabled={!this.state.advancable || this.state.submitting}
               loading={this.state.submitting}
               type='submit'

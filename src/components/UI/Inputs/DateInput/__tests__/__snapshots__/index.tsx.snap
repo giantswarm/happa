@@ -5,7 +5,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -15,7 +15,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 kfaNv"
+          class="StyledButtonKind-sc-1vhfpnt-0 ehJRIz"
           id="dob"
           type="button"
         >
@@ -24,7 +24,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-ofa7kd-0 dyOQNl"
+              class="StyledIcon-ofa7kd-0 jJugNl"
               viewBox="0 0 24 24"
             >
               <path
@@ -51,7 +51,7 @@ exports[`DateInput renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -104,7 +104,7 @@ exports[`DateInput renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -149,7 +149,7 @@ exports[`DateInput renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -206,7 +206,7 @@ exports[`DateInput renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -258,7 +258,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -315,7 +315,7 @@ exports[`DateInput renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"

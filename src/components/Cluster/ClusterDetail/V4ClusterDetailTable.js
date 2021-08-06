@@ -57,10 +57,6 @@ const KubernetesURIWrapper = styled(FlexRowWithTwoBlocksOnEdges)`
       }
     }
   }
-
-  i {
-    padding: 0 8px;
-  }
 `;
 
 const GetStartedWrapper = styled.div`
@@ -144,8 +140,11 @@ class V4ClusterDetailTable extends React.Component {
             {api_endpoint}
           </StyledURIBlock>
           <GetStartedWrapper>
-            <Button onClick={this.props.accessCluster}>
-              <i className='fa fa-start' /> Get started
+            <Button
+              onClick={this.props.accessCluster}
+              icon={<i className='fa fa-start' />}
+            >
+              Get started
             </Button>
           </GetStartedWrapper>
         </KubernetesURIWrapper>

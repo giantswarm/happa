@@ -1,6 +1,7 @@
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import yaml from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import useDebounce from 'lib/hooks/useDebounce';
@@ -285,8 +286,11 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
 
   return (
     <>
-      <Button bsStyle='primary' onClick={openModal}>
-        <i className='fa fa-add-circle' />
+      <Button
+        primary={true}
+        onClick={openModal}
+        icon={<i className='fa fa-add-circle' />}
+      >
         Install in cluster
       </Button>
       {(() => {
@@ -296,7 +300,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
               <GenericModal
                 {...props}
                 footer={
-                  <Button bsStyle='link' onClick={onClose}>
+                  <Button link={true} onClick={onClose}>
                     Cancel
                   </Button>
                 }
@@ -319,22 +323,22 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
               <GenericModal
                 {...props}
                 footer={
-                  <>
+                  <Box direction='row' gap='small' justify='end'>
                     <Button
-                      bsStyle='primary'
+                      primary={true}
                       disabled={anyValidationErrors()}
                       loading={loading}
                       onClick={createApp}
                     >
                       Install app
                     </Button>
-                    <Button bsStyle='link' onClick={previous}>
+                    <Button link={true} onClick={previous}>
                       Pick a different cluster
                     </Button>
-                    <Button bsStyle='link' onClick={onClose}>
+                    <Button link={true} onClick={onClose}>
                       Cancel
                     </Button>
-                  </>
+                  </Box>
                 }
                 onClose={onClose}
                 title={

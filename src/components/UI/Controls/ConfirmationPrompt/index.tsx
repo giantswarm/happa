@@ -88,10 +88,15 @@ const ConfirmationPrompt = React.forwardRef<
             {children}
 
             {(onConfirm || onCancel) && (
-              <Box direction='row' margin={{ top: 'medium' }} justify='center'>
+              <Box
+                direction='row'
+                margin={{ top: 'medium' }}
+                justify='center'
+                gap='small'
+              >
                 {onConfirm &&
                   (typeof confirmButton === 'string' ? (
-                    <Button bsStyle='danger' onClick={handleConfirm}>
+                    <Button danger={true} onClick={handleConfirm}>
                       {confirmButton}
                     </Button>
                   ) : (
@@ -101,7 +106,6 @@ const ConfirmationPrompt = React.forwardRef<
                 {onCancel &&
                   (typeof cancelButton === 'string' ? (
                     <Button
-                      bsStyle='default'
                       onClick={handleCancel}
                       ref={cancelButtonRef}
                       className='cancel-button'

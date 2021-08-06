@@ -171,6 +171,7 @@ const theme = deepMerge(generate(16), {
       'selected-background': 'brand',
       'selected-text': 'text-strong',
       'status-critical': '#e49090',
+      'status-danger': '#bd3e3a',
       'status-warning': '#FFAA15',
       'status-ok': '#2a8b29',
       'status-unknown': '#CCCCCC',
@@ -296,10 +297,19 @@ const theme = deepMerge(generate(16), {
     border: {
       radius: '4px',
     },
+    extend: () => css`
+      white-space: nowrap;
+      user-select: none;
+      touch-action: manipulation;
+    `,
     size: {
       small: {
         border: {
           radius: '2px',
+        },
+        pad: {
+          vertical: '4px',
+          horizontal: '8px',
         },
       },
       medium: {
@@ -315,18 +325,25 @@ const theme = deepMerge(generate(16), {
         border: {
           radius: '4px',
         },
+        pad: {
+          vertical: '8px',
+          horizontal: '16px',
+        },
       },
     },
     default: {
       background: 'transparent',
+      color: 'text-weak',
+      font: {
+        weight: 'normal',
+      },
     },
     primary: {
       background: 'status-ok',
-      border: {
-        color: 'status-ok',
-        width: '1px',
-      },
       color: 'text',
+      font: {
+        weight: 'normal',
+      },
     },
     secondary: {
       background: 'transparent',
@@ -335,22 +352,28 @@ const theme = deepMerge(generate(16), {
         color: 'text-weak',
         width: '1px',
       },
+      font: {
+        weight: 'normal',
+      },
     },
     hover: {
       color: 'text',
       default: {
         background: {
           color: 'text',
-          opacity: 0.1,
+          opacity: 0.15,
         },
         border: {
           color: 'text',
         },
+        extend: () => css`
+          text-decoration: underline;
+        `,
       },
       secondary: {
         background: {
           color: 'text',
-          opacity: 0.1,
+          opacity: 0.15,
         },
         border: {
           color: 'text',
@@ -358,10 +381,6 @@ const theme = deepMerge(generate(16), {
       },
       primary: {
         background: {
-          color: 'status-ok',
-          opacity: 0.7,
-        },
-        border: {
           color: 'status-ok',
           opacity: 0.7,
         },
@@ -392,10 +411,14 @@ const theme = deepMerge(generate(16), {
           color: 'status-ok',
           opacity: 0.5,
         },
-        border: {
-          color: 'status-ok',
-          opacity: 0.5,
-        },
+      },
+    },
+    disabled: {
+      background: 'status-disabled',
+      color: 'text-weak',
+      opacity: 0.7,
+      border: {
+        width: '0',
       },
     },
   },

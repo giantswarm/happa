@@ -317,7 +317,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
             <Box margin={{ top: 'medium' }}>
               <Box direction='row'>
                 <Button
-                  bsStyle='primary'
+                  primary={true}
                   disabled={!isValid}
                   type='submit'
                   loading={state.isCreating}
@@ -326,9 +326,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
                 </Button>
 
                 {!state.isCreating && (
-                  <Button bsStyle='default' onClick={handleCancel}>
-                    Cancel
-                  </Button>
+                  <Button onClick={handleCancel}>Cancel</Button>
                 )}
               </Box>
               <Box margin={{ top: 'medium' }}>

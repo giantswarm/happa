@@ -26,7 +26,7 @@ const WorkerNodesNodePoolListPlaceholder: React.FC<IWorkerNodesNodePoolListPlace
         </Text>
       </Box>
       <Box>
-        <Button bsStyle='default' onClick={onCreateButtonClick}>
+        <Button onClick={onCreateButtonClick}>
           <i
             className='fa fa-add-circle'
             role='presentation'

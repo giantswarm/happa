@@ -5,7 +5,7 @@ exports[`FileInput renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -35,7 +35,7 @@ exports[`FileInput renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -64,7 +64,7 @@ exports[`FileInput renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -98,7 +98,7 @@ exports[`FileInput renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -134,7 +134,7 @@ exports[`FileInput renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -168,7 +168,7 @@ exports[`FileInput renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"

@@ -5,7 +5,7 @@ exports[`Select renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -21,7 +21,7 @@ exports[`Select renders a disabled input 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 cjpaII Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 kvbsMU Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           disabled=""
           id="pet"
           type="button"
@@ -77,7 +77,7 @@ exports[`Select renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -87,7 +87,7 @@ exports[`Select renders a simple input 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 csiCSO Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 eBvPtR Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           id="pet"
           type="button"
         >
@@ -142,7 +142,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -152,7 +152,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 cjpaII Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 kvbsMU Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           disabled=""
           id="pet"
           type="button"
@@ -207,7 +207,7 @@ exports[`Select renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -228,7 +228,7 @@ exports[`Select renders an input with a help message 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 csiCSO Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 eBvPtR Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           id="pet"
           type="button"
         >
@@ -283,7 +283,7 @@ exports[`Select renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -299,7 +299,7 @@ exports[`Select renders an input with a label 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 csiCSO Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 eBvPtR Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           id="pet"
           type="button"
         >
@@ -354,7 +354,7 @@ exports[`Select renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -370,7 +370,7 @@ exports[`Select renders an input with a validation error 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 csiCSO Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 eBvPtR Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           id="pet"
           type="button"
         >
@@ -430,7 +430,7 @@ exports[`Select renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-iCoGMd hFJToB"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
@@ -446,7 +446,7 @@ exports[`Select renders an input with an info message 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButton-sc-323bzc-0 csiCSO Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
+          class="StyledButtonKind-sc-1vhfpnt-0 eBvPtR Select__StyledSelectDropButton-sc-17idtfo-2 iEUOTR"
           id="pet"
           type="button"
         >

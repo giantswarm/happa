@@ -1,5 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import formatDistance from 'date-fns/fp/formatDistance';
+import { Box } from 'grommet';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -124,15 +125,19 @@ class Home extends React.Component {
       <DocumentTitle title={this.title()}>
         <div data-testid='clusters-list'>
           {selectedOrganization && (
-            <div className='well launch-new-cluster'>
+            <Box className='well' gap='small' direction='row' align='center'>
               <Link to={this.newClusterPath()}>
-                <Button bsStyle='primary' type='button'>
-                  <i className='fa fa-add-circle' /> Launch new cluster
+                <Button
+                  primary={true}
+                  type='button'
+                  icon={<i className='fa fa-add-circle' />}
+                >
+                  Launch new cluster
                 </Button>
               </Link>
               {clusters.length === 0 &&
                 'Ready to launch your first cluster? Click the green button!'}
-            </div>
+            </Box>
           )}
           {clusters.length === 0 && (
             <ClusterEmptyState

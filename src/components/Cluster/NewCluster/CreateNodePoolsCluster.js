@@ -296,37 +296,41 @@ class CreateNodePoolsCluster extends Component {
             })}
           </NodePoolsTransitionGroup>
           <RUMActionTarget name={RUMActions.AddNodePool}>
-            <Button onClick={this.addNodePoolForm}>
-              <i className='fa fa-add-circle' /> Add node pool
+            <Button
+              onClick={this.addNodePoolForm}
+              icon={<i className='fa fa-add-circle' />}
+            >
+              Add node pool
             </Button>
           </RUMActionTarget>
           <HorizontalLine />
         </Box>
         <FlexRow>
-          <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-            <Button
-              bsStyle='primary'
-              disabled={!this.isValid()}
-              loading={isClusterCreating}
-              onClick={this.createCluster}
-              type='button'
-            >
-              Create cluster
-            </Button>
-          </RUMActionTarget>
-          {/* We want to hide cancel button when the Create NP button has been clicked */}
-          {!isClusterCreating && (
-            <RUMActionTarget name={RUMActions.CreateClusterCancel}>
+          <Box gap='small' direction='row'>
+            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
               <Button
-                bsStyle='default'
+                primary={true}
+                disabled={!this.isValid()}
                 loading={isClusterCreating}
-                onClick={this.props.closeForm}
+                onClick={this.createCluster}
                 type='button'
               >
-                Cancel
+                Create cluster
               </Button>
             </RUMActionTarget>
-          )}
+            {/* We want to hide cancel button when the Create NP button has been clicked */}
+            {!isClusterCreating && (
+              <RUMActionTarget name={RUMActions.CreateClusterCancel}>
+                <Button
+                  loading={isClusterCreating}
+                  onClick={this.props.closeForm}
+                  type='button'
+                >
+                  Cancel
+                </Button>
+              </RUMActionTarget>
+            )}
+          </Box>
         </FlexRow>
         <FlexRow>
           <ClusterCreationHint>

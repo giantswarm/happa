@@ -497,13 +497,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           footer={
             <>
               <Button
-                bsStyle='primary'
+                primary={true}
                 onClick={editChartVersion}
                 loading={appUpdateIsLoading}
               >
                 Update chart version
               </Button>
-              <Button bsStyle='link' onClick={showPane(ModalPanes.Initial)}>
+              <Button link={true} onClick={showPane(ModalPanes.Initial)}>
                 Cancel
               </Button>
             </>

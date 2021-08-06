@@ -29,8 +29,8 @@ const FooterUpdateButton: React.FC<IFooterUpdateButtonProps> = ({
       <StyledButton
         disabled={isUpdating}
         loading={isUpdating}
-        bsStyle='warning'
-        bsSize='sm'
+        warning={true}
+        size='small'
         onClick={onClick}
         {...rest}
       >

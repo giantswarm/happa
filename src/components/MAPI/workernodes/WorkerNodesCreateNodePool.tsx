@@ -325,9 +325,9 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 providerNodePool={state.providerNodePool}
                 onChange={handleChange(NodePoolPropertyField.Scale)}
               />
-              <Box direction='row' margin={{ top: 'medium' }}>
+              <Box direction='row' margin={{ top: 'medium' }} gap='small'>
                 <Button
-                  bsStyle='primary'
+                  primary={true}
                   disabled={!isValid}
                   type='submit'
                   loading={state.isCreating}
@@ -336,9 +336,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 </Button>
 
                 {!state.isCreating && (
-                  <Button bsStyle='default' onClick={handleCancel}>
-                    Cancel
-                  </Button>
+                  <Button onClick={handleCancel}>Cancel</Button>
                 )}
               </Box>
             </Box>

@@ -1,191 +1,204 @@
-import { Button as Control } from 'grommet';
+import { Box, Button as Control, ThemeContext, ThemeType } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import BsButton from 'react-bootstrap/lib/Button';
 import styled from 'styled-components';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 
-const Wrapper = styled.div`
-  .btn {
-    border: 0px;
-    border-radius: 3px;
-    color: #fff;
-    padding: 6px 12px;
-    font-weight: 400;
-    outline: none;
-    cursor: pointer;
-    transition: background-color 0.1s cubic-bezier(0, -0.41, 0.19, 1.44);
-  }
-  .btn.small {
-    font-size: 14px;
-    padding: 8px 18px;
-  }
+const StyledBox = styled(Box)`
+  display: inline-block;
+`;
 
-  .btn-secondary {
-    background-color: #52728a;
-    border: 1px #52728a solid;
-  }
-
-  .btn-primary {
-    background-color: #2d9a2c;
-    border: 1px #2d9a2c solid;
-  }
-
-  .btn-link {
-    color: #ccc;
-  }
-
-  .btn-link:hover {
-    color: #fff;
-  }
-
-  .btn:hover,
-  .btn:active,
-  .btn:active:focus,
-  .btn:focus {
-    background-color: #5c7f9a;
-    color: #fff;
-  }
-
-  .btn-primary.disabled.focus,
-  .btn-primary.disabled:focus,
-  .btn-primary.disabled:hover,
-  .btn-primary[disabled].focus,
-  .btn-primary[disabled]:focus,
-  .btn-primary[disabled]:hover,
-  fieldset[disabled] .btn-primary.focus,
-  fieldset[disabled] .btn-primary:focus,
-  fieldset[disabled] .btn-primary:hover {
-    background-color: #404040;
-  }
-
-  .btn-primary:hover,
-  .btn-primary:active:focus,
-  .btn-primary:focus,
-  .btn-primary:active:hover {
-    background-color: #278626;
-    border-color: #278626;
-  }
-
-  .btn-danger {
-    background-color: #d9534f;
-    border: 1px #d9534f solid;
-  }
-
-  .btn-danger:hover,
-  .btn-danger:active:hover {
-    background-color: #d43f3a;
-    border: 1px #d43f3a solid;
-  }
-
-  .btn:disabled,
-  .btn:disabled:hover,
-  .btn:disabled:active:hover {
-    background-color: #aaa;
-    border-color: #aaa;
-  }
-
-  .btn-default {
-    background-color: transparent;
-    color: #ccc;
-    border: 1px solid #d7d7d7;
-  }
-
-  .btn-default:focus,
-  .btn-default:active,
-  .btn-default:hover,
-  .btn-default:active:focus,
-  .btn-default:hover:focus,
-  .btn-default:hover:active {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: 1px solid #fff;
-  }
-
-  .btn {
-    i.fa {
-      padding-right: 0.3em;
-    }
-  }
-
-  .btn.btn-sm {
-    height: 24px;
-    padding: 0px 8px !important;
-    margin-left: 5px;
+const StyledLoadingIndicator = styled(LoadingIndicator)`
+  img {
+    width: 22px;
+    height: 22px;
+    position: relative;
+    margin: 0;
+    vertical-align: middle;
+    margin-left: 10px;
   }
 `;
 
-interface IButtonProps extends React.ComponentPropsWithoutRef<'button'> {
-  bsStyle?: 'primary' | 'danger' | 'default' | 'link' | 'warning';
-  bsSize?: 'sm' | 'lg';
+enum ButtonStyle {
+  Primary,
+  Secondary,
+  Danger,
+  Link,
+  Warning,
+}
+
+function makeCustomTheme(style: ButtonStyle): ThemeType {
+  const theme: ThemeType = {
+    button: {
+      hover: {},
+      active: {},
+    },
+  };
+
+  switch (style) {
+    case ButtonStyle.Danger:
+      theme.button!.secondary = {
+        background: 'status-danger',
+        border: {
+          width: '0',
+        },
+        color: 'text',
+      };
+
+      theme.button!.hover!.secondary = {
+        background: {
+          color: 'status-danger',
+          opacity: 0.7,
+        },
+        border: {
+          width: '0',
+        },
+      };
+
+      theme.button!.active!.secondary = {
+        background: {
+          color: 'status-danger',
+          opacity: 0.5,
+        },
+        border: {
+          width: '0',
+        },
+      };
+
+      break;
+
+    case ButtonStyle.Warning:
+      theme.button!.secondary = {
+        background: 'status-warning',
+        border: {
+          width: '0',
+        },
+        color: 'text',
+      };
+
+      theme.button!.hover!.secondary = {
+        background: {
+          color: 'status-warning',
+          opacity: 0.7,
+        },
+        border: {
+          width: '0',
+        },
+      };
+
+      theme.button!.active!.secondary = {
+        background: {
+          color: 'status-warning',
+          opacity: 0.5,
+        },
+        border: {
+          width: '0',
+        },
+      };
+
+      break;
+  }
+
+  return theme;
+}
+
+interface IButtonProps extends React.ComponentPropsWithoutRef<typeof Control> {
   loading?: boolean;
   loadingTimeout?: number;
   disabled?: boolean;
   href?: string;
   target?: '_self' | '_blank' | '_parent' | '_top' | string;
   rel?: string;
+  warning?: boolean;
+  danger?: boolean;
+  link?: boolean;
+  wrapperProps?: React.ComponentPropsWithoutRef<typeof StyledBox>;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
   (
-    { loading, disabled, bsStyle, bsSize, children, loadingTimeout, ...props },
+    {
+      loading,
+      disabled,
+      primary,
+      secondary,
+      warning,
+      danger,
+      link,
+      children,
+      loadingTimeout,
+      wrapperProps,
+      ...props
+    },
     ref
   ) => {
-    let grommetSize = 'medium';
-    switch (bsSize) {
-      case 'sm':
-        grommetSize = 'small';
+    let buttonStyle = ButtonStyle.Link;
+    switch (true) {
+      case primary:
+        buttonStyle = ButtonStyle.Primary;
         break;
-      case 'lg':
-        grommetSize = 'large';
+      case link:
+        buttonStyle = ButtonStyle.Link;
+        break;
+      case warning:
+        buttonStyle = ButtonStyle.Warning;
+        break;
+      case danger:
+        buttonStyle = ButtonStyle.Danger;
+        break;
+      case secondary:
+        buttonStyle = ButtonStyle.Secondary;
         break;
     }
 
     return (
-      <Wrapper
-        ref={ref as React.RefObject<HTMLDivElement>}
-        className='button-wrapper'
-      >
-        <BsButton
-          bsSize={bsSize}
-          bsStyle={bsStyle}
-          disabled={disabled || loading}
-          role='button'
-          {...(props as React.ComponentPropsWithoutRef<typeof BsButton>)}
+      <ThemeContext.Extend value={makeCustomTheme(buttonStyle)}>
+        <StyledBox
+          width={{
+            min: 'auto',
+          }}
+          {...wrapperProps}
         >
-          {children}
-        </BsButton>
-        <Control
-          primary={bsStyle === 'primary'}
-          secondary={bsStyle === 'default'}
-          size={grommetSize as never}
-          label={children}
-          disabled={disabled || loading}
-          {...(props as React.ComponentPropsWithoutRef<typeof Control>)}
-        />
-        <LoadingIndicator
-          loading={loading}
-          loadingPosition='right'
-          timeout={loadingTimeout}
-        />
-      </Wrapper>
+          <Control
+            primary={buttonStyle === ButtonStyle.Primary}
+            secondary={
+              buttonStyle !== ButtonStyle.Primary &&
+              buttonStyle !== ButtonStyle.Link
+            }
+            label={children}
+            disabled={disabled || loading}
+            {...(props as React.ComponentPropsWithoutRef<typeof Control>)}
+            ref={ref}
+          />
+          <StyledLoadingIndicator
+            loading={loading}
+            loadingPosition='right'
+            timeout={loadingTimeout}
+          />
+        </StyledBox>
+      </ThemeContext.Extend>
     );
   }
 );
 
 Button.propTypes = {
-  bsStyle: PropTypes.string as PropTypes.Requireable<IButtonProps['bsStyle']>,
-  bsSize: PropTypes.string as PropTypes.Requireable<IButtonProps['bsSize']>,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
   children: PropTypes.node,
   className: PropTypes.string,
   loadingTimeout: PropTypes.number,
+  primary: PropTypes.bool,
+  secondary: PropTypes.bool,
+  warning: PropTypes.bool,
+  danger: PropTypes.bool,
+  link: PropTypes.bool,
+  wrapperProps: PropTypes.object,
 };
 
 Button.defaultProps = {
-  bsStyle: 'default',
+  secondary: true,
+  gap: 'xsmall',
 };
 
 export default Button;

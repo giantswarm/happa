@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
@@ -183,7 +184,7 @@ class ScaleClusterModal extends React.Component {
 
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
-          style: 'primary',
+          primary: true,
           disabled: !this.state.scaling.minValid,
         };
       }
@@ -197,7 +198,7 @@ class ScaleClusterModal extends React.Component {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
-          style: 'danger',
+          danger: true,
           disabled: !this.state.scaling.maxValid,
         };
       }
@@ -205,7 +206,7 @@ class ScaleClusterModal extends React.Component {
       if (this.state.scaling.min !== this.props.cluster.scaling.min) {
         return {
           title: 'Apply',
-          style: 'primary',
+          primary: true,
           disabled: !(
             this.state.scaling.minValid && this.state.scaling.maxValid
           ),
@@ -215,7 +216,7 @@ class ScaleClusterModal extends React.Component {
       if (this.state.scaling.max !== this.props.cluster.scaling.max) {
         return {
           title: 'Apply',
-          style: 'primary',
+          primary: true,
           disabled: !(
             this.state.scaling.minValid && this.state.scaling.maxValid
           ),
@@ -236,7 +237,7 @@ class ScaleClusterModal extends React.Component {
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralizeWorkers}`,
-        style: 'primary',
+        primary: true,
         disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
       };
     }
@@ -244,7 +245,7 @@ class ScaleClusterModal extends React.Component {
     if (workerDelta < 0) {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralizeWorkers}`,
-        style: 'danger',
+        danger: true,
         disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
       };
     }
@@ -348,7 +349,8 @@ class ScaleClusterModal extends React.Component {
       <BootstrapModal.Footer>
         {this.buttonProperties().disabled ? undefined : (
           <Button
-            bsStyle={this.buttonProperties().style}
+            primary={this.buttonProperties().primary}
+            danger={this.buttonProperties().danger}
             disabled={this.buttonProperties().disabled}
             loading={this.state.loading}
             onClick={this.submit}
@@ -357,11 +359,7 @@ class ScaleClusterModal extends React.Component {
             {this.buttonProperties().title}
           </Button>
         )}
-        <Button
-          bsStyle='link'
-          disabled={this.state.loading}
-          onClick={this.close}
-        >
+        <Button link={true} disabled={this.state.loading} onClick={this.close}>
           Cancel
         </Button>
       </BootstrapModal.Footer>
@@ -380,20 +378,22 @@ class ScaleClusterModal extends React.Component {
       );
       footer = (
         <BootstrapModal.Footer>
-          <Button
-            bsStyle='link'
-            disabled={this.state.loading}
-            onClick={this.back}
-          >
-            Back
-          </Button>
-          <Button
-            bsStyle='link'
-            disabled={this.state.loading}
-            onClick={this.close}
-          >
-            Cancel
-          </Button>
+          <Box gap='small' direction='row' justify='end'>
+            <Button
+              link={true}
+              disabled={this.state.loading}
+              onClick={this.back}
+            >
+              Back
+            </Button>
+            <Button
+              link={true}
+              disabled={this.state.loading}
+              onClick={this.close}
+            >
+              Cancel
+            </Button>
+          </Box>
         </BootstrapModal.Footer>
       );
     }

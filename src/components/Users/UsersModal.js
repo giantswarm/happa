@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
@@ -29,23 +30,25 @@ const UsersModal = ({
 
       <BootstrapModal.Body>{children}</BootstrapModal.Body>
       <BootstrapModal.Footer>
-        {!confirmHidden && (
-          <Button
-            bsStyle='danger'
-            loading={isLoading}
-            onClick={onConfirm}
-            type='submit'
-            disabled={confirmDisabled}
-          >
-            {confirmText}
-          </Button>
-        )}
+        <Box gap='small' direction='row' justify='end'>
+          {!confirmHidden && (
+            <Button
+              danger={true}
+              loading={isLoading}
+              onClick={onConfirm}
+              type='submit'
+              disabled={confirmDisabled}
+            >
+              {confirmText}
+            </Button>
+          )}
 
-        {!isLoading && (
-          <Button bsStyle='link' onClick={onClose}>
-            {cancelText}
-          </Button>
-        )}
+          {!isLoading && (
+            <Button link={true} onClick={onClose}>
+              {cancelText}
+            </Button>
+          )}
+        </Box>
       </BootstrapModal.Footer>
     </BootstrapModal>
   );

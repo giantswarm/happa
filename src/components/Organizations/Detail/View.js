@@ -213,8 +213,8 @@ class OrganizationDetail extends React.Component {
             />
           )}
           <Link to={newClusterPath}>
-            <Button bsStyle='default'>
-              <i className='fa fa-add-circle' /> Create cluster
+            <Button icon={<i className='fa fa-add-circle' />}>
+              Create cluster
             </Button>
           </Link>
         </Section>
@@ -233,8 +233,11 @@ class OrganizationDetail extends React.Component {
                 keyField='email'
               />
             )}
-            <Button bsStyle='default' onClick={this.addMember}>
-              <i className='fa fa-add-circle' /> Add member
+            <Button
+              onClick={this.addMember}
+              icon={<i className='fa fa-add-circle' />}
+            >
+              Add member
             </Button>
           </MembersTable>
         </Section>
@@ -254,12 +257,13 @@ class OrganizationDetail extends React.Component {
         <Section title='Delete this organization' flat>
           <Disclaimer>{supportsDeletion.message}</Disclaimer>
           <Button
-            bsStyle='danger'
+            danger={true}
             onClick={this.deleteOrganization}
             disabled={!supportsDeletion.status}
             aria-label='Delete organization'
+            icon={<i className='fa fa-delete' />}
           >
-            <i className='fa fa-delete' /> Delete organization
+            Delete organization
           </Button>
         </Section>
       </DocumentTitle>
@@ -321,7 +325,7 @@ function clusterActionsCellFormatter(_cell, row) {
 
   return (
     <Link to={clusterDetailPath}>
-      <Button bsStyle='default' bsSize='sm' type='button'>
+      <Button size='small' type='button'>
         Details
       </Button>
     </Link>
@@ -335,8 +339,7 @@ function memberActionsCellFormatter(_cell, row) {
       // eslint-disable-next-line react/no-this-in-sfc
       onClick={this.removeMember.bind(this, row.email)}
       type='button'
-      bsStyle='default'
-      bsSize='sm'
+      size='small'
       data-testid='organization-member-remove'
     >
       Remove

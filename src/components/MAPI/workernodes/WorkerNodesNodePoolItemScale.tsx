@@ -37,7 +37,7 @@ function getSubmitButtonAttributes(fromValue: {
   max: number;
   maxValid: boolean;
   initialScaling: ReturnType<typeof getNodePoolScaling>;
-}): { disabled: boolean; label: string; style?: 'primary' | 'danger' } {
+}): { disabled: boolean; label: string; primary?: boolean; danger?: boolean } {
   const { min, minValid, max, maxValid, initialScaling } = fromValue;
 
   const nodesDifference = getWorkerNodesDifference(
@@ -54,7 +54,7 @@ function getSubmitButtonAttributes(fromValue: {
   if (nodesDifference > 0 && initialScaling.desired > 0) {
     return {
       label: `Increase minimum number of nodes by ${nodesDifference}`,
-      style: 'primary',
+      primary: true,
       disabled: !isValid,
     };
   } else if (nodesDifference < 0 && initialScaling.desired > 0) {
@@ -62,14 +62,14 @@ function getSubmitButtonAttributes(fromValue: {
 
     return {
       label: `Remove ${Math.abs(nodesDifference)} ${nodesLabel}`,
-      style: 'danger',
+      danger: true,
       disabled: !isValid,
     };
   }
 
   return {
     label: 'Apply',
-    style: 'primary',
+    primary: true,
     disabled: !isValid,
   };
 }
@@ -196,7 +196,8 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
       onConfirm={handleScale}
       confirmButton={
         <Button
-          bsStyle={submitButtonAttributes.style}
+          primary={submitButtonAttributes.primary}
+          danger={submitButtonAttributes.danger}
           onClick={handleScale}
           loading={isLoading}
           disabled={submitButtonAttributes.disabled}

@@ -61,8 +61,16 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<IClusterDetailWidgetKubernetesA
 
       {typeof k8sApiURL !== 'undefined' && (
         <Link to={gettingStartedPath}>
-          <Button tabIndex={-1}>
-            <i className='fa fa-start' aria-hidden={true} role='presentation' />
+          <Button
+            tabIndex={-1}
+            icon={
+              <i
+                className='fa fa-start'
+                aria-hidden={true}
+                role='presentation'
+              />
+            }
+          >
             Get started
           </Button>
         </Link>

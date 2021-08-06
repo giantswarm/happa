@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
@@ -215,7 +216,7 @@ class ScaleNodePoolModal extends React.Component<
 
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
-          style: 'primary' as const,
+          primary: true,
           disabled: !minValid,
         };
       }
@@ -227,7 +228,7 @@ class ScaleNodePoolModal extends React.Component<
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
-          style: 'danger' as const,
+          danger: true,
           disabled: !maxValid,
         };
       }
@@ -235,7 +236,7 @@ class ScaleNodePoolModal extends React.Component<
       if (min !== nodePool.scaling!.min) {
         return {
           title: 'Apply',
-          style: 'primary' as const,
+          primary: true,
           disabled: !(minValid && maxValid),
         };
       }
@@ -243,7 +244,7 @@ class ScaleNodePoolModal extends React.Component<
       if (max !== nodePool.scaling!.max) {
         return {
           title: 'Apply',
-          style: 'primary' as const,
+          primary: true,
           disabled: !(minValid && maxValid),
         };
       }
@@ -256,7 +257,7 @@ class ScaleNodePoolModal extends React.Component<
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralizeWorkers}`,
-        style: 'primary' as const,
+        primary: true,
         disabled: !(minValid && maxValid),
       };
     }
@@ -264,7 +265,7 @@ class ScaleNodePoolModal extends React.Component<
     if (workerDelta < 0) {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralizeWorkers}`,
-        style: 'danger' as const,
+        danger: true,
         disabled: !(minValid && maxValid),
       };
     }
@@ -338,20 +339,23 @@ class ScaleNodePoolModal extends React.Component<
     );
     let footer = (
       <BootstrapModal.Footer>
-        {this.buttonProperties().disabled ? undefined : (
-          <Button
-            bsStyle={this.buttonProperties().style}
-            disabled={this.buttonProperties().disabled}
-            loading={loading}
-            onClick={this.submit}
-            type='submit'
-          >
-            {this.buttonProperties().title}
+        <Box gap='small' direction='row' justify='end'>
+          {this.buttonProperties().disabled ? undefined : (
+            <Button
+              primary={this.buttonProperties().primary}
+              danger={this.buttonProperties().danger}
+              disabled={this.buttonProperties().disabled}
+              loading={loading}
+              onClick={this.submit}
+              type='submit'
+            >
+              {this.buttonProperties().title}
+            </Button>
+          )}
+          <Button link={true} disabled={loading} onClick={this.close}>
+            Cancel
           </Button>
-        )}
-        <Button bsStyle='link' disabled={loading} onClick={this.close}>
-          Cancel
-        </Button>
+        </Box>
       </BootstrapModal.Footer>
     );
 
@@ -366,10 +370,10 @@ class ScaleNodePoolModal extends React.Component<
       );
       footer = (
         <BootstrapModal.Footer>
-          <Button bsStyle='link' disabled={loading} onClick={this.back}>
+          <Button link={true} disabled={loading} onClick={this.back}>
             Back
           </Button>
-          <Button bsStyle='link' disabled={loading} onClick={this.close}>
+          <Button link={true} disabled={loading} onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>

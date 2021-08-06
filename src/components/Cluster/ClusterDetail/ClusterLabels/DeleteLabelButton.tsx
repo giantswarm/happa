@@ -88,7 +88,7 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
             <DeleteLabelTooltipInner>
               <span>Are you sure you want to delete this label?</span>
               <Button
-                bsStyle='danger'
+                danger={true}
                 onClick={() => {
                   close();
                   onDelete();
@@ -97,7 +97,7 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
                 Delete
               </Button>
               <Button
-                bsStyle='link'
+                link={true}
                 onClick={close}
                 ref={cancelButtonRef}
                 className='cancel-button'

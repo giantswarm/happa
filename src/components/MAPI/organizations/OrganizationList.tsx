@@ -115,7 +115,7 @@ const OrganizationIndex: React.FC = () => {
 
         {!isCreateFormOpen && (
           <Box animation={{ type: 'fadeIn', duration: 300 }}>
-            <Button bsStyle='default' onClick={handleOpenCreateForm}>
+            <Button onClick={handleOpenCreateForm}>
               <i
                 className='fa fa-add-circle'
                 role='presentation'

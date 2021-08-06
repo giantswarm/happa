@@ -119,7 +119,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
             onConfirm={handleDelete}
             onCancel={hideConfirmation}
             confirmButton={
-              <Button bsStyle='danger' onClick={handleDelete}>
+              <Button danger={true} onClick={handleDelete}>
                 <i
                   className='fa fa-delete'
                   role='presentation'
@@ -141,7 +141,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
             <Box animation={{ type: 'fadeIn', duration: 300 }}>
               <Button
                 ref={deleteButtonRef}
-                bsStyle='danger'
+                danger={true}
                 onClick={showConfirmation}
                 loading={isLoading}
               >

@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
@@ -257,16 +258,18 @@ class SetPassword extends React.Component {
             type='password'
           />
 
-          <Button
-            onClick={this.submit}
-            bsStyle='primary'
-            disabled={this.state.submitting || !this.formIsValid()}
-            loading={this.state.submitting}
-          >
-            {this.state.submitting ? 'Submitting ...' : 'Submit'}
-          </Button>
+          <Box direction='row' gap='small' align='center'>
+            <Button
+              onClick={this.submit}
+              primary={true}
+              disabled={this.state.submitting || !this.formIsValid()}
+              loading={this.state.submitting}
+            >
+              {this.state.submitting ? 'Submitting ...' : 'Submit'}
+            </Button>
 
-          <Link to={MainRoutes.Login}>Back to login form</Link>
+            <Link to={MainRoutes.Login}>Back to login form</Link>
+          </Box>
         </form>
       );
     }
@@ -306,15 +309,17 @@ class SetPassword extends React.Component {
           value={this.state.emailField}
         />
 
-        <Button
-          bsStyle='primary'
-          disabled={this.state.submitting}
-          onClick={this.setEmail}
-          loading={this.state.submitting}
-        >
-          {this.state.submitting ? 'Submitting ...' : 'Submit'}
-        </Button>
-        <Link to={MainRoutes.Login}>Back to login form</Link>
+        <Box direction='row' gap='small' align='center'>
+          <Button
+            primary={true}
+            disabled={this.state.submitting}
+            onClick={this.setEmail}
+            loading={this.state.submitting}
+          >
+            {this.state.submitting ? 'Submitting ...' : 'Submit'}
+          </Button>
+          <Link to={MainRoutes.Login}>Back to login form</Link>
+        </Box>
         <br />
         <br />
         <Link to={MainRoutes.ForgotPassword}>Request a new token</Link>

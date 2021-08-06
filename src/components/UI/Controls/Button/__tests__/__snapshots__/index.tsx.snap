@@ -1,0 +1,241 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button renders a button with a loading animation 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 duqESE"
+        disabled=""
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="false"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      >
+        <img
+          alt="loading"
+          class="loader right"
+          src="[object Object]"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders a danger button 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 fcQuyX"
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders a disabled button 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 duqESE"
+        disabled=""
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders a link button 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 ehJRIz"
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders a primary button 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 dLRRvC"
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders a secondary button 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 jSHbzi"
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders a warning button 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 jaLtNn"
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Button renders without crashing 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+    >
+      <button
+        class="StyledButtonKind-sc-1vhfpnt-0 jSHbzi"
+        type="button"
+      >
+        Hi friends
+      </button>
+      <div
+        aria-busy="true"
+        aria-hidden="true"
+        aria-live="assertive"
+        aria-valuetext="Loading\\\\u2026"
+        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        role="progressbar"
+      />
+    </div>
+  </div>
+</div>
+`;

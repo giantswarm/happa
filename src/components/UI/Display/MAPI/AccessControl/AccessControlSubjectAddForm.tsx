@@ -15,27 +15,11 @@ import TextInput from 'UI/Inputs/TextInput';
 const VISIBLE_SUGGESTION_COUNT = 10;
 const FILTER_DEBOUNCE_RATE = 250;
 
-const StyledButton = styled(Button)`
-  &.btn {
-    height: 38px;
-    margin-left: 0;
-  }
-`;
-
-const StyledBox = styled(Box)`
-  .button-wrapper {
-    margin-right: 0;
-  }
-`;
-
 const SaveButton = styled(Button)`
-  &.btn {
-    height: 36px;
-    border: 0;
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-    margin-left: 0;
-  }
+  border-start-start-radius: 0;
+  border-start-end-radius: 2px;
+  border-end-start-radius: 0;
+  border-end-end-radius: 2px;
 `;
 
 const StyledLoadingIndicator = styled(LoadingIndicator)`
@@ -132,7 +116,7 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
   return (
     <Box {...props}>
       {isAdding ? (
-        <StyledBox direction='row' gap='small' align='center'>
+        <Box direction='row' gap='small' align='center'>
           <Keyboard onEsc={handleOnEsc}>
             <form onSubmit={handleSubmit} aria-label='Subjects to add'>
               <TextInput
@@ -154,11 +138,7 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
                 onSuggestionSelect={handleSuggestionSelect}
                 suggestions={visibleSuggestions}
               >
-                <SaveButton
-                  type='submit'
-                  bsStyle='primary'
-                  disabled={isLoading}
-                >
+                <SaveButton type='submit' primary={true} disabled={isLoading}>
                   OK
                 </SaveButton>
               </TextInput>
@@ -171,12 +151,14 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
               timeout={0}
             />
           )}
-        </StyledBox>
+        </Box>
       ) : (
-        <StyledButton onClick={onToggleAdding}>
-          <i className='fa fa-add-circle' />
+        <Button
+          onClick={onToggleAdding}
+          icon={<i className='fa fa-add-circle' />}
+        >
           Add
-        </StyledButton>
+        </Button>
       )}
     </Box>
   );

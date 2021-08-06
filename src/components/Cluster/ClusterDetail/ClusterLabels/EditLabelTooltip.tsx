@@ -1,4 +1,4 @@
-import { Keyboard, Text } from 'grommet';
+import { Box, Keyboard, Text } from 'grommet';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
@@ -153,8 +153,10 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
           data-testid='add-label-button'
+          icon={<i className='fa fa-add-circle' />}
+          margin={{ left: 'small' }}
         >
-          <i className='fa fa-add-circle' /> Add label
+          Add label
         </Button>
       ) : (
         <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
@@ -217,16 +219,18 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
                 />
               </ValueInputWrapper>
               <Buttons>
-                <Button
-                  bsStyle='primary'
-                  disabled={!keyIsValid || !valueIsValid}
-                  onClick={save}
-                >
-                  Save
-                </Button>
-                <Button bsStyle='link' onClick={onClose}>
-                  Cancel
-                </Button>
+                <Box gap='small' direction='row'>
+                  <Button
+                    primary={true}
+                    disabled={!keyIsValid || !valueIsValid}
+                    onClick={save}
+                  >
+                    Save
+                  </Button>
+                  <Button link={true} onClick={onClose}>
+                    Cancel
+                  </Button>
+                </Box>
               </Buttons>
             </FormWrapper>
           </Keyboard>
