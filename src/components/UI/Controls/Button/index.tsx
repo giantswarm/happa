@@ -167,7 +167,7 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
             }
             label={children}
             disabled={disabled || loading}
-            {...(props as React.ComponentPropsWithoutRef<typeof Control>)}
+            {...props}
             ref={ref}
           />
           <StyledLoadingIndicator
