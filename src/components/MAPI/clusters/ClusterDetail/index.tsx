@@ -32,6 +32,7 @@ import ClusterIDLabel, {
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
+import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';
 
@@ -61,6 +62,13 @@ function computePaths(orgName: string, clusterName: string) {
     ),
     WorkerNodes: RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.WorkerNodes,
+      {
+        orgId: orgName,
+        clusterId: clusterName,
+      }
+    ),
+    Actions: RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.Actions,
       {
         orgId: orgName,
         clusterId: clusterName,
@@ -260,6 +268,7 @@ const ClusterDetail: React.FC<{}> = () => {
             <Tab eventKey={paths.KeyPairs} title='Key pairs' />
             <Tab eventKey={paths.Apps} title='Apps' />
             <Tab eventKey={paths.Ingress} title='Ingress' />
+            <Tab eventKey={paths.Actions} title='Actions' />
           </Tabs>
           <Switch>
             <Route
@@ -288,6 +297,10 @@ const ClusterDetail: React.FC<{}> = () => {
                   />
                 )
               }
+            />
+            <Route
+              path={OrganizationsRoutes.Clusters.Detail.Actions}
+              component={ClusterDetailActions}
             />
             <Route
               path={OrganizationsRoutes.Clusters.Detail.Home}

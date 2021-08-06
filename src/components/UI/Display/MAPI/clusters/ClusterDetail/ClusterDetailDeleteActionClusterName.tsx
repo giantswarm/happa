@@ -32,7 +32,7 @@ const ClusterDetailDeleteActionClusterName: React.FC<IClusterDetailDeleteActionC
 
   return (
     <Box direction='row' gap='small' align='baseline' {...props}>
-      <Text>If yes, please enter the cluster {variant}</Text>
+      <Text>If yes, please enter the cluster {variant}:</Text>
       <Keyboard onEnter={handleFormSubmit}>
         <TextInput
           width='xxsmall'
