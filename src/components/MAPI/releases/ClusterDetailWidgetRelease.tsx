@@ -24,7 +24,7 @@ import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ClusterDetailStatus from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailStatus';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import * as ui from 'UI/Display/MAPI/releases/types';
 import NotAvailable from 'UI/Display/NotAvailable';
 
@@ -255,10 +255,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   return (
     <ClusterDetailWidget title='Release' inline={true} {...props}>
       <Box direction='row' gap='xsmall' wrap={true} align='center'>
-        <ClusterDetailWidgetOptionalValue
-          value={releaseVersion}
-          replaceEmptyValue={false}
-        >
+        <OptionalValue value={releaseVersion} replaceEmptyValue={false}>
           {(value) => (
             <Keyboard onSpace={handleVersionClick}>
               <StyledLink
@@ -277,19 +274,16 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
               </StyledLink>
             </Keyboard>
           )}
-        </ClusterDetailWidgetOptionalValue>
+        </OptionalValue>
         <StyledDot />
-        <ClusterDetailWidgetOptionalValue
-          value={k8sVersion}
-          replaceEmptyValue={false}
-        >
+        <OptionalValue value={k8sVersion} replaceEmptyValue={false}>
           {(value) => (
             <KubernetesVersionLabel
               hidePatchVersion={false}
               version={value as string}
             />
           )}
-        </ClusterDetailWidgetOptionalValue>
+        </OptionalValue>
 
         {cluster && (
           <ClusterDetailStatus

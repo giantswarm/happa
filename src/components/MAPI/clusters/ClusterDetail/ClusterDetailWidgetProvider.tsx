@@ -7,7 +7,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
@@ -106,26 +106,21 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
       }}
       {...props}
     >
-      <ClusterDetailWidgetOptionalValue
-        value={getClusterRegionLabel(cluster)}
-        loaderWidth={85}
-      >
+      <OptionalValue value={getClusterRegionLabel(cluster)} loaderWidth={85}>
         {(value) => <Text>{value}</Text>}
-      </ClusterDetailWidgetOptionalValue>
-      <ClusterDetailWidgetOptionalValue value={region} loaderWidth={80}>
+      </OptionalValue>
+      <OptionalValue value={region} loaderWidth={80}>
         {(value) => (
           <Text>
             <code>{value}</code>
           </Text>
         )}
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
       <StyledDot />
-      <ClusterDetailWidgetOptionalValue
-        value={getClusterAccountIDLabel(cluster)}
-      >
+      <OptionalValue value={getClusterAccountIDLabel(cluster)}>
         {(value) => <Text>{value}</Text>}
-      </ClusterDetailWidgetOptionalValue>
-      <ClusterDetailWidgetOptionalValue
+      </OptionalValue>
+      <OptionalValue
         value={accountID}
         loaderWidth={300}
         replaceEmptyValue={false}
@@ -149,7 +144,7 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
             </StyledLink>
           )
         }
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
     </ClusterDetailWidget>
   );
 };

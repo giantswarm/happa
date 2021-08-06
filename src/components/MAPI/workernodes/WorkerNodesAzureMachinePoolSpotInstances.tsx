@@ -7,7 +7,7 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 
 interface IWorkerNodesAzureMachinePoolSpotInstancesProps {
   providerNodePool?: capzexpv1alpha3.IAzureMachinePool;
@@ -36,7 +36,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
   }
 
   return (
-    <ClusterDetailWidgetOptionalValue
+    <OptionalValue
       value={providerNodePool}
       loaderWidth={30}
       replaceEmptyValue={false}
@@ -70,7 +70,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
           </Text>
         </OverlayTrigger>
       )}
-    </ClusterDetailWidgetOptionalValue>
+    </OptionalValue>
   );
 };
 

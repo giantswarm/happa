@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
 
-import ClusterDetailWidgetOptionalValue from '../ClusterDetailWidgetOptionalValue';
+import OptionalValue from '../OptionalValue';
 
 function pluralizeLabel(count: number | undefined, base: string) {
   if (count === 1) {
@@ -43,7 +43,7 @@ const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
   return (
     <Box align='center' basis='100px' flex={{ grow: 0, shrink: 1 }} {...props}>
       <Box margin={{ bottom: 'xsmall' }}>
-        <ClusterDetailWidgetOptionalValue
+        <OptionalValue
           value={value}
           replaceEmptyValue={false}
           loaderHeight={22}
@@ -54,7 +54,7 @@ const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
               {counterValue === -1 ? <NotAvailable /> : counterValue}
             </Text>
           )}
-        </ClusterDetailWidgetOptionalValue>
+        </OptionalValue>
       </Box>
       <Label color='text-weak' size='small'>
         {formattedLabel}

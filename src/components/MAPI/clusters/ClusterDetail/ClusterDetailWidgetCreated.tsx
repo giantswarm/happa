@@ -6,7 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -38,13 +38,13 @@ const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = (
       }}
       {...props}
     >
-      <ClusterDetailWidgetOptionalValue value={creationDate}>
+      <OptionalValue value={creationDate}>
         {(value) => <Text>{relativeDate(value as string)}</Text>}
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
       <StyledDot />
-      <ClusterDetailWidgetOptionalValue value={creationDate} loaderWidth={150}>
+      <OptionalValue value={creationDate} loaderWidth={150}>
         {(value) => <Text>{formatDate(value as string)}</Text>}
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
     </ClusterDetailWidget>
   );
 };

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import { mutate } from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 
 import { getVisibleLabels, updateClusterLabels } from './utils';
 
@@ -102,11 +102,7 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
       }}
       {...props}
     >
-      <ClusterDetailWidgetOptionalValue
-        value={labels}
-        loaderHeight={34}
-        loaderWidth={350}
-      >
+      <OptionalValue value={labels} loaderHeight={34} loaderWidth={350}>
         {(value) => (
           <ClusterLabels
             labels={value as Record<string, string>}
@@ -116,7 +112,7 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
             showTitle={false}
           />
         )}
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
     </ClusterDetailWidget>
   );
 };

@@ -16,7 +16,7 @@ import { Dot } from 'styles';
 import useSWR from 'swr';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 import { computeControlPlaneNodesStats } from './utils';
@@ -121,7 +121,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       }}
       {...props}
     >
-      <ClusterDetailWidgetOptionalValue
+      <OptionalValue
         value={formatNodesCountLabel(stats.readyCount, stats.totalCount)}
         loaderWidth={200}
         replaceEmptyValue={false}
@@ -137,12 +137,12 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
             </Text>
           )
         }
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
       <StyledDot />
       <Text margin={{ right: 'xsmall' }}>
         {formatAvailabilityZonesLabel(stats.availabilityZones)}
       </Text>
-      <ClusterDetailWidgetOptionalValue
+      <OptionalValue
         value={stats.availabilityZones}
         loaderWidth={100}
         loaderHeight={26}
@@ -150,7 +150,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
         {(value) => (
           <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
         )}
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
     </ClusterDetailWidget>
   );
 };

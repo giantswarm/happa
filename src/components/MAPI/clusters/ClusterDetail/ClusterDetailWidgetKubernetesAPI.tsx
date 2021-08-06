@@ -7,7 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 
 interface IClusterDetailWidgetKubernetesAPIProps
   extends Omit<
@@ -50,14 +50,10 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<IClusterDetailWidgetKubernetesA
       }}
       {...props}
     >
-      <ClusterDetailWidgetOptionalValue
-        value={k8sApiURL}
-        loaderWidth={400}
-        loaderHeight={24}
-      >
+      <OptionalValue value={k8sApiURL} loaderWidth={400} loaderHeight={24}>
         {/* @ts-expect-error */}
         {(value) => <URIBlock>{value}</URIBlock>}
-      </ClusterDetailWidgetOptionalValue>
+      </OptionalValue>
 
       {typeof k8sApiURL !== 'undefined' && (
         <Link to={gettingStartedPath}>
