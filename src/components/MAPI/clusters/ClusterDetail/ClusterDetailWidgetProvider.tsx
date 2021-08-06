@@ -87,9 +87,9 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
 
   const accountID = useMemo(() => {
     if (!providerCluster) return undefined;
-    if (!providerCluster?.spec.subscriptionID) return '';
+    if (!providerCluster.spec.subscriptionID) return '';
 
-    return providerCluster?.spec.subscriptionID;
+    return providerCluster.spec.subscriptionID;
   }, [providerCluster]);
 
   const accountIDPath = getClusterAccountIDPath(cluster, accountID);
