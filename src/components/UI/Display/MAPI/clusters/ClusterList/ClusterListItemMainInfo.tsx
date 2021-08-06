@@ -5,8 +5,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
-
-import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
+import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -27,10 +26,7 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
 }) => {
   return (
     <Box direction='row' align='center' gap='xsmall' {...props}>
-      <ClusterListItemOptionalValue
-        value={releaseVersion}
-        replaceEmptyValue={false}
-      >
+      <OptionalValue value={releaseVersion} replaceEmptyValue={false}>
         {(value) => (
           <Text aria-label={`Release version: ${value}`}>
             <i
@@ -41,21 +37,15 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
             {value}
           </Text>
         )}
-      </ClusterListItemOptionalValue>
+      </OptionalValue>
       <StyledDot />
-      <ClusterListItemOptionalValue
-        value={k8sVersion}
-        replaceEmptyValue={false}
-      >
+      <OptionalValue value={k8sVersion} replaceEmptyValue={false}>
         {(value) => <KubernetesVersionLabel version={value as string} />}
-      </ClusterListItemOptionalValue>
+      </OptionalValue>
       <StyledDot />
-      <ClusterListItemOptionalValue
-        value={creationDate}
-        replaceEmptyValue={false}
-      >
+      <OptionalValue value={creationDate} replaceEmptyValue={false}>
         {(value) => <Text>Created {relativeDate(value as string)}</Text>}
-      </ClusterListItemOptionalValue>
+      </OptionalValue>
     </Box>
   );
 };
