@@ -3,11 +3,12 @@ import { ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import NotAvailable from 'UI/Display/NotAvailable';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
@@ -84,7 +85,13 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
 }) => {
   const region = providerCluster?.spec.location;
 
-  const accountID = providerCluster?.spec.subscriptionID;
+  const accountID = useMemo(() => {
+    if (!providerCluster) return undefined;
+    if (!providerCluster.spec.subscriptionID) return '';
+
+    return providerCluster.spec.subscriptionID;
+  }, [providerCluster]);
+
   const accountIDPath = getClusterAccountIDPath(cluster, accountID);
 
   return (
@@ -118,22 +125,30 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
       >
         {(value) => <Text>{value}</Text>}
       </ClusterDetailWidgetOptionalValue>
-      <ClusterDetailWidgetOptionalValue value={accountID} loaderWidth={300}>
-        {(value) => (
-          <StyledLink
-            color='text-weak'
-            href={accountIDPath}
-            rel='noopener noreferrer'
-            target='_blank'
-          >
-            <code>{value}</code>
-            <i
-              className='fa fa-open-in-new'
-              aria-hidden={true}
-              role='presentation'
-            />
-          </StyledLink>
-        )}
+      <ClusterDetailWidgetOptionalValue
+        value={accountID}
+        loaderWidth={300}
+        replaceEmptyValue={false}
+      >
+        {(value) =>
+          value === '' ? (
+            <NotAvailable />
+          ) : (
+            <StyledLink
+              color='text-weak'
+              href={accountIDPath}
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              <code>{value}</code>
+              <i
+                className='fa fa-open-in-new'
+                aria-hidden={true}
+                role='presentation'
+              />
+            </StyledLink>
+          )
+        }
       </ClusterDetailWidgetOptionalValue>
     </ClusterDetailWidget>
   );
