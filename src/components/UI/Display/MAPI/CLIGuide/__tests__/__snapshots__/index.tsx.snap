@@ -8,7 +8,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
     class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hrJYol sc-kNnZrs iaZSkm"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-ePZAhl cuXKts"
       role="tablist"
     >
       <div
@@ -91,7 +91,7 @@ exports[`CLIGuide renders without crashing 1`] = `
     class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hrJYol sc-kNnZrs iaZSkm"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-ePZAhl cuXKts"
       role="tablist"
     >
       <div
