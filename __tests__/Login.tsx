@@ -43,6 +43,9 @@ describe('Login', () => {
   });
 
   it('redirects to / and shows the layout after a succesful login', async () => {
+    const initialMapiAuth = featureFlags.flags.CustomerSSO.enabled;
+    featureFlags.flags.CustomerSSO.enabled = false;
+
     // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
     // that I can log in to.
 
@@ -71,8 +74,6 @@ describe('Login', () => {
       {}
     );
 
-    fireEvent.click(screen.getByText('Log in using email and password'));
-
     // When I type in my email and password
     const emailInput = getByLabelText('Email');
     const passwordInput = getByLabelText('Password');
@@ -95,17 +96,20 @@ describe('Login', () => {
         getByText(/There are no organizations yet in your installation./i)
       ).toBeInTheDocument();
     });
+
+    featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;
   });
 
   it('tells the user to give a password if they leave it blank', async () => {
+    const initialMapiAuth = featureFlags.flags.CustomerSSO.enabled;
+    featureFlags.flags.CustomerSSO.enabled = false;
+
     // Given I arrive at the login page with nothing in the state.
     const { getByText, getByLabelText } = renderRouteWithStore(
       MainRoutes.Login,
       {},
       {}
     );
-
-    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my email but not my password.
     const emailInput = getByLabelText('Email');
@@ -121,17 +125,20 @@ describe('Login', () => {
     await waitFor(() => {
       expect(getByText(/Please enter your password./i)).toBeInTheDocument();
     });
+
+    featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;
   });
 
   it('tells the user to give a email if they leave it blank', async () => {
+    const initialMapiAuth = featureFlags.flags.CustomerSSO.enabled;
+    featureFlags.flags.CustomerSSO.enabled = false;
+
     // Given I arrive at the login page with nothing in the state.
     const { getByText, getByLabelText } = renderRouteWithStore(
       MainRoutes.Login,
       {},
       {}
     );
-
-    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my password but not my email.
     const passwordInput = getByLabelText('Password');
@@ -145,9 +152,14 @@ describe('Login', () => {
     await waitFor(() => {
       expect(getByText(/Please provide the email/i)).toBeInTheDocument();
     });
+
+    featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;
   });
 
   it('shows an error if the user logs in with invalid credentials', async () => {
+    const initialMapiAuth = featureFlags.flags.CustomerSSO.enabled;
+    featureFlags.flags.CustomerSSO.enabled = false;
+
     // Given I have a Giant Swarm API that does not accept my login attempt
 
     // The failed 401 response to the login call
@@ -159,8 +171,6 @@ describe('Login', () => {
       {},
       {}
     );
-
-    fireEvent.click(screen.getByText('Log in using email and password'));
 
     // When I type in my email and password
     const emailInput = getByLabelText('Email');
@@ -179,6 +189,8 @@ describe('Login', () => {
     await waitFor(() => {
       expect(getByText(/Could not log in/i)).toBeInTheDocument();
     });
+
+    featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;
   });
 
   it('performs the OAuth2 login flow', async () => {
@@ -375,10 +387,7 @@ describe('Login', () => {
     renderRouteWithStore(MainRoutes.Login, {}, {});
 
     expect(
-      screen.queryByText('Log in using email and password')
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: 'Proceed to l ogin' })
+      screen.queryByRole('button', { name: 'Proceed to login' })
     ).not.toBeInTheDocument();
 
     featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;

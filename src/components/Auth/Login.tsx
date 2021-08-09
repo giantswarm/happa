@@ -1,5 +1,5 @@
 import { push } from 'connected-react-router';
-import { Anchor, Box, Heading, Paragraph } from 'grommet';
+import { Box, Heading, Paragraph } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
   clearQueues,
@@ -56,7 +56,6 @@ interface ILoginState {
   password: string;
   authenticating: boolean;
   mapiAuthenticating: boolean;
-  loginFormVisible: boolean;
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
@@ -77,7 +76,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     password: '',
     authenticating: false,
     mapiAuthenticating: false,
-    loginFormVisible: !featureFlags.flags.CustomerSSO.enabled,
   };
 
   public onAuthenticateFailed = (message: string) => {
@@ -169,20 +167,8 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     );
   };
 
-  public showLoginForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-
-    this.setState({ loginFormVisible: true });
-  };
-
   public render(): ReactNode {
-    const {
-      authenticating,
-      mapiAuthenticating,
-      email,
-      password,
-      loginFormVisible,
-    } = this.state;
+    const { authenticating, mapiAuthenticating, email, password } = this.state;
 
     const isLoading = authenticating || mapiAuthenticating;
 
@@ -209,14 +195,12 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                 </Button>
                 <Paragraph fill={true} margin={{ top: 'large' }}>
                   The above option will use a central authentication provider to
-                  log you in. If you have logged in using email and password
-                  before, and want to continue to do so, you can still do it for
-                  a transitional period.
+                  log you in.
                 </Paragraph>
               </Box>
             )}
 
-            {loginFormVisible ? (
+            {!featureFlags.flags.CustomerSSO.enabled && (
               <Box direction='column' gap='medium'>
                 <form onSubmit={this.logIn}>
                   <Box margin={{ bottom: 'small' }}>
@@ -269,12 +253,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                     support@giantswarm.io
                   </a>
                 </div>
-              </Box>
-            ) : (
-              <Box>
-                <Anchor onClick={this.showLoginForm}>
-                  Log in using email and password
-                </Anchor>
               </Box>
             )}
           </StyledBox>

@@ -1,30 +1,25 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
-import {
-  authTokenResponse,
-  AWSInfoResponse,
-  generateRandomString,
-  getMockCall,
-  metadataResponse,
-  postMockCall,
-  USER_EMAIL,
-  userResponse,
-} from 'testUtils/mockHttpCalls';
+import * as featureFlags from 'shared/featureFlags';
+import * as mockHttpCalls from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('PasswordReset', () => {
   beforeEach(() => {
-    getConfiguration.mockResolvedValueOnce(metadataResponse);
+    getConfiguration.mockResolvedValueOnce(mockHttpCalls.metadataResponse);
   });
 
   // Letting the server know that you forgot your
   describe('ForgotPassword', () => {
     it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {
+      const initialMapiAuth = featureFlags.flags.CustomerSSO.enabled;
+      featureFlags.flags.CustomerSSO.enabled = false;
+
       // Given I am not logged in and visit the app.
       const { findByText, getByText } = renderRouteWithStore(
         MainRoutes.Home,
@@ -36,8 +31,6 @@ describe('PasswordReset', () => {
       const pageTitle = await findByText(/Welcome to Giant Swarm/i);
       expect(pageTitle).toBeInTheDocument();
 
-      fireEvent.click(screen.getByText('Log in using email and password'));
-
       // When I click "Forgot your password?".
       const forgotPasswordLink = getByText('Forgot your password?');
       fireEvent.click(forgotPasswordLink);
@@ -47,6 +40,8 @@ describe('PasswordReset', () => {
         /Enter the email you used to sign-up/i
       );
       expect(forgotPasswordPageTitle).toBeInTheDocument();
+
+      featureFlags.flags.CustomerSSO.enabled = initialMapiAuth;
     });
 
     it('gives me a confirmation message after entering something into the email field and clicking submit ', async () => {
@@ -91,7 +86,7 @@ describe('PasswordReset', () => {
   // Setting a new password
   describe('SetPassword', () => {
     // eslint-disable-next-line no-magic-numbers
-    const token = generateRandomString(22);
+    const token = mockHttpCalls.generateRandomString(22);
     const routeWithToken = RoutePath.createUsablePath(MainRoutes.SetPassword, {
       token,
     });
@@ -117,9 +112,9 @@ describe('PasswordReset', () => {
 
     it('displays an error if the token is invalid', async () => {
       nock(global.config.passageEndpoint)
-        .post(`/recovery/${token}/`, { email: USER_EMAIL })
+        .post(`/recovery/${token}/`, { email: mockHttpCalls.USER_EMAIL })
         .reply(StatusCodes.Ok, {
-          email: USER_EMAIL,
+          email: mockHttpCalls.USER_EMAIL,
           is_valid: false,
           token,
         });
@@ -131,7 +126,9 @@ describe('PasswordReset', () => {
       );
 
       const emailInput = await findByLabelText(/email/i);
-      fireEvent.change(emailInput, { target: { value: USER_EMAIL } });
+      fireEvent.change(emailInput, {
+        target: { value: mockHttpCalls.USER_EMAIL },
+      });
 
       const submitButton = await findByText(/submit/i);
       fireEvent.click(submitButton);
@@ -145,31 +142,34 @@ describe('PasswordReset', () => {
     it('sets a new password for the email in the form', async () => {
       const finalPassword = 'g00dPa$$w0rD';
 
-      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-      postMockCall('/v4/auth-tokens/', authTokenResponse);
-      getMockCall('/v4/user/', userResponse);
-      getMockCall('/v4/organizations/');
-      getMockCall('/v4/clusters/');
-      getMockCall('/v4/appcatalogs/');
+      getInstallationInfo.mockResolvedValueOnce(mockHttpCalls.AWSInfoResponse);
+      mockHttpCalls.postMockCall(
+        '/v4/auth-tokens/',
+        mockHttpCalls.authTokenResponse
+      );
+      mockHttpCalls.getMockCall('/v4/user/', mockHttpCalls.userResponse);
+      mockHttpCalls.getMockCall('/v4/organizations/');
+      mockHttpCalls.getMockCall('/v4/clusters/');
+      mockHttpCalls.getMockCall('/v4/appcatalogs/');
 
       nock(global.config.passageEndpoint)
-        .post(`/recovery/${token}/`, { email: USER_EMAIL })
+        .post(`/recovery/${token}/`, { email: mockHttpCalls.USER_EMAIL })
         .reply(StatusCodes.Ok, {
-          email: USER_EMAIL,
+          email: mockHttpCalls.USER_EMAIL,
           is_valid: true,
           token,
           valid_until: '2020-02-21T16:50:20.589772+00:00',
         });
       nock(global.config.passageEndpoint)
         .post(`/recovery/${token}/password/`, {
-          email: USER_EMAIL,
+          email: mockHttpCalls.USER_EMAIL,
           password: finalPassword,
         })
         .reply(StatusCodes.Ok, {
-          email: USER_EMAIL,
+          email: mockHttpCalls.USER_EMAIL,
           message: 'Password updated',
           // eslint-disable-next-line no-magic-numbers
-          token: generateRandomString(10),
+          token: mockHttpCalls.generateRandomString(10),
           username: 'adrian@giantswarm.io',
         });
 
@@ -180,7 +180,9 @@ describe('PasswordReset', () => {
       );
 
       const emailInput = await findByLabelText(/email/i);
-      fireEvent.change(emailInput, { target: { value: USER_EMAIL } });
+      fireEvent.change(emailInput, {
+        target: { value: mockHttpCalls.USER_EMAIL },
+      });
 
       let submitButton = await findByText(/submit/i);
       fireEvent.click(submitButton);
@@ -273,9 +275,9 @@ describe('PasswordReset', () => {
 
     it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
       nock(global.config.passageEndpoint)
-        .post(`/recovery/${token}/`, { email: USER_EMAIL })
+        .post(`/recovery/${token}/`, { email: mockHttpCalls.USER_EMAIL })
         .reply(StatusCodes.Ok, {
-          email: USER_EMAIL,
+          email: mockHttpCalls.USER_EMAIL,
           is_valid: true,
           token,
           valid_until: '2020-02-21T16:50:20.589772+00:00',
