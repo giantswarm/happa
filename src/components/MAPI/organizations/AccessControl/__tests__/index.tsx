@@ -741,7 +741,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Groups');
     const subject = within(section).getByLabelText('Admins');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
@@ -829,7 +829,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Groups');
     const subject = within(section).getByLabelText('Admins');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
@@ -933,7 +933,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Users');
     const subject = within(section).getByLabelText('test@test.com');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
@@ -1017,7 +1017,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Users');
     const subject = within(section).getByLabelText('test@test.com');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(
       await screen.findByText(/Could not delete subject test@test.com/)
@@ -1059,7 +1059,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Service accounts');
     const subject = within(section).getByLabelText('some-random-account');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
@@ -1535,7 +1535,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Service accounts');
     const subject = within(section).getByLabelText('el-toro');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
@@ -1622,7 +1622,7 @@ describe('AccessControl', () => {
     const section = within(content).getByLabelText('Service accounts');
     const subject = within(section).getByLabelText('el-toro');
     fireEvent.click(within(subject).getByTitle('Delete'));
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(

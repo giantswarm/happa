@@ -364,7 +364,7 @@ describe('AccessControlRoleSubjects', () => {
     fireEvent.click(deleteButton);
 
     expect(screen.getByText('Are you sure?')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     await waitFor(() => {
       expect(within(subject).queryByRole('progressbar')).toBeInTheDocument();
@@ -520,7 +520,7 @@ describe('AccessControlRoleSubjects', () => {
     fireEvent.click(deleteButton);
 
     expect(screen.getByText('Are you sure?')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Yes, delete it'));
+    fireEvent.click(screen.getByText('Remove'));
 
     expect(
       await screen.findByText(/Could not delete subject test-group1/)
