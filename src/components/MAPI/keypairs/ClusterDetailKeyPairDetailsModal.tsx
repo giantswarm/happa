@@ -1,5 +1,5 @@
 import { Box, Text } from 'grommet';
-import { formatDate, relativeDate } from 'lib/helpers';
+import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
 import GenericModal from 'Modals/GenericModal';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -84,7 +84,8 @@ const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsMod
           <Label>Created</Label>
           {creationDate ? (
             <Text>
-              {formatDate(creationDate)} &ndash; {relativeDate(creationDate)}
+              {formatDate(creationDate)} &ndash;{' '}
+              {getRelativeDateFromNow(creationDate)}
             </Text>
           ) : (
             <NotAvailable />
@@ -95,7 +96,7 @@ const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsMod
           {expirationDate ? (
             <Text color={isExpiringSoon ? 'status-warning' : undefined}>
               {formatDate(expirationDate)} &ndash;{' '}
-              {relativeDate(expirationDate)}
+              {getRelativeDateFromNow(expirationDate)}
             </Text>
           ) : (
             <NotAvailable />
