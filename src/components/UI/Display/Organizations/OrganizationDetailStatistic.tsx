@@ -2,8 +2,8 @@ import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 
+import LoadingPlaceholder from '../MAPI/clusters/ClusterDetail/LoadingPlaceholder';
 import NotAvailable from '../NotAvailable';
-import OrganizationDetailStatisticPlaceholder from './OrganizationDetailStatisticPlaceholder';
 
 interface IOrganizationDetailStatisticProps
   extends React.ComponentPropsWithoutRef<typeof Text> {
@@ -17,7 +17,7 @@ const OrganizationDetailStatistic: React.FC<IOrganizationDetailStatisticProps> =
 }) => {
   return (
     <Text {...props}>
-      {isLoading && <OrganizationDetailStatisticPlaceholder />}
+      {isLoading && <LoadingPlaceholder height={20} width={80} />}
       {typeof children === 'undefined' && !isLoading && <NotAvailable />}
       {typeof children !== 'undefined' && !isLoading && children}
     </Text>
