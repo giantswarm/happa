@@ -39,6 +39,7 @@ interface IAccessControlSubjectSetItemProps
     React.ComponentPropsWithoutRef<typeof Box> {
   name: React.ReactNode;
   deleteTooltipMessage?: string;
+  deleteConfirmationMessage?: React.ReactNode;
 }
 
 const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> = ({
@@ -47,6 +48,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
   isLoading,
   onDelete,
   deleteTooltipMessage,
+  deleteConfirmationMessage,
   ...props
 }) => {
   const deleteButtonRef = useRef<HTMLAnchorElement>(null);
@@ -155,9 +157,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
               gap='small'
               border={{ color: 'text-xweak' }}
             >
-              <Box>
-                <Text>Are you sure?</Text>
-              </Box>
+              <Box>{deleteConfirmationMessage}</Box>
               <Box direction='row' gap='small'>
                 <Button danger={true} onClick={handleDelete}>
                   Yes, delete it
@@ -174,12 +174,17 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
   );
 };
 
+AccessControlSubjectSetItem.defaultProps = {
+  deleteConfirmationMessage: <Text>Are you sure?</Text>,
+};
+
 AccessControlSubjectSetItem.propTypes = {
   name: PropTypes.node.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isEditable: PropTypes.bool.isRequired,
   onDelete: PropTypes.func.isRequired,
   deleteTooltipMessage: PropTypes.string,
+  deleteConfirmationMessage: PropTypes.node,
 };
 
 export default AccessControlSubjectSetItem;
