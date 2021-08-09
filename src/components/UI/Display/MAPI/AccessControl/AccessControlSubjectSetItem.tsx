@@ -154,13 +154,13 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
               pad='medium'
               round='small'
               direction='column'
-              gap='small'
+              gap='medium'
               border={{ color: 'text-xweak' }}
             >
               <Box>{deleteConfirmationMessage}</Box>
               <Box direction='row' gap='small'>
                 <Button danger={true} onClick={handleDelete}>
-                  Yes, delete it
+                  Remove
                 </Button>
                 <Button link={true} onClick={hideConfirmation}>
                   Cancel
