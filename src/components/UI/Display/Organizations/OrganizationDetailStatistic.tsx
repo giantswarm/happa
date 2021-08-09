@@ -1,8 +1,8 @@
 import { Text } from 'grommet';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 
-import LoadingPlaceholder from '../MAPI/clusters/ClusterDetail/LoadingPlaceholder';
 import NotAvailable from '../NotAvailable';
 
 interface IOrganizationDetailStatisticProps

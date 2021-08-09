@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 function pluralizeLabel(count: number, base: string) {
   if (count === 1) {

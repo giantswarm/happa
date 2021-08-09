@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
-
-import OptionalValue from '../OptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 function pluralizeLabel(count: number | undefined, base: string) {
   if (count === 1) {

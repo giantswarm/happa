@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import { mutate } from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import { getVisibleLabels, updateClusterLabels } from './utils';
 

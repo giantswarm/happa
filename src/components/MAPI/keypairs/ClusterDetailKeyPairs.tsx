@@ -15,7 +15,7 @@ import Copyable from 'shared/Copyable';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import LoadingPlaceholder from 'UI/Display/MAPI/clusters/ClusterDetail/LoadingPlaceholder';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import NotAvailable from 'UI/Display/NotAvailable';
 import {
   Table,

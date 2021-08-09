@@ -29,7 +29,7 @@ import useSWR from 'swr';
 import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailActions from './ClusterDetailActions';

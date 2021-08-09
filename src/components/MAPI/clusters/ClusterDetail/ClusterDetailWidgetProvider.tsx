@@ -7,8 +7,8 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;

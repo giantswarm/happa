@@ -10,8 +10,8 @@ import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
-import LoadingPlaceholder from 'UI/Display/MAPI/clusters/ClusterDetail/LoadingPlaceholder';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
 
 import { HeadingRenderer, IATagProps, readmeBaseURL, urlFor } from './utils';

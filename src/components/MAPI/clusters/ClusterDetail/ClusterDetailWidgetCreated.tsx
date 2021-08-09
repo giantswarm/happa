@@ -6,7 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 const StyledDot = styled(Dot)`
   padding: 0;

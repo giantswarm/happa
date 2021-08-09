@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
-
-import LoadingPlaceholder from './LoadingPlaceholder';
 
 const StyledRefreshableLabel = styled(RefreshableLabel)`
   padding: 0;

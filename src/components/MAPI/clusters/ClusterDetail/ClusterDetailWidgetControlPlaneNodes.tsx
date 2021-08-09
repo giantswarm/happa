@@ -16,8 +16,8 @@ import { Dot } from 'styles';
 import useSWR from 'swr';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import NotAvailable from 'UI/Display/NotAvailable';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import { computeControlPlaneNodesStats } from './utils';
 

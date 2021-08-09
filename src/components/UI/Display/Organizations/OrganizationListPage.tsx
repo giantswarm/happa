@@ -3,6 +3,7 @@ import * as docs from 'lib/docs';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import {
   Table,
   TableBody,
@@ -10,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from 'UI/Display/Table';
-
-import OptionalValue from '../MAPI/clusters/ClusterDetail/OptionalValue';
 
 const StyledTableRow = styled(TableRow)`
   :hover,

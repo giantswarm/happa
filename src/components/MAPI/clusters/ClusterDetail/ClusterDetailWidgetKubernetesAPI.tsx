@@ -7,7 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 interface IClusterDetailWidgetKubernetesAPIProps
   extends Omit<

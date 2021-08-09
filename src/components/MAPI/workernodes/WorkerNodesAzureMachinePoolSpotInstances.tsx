@@ -7,7 +7,7 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 interface IWorkerNodesAzureMachinePoolSpotInstancesProps {
   providerNodePool?: capzexpv1alpha3.IAzureMachinePool;

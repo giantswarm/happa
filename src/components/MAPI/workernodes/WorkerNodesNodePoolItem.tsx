@@ -19,9 +19,9 @@ import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import { Code } from 'styles';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';

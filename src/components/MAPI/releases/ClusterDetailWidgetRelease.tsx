@@ -24,9 +24,9 @@ import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ClusterDetailStatus from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailStatus';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import * as ui from 'UI/Display/MAPI/releases/types';
 import NotAvailable from 'UI/Display/NotAvailable';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import ClusterDetailReleaseDetailsModal from './ClusterDetailReleaseDetailsModal';
 import ClusterDetailUpgradeModal from './ClusterDetailUpgradeModal';

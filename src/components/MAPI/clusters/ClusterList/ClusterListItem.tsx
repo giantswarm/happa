@@ -29,9 +29,9 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
-import OptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/OptionalValue';
 import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import {
   getWorkerNodesCount,
