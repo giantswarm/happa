@@ -64,6 +64,9 @@ export const kubectlGSLoginURL =
 export const kubectlGSGetClustersURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
 
+export const kubectlGSTemplateClusterURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
+
 export const organizationCRDSchema =
   'https://docs.giantswarm.io/ui-api/management-api/crd/organizations.security.giantswarm.io/';
 

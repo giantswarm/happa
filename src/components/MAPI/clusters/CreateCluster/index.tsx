@@ -22,6 +22,7 @@ import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
+import CreateClusterGuide from '../guides/CreateClusterGuide';
 import {
   createCluster,
   createDefaultCluster,
@@ -336,6 +337,13 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
                 </Text>
               </Box>
             </Box>
+          </Box>
+          <Box margin={{ top: 'large' }} direction='column' gap='small'>
+            <CreateClusterGuide
+              provider={state.provider}
+              clusterName={state.cluster.metadata.name}
+              organizationName={orgId}
+            />
           </Box>
         </Box>
       </DocumentTitle>
