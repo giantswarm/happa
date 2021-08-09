@@ -1,5 +1,5 @@
 import { Box, Text } from 'grommet';
-import { formatDate, relativeDate } from 'lib/helpers';
+import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ClusterIDLabel, {
@@ -109,7 +109,8 @@ const ClusterDetailDeleteActionClusterDetails: React.FC<IClusterDetailDeleteActi
       </Box>
       <Box direction='row'>
         <Text>
-          Created: {relativeDate(creationDate)} ({formatDate(creationDate)})
+          Created: {getRelativeDateFromNow(creationDate)} (
+          {formatDate(creationDate)})
         </Text>
       </Box>
       <Box direction='row' gap='xsmall' align='baseline'>
