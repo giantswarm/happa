@@ -1,5 +1,5 @@
 import { Text } from 'grommet';
-import { formatDate, relativeDate } from 'lib/helpers';
+import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -39,7 +39,7 @@ const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = (
       {...props}
     >
       <ClusterDetailWidgetOptionalValue value={creationDate}>
-        {(value) => <Text>{relativeDate(value as string)}</Text>}
+        {(value) => <Text>{getRelativeDateFromNow(value as string)}</Text>}
       </ClusterDetailWidgetOptionalValue>
       <StyledDot />
       <ClusterDetailWidgetOptionalValue value={creationDate} loaderWidth={150}>
