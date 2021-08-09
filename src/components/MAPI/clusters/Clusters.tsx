@@ -23,6 +23,7 @@ import ClusterListErrorPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/Cl
 import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListNoOrgsPlaceholder';
 
 import ClusterListItem from './ClusterList/ClusterListItem';
+import ListClustersGuide from './guides/ListClustersGuide';
 import { compareClusters } from './utils';
 
 const LOADING_COMPONENTS = new Array(6).fill(0);
@@ -213,6 +214,9 @@ const Clusters: React.FC<{}> = () => {
               </TransitionGroup>
             </AnimationWrapper>
           </Keyboard>
+        </Box>
+        <Box margin={{ top: 'medium' }} direction='column' gap='small'>
+          <ListClustersGuide />
         </Box>
       </Box>
     </DocumentTitle>

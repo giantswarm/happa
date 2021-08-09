@@ -61,8 +61,14 @@ export const kubectlGSInstallationURL =
 export const kubectlGSLoginURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/login/';
 
+export const kubectlGSGetClustersURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
+
 export const organizationCRDSchema =
   'https://docs.giantswarm.io/ui-api/management-api/crd/organizations.security.giantswarm.io/';
+
+export const clusterCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/clusters.cluster.x-k8s.io/';
 
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
