@@ -160,13 +160,6 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
     setIncludeTestVersions(event.target.checked);
   };
 
-  const handleBlur = (onBlurHandler: () => void) => () => {
-    setTimeout(() => {
-      onBlurHandler();
-      // eslint-disable-next-line no-magic-numbers
-    }, 300);
-  };
-
   const handleOnChange = (version: string) => (
     event: React.MouseEvent<HTMLAnchorElement>
   ) => {
@@ -185,7 +178,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
           onBlurHandler,
           onFocusHandler,
         }) => (
-          <div onBlur={handleBlur(onBlurHandler)} onFocus={onFocusHandler}>
+          <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
             <VersionPickerDropdownTrigger
               aria-expanded={isOpen}
               aria-haspopup='true'
