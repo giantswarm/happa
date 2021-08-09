@@ -152,7 +152,8 @@ describe('Installed app detail pane', () => {
         findByText,
         findByTestId,
         getByText,
-        queryByText,
+        getByRole,
+        queryByRole,
       } = renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
@@ -167,18 +168,20 @@ describe('Installed app detail pane', () => {
       const fileInputPlaceholder = getByText(
         /User level config values have been set/i
       );
-      let deleteButton = fileInputPlaceholder.parentNode!.querySelector(
-        '.btn-danger'
-      )!;
+      let deleteButton = within(
+        fileInputPlaceholder.parentElement!
+      ).getByRole('button', { name: 'Delete' });
       fireEvent.click(deleteButton);
 
       // Confirm deletion
-      deleteButton = getByText(/^Delete user level config values$/i);
+      deleteButton = getByRole('button', {
+        name: /^Delete user level config values$/i,
+      }) as HTMLButtonElement;
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
         expect(
-          queryByText(/Delete user level config values/i)
+          queryByRole('button', { name: /Delete user level config values/i })
         ).not.toBeInTheDocument();
       });
 
@@ -197,7 +200,7 @@ describe('Installed app detail pane', () => {
         findByText,
         findByTestId,
         getByText,
-        queryByText,
+        queryByRole,
       } = renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
@@ -236,7 +239,7 @@ describe('Installed app detail pane', () => {
 
       await waitFor(() => {
         expect(
-          queryByText(/delete user level secret values/i)
+          queryByRole('button', { name: /delete user level secret values/i })
         ).not.toBeInTheDocument();
       });
 
@@ -259,7 +262,8 @@ describe('Installed app detail pane', () => {
         findByText,
         findByTestId,
         getByText,
-        queryByText,
+        getByRole,
+        queryByRole,
       } = renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
@@ -274,18 +278,20 @@ describe('Installed app detail pane', () => {
       const fileInputPlaceholder = getByText(
         /user level secret values have been set/i
       );
-      let deleteButton = fileInputPlaceholder.parentNode!.querySelector(
-        '.btn-danger'
-      )!;
+      let deleteButton = within(
+        fileInputPlaceholder.parentElement!
+      ).getByRole('button', { name: 'Delete' });
       fireEvent.click(deleteButton);
 
       // Confirm deletion
-      deleteButton = getByText(/^delete user level secret values$/i);
+      deleteButton = getByRole('button', {
+        name: /^delete user level secret values$/i,
+      }) as HTMLButtonElement;
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
         expect(
-          queryByText(/delete user level secret values/i)
+          queryByRole('button', { name: /delete user level secret values/i })
         ).not.toBeInTheDocument();
       });
 

@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -113,27 +114,31 @@ const InitialPane: React.FC<IInitialPaneProps> = (props) => {
           <>
             <span>User level config values have been set</span>
 
-            <div className='actions'>
+            <Box direction='row' gap='small'>
               <YAMLFileUpload
                 buttonText='Replace values'
                 onInputChange={props.dispatchUpdateAppConfig}
               />
 
-              <Button bsStyle='danger' onClick={props.showDeleteAppConfigPane}>
-                <i className='fa fa-delete' /> Delete
+              <Button
+                danger={true}
+                onClick={props.showDeleteAppConfigPane}
+                icon={<i className='fa fa-delete' />}
+              >
+                Delete
               </Button>
-            </div>
+            </Box>
           </>
         ) : (
           <>
             <span>No user level config values</span>
 
-            <div className='actions'>
+            <Box direction='row' gap='small'>
               <YAMLFileUpload
                 buttonText='Upload user level config values'
                 onInputChange={props.dispatchCreateAppConfig}
               />
-            </div>
+            </Box>
           </>
         )}
       </DetailItem>
@@ -143,34 +148,41 @@ const InitialPane: React.FC<IInitialPaneProps> = (props) => {
           <>
             <span>User level secret values have been set</span>
 
-            <div className='actions'>
+            <Box direction='row' gap='small'>
               <YAMLFileUpload
                 buttonText='Replace user level secret values'
                 onInputChange={props.dispatchUpdateAppSecret}
               />
 
-              <Button bsStyle='danger' onClick={props.showDeleteAppSecretPane}>
-                <i className='fa fa-delete' /> Delete
+              <Button
+                danger={true}
+                onClick={props.showDeleteAppSecretPane}
+                icon={<i className='fa fa-delete' />}
+              >
+                Delete
               </Button>
-            </div>
+            </Box>
           </>
         ) : (
           <>
             <span>No user level secret values</span>
 
-            <div className='actions'>
+            <Box direction='row' gap='small'>
               <YAMLFileUpload
                 buttonText='Upload user level secret values'
                 onInputChange={props.dispatchCreateAppSecret}
               />
-            </div>
+            </Box>
           </>
         )}
       </DetailItem>
 
       <DetailItem title='Delete This App'>
-        <Button bsStyle='danger' onClick={props.showDeleteAppPane}>
-          <i className='fa fa-delete' />
+        <Button
+          danger={true}
+          onClick={props.showDeleteAppPane}
+          icon={<i className='fa fa-delete' />}
+        >
           Delete app
         </Button>
       </DetailItem>

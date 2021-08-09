@@ -147,10 +147,15 @@ const Clusters: React.FC<{}> = () => {
             round='xsmall'
             direction='row'
             align='center'
+            gap='small'
           >
             <Link to={newClusterPath}>
-              <Button bsStyle='primary' tabIndex={-1}>
-                <i className='fa fa-add-circle' /> Launch new cluster
+              <Button
+                primary={true}
+                tabIndex={-1}
+                icon={<i className='fa fa-add-circle' />}
+              >
+                Launch new cluster
               </Button>
             </Link>
 

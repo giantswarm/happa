@@ -94,9 +94,7 @@ const NextSteps = (props) => {
 
         <GettingStartedBottomNav>
           <Link to={clusterGuideExamplePath}>
-            <Button bsStyle='default'>
-              <i className='fa fa-chevron-left' /> Back
-            </Button>
+            <Button icon={<i className='fa fa-chevron-left' />}>Back</Button>
           </Link>
         </GettingStartedBottomNav>
       </>

@@ -23,8 +23,12 @@ const Overview = (props) => (
 
     <GettingStartedBottomNav>
       <Link to={props.steps[0].url}>
-        <Button bsStyle='primary'>
-          Start <i className='fa fa-chevron-right' />
+        <Button
+          primary={true}
+          icon={<i className='fa fa-chevron-right' />}
+          reverse={true}
+        >
+          Start
         </Button>
       </Link>
     </GettingStartedBottomNav>

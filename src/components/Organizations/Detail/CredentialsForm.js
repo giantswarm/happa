@@ -155,7 +155,7 @@ class CredentialsForm extends React.Component {
             margin={{ bottom: 'medium' }}
           />
           <Button
-            bsStyle='primary'
+            primary={true}
             disabled={!this.state.isValid}
             onClick={this.handleSubmit}
           >
@@ -203,7 +203,7 @@ class CredentialsForm extends React.Component {
             margin={{ bottom: 'medium' }}
           />
           <Button
-            bsStyle='primary'
+            primary={true}
             disabled={!this.state.isValid}
             onClick={this.handleSubmit}
           >

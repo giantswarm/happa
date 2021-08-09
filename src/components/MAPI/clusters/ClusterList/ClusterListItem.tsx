@@ -231,7 +231,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
               )}
             </OptionalValue>
           </Box>
-          <Box basis='82%'>
+          <Box basis='75%'>
             <Box direction='row' align='center' wrap={true} gap='small'>
               <OptionalValue value={description}>
                 {(value) => (
@@ -284,13 +284,22 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
           </Box>
 
           {shouldDisplayGetStarted && (
-            <Box basis='8%'>
-              <Button onClick={handleGetStartedClick}>
-                <i
-                  className='fa fa-start'
-                  aria-hidden={true}
-                  role='presentation'
-                />
+            <Box
+              align='end'
+              basis='15%'
+              width={{ min: '120px' }}
+              flex={{ grow: 1 }}
+            >
+              <Button
+                onClick={handleGetStartedClick}
+                icon={
+                  <i
+                    className='fa fa-start'
+                    aria-hidden={true}
+                    role='presentation'
+                  />
+                }
+              >
                 Get started
               </Button>
             </Box>

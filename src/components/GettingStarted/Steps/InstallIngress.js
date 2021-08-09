@@ -82,14 +82,16 @@ const InstallIngress = (props) => {
 
         <GettingStartedBottomNav>
           <Link to={clusterGuideConfigurationPath}>
-            <Button bsStyle='default'>
-              <i className='fa fa-chevron-left' /> Back
-            </Button>
+            <Button icon={<i className='fa fa-chevron-left' />}>Back</Button>
           </Link>
 
           <Link to={clusterGuideExamplePath}>
-            <Button bsStyle='primary'>
-              Continue <i className='fa fa-chevron-right' />
+            <Button
+              primary={true}
+              icon={<i className='fa fa-chevron-right' />}
+              reverse={true}
+            >
+              Continue
             </Button>
           </Link>
         </GettingStartedBottomNav>

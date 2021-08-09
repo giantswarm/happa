@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import {
   clearQueues,
@@ -137,15 +138,17 @@ class ForgotPassword extends React.Component {
             value={this.state.email}
             margin={{ bottom: 'medium' }}
           />
-          <Button
-            bsStyle='primary'
-            loading={this.state.submitting}
-            onClick={this.submit}
-            type='submit'
-          >
-            {this.state.submitting ? 'Submitting ...' : 'Submit'}
-          </Button>
-          <Link to={MainRoutes.Login}>Back to login form</Link>
+          <Box direction='row' gap='small' align='center'>
+            <Button
+              primary={true}
+              loading={this.state.submitting}
+              onClick={this.submit}
+              type='submit'
+            >
+              {this.state.submitting ? 'Submitting ...' : 'Submit'}
+            </Button>
+            <Link to={MainRoutes.Login}>Back to login form</Link>
+          </Box>
         </form>
       </>
     );

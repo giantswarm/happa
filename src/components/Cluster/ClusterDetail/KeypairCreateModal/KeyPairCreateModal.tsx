@@ -11,6 +11,7 @@ import {
   MODAL_CHANGE_TIMEOUT,
   VALIDATION_DEBOUNCE_RATE,
 } from 'Cluster/ClusterDetail/KeypairCreateModal/Utils';
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { makeKubeConfigTextFile } from 'lib/helpers';
 import useDebounce from 'lib/hooks/useDebounce';
@@ -184,8 +185,8 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
 
   return (
     <>
-      <Button bsStyle='default' onClick={show}>
-        <i className='fa fa-add-circle' /> Create key pair and kubeconfig
+      <Button onClick={show} icon={<i className='fa fa-add-circle' />}>
+        Create key pair and kubeconfig
       </Button>
       <StyledModal
         data-testid='create-key-pair-modal'
@@ -223,24 +224,26 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
             <AddKeyPairErrorTemplate>{modal.errorCode}</AddKeyPairErrorTemplate>
           </BootstrapModal.Body>
           <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
-            {modal.status !== KeypairCreateModalStatus.Success && (
-              <Button
-                bsStyle='primary'
-                disabled={cnPrefixError !== null}
-                loading={modal.loading}
-                onClick={confirmAddKeyPair}
-                type='submit'
-                loadingTimeout={0}
-              >
-                {submitButtonText}
-              </Button>
-            )}
+            <Box direction='row' gap='small' justify='end'>
+              {modal.status !== KeypairCreateModalStatus.Success && (
+                <Button
+                  primary={true}
+                  disabled={cnPrefixError !== null}
+                  loading={modal.loading}
+                  onClick={confirmAddKeyPair}
+                  type='submit'
+                  loadingTimeout={0}
+                >
+                  {submitButtonText}
+                </Button>
+              )}
 
-            {!modal.loading && (
-              <Button bsStyle='link' onClick={close}>
-                {closeButtonText}
-              </Button>
-            )}
+              {!modal.loading && (
+                <Button link={true} onClick={close}>
+                  {closeButtonText}
+                </Button>
+              )}
+            </Box>
           </BootstrapModal.Footer>
         </form>
       </StyledModal>

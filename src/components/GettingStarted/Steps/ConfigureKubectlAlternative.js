@@ -193,7 +193,7 @@ class ConfigKubeCtl extends React.Component {
               })
             )}
           >
-            <Button bsStyle='default'>CA CERTIFICATE</Button>
+            <Button>CA CERTIFICATE</Button>
           </a>
           <a
             download='client.crt'
@@ -203,7 +203,7 @@ class ConfigKubeCtl extends React.Component {
               })
             )}
           >
-            <Button bsStyle='default'>CLIENT CERTIFICATE</Button>
+            <Button>CLIENT CERTIFICATE</Button>
           </a>
           <a
             download='client.key'
@@ -213,7 +213,7 @@ class ConfigKubeCtl extends React.Component {
               })
             )}
           >
-            <Button bsStyle='default'>CLIENT KEY</Button>
+            <Button>CLIENT KEY</Button>
           </a>
         </div>
       </KubeconfigAndDownloadButtons>
@@ -248,7 +248,7 @@ class ConfigKubeCtl extends React.Component {
         ) : (
           <CreateKeyPairPlaceHolder>
             <Button
-              bsStyle='primary'
+              primary={true}
               loading={this.state.keyPair.generating}
               onClick={this.generateKeyPair}
             >

@@ -100,9 +100,7 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
                 Please check your search term or check more catalogs to show
                 apps from
               </p>
-              <Button bsStyle='default' onClick={props.onResetSearch}>
-                Reset search
-              </Button>
+              <Button onClick={props.onResetSearch}>Reset search</Button>
             </div>
           </EmptyState>
         )}

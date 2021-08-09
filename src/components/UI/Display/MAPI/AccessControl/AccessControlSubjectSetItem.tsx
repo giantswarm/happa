@@ -158,11 +158,11 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
               <Box>
                 <Text>Are you sure?</Text>
               </Box>
-              <Box direction='row'>
-                <Button bsStyle='danger' onClick={handleDelete}>
+              <Box direction='row' gap='small'>
+                <Button danger={true} onClick={handleDelete}>
                   Yes, delete it
                 </Button>
-                <Button bsStyle='link' onClick={hideConfirmation}>
+                <Button link={true} onClick={hideConfirmation}>
                   Cancel
                 </Button>
               </Box>

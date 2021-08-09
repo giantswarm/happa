@@ -337,14 +337,16 @@ class ConfigKubeCtl extends React.Component {
 
           <GettingStartedBottomNav>
             <Link to={clusterGuideOverviewPath}>
-              <Button bsStyle='default'>
-                <i className='fa fa-chevron-left' /> Back
-              </Button>
+              <Button icon={<i className='fa fa-chevron-left' />}>Back</Button>
             </Link>
 
             <Link to={this.props.steps[this.props.stepIndex + 1].url}>
-              <Button bsStyle='primary'>
-                Continue <i className='fa fa-chevron-right' />
+              <Button
+                primary={true}
+                icon={<i className='fa fa-chevron-right' />}
+                reverse={true}
+              >
+                Continue
               </Button>
             </Link>
           </GettingStartedBottomNav>

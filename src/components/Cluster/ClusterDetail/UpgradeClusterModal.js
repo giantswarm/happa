@@ -1,4 +1,5 @@
 import diff from 'deep-diff';
+import { Box } from 'grommet';
 import { clusterUpgradeChecklistURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -199,15 +200,17 @@ class UpgradeClusterModal extends React.Component {
           {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
-          <Button
-            bsStyle='primary'
-            onClick={() => this.goToPage(Pages.InspectChanges)}
-          >
-            Inspect changes
-          </Button>
-          <Button bsStyle='link' onClick={this.close}>
-            Cancel
-          </Button>
+          <Box gap='small' direction='row' justify='end'>
+            <Button
+              primary={true}
+              onClick={() => this.goToPage(Pages.InspectChanges)}
+            >
+              Inspect changes
+            </Button>
+            <Button link={true} onClick={this.close}>
+              Cancel
+            </Button>
+          </Box>
         </BootstrapModal.Footer>
       </div>
     );
@@ -227,7 +230,7 @@ class UpgradeClusterModal extends React.Component {
         <BootstrapModal.Body>{this.changedComponents()}</BootstrapModal.Body>
         <BootstrapModal.Footer>
           <Button
-            bsStyle='primary'
+            primary={true}
             loading={loading}
             onClick={this.submit}
             loadingTimeout={0}
@@ -236,7 +239,7 @@ class UpgradeClusterModal extends React.Component {
           </Button>
 
           {!loading && (
-            <Button bsStyle='link' onClick={this.close}>
+            <Button link={true} onClick={this.close}>
               Cancel
             </Button>
           )}

@@ -123,7 +123,7 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
           onCancel={hideConfirmation}
           confirmButton={
             <Button
-              bsStyle='danger'
+              danger={true}
               onClick={handleContinue}
               disabled={isConfirmButtonDisabled}
             >
@@ -169,7 +169,6 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
         {!confirmationVisible && (
           <Box animation={{ type: 'fadeIn', duration: 300 }}>
             <Button
-              bsStyle='default'
               onClick={showConfirmation}
               loading={isLoading}
               disabled={disabled}

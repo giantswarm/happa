@@ -559,14 +559,16 @@ scales node pools correctly`, async () => {
       filterLabels(v5ClusterResponse.labels)
     );
 
-    const { findByText, getByRole } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, getByRole, findByRole } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
     await findByText('Labels:');
 
     fireEvent.click(
       getByRole('button', { name: `Delete '${visibleLabels[0][0]}' label` })
     );
-    fireEvent.click(await findByText('Delete', { selector: 'button' }));
+    fireEvent.click(await findByRole('button', { name: 'Delete' }));
 
     await findByText(/This cluster has no labels./);
   });
@@ -585,15 +587,15 @@ scales node pools correctly`, async () => {
       findByLabelText,
       findByText,
       getByLabelText,
-      getByText,
+      getByRole,
     } = renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
-    fireEvent.click(getByText('Add label', { selector: 'button ' }));
+    fireEvent.click(getByRole('button', { name: 'Add label' }));
 
     const keyInput = await findByLabelText('Label key');
     const valueInput = getByLabelText('Label value');
-    const saveButton = getByText('Save', { selector: 'button' });
+    const saveButton = getByRole('button', { name: 'Save' });
 
     fireEvent.change(keyInput, { target: { value: '.invalid.' } });
     fireEvent.change(valueInput, { target: { value: 'valid' } });
@@ -635,14 +637,15 @@ scales node pools correctly`, async () => {
       findByText,
       getByLabelText,
       getByText,
+      getByRole,
     } = renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
-    fireEvent.click(getByText('Add label', { selector: 'button ' }));
+    fireEvent.click(getByRole('button', { name: 'Add label' }));
 
     const keyInput = await findByLabelText('Label key');
     const valueInput = getByLabelText('Label value');
-    const saveButton = getByText('Save', { selector: 'button' });
+    const saveButton = getByRole('button', { name: 'Save' });
 
     fireEvent.change(keyInput, { target: { value: newLabelKey } });
     fireEvent.change(valueInput, {

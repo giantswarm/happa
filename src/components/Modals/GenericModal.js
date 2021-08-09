@@ -20,7 +20,7 @@ const GenericModal = (props) => {
         {props.footer ? (
           props.footer
         ) : (
-          <Button bsStyle='link' onClick={props.onClose}>
+          <Button link={true} onClick={props.onClose}>
             Close
           </Button>
         )}

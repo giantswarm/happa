@@ -166,9 +166,9 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
                 error={debouncedValidationMessage}
               />
             </Box>
-            <Box direction='row' margin={{ top: 'small' }}>
+            <Box direction='row' margin={{ top: 'small' }} gap='small'>
               <Button
-                bsStyle='primary'
+                primary={true}
                 type='submit'
                 loading={isCreating}
                 disabled={!hasTyped || !isValid}

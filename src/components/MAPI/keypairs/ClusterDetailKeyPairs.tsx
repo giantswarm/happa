@@ -192,7 +192,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                     </TableCell>
                     <TableCell size='xsmall'>
                       <Button
-                        bsSize='sm'
+                        size='small'
                         onClick={handleOpenDetails(keyPair.serial_number)}
                       >
                         Details

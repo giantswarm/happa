@@ -1,6 +1,7 @@
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
 import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5ClusterDetailTableNodePoolScaling';
 import formatDistance from 'date-fns/fp/formatDistance';
+import { Box } from 'grommet';
 import produce from 'immer';
 import { nodePoolsURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -246,10 +247,6 @@ const KubernetesURIWrapper = styled(FlexRowWithTwoBlocksOnEdges)`
       }
     }
   }
-
-  i {
-    padding: 0 8px;
-  }
 `;
 
 const GetStartedWrapper = styled.div`
@@ -457,8 +454,11 @@ class V5ClusterDetailTable extends React.Component {
             {api_endpoint}
           </StyledURIBlock>
           <GetStartedWrapper>
-            <Button onClick={accessCluster}>
-              <i className='fa fa-start' /> Get started
+            <Button
+              onClick={accessCluster}
+              icon={<i className='fa fa-start' />}
+            >
+              Get started
             </Button>
           </GetStartedWrapper>
         </KubernetesURIWrapper>
@@ -550,26 +550,27 @@ class V5ClusterDetailTable extends React.Component {
                   capabilities={cluster.capabilities}
                 />
                 <FlexWrapperDiv>
-                  <Button
-                    bsStyle='primary'
-                    disabled={!nodePoolForm.isValid}
-                    loading={nodePoolForm.isSubmitting}
-                    onClick={this.createNodePool}
-                    type='button'
-                  >
-                    Create node pool
-                  </Button>
-                  {/* We want to hide cancel button when the Create NP button has been clicked */}
-                  {!nodePoolForm.isSubmitting && (
+                  <Box gap='small' direction='row'>
                     <Button
-                      bsStyle='default'
+                      primary={true}
+                      disabled={!nodePoolForm.isValid}
                       loading={nodePoolForm.isSubmitting}
-                      onClick={this.toggleAddNodePoolForm}
+                      onClick={this.createNodePool}
                       type='button'
                     >
-                      Cancel
+                      Create node pool
                     </Button>
-                  )}
+                    {/* We want to hide cancel button when the Create NP button has been clicked */}
+                    {!nodePoolForm.isSubmitting && (
+                      <Button
+                        loading={nodePoolForm.isSubmitting}
+                        onClick={this.toggleAddNodePoolForm}
+                        type='button'
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                  </Box>
                 </FlexWrapperDiv>
               </AddNodePoolFlexColumnDiv>
             </AddNodePoolWrapperDiv>
@@ -586,8 +587,11 @@ class V5ClusterDetailTable extends React.Component {
               </p>
             )}
             <RUMActionTarget name={RUMActions.AddNodePool}>
-              <Button onClick={this.toggleAddNodePoolForm}>
-                <i className='fa fa-add-circle' /> Add node pool
+              <Button
+                onClick={this.toggleAddNodePoolForm}
+                icon={<i className='fa fa-add-circle' />}
+              >
+                Add node pool
               </Button>
             </RUMActionTarget>
             {nodePools && nodePools.length === 1 && (

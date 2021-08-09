@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
@@ -14,20 +15,25 @@ const DeleteConfirmFooter: React.FC<IDeleteConfirmFooterProps> = ({
   onCancel,
 }) => {
   return (
-    <>
-      <Button bsStyle='danger' onClick={onConfirm}>
-        <i
-          className='fa fa-delete'
-          role='presentation'
-          aria-hidden='true'
-          aria-label={cta}
-        />
+    <Box direction='row' gap='small' justify='end'>
+      <Button
+        danger={true}
+        onClick={onConfirm}
+        icon={
+          <i
+            className='fa fa-delete'
+            role='presentation'
+            aria-hidden='true'
+            aria-label={cta}
+          />
+        }
+      >
         {cta}
       </Button>
-      <Button bsStyle='link' onClick={onCancel}>
+      <Button link={true} onClick={onCancel}>
         Cancel
       </Button>
-    </>
+    </Box>
   );
 };
 

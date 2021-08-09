@@ -43,8 +43,11 @@ class OrganizationListWrapper extends React.Component {
               organizations={this.props.organizations}
             />
           </EmptyStateDisplay>
-          <Button bsStyle='default' onClick={this.createOrganization}>
-            <i className='fa fa-add-circle' /> Create new organization
+          <Button
+            onClick={this.createOrganization}
+            icon={<i className='fa fa-add-circle' />}
+          >
+            Create new organization
           </Button>
         </>
       </DocumentTitle>
