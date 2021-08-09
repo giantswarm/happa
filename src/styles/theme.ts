@@ -381,8 +381,8 @@ const theme = deepMerge(generate(16), {
       },
       primary: {
         background: {
-          color: 'status-ok',
-          opacity: 0.7,
+          color: '#3F963E',
+          opacity: 1,
         },
       },
     },
@@ -391,7 +391,6 @@ const theme = deepMerge(generate(16), {
       default: {
         background: {
           color: 'text',
-          opacity: 0.3,
         },
         border: {
           color: 'text',
@@ -400,7 +399,6 @@ const theme = deepMerge(generate(16), {
       secondary: {
         background: {
           color: 'text',
-          opacity: 0.3,
         },
         border: {
           color: 'text',
@@ -409,7 +407,6 @@ const theme = deepMerge(generate(16), {
       primary: {
         background: {
           color: 'status-ok',
-          opacity: 0.5,
         },
       },
     },

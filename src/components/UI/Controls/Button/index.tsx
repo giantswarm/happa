@@ -47,8 +47,8 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
 
       theme.button!.hover!.secondary = {
         background: {
-          color: 'status-danger',
-          opacity: 0.7,
+          color: '#c44e4b',
+          opacity: 1,
         },
         border: {
           width: '0',
@@ -58,7 +58,6 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
       theme.button!.active!.secondary = {
         background: {
           color: 'status-danger',
-          opacity: 0.5,
         },
         border: {
           width: '0',
@@ -78,8 +77,8 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
 
       theme.button!.hover!.secondary = {
         background: {
-          color: 'status-warning',
-          opacity: 0.7,
+          color: '#ffb83b',
+          opacity: 1,
         },
         border: {
           width: '0',
@@ -89,7 +88,6 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
       theme.button!.active!.secondary = {
         background: {
           color: 'status-warning',
-          opacity: 0.5,
         },
         border: {
           width: '0',
