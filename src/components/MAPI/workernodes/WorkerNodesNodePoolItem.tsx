@@ -19,9 +19,9 @@ import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import { Code } from 'styles';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
@@ -206,7 +206,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         additionalColumnsCount={additionalColumns?.length}
       >
         <Box align='center'>
-          <ClusterDetailWidgetOptionalValue
+          <OptionalValue
             value={nodePool?.metadata.name}
             loaderWidth={70}
             loaderHeight={26}
@@ -218,13 +218,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 </Text>
               </Copyable>
             )}
-          </ClusterDetailWidgetOptionalValue>
+          </OptionalValue>
         </Box>
         <StyledDescriptionWrapper full={isDeleting}>
-          <ClusterDetailWidgetOptionalValue
-            value={description}
-            loaderWidth={150}
-          >
+          <OptionalValue value={description} loaderWidth={150}>
             {(value) =>
               isDeleting ? (
                 <Box direction='row' gap='medium' align='baseline'>
@@ -244,27 +241,21 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 />
               )
             }
-          </ClusterDetailWidgetOptionalValue>
+          </OptionalValue>
         </StyledDescriptionWrapper>
         {!isDeleting && !isEditingDescription && (
           <>
             <Box align='center'>
-              <ClusterDetailWidgetOptionalValue
-                value={machineType}
-                loaderWidth={130}
-              >
+              <OptionalValue value={machineType} loaderWidth={130}>
                 {(value) => (
                   <Code aria-label={formatMachineTypeLabel(providerNodePool)}>
                     {value}
                   </Code>
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
             <Box align='center'>
-              <ClusterDetailWidgetOptionalValue
-                value={availabilityZones}
-                loaderHeight={26}
-              >
+              <OptionalValue value={availabilityZones} loaderHeight={26}>
                 {(value) => (
                   <Box
                     direction='row'
@@ -273,13 +264,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
                   </Box>
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
             <Box align='center'>
-              <ClusterDetailWidgetOptionalValue
-                value={scaling?.min}
-                loaderWidth={30}
-              >
+              <OptionalValue value={scaling?.min} loaderWidth={30}>
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
                     <Text
@@ -289,13 +277,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     </Text>
                   </Box>
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
             <Box align='center'>
-              <ClusterDetailWidgetOptionalValue
-                value={scaling?.max}
-                loaderWidth={30}
-              >
+              <OptionalValue value={scaling?.max} loaderWidth={30}>
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
                     <Text
@@ -305,13 +290,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     </Text>
                   </Box>
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
             <Box align='center'>
-              <ClusterDetailWidgetOptionalValue
-                value={scaling?.desired}
-                loaderWidth={30}
-              >
+              <OptionalValue value={scaling?.desired} loaderWidth={30}>
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
                     <Text aria-label={`Autoscaler target node count: ${value}`}>
@@ -319,13 +301,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     </Text>
                   </Box>
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
             <Box align='center'>
-              <ClusterDetailWidgetOptionalValue
-                value={scaling?.current}
-                loaderWidth={30}
-              >
+              <OptionalValue value={scaling?.current} loaderWidth={30}>
                 {(value) => (
                   <Box
                     pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
@@ -342,7 +321,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     </Text>
                   </Box>
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
 
             {additionalColumns?.map((column) => (

@@ -15,7 +15,7 @@ import Copyable from 'shared/Copyable';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import ClusterDetailWidgetLoadingPlaceholder from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetLoadingPlaceholder';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import NotAvailable from 'UI/Display/NotAvailable';
 import {
   Table,
@@ -161,16 +161,16 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                 LOADING_COMPONENTS.map((_, i) => (
                   <TableRow key={i}>
                     <TableCell size='large'>
-                      <ClusterDetailWidgetLoadingPlaceholder width={400} />
+                      <LoadingPlaceholder width={400} />
                     </TableCell>
                     <TableCell size='small'>
-                      <ClusterDetailWidgetLoadingPlaceholder />
+                      <LoadingPlaceholder />
                     </TableCell>
                     <TableCell size='small'>
-                      <ClusterDetailWidgetLoadingPlaceholder />
+                      <LoadingPlaceholder />
                     </TableCell>
                     <TableCell size='small'>
-                      <ClusterDetailWidgetLoadingPlaceholder />
+                      <LoadingPlaceholder />
                     </TableCell>
                   </TableRow>
                 ))}

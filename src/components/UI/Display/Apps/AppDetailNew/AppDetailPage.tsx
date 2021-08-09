@@ -11,10 +11,10 @@ import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
 
-import AppDetailPageOptionalValue from './AppDetailPageOptionalValue';
-import AppDetailsLoadingPlaceholder from './AppDetailsLoadingPlaceholder';
 import { HeadingRenderer, IATagProps, readmeBaseURL, urlFor } from './utils';
 
 const Header = styled.div`
@@ -222,23 +222,31 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
         <HeaderDetails>
           <Upper>
             <h1>
-              <AppDetailPageOptionalValue value={props.appTitle}>
+              <OptionalValue
+                value={props.appTitle}
+                loaderWidth={200}
+                loaderHeight={28}
+              >
                 {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
                 {(value) => <>{value}</>}
-              </AppDetailPageOptionalValue>
+              </OptionalValue>
             </h1>
             {props.installAppModal}
           </Upper>
           <Lower>
-            <AppDetailPageOptionalValue value={props.catalogName}>
+            <OptionalValue
+              value={props.catalogName}
+              loaderWidth={200}
+              loaderHeight={28}
+            >
               {(value) => (
                 <CatalogLabel
-                  catalogName={value}
+                  catalogName={value as string}
                   description={props.catalogDescription}
                   iconUrl={props.catalogIcon}
                 />
               )}
-            </AppDetailPageOptionalValue>
+            </OptionalValue>
           </Lower>
         </HeaderDetails>
       </Header>
@@ -255,7 +263,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             versions={props.otherVersions}
           />
         ) : (
-          <AppDetailsLoadingPlaceholder />
+          <LoadingPlaceholder width={200} height={28} />
         )}
       </VersionPickerRow>
       <Body>
@@ -303,47 +311,67 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <DetailGroup>
             <Detail>
               <small>CHART VERSION</small>
-              <AppDetailPageOptionalValue value={props.chartVersion}>
-                {(value) => <Truncated as='span'>{value}</Truncated>}
-              </AppDetailPageOptionalValue>
+              <OptionalValue
+                value={props.chartVersion}
+                loaderWidth={200}
+                loaderHeight={28}
+              >
+                {(value) => <Truncated as='span'>{value as string}</Truncated>}
+              </OptionalValue>
             </Detail>
 
             <Detail>
               <small>CREATED</small>
-              <AppDetailPageOptionalValue value={props.createDate}>
-                {(value) => relativeDate(value)}
-              </AppDetailPageOptionalValue>
+              <OptionalValue
+                value={props.createDate}
+                loaderWidth={200}
+                loaderHeight={28}
+              >
+                {(value) => relativeDate(value as string)}
+              </OptionalValue>
             </Detail>
 
             <Detail>
               <small>INCLUDES VERSION</small>
-              <AppDetailPageOptionalValue value={props.includesVersion}>
-                {(value) => <Truncated as='span'>{value}</Truncated>}
-              </AppDetailPageOptionalValue>
+              <OptionalValue
+                value={props.includesVersion}
+                loaderWidth={200}
+                loaderHeight={28}
+              >
+                {(value) => <Truncated as='span'>{value as string}</Truncated>}
+              </OptionalValue>
             </Detail>
           </DetailGroup>
 
           <Detail>
             <small>DESCRIPTION</small>
-            <AppDetailPageOptionalValue value={props.description}>
+            <OptionalValue
+              value={props.description}
+              loaderWidth={200}
+              loaderHeight={28}
+            >
               {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
               {(value) => <>{value}</>}
-            </AppDetailPageOptionalValue>
+            </OptionalValue>
           </Detail>
 
           <Detail>
             <small>WEBSITE</small>
-            <AppDetailPageOptionalValue value={props.website}>
+            <OptionalValue
+              value={props.website}
+              loaderWidth={200}
+              loaderHeight={28}
+            >
               {(value) => (
                 <NonBreakingLink
-                  href={value}
+                  href={value as string}
                   target='_blank'
                   rel='noopener noreferrer'
                 >
                   {value} <i className='fa fa-open-in-new' />
                 </NonBreakingLink>
               )}
-            </AppDetailPageOptionalValue>
+            </OptionalValue>
           </Detail>
 
           {props.keywords!.length > 0 && (

@@ -3,6 +3,7 @@ import * as docs from 'lib/docs';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import {
   Table,
   TableBody,
@@ -10,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from 'UI/Display/Table';
-
-import ClusterDetailWidgetOptionalValue from '../MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
 
 const StyledTableRow = styled(TableRow)`
   :hover,
@@ -85,12 +84,9 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = ({
               >
                 <TableCell>{org.name}</TableCell>
                 <TableCell size='small' align='center' justify='center'>
-                  <ClusterDetailWidgetOptionalValue
-                    value={org.clusterCount}
-                    loaderWidth={18}
-                  >
+                  <OptionalValue value={org.clusterCount} loaderWidth={18}>
                     {(value) => <Text>{value}</Text>}
-                  </ClusterDetailWidgetOptionalValue>
+                  </OptionalValue>
                 </TableCell>
               </StyledTableRow>
             ))}

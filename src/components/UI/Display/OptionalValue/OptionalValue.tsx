@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
+import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
-
-import ClusterDetailWidgetLoadingPlaceholder from './ClusterDetailWidgetLoadingPlaceholder';
 
 const StyledRefreshableLabel = styled(RefreshableLabel)`
   padding: 0;
@@ -14,7 +13,7 @@ const StyledRefreshableLabel = styled(RefreshableLabel)`
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Value = string | number | Record<string, any>;
 
-interface IClusterDetailWidgetOptionalValueProps {
+interface IOptionalValueProps {
   children: (value: Value) => React.ReactElement;
   value?: Value;
   replaceEmptyValue?: boolean;
@@ -22,7 +21,7 @@ interface IClusterDetailWidgetOptionalValueProps {
   loaderWidth?: number;
 }
 
-const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalValueProps> = ({
+const OptionalValue: React.FC<IOptionalValueProps> = ({
   value,
   children,
   replaceEmptyValue,
@@ -31,7 +30,7 @@ const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalVal
 }) => {
   if (typeof value === 'undefined') {
     return (
-      <ClusterDetailWidgetLoadingPlaceholder
+      <LoadingPlaceholder
         margin={{ vertical: 'xsmall' }}
         height={loaderHeight}
         width={loaderWidth}
@@ -53,7 +52,7 @@ const ClusterDetailWidgetOptionalValue: React.FC<IClusterDetailWidgetOptionalVal
   );
 };
 
-ClusterDetailWidgetOptionalValue.propTypes = {
+OptionalValue.propTypes = {
   children: PropTypes.func.isRequired,
   value: PropTypes.any,
   replaceEmptyValue: PropTypes.bool,
@@ -61,8 +60,8 @@ ClusterDetailWidgetOptionalValue.propTypes = {
   loaderWidth: PropTypes.number,
 };
 
-ClusterDetailWidgetOptionalValue.defaultProps = {
+OptionalValue.defaultProps = {
   replaceEmptyValue: true,
 };
 
-export default ClusterDetailWidgetOptionalValue;
+export default OptionalValue;

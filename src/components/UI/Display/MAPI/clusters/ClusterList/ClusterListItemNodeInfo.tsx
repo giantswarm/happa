@@ -4,8 +4,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import NotAvailable from 'UI/Display/NotAvailable';
-
-import ClusterListItemOptionalValue from './ClusterListItemOptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 function pluralizeLabel(count: number, base: string) {
   if (count === 1) {
@@ -62,10 +61,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
   return (
     <Box direction='row' align='center' gap='xsmall' {...props}>
       <Box direction='row' gap='xsmall' align='center'>
-        <ClusterListItemOptionalValue
-          value={workerNodePoolsCount}
-          replaceEmptyValue={false}
-        >
+        <OptionalValue value={workerNodePoolsCount} replaceEmptyValue={false}>
           {(value) => (
             <Text>
               {value === -1 ? (
@@ -76,11 +72,8 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
               {pluralizeLabel(value as number, 'node pool')},
             </Text>
           )}
-        </ClusterListItemOptionalValue>
-        <ClusterListItemOptionalValue
-          value={workerNodesCount}
-          replaceEmptyValue={false}
-        >
+        </OptionalValue>
+        <OptionalValue value={workerNodesCount} replaceEmptyValue={false}>
           {(value) => (
             <Text>
               {value === -1 ? (
@@ -91,32 +84,26 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
               {pluralizeLabel(value as number, 'worker node')}
             </Text>
           )}
-        </ClusterListItemOptionalValue>
+        </OptionalValue>
       </Box>
       <StyledDot />
-      <ClusterListItemOptionalValue
-        value={workerNodesCPU}
-        replaceEmptyValue={false}
-      >
+      <OptionalValue value={workerNodesCPU} replaceEmptyValue={false}>
         {(value) => (
           <Text>
             {value === -1 ? <NotAvailable /> : formatCPU(value as number)}{' '}
             {pluralizeLabel(value as number, 'CPU core')}
           </Text>
         )}
-      </ClusterListItemOptionalValue>
+      </OptionalValue>
       <StyledDot />
-      <ClusterListItemOptionalValue
-        value={workerNodesMemory}
-        replaceEmptyValue={false}
-      >
+      <OptionalValue value={workerNodesMemory} replaceEmptyValue={false}>
         {(value) => (
           <Text>
             {value === -1 ? <NotAvailable /> : formatMemory(value as number)} GB
             RAM
           </Text>
         )}
-      </ClusterListItemOptionalValue>
+      </OptionalValue>
     </Box>
   );
 };

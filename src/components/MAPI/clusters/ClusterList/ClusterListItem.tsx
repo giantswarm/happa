@@ -31,7 +31,7 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
-import ClusterListItemOptionalValue from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemOptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import {
   getWorkerNodesCount,
@@ -219,7 +219,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       >
         <CardBody direction='row' gap='xsmall' wrap={true}>
           <Box>
-            <ClusterListItemOptionalValue value={name}>
+            <OptionalValue value={name}>
               {(value) => (
                 <Text size='large' aria-label={`Name: ${value}`}>
                   <ClusterIDLabel
@@ -229,11 +229,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                   />
                 </Text>
               )}
-            </ClusterListItemOptionalValue>
+            </OptionalValue>
           </Box>
           <Box basis='75%'>
             <Box direction='row' align='center' wrap={true} gap='small'>
-              <ClusterListItemOptionalValue value={description}>
+              <OptionalValue value={description}>
                 {(value) => (
                   <Text
                     weight='bold'
@@ -243,7 +243,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                     {value}
                   </Text>
                 )}
-              </ClusterListItemOptionalValue>
+              </OptionalValue>
 
               {cluster && (
                 <ClusterListItemStatus

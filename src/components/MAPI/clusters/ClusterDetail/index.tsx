@@ -29,7 +29,7 @@ import useSWR from 'swr';
 import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
-import ClusterDetailWidgetOptionalValue from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidgetOptionalValue';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailActions from './ClusterDetailActions';
@@ -246,7 +246,7 @@ const ClusterDetail: React.FC<{}> = () => {
                 copyEnabled={true}
                 variant={ClusterIDLabelType.Name}
               />{' '}
-              <ClusterDetailWidgetOptionalValue
+              <OptionalValue
                 value={clusterDescription}
                 loaderHeight={35}
                 loaderWidth={300}
@@ -259,7 +259,7 @@ const ClusterDetail: React.FC<{}> = () => {
                     aria-label={value as string}
                   />
                 )}
-              </ClusterDetailWidgetOptionalValue>
+              </OptionalValue>
             </Box>
           </Heading>
           <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
