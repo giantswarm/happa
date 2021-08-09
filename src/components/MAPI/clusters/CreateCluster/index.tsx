@@ -315,7 +315,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
             />
             <Box margin={{ top: 'medium' }}>
-              <Box direction='row'>
+              <Box direction='row' gap='small'>
                 <Button
                   primary={true}
                   disabled={!isValid}

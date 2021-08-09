@@ -47,7 +47,7 @@ exports[`Button renders a danger button 1`] = `
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 fcQuyX"
+        class="StyledButtonKind-sc-1vhfpnt-0 fyIUWJ"
         type="button"
       >
         Hi friends
@@ -135,7 +135,7 @@ exports[`Button renders a primary button 1`] = `
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 dLRRvC"
+        class="StyledButtonKind-sc-1vhfpnt-0 jMJXUD"
         type="button"
       >
         Hi friends
@@ -193,7 +193,7 @@ exports[`Button renders a warning button 1`] = `
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 jaLtNn"
+        class="StyledButtonKind-sc-1vhfpnt-0 bkgFHr"
         type="button"
       >
         Hi friends

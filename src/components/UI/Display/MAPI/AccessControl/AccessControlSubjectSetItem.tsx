@@ -158,7 +158,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
               <Box>
                 <Text>Are you sure?</Text>
               </Box>
-              <Box direction='row'>
+              <Box direction='row' gap='small'>
                 <Button danger={true} onClick={handleDelete}>
                   Yes, delete it
                 </Button>
