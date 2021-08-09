@@ -27,7 +27,7 @@ const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
     <GettingStartedBottomNav {...props}>
       {!isFirstStep && prevStepPath && (
         <Link to={prevStepPath} key='prev-step'>
-          <Button bsStyle='default'>
+          <Button>
             <i
               className='fa fa-chevron-left'
               aria-hidden={true}
@@ -40,7 +40,7 @@ const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
 
       {isFirstStep && !prevStepPath && (
         <Link to={homePath} key='prev-step'>
-          <Button bsStyle='default'>
+          <Button>
             <i
               className='fa fa-chevron-left'
               aria-hidden={true}
@@ -53,7 +53,7 @@ const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
 
       {!isPenultimateStep && !isHome && nextStepPath && (
         <Link to={nextStepPath} key='next-step'>
-          <Button bsStyle='primary'>
+          <Button primary={true}>
             Continue{' '}
             <i
               className='fa fa-chevron-right'
@@ -66,7 +66,7 @@ const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
 
       {isPenultimateStep && nextStepPath && (
         <Link to={nextStepPath} key='next-step'>
-          <Button bsStyle='primary'>
+          <Button primary={true}>
             Finish{' '}
             <i
               className='fa fa-chevron-right'
@@ -79,7 +79,7 @@ const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
 
       {isHome && nextStepPath && (
         <Link to={nextStepPath} key='next-step'>
-          <Button bsStyle='primary'>
+          <Button primary={true}>
             Start{' '}
             <i
               className='fa fa-chevron-right'

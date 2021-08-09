@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
@@ -152,29 +153,30 @@ class Modals extends React.Component {
               <small>There is no undo</small>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button
-                bsStyle='danger'
-                loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
-                onClick={() =>
-                  this.props.dispatch(
-                    batchedOrganizationDeleteConfirmed(
-                      this.props.modal.templateValues.orgId
+              <Box gap='small' direction='row' justify='end'>
+                <Button
+                  danger={true}
+                  loading={this.props.modal.templateValues.loading}
+                  onClick={() =>
+                    this.props.dispatch(
+                      batchedOrganizationDeleteConfirmed(
+                        this.props.modal.templateValues.orgId
+                      )
                     )
-                  )
-                }
-                type='submit'
-              >
-                {this.props.modal.templateValues.loading
-                  ? 'Deleting organization'
-                  : 'Delete organization'}
-              </Button>
-
-              {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close}>
-                  Cancel
+                  }
+                  type='submit'
+                >
+                  {this.props.modal.templateValues.loading
+                    ? 'Deleting organization'
+                    : 'Delete organization'}
                 </Button>
-              )}
+
+                {this.props.modal.templateValues.loading ? null : (
+                  <Button link={true} onClick={this.close}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
@@ -210,24 +212,27 @@ class Modals extends React.Component {
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button
-                bsStyle='primary'
-                loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
-                onClick={this.createOrganisation}
-                type='submit'
-                disabled={this.state.organizationNameValidationError.length > 0}
-              >
-                {this.props.modal.templateValues.loading
-                  ? 'Creating organization'
-                  : 'Create organization'}
-              </Button>
-
-              {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close}>
-                  Cancel
+              <Box gap='small' direction='row' justify='end'>
+                <Button
+                  primary={true}
+                  loading={this.props.modal.templateValues.loading}
+                  onClick={this.createOrganisation}
+                  type='submit'
+                  disabled={
+                    this.state.organizationNameValidationError.length > 0
+                  }
+                >
+                  {this.props.modal.templateValues.loading
+                    ? 'Creating organization'
+                    : 'Create organization'}
                 </Button>
-              )}
+
+                {this.props.modal.templateValues.loading ? null : (
+                  <Button link={true} onClick={this.close}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
@@ -257,24 +262,25 @@ class Modals extends React.Component {
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button
-                bsStyle='primary'
-                disabled={this.state.emailValidationError.length > 0}
-                loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
-                onClick={this.addMember}
-                type='submit'
-              >
-                {this.props.modal.templateValues.loading
-                  ? 'Adding member'
-                  : 'Add member to organization'}
-              </Button>
-
-              {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close}>
-                  Cancel
+              <Box gap='small' direction='row' justify='end'>
+                <Button
+                  primary={true}
+                  disabled={this.state.emailValidationError.length > 0}
+                  loading={this.props.modal.templateValues.loading}
+                  onClick={this.addMember}
+                  type='submit'
+                >
+                  {this.props.modal.templateValues.loading
+                    ? 'Adding member'
+                    : 'Add member to organization'}
                 </Button>
-              )}
+
+                {this.props.modal.templateValues.loading ? null : (
+                  <Button link={true} onClick={this.close}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
@@ -293,23 +299,24 @@ class Modals extends React.Component {
               </p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button
-                bsStyle='danger'
-                loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
-                onClick={this.removeMember.bind(this)}
-                type='submit'
-              >
-                {this.props.modal.templateValues.loading
-                  ? 'Removing member'
-                  : 'Remove member from organization'}
-              </Button>
-
-              {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close}>
-                  Cancel
+              <Box gap='small' direction='row' justify='end'>
+                <Button
+                  danger={true}
+                  loading={this.props.modal.templateValues.loading}
+                  onClick={this.removeMember.bind(this)}
+                  type='submit'
+                >
+                  {this.props.modal.templateValues.loading
+                    ? 'Removing member'
+                    : 'Remove member from organization'}
                 </Button>
-              )}
+
+                {this.props.modal.templateValues.loading ? null : (
+                  <Button link={true} onClick={this.close}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
@@ -359,27 +366,28 @@ class Modals extends React.Component {
             </BootstrapModal.Header>
             <BootstrapModal.Body>{bodyText}</BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button
-                bsStyle='danger'
-                loading={this.props.modal.templateValues.loading}
-                loadingPosition='left'
-                onClick={() =>
-                  this.props.dispatch(
-                    nodePoolDeleteConfirmed(clusterId, nodePool)
-                  )
-                }
-                type='submit'
-              >
-                {this.props.modal.templateValues.loading
-                  ? 'Deleting node pool'
-                  : 'Delete node pool'}
-              </Button>
-
-              {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close}>
-                  Cancel
+              <Box gap='small' direction='row' justify='end'>
+                <Button
+                  danger={true}
+                  loading={this.props.modal.templateValues.loading}
+                  onClick={() =>
+                    this.props.dispatch(
+                      nodePoolDeleteConfirmed(clusterId, nodePool)
+                    )
+                  }
+                  type='submit'
+                >
+                  {this.props.modal.templateValues.loading
+                    ? 'Deleting node pool'
+                    : 'Delete node pool'}
                 </Button>
-              )}
+
+                {this.props.modal.templateValues.loading ? null : (
+                  <Button link={true} onClick={this.close}>
+                    Cancel
+                  </Button>
+                )}
+              </Box>
             </BootstrapModal.Footer>
           </BootstrapModal>
         );

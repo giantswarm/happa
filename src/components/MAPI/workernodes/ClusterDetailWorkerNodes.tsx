@@ -411,7 +411,6 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
               !isCreateFormOpen && (
                 <Box animation={{ type: 'fadeIn', duration: 300 }}>
                   <Button
-                    bsStyle='default'
                     onClick={handleOpenCreateForm}
                     disabled={!cluster || !providerCluster}
                   >

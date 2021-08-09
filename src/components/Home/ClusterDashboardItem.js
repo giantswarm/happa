@@ -5,7 +5,6 @@ import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
@@ -284,12 +283,12 @@ function ClusterDashboardItem({
 
         <ButtonsWrapper>
           {clusterYoungerThan30Days() ? (
-            <ButtonGroup>
-              <Button onClick={accessCluster}>
-                <i className='fa fa-start' />
-                Get started
-              </Button>
-            </ButtonGroup>
+            <Button
+              onClick={accessCluster}
+              icon={<i className='fa fa-start' />}
+            >
+              Get started
+            </Button>
           ) : (
             ''
           )}

@@ -343,29 +343,30 @@ class CreateRegularCluster extends React.Component {
         <HorizontalLine />
 
         <FlexRow>
-          <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-            <Button
-              bsStyle='primary'
-              disabled={!this.valid()}
-              loading={isClusterCreating}
-              onClick={this.createCluster}
-              type='submit'
-            >
-              Create cluster
-            </Button>
-          </RUMActionTarget>
-          {!isClusterCreating && (
-            <RUMActionTarget name={RUMActions.CreateClusterCancel}>
+          <Box gap='small' direction='row'>
+            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
               <Button
-                bsStyle='default'
+                primary={true}
+                disabled={!this.valid()}
                 loading={isClusterCreating}
-                onClick={this.props.closeForm}
-                type='button'
+                onClick={this.createCluster}
+                type='submit'
               >
-                Cancel
+                Create cluster
               </Button>
             </RUMActionTarget>
-          )}
+            {!isClusterCreating && (
+              <RUMActionTarget name={RUMActions.CreateClusterCancel}>
+                <Button
+                  loading={isClusterCreating}
+                  onClick={this.props.closeForm}
+                  type='button'
+                >
+                  Cancel
+                </Button>
+              </RUMActionTarget>
+            )}
+          </Box>
         </FlexRow>
         <FlexColumn>
           <ClusterCreationDuration stats={this.props.clusterCreationStats} />

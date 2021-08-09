@@ -4,6 +4,7 @@ import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import yaml from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -310,8 +311,11 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   return (
     <>
-      <Button bsStyle='primary' onClick={openModal}>
-        <i className='fa fa-add-circle' />
+      <Button
+        primary={true}
+        onClick={openModal}
+        icon={<i className='fa fa-add-circle' />}
+      >
         Install in cluster
       </Button>
       {(() => {
@@ -320,7 +324,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
             return (
               <GenericModal
                 footer={
-                  <Button bsStyle='link' onClick={onClose}>
+                  <Button link={true} onClick={onClose}>
                     Cancel
                   </Button>
                 }
@@ -342,22 +346,22 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
             return (
               <GenericModal
                 footer={
-                  <>
+                  <Box direction='row' gap='small' justify='end'>
                     <Button
-                      bsStyle='primary'
+                      primary={true}
                       disabled={anyValidationErrors()}
                       loading={loading}
                       onClick={installApp}
                     >
                       Install app
                     </Button>
-                    <Button bsStyle='link' onClick={previous}>
+                    <Button link={true} onClick={previous}>
                       Pick a different cluster
                     </Button>
-                    <Button bsStyle='link' onClick={onClose}>
+                    <Button link={true} onClick={onClose}>
                       Cancel
                     </Button>
-                  </>
+                  </Box>
                 }
                 onClose={onClose}
                 title={

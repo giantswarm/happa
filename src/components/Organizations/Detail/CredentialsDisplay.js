@@ -15,11 +15,7 @@ const CredentialsDisplay = (props) => {
     );
   }
   if (props.credentials.length === 0) {
-    const button = (
-      <Button bsStyle='default' onClick={props.onShowForm}>
-        Set credentials
-      </Button>
-    );
+    const button = <Button onClick={props.onShowForm}>Set credentials</Button>;
 
     if (props.provider === Providers.AZURE) {
       return (

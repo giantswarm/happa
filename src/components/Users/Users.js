@@ -221,8 +221,11 @@ class Users extends React.Component {
             <Section title='Open invites'>
               <>
                 <InvitesTable invitations={invitations} />
-                <Button onClick={this.inviteUser}>
-                  <i className='fa fa-add-circle' /> Invite user
+                <Button
+                  onClick={this.inviteUser}
+                  icon={<i className='fa fa-add-circle' />}
+                >
+                  Invite user
                 </Button>
               </>
             </Section>

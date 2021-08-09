@@ -199,8 +199,8 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             {featureFlags.flags.CustomerSSO.enabled && (
               <Box margin={{ bottom: 'medium' }}>
                 <Button
-                  bsStyle='primary'
-                  bsSize='lg'
+                  primary={true}
+                  size='large'
                   loading={mapiAuthenticating}
                   onClick={this.mapiLogin}
                   disabled={authenticating}
@@ -241,18 +241,18 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                     />
                   </Box>
 
-                  <Button
-                    bsStyle='default'
-                    loading={authenticating}
-                    onClick={this.logIn}
-                    type='submit'
-                    disabled={mapiAuthenticating}
-                  >
-                    Log in
-                  </Button>
-                  <Link to={MainRoutes.ForgotPassword}>
-                    Forgot your password?
-                  </Link>
+                  <Box direction='row' gap='small' align='center'>
+                    <Button
+                      loading={authenticating}
+                      type='submit'
+                      disabled={mapiAuthenticating}
+                    >
+                      Log in
+                    </Button>
+                    <Link to={MainRoutes.ForgotPassword}>
+                      Forgot your password?
+                    </Link>
+                  </Box>
                 </form>
                 <div className='login_form--legal'>
                   By logging in you acknowledge that we track your activities in

@@ -3,37 +3,13 @@ import { Box } from 'grommet';
 import Button from '../';
 
 <Meta
-  title="Inputs/Button"
+  title='Inputs/Button'
   component={Button}
-  parameters={{ actions: { argTypesRegex: '^onClick.\*' } }}
-  argTypes={{
-    bsStyle: {
-      name: 'Style',
-      description: 'Available options available to the Badge',
-      control: {
-        type: 'select',
-        options: [
-          'default',
-          'primary',
-          'danger',
-        ],
-      },
-      table: {
-        defaultValue: {
-          summary: 'default'
-        },
-        type: {
-          summary: 'Shows options to the Button',
-          detail: 'Listing of available options'
-        },
-      },
-    },
-  }}
+  parameters={{ actions: { argTypesRegex: '^onClick.*' } }}
+  argTypes={{}}
 />
 
 # Buttons
-
-**Note:** Buttons are currently not yet a Grommet component. They are still based on react-bootstrap.
 
 ## Parameters
 
@@ -44,12 +20,12 @@ What the styles mean and when to use them:
 - `primary` is used when there are multiple buttons, where one is the recommended action or the most important one. Example: a dialog with one conformation button (using the primary style) and one for cancelling (in link style).
 - `danger` is used to indicate that the click of the button triggers a destructive action.
 - `link` is used in a row with other buttons, in particular for the **Cancel** button in a model dialog.
-- `default` is for all other cases.
+- `secondary` is for all other cases.
 
 ### Size
 
 - The default size works for most contexts.
-- The small size (`sm`) is used especially in tables and space-constrained contexts.
+- The small size (`small`) is used especially in tables and space-constrained contexts.
 
 ### Loading indicator
 
@@ -57,7 +33,7 @@ Used to indicate activity, usually as a reaction to the button having been click
 
 ### Disabling
 
-The button can be disabled independent of other attributes. This shall not be combined with the *loading* parameter.
+The button can be disabled independent of other attributes. This shall not be combined with the _loading_ parameter.
 
 ## Examples
 
@@ -66,17 +42,11 @@ The button can be disabled independent of other attributes. This shall not be co
 ### Multiple buttons
 
 <Preview>
-  <Story name="Multiple">
-    <Box wrap={true} direction='row'>
-      <Button bsStyle="primary">
-        Primary
-      </Button>
-      <Button>
-        Default
-      </Button>
-      <Button bsStyle="link">
-        Link
-      </Button>
+  <Story name='Multiple'>
+    <Box wrap={true} direction='row' gap='small'>
+      <Button primary={true}>Primary</Button>
+      <Button>Secondary</Button>
+      <Button link={true}>Link</Button>
     </Box>
   </Story>
 </Preview>
@@ -84,49 +54,43 @@ The button can be disabled independent of other attributes. This shall not be co
 ### Icons and labels
 
 <Preview>
-  <Story name="IconAndLabel">
-    <Box wrap={true} direction='row'>
-      <Button bsStyle="primary">
-        <i className='fa fa-add-circle' /> Add
+  <Story name='IconAndLabel'>
+    <Box wrap={true} direction='row' gap='small'>
+      <Button primary={true} icon={<i className='fa fa-add-circle' />}>
+        Add
       </Button>
-      <Button bsStyle="danger">
-        <i className='fa fa-delete' /> Delete
+      <Button danger={true} icon={<i className='fa fa-delete' />}>
+        Delete
       </Button>
     </Box>
   </Story>
 </Preview>
 
-### Default
+### Secondary
 
 <Preview>
-  <Story name="Default">
-    <Button>
-      Default
-    </Button>
+  <Story name='Secondary'>
+    <Button>Secondary</Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="DefaultSmall">
-    <Button bsSize="sm">
-      Default small
-    </Button>
+  <Story name='SecondarySmall'>
+    <Button size='small'>Secondary small</Button>
   </Story>
 </Preview>
 
 ### Primary
 
 <Preview>
-  <Story name="Primary">
-    <Button bsStyle="primary">
-      Primary
-    </Button>
+  <Story name='Primary'>
+    <Button primary={true}>Primary</Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="PrimarySmall">
-    <Button bsStyle="primary" bsSize="sm">
+  <Story name='PrimarySmall'>
+    <Button primary={true} size='small'>
       Primary small
     </Button>
   </Story>
@@ -135,16 +99,14 @@ The button can be disabled independent of other attributes. This shall not be co
 ### Danger
 
 <Preview>
-  <Story name="Danger">
-    <Button bsStyle="danger">
-      Danger
-    </Button>
+  <Story name='Danger'>
+    <Button danger={true}>Danger</Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="DangerSmall">
-    <Button bsStyle="danger" bsSize="sm">
+  <Story name='DangerSmall'>
+    <Button danger={true} size='small'>
       Danger small
     </Button>
   </Story>
@@ -153,16 +115,14 @@ The button can be disabled independent of other attributes. This shall not be co
 ### Link
 
 <Preview>
-  <Story name="Link">
-    <Button bsStyle="link">
-      Link
-    </Button>
+  <Story name='Link'>
+    <Button link={true}>Link</Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="LinkSmall">
-    <Button bsStyle="link" bsSize="sm">
+  <Story name='LinkSmall'>
+    <Button link={true} size='small'>
       Link small
     </Button>
   </Story>
@@ -171,23 +131,21 @@ The button can be disabled independent of other attributes. This shall not be co
 ### Loading
 
 <Preview>
-  <Story name="Loading">
-    <Button loading={true}>
-      Loading
-    </Button>
+  <Story name='Loading'>
+    <Button loading={true}>Loading</Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="LoadingSmall">
-    <Button loading={true} bsSize="sm">
+  <Story name='LoadingSmall'>
+    <Button loading={true} size='small'>
       Loading small
     </Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="LoadingLeft">
+  <Story name='LoadingLeft'>
     <Button loading={true} loadignPosition='left'>
       Loading
     </Button>
@@ -195,8 +153,8 @@ The button can be disabled independent of other attributes. This shall not be co
 </Preview>
 
 <Preview>
-  <Story name="LoadingLeftSmall">
-    <Button loading={true} loadignPosition='left' bsSize="sm">
+  <Story name='LoadingLeftSmall'>
+    <Button loading={true} loadignPosition='left' size='small'>
       Loading small
     </Button>
   </Story>
@@ -205,16 +163,14 @@ The button can be disabled independent of other attributes. This shall not be co
 ### Disabled
 
 <Preview>
-  <Story name="Disabled">
-    <Button disabled={true}>
-      Disabled
-    </Button>
+  <Story name='Disabled'>
+    <Button disabled={true}>Disabled</Button>
   </Story>
 </Preview>
 
 <Preview>
-  <Story name="DisabledSmall">
-    <Button disabled={true} bsSize="sm">
+  <Story name='DisabledSmall'>
+    <Button disabled={true} size='small'>
       Disabled small
     </Button>
   </Story>

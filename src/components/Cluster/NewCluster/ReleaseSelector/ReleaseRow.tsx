@@ -5,7 +5,7 @@ import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
-import { TableButton } from 'UI/Controls/ExpandableSelector/Items';
+import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import { TableCell, TableRow } from 'UI/Display/Table';
@@ -14,10 +14,6 @@ import RadioInput from 'UI/Inputs/RadioInput';
 import { IRelease } from './ReleaseSelector';
 
 const INACTIVE_OPACITY = 0.4;
-
-const FixedWidthTableButton = styled(TableButton)`
-  width: 100px;
-`;
 
 const StyledTableRow = styled(TableRow)`
   cursor: pointer;
@@ -133,21 +129,23 @@ const ReleaseRow: FC<IReleaseRow> = ({
               onEnter={handleButtonKeyDown}
               onSpace={handleButtonKeyDown}
             >
-              <FixedWidthTableButton
+              <Button
                 data-testid={`show-components-${version}`}
                 onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   e.preventDefault();
                   setCollapsed(!collapsed);
                 }}
+                icon={
+                  <i
+                    role='presentation'
+                    aria-hidden={true}
+                    className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`}
+                  />
+                }
               >
-                <i
-                  role='presentation'
-                  aria-hidden={true}
-                  className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`}
-                />
                 {collapsed ? 'Show' : 'Hide'}
-              </FixedWidthTableButton>
+              </Button>
             </Keyboard>
           </RUMActionTarget>
         </TableCell>
@@ -159,21 +157,23 @@ const ReleaseRow: FC<IReleaseRow> = ({
           }
         >
           <Keyboard onEnter={handleButtonKeyDown} onSpace={handleButtonKeyDown}>
-            <TableButton
+            <Button
               data-testid={`open-changelog-${version}`}
               href={releaseNotesURL}
               target='_blank'
               rel='noopener noreferrer'
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
               disabled={!releaseNotesURL}
+              icon={
+                <i
+                  className='fa fa-open-in-new'
+                  aria-hidden={true}
+                  role='presentation'
+                />
+              }
             >
-              <i
-                className='fa fa-open-in-new'
-                aria-hidden={true}
-                role='presentation'
-              />
               Open
-            </TableButton>
+            </Button>
           </Keyboard>
         </TableCell>
       </StyledTableRow>

@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import gfm from 'remark-gfm';
 import styled from 'styled-components';
+import Button from 'UI/Controls/Button';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
@@ -37,6 +38,7 @@ const NonBreakingLink = styled.a`
 const Upper = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBlueLighter3};
   margin-bottom: 20px;
 
@@ -205,8 +207,12 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
   return (
     <Wrapper className={props.readmeURL ? '' : 'no-readme'}>
       <Link to='/apps'>
-        <i aria-hidden='true' className='fa fa-chevron-left' />
-        Back to Apps
+        <Button
+          icon={<i aria-hidden='true' className='fa fa-chevron-left' />}
+          plain={true}
+        >
+          Back to Apps
+        </Button>
       </Link>
 
       <Header>

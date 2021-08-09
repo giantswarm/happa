@@ -224,8 +224,9 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
               <BrowseButton
                 onClick={openAppCatalog}
                 disabled={appListIsLoading}
+                icon={<i className='fa fa-add-circle' />}
               >
-                <i className='fa fa-add-circle' /> Install app
+                Install app
               </BrowseButton>
             </BrowseButtonContainer>
           </UserInstalledApps>

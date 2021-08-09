@@ -1,15 +1,4 @@
 import styled from 'styled-components';
-import Button from 'UI/Controls/Button';
-
-export const TableButton = styled(Button)`
-  position: relative;
-  margin-left: 0;
-  padding: 0px 15px;
-
-  i {
-    margin-right: 4px;
-  }
-`;
 
 export const Tr = styled.tr<{ isSelected: boolean; toneDown?: boolean }>`
   background-color: ${({ isSelected, theme }) =>

@@ -53,7 +53,7 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
       </p>
       <ButtonWrapper>
         <Button
-          bsStyle='primary'
+          primary={true}
           loading={isLoading}
           loadingTimeout={0}
           onClick={handleEventListener(onApply)}

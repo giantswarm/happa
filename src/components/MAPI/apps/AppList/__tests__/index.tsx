@@ -120,8 +120,7 @@ describe('AppList', () => {
 
     await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
 
-    const filterWrapperElement = screen.getByText('Filter by Catalog')
-      .parentElement!;
+    const filterWrapperElement = screen.getByLabelText('Filter by catalog');
 
     fireEvent.click(
       within(filterWrapperElement).getByLabelText('Default Catalog')
@@ -138,11 +137,7 @@ describe('AppList', () => {
       expect(screen.queryByLabelText(appName)).not.toBeInTheDocument();
     }
 
-    fireEvent.click(
-      within(filterWrapperElement).getByRole('button', {
-        name: 'Select none',
-      })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Select none' }));
 
     for (const appName of [
       ...Object.keys(giantswarmAppCatalogIndex.entries),

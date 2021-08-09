@@ -113,7 +113,7 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
       footer={
         <>
           {primaryButtonText && (
-            <Button bsStyle='primary' onClick={handlePrimaryButtonClick}>
+            <Button primary={true} onClick={handlePrimaryButtonClick}>
               {primaryButtonText}
             </Button>
           )}

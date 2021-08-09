@@ -7,7 +7,7 @@ import React from 'react';
 // It centers the navigational buttons at the end of those docs.
 
 const GettingStartedBottomNav: React.FC = ({ children }) => (
-  <Box direction='row' margin={{ top: 'large' }} justify='center'>
+  <Box direction='row' margin={{ top: 'large' }} justify='center' gap='small'>
     {children}
   </Box>
 );

@@ -241,7 +241,7 @@ class ChangePassword extends React.Component<
             <div>
               <SlideTransition in={this.state.buttonVisible} direction='down'>
                 <Button
-                  bsStyle='primary'
+                  primary={true}
                   disabled={!this.state.formValid}
                   loading={this.state.submitting}
                   type='submit'

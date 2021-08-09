@@ -1,4 +1,4 @@
-import { Keyboard } from 'grommet';
+import { Box, Keyboard } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { Component, FormEvent, GetDerivedStateFromProps } from 'react';
@@ -30,12 +30,6 @@ const FormWrapper = styled.span`
   form {
     display: flex;
     align-items: center;
-  }
-
-  .btn-group {
-    float: none;
-    margin-left: 4px;
-    top: -2px;
   }
 `;
 
@@ -222,12 +216,19 @@ class ViewAndEditName extends Component<
             >
               <Tooltip id='name-form-error'>{errorMessage}</Tooltip>
             </Overlay>
-            <div className='btn-group'>
-              <Button type='submit' bsStyle='primary' disabled={hasError}>
+            <Box direction='row' gap='small'>
+              <Button
+                type='submit'
+                primary={true}
+                disabled={hasError}
+                size='small'
+              >
                 OK
               </Button>
-              <Button onClick={this.handleCancel}>Cancel</Button>
-            </div>
+              <Button onClick={this.handleCancel} size='small'>
+                Cancel
+              </Button>
+            </Box>
           </form>
         </FormWrapper>
       );

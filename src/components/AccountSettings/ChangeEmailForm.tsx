@@ -148,7 +148,7 @@ class ChangeEmailForm extends React.Component<
           <ButtonPlaceholder>
             <SlideTransition direction='left' in={this.state.isButtonVisible}>
               <Button
-                bsStyle='primary'
+                primary={true}
                 disabled={!this.state.isValid}
                 loading={this.state.isSubmitting}
                 type='submit'

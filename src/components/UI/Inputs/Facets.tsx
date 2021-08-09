@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -15,10 +16,6 @@ const StyledButton = styled(Button)`
 const Wrapper = styled.div`
   width: 270px;
   flex-shrink: 0;
-
-  .btn.btn-sm {
-    margin-left: 0px;
-  }
 `;
 
 const CatalogList = styled.ul`
@@ -66,17 +63,18 @@ const Facets: React.FC<IFacetsProps> = (props) => {
 
   return (
     <Wrapper>
-      <label>Filter by Catalog</label>
-      <br />
-      <StyledButton bsSize='sm' onClick={selectAll}>
-        Select all
-      </StyledButton>{' '}
-      <StyledButton bsSize='sm' onClick={selectNone}>
-        Select none
-      </StyledButton>
-      <br />
-      <br />
-      <CatalogList>
+      <Box>
+        <label>Filter by Catalog</label>
+      </Box>
+      <Box direction='row' gap='xsmall' margin={{ bottom: 'medium' }}>
+        <StyledButton size='small' onClick={selectAll}>
+          Select all
+        </StyledButton>{' '}
+        <StyledButton size='small' onClick={selectNone}>
+          Select none
+        </StyledButton>
+      </Box>
+      <CatalogList aria-label='Filter by catalog'>
         {props.isLoading &&
           LOADING_COMPONENTS.map((_, i) => (
             <ListItem key={i}>

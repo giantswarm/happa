@@ -21,7 +21,7 @@ const WorkerNodesNodePoolItemDelete: React.FC<IWorkerNodesNodePoolItemDeleteProp
     <ConfirmationPrompt
       onConfirm={onConfirm}
       confirmButton={
-        <Button bsStyle='danger' onClick={onConfirm} loading={isLoading}>
+        <Button danger={true} onClick={onConfirm} loading={isLoading}>
           <i
             className='fa fa-delete'
             role='presentation'
