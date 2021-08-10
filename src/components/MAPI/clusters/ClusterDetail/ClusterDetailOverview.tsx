@@ -22,6 +22,7 @@ import ClusterDetailWidgetKeyPairs from '../../keypairs/ClusterDetailWidgetKeyPa
 import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidgetWorkerNodes';
 import InspectClusterGuide from '../guides/InspectClusterGuide';
 import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
+import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -134,6 +135,11 @@ const ClusterDetailOverview: React.FC<{}> = () => {
               releaseVersion={releaseVersion}
             />
           )}
+
+          <SetClusterLabelsGuide
+            clusterName={cluster.metadata.name}
+            clusterNamespace={cluster.metadata.namespace!}
+          />
         </Box>
       )}
     </StyledBox>

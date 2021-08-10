@@ -90,3 +90,6 @@ export const kubectlCreateRoleBindingURL =
 
 export const kubectlCreateClusterRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
+
+export const labellingWorkloadClustersURL =
+  'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
