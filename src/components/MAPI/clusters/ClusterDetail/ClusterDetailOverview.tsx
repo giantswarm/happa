@@ -21,6 +21,7 @@ import useSWR from 'swr';
 import ClusterDetailWidgetKeyPairs from '../../keypairs/ClusterDetailWidgetKeyPairs';
 import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidgetWorkerNodes';
 import InspectClusterGuide from '../guides/InspectClusterGuide';
+import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -85,6 +86,9 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   }, [providerClusterError]);
 
   const provider = useSelector(getProvider);
+  const releaseVersion = cluster
+    ? capiv1alpha3.getReleaseVersion(cluster)
+    : undefined;
 
   return (
     <StyledBox wrap={true} direction='row'>
@@ -122,6 +126,14 @@ const ClusterDetailOverview: React.FC<{}> = () => {
             clusterName={cluster.metadata.name}
             clusterNamespace={cluster.metadata.namespace!}
           />
+
+          {releaseVersion && (
+            <InspectClusterReleaseGuide
+              clusterName={cluster.metadata.name}
+              clusterNamespace={cluster.metadata.namespace!}
+              releaseVersion={releaseVersion}
+            />
+          )}
         </Box>
       )}
     </StyledBox>

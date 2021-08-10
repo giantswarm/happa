@@ -214,6 +214,13 @@ describe('utils', () => {
         },
         expectedOutput: 'kubectl gs get clusters some-cluster',
       },
+      {
+        name: 'returns correct output with output',
+        modifierConfig: {
+          output: 'json',
+        },
+        expectedOutput: 'kubectl gs get clusters -o "json"',
+      },
     ];
 
     for (const tc of testCases) {

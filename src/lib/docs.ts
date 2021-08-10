@@ -79,6 +79,9 @@ export const azureClusterCRDSchemaURL =
 export const azureMachineCRDSchemaURL =
   'https://docs.giantswarm.io/ui-api/management-api/crd/azuremachines.infrastructure.cluster.x-k8s.io/';
 
+export const releaseCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
+
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
 

@@ -118,6 +118,7 @@ export interface IKubectlGSGetClustersCommandConfig {
   namespace?: string;
   allNamespaces?: boolean;
   name?: string;
+  output?: string;
 }
 
 /**
@@ -140,6 +141,10 @@ export function withGetClusters(
 
     if (config.allNamespaces) {
       newParts.push('--all-namespaces');
+    }
+
+    if (config.output) {
+      newParts.push('-o', `"${config.output}"`);
     }
 
     return newParts;
