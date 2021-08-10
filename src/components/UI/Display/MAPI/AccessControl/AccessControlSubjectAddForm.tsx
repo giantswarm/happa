@@ -137,6 +137,7 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
                 placeholder='e.g. subject1, subject2, subject3'
                 onSuggestionSelect={handleSuggestionSelect}
                 suggestions={visibleSuggestions}
+                spellCheck={false}
               >
                 <SaveButton type='submit' primary={true} disabled={isLoading}>
                   OK
