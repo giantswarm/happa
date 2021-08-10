@@ -405,6 +405,16 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
               <AccessControlSubjectSetItem
                 aria-label={params.name}
                 deleteTooltipMessage="Remove this service account's binding to this role"
+                deleteConfirmationMessage={
+                  <Box gap='small' direction='column'>
+                    <Text>
+                      Remove the binding between service account{' '}
+                      <code>{params.name}</code> and role{' '}
+                      <code>{roleName}</code> ?
+                    </Text>
+                    <Text>The service account will stay.</Text>
+                  </Box>
+                }
                 {...params}
               />
             )}

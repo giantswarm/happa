@@ -34,11 +34,16 @@ const StyledAnchor = styled(Anchor)`
   }
 `;
 
+const StyledDrop = styled(Drop)`
+  z-index: 1071; /* To appear above the Bootstrap Tooltip, which has a z-index of 1070 */
+`;
+
 interface IAccessControlSubjectSetItemProps
   extends Omit<IAccessControlSubjectSetRenderer, 'name'>,
     React.ComponentPropsWithoutRef<typeof Box> {
   name: React.ReactNode;
   deleteTooltipMessage?: string;
+  deleteConfirmationMessage?: React.ReactNode;
 }
 
 const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> = ({
@@ -47,6 +52,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
   isLoading,
   onDelete,
   deleteTooltipMessage,
+  deleteConfirmationMessage,
   ...props
 }) => {
   const deleteButtonRef = useRef<HTMLAnchorElement>(null);
@@ -141,7 +147,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
 
       {confirmationVisible && deleteButtonRef.current && (
         <Keyboard onEsc={hideConfirmation}>
-          <Drop
+          <StyledDrop
             align={{ bottom: 'top', right: 'right' }}
             target={deleteButtonRef.current}
             plain={true}
@@ -152,26 +158,28 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
               pad='medium'
               round='small'
               direction='column'
-              gap='small'
+              gap='medium'
               border={{ color: 'text-xweak' }}
             >
-              <Box>
-                <Text>Are you sure?</Text>
-              </Box>
+              <Box>{deleteConfirmationMessage}</Box>
               <Box direction='row' gap='small'>
                 <Button danger={true} onClick={handleDelete}>
-                  Yes, delete it
+                  Remove
                 </Button>
                 <Button link={true} onClick={hideConfirmation}>
                   Cancel
                 </Button>
               </Box>
             </Box>
-          </Drop>
+          </StyledDrop>
         </Keyboard>
       )}
     </Box>
   );
+};
+
+AccessControlSubjectSetItem.defaultProps = {
+  deleteConfirmationMessage: <Text>Are you sure?</Text>,
 };
 
 AccessControlSubjectSetItem.propTypes = {
@@ -180,6 +188,7 @@ AccessControlSubjectSetItem.propTypes = {
   isEditable: PropTypes.bool.isRequired,
   onDelete: PropTypes.func.isRequired,
   deleteTooltipMessage: PropTypes.string,
+  deleteConfirmationMessage: PropTypes.node,
 };
 
 export default AccessControlSubjectSetItem;
