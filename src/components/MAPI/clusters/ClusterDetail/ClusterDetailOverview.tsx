@@ -12,12 +12,15 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
+import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import ClusterDetailWidgetKeyPairs from '../../keypairs/ClusterDetailWidgetKeyPairs';
 import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidgetWorkerNodes';
+import InspectClusterGuide from '../guides/InspectClusterGuide';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -81,6 +84,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   }, [providerClusterError]);
 
+  const provider = useSelector(getProvider);
+
   return (
     <StyledBox wrap={true} direction='row'>
       <ClusterDetailWidgetWorkerNodes
@@ -103,6 +108,22 @@ const ClusterDetailOverview: React.FC<{}> = () => {
         basis='100%'
       />
       <ClusterDetailWidgetCreated cluster={cluster} basis='100%' />
+
+      {cluster && (
+        <Box
+          margin={{ top: 'large' }}
+          direction='column'
+          gap='small'
+          basis='100%'
+          animation={{ type: 'fadeIn', duration: 300 }}
+        >
+          <InspectClusterGuide
+            provider={provider}
+            clusterName={cluster.metadata.name}
+            clusterNamespace={cluster.metadata.namespace!}
+          />
+        </Box>
+      )}
     </StyledBox>
   );
 };
