@@ -4,7 +4,6 @@ import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import {
   getCurrentInstallationContextName,
   makeKubectlGSCommand,
-  withContext,
   withFormatting,
   withTemplateCluster,
 } from 'MAPI/guides/utils';
@@ -77,7 +76,6 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
         <CLIGuideStep
           title='2. Create a cluster manifest'
           command={makeKubectlGSCommand(
-            withContext(context),
             withTemplateCluster({
               provider,
               owner: organizationName,
@@ -93,9 +91,7 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
         />
         <CLIGuideStep
           title='3. Apply the manifest'
-          command={`
-              kubectl apply -f cluster-${clusterName}.yaml
-          `}
+          command={`kubectl apply --context ${context} -f cluster-${clusterName}.yaml`}
         >
           <Text>
             As a result, a cluster without worker nodes will get created.
