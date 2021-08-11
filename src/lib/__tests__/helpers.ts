@@ -30,8 +30,8 @@ describe('helpers', () => {
       const result = dedent(input);
 
       expect(result).toEqual(`somecommand execute \\
-go-home \\
-cool`);
+      go-home \\
+      cool`);
     });
   });
 
