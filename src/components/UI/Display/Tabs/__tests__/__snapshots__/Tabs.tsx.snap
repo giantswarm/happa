@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tabs renders a basic tab layout 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 kUTqHn StyledTabs-a4fwxl-2 bpLJQL"
+      role="tablist"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 gPvHHw StyledTabs__StyledTabsHeader-a4fwxl-0 bWPZNA"
+      >
+        <button
+          aria-expanded="true"
+          aria-selected="true"
+          class="StyledButtonKind-sc-1vhfpnt-0 kjmWPw"
+          role="tab"
+          type="button"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 kFHaPQ StyledTab-sc-1nnwnsb-0 ilPnGI"
+          >
+            <span
+              class="StyledText-sc-1sadyjn-0 kEERpA"
+            >
+              first
+            </span>
+          </div>
+        </button>
+        <button
+          aria-expanded="false"
+          aria-selected="false"
+          class="StyledButtonKind-sc-1vhfpnt-0 kjmWPw"
+          role="tab"
+          type="button"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 kyyQds StyledTab-sc-1nnwnsb-0 ilPnGI"
+          >
+            <span
+              class="StyledText-sc-1sadyjn-0 coQEjk"
+            >
+              second
+            </span>
+          </div>
+        </button>
+        <button
+          aria-expanded="false"
+          aria-selected="false"
+          class="StyledButtonKind-sc-1vhfpnt-0 kjmWPw"
+          role="tab"
+          type="button"
+        >
+          <div
+            class="StyledBox-sc-13pk1d4-0 kyyQds StyledTab-sc-1nnwnsb-0 ilPnGI"
+          >
+            <span
+              class="StyledText-sc-1sadyjn-0 coQEjk"
+            >
+              third
+            </span>
+          </div>
+        </button>
+      </div>
+      <div
+        aria-label="first Tab Contents"
+        class="StyledTabs__StyledTabPanel-a4fwxl-1 fOVLKT"
+        role="tabpanel"
+      >
+        <h1>
+          First Tab
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+`;
