@@ -6,6 +6,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -76,10 +77,13 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
 
       dispatch(push(OrganizationsRoutes.Home));
     } else if (error) {
+      const errorMessage = extractErrorMessage(error);
+
       new FlashMessage(
         `There was a problem loading organization <code>${orgId}</code>`,
         messageType.ERROR,
-        messageTTL.FOREVER
+        messageTTL.FOREVER,
+        errorMessage
       );
 
       if (!data) {
