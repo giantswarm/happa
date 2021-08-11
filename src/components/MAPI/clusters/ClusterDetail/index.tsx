@@ -267,6 +267,7 @@ const ClusterDetail: React.FC<{}> = () => {
             <Tab path={paths.KeyPairs} title='Key pairs' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
+            <Tab path={paths.Actions} title='Actions' />
           </Tabs>
           <Switch>
             <Route

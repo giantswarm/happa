@@ -391,7 +391,7 @@ class ClusterDetailView extends React.Component {
                   />
                 )}
               </Tab>
-              <Tab eventKey={tabsPaths.Actions} title='Actions'>
+              <Tab path={tabsPaths.Actions} title='Actions'>
                 <LoadingOverlay loading={this.props.loadingCluster}>
                   <ClusterActions />
                 </LoadingOverlay>
