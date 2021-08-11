@@ -51,7 +51,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
             <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
           </Box>
           <Box margin={{ top: 'medium' }}>
-            <Tabs defaultActiveIndex={0}>
+            <Tabs>
               <Tab title='Subjects'>
                 <AccessControlRoleSubjects
                   roleName={activeRole.name}

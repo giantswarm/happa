@@ -3,21 +3,13 @@ import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingSt
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import theme from 'styles/theme';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
-const StyledTabs = styled(Tabs)`
-  border: 1px #fff dashed;
-  border-color: ${({ theme: t }) => t.global.colors['background-front'].dark};
-  background-color: ${({ theme: t }) =>
-    t.global.colors['background-front'].dark};
-
-  padding: 15px 18px;
-  border-radius: 8px;
-`;
-
 const StyledTab = styled(Tab)`
-  border-bottom: 0px;
+  &[aria-expanded='true'] > div {
+    background-color: ${({ theme }) =>
+      theme.global.colors['background-front'].dark};
+  }
 `;
 
 interface IGettingStartedPlatformTabsProps
@@ -34,16 +26,10 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
   ...props
 }) => {
   const { selectedPlatform, setSelectedPlatform } = useGettingStartedContext();
-  console.log(selectedPlatform);
 
   return (
-    <Box {...props}>
-      <StyledTabs
-        defaultActiveIndex={selectedPlatform as never}
-        controlledActiveIndex={selectedPlatform}
-        onActive={setSelectedPlatform as never}
-        backgroundColor={theme.global.colors['background-front'].dark}
-      >
+    <Box background='background-front' pad='medium' round='xsmall' {...props}>
+      <Tabs activeIndex={selectedPlatform} onActive={setSelectedPlatform}>
         {linuxContent && <StyledTab title='Linux'>{linuxContent}</StyledTab>}
 
         {macOSContent && <StyledTab title='macOS'>{macOSContent}</StyledTab>}
@@ -51,7 +37,7 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
         {windowsContent && (
           <StyledTab title='Windows'>{windowsContent}</StyledTab>
         )}
-      </StyledTabs>
+      </Tabs>
     </Box>
   );
 };

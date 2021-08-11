@@ -841,24 +841,51 @@ const theme = deepMerge(generate(16), {
   },
   tabs: {
     header: {
-      extend: {
-        borderBottom: '1px solid #fff',
-        marginBottom: '22px',
+      border: {
+        size: 'xsmall',
+        side: 'bottom',
+        color: 'text',
       },
     },
-    extend: {},
+    panel: {
+      extend: () => css`
+        padding-top: ${(props) => props.theme.global.edgeSize.medium};
+      `,
+    },
   },
   tab: {
-    extend: {
-      padding: '10px 15px',
-      border: '1px',
-      borderTopRightRadius: '5px',
-      borderTopLeftRadius: '5px',
-      margin: '0px',
-      marginRight: '2px',
-      position: 'relative',
-      top: '1px',
+    color: 'text-xweak',
+    pad: 'small',
+    border: {
+      side: 'all',
+      size: 'xsmall',
+      color: 'transparent',
+      active: {
+        color: 'text',
+      },
+      hover: {
+        color: 'transparent',
+      },
     },
+    background: {
+      opacity: 1,
+    },
+    hover: {
+      color: 'text',
+    },
+    margin: {
+      horizontal: 'xsmall',
+      top: 'none',
+      bottom: '-1px',
+    },
+    active: {
+      background: 'background',
+    },
+    extend: () => css`
+      border-top-left-radius: ${(props) => props.theme.rounding}px;
+      border-top-right-radius: ${(props) => props.theme.rounding}px;
+      border-bottom: none;
+    `,
   },
   table: {
     row: {

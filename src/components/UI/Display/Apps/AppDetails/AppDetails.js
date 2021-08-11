@@ -262,7 +262,7 @@ const AppDetails = (props) => {
         <Install>{children}</Install>
       </Header>
 
-      <Tabs defaultActiveIndex={0}>
+      <Tabs>
         <Tab title='About'>
           <About>
             {readme && (

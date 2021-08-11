@@ -101,7 +101,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
             <Heading level={1} margin={{ bottom: 'large' }}>
               Organization: {data.metadata.name}
             </Heading>
-            <Tabs defaultActiveIndex={0} useRoutes={true}>
+            <Tabs useRoutes={true}>
               <Tab path={paths.Detail} title='General'>
                 <OrganizationDetailGeneral
                   organizationName={data.metadata.name}

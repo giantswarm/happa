@@ -261,7 +261,7 @@ const ClusterDetail: React.FC<{}> = () => {
               </OptionalValue>
             </Box>
           </Heading>
-          <Tabs defaultActiveIndex={0} useRoutes={true}>
+          <Tabs useRoutes={true}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />
             <Tab path={paths.KeyPairs} title='Key pairs' />

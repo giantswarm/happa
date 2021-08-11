@@ -8,7 +8,6 @@ import { Tab, Tabs } from '..';
 describe('Tabs', () => {
   const renderComponent = (
     props: Partial<React.ComponentProps<typeof Tabs>> = {
-      defaultActiveIndex: 0,
       children: [],
     },
     history = createMemoryHistory()
@@ -24,7 +23,6 @@ describe('Tabs', () => {
 
   it('renders only the first tab', () => {
     const { queryByText } = renderComponent({
-      defaultActiveIndex: 0,
       children: [
         <Tab key='tab-1' title='first'>
           <h1>First Tab</h1>
@@ -47,7 +45,6 @@ describe('Tabs', () => {
     const history = createMemoryHistory();
     const { getByText } = renderComponent(
       {
-        defaultActiveIndex: 0,
         children: [
           <Tab key='tab-1' path='/' title='First tab'>
             <h1>First Content</h1>

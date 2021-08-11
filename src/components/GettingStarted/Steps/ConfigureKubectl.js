@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -9,7 +10,6 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as clusterActions from 'stores/cluster/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
-import theme from 'styles/theme';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
@@ -19,19 +19,11 @@ import Aside from 'UI/Layout/Aside';
 
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 
-const StyledTabs = styled(Tabs)`
-  border: 1px #fff dashed;
-  border-color: ${({ theme: t }) => t.global.colors['background-front'].dark};
-  background-color: ${({ theme: t }) =>
-    t.global.colors['background-front'].dark};
-
-  padding: 15px 18px;
-  border-radius: 8px;
-  margin-bottom: 25px;
-`;
-
 const StyledTab = styled(Tab)`
-  border-bottom: 0px;
+  &[aria-expanded='true'] > div {
+    background-color: ${({ theme }) =>
+      theme.global.colors['background-front'].dark};
+  }
 `;
 
 const ToggleAlternativeButton = styled.div`
@@ -194,18 +186,24 @@ class ConfigKubeCtl extends React.Component {
           </p>
 
           <p>
-            In case you can&apos;t i2nstall <code>gsctl</code> right now, we
+            In case you can&apos;t install <code>gsctl</code> right now, we
             provide an <a href='#alternative'>alternative solution below.</a>
           </p>
 
-          <StyledTabs
-            backgroundColor={theme.global.colors['background-front'].dark}
-            defaultActiveIndex={0}
+          <Box
+            background='background-front'
+            pad='medium'
+            round='xsmall'
+            margin={{ vertical: 'medium' }}
           >
-            <StyledTab title='Linux'>{this.linuxInstructions()}</StyledTab>
-            <StyledTab title='Mac OS'>{this.macOSinstructions()}</StyledTab>
-            <StyledTab title='Windows'>{this.windowsInstructions()}</StyledTab>
-          </StyledTabs>
+            <Tabs>
+              <StyledTab title='Linux'>{this.linuxInstructions()}</StyledTab>
+              <StyledTab title='Mac OS'>{this.macOSinstructions()}</StyledTab>
+              <StyledTab title='Windows'>
+                {this.windowsInstructions()}
+              </StyledTab>
+            </Tabs>
+          </Box>
 
           <p>Run this command to make sure the installation succeeded:</p>
 
