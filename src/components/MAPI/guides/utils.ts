@@ -108,6 +108,39 @@ export function withTemplateCluster(
   };
 }
 
+/**
+ * All the configuration options supported by the
+ * `template cluster` command.
+ * Taken from:
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/get/clusters/flag.go#L14}
+ * */
+export interface IKubectlGSGetClustersCommandConfig {
+  namespace?: string;
+  allNamespaces?: boolean;
+}
+
+/**
+ * Generate modifier for constructing the
+ * `kubectl gs get clusters` command.
+ * */
+export function withGetClusters(
+  config: IKubectlGSGetClustersCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [...parts, 'get', 'clusters'];
+
+    if (config.namespace) {
+      newParts.push('--namespace', config.namespace);
+    }
+
+    if (config.allNamespaces) {
+      newParts.push('--all-namespaces');
+    }
+
+    return newParts;
+  };
+}
+
 function isFlag(value: string): boolean {
   return value.startsWith('--');
 }

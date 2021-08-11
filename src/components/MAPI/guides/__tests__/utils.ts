@@ -1,9 +1,11 @@
 import {
+  IKubectlGSGetClustersCommandConfig,
   IKubectlGSTemplateClusterCommandConfig,
   KubectlGSCommandModifier,
   makeKubectlGSCommand,
   withContext,
   withFormatting,
+  withGetClusters,
   withTemplateCluster,
 } from '../utils';
 
@@ -172,6 +174,44 @@ describe('utils', () => {
         const output = makeKubectlGSCommand(
           withTemplateCluster(tc.modifierConfig)
         );
+
+        expect(output).toEqual(tc.expectedOutput);
+      });
+    }
+  });
+
+  describe('withGetClusters', () => {
+    interface ITestCase {
+      name: string;
+      modifierConfig: IKubectlGSGetClustersCommandConfig;
+      expectedOutput: string;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        name: 'returns correct output without options',
+        modifierConfig: {},
+        expectedOutput: 'kubectl gs get clusters',
+      },
+      {
+        name: 'returns correct output with namespace',
+        modifierConfig: {
+          namespace: 'the-namespace',
+        },
+        expectedOutput: 'kubectl gs get clusters --namespace the-namespace',
+      },
+      {
+        name: 'returns correct output with all namespaces',
+        modifierConfig: {
+          allNamespaces: true,
+        },
+        expectedOutput: 'kubectl gs get clusters --all-namespaces',
+      },
+    ];
+
+    for (const tc of testCases) {
+      it(tc.name, () => {
+        const output = makeKubectlGSCommand(withGetClusters(tc.modifierConfig));
 
         expect(output).toEqual(tc.expectedOutput);
       });

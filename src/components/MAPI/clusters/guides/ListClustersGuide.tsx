@@ -1,7 +1,12 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
-import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
+import {
+  getCurrentInstallationContextName,
+  makeKubectlGSCommand,
+  withContext,
+  withGetClusters,
+} from 'MAPI/guides/utils';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -50,7 +55,12 @@ const ListClustersGuide: React.FC<IListClustersGuideProps> = (props) => {
         <LoginGuideStep />
         <CLIGuideStep
           title='2. List all clusters'
-          command={`kubectl --context ${context} gs get clusters --all-namespaces`}
+          command={makeKubectlGSCommand(
+            withContext(context),
+            withGetClusters({
+              allNamespaces: true,
+            })
+          )}
         >
           <Text>
             <strong>Note:</strong> The above command prints a user-friendly
