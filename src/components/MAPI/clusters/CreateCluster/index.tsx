@@ -7,9 +7,14 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
-import { extractErrorMessage, generateUID } from 'MAPI/utils';
+import {
+  extractErrorMessage,
+  generateUID,
+  getClusterDescription,
+  getClusterReleaseVersion,
+} from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -22,6 +27,10 @@ import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
+import {
+  computeControlPlaneNodesStats,
+  getVisibleLabels,
+} from '../ClusterDetail/utils';
 import CreateClusterGuide from '../guides/CreateClusterGuide';
 import {
   createCluster,
@@ -268,6 +277,14 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     }
   };
 
+  const releaseVersion = getClusterReleaseVersion(state.cluster);
+  const description = getClusterDescription(state.cluster);
+  const controlPlaneAZs = useMemo(() => {
+    return computeControlPlaneNodesStats([state.controlPlaneNode])
+      .availabilityZones;
+  }, [state.controlPlaneNode]);
+  const labels = getVisibleLabels(state.cluster);
+
   return (
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>
       <DocumentTitle title={`Create Cluster | ${orgId}`}>
@@ -343,6 +360,10 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               provider={state.provider}
               clusterName={state.cluster.metadata.name}
               organizationName={orgId}
+              releaseVersion={releaseVersion}
+              description={description}
+              labels={labels}
+              controlPlaneAZs={controlPlaneAZs}
             />
           </Box>
         </Box>

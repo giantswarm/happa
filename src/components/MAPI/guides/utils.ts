@@ -85,7 +85,7 @@ export function withTemplateCluster(
     }
 
     if (config.release) {
-      newParts.push('--release', `${config.release}`);
+      newParts.push('--release', config.release);
     }
 
     if (config.labels) {
