@@ -6,9 +6,9 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import Tabs from 'shared/Tabs';
 import styled from 'styled-components';
 import { mq } from 'styles';
+import Tabs from 'UI/Display/Tabs';
 import Truncated from 'UI/Util/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';

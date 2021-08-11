@@ -2,9 +2,9 @@ import { Box } from 'grommet';
 import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Tab, Tabs } from 'shared/Tabs';
 import styled from 'styled-components';
 import theme from 'styles/theme';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 
 const StyledTabs = styled(Tabs)`
   border: 1px #fff dashed;

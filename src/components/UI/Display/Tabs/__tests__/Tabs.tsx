@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
 
-import { Tab, Tabs } from '../Tabs';
+import { Tab, Tabs } from '..';
 
 describe('Tabs', () => {
   const renderComponent = (

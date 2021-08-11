@@ -21,7 +21,6 @@ import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { Tab, Tabs } from 'shared/Tabs';
 import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -29,6 +28,7 @@ import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailActions from './ClusterDetailActions';

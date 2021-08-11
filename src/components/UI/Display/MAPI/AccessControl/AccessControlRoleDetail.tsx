@@ -2,7 +2,7 @@ import { Box, Heading, Text } from 'grommet';
 import AccessControlRoleSubjects from 'MAPI/organizations/AccessControl/AccessControlRoleSubjects';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { Tab, Tabs } from 'shared/Tabs';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import AccessControlRoleDetailLoadingPlaceholder from './AccessControlRoleDetailLoadingPlaceholder';
 import AccessControlRolePermissions from './AccessControlRolePermissions';

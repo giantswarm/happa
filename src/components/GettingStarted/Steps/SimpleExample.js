@@ -7,12 +7,12 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { Tab, Tabs } from 'shared/Tabs';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import Button from 'UI/Controls/Button';
 import { CodeBlock, Output, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import Aside from 'UI/Layout/Aside';
 
 const StyledTabs = styled(Tabs)`

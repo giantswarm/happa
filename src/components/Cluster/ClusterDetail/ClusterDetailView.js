@@ -14,7 +14,6 @@ import { bindActionCreators } from 'redux';
 import { Constants, Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps } from 'shared/featureSupport';
-import { Tab, Tabs } from 'shared/Tabs';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -41,6 +40,7 @@ import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 import Well from 'UI/Layout/Well';
 import { memoize } from 'underscore';

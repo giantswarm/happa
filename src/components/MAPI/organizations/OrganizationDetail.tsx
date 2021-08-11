@@ -15,11 +15,11 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { Tab, Tabs } from 'shared/Tabs';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import OrganizationDetailGeneral from './OrganizationDetailGeneral';
 
