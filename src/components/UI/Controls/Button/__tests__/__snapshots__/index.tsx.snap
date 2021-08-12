@@ -21,7 +21,7 @@ exports[`Button renders a button with a loading animation 1`] = `
         aria-busy="true"
         aria-hidden="false"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       >
@@ -56,7 +56,7 @@ exports[`Button renders a danger button 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
@@ -86,7 +86,7 @@ exports[`Button renders a disabled button 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
@@ -115,7 +115,7 @@ exports[`Button renders a link button 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
@@ -144,7 +144,7 @@ exports[`Button renders a primary button 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
@@ -173,7 +173,7 @@ exports[`Button renders a secondary button 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
@@ -202,7 +202,7 @@ exports[`Button renders a warning button 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
@@ -231,7 +231,7 @@ exports[`Button renders without crashing 1`] = `
         aria-busy="true"
         aria-hidden="true"
         aria-live="assertive"
-        aria-valuetext="Loading\\\\u2026"
+        aria-valuetext="Loading…"
         class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
         role="progressbar"
       />
