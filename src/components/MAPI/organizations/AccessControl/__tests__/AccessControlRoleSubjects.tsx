@@ -12,6 +12,7 @@ import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
+import { withMarkup } from 'testUtils/assertUtils';
 import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
@@ -381,7 +382,7 @@ describe('AccessControlRoleSubjects', () => {
     });
 
     expect(
-      screen.getByText(/Subject test-group1 deleted successfully./)
+      withMarkup(screen.getByText)('Subject test-group1 deleted successfully.')
     ).toBeInTheDocument();
 
     jest.useRealTimers();
