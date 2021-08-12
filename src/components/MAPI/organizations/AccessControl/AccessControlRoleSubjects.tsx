@@ -146,33 +146,51 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
   };
 };
 
-const getBindServiceAccountSuccessMessage = (
-  values: string[],
-  statuses: ui.AccessControlRoleSubjectStatus[],
-  statusFilter: ui.AccessControlRoleSubjectStatus
-): string => {
-  const accounts = values.filter((_, i) => statuses[i] === statusFilter);
+const formatAccountNames = (accountNames: string[]): string => {
+  return accountNames
+    .map((accountName) => `<code>${accountName}</code>`)
+    .join(', ');
+};
 
-  switch (true) {
-    case statusFilter === ui.AccessControlRoleSubjectStatus.Created &&
-      accounts.length > 1:
-      return `Service accounts ${accounts
-        .map((account) => `<code>${account}</code>`)
-        .join(', ')} have been created and bound to the role.`;
-    case statusFilter === ui.AccessControlRoleSubjectStatus.Created &&
-      accounts.length === 1:
-      return `Service account <code>${accounts[0]}</code> has been created and bound to the role.`;
-    case statusFilter === ui.AccessControlRoleSubjectStatus.Updated &&
-      accounts.length > 1:
-      return `Service accounts ${accounts
-        .map((account) => `<code>${account}</code>`)
-        .join(', ')} have been bound to the role.`;
-    case statusFilter === ui.AccessControlRoleSubjectStatus.Updated &&
-      accounts.length === 1:
-      return `Service account <code>${accounts[0]}</code> has been bound to the role.`;
-    default:
-      return '';
-  }
+const getBindServiceAccountSuccessMessages = (
+  statuses: ui.IAccessControlServiceAccounts[],
+  statusFilters = Object.values(ui.AccessControlRoleSubjectStatus)
+): string[] => {
+  const messages = statusFilters.map((statusFilter) => {
+    const accounts = statuses.filter(
+      (account) => account.status === statusFilter
+    );
+
+    const accountNames = accounts.map((account) => account.name);
+
+    const isCreatedAccounts =
+      statusFilter === ui.AccessControlRoleSubjectStatus.Created;
+    const isUpdatedAccounts =
+      statusFilter === ui.AccessControlRoleSubjectStatus.Updated;
+
+    switch (true) {
+      case isCreatedAccounts && accounts.length > 1:
+        return `Service accounts ${formatAccountNames(
+          accountNames
+        )} have been created and bound to the role.`;
+      case isCreatedAccounts && accounts.length === 1:
+        return `Service account ${formatAccountNames(
+          accountNames
+        )} has been created and bound to the role.`;
+      case isUpdatedAccounts && accounts.length > 1:
+        return `Service accounts ${formatAccountNames(
+          accountNames
+        )} have been bound to the role.`;
+      case isUpdatedAccounts && accounts.length === 1:
+        return `Service account ${formatAccountNames(
+          accountNames
+        )} has been bound to the role.`;
+      default:
+        return '';
+    }
+  });
+
+  return messages;
 };
 
 interface IAccessControlRoleSubjectsProps
@@ -187,7 +205,7 @@ interface IAccessControlRoleSubjectsProps
   onAdd: (
     type: ui.AccessControlSubjectTypes,
     names: string[]
-  ) => Promise<void | ui.AccessControlRoleSubjectStatus[]>;
+  ) => Promise<ui.IAccessControlServiceAccounts[]>;
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
@@ -220,37 +238,21 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
       return;
     }
+    const isServiceAccount =
+      type === ui.AccessControlSubjectTypes.ServiceAccount;
 
     try {
       dispatch({ type: 'startLoading', subjectType: type });
       const statuses = await onAdd(type, values);
       dispatch({ type: 'stopAdding', subjectType: type });
 
-      if (statuses) {
-        const createdAccountsMessage = getBindServiceAccountSuccessMessage(
-          values,
-          statuses,
-          ui.AccessControlRoleSubjectStatus.Created
-        );
-        if (createdAccountsMessage.length > 0) {
-          new FlashMessage(
-            createdAccountsMessage,
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
-        }
+      if (isServiceAccount) {
+        const messages = getBindServiceAccountSuccessMessages(statuses);
 
-        const updatedAccountsMessage = getBindServiceAccountSuccessMessage(
-          values,
-          statuses,
-          ui.AccessControlRoleSubjectStatus.Updated
-        );
-        if (updatedAccountsMessage.length > 0) {
-          new FlashMessage(
-            updatedAccountsMessage,
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
+        for (const message of messages) {
+          if (message.length > 0) {
+            new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
+          }
         }
       } else {
         let message = '';
@@ -263,18 +265,17 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
       }
     } catch (err: unknown) {
-      const isServiceAccount =
-        type === ui.AccessControlSubjectTypes.ServiceAccount;
-
       let message = '';
       switch (true) {
         case isServiceAccount && values.length > 1:
-          message = `Could not create service accounts ${values
-            .map((account) => `<code>${account}</code>`)
-            .join(', ')} :`;
+          message = `Could not create service accounts ${formatAccountNames(
+            values
+          )} :`;
           break;
         case isServiceAccount && values.length === 1:
-          message = `Could not create service account <code>${values[0]}</code> :`;
+          message = `Could not create service account ${formatAccountNames(
+            values
+          )} :`;
           break;
         case values.length > 1:
           message = 'Could not add subjects:';
