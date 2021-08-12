@@ -71,7 +71,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     names: string[]
   ) => {
     try {
-      if (!activeRole || !data) return Promise.resolve();
+      if (!activeRole || !data) return Promise.resolve([]);
 
       const creationRequests = names.map((name) =>
         ensureServiceAccount(clientFactory(), auth, name, organizationNamespace)
