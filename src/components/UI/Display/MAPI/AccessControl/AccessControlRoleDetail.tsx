@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from 'shared/Tabs';
+import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 import AccessControlRoleDetailLoadingPlaceholder from './AccessControlRoleDetailLoadingPlaceholder';
 import AccessControlRolePermissions from './AccessControlRolePermissions';
@@ -24,7 +25,10 @@ interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   namespace: string;
   permissions: IAccessControlPermissions;
-  onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
+  onAdd: (
+    type: AccessControlSubjectTypes,
+    names: string[]
+  ) => Promise<void | ui.AccessControlRoleSubjectStatus[]>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
 }
