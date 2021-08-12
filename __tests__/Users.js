@@ -156,10 +156,10 @@ describe('Users', () => {
 
     const { findByText, getByText } = renderRouteWithStore(UsersRoutes.Home);
 
-    const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
-    let deleteButton = within(selectedEmailCell.parentNode).getByText(
-      /delete/i
-    );
+    const selectedEmailCell = (
+      await findByText(new RegExp(desiredEmail, 'i'))
+    ).closest('tr');
+    let deleteButton = within(selectedEmailCell).getByText(/delete/i);
     fireEvent.click(deleteButton);
 
     expect(
@@ -186,13 +186,13 @@ describe('Users', () => {
 
     const { findByText, getByText } = renderRouteWithStore(UsersRoutes.Home);
 
-    const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
-    const expiryDate = within(selectedEmailCell.parentNode).getByText(
-      /in about 1 year/i
-    );
+    const selectedEmailCell = (
+      await findByText(new RegExp(desiredEmail, 'i'))
+    ).closest('tr');
+    const expiryDate = within(selectedEmailCell).getByText(/in about 1 year/i);
     expect(expiryDate).toBeInTheDocument();
 
-    let unexpireButton = within(selectedEmailCell.parentNode).getByTitle(
+    let unexpireButton = within(selectedEmailCell).getByTitle(
       /remove expiration/i
     );
     fireEvent.click(unexpireButton);
