@@ -1425,7 +1425,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Could not add subjects:/)
+      await withMarkup(screen.findByText)(
+        'Could not create service accounts automation, random :'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 
