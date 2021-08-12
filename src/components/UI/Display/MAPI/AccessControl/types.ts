@@ -57,3 +57,8 @@ export enum AccessControlRoleSubjectStatus {
   Created,
   Updated,
 }
+
+export interface IAccessControlServiceAccounts {
+  name: string;
+  status: AccessControlRoleSubjectStatus;
+}

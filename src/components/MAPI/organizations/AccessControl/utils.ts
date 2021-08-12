@@ -530,9 +530,8 @@ export function findSubjectInRoleItem(
 }
 
 /**
- * Check if an existing account exists.
- * If it does, return an 'Updated' status.
- * If it doesn't, create one and return a 'Created' status.
+ * Check if an account exists. If it does, return its name with an 'Updated' status.
+ * If it doesn't, create the account and return its name with a 'Created' status.
  *
  * @param client
  * @param auth
@@ -544,11 +543,11 @@ export async function ensureServiceAccount(
   auth: IOAuth2Provider,
   name: string,
   namespace: string
-): Promise<ui.AccessControlRoleSubjectStatus> {
+): Promise<ui.IAccessControlServiceAccounts> {
   try {
     await corev1.getServiceAccount(client, auth, name, namespace);
 
-    return ui.AccessControlRoleSubjectStatus.Updated;
+    return { name, status: ui.AccessControlRoleSubjectStatus.Updated };
   } catch (err: unknown) {
     // If the service account is not found, we'll create it.
     if (
@@ -566,7 +565,7 @@ export async function ensureServiceAccount(
 
   await corev1.createServiceAccount(client, auth, serviceAccount);
 
-  return ui.AccessControlRoleSubjectStatus.Created;
+  return { name, status: ui.AccessControlRoleSubjectStatus.Created };
 }
 
 /**
