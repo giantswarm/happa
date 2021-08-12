@@ -854,14 +854,14 @@ const theme = deepMerge(generate(16), {
     },
   },
   tab: {
-    color: 'text-xweak',
+    color: 'text-weak',
     pad: 'small',
     border: {
       side: 'all',
       size: 'xsmall',
       color: 'transparent',
       active: {
-        color: 'text',
+        color: 'text-strong',
       },
       hover: {
         color: 'transparent',
@@ -871,7 +871,7 @@ const theme = deepMerge(generate(16), {
       opacity: 1,
     },
     hover: {
-      color: 'text',
+      color: 'text-strong',
     },
     margin: {
       horizontal: 'xsmall',
