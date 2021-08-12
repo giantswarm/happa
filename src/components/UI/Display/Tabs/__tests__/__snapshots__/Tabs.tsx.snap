@@ -22,7 +22,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kFHaPQ StyledTab-sc-1nnwnsb-0 ilPnGI"
+            class="StyledBox-sc-13pk1d4-0 kBa-dZY StyledTab-sc-1nnwnsb-0 cbSdFw"
           >
             <span
               class="StyledText-sc-1sadyjn-0 kEERpA"
@@ -39,10 +39,10 @@ exports[`Tabs renders a basic tab layout 1`] = `
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kyyQds StyledTab-sc-1nnwnsb-0 ilPnGI"
+            class="StyledBox-sc-13pk1d4-0 kyyQds StyledTab-sc-1nnwnsb-0 cbSdFw"
           >
             <span
-              class="StyledText-sc-1sadyjn-0 coQEjk"
+              class="StyledText-sc-1sadyjn-0 biMlWM"
             >
               second
             </span>
@@ -56,10 +56,10 @@ exports[`Tabs renders a basic tab layout 1`] = `
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kyyQds StyledTab-sc-1nnwnsb-0 ilPnGI"
+            class="StyledBox-sc-13pk1d4-0 kyyQds StyledTab-sc-1nnwnsb-0 cbSdFw"
           >
             <span
-              class="StyledText-sc-1sadyjn-0 coQEjk"
+              class="StyledText-sc-1sadyjn-0 biMlWM"
             >
               third
             </span>
