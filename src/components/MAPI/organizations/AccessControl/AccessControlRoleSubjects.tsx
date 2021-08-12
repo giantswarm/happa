@@ -240,7 +240,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           new FlashMessage(
             createdAccountsMessage,
             messageType.SUCCESS,
-            messageTTL.SHORT
+            messageTTL.MEDIUM
           );
         }
 
@@ -253,7 +253,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           new FlashMessage(
             updatedAccountsMessage,
             messageType.SUCCESS,
-            messageTTL.SHORT
+            messageTTL.MEDIUM
           );
         }
       } else {
@@ -264,7 +264,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           message = 'Subject added successfully.';
         }
 
-        new FlashMessage(message, messageType.SUCCESS, messageTTL.SHORT);
+        new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
       }
     } catch (err: unknown) {
       let message = '';
