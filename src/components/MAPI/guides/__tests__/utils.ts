@@ -207,6 +207,13 @@ describe('utils', () => {
         },
         expectedOutput: 'kubectl gs get clusters --all-namespaces',
       },
+      {
+        name: 'returns correct output with name',
+        modifierConfig: {
+          name: 'some-cluster',
+        },
+        expectedOutput: 'kubectl gs get clusters some-cluster',
+      },
     ];
 
     for (const tc of testCases) {
@@ -252,9 +259,9 @@ describe('utils', () => {
           'the-value',
         ],
         expectedOutput: `kubectl gs \\
-    --some-flag super-value \\
-    --some-other-flag other-value \\
-    --some-random-flag the-value`,
+  --some-flag super-value \\
+  --some-other-flag other-value \\
+  --some-random-flag the-value`,
       },
       {
         name: 'returns correct output for a long command and some arguments',
@@ -270,15 +277,15 @@ describe('utils', () => {
           'the-value',
         ],
         expectedOutput: `kubectl gs get some resources \\
-    --some-flag super-value \\
-    --some-other-flag other-value \\
-    --some-random-flag the-value`,
+  --some-flag super-value \\
+  --some-other-flag other-value \\
+  --some-random-flag the-value`,
       },
       {
         name: 'returns correct output for a long command and a flag before it',
         args: ['--some-flag', 'super-value', 'get', 'some', 'resources'],
         expectedOutput: `kubectl gs --some-flag super-value \\
-    get some resources`,
+  get some resources`,
       },
       {
         name:
@@ -293,8 +300,8 @@ describe('utils', () => {
           'other-value',
         ],
         expectedOutput: `kubectl gs --some-flag super-value \\
-    get some resources \\
-    --some-other-flag other-value`,
+  get some resources \\
+  --some-other-flag other-value`,
       },
     ];
 

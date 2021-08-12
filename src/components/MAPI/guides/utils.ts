@@ -117,6 +117,7 @@ export function withTemplateCluster(
 export interface IKubectlGSGetClustersCommandConfig {
   namespace?: string;
   allNamespaces?: boolean;
+  name?: string;
 }
 
 /**
@@ -128,6 +129,10 @@ export function withGetClusters(
 ): KubectlGSCommandModifier {
   return (parts) => {
     const newParts = [...parts, 'get', 'clusters'];
+
+    if (config.name) {
+      newParts.push(config.name);
+    }
 
     if (config.namespace) {
       newParts.push('--namespace', config.namespace);
@@ -146,7 +151,7 @@ function isFlag(value: string): boolean {
 }
 
 // The delimiter used between each line of a multi-line command.
-const formattingLineBreak = ' \\\n    ';
+const formattingLineBreak = ' \\\n  ';
 
 /**
  * Format a command output in a more user-friendly way.
