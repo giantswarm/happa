@@ -839,6 +839,54 @@ const theme = deepMerge(generate(16), {
       small: '16px',
     },
   },
+  tabs: {
+    header: {
+      border: {
+        size: 'xsmall',
+        side: 'bottom',
+        color: 'text',
+      },
+    },
+    panel: {
+      extend: () => css`
+        padding-top: ${(props) => props.theme.global.edgeSize.medium};
+      `,
+    },
+  },
+  tab: {
+    color: 'text-weak',
+    pad: 'small',
+    border: {
+      side: 'all',
+      size: 'xsmall',
+      color: 'transparent',
+      active: {
+        color: 'text-strong',
+      },
+      hover: {
+        color: 'transparent',
+      },
+    },
+    background: {
+      opacity: 1,
+    },
+    hover: {
+      color: 'text-strong',
+    },
+    margin: {
+      horizontal: 'xsmall',
+      top: 'none',
+      bottom: '-1px',
+    },
+    active: {
+      background: 'background',
+    },
+    extend: () => css`
+      border-top-left-radius: ${(props) => props.theme.rounding}px;
+      border-top-right-radius: ${(props) => props.theme.rounding}px;
+      border-bottom: none;
+    `,
+  },
   table: {
     row: {
       hover: {

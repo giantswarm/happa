@@ -1,18 +1,15 @@
 import { Box } from 'grommet';
-import {
-  GettingStartedPlatform,
-  useGettingStartedContext,
-} from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
+import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Tab } from 'react-bootstrap';
-import Tabs from 'shared/Tabs';
 import styled from 'styled-components';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 
 const StyledTab = styled(Tab)`
-  padding: ${({ theme }) => theme.global.edgeSize.medium};
-  background: ${({ theme }) => theme.global.colors['background-front'].dark};
-  border-radius: ${({ theme }) => theme.rounding}px;
+  &[aria-expanded='true'] > div {
+    background-color: ${({ theme }) =>
+      theme.global.colors['background-front'].dark};
+  }
 `;
 
 interface IGettingStartedPlatformTabsProps
@@ -31,28 +28,14 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
   const { selectedPlatform, setSelectedPlatform } = useGettingStartedContext();
 
   return (
-    <Box {...props}>
-      <Tabs
-        defaultActiveKey={selectedPlatform as never}
-        activeKey={selectedPlatform}
-        onSelect={setSelectedPlatform as never}
-      >
-        {linuxContent && (
-          <StyledTab eventKey={GettingStartedPlatform.Linux} title='Linux'>
-            {linuxContent}
-          </StyledTab>
-        )}
+    <Box background='background-front' pad='medium' round='xsmall' {...props}>
+      <Tabs activeIndex={selectedPlatform} onActive={setSelectedPlatform}>
+        {linuxContent && <StyledTab title='Linux'>{linuxContent}</StyledTab>}
 
-        {macOSContent && (
-          <StyledTab eventKey={GettingStartedPlatform.MacOS} title='macOS'>
-            {macOSContent}
-          </StyledTab>
-        )}
+        {macOSContent && <StyledTab title='macOS'>{macOSContent}</StyledTab>}
 
         {windowsContent && (
-          <StyledTab eventKey={GettingStartedPlatform.Windows} title='Windows'>
-            {windowsContent}
-          </StyledTab>
+          <StyledTab title='Windows'>{windowsContent}</StyledTab>
         )}
       </Tabs>
     </Box>

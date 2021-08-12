@@ -2,14 +2,13 @@ import { Box, Heading, Text } from 'grommet';
 import AccessControlRoleSubjects from 'MAPI/organizations/AccessControl/AccessControlRoleSubjects';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import Tab from 'react-bootstrap/lib/Tab';
-import Tabs from 'shared/Tabs';
-import * as ui from 'UI/Display/MAPI/AccessControl/types';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import AccessControlRoleDetailLoadingPlaceholder from './AccessControlRoleDetailLoadingPlaceholder';
 import AccessControlRolePermissions from './AccessControlRolePermissions';
 import AccessControlRoleType from './AccessControlRoleType';
 import {
+  AccessControlRoleSubjectStatus,
   AccessControlSubjectTypes,
   IAccessControlPermissions,
   IAccessControlRoleItem,
@@ -28,7 +27,7 @@ interface IAccessControlRoleDetailProps
   onAdd: (
     type: AccessControlSubjectTypes,
     names: string[]
-  ) => Promise<void | ui.AccessControlRoleSubjectStatus[]>;
+  ) => Promise<void | AccessControlRoleSubjectStatus[]>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
 }
@@ -56,8 +55,8 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
             <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
           </Box>
           <Box margin={{ top: 'medium' }}>
-            <Tabs defaultActiveKey='1'>
-              <Tab eventKey='1' title='Subjects'>
+            <Tabs>
+              <Tab title='Subjects'>
                 <AccessControlRoleSubjects
                   roleName={activeRole.name}
                   onAdd={onAdd}
@@ -69,7 +68,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
                   permissions={permissions}
                 />
               </Tab>
-              <Tab eventKey='2' title='Permissions'>
+              <Tab title='Permissions'>
                 <AccessControlRolePermissions
                   permissions={activeRole.permissions}
                 />

@@ -33,6 +33,7 @@ export function dedent(str: string): string {
   const lines = result.split('\n');
   const spacesRegexp = /^(\s+)\S+/;
   let minIndent: number | null = null;
+  let maxIndent: number | null = null;
   for (const line of lines) {
     const m = spacesRegexp.exec(line);
     if (!m) continue;
@@ -44,9 +45,17 @@ export function dedent(str: string): string {
     } else {
       minIndent = Math.min(minIndent, indent);
     }
+
+    if (!maxIndent) {
+      maxIndent = indent;
+    } else {
+      maxIndent = Math.max(maxIndent, indent);
+    }
   }
 
-  if (minIndent !== null) {
+  if (minIndent !== null && minIndent === maxIndent) {
+    result = lines.join('\n');
+  } else if (minIndent !== null) {
     result = lines
       .map((l) => (l.startsWith(' ') ? l.slice(minIndent as number) : l))
       .join('\n');
