@@ -2654,20 +2654,6 @@
     resolve-from "^5.0.0"
     store2 "^2.12.0"
 
-"@swc-node/core@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-1.5.1.tgz#f56be4ac8b4defc782963a59dbc49e0c0d12c90a"
-  integrity sha512-H424sTzhvgc+mKm9E4C115UYKgegM4LeX5F1UPBGTvLs4KSS9eU/wH0sly7+mUk0I8QZjjn3NgtWLAE8NxM37Q==
-  dependencies:
-    "@swc/core" "^1.2.59"
-
-"@swc-node/jest@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-1.3.1.tgz#75c8c9775540d3dde362ca7c89e523baaa3cce25"
-  integrity sha512-L7sXL4vFdXyLQz0EWuKZxDtqWcmkl24h7PiRbToQsNuXi7vYpF9ApydbZ80OdODRUa5tl8qNKSyyLejl1Y0C3Q==
-  dependencies:
-    "@swc-node/core" "^1.5.1"
-
 "@swc/core-android-arm64@^1.2.76":
   version "1.2.76"
   resolved "https://registry.yarnpkg.com/@swc/core-android-arm64/-/core-android-arm64-1.2.76.tgz#533a350129c9f2bc7f277a182a3a0cdedc39c5dd"
@@ -2728,7 +2714,7 @@
   resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.2.76.tgz#7c4ae7689dd8414aa65827686ebc78e0c0c130e4"
   integrity sha512-CvgWITouMnWSA/yiP4yEbXlTt9qoI0DvWz2riuW3vbQWGqsz0NcvXqsWzcrqvOG5+y62ZVUKW4sukBu0kOjNEw==
 
-"@swc/core@^1.2.52", "@swc/core@^1.2.59", "@swc/core@^1.2.76":
+"@swc/core@^1.2.30", "@swc/core@^1.2.52", "@swc/core@^1.2.76":
   version "1.2.76"
   resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.2.76.tgz#86aa88bf174936cfe6c8961cfe0b9edcf92ef518"
   integrity sha512-oS4HMvHPYRD8i4pegxjET+3OTKJRd1CixulqoeNKi1pxW0bZ0mqeGXgLJJcAR0vtHRyF4Kv4yLh6qHhxfiIixQ==
@@ -2748,10 +2734,17 @@
     "@swc/core-win32-ia32-msvc" "^1.2.76"
     "@swc/core-win32-x64-msvc" "^1.2.76"
 
-"@swc/helpers@^0.2.12":
-  version "0.2.12"
-  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.2.12.tgz#cd54624dd685f7832b50dd7ce119ddc4eb2585ad"
-  integrity sha512-hsPGC/U/0xe/WghMeSgyFsq9nNPfA5oY1Il2AaeAJcu/vTm4Bv8o9ev4eAgxcA61i5WWp72amN20XVyxWwM5aQ==
+"@swc/helpers@^0.2.13":
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.2.13.tgz#95d69aaed0998040d455832efbe1342ed79d0809"
+  integrity sha512-HxfZHtTgDlME7fH+KIwBrm1B1+2iB3UpbcSbPCZzDAHxZ3z+qfjflHverm33sXrdyQYx4s3J7r6ot76433mwEg==
+
+"@swc/jest@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.1.4.tgz#1ae41e23b99efe80fcf92897cc803d979b2d8e4a"
+  integrity sha512-QOPGFrkCvg290V7VLpi8gEfEjNL/vo0RANFBa6kEKGtvRDzqyW1oNJqYYu4Pr5FnrO/qmMIt8LODz4SR63BPWA==
+  dependencies:
+    "@swc/core" "^1.2.30"
 
 "@testing-library/dom@^7.28.1":
   version "7.30.3"
