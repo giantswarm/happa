@@ -1,58 +1,31 @@
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import styled from 'styled-components';
-
-const TableWrapper = styled.div`
-  .react-bootstrap-table table {
-    table-layout: auto;
-  }
-
-  .status {
-    width: 90px;
-  }
-
-  .actions {
-    width: 100px;
-  }
-`;
-
-const tableDefaultSorting = [
-  {
-    dataField: 'email',
-    order: 'asc',
-  },
-];
+import DataTable from 'UI/DataTable';
 
 // Provides the configuraiton for the clusters table
 const getTableColumnsConfig = () => {
   return [
     {
-      classes: 'email',
-      dataField: 'email',
-      text: 'Email',
-      sort: true,
+      property: 'email',
+      header: 'Email',
+      primary: true,
     },
     {
-      classes: 'created',
-      dataField: 'created',
-      text: 'Invited',
-      sort: true,
-      formatter: relativeDate,
+      property: 'created',
+      header: 'Invited',
+      render: (data) => relativeDate(data.created),
+      size: 'small',
     },
     {
-      classes: 'invited_by',
-      dataField: 'invited_by',
-      text: 'Invited by',
-      sort: true,
+      property: 'invited_by',
+      header: 'Invited by',
     },
     {
-      classes: 'expiry',
-      dataField: 'expiry',
-      text: 'Expires',
-      sort: true,
-      formatter: relativeDate,
+      property: 'expiry',
+      header: 'Expires',
+      render: (data) => relativeDate(data.expiry),
+      size: 'small',
     },
   ];
 };
@@ -66,16 +39,19 @@ const InvitesTable = ({ invitations }) => {
   }
 
   return (
-    <TableWrapper>
-      <BootstrapTable
-        bordered={false}
+    <div>
+      <DataTable
         columns={getTableColumnsConfig()}
         data={Object.values(invitations.items)}
-        defaultSortDirection='asc'
-        defaultSorted={tableDefaultSorting}
-        keyField='email'
+        sort={{
+          property: 'email',
+          direction: 'asc',
+        }}
+        sortable={true}
+        fill='horizontal'
+        margin={{ bottom: 'medium' }}
       />
-    </TableWrapper>
+    </div>
   );
 };
 
