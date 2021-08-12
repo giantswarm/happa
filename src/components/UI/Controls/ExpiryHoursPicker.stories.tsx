@@ -18,6 +18,7 @@ export const Standard = Template.bind({});
 
 Standard.args = {
   onChange: (ttl) => {
+    // eslint-disable-next-line no-console
     console.log('onChange for ExpiryHoursPicker called with:', ttl);
   },
   initialValue: 0,

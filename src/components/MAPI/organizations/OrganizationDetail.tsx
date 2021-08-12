@@ -11,16 +11,15 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Tab } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import Tabs from 'shared/Tabs';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import OrganizationDetailGeneral from './OrganizationDetailGeneral';
 
@@ -102,14 +101,14 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
             <Heading level={1} margin={{ bottom: 'large' }}>
               Organization: {data.metadata.name}
             </Heading>
-            <Tabs defaultActiveKey={paths.Detail} useRoutes={true}>
-              <Tab eventKey={paths.Detail} title='General'>
+            <Tabs useRoutes={true}>
+              <Tab path={paths.Detail} title='General'>
                 <OrganizationDetailGeneral
                   organizationName={data.metadata.name}
                   organizationNamespace={orgNamespace}
                 />
               </Tab>
-              <Tab eventKey={paths.AccessControl} title='Access control'>
+              <Tab path={paths.AccessControl} title='Access control'>
                 <AccessControlPage
                   organizationName={data.metadata.name}
                   organizationNamespace={orgNamespace}

@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import RoutePath from 'lib/routePath';
@@ -7,10 +8,19 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import { CodeBlock, Output, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import Aside from 'UI/Layout/Aside';
+
+const StyledTab = styled(Tab)`
+  &[aria-expanded='true'] > div {
+    background-color: ${({ theme }) =>
+      theme.global.colors['background-front'].dark};
+  }
+`;
 
 class SimpleExample extends React.Component {
   state = {
@@ -31,14 +41,6 @@ class SimpleExample extends React.Component {
     this.setState({
       selectedPlatform: newPlatform,
     });
-  }
-
-  selectedSedCommand() {
-    return (
-      `sed -i${this.state.selectedPlatform === 'Mac' ? ' ' : ''}` +
-      `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
-      `helloworld-manifest.yaml`
-    );
   }
 
   isSelectedPlatform(newPlatform) {
@@ -142,29 +144,33 @@ class SimpleExample extends React.Component {
             manually edit the <code>helloworld-manifest.yaml</code> file.
           </p>
 
-          <div className='platform_selector'>
-            <ul className='platform_selector--tabs'>
-              <li
-                className={this.isSelectedPlatform('Linux') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Linux')}
-              >
-                Linux
-              </li>
-
-              <li
-                className={this.isSelectedPlatform('Mac') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Mac')}
-              >
-                Mac OS
-              </li>
-            </ul>
-
-            <div className='platform_selector--content'>
-              <CodeBlock>
-                <Prompt>{this.selectedSedCommand()}</Prompt>
-              </CodeBlock>
-            </div>
-          </div>
+          <Box
+            background='background-front'
+            pad='medium'
+            round='xsmall'
+            margin={{ vertical: 'medium' }}
+          >
+            <Tabs>
+              <StyledTab title='Linux'>
+                <CodeBlock>
+                  <Prompt>
+                    {`sed -i` +
+                      `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
+                      `helloworld-manifest.yaml`}
+                  </Prompt>
+                </CodeBlock>
+              </StyledTab>
+              <StyledTab title='Mac OS'>
+                <CodeBlock>
+                  <Prompt>
+                    {`sed -i ` +
+                      `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
+                      `helloworld-manifest.yaml`}
+                  </Prompt>
+                </CodeBlock>
+              </StyledTab>
+            </Tabs>
+          </Box>
 
           <p>Finally apply the manifest to your cluster:</p>
           <CodeBlock>
