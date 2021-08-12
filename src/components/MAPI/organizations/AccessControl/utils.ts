@@ -403,8 +403,6 @@ export async function createRoleBindingWithSubjects(
   namespace: string,
   roleItem: ui.IAccessControlRoleItem
 ) {
-  const subjectCreationRequests = [];
-
   const roleBinding = makeRoleBinding(roleItem);
   roleBinding.metadata.namespace = namespace;
   for (const name of subjectNames) {
@@ -417,16 +415,10 @@ export async function createRoleBindingWithSubjects(
     if (subject.kind === rbacv1.SubjectKinds.ServiceAccount) {
       subject.apiGroup = '';
       subject.namespace = namespace;
-
-      subjectCreationRequests.push(
-        ensureServiceAccount(clientFactory(), auth, subject.name, namespace)
-      );
     }
 
     roleBinding.subjects.push(subject);
   }
-
-  await Promise.all(subjectCreationRequests);
 
   return rbacv1.createRoleBinding(clientFactory(), auth, roleBinding);
 }
@@ -538,8 +530,10 @@ export function findSubjectInRoleItem(
 }
 
 /**
- * Check if an existing account exists. If it does,
- * return it, and if it doesn't, create one.
+ * Check if an existing account exists.
+ * If it does, return an 'Updated' status.
+ * If it doesn't, create one and return a 'Created' status.
+ *
  * @param client
  * @param auth
  * @param name
@@ -550,16 +544,11 @@ export async function ensureServiceAccount(
   auth: IOAuth2Provider,
   name: string,
   namespace: string
-): Promise<corev1.IServiceAccount> {
+): Promise<ui.AccessControlRoleSubjectStatus> {
   try {
-    const account = await corev1.getServiceAccount(
-      client,
-      auth,
-      name,
-      namespace
-    );
+    await corev1.getServiceAccount(client, auth, name, namespace);
 
-    return account;
+    return ui.AccessControlRoleSubjectStatus.Updated;
   } catch (err: unknown) {
     // If the service account is not found, we'll create it.
     if (
@@ -575,7 +564,9 @@ export async function ensureServiceAccount(
   const serviceAccount = makeServiceAccount(name);
   serviceAccount.metadata.namespace = namespace;
 
-  return corev1.createServiceAccount(client, auth, serviceAccount);
+  await corev1.createServiceAccount(client, auth, serviceAccount);
+
+  return ui.AccessControlRoleSubjectStatus.Created;
 }
 
 /**
