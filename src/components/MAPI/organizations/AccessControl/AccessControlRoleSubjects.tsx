@@ -161,9 +161,7 @@ const getBindServiceAccountSuccessMessage = (
         .join(', ')} have been created and bound to the role.`;
     case statusFilter === ui.AccessControlRoleSubjectStatus.Created &&
       accounts.length === 1:
-      return `Service account <code>${[
-        accounts,
-      ]}</code> has been created and bound to the role.`;
+      return `Service account <code>${accounts[0]}</code> has been created and bound to the role.`;
     case statusFilter === ui.AccessControlRoleSubjectStatus.Updated &&
       accounts.length > 1:
       return `Service accounts ${accounts
@@ -171,9 +169,7 @@ const getBindServiceAccountSuccessMessage = (
         .join(', ')} have been bound to the role.`;
     case statusFilter === ui.AccessControlRoleSubjectStatus.Updated &&
       accounts.length === 1:
-      return `Service account <code>${[
-        accounts,
-      ]}</code> has been bound to the role.`;
+      return `Service account <code>${accounts[0]}</code> has been bound to the role.`;
     default:
       return '';
   }
@@ -267,11 +263,24 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
       }
     } catch (err: unknown) {
+      const isServiceAccount =
+        type === ui.AccessControlSubjectTypes.ServiceAccount;
+
       let message = '';
-      if (values.length > 1) {
-        message = 'Could not add subjects:';
-      } else {
-        message = 'Could not add subject:';
+      switch (true) {
+        case isServiceAccount && values.length > 1:
+          message = `Could not create service accounts ${values
+            .map((account) => `<code>${account}</code>`)
+            .join(', ')} :`;
+          break;
+        case isServiceAccount && values.length === 1:
+          message = `Could not create service account <code>${values[0]}</code> :`;
+          break;
+        case values.length > 1:
+          message = 'Could not add subjects:';
+          break;
+        default:
+          message = 'Could not add subject:';
       }
       const errorMessage = (err as Error).message;
 
