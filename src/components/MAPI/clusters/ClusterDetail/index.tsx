@@ -15,14 +15,12 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Tab } from 'react-bootstrap';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import Tabs from 'shared/Tabs';
 import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -30,6 +28,7 @@ import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailActions from './ClusterDetailActions';
@@ -262,13 +261,13 @@ const ClusterDetail: React.FC<{}> = () => {
               </OptionalValue>
             </Box>
           </Heading>
-          <Tabs defaultActiveKey={paths.Home} useRoutes={true}>
-            <Tab eventKey={paths.Home} title='Overview' />
-            <Tab eventKey={paths.WorkerNodes} title='Worker nodes' />
-            <Tab eventKey={paths.KeyPairs} title='Key pairs' />
-            <Tab eventKey={paths.Apps} title='Apps' />
-            <Tab eventKey={paths.Ingress} title='Ingress' />
-            <Tab eventKey={paths.Actions} title='Actions' />
+          <Tabs useRoutes={true}>
+            <Tab path={paths.Home} title='Overview' />
+            <Tab path={paths.WorkerNodes} title='Worker nodes' />
+            <Tab path={paths.KeyPairs} title='Key pairs' />
+            <Tab path={paths.Apps} title='Apps' />
+            <Tab path={paths.Ingress} title='Ingress' />
+            <Tab path={paths.Actions} title='Actions' />
           </Tabs>
           <Switch>
             <Route

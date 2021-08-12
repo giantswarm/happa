@@ -6,9 +6,9 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import Tabs from 'shared/Tabs';
 import styled from 'styled-components';
 import { mq } from 'styles';
+import Tabs from 'UI/Display/Tabs';
 import Truncated from 'UI/Util/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';
@@ -262,8 +262,8 @@ const AppDetails = (props) => {
         <Install>{children}</Install>
       </Header>
 
-      <Tabs defaultActiveKey={1}>
-        <Tab eventKey={1} title='About'>
+      <Tabs>
+        <Tab title='About'>
           <About>
             {readme && (
               <Readme>
@@ -298,7 +298,7 @@ const AppDetails = (props) => {
           </About>
         </Tab>
 
-        <Tab eventKey={2} title='Other Versions'>
+        <Tab title='Other Versions'>
           <ChartVersionsTable appVersions={appVersions} />
         </Tab>
       </Tabs>
