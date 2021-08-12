@@ -181,10 +181,10 @@ class SimpleExample extends React.Component {
             </Prompt>
             <Output>
               {`
-                  service/helloworld created
-                  deployment.apps/helloworld created
-                  poddisruptionbudget.policy/helloworld-pdb created
-                  ingress.networking.k8s.io/helloworld created
+service/helloworld created
+deployment.apps/helloworld created
+poddisruptionbudget.policy/helloworld-pdb created
+ingress.networking.k8s.io/helloworld created
                 `}
             </Output>
           </CodeBlock>
@@ -214,8 +214,8 @@ class SimpleExample extends React.Component {
             <Prompt>kubectl get deployment -l app=helloworld</Prompt>
             <Output>
               {`
-                  NAME         READY   UP-TO-DATE   AVAILABLE   AGE
-                  helloworld   2/2     2            2           2m
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+helloworld   2/2     2            2           2m
                 `}
             </Output>
           </CodeBlock>
@@ -230,8 +230,8 @@ class SimpleExample extends React.Component {
             <Prompt>kubectl get svc -l app=helloworld</Prompt>
             <Output>
               {`
-                  NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-                  helloworld   ClusterIP   172.31.144.55   <none>        8080/TCP   2m
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+helloworld   ClusterIP   172.31.144.55   <none>        8080/TCP   2m
                 `}
             </Output>
           </CodeBlock>
@@ -269,12 +269,12 @@ class SimpleExample extends React.Component {
             <Prompt>kubectl logs --selector app=helloworld</Prompt>
             <Output>
               {`
-                  2014/07/01 09:57:30 Starting up at :8080
-                  2014/07/01 09:57:40 GET /giant-swarm-logo.svg
-                  2014/07/01 09:57:41 GET /favicon32.ico
-                  2014/07/01 09:57:30 Starting up at :8080
-                  2014/07/01 09:57:40 GET /
-                  2014/07/01 09:57:40 GET /blue-bg.jpg
+2014/07/01 09:57:30 Starting up at :8080
+2014/07/01 09:57:40 GET /giant-swarm-logo.svg
+2014/07/01 09:57:41 GET /favicon32.ico
+2014/07/01 09:57:30 Starting up at :8080
+2014/07/01 09:57:40 GET /
+2014/07/01 09:57:40 GET /blue-bg.jpg
                 `}
             </Output>
           </CodeBlock>
@@ -294,10 +294,10 @@ class SimpleExample extends React.Component {
             <Prompt>kubectl delete -f helloworld-manifest.yaml</Prompt>
             <Output>
               {`
-                  service "helloworld" deleted
-                  deployment.apps "helloworld" deleted
-                  poddisruptionbudget.policy "helloworld-pdb" deleted
-                  ingress.networking.k8s.io "helloworld" deleted
+service "helloworld" deleted
+deployment.apps "helloworld" deleted
+poddisruptionbudget.policy "helloworld-pdb" deleted
+ingress.networking.k8s.io "helloworld" deleted
                 `}
             </Output>
           </CodeBlock>
