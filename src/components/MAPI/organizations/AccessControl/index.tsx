@@ -23,6 +23,7 @@ import {
   computePermissions,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
+  ensureServiceAccount,
   getRoleItems,
   getRoleItemsKey,
 } from './utils';
@@ -72,6 +73,11 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     try {
       if (!activeRole || !data) return Promise.resolve();
 
+      const creationRequests = names.map((name) =>
+        ensureServiceAccount(clientFactory(), auth, name, organizationNamespace)
+      );
+      const serviceAccountStatuses = await Promise.all(creationRequests);
+
       const newRoleBinding = await createRoleBindingWithSubjects(
         clientFactory,
         auth,
@@ -91,7 +97,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       }, data);
       mutate(newData, false);
 
-      return Promise.resolve();
+      return Promise.resolve(serviceAccountStatuses);
     } catch (err: unknown) {
       ErrorReporter.getInstance().notify(err as never);
 
