@@ -1,8 +1,10 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -19,6 +21,8 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
   clusterNamespace,
   ...props
 }) => {
+  const context = useSelector(getCurrentInstallationContextName);
+
   return (
     <CLIGuide
       title='Set cluster labels via the Management API'
@@ -54,7 +58,12 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Add a label to this cluster'
-          command={`kubectl patch cluster ${clusterName} -n ${clusterNamespace} --type merge -p '{"metadata": {"labels": {"foo": "bar"}}}'`}
+          command={`
+          kubectl --context ${context} \\
+            patch cluster ${clusterName} \\
+            -n ${clusterNamespace} \\
+            --type merge -p '{"metadata": {"labels": {"foo": "bar"}}}'
+          `}
         >
           <Text>
             The above command would add the label <code>foo</code> with the
