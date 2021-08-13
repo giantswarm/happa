@@ -153,7 +153,7 @@ const formatAccountNames = (accountNames: string[]): string => {
 };
 
 const getBindServiceAccountSuccessMessages = (
-  statuses: ui.IAccessControlServiceAccounts[],
+  statuses: ui.IAccessControlServiceAccount[],
   statusFilters = Object.values(ui.AccessControlRoleSubjectStatus)
 ): string[] => {
   const messages = statusFilters.map((statusFilter) => {
@@ -205,7 +205,7 @@ interface IAccessControlRoleSubjectsProps
   onAdd: (
     type: ui.AccessControlSubjectTypes,
     names: string[]
-  ) => Promise<ui.IAccessControlServiceAccounts[]>;
+  ) => Promise<ui.IAccessControlServiceAccount[]>;
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
