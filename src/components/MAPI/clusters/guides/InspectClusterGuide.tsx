@@ -106,7 +106,7 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
               command={`
               kubectl --context ${context} \\
                 get azuremachines.infrastructure.cluster.x-k8s.io \\
-                -l cluster.x-k8s.io/cluster-name=${clusterName} \\
+                --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
                 --namespace ${clusterNamespace}
               `}
             />

@@ -144,7 +144,7 @@ export function withGetClusters(
     }
 
     if (config.output) {
-      newParts.push('-o', `"${config.output}"`);
+      newParts.push('--output', `"${config.output}"`);
     }
 
     return newParts;

@@ -219,7 +219,7 @@ describe('utils', () => {
         modifierConfig: {
           output: 'json',
         },
-        expectedOutput: 'kubectl gs get clusters -o "json"',
+        expectedOutput: 'kubectl gs get clusters --output "json"',
       },
     ];
 

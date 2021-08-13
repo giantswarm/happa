@@ -62,7 +62,8 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
           kubectl --context ${context} \\
             patch cluster ${clusterName} \\
             -n ${clusterNamespace} \\
-            --type merge -p '{"metadata": {"labels": {"foo": "bar"}}}'
+            --type merge \\
+            --patch '{"metadata": {"labels": {"foo": "bar"}}}'
           `}
         >
           <Text>
