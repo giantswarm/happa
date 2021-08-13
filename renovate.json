@@ -2,6 +2,7 @@
   "extends": [
     "config:base"
   ],
+  "prConcurrentLimit": 5,
   "schedule": [
     "every weekend",
     "before 5am every weekday",
