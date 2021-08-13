@@ -27,8 +27,8 @@ const CLIGuideStep: React.FC<ICLIGuideStepProps> = ({
 };
 
 CLIGuideStep.propTypes = {
-  title: PropTypes.string.isRequired,
-  command: PropTypes.string.isRequired,
+  title: PropTypes.node.isRequired,
+  command: PropTypes.node.isRequired,
   children: PropTypes.node,
 };
 

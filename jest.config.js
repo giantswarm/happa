@@ -6,18 +6,27 @@ process.env.DEBUG_PRINT_LIMIT = 10000;
 module.exports = {
   transform: {
     '^.+\\.(js|ts)(x?)$': [
-      '@swc-node/jest',
+      '@swc/jest',
       {
-        dynamicImport: true,
-        target: 'es2015',
-        sourcemap: true,
-        jsx: true,
-        experimentalDecorators: true,
-        emitDecoratorMetadata: true,
-        esModuleInterop: true,
-        react: {
-          runtime: 'automatic',
-          development: true,
+        jsc: {
+          target: 'es2015',
+          parser: {
+            syntax: 'typescript',
+            tsx: true,
+            decorators: true,
+            dynamicImport: true,
+          },
+          transform: {
+            legacyDecorator: true,
+            decoratorMetadata: true,
+            react: {
+              runtime: 'automatic',
+            },
+          },
+          externalHelpers: true,
+        },
+        env: {
+          targets: '> 0.25%, not dead',
         },
       },
     ],

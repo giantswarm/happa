@@ -1,14 +1,13 @@
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Tab from 'react-bootstrap/lib/Tab';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { mq } from 'styles';
-import Tabs from 'UI/Display/Tabs';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import Truncated from 'UI/Util/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';

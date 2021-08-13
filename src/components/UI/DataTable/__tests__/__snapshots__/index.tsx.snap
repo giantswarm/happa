@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DataTable renders a simple table 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-iCoGMd hFJToB"
+  >
+    <table
+      class="StyledTable-sc-1m3u5g-6 gnELFm StyledDataTable-xrlyjm-0 efGflZ"
+    >
+      <thead
+        class="StyledTable__StyledTableHeader-sc-1m3u5g-4 StyledDataTable__StyledDataTableHeader-xrlyjm-4"
+      >
+        <tr
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2 StyledDataTable__StyledDataTableRow-xrlyjm-2 jcwRQa"
+        />
+      </thead>
+      <tbody
+        class="StyledTable__StyledTableBody-sc-1m3u5g-3 StyledDataTable__StyledDataTableBody-xrlyjm-3 hIVAIv"
+      />
+    </table>
+  </div>
+</div>
+`;
