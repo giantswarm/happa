@@ -8,7 +8,6 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
-import { Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import {
   fixTestAppReadmeURLs,
@@ -351,13 +350,12 @@ export function getAppCatalogsIndexAppListKey(
     .join();
 }
 
-export function getAppCatalogIndexAppVersionReadmeURL(
-  appVersion?: IAppCatalogIndexAppVersion
+export function getAppCatalogEntryReadmeURL(
+  appCatalogEntry?: applicationv1alpha1.IAppCatalogEntry
 ): string | undefined {
-  return (
-    appVersion?.annotations?.[applicationv1alpha1.annotationReadme] ||
-    appVersion?.sources?.find((url) => url.endsWith(Constants.README_FILE))
-  );
+  return appCatalogEntry?.metadata.annotations?.[
+    applicationv1alpha1.annotationReadme
+  ];
 }
 
 /**
@@ -367,7 +365,7 @@ export function getAppCatalogIndexAppVersionReadmeURL(
  * @param _auth
  * @param fromURL
  */
-export async function fetchAppCatalogIndexAppVersionReadme(
+export async function fetchAppCatalogEntryReadme(
   client: IHttpClient,
   _auth: IOAuth2Provider,
   fromURL: string
