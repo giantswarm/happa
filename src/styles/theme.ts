@@ -911,6 +911,32 @@ const theme = deepMerge(generate(16), {
       }
     `,
   },
+  dataTable: {
+    row: {
+      hover: {
+        background: 'selected-background',
+      },
+    },
+    header: {
+      font: {
+        size: 'xsmall',
+        weight: 'normal',
+      },
+      color: 'text-weak',
+      gap: 'xsmall',
+      extend: () => css`
+        text-transform: uppercase;
+
+        svg {
+          width: 15px;
+          height: 15px;
+        }
+      `,
+    },
+    primary: {
+      weight: 'normal',
+    },
+  },
   anchor: {
     color: 'text',
   },

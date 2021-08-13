@@ -1,47 +1,25 @@
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import DataTable from 'UI/DataTable';
 
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
 import { isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
 
-const TableWrapper = styled.div`
-  .react-bootstrap-table table {
-    table-layout: auto;
-  }
-
-  .status {
-    width: 90px;
-  }
-
-  .actions {
-    width: 100px;
-  }
-`;
-
-const tableDefaultSorting = [
-  {
-    dataField: 'email',
-    order: 'asc',
-  },
-];
-
 // eslint-disable-next-line react/no-multi-comp
-const getExpiryCellFormatter = (cell, row, removeExpiration) => {
-  if (cell === NEVER_EXPIRES) {
+const getExpiryCellFormatter = (data, removeExpiration) => {
+  if (data.expiry === NEVER_EXPIRES) {
     return <span>never</span>;
   }
 
-  const expiryClass = isExpiringSoon(cell) ? 'expiring' : null;
-  const onRemoveExpiration = () => removeExpiration(row.email);
+  const expiryClass = isExpiringSoon(data.expiry) ? 'expiring' : null;
+  const onRemoveExpiration = () => removeExpiration(data.email);
 
   return (
     <span className={expiryClass}>
-      {relativeDate(cell)} &nbsp;
+      {relativeDate(data.expiry)} &nbsp;
       <i
         className='fa fa-close clickable'
         onClick={onRemoveExpiration}
@@ -52,12 +30,12 @@ const getExpiryCellFormatter = (cell, row, removeExpiration) => {
 };
 
 // eslint-disable-next-line react/no-multi-comp
-const getActionsCellFormatter = (_cell, row, deleteUser) => {
-  if (row.invited_by) {
+const getActionsCellFormatter = (data, deleteUser) => {
+  if (data.invited_by) {
     return '';
   }
 
-  const onDelete = () => deleteUser(row.email);
+  const onDelete = () => deleteUser(data.email);
 
   return (
     <Button size='small' onClick={onDelete} type='button'>
@@ -70,39 +48,31 @@ const getActionsCellFormatter = (_cell, row, deleteUser) => {
 const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
   return [
     {
-      classes: 'email',
-      dataField: 'email',
-      text: 'Email',
-      sort: true,
+      property: 'email',
+      header: 'Email',
+      primary: true,
     },
     {
-      classes: 'emaildomain',
-      dataField: 'emaildomain',
-      text: 'Email Domain',
-      sort: true,
+      property: 'emaildomain',
+      header: 'Email Domain',
     },
     {
-      classes: 'created',
-      dataField: 'created',
-      text: 'Created',
-      sort: true,
-      formatter: relativeDate,
+      property: 'created',
+      header: 'Created',
+      render: (data) => relativeDate(data.created),
+      size: 'small',
     },
     {
-      classes: 'expiry',
-      dataField: 'expiry',
-      text: 'Expires',
-      sort: true,
-      formatter: (cell, row) =>
-        getExpiryCellFormatter(cell, row, onRemoveExpiration),
+      property: 'expiry',
+      header: 'Expires',
+      render: (data) => getExpiryCellFormatter(data, onRemoveExpiration),
+      size: 'small',
     },
     {
-      classes: 'actions',
-      dataField: 'actionsDummy',
-      isDummyField: true,
-      text: '',
-      align: 'right',
-      formatter: (cell, row) => getActionsCellFormatter(cell, row, onDelete),
+      property: 'dummy',
+      align: 'end',
+      render: (data) => getActionsCellFormatter(data, onDelete),
+      size: 'xsmall',
     },
   ];
 };
@@ -118,16 +88,18 @@ const UsersTable = ({ onRemoveExpiration, onDelete, users }) => {
   }
 
   return (
-    <TableWrapper>
-      <BootstrapTable
-        bordered={false}
+    <div>
+      <DataTable
         columns={getTableColumnsConfig(onRemoveExpiration, onDelete)}
         data={Object.values(users.items)}
-        defaultSortDirection='asc'
-        defaultSorted={tableDefaultSorting}
-        keyField='email'
+        sort={{
+          property: 'email',
+          direction: 'asc',
+        }}
+        sortable={true}
+        fill='horizontal'
       />
-    </TableWrapper>
+    </div>
   );
 };
 
