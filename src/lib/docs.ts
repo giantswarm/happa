@@ -73,6 +73,15 @@ export const organizationCRDSchema =
 export const clusterCRDSchemaURL =
   'https://docs.giantswarm.io/ui-api/management-api/crd/clusters.cluster.x-k8s.io/';
 
+export const azureClusterCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/azureclusters.infrastructure.cluster.x-k8s.io/';
+
+export const azureMachineCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/azuremachines.infrastructure.cluster.x-k8s.io/';
+
+export const releaseCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
+
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
 
@@ -81,3 +90,6 @@ export const kubectlCreateRoleBindingURL =
 
 export const kubectlCreateClusterRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
+
+export const labellingWorkloadClustersURL =
+  'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
