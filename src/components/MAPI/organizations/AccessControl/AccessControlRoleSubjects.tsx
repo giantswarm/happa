@@ -243,11 +243,11 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
     try {
       dispatch({ type: 'startLoading', subjectType: type });
-      const statuses = await onAdd(type, values);
+      const accounts = await onAdd(type, values);
       dispatch({ type: 'stopAdding', subjectType: type });
 
       if (isServiceAccount) {
-        const messages = getBindServiceAccountSuccessMessages(statuses);
+        const messages = getBindServiceAccountSuccessMessages(accounts);
 
         for (const message of messages) {
           if (message.length > 0) {
