@@ -2,6 +2,19 @@
   "extends": [
     "config:base"
   ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "@types/jest",
+        "jest"
+      ],
+      "groupName": "jest"
+    },
+    {
+      "matchPackagePatterns": ["^eslint"],
+      "groupName": "eslint"
+    }
+  ],
   "prConcurrentLimit": 5,
   "schedule": [
     "every weekend",
