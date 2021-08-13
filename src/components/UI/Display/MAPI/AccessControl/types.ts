@@ -54,8 +54,8 @@ export interface IAccessControlPermissions {
 }
 
 export enum AccessControlRoleSubjectStatus {
-  Created,
-  Updated,
+  Created = 'Created',
+  Updated = 'Updated',
 }
 
 export interface IAccessControlServiceAccount {

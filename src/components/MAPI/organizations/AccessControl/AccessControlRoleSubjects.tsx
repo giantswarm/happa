@@ -153,42 +153,59 @@ const formatAccountNames = (accountNames: string[]): string => {
 };
 
 const getBindServiceAccountSuccessMessages = (
-  statuses: ui.IAccessControlServiceAccount[],
-  statusFilters = Object.values(ui.AccessControlRoleSubjectStatus)
+  accounts: ui.IAccessControlServiceAccount[],
+  statuses = Object.values(ui.AccessControlRoleSubjectStatus)
 ): string[] => {
-  const messages = statusFilters.map((statusFilter) => {
-    const accounts = statuses.filter(
-      (account) => account.status === statusFilter
-    );
+  const accountsByStatus = {} as Record<
+    ui.AccessControlRoleSubjectStatus,
+    string[] | null
+  >;
 
-    const accountNames = accounts.map((account) => account.name);
+  for (const account of accounts) {
+    accountsByStatus[account.status] = accountsByStatus[account.status]?.concat(
+      account.name
+    ) || [account.name];
+  }
+
+  const messages = [];
+
+  for (const status of statuses) {
+    const filteredAccounts = accountsByStatus[status];
+
+    if (!filteredAccounts) {
+      continue;
+    }
 
     const isCreatedAccounts =
-      statusFilter === ui.AccessControlRoleSubjectStatus.Created;
+      status === ui.AccessControlRoleSubjectStatus.Created;
     const isUpdatedAccounts =
-      statusFilter === ui.AccessControlRoleSubjectStatus.Updated;
+      status === ui.AccessControlRoleSubjectStatus.Updated;
 
+    let message = '';
     switch (true) {
-      case isCreatedAccounts && accounts.length > 1:
-        return `Service accounts ${formatAccountNames(
-          accountNames
+      case isCreatedAccounts && filteredAccounts.length > 1:
+        message = `Service accounts ${formatAccountNames(
+          filteredAccounts
         )} have been created and bound to the role.`;
-      case isCreatedAccounts && accounts.length === 1:
-        return `Service account ${formatAccountNames(
-          accountNames
+        break;
+      case isCreatedAccounts && filteredAccounts.length === 1:
+        message = `Service account ${formatAccountNames(
+          filteredAccounts
         )} has been created and bound to the role.`;
-      case isUpdatedAccounts && accounts.length > 1:
-        return `Service accounts ${formatAccountNames(
-          accountNames
+        break;
+      case isUpdatedAccounts && filteredAccounts.length > 1:
+        message = `Service accounts ${formatAccountNames(
+          filteredAccounts
         )} have been bound to the role.`;
-      case isUpdatedAccounts && accounts.length === 1:
-        return `Service account ${formatAccountNames(
-          accountNames
+        break;
+      case isUpdatedAccounts && filteredAccounts.length === 1:
+        message = `Service account ${formatAccountNames(
+          filteredAccounts
         )} has been bound to the role.`;
-      default:
-        return '';
+        break;
     }
-  });
+    messages.push(message);
+  }
 
   return messages;
 };
