@@ -5,7 +5,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Copyable from 'shared/Copyable';
@@ -15,6 +14,7 @@ import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import DataTable from 'UI/DataTable';
 import FlashMessage from 'UI/Display/FlashMessage';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
@@ -32,29 +32,17 @@ const Wrapper = styled.div`
     height: 25px;
     margin-bottom: 25px;
   }
-
-  .react-bootstrap-table table {
-    table-layout: auto;
-  }
-
-  .certificate-orgs-column {
-    max-width: 350px;
-    white-space: wrap;
-    display: table-cell;
-    overflow-wrap: normal;
-    word-break: break-all;
-  }
 `;
 
 class KeyPairs extends React.Component {
-  static createdCellFormatter(_cell, row) {
-    return <small>{relativeDate(row.create_date)}</small>;
+  static createdCellFormatter(data) {
+    return <span>{relativeDate(data.create_date)}</span>;
   }
 
-  static expireDateCellFormatter(_cell, row) {
+  static expireDateCellFormatter(data) {
     let expiryClass = '';
 
-    const expirationDate = toDate(row.expire_date, { timeZone: 'UTC' });
+    const expirationDate = toDate(data.expire_date, { timeZone: 'UTC' });
     const expirySeconds = differenceInSeconds(expirationDate)(new Date());
 
     // eslint-disable-next-line no-magic-numbers
@@ -63,15 +51,15 @@ class KeyPairs extends React.Component {
     }
 
     return (
-      <small className={expiryClass}>{relativeDate(row.expire_date)}</small>
+      <span className={expiryClass}>{relativeDate(data.expire_date)}</span>
     );
   }
 
-  static organizationFormatter(_cell, row) {
-    if (row.certificate_organizations !== '') {
+  static organizationFormatter(data) {
+    if (data.certificate_organizations !== '') {
       return (
-        <Copyable copyText={row.certificate_organizations}>
-          <CertificateOrgsLabel value={row.certificate_organizations} />
+        <Copyable copyText={data.certificate_organizations}>
+          <CertificateOrgsLabel value={data.certificate_organizations} />
         </Copyable>
       );
     }
@@ -120,35 +108,33 @@ class KeyPairs extends React.Component {
   getKeypairsTableColumnsConfig = () => {
     return [
       {
-        dataField: 'common_name',
-        text: 'Common Name (CN)',
-        sort: true,
-        formatter: this.commonNameFormatter,
+        property: 'common_name',
+        header: 'Common Name (CN)',
+        primary: true,
+        render: this.commonNameFormatter,
       },
       {
-        dataField: 'certificate_organizations',
-        text: 'Organization (O)',
-        sort: true,
-        formatter: KeyPairs.organizationFormatter,
-        classes: 'certificate-orgs-column',
+        property: 'certificate_organizations',
+        header: 'Organization (O)',
+        render: KeyPairs.organizationFormatter,
       },
       {
-        dataField: 'create_date',
-        text: 'Created',
-        sort: true,
-        formatter: KeyPairs.createdCellFormatter,
+        property: 'create_date',
+        header: 'Created',
+        render: KeyPairs.createdCellFormatter,
+        size: 'small',
       },
       {
-        dataField: 'expire_date',
-        text: 'Expiry',
-        sort: true,
-        formatter: KeyPairs.expireDateCellFormatter,
+        property: 'expire_date',
+        header: 'Expiry',
+        render: KeyPairs.expireDateCellFormatter,
+        size: 'small',
       },
       {
-        dataField: 'id',
-        text: '',
-        sort: false,
-        formatter: this.actionsCellFormatter,
+        property: 'dummy',
+        align: 'end',
+        render: this.actionsCellFormatter,
+        size: 'xsmall',
       },
     ];
   };
@@ -156,13 +142,10 @@ class KeyPairs extends React.Component {
   /**
    * Replaces a common suffix in every CN string, returns it as copyable
    */
-  commonNameFormatter = (_cell, row) => {
-    let displayName = row.common_name;
-    displayName = displayName.replace(`.${this.apiEndpointHostname}`, '...');
-
+  commonNameFormatter = (data) => {
     return (
-      <Copyable copyText={row.common_name}>
-        <small>{displayName}</small>
+      <Copyable copyText={data.common_name}>
+        <span>{data.common_name}</span>
       </Copyable>
     );
   };
@@ -185,9 +168,9 @@ class KeyPairs extends React.Component {
     });
   };
 
-  actionsCellFormatter = (_cell, row) => {
+  actionsCellFormatter = (data) => {
     return (
-      <Button size='small' onClick={this.showKeyPairModal.bind(this, row)}>
+      <Button size='small' onClick={this.showKeyPairModal.bind(this, data)}>
         Details
       </Button>
     );
@@ -231,13 +214,13 @@ class KeyPairs extends React.Component {
           }
 
           return (
-            <BootstrapTable
-              bordered={false}
+            <DataTable
               columns={this.getKeypairsTableColumnsConfig()}
               data={this.props.cluster.keyPairs}
-              defaultSortDirection='asc'
-              defaultSorted={[{ dataField: 'create_date', order: 'desc' }]}
-              keyField='id'
+              sort={{ property: 'create_date', direction: 'desc' }}
+              sortable={true}
+              fill='horizontal'
+              margin={{ top: 'small', bottom: 'medium' }}
             />
           );
         })()}

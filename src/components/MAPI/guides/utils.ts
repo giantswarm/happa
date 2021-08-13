@@ -117,6 +117,8 @@ export function withTemplateCluster(
 export interface IKubectlGSGetClustersCommandConfig {
   namespace?: string;
   allNamespaces?: boolean;
+  name?: string;
+  output?: string;
 }
 
 /**
@@ -129,12 +131,20 @@ export function withGetClusters(
   return (parts) => {
     const newParts = [...parts, 'get', 'clusters'];
 
+    if (config.name) {
+      newParts.push(config.name);
+    }
+
     if (config.namespace) {
       newParts.push('--namespace', config.namespace);
     }
 
     if (config.allNamespaces) {
       newParts.push('--all-namespaces');
+    }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
     }
 
     return newParts;
@@ -146,7 +156,7 @@ function isFlag(value: string): boolean {
 }
 
 // The delimiter used between each line of a multi-line command.
-const formattingLineBreak = ' \\\n    ';
+const formattingLineBreak = ' \\\n  ';
 
 /**
  * Format a command output in a more user-friendly way.
