@@ -61,8 +61,26 @@ export const kubectlGSInstallationURL =
 export const kubectlGSLoginURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/login/';
 
+export const kubectlGSGetClustersURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
+
+export const kubectlGSTemplateClusterURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
+
 export const organizationCRDSchema =
   'https://docs.giantswarm.io/ui-api/management-api/crd/organizations.security.giantswarm.io/';
+
+export const clusterCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/clusters.cluster.x-k8s.io/';
+
+export const azureClusterCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/azureclusters.infrastructure.cluster.x-k8s.io/';
+
+export const azureMachineCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/azuremachines.infrastructure.cluster.x-k8s.io/';
+
+export const releaseCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
 
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
@@ -72,3 +90,6 @@ export const kubectlCreateRoleBindingURL =
 
 export const kubectlCreateClusterRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
+
+export const labellingWorkloadClustersURL =
+  'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';

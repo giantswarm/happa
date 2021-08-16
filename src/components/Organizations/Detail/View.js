@@ -2,10 +2,8 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
-import { compare } from 'lib/semver';
 import PropTypes from 'prop-types';
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -15,6 +13,7 @@ import * as organizationActions from 'stores/organization/actions';
 import styled from 'styled-components';
 import { Ellipsis } from 'styles';
 import Button from 'UI/Controls/Button';
+import DataTable from 'UI/DataTable';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Section from 'UI/Layout/Section';
 
@@ -30,20 +29,6 @@ const Disclaimer = styled.p`
   margin: 0 0 20px;
   line-height: 1.2;
 `;
-
-const clusterTableDefaultSorting = [
-  {
-    dataField: 'id',
-    order: 'asc',
-  },
-];
-
-const memberTableDefaultSorting = [
-  {
-    dataField: 'email',
-    order: 'asc',
-  },
-];
 
 class OrganizationDetail extends React.Component {
   componentDidMount() {
@@ -71,48 +56,39 @@ class OrganizationDetail extends React.Component {
   getClusterTableColumnsConfig = () => {
     return [
       {
-        dataField: 'id',
-        text: 'Cluster ID',
-        sort: true,
-        formatter: clusterIDCellFormatter.bind(this),
+        property: 'id',
+        header: 'Cluster ID',
+        render: clusterIDCellFormatter.bind(this),
       },
       {
-        dataField: 'name',
-        text: 'Name',
-        sort: true,
-        formatter: (cell, row) =>
-          formatClusterName(cell, row, this.props.organization.id),
+        property: 'name',
+        header: 'Name',
+        render: (data) => formatClusterName(data, this.props.organization.id),
+        size: 'medium',
       },
       {
-        dataField: 'release_version',
-        text: 'Release',
-        sort: true,
-        sortFunc: (a, b, order) => {
-          if (order === 'desc') {
-            return compare(a, b) * -1;
-          }
-
-          return compare(a, b);
-        },
+        property: 'release_version',
+        header: 'Release',
+        size: 'small',
+        sortable: false,
       },
       {
-        dataField: 'create_date',
-        text: 'Created',
-        sort: true,
-        formatter: relativeDate,
+        property: 'create_date',
+        header: 'Created',
+        render: (data) => relativeDate(data.create_date),
+        size: 'small',
       },
       {
-        dataField: 'delete_date',
-        text: 'Deleted',
-        sort: true,
-        formatter: relativeDate,
+        property: 'delete_date',
+        header: 'Deleted',
+        render: (data) => relativeDate(data.delete_date),
+        size: 'small',
       },
       {
-        dataField: 'actionsDummy',
-        isDummyField: true,
-        text: '',
-        align: 'right',
-        formatter: clusterActionsCellFormatter.bind(this),
+        property: 'dummy',
+        align: 'end',
+        render: clusterActionsCellFormatter.bind(this),
+        size: 'xsmall',
       },
     ];
   };
@@ -120,25 +96,27 @@ class OrganizationDetail extends React.Component {
   getMemberTableColumnsConfig = () => {
     return [
       {
-        dataField: 'email',
-        text: 'Email',
-        sort: true,
-        attrs: {
-          'data-testid': 'organization-member-email',
-          className: 'member-email',
-        },
+        property: 'email',
+        header: 'Email',
+        render: (data) => (
+          <span
+            data-testid='organization-member-email'
+            className='member-email'
+          >
+            {data.email}
+          </span>
+        ),
       },
       {
-        dataField: 'emailDomain',
-        text: 'Email Domain',
-        sort: true,
+        property: 'emailDomain',
+        header: 'Email Domain',
       },
       {
-        dataField: 'actionsDummy',
+        property: 'actionsDummy',
         isDummyField: true,
-        text: '',
-        align: 'right',
-        formatter: memberActionsCellFormatter.bind(this),
+        align: 'end',
+        render: memberActionsCellFormatter.bind(this),
+        size: 'xsmall',
       },
     ];
   };
@@ -203,13 +181,16 @@ class OrganizationDetail extends React.Component {
           {clusters.length === 0 ? (
             <p>This organization doesn&apos;t have any clusters.</p>
           ) : (
-            <BootstrapTable
-              bordered={false}
+            <DataTable
               columns={this.getClusterTableColumnsConfig()}
               data={clusters}
-              defaultSortDirection='asc'
-              defaultSorted={clusterTableDefaultSorting}
-              keyField='id'
+              sort={{
+                property: 'id',
+                direction: 'asc',
+              }}
+              sortable={true}
+              fill='horizontal'
+              margin={{ bottom: 'medium' }}
             />
           )}
           <Link to={newClusterPath}>
@@ -224,13 +205,16 @@ class OrganizationDetail extends React.Component {
             {!organization.members || organization.members.length === 0 ? (
               <p>This organization has no members</p>
             ) : (
-              <BootstrapTable
-                bordered={false}
+              <DataTable
                 columns={this.getMemberTableColumnsConfig()}
                 data={this.props.membersForTable}
-                defaultSortDirection='asc'
-                defaultSorted={memberTableDefaultSorting}
-                keyField='email'
+                sort={{
+                  property: 'email',
+                  direction: 'asc',
+                }}
+                sortable={true}
+                fill='horizontal'
+                margin={{ top: 'small', bottom: 'medium' }}
               />
             )}
             <Button
@@ -284,33 +268,33 @@ OrganizationDetail.propTypes = {
 };
 
 // eslint-disable-next-line react/no-multi-comp
-function clusterIDCellFormatter(cell) {
-  return <ClusterIDLabel clusterID={cell} copyEnabled />;
+function clusterIDCellFormatter(data) {
+  return <ClusterIDLabel clusterID={data.id} copyEnabled />;
 }
 
 // eslint-disable-next-line react/no-multi-comp
-function formatClusterName(_, cluster, orgId) {
+function formatClusterName(data, orgId) {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail.Home,
     {
       orgId,
-      clusterId: cluster.id,
+      clusterId: data.id,
     }
   );
 
   return (
-    <>
-      {cluster.name}{' '}
+    <span>
+      {data.name}{' '}
       <Link to={clusterDetailPath}>
-        <ClusterStatus clusterId={cluster.id} hideText={true} />
+        <ClusterStatus clusterId={data.id} hideText={true} />
       </Link>
-    </>
+    </span>
   );
 }
 
 // eslint-disable-next-line react/no-multi-comp
-function clusterActionsCellFormatter(_cell, row) {
-  if (row.delete_date) {
+function clusterActionsCellFormatter(data) {
+  if (data.delete_date) {
     return <span />;
   }
 
@@ -319,7 +303,7 @@ function clusterActionsCellFormatter(_cell, row) {
     {
       // eslint-disable-next-line react/no-this-in-sfc
       orgId: this.props.organization.id,
-      clusterId: row.id,
+      clusterId: data.id,
     }
   );
 
@@ -333,11 +317,11 @@ function clusterActionsCellFormatter(_cell, row) {
 }
 
 // eslint-disable-next-line react/no-multi-comp
-function memberActionsCellFormatter(_cell, row) {
+function memberActionsCellFormatter(data) {
   return (
     <Button
       // eslint-disable-next-line react/no-this-in-sfc
-      onClick={this.removeMember.bind(this, row.email)}
+      onClick={this.removeMember.bind(this, data.email)}
       type='button'
       size='small'
       data-testid='organization-member-remove'

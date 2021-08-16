@@ -1,4 +1,4 @@
-import platform from 'lib/platform';
+import { Box } from 'grommet';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,9 +14,17 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
+import { Tab, Tabs } from 'UI/Display/Tabs';
 import Aside from 'UI/Layout/Aside';
 
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
+
+const StyledTab = styled(Tab)`
+  &[aria-expanded='true'] > div {
+    background-color: ${({ theme }) =>
+      theme.global.colors['background-front'].dark};
+  }
+`;
 
 const ToggleAlternativeButton = styled.div`
   cursor: pointer;
@@ -35,7 +43,6 @@ const ToggleAlternativeButton = styled.div`
 
 class ConfigKubeCtl extends React.Component {
   state = {
-    selectedPlatform: platform,
     alternativeOpen: false,
   };
 
@@ -43,106 +50,94 @@ class ConfigKubeCtl extends React.Component {
     this.props.actions.clusterSelect(clusterId);
   }
 
-  selectPlatform(nextPlatform) {
-    this.setState({
-      selectedPlatform: nextPlatform,
-    });
-  }
+  linuxInstructions = () => {
+    return (
+      <p>
+        Download the latest release{' '}
+        <a
+          href='https://github.com/giantswarm/gsctl/releases'
+          rel='noopener noreferrer'
+        >
+          from GitHub
+        </a>
+        , unpack the binary and move it to a location covered by your{' '}
+        <code>PATH</code> environment variable.
+      </p>
+    );
+  };
 
-  selectedInstallInstructions() {
-    switch (this.state.selectedPlatform) {
-      case 'Windows':
-        return (
-          <>
-            <p>
-              <a href='http://scoop.sh/' rel='noopener noreferrer'>
-                scoop
-              </a>{' '}
-              enables convenient installs and updates for Windows PowerShell
-              users. Before you can install gsctl for the first time, execute
-              this:
-            </p>
-            <CodeBlock>
-              <Prompt>
-                scoop bucket add giantswarm
-                https://github.com/giantswarm/scoop-bucket.git
-              </Prompt>
-            </CodeBlock>
-            <p>To install:</p>
-            <CodeBlock>
-              <Prompt>scoop install gsctl</Prompt>
-            </CodeBlock>
-            <p>To update:</p>
-            <CodeBlock>
-              <Prompt>scoop update gsctl</Prompt>
-            </CodeBlock>
-            <p>
-              To install without scoop, download the latest release{' '}
-              <a
-                href='https://github.com/giantswarm/gsctl/releases'
-                rel='noopener noreferrer'
-              >
-                from GitHub
-              </a>
-              , unpack the binary and move it to a location covered by your{' '}
-              <code>PATH</code> environment variable.
-            </p>
-          </>
-        );
-      case 'Mac':
-        return (
-          <>
-            <p>
-              Homebrew provides the most convenient way to install gsctl and
-              keep it up to date. To install, use this command:
-            </p>
+  windowsInstructions = () => {
+    return (
+      <>
+        <p>
+          <a href='http://scoop.sh/' rel='noopener noreferrer'>
+            scoop
+          </a>{' '}
+          enables convenient installs and updates for Windows PowerShell users.
+          Before you can install gsctl for the first time, execute this:
+        </p>
+        <CodeBlock>
+          <Prompt>
+            scoop bucket add giantswarm
+            https://github.com/giantswarm/scoop-bucket.git
+          </Prompt>
+        </CodeBlock>
+        <p>To install:</p>
+        <CodeBlock>
+          <Prompt>scoop install gsctl</Prompt>
+        </CodeBlock>
+        <p>To update:</p>
+        <CodeBlock>
+          <Prompt>scoop update gsctl</Prompt>
+        </CodeBlock>
+        <p>
+          To install without scoop, download the latest release{' '}
+          <a
+            href='https://github.com/giantswarm/gsctl/releases'
+            rel='noopener noreferrer'
+          >
+            from GitHub
+          </a>
+          , unpack the binary and move it to a location covered by your{' '}
+          <code>PATH</code> environment variable.
+        </p>
+      </>
+    );
+  };
 
-            <CodeBlock>
-              <Prompt>brew tap giantswarm/giantswarm</Prompt>
-              <Prompt>brew install gsctl</Prompt>
-            </CodeBlock>
+  macOSinstructions = () => {
+    return (
+      <>
+        <p>
+          Homebrew provides the most convenient way to install gsctl and keep it
+          up to date. To install, use this command:
+        </p>
 
-            <p>For updating:</p>
+        <CodeBlock>
+          <Prompt>brew tap giantswarm/giantswarm</Prompt>
+          <Prompt>brew install gsctl</Prompt>
+        </CodeBlock>
 
-            <CodeBlock>
-              <Prompt>brew upgrade gsctl</Prompt>
-            </CodeBlock>
+        <p>For updating:</p>
 
-            <p>
-              To install without homebrew, download the latest release{' '}
-              <a
-                href='https://github.com/giantswarm/gsctl/releases'
-                rel='noopener noreferrer'
-              >
-                from GitHub
-              </a>
-              , unpack the binary and move it to a location covered by your{' '}
-              <code>PATH</code> environment variable.
-            </p>
-          </>
-        );
-      case 'Linux':
-        return (
-          <p>
-            Download the latest release{' '}
-            <a
-              href='https://github.com/giantswarm/gsctl/releases'
-              rel='noopener noreferrer'
-            >
-              from GitHub
-            </a>
-            , unpack the binary and move it to a location covered by your{' '}
-            <code>PATH</code> environment variable.
-          </p>
-        );
-      default:
-        return <p>Shouldn&apos;t be here</p>;
-    }
-  }
+        <CodeBlock>
+          <Prompt>brew upgrade gsctl</Prompt>
+        </CodeBlock>
 
-  isSelectedPlatform(nextPlatform) {
-    return this.state.selectedPlatform === nextPlatform;
-  }
+        <p>
+          To install without homebrew, download the latest release{' '}
+          <a
+            href='https://github.com/giantswarm/gsctl/releases'
+            rel='noopener noreferrer'
+          >
+            from GitHub
+          </a>
+          , unpack the binary and move it to a location covered by your{' '}
+          <code>PATH</code> environment variable.
+        </p>
+      </>
+    );
+  };
 
   toggleAlternative = () => {
     this.setState((prevState) => ({
@@ -195,34 +190,20 @@ class ConfigKubeCtl extends React.Component {
             provide an <a href='#alternative'>alternative solution below.</a>
           </p>
 
-          <div className='platform_selector'>
-            <ul className='platform_selector--tabs'>
-              <li
-                className={this.isSelectedPlatform('Linux') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Linux')}
-              >
-                Linux
-              </li>
-
-              <li
-                className={this.isSelectedPlatform('Mac') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Mac')}
-              >
-                Mac OS
-              </li>
-
-              <li
-                className={this.isSelectedPlatform('Windows') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Windows')}
-              >
-                Windows
-              </li>
-            </ul>
-
-            <div className='platform_selector--content'>
-              {this.selectedInstallInstructions()}
-            </div>
-          </div>
+          <Box
+            background='background-front'
+            pad='medium'
+            round='xsmall'
+            margin={{ vertical: 'medium' }}
+          >
+            <Tabs>
+              <StyledTab title='Linux'>{this.linuxInstructions()}</StyledTab>
+              <StyledTab title='Mac OS'>{this.macOSinstructions()}</StyledTab>
+              <StyledTab title='Windows'>
+                {this.windowsInstructions()}
+              </StyledTab>
+            </Tabs>
+          </Box>
 
           <p>Run this command to make sure the installation succeeded:</p>
 
