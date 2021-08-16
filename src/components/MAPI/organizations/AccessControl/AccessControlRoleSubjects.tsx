@@ -153,29 +153,22 @@ const formatAccountNames = (accountNames: string[]): string => {
 };
 
 const getBindServiceAccountSuccessMessages = (
-  accounts: ui.IAccessControlServiceAccount[],
-  statuses = Object.values(ui.AccessControlRoleSubjectStatus)
+  accounts: ui.IAccessControlServiceAccount[]
 ): string[] => {
   const accountsByStatus = {} as Record<
     ui.AccessControlRoleSubjectStatus,
-    string[] | null
+    string[]
   >;
-
   for (const account of accounts) {
-    accountsByStatus[account.status] = accountsByStatus[account.status]?.concat(
-      account.name
-    ) || [account.name];
+    if (!accountsByStatus.hasOwnProperty(account.status)) {
+      accountsByStatus[account.status] = [];
+    }
+    accountsByStatus[account.status].push(account.name);
   }
 
   const messages = [];
 
-  for (const status of statuses) {
-    const filteredAccounts = accountsByStatus[status];
-
-    if (!filteredAccounts) {
-      continue;
-    }
-
+  for (const [status, filteredAccounts] of Object.entries(accountsByStatus)) {
     const isCreatedAccounts =
       status === ui.AccessControlRoleSubjectStatus.Created;
     const isUpdatedAccounts =
