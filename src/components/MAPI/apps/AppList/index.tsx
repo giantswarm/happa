@@ -5,7 +5,7 @@ import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import usePrevious from 'lib/hooks/usePrevious';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -50,7 +50,7 @@ const AppList: React.FC<{}> = () => {
     data: appCatalogList,
     error: appCatalogListError,
     isValidating: appCatalogListIsValidating,
-  } = useSWR<applicationv1alpha1.IAppCatalogList, GenericResponse>(
+  } = useSWR<applicationv1alpha1.IAppCatalogList, GenericResponseError>(
     applicationv1alpha1.getAppCatalogListKey(appCatalogListGetOptions),
     () =>
       applicationv1alpha1.getAppCatalogList(
@@ -119,7 +119,7 @@ const AppList: React.FC<{}> = () => {
     data: appCatalogIndexAppList,
     error: appCatalogIndexAppListError,
     isValidating: appCatalogIndexAppListIsValidating,
-  } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
+  } = useSWR<IAppCatalogIndexAppList, GenericResponseError>(
     getAppCatalogsIndexAppListKey(appCatalogList?.items),
     () => getAppCatalogsIndexAppList(clientFactory, auth, appCatalogList!.items)
   );

@@ -4,7 +4,7 @@ import produce from 'immer';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -42,7 +42,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   const auth = useAuthProvider();
   const { data, mutate, error } = useSWR<
     ui.IAccessControlRoleItem[],
-    GenericResponse
+    GenericResponseError
   >(getRoleItemsKey(organizationNamespace), () =>
     getRoleItems(clientFactory, auth, organizationNamespace)
   );

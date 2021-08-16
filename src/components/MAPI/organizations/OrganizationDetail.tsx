@@ -7,7 +7,7 @@ import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -51,7 +51,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   const orgClient = useRef(clientFactory());
   const { data, error } = useSWR<
     securityv1alpha1.IOrganization,
-    GenericResponse
+    GenericResponseError
   >(securityv1alpha1.getOrganizationKey(orgId), () =>
     securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
   );

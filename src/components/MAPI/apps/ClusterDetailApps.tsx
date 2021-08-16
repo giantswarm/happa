@@ -7,7 +7,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import PropTypes from 'prop-types';
@@ -109,7 +109,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     data: appList,
     error: appListError,
     isValidating: appListIsValidating,
-  } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     applicationv1alpha1.getAppListKey(appListGetOptions),
     () =>
       applicationv1alpha1.getAppList(
@@ -154,7 +154,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     data: release,
     error: releaseError,
     isValidating: releaseIsValidating,
-  } = useSWR<releasev1alpha1.IRelease, GenericResponse>(
+  } = useSWR<releasev1alpha1.IRelease, GenericResponseError>(
     releasev1alpha1.getReleaseKey(releaseVersion),
     () =>
       releasev1alpha1.getRelease(
