@@ -84,7 +84,7 @@ export function mapResourcesToUiRoles(
     }
   }
 
-  return Object.values(roleMap);
+  return Object.values(roleMap).sort((a, b) => (a.name > b.name ? 1 : -1));
 }
 
 /**
