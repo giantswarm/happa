@@ -11,6 +11,7 @@ import {
   AccessControlSubjectTypes,
   IAccessControlPermissions,
   IAccessControlRoleItem,
+  IAccessControlServiceAccount,
 } from './types';
 
 export function formatManagedBy(managedBy?: string): string {
@@ -23,7 +24,10 @@ interface IAccessControlRoleDetailProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   namespace: string;
   permissions: IAccessControlPermissions;
-  onAdd: (type: AccessControlSubjectTypes, names: string[]) => Promise<void>;
+  onAdd: (
+    type: AccessControlSubjectTypes,
+    names: string[]
+  ) => Promise<IAccessControlServiceAccount[]>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
 }

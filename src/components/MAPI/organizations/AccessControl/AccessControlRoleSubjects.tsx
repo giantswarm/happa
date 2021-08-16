@@ -146,6 +146,63 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
   };
 };
 
+const formatAccountNames = (accountNames: string[]): string => {
+  return accountNames
+    .map((accountName) => `<code>${accountName}</code>`)
+    .join(', ');
+};
+
+const getBindServiceAccountSuccessMessages = (
+  accounts: ui.IAccessControlServiceAccount[]
+): string[] => {
+  const accountsByStatus = {} as Record<
+    ui.AccessControlRoleSubjectStatus,
+    string[]
+  >;
+  for (const account of accounts) {
+    if (!accountsByStatus.hasOwnProperty(account.status)) {
+      accountsByStatus[account.status] = [];
+    }
+    accountsByStatus[account.status].push(account.name);
+  }
+
+  const messages = [];
+
+  for (const [status, filteredAccounts] of Object.entries(accountsByStatus)) {
+    const isCreatedAccounts =
+      status === ui.AccessControlRoleSubjectStatus.Created;
+    const isUpdatedAccounts =
+      status === ui.AccessControlRoleSubjectStatus.Updated;
+
+    let message = '';
+    switch (true) {
+      case isCreatedAccounts && filteredAccounts.length > 1:
+        message = `Service accounts ${formatAccountNames(
+          filteredAccounts
+        )} have been created and bound to the role.`;
+        break;
+      case isCreatedAccounts && filteredAccounts.length === 1:
+        message = `Service account ${formatAccountNames(
+          filteredAccounts
+        )} has been created and bound to the role.`;
+        break;
+      case isUpdatedAccounts && filteredAccounts.length > 1:
+        message = `Service accounts ${formatAccountNames(
+          filteredAccounts
+        )} have been bound to the role.`;
+        break;
+      case isUpdatedAccounts && filteredAccounts.length === 1:
+        message = `Service account ${formatAccountNames(
+          filteredAccounts
+        )} has been bound to the role.`;
+        break;
+    }
+    messages.push(message);
+  }
+
+  return messages;
+};
+
 interface IAccessControlRoleSubjectsProps
   extends Pick<
       ui.IAccessControlRoleItem,
@@ -155,7 +212,10 @@ interface IAccessControlRoleSubjectsProps
   roleName: string;
   namespace: string;
   permissions: ui.IAccessControlPermissions;
-  onAdd: (type: ui.AccessControlSubjectTypes, names: string[]) => Promise<void>;
+  onAdd: (
+    type: ui.AccessControlSubjectTypes,
+    names: string[]
+  ) => Promise<ui.IAccessControlServiceAccount[]>;
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
@@ -188,26 +248,50 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
       return;
     }
+    const isServiceAccount =
+      type === ui.AccessControlSubjectTypes.ServiceAccount;
 
     try {
       dispatch({ type: 'startLoading', subjectType: type });
-      await onAdd(type, values);
+      const accounts = await onAdd(type, values);
       dispatch({ type: 'stopAdding', subjectType: type });
 
-      let message = '';
-      if (values.length > 1) {
-        message = 'Subjects added successfully.';
-      } else {
-        message = 'Subject added successfully.';
-      }
+      if (isServiceAccount) {
+        const messages = getBindServiceAccountSuccessMessages(accounts);
 
-      new FlashMessage(message, messageType.SUCCESS, messageTTL.SHORT);
+        for (const message of messages) {
+          if (message.length > 0) {
+            new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
+          }
+        }
+      } else {
+        let message = '';
+        if (values.length > 1) {
+          message = 'Subjects added successfully.';
+        } else {
+          message = 'Subject added successfully.';
+        }
+
+        new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
+      }
     } catch (err: unknown) {
       let message = '';
-      if (values.length > 1) {
-        message = 'Could not add subjects:';
-      } else {
-        message = 'Could not add subject:';
+      switch (true) {
+        case isServiceAccount && values.length > 1:
+          message = `Could not create service accounts ${formatAccountNames(
+            values
+          )} :`;
+          break;
+        case isServiceAccount && values.length === 1:
+          message = `Could not create service account ${formatAccountNames(
+            values
+          )} :`;
+          break;
+        case values.length > 1:
+          message = 'Could not add subjects:';
+          break;
+        default:
+          message = 'Could not add subject:';
       }
       const errorMessage = (err as Error).message;
 
@@ -235,11 +319,14 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       });
       await onDelete(type, name);
 
-      new FlashMessage(
-        `Subject ${name} deleted successfully.`,
-        messageType.SUCCESS,
-        messageTTL.SHORT
-      );
+      let deletionMessage = '';
+      if (type === ui.AccessControlSubjectTypes.ServiceAccount) {
+        deletionMessage = `The binding for service account <code>${name}</code> has been removed.`;
+      } else {
+        deletionMessage = `Subject <code>${name}</code> deleted successfully.`;
+      }
+
+      new FlashMessage(deletionMessage, messageType.SUCCESS, messageTTL.SHORT);
     } catch (err: unknown) {
       const message = (err as Error).message;
 
