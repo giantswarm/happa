@@ -109,8 +109,44 @@ export function withTemplateCluster(
 }
 
 /**
+ * Relevant configuration options supported by the
+ * `get apps` command.
+ * */
+export interface IKubectlGSGetAppsCommandConfig {
+  namespace?: string;
+  allNamespaces?: boolean;
+  output?: string;
+}
+
+/**
+ * Generate modifier for constructing the
+ * `kubectl gs get apps` command.
+ * */
+export function withGetApps(
+  config: IKubectlGSGetAppsCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [...parts, 'get', 'apps'];
+
+    if (config.namespace) {
+      newParts.push('--namespace', config.namespace);
+    }
+
+    if (config.allNamespaces) {
+      newParts.push('--all-namespaces');
+    }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
+/**
  * All the configuration options supported by the
- * `template cluster` command.
+ * `get clusters` command.
  * Taken from:
  * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/get/clusters/flag.go#L14}
  * */
