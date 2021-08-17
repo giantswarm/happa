@@ -54,7 +54,7 @@ const ListNodePoolsGuide: React.FC<IListNodePoolsGuideProps> = ({
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. List node pools.'
+          title='2. List node pools'
           command={`
           kubectl gs --context ${context} \\
             get nodepools \\
