@@ -70,24 +70,6 @@ export const kubectlGSGetClustersURL =
 export const kubectlGSTemplateClusterURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
 
-export const organizationCRDSchema =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/organizations.security.giantswarm.io/';
-
-export const clusterCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/clusters.cluster.x-k8s.io/';
-
-export const azureClusterCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/azureclusters.infrastructure.cluster.x-k8s.io/';
-
-export const azureMachineCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/azuremachines.infrastructure.cluster.x-k8s.io/';
-
-export const releaseCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
-
-export const appCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/apps.application.giantswarm.io/';
-
 // Management API introduction page
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
@@ -107,3 +89,10 @@ export const labellingWorkloadClustersURL =
 // How to create workload cluster key pairs via the Management API
 export const creatingWorkloadClusterKeyPairsURL =
   'https://docs.giantswarm.io/ui-api/management-api/wc-key-pairs/';
+
+// CRD docs URL function
+export function crdSchemaURL(fullName: string) {
+  const baseURL = 'https://docs.giantswarm.io/ui-api/management-api/crd/';
+
+  return `${baseURL}${fullName}/`;
+}
