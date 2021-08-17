@@ -26,6 +26,7 @@ import {
 } from 'UI/Display/Table';
 import Truncated from 'UI/Util/Truncated';
 
+import CreateKeyPairGuide from '../clusters/guides/CreateKeyPairGuide';
 import ClusterDetailKeyPairDetailsModal from './ClusterDetailKeyPairDetailsModal';
 import { getKeyPairExpirationDate, isKeyPairExpiringSoon } from './utils';
 
@@ -224,6 +225,10 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
             onClose={handleCloseDetails}
             visible={typeof selectedKeyPair !== 'undefined'}
           />
+        </Box>
+
+        <Box margin={{ top: 'large' }} direction='column' gap='small'>
+          <CreateKeyPairGuide />
         </Box>
       </Breadcrumb>
     </DocumentTitle>
