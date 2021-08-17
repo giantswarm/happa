@@ -3,6 +3,7 @@ import { Box, Heading, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import ListNodePoolsGuide from 'MAPI/guides/ListNodePoolsGuide';
 import { NodePool, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -71,6 +72,19 @@ function formatMachineTypeColumnTitle(
       return 'VM Size';
     default:
       return 'Machine type';
+  }
+}
+
+function getProviderNodePoolResourceName(
+  provider: PropertiesOf<typeof Providers>
+) {
+  switch (provider) {
+    case Providers.AWS:
+      return 'MachineDeployment';
+    case Providers.AZURE:
+      return 'MachinePool';
+    default:
+      return 'MachinePool';
   }
 }
 
@@ -156,6 +170,7 @@ const AnimationWrapper = styled.div`
 
 interface IClusterDetailWorkerNodesProps {}
 
+// eslint-disable-next-line complexity
 const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () => {
   const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
@@ -431,6 +446,23 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
               />
             )}
           </Box>
+          {cluster && providerCluster && (
+            <Box
+              margin={{ top: 'large' }}
+              direction='column'
+              gap='small'
+              basis='100%'
+              animation={{ type: 'fadeIn', duration: 300 }}
+            >
+              <ListNodePoolsGuide
+                clusterName={cluster.metadata.name}
+                clusterNamespace={cluster.metadata.namespace!}
+                providerNodePoolResourceName={getProviderNodePoolResourceName(
+                  provider
+                )}
+              />
+            </Box>
+          )}
         </Box>
       </Breadcrumb>
     </DocumentTitle>
