@@ -1,10 +1,12 @@
 import {
+  IKubectlGSGetAppsCommandConfig,
   IKubectlGSGetClustersCommandConfig,
   IKubectlGSTemplateClusterCommandConfig,
   KubectlGSCommandModifier,
   makeKubectlGSCommand,
   withContext,
   withFormatting,
+  withGetApps,
   withGetClusters,
   withTemplateCluster,
 } from '../utils';
@@ -174,6 +176,51 @@ describe('utils', () => {
         const output = makeKubectlGSCommand(
           withTemplateCluster(tc.modifierConfig)
         );
+
+        expect(output).toEqual(tc.expectedOutput);
+      });
+    }
+  });
+
+  describe('withGetApps', () => {
+    interface ITestCase {
+      name: string;
+      modifierConfig: IKubectlGSGetAppsCommandConfig;
+      expectedOutput: string;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        name: 'returns correct output without options',
+        modifierConfig: {},
+        expectedOutput: 'kubectl gs get apps',
+      },
+      {
+        name: 'returns correct output with namespace',
+        modifierConfig: {
+          namespace: 'the-namespace',
+        },
+        expectedOutput: 'kubectl gs get apps --namespace the-namespace',
+      },
+      {
+        name: 'returns correct output with all namespaces',
+        modifierConfig: {
+          allNamespaces: true,
+        },
+        expectedOutput: 'kubectl gs get apps --all-namespaces',
+      },
+      {
+        name: 'returns correct output with output',
+        modifierConfig: {
+          output: 'json',
+        },
+        expectedOutput: 'kubectl gs get apps --output "json"',
+      },
+    ];
+
+    for (const tc of testCases) {
+      it(tc.name, () => {
+        const output = makeKubectlGSCommand(withGetApps(tc.modifierConfig));
 
         expect(output).toEqual(tc.expectedOutput);
       });

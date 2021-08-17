@@ -85,6 +85,9 @@ export const azureMachineCRDSchemaURL =
 export const releaseCRDSchemaURL =
   'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
 
+export const appCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/apps.application.giantswarm.io/';
+
 // Management API introduction page
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
