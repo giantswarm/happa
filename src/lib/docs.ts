@@ -85,14 +85,22 @@ export const azureMachineCRDSchemaURL =
 export const releaseCRDSchemaURL =
   'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
 
+// Management API introduction page
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
 
+// How to create a RoleBinding
 export const kubectlCreateRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-rolebinding-em-';
 
+// How to create a ClusterRoleBinding
 export const kubectlCreateClusterRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
 
+// How to manage workload cluster labels via the Management API
 export const labellingWorkloadClustersURL =
   'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
+
+// How to create workload cluster key pairs via the Management API
+export const creatingWorkloadClusterKeyPairsURL =
+  'https://docs.giantswarm.io/ui-api/management-api/wc-key-pairs/';
