@@ -3,7 +3,6 @@ import { Box, Heading, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import ListNodePoolsGuide from 'MAPI/guides/ListNodePoolsGuide';
 import { NodePool, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -14,6 +13,7 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
 } from 'MAPI/utils';
+import ListNodePoolsGuide from 'MAPI/workernodes/guides/ListNodePoolsGuide';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
