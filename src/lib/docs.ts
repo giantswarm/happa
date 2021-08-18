@@ -90,6 +90,14 @@ export const labellingWorkloadClustersURL =
 export const creatingWorkloadClusterKeyPairsURL =
   'https://docs.giantswarm.io/ui-api/management-api/wc-key-pairs/';
 
+// CRD names we expect to find a docs schema page for,
+// grouped by publisher domain.
+export const crds = {
+  xk8sio: {
+    cluster: 'clusters.cluster.x-k8s.io',
+  },
+};
+
 // CRD docs URL function
 export function crdSchemaURL(fullName: string) {
   const baseURL = 'https://docs.giantswarm.io/ui-api/management-api/crd/';
