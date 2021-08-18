@@ -88,6 +88,9 @@ export const releaseCRDSchemaURL =
 export const machinePoolCRDSchemaURL =
   'https://docs.giantswarm.io/ui-api/management-api/crd/machinepools.exp.cluster.x-k8s.io/';
 
+export const appCRDSchemaURL =
+  'https://docs.giantswarm.io/ui-api/management-api/crd/apps.application.giantswarm.io/';
+
 // Management API introduction page
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
