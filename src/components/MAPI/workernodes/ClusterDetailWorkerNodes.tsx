@@ -33,6 +33,7 @@ import Button from 'UI/Controls/Button';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolListPlaceholder from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolListPlaceholder';
 
+import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
 import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
 import { IWorkerNodesAdditionalColumn } from './types';
@@ -463,6 +464,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
                 )}
               />
               <ModifyNodePoolGuide
+                clusterNamespace={cluster.metadata.namespace!}
+              />
+              <DeleteNodePoolGuide
                 clusterNamespace={cluster.metadata.namespace!}
               />
             </Box>
