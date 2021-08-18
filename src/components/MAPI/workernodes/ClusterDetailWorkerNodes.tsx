@@ -13,7 +13,6 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
 } from 'MAPI/utils';
-import ListNodePoolsGuide from 'MAPI/workernodes/guides/ListNodePoolsGuide';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -34,6 +33,8 @@ import Button from 'UI/Controls/Button';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolListPlaceholder from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolListPlaceholder';
 
+import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
+import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
 import { IWorkerNodesAdditionalColumn } from './types';
 import WorkerNodesAzureMachinePoolSpotInstances from './WorkerNodesAzureMachinePoolSpotInstances';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
@@ -460,6 +461,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
                 providerNodePoolResourceName={getProviderNodePoolResourceName(
                   provider
                 )}
+              />
+              <ModifyNodePoolGuide
+                clusterNamespace={cluster.metadata.namespace!}
               />
             </Box>
           )}
