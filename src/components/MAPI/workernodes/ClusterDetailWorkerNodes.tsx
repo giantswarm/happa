@@ -3,7 +3,6 @@ import { Box, Heading, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import ListNodePoolsGuide from 'MAPI/guides/ListNodePoolsGuide';
 import { NodePool, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -34,6 +33,8 @@ import Button from 'UI/Controls/Button';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolListPlaceholder from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolListPlaceholder';
 
+import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
+import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
 import { IWorkerNodesAdditionalColumn } from './types';
 import WorkerNodesAzureMachinePoolSpotInstances from './WorkerNodesAzureMachinePoolSpotInstances';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
@@ -460,6 +461,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
                 providerNodePoolResourceName={getProviderNodePoolResourceName(
                   provider
                 )}
+              />
+              <ModifyNodePoolGuide
+                clusterNamespace={cluster.metadata.namespace!}
               />
             </Box>
           )}

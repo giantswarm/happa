@@ -45,9 +45,6 @@ export const kubernetesResourcesURL =
 // All information about node pools.
 export const nodePoolsURL = 'https://docs.giantswarm.io/advanced/node-pools/';
 
-export const kubectlGSGetNodePoolsURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-nodepools/';
-
 // Organization concept docs.
 export const organizationsExplainedURL =
   'https://docs.giantswarm.io/general/organizations/';
@@ -69,6 +66,9 @@ export const kubectlGSGetClustersURL =
 
 export const kubectlGSTemplateClusterURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
+
+export const kubectlGSGetNodePoolsURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-nodepools/';
 
 // Management API introduction page
 export const managementAPIIntroduction =
