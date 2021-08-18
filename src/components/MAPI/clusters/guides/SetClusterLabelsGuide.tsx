@@ -36,7 +36,7 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
             },
             {
               label: 'Cluster CRD schema',
-              href: docs.clusterCRDSchemaURL,
+              href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
               external: true,
             },
             {

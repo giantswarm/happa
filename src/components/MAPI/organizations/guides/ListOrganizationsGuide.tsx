@@ -31,7 +31,7 @@ const ListOrganizationsGuide: React.FC<IListOrganizationsGuideProps> = (
             },
             {
               label: 'Organization CRD schema',
-              href: docs.organizationCRDSchema,
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.organization),
               external: true,
             },
             {

@@ -45,17 +45,17 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
             },
             {
               label: 'Cluster CRD schema',
-              href: docs.clusterCRDSchemaURL,
+              href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
               external: true,
             },
             {
               label: 'AzureCluster CRD schema',
-              href: docs.azureClusterCRDSchemaURL,
+              href: docs.crdSchemaURL(docs.crds.xk8sio.azureCluster),
               external: true,
             },
             {
               label: 'AzureMachine CRD schema',
-              href: docs.azureMachineCRDSchemaURL,
+              href: docs.crdSchemaURL(docs.crds.xk8sio.azureMachine),
               external: true,
             },
             {
