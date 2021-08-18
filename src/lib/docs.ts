@@ -99,6 +99,8 @@ export const crds = {
     release: 'releases.release.giantswarm.io',
   },
   xk8sio: {
+    azureCluster: 'azureclusters.infrastructure.cluster.x-k8s.io',
+    azureMachine: 'azuremachines.infrastructure.cluster.x-k8s.io',
     cluster: 'clusters.cluster.x-k8s.io',
     machinepool: 'machinepools.exp.cluster.x-k8s.io',
   },
