@@ -34,7 +34,7 @@ const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
             },
             {
               label: 'MachinePool CRD Schema',
-              href: docs.machinePoolCRDSchemaURL,
+              href: docs.crdSchemaURL(docs.crds.xk8sio.machinepool),
               external: true,
             },
             {

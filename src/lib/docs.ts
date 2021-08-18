@@ -100,6 +100,7 @@ export const crds = {
   },
   xk8sio: {
     cluster: 'clusters.cluster.x-k8s.io',
+    machinepool: 'machinepools.exp.cluster.x-k8s.io',
   },
 };
 
