@@ -31,7 +31,7 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
             },
             {
               label: 'Organization CRD schema',
-              href: docs.crdSchemaURL('organizations.security.giantswarm.io'),
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.organization),
               external: true,
             },
             {

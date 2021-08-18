@@ -93,6 +93,11 @@ export const creatingWorkloadClusterKeyPairsURL =
 // CRD names we expect to find a docs schema page for,
 // grouped by publisher domain.
 export const crds = {
+  giantswarmio: {
+    app: 'apps.application.giantswarm.io',
+    organization: 'organizations.security.giantswarm.io',
+    release: 'releases.release.giantswarm.io',
+  },
   xk8sio: {
     cluster: 'clusters.cluster.x-k8s.io',
   },

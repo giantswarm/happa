@@ -49,7 +49,7 @@ const InspectClusterReleaseGuide: React.FC<IInspectClusterReleaseGuideProps> = (
             },
             {
               label: 'Release CRD schema',
-              href: docs.crdSchemaURL('releases.release.giantswarm.io'),
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.release),
               external: true,
             },
             {

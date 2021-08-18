@@ -40,7 +40,7 @@ const ListAppsGuide: React.FC<IListAppsGuideProps> = ({
             },
             {
               label: 'App CRD schema',
-              href: docs.crdSchemaURL('apps.application.giantswarm.io'),
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.app),
               external: true,
             },
             {
