@@ -187,6 +187,83 @@ export function withGetClusters(
   };
 }
 
+/**
+ * Configuration options supported by the `template nodepool` command.
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/nodepool/flag.go#L13}
+ * */
+export interface IKubectlGSTemplateNodePoolCommandConfig {
+  provider: string;
+  owner: string;
+  clusterName: string;
+  description?: string;
+  azureVMSize?: string;
+  nodePoolAZs?: string[];
+  azureUseSpotVMs?: boolean;
+  azureSpotVMsMaxPrice?: number;
+  nodesMin?: number;
+  nodesMax?: number;
+  output?: string;
+}
+
+/**
+ * Generate a modifier for constructing the
+ * `kubectl gs template nodepool` command.
+ * */
+export function withTemplateNodePool(
+  config: IKubectlGSTemplateNodePoolCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [
+      ...parts,
+      'template',
+      'nodepool',
+      '--provider',
+      config.provider,
+      '--owner',
+      config.owner,
+      '--cluster-name',
+      config.clusterName,
+    ];
+
+    if (config.description) {
+      newParts.push('--description', `"${config.description}"`);
+    }
+
+    if (config.azureVMSize) {
+      newParts.push('--azure-vm-size', config.azureVMSize);
+    }
+
+    if (config.nodePoolAZs && config.nodePoolAZs.length > 0) {
+      newParts.push('--availability-zones', config.nodePoolAZs.join(','));
+    }
+
+    if (config.azureUseSpotVMs) {
+      newParts.push('--azure-spot-vms', '');
+    }
+
+    if (config.azureSpotVMsMaxPrice && config.azureSpotVMsMaxPrice > -1) {
+      newParts.push(
+        '--azure-spot-vms-max-price',
+        `${config.azureSpotVMsMaxPrice}`
+      );
+    }
+
+    if (config.nodesMin) {
+      newParts.push('--nodes-min', `${config.nodesMin}`);
+    }
+
+    if (config.nodesMax) {
+      newParts.push('--nodes-max', `${config.nodesMax}`);
+    }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
 function isFlag(value: string): boolean {
   return value.startsWith('--');
 }
