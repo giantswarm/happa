@@ -372,13 +372,25 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           owner: 'some-owner',
           provider: 'some-provider',
-          nodesMin: 4,
+          nodesMin: 0,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-min 4',
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-min 0',
       },
       {
-        name: 'returns correct output with minimum number of nodes',
+        name:
+          'returns correct output if the minimum number of nodes equals the recommended default',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodesMin: 3,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+      },
+      {
+        name: 'returns correct output with maximum number of nodes',
         modifierConfig: {
           clusterName: 'a1b2c',
           owner: 'some-owner',
@@ -387,6 +399,18 @@ describe('utils', () => {
         },
         expectedOutput:
           'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-max 8',
+      },
+      {
+        name:
+          'returns correct output if the maximum number of nodes equals the recommended default',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodesMax: 10,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
       },
     ];
 

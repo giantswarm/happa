@@ -1,3 +1,4 @@
+import { Constants } from 'shared/constants';
 import { IState } from 'stores/state';
 
 export function getCurrentInstallationContextName(state: IState): string {
@@ -248,11 +249,17 @@ export function withTemplateNodePool(
       );
     }
 
-    if (config.nodesMin) {
+    if (
+      typeof config.nodesMin !== 'undefined' &&
+      config.nodesMin !== Constants.NP_DEFAULT_MIN_SCALING
+    ) {
       newParts.push('--nodes-min', `${config.nodesMin}`);
     }
 
-    if (config.nodesMax) {
+    if (
+      typeof config.nodesMax !== 'undefined' &&
+      config.nodesMax !== Constants.NP_DEFAULT_MAX_SCALING
+    ) {
       newParts.push('--nodes-max', `${config.nodesMax}`);
     }
 
