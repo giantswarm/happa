@@ -264,7 +264,9 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   const supportsSpotInstances = clusterReleaseVersion
     ? supportsNodePoolSpotInstances(provider, clusterReleaseVersion)
     : false;
-  const orgName = cluster.metadata.labels![capiv1alpha3.labelOrganization];
+  const orgName = state.nodePool.metadata.labels![
+    capiv1alpha3.labelOrganization
+  ];
   const description = getNodePoolDescription(state.nodePool);
   const machineType = getProviderNodePoolMachineType(state.providerNodePool);
   const spotInstances = getProviderNodePoolSpotInstances(
