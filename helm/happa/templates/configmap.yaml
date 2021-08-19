@@ -33,9 +33,5 @@ data:
   enable-rum: 'TRUE'
 
   # Feature flags
-  {{ if eq .Values.managementCluster.pipeline "testing" }}
-  feature-mapi-auth: 'TRUE'
-  {{ else }}
-  feature-mapi-auth: 'FALSE'
-  {{ end }}
+  feature-mapi-auth: {{ .Values.happa.featureFlags.mapiAuth | quote | upper }}
   feature-mapi-clusters: {{ .Values.happa.featureFlags.mapiClusters | quote | upper }}
