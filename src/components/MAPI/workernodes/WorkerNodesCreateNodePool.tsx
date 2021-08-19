@@ -15,8 +15,14 @@ import {
   extractErrorMessage,
   generateUID,
   getClusterReleaseVersion,
+  getNodePoolAvailabilityZones,
+  getNodePoolDescription,
+  getNodePoolScaling,
   getProviderClusterLocation,
   getProviderNodePoolLocation,
+  getProviderNodePoolMachineType,
+  getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import PropTypes from 'prop-types';
@@ -28,6 +34,7 @@ import { getProvider } from 'stores/main/selectors';
 import { supportsNodePoolSpotInstances } from 'stores/nodepool/utils';
 import Button from 'UI/Controls/Button';
 
+import CreateNodePoolGuide from './guides/CreateNodePoolGuide';
 import { INodePoolPropertyValue, NodePoolPatch } from './patches';
 import {
   createDefaultBootstrapConfig,
@@ -257,6 +264,16 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   const supportsSpotInstances = clusterReleaseVersion
     ? supportsNodePoolSpotInstances(provider, clusterReleaseVersion)
     : false;
+  const orgName = state.nodePool.metadata.labels![
+    capiv1alpha3.labelOrganization
+  ];
+  const description = getNodePoolDescription(state.nodePool);
+  const machineType = getProviderNodePoolMachineType(state.providerNodePool);
+  const spotInstances = getProviderNodePoolSpotInstances(
+    state.providerNodePool
+  ) as INodePoolSpotInstancesAzure;
+  const nodePoolAZs = getNodePoolAvailabilityZones(state.nodePool);
+  const scaling = getNodePoolScaling(state.nodePool);
 
   return (
     <Collapsible {...props}>
@@ -339,6 +356,26 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                   <Button onClick={handleCancel}>Cancel</Button>
                 )}
               </Box>
+            </Box>
+            <Box
+              margin={{ top: 'large' }}
+              direction='column'
+              gap='small'
+              basis='100%'
+              animation={{ type: 'fadeIn', duration: 300 }}
+            >
+              <CreateNodePoolGuide
+                provider={provider}
+                organizationName={orgName}
+                clusterName={cluster.metadata.name}
+                description={description}
+                azureVMSize={machineType}
+                nodePoolAZs={nodePoolAZs}
+                azureUseSpotVMs={spotInstances.enabled}
+                azureSpotVMsMaxPrice={spotInstances.maxPrice}
+                nodesMin={scaling.min}
+                nodesMax={scaling.max}
+              />
             </Box>
           </Box>
         </form>
