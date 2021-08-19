@@ -39,6 +39,7 @@ happa:
   host: ""
   letsencrypt: ""
   featureFlags:
+    mapiAuth: false
     mapiClusters: false
 
 happaapi:
