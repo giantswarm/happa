@@ -216,7 +216,7 @@ const Clusters: React.FC<{}> = () => {
           </Keyboard>
         </Box>
         <Box margin={{ top: 'medium' }} direction='column' gap='small'>
-          <ListClustersGuide />
+          <ListClustersGuide namespace={`org-${selectedOrgName}`} />
         </Box>
       </Box>
     </DocumentTitle>

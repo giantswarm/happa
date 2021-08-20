@@ -7,6 +7,7 @@ import {
   withContext,
   withGetClusters,
 } from 'MAPI/guides/utils';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -15,9 +16,14 @@ import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
 interface IListClustersGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {}
+  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+  namespace: string;
+}
 
-const ListClustersGuide: React.FC<IListClustersGuideProps> = (props) => {
+const ListClustersGuide: React.FC<IListClustersGuideProps> = ({
+  namespace,
+  ...props
+}) => {
   const context = useSelector(getCurrentInstallationContextName);
 
   return (
@@ -58,7 +64,7 @@ const ListClustersGuide: React.FC<IListClustersGuideProps> = (props) => {
           command={makeKubectlGSCommand(
             withContext(context),
             withGetClusters({
-              allNamespaces: true,
+              namespace: namespace,
             })
           )}
         >
@@ -72,6 +78,8 @@ const ListClustersGuide: React.FC<IListClustersGuideProps> = (props) => {
   );
 };
 
-ListClustersGuide.propTypes = {};
+ListClustersGuide.propTypes = {
+  namespace: PropTypes.string.isRequired,
+};
 
 export default ListClustersGuide;
