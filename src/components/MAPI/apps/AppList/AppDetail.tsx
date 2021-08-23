@@ -89,18 +89,17 @@ const AppDetail: React.FC<{}> = () => {
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
-    useMemo(
-      () => ({
-        labelSelector: {
-          matchingLabels: {
-            [applicationv1alpha1.labelAppName]: app,
-            [applicationv1alpha1.labelAppCatalog]: catalogName,
-          },
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(
+    () => ({
+      labelSelector: {
+        matchingLabels: {
+          [applicationv1alpha1.labelAppName]: app,
+          [applicationv1alpha1.labelAppCatalog]: catalogName,
         },
-      }),
-      [app, catalogName]
-    );
+      },
+    }),
+    [app, catalogName]
+  );
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
@@ -196,10 +195,23 @@ const AppDetail: React.FC<{}> = () => {
     creationDate = '';
   }
 
-  const keywords = useMemo(
-    () => selectedEntry?.spec.chart.keywords,
-    [selectedEntry?.spec.chart.keywords]
-  );
+  const keywords = useMemo(() => {
+    if (!selectedEntry) return undefined;
+
+    return selectedEntry.spec.chart.keywords ?? [];
+  }, [selectedEntry]);
+
+  const catalogIcon = appCatalog ? appCatalog.spec.logoURL ?? '' : undefined;
+
+  const appIconURL = selectedEntry
+    ? selectedEntry.spec.chart.icon ?? ''
+    : undefined;
+  const chartDescription = selectedEntry
+    ? selectedEntry.spec.chart.description ?? ''
+    : undefined;
+  const chartWebsite = selectedEntry
+    ? selectedEntry.spec.chart.home ?? ''
+    : undefined;
 
   return (
     <DocumentTitle title={appName ? `App Details | ${appName}` : 'App Details'}>
@@ -211,16 +223,16 @@ const AppDetail: React.FC<{}> = () => {
       >
         <AppDetailPage
           catalogName={appCatalog?.spec.title}
-          catalogIcon={appCatalog?.spec.logoURL}
+          catalogIcon={catalogIcon}
           catalogDescription={appCatalog?.spec.description}
           otherVersions={otherEntries}
           appTitle={appName}
-          appIconURL={selectedEntry?.spec.chart.icon}
+          appIconURL={appIconURL}
           chartVersion={selectedEntry?.spec.version}
           createDate={creationDate}
           includesVersion={selectedEntry?.spec.appVersion}
-          description={selectedEntry?.spec.chart.description}
-          website={selectedEntry?.spec.chart.home}
+          description={chartDescription}
+          website={chartWebsite}
           keywords={keywords}
           readmeURL={readmeURL}
           readmeError={extractErrorMessage(appReadmeError)}
