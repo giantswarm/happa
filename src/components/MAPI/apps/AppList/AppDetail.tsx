@@ -37,7 +37,7 @@ function mapAppCatalogEntriesToReleasePickerItems(
     .map((e) => ({
       chartVersion: e.spec.version,
       created: e.spec.dateCreated!,
-      includesVersion: e.spec.appVersion ?? 'n/a',
+      includesVersion: e.spec.appVersion,
       test: isTestRelease(e.spec.version),
     }))
     .sort((a, b) => compare(b.chartVersion, a.chartVersion));
