@@ -1,57 +1,14 @@
-import yaml from 'js-yaml';
 import { compareDates } from 'lib/helpers';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
-import { compare } from 'lib/semver';
-import { extractErrorMessage } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
 import { AppsRoutes } from 'shared/constants/routes';
-import {
-  fixTestAppReadmeURLs,
-  normalizeAppCatalogIndexURL,
-} from 'stores/appcatalog/utils';
+import { fixTestAppReadmeURLs } from 'stores/appcatalog/utils';
+import AppsList from 'UI/Display/Apps/AppList/AppsListPage';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
-
-export interface IAppCatalogIndexAppVersion {
-  apiVersion: string;
-  appVersion: string;
-  version: string;
-  created: string;
-  digest: string;
-  home: string;
-  icon: string;
-  name: string;
-  urls: string[];
-  description: string;
-  sources?: string[];
-  annotations?: Record<string, string>;
-  keywords?: string[];
-}
-
-export interface IAppCatalogIndexApp {
-  name: string;
-  catalogName: string;
-  catalogTitle: string;
-  catalogIconUrl: string;
-  catalogIsManaged: boolean;
-  appIconURL: string;
-  to: string;
-  versions: IAppCatalogIndexAppVersion[];
-}
-
-export interface IAppCatalogIndex {
-  apiVersion: string;
-  entries: Record<string, IAppCatalogIndexApp>;
-}
-
-export interface IAppCatalogIndexAppList {
-  items: IAppCatalogIndexApp[];
-  errors: Record<string, string>;
-}
 
 function isAppCatalogVisibleToUsers(
   appCatalog: applicationv1alpha1.IAppCatalog
@@ -62,44 +19,47 @@ function isAppCatalogVisibleToUsers(
   );
 }
 
-function compareAppCatalogIndexAppsByName(
-  a: IAppCatalogIndexApp,
-  b: IAppCatalogIndexApp
+function compareAppCatalogEntriesByName(
+  a: applicationv1alpha1.IAppCatalogEntry,
+  b: applicationv1alpha1.IAppCatalogEntry
 ) {
-  if (a.name < b.name) return -1;
-  if (a.name > b.name) return 1;
+  if (a.spec.appName < b.spec.appName) return -1;
+  if (a.spec.appName > b.spec.appName) return 1;
 
   return 0;
 }
 
-function compareAppCatalogIndexAppsByAppCatalog(
-  a: IAppCatalogIndexApp,
-  b: IAppCatalogIndexApp
+function compareAppCatalogEntriesByAppCatalog(
+  a: applicationv1alpha1.IAppCatalogEntry,
+  b: applicationv1alpha1.IAppCatalogEntry
 ) {
-  if (a.catalogTitle < b.catalogTitle) return -1;
-  if (a.catalogTitle > b.catalogTitle) return 1;
+  if (a.spec.catalog.name < b.spec.catalog.name) return -1;
+  if (a.spec.catalog.name > b.spec.catalog.name) return 1;
 
   return 0;
 }
 
-function compareAppCatalogIndexAppsByLatest(
-  a: IAppCatalogIndexApp,
-  b: IAppCatalogIndexApp
+function compareAppCatalogEntriesByLatest(
+  a: applicationv1alpha1.IAppCatalogEntry,
+  b: applicationv1alpha1.IAppCatalogEntry
 ) {
-  return compareDates(b.versions[0]?.created ?? 0, a.versions[0]?.created ?? 0);
+  return compareDates(b.spec.dateCreated ?? 0, a.spec.dateCreated ?? 0);
 }
 
 /**
  * The comparison functions used for sorting apps,
  * used by the `Sort by` dropdown.
  */
-export const compareAppCatalogIndexAppsFns: Record<
+export const compareAppCatalogEntriesFns: Record<
   string,
-  (a: IAppCatalogIndexApp, b: IAppCatalogIndexApp) => number
+  (
+    a: applicationv1alpha1.IAppCatalogEntry,
+    b: applicationv1alpha1.IAppCatalogEntry
+  ) => number
 > = {
-  name: compareAppCatalogIndexAppsByName,
-  catalog: compareAppCatalogIndexAppsByAppCatalog,
-  latest: compareAppCatalogIndexAppsByLatest,
+  name: compareAppCatalogEntriesByName,
+  catalog: compareAppCatalogEntriesByAppCatalog,
+  latest: compareAppCatalogEntriesByLatest,
 };
 
 /**
@@ -163,7 +123,7 @@ function compareAppCatalogs(
 export function mapAppCatalogsToFacets(
   appCatalogs: applicationv1alpha1.IAppCatalog[] = [],
   selectedAppCatalogs: Record<string, boolean> = {},
-  appCatalogErrors: Record<string, string> = {}
+  error: string = ''
 ): IFacetOption[] {
   return appCatalogs.sort(compareAppCatalogs).map((appCatalog) => {
     const uiTitle = computeAppCatalogUITitle(appCatalog);
@@ -176,7 +136,7 @@ export function mapAppCatalogsToFacets(
           catalogName={uiTitle}
           iconUrl={appCatalog.spec.logoURL}
           description={appCatalog.spec.description}
-          error={appCatalogErrors[appCatalog.metadata.name]}
+          error={error}
         />
       ),
     };
@@ -187,28 +147,31 @@ export function mapAppCatalogsToFacets(
  * Search through the apps and find one that is in the
  * selected catalogs, and that matches the search query.
  * @param searchQuery
- * @param indexApps
+ * @param appCatalogEntries
+ * @param selectedAppCatalogs
  */
-export function filterAppCatalogIndexApps(
+export function filterAppCatalogEntries(
   searchQuery: string,
-  indexApps: IAppCatalogIndexApp[],
+  appCatalogEntries: applicationv1alpha1.IAppCatalogEntry[],
   selectedAppCatalogs: Record<string, boolean>
 ) {
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  return indexApps.filter((indexApp) => {
-    if (!selectedAppCatalogs.hasOwnProperty(indexApp.catalogName)) return false;
+  return appCatalogEntries.filter((appCatalogEntry) => {
+    if (!selectedAppCatalogs.hasOwnProperty(appCatalogEntry.spec.catalog.name))
+      return false;
 
     if (normalizedQuery.length < 1) return true;
 
-    if (indexApp.versions.length < 1) return false;
-    const version = indexApp.versions[0];
-
     switch (true) {
-      case version.name.toLowerCase().includes(normalizedQuery):
-      case version.description.toLowerCase().includes(normalizedQuery):
-      case version.keywords &&
-        version.keywords.join(',').toLowerCase().includes(normalizedQuery):
+      case appCatalogEntry.spec.appName.toLowerCase().includes(normalizedQuery):
+      case appCatalogEntry.spec.chart.description
+        ?.toLowerCase()
+        .includes(normalizedQuery):
+      case appCatalogEntry.spec.chart.keywords
+        ?.join('')
+        .toLowerCase()
+        .includes(normalizedQuery):
         return true;
 
       default:
@@ -227,135 +190,6 @@ function makeAppPath(
     catalogName,
     version,
   });
-}
-
-function compareVersions(
-  a: IAppCatalogIndexAppVersion,
-  b: IAppCatalogIndexAppVersion
-) {
-  return compare(b.version, a.version);
-}
-
-export interface IAppCatalogIndexResponse {
-  apiVersion: string;
-  entries: Record<string, IAppCatalogIndexAppVersion[]>;
-}
-
-/**
- * Fetch the catalog index from the URL saved in the catalog CR.
- * @param client
- * @param _auth
- * @param catalog
- */
-async function fetchAppCatalogIndex(
-  client: IHttpClient,
-  _auth: IOAuth2Provider,
-  catalog: applicationv1alpha1.IAppCatalog
-): Promise<IAppCatalogIndex> {
-  const url = normalizeAppCatalogIndexURL(catalog.spec.storage.URL);
-
-  client.setRequestConfig({
-    forceCORS: true,
-    url,
-    headers: {},
-  });
-
-  const response = await client.execute<string>();
-  const catalogIndexResponse = yaml.load(
-    response.data
-  ) as IAppCatalogIndexResponse;
-
-  const catalogIndex: IAppCatalogIndex = {
-    apiVersion: catalogIndexResponse.apiVersion,
-    entries: {},
-  };
-
-  for (const [appName, versions] of Object.entries(
-    catalogIndexResponse.entries
-  )) {
-    let sortedVersions = versions.sort(compareVersions);
-    sortedVersions = sortedVersions.map((v) => {
-      // There might be some old versions that don't have all the right values.
-      if (typeof v.home === 'undefined') {
-        v.home = '';
-      }
-
-      if (typeof v.appVersion === 'undefined') {
-        v.appVersion = '';
-      }
-
-      if (typeof v.description === 'undefined') {
-        v.description = '';
-      }
-
-      return v;
-    });
-
-    const version = versions[0]?.version ?? 'n/a';
-    const iconURL = versions[0]?.icon ?? '';
-
-    catalogIndex.entries[appName] = {
-      catalogName: catalog.metadata.name,
-      catalogTitle: computeAppCatalogUITitle(catalog),
-      catalogIconUrl: catalog.spec.logoURL ?? '',
-      catalogIsManaged: isAppCatalogVisibleToUsers(catalog),
-      appIconURL: iconURL,
-      name: appName,
-      to: makeAppPath(appName, version, catalog.metadata.name),
-      versions: sortedVersions,
-    };
-  }
-
-  return catalogIndex;
-}
-
-export async function getAppCatalogsIndexAppList(
-  clientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  catalogs: applicationv1alpha1.IAppCatalog[]
-): Promise<IAppCatalogIndexAppList> {
-  const requests = catalogs.map((catalog) =>
-    fetchAppCatalogIndex(clientFactory(), auth, catalog)
-  );
-
-  const responses = await Promise.allSettled(requests);
-
-  const indexList: IAppCatalogIndexAppList = {
-    items: [],
-    errors: {},
-  };
-  for (let i = 0; i < responses.length; i++) {
-    const response = responses[i];
-
-    if (response.status === 'rejected') {
-      const catalogName = catalogs[i].metadata.name;
-      indexList.errors[catalogName] = extractErrorMessage(response.reason);
-      continue;
-    }
-
-    indexList.items.push(...Object.values(response.value.entries));
-  }
-
-  return indexList;
-}
-
-export function getAppCatalogsIndexAppListKey(
-  catalogs?: applicationv1alpha1.IAppCatalog[]
-) {
-  if (!catalogs) return null;
-
-  return catalogs
-    .sort(compareAppCatalogs)
-    .map((c) => c.metadata.name)
-    .join();
-}
-
-export function getAppCatalogEntryReadmeURL(
-  appCatalogEntry?: applicationv1alpha1.IAppCatalogEntry
-): string | undefined {
-  return appCatalogEntry?.metadata.annotations?.[
-    applicationv1alpha1.annotationReadme
-  ];
 }
 
 /**
@@ -383,6 +217,39 @@ export async function fetchAppCatalogEntryReadme(
   return response.data;
 }
 
-export function fetchAppCatalogIndexAppVersionReadmeKey(fromURL?: string) {
+export function fetchAppCatalogEntryReadmeKey(fromURL?: string) {
   return fromURL ?? null;
+}
+
+type AppPageApps = React.ComponentPropsWithoutRef<typeof AppsList>['apps'];
+
+export function mapAppCatalogEntriesToAppPageApps(
+  appCatalogEntries: applicationv1alpha1.IAppCatalogEntry[],
+  catalogs: applicationv1alpha1.IAppCatalog[] = []
+): AppPageApps {
+  const appCatalogs = catalogs.reduce<
+    Record<string, applicationv1alpha1.IAppCatalog>
+  >((acc, catalog) => {
+    acc[catalog.metadata.name] = catalog;
+
+    return acc;
+  }, {});
+
+  return appCatalogEntries.map((appCatalogEntry) => {
+    const catalog = appCatalogs[appCatalogEntry.spec.catalog.name];
+    const appName = appCatalogEntry.spec.appName;
+
+    return {
+      catalogTitle: catalog ? computeAppCatalogUITitle(catalog) : '',
+      catalogIconUrl: catalog?.spec.logoURL ?? '',
+      catalogIsManaged: catalog ? isAppCatalogVisibleToUsers(catalog) : false,
+      appIconURL: appCatalogEntry.spec.chart.icon,
+      name: appName,
+      to: makeAppPath(
+        appName,
+        appCatalogEntry.spec.version,
+        appCatalogEntry.spec.catalog.name
+      ),
+    };
+  });
 }

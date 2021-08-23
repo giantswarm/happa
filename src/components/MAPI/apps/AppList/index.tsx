@@ -15,11 +15,9 @@ import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
 import { useAppsContext } from '../AppsProvider';
 import {
-  compareAppCatalogIndexAppsFns,
-  filterAppCatalogIndexApps,
-  getAppCatalogsIndexAppList,
-  getAppCatalogsIndexAppListKey,
-  IAppCatalogIndexAppList,
+  compareAppCatalogEntriesFns,
+  filterAppCatalogEntries,
+  mapAppCatalogEntriesToAppPageApps,
   mapAppCatalogsToFacets,
 } from './utils';
 
@@ -115,45 +113,76 @@ const AppList: React.FC<{}> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appCatalogList?.items, prevAppCatalogList]);
 
+  const appCatalogEntryListClient = useRef(clientFactory());
+
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(
+    () => ({
+      labelSelector: {
+        matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
+      },
+    }),
+    []
+  );
+
   const {
-    data: appCatalogIndexAppList,
-    error: appCatalogIndexAppListError,
-    isValidating: appCatalogIndexAppListIsValidating,
-  } = useSWR<IAppCatalogIndexAppList, GenericResponse>(
-    getAppCatalogsIndexAppListKey(appCatalogList?.items),
-    () => getAppCatalogsIndexAppList(clientFactory, auth, appCatalogList!.items)
+    data: appCatalogEntryList,
+    error: appCatalogEntryListError,
+    isValidating: appCatalogEntryListIsValidating,
+  } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponse>(
+    applicationv1alpha1.getAppCatalogEntryListKey(
+      appCatalogEntryListGetOptions
+    ),
+    () =>
+      applicationv1alpha1.getAppCatalogEntryList(
+        appCatalogEntryListClient.current,
+        auth,
+        appCatalogEntryListGetOptions
+      )
   );
 
   useEffect(() => {
-    if (appCatalogIndexAppListError) {
-      ErrorReporter.getInstance().notify(appCatalogIndexAppListError);
-    }
-  }, [appCatalogIndexAppListError]);
+    if (appCatalogEntryListError) {
+      const errorMessage = extractErrorMessage(appCatalogEntryListError);
 
-  const appCatalogIndexListIsLoading =
+      new FlashMessage(
+        'There was a problem loading the app versions.',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(appCatalogEntryListError);
+    }
+  }, [appCatalogEntryListError]);
+
+  const appCatalogEntryListIsLoading =
     appCatalogListIsLoading ||
-    (typeof appCatalogIndexAppList === 'undefined' &&
-      appCatalogIndexAppListIsValidating);
+    (typeof appCatalogEntryList === 'undefined' &&
+      appCatalogEntryListIsValidating);
 
   const apps = useMemo(() => {
-    if (!appCatalogIndexAppList) return [];
+    if (!appCatalogEntryList) return [];
 
     // Filter apps by the search query.
-    const appCollection = filterAppCatalogIndexApps(
+    const filteredAppCatalogEntryList = filterAppCatalogEntries(
       debouncedSearchQuery,
-      appCatalogIndexAppList.items,
+      appCatalogEntryList.items,
       selectedCatalogs
     );
 
     // Sort apps by the selected sorting criteria.
-    appCollection.sort(compareAppCatalogIndexAppsFns[sortOrder]);
+    filteredAppCatalogEntryList.sort(compareAppCatalogEntriesFns[sortOrder]);
 
-    return appCollection;
+    return mapAppCatalogEntriesToAppPageApps(
+      filteredAppCatalogEntryList,
+      appCatalogList?.items
+    );
   }, [
+    appCatalogEntryList,
     debouncedSearchQuery,
     selectedCatalogs,
     sortOrder,
-    appCatalogIndexAppList,
+    appCatalogList?.items,
   ]);
 
   const handleChangeFacets = (value: string, checked: boolean) => {
@@ -177,10 +206,10 @@ const AppList: React.FC<{}> = () => {
       facetOptions={mapAppCatalogsToFacets(
         appCatalogList?.items,
         selectedCatalogs,
-        appCatalogIndexAppList?.errors
+        extractErrorMessage(appCatalogEntryListError)
       )}
       facetsIsLoading={appCatalogListIsLoading}
-      appsIsLoading={appCatalogIndexListIsLoading}
+      appsIsLoading={appCatalogEntryListIsLoading}
     />
   );
 };
