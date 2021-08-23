@@ -125,10 +125,16 @@ export function mapAppCatalogsToFacets(
   selectedAppCatalogs: Record<string, boolean> = {},
   error: string = ''
 ): IFacetOption[] {
-  return appCatalogs.sort(compareAppCatalogs).map((appCatalog) => {
+  const sortedAppCatalogs = appCatalogs.sort(compareAppCatalogs);
+
+  const facetOptions: IFacetOption[] = [];
+  for (const appCatalog of sortedAppCatalogs) {
+    // TODO(axbarsan): Remove this once https://github.com/giantswarm/giantswarm/issues/17490 is done.
+    if (appCatalog.metadata.name === 'helm-stable') continue;
+
     const uiTitle = computeAppCatalogUITitle(appCatalog);
 
-    return {
+    facetOptions.push({
       value: appCatalog.metadata.name,
       checked: selectedAppCatalogs.hasOwnProperty(appCatalog.metadata.name),
       label: (
@@ -139,8 +145,10 @@ export function mapAppCatalogsToFacets(
           error={error}
         />
       ),
-    };
-  });
+    });
+  }
+
+  return facetOptions;
 }
 
 /**

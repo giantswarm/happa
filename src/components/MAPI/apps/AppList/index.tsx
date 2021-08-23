@@ -102,16 +102,14 @@ const AppList: React.FC<{}> = () => {
       return;
     }
 
-    // Pre-select all catalogs except `helm-stable`.
+    // Pre-select all catalogs.
     for (const catalog of appCatalogList.items) {
-      if (catalog.metadata.name === 'helm-stable') continue;
-
       selectCatalog(catalog.metadata.name);
     }
 
     // We don't need to run this again if the selected catalogs change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appCatalogList?.items, prevAppCatalogList]);
+  }, [appCatalogList, prevAppCatalogList, selectedCatalogs]);
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
