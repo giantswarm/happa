@@ -43,6 +43,10 @@ function mapAppCatalogEntriesToReleasePickerItems(
     .sort((a, b) => compare(b.chartVersion, a.chartVersion));
 }
 
+function formatVersion(version: string): string {
+  return version.replace(/^v/, '');
+}
+
 const AppDetail: React.FC<{}> = () => {
   const match = useRouteMatch<{
     catalogName: string;
@@ -213,6 +217,13 @@ const AppDetail: React.FC<{}> = () => {
     ? selectedEntry.spec.chart.home ?? ''
     : undefined;
 
+  const chartVersion = selectedEntry
+    ? formatVersion(selectedEntry.spec.version)
+    : undefined;
+  const appVersion = selectedEntry
+    ? formatVersion(selectedEntry.spec.appVersion)
+    : undefined;
+
   return (
     <DocumentTitle title={appName ? `App Details | ${appName}` : 'App Details'}>
       <Breadcrumb
@@ -228,9 +239,9 @@ const AppDetail: React.FC<{}> = () => {
           otherVersions={otherEntries}
           appTitle={appName}
           appIconURL={appIconURL}
-          chartVersion={selectedEntry?.spec.version}
+          chartVersion={chartVersion}
           createDate={creationDate}
-          includesVersion={selectedEntry?.spec.appVersion}
+          includesVersion={appVersion}
           description={chartDescription}
           website={chartWebsite}
           keywords={keywords}
