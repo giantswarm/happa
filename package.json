@@ -127,7 +127,7 @@
     "@storybook/addon-essentials": "^6.3.6",
     "@storybook/addon-links": "^6.3.6",
     "@storybook/builder-webpack5": "^6.3.6",
-    "@storybook/manager-webpack5": "^6.3.6",
+    "@storybook/manager-webpack5": "^6.3.7",
     "@storybook/react": "^6.3.6",
     "@swc/core": "^1.2.76",
     "@swc/helpers": "^0.2.13",
