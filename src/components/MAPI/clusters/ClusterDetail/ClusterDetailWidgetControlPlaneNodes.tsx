@@ -111,7 +111,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
 
   return (
     <ClusterDetailWidget
-      title='Control plane nodes'
+      title='Control plane'
       inline={true}
       contentProps={{
         direction: 'row',
