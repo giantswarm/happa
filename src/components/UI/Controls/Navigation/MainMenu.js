@@ -91,7 +91,7 @@ const DropdownNavLink = styled(StyledNavLink)`
 
 const DropdownAnchor = DropdownNavLink.withComponent('a');
 
-function MainMenu({ showApps, isUserAdmin }) {
+function MainMenu({ showApps, showUsers }) {
   return (
     <>
       <NavDiv>
@@ -106,11 +106,11 @@ function MainMenu({ showApps, isUserAdmin }) {
             Apps
           </StyledNavLink>
         )}
-        {isUserAdmin ? (
+        {showUsers && (
           <StyledNavLink activeClassName='active' to={UsersRoutes.Home}>
             Users
           </StyledNavLink>
-        ) : undefined}
+        )}
         {monitoringURL && (
           <StyledExternalNavLink
             href={monitoringURL}
@@ -175,7 +175,7 @@ function MainMenu({ showApps, isUserAdmin }) {
                     </DropdownNavLink>
                   </li>
                 )}
-                {isUserAdmin ? (
+                {showUsers && (
                   <li>
                     <DropdownNavLink
                       activeClassName='active'
@@ -185,7 +185,7 @@ function MainMenu({ showApps, isUserAdmin }) {
                       Users
                     </DropdownNavLink>
                   </li>
-                ) : undefined}
+                )}
                 {monitoringURL && (
                   <li>
                     <DropdownAnchor
@@ -219,7 +219,7 @@ function MainMenu({ showApps, isUserAdmin }) {
 
 MainMenu.propTypes = {
   showApps: PropTypes.bool,
-  isUserAdmin: PropTypes.bool,
+  showUsers: PropTypes.bool,
 };
 
 export default MainMenu;
