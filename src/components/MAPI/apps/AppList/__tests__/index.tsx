@@ -6,7 +6,6 @@ import {
   within,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import yaml from 'js-yaml';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import AppsProvider from 'MAPI/apps/AppsProvider';
 import nock from 'nock';
@@ -17,7 +16,6 @@ import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import AppList from '../';
-import { IAppCatalogIndexResponse } from '../utils';
 
 function getComponent(props: React.ComponentPropsWithoutRef<typeof AppList>) {
   const history = createMemoryHistory();
@@ -42,16 +40,6 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppList>) {
 }
 
 describe('AppList', () => {
-  const defaultAppCatalogIndex = yaml.load(
-    applicationv1alpha1Mocks.defaultAppCatalogIndex
-  ) as IAppCatalogIndexResponse;
-  const giantswarmAppCatalogIndex = yaml.load(
-    applicationv1alpha1Mocks.giantswarmAppCatalogIndex
-  ) as IAppCatalogIndexResponse;
-  const helmAppCatalogIndex = yaml.load(
-    applicationv1alpha1Mocks.helmAppCatalogIndex
-  ) as IAppCatalogIndexResponse;
-
   afterEach(() => {
     cache.clear();
   });
@@ -65,34 +53,26 @@ describe('AppList', () => {
       .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/')
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.appCatalogList);
 
-    nock('https://catalogs.com')
-      .get('/default-catalog/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultAppCatalogIndex);
-
-    nock('https://catalogs.com')
-      .get('/giantswarm-catalog/index.yaml')
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=latest%3Dtrue'
+      )
       .reply(
         StatusCodes.Ok,
-        applicationv1alpha1Mocks.giantswarmAppCatalogIndex
+        applicationv1alpha1Mocks.latestAppCatalogEntryList
       );
-
-    nock('https://charts.helm.sh')
-      .get('/stable/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.helmAppCatalogIndex);
 
     render(getComponent({}));
 
-    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+    await waitForElementToBeRemoved(() =>
+      screen.getAllByLabelText('Loading...')
+    );
 
-    for (const appName of [
-      ...Object.keys(defaultAppCatalogIndex.entries),
-      ...Object.keys(giantswarmAppCatalogIndex.entries),
+    for (const entry of [
+      ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList.items,
+      ...applicationv1alpha1Mocks.giantswarmCatalogAppCatalogEntryList.items,
     ]) {
-      expect(screen.getByLabelText(appName)).toBeInTheDocument();
-    }
-
-    for (const appName of Object.keys(helmAppCatalogIndex.entries)) {
-      expect(screen.queryByLabelText(appName)).not.toBeInTheDocument();
+      expect(screen.getByLabelText(entry.spec.appName)).toBeInTheDocument();
     }
   });
 
@@ -101,24 +81,20 @@ describe('AppList', () => {
       .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/')
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.appCatalogList);
 
-    nock('https://catalogs.com')
-      .get('/default-catalog/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultAppCatalogIndex);
-
-    nock('https://catalogs.com')
-      .get('/giantswarm-catalog/index.yaml')
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=latest%3Dtrue'
+      )
       .reply(
         StatusCodes.Ok,
-        applicationv1alpha1Mocks.giantswarmAppCatalogIndex
+        applicationv1alpha1Mocks.latestAppCatalogEntryList
       );
-
-    nock('https://charts.helm.sh')
-      .get('/stable/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.helmAppCatalogIndex);
 
     render(getComponent({}));
 
-    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+    await waitForElementToBeRemoved(() =>
+      screen.getAllByLabelText('Loading...')
+    );
 
     const filterWrapperElement = screen.getByLabelText('Filter by catalog');
 
@@ -126,25 +102,27 @@ describe('AppList', () => {
       within(filterWrapperElement).getByLabelText('Default Catalog')
     );
 
-    for (const appName of Object.keys(giantswarmAppCatalogIndex.entries)) {
-      expect(screen.getByLabelText(appName)).toBeInTheDocument();
+    for (const entry of applicationv1alpha1Mocks
+      .giantswarmCatalogAppCatalogEntryList.items) {
+      expect(screen.getByLabelText(entry.spec.appName)).toBeInTheDocument();
     }
 
-    for (const appName of [
-      ...Object.keys(defaultAppCatalogIndex.entries),
-      ...Object.keys(helmAppCatalogIndex.entries),
-    ]) {
-      expect(screen.queryByLabelText(appName)).not.toBeInTheDocument();
+    for (const entry of applicationv1alpha1Mocks
+      .defaultCatalogAppCatalogEntryList.items) {
+      expect(
+        screen.queryByLabelText(entry.spec.appName)
+      ).not.toBeInTheDocument();
     }
 
     fireEvent.click(screen.getByRole('button', { name: 'Select none' }));
 
-    for (const appName of [
-      ...Object.keys(giantswarmAppCatalogIndex.entries),
-      ...Object.keys(defaultAppCatalogIndex.entries),
-      ...Object.keys(helmAppCatalogIndex.entries),
+    for (const entry of [
+      ...applicationv1alpha1Mocks.giantswarmCatalogAppCatalogEntryList.items,
+      ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList.items,
     ]) {
-      expect(screen.queryByLabelText(appName)).not.toBeInTheDocument();
+      expect(
+        screen.queryByLabelText(entry.spec.appName)
+      ).not.toBeInTheDocument();
     }
 
     expect(
@@ -153,30 +131,26 @@ describe('AppList', () => {
   });
 
   it('can search for a specific app', async () => {
-    const app = 'calico';
+    const app = 'coredns';
 
     nock(window.config.mapiEndpoint)
       .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/')
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.appCatalogList);
 
-    nock('https://catalogs.com')
-      .get('/default-catalog/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultAppCatalogIndex);
-
-    nock('https://catalogs.com')
-      .get('/giantswarm-catalog/index.yaml')
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=latest%3Dtrue'
+      )
       .reply(
         StatusCodes.Ok,
-        applicationv1alpha1Mocks.giantswarmAppCatalogIndex
+        applicationv1alpha1Mocks.latestAppCatalogEntryList
       );
-
-    nock('https://charts.helm.sh')
-      .get('/stable/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.helmAppCatalogIndex);
 
     render(getComponent({}));
 
-    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+    await waitForElementToBeRemoved(() =>
+      screen.getAllByLabelText('Loading...')
+    );
 
     const searchInput = screen.getByLabelText('Search for a specific app');
     expect(searchInput).toBeInTheDocument();
@@ -187,14 +161,15 @@ describe('AppList', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(app)).toBeInTheDocument();
 
-    for (const appName of [
-      ...Object.keys(giantswarmAppCatalogIndex.entries),
-      ...Object.keys(defaultAppCatalogIndex.entries),
-      ...Object.keys(helmAppCatalogIndex.entries),
+    for (const entry of [
+      ...applicationv1alpha1Mocks.giantswarmCatalogAppCatalogEntryList.items,
+      ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList.items,
     ]) {
-      if (appName === app) continue;
+      if (entry.spec.appName === app) continue;
 
-      expect(screen.queryByLabelText(appName)).not.toBeInTheDocument();
+      expect(
+        screen.queryByLabelText(entry.spec.appName)
+      ).not.toBeInTheDocument();
     }
 
     fireEvent.change(searchInput, {

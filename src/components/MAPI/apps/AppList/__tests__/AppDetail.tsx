@@ -4,7 +4,6 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import yaml from 'js-yaml';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import AppsProvider from 'MAPI/apps/AppsProvider';
 import nock from 'nock';
@@ -15,7 +14,6 @@ import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import AppDetail from '../AppDetail';
-import { IAppCatalogIndexResponse } from '../utils';
 
 function getComponent(props: React.ComponentPropsWithoutRef<typeof AppDetail>) {
   const history = createMemoryHistory();
@@ -39,19 +37,14 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppDetail>) {
   );
 }
 
-const defaultAppCatalogIndex = yaml.load(
-  applicationv1alpha1Mocks.defaultAppCatalogIndex
-) as IAppCatalogIndexResponse;
-const app = defaultAppCatalogIndex.entries.calico;
-
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useRouteMatch: jest.fn().mockReturnValue({
     url: '',
     params: {
       catalogName: 'default',
-      app: 'calico',
-      version: '0.2.0',
+      app: 'coredns',
+      version: '1.2.0',
     },
   }),
 }));
@@ -66,29 +59,42 @@ describe('AppDetail', () => {
   });
 
   it('displays various details about the app', async () => {
-    const version = app[0];
+    const appCatalogEntry =
+      applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1;
+    const catalog = applicationv1alpha1Mocks.defaultAppCatalog;
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/default/')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultAppCatalog);
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/appcatalogs/${catalog.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, catalog);
 
-    nock('https://catalogs.com')
-      .get('/default-catalog/index.yaml')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultAppCatalogIndex);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${appCatalogEntry.spec.appName}%2Capplication.giantswarm.io%2Fcatalog%3D${appCatalogEntry.spec.catalog.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
 
     render(getComponent({}));
 
-    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+    await waitForElementToBeRemoved(() =>
+      screen.getAllByLabelText('Loading...')
+    );
 
-    expect(screen.getByText(version.name)).toBeInTheDocument();
+    expect(screen.getByText(appCatalogEntry.spec.appName)).toBeInTheDocument();
+    expect(screen.getByText(catalog.spec.title)).toBeInTheDocument();
+    expect(screen.getAllByText(appCatalogEntry.spec.version)).toHaveLength(2);
     expect(
-      screen.getByText(applicationv1alpha1Mocks.defaultAppCatalog.spec.title)
+      screen.getByText(appCatalogEntry.spec.appVersion)
     ).toBeInTheDocument();
-    expect(screen.getAllByText(version.version)).toHaveLength(2);
-    expect(screen.getByText(version.appVersion)).toBeInTheDocument();
-    expect(screen.getByText(version.description)).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: version.home })
+      screen.getByText(appCatalogEntry.spec.chart.description!)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: appCatalogEntry.spec.chart.home })
     ).toBeInTheDocument();
   });
 });

@@ -45,47 +45,6 @@ export const defaultAppCatalog: applicationv1alpha1.IAppCatalog = {
   },
 };
 
-export const helmAppCatalog: applicationv1alpha1.IAppCatalog = {
-  apiVersion: 'application.giantswarm.io/v1alpha1',
-  kind: 'AppCatalog',
-  metadata: {
-    annotations: {
-      'helm.sh/resource-policy': 'keep',
-      'meta.helm.sh/release-name': 'appcatalog-helm-stable',
-      'meta.helm.sh/release-namespace': 'giantswarm',
-    },
-    creationTimestamp: '2020-07-17T07:48:54Z',
-    finalizers: [
-      'operatorkit.giantswarm.io/app-operator',
-      'operatorkit.giantswarm.io/appCatalog',
-      'operatorkit.giantswarm.io/app-operator-appcatalog',
-    ],
-    generation: 2,
-    labels: {
-      'app-operator.giantswarm.io/version': '1.0.0',
-      'app.kubernetes.io/managed-by': 'Helm',
-      'application.giantswarm.io/catalog-type': 'community',
-      'application.giantswarm.io/catalog-visibility': 'public',
-    },
-    name: 'helm-stable',
-    resourceVersion: '414355533',
-    selfLink:
-      '/apis/application.giantswarm.io/v1alpha1/appcatalogs/helm-stable',
-    uid: '7dafd011-27be-4e63-a695-9d58d51eacb2',
-  },
-  spec: {
-    config: {},
-    description:
-      'This is the Helm Stable chart repository that you can find here: https://github.com/helm/charts/tree/master/stable This App Catalog does not have any guarantees or SLA. ',
-    logoURL: '/images/repo_icons/community.png',
-    storage: {
-      URL: 'https://charts.helm.sh/stable/packages/',
-      type: 'helm',
-    },
-    title: 'Helm Stable',
-  },
-};
-
 export const giantswarmAppCatalog: applicationv1alpha1.IAppCatalog = {
   apiVersion: 'application.giantswarm.io/v1alpha1',
   kind: 'AppCatalog',
@@ -138,5 +97,5 @@ export const appCatalogList = {
     resourceVersion: '2318290',
     selfLink: '/apis/application.giantswarm.io/v1alpha1/appcatalogs/',
   },
-  items: [defaultAppCatalog, helmAppCatalog, giantswarmAppCatalog],
+  items: [defaultAppCatalog, giantswarmAppCatalog],
 };
