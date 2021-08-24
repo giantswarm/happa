@@ -1,24 +1,66 @@
 {
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:js-app"],
+  "labels": ["dependencies"],
+  "reviewers": ["team:team-biscuit"],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "@types/jest",
-        "jest"
-      ],
-      "groupName": "jest"
+      "matchPackagePrefixes": ["@types/jest", "jest"],
+      "groupName": "jest packages"
     },
     {
-      "matchPackagePatterns": ["^eslint"],
-      "groupName": "eslint"
+      "matchPackagePrefixes": ["eslint", "@typescript-eslint"],
+      "groupName": "eslint packages"
+    },
+    {
+      "matchPackagePrefixes": ["date-fns"],
+      "groupName": "date-fns packages"
+    },
+    {
+      "matchPackagePrefixes": ["@swc", "swc-loader"],
+      "groupName": "swc packages"
+    },
+    {
+      "matchPackagePrefixes": ["@storybook"],
+      "groupName": "storybook packages"
+    },
+    {
+      "matchPackagePrefixes": ["@babel", "babel"],
+      "groupName": "babel packages"
+    },
+    {
+      "matchPackagePrefixes": ["@sentry"],
+      "groupName": "sentry packages"
+    },
+    {
+      "matchPackagePrefixes": ["@testing-library"],
+      "groupName": "testing-library packages"
+    },
+    {
+      "matchPackagePrefixes": [
+        "@types/react",
+        "react",
+        "@hot-loader/react-dom"
+      ],
+      "groupName": "react packages"
+    },
+    {
+      "matchPackagePrefixes": ["@types/react-router", "react-router"],
+      "groupName": "react-router packages"
+    },
+    {
+      "matchPackagePrefixes": ["@webpack"],
+      "groupName": "webpack packages"
+    },
+    {
+      "matchPackageNames": [
+        "@types/bootstrap",
+        "bootstrap",
+        "@types/react-bootstrap",
+        "react-bootstrap"
+      ],
+      "enabled": false
     }
   ],
   "prConcurrentLimit": 5,
-  "schedule": [
-    "every weekend",
-    "before 5am every weekday",
-    "after 10pm every weekday"
-  ]
+  "schedule": ["every weekend"]
 }
