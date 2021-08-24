@@ -5,7 +5,7 @@ exports[`Button renders a button with a loading animation 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
@@ -41,7 +41,7 @@ exports[`Button renders a danger button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
@@ -70,7 +70,7 @@ exports[`Button renders a disabled button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
@@ -100,7 +100,7 @@ exports[`Button renders a link button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
@@ -129,7 +129,7 @@ exports[`Button renders a primary button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
@@ -158,7 +158,7 @@ exports[`Button renders a secondary button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
@@ -187,13 +187,13 @@ exports[`Button renders a warning button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 bkgFHr"
+        class="StyledButtonKind-sc-1vhfpnt-0 FXAWq"
         type="button"
       >
         Hi friends
@@ -216,7 +216,7 @@ exports[`Button renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
