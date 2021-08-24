@@ -289,6 +289,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
 
         {cluster && (
           <ClusterDetailStatus
+            isCreating={isCreating}
             isDeleting={isDeleting}
             isUpgrading={isUpgrading}
             isUpgradable={isUpgradable}
