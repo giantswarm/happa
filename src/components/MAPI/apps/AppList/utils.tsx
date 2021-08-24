@@ -176,10 +176,9 @@ export function filterAppCatalogEntries(
       case appCatalogEntry.spec.chart.description
         ?.toLowerCase()
         .includes(normalizedQuery):
-      case appCatalogEntry.spec.chart.keywords
-        ?.join('')
-        .toLowerCase()
-        .includes(normalizedQuery):
+      case appCatalogEntry.spec.chart.keywords?.some((keyword) =>
+        keyword.toLowerCase().includes(normalizedQuery)
+      ):
         return true;
 
       default:
