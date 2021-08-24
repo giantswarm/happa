@@ -7,6 +7,7 @@ import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { cache, SWRConfig } from 'swr';
+import { withMarkup } from 'testUtils/assertUtils';
 import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
 import * as rbacv1Mocks from 'testUtils/mockHttpCalls/rbacv1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -1063,8 +1064,8 @@ describe('AccessControl', () => {
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(
-        /Subject some-random-account deleted successfully./
+      await withMarkup(screen.findByText)(
+        'The binding for service account some-random-account has been removed.'
       )
     ).toBeInTheDocument();
 
@@ -1212,7 +1213,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Subjects added successfully./)
+      await withMarkup(screen.findByText)(
+        'Service accounts automation, random have been created and bound to the role.'
+      )
     ).toBeInTheDocument();
 
     expect(within(section).getByLabelText('automation')).toBeInTheDocument();
@@ -1324,7 +1327,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Subject added successfully./)
+      await withMarkup(screen.findByText)(
+        'Service account random has been bound to the role.'
+      )
     ).toBeInTheDocument();
 
     expect(within(section).getByLabelText('random')).toBeInTheDocument();
@@ -1420,7 +1425,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Could not add subjects:/)
+      await withMarkup(screen.findByText)(
+        'Could not create service accounts automation, random :'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 
@@ -1539,7 +1546,9 @@ describe('AccessControl', () => {
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(/Subject el-toro deleted successfully./)
+      await withMarkup(screen.findByText)(
+        'The binding for service account el-toro has been removed.'
+      )
     ).toBeInTheDocument();
 
     expect(within(section).queryByLabelText('el-toro')).not.toBeInTheDocument();

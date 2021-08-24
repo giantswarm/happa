@@ -5,10 +5,10 @@ exports[`CLIGuide renders the contents when open 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hrJYol sc-WZYut qvxWH"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-dkQUaI fkbCbt"
       role="tablist"
     >
       <div
@@ -88,10 +88,10 @@ exports[`CLIGuide renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hrJYol sc-WZYut qvxWH"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-dkQUaI fkbCbt"
       role="tablist"
     >
       <div

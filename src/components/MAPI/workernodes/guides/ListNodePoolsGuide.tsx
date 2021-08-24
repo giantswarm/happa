@@ -1,25 +1,33 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IGetOrganizationDetailsGuideProps
+interface IListNodePoolsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
-  organizationName: string;
+  clusterName: string;
+  clusterNamespace: string;
+  providerNodePoolResourceName: string;
 }
 
-const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> = ({
-  organizationName,
+const ListNodePoolsGuide: React.FC<IListNodePoolsGuideProps> = ({
+  clusterName,
+  clusterNamespace,
+  providerNodePoolResourceName,
   ...props
 }) => {
+  const context = useSelector(getCurrentInstallationContextName);
+
   return (
     <CLIGuide
-      title='Get organization details via the Management API'
+      title="List this cluster's node pools via the Management API"
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -29,13 +37,8 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
               external: true,
             },
             {
-              label: 'kubectl gs login command',
-              href: docs.kubectlGSLoginURL,
-              external: true,
-            },
-            {
-              label: 'Organization CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.organization),
+              label: 'kubectl gs get nodepools command',
+              href: docs.kubectlGSGetNodePoolsURL,
               external: true,
             },
             {
@@ -51,12 +54,18 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Get organization details'
-          command={`kubectl describe organization ${organizationName}`}
+          title='2. List node pools'
+          command={`
+          kubectl gs --context ${context} \\
+            get nodepools \\
+            --cluster-name ${clusterName} \\
+            --namespace ${clusterNamespace}
+          `}
         >
           <Text>
-            As a result, details of the <code>Organization</code> CR are
-            printed.
+            <strong>Note:</strong> Add <code>--output json</code> to include
+            full <code>{providerNodePoolResourceName}</code> resource details in
+            a machine-readable format.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
@@ -64,8 +73,10 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
   );
 };
 
-GetOrganizationDetailsGuide.propTypes = {
-  organizationName: PropTypes.string.isRequired,
+ListNodePoolsGuide.propTypes = {
+  clusterName: PropTypes.string.isRequired,
+  clusterNamespace: PropTypes.string.isRequired,
+  providerNodePoolResourceName: PropTypes.string.isRequired,
 };
 
-export default GetOrganizationDetailsGuide;
+export default ListNodePoolsGuide;

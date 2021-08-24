@@ -1,25 +1,35 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import {
+  getCurrentInstallationContextName,
+  makeKubectlGSCommand,
+  withContext,
+  withFormatting,
+  withGetApps,
+} from 'MAPI/guides/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IGetOrganizationDetailsGuideProps
+interface IListAppsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
-  organizationName: string;
+  namespace: string;
 }
 
-const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> = ({
-  organizationName,
+const ListAppsGuide: React.FC<IListAppsGuideProps> = ({
+  namespace,
   ...props
 }) => {
+  const context = useSelector(getCurrentInstallationContextName);
+
   return (
     <CLIGuide
-      title='Get organization details via the Management API'
+      title='List installed apps via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -29,13 +39,8 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
               external: true,
             },
             {
-              label: 'kubectl gs login command',
-              href: docs.kubectlGSLoginURL,
-              external: true,
-            },
-            {
-              label: 'Organization CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.organization),
+              label: 'App CRD schema',
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.app),
               external: true,
             },
             {
@@ -51,12 +56,19 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Get organization details'
-          command={`kubectl describe organization ${organizationName}`}
+          title='2. List installed apps'
+          command={makeKubectlGSCommand(
+            withContext(context),
+            withGetApps({
+              namespace: namespace,
+            }),
+            withFormatting()
+          )}
         >
           <Text>
-            As a result, details of the <code>Organization</code> CR are
-            printed.
+            As a result, you will get a list of all <code>App</code> resources
+            representing apps installed in this cluster. You can append the flag{' '}
+            <code>--output json</code> for full, machine-readable information.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
@@ -64,8 +76,8 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
   );
 };
 
-GetOrganizationDetailsGuide.propTypes = {
-  organizationName: PropTypes.string.isRequired,
+ListAppsGuide.propTypes = {
+  namespace: PropTypes.string.isRequired,
 };
 
-export default GetOrganizationDetailsGuide;
+export default ListAppsGuide;

@@ -67,29 +67,51 @@ export const kubectlGSGetClustersURL =
 export const kubectlGSTemplateClusterURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
 
-export const organizationCRDSchema =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/organizations.security.giantswarm.io/';
+export const kubectlGSGetNodePoolsURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-nodepools/';
 
-export const clusterCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/clusters.cluster.x-k8s.io/';
+export const kubectlGSTemplateNodePoolURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-nodepool/';
 
-export const azureClusterCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/azureclusters.infrastructure.cluster.x-k8s.io/';
-
-export const azureMachineCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/azuremachines.infrastructure.cluster.x-k8s.io/';
-
-export const releaseCRDSchemaURL =
-  'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/';
-
+// Management API introduction page
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
 
+// How to create a RoleBinding
 export const kubectlCreateRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-rolebinding-em-';
 
+// How to create a ClusterRoleBinding
 export const kubectlCreateClusterRoleBindingURL =
   'https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-clusterrolebinding-em-';
 
+// How to manage workload cluster labels via the Management API
 export const labellingWorkloadClustersURL =
   'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
+
+// How to create workload cluster key pairs via the Management API
+export const creatingWorkloadClusterKeyPairsURL =
+  'https://docs.giantswarm.io/ui-api/management-api/wc-key-pairs/';
+
+// CRD names we expect to find a docs schema page for,
+// grouped by publisher domain.
+export const crds = {
+  giantswarmio: {
+    app: 'apps.application.giantswarm.io',
+    organization: 'organizations.security.giantswarm.io',
+    release: 'releases.release.giantswarm.io',
+  },
+  xk8sio: {
+    azureCluster: 'azureclusters.infrastructure.cluster.x-k8s.io',
+    azureMachine: 'azuremachines.infrastructure.cluster.x-k8s.io',
+    cluster: 'clusters.cluster.x-k8s.io',
+    machinepool: 'machinepools.exp.cluster.x-k8s.io',
+  },
+};
+
+// CRD docs URL function
+export function crdSchemaURL(fullName: string) {
+  const baseURL = 'https://docs.giantswarm.io/ui-api/management-api/crd/';
+
+  return `${baseURL}${fullName}/`;
+}

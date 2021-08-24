@@ -68,7 +68,7 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
 
     case ButtonStyle.Warning:
       theme.button!.secondary = {
-        background: 'status-warning',
+        background: '#d4982f',
         border: {
           width: '0',
         },
@@ -77,7 +77,7 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
 
       theme.button!.hover!.secondary = {
         background: {
-          color: '#ffb83b',
+          color: '#ffaa15',
           opacity: 1,
         },
         border: {
@@ -87,7 +87,7 @@ function makeCustomTheme(style: ButtonStyle): ThemeType {
 
       theme.button!.active!.secondary = {
         background: {
-          color: 'status-warning',
+          color: '#d4982f',
         },
         border: {
           width: '0',

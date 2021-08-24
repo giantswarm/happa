@@ -1,3 +1,4 @@
+import { Constants } from 'shared/constants';
 import { IState } from 'stores/state';
 
 export function getCurrentInstallationContextName(state: IState): string {
@@ -109,8 +110,44 @@ export function withTemplateCluster(
 }
 
 /**
+ * Relevant configuration options supported by the
+ * `get apps` command.
+ * */
+export interface IKubectlGSGetAppsCommandConfig {
+  namespace?: string;
+  allNamespaces?: boolean;
+  output?: string;
+}
+
+/**
+ * Generate modifier for constructing the
+ * `kubectl gs get apps` command.
+ * */
+export function withGetApps(
+  config: IKubectlGSGetAppsCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [...parts, 'get', 'apps'];
+
+    if (config.namespace) {
+      newParts.push('--namespace', config.namespace);
+    }
+
+    if (config.allNamespaces) {
+      newParts.push('--all-namespaces');
+    }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
+/**
  * All the configuration options supported by the
- * `template cluster` command.
+ * `get clusters` command.
  * Taken from:
  * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/get/clusters/flag.go#L14}
  * */
@@ -141,6 +178,89 @@ export function withGetClusters(
 
     if (config.allNamespaces) {
       newParts.push('--all-namespaces');
+    }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
+/**
+ * Configuration options supported by the `template nodepool` command.
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/nodepool/flag.go#L13}
+ * */
+export interface IKubectlGSTemplateNodePoolCommandConfig {
+  provider: string;
+  owner: string;
+  clusterName: string;
+  description?: string;
+  azureVMSize?: string;
+  nodePoolAZs?: string[];
+  azureUseSpotVMs?: boolean;
+  azureSpotVMsMaxPrice?: number;
+  nodesMin?: number;
+  nodesMax?: number;
+  output?: string;
+}
+
+/**
+ * Generate a modifier for constructing the
+ * `kubectl gs template nodepool` command.
+ * */
+export function withTemplateNodePool(
+  config: IKubectlGSTemplateNodePoolCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [
+      ...parts,
+      'template',
+      'nodepool',
+      '--provider',
+      config.provider,
+      '--owner',
+      config.owner,
+      '--cluster-name',
+      config.clusterName,
+    ];
+
+    if (config.description) {
+      newParts.push('--description', `"${config.description}"`);
+    }
+
+    if (config.azureVMSize) {
+      newParts.push('--azure-vm-size', config.azureVMSize);
+    }
+
+    if (config.nodePoolAZs && config.nodePoolAZs.length > 0) {
+      newParts.push('--availability-zones', config.nodePoolAZs.join(','));
+    }
+
+    if (config.azureUseSpotVMs) {
+      newParts.push('--azure-spot-vms', '');
+    }
+
+    if (config.azureSpotVMsMaxPrice && config.azureSpotVMsMaxPrice > -1) {
+      newParts.push(
+        '--azure-spot-vms-max-price',
+        `${config.azureSpotVMsMaxPrice}`
+      );
+    }
+
+    if (
+      typeof config.nodesMin !== 'undefined' &&
+      config.nodesMin !== Constants.NP_DEFAULT_MIN_SCALING
+    ) {
+      newParts.push('--nodes-min', `${config.nodesMin}`);
+    }
+
+    if (
+      typeof config.nodesMax !== 'undefined' &&
+      config.nodesMax !== Constants.NP_DEFAULT_MAX_SCALING
+    ) {
+      newParts.push('--nodes-max', `${config.nodesMax}`);
     }
 
     if (config.output) {

@@ -1,11 +1,13 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import UserInstalledApps from 'Cluster/ClusterDetail/UserInstalledApps/UserInstalledApps';
 import { push } from 'connected-react-router';
+import { Box } from 'grommet';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
+import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -229,6 +231,10 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
                 Install app
               </BrowseButton>
             </BrowseButtonContainer>
+
+            <Box margin={{ top: 'large' }} direction='column' gap='small'>
+              <ListAppsGuide namespace={clusterId} />
+            </Box>
           </UserInstalledApps>
 
           <div>

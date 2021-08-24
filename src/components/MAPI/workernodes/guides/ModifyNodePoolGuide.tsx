@@ -10,14 +10,12 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface ISetClusterLabelsGuideProps
+interface IModifyNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
-  clusterName: string;
   clusterNamespace: string;
 }
 
-const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
-  clusterName,
+const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
   clusterNamespace,
   ...props
 }) => {
@@ -25,7 +23,7 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
 
   return (
     <CLIGuide
-      title='Set cluster labels via the Management API'
+      title='Modify a node pool via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -35,13 +33,8 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
               external: true,
             },
             {
-              label: 'Cluster CRD schema',
-              href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
-              external: true,
-            },
-            {
-              label: 'Labelling workload clusters',
-              href: docs.labellingWorkloadClustersURL,
+              label: 'MachinePool CRD Schema',
+              href: docs.crdSchemaURL(docs.crds.xk8sio.machinepool),
               external: true,
             },
             {
@@ -57,18 +50,33 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Add a label to this cluster'
+          title='2. Update the node pool description'
           command={`
           kubectl --context ${context} \\
-            patch cluster ${clusterName} \\
-            -n ${clusterNamespace} \\
+            patch machinepools.exp.cluster.x-k8s.io my-np \\
+            --namespace ${clusterNamespace} \\
             --type merge \\
-            --patch '{"metadata": {"labels": {"foo": "bar"}}}'
+            --patch '{"metadata": {"annotations": {"machine-pool.giantswarm.io/name": "General purpose nodes"}}}'
           `}
         >
           <Text>
-            The above command would add the label <code>foo</code> with the
-            value <code>bar</code>.
+            Make sure to replace <code>my-np</code> with the correct node pool
+            name.
+          </Text>
+        </CLIGuideStep>
+        <CLIGuideStep
+          title='3. Update the node pool scaling range'
+          command={`
+          kubectl --context ${context} \\
+            patch machinepools.exp.cluster.x-k8s.io my-np \\
+            --namespace ${clusterNamespace} \\
+            --type merge \\
+            --patch '{"metadata": {"annotations": {"cluster.k8s.io/cluster-api-autoscaler-node-group-min-size": "3", "cluster.k8s.io/cluster-api-autoscaler-node-group-max-size": "10"}}}'
+          `}
+        >
+          <Text>
+            Again, make sure to replace <code>my-np</code> with the correct node
+            pool name.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
@@ -76,9 +84,8 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
   );
 };
 
-SetClusterLabelsGuide.propTypes = {
-  clusterName: PropTypes.string.isRequired,
+ModifyNodePoolGuide.propTypes = {
   clusterNamespace: PropTypes.string.isRequired,
 };
 
-export default SetClusterLabelsGuide;
+export default ModifyNodePoolGuide;

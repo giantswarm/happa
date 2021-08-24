@@ -27,6 +27,7 @@ import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
 } from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailDeleteAction';
 
+import DeleteClusterGuide from '../guides/DeleteClusterGuide';
 import { getWorkerNodesCount } from '../utils';
 import { deleteCluster } from './utils';
 
@@ -211,6 +212,17 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
               flex={{ grow: 1, shrink: 0 }}
             />
           </Box>
+          {cluster && (
+            <Box
+              margin={{ top: 'large' }}
+              direction='column'
+              gap='small'
+              basis='100%'
+              animation={{ type: 'fadeIn', duration: 300 }}
+            >
+              <DeleteClusterGuide clusterName={name} namespace={namespace!} />
+            </Box>
+          )}
         </Box>
       </Breadcrumb>
     </DocumentTitle>

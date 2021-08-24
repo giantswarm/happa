@@ -1,12 +1,7 @@
 import { getUpdateButtonMessage } from 'Footer/FooterUtils';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-
-const StyledButton = styled(Button)`
-  padding: 0 5px;
-`;
 
 interface IFooterUpdateButtonProps {
   hasUpdateReady: boolean;
@@ -26,7 +21,7 @@ const FooterUpdateButton: React.FC<IFooterUpdateButtonProps> = ({
 
   if (hasUpdateReady) {
     return (
-      <StyledButton
+      <Button
         disabled={isUpdating}
         loading={isUpdating}
         warning={true}
@@ -35,7 +30,7 @@ const FooterUpdateButton: React.FC<IFooterUpdateButtonProps> = ({
         {...rest}
       >
         {label}
-      </StyledButton>
+      </Button>
     );
   }
 

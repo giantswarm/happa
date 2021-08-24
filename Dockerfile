@@ -1,4 +1,4 @@
-FROM quay.io/giantswarm/alpine:3.12 AS compress
+FROM quay.io/giantswarm/alpine:3.14.1 AS compress
 
 RUN apk --no-cache add findutils gzip
 
@@ -11,7 +11,7 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-FROM quay.io/giantswarm/nginx:1.19-alpine
+FROM quay.io/giantswarm/nginx:1.21-alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx scripts/start.sh /

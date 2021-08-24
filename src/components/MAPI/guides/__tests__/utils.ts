@@ -1,12 +1,16 @@
 import {
+  IKubectlGSGetAppsCommandConfig,
   IKubectlGSGetClustersCommandConfig,
   IKubectlGSTemplateClusterCommandConfig,
+  IKubectlGSTemplateNodePoolCommandConfig,
   KubectlGSCommandModifier,
   makeKubectlGSCommand,
   withContext,
   withFormatting,
+  withGetApps,
   withGetClusters,
   withTemplateCluster,
+  withTemplateNodePool,
 } from '../utils';
 
 describe('utils', () => {
@@ -180,6 +184,51 @@ describe('utils', () => {
     }
   });
 
+  describe('withGetApps', () => {
+    interface ITestCase {
+      name: string;
+      modifierConfig: IKubectlGSGetAppsCommandConfig;
+      expectedOutput: string;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        name: 'returns correct output without options',
+        modifierConfig: {},
+        expectedOutput: 'kubectl gs get apps',
+      },
+      {
+        name: 'returns correct output with namespace',
+        modifierConfig: {
+          namespace: 'the-namespace',
+        },
+        expectedOutput: 'kubectl gs get apps --namespace the-namespace',
+      },
+      {
+        name: 'returns correct output with all namespaces',
+        modifierConfig: {
+          allNamespaces: true,
+        },
+        expectedOutput: 'kubectl gs get apps --all-namespaces',
+      },
+      {
+        name: 'returns correct output with output',
+        modifierConfig: {
+          output: 'json',
+        },
+        expectedOutput: 'kubectl gs get apps --output "json"',
+      },
+    ];
+
+    for (const tc of testCases) {
+      it(tc.name, () => {
+        const output = makeKubectlGSCommand(withGetApps(tc.modifierConfig));
+
+        expect(output).toEqual(tc.expectedOutput);
+      });
+    }
+  });
+
   describe('withGetClusters', () => {
     interface ITestCase {
       name: string;
@@ -226,6 +275,150 @@ describe('utils', () => {
     for (const tc of testCases) {
       it(tc.name, () => {
         const output = makeKubectlGSCommand(withGetClusters(tc.modifierConfig));
+
+        expect(output).toEqual(tc.expectedOutput);
+      });
+    }
+  });
+
+  describe('withTemplateNodePool', () => {
+    interface ITestCase {
+      name: string;
+      modifierConfig: IKubectlGSTemplateNodePoolCommandConfig;
+      expectedOutput: string;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        name: 'returns correct output with required options',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+      },
+      {
+        name: 'returns correct output with description',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          description: 'Describe me',
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --description "Describe me"',
+      },
+      {
+        name: 'returns correct output with Azure VM size',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          azureVMSize: 'some_standard_size',
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-vm-size some_standard_size',
+      },
+      {
+        name: 'returns correct output with one node pool AZ',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodePoolAZs: ['1'],
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --availability-zones 1',
+      },
+      {
+        name: 'returns correct output with multiple node pool AZs',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodePoolAZs: ['1', '2'],
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --availability-zones 1,2',
+      },
+      {
+        name: 'returns correct output with use Azure spot VMs',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          azureUseSpotVMs: true,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-spot-vms',
+      },
+      {
+        name: 'returns correct output with Azure spot VMs max price',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          azureUseSpotVMs: true,
+          azureSpotVMsMaxPrice: 0.00001,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-spot-vms --azure-spot-vms-max-price 0.00001',
+      },
+      {
+        name: 'returns correct output with minimum number of nodes',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodesMin: 0,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-min 0',
+      },
+      {
+        name:
+          'returns correct output if the minimum number of nodes equals the recommended default',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodesMin: 3,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+      },
+      {
+        name: 'returns correct output with maximum number of nodes',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodesMax: 8,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-max 8',
+      },
+      {
+        name:
+          'returns correct output if the maximum number of nodes equals the recommended default',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          nodesMax: 10,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+      },
+    ];
+
+    for (const tc of testCases) {
+      it(tc.name, () => {
+        const output = makeKubectlGSCommand(
+          withTemplateNodePool(tc.modifierConfig)
+        );
 
         expect(output).toEqual(tc.expectedOutput);
       });

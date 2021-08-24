@@ -5,7 +5,7 @@ import {
   getCurrentInstallationContextName,
   makeKubectlGSCommand,
   withFormatting,
-  withTemplateCluster,
+  withTemplateNodePool,
 } from 'MAPI/guides/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -17,32 +17,38 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface ICreateClusterGuideProps
+interface ICreateNodePoolGuide
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   provider: PropertiesOf<typeof Providers>;
-  clusterName: string;
   organizationName: string;
-  releaseVersion?: string;
+  clusterName: string;
   description?: string;
-  labels?: Record<string, string>;
-  controlPlaneAZs?: string[];
+  azureVMSize?: string;
+  nodePoolAZs?: string[];
+  azureUseSpotVMs?: boolean;
+  azureSpotVMsMaxPrice?: number;
+  nodesMin?: number;
+  nodesMax?: number;
 }
 
-const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
+const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
   provider,
-  clusterName,
   organizationName,
-  releaseVersion,
+  clusterName,
   description,
-  labels,
-  controlPlaneAZs,
+  azureVMSize,
+  nodePoolAZs,
+  azureUseSpotVMs,
+  azureSpotVMsMaxPrice,
+  nodesMin,
+  nodesMax,
   ...props
 }) => {
   const context = useSelector(getCurrentInstallationContextName);
 
   return (
     <CLIGuide
-      title='Create a cluster via the Management API'
+      title='Create a node pool via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[
@@ -52,13 +58,8 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
               external: true,
             },
             {
-              label: 'kubectl gs template cluster command',
-              href: docs.kubectlGSTemplateClusterURL,
-              external: true,
-            },
-            {
-              label: 'Cluster CRD schema',
-              href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
+              label: 'kubectl gs template nodepool command',
+              href: docs.kubectlGSTemplateNodePoolURL,
               external: true,
             },
             {
@@ -74,44 +75,46 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Create a cluster manifest'
+          title='2. Create a node pool manifest'
           command={makeKubectlGSCommand(
-            withTemplateCluster({
+            withTemplateNodePool({
               provider,
               owner: organizationName,
-              name: clusterName,
-              release: releaseVersion,
+              clusterName,
               description,
-              controlPlaneAZs,
-              labels,
-              output: `cluster-${clusterName}.yaml`,
+              azureVMSize,
+              nodePoolAZs,
+              azureUseSpotVMs,
+              azureSpotVMsMaxPrice,
+              nodesMin,
+              nodesMax,
+              output: `cluster-${clusterName}-nodepool.yaml`,
             }),
             withFormatting()
           )}
         />
         <CLIGuideStep
           title='3. Apply the manifest'
-          command={`kubectl apply --context ${context} -f cluster-${clusterName}.yaml`}
+          command={`kubectl --context ${context} apply -f cluster-${clusterName}-nodepool.yaml`}
         >
-          <Text>
-            As a result, a cluster without worker nodes will get created.
-          </Text>
+          <Text>As a result, a node pool will get created.</Text>
         </CLIGuideStep>
       </CLIGuideStepList>
     </CLIGuide>
   );
 };
 
-CreateClusterGuide.propTypes = {
+CreateNodePoolGuide.propTypes = {
   provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  clusterName: PropTypes.string.isRequired,
   organizationName: PropTypes.string.isRequired,
-  releaseVersion: PropTypes.string,
+  clusterName: PropTypes.string.isRequired,
   description: PropTypes.string,
-  labels: PropTypes.object as PropTypes.Requireable<
-    ICreateClusterGuideProps['labels']
-  >,
-  controlPlaneAZs: PropTypes.arrayOf(PropTypes.string.isRequired),
+  azureVMSize: PropTypes.string,
+  nodePoolAZs: PropTypes.arrayOf(PropTypes.string.isRequired),
+  azureUseSpotVMs: PropTypes.bool,
+  azureSpotVMsMaxPrice: PropTypes.number,
+  nodesMin: PropTypes.number,
+  nodesMax: PropTypes.number,
 };
 
-export default CreateClusterGuide;
+export default CreateNodePoolGuide;

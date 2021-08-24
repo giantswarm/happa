@@ -1,41 +1,35 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IGetOrganizationDetailsGuideProps
+interface IDeleteNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
-  organizationName: string;
+  clusterNamespace: string;
 }
 
-const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> = ({
-  organizationName,
+const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
+  clusterNamespace,
   ...props
 }) => {
+  const context = useSelector(getCurrentInstallationContextName);
+
   return (
     <CLIGuide
-      title='Get organization details via the Management API'
+      title='Delete a node pool via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[
             {
               label: 'kubectl gs plugin installation',
               href: docs.kubectlGSInstallationURL,
-              external: true,
-            },
-            {
-              label: 'kubectl gs login command',
-              href: docs.kubectlGSLoginURL,
-              external: true,
-            },
-            {
-              label: 'Organization CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.organization),
               external: true,
             },
             {
@@ -51,12 +45,21 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Get organization details'
-          command={`kubectl describe organization ${organizationName}`}
+          title='2. Delete a node pool'
+          command={`
+          kubectl --context ${context} \\
+            delete machinepools.exp.cluster.x-k8s.io my-np \\
+            --namespace ${clusterNamespace}
+          `}
         >
           <Text>
-            As a result, details of the <code>Organization</code> CR are
-            printed.
+            Replace <code>my-np</code> with the name of the node pool to delete.
+          </Text>
+          <Text>
+            <strong>Note:</strong> This will result in the deletion of worker
+            nodes. Data stored on worker nodes or in ephemeral volumes will be
+            lost. There is no way to undo this. To allow scheduling of workloads
+            to other worker nodes, make sure to have other node pools available.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
@@ -64,8 +67,8 @@ const GetOrganizationDetailsGuide: React.FC<IGetOrganizationDetailsGuideProps> =
   );
 };
 
-GetOrganizationDetailsGuide.propTypes = {
-  organizationName: PropTypes.string.isRequired,
+DeleteNodePoolGuide.propTypes = {
+  clusterNamespace: PropTypes.string.isRequired,
 };
 
-export default GetOrganizationDetailsGuide;
+export default DeleteNodePoolGuide;
