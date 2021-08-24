@@ -1,4 +1,5 @@
 import { IAppCatalog } from './';
+import { IAppCatalogEntry } from './types';
 
 export const labelAppOperator = 'app-operator.giantswarm.io/version';
 export const labelAppName = 'app.kubernetes.io/name';
@@ -22,4 +23,10 @@ export function isAppCatalogStable(catalog: IAppCatalog): boolean {
   const type = catalog.metadata.labels?.[labelCatalogType];
 
   return type === 'stable';
+}
+
+export function getAppCatalogEntryReadmeURL(
+  appCatalogEntry: IAppCatalogEntry
+): string | undefined {
+  return appCatalogEntry.metadata.annotations?.[annotationReadme];
 }

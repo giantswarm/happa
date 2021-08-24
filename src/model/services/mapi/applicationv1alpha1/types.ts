@@ -151,8 +151,11 @@ export interface IAppCatalogEntrySpecRestrictions {
 
 export interface IAppCatalogEntrySpecChart {
   apiVersion: string;
+  description?: string;
   home?: string;
   icon?: string;
+  keywords?: string[];
+  upstreamChartVersion?: string;
 }
 
 export interface IAppCatalogEntrySpecCatalog {
