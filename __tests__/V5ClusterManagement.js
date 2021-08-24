@@ -432,7 +432,7 @@ scales node pools correctly`, async () => {
     expect(
       await screen.findByText(/kubernetes endpoint uri/i)
     ).toBeInTheDocument();
-    expect(screen.getByText(/control plane nodes/i)).toBeInTheDocument();
+    expect(screen.getByText(/control plane/i)).toBeInTheDocument();
     expect(
       screen.queryByText(/switch to high availability…/i)
     ).not.toBeInTheDocument();
