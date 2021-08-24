@@ -4,7 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -56,7 +56,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<capiv1alpha3.IClusterList, GenericResponse>(
+  } = useSWR<capiv1alpha3.IClusterList, GenericResponseError>(
     () => capiv1alpha3.getClusterListKey(getOptions),
     () =>
       capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
@@ -110,7 +110,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     data: clustersSummary,
     isValidating: clustersSummaryIsValidating,
     error: clustersSummaryError,
-  } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponse>(
+  } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponseError>(
     () => fetchClustersSummaryKey(clusterList?.items),
     () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
   );
@@ -125,7 +125,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     data: releasesSummary,
     isValidating: releasesSummaryIsValidating,
     error: releasesSummaryError,
-  } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponse>(
+  } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponseError>(
     () => fetchReleasesSummaryKey(clusterList?.items),
     () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
   );
@@ -140,7 +140,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     data: appsSummary,
     isValidating: appsSummaryIsValidating,
     error: appsSummaryError,
-  } = useSWR<ui.IOrganizationDetailAppsSummary, GenericResponse>(
+  } = useSWR<ui.IOrganizationDetailAppsSummary, GenericResponseError>(
     () => fetchAppsSummaryKey(clusterList?.items),
     () => fetchAppsSummary(clientFactory, auth, clusterList!.items)
   );

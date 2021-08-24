@@ -7,7 +7,7 @@ import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
 import AppInstallModal from 'MAPI/apps/AppInstallModal';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryReadmeURL } from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -62,7 +62,7 @@ const AppDetail: React.FC<{}> = () => {
   const appCatalogClient = useRef(clientFactory());
   const { data: appCatalog, error: appCatalogError } = useSWR<
     applicationv1alpha1.IAppCatalog,
-    GenericResponse
+    GenericResponseError
   >(applicationv1alpha1.getAppCatalogKey('', catalogName), () =>
     applicationv1alpha1.getAppCatalog(
       appCatalogClient.current,
@@ -107,7 +107,7 @@ const AppDetail: React.FC<{}> = () => {
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
-    GenericResponse
+    GenericResponseError
   >(
     applicationv1alpha1.getAppCatalogEntryListKey(
       appCatalogEntryListGetOptions
@@ -182,7 +182,7 @@ const AppDetail: React.FC<{}> = () => {
 
   const { data: appReadme, error: appReadmeError } = useSWR<
     string,
-    GenericResponse
+    GenericResponseError
   >(fetchAppCatalogEntryReadmeKey(readmeURL), () =>
     fetchAppCatalogEntryReadme(appReadmeClient.current, auth, readmeURL!)
   );

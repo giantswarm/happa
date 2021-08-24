@@ -5,7 +5,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
@@ -61,7 +61,7 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
     data: appList,
     error: appListError,
     isValidating: appListIsValidating,
-  } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     applicationv1alpha1.getAppListKey(appListGetOptions),
     () => applicationv1alpha1.getAppList(appListClient, auth, appListGetOptions)
   );
