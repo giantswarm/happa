@@ -7,7 +7,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as metav1 from 'model/services/mapi/metav1';
 import PropTypes from 'prop-types';
@@ -59,7 +59,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   const appClient = useRef(clientFactory());
   const { data: app, error: appError, mutate: mutateApp } = useSWR<
     applicationv1alpha1.IApp,
-    GenericResponse
+    GenericResponseError
   >(applicationv1alpha1.getAppKey(clusterName, appName), () =>
     applicationv1alpha1.getApp(appClient.current, auth, clusterName, appName)
   );
@@ -125,7 +125,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     data: appCatalogEntryList,
     error: appCatalogEntryListError,
     isValidating: appCatalogEntryListIsValidating,
-  } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponse>(
+  } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
     appCatalogEntryListKey,
     () =>
       applicationv1alpha1.getAppCatalogEntryList(

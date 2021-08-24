@@ -3,7 +3,7 @@ import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import PropTypes from 'prop-types';
 import React, { useEffect, useReducer } from 'react';
 import useSWR from 'swr';
@@ -366,7 +366,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
   const {
     data: serviceAccountSuggestions,
     error: serviceAccountSuggestionsError,
-  } = useSWR<string[], GenericResponse>(
+  } = useSWR<string[], GenericResponseError>(
     fetchServiceAccountSuggestionsKey(namespace),
     () => fetchServiceAccountSuggestions(client, auth, namespace)
   );
