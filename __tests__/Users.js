@@ -6,6 +6,7 @@ import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { UsersRoutes } from 'shared/constants/routes';
+import * as featureFlags from 'shared/featureFlags';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -28,6 +29,16 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('Users', () => {
+  const initialCustomerSSO = featureFlags.flags.CustomerSSO.enabled;
+
+  beforeAll(() => {
+    featureFlags.flags.CustomerSSO.enabled = false;
+  });
+
+  afterAll(() => {
+    featureFlags.flags.CustomerSSO.enabled = initialCustomerSSO;
+  });
+
   // Responses to requests
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
