@@ -133,7 +133,9 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     cluster && typeof cluster.metadata.deletionTimestamp !== 'undefined';
   const isUpgrading = cluster && isClusterUpgrading(cluster);
   const isUpgradable = typeof nextVersion !== 'undefined';
-  const isCreating = cluster && isClusterCreating(cluster);
+  const isCreating =
+    cluster &&
+    (isClusterCreating(cluster) || typeof cluster.status === 'undefined');
 
   const canUpgrade = !isUpgrading && !isCreating && isUpgradable;
 
