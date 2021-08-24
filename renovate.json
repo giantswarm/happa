@@ -48,7 +48,26 @@
       "groupName": "react-router packages"
     },
     {
-      "matchPackagePrefixes": ["@webpack"],
+      "matchPackagePrefixes": [
+        "@webpack",
+        "webpack",
+        "@types/copy-webpack-plugin",
+        "copy-webpack-plugin",
+        "@types/css-minimizer-webpack-plugin",
+        "css-minimizer-webpack-plugin",
+        "@types/mini-css-extract-plugin",
+        "mini-css-extract-plugin",
+        "@types/terser-webpack-plugin",
+        "terser-webpack-plugin",
+        "clean-webpack-plugin",
+        "html-webpack-plugin",
+        "css-loader",
+        "sass-loader",
+        "style-loader",
+        "json-loader",
+        "file-loader",
+        "imports-loader"
+      ],
       "groupName": "webpack packages"
     },
     {
