@@ -5,12 +5,14 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 interface IClusterDetailStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
+  isCreating?: boolean;
   isDeleting?: boolean;
   isUpgrading?: boolean;
   isUpgradable?: boolean;
 }
 
 const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
+  isCreating,
   isDeleting,
   isUpgrading,
   isUpgradable,
@@ -21,6 +23,7 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   let tooltip = '';
 
   switch (true) {
+    case isCreating:
     case isDeleting:
       return null;
 
@@ -54,6 +57,7 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
 };
 
 ClusterDetailStatus.propTypes = {
+  isCreating: PropTypes.bool,
   isDeleting: PropTypes.bool,
   isUpgrading: PropTypes.bool,
   isUpgradable: PropTypes.bool,
