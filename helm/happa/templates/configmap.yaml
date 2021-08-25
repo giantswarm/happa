@@ -35,3 +35,10 @@ data:
   # Feature flags
   feature-mapi-auth: {{ .Values.happa.featureFlags.mapiAuth | quote | upper }}
   feature-mapi-clusters: {{ .Values.happa.featureFlags.mapiClusters | quote | upper }}
+
+  {{- if and (eq .Values.managementCluster.customer "giantswarm") (ne .Values.managementCluster.pipeline "testing") }}
+  # Shared installations don't get the Monitoring feature
+  feature-monitoring: "FALSE"
+  {{- else }}
+  feature-monitoring: "TRUE"
+  {{- end }}
