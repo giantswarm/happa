@@ -1,7 +1,6 @@
 import GenericModal from 'components/Modals/GenericModal';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import useError from 'lib/hooks/useError';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -338,13 +337,6 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     default:
       return null;
   }
-};
-
-AppDetailsModal.propTypes = {
-  app: (PropTypes.object as PropTypes.Requireable<IInstalledApp>).isRequired,
-  clusterId: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-  visible: PropTypes.bool,
 };
 
 AppDetailsModal.defaultProps = {

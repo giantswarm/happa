@@ -30,6 +30,4 @@ const AccessControlRoleSearchPlaceholder: React.FC<IAccessControlRoleSearchPlace
   );
 };
 
-AccessControlRoleSearchPlaceholder.propTypes = {};
-
 export default AccessControlRoleSearchPlaceholder;

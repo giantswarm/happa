@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
@@ -117,15 +116,6 @@ const Toolbar: React.FC<IToolbarProps> = (props) => {
       </Sort>
     </Wrapper>
   );
-};
-
-Toolbar.propTypes = {
-  matchCount: PropTypes.number.isRequired,
-  onChangeSearchQuery: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  onChangeSortOrder: PropTypes.func.isRequired,
-  sortOrder: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
 };
 
 export default Toolbar;

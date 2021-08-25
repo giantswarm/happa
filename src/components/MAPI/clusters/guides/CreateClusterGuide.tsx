@@ -7,7 +7,6 @@ import {
   withFormatting,
   withTemplateCluster,
 } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
@@ -100,18 +99,6 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-CreateClusterGuide.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  clusterName: PropTypes.string.isRequired,
-  organizationName: PropTypes.string.isRequired,
-  releaseVersion: PropTypes.string,
-  description: PropTypes.string,
-  labels: PropTypes.object as PropTypes.Requireable<
-    ICreateClusterGuideProps['labels']
-  >,
-  controlPlaneAZs: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 export default CreateClusterGuide;

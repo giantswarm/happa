@@ -122,6 +122,4 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
   );
 };
 
-OrganizationDetail.propTypes = {};
-
 export default OrganizationDetail;

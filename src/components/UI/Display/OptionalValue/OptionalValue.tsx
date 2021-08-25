@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
@@ -50,14 +49,6 @@ const OptionalValue: React.FC<IOptionalValueProps> = ({
       {children(value)}
     </StyledRefreshableLabel>
   );
-};
-
-OptionalValue.propTypes = {
-  children: PropTypes.func.isRequired,
-  value: PropTypes.any,
-  replaceEmptyValue: PropTypes.bool,
-  loaderHeight: PropTypes.number,
-  loaderWidth: PropTypes.number,
 };
 
 OptionalValue.defaultProps = {

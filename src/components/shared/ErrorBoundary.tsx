@@ -1,5 +1,4 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import PropTypes from 'prop-types';
 import React, { Component, ReactNode } from 'react';
 
 interface IErrorBoundaryProps {
@@ -16,12 +15,6 @@ class ErrorBoundary extends Component<
   IErrorBoundaryProps,
   IErrorBoundaryState
 > {
-  static propTypes = {
-    children: PropTypes.element.isRequired,
-    fallback: PropTypes.element,
-    reportError: PropTypes.bool,
-  };
-
   static defaultProps = {
     reportError: true,
   };

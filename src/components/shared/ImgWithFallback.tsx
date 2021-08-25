@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { FC, ImgHTMLAttributes, useState } from 'react';
 
 interface IFallback {
@@ -49,14 +48,6 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
   }
 
   return <img {...restProps} onLoad={() => setLoadError(false)} />;
-};
-
-ImgWithFallback.propTypes = {
-  fallback: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    backgroundColor: PropTypes.string.isRequired,
-    textColor: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default ImgWithFallback;

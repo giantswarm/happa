@@ -3,7 +3,6 @@ import {
   IInstanceType,
   useInstanceTypeSelectionLabels,
 } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
-import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
@@ -95,15 +94,6 @@ const InstanceTypeRow: FC<IInstanceTypeRow> = ({
       </TableCell>
     </StyledTableRow>
   );
-};
-
-InstanceTypeRow.propTypes = {
-  cpu: PropTypes.string.isRequired,
-  ram: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  selectInstanceType: PropTypes.func.isRequired,
 };
 
 export default InstanceTypeRow;

@@ -1,5 +1,4 @@
 import { appPlatformURL } from 'lib/docs';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -122,20 +121,6 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
       </ListAndFacets>
     </Wrapper>
   );
-};
-
-AppsList.propTypes = {
-  matchCount: PropTypes.number.isRequired,
-  onChangeFacets: PropTypes.func.isRequired,
-  onChangeSearchQuery: PropTypes.func.isRequired,
-  onChangeSortOrder: PropTypes.func.isRequired,
-  onResetSearch: PropTypes.func.isRequired,
-  sortOrder: PropTypes.string.isRequired,
-  facetOptions: PropTypes.array.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  apps: PropTypes.array.isRequired,
-  appsIsLoading: PropTypes.bool,
-  facetsIsLoading: PropTypes.bool,
 };
 
 export default AppsList;

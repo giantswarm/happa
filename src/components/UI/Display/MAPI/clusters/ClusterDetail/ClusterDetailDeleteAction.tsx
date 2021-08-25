@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
@@ -186,19 +185,6 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
       </Box>
     </Box>
   );
-};
-
-ClusterDetailDeleteAction.propTypes = {
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  creationDate: PropTypes.string.isRequired,
-  workerNodesCount: PropTypes.number.isRequired,
-  nodePoolsCount: PropTypes.number.isRequired,
-  userInstalledAppsCount: PropTypes.number,
-  onDelete: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool,
-  variant: PropTypes.oneOf(Object.values(ClusterDetailDeleteActionNameVariant)),
-  disabled: PropTypes.bool,
 };
 
 ClusterDetailDeleteAction.defaultProps = {

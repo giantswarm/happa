@@ -1,6 +1,5 @@
 import { Box, Keyboard, Text } from 'grommet';
 import { compare } from 'lib/semver';
-import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
@@ -274,20 +273,6 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
       )}
     </LoadingOverlay>
   );
-};
-
-ReleaseSelector.propTypes = {
-  selectRelease: PropTypes.func.isRequired,
-  selectedRelease: PropTypes.string.isRequired,
-  releases: (PropTypes.object as PropTypes.Requireable<
-    IReleaseSelectorProps['releases']
-  >).isRequired,
-  isLoading: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  isAdmin: PropTypes.bool,
-  collapsible: PropTypes.bool,
-  autoSelectLatest: PropTypes.bool,
-  versionFilter: PropTypes.func,
 };
 
 ReleaseSelector.defaultProps = {

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -31,11 +30,6 @@ const Ports: React.FC<IPortsProps> = ({ HTTP, HTTPS, ...rest }) => {
       </li>
     </List>
   );
-};
-
-Ports.propTypes = {
-  HTTP: PropTypes.number,
-  HTTPS: PropTypes.number,
 };
 
 Ports.defaultProps = {

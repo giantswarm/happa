@@ -12,7 +12,6 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -330,10 +329,6 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
       )}
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetRelease.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetRelease;

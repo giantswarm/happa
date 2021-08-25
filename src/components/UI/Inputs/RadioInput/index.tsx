@@ -5,7 +5,6 @@ import {
   RadioButton as Input,
   RadioButtonProps,
 } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { setMultipleRefs } from 'utils/componentUtils';
@@ -139,21 +138,5 @@ const RadioInput = React.forwardRef<HTMLInputElement, IRadioInputProps>(
     );
   }
 );
-
-RadioInput.propTypes = {
-  name: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  contentProps: PropTypes.object,
-  formFieldProps: PropTypes.object,
-  disabled: PropTypes.bool,
-  required: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  info: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  help: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  margin: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  pad: PropTypes.bool,
-  fieldLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-};
 
 export default RadioInput;

@@ -27,6 +27,4 @@ const OrganizationDetailStatisticPlaceholder: React.FC<IOrganizationDetailStatis
   );
 };
 
-OrganizationDetailStatisticPlaceholder.propTypes = {};
-
 export default React.memo(OrganizationDetailStatisticPlaceholder);

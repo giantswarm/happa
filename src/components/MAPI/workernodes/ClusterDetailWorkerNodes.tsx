@@ -477,6 +477,4 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> = () =>
   );
 };
 
-ClusterDetailWorkerNodes.propTypes = {};
-
 export default ClusterDetailWorkerNodes;

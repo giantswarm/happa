@@ -22,6 +22,4 @@ const LoginGuideStep: React.FC<ILoginGuideStepProps> = (props) => {
   );
 };
 
-LoginGuideStep.propTypes = {};
-
 export default LoginGuideStep;

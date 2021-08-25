@@ -1,7 +1,6 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
-import PropTypes from 'prop-types';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
@@ -132,10 +131,6 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-BindRolesToSubjectsGuide.propTypes = {
-  namespace: PropTypes.string.isRequired,
 };
 
 export default BindRolesToSubjectsGuide;

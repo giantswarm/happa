@@ -5,10 +5,8 @@ import ReleaseSelector, {
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import * as releasesUtils from 'MAPI/releases/utils';
-import { Cluster } from 'MAPI/types';
 import { extractErrorMessage, getClusterReleaseVersion } from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserIsAdmin } from 'stores/main/selectors';
@@ -106,15 +104,6 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
       />
     </InputGroup>
   );
-};
-
-CreateClusterRelease.propTypes = {
-  id: PropTypes.string.isRequired,
-  cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  autoFocus: PropTypes.bool,
 };
 
 export default CreateClusterRelease;

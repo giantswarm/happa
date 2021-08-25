@@ -7,7 +7,6 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Constants } from 'shared/constants';
@@ -156,15 +155,6 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
       )}
     </InputGroup>
   );
-};
-
-WorkerNodesCreateNodePoolSpotInstances.propTypes = {
-  id: PropTypes.string.isRequired,
-  providerNodePool: (PropTypes.object as PropTypes.Requireable<ProviderNodePool>)
-    .isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolSpotInstances;

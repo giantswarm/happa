@@ -1,5 +1,4 @@
 import { Anchor, Box, Heading, Paragraph, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import { MainRoutes } from 'shared/constants/routes';
@@ -70,11 +69,6 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
       </Box>
     </StyledBox>
   );
-};
-
-MapiUnauthorized.propTypes = {
-  // @ts-expect-error
-  user: PropTypes.object,
 };
 
 export default MapiUnauthorized;

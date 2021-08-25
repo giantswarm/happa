@@ -1,5 +1,4 @@
 import { Grommet } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -27,10 +26,6 @@ const ThemeProvider: React.FC<IThemeProviderProps> = ({
       <AppWrapper>{children}</AppWrapper>
     </Grommet>
   );
-};
-
-ThemeProvider.propTypes = {
-  children: PropTypes.node,
 };
 
 ThemeProvider.defaultProps = {

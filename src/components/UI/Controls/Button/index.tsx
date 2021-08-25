@@ -1,5 +1,4 @@
 import { Box, Button as Control, ThemeContext, ThemeType } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
@@ -178,21 +177,6 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
     );
   }
 );
-
-Button.propTypes = {
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  loading: PropTypes.bool,
-  children: PropTypes.node,
-  className: PropTypes.string,
-  loadingTimeout: PropTypes.number,
-  primary: PropTypes.bool,
-  secondary: PropTypes.bool,
-  warning: PropTypes.bool,
-  danger: PropTypes.bool,
-  link: PropTypes.bool,
-  wrapperProps: PropTypes.object,
-};
 
 Button.defaultProps = {
   secondary: true,

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { ReactNode } from 'react';
 import { css } from 'styled-components';
 import styled from 'styled-components';
@@ -54,15 +53,6 @@ const ValueLabel = ({ label, value, color, ...props }: IValueLabelProps) => {
       <ValueWrapper color={color}>{value}</ValueWrapper>
     </Wrapper>
   );
-};
-
-ValueLabel.propTypes = {
-  label: PropTypes.node.isRequired,
-  value: PropTypes.node,
-
-  className: PropTypes.string,
-  color: PropTypes.string,
-  onClick: PropTypes.func,
 };
 
 ValueLabel.defaultProps = {

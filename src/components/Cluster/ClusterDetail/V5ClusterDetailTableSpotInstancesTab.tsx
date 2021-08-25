@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Constants, Providers } from 'shared/constants';
@@ -24,10 +23,6 @@ const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotIn
       <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
     </OverlayTrigger>
   );
-};
-
-V5ClusterDetailTableSpotInstancesTab.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
 };
 
 export default V5ClusterDetailTableSpotInstancesTab;

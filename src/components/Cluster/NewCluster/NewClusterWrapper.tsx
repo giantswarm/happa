@@ -142,6 +142,4 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
   );
 };
 
-NewClusterWrapper.propTypes = {};
-
 export default NewClusterWrapper;

@@ -1,5 +1,4 @@
 import { Anchor, Box, Drop, Keyboard, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -180,15 +179,6 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
 
 AccessControlSubjectSetItem.defaultProps = {
   deleteConfirmationMessage: <Text>Are you sure?</Text>,
-};
-
-AccessControlSubjectSetItem.propTypes = {
-  name: PropTypes.node.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  isEditable: PropTypes.bool.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  deleteTooltipMessage: PropTypes.string,
-  deleteConfirmationMessage: PropTypes.node,
 };
 
 export default AccessControlSubjectSetItem;

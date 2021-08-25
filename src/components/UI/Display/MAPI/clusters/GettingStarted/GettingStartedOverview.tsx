@@ -78,6 +78,4 @@ const GettingStartedOverview: React.FC<IGettingStartedOverviewProps> = () => {
   );
 };
 
-GettingStartedOverview.propTypes = {};
-
 export default GettingStartedOverview;

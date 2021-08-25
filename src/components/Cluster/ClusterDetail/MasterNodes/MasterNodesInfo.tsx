@@ -2,7 +2,6 @@ import {
   getAvailabilityZonesSectionLabel,
   getReadinessLabel,
 } from 'Cluster/ClusterDetail/MasterNodes/MasterNodesUtils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -89,15 +88,6 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
       )}
     </div>
   );
-};
-
-MasterNodesInfo.propTypes = {
-  canBeConverted: PropTypes.bool,
-  availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
-  supportsReadyNodes: PropTypes.bool,
-  numOfReadyNodes: PropTypes.number,
-  maxNumOfNodes: PropTypes.number,
-  onConvert: PropTypes.func,
 };
 
 MasterNodesInfo.defaultProps = {

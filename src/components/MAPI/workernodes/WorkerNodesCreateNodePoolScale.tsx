@@ -1,6 +1,4 @@
-import { NodePool } from 'MAPI/types';
 import { getNodePoolScaling } from 'MAPI/utils';
-import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -62,14 +60,6 @@ const WorkerNodesCreateNodePoolScale: React.FC<IWorkerNodesCreateNodePoolScalePr
       />
     </InputGroup>
   );
-};
-
-WorkerNodesCreateNodePoolScale.propTypes = {
-  id: PropTypes.string.isRequired,
-  nodePool: (PropTypes.object as PropTypes.Requireable<NodePool>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolScale;

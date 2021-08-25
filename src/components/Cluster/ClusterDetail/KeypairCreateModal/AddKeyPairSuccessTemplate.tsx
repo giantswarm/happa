@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import FileBlock from 'UI/Display/Documentation/FileBlock';
 
@@ -24,10 +23,6 @@ const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
       <FileBlock fileName='config.yaml'>{kubeconfig}</FileBlock>
     </>
   );
-};
-
-AddKeyPairSuccessTemplate.propTypes = {
-  kubeconfig: PropTypes.string.isRequired,
 };
 
 export default AddKeyPairSuccessTemplate;

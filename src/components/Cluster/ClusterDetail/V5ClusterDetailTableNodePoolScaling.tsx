@@ -1,5 +1,4 @@
 import { NodePoolsColumnHeader } from 'Cluster/ClusterDetail/V5ClusterDetailTable';
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -74,12 +73,6 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
       )}
     </>
   );
-};
-
-V5ClusterDetailTableNodePoolScaling.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  supportsAutoscaling: PropTypes.bool,
-  supportsSpotInstances: PropTypes.bool,
 };
 
 V5ClusterDetailTableNodePoolScaling.defaultProps = {

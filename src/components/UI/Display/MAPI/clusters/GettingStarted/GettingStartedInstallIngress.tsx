@@ -42,6 +42,4 @@ const GettingStartedInstallIngress: React.FC<IGettingStartedInstallIngressProps>
   );
 };
 
-GettingStartedInstallIngress.propTypes = {};
-
 export default GettingStartedInstallIngress;

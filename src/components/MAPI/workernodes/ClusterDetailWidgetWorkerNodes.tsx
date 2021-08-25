@@ -11,7 +11,6 @@ import {
   getMachineTypes,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -174,10 +173,6 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
       )}
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetWorkerNodes.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetWorkerNodes;

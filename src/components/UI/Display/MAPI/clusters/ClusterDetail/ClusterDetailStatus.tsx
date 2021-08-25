@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
@@ -54,13 +53,6 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
       </Box>
     </OverlayTrigger>
   );
-};
-
-ClusterDetailStatus.propTypes = {
-  isCreating: PropTypes.bool,
-  isDeleting: PropTypes.bool,
-  isUpgrading: PropTypes.bool,
-  isUpgradable: PropTypes.bool,
 };
 
 export default ClusterDetailStatus;

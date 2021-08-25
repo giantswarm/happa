@@ -1,5 +1,4 @@
 import { formatVersion } from 'Footer/FooterUtils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -32,11 +31,6 @@ const FooterVersion: React.FC<IFooterVersionProps> = ({
   }
 
   return <span key='current-version'>{formattedVersion}</span>;
-};
-
-FooterVersion.propTypes = {
-  hasUpdateReady: PropTypes.bool.isRequired,
-  currentVersion: PropTypes.string.isRequired,
 };
 
 export default FooterVersion;

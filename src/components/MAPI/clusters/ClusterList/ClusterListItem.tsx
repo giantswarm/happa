@@ -17,7 +17,6 @@ import {
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -308,11 +307,6 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       </Card>
     </StyledLink>
   );
-};
-
-ClusterListItem.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
-  releases: PropTypes.array,
 };
 
 export default ClusterListItem;

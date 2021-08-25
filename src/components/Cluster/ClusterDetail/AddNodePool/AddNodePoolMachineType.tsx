@@ -1,6 +1,5 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import { useInstanceTypeSelectionLabels } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
-import PropTypes from 'prop-types';
 import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
@@ -28,12 +27,6 @@ const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
       />
     </InputGroup>
   );
-};
-
-AddNodePoolMachineType.propTypes = {
-  id: PropTypes.string,
-  machineType: PropTypes.string,
-  onChange: PropTypes.func,
 };
 
 AddNodePoolMachineType.defaultProps = {

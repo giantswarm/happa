@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import ReleaseDetailsModalSection from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalSection';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
@@ -88,11 +87,6 @@ const ClusterDetailUpgradeModalChangelog: React.FC<IClusterDetailUpgradeModalCha
       )}
     </Box>
   );
-};
-
-ClusterDetailUpgradeModalChangelog.propTypes = {
-  releaseNotesURL: PropTypes.string,
-  componentsDiff: PropTypes.object as PropTypes.Requireable<IReleaseComponentsDiff>,
 };
 
 export default ClusterDetailUpgradeModalChangelog;

@@ -8,7 +8,6 @@ import {
   withFormatting,
   withGetApps,
 } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -74,10 +73,6 @@ const ListAppsGuide: React.FC<IListAppsGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-ListAppsGuide.propTypes = {
-  namespace: PropTypes.string.isRequired,
 };
 
 export default ListAppsGuide;

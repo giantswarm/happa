@@ -60,6 +60,4 @@ const ListOrganizationsGuide: React.FC<IListOrganizationsGuideProps> = (
   );
 };
 
-ListOrganizationsGuide.propTypes = {};
-
 export default ListOrganizationsGuide;

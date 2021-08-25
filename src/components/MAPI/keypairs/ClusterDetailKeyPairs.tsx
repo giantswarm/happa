@@ -235,6 +235,4 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   );
 };
 
-ClusterDetailKeyPairs.propTypes = {};
-
 export default ClusterDetailKeyPairs;

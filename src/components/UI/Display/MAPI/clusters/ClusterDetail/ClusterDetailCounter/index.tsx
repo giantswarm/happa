@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
@@ -60,12 +59,6 @@ const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
       </Label>
     </Box>
   );
-};
-
-ClusterDetailCounter.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.number,
-  pluralize: PropTypes.bool,
 };
 
 export default ClusterDetailCounter;

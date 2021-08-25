@@ -1,7 +1,6 @@
 import { Box, Text } from 'grommet';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Providers } from 'shared/constants';
@@ -97,14 +96,6 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       </Box>
     </OverlayTrigger>
   );
-};
-
-ClusterListItemStatus.propTypes = {
-  cluster: (PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>)
-    .isRequired,
-  isAdmin: PropTypes.bool.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  releases: PropTypes.array,
 };
 
 export default ClusterListItemStatus;

@@ -1,7 +1,6 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
-import PropTypes from 'prop-types';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
@@ -103,10 +102,6 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-InspectRoleGuide.propTypes = {
-  namespace: PropTypes.string.isRequired,
 };
 
 export default InspectRoleGuide;

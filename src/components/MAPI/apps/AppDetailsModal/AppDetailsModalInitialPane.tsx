@@ -3,7 +3,6 @@ import { Box } from 'grommet';
 import { spinner } from 'images';
 import { compare } from 'lib/semver';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -200,21 +199,6 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
       </DetailItem>
     </div>
   );
-};
-
-AppDetailsModalInitialPane.propTypes = {
-  app: (PropTypes.object as PropTypes.Requireable<applicationv1alpha1.IApp>)
-    .isRequired,
-  appCatalogEntriesIsLoading: PropTypes.bool.isRequired,
-  dispatchCreateAppConfig: PropTypes.func.isRequired,
-  dispatchCreateAppSecret: PropTypes.func.isRequired,
-  dispatchUpdateAppConfig: PropTypes.func.isRequired,
-  dispatchUpdateAppSecret: PropTypes.func.isRequired,
-  showDeleteAppConfigPane: PropTypes.func.isRequired,
-  showDeleteAppPane: PropTypes.func.isRequired,
-  showDeleteAppSecretPane: PropTypes.func.isRequired,
-  showEditChartVersionPane: PropTypes.func.isRequired,
-  appCatalogEntries: PropTypes.array,
 };
 
 export default AppDetailsModalInitialPane;

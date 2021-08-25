@@ -1,5 +1,4 @@
 import { getUpdateButtonMessage } from 'Footer/FooterUtils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -39,13 +38,6 @@ const FooterUpdateButton: React.FC<IFooterUpdateButtonProps> = ({
       {label}
     </a>
   );
-};
-
-FooterUpdateButton.propTypes = {
-  hasUpdateReady: PropTypes.bool.isRequired,
-  isUpdating: PropTypes.bool.isRequired,
-  releaseURL: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
 };
 
 export default FooterUpdateButton;

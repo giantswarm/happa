@@ -1,6 +1,5 @@
 import { Box, Heading, Text } from 'grommet';
 import AccessControlRoleSubjects from 'MAPI/organizations/AccessControl/AccessControlRoleSubjects';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
@@ -79,16 +78,6 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
       )}
     </Box>
   );
-};
-
-AccessControlRoleDetail.propTypes = {
-  namespace: PropTypes.string.isRequired,
-  permissions: (PropTypes.object as PropTypes.Requireable<IAccessControlPermissions>)
-    .isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  // @ts-expect-error
-  activeRole: PropTypes.object,
 };
 
 export default AccessControlRoleDetail;

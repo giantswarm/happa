@@ -146,6 +146,4 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   );
 };
 
-ClusterDetailOverview.propTypes = {};
-
 export default ClusterDetailOverview;

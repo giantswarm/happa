@@ -1,5 +1,4 @@
 import { truncate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -53,19 +52,6 @@ const Truncated: React.FC<ITruncatedProps> = ({
       )}
     </Wrapper>
   );
-};
-
-Truncated.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
-  // Suppressing because there is no prop-type for HTML tag names
-  // @ts-ignore
-  as: PropTypes.string,
-  labelProps: PropTypes.object,
-  numEnd: PropTypes.number,
-  numStart: PropTypes.number,
-  replacer: PropTypes.string,
-  tooltipPlacement: PropTypes.oneOf(['top', 'bottom']),
 };
 
 Truncated.defaultProps = {

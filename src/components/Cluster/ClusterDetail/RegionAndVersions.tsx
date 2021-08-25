@@ -1,7 +1,6 @@
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal/ReleaseDetailsModal';
-import PropTypes from 'prop-types';
 import React, { FC, RefObject, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -110,39 +109,6 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
       )}
     </>
   );
-};
-
-RegionAndVersions.propTypes = {
-  clusterId: PropTypes.string.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
-  // @ts-expect-error
-  releases: PropTypes.object.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  showUpgradeModal: PropTypes.func.isRequired,
-  setUpgradeVersion: PropTypes.func.isRequired,
-  createDate: PropTypes.string,
-  region: PropTypes.string,
-  // @ts-expect-error
-  release: PropTypes.shape({
-    active: PropTypes.bool.isRequired,
-    changelog: PropTypes.arrayOf(
-      PropTypes.shape({
-        component: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-      }).isRequired
-    ).isRequired,
-    components: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        version: PropTypes.string.isRequired,
-      }).isRequired
-    ).isRequired,
-    timestamp: PropTypes.string.isRequired,
-    version: PropTypes.string.isRequired,
-    kubernetesVersion: PropTypes.string,
-    k8sVersionEOLDate: PropTypes.string,
-    releaseNotesURL: PropTypes.string,
-  }),
 };
 
 export default RegionAndVersions;

@@ -1,5 +1,4 @@
 import { Box, Heading, Paragraph } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 interface IClusterListEmptyPlaceholderProps
@@ -36,10 +35,6 @@ const ClusterListEmptyPlaceholder: React.FC<IClusterListEmptyPlaceholderProps> =
       </Paragraph>
     </Box>
   );
-};
-
-ClusterListEmptyPlaceholder.propTypes = {
-  organizationName: PropTypes.string.isRequired,
 };
 
 export default ClusterListEmptyPlaceholder;

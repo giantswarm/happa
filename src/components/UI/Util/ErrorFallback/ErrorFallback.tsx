@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { ReactElement, ReactNode } from 'react';
 import ErrorText from 'UI/Util/ErrorFallback/ErrorText';
 
@@ -24,12 +23,6 @@ const ErrorFallback: React.FC<IErrorFallbackProps> = ({
   }
 
   return null;
-};
-
-ErrorFallback.propTypes = {
-  children: PropTypes.element,
-  error: PropTypes.string,
-  className: PropTypes.string,
 };
 
 export default ErrorFallback;

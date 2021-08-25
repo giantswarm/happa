@@ -1,7 +1,6 @@
 import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect, DispatchProp } from 'react-redux';
@@ -49,17 +48,6 @@ class ScaleNodePoolModal extends React.Component<
 > {
   // eslint-disable-next-line no-magic-numbers
   static rollupAnimationDuration = 500;
-
-  static propTypes = {
-    cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-    nodePool: (PropTypes.object as PropTypes.Requireable<INodePool>).isRequired,
-    nodePoolActions: (PropTypes.object as PropTypes.Requireable<
-      IDispatchProps['nodePoolActions']
-    >).isRequired,
-    workerNodesRunning: PropTypes.number.isRequired,
-    workerNodesDesired: PropTypes.number.isRequired,
-    supportsAutoscaling: PropTypes.bool,
-  };
 
   static defaultProps = {
     supportsAutoscaling: false,

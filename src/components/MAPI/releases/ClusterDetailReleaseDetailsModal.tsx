@@ -2,7 +2,6 @@ import { Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
 import GenericModal from 'Modals/GenericModal';
 import ReleaseDetailsModalSection from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalSection';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -100,17 +99,6 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
       </Box>
     </GenericModal>
   );
-};
-
-ClusterDetailReleaseDetailsModal.propTypes = {
-  version: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onUpgradeVersionSelect: PropTypes.func.isRequired,
-  visible: PropTypes.bool,
-  components: PropTypes.array,
-  creationDate: PropTypes.string,
-  releaseNotesURL: PropTypes.string,
-  supportedUpgradeVersions: PropTypes.array,
 };
 
 export default ClusterDetailReleaseDetailsModal;

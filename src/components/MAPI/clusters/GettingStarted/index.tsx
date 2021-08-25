@@ -240,6 +240,4 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
   );
 };
 
-GettingStarted.propTypes = {};
-
 export default GettingStarted;

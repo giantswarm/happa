@@ -72,6 +72,4 @@ const ListClustersGuide: React.FC<IListClustersGuideProps> = (props) => {
   );
 };
 
-ListClustersGuide.propTypes = {};
-
 export default ListClustersGuide;

@@ -9,7 +9,6 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -153,10 +152,6 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       </OptionalValue>
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetControlPlaneNodes.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetControlPlaneNodes;

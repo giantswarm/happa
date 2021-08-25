@@ -81,6 +81,4 @@ const GettingStartedNextSteps: React.FC<IGettingStartedNextStepsProps> = () => {
   );
 };
 
-GettingStartedNextSteps.propTypes = {};
-
 export default GettingStartedNextSteps;

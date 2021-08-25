@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
@@ -72,11 +71,6 @@ const NodePoolScalingSpotInstancesDetails: React.FC<INodePoolScalingSpotInstance
   }
 
   return null;
-};
-
-NodePoolScalingSpotInstancesDetails.propTypes = {
-  nodePool: (PropTypes.object as PropTypes.Requireable<INodePool>).isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
 };
 
 export default NodePoolScalingSpotInstancesDetails;

@@ -1,6 +1,5 @@
 import yaml from 'js-yaml';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -65,11 +64,6 @@ const YAMLFileUpload: React.FC<IYAMLFileUploadProps> = ({
       />
     </>
   );
-};
-
-YAMLFileUpload.propTypes = {
-  buttonText: PropTypes.string.isRequired,
-  onInputChange: PropTypes.func.isRequired,
 };
 
 export default YAMLFileUpload;

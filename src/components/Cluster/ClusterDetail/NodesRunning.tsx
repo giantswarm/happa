@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { Dot, FallbackSpan } from 'styles';
@@ -47,14 +46,6 @@ const NodesRunning: FC<INodesRunningProps> = ({
       </span>
     </div>
   );
-};
-
-NodesRunning.propTypes = {
-  CPUs: PropTypes.number.isRequired,
-  RAM: PropTypes.number.isRequired,
-  isClusterCreating: PropTypes.bool.isRequired,
-  workerNodesRunning: PropTypes.number.isRequired,
-  numNodePools: PropTypes.number,
 };
 
 export default NodesRunning;

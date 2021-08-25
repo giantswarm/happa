@@ -93,6 +93,4 @@ const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
   );
 };
 
-GettingStartedNavigation.propTypes = {};
-
 export default GettingStartedNavigation;

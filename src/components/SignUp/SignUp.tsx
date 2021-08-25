@@ -3,7 +3,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage from 'lib/passageClient';
 import { validatePassword } from 'lib/passwordValidation';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
@@ -134,12 +133,6 @@ interface ISignUpState {
 }
 
 class SignUp extends React.Component<ISignUpProps, ISignUpState> {
-  public static propTypes = {
-    match: PropTypes.object,
-    dispatch: PropTypes.func,
-    actions: PropTypes.object,
-  };
-
   private password: HTMLInputElement | null = null;
   private passwordConfirmation: HTMLInputElement | null = null;
 
@@ -528,5 +521,4 @@ function mapDispatchToProps(dispatch: Dispatch) {
   };
 }
 
-// @ts-expect-error
 export default connect(null, mapDispatchToProps)(SignUp);

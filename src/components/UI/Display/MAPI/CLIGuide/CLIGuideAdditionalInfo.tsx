@@ -1,5 +1,4 @@
 import { Box, Heading, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -53,10 +52,6 @@ const CLIGuideAdditionalInfo: React.FC<ICLIGuideAdditionalInfoProps> = ({
       </Box>
     </Box>
   );
-};
-
-CLIGuideAdditionalInfo.propTypes = {
-  links: PropTypes.array,
 };
 
 export default CLIGuideAdditionalInfo;

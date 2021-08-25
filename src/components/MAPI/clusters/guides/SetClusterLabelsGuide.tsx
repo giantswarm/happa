@@ -2,7 +2,6 @@ import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -74,11 +73,6 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-SetClusterLabelsGuide.propTypes = {
-  clusterName: PropTypes.string.isRequired,
-  clusterNamespace: PropTypes.string.isRequired,
 };
 
 export default SetClusterLabelsGuide;

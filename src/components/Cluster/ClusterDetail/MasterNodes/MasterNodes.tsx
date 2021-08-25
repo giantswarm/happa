@@ -1,7 +1,6 @@
 import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
@@ -117,16 +116,6 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
       </InfoWrapper>
     </Wrapper>
   );
-};
-
-MasterNodes.propTypes = {
-  isHA: PropTypes.bool,
-  canBeConverted: PropTypes.bool,
-  availabilityZones: PropTypes.arrayOf(PropTypes.string.isRequired),
-  supportsReadyNodes: PropTypes.bool,
-  numOfReadyNodes: PropTypes.number,
-  numOfMaxHANodes: PropTypes.number,
-  onConvert: PropTypes.func,
 };
 
 MasterNodes.defaultProps = {

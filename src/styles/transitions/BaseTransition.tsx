@@ -1,5 +1,4 @@
 import useDelayedChange from 'lib/hooks/useDelayedChange';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 
@@ -34,21 +33,6 @@ BaseTransition.defaultProps = {
   in: false,
   timeout: 200,
   delayTimeout: 500,
-};
-
-BaseTransition.propTypes = {
-  in: PropTypes.bool,
-  children: PropTypes.node.isRequired,
-  timeout: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      appear: PropTypes.number,
-      enter: PropTypes.number,
-      exit: PropTypes.number,
-    }),
-  ]),
-  classNames: PropTypes.string.isRequired,
-  delayTimeout: PropTypes.number,
 };
 
 export default BaseTransition;

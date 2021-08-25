@@ -7,7 +7,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
-import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -373,12 +372,6 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
       })()}
     </>
   );
-};
-
-InstallAppModal.propTypes = {
-  app: (PropTypes.object as PropTypes.Requireable<IInstallAppModalApp>)
-    .isRequired,
-  selectedClusterID: PropTypes.string,
 };
 
 export default InstallAppModal;

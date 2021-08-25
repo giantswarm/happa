@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -64,11 +63,6 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
       </fieldset>
     </InputGroup>
   );
-};
-
-MasterNodes.propTypes = {
-  isHighAvailability: PropTypes.bool,
-  onChange: PropTypes.func,
 };
 
 MasterNodes.defaultProps = {

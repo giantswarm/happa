@@ -7,7 +7,6 @@ import {
   withFormatting,
   withGetClusters,
 } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
@@ -115,12 +114,6 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-InspectClusterGuide.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  clusterName: PropTypes.string.isRequired,
-  clusterNamespace: PropTypes.string.isRequired,
 };
 
 export default InspectClusterGuide;

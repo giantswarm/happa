@@ -1,5 +1,4 @@
 import { Keyboard } from 'grommet';
-import PropTypes from 'prop-types';
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -110,13 +109,6 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
       </Overlay>
     </DeleteLabelButtonWrapper>
   );
-};
-
-DeleteLabelButton.propTypes = {
-  onDelete: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
-
-  allowInteraction: PropTypes.bool,
 };
 
 export default DeleteLabelButton;

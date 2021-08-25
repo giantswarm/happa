@@ -2,7 +2,6 @@ import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -62,11 +61,6 @@ const DeleteClusterGuide: React.FC<IDeleteClusterGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-DeleteClusterGuide.propTypes = {
-  clusterName: PropTypes.string.isRequired,
-  namespace: PropTypes.string.isRequired,
 };
 
 export default DeleteClusterGuide;

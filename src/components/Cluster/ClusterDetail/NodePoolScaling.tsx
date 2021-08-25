@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -81,14 +80,6 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
       )}
     </>
   );
-};
-
-NodePoolScaling.propTypes = {
-  // @ts-ignore
-  nodePool: PropTypes.object.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  supportsAutoscaling: PropTypes.bool,
-  supportsSpotInstances: PropTypes.bool,
 };
 
 NodePoolScaling.defaultProps = {

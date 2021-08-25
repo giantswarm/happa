@@ -35,6 +35,4 @@ const ClusterDetailUpgradeModalDisclaimer: React.FC<IClusterDetailUpgradeModalDi
   );
 };
 
-ClusterDetailUpgradeModalDisclaimer.propTypes = {};
-
 export default ClusterDetailUpgradeModalDisclaimer;

@@ -1,5 +1,4 @@
 import { Box, Heading, Paragraph } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 interface IClusterListErrorPlaceholderProps
@@ -35,10 +34,6 @@ const ClusterListErrorPlaceholder: React.FC<IClusterListErrorPlaceholderProps> =
       </Paragraph>
     </Box>
   );
-};
-
-ClusterListErrorPlaceholder.propTypes = {
-  organizationName: PropTypes.string.isRequired,
 };
 
 export default ClusterListErrorPlaceholder;

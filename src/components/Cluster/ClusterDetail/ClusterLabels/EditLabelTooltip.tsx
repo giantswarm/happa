@@ -1,6 +1,5 @@
 import { Box, Keyboard, Text } from 'grommet';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
-import PropTypes from 'prop-types';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
@@ -243,16 +242,6 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
       </Overlay>
     </EditLabelTooltipWrapper>
   );
-};
-
-EditLabelTooltip.propTypes = {
-  label: PropTypes.string.isRequired,
-  onOpen: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-
-  allowInteraction: PropTypes.bool,
-  className: PropTypes.string,
 };
 
 export default EditLabelTooltip;

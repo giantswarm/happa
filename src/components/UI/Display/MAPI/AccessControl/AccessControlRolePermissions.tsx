@@ -1,5 +1,4 @@
 import { InfiniteScroll } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import {
@@ -116,11 +115,6 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
       </TableBody>
     </StyledTable>
   );
-};
-
-AccessControlRolePermissions.propTypes = {
-  // @ts-expect-error
-  permissions: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 
 export default AccessControlRolePermissions;

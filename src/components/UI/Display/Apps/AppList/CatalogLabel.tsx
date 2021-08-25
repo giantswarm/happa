@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -59,10 +58,6 @@ const ErrorIcon: React.FC<{ name: string }> = ({ name }) => {
   );
 };
 
-ErrorIcon.propTypes = {
-  name: PropTypes.string.isRequired,
-};
-
 const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
   const text = (
     <span>
@@ -99,14 +94,6 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
       </Text>
     </Wrapper>
   );
-};
-
-CatalogLabel.propTypes = {
-  iconUrl: PropTypes.string,
-  catalogName: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  isManaged: PropTypes.bool,
-  error: PropTypes.string,
 };
 
 export default CatalogLabel;

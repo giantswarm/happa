@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 import TextInput from '../TextInput';
@@ -93,16 +92,6 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, ICurrencyInputProps>(
     );
   }
 );
-
-CurrencyInput.propTypes = {
-  currencyLabel: PropTypes.string,
-  precision: PropTypes.number,
-  value: PropTypes.number,
-  min: PropTypes.number,
-  max: PropTypes.number,
-  onChange: PropTypes.func,
-  disabled: PropTypes.bool,
-};
 
 CurrencyInput.defaultProps = {
   currencyLabel: '$',

@@ -26,6 +26,4 @@ const AddKeyPairServiceUnavailableError: React.FC<IAddKeyPairServiceUnavailableE
   );
 };
 
-AddKeyPairServiceUnavailableError.propTypes = {};
-
 export default AddKeyPairServiceUnavailableError;

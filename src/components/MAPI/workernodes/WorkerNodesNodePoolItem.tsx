@@ -13,7 +13,6 @@ import {
   getProviderNodePoolMachineType,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import PropTypes from 'prop-types';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -99,9 +98,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
   const isScalingInProgress = scaling && scaling.desired !== scaling.current;
 
-  const viewAndEditNameRef = useRef<
-    { activateEditMode: () => boolean } & HTMLElement
-  >(null);
+  const viewAndEditNameRef = useRef<ViewAndEditName>(null);
 
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
@@ -365,12 +362,6 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       )}
     </Box>
   );
-};
-
-WorkerNodesNodePoolItem.propTypes = {
-  nodePool: PropTypes.object as PropTypes.Validator<NodePool>,
-  providerNodePool: PropTypes.object as PropTypes.Validator<ProviderNodePool>,
-  additionalColumns: PropTypes.array,
 };
 
 export default WorkerNodesNodePoolItem;
