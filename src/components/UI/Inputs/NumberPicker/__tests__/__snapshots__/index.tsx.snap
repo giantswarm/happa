@@ -5,7 +5,7 @@ exports[`NumberPicker renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 iUQqn"
 >
   <div
-    class="sc-iCoGMd hFJToB"
+    class="sc-gKAaRy ezfMqp"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 cYwaIm"
@@ -29,7 +29,7 @@ exports[`NumberPicker renders a simple input 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi sc-kGVuwA gKkVlS"
+            class="StyledTextInput-sc-1x30a0s-0 gHAWHi sc-ciOKUB hvszOO"
             id="money"
             step="1"
             type="number"
@@ -37,18 +37,18 @@ exports[`NumberPicker renders a simple input 1`] = `
           />
         </div>
         <div
-          class="sc-bA-DTon jdgQSB"
+          class="sc-kGVuwA kVWBtb"
         >
           <div
             aria-label="Decrement"
-            class="sc-jYKCQm eUTjom"
+            class="sc-bA-DTon dNOjvy"
             role="button"
           >
             –
           </div>
           <div
             aria-label="Increment"
-            class="sc-jYKCQm eUTjom"
+            class="sc-bA-DTon dNOjvy"
             role="button"
           >
             +

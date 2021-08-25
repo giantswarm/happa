@@ -11,7 +11,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import PropTypes from 'prop-types';
@@ -118,7 +118,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const clusterListClient = useRef(clientFactory());
   const { data: clusterList, error: clusterListError } = useSWR<
     capiv1alpha3.IClusterList,
-    GenericResponse
+    GenericResponseError
   >(capiv1alpha3.getClusterListKey(), () =>
     capiv1alpha3.getClusterList(clusterListClient.current, auth)
   );

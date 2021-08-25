@@ -20,6 +20,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import * as featureFlags from 'shared/featureFlags';
 import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
 import {
@@ -65,6 +66,8 @@ class Layout extends React.Component {
     const showApps =
       supportsAppsViaMapi || Object.keys(this.props.catalogs.items).length > 0;
 
+    const showUsers = !featureFlags.flags.CustomerSSO.enabled;
+
     return (
       <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
@@ -76,6 +79,7 @@ class Layout extends React.Component {
                 organizations={this.props.organizations}
                 selectedOrganization={this.props.selectedOrganization}
                 showApps={showApps}
+                showUsers={showUsers}
                 user={user}
               />
               <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
@@ -97,7 +101,9 @@ class Layout extends React.Component {
                       <Route component={Apps} path={AppsRoutes.Home} />
                     )}
 
-                    <Route component={Users} exact path={UsersRoutes.Home} />
+                    {showUsers && (
+                      <Route component={Users} exact path={UsersRoutes.Home} />
+                    )}
 
                     {user.type === LoggedInUserTypes.MAPI ? (
                       <Route

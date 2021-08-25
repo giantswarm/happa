@@ -148,7 +148,7 @@ describe('AppDetailsModal', () => {
       )
       .reply(
         StatusCodes.Ok,
-        applicationv1alpha1Mocks.randomAppAppCatalogEntryList
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
       );
 
     nock(window.config.mapiEndpoint)
@@ -189,7 +189,7 @@ describe('AppDetailsModal', () => {
 
     fireEvent.click(
       await screen.findByText(
-        applicationv1alpha1Mocks.randomAppAppCatalogEntry3.spec.version
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry3.spec.version
       )
     );
 

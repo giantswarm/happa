@@ -5,7 +5,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { extractErrorMessage } from 'MAPI/utils';
-import { GenericResponse } from 'model/clients/GenericResponse';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -60,7 +60,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     isValidating: appListIsValidating,
     error: appListError,
     mutate: mutateAppList,
-  } = useSWR<applicationv1alpha1.IAppList, GenericResponse>(
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     applicationv1alpha1.getAppListKey(appListGetOptions),
     () =>
       applicationv1alpha1.getAppList(
@@ -85,7 +85,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     data: ingressAppToInstall,
     error: ingressAppToInstallError,
     isValidating: ingressAppToInstallIsValidating,
-  } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponse>(
+  } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponseError>(
     getIngressAppCatalogEntryKey(appList?.items),
     () => getIngressAppCatalogEntry(appCatalogEntryClient.current, auth)
   );
