@@ -1,0 +1,85 @@
+{
+  "extends": ["config:js-app"],
+  "labels": ["dependencies"],
+  "reviewers": ["team:team-biscuit"],
+  "packageRules": [
+    {
+      "matchPackagePrefixes": ["@types/jest", "jest"],
+      "groupName": "jest packages"
+    },
+    {
+      "matchPackagePrefixes": ["eslint", "@typescript-eslint"],
+      "groupName": "eslint packages"
+    },
+    {
+      "matchPackagePrefixes": ["date-fns"],
+      "groupName": "date-fns packages"
+    },
+    {
+      "matchPackagePrefixes": ["@swc", "swc-loader"],
+      "groupName": "swc packages"
+    },
+    {
+      "matchPackagePrefixes": ["@storybook"],
+      "groupName": "storybook packages"
+    },
+    {
+      "matchPackagePrefixes": ["@babel", "babel"],
+      "groupName": "babel packages"
+    },
+    {
+      "matchPackagePrefixes": ["@sentry"],
+      "groupName": "sentry packages"
+    },
+    {
+      "matchPackagePrefixes": ["@testing-library"],
+      "groupName": "testing-library packages"
+    },
+    {
+      "matchPackagePrefixes": [
+        "@types/react",
+        "react",
+        "@hot-loader/react-dom"
+      ],
+      "groupName": "react packages"
+    },
+    {
+      "matchPackagePrefixes": ["@types/react-router", "react-router"],
+      "groupName": "react-router packages"
+    },
+    {
+      "matchPackagePrefixes": [
+        "@webpack",
+        "webpack",
+        "@types/copy-webpack-plugin",
+        "copy-webpack-plugin",
+        "@types/css-minimizer-webpack-plugin",
+        "css-minimizer-webpack-plugin",
+        "@types/mini-css-extract-plugin",
+        "mini-css-extract-plugin",
+        "@types/terser-webpack-plugin",
+        "terser-webpack-plugin",
+        "clean-webpack-plugin",
+        "html-webpack-plugin",
+        "css-loader",
+        "sass-loader",
+        "style-loader",
+        "json-loader",
+        "file-loader",
+        "imports-loader"
+      ],
+      "groupName": "webpack packages"
+    },
+    {
+      "matchPackageNames": [
+        "@types/bootstrap",
+        "bootstrap",
+        "@types/react-bootstrap",
+        "react-bootstrap"
+      ],
+      "enabled": false
+    }
+  ],
+  "prConcurrentLimit": 5,
+  "schedule": ["every weekend"]
+}
