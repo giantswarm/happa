@@ -1,5 +1,6 @@
 {
   "extends": ["config:js-app"],
+  "dependencyDashboard": true,
   "labels": ["dependencies"],
   "reviewers": ["team:team-biscuit"],
   "packageRules": [
