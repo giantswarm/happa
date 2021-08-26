@@ -40,122 +40,8 @@ spec:
       - name: happa
         image: {{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
-        {{- if eq .Values.managementCluster.provider.kind "aws" }}
-        - name: AWS_CAPABILITIES_JSON
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: aws-capabilities-json
-        {{- end }}
-        {{- if eq .Values.managementCluster.provider.kind "azure" }}
-        - name: AZURE_CAPABILITIES_JSON
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: azure-capabilities-json
-        {{- end }}
-        - name: PASSAGE_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: passage-endpoint
-        - name: API_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: api-endpoint
-        - name: MAPI_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: mapi-endpoint
-        - name: AUDIENCE
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: audience
-        - name: MAPI_AUDIENCE
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: mapi-audience
-        - name: INGRESS_BASE_DOMAIN
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: ingress-base-domain
-        - name: INSTALLATION_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: installation-name
-        - name: DEFAULT_REQUEST_TIMEOUT_SECONDS
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: default-request-timeout-seconds
-        - name: PROVIDER
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: provider
-        - name: ENABLE_RUM
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: enable-rum
-        - name: MAPI_AUTH_REDIRECT_URL
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: mapi-auth-redirect-url
-        - name: MAPI_AUTH_ADMIN_GROUP
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: mapi-auth-admin-group
-        - name: SENTRY_DSN
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: sentry-dsn
-        - name: SENTRY_ENVIRONMENT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: sentry-environment
-        - name: SENTRY_RELEASE_VERSION
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: sentry-release-version
-        - name: SENTRY_DEBUG
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: sentry-debug
-        - name: SENTRY_SAMPLE_RATE
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: sentry-sample-rate
-        - name: ENVIRONMENT
-          value: kubernetes
-        - name: FEATURE_MAPI_AUTH
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: feature-mapi-auth
-        - name: FEATURE_MAPI_CLUSTERS
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: feature-mapi-clusters
-        - name: FEATURE_MONITORING
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: feature-monitoring
+          - name: CONFIG_PATH
+            value: "/var/run/{{ .Values.name }}/configmap/config.yaml"
         livenessProbe:
           httpGet:
             path: /
@@ -180,6 +66,9 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: nginx-tmpfs
+        - name: "{{ .Values.name }}-configmap"
+          mountPath: /var/run/{{ .Values.name }}/configmap/
+          readOnly: true
       imagePullSecrets:
       - name: happa-pull-secret
       volumes:

@@ -1,126 +1,10 @@
 /* eslint-disable no-magic-numbers, no-console */
 
 import { Config, ReactConfig } from '@swc/core';
-import chalk from 'chalk';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import dotenv from 'dotenv';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
-import process from 'process';
 import webpack from 'webpack';
-
-import getServiceURL from './scripts/webpack/getServiceURL';
-
-const envFileVars = dotenv.config().parsed;
-
-const determineAudienceURL = () => {
-  console.log(
-    chalk.blue(
-      `🛠  [AudienceURL Helper] Checking for HAPPA_PROXY_INSTALLATION or HAPPA_PROXY_BASE_DOMAIN`
-    )
-  );
-
-  const { HAPPA_PROXY_INSTALLATION, HAPPA_PROXY_BASE_DOMAIN } = Object.assign(
-    {},
-    envFileVars,
-    process.env
-  );
-
-  let apiAudienceUrl = '';
-  if (HAPPA_PROXY_INSTALLATION) {
-    console.log(
-      chalk.blue(
-        `🛠  [AudienceURL Helper] HAPPA_PROXY_INSTALLATION is ${HAPPA_PROXY_INSTALLATION}. Setting audience based on opsctl response.`
-      )
-    );
-    apiAudienceUrl = getServiceURL(HAPPA_PROXY_INSTALLATION, 'api');
-  } else if (HAPPA_PROXY_BASE_DOMAIN) {
-    console.log(
-      chalk.blue(
-        `🛠  [AudienceURL Helper] HAPPA_PROXY_BASE_DOMAIN is ${HAPPA_PROXY_BASE_DOMAIN}. Setting the audience based on that.`
-      )
-    );
-    apiAudienceUrl = `https://api.${HAPPA_PROXY_BASE_DOMAIN}`;
-  }
-
-  console.log(
-    chalk.blue(`🛠  [AudienceURL Helper] Set audience to ${apiAudienceUrl}.`)
-  );
-
-  return apiAudienceUrl;
-};
-
-function makeMapiEndpointURL(currentValue: string, apiEndpoint: string) {
-  if (!apiEndpoint.includes('localhost')) {
-    return apiEndpoint.replace('api', 'happaapi');
-  }
-
-  return currentValue;
-}
-
-function makeMapiAudienceURL(currentValue: string, mapiEndpoint: string) {
-  if (!mapiEndpoint.includes('localhost')) {
-    return mapiEndpoint.replace('happaapi', 'dex');
-  }
-
-  return currentValue;
-}
-
-const makeEndpoints = () => {
-  const defaults = {
-    HAPPA_API_ENDPOINT: 'http://localhost:8000',
-    HAPPA_MAPI_ENDPOINT: 'http://localhost:8888',
-    HAPPA_PASSAGE_ENDPOINT: 'http://localhost:5001',
-  };
-
-  const values = Object.assign({}, defaults, envFileVars, process.env);
-  const { HAPPA_API_ENDPOINT, HAPPA_PASSAGE_ENDPOINT } = values;
-
-  let { HAPPA_MAPI_ENDPOINT } = values;
-  HAPPA_MAPI_ENDPOINT = makeMapiEndpointURL(
-    HAPPA_MAPI_ENDPOINT,
-    HAPPA_API_ENDPOINT
-  );
-
-  const apiAudienceUrl = determineAudienceURL();
-  const mapiAudience = makeMapiAudienceURL(
-    'http://localhost:9999',
-    HAPPA_MAPI_ENDPOINT
-  );
-
-  return {
-    apiEndpoint: HAPPA_API_ENDPOINT,
-    mapiEndpoint: HAPPA_MAPI_ENDPOINT,
-    audience: apiAudienceUrl || HAPPA_API_ENDPOINT,
-    mapiAudience,
-    passageEndpoint: HAPPA_PASSAGE_ENDPOINT,
-  };
-};
-
-const makeFeatureFlags = () => {
-  const defaults = {
-    FEATURE_MAPI_AUTH: false,
-    FEATURE_MAPI_CLUSTERS: false,
-    FEATURE_MONITORING: true,
-  };
-
-  const dirtyFlags = Object.assign({}, defaults, envFileVars, process.env);
-  const flags: Record<string, boolean> = {};
-  for (const flagName of Object.keys(defaults)) {
-    const flagValue = dirtyFlags[flagName];
-    switch (typeof flagValue) {
-      case 'string':
-        flags[flagName] = flagValue.toLowerCase() === 'true';
-        break;
-
-      case 'boolean':
-        flags[flagName] = flagValue;
-        break;
-    }
-  }
-
-  return flags;
-};
 
 export const compilerConfig: Config = {
   sourceMaps: true,
@@ -247,10 +131,7 @@ const config: webpack.Configuration = {
     (new CleanWebpackPlugin() as unknown) as webpack.WebpackPluginInstance,
     new HtmlWebpackPlugin({
       template: 'src/index.ejs',
-      templateParameters: {
-        ...makeEndpoints(),
-        ...makeFeatureFlags(),
-      },
+      filename: 'index.ejs',
     }),
   ],
 };
