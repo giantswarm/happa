@@ -78,3 +78,9 @@ spec:
         emptyDir:
           medium: Memory
           sizeLimit: 200Mi
+      - name: "{{ .Values.name }}-configmap"
+        configMap:
+          name: "{{ .Values.name }}-configmap"
+          items:
+          - key: config.yaml
+            path: config.yaml
