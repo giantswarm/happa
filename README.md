@@ -84,7 +84,7 @@ Use environment variables to adjust the behavior of this application in producti
 
 These environment variables affect the config object in `index.html` (which is
 created from `index.ejs`).
-A startup script (`start.sh`) applies the values from the environment variables
+A configuration script (`prepare.ts`) applies the values from the environment variables
 to `index.html` by editing the file. This way Happa remains a fully static website
 that can be served by nginx.
 
