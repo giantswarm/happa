@@ -10,7 +10,6 @@ metadata:
   labels:
     app: happa
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     {{- if .Values.happa.letsencrypt }}
     kubernetes.io/tls-acme: "true"
     {{- end }}
@@ -23,6 +22,7 @@ metadata:
       add_header X-Content-Type-Options "nosniff" always;
       add_header Referrer-Policy "no-referrer-when-downgrade" always;
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ .Values.happa.host }}
     http:
