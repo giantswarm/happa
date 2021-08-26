@@ -40,8 +40,10 @@ spec:
       - name: happa
         image: {{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
         env:
-          - name: CONFIG_PATH
+          - name: HAPPA_CONFIG_PATH
             value: "/var/run/{{ .Values.name }}/configmap/config.yaml"
+          - name: HAPPA_VERSION
+            value: "{{ .Values.image.tag }}"
         livenessProbe:
           httpGet:
             path: /

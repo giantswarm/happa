@@ -326,7 +326,7 @@ jobs:
 
       - run:
           name: Build web application
-          command: SENTRY_RELEASE_VERSION="$(cat .sentry_release_version)" VERSION="$(cat VERSION)" yarn run dist
+          command: SENTRY_RELEASE_VERSION="$(cat .sentry_release_version)" yarn run dist
           environment:
             NODE_ENV: production
             SENTRY_UPLOAD_SOURCEMAPS: 'true'

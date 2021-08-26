@@ -24,7 +24,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
 COPY --chown=nginx scripts/ /scripts
 COPY --from=compress --chown=nginx /www /www
-# COPY --chown=nginx VERSION /
 
 RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv

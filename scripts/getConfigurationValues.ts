@@ -66,6 +66,9 @@ export async function getConfigurationValues(
 
   config.setDefault('feature-monitoring', true);
 
+  config.useEnvVariables();
+  config.setEnvVariablePrefix('HAPPA');
+
   config.parse(fromConfig);
 
   return {
