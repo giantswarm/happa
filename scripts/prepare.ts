@@ -86,9 +86,9 @@ async function gzipFiles(): Promise<void> {
 async function tryReadConfigFile(): Promise<string> {
   log('Trying to read config file.');
 
-  const configPath = process.env.CONFIG_PATH;
+  const configPath = process.env.HAPPA_CONFIG_PATH;
   if (!configPath) {
-    log(`The '$CONFIG_PATH' environmental variable is not set.`);
+    log(`The '$HAPPA_CONFIG_PATH' environmental variable is not set.`);
     log('Continuing without a configuration file.');
 
     return Promise.resolve('');
