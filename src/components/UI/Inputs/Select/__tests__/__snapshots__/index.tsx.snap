@@ -53,12 +53,12 @@ exports[`Select renders a disabled input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />
@@ -118,12 +118,12 @@ exports[`Select renders a simple input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />
@@ -183,12 +183,12 @@ exports[`Select renders an input inside the dropdown, that can search through th
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />
@@ -259,12 +259,12 @@ exports[`Select renders an input with a help message 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />
@@ -330,12 +330,12 @@ exports[`Select renders an input with a label 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />
@@ -401,12 +401,12 @@ exports[`Select renders an input with a validation error 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />
@@ -477,12 +477,12 @@ exports[`Select renders an input with an info message 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />

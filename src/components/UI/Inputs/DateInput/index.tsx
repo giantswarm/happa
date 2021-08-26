@@ -51,7 +51,9 @@ interface IBaseProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof Input>,
     'inputProps' | 'size' | 'onBlur'
-  > {}
+  > {
+  value: string | string[];
+}
 
 interface IDateInputProps
   extends IBaseProps,

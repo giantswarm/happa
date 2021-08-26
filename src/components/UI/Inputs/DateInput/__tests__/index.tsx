@@ -6,6 +6,7 @@ describe('DateInput', () => {
   it('renders a simple input', () => {
     const { container } = renderWithTheme(DateInput, {
       format: 'yyyy-mm-dd',
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -15,6 +16,7 @@ describe('DateInput', () => {
       id: 'dob',
       label: 'Date of birth',
       format: 'yyyy-mm-dd',
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -25,6 +27,7 @@ describe('DateInput', () => {
       label: 'Date of birth',
       error: 'You failed at this',
       format: 'yyyy-mm-dd',
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -35,6 +38,7 @@ describe('DateInput', () => {
       label: 'Date of birth',
       help: 'This is a very cool input',
       format: 'yyyy-mm-dd',
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -45,6 +49,7 @@ describe('DateInput', () => {
       label: 'Date of birth',
       info: 'You can set a cool value',
       format: 'yyyy-mm-dd',
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -55,6 +60,7 @@ describe('DateInput', () => {
       label: 'Date of birth',
       disabled: true,
       format: 'yyyy-mm-dd',
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -65,6 +71,7 @@ describe('DateInput', () => {
       buttonProps: {
         label: 'Pick a date and call me Jim',
       },
+      value: '',
     });
     expect(container.firstChild).toMatchSnapshot();
   });

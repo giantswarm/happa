@@ -14,7 +14,7 @@ exports[`DataTable renders a simple table 1`] = `
         class="StyledTable__StyledTableHeader-sc-1m3u5g-4 StyledDataTable__StyledDataTableHeader-xrlyjm-4"
       >
         <tr
-          class="StyledTable__StyledTableRow-sc-1m3u5g-2 StyledDataTable__StyledDataTableRow-xrlyjm-2 jcwRQa"
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2 StyledDataTable__StyledDataTableRow-xrlyjm-2 hZNAex"
         />
       </thead>
       <tbody
