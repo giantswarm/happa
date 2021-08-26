@@ -326,7 +326,7 @@ jobs:
 
       - run:
           name: Build web application
-          command: SENTRY_RELEASE_VERSION="$(cat .sentry_release_version)" yarn run dist
+          command: SENTRY_RELEASE_VERSION="$(cat .sentry_release_version)" VERSION="$(cat VERSION)" yarn run dist
           environment:
             NODE_ENV: production
             SENTRY_UPLOAD_SOURCEMAPS: 'true'
@@ -365,29 +365,6 @@ jobs:
           command: |
             set -x
             docker run --name happa-branch \
-              -e DEFAULT_REQUEST_TIMEOUT_SECONDS=10 \
-              -e AUDIENCE=test \
-              -e MAPI_AUDIENCE=test \
-              -e API_ENDPOINT=test \
-              -e MAPI_ENDPOINT=test \
-              -e PASSAGE_ENDPOINT=test \
-              -e PROVIDER=development \
-              -e INGRESS_BASE_DOMAIN=test \
-              -e INSTALLATION_NAME=test \
-              -e AWS_CAPABILITIES_JSON={} \
-              -e AZURE_CAPABILITIES_JSON={} \
-              -e ENVIRONMENT=test-in-ci \
-              -e ENABLE_RUM=TRUE \
-              -e MAPI_AUTH_REDIRECT_URL=test \
-              -e MAPI_AUTH_ADMIN_GROUP=test \
-              -e SENTRY_DSN=test \
-              -e SENTRY_ENVIRONMENT=test \
-              -e SENTRY_RELEASE_VERSION=test \
-              -e SENTRY_DEBUG=FALSE \
-              -e SENTRY_SAMPLE_RATE='0.0' \
-              -e FEATURE_MONITORING=TRUE \
-              -e FEATURE_MAPI_AUTH=TRUE \
-              -e FEATURE_MAPI_CLUSTERS=TRUE \
               -p 8000:8000 \
               -d \
               "$(cat .docker_image_name)"

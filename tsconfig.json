@@ -26,7 +26,8 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
+      "module": "CommonJS",
+      "types": ["node"]
     }
   },
   "include": ["./*.**", "src", "testUtils", "__tests__", "scripts"]

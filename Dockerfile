@@ -13,14 +13,31 @@ RUN find /www \
 
 FROM quay.io/giantswarm/nginx:1.21-alpine
 
+ENV NODE_VERSION 16.7.0
+
+RUN apk add --no-cache binutils libstdc++
+RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz"; \
+      tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+      && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
+
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --chown=nginx scripts/start.sh /
+COPY --chown=nginx tsconfig.json/ /tsconfig.json
+COPY --chown=nginx scripts/ /scripts
 COPY --from=compress --chown=nginx /www /www
-COPY --chown=nginx VERSION /
+# COPY --chown=nginx VERSION /
+
+RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
+RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
+RUN chown -R nginx:nginx /scripts/
+
+RUN chown -R nginx:nginx /var/log/nginx/
 
 RUN chmod u=rwx /www
 RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
+RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
 
 USER nginx
 
-CMD ["/start.sh"]
+RUN scripts/prepare.ts
+
+CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
