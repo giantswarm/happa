@@ -7,7 +7,6 @@
  */
 
 import SentryCliPlugin from '@sentry/webpack-plugin';
-import { Program } from '@swc/core';
 import CopyPlugin from 'copy-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import dotenv from 'dotenv';
@@ -16,7 +15,6 @@ import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
-import PropTypesStripper from './scripts/swc/PropTypesStripper';
 import common, { compilerConfig } from './webpack.common';
 
 const envFileVars = dotenv.config().parsed;
@@ -106,9 +104,7 @@ const config: webpack.Configuration = merge(common, {
         exclude: /node_modules/,
         use: {
           loader: require.resolve('swc-loader'),
-          options: Object.assign({}, compilerConfig, {
-            plugin: (m: Program) => new PropTypesStripper().visitProgram(m),
-          }),
+          options: compilerConfig,
         },
       },
       {
