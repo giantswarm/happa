@@ -13,7 +13,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Validate PR Title
-        uses: deepakputhraya/action-pr-title@v1.0.0
+        uses: deepakputhraya/action-pr-title@v1.0.2
         with:
           regex: '([ a-zA-Z0-9])+'
           prefix_case_sensitive: false
