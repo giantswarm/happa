@@ -1,5 +1,4 @@
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
@@ -303,18 +302,6 @@ const AppDetails = (props) => {
       </Tabs>
     </>
   );
-};
-
-AppDetails.propTypes = {
-  app: PropTypes.object,
-  appVersions: PropTypes.array,
-  params: PropTypes.object,
-  q: PropTypes.string,
-  imgErrorFlag: PropTypes.bool,
-  imgError: PropTypes.func,
-  catalog: PropTypes.object,
-  children: PropTypes.any,
-  readmeBaseURL: PropTypes.string,
 };
 
 export default AppDetails;

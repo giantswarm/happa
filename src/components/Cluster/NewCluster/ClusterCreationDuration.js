@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -18,10 +17,6 @@ const ClusterCreationDuration = (props) => {
       : `Clusters usually take between 10 and 30 minutes to come up.`;
 
   return <Message>{message}</Message>;
-};
-
-ClusterCreationDuration.propTypes = {
-  stats: PropTypes.object,
 };
 
 export default ClusterCreationDuration;

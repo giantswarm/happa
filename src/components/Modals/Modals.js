@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
@@ -398,12 +397,6 @@ class Modals extends React.Component {
     }
   }
 }
-
-Modals.propTypes = {
-  dispatch: PropTypes.func,
-  modal: PropTypes.object,
-  clusters: PropTypes.object,
-};
 
 function mapStateToProps(state) {
   return {

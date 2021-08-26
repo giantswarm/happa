@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -44,10 +43,5 @@ function LoadingOverlay(props) {
 
   return null;
 }
-
-LoadingOverlay.propTypes = {
-  loading: PropTypes.bool,
-  children: PropTypes.node,
-};
 
 export default LoadingOverlay;

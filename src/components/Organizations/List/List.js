@@ -1,6 +1,5 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -54,13 +53,6 @@ class OrganizationListWrapper extends React.Component {
     );
   }
 }
-
-OrganizationListWrapper.propTypes = {
-  dispatch: PropTypes.func,
-  organizations: PropTypes.array,
-  clusters: PropTypes.object,
-  supportsMultiAccount: PropTypes.bool,
-};
 
 function mapStateToProps(state) {
   const sortedOrganizations = Object.values(

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
@@ -26,10 +25,6 @@ const Organizations = (props) => {
       </LoadingOverlay>
     </Breadcrumb>
   );
-};
-
-Organizations.propTypes = {
-  loadingClustersDetails: PropTypes.bool,
 };
 
 function mapStateToProps(state) {

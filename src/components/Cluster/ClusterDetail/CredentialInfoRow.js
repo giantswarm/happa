@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
@@ -64,11 +63,5 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
 
   return null;
 }
-
-CredentialInfoRow.propTypes = {
-  cluster: PropTypes.object,
-  credentials: PropTypes.object,
-  provider: PropTypes.string,
-};
 
 export default CredentialInfoRow;

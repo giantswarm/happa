@@ -1,5 +1,4 @@
 import { Keyboard } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
@@ -139,15 +138,5 @@ function AvailabilityZonesLabel({
     </RUMActionTarget>
   );
 }
-
-AvailabilityZonesLabel.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  title: PropTypes.string,
-  onToggleChecked: PropTypes.func,
-  isChecked: PropTypes.bool,
-  isMaxReached: PropTypes.bool,
-  isRadioButtons: PropTypes.bool,
-};
 
 export default AvailabilityZonesLabel;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -78,12 +77,6 @@ const VersionsRow = ({ appVersion, entries, className }) => {
       </td>
     </tr>
   );
-};
-
-VersionsRow.propTypes = {
-  appVersion: PropTypes.string,
-  entries: PropTypes.array,
-  className: PropTypes.string,
 };
 
 export default VersionsRow;

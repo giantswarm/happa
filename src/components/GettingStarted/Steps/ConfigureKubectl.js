@@ -1,6 +1,5 @@
 import { Box } from 'grommet';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
@@ -336,15 +335,6 @@ class ConfigKubeCtl extends React.Component {
     );
   }
 }
-
-ConfigKubeCtl.propTypes = {
-  actions: PropTypes.object,
-  match: PropTypes.object,
-  selectedCluster: PropTypes.object,
-  user: PropTypes.object,
-  steps: PropTypes.array,
-  stepIndex: PropTypes.number,
-};
 
 function mapStateToProps(state, ownProps) {
   const selectedCluster =

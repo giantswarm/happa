@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 class LazyLoadedImage extends React.PureComponent {
@@ -17,9 +16,5 @@ class LazyLoadedImage extends React.PureComponent {
     return <img {...this.props} src={null} ref={this.imageRef} />;
   }
 }
-
-LazyLoadedImage.propTypes = {
-  src: PropTypes.string.isRequired,
-};
 
 export default LazyLoadedImage;

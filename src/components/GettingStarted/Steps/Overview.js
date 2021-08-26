@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'UI/Controls/Button';
@@ -34,9 +33,5 @@ const Overview = (props) => (
     </GettingStartedBottomNav>
   </>
 );
-
-Overview.propTypes = {
-  steps: PropTypes.array,
-};
 
 export default Overview;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -77,10 +76,6 @@ const ChartVersionsTable = (props) => {
       </tbody>
     </ChartVersionTable>
   );
-};
-
-ChartVersionsTable.propTypes = {
-  appVersions: PropTypes.array,
 };
 
 export default ChartVersionsTable;

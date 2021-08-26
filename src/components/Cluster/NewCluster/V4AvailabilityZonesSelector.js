@@ -1,6 +1,5 @@
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import { compare } from 'lib/semver';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -66,14 +65,6 @@ V4AvailabilityZonesSelector.defaultProps = {
   maxValue: 1,
   // eslint-disable-next-line no-empty-function
   onChange: () => {},
-};
-
-V4AvailabilityZonesSelector.propTypes = {
-  minValue: PropTypes.number,
-  maxValue: PropTypes.number,
-  onChange: PropTypes.func,
-  requiredReleaseVersion: PropTypes.string,
-  currentReleaseVersion: PropTypes.string,
 };
 
 export default V4AvailabilityZonesSelector;

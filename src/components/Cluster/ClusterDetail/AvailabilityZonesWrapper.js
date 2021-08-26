@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
@@ -20,10 +19,6 @@ const AvailabilityZonesWrapper = ({ zones }) => {
       <AvailabilityZonesLabels zones={zones} />
     </Wrapper>
   );
-};
-
-AvailabilityZonesWrapper.propTypes = {
-  zones: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default AvailabilityZonesWrapper;

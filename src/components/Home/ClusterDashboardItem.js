@@ -3,7 +3,6 @@ import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -297,18 +296,6 @@ function ClusterDashboardItem({
     </ErrorBoundary>
   );
 }
-
-ClusterDashboardItem.propTypes = {
-  cluster: PropTypes.object,
-  organizationID: PropTypes.string,
-  selectedOrganization: PropTypes.string,
-  dispatch: PropTypes.func,
-  isV5Cluster: PropTypes.bool,
-  nodePools: PropTypes.array,
-  nodePoolsLoadError: PropTypes.string,
-  clusterId: PropTypes.string,
-  releases: PropTypes.object,
-};
 
 function mapStateToProps(state, props) {
   const cluster = selectClusterById(state, props.clusterId);

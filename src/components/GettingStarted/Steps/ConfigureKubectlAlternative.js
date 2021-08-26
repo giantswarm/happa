@@ -2,7 +2,6 @@ import { installingCACert } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -340,11 +339,5 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(clusterActions, dispatch),
   };
 }
-
-ConfigKubeCtl.propTypes = {
-  user: PropTypes.object,
-  cluster: PropTypes.object,
-  actions: PropTypes.object,
-};
 
 export default connect(undefined, mapDispatchToProps)(ConfigKubeCtl);

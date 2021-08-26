@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { CSSBreakpoints } from 'shared/constants';
 import styled from 'styled-components';
@@ -43,12 +42,6 @@ const Section = ({ flat, title, children, ...rest }) => {
       <Right flat={flat}>{children}</Right>
     </Wrapper>
   );
-};
-
-Section.propTypes = {
-  children: PropTypes.node,
-  title: PropTypes.string,
-  flat: PropTypes.bool,
 };
 
 export default Section;

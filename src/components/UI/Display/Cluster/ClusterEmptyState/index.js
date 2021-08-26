@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -83,10 +82,5 @@ class ClusterEmptyState extends React.Component {
     );
   }
 }
-
-ClusterEmptyState.propTypes = {
-  errorLoadingClusters: PropTypes.bool,
-  selectedOrganization: PropTypes.string,
-};
 
 export default ClusterEmptyState;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -89,16 +88,5 @@ function WorkerNodesAWS({
     </WrapperDiv>
   );
 }
-
-WorkerNodesAWS.propTypes = {
-  az: PropTypes.array,
-  isClusterCreating: PropTypes.bool,
-  instanceName: PropTypes.string,
-  instanceType: PropTypes.object,
-  scaling: PropTypes.object,
-  showScalingModal: PropTypes.func,
-  workerNodesDesired: PropTypes.number,
-  workerNodesRunning: PropTypes.number,
-};
 
 export default WorkerNodesAWS;

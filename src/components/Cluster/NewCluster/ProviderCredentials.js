@@ -1,5 +1,4 @@
 import { FormField } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Providers } from 'shared/constants';
@@ -74,13 +73,6 @@ class ProviderCredentials extends React.Component {
     return <div />;
   }
 }
-
-ProviderCredentials.propTypes = {
-  dispatch: PropTypes.func,
-  provider: PropTypes.string,
-  organizationName: PropTypes.string,
-  credentials: PropTypes.object,
-};
 
 function mapStateToProps(state) {
   return {

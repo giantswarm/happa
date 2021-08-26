@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -41,11 +40,6 @@ const AppDetailsItem = (props) => {
       </dd>
     </>
   );
-};
-
-AppDetailsItem.propTypes = {
-  data: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  label: PropTypes.string,
 };
 
 export default AppDetailsItem;

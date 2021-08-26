@@ -1,5 +1,4 @@
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import DataTable from 'UI/DataTable';
 
@@ -57,10 +56,6 @@ const InvitesTable = ({ invitations }) => {
 
 InvitesTable.defaultProps = {
   invitations: {},
-};
-
-InvitesTable.propTypes = {
-  invitations: PropTypes.object,
 };
 
 export default InvitesTable;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 // Line
@@ -16,10 +15,5 @@ const Line = ({ prompt, text }) => (
     {text}
   </div>
 );
-
-Line.propTypes = {
-  prompt: PropTypes.bool,
-  text: PropTypes.string,
-};
 
 export default Line;

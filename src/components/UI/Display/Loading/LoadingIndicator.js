@@ -1,5 +1,4 @@
 import { spinner } from 'images';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -26,11 +25,5 @@ const LoadingIndicator = ({ loading, loadingPosition, timeout, ...rest }) => (
     </SlideTransition>
   </ProgressButtonStatusIndicator>
 );
-
-LoadingIndicator.propTypes = {
-  loading: PropTypes.bool,
-  loadingPosition: PropTypes.string,
-  timeout: PropTypes.number,
-};
 
 export default LoadingIndicator;

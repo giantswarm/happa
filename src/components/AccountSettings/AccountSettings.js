@@ -1,5 +1,4 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
@@ -54,11 +53,6 @@ const AccountSettings = (props) => (
     </DocumentTitle>
   </Breadcrumb>
 );
-
-AccountSettings.propTypes = {
-  user: PropTypes.object,
-  actions: PropTypes.object,
-};
 
 function mapStateToProps(state) {
   return {

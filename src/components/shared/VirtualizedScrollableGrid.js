@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';
 import { FixedSizeGrid as List } from 'react-window';
@@ -200,26 +199,5 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     );
   }
 }
-
-VirtualizedScrollableGrid.propTypes = {
-  columnCount: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      small: PropTypes.number,
-      med: PropTypes.number,
-      large: PropTypes.number,
-    }),
-  ]).isRequired,
-  rowHeight: PropTypes.number.isRequired,
-  children: PropTypes.func.isRequired,
-  data: PropTypes.array.isRequired,
-  height: PropTypes.number,
-  width: PropTypes.number,
-  scrollToItemIndex: PropTypes.number,
-  className: PropTypes.string,
-  adaptWidthToElement: PropTypes.object,
-  style: PropTypes.object,
-  theme: PropTypes.object,
-};
 
 export default withTheme(VirtualizedScrollableGrid);
