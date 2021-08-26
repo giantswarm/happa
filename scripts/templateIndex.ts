@@ -1,7 +1,9 @@
 import { IConfigurationValues } from './getConfigurationValues';
-import fs from 'fs/promises';
 import ejs from 'ejs';
 
+/**
+ * Template the index file with given configuration values
+ * */
 export async function templateIndex(
   input: string,
   withValues: IConfigurationValues

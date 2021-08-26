@@ -19,6 +19,10 @@ interface IMetadataContent {
   version: string;
 }
 
+function log(message: string): void {
+  process.stdout.write(`${message}\n`);
+}
+
 async function createMetadataTemplate(
   withValues: IConfigurationValues
 ): Promise<void> {
@@ -26,17 +30,25 @@ async function createMetadataTemplate(
     version: withValues.happaVersion,
   };
 
-  return fs.writeFile(metadataPath, JSON.stringify(content));
+  log(`Writing metadata file to path '${metadataPath}'.`);
+  await fs.writeFile(metadataPath, JSON.stringify(content));
+  log('Wrote metadata file successfully.');
 }
 
 async function createIndexTemplate(
   withValues: IConfigurationValues
 ): Promise<void> {
+  log(`Reading index template at '${indexTemplatePath}'.`);
   const indexFile = await fs.readFile(indexTemplatePath);
+  log('Read index template successfully.');
 
+  log('Templating index');
   const output = await templateIndex(indexFile.toString(), withValues);
+  log(`Templated index successfully.`);
 
-  return fs.writeFile(indexOutputPath, output);
+  log(`Writing index file to path '${indexTemplatePath}'.`);
+  await fs.writeFile(indexOutputPath, output);
+  log('Wrote index file successfully.');
 }
 
 async function $(command: string) {
@@ -44,7 +56,7 @@ async function $(command: string) {
     const args = command.split(' ');
     if (args.length < 1) return Promise.resolve();
 
-    process.stdout.write(`Running '${command}'\n`);
+    log(`Running '${command}'`);
 
     const proc = spawn(args[0], args.slice(1), {
       shell: true,
@@ -65,15 +77,28 @@ async function $(command: string) {
 }
 
 async function gzipFiles(): Promise<void> {
+  log('Gzipping files');
   await $(`gzip -f -9 -k ${indexOutputPath}`);
   await $(`gzip -f -9 -k ${metadataPath}`);
+  log('Gzipped files successfully');
 }
 
 async function tryReadConfigFile(): Promise<string> {
+  log('Trying to read config file.');
+
   const configPath = process.env.CONFIG_PATH;
-  if (!configPath) return Promise.resolve('');
+  if (!configPath) {
+    log(`The '$CONFIG_PATH' environmental variable is not set.`);
+    log('Continuing without a configuration file.');
+
+    return Promise.resolve('');
+  }
+
+  log(`Attempting to read config file from path '${configPath}'.`);
 
   const configFile = await fs.readFile(configPath);
+
+  log('Read config file successfully.');
 
   return configFile.toString();
 }
@@ -81,7 +106,10 @@ async function tryReadConfigFile(): Promise<string> {
 async function main(): Promise<void> {
   try {
     const configContent = await tryReadConfigFile();
+
+    log('Computing the configuration values.');
     const values = await getConfigurationValues(configContent);
+    log('Computed the configuration values successfully.');
 
     await createIndexTemplate(values);
     await createMetadataTemplate(values);

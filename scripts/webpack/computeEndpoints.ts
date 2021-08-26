@@ -43,6 +43,9 @@ function determineAudienceURL() {
   return apiAudienceUrl;
 }
 
+/**
+ * Determine which backend endpoints to use.
+ * */
 export function computeEndpoints() {
   const endpoints: Pick<
     IConfigurationValues,

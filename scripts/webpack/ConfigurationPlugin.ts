@@ -7,11 +7,25 @@ import {
 import { templateIndex } from '../templateIndex';
 
 interface IConfigurationPluginOptions {
+  /**
+   * The path of the file to template.
+   * */
   filename: string;
+  /**
+   * Where to save the templated file
+   * */
   outputFilename: string;
+  /**
+   * Set custom template values that override the
+   * ones computed from the environment.
+   * */
   overrides?: Partial<IConfigurationValues>;
 }
 
+/**
+ * This `webpack` plugin will template a given file with
+ * configuration values computed from the environment.
+ * */
 export class ConfigurationPlugin implements webpack.WebpackPluginInstance {
   public constructor(protected options: IConfigurationPluginOptions) {}
 
@@ -37,12 +51,14 @@ export class ConfigurationPlugin implements webpack.WebpackPluginInstance {
 
         const contents = asset.buffer().toString();
 
-        // Template the file.
         let values = await getConfigurationValues();
+
+        // Apply configuration value overrides, if any.
         if (this.options.overrides) {
           values = Object.assign({}, values, this.options.overrides);
         }
 
+        // Template the file with the configuration values.
         const transformedContents = await templateIndex(contents, values);
 
         // Create the new templated file.

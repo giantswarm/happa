@@ -29,6 +29,11 @@ export interface IConfigurationValues {
   FEATURE_MONITORING: boolean;
 }
 
+/**
+ * This function maps the configuration file values
+ * to the values used for templating.
+ * @param getConfigurationValues
+ * */
 export async function getConfigurationValues(
   fromConfig: string = ''
 ): Promise<IConfigurationValues> {
