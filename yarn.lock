@@ -9089,10 +9089,10 @@ graphlib@^2.1.7, graphlib@^2.1.8:
   dependencies:
     lodash "^4.17.15"
 
-grommet-icons@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/grommet-icons/-/grommet-icons-4.5.0.tgz#855ad26338ea1a1503eb18fdae428c431332be6a"
-  integrity sha512-q7TNXV996fDh2e++7WapiNFUk0UEll17iEZ2d75W4yz+8Bb3+vdQ1MeT/d1RRlM0pV2KnTpSeR00GeN4KA9upg==
+grommet-icons@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/grommet-icons/-/grommet-icons-4.6.2.tgz#56315cdb061895ddf18ad06cb76378b317cbbe56"
+  integrity sha512-3wTRQsmwrSFM7FvruULNWwi5dWp8MtYCimWeJW0zaJxkq35iPHMTZCzBrVfuRL6pOja3KegNC9b8rvdXVMct6Q==
   dependencies:
     grommet-styles "^0.2.0"
 
@@ -9101,16 +9101,15 @@ grommet-styles@^0.2.0:
   resolved "https://registry.yarnpkg.com/grommet-styles/-/grommet-styles-0.2.0.tgz#b2eac2b7e2747cb523434d21728ce5234f8ce4f4"
   integrity sha512-0OMSYuGeyifYKpg4Gv2HzL8rUdd0ddnJ5LbCBKgDuloC71XIwr9g/Fxa6rs737MbPV7OZ4pEm4wvrjH4epzf1A==
 
-grommet@2.17.3:
-  version "2.17.3"
-  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.17.3.tgz#7522a58db86ed54dc31e37cae9e492b8d4d049fb"
-  integrity sha512-33q28/bBTkhC68pL7LOyJmR8XF/izChGxYOMW+2SS5SojqGpR4yvhMTLFdEA0F20+tAZ9AqIvMGJmsyMbyDVXg==
+grommet@2.17.5:
+  version "2.17.5"
+  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.17.5.tgz#690c288306f3a7f46003eb9db9c2b0d295b10f03"
+  integrity sha512-ld8nvuEqBDXiUiMybX2yuMH94KC1LxGhHKaDyqQI8HZrzgUpOB/GuQ2VcvB2YSB62Zpt7NuBjsghlLPKG5l8gQ==
   dependencies:
-    grommet-icons "^4.5.0"
+    grommet-icons "^4.6.2"
     hoist-non-react-statics "^3.2.0"
-    markdown-to-jsx "^6.11.4"
+    markdown-to-jsx "^7.1.3"
     prop-types "^15.7.2"
-    react-desc "^4.1.3"
 
 growly@^1.3.0:
   version "1.3.0"
@@ -13663,11 +13662,6 @@ react-content-loader@6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-6.0.2.tgz#7c72e5b133136c31c2f27036d1d7b39dab804026"
   integrity sha512-eQrWT2KV1uPhFh9ErRhOLl4SBkzK9oxQiuEq6Dgq4D9oqKg9j/Ib8+aFoknvn1hYVx5fqSAI5BjxY9ukTOVPXw==
-
-react-desc@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/react-desc/-/react-desc-4.1.3.tgz#197b56b7b55aba702e0c912f372dea5fee86f53b"
-  integrity sha512-XqfNsg+nvAO77ja5+v3J6bMS7drnWozpiA64bUTyhqvSCJRkq45FiONl7/+74OjPw4Id6qbqVX6xkER/yTU8+w==
 
 react-dev-utils@^11.0.3:
   version "11.0.4"
