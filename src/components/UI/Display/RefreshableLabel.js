@@ -1,5 +1,4 @@
 import usePrevious from 'lib/hooks/usePrevious';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
@@ -70,10 +69,8 @@ function RefreshableLabel({ children, value, className }) {
   return <Wrapper className={labelClassName}>{children}</Wrapper>;
 }
 
-RefreshableLabel.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+RefreshableLabel.defaultProps = {
+  className: '',
 };
 
 export default RefreshableLabel;

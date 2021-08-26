@@ -44,7 +44,6 @@ const OptionalValue: React.FC<IOptionalValueProps> = ({
   const refreshableKey = JSON.stringify(value);
 
   return (
-    // @ts-expect-error
     <StyledRefreshableLabel value={refreshableKey}>
       {children(value)}
     </StyledRefreshableLabel>
