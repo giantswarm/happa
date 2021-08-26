@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { Overlay } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -89,13 +88,6 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
       </Overlay>
     </>
   );
-};
-
-KubernetesVersionLabel.propTypes = {
-  version: PropTypes.string,
-  hidePatchVersion: PropTypes.bool,
-  eolDate: PropTypes.string,
-  hideIcon: PropTypes.bool,
 };
 
 KubernetesVersionLabel.defaultProps = {

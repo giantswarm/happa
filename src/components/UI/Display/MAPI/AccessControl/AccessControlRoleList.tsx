@@ -1,7 +1,6 @@
 import { Box, InfiniteScroll, Keyboard, Sidebar } from 'grommet';
 import useDebounce from 'lib/hooks/useDebounce';
 import { filterRoles } from 'MAPI/organizations/AccessControl/utils';
-import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import TextInput from 'UI/Inputs/TextInput';
@@ -131,15 +130,6 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
       </Content>
     </Sidebar>
   );
-};
-
-AccessControlRoleList.propTypes = {
-  activeRoleName: PropTypes.string.isRequired,
-  setActiveRoleName: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool,
-  // @ts-expect-error
-  roles: PropTypes.arrayOf(PropTypes.object.isRequired),
-  errorMessage: PropTypes.string,
 };
 
 export default AccessControlRoleList;

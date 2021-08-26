@@ -1,5 +1,4 @@
 import { Keyboard } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
@@ -133,15 +132,6 @@ const UserInstalledApps: React.FC<IUserInstalledAppsProps> = ({
       </>
     </InstalledAppsWrapper>
   );
-};
-
-UserInstalledApps.propTypes = {
-  apps: PropTypes.arrayOf(
-    PropTypes.object as PropTypes.Validator<IUserInstalledApp>
-  ).isRequired,
-  onShowDetail: PropTypes.func.isRequired,
-  error: PropTypes.string,
-  children: PropTypes.node,
 };
 
 export default UserInstalledApps;

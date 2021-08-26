@@ -5,7 +5,6 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { css } from 'styled-components';
 
@@ -148,21 +147,6 @@ const Select = React.forwardRef<HTMLButtonElement, ISelectProps>(
     );
   }
 );
-
-Select.propTypes = {
-  name: PropTypes.string,
-  id: PropTypes.string,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  contentProps: PropTypes.object,
-  formFieldProps: PropTypes.object,
-  disabled: PropTypes.bool,
-  required: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  info: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  help: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  margin: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  pad: PropTypes.bool,
-};
 
 Select.defaultProps = {
   dropHeight: 'small',

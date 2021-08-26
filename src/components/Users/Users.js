@@ -1,7 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
@@ -256,16 +255,6 @@ class Users extends React.Component {
     );
   }
 }
-
-Users.propTypes = {
-  dispatch: PropTypes.func,
-  currentUser: PropTypes.object,
-  users: PropTypes.object,
-  organizations: PropTypes.object,
-  initialSelectedOrganizations: PropTypes.array,
-  invitations: PropTypes.object,
-  installation_name: PropTypes.string,
-};
 
 function mapStateToProps(state) {
   return {

@@ -1,7 +1,6 @@
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
 import { formatDate, relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
 import NotAvailable from 'UI/Display/NotAvailable';
@@ -101,11 +100,5 @@ class KeyPairDetailsModal extends React.Component {
     );
   }
 }
-
-KeyPairDetailsModal.propTypes = {
-  keyPair: PropTypes.object,
-  onClose: PropTypes.func,
-  visible: PropTypes.bool,
-};
 
 export default KeyPairDetailsModal;

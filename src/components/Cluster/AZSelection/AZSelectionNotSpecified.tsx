@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 import { AZSelectionVariants } from './AZSelectionUtils';
@@ -19,10 +18,6 @@ const AZSelectionNotSpecified: React.FC<IAZSelectionNotSpecifiedProps> = ({
   }
 
   return <Text>{descriptionMessage}</Text>;
-};
-
-AZSelectionNotSpecified.propTypes = {
-  variant: PropTypes.number.isRequired,
 };
 
 export default AZSelectionNotSpecified;

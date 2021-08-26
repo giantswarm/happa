@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -26,10 +25,6 @@ const DownloadKubeconfigButton: React.FC<IDownloadKubeconfigButtonProps> = ({
       <Button>Download</Button>
     </a>
   );
-};
-
-DownloadKubeconfigButton.propTypes = {
-  content: PropTypes.string,
 };
 
 DownloadKubeconfigButton.defaultProps = {

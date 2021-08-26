@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 interface IOptionPillProps extends React.ComponentPropsWithoutRef<typeof Box> {
@@ -33,11 +32,6 @@ const OptionPill: React.FC<IOptionPillProps> = ({
       )}
     </Box>
   );
-};
-
-OptionPill.propTypes = {
-  option: PropTypes.string.isRequired,
-  editable: PropTypes.bool,
 };
 
 OptionPill.defaultProps = {

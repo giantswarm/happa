@@ -5,9 +5,7 @@ import {
   AZSelectionZonesUpdater,
   IUpdateZoneLabelsPayload,
 } from 'Cluster/AZSelection/AZSelectionUtils';
-import { Cluster, ControlPlaneNode } from 'MAPI/types';
 import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
@@ -113,17 +111,6 @@ const CreateClusterControlPlaneNodeAZs: React.FC<ICreateClusterControlPlaneNodeA
       />
     </InputGroup>
   );
-};
-
-CreateClusterControlPlaneNodeAZs.propTypes = {
-  id: PropTypes.string.isRequired,
-  cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-  controlPlaneNode: (PropTypes.object as PropTypes.Requireable<ControlPlaneNode>)
-    .isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  autoFocus: PropTypes.bool,
 };
 
 export default CreateClusterControlPlaneNodeAZs;

@@ -10,7 +10,6 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as metav1 from 'model/services/mapi/metav1';
-import PropTypes from 'prop-types';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -611,13 +610,6 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
     default:
       return null;
   }
-};
-
-AppDetailsModal.propTypes = {
-  appName: PropTypes.string.isRequired,
-  clusterName: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-  visible: PropTypes.bool,
 };
 
 AppDetailsModal.defaultProps = {

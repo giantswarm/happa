@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
 
@@ -82,12 +81,6 @@ const GettingStartedProvider: React.FC<
       {children}
     </gettingStartedContext.Provider>
   );
-};
-
-GettingStartedProvider.propTypes = {
-  homePath: PropTypes.string.isRequired,
-  steps: PropTypes.array.isRequired,
-  children: PropTypes.node,
 };
 
 export default GettingStartedProvider;

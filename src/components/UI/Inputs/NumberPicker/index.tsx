@@ -1,6 +1,5 @@
 import { ThemeContext, ThemeType } from 'grommet';
 import usePrevious from 'lib/hooks/usePrevious';
-import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
@@ -232,19 +231,6 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     );
   }
 );
-
-NumberPicker.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.number,
-  step: PropTypes.number,
-  min: PropTypes.number,
-  max: PropTypes.number,
-  onChange: PropTypes.func,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  className: PropTypes.string,
-  title: PropTypes.string,
-};
 
 NumberPicker.defaultProps = {
   value: 0,

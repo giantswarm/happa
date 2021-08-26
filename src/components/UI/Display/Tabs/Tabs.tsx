@@ -1,6 +1,5 @@
 import { replace } from 'connected-react-router';
 import { Tabs as GromTabs } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -75,12 +74,6 @@ const Tabs: React.FC<ITabsProps> = ({
       {children}
     </GromTabs>
   );
-};
-
-Tabs.propTypes = {
-  children: PropTypes.node,
-  activeIndex: PropTypes.number,
-  useRoutes: PropTypes.bool,
 };
 
 Tabs.defaultProps = {

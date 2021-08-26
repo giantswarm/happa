@@ -3,7 +3,6 @@ import formatDistance from 'date-fns/fp/formatDistance';
 import { Box } from 'grommet';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -186,16 +185,6 @@ class Home extends React.Component {
     );
   }
 }
-
-Home.propTypes = {
-  clearInterval: PropTypes.func,
-  setInterval: PropTypes.func,
-  clusters: PropTypes.array,
-  selectedOrganization: PropTypes.string,
-  errorLoadingClusters: PropTypes.bool,
-  v5Clusters: PropTypes.array,
-  dispatch: PropTypes.func,
-};
 
 const makeMapStateToProps = () => {
   const selectClusters = selectClustersList();

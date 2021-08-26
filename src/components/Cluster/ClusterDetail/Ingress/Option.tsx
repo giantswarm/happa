@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -52,12 +51,6 @@ const Option: React.FC<IOptionProps> = ({ id, footer, children, ...rest }) => {
       </StyledInfoRow>
     </Info>
   );
-};
-
-Option.propTypes = {
-  id: PropTypes.string,
-  footer: PropTypes.node,
-  children: PropTypes.node,
 };
 
 Option.defaultProps = {

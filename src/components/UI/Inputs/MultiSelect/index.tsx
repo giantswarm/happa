@@ -1,5 +1,4 @@
 import { Box, Button } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 import CheckBoxInput from '../CheckBoxInput';
@@ -128,15 +127,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, IMultiSelectProps>(
     );
   }
 );
-
-MultiSelect.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  selected: PropTypes.arrayOf(PropTypes.string.isRequired),
-  disabled: PropTypes.bool,
-  placeholder: PropTypes.string,
-  maxVisibleValues: PropTypes.number,
-  onRemoveValue: PropTypes.func,
-};
 
 MultiSelect.defaultProps = {
   maxVisibleValues: 4,

@@ -6,7 +6,6 @@ import {
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import { Box } from 'grommet';
 import produce from 'immer';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
@@ -342,22 +341,6 @@ class CreateNodePoolsCluster extends Component {
     );
   }
 }
-
-CreateNodePoolsCluster.propTypes = {
-  allowSubmit: PropTypes.bool,
-  availabilityZones: PropTypes.array,
-  capabilities: PropTypes.object,
-  closeForm: PropTypes.func,
-  isClusterCreating: PropTypes.bool,
-  clusterName: PropTypes.string,
-  defaultAZ: PropTypes.number,
-  dispatch: PropTypes.func,
-  maxAZ: PropTypes.number,
-  minAZ: PropTypes.number,
-  provider: PropTypes.string,
-  selectedOrganization: PropTypes.string,
-  selectedRelease: PropTypes.string,
-};
 
 function mapStateToProps(state) {
   const { availability_zones: AZ, provider } = state.main.info.general;

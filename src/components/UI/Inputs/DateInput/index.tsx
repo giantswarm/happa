@@ -6,7 +6,6 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { css, DefaultTheme } from 'styled-components';
 
@@ -174,35 +173,6 @@ const DateInput = React.forwardRef<HTMLInputElement, IDateInputProps>(
     );
   }
 );
-
-DateInput.propTypes = {
-  id: PropTypes.string,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  contentProps: PropTypes.object,
-  formFieldProps: PropTypes.object,
-  disabled: PropTypes.bool,
-  required: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  info: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  help: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  name: PropTypes.string,
-  margin: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  pad: PropTypes.bool,
-  onChange: PropTypes.func,
-  value: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string.isRequired),
-  ]),
-  buttonProps: PropTypes.object,
-  calendarProps: PropTypes.object,
-  defaultValue: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string.isRequired),
-  ]),
-  dropProps: PropTypes.object,
-  format: PropTypes.string,
-  inline: PropTypes.bool,
-};
 
 DateInput.defaultProps = {
   size: 'medium',

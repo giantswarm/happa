@@ -34,6 +34,4 @@ const AccessControlRolePlaceholder: React.FC<IAccessControlRolePlaceholderProps>
   );
 };
 
-AccessControlRolePlaceholder.propTypes = {};
-
 export default AccessControlRolePlaceholder;

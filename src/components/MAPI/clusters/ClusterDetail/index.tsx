@@ -312,6 +312,4 @@ const ClusterDetail: React.FC<{}> = () => {
   );
 };
 
-ClusterDetail.propTypes = {};
-
 export default ClusterDetail;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
@@ -57,11 +56,6 @@ const ComponentChangelog = (props) => {
       })}
     </Wrapper>
   );
-};
-
-ComponentChangelog.propTypes = {
-  name: PropTypes.string.isRequired,
-  changes: PropTypes.array.isRequired,
 };
 
 export default ComponentChangelog;

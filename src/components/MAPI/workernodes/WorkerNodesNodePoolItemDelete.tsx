@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
@@ -45,13 +44,6 @@ const WorkerNodesNodePoolItemDelete: React.FC<IWorkerNodesNodePoolItemDeleteProp
       </Text>
     </ConfirmationPrompt>
   );
-};
-
-WorkerNodesNodePoolItemDelete.propTypes = {
-  nodePoolName: PropTypes.string.isRequired,
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
-  isLoading: PropTypes.bool,
 };
 
 export default WorkerNodesNodePoolItemDelete;

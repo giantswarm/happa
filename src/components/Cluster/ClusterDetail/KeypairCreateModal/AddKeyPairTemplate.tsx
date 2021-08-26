@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -124,23 +123,6 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
       )}
     </>
   );
-};
-
-AddKeyPairTemplate.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  email: PropTypes.string.isRequired,
-  cnPrefix: PropTypes.string.isRequired,
-  cnPrefixError: PropTypes.string,
-  handleCNPrefixChange: PropTypes.func.isRequired,
-  certificateOrganizations: PropTypes.string.isRequired,
-  handleCertificateOrganizationsChange: PropTypes.func.isRequired,
-  description: PropTypes.string.isRequired,
-  handleDescriptionChange: PropTypes.func.isRequired,
-  expireTTL: PropTypes.number.isRequired,
-  handleTTLChange: PropTypes.func.isRequired,
-  useInternalAPI: PropTypes.bool.isRequired,
-  handleUseInternalAPIChange: PropTypes.func.isRequired,
-  ingressBaseDomain: PropTypes.string.isRequired,
 };
 
 export default AddKeyPairTemplate;

@@ -5,7 +5,6 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { NodePool } from 'MAPI/types';
 import { extractErrorMessage, getNodePoolScaling } from 'MAPI/utils';
-import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Controls/Button';
@@ -249,13 +248,6 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
       )}
     </ConfirmationPrompt>
   );
-};
-
-WorkerNodesNodePoolItemScale.propTypes = {
-  nodePool: (PropTypes.object as PropTypes.Requireable<NodePool>).isRequired,
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
-  open: PropTypes.bool,
 };
 
 export default WorkerNodesNodePoolItemScale;

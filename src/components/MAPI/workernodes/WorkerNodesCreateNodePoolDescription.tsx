@@ -1,7 +1,5 @@
 import { hasAppropriateLength } from 'lib/helpers';
-import { NodePool } from 'MAPI/types';
 import { getNodePoolDescription } from 'MAPI/utils';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -63,15 +61,6 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
       />
     </InputGroup>
   );
-};
-
-WorkerNodesCreateNodePoolDescription.propTypes = {
-  id: PropTypes.string.isRequired,
-  nodePool: (PropTypes.object as PropTypes.Requireable<NodePool>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  autoFocus: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolDescription;

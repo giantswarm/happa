@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import CachingColorHash from 'utils/cachingColorHash';
@@ -51,9 +50,5 @@ class CertificateOrgsLabel extends React.Component {
     );
   }
 }
-
-CertificateOrgsLabel.propTypes = {
-  value: PropTypes.string,
-};
 
 export default CertificateOrgsLabel;

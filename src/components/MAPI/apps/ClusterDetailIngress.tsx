@@ -7,7 +7,6 @@ import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
@@ -142,13 +141,6 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
       </Breadcrumb>
     </DocumentTitle>
   );
-};
-
-ClusterDetailIngress.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  k8sEndpoint: PropTypes.string,
-  kvmTCPHTTPPort: PropTypes.number,
-  kvmTCPHTTPSPort: PropTypes.number,
 };
 
 ClusterDetailIngress.defaultProps = {

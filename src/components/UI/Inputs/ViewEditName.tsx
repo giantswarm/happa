@@ -1,6 +1,5 @@
 import { Box, Keyboard } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React, { Component, FormEvent, GetDerivedStateFromProps } from 'react';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -55,13 +54,6 @@ class ViewAndEditName extends Component<
 > {
   static defaultProps = {
     onSave: () => {},
-  };
-
-  static propTypes = {
-    value: PropTypes.string,
-    typeLabel: PropTypes.string,
-    onSave: PropTypes.func,
-    onToggleEditingState: PropTypes.func,
   };
 
   static getDerivedStateFromProps: GetDerivedStateFromProps<

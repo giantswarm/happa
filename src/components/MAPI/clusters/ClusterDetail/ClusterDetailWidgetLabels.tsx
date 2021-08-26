@@ -5,7 +5,6 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import { mutate } from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
@@ -115,10 +114,6 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
       </OptionalValue>
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetLabels.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetLabels;

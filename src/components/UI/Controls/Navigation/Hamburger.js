@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { DropdownTrigger } from 'UI/Controls/DropdownMenu';
@@ -58,11 +57,5 @@ function Hamburger({ onClickHandler, onKeyDownHandler, isOpen }) {
     </HamburgerDiv>
   );
 }
-
-Hamburger.propTypes = {
-  onClickHandler: PropTypes.func,
-  onKeyDownHandler: PropTypes.func,
-  isOpen: PropTypes.bool,
-};
 
 export default Hamburger;

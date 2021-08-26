@@ -1,7 +1,5 @@
 import { hasAppropriateLength } from 'lib/helpers';
-import { Cluster } from 'MAPI/types';
 import { getClusterDescription } from 'MAPI/utils';
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -76,15 +74,6 @@ const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
       />
     </InputGroup>
   );
-};
-
-CreateClusterDescription.propTypes = {
-  id: PropTypes.string.isRequired,
-  cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  autoFocus: PropTypes.bool,
 };
 
 export default CreateClusterDescription;

@@ -1,6 +1,5 @@
 import { Box } from 'grommet';
 import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { Tab, Tabs } from 'UI/Display/Tabs';
@@ -40,12 +39,6 @@ const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> = (
       </Tabs>
     </Box>
   );
-};
-
-GettingStartedPlatformTabs.propTypes = {
-  linuxContent: PropTypes.node,
-  macOSContent: PropTypes.node,
-  windowsContent: PropTypes.node,
 };
 
 export default GettingStartedPlatformTabs;

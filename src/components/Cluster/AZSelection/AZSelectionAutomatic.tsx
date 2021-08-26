@@ -1,6 +1,5 @@
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -68,16 +67,6 @@ const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
       <Text>{automaticAZSelectionMessage}</Text>
     </>
   );
-};
-
-AZSelectionAutomatic.propTypes = {
-  onUpdateZones: PropTypes.func.isRequired,
-  variant: PropTypes.number.isRequired,
-  allZones: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  minNumOfZones: PropTypes.number.isRequired,
-  maxNumOfZones: PropTypes.number.isRequired,
-  defaultNumOfZones: PropTypes.number.isRequired,
-  numOfZones: PropTypes.number.isRequired,
 };
 
 export default AZSelectionAutomatic;

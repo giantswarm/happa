@@ -1,6 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { ReleaseHelper } from 'lib/ReleaseHelper';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -126,17 +125,6 @@ const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOpt
       {containsBetaReleases && <StyledBetaDisclaimer />}
     </ReleaseDetailsModalSection>
   );
-};
-
-ReleaseDetailsModalUpgradeOptions.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-  // @ts-expect-error
-  releases: PropTypes.object.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  currentVersion: PropTypes.string.isRequired,
-  showUpgradeModal: PropTypes.func.isRequired,
-  setUpgradeVersion: PropTypes.func.isRequired,
-  closeModal: PropTypes.func.isRequired,
 };
 
 export default ReleaseDetailsModalUpgradeOptions;

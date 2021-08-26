@@ -150,6 +150,4 @@ const GettingStarted = (props) => {
   );
 };
 
-GettingStarted.propTypes = {};
-
 export default GettingStarted;

@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -48,12 +47,6 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
       </OptionalValue>
     </Box>
   );
-};
-
-ClusterListItemMainInfo.propTypes = {
-  releaseVersion: PropTypes.string,
-  creationDate: PropTypes.string,
-  k8sVersion: PropTypes.string,
 };
 
 export default ClusterListItemMainInfo;

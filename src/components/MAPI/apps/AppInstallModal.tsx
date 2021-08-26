@@ -14,7 +14,6 @@ import RoutePath from 'lib/routePath';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -396,14 +395,6 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
       })()}
     </>
   );
-};
-
-AppInstallModal.propTypes = {
-  appName: PropTypes.string.isRequired,
-  chartName: PropTypes.string.isRequired,
-  catalogName: PropTypes.string.isRequired,
-  versions: PropTypes.array.isRequired,
-  selectedClusterID: PropTypes.string,
 };
 
 export default AppInstallModal;

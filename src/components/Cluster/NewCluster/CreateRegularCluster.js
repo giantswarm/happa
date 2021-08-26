@@ -1,6 +1,5 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -382,26 +381,6 @@ CreateRegularCluster.defaultProps = {
   defaultCPUCores: 4,
   defaultMemorySize: 4,
   defaultDiskSize: 20,
-};
-
-CreateRegularCluster.propTypes = {
-  clusterName: PropTypes.string,
-  allowSubmit: PropTypes.bool,
-  minAvailabilityZones: PropTypes.number,
-  maxAvailabilityZones: PropTypes.number,
-  maxWorkersPerCluster: PropTypes.number,
-  selectedOrganization: PropTypes.string,
-  selectedRelease: PropTypes.string,
-  dispatch: PropTypes.func,
-  provider: PropTypes.string,
-  defaultInstanceType: PropTypes.string,
-  defaultVMSize: PropTypes.string,
-  defaultCPUCores: PropTypes.number,
-  defaultMemorySize: PropTypes.number,
-  defaultDiskSize: PropTypes.number,
-  closeForm: PropTypes.func,
-  isClusterCreating: PropTypes.bool,
-  clusterCreationStats: PropTypes.object,
 };
 
 function mapStateToProps(state) {

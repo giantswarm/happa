@@ -1,5 +1,4 @@
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
@@ -182,14 +181,6 @@ const AppContainer = ({
       </StyledLink>
     </Wrapper>
   );
-};
-
-AppContainer.propTypes = {
-  appVersions: PropTypes.array,
-  catalog: PropTypes.object,
-  searchQuery: PropTypes.string,
-  hasIconError: PropTypes.bool,
-  onImgError: PropTypes.func,
 };
 
 export default AppContainer;

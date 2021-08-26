@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
@@ -57,14 +56,6 @@ const AddNodePoolSpotInstancesAzure: React.FC<IAddNodePoolSpotInstancesAzureProp
       </CheckboxWrapper>
     </AzureSpotInstances>
   );
-};
-
-AddNodePoolSpotInstancesAzure.propTypes = {
-  maxPrice: PropTypes.number.isRequired,
-  setMaxPrice: PropTypes.func.isRequired,
-  maxPriceValidationError: PropTypes.string.isRequired,
-  useOnDemandPricing: PropTypes.bool.isRequired,
-  setUseOnDemandPricing: PropTypes.func.isRequired,
 };
 
 export default AddNodePoolSpotInstancesAzure;

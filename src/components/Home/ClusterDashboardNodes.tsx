@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
@@ -19,11 +18,6 @@ const ClusterDashboardNodes: React.FC<IClusterDashboardNodesProps> = ({
   return (
     <span>{`${numberOfNodes} ${numberOfNodes === 1 ? 'node' : 'nodes'}`}</span>
   );
-};
-
-ClusterDashboardNodes.propTypes = {
-  numberOfNodes: PropTypes.number.isRequired,
-  isClusterCreating: PropTypes.bool.isRequired,
 };
 
 export default ClusterDashboardNodes;

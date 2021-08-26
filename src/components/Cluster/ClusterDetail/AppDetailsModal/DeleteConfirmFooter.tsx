@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -35,12 +34,6 @@ const DeleteConfirmFooter: React.FC<IDeleteConfirmFooterProps> = ({
       </Button>
     </Box>
   );
-};
-
-DeleteConfirmFooter.propTypes = {
-  cta: PropTypes.string,
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
 };
 
 export default DeleteConfirmFooter;

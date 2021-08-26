@@ -1,6 +1,4 @@
 import { Box, Text } from 'grommet';
-import { Cluster } from 'MAPI/types';
-import PropTypes from 'prop-types';
 import React from 'react';
 import ClusterIDLabel, {
   ClusterIDLabelType,
@@ -32,14 +30,6 @@ const CreateClusterName: React.FC<ICreateClusterNameProps> = ({
       />
     </Box>
   );
-};
-
-CreateClusterName.propTypes = {
-  id: PropTypes.string.isRequired,
-  cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
 };
 
 export default CreateClusterName;

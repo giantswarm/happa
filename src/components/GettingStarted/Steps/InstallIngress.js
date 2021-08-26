@@ -1,7 +1,6 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import RoutePath from 'lib/routePath';
 import InstallIngressButtonMAPI from 'MAPI/apps/InstallIngressButton';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useSelector } from 'react-redux';
@@ -98,11 +97,6 @@ const InstallIngress = (props) => {
       </>
     </Breadcrumb>
   );
-};
-
-InstallIngress.propTypes = {
-  match: PropTypes.object,
-  cluster: PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {

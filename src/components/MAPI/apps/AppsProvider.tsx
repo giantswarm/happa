@@ -1,5 +1,4 @@
 import produce from 'immer';
-import PropTypes from 'prop-types';
 import React, {
   createContext,
   useCallback,
@@ -137,10 +136,6 @@ const AppsProvider: React.FC<{}> = ({ children }) => {
       {children}
     </appsContext.Provider>
   );
-};
-
-AppsProvider.propTypes = {
-  children: PropTypes.node,
 };
 
 export default AppsProvider;

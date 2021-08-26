@@ -1,6 +1,5 @@
 import mermaid from 'mermaid';
 import mermaidAPI from 'mermaid/mermaidAPI';
-import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 
 const DEFAULT_CONFIG: mermaidAPI.Config = {
@@ -33,11 +32,6 @@ const Mermaid: React.FC<IMermaidProps> = ({ chart, config, ...props }) => {
       {chart}
     </div>
   );
-};
-
-Mermaid.propTypes = {
-  chart: PropTypes.string.isRequired,
-  config: PropTypes.object,
 };
 
 export default Mermaid;

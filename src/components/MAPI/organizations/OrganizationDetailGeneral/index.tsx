@@ -8,7 +8,6 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { StatusCodes } from 'shared/constants';
@@ -182,11 +181,6 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       </Box>
     </>
   );
-};
-
-OrganizationDetailGeneral.propTypes = {
-  organizationName: PropTypes.string.isRequired,
-  organizationNamespace: PropTypes.string.isRequired,
 };
 
 export default OrganizationDetailGeneral;

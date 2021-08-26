@@ -1,5 +1,4 @@
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 import DataTable from 'UI/DataTable';
@@ -109,12 +108,6 @@ UsersTable.defaultProps = {
   onRemoveExpiration: () => {},
   // eslint-disable-next-line no-empty-function
   onDelete: () => {},
-};
-
-UsersTable.propTypes = {
-  users: PropTypes.object,
-  onRemoveExpiration: PropTypes.func,
-  onDelete: PropTypes.func,
 };
 
 export default UsersTable;

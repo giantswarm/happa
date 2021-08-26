@@ -1,7 +1,6 @@
 import { Keyboard } from 'grommet';
 import { dedent } from 'lib/helpers';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
@@ -136,16 +135,4 @@ export const CodeBlock = ({ children }) => {
       </div>
     </Styles>
   );
-};
-
-Prompt.propTypes = {
-  children: PropTypes.node,
-};
-
-Output.propTypes = {
-  children: PropTypes.node,
-};
-
-CodeBlock.propTypes = {
-  children: PropTypes.node,
 };

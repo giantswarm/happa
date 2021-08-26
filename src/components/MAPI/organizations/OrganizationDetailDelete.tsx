@@ -2,7 +2,6 @@ import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -159,13 +158,6 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
       </Box>
     </Box>
   );
-};
-
-OrganizationDetailDelete.propTypes = {
-  organizationName: PropTypes.string.isRequired,
-  organizationNamespace: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  clusterCount: PropTypes.number,
 };
 
 export default OrganizationDetailDelete;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
@@ -57,9 +56,5 @@ function PortMappingsRow({ cluster }) {
 
   return null;
 }
-
-PortMappingsRow.propTypes = {
-  cluster: PropTypes.object,
-};
 
 export default PortMappingsRow;

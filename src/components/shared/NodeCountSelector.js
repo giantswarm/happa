@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 import TwoInputArea, { InnerTwoInputArea } from 'UI/Layout/TwoInputArea';
@@ -128,19 +127,6 @@ NodeCountSelector.defaultProps = {
   },
   // eslint-disable-next-line no-empty-function
   onChange: () => {},
-};
-
-NodeCountSelector.propTypes = {
-  autoscalingEnabled: PropTypes.bool,
-  label: PropTypes.shape({
-    min: PropTypes.string,
-    max: PropTypes.string,
-  }),
-  minValue: PropTypes.number,
-  maxValue: PropTypes.number,
-  onChange: PropTypes.func,
-  readOnly: PropTypes.bool,
-  scaling: PropTypes.object,
 };
 
 export default NodeCountSelector;

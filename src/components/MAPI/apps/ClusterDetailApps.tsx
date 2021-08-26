@@ -12,7 +12,6 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -349,10 +348,6 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       </Breadcrumb>
     </DocumentTitle>
   );
-};
-
-ClusterDetailApps.propTypes = {
-  releaseVersion: PropTypes.string.isRequired,
 };
 
 export default ClusterDetailApps;

@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import { AdditionalInputHint } from 'UI/Display/Cluster/ClusterCreation/StyledInput';
 import NumberPicker from 'UI/Inputs/NumberPicker';
@@ -71,14 +70,5 @@ const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
     </Box>
   </>
 );
-
-KVMWorkerConfiguration.propTypes = {
-  cpuCores: PropTypes.number.isRequired,
-  diskSize: PropTypes.number.isRequired,
-  memorySize: PropTypes.number.isRequired,
-  onUpdateCPUCores: PropTypes.func.isRequired,
-  onUpdateDiskSize: PropTypes.func.isRequired,
-  onUpdateMemorySize: PropTypes.func.isRequired,
-};
 
 export default KVMWorkerConfiguration;

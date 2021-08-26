@@ -29,6 +29,4 @@ const ClusterDetailAppLoadingPlaceholder: React.FC<IClusterDetailAppLoadingPlace
   );
 };
 
-ClusterDetailAppLoadingPlaceholder.propTypes = {};
-
 export default React.memo(ClusterDetailAppLoadingPlaceholder);

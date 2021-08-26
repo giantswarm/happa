@@ -1,5 +1,4 @@
 import { logo } from 'images';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
@@ -141,14 +140,5 @@ class Navigation extends React.Component {
     );
   }
 }
-
-Navigation.propTypes = {
-  user: PropTypes.object,
-  showApps: PropTypes.bool,
-  showUsers: PropTypes.bool,
-  organizations: PropTypes.object,
-  onSelectOrganization: PropTypes.func,
-  selectedOrganization: PropTypes.string,
-};
 
 export default Navigation;

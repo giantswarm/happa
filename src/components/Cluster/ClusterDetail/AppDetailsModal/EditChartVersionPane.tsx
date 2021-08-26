@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FlashMessageType } from 'styles';
 import FlashMessage from 'UI/Display/FlashMessage';
@@ -51,12 +50,6 @@ const EditChartVersionPane: React.FC<IEditChartVersionPaneProps> = ({
       )}
     </Box>
   );
-};
-
-EditChartVersionPane.propTypes = {
-  currentVersion: PropTypes.string.isRequired,
-  desiredVersion: PropTypes.string.isRequired,
-  errorMessage: PropTypes.string,
 };
 
 export default EditChartVersionPane;

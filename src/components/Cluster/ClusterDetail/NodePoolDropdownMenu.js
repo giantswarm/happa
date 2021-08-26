@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import DropdownMenu, {
   DropdownTrigger,
@@ -75,15 +74,6 @@ const NodePoolDropdownMenu = ({
       )}
     />
   );
-};
-
-NodePoolDropdownMenu.propTypes = {
-  clusterId: PropTypes.string,
-  provider: PropTypes.string,
-  nodePool: PropTypes.object,
-  deleteNodePool: PropTypes.func,
-  showNodePoolScalingModal: PropTypes.func,
-  triggerEditName: PropTypes.func,
 };
 
 export default NodePoolDropdownMenu;

@@ -32,6 +32,4 @@ const AccessControlRoleDescription: React.FC<IAccessControlRoleDescriptionProps>
   );
 };
 
-AccessControlRoleDescription.propTypes = {};
-
 export default AccessControlRoleDescription;

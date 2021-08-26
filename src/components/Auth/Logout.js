@@ -1,5 +1,4 @@
 import { spinner } from 'images';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -44,11 +43,6 @@ class Logout extends React.Component {
     );
   }
 }
-
-Logout.propTypes = {
-  actions: PropTypes.object,
-  authProvider: PropTypes.object,
-};
 
 function mapDispatchToProps(dispatch) {
   return {

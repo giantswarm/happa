@@ -1,5 +1,4 @@
 import { Keyboard, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import DropdownMenu, {
@@ -113,12 +112,6 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
       )}
     />
   );
-};
-
-WorkerNodesNodePoolActions.propTypes = {
-  onRenameClick: PropTypes.func,
-  onDeleteClick: PropTypes.func,
-  onScaleClick: PropTypes.func,
 };
 
 export default WorkerNodesNodePoolActions;

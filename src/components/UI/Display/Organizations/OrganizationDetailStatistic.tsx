@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 
@@ -22,11 +21,6 @@ const OrganizationDetailStatistic: React.FC<IOrganizationDetailStatisticProps> =
       {typeof children !== 'undefined' && !isLoading && children}
     </Text>
   );
-};
-
-OrganizationDetailStatistic.propTypes = {
-  isLoading: PropTypes.bool,
-  children: PropTypes.node,
 };
 
 export default OrganizationDetailStatistic;

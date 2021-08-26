@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -134,12 +133,6 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       </Wrapper>
     </OverlayTrigger>
   );
-};
-
-ClusterStatus.propTypes = {
-  clusterId: PropTypes.string.isRequired,
-  hideText: PropTypes.bool,
-  onClick: PropTypes.func,
 };
 
 export default ClusterStatus;

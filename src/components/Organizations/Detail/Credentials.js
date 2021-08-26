@@ -1,7 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Providers } from 'shared/constants';
 import {
   organizationCredentialsDiscard,
   organizationCredentialsSet,
@@ -66,14 +64,5 @@ class Credentials extends React.Component {
     );
   }
 }
-
-Credentials.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  credentials: PropTypes.array,
-  dispatch: PropTypes.func,
-  organizationName: PropTypes.string,
-  showCredentialsForm: PropTypes.bool,
-  loadingCredentials: PropTypes.bool,
-};
 
 export default connect()(Credentials);

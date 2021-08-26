@@ -229,6 +229,4 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   );
 };
 
-ClusterDetailActions.propTypes = {};
-
 export default ClusterDetailActions;

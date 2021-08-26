@@ -47,6 +47,4 @@ const Organization: React.FC<IOrganizationProps> = () => {
   );
 };
 
-Organization.propTypes = {};
-
 export default Organization;

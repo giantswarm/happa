@@ -94,6 +94,4 @@ const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
   );
 };
 
-ClusterDetailWidgetKeyPairs.propTypes = {};
-
 export default ClusterDetailWidgetKeyPairs;

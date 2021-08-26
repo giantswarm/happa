@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -63,7 +62,20 @@ const MenuWrapper = styled.div`
   position: relative;
 `;
 
-function DropdownMenu(props) {
+interface IRender {
+  isOpen: boolean;
+  onClickHandler: React.MouseEventHandler<HTMLElement>;
+  onBlurHandler: () => void;
+  onFocusHandler: React.FocusEventHandler<HTMLElement>;
+  onKeyDownHandler: React.KeyboardEventHandler<HTMLElement>;
+}
+
+interface IDropdownMenuProps {
+  className?: string;
+  render: (args: IRender) => React.ReactElement;
+}
+
+function DropdownMenu(props: IDropdownMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const timeOutId = useRef(0);
 
@@ -74,7 +86,7 @@ function DropdownMenu(props) {
   }, []);
 
   const onBlurHandler = () => {
-    timeOutId.current = setTimeout(() => {
+    timeOutId.current = window.setTimeout(() => {
       setIsOpen(false);
     });
   };
@@ -84,7 +96,7 @@ function DropdownMenu(props) {
     clearTimeout(timeOutId.current);
   };
 
-  const onKeyDownHandler = (event) => {
+  const onKeyDownHandler = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape') setIsOpen(false);
   };
 
@@ -100,10 +112,5 @@ function DropdownMenu(props) {
     </MenuWrapper>
   );
 }
-
-DropdownMenu.propTypes = {
-  render: PropTypes.func,
-  className: PropTypes.string,
-};
 
 export default DropdownMenu;

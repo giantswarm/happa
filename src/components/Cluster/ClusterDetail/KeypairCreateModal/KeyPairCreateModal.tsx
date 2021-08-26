@@ -15,7 +15,6 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { makeKubeConfigTextFile } from 'lib/helpers';
 import useDebounce from 'lib/hooks/useDebounce';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Providers, StatusCodes } from 'shared/constants';
@@ -249,16 +248,6 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
       </StyledModal>
     </>
   );
-};
-
-KeyPairCreateModal.propTypes = {
-  // @ts-ignore
-  user: PropTypes.object.isRequired,
-  // @ts-ignore
-  actions: PropTypes.object.isRequired,
-  // @ts-ignore
-  cluster: PropTypes.object.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
 };
 
 export default KeyPairCreateModal;

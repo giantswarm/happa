@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -77,15 +76,6 @@ const App: React.FC<IAppProps> = (props) => {
       </DetailWrapper>
     </Wrapper>
   );
-};
-
-App.propTypes = {
-  to: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  appIconURL: PropTypes.string,
-  catalogTitle: PropTypes.string.isRequired,
-  catalogIconUrl: PropTypes.string.isRequired,
-  catalogIsManaged: PropTypes.bool,
 };
 
 export default App;

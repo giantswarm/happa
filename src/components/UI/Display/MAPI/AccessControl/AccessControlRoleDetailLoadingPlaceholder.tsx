@@ -30,6 +30,4 @@ const AccessControlRoleDetailLoadingPlaceholder: React.FC<IAccessControlRoleDeta
   );
 };
 
-AccessControlRoleDetailLoadingPlaceholder.propTypes = {};
-
 export default React.memo(AccessControlRoleDetailLoadingPlaceholder);

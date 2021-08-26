@@ -9,7 +9,6 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import { validatePassword } from 'lib/passwordValidation';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -342,12 +341,6 @@ class SetPassword extends React.Component {
     );
   }
 }
-
-SetPassword.propTypes = {
-  actions: PropTypes.object,
-  match: PropTypes.object,
-  dispatch: PropTypes.func,
-};
 
 function mapDispatchToProps(dispatch) {
   return {

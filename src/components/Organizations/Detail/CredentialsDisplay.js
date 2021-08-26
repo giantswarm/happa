@@ -1,5 +1,4 @@
 import { spinner } from 'images';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import Button from 'UI/Controls/Button';
@@ -122,13 +121,6 @@ const CredentialsDisplay = (props) => {
   }
 
   return null;
-};
-
-CredentialsDisplay.propTypes = {
-  credentials: PropTypes.array,
-  loading: PropTypes.bool,
-  provider: PropTypes.string,
-  onShowForm: PropTypes.func,
 };
 
 export default CredentialsDisplay;

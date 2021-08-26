@@ -5,13 +5,11 @@ import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
 import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
-import { Providers } from 'shared/constants';
 import {
   AccountSettingsRoutes,
   AppsRoutes,
@@ -150,18 +148,6 @@ class Layout extends React.Component {
     );
   }
 }
-
-Layout.propTypes = {
-  user: PropTypes.object,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  organizations: PropTypes.object,
-  selectedOrganization: PropTypes.string,
-  dispatch: PropTypes.func,
-  catalogs: PropTypes.object,
-  firstLoadComplete: PropTypes.bool,
-  authProvider: PropTypes.object,
-  hasAppAccess: PropTypes.bool,
-};
 
 function mapStateToProps(state) {
   return {

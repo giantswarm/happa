@@ -1,5 +1,4 @@
 import { FormField } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -126,19 +125,6 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
   }
 
   return null;
-};
-
-AddNodePoolSpotInstances.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  spotPercentage: PropTypes.number.isRequired,
-  setSpotPercentage: PropTypes.func.isRequired,
-  onDemandBaseCapacity: PropTypes.number.isRequired,
-  setOnDemandBaseCapacity: PropTypes.func.isRequired,
-  maxPrice: PropTypes.number.isRequired,
-  setMaxPrice: PropTypes.func.isRequired,
-  maxPriceValidationError: PropTypes.string.isRequired,
-  useOnDemandPricing: PropTypes.bool.isRequired,
-  setUseOnDemandPricing: PropTypes.func.isRequired,
 };
 
 export default AddNodePoolSpotInstances;

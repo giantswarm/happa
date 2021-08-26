@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
@@ -50,13 +49,6 @@ const VersionLabel = (props) => {
   return <Truncated as='span'>{newVersion}</Truncated>;
 };
 
-VersionLabel.propTypes = {
-  newVersion: PropTypes.string,
-  oldVersion: PropTypes.string,
-  isAdded: PropTypes.bool,
-  isRemoved: PropTypes.bool,
-};
-
 // eslint-disable-next-line react/no-multi-comp
 const ReleaseComponentLabel = (props) => {
   const { name, version, oldVersion, isAdded, isRemoved, className } = props;
@@ -77,15 +69,6 @@ const ReleaseComponentLabel = (props) => {
       aria-label={formatValueLabel(name, oldVersion, version)}
     />
   );
-};
-
-ReleaseComponentLabel.propTypes = {
-  name: PropTypes.string.isRequired,
-  oldVersion: PropTypes.string,
-  version: PropTypes.string,
-  isAdded: PropTypes.bool,
-  isRemoved: PropTypes.bool,
-  className: PropTypes.string,
 };
 
 export default ReleaseComponentLabel;

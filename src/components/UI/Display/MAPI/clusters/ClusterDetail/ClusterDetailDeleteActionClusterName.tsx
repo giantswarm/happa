@@ -1,5 +1,4 @@
 import { Box, Keyboard, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import TextInput from 'UI/Inputs/TextInput';
 
@@ -47,14 +46,6 @@ const ClusterDetailDeleteActionClusterName: React.FC<IClusterDetailDeleteActionC
       </Keyboard>
     </Box>
   );
-};
-
-ClusterDetailDeleteActionClusterName.propTypes = {
-  variant: (PropTypes.string as PropTypes.Requireable<ClusterDetailDeleteActionNameVariant>)
-    .isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onContinue: PropTypes.func.isRequired,
 };
 
 export default ClusterDetailDeleteActionClusterName;

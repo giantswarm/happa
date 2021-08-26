@@ -1,6 +1,5 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -50,15 +49,6 @@ const Ingress: React.FC<IIngressProps> = ({
       )}
     </IngressWrapper>
   );
-};
-
-Ingress.propTypes = {
-  // @ts-ignore
-  cluster: PropTypes.object.isRequired,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  k8sEndpoint: PropTypes.string,
-  kvmTCPHTTPPort: PropTypes.number,
-  kvmTCPHTTPSPort: PropTypes.number,
 };
 
 Ingress.defaultProps = {

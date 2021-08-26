@@ -8,7 +8,6 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
-import PropTypes from 'prop-types';
 import React, { ReactNode } from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -59,18 +58,6 @@ interface ILoginState {
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
-  public static propTypes: IStateProps & IDispatchProps = {
-    /**
-     * We skip typechecking because we don't want to define the whole object
-     * structure (for now)
-     */
-    // @ts-expect-error
-    dispatch: PropTypes.func,
-    // @ts-expect-error
-    actions: PropTypes.object,
-    authProvider: PropTypes.object,
-  };
-
   public readonly state: ILoginState = {
     email: '',
     password: '',
@@ -270,16 +257,12 @@ function mapStateToProps(state: IState): IStateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   return {
-    // Skipping check as we don't have a valid type for mainActions yet
-    // @ts-ignore
     actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,
   };
 }
 
-// This is complaining about our prop types not having the EXACT same structure as our Props interface
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-  // @ts-expect-error
 )(withAuthProvider(Login));

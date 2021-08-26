@@ -2,12 +2,10 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as organizationActions from 'stores/organization/actions';
 import styled from 'styled-components';
@@ -254,18 +252,6 @@ class OrganizationDetail extends React.Component {
     );
   }
 }
-
-OrganizationDetail.propTypes = {
-  actions: PropTypes.object,
-  clusters: PropTypes.array,
-  organization: PropTypes.object,
-  credentials: PropTypes.array,
-  loadingCredentials: PropTypes.bool,
-  showCredentialsForm: PropTypes.bool,
-  membersForTable: PropTypes.array,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  supportsMultiAccount: PropTypes.bool,
-};
 
 // eslint-disable-next-line react/no-multi-comp
 function clusterIDCellFormatter(data) {

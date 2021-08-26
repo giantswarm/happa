@@ -54,6 +54,4 @@ const ClusterDetail = () => {
   );
 };
 
-ClusterDetail.propTypes = {};
-
 export default ClusterDetail;

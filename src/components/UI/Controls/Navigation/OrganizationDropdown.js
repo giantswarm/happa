@@ -1,5 +1,4 @@
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
@@ -231,12 +230,6 @@ const OrganizationDropdown = ({
       />
     </InlineDiv>
   );
-};
-
-OrganizationDropdown.propTypes = {
-  organizations: PropTypes.object,
-  onSelectOrganization: PropTypes.func,
-  selectedOrganization: PropTypes.string,
 };
 
 export default OrganizationDropdown;

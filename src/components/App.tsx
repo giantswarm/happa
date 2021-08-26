@@ -4,7 +4,6 @@ import Footer from 'Footer/Footer';
 import { Box, Heading, Text } from 'grommet';
 import { History } from 'history';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
@@ -58,17 +57,5 @@ const App: React.FC<IAppProps> = ({ store, theme, history, auth }) => (
     </Provider>
   </ErrorBoundary>
 );
-
-// Ignoring these, as we don't want to specify the exact shape of each prop type for now
-App.propTypes = {
-  // @ts-expect-error
-  store: PropTypes.object.isRequired,
-  // @ts-expect-error
-  theme: PropTypes.object.isRequired,
-  // @ts-expect-error
-  history: PropTypes.object.isRequired,
-  // @ts-expect-error
-  auth: PropTypes.object.isRequired,
-};
 
 export default hot(module)(App);

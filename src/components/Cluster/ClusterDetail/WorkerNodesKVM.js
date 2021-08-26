@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
@@ -40,12 +39,5 @@ function WorkerNodesKVM({
     </WrapperDiv>
   );
 }
-
-WorkerNodesKVM.propTypes = {
-  isClusterCreating: PropTypes.bool,
-  worker: PropTypes.object,
-  nodes: PropTypes.number,
-  showScalingModal: PropTypes.func,
-};
 
 export default WorkerNodesKVM;

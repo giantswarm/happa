@@ -1,7 +1,6 @@
 import Option from 'Cluster/ClusterDetail/Ingress/Option';
 import Ports from 'Cluster/ClusterDetail/Ingress/Ports';
 import { getBasePathFromK8sEndpoint } from 'Cluster/ClusterDetail/Ingress/util';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -164,13 +163,6 @@ const Instructions: React.FC<IInstructionsProps> = ({
       </>
     </>
   );
-};
-
-Instructions.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  k8sEndpoint: PropTypes.string,
-  kvmTCPHTTPPort: PropTypes.number,
-  kvmTCPHTTPSPort: PropTypes.number,
 };
 
 Instructions.defaultProps = {

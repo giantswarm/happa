@@ -1,6 +1,5 @@
 import { Box, Heading, Keyboard, Text } from 'grommet';
 import * as docs from 'lib/docs';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -95,11 +94,6 @@ const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = ({
       </Table>
     </Box>
   );
-};
-
-OrganizationListPage.propTypes = {
-  organizations: PropTypes.array.isRequired,
-  onClickRow: PropTypes.func.isRequired,
 };
 
 export default OrganizationListPage;

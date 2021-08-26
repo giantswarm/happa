@@ -208,6 +208,4 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
   );
 };
 
-GettingStartedGetAccess.propTypes = {};
-
 export default GettingStartedGetAccess;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -28,9 +27,5 @@ class AWSAccountID extends React.Component {
     );
   }
 }
-
-AWSAccountID.propTypes = {
-  roleARN: PropTypes.string,
-};
 
 export default AWSAccountID;

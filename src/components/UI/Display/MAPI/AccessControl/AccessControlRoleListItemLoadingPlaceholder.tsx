@@ -29,6 +29,4 @@ const AccessControlRoleListItemLoadingPlaceholder: React.FC<IAccessControlRoleLi
   );
 };
 
-AccessControlRoleListItemLoadingPlaceholder.propTypes = {};
-
 export default React.memo(AccessControlRoleListItemLoadingPlaceholder);

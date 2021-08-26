@@ -1,6 +1,5 @@
 import { dedent } from 'lib/helpers';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
@@ -124,10 +123,8 @@ export const FileBlock = ({ children, hideText, fileName }) => {
   );
 };
 
-FileBlock.propTypes = {
-  children: PropTypes.node,
-  fileName: PropTypes.string,
-  hideText: PropTypes.bool,
+FileBlock.defaultProps = {
+  hideText: false,
 };
 
 export default FileBlock;

@@ -85,6 +85,4 @@ const Experiments: React.FC<IExperimentsProps> = () => {
   );
 };
 
-Experiments.propTypes = {};
-
 export default Experiments;

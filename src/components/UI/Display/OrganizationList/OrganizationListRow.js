@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TableCell, TableRow } from 'UI/Display/Table';
@@ -37,13 +36,6 @@ const OrganizationListRow = ({
       )}
     </TableRow>
   );
-};
-
-OrganizationListRow.propTypes = {
-  getViewURL: PropTypes.func.isRequired,
-  organization: PropTypes.object,
-  clusters: PropTypes.array,
-  supportsMultiAccount: PropTypes.bool,
 };
 
 export default OrganizationListRow;

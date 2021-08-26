@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
 
@@ -124,20 +123,6 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
       )}
     </Box>
   );
-};
-
-AccessControlSubjectSet.propTypes = {
-  // @ts-expect-error
-  items: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  permissions: (PropTypes.object as PropTypes.Requireable<IAccessControlSubjectPermissions>)
-    .isRequired,
-  renderItem: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onToggleAdding: PropTypes.func.isRequired,
-  onDeleteItem: PropTypes.func.isRequired,
-  isAdding: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  inputSuggestions: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AccessControlSubjectSet.defaultProps = {

@@ -6,7 +6,6 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -168,10 +167,6 @@ class ForgotPassword extends React.Component {
     );
   }
 }
-
-ForgotPassword.propTypes = {
-  actions: PropTypes.object,
-};
 
 function mapDispatchToProps(dispatch) {
   return {

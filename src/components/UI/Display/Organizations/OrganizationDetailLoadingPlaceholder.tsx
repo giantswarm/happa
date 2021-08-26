@@ -29,6 +29,4 @@ const OrganizationDetailLoadingPlaceholder: React.FC<IOrganizationDetailLoadingP
   );
 };
 
-OrganizationDetailLoadingPlaceholder.propTypes = {};
-
 export default React.memo(OrganizationDetailLoadingPlaceholder);

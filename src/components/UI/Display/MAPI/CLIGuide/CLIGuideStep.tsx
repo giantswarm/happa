@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 
@@ -24,12 +23,6 @@ const CLIGuideStep: React.FC<ICLIGuideStepProps> = ({
       {children}
     </Box>
   );
-};
-
-CLIGuideStep.propTypes = {
-  title: PropTypes.node.isRequired,
-  command: PropTypes.node.isRequired,
-  children: PropTypes.node,
 };
 
 export default CLIGuideStep;

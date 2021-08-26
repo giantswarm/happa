@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import FlashMessage from 'UI/Display/FlashMessage';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
@@ -80,20 +79,6 @@ InviteUserForm.defaultProps = {
   handleOrganizationChange: () => {},
   // eslint-disable-next-line no-empty-function
   handleSendEmailChange: () => {},
-};
-
-InviteUserForm.propTypes = {
-  inviteForm: PropTypes.shape({
-    email: PropTypes.string,
-    organizations: PropTypes.arrayOf(PropTypes.string),
-    sendEmail: PropTypes.bool,
-    isValid: PropTypes.bool,
-    error: PropTypes.string,
-  }),
-  organizations: PropTypes.object,
-  handleEmailChange: PropTypes.func,
-  handleOrganizationChange: PropTypes.func,
-  handleSendEmailChange: PropTypes.func,
 };
 
 export default InviteUserForm;

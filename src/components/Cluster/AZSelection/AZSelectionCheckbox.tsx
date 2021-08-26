@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import RadioInput from 'UI/Inputs/RadioInput';
@@ -49,15 +48,6 @@ const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
       />
     </RUMActionTarget>
   );
-};
-
-AZSelectionCheckbox.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.number,
-  type: PropTypes.number,
-  uniqueIdentifier: PropTypes.string,
-  baseActionName: PropTypes.string,
-  label: PropTypes.string,
 };
 
 AZSelectionCheckbox.defaultProps = {

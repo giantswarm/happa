@@ -2,7 +2,6 @@ import GiantSwarm from 'giantswarm';
 import { Form } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -39,11 +38,6 @@ class ChangeEmailForm extends React.Component<
   IChangeEmailFormProps,
   IChangeEmailFormState
 > {
-  public static propTypes = {
-    user: PropTypes.object,
-    refreshUserInfo: PropTypes.func,
-  };
-
   state = {
     emailValue: this.props.user.email,
     error: false,

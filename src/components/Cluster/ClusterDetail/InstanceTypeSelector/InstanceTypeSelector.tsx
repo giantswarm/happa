@@ -4,7 +4,6 @@ import {
   useInstanceTypeCapabilities,
   useInstanceTypeSelectionLabels,
 } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
-import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
@@ -141,11 +140,6 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
       )}
     </>
   );
-};
-
-InstanceTypeSelector.propTypes = {
-  selectInstanceType: PropTypes.func.isRequired,
-  selectedInstanceType: PropTypes.string.isRequired,
 };
 
 export default InstanceTypeSelector;

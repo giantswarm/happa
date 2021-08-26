@@ -3,7 +3,6 @@ import { Box } from 'grommet';
 import { clusterUpgradeChecklistURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
@@ -304,13 +303,6 @@ class UpgradeClusterModal extends React.Component {
     );
   }
 }
-
-UpgradeClusterModal.propTypes = {
-  cluster: PropTypes.object,
-  clusterActions: PropTypes.object,
-  release: PropTypes.object,
-  targetRelease: PropTypes.object,
-};
 
 function mapDispatchToProps(dispatch) {
   return {

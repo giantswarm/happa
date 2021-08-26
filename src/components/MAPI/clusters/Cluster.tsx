@@ -28,6 +28,4 @@ const Cluster: React.FC<{}> = () => {
   );
 };
 
-Cluster.propTypes = {};
-
 export default Cluster;

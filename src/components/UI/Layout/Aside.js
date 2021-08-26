@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -16,10 +15,6 @@ const Aside = ({ children }) => {
       <p>{children}</p>
     </Wrapper>
   );
-};
-
-Aside.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 export default Aside;

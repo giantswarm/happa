@@ -29,6 +29,4 @@ const FacetListItemLoadingPlaceholder: React.FC<IFacetListItemLoadingPlaceholder
   );
 };
 
-FacetListItemLoadingPlaceholder.propTypes = {};
-
 export default React.memo(FacetListItemLoadingPlaceholder);

@@ -372,6 +372,4 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   );
 };
 
-CreateCluster.propTypes = {};
-
 export default CreateCluster;

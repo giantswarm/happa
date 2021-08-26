@@ -1,5 +1,4 @@
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -33,17 +32,6 @@ const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
 InviteUserSuccess.defaultProps = {
   inviteForm: getInitialState([]),
   invitationResult: {},
-};
-
-InviteUserSuccess.propTypes = {
-  inviteForm: PropTypes.shape({
-    email: PropTypes.string,
-    organizations: PropTypes.arrayOf(PropTypes.string),
-    sendEmail: PropTypes.bool,
-    isValid: PropTypes.bool,
-    error: PropTypes.string,
-  }),
-  invitationResult: PropTypes.object,
 };
 
 export default InviteUserSuccess;

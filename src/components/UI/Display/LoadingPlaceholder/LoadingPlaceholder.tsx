@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
@@ -36,11 +35,6 @@ const LoadingPlaceholder: React.FC<ILoadingPlaceholderProps> = ({
       </ContentLoader>
     </Box>
   );
-};
-
-LoadingPlaceholder.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
 };
 
 LoadingPlaceholder.defaultProps = {

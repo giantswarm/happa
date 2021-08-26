@@ -1,7 +1,6 @@
 import { push } from 'connected-react-router';
 import { IOAuth2Provider, OAuth2Events } from 'lib/OAuth2/OAuth2';
 import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
-import PropTypes from 'prop-types';
 import React, {
   createContext,
   useCallback,
@@ -60,12 +59,6 @@ const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
   }, [onUserLoaded, onUserInvalid, auth]);
 
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
-};
-
-MapiAuthProvider.propTypes = {
-  // @ts-expect-error
-  auth: PropTypes.object.isRequired,
-  children: PropTypes.node,
 };
 
 export function useAuthProvider(): IOAuth2Provider {

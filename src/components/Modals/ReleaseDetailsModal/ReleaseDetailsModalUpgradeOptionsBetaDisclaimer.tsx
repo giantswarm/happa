@@ -32,6 +32,4 @@ const ReleaseDetailsModalUpgradeOptionsBetaDisclaimer: React.FC<IReleaseDetailsM
   );
 };
 
-ReleaseDetailsModalUpgradeOptionsBetaDisclaimer.propTypes = {};
-
 export default ReleaseDetailsModalUpgradeOptionsBetaDisclaimer;
