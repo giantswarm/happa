@@ -39,6 +39,11 @@ export async function getConfigurationValues(
 ): Promise<IConfigurationValues> {
   const config = new Configuration();
 
+  config.setDefault('api-endpoint', 'http://localhost:8000');
+  config.setDefault('mapi-endpoint', 'http://localhost:8000');
+  config.setDefault('audience', 'http://localhost:8000');
+  config.setDefault('mapi-audience', 'http://localhost:8000');
+  config.setDefault('passage-endpoint', 'http://localhost:8000');
   config.setDefault('enable-rum', true);
   config.setDefault('installation-name', 'development');
   config.setDefault('default-request-timeout-seconds', 10);
