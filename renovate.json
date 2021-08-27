@@ -2,7 +2,10 @@
   "extends": ["config:js-app"],
   "dependencyDashboard": true,
   "labels": ["dependencies"],
-  "reviewers": ["team:team-biscuit"],
+  "reviewers": [
+    "axbarsan",
+    "marians"
+  ],
   "packageRules": [
     {
       "matchPackagePrefixes": ["@types/jest", "jest"],
