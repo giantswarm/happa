@@ -139,6 +139,7 @@ export const compilerConfig: Config = {
         runtime: 'automatic',
       } as ReactConfig,
     },
+    externalHelpers: true,
   },
   env: {
     targets: '> 0.25%, not dead',
