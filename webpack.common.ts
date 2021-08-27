@@ -123,6 +123,7 @@ const makeFeatureFlags = () => {
 };
 
 export const compilerConfig: Config = {
+  sourceMaps: true,
   jsc: {
     target: 'es2015',
     parser: {

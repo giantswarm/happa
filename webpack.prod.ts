@@ -66,6 +66,7 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
       project: 'happa',
       release: SENTRY_RELEASE_VERSION,
       validate: true,
+      urlPrefix: '~/assets/',
     })
   );
 }
@@ -81,6 +82,9 @@ const config: webpack.Configuration = merge(common, {
     minimizer: [
       (new TerserPlugin({
         extractComments: 'some',
+        terserOptions: {
+          sourceMap: true,
+        },
       }) as unknown) as webpack.WebpackPluginInstance,
       (new CssMinimizerPlugin() as unknown) as webpack.WebpackPluginInstance,
     ],
