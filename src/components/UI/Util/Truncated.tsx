@@ -18,6 +18,12 @@ interface ITruncatedProps
 const Wrapper = styled.span``;
 const Label = styled.span``;
 
+const StyledTooltip = styled(Tooltip)`
+  .tooltip-inner {
+    max-width: none;
+  }
+`;
+
 /**
  * A component that truncates a string/number in a smart way
  */
@@ -44,7 +50,7 @@ const Truncated: React.FC<ITruncatedProps> = ({
         <Label {...labelProps}>{str}</Label>
       ) : (
         <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>{children}</Tooltip>}
+          overlay={<StyledTooltip id='tooltip'>{children}</StyledTooltip>}
           placement={tooltipPlacement ?? 'top'}
         >
           <Label {...labelProps}>{str}</Label>
