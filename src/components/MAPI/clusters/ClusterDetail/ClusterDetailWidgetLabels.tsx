@@ -35,8 +35,6 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
   const handleLabelsChange = async (patch: ILabelChange) => {
     if (!cluster) return;
 
-    const organizationName = capiv1alpha3.getClusterOrganization(cluster)!;
-
     setLabelsError('');
     setLabelsIsLoading(true);
 
@@ -58,11 +56,7 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
       );
       mutate(
         capiv1alpha3.getClusterListKey({
-          labelSelector: {
-            matchingLabels: {
-              [capiv1alpha3.labelOrganization]: organizationName,
-            },
-          },
+          namespace: cluster.metadata.namespace!,
         })
       );
 

@@ -259,34 +259,20 @@ export async function fetchClusterList(
   httpClient: IHttpClient,
   auth: IOAuth2Provider,
   _provider: PropertiesOf<typeof Providers>,
-  organizationName?: string
+  namespace?: string
 ): Promise<ClusterList> {
-  let getOptions: capiv1alpha3.IGetClusterListOptions = {};
-
-  if (organizationName) {
-    getOptions = {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
-      },
-    };
-  }
+  const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
 
   return capiv1alpha3.getClusterList(httpClient, auth, getOptions);
 }
 
 export function fetchClusterListKey(
   _provider: PropertiesOf<typeof Providers>,
-  organizationName?: string
-): string {
-  let getOptions: capiv1alpha3.IGetClusterListOptions = {};
+  namespace?: string
+): string | null {
+  if (typeof namespace === 'undefined') return null;
 
-  if (organizationName) {
-    getOptions = {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
-      },
-    };
-  }
+  const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
 
   return capiv1alpha3.getClusterListKey(getOptions);
 }

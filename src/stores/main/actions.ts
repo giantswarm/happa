@@ -52,7 +52,7 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { computePermissions, getNamespaceFromOrgName } from './utils';
+import { computePermissions } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -414,9 +414,9 @@ export function fetchPermissions(
   auth: IOAuth2Provider
 ): ThunkAction<Promise<void>, IState, void, MainActions> {
   return async (dispatch, getState) => {
-    const orgNames = Object.keys(selectOrganizations()(getState()));
+    const orgs = Object.values(selectOrganizations()(getState()));
 
-    const namespaces = orgNames.map(getNamespaceFromOrgName);
+    const namespaces = orgs.map((o) => o.namespace ?? '');
     // Also get permissions for the default namespace.
     namespaces.push('default');
 

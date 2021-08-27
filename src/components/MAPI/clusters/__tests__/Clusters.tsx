@@ -25,7 +25,11 @@ const defaultState: IState = {
     organizations: {
       ...preloginState.entities.organizations,
       items: {
-        org1: { id: 'org1' },
+        org1: {
+          id: 'org1',
+          name: 'org1',
+          namespace: 'org-org1',
+        },
       },
     } as IOrganizationState,
   } as IState['entities'],
@@ -86,9 +90,7 @@ describe('Clusters', () => {
 
   it('displays an error message if the list of clusters could not be fetched', async () => {
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.NotFound, {
         apiVersion: 'v1',
         kind: 'Status',
@@ -111,9 +113,7 @@ describe('Clusters', () => {
 
   it('displays a placeholder if there are no clusters', async () => {
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],

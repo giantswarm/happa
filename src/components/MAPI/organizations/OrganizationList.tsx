@@ -41,8 +41,8 @@ const OrganizationIndex: React.FC = () => {
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListKey(provider), () =>
-    fetchClusterList(client, auth, provider)
+  >(fetchClusterListKey(provider, ''), () =>
+    fetchClusterList(client, auth, provider, '')
   );
 
   useEffect(() => {
@@ -63,22 +63,22 @@ const OrganizationIndex: React.FC = () => {
       clusterList?.items
     );
 
-    const orgs = Object.keys(organizations).map((orgName) => {
+    const orgs = Object.values(organizations).map((org) => {
       // eslint-disable-next-line @typescript-eslint/init-declarations
       let clusterCount: number | undefined;
       if (clusterListError) {
         clusterCount = -1;
       } else if (clusterCounters) {
-        clusterCount = clusterCounters[orgName] ?? 0;
+        clusterCount = clusterCounters[org.name!] ?? 0;
       }
 
       return {
-        name: orgName,
+        name: org.id,
         clusterCount,
       };
     });
 
-    return Object.values(orgs);
+    return orgs;
   }, [organizations, clusterList, clusterListError]);
 
   const handleOrgClick = (name: string) => {

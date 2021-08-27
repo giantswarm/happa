@@ -3,8 +3,9 @@ import { Box, Keyboard, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import { ClusterList } from 'MAPI/types';
+import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
+import { getProvider } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
@@ -48,40 +50,32 @@ const AnimationWrapper = styled.div`
   }
 `;
 
+// eslint-disable-next-line complexity
 const Clusters: React.FC<{}> = () => {
   const selectedOrgName = useSelector(
     (state: IState) => state.main.selectedOrganization
   );
-  const organizations = Object.values(useSelector(selectOrganizations()));
-  const hasOrgs = organizations.length > 0;
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = selectedOrgName
+    ? organizations[selectedOrgName]
+    : undefined;
+  const hasOrgs = Object.values(organizations).length > 0;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const getOptions: capiv1alpha3.IGetClusterListOptions = React.useMemo(() => {
-    if (!selectedOrgName || !hasOrgs) return {};
+  const namespace = selectedOrg?.namespace;
+  const provider = useSelector(getProvider);
 
-    return {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: selectedOrgName },
-      },
-    };
-  }, [selectedOrgName, hasOrgs]);
-
-  const clusterListKey =
-    selectedOrgName && hasOrgs
-      ? capiv1alpha3.getClusterListKey(getOptions)
-      : null;
   const clusterListClient = useRef(clientFactory());
 
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<capiv1alpha3.IClusterList, GenericResponseError>(
-    clusterListKey,
-    () =>
-      capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
+  } = useSWR<ClusterList, GenericResponseError>(
+    fetchClusterListKey(provider, namespace),
+    () => fetchClusterList(clusterListClient.current, auth, provider, namespace)
   );
 
   useEffect(() => {
@@ -101,12 +95,12 @@ const Clusters: React.FC<{}> = () => {
   );
 
   const newClusterPath = useMemo(() => {
-    if (!selectedOrgName) return '';
+    if (!selectedOrg) return '';
 
     return RoutePath.createUsablePath(OrganizationsRoutes.Clusters.New, {
-      orgId: selectedOrgName,
+      orgId: selectedOrg.id,
     });
-  }, [selectedOrgName]);
+  }, [selectedOrg]);
 
   const title = selectedOrgName
     ? `Cluster Overview | ${selectedOrgName}`
@@ -114,13 +108,13 @@ const Clusters: React.FC<{}> = () => {
 
   const hasNoClusters =
     hasOrgs &&
-    selectedOrgName &&
+    namespace &&
     !clusterListIsLoading &&
     sortedClusters?.length === 0;
 
   const hasError =
     hasOrgs &&
-    selectedOrgName &&
+    namespace &&
     typeof clusterListError !== 'undefined' &&
     typeof sortedClusters === 'undefined';
 
@@ -207,6 +201,7 @@ const Clusters: React.FC<{}> = () => {
                       <ClusterListItem
                         cluster={cluster}
                         releases={releaseList?.items}
+                        organizations={organizations}
                         margin={{ bottom: 'medium' }}
                       />
                     </BaseTransition>

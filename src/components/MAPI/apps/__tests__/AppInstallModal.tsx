@@ -5,13 +5,37 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
+import { IMainState } from 'stores/main/types';
+import { IOrganizationState } from 'stores/organization/types';
+import { IState } from 'stores/state';
 import { cache, SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import preloginState from 'testUtils/preloginState';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import AppInstallModal from '../AppInstallModal';
+
+const defaultState: IState = {
+  ...preloginState,
+  main: {
+    ...preloginState.main,
+    selectedOrganization: 'org1',
+  } as IMainState,
+  entities: {
+    organizations: {
+      ...preloginState.entities.organizations,
+      items: {
+        org1: {
+          id: 'org1',
+          name: 'org1',
+          namespace: 'org-org1',
+        },
+      },
+    } as IOrganizationState,
+  } as IState['entities'],
+} as IState;
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof AppInstallModal>
@@ -28,7 +52,7 @@ function getComponent(
   return getComponentWithStore(
     Component,
     props,
-    undefined,
+    defaultState,
     undefined,
     history,
     auth
