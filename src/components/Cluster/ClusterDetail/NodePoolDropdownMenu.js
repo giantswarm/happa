@@ -6,7 +6,6 @@ import DropdownMenu, {
 } from 'UI/Controls/DropdownMenu';
 
 const NodePoolDropdownMenu = ({
-  triggerEditName,
   deleteNodePool,
   nodePool,
   showNodePoolScalingModal,
@@ -35,17 +34,6 @@ const NodePoolDropdownMenu = ({
           </DropdownTrigger>
           {isOpen && (
             <List aria-labelledby='node_pools_dropdown' role='menu'>
-              <li>
-                <Link
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    triggerEditName();
-                  }}
-                >
-                  Rename
-                </Link>
-              </li>
               <li>
                 <Link
                   href='#'

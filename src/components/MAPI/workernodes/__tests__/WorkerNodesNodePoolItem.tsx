@@ -267,41 +267,6 @@ describe('WorkerNodesNodePoolItem', () => {
     ).toBeInTheDocument();
   });
 
-  it('can edit the node pool description by using the action button', async () => {
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/machinepools/${capiexpv1alpha3Mocks.randomCluster1MachinePool1.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, capiexpv1alpha3Mocks.randomCluster1MachinePool1);
-
-    nock(window.config.mapiEndpoint)
-      .put(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/machinepools/${capiexpv1alpha3Mocks.randomCluster1MachinePool1.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, capiexpv1alpha3Mocks.randomCluster1MachinePool1);
-
-    render(
-      getComponent({
-        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
-        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
-      })
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
-    fireEvent.click(await screen.findByText('Rename'));
-
-    fireEvent.change(screen.getByDisplayValue('Some node pool'), {
-      target: { value: 'A random node pool' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'OK' }));
-
-    expect(
-      await screen.findByText(
-        `Successfully updated the node pool's description`
-      )
-    ).toBeInTheDocument();
-  });
-
   it('can change the node pool scaling', async () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
