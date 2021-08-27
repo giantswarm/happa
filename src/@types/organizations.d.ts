@@ -29,6 +29,8 @@ interface ICredential {
 
 interface IOrganization {
   id: string;
+  name?: string;
+  namespace?: string;
 
   // Injected by client-side.
   members?: IOrganizationMember[] | null;

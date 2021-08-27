@@ -392,13 +392,7 @@ export async function createCluster(
     // Add the created cluster to the existing list.
     mutate(
       capiv1alpha3.getClusterListKey({
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelOrganization]: cluster.metadata.labels![
-              capiv1alpha3.labelOrganization
-            ],
-          },
-        },
+        namespace: cluster.metadata.namespace!,
       }),
       (draft?: capiv1alpha3.IClusterList) => {
         draft?.items.push(cluster);

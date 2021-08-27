@@ -3,15 +3,20 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { extractErrorMessage } from 'MAPI/utils';
+import { ClusterList } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  fetchClusterList,
+  fetchClusterListKey,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import React, { useEffect, useMemo, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { StatusCodes } from 'shared/constants';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { getProvider } from 'stores/main/selectors';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
@@ -43,22 +48,22 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
+  const provider = useSelector(getProvider);
+
   const clusterListClient = useRef(clientFactory());
-  const getOptions: capiv1alpha3.IGetClusterListOptions = useMemo(() => {
-    return {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
-      },
-    };
-  }, [organizationName]);
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<capiv1alpha3.IClusterList, GenericResponseError>(
-    () => capiv1alpha3.getClusterListKey(getOptions),
+  } = useSWR<ClusterList, GenericResponseError>(
+    fetchClusterListKey(provider, organizationNamespace),
     () =>
-      capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
+      fetchClusterList(
+        clusterListClient.current,
+        auth,
+        provider,
+        organizationNamespace
+      )
   );
 
   useEffect(() => {

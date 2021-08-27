@@ -11,13 +11,17 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import { Cluster, ClusterList } from 'MAPI/types';
+import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
+import { getProvider } from 'stores/main/selectors';
+import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -26,13 +30,26 @@ import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
 import { createApp, filterClusters } from './utils';
 
+function getOrganizationForCluster(
+  cluster: Cluster,
+  organizations: Record<string, IOrganization>
+): IOrganization | undefined {
+  const organization = capiv1alpha3.getClusterOrganization(cluster);
+  if (!organization) return undefined;
+
+  return Object.values(organizations).find((o) => o.name === organization);
+}
+
 function mapClusterToClusterPickerInput(
-  cluster: capiv1alpha3.ICluster
+  cluster: Cluster,
+  organizations: Record<string, IOrganization>
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
+  const organization = getOrganizationForCluster(cluster, organizations);
+
   return {
     id: cluster.metadata.name,
     name: capiv1alpha3.getClusterDescription(cluster),
-    owner: capiv1alpha3.getClusterOrganization(cluster) ?? '',
+    owner: organization?.id ?? '',
     isAvailable: true,
   };
 }
@@ -114,12 +131,14 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const provider = useSelector(getProvider);
+
   const clusterListClient = useRef(clientFactory());
   const { data: clusterList, error: clusterListError } = useSWR<
-    capiv1alpha3.IClusterList,
+    ClusterList,
     GenericResponseError
-  >(capiv1alpha3.getClusterListKey(), () =>
-    capiv1alpha3.getClusterList(clusterListClient.current, auth)
+  >(fetchClusterListKey(provider, ''), () =>
+    fetchClusterList(clusterListClient.current, auth, provider, '')
   );
 
   useEffect(() => {
@@ -138,14 +157,16 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters']
   >([]);
 
+  const organizations = useSelector(selectOrganizations());
+
   useEffect(() => {
     const clusterCollection = filterClusters(
       clusterList?.items ?? [],
       debouncedQuery
-    ).map(mapClusterToClusterPickerInput);
+    ).map((c) => mapClusterToClusterPickerInput(c, organizations));
 
     setFilteredClusters(clusterCollection);
-  }, [debouncedQuery, clusterList]);
+  }, [debouncedQuery, clusterList, organizations]);
 
   const updateNamespace = useCallback(
     (ns) => {
@@ -233,7 +254,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     );
     if (!cluster) return;
 
-    const organization = capiv1alpha3.getClusterOrganization(cluster);
+    const organization = getOrganizationForCluster(cluster, organizations);
     if (!organization) return;
 
     try {
@@ -255,7 +276,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
       const clusterDetailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Clusters.Detail.Apps,
         {
-          orgId: organization,
+          orgId: organization.id,
           clusterId: clusterName,
         }
       );

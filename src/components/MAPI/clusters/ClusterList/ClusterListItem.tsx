@@ -66,11 +66,13 @@ interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster?: capiv1alpha3.ICluster;
   releases?: releasev1alpha1.IRelease[];
+  organizations?: Record<string, IOrganization>;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
   releases,
+  organizations,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -80,9 +82,15 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const releaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;
-  const organization = cluster
-    ? capiv1alpha3.getClusterOrganization(cluster)
-    : undefined;
+
+  const organization = useMemo(() => {
+    if (!organizations || !cluster) return undefined;
+
+    const org = capiv1alpha3.getClusterOrganization(cluster);
+    if (!org) return undefined;
+
+    return Object.values(organizations).find((o) => o.name === org)?.id;
+  }, [cluster, organizations]);
 
   const creationDate = cluster?.metadata.creationTimestamp;
   const deletionDate = cluster?.metadata.deletionTimestamp;
