@@ -16,6 +16,8 @@ import 'webpack-dev-server';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
+import { computeEndpoints } from './scripts/webpack/computeEndpoints';
+import { ConfigurationPlugin } from './scripts/webpack/ConfigurationPlugin';
 import ProxyPlugin from './scripts/webpack/proxyPlugin';
 import common, { compilerConfig } from './webpack.common';
 
@@ -54,6 +56,11 @@ const config: webpack.Configuration = merge(common, {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new ConfigurationPlugin({
+      filename: 'index.ejs',
+      outputFilename: 'index.html',
+      overrides: computeEndpoints(),
+    }),
     new ProxyPlugin([
       {
         service: 'api',
