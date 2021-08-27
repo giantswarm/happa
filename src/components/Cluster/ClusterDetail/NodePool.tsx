@@ -104,10 +104,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     this.setState({ isNameBeingEdited });
   };
 
-  triggerEditName = () => {
-    this.viewEditNameRef?.activateEditMode();
-  };
-
   editNodePoolName = (name: string): void => {
     const { cluster, nodePool } = this.props;
 
@@ -242,7 +238,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}
               showNodePoolScalingModal={this.showNodePoolScalingModal}
-              triggerEditName={this.triggerEditName}
             />
           </>
         )}

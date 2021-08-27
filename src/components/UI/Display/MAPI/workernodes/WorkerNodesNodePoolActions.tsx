@@ -13,13 +13,11 @@ const StyledDropdownTrigger = styled(DropdownTrigger)`
 
 interface IWorkerNodesNodePoolActionsProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  onRenameClick?: () => void;
   onDeleteClick?: () => void;
   onScaleClick?: () => void;
 }
 
 const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = ({
-  onRenameClick,
   onDeleteClick,
   onScaleClick,
   ...props
@@ -60,21 +58,6 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> = (
               onEnter={handleListKeyDown}
             >
               <List role='menu'>
-                {onRenameClick && (
-                  <li>
-                    <Link
-                      href='#'
-                      onClick={(e) => {
-                        e.preventDefault();
-
-                        onRenameClick();
-                        onBlurHandler();
-                      }}
-                    >
-                      <Text>Rename</Text>
-                    </Link>
-                  </li>
-                )}
                 {onScaleClick && (
                   <li>
                     <Link

@@ -102,10 +102,6 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
-  const onStartEditingDescription = () => {
-    viewAndEditNameRef.current?.activateEditMode();
-  };
-
   const updateDescription = async (newValue: string) => {
     if (!nodePool) return;
 
@@ -329,7 +325,6 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
             <Box align='center'>
               <WorkerNodesNodePoolActions
-                onRenameClick={onStartEditingDescription}
                 onDeleteClick={onDelete}
                 onScaleClick={onScale}
               />
