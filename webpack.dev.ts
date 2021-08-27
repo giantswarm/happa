@@ -1,30 +1,32 @@
 /* eslint-disable no-magic-numbers, no-console */
 
-/*
+/**
  * Webpack development server configuration
  *
  * This file is set up for serving the webpack-dev-server, which will watch for changes and recompile as required if
  * the subfolder /webpack-dev-server/ is visited. Visiting the root will not automatically reload.
- *
- * It also starts helpful CORS proxies if HAPPA_PROXY_INSTALLATION or HAPPA_PROXY_BASE_DOMAIN environment variables are set:
- *
- * HAPPA_PROXY_INSTALLATION=ginger yarn start
- */
+ * */
 
 import 'webpack-dev-server';
 
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
-import { computeEndpoints } from './scripts/webpack/computeEndpoints';
 import { ConfigurationPlugin } from './scripts/webpack/ConfigurationPlugin';
-import ProxyPlugin from './scripts/webpack/proxyPlugin';
 import common, { compilerConfig } from './webpack.common';
 
 const config: webpack.Configuration = merge(common, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
   cache: true,
+  stats: {
+    colors: true,
+    reasons: true,
+    logging: 'info',
+  },
+  infrastructureLogging: {
+    level: 'log',
+  },
   output: {
     filename: 'assets/[name].js',
   },
@@ -59,26 +61,41 @@ const config: webpack.Configuration = merge(common, {
     new ConfigurationPlugin({
       filename: 'index.ejs',
       outputFilename: 'index.html',
-      overrides: computeEndpoints(),
+      overrides: {
+        apiEndpoint: 'http://localhost:8000',
+        mapiEndpoint: 'http://localhost:8888',
+        mapiAudience: 'http://localhost:9999',
+        passageEndpoint: 'http://localhost:5001',
+        mapiAuthRedirectURL: 'http://localhost:7000',
+        environment: 'development',
+        happaVersion: 'development',
+        enableRealUserMonitoring: false,
+      },
+      proxies: [
+        {
+          port: 8000,
+          host: (options) => options.apiEndpoint,
+        },
+        {
+          port: 8888,
+          host: (options) => options.mapiEndpoint,
+        },
+        {
+          port: 5001,
+          host: (options) => options.passageEndpoint,
+        },
+        {
+          port: 9999,
+          host: (options) => {
+            if (!/http(s)?:\/\//.test(options.mapiAudience)) {
+              return `https://${options.mapiAudience}`;
+            }
+
+            return options.mapiAudience;
+          },
+        },
+      ],
     }),
-    new ProxyPlugin([
-      {
-        service: 'api',
-        localPort: 8000,
-      },
-      {
-        service: 'happaapi',
-        localPort: 8888,
-      },
-      {
-        service: 'passage',
-        localPort: 5001,
-      },
-      {
-        service: 'oidc_issuer',
-        localPort: 9999,
-      },
-    ]),
   ],
   module: {
     rules: [
