@@ -4,7 +4,8 @@
   "labels": ["dependencies"],
   "reviewers": [
     "axbarsan",
-    "marians"
+    "marians",
+    "kuosandys"
   ],
   "packageRules": [
     {
