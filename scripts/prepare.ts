@@ -115,9 +115,9 @@ async function main(): Promise<void> {
     await createMetadataTemplate(values);
 
     await gzipFiles();
-  } catch (err) {
+  } catch (err: unknown) {
     process.stderr.write('\n');
-    process.stderr.write(err.toString());
+    process.stderr.write((err as Error).toString());
 
     process.exit(1);
   }
