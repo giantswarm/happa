@@ -184,7 +184,7 @@
     "clean-webpack-plugin": "3.0.0",
     "command-line-args": "5.0.2",
     "copy-webpack-plugin": "8.1.1",
-    "cors": "2.8.4",
+    "cors": "2.8.5",
     "css-loader": "5.2.6",
     "css-minimizer-webpack-plugin": "3.0.1",
     "ejs": "3.1.6",
