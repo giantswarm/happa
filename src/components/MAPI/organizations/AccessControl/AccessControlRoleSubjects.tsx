@@ -145,7 +145,7 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
   };
 };
 
-const sortByName = (
+const compareSubjects = (
   a: ui.IAccessControlRoleSubjectItem,
   b: ui.IAccessControlRoleSubjectItem
 ) => a.name.localeCompare(b.name);
@@ -381,10 +381,10 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   }, [serviceAccountSuggestionsError]);
 
-  const groupCollection = Object.values(groups).sort(sortByName);
-  const userCollection = Object.values(users).sort(sortByName);
+  const groupCollection = Object.values(groups).sort(compareSubjects);
+  const userCollection = Object.values(users).sort(compareSubjects);
   const serviceAccountCollection = Object.values(serviceAccounts).sort(
-    sortByName
+    compareSubjects
   );
 
   const groupType = state[ui.AccessControlSubjectTypes.Group];
