@@ -8,6 +8,7 @@ module.exports = {
     '^.+\\.(js|ts)(x?)$': [
       '@swc/jest',
       {
+        sourceMaps: true,
         jsc: {
           target: 'es2015',
           parser: {
@@ -24,6 +25,9 @@ module.exports = {
             },
           },
           externalHelpers: true,
+        },
+        module: {
+          type: 'commonjs',
         },
         env: {
           targets: '> 0.25%, not dead',
