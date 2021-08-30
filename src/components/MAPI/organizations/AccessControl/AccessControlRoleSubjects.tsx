@@ -145,6 +145,11 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
   };
 };
 
+const compareSubjects = (
+  a: ui.IAccessControlRoleSubjectItem,
+  b: ui.IAccessControlRoleSubjectItem
+) => a.name.localeCompare(b.name);
+
 const formatAccountNames = (accountNames: string[]): string => {
   return accountNames
     .map((accountName) => `<code>${accountName}</code>`)
@@ -376,9 +381,11 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   }, [serviceAccountSuggestionsError]);
 
-  const groupCollection = Object.values(groups);
-  const userCollection = Object.values(users);
-  const serviceAccountCollection = Object.values(serviceAccounts);
+  const groupCollection = Object.values(groups).sort(compareSubjects);
+  const userCollection = Object.values(users).sort(compareSubjects);
+  const serviceAccountCollection = Object.values(serviceAccounts).sort(
+    compareSubjects
+  );
 
   const groupType = state[ui.AccessControlSubjectTypes.Group];
   const userType = state[ui.AccessControlSubjectTypes.User];
