@@ -1,10 +1,11 @@
 import { Anchor, Box, Drop, Keyboard, Text } from 'grommet';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import { IAccessControlSubjectSetRenderer } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 
 const StyledLoadingIndicator = styled(LoadingIndicator)`
   margin-left: 5px;
@@ -49,6 +50,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
   name,
   isEditable,
   isLoading,
+  isNewlyAdded,
   onDelete,
   deleteTooltipMessage,
   deleteConfirmationMessage,
@@ -88,6 +90,11 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
     onDelete();
   };
 
+  const [isHighlightedValue, setIsHiglightedValue] = useState(isNewlyAdded);
+  useEffect(() => {
+    if (isHighlightedValue) setIsHiglightedValue(false);
+  }, [isHighlightedValue]);
+
   return (
     <Box
       direction='row'
@@ -99,8 +106,13 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
       margin={{ right: 'small', bottom: 'small' }}
       {...props}
     >
-      {typeof name === 'string' ? <Text color='text-weak'>{name}</Text> : name}
-
+      <RefreshableLabel value={Number(isHighlightedValue)}>
+        {typeof name === 'string' ? (
+          <Text color='text-weak'>{name}</Text>
+        ) : (
+          name
+        )}
+      </RefreshableLabel>
       {isLoading && (
         <StyledLoadingIndicator
           loading={true}

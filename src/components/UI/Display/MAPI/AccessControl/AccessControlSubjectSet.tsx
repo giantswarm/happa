@@ -19,6 +19,7 @@ export interface IAccessControlSubjectSetRenderer
   name: string;
   isEditable: boolean;
   isLoading: boolean;
+  isNewlyAdded: boolean;
   onDelete: () => void;
 }
 
@@ -85,6 +86,8 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
     return '';
   };
 
+  const [newlyAddedSubjects, setNewlyAddedSubjects] = useState<string[]>([]);
+
   const handleAdd = (newValue: string[]) => {
     const error = validateSubjects(newValue);
     if (error) {
@@ -93,6 +96,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
       return;
     }
 
+    setNewlyAddedSubjects(newValue);
     onAdd(newValue);
   };
 
@@ -104,6 +108,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
             name,
             isEditable: permissions.canDelete && isEditable,
             isLoading: isItemLoading,
+            isNewlyAdded: newlyAddedSubjects.includes(name),
             onDelete: () => onDeleteItem(name),
           })}
         </React.Fragment>
