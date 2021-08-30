@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import GenericModal from 'Modals/GenericModal';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useMemo, useState } from 'react';
@@ -110,14 +111,14 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
   return (
     <GenericModal
       footer={
-        <>
+        <Box direction='row' gap='small' justify='end'>
           {primaryButtonText && (
             <Button primary={true} onClick={handlePrimaryButtonClick}>
               {primaryButtonText}
             </Button>
           )}
           <Button onClick={onClose}>Cancel</Button>
-        </>
+        </Box>
       }
       onClose={onClose}
       title={title}
