@@ -75,7 +75,7 @@ function mapStateToProps(state, ownProps) {
     });
   });
 
-  const { provider } = state.main.info.general;
+  const { provider } = window.config.info.general;
   const providerSupportsMultiAccount = supportsMultiAccount(provider);
 
   return {

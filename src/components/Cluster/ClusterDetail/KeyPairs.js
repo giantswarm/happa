@@ -242,7 +242,7 @@ class KeyPairs extends React.Component {
 function mapStateToProps(state) {
   return {
     clusters: state.entities.clusters,
-    provider: state.main.info.general.provider,
+    provider: window.config.info.general.provider,
     user: getLoggedInUser(state),
     loadingKeyPairs: selectLoadingFlagByAction(
       state,

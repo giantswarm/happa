@@ -14,7 +14,7 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR, { mutate } from 'swr';
@@ -105,7 +105,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     return version;
   }, [releaseList, currentRelease]);
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
   const isAdmin = useSelector(getUserIsAdmin);
 
   const supportedUpgradeVersions: ui.IReleaseVersion[] = useMemo(() => {

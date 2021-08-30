@@ -8,7 +8,6 @@ import {
   withGetClusters,
 } from 'MAPI/guides/utils';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -29,7 +28,7 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
   clusterNamespace,
   ...props
 }) => {
-  const context = useSelector(getCurrentInstallationContextName);
+  const context = getCurrentInstallationContextName();
 
   return (
     <CLIGuide

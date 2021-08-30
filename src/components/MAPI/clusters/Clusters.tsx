@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getProvider } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
@@ -65,7 +64,7 @@ const Clusters: React.FC<{}> = () => {
   const auth = useAuthProvider();
 
   const namespace = selectedOrg?.namespace;
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const clusterListClient = useRef(clientFactory());
 

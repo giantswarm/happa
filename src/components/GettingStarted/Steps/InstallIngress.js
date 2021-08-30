@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps } from 'shared/featureSupport';
 import { selectClusterById } from 'stores/cluster/selectors';
-import { getLoggedInUser, getProvider } from 'stores/main/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
@@ -39,7 +39,7 @@ const InstallIngress = (props) => {
   );
 
   const user = useSelector(getLoggedInUser);
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   return (
     <Breadcrumb

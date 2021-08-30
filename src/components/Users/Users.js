@@ -263,7 +263,7 @@ function mapStateToProps(state) {
     invitations: state.entities.users.invitations,
     organizations: state.entities.organizations,
     initialSelectedOrganizations: [state.main.selectedOrganization],
-    installation_name: state.main.info.general.installation_name,
+    installation_name: window.config.info.general.installationName,
   };
 }
 

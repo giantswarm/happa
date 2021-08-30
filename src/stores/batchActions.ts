@@ -38,7 +38,7 @@ import {
   refreshUserInfo,
 } from 'stores/main/actions';
 import { getInfo, resumeLogin } from 'stores/main/actions';
-import { getLoggedInUser, getProvider } from 'stores/main/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
 import {
@@ -75,7 +75,11 @@ export function batchedLayout(
       }
 
       await dispatch(refreshUserInfo());
-      await dispatch(getInfo());
+
+      // TODO(axbarsan): Remove this once [this](https://github.com/giantswarm/roadmap/issues/336) is done.
+      if (user.type === LoggedInUserTypes.GS) {
+        await dispatch(getInfo());
+      }
     } catch (err) {
       dispatch(push(MainRoutes.Login));
       dispatch(globalLoadError());
@@ -93,7 +97,7 @@ export function batchedLayout(
 
     try {
       const user = getLoggedInUser(getState())!;
-      const provider = getProvider(getState())!;
+      const provider = window.config.info.general.provider;
 
       if (!supportsMapiApps(user, provider)) {
         const catalogs = await dispatch(listCatalogs());
@@ -259,7 +263,7 @@ export function batchedClusterDetailView(
       dispatch(loadReleases());
 
       const user = getLoggedInUser(getState())!;
-      const provider = getProvider(getState());
+      const provider = window.config.info.general.provider;
       if (!supportsMapiApps(user, provider)) {
         dispatch(loadClusterApps({ clusterId }));
       }
@@ -314,7 +318,7 @@ export function batchedRefreshClusterDetailView(
       }
 
       const user = getLoggedInUser(getState())!;
-      const provider = getProvider(getState());
+      const provider = window.config.info.general.provider;
 
       if (
         !supportsMapiApps(user, provider) &&
@@ -369,7 +373,7 @@ export function batchedOrganizationSelect(
       dispatch(organizationSelect(orgId));
 
       const user = getLoggedInUser(getState())!;
-      const provider = getProvider(getState())!;
+      const provider = window.config.info.general.provider;
 
       if (!supportsMapiClusters(user, provider)) {
         dispatch(

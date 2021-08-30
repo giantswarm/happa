@@ -435,9 +435,9 @@ function mapStateToProps(state, props) {
     credentials: state.entities.organizations.credentials,
     catalogs: state.entities.catalogs,
     nodePools: selectNodePools(state),
-    provider: state.main.info.general.provider,
+    provider: window.config.info.general.provider,
     user: getLoggedInUser(state),
-    region: state.main.info.general.datacenter,
+    region: window.config.info.general.dataCenter,
     isAdmin: getUserIsAdmin(state),
     clusterIsAwaitingUpgrade: selectIsClusterAwaitingUpgrade(clusterID ?? '')(
       state

@@ -412,12 +412,12 @@ class ScaleClusterModal extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   const propsToPush = {};
 
-  if (state.main.info.workers.count_per_cluster.max) {
+  if (window.config.info.workers.countPerCluster.max) {
     propsToPush.maxWorkersPerCluster =
-      state.main.info.workers.count_per_cluster.max;
+      window.config.info.workers.countPerCluster.max;
   }
 
   return propsToPush;

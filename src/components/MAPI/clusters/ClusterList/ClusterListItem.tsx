@@ -21,7 +21,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -170,7 +170,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       );
 
   const isAdmin = useSelector(getUserIsAdmin);
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const workerNodesCount = getWorkerNodesCount(nodePoolList?.items);
 

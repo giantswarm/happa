@@ -1,16 +1,13 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
-import {
-  getAllowedInstanceTypeNames,
-  getProvider,
-} from 'stores/main/selectors';
+import { getAllowedInstanceTypeNames } from 'stores/main/selectors';
 
 export function useInstanceTypeSelectionLabels(): {
   singular: string;
   plural: string;
 } {
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   return useMemo(() => {
     switch (provider) {
@@ -38,7 +35,7 @@ export interface IInstanceType {
 }
 
 function useNormalizedCapabilities(): Record<string, IInstanceType> {
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   return useMemo(() => {
     let rawCaps: Record<string, IRawInstanceType> = {};
