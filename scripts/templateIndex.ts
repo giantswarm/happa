@@ -6,7 +6,7 @@ import ejs from 'ejs';
  * */
 export async function templateIndex(
   input: string,
-  withValues: IConfigurationValues
+  withValues: Partial<IConfigurationValues>
 ): Promise<string> {
   const template = ejs.compile(input, {
     openDelimiter: '{',
