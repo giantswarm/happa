@@ -52,6 +52,45 @@
         sentryReleaseVersion: '{!= sentryReleaseVersion !}',
         sentryDebug: {!= sentryDebug !},
         sentrySampleRate: {!= sentrySampleRate !},
+        info: {
+          general: {
+            provider: '{!= info.general.provider !}',
+            installationName: '{!= info.general.installationName !}',
+            availabilityZones: {
+              default: {!= info.general.availabilityZones.default !},
+              max: {!= info.general.availabilityZones.zones.split(' ').filter(Boolean).length !},
+              zones: [
+                {! info.general.availabilityZones.zones.split(' ').filter(Boolean).map((zone) => { !}
+                  '{!= zone !}',
+                {! }) !}
+              ]
+            },
+            dataCenter: '{!= info.general.dataCenter !}',
+            kubernetesVersions: [],
+          },
+          workers: {
+            countPerCluster: {
+              max: {!= info.workers.countPerCluster.max !},
+              default: {!= info.workers.countPerCluster.default !},
+            },
+            instanceType: {
+              options: [
+                {! info.workers.instanceType.options.split(' ').filter(Boolean).map((option) => { !}
+                  '{!= option !}',
+                {! }) !}
+              ],
+              default: '{!= info.workers.instanceType.default !}',
+            },
+            vmSize: {
+              options: [
+                {! info.workers.vmSize.options.split(' ').filter(Boolean).map((option) => { !}
+                  '{!= option !}',
+                {! }) !}
+              ],
+              default: '{!= info.workers.vmSize.default !}',
+            },
+          },
+        },
       };
       window.config = config;
 

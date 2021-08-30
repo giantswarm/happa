@@ -43,3 +43,27 @@ data:
     {{- else }}
     feature-monitoring: true
     {{- end }}
+
+    info:
+      general:
+        provider: '{{ .Values.managementCluster.provider.kind }}'
+        installationName: '{{ .Values.managementCluster.name }}'
+        availabilityZones:
+          default: 1
+          {{- if eq .Values.managementCluster.provider.kind "aws" }}
+          zones: '{{ .Values.aws.availabilityZones | join " " }}'
+          {{- else if eq .Values.managementCluster.provider.kind "azure" }}
+          zones: '{{ .Values.azure.availabilityZones | join " " }}'
+          {{- end }}
+        dataCenter: '{{ .Values.managementCluster.provider.region }}'
+        kubernetesVersions: ""
+      workers:
+        countPerCluster:
+          default: 3
+          max: 100
+        instanceType:
+          options: '{{ .Values.aws.instance.allowed | join " " }}'
+          default: '{{ .Values.aws.instance.default }}'
+        vmSize:
+          options: '{{ .Values.azure.vm.vmSize.allowed | join " " }}'
+          default: '{{ .Values.azure.vm.vmSize.default }}'
