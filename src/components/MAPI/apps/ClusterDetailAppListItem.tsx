@@ -41,7 +41,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             />
           </Box>
           <OptionalValue value={app?.metadata.name} loaderWidth={100}>
-            {(value) => <Text weight='bold'>{value}</Text>}
+            {(value) => (
+              <Text weight='bold' aria-label={`App name: ${value}`}>
+                {value}
+              </Text>
+            )}
           </OptionalValue>
 
           <Box
@@ -49,7 +53,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             margin={{ left: 'small' }}
           >
             <OptionalValue value={app?.spec.version} loaderWidth={100}>
-              {(value) => <Text color='text-weak'>{value}</Text>}
+              {(value) => (
+                <Text color='text-weak' aria-label={`App version: ${value}`}>
+                  {value}
+                </Text>
+              )}
             </OptionalValue>
           </Box>
         </Box>
