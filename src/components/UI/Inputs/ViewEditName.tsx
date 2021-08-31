@@ -75,7 +75,7 @@ class ViewAndEditName extends Component<
 
   static validate(
     value: string,
-    variant: string
+    variant: ViewAndEditNameVariant
   ): { valid: boolean; error: string } {
     const capitalizedVariant = variant[0].toUpperCase() + variant.slice(1);
 
