@@ -29,7 +29,9 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tab, Tabs } from 'UI/Display/Tabs';
-import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import ViewAndEditName, {
+  ViewAndEditNameVariant,
+} from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
@@ -256,6 +258,7 @@ const ClusterDetail: React.FC<{}> = () => {
                     typeLabel='cluster'
                     onSave={updateDescription}
                     aria-label={value as string}
+                    variant={ViewAndEditNameVariant.Description}
                   />
                 )}
               </OptionalValue>

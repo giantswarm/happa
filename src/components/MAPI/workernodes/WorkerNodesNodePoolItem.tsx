@@ -21,7 +21,9 @@ import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/Availa
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
-import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import ViewAndEditName, {
+  ViewAndEditNameVariant,
+} from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
 import { deleteNodePool, updateNodePoolDescription } from './utils';
@@ -231,6 +233,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                   aria-label={`Description: ${value}`}
                   onSave={updateDescription}
                   ref={viewAndEditNameRef}
+                  variant={ViewAndEditNameVariant.Description}
                 />
               )
             }
