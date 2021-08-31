@@ -71,8 +71,7 @@ describe('ReleaseSelector', () => {
     renderWithStore(ReleaseSelector, { ...defaultProps });
 
     expect(screen.getByText(version)).toBeInTheDocument();
-    expect(screen.getByText(/This release contains:/i)).toBeInTheDocument();
-    expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Kubernetes version:/i)).toBeInTheDocument();
     expect(
       screen.getByText(
         mockReleases[mockReleases[version].version].kubernetesVersion as string
@@ -169,8 +168,7 @@ describe('ReleaseSelector', () => {
     fireEvent.click(screen.getByText(/Available releases/i));
 
     expect(screen.getByText(versionToSelect)).toBeInTheDocument();
-    expect(screen.getByText(/This release contains:/i)).toBeInTheDocument();
-    expect(screen.getByText(/kubernetes/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Kubernetes version:/i)).toBeInTheDocument();
     expect(
       screen.getByText(mockReleases[versionToSelect].components[0].version)
     ).toBeInTheDocument();

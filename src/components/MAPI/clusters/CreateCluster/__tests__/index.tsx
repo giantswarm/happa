@@ -151,7 +151,7 @@ describe('ClusterCreate', () => {
 
     // Has the latest version selected by default.
     expect(
-      await screen.findByLabelText('The currently selected version is 15.0.0')
+      await screen.findByLabelText('Release version: 15.0.0')
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('Available releases'));
