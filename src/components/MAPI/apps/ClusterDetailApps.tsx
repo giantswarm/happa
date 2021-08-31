@@ -25,6 +25,7 @@ import { useLocation, useParams } from 'react-router';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
+import * as featureFlags from 'shared/featureFlags';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/main/actions';
 import styled from 'styled-components';
@@ -35,6 +36,7 @@ import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreins
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
 
+import ClusterDetailAppList from './ClusterDetailAppList';
 import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';
 import { filterUserInstalledApps, mapDefaultApps } from './utils';
 
@@ -211,29 +213,42 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         }}
       >
         <>
-          <UserInstalledApps
-            apps={userInstalledApps.map((a) => ({
-              name: a.metadata.name,
-              version: a.spec.version,
-              deletionTimestamp: a.metadata.deletionTimestamp,
-            }))}
-            error={extractErrorMessage(appListError) ?? null}
-            onShowDetail={showAppDetail}
-          >
-            <BrowseButtonContainer>
-              <BrowseButton
-                onClick={openAppCatalog}
-                disabled={appListIsLoading}
-                icon={<i className='fa fa-add-circle' />}
-              >
-                Install app
-              </BrowseButton>
-            </BrowseButtonContainer>
+          {featureFlags.flags.NextGenClusterApps.enabled ? (
+            <>
+              <h3>Installed Apps</h3>
+              <ClusterDetailAppList
+                apps={userInstalledApps}
+                isLoading={appListIsLoading}
+                border={{ side: 'bottom' }}
+                pad={{ bottom: 'medium' }}
+                margin={{ bottom: 'medium' }}
+              />
+            </>
+          ) : (
+            <UserInstalledApps
+              apps={userInstalledApps.map((a) => ({
+                name: a.metadata.name,
+                version: a.spec.version,
+                deletionTimestamp: a.metadata.deletionTimestamp,
+              }))}
+              error={extractErrorMessage(appListError) ?? null}
+              onShowDetail={showAppDetail}
+            >
+              <BrowseButtonContainer>
+                <BrowseButton
+                  onClick={openAppCatalog}
+                  disabled={appListIsLoading}
+                  icon={<i className='fa fa-add-circle' />}
+                >
+                  Install app
+                </BrowseButton>
+              </BrowseButtonContainer>
 
-            <Box margin={{ top: 'large' }} direction='column' gap='small'>
-              <ListAppsGuide namespace={clusterId} />
-            </Box>
-          </UserInstalledApps>
+              <Box margin={{ top: 'large' }} direction='column' gap='small'>
+                <ListAppsGuide namespace={clusterId} />
+              </Box>
+            </UserInstalledApps>
+          )}
 
           <div>
             <h3>Preinstalled Apps</h3>
