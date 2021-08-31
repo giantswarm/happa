@@ -10,11 +10,16 @@ import Button from 'UI/Controls/Button';
 
 import TextInput from './TextInput';
 
+export enum ViewAndEditNameVariant {
+  Name = 'name',
+  Description = 'description',
+}
 interface IViewAndEditNameProps extends React.ComponentPropsWithRef<'span'> {
   value: string;
   typeLabel: string;
   onSave(value: string): void;
   onToggleEditingState?(editing: boolean): void;
+  variant?: ViewAndEditNameVariant;
 }
 
 interface IViewAndEditNameState {
@@ -54,6 +59,7 @@ class ViewAndEditName extends Component<
 > {
   static defaultProps = {
     onSave: () => {},
+    variant: ViewAndEditNameVariant.Name,
   };
 
   static getDerivedStateFromProps: GetDerivedStateFromProps<
@@ -67,11 +73,17 @@ class ViewAndEditName extends Component<
     return null;
   };
 
-  static validate(value: string): { valid: boolean; error: string } {
+  static validate(
+    value: string,
+    variant: ViewAndEditNameVariant
+  ): { valid: boolean; error: string } {
+    const capitalizedVariant = variant[0].toUpperCase() + variant.slice(1);
+
     const { isValid, message } = hasAppropriateLength(
       value,
       Constants.MIN_NAME_LENGTH,
-      Constants.MAX_NAME_LENGTH
+      Constants.MAX_NAME_LENGTH,
+      capitalizedVariant
     );
 
     return {
@@ -120,7 +132,10 @@ class ViewAndEditName extends Component<
 
   handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { value } = e.target;
-    const validationResult = ViewAndEditName.validate(value);
+    const validationResult = ViewAndEditName.validate(
+      value,
+      this.props.variant!
+    );
 
     this.setState({
       value: value,
@@ -134,7 +149,10 @@ class ViewAndEditName extends Component<
     const { value } = this.state;
 
     // Validate here, also, in case we're calling this method directly
-    const validationResult = ViewAndEditName.validate(value);
+    const validationResult = ViewAndEditName.validate(
+      value,
+      this.props.variant!
+    );
     if (!validationResult.valid) return;
 
     this.toggleEditMode(false, {
@@ -174,6 +192,7 @@ class ViewAndEditName extends Component<
       value,
       onSave,
       onToggleEditingState,
+      variant,
       ...rest
     } = this.props;
     const { errorMessage } = this.state;
@@ -235,7 +254,9 @@ class ViewAndEditName extends Component<
         <span tabIndex={0} {...rest}>
           <OverlayTrigger
             overlay={
-              <Tooltip id='tooltip'>Click to edit {typeLabel} name</Tooltip>
+              <Tooltip id='tooltip'>
+                Click to edit {typeLabel} {variant}
+              </Tooltip>
             }
             placement='top'
           >
