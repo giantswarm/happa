@@ -37,6 +37,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
               role='presentation'
               aria-hidden='true'
               size='28px'
+              color={!app ? 'text-xweak' : 'text'}
             />
           </Box>
           <OptionalValue value={app?.metadata.name} loaderWidth={100}>

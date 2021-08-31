@@ -68,10 +68,6 @@ const BrowseButtonContainer = styled.div`
     ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
-const BrowseButton = styled(Button)`
-  margin: 0;
-`;
-
 const Disclaimer = styled.p`
   margin: 0 0 20px;
   line-height: 1.2;
@@ -121,7 +117,9 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       )
   );
   const appListIsLoading =
-    typeof appList === 'undefined' && appListIsValidating;
+    appListIsValidating &&
+    typeof appList === 'undefined' &&
+    typeof appListError === 'undefined';
 
   useEffect(() => {
     if (appListError) {
@@ -222,7 +220,24 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
                 border={{ side: 'bottom' }}
                 pad={{ bottom: 'medium' }}
                 margin={{ bottom: 'medium' }}
-              />
+                errorMessage={extractErrorMessage(appListError)}
+              >
+                <Box margin={{ top: 'medium' }}>
+                  <Button
+                    onClick={openAppCatalog}
+                    disabled={appListIsLoading}
+                    icon={
+                      <i
+                        className='fa fa-add-circle'
+                        role='presentation'
+                        aria-hidden='true'
+                      />
+                    }
+                  >
+                    Install app
+                  </Button>
+                </Box>
+              </ClusterDetailAppList>
             </>
           ) : (
             <UserInstalledApps
@@ -235,13 +250,13 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
               onShowDetail={showAppDetail}
             >
               <BrowseButtonContainer>
-                <BrowseButton
+                <Button
                   onClick={openAppCatalog}
                   disabled={appListIsLoading}
                   icon={<i className='fa fa-add-circle' />}
                 >
                   Install app
-                </BrowseButton>
+                </Button>
               </BrowseButtonContainer>
 
               <Box margin={{ top: 'large' }} direction='column' gap='small'>
