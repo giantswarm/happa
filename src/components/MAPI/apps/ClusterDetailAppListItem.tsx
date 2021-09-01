@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
+import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
 import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
@@ -80,7 +81,16 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
         pad={{ horizontal: 'small', top: 'xsmall', bottom: 'small' }}
       >
         <StyledBox wrap={true} direction='row'>
-          <ClusterDetailAppListWidgetVersion app={app} />
+          <ClusterDetailAppListWidgetVersion
+            app={app}
+            basis='200px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetStatus
+            app={app}
+            basis='200px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
         </StyledBox>
       </Box>
     </AccordionPanel>
