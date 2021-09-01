@@ -1,6 +1,7 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
 import * as releasesUtils from 'MAPI/releases/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -645,4 +646,26 @@ export function computeAppsCategorizedCounters(
     uniqueApps: Object.values(apps).length,
     deployed: deployedAppCount,
   };
+}
+
+export function isAppChangingVersion(app: applicationv1alpha1.IApp): boolean {
+  if (!app.status) return false;
+
+  return (
+    app.status.version.length > 0 && app.spec.version !== app.status.version
+  );
+}
+
+export function getLatestVersionForApp(
+  apps: applicationv1alpha1.IAppCatalogEntry[],
+  appName: string
+): string | undefined {
+  const versions: string[] = [];
+  for (const app of apps) {
+    if (app.spec.appName === appName) {
+      versions.push(app.spec.version);
+    }
+  }
+
+  return versions.sort((a, b) => compare(b, a))[0];
 }

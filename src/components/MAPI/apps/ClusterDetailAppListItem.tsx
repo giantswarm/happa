@@ -4,10 +4,16 @@ import React from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
+import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
+
 const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
   transition: 0.15s ease-out;
+`;
+
+const StyledBox = styled(Box)`
+  gap: ${({ theme }) => theme.global.edgeSize.small};
 `;
 
 interface IClusterDetailAppListItemProps
@@ -71,9 +77,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
         round={{ corner: 'bottom', size: 'xsmall' }}
         background='background-front'
         fill='horizontal'
-        pad='medium'
+        pad={{ horizontal: 'small', top: 'xsmall', bottom: 'small' }}
       >
-        hi friends
+        <StyledBox wrap={true} direction='row'>
+          <ClusterDetailAppListWidgetVersion app={app} />
+        </StyledBox>
       </Box>
     </AccordionPanel>
   );
