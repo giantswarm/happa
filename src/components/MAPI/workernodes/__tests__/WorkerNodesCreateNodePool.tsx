@@ -18,7 +18,6 @@ import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp'
 import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
 import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
 import * as gscorev1alpha1Mocks from 'testUtils/mockHttpCalls/gscorev1alpha1';
-import preloginState from 'testUtils/preloginState';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import * as NodePoolUtils from '../utils';
@@ -36,40 +35,10 @@ function getComponent(
     </SWRConfig>
   );
 
-  const state = {
-    ...preloginState,
-    main: {
-      ...preloginState.main,
-      info: {
-        ...preloginState.main.info,
-        general: {
-          ...preloginState.main.info.general,
-          availability_zones: {
-            default: 1,
-            max: 3,
-            zones: ['1', '2', '3'],
-          },
-          provider: Providers.AZURE,
-        },
-        workers: {
-          ...preloginState.main.info.workers,
-          vm_size: {
-            options: [
-              'Standard_D4s_v3',
-              'Standard_A2_v2',
-              'Standard_A4_v2',
-              'Standard_A8_v2',
-            ],
-          },
-        },
-      },
-    },
-  };
-
   return getComponentWithStore(
     Component,
     props,
-    state,
+    undefined,
     undefined,
     history,
     auth
@@ -82,6 +51,39 @@ generateUIDMockFn.mockReturnValue(
 );
 
 describe('WorkerNodesCreateNodePool', () => {
+  const originalInfo = window.config.info;
+
+  beforeAll(() => {
+    window.config.info = {
+      ...window.config.info,
+      general: {
+        ...window.config.info.general,
+        availabilityZones: {
+          default: 1,
+          max: 3,
+          zones: ['1', '2', '3'],
+        },
+        provider: Providers.AZURE,
+      },
+      workers: {
+        ...window.config.info.workers,
+        vmSize: {
+          default: 'Standard_D4s_v3',
+          options: [
+            'Standard_D4s_v3',
+            'Standard_A2_v2',
+            'Standard_A4_v2',
+            'Standard_A8_v2',
+          ],
+        },
+      },
+    };
+  });
+
+  afterAll(() => {
+    window.config.info = originalInfo;
+  });
+
   afterEach(() => {
     cache.clear();
   });
@@ -438,7 +440,7 @@ describe('WorkerNodesCreateNodePool', () => {
     createNodePoolMockFn.mockRestore();
   });
 
-  it('creates a nod epool with default options', async () => {
+  it('creates a node pool with default options', async () => {
     const createNodePoolMockFn = jest.spyOn(NodePoolUtils, 'createNodePool');
     createNodePoolMockFn.mockResolvedValue({
       nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,

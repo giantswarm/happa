@@ -22,6 +22,38 @@ interface IGlobalConfig {
   sentryReleaseVersion: string;
   sentryDebug: boolean;
   sentrySampleRate: number;
+  info: {
+    general: {
+      provider: import('shared/types').PropertiesOf<
+        typeof import('shared/constants').Providers
+      >;
+      installationName: string;
+      availabilityZones: {
+        default: number;
+        max: number;
+        zones: string[];
+      };
+      dataCenter: string;
+      kubernetesVersions: {
+        minorVersion: string;
+        eolDate: string;
+      }[];
+    };
+    workers: {
+      countPerCluster: {
+        max: number;
+        default: number;
+      };
+      instanceType: {
+        options: string[];
+        default: string;
+      };
+      vmSize: {
+        options: string[];
+        default: string;
+      };
+    };
+  };
 }
 
 interface IFeatureFlags {

@@ -14,13 +14,19 @@ api:
   address: ""
 
 aws:
+  availabilityZones: []
   instance:
     capabilities: {}
+    allowed: []
+    default: ""
 
 azure:
+  availabilityZones: []
   vm:
     vmSize:
       capabilities: {}
+      allowed: []
+      default: ""
 
 certificate:
   monitoring:
@@ -53,6 +59,7 @@ managementCluster:
   pipeline: ""
   provider:
     kind: ""
+    region: ""
 
 oidc:
   issuerAddress: ""

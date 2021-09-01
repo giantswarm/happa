@@ -10,7 +10,6 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { IState } from 'stores/state';
 
 import {
   Cluster,
@@ -518,22 +517,17 @@ export function getProviderNodePoolLocation(
   }
 }
 
-// TODO(axbarsan): Get this info from the environment, rather than the info response.
-export function getSupportedAvailabilityZones(
-  state: IState
-): {
+export function getSupportedAvailabilityZones(): {
   minCount: number;
   maxCount: number;
   defaultCount: number;
   all: string[];
 } {
-  const zonesStats = state.main.info.general.availability_zones;
-
   return {
     minCount: 1,
-    maxCount: zonesStats?.max ?? 1,
-    defaultCount: zonesStats?.default ?? 1,
-    all: zonesStats?.zones ?? [],
+    maxCount: window.config.info.general.availabilityZones.max,
+    defaultCount: window.config.info.general.availabilityZones.default,
+    all: window.config.info.general.availabilityZones.zones,
   };
 }
 

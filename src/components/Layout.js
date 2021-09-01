@@ -21,11 +21,7 @@ import {
 import * as featureFlags from 'shared/featureFlags';
 import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
-import {
-  getLoggedInUser,
-  getProvider,
-  selectHasAppAccess,
-} from 'stores/main/selectors';
+import { getLoggedInUser, selectHasAppAccess } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -153,7 +149,7 @@ function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
     user: getLoggedInUser(state),
-    provider: getProvider(state),
+    provider: window.config.info.general.provider,
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,

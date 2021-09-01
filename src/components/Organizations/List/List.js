@@ -60,7 +60,7 @@ function mapStateToProps(state) {
   ).sort((a, b) => a.id.localeCompare(b.id));
 
   const providerSupportsMultiAccount = supportsMultiAccount(
-    state.main.info.general.provider
+    window.config.info.general.provider
   );
 
   return {

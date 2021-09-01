@@ -12,9 +12,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
-import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -86,7 +84,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   }, [providerClusterError]);
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
   const releaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;

@@ -514,25 +514,19 @@ AddNodePool.defaultProps = {
   name: Constants.DEFAULT_NODEPOOL_NAME,
 };
 
-function mapStateToProps(state) {
-  const { availability_zones: AZ } = state.main.info.general;
-  const availabilityZones = AZ?.zones ?? [];
+function mapStateToProps() {
+  const { availabilityZones: AZ } = window.config.info.general;
+  const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
-  const maxAZ = Math.min(AZ?.max ?? 0, 4);
+  const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
-  const provider = state.main.info.general.provider;
+  const provider = window.config.info.general.provider;
 
-  const defaultInstanceType =
-    state.main.info.workers.instance_type &&
-    state.main.info.workers.instance_type.default
-      ? state.main.info.workers.instance_type.default
-      : 'm3.large';
+  const defaultInstanceType = window.config.info.workers.instanceType.default;
 
-  const defaultVmSize =
-    state.main.info.workers.vm_size?.default ??
-    Constants.AZURE_NODEPOOL_DEFAULT_VM_SIZE;
+  const defaultVmSize = window.config.info.workers.vmSize.default;
 
   return {
     availabilityZones,

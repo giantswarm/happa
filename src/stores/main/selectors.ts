@@ -23,11 +23,6 @@ export function getMinHAMastersVersion(state: IState): string {
       break;
   }
 
-  if (state.main.info.features?.ha_masters?.release_version_minimum) {
-    releaseVersion =
-      state.main.info.features.ha_masters.release_version_minimum;
-  }
-
   return releaseVersion;
 }
 
@@ -45,19 +40,15 @@ export function getFirstNodePoolsRelease(state: IState): string {
       break;
   }
 
-  if (state.main.info.features?.nodepools) {
-    releaseVersion = state.main.info.features.nodepools.release_version_minimum;
-  }
-
   return releaseVersion;
 }
 
-export function getAllowedInstanceTypeNames(state: IState): string[] {
-  switch (state.main.info.general.provider) {
+export function getAllowedInstanceTypeNames(): string[] {
+  switch (window.config.info.general.provider) {
     case Providers.AWS:
-      return state.main.info.workers.instance_type?.options ?? [];
+      return window.config.info.workers.instanceType.options;
     case Providers.AZURE:
-      return state.main.info.workers.vm_size?.options ?? [];
+      return window.config.info.workers.vmSize.options;
     default:
       return [];
   }

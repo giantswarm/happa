@@ -20,7 +20,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { getProvider } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
@@ -131,7 +130,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const clusterListClient = useRef(clientFactory());
   const { data: clusterList, error: clusterListError } = useSWR<

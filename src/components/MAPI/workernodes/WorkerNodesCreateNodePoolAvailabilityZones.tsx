@@ -19,9 +19,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import { getProvider } from 'stores/main/selectors';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
 
@@ -79,8 +77,8 @@ const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<IWorkerNodesCreateNod
       .availabilityZones;
   }, [controlPlaneNodeList, controlPlaneNodeListError]);
 
-  const provider = useSelector(getProvider);
-  const azStats = useSelector(getSupportedAvailabilityZones);
+  const provider = window.config.info.general.provider;
+  const azStats = getSupportedAvailabilityZones();
 
   const [azSelector, setAzSelector] = useState(
     AvailabilityZoneSelection.Automatic

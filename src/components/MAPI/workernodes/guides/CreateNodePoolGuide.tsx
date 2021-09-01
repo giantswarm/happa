@@ -8,7 +8,6 @@ import {
   withTemplateNodePool,
 } from 'MAPI/guides/utils';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -43,7 +42,7 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
   nodesMax,
   ...props
 }) => {
-  const context = useSelector(getCurrentInstallationContextName);
+  const context = getCurrentInstallationContextName();
 
   return (
     <CLIGuide

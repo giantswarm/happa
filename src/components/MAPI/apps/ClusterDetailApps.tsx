@@ -20,14 +20,13 @@ import React, {
   useState,
 } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/main/actions';
-import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
@@ -195,7 +194,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     setDetailsModalAppName('');
   };
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
   const hasOptionalIngress = supportsOptionalIngress(provider, releaseVersion);
 
   const userInstalledApps = useMemo(

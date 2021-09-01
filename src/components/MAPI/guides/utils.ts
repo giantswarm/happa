@@ -1,8 +1,7 @@
 import { Constants } from 'shared/constants';
-import { IState } from 'stores/state';
 
-export function getCurrentInstallationContextName(state: IState): string {
-  const codeName = state.main.info.general.installation_name;
+export function getCurrentInstallationContextName(): string {
+  const codeName = window.config.info.general.installationName;
 
   return `gs-${codeName}`;
 }

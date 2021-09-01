@@ -27,6 +27,33 @@ export interface IConfigurationValues {
   FEATURE_MAPI_AUTH: boolean;
   FEATURE_MAPI_CLUSTERS: boolean;
   FEATURE_MONITORING: boolean;
+
+  info: {
+    general: {
+      provider: string;
+      installationName: string;
+      availabilityZones: {
+        default: number;
+        zones: string;
+      };
+      dataCenter: string;
+      kubernetesVersions: string;
+    };
+    workers: {
+      countPerCluster: {
+        max: number;
+        default: number;
+      };
+      instanceType: {
+        options: string;
+        default: string;
+      };
+      vmSize: {
+        options: string;
+        default: string;
+      };
+    };
+  };
 }
 
 /**
@@ -71,6 +98,9 @@ export async function getConfigurationValues(
 
   config.setDefault('feature-monitoring', true);
 
+  config.setDefault('info.general.installationName', 'development');
+  config.setDefault('info.general.dataCenter', 'development');
+
   config.useEnvVariables();
   config.setEnvVariablePrefix('HAPPA');
 
@@ -105,5 +135,32 @@ export async function getConfigurationValues(
     FEATURE_MAPI_AUTH: config.getBoolean('feature-mapi-auth'),
     FEATURE_MAPI_CLUSTERS: config.getBoolean('feature-mapi-clusters'),
     FEATURE_MONITORING: config.getBoolean('feature-monitoring'),
+
+    info: {
+      general: {
+        provider: config.getString('info.general.provider'),
+        installationName: config.getString('info.general.installationName'),
+        availabilityZones: {
+          default: config.getNumber('info.general.availabilityZones.default'),
+          zones: config.getString('info.general.availabilityZones.zones'),
+        },
+        dataCenter: config.getString('info.general.dataCenter'),
+        kubernetesVersions: config.getString('info.general.kubernetesVersions'),
+      },
+      workers: {
+        countPerCluster: {
+          default: config.getNumber('info.workers.countPerCluster.default'),
+          max: config.getNumber('info.workers.countPerCluster.max'),
+        },
+        instanceType: {
+          options: config.getString('info.workers.instanceType.options'),
+          default: config.getString('info.workers.instanceType.default'),
+        },
+        vmSize: {
+          options: config.getString('info.workers.vmSize.options'),
+          default: config.getString('info.workers.vmSize.default'),
+        },
+      },
+    },
   };
 }

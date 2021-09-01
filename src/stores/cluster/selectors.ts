@@ -134,7 +134,7 @@ export const selectCanClusterUpgrade = (clusterID: string) => (
   return canClusterUpgrade(
     cluster.release_version,
     targetVersion,
-    state.main.info.general.provider
+    window.config.info.general.provider
   );
 };
 

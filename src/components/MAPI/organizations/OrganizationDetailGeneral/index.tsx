@@ -13,10 +13,9 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { StatusCodes } from 'shared/constants';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { getProvider } from 'stores/main/selectors';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
@@ -48,7 +47,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const clusterListClient = useRef(clientFactory());
   const {

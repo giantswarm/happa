@@ -343,7 +343,7 @@ class CreateNodePoolsCluster extends Component {
 }
 
 function mapStateToProps(state) {
-  const { availability_zones: AZ, provider } = state.main.info.general;
+  const { availabilityZones: AZ, provider } = window.config.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers

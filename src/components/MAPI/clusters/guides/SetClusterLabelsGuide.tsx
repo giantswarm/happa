@@ -3,7 +3,6 @@ import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -20,7 +19,7 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
   clusterNamespace,
   ...props
 }) => {
-  const context = useSelector(getCurrentInstallationContextName);
+  const context = getCurrentInstallationContextName();
 
   return (
     <CLIGuide

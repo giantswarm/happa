@@ -7,7 +7,7 @@ import { Redirect, Switch, useParams, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiClusters } from 'shared/featureSupport';
-import { getLoggedInUser, getProvider } from 'stores/main/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 
 import OrganizationDetail from './OrganizationDetail';
 
@@ -18,7 +18,7 @@ const Organization: React.FC<IOrganizationProps> = () => {
   const match = useRouteMatch();
 
   const user = useSelector(getLoggedInUser)!;
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   return (
     <Breadcrumb

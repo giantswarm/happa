@@ -5,7 +5,7 @@ import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
+import { Providers, StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { getNumberOfNodes } from 'stores/cluster/utils';
 import {
@@ -29,6 +29,16 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 const minNodesCount = 3;
+
+const originalProvider = window.config.info.general.provider;
+
+beforeAll(() => {
+  window.config.info.general.provider = Providers.KVM;
+});
+
+afterAll(() => {
+  window.config.info.general.provider = originalProvider;
+});
 
 beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(KVMInfoResponse);

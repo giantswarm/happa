@@ -90,7 +90,7 @@ export class ConfigurationPlugin implements webpack.WebpackPluginInstance {
     // Template the file with the configuration values.
     const transformedContents = await templateIndex(
       contents,
-      this.configurationValues
+      this.configurationValues as IConfigurationValues
     );
 
     logger.info('Emitting configuration file asset');

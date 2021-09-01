@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { getProvider } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
@@ -33,7 +32,7 @@ const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const organizations = useSelector(selectOrganizations());
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const client = useHttpClient();
   const auth = useAuthProvider();
