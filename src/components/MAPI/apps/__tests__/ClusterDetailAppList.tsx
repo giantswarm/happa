@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/dom';
+import { screen } from '@testing-library/react';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
