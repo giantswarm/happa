@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import UsersModal from './UsersModal';
@@ -22,20 +21,6 @@ const DeleteUserModal = ({ forUser, isLoading, ...props }) => {
 
 DeleteUserModal.defaultProps = {
   forUser: '',
-};
-
-DeleteUserModal.propTypes = {
-  show: PropTypes.bool,
-  title: PropTypes.string,
-  onClose: PropTypes.func,
-  onConfirm: PropTypes.func,
-  isLoading: PropTypes.bool,
-  children: PropTypes.node,
-  confirmText: PropTypes.string,
-  confirmDisabled: PropTypes.bool,
-  confirmHidden: PropTypes.bool,
-  cancelText: PropTypes.string,
-  forUser: PropTypes.string,
 };
 
 export default DeleteUserModal;

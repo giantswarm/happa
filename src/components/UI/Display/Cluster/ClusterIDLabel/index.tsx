@@ -1,6 +1,5 @@
 import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -123,12 +122,6 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
       </Wrapper>
     </Keyboard>
   );
-};
-
-ClusterIDLabel.propTypes = {
-  clusterID: PropTypes.string.isRequired,
-  copyEnabled: PropTypes.bool,
-  variant: PropTypes.oneOf(Object.values(ClusterIDLabelType)),
 };
 
 ClusterIDLabel.defaultProps = {

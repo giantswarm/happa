@@ -90,9 +90,7 @@ describe('OrganizationDetailGeneral', () => {
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
 
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],
@@ -135,9 +133,7 @@ describe('OrganizationDetailGeneral', () => {
       });
 
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],
@@ -167,9 +163,7 @@ describe('OrganizationDetailGeneral', () => {
 
   it('can cancel deletion', async () => {
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [],
@@ -196,9 +190,7 @@ describe('OrganizationDetailGeneral', () => {
 
   it('cannot delete the organization if there are still clusters that belong to it', async () => {
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
         apiVersion: 'cluster.x-k8s.io/v1alpha3',
         items: [
@@ -277,9 +269,7 @@ describe('OrganizationDetailGeneral', () => {
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
 
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.NotFound);
 
     render(
@@ -307,9 +297,7 @@ describe('OrganizationDetailGeneral', () => {
     jest.setTimeout(10000);
 
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
 
     nock(window.config.mapiEndpoint)
@@ -486,9 +474,7 @@ describe('OrganizationDetailGeneral', () => {
     jest.setTimeout(10000);
 
     nock(window.config.mapiEndpoint)
-      .get(
-        '/apis/cluster.x-k8s.io/v1alpha3/clusters/?labelSelector=giantswarm.io%2Forganization%3Dorg1'
-      )
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
 
     render(

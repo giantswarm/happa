@@ -8,7 +8,6 @@ import {
   withFormatting,
   withGetClusters,
 } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -92,12 +91,6 @@ const InspectClusterReleaseGuide: React.FC<IInspectClusterReleaseGuideProps> = (
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-InspectClusterReleaseGuide.propTypes = {
-  clusterName: PropTypes.string.isRequired,
-  clusterNamespace: PropTypes.string.isRequired,
-  releaseVersion: PropTypes.string.isRequired,
 };
 
 export default InspectClusterReleaseGuide;

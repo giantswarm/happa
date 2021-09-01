@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -37,10 +36,6 @@ const WorkerNodesNodePoolListPlaceholder: React.FC<IWorkerNodesNodePoolListPlace
       </Box>
     </Box>
   );
-};
-
-WorkerNodesNodePoolListPlaceholder.propTypes = {
-  onCreateButtonClick: PropTypes.func,
 };
 
 export default WorkerNodesNodePoolListPlaceholder;

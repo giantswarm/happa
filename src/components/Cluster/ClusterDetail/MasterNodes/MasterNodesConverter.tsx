@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -67,12 +66,6 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
       </ButtonWrapper>
     </div>
   );
-};
-
-MasterNodeConverter.propTypes = {
-  onApply: PropTypes.func,
-  onCancel: PropTypes.func,
-  isLoading: PropTypes.bool,
 };
 
 MasterNodeConverter.defaultProps = {

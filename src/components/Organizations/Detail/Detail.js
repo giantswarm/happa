@@ -1,13 +1,11 @@
 import Cluster from 'Cluster/Cluster';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
-import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
@@ -60,19 +58,6 @@ class DetailIndex extends React.Component {
   }
 }
 
-DetailIndex.propTypes = {
-  dispatch: PropTypes.func,
-  match: PropTypes.object,
-  organization: PropTypes.object,
-  clusters: PropTypes.array,
-  membersForTable: PropTypes.array,
-  credentials: PropTypes.array,
-  loadingCredentials: PropTypes.bool,
-  showCredentialsForm: PropTypes.bool,
-  supportsMultiAccount: PropTypes.bool,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-};
-
 function mapStateToProps(state, ownProps) {
   const allClusters = state.entities.clusters.items;
   const organizationParam = ownProps.match.params.orgId;
@@ -90,7 +75,7 @@ function mapStateToProps(state, ownProps) {
     });
   });
 
-  const { provider } = state.main.info.general;
+  const { provider } = window.config.info.general;
   const providerSupportsMultiAccount = supportsMultiAccount(provider);
 
   return {

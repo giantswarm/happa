@@ -39,6 +39,4 @@ const AppListAppLoadingPlacholder: React.FC<IAppListAppLoadingPlacholderProps> =
   );
 };
 
-AppListAppLoadingPlacholder.propTypes = {};
-
 export default React.memo(AppListAppLoadingPlacholder);

@@ -1,6 +1,5 @@
 import { gettingStartedURL, homeURL, kubernetesResourcesURL } from 'lib/docs';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
@@ -100,10 +99,6 @@ const NextSteps = (props) => {
       </>
     </Breadcrumb>
   );
-};
-
-NextSteps.propTypes = {
-  match: PropTypes.object,
 };
 
 export default NextSteps;

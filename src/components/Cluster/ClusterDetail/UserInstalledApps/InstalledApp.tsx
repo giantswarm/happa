@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
@@ -88,18 +87,6 @@ const InstalledApp: React.FC<IInstalledAppProps> = ({
       </Box>
     </Wrapper>
   );
-};
-
-InstalledApp.propTypes = {
-  name: PropTypes.string.isRequired,
-  version: PropTypes.string.isRequired,
-  onIconError: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired,
-  logoUrl: PropTypes.string,
-  deletionTimestamp: PropTypes.string,
-  iconErrors: PropTypes.object as PropTypes.Requireable<
-    Record<string, boolean>
-  >,
 };
 
 export default InstalledApp;

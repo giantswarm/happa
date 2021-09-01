@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import ImgWithFallback from 'shared/ImgWithFallback';
 import styled from 'styled-components';
@@ -71,11 +70,6 @@ const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
       {...rest}
     />
   );
-};
-
-Icon.propTypes = {
-  name: PropTypes.string.isRequired,
-  src: PropTypes.string,
 };
 
 export default Icon;

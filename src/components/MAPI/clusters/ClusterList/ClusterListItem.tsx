@@ -17,12 +17,11 @@ import {
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -67,11 +66,13 @@ interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster?: capiv1alpha3.ICluster;
   releases?: releasev1alpha1.IRelease[];
+  organizations?: Record<string, IOrganization>;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
   releases,
+  organizations,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -81,9 +82,15 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const releaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;
-  const organization = cluster
-    ? capiv1alpha3.getClusterOrganization(cluster)
-    : undefined;
+
+  const organization = useMemo(() => {
+    if (!organizations || !cluster) return undefined;
+
+    const org = capiv1alpha3.getClusterOrganization(cluster);
+    if (!org) return undefined;
+
+    return Object.values(organizations).find((o) => o.name === org)?.id;
+  }, [cluster, organizations]);
 
   const creationDate = cluster?.metadata.creationTimestamp;
   const deletionDate = cluster?.metadata.deletionTimestamp;
@@ -163,7 +170,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       );
 
   const isAdmin = useSelector(getUserIsAdmin);
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const workerNodesCount = getWorkerNodesCount(nodePoolList?.items);
 
@@ -308,11 +315,6 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       </Card>
     </StyledLink>
   );
-};
-
-ClusterListItem.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
-  releases: PropTypes.array,
 };
 
 export default ClusterListItem;

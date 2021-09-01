@@ -52,12 +52,12 @@ exports[`MultiSelect renders a simple input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 hvOgkV"
+                class="StyledIcon-sc-ofa7kd-0 cDxyWQ"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />

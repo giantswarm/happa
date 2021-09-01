@@ -1,8 +1,7 @@
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { Constants, Providers } from 'shared/constants';
+import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import Button from 'UI/Controls/Button';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
@@ -132,14 +131,5 @@ class ReleaseDetailsModal extends React.Component {
     );
   }
 }
-
-ReleaseDetailsModal.propTypes = {
-  release: PropTypes.object,
-  isAdmin: PropTypes.bool,
-  releases: PropTypes.object,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  showUpgradeModal: PropTypes.func,
-  setUpgradeVersion: PropTypes.func,
-};
 
 export default ReleaseDetailsModal;

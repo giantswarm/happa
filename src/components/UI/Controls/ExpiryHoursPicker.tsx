@@ -4,7 +4,6 @@ import format from 'date-fns/fp/format';
 import startOfDay from 'date-fns/fp/startOfDay';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
@@ -56,12 +55,6 @@ class ExpiryHoursPicker extends React.Component<
   IExpiryHoursPickerProps,
   IExpiryHoursPickerState
 > {
-  public static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    initialValue: PropTypes.number.isRequired,
-    maxSafeValueHours: PropTypes.number.isRequired,
-  };
-
   constructor(props: IExpiryHoursPickerProps) {
     super(props);
 

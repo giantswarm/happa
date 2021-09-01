@@ -2,9 +2,7 @@ import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -19,7 +17,7 @@ const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
   clusterNamespace,
   ...props
 }) => {
-  const context = useSelector(getCurrentInstallationContextName);
+  const context = getCurrentInstallationContextName();
 
   return (
     <CLIGuide
@@ -82,10 +80,6 @@ const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-ModifyNodePoolGuide.propTypes = {
-  clusterNamespace: PropTypes.string.isRequired,
 };
 
 export default ModifyNodePoolGuide;

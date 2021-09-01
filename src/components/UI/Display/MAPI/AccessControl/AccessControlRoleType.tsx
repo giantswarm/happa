@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 interface IAccessControlRoleTypeProps
@@ -29,10 +28,6 @@ const AccessControlRoleType: React.FC<IAccessControlRoleTypeProps> = ({
       <Text>{message}</Text>
     </Box>
   );
-};
-
-AccessControlRoleType.propTypes = {
-  namespace: PropTypes.string,
 };
 
 AccessControlRoleType.defaultProps = {

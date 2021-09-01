@@ -1,6 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -163,11 +162,6 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
       {!isLoading && <Text>{additionalText}</Text>}
     </Wrapper>
   );
-};
-
-InstallIngressButton.propTypes = {
-  // @ts-ignore
-  cluster: PropTypes.object.isRequired,
 };
 
 export default InstallIngressButton;

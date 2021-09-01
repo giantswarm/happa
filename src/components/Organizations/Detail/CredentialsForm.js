@@ -2,7 +2,6 @@ import {
   cloudProviderAccountSetupAwsURL,
   cloudProviderAccountSetupAzureURL,
 } from 'lib/docs';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Providers } from 'shared/constants';
 import Button from 'UI/Controls/Button';
@@ -216,12 +215,5 @@ class CredentialsForm extends React.Component {
     return null;
   }
 }
-
-CredentialsForm.propTypes = {
-  provider: PropTypes.string,
-  formData: PropTypes.object,
-  onSubmit: PropTypes.func,
-  organizationName: PropTypes.string,
-};
 
 export default CredentialsForm;

@@ -1,6 +1,6 @@
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Meta, Story } from '@storybook/react/types-6-0';
-import React from 'react';
+import React, { ComponentPropsWithoutRef } from 'react';
 
 import { CodeBlock, Output, Prompt } from './CodeBlock';
 
@@ -11,7 +11,9 @@ export default {
   argTypes: {},
 } as Meta;
 
-const Template: Story = (args) => <CodeBlock {...args} />;
+const Template: Story<ComponentPropsWithoutRef<typeof CodeBlock>> = (args) => (
+  <CodeBlock {...args} />
+);
 
 export const SinglePrompt = Template.bind({});
 SinglePrompt.args = {

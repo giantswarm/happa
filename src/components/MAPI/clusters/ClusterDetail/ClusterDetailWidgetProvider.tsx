@@ -2,7 +2,6 @@ import { Text } from 'grommet';
 import { ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -147,11 +146,6 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
       </OptionalValue>
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetProvider.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
-  providerCluster: PropTypes.object as PropTypes.Requireable<ProviderCluster>,
 };
 
 export default ClusterDetailWidgetProvider;

@@ -233,6 +233,4 @@ ingress.networking.k8s.io "helloworld" deleted
   );
 };
 
-GettingStartedSimpleExample.propTypes = {};
-
 export default GettingStartedSimpleExample;

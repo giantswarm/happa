@@ -5,7 +5,6 @@ import { Box } from 'grommet';
 import produce from 'immer';
 import { nodePoolsURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
@@ -625,27 +624,6 @@ class V5ClusterDetailTable extends React.Component {
     );
   }
 }
-
-V5ClusterDetailTable.propTypes = {
-  accessCluster: PropTypes.func,
-  cluster: PropTypes.object,
-  credentials: PropTypes.object,
-  dispatch: PropTypes.func,
-  provider: PropTypes.string,
-  region: PropTypes.string,
-  release: PropTypes.object,
-  showUpgradeModal: PropTypes.func,
-  setUpgradeVersion: PropTypes.func,
-  nodePools: PropTypes.array,
-  resources: PropTypes.object,
-  loadingNodePools: PropTypes.bool,
-  clusterIsCreating: PropTypes.bool,
-  clusterIsUpdating: PropTypes.bool,
-  isAdmin: PropTypes.bool,
-  releases: PropTypes.object,
-  labelsIsLoading: PropTypes.bool,
-  labelsErrorMessage: PropTypes.string,
-};
 
 // We use this wrapper function because we want different references for each cluster
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances

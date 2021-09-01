@@ -57,6 +57,4 @@ const AdminLogin: React.FC<IAdminLoginProps> = () => {
   );
 };
 
-AdminLogin.propTypes = {};
-
 export default AdminLogin;

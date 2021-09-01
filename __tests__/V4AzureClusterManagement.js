@@ -5,7 +5,7 @@ import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
+import { Providers, StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { getNumberOfNodes } from 'stores/cluster/utils';
 import {
@@ -31,6 +31,35 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('V4AzureClusterManagement', () => {
   const minNodesCount = 3;
+
+  const originalInfo = window.config.info;
+
+  beforeAll(() => {
+    window.config.info = {
+      ...window.config.info,
+      general: {
+        ...window.config.info.general,
+        availabilityZones: {
+          default: 1,
+          max: 3,
+          zones: ['1', '2', '3'],
+        },
+        provider: Providers.AZURE,
+      },
+      workers: {
+        ...window.config.info.workers,
+        countPerCluster: { max: 0, default: 10 },
+        vmSize: {
+          options: ['Standard_A2_v2'],
+          default: 'Standard_A2_v2',
+        },
+      },
+    };
+  });
+
+  afterAll(() => {
+    window.config.info = originalInfo;
+  });
 
   // Responses to requests
   beforeEach(() => {

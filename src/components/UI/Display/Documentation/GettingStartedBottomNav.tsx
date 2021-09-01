@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 // This is a simple presentational component used at the end of Getting Started
@@ -11,9 +10,5 @@ const GettingStartedBottomNav: React.FC = ({ children }) => (
     {children}
   </Box>
 );
-
-GettingStartedBottomNav.propTypes = {
-  children: PropTypes.node,
-};
 
 export default GettingStartedBottomNav;

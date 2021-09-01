@@ -1,6 +1,5 @@
 import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -131,12 +130,6 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
 
 URIBlock.defaultProps = {
   children: '',
-};
-
-URIBlock.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  title: PropTypes.string,
-  copyContent: PropTypes.string,
 };
 
 export default URIBlock;

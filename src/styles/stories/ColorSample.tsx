@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -48,13 +47,6 @@ const ColorSample: React.FC<IColorSampleProps> = ({
       </Box>
     </Box>
   );
-};
-
-ColorSample.propTypes = {
-  children: PropTypes.node,
-  color: PropTypes.string.isRequired,
-  contrastingColor: PropTypes.string,
-  title: PropTypes.string,
 };
 
 ColorSample.defaultProps = {

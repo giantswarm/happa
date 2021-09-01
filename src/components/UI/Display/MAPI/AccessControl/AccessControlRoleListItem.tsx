@@ -1,5 +1,4 @@
 import { Box, Card, CardBody, CardHeader, Heading, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -98,17 +97,5 @@ const AccessControlRoleListItem = React.forwardRef<
     </StyledCard>
   );
 });
-
-AccessControlRoleListItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  namespace: PropTypes.string.isRequired,
-  active: PropTypes.bool.isRequired,
-  // @ts-expect-error
-  permissions: PropTypes.arrayOf(PropTypes.object.isRequired),
-  // @ts-expect-error
-  groups: PropTypes.object.isRequired,
-  // @ts-expect-error
-  users: PropTypes.object.isRequired,
-};
 
 export default AccessControlRoleListItem;

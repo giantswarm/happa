@@ -2,7 +2,11 @@
   "extends": ["config:js-app"],
   "dependencyDashboard": true,
   "labels": ["dependencies"],
-  "reviewers": ["team:team-biscuit"],
+  "reviewers": [
+    "axbarsan",
+    "marians",
+    "kuosandys"
+  ],
   "packageRules": [
     {
       "matchPackagePrefixes": ["@types/jest", "jest"],
@@ -81,6 +85,10 @@
       "enabled": false
     }
   ],
-  "prConcurrentLimit": 5,
-  "schedule": ["every weekend"]
+  "prConcurrentLimit": 3,
+  "schedule": [
+    "every weekend",
+    "every weekday after 6pm",
+    "every weekday before 6am"
+  ]
 }

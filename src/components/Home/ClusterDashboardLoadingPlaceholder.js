@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import ContentLoader from 'react-content-loader';
 import theme from 'styles/theme';
@@ -23,9 +22,5 @@ const ClusterDashboardLoadingPlaceholder = ({ isV5Cluster }) => (
     )}
   </ContentLoader>
 );
-
-ClusterDashboardLoadingPlaceholder.propTypes = {
-  isV5Cluster: PropTypes.bool,
-};
 
 export default ClusterDashboardLoadingPlaceholder;

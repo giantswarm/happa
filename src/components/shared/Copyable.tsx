@@ -1,6 +1,5 @@
 import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -89,11 +88,6 @@ const Copyable: React.FC<ICopyableProps> = ({ children, copyText }) => {
       </Wrapper>
     </Keyboard>
   );
-};
-
-Copyable.propTypes = {
-  children: PropTypes.node,
-  copyText: PropTypes.string.isRequired,
 };
 
 export default Copyable;

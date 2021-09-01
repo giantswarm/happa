@@ -21,40 +21,12 @@ kind: ConfigMap
 ...
 data:
   ...
-+  feature-login: 'FALSE'
++    feature-login: false
   ...
   `}
 </FileBlock>
 
-2. Map that value to an environmental variable in the Helm `Deployment` template.
-
-This is so the container would know about our flag.
-
-<FileBlock fileName='helm/happa/templates/deployment.yaml'>
-  {`apiVersion: apps/v1
-kind: Deployment
-...
-spec:
-  ...
-  template:
-    ...
-    spec:
-      ...
-      containers:
-      - name: happa
-        ...
-        env:
-        ...
-+        - name: FEATURE_LOGIN
-+          valueFrom:
-+          configMapKeyRef:
-+            name: happa-configmap
-+            key: feature-login
-        ...
-`}
-</FileBlock>
-
-3. Add it to the window object in the index file template.
+2. Add it to the window object in the index file template.
 
 This is where the value gets into our code.
 
@@ -73,22 +45,28 @@ This is where the value gets into our code.
 `}
 </FileBlock>
 
-4. Add it to the container startup script.
+3. Add it to configuration value setup function.
 
 This is so the correct value arrives in the index file when the container starts.
 
-<FileBlock fileName='scripts/start.sh'>
-  {`#!/bin/sh
+<FileBlock fileName='scripts/getConfigurationValues.ts'>
+  {`export interface IConfigurationValues {
 ...
-+ if [ "$FEATURE_LOGIN" = "TRUE" ]; then
-+   sed -i "s|FEATURE_LOGIN: .\*|FEATURE_LOGIN: true,|" /www/index.html
-+ else
-+   sed -i "s|FEATURE_LOGIN: .\*|FEATURE_LOGIN: false,|" /www/index.html
-+ fi
++ FEATURE_LOGIN: boolean;
   ...`}
 </FileBlock>
 
-5. Define the new variable type in the window type definitions.
+<FileBlock fileName='scripts/getConfigurationValues.ts'>
+  {`export async function getConfigurationValues(
+...
+    return {
+        ...
++        FEATURE_LOGIN: config.getBoolean('feature-login'),
+    };
+  ...`}
+</FileBlock>
+
+4. Define the new variable type in the window type definitions.
 
 This is so TypeScript would know about our new flag.
 
@@ -102,7 +80,7 @@ interface IFeatureFlags {
 ...`}
 </FileBlock>
 
-6. Add it in the internal feature flags data structure.
+5. Add it in the internal feature flags data structure.
 
 This what you'll use in your code.
 
@@ -148,23 +126,7 @@ export const flags: Record<Feature, IFeatureFlag> = {
 ...`}
 </FileBlock>
 
-7. Add it to the webpack configuration.
-
-This is the default value that will be used during development.
-
-<FileBlock fileName='webpack.common.js'>
-  {`...
-const makeFeatureFlags = () => {
-    const defaults = {
-            ...
-+        FEATURE_LOGIN: false,
-            ...
-    };
-    ...
-...`}
-</FileBlock>
-
-8. Add it to the jest configuration.
+6. Add it to the jest configuration.
 
 This is the default value that will be used in tests.
 
@@ -181,28 +143,7 @@ module.exports = {
 ...`}
 </FileBlock>
 
-9. Still there? Add it to the Circle CI config file.
-
-<FileBlock fileName='.circleci/config.yml'>
-  {`...
-workflows:
-  ...
-  jobs:
-    ...
-    build-container:
-      ...
-      - run:
-          name: Launch container for tests
-          command: |
-            set -x
-            docker run --name happa-branch \\
-              ...
-              -e FEATURE_LOGIN=TRUE \\
-              ...
-...`}
-</FileBlock>
-
-10. Use it in code
+7. Use it in code
 
 <FileBlock fileName='YourFile.ts'>
   {`import * as featureFlags from 'shared/featureFlags';

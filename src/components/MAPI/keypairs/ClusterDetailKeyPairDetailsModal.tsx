@@ -1,7 +1,6 @@
 import { Box, Text } from 'grommet';
 import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
 import GenericModal from 'Modals/GenericModal';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -109,18 +108,6 @@ const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsMod
       </Box>
     </GenericModal>
   );
-};
-
-ClusterDetailKeyPairDetailsModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  commonName: PropTypes.string,
-  organizations: PropTypes.string,
-  creationDate: PropTypes.string,
-  expirationDate: PropTypes.string,
-  isExpiringSoon: PropTypes.bool,
-  description: PropTypes.string,
-  visible: PropTypes.bool,
 };
 
 export default ClusterDetailKeyPairDetailsModal;

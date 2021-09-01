@@ -1,5 +1,4 @@
 import { FormField, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 interface IInputGroupProps
@@ -26,10 +25,5 @@ const InputGroup = React.forwardRef<HTMLDivElement, IInputGroupProps>(
     );
   }
 );
-
-InputGroup.propTypes = {
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  contentProps: PropTypes.object,
-};
 
 export default InputGroup;

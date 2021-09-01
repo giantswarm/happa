@@ -4,7 +4,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import PropTypes from 'prop-types';
 import React, { useEffect, useReducer } from 'react';
 import useSWR from 'swr';
 import AccessControlSubjectSet, {
@@ -145,6 +144,11 @@ const mapValueToSetItem = (stateValue: IStateValue) => (
     isLoading,
   };
 };
+
+const compareSubjects = (
+  a: ui.IAccessControlRoleSubjectItem,
+  b: ui.IAccessControlRoleSubjectItem
+) => a.name.localeCompare(b.name);
 
 const formatAccountNames = (accountNames: string[]): string => {
   return accountNames
@@ -377,9 +381,11 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   }, [serviceAccountSuggestionsError]);
 
-  const groupCollection = Object.values(groups);
-  const userCollection = Object.values(users);
-  const serviceAccountCollection = Object.values(serviceAccounts);
+  const groupCollection = Object.values(groups).sort(compareSubjects);
+  const userCollection = Object.values(users).sort(compareSubjects);
+  const serviceAccountCollection = Object.values(serviceAccounts).sort(
+    compareSubjects
+  );
 
   const groupType = state[ui.AccessControlSubjectTypes.Group];
   const userType = state[ui.AccessControlSubjectTypes.User];
@@ -528,21 +534,6 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       )}
     </Box>
   );
-};
-
-AccessControlRoleSubjects.propTypes = {
-  roleName: PropTypes.string.isRequired,
-  // @ts-expect-error
-  groups: PropTypes.object.isRequired,
-  // @ts-expect-error
-  users: PropTypes.object.isRequired,
-  // @ts-expect-error
-  serviceAccounts: PropTypes.object.isRequired,
-  namespace: PropTypes.string.isRequired,
-  permissions: (PropTypes.object as PropTypes.Requireable<ui.IAccessControlPermissions>)
-    .isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
 };
 
 export default AccessControlRoleSubjects;

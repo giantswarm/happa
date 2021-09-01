@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
@@ -137,11 +136,6 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
       />
     </Wrapper>
   );
-};
-
-UserDropdown.propTypes = {
-  // @ts-expect-error
-  user: PropTypes.object.isRequired,
 };
 
 export default UserDropdown;

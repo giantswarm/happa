@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
 import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
@@ -166,25 +165,6 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
       )}
     </div>
   );
-};
-
-AZSelection.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  onUpdateZones: PropTypes.func.isRequired,
-  variant: PropTypes.number,
-  value: PropTypes.number,
-  uniqueIdentifier: PropTypes.string,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  baseActionName: PropTypes.string,
-
-  allZones: PropTypes.arrayOf(PropTypes.string.isRequired),
-  minNumOfZones: PropTypes.number,
-  maxNumOfZones: PropTypes.number,
-  defaultNumOfZones: PropTypes.number,
-
-  numOfZones: PropTypes.number,
-
-  selectedZones: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AZSelection.defaultProps = {

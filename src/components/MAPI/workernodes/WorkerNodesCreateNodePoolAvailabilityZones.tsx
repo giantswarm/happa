@@ -10,7 +10,7 @@ import {
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { computeControlPlaneNodesStats } from 'MAPI/clusters/ClusterDetail/utils';
-import { Cluster, ControlPlaneNodeList, NodePool } from 'MAPI/types';
+import { Cluster, ControlPlaneNodeList } from 'MAPI/types';
 import {
   determineRandomAZs,
   fetchMasterListForCluster,
@@ -18,11 +18,8 @@ import {
   getSupportedAvailabilityZones,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import { getProvider } from 'stores/main/selectors';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
 
@@ -80,8 +77,8 @@ const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<IWorkerNodesCreateNod
       .availabilityZones;
   }, [controlPlaneNodeList, controlPlaneNodeListError]);
 
-  const provider = useSelector(getProvider);
-  const azStats = useSelector(getSupportedAvailabilityZones);
+  const provider = window.config.info.general.provider;
+  const azStats = getSupportedAvailabilityZones();
 
   const [azSelector, setAzSelector] = useState(
     AvailabilityZoneSelection.Automatic
@@ -169,16 +166,6 @@ const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<IWorkerNodesCreateNod
       )}
     </InputGroup>
   );
-};
-
-WorkerNodesCreateNodePoolAvailabilityZones.propTypes = {
-  id: PropTypes.string.isRequired,
-  nodePool: (PropTypes.object as PropTypes.Requireable<NodePool>).isRequired,
-  cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  autoFocus: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolAvailabilityZones;

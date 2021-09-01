@@ -1,7 +1,6 @@
 import { Text } from 'grommet';
 import { formatDate, relativeDate } from 'lib/helpers';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -47,10 +46,6 @@ const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = (
       </OptionalValue>
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetCreated.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetCreated;

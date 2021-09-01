@@ -52,6 +52,9 @@ export const organizationsExplainedURL =
 export const organizationsNamingConventionsURL =
   'https://docs.giantswarm.io/general/organizations/#naming-conventions';
 
+export const organizationAccessControlWebUI =
+  'https://docs.giantswarm.io/ui-api/web/organizations/access-control/';
+
 export const gsctlCreateKubeconfigURL =
   'https://docs.giantswarm.io/ui-api/gsctl/create-kubeconfig/';
 

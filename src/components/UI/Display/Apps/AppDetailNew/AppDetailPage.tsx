@@ -1,5 +1,4 @@
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React, { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
@@ -390,26 +389,6 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
 
 AppDetail.defaultProps = {
   keywords: [],
-};
-
-AppDetail.propTypes = {
-  selectVersion: PropTypes.func.isRequired,
-  appTitle: PropTypes.string,
-  appIconURL: PropTypes.string,
-  catalogName: PropTypes.string,
-  catalogDescription: PropTypes.string,
-  catalogIcon: PropTypes.string,
-  chartVersion: PropTypes.string,
-  createDate: PropTypes.string,
-  includesVersion: PropTypes.string,
-  description: PropTypes.string,
-  website: PropTypes.string,
-  keywords: PropTypes.arrayOf(PropTypes.string.isRequired),
-  readme: PropTypes.string,
-  readmeURL: PropTypes.string,
-  readmeError: PropTypes.string,
-  installAppModal: PropTypes.element,
-  otherVersions: PropTypes.array,
 };
 
 export default AppDetail;

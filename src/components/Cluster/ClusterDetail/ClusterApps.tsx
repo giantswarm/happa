@@ -1,7 +1,6 @@
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppConstants, Constants } from 'shared/constants';
@@ -321,14 +320,6 @@ const ClusterApps: React.FC<IClusterAppsProps> = ({
       )}
     </>
   );
-};
-
-ClusterApps.propTypes = {
-  clusterId: PropTypes.string.isRequired,
-  release: PropTypes.object as PropTypes.Validator<IRelease>,
-  installedApps: PropTypes.array,
-  showInstalledAppsBlock: PropTypes.bool,
-  hasOptionalIngress: PropTypes.bool,
 };
 
 export default ClusterApps;

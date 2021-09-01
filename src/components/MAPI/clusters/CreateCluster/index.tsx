@@ -16,13 +16,12 @@ import {
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { PropertiesOf } from 'shared/types';
-import { getProvider } from 'stores/main/selectors';
 import { getNamespaceFromOrgName } from 'stores/main/utils';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -176,7 +175,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const { orgId } = match.params;
   const namespace = getNamespaceFromOrgName(orgId);
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const [state, dispatch] = useReducer(
     reducer,
@@ -371,7 +370,5 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     </Breadcrumb>
   );
 };
-
-CreateCluster.propTypes = {};
 
 export default CreateCluster;

@@ -16,12 +16,11 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import ClusterIDLabel, {
@@ -29,7 +28,9 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tab, Tabs } from 'UI/Display/Tabs';
-import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import ViewAndEditName, {
+  ViewAndEditNameVariant,
+} from 'UI/Inputs/ViewEditName';
 
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
@@ -227,7 +228,7 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   };
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
@@ -256,6 +257,7 @@ const ClusterDetail: React.FC<{}> = () => {
                     typeLabel='cluster'
                     onSave={updateDescription}
                     aria-label={value as string}
+                    variant={ViewAndEditNameVariant.Description}
                   />
                 )}
               </OptionalValue>
@@ -311,7 +313,5 @@ const ClusterDetail: React.FC<{}> = () => {
     </DocumentTitle>
   );
 };
-
-ClusterDetail.propTypes = {};
 
 export default ClusterDetail;

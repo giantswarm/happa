@@ -12,11 +12,9 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { getProvider, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR, { mutate } from 'swr';
@@ -65,8 +63,6 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
   cluster,
   ...props
 }) => {
-  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
-
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -109,7 +105,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
     return version;
   }, [releaseList, currentRelease]);
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
   const isAdmin = useSelector(getUserIsAdmin);
 
   const supportedUpgradeVersions: ui.IReleaseVersion[] = useMemo(() => {
@@ -224,11 +220,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
 
       mutate(
         capiv1alpha3.getClusterListKey({
-          labelSelector: {
-            matchingLabels: {
-              [capiv1alpha3.labelOrganization]: orgId,
-            },
-          },
+          namespace: cluster.metadata.namespace!,
         })
       );
 
@@ -330,10 +322,6 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
       )}
     </ClusterDetailWidget>
   );
-};
-
-ClusterDetailWidgetRelease.propTypes = {
-  cluster: PropTypes.object as PropTypes.Requireable<capiv1alpha3.ICluster>,
 };
 
 export default ClusterDetailWidgetRelease;

@@ -1,7 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { V5AddNodePoolRequest } from 'giantswarm';
 import { Providers } from 'shared/constants';
-import { IState } from 'stores/state';
 import { renderWithStore } from 'testUtils/renderUtils';
 
 import AddNodePool from '../AddNodePool';
@@ -9,21 +8,34 @@ import AddNodePool from '../AddNodePool';
 describe('AddNodePool', () => {
   describe('Azure', () => {
     describe('Spot Instances', () => {
-      const defaultState = ({
-        main: {
-          info: {
-            general: {
-              provider: Providers.AZURE,
-              availability_zones: {
-                default: 1,
-                max: 3,
-                zones: ['1', '2', '3'],
-              },
+      const originalInfo = window.config.info;
+
+      beforeAll(() => {
+        window.config.info = {
+          ...window.config.info,
+          general: {
+            ...window.config.info.general,
+            availabilityZones: {
+              default: 1,
+              max: 3,
+              zones: ['1', '2', '3'],
             },
-            workers: {},
+            provider: Providers.AZURE,
           },
-        },
-      } as unknown) as IState;
+          workers: {
+            ...window.config.info.workers,
+            countPerCluster: { max: 0, default: 10 },
+            vmSize: {
+              options: ['Standard_D4s_v3'],
+              default: 'Standard_D4s_v3',
+            },
+          },
+        };
+      });
+
+      afterAll(() => {
+        window.config.info = originalInfo;
+      });
 
       it('does not render the spot instances section if the feature is unsupported', () => {
         const capabilities: IClusterCapabilities = {
@@ -34,15 +46,11 @@ describe('AddNodePool', () => {
           supportsNodePoolSpotInstances: false,
         };
 
-        renderWithStore(
-          AddNodePool,
-          {
-            id: '123sd',
-            capabilities,
-            informParent: jest.fn(),
-          },
-          defaultState
-        );
+        renderWithStore(AddNodePool, {
+          id: '123sd',
+          capabilities,
+          informParent: jest.fn(),
+        });
 
         expect(
           screen.queryByText(/spot virtual machines/i)
@@ -60,15 +68,11 @@ describe('AddNodePool', () => {
 
         const informParentMockFn = jest.fn();
 
-        renderWithStore(
-          AddNodePool,
-          {
-            id: '123sd',
-            capabilities,
-            informParent: informParentMockFn,
-          },
-          defaultState
-        );
+        renderWithStore(AddNodePool, {
+          id: '123sd',
+          capabilities,
+          informParent: informParentMockFn,
+        });
 
         expect(screen.getByText('Spot virtual machines')).toBeInTheDocument();
 
@@ -118,15 +122,11 @@ describe('AddNodePool', () => {
 
         const informParentMockFn = jest.fn();
 
-        renderWithStore(
-          AddNodePool,
-          {
-            id: '123sd',
-            capabilities,
-            informParent: informParentMockFn,
-          },
-          defaultState
-        );
+        renderWithStore(AddNodePool, {
+          id: '123sd',
+          capabilities,
+          informParent: informParentMockFn,
+        });
 
         expect(screen.getByText('Spot virtual machines')).toBeInTheDocument();
 

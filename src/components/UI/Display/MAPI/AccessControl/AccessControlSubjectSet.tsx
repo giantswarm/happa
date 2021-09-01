@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AccessControlSubjectAddForm from 'UI/Display/MAPI/AccessControl/AccessControlSubjectAddForm';
 
@@ -20,6 +19,7 @@ export interface IAccessControlSubjectSetRenderer
   name: string;
   isEditable: boolean;
   isLoading: boolean;
+  isNewlyAdded: boolean;
   onDelete: () => void;
 }
 
@@ -86,6 +86,8 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
     return '';
   };
 
+  const [newlyAddedSubjects, setNewlyAddedSubjects] = useState<string[]>([]);
+
   const handleAdd = (newValue: string[]) => {
     const error = validateSubjects(newValue);
     if (error) {
@@ -94,6 +96,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
       return;
     }
 
+    setNewlyAddedSubjects(newValue);
     onAdd(newValue);
   };
 
@@ -105,6 +108,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
             name,
             isEditable: permissions.canDelete && isEditable,
             isLoading: isItemLoading,
+            isNewlyAdded: newlyAddedSubjects.includes(name),
             onDelete: () => onDeleteItem(name),
           })}
         </React.Fragment>
@@ -124,20 +128,6 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
       )}
     </Box>
   );
-};
-
-AccessControlSubjectSet.propTypes = {
-  // @ts-expect-error
-  items: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  permissions: (PropTypes.object as PropTypes.Requireable<IAccessControlSubjectPermissions>)
-    .isRequired,
-  renderItem: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onToggleAdding: PropTypes.func.isRequired,
-  onDeleteItem: PropTypes.func.isRequired,
-  isAdding: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  inputSuggestions: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AccessControlSubjectSet.defaultProps = {

@@ -5,13 +5,11 @@ import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
 import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
-import { Providers } from 'shared/constants';
 import {
   AccountSettingsRoutes,
   AppsRoutes,
@@ -23,11 +21,7 @@ import {
 import * as featureFlags from 'shared/featureFlags';
 import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
 import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
-import {
-  getLoggedInUser,
-  getProvider,
-  selectHasAppAccess,
-} from 'stores/main/selectors';
+import { getLoggedInUser, selectHasAppAccess } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -151,23 +145,11 @@ class Layout extends React.Component {
   }
 }
 
-Layout.propTypes = {
-  user: PropTypes.object,
-  provider: PropTypes.oneOf(Object.values(Providers)),
-  organizations: PropTypes.object,
-  selectedOrganization: PropTypes.string,
-  dispatch: PropTypes.func,
-  catalogs: PropTypes.object,
-  firstLoadComplete: PropTypes.bool,
-  authProvider: PropTypes.object,
-  hasAppAccess: PropTypes.bool,
-};
-
 function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
     user: getLoggedInUser(state),
-    provider: getProvider(state),
+    provider: window.config.info.general.provider,
     selectedOrganization: state.main.selectedOrganization,
     catalogs: state.entities.catalogs,
     firstLoadComplete: state.main.firstLoadComplete,

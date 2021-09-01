@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -40,11 +39,6 @@ const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<IReleaseDetailsModalUpg
       {isBeta && <ReleaseDetailsModalUpgradeOptionsBetaLabel />}
     </span>
   );
-};
-
-ReleaseDetailsModalUpgradeOptionsVersion.propTypes = {
-  version: PropTypes.string.isRequired,
-  isBeta: PropTypes.bool.isRequired,
 };
 
 export default ReleaseDetailsModalUpgradeOptionsVersion;

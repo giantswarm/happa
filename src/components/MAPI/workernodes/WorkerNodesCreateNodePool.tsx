@@ -25,12 +25,9 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import PropTypes from 'prop-types';
 import React, { useReducer } from 'react';
-import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { getProvider } from 'stores/main/selectors';
 import { supportsNodePoolSpotInstances } from 'stores/nodepool/utils';
 import Button from 'UI/Controls/Button';
 
@@ -185,7 +182,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   onCancel,
   ...props
 }) => {
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const [state, dispatch] = useReducer(
     reducer,
@@ -382,14 +379,6 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       </Keyboard>
     </Collapsible>
   );
-};
-
-WorkerNodesCreateNodePool.propTypes = {
-  cluster: (PropTypes.object as PropTypes.Requireable<Cluster>).isRequired,
-  providerCluster: (PropTypes.object as PropTypes.Requireable<ProviderCluster>)
-    .isRequired,
-  id: PropTypes.string.isRequired,
-  onCancel: PropTypes.func,
 };
 
 export default WorkerNodesCreateNodePool;

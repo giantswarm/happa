@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import AvailabilityZonesLabel from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
 import NotAvailable from 'UI/Display/NotAvailable';
@@ -32,14 +31,6 @@ AvailabilityZonesLabels.defaultProps = {
   labelsChecked: [],
   isMaxReached: false,
   isRadioButtons: false,
-};
-
-AvailabilityZonesLabels.propTypes = {
-  zones: PropTypes.arrayOf(PropTypes.string),
-  onToggleChecked: PropTypes.func,
-  labelsChecked: PropTypes.array,
-  isMaxReached: PropTypes.bool,
-  isRadioButtons: PropTypes.bool,
 };
 
 export default AvailabilityZonesLabels;

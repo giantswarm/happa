@@ -23,6 +23,4 @@ const ReleaseDetailsModalUpgradeOptionsBetaLabel: React.FC<IReleaseDetailsModalU
   );
 };
 
-ReleaseDetailsModalUpgradeOptionsBetaLabel.propTypes = {};
-
 export default ReleaseDetailsModalUpgradeOptionsBetaLabel;

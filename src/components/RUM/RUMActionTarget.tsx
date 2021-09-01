@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { ReactElement } from 'react';
 
 interface IRUMActionTargetProps {
@@ -24,11 +23,6 @@ const RUMActionTarget: React.FC<IRUMActionTargetProps> = ({
   });
 
   return React.Children.only(newChildren);
-};
-
-RUMActionTarget.propTypes = {
-  name: PropTypes.string.isRequired,
-  children: PropTypes.element.isRequired,
 };
 
 export default RUMActionTarget;

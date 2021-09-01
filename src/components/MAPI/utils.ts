@@ -10,7 +10,6 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { IState } from 'stores/state';
 
 import {
   Cluster,
@@ -259,34 +258,20 @@ export async function fetchClusterList(
   httpClient: IHttpClient,
   auth: IOAuth2Provider,
   _provider: PropertiesOf<typeof Providers>,
-  organizationName?: string
+  namespace?: string
 ): Promise<ClusterList> {
-  let getOptions: capiv1alpha3.IGetClusterListOptions = {};
-
-  if (organizationName) {
-    getOptions = {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
-      },
-    };
-  }
+  const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
 
   return capiv1alpha3.getClusterList(httpClient, auth, getOptions);
 }
 
 export function fetchClusterListKey(
   _provider: PropertiesOf<typeof Providers>,
-  organizationName?: string
-): string {
-  let getOptions: capiv1alpha3.IGetClusterListOptions = {};
+  namespace?: string
+): string | null {
+  if (typeof namespace === 'undefined') return null;
 
-  if (organizationName) {
-    getOptions = {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
-      },
-    };
-  }
+  const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
 
   return capiv1alpha3.getClusterListKey(getOptions);
 }
@@ -532,22 +517,17 @@ export function getProviderNodePoolLocation(
   }
 }
 
-// TODO(axbarsan): Get this info from the environment, rather than the info response.
-export function getSupportedAvailabilityZones(
-  state: IState
-): {
+export function getSupportedAvailabilityZones(): {
   minCount: number;
   maxCount: number;
   defaultCount: number;
   all: string[];
 } {
-  const zonesStats = state.main.info.general.availability_zones;
-
   return {
     minCount: 1,
-    maxCount: zonesStats?.max ?? 1,
-    defaultCount: zonesStats?.default ?? 1,
-    all: zonesStats?.zones ?? [],
+    maxCount: window.config.info.general.availabilityZones.max,
+    defaultCount: window.config.info.general.availabilityZones.default,
+    all: window.config.info.general.availabilityZones.zones,
   };
 }
 

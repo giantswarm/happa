@@ -11,7 +11,6 @@ import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
 import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
-import preloginState from 'testUtils/preloginState';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import * as CreateClusterUtils from '../../utils';
@@ -29,29 +28,10 @@ function getComponent(
     </SWRConfig>
   );
 
-  const state = {
-    ...preloginState,
-    main: {
-      ...preloginState.main,
-      info: {
-        ...preloginState.main.info,
-        general: {
-          ...preloginState.main.info.general,
-          availability_zones: {
-            default: 1,
-            max: 3,
-            zones: ['1', '2', '3'],
-          },
-          provider: Providers.AZURE,
-        },
-      },
-    },
-  };
-
   return getComponentWithStore(
     Component,
     props,
-    state,
+    undefined,
     undefined,
     history,
     auth
@@ -74,6 +54,27 @@ generateUIDMockFn.mockReturnValue(
 );
 
 describe('ClusterCreate', () => {
+  const originalInfo = window.config.info;
+
+  beforeAll(() => {
+    window.config.info = {
+      ...window.config.info,
+      general: {
+        ...window.config.info.general,
+        availabilityZones: {
+          default: 1,
+          max: 3,
+          zones: ['1', '2', '3'],
+        },
+        provider: Providers.AZURE,
+      },
+    };
+  });
+
+  afterAll(() => {
+    window.config.info = originalInfo;
+  });
+
   afterEach(() => {
     cache.clear();
   });
@@ -151,7 +152,7 @@ describe('ClusterCreate', () => {
 
     // Has the latest version selected by default.
     expect(
-      await screen.findByLabelText('The currently selected version is 15.0.0')
+      await screen.findByLabelText('Release version: 15.0.0')
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('Available releases'));

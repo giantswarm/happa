@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import NumberPicker from 'UI/Inputs/NumberPicker';
@@ -103,12 +102,6 @@ export default function AvailabilityZonesParser({
   );
 }
 
-AvailabilityZonesParser.propTypes = {
-  max: PropTypes.number,
-  min: PropTypes.number,
-  defaultValue: PropTypes.number,
-  zones: PropTypes.array,
-  updateAZValuesInParent: PropTypes.func,
-  isLabels: PropTypes.bool,
-  isRadioButtons: PropTypes.bool,
+AvailabilityZonesParser.defaultProps = {
+  isRadioButtons: false,
 };

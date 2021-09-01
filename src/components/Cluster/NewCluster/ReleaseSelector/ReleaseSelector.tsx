@@ -1,6 +1,5 @@
 import { Box, Keyboard, Text } from 'grommet';
 import { compare } from 'lib/semver';
-import PropTypes from 'prop-types';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants } from 'shared/constants';
@@ -10,13 +9,9 @@ import {
   isPreRelease,
 } from 'stores/releases/utils';
 import styled from 'styled-components';
-import {
-  ListToggler,
-  SelectedDescription,
-  SelectedItem,
-  SelectedWrapper,
-} from 'UI/Controls/ExpandableSelector/Selector';
-import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import { Dot } from 'styles';
+import { ListToggler } from 'UI/Controls/ExpandableSelector/Selector';
+import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 import {
   Table,
@@ -43,9 +38,8 @@ function getLatestReleaseVersion(
   return releaseVersions[0];
 }
 
-const K8sReleaseComponentLabel = styled(ReleaseComponentLabel)`
-  margin-left: ${({ theme }) => theme.spacingPx}px;
-  margin-bottom: 0;
+const StyledDot = styled(Dot)`
+  padding: 0;
 `;
 
 export interface IReleaseComponent {
@@ -184,20 +178,26 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
 
   return (
     <LoadingOverlay loading={isLoading}>
-      <SelectedWrapper>
-        <SelectedItem
-          aria-label={`The currently selected version is ${selectedRelease}`}
-        >
-          <i className='fa fa-version-tag' /> {selectedRelease}
-        </SelectedItem>
-        <SelectedDescription>
-          This release contains:
-          <K8sReleaseComponentLabel
-            name='kubernetes'
-            version={selectedKubernetesVersion}
-          />
-        </SelectedDescription>
-      </SelectedWrapper>
+      <Box
+        direction='row'
+        gap='xsmall'
+        align='center'
+        margin={{ bottom: 'small' }}
+      >
+        <Text aria-label={`Release version: ${selectedRelease}`}>
+          <i
+            className='fa fa-version-tag'
+            role='presentation'
+            aria-hidden='true'
+          />{' '}
+          {selectedRelease}
+        </Text>
+        <StyledDot />
+        <KubernetesVersionLabel
+          hidePatchVersion={false}
+          version={selectedKubernetesVersion}
+        />
+      </Box>
       <div>
         <RUMActionTarget
           name={
@@ -274,20 +274,6 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
       )}
     </LoadingOverlay>
   );
-};
-
-ReleaseSelector.propTypes = {
-  selectRelease: PropTypes.func.isRequired,
-  selectedRelease: PropTypes.string.isRequired,
-  releases: (PropTypes.object as PropTypes.Requireable<
-    IReleaseSelectorProps['releases']
-  >).isRequired,
-  isLoading: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  isAdmin: PropTypes.bool,
-  collapsible: PropTypes.bool,
-  autoSelectLatest: PropTypes.bool,
-  versionFilter: PropTypes.func,
 };
 
 ReleaseSelector.defaultProps = {

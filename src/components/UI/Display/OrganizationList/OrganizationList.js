@@ -1,5 +1,4 @@
 import { clustersForOrg } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -49,13 +48,6 @@ const OrganizationList = ({ supportsMultiAccount, ...props }) => {
       </TableBody>
     </StyledTable>
   );
-};
-
-OrganizationList.propTypes = {
-  getViewURL: PropTypes.func.isRequired,
-  organizations: PropTypes.array,
-  clusters: PropTypes.object,
-  supportsMultiAccount: PropTypes.bool,
 };
 
 export default OrganizationList;

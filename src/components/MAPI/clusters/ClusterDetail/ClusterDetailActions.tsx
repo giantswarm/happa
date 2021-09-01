@@ -18,10 +18,8 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getProvider } from 'stores/main/selectors';
 import useSWR from 'swr';
 import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
@@ -41,7 +39,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     orgId: string;
   }>();
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -228,7 +226,5 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     </DocumentTitle>
   );
 };
-
-ClusterDetailActions.propTypes = {};
 
 export default ClusterDetailActions;

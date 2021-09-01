@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -63,16 +62,6 @@ function ClusterDashboardResourcesV5({
     </div>
   );
 }
-
-ClusterDashboardResourcesV5.propTypes = {
-  cluster: PropTypes.object,
-  isClusterCreating: PropTypes.bool,
-  nodePools: PropTypes.array,
-  resources: PropTypes.object,
-  loadingClusters: PropTypes.bool,
-  loadingNodePools: PropTypes.bool,
-  loadingStatus: PropTypes.bool,
-};
 
 const makeMapStateToProps = () => {
   const mapStateToProps = (state, props) => {

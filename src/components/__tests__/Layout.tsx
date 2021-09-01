@@ -60,6 +60,9 @@ describe('Layout', () => {
             name: 'giantswarm',
           },
           spec: {},
+          status: {
+            namespace: 'org-giantswarm',
+          },
         },
         {
           apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -69,6 +72,9 @@ describe('Layout', () => {
             name: 'test',
           },
           spec: {},
+          status: {
+            namespace: 'org-test',
+          },
         },
       ],
       kind: 'OrganizationList',

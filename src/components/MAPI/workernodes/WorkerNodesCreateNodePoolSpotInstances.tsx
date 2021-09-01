@@ -7,11 +7,8 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Constants } from 'shared/constants';
-import { getProvider } from 'stores/main/selectors';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import InputGroup from 'UI/Inputs/InputGroup';
 
@@ -121,7 +118,7 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
     appendChanges(patchConfig.current);
   };
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const formattedMaxPrice = formatMaxPrice(
     (value as INodePoolSpotInstancesAzure).maxPrice,
@@ -156,15 +153,6 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
       )}
     </InputGroup>
   );
-};
-
-WorkerNodesCreateNodePoolSpotInstances.propTypes = {
-  id: PropTypes.string.isRequired,
-  providerNodePool: (PropTypes.object as PropTypes.Requireable<ProviderNodePool>)
-    .isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolSpotInstances;

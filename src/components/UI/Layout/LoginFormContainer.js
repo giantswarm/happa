@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -22,10 +21,6 @@ const LoginWrapper = styled.div`
 
 const LoginFormContainer = (props) => {
   return <LoginWrapper>{props.children}</LoginWrapper>;
-};
-
-LoginFormContainer.propTypes = {
-  children: PropTypes.any.isRequired,
 };
 
 export default LoginFormContainer;

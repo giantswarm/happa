@@ -14,7 +14,7 @@ const AccessControlRoleDescription: React.FC<IAccessControlRoleDescriptionProps>
         Assign users or groups to roles in order to grant permissions to the
         resources in this organization&apos;s namespace. Learn more in our{' '}
         <Anchor
-          href={docs.homeURL}
+          href={docs.organizationAccessControlWebUI}
           rel='noopener noreferrer'
           target='_blank'
           aria-label='Open documentation in a separate tab'
@@ -31,7 +31,5 @@ const AccessControlRoleDescription: React.FC<IAccessControlRoleDescriptionProps>
     </Box>
   );
 };
-
-AccessControlRoleDescription.propTypes = {};
 
 export default AccessControlRoleDescription;

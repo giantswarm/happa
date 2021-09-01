@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -38,11 +37,6 @@ const AppDetailsBody = (props) => {
       {children}
     </DescriptionList>
   );
-};
-
-AppDetailsBody.propTypes = {
-  description: PropTypes.string,
-  children: PropTypes.any,
 };
 
 export default AppDetailsBody;

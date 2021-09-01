@@ -20,6 +20,4 @@ const NotAvailable: FC<INotAvailableProps> = (props) => {
   );
 };
 
-NotAvailable.propTypes = {};
-
 export default NotAvailable;

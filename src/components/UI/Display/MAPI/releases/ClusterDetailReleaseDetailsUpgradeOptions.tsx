@@ -1,7 +1,6 @@
 import { Box, Keyboard, Paragraph } from 'grommet';
 import ReleaseDetailsModalUpgradeOptionsBetaDisclaimer from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalUpgradeOptionsBetaDisclaimer';
 import ReleaseDetailsModalUpgradeOptionsVersion from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalUpgradeOptionsVersion';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 
 import { IReleaseVersion, ReleaseVersionStatus } from './types';
@@ -91,11 +90,6 @@ const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<IClusterDetailReleaseD
       )}
     </>
   );
-};
-
-ClusterDetailReleaseDetailsUpgradeOptions.propTypes = {
-  supportedVersions: PropTypes.array.isRequired,
-  onVersionClick: PropTypes.func.isRequired,
 };
 
 export default ClusterDetailReleaseDetailsUpgradeOptions;

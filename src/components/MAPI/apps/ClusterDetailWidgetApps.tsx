@@ -114,6 +114,4 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
   );
 };
 
-ClusterDetailWidgetApps.propTypes = {};
-
 export default ClusterDetailWidgetApps;

@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -97,13 +96,6 @@ const Facets: React.FC<IFacetsProps> = (props) => {
       {props.errorMessage && <span>{props.errorMessage}</span>}
     </Wrapper>
   );
-};
-
-Facets.propTypes = {
-  options: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string,
-  isLoading: PropTypes.bool,
 };
 
 export default Facets;

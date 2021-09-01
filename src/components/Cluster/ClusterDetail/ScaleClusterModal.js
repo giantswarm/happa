@@ -2,7 +2,6 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
-import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
@@ -413,21 +412,12 @@ class ScaleClusterModal extends React.Component {
   }
 }
 
-ScaleClusterModal.propTypes = {
-  cluster: PropTypes.object,
-  clusterActions: PropTypes.object,
-  provider: PropTypes.string,
-  maxWorkersPerCluster: PropTypes.number,
-  workerNodesRunning: PropTypes.number,
-  workerNodesDesired: PropTypes.number,
-};
-
-function mapStateToProps(state) {
+function mapStateToProps() {
   const propsToPush = {};
 
-  if (state.main.info.workers.count_per_cluster.max) {
+  if (window.config.info.workers.countPerCluster.max) {
     propsToPush.maxWorkersPerCluster =
-      state.main.info.workers.count_per_cluster.max;
+      window.config.info.workers.countPerCluster.max;
   }
 
   return propsToPush;

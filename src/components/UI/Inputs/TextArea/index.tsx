@@ -1,5 +1,4 @@
 import { FormField, FormFieldProps, TextArea as Input } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 
 interface ITextAreaProps extends React.ComponentPropsWithoutRef<typeof Input> {
@@ -88,21 +87,6 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
     );
   }
 );
-
-TextArea.propTypes = {
-  id: PropTypes.string,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  contentProps: PropTypes.object,
-  formFieldProps: PropTypes.object,
-  disabled: PropTypes.bool,
-  required: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  info: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  help: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  name: PropTypes.string,
-  margin: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  pad: PropTypes.bool,
-};
 
 TextArea.defaultProps = {
   size: 'medium',

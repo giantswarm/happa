@@ -1,6 +1,5 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -384,55 +383,17 @@ CreateRegularCluster.defaultProps = {
   defaultDiskSize: 20,
 };
 
-CreateRegularCluster.propTypes = {
-  clusterName: PropTypes.string,
-  allowSubmit: PropTypes.bool,
-  minAvailabilityZones: PropTypes.number,
-  maxAvailabilityZones: PropTypes.number,
-  maxWorkersPerCluster: PropTypes.number,
-  selectedOrganization: PropTypes.string,
-  selectedRelease: PropTypes.string,
-  dispatch: PropTypes.func,
-  provider: PropTypes.string,
-  defaultInstanceType: PropTypes.string,
-  defaultVMSize: PropTypes.string,
-  defaultCPUCores: PropTypes.number,
-  defaultMemorySize: PropTypes.number,
-  defaultDiskSize: PropTypes.number,
-  closeForm: PropTypes.func,
-  isClusterCreating: PropTypes.bool,
-  clusterCreationStats: PropTypes.object,
-};
-
 function mapStateToProps(state) {
-  const provider = state.main.info.general.provider;
+  const provider = window.config.info.general.provider;
   const propsToPush = {
-    minAvailabilityZones:
-      state.main.info.general.availability_zones?.default ?? 0,
-    maxAvailabilityZones: state.main.info.general.availability_zones?.max ?? 0,
+    minAvailabilityZones: window.config.info.general.availabilityZones.default,
+    maxAvailabilityZones: window.config.info.general.availabilityZones.max,
     clusterCreationStats: state.main.info.stats.cluster_creation_duration,
     provider,
+    defaultInstanceType: window.config.info.workers.instanceType.default,
+    defaultVMSize: window.config.info.workers.vmSize.default,
+    maxWorkersPerCluster: window.config.info.workers.countPerCluster.max,
   };
-
-  if (
-    state.main.info.workers.instance_type &&
-    state.main.info.workers.instance_type.default
-  ) {
-    propsToPush.defaultInstanceType =
-      state.main.info.workers.instance_type.default;
-  }
-
-  if (
-    state.main.info.workers.vm_size &&
-    state.main.info.workers.vm_size.default
-  ) {
-    propsToPush.defaultVMSize = state.main.info.workers.vm_size.default;
-  }
-
-  if (state.main.info.workers.count_per_cluster.max) {
-    propsToPush.maxWorkersPerCluster =
-      state.main.info.workers.count_per_cluster.max;
-  }
 
   return {
     ...propsToPush,

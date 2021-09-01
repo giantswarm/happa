@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/Controls/Button';
@@ -66,19 +65,6 @@ UsersModal.defaultProps = {
   confirmDisabled: false,
   confirmHidden: false,
   cancelText: 'Cancel',
-};
-
-UsersModal.propTypes = {
-  show: PropTypes.bool,
-  title: PropTypes.string,
-  onClose: PropTypes.func,
-  onConfirm: PropTypes.func,
-  isLoading: PropTypes.bool,
-  children: PropTypes.node,
-  confirmText: PropTypes.string,
-  confirmDisabled: PropTypes.bool,
-  confirmHidden: PropTypes.bool,
-  cancelText: PropTypes.string,
 };
 
 export default UsersModal;

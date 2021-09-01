@@ -1,5 +1,3 @@
-import { NodePool } from 'MAPI/types';
-import PropTypes from 'prop-types';
 import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
@@ -31,14 +29,6 @@ const WorkerNodesCreateNodePoolName: React.FC<IWorkerNodesCreateNodePoolNameProp
       />
     </InputGroup>
   );
-};
-
-WorkerNodesCreateNodePoolName.propTypes = {
-  id: PropTypes.string.isRequired,
-  nodePool: (PropTypes.object as PropTypes.Requireable<NodePool>).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolName;

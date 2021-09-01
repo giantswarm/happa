@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -26,11 +25,6 @@ const ReleaseDetailsModalSection: React.FC<IReleaseDetailsModalSectionProps> = (
       {children}
     </Wrapper>
   );
-};
-
-ReleaseDetailsModalSection.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node,
 };
 
 export default ReleaseDetailsModalSection;

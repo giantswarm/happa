@@ -1,6 +1,5 @@
 import AddKeyPairGenericError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairGenericError';
 import AddKeyPairServiceUnavailableError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairServiceUnavailableError';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -52,10 +51,6 @@ const AddKeyPairErrorTemplate: React.FC<IAddKeyPairErrorProps> = ({
       </StyledFlashMessage>
     </SlideTransition>
   );
-};
-
-AddKeyPairErrorTemplate.propTypes = {
-  children: PropTypes.number,
 };
 
 AddKeyPairErrorTemplate.defaultProps = {

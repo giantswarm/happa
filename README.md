@@ -28,9 +28,7 @@ To run happa locally, you need:
 
 - [NodeJS 16](https://nodejs.org/)
 - [`yarn`](https://yarnpkg.com/)
-- [`opsctl`](https://github.com/giantswarm/opsctl) - Required configured properly
-in order to execute happa against a Giant Swarm installation. (`opsctl` is our internal tool for
-managing access to clusters and performing ops related tasks.)
+- [`kubectl`](https://github.com/giantswarm/kubectl) - Necessary to use happa against a Giant Swarm installation.
 
 ### Quick start
 
@@ -42,11 +40,12 @@ yarn install
 
 Some warnings regarding unmatched dependency versions are expected and can be ignored.
 
-Then, to bring up Happa connected to the `ginger` installation, use the following
-command:
+Then, to bring up Happa connected to an installation, you need to have a `kubectl` context that points to the installation's management cluster. You also need to have `get` permissions for the `happa-configmap` `ConfigMap`, in the `giantswarm` namespace.
+
+You can log into the installation's management cluster using the [kubectl gs](https://github.com/giantswarm/kubectl-gs) plugin. Here's how you would start Happa after using the plugin to log into the `ginger` installation:
 
 ```nohighlight
-HAPPA_PROXY_INSTALLATION=ginger yarn start
+HAPPA_KUBECTL_CONTEXT=gs-ginger yarn start
 ```
 
 ### Running tests
@@ -68,28 +67,15 @@ We are maintaining a [Storybook](https://fe-docs.giantswarm.io/) showcasing more
 
 ## Configuration
 
-Use environment variables to adjust the behavior of this application in production.
+Use environment variables or a configuration file to adjust the behaviour of the application in production.
 
-| Variable Name           | Description                                                                                                                                           | Default                |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| API_ENDPOINT            | URL to Giant Swarm's API.                                                                                                                             | http://localhost:8000  |
-| MAPI_ENDPOINT           | URL to Giant Swarm's K8s Management API.                                                                                                              |                        |
-| AUDIENCE                | The Audience claim that our oauth library will use when requesting a token.                                                                           | API_ENDPOINT           |
-| MAPI_AUDIENCE           | The Audience claim that our oauth library will use when requesting a token for logging into the Management API.                                       | http://localhost:9999  |
-| PASSAGE_ENDPOINT        | URL to Passage, which helps users when they lose their password or have been invited to create an account.                                            | http://localhost:5001  |
-| INGRESS_BASE_DOMAIN     | The ingress base domain of the installation that Happa is on. This affects the getting started guide.                                                 | k8s.sample.io          |
-| AWS_CAPABILITIES_JSON   | A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information |                        |
-| AZURE_CAPABILITIES_JSON | A JSON array representing all the details of Azure vm sizes. This has been extracted so that we have a single point of truth for this information     |                        |
-| ENVIRONMENT             | A string that indicates where Happa is running.                                                                                                       | development            |
-
-These environment variables affect the config object in `index.html` (which is
+These configuration values affect the config object in `index.html` (which is
 created from `index.ejs`).
-A startup script (`start.sh`) applies the values from the environment variables
-to `index.html` by editing the file. This way Happa remains a fully static website
-that can be served by nginx.
+A configuration script (`prepare.ts`) applies the values from the configuration values
+to `index.html` by templating `index.ejs` and creating the `index.html` file. This way Happa remains a fully static website
+that can be served by `nginx`.
 
-In development, these environment variables are applied as part of a templating step
-that generates index.html (configured in webpack.common.js).
+In development, these configuration values are applied using the `ConfigurationPlugin` via `webpack`, which generates index.html.
 
 ## Redux in a nutshell
 

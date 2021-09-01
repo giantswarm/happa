@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
@@ -168,10 +167,6 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
       </Box>
     </OverlayTrigger>
   );
-};
-
-AccessControlRoleVerbs.propTypes = {
-  verbs: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 };
 
 export default AccessControlRoleVerbs;

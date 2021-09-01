@@ -1,5 +1,4 @@
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DropdownMenu, {
@@ -242,12 +241,6 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
       />
     </Wrapper>
   );
-};
-
-VersionPicker.propTypes = {
-  selectedVersion: PropTypes.string,
-  versions: PropTypes.array,
-  onChange: PropTypes.func,
 };
 
 export default VersionPicker;

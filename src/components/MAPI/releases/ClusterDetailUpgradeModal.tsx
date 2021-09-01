@@ -1,6 +1,6 @@
+import { Box } from 'grommet';
 import GenericModal from 'Modals/GenericModal';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import Button from 'UI/Controls/Button';
 import ClusterDetailUpgradeModalChangelog from 'UI/Display/MAPI/releases/ClusterDetailUpgradeModalChangelog';
@@ -111,14 +111,14 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
   return (
     <GenericModal
       footer={
-        <>
+        <Box direction='row' gap='small' justify='end'>
           {primaryButtonText && (
             <Button primary={true} onClick={handlePrimaryButtonClick}>
               {primaryButtonText}
             </Button>
           )}
           <Button onClick={onClose}>Cancel</Button>
-        </>
+        </Box>
       }
       onClose={onClose}
       title={title}
@@ -128,16 +128,6 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
       {visiblePane}
     </GenericModal>
   );
-};
-
-ClusterDetailUpgradeModal.propTypes = {
-  fromRelease: (PropTypes.object as PropTypes.Requireable<releasev1alpha1.IRelease>)
-    .isRequired,
-  toRelease: (PropTypes.object as PropTypes.Requireable<releasev1alpha1.IRelease>)
-    .isRequired,
-  onUpgrade: PropTypes.func.isRequired,
-  onClose: PropTypes.func,
-  visible: PropTypes.bool,
 };
 
 export default ClusterDetailUpgradeModal;

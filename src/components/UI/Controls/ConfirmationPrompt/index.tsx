@@ -1,5 +1,4 @@
 import { Box, Collapsible, Keyboard, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 
 import Button from '../Button';
@@ -123,16 +122,6 @@ const ConfirmationPrompt = React.forwardRef<
     );
   }
 );
-
-ConfirmationPrompt.propTypes = {
-  open: PropTypes.bool,
-  children: PropTypes.node,
-  title: PropTypes.node,
-  confirmButton: PropTypes.node,
-  cancelButton: PropTypes.node,
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
-};
 
 ConfirmationPrompt.defaultProps = {
   confirmButton: 'Confirm',

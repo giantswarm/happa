@@ -3,7 +3,6 @@ import toDate from 'date-fns-tz/toDate';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -240,18 +239,10 @@ class KeyPairs extends React.Component {
   }
 }
 
-KeyPairs.propTypes = {
-  user: PropTypes.object,
-  actions: PropTypes.object,
-  provider: PropTypes.string,
-  cluster: PropTypes.object,
-  loadingKeyPairs: PropTypes.bool,
-};
-
 function mapStateToProps(state) {
   return {
     clusters: state.entities.clusters,
-    provider: state.main.info.general.provider,
+    provider: window.config.info.general.provider,
     user: getLoggedInUser(state),
     loadingKeyPairs: selectLoadingFlagByAction(
       state,

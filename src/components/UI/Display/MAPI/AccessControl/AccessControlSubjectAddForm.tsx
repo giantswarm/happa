@@ -5,7 +5,6 @@ import {
   filterSubjectSuggestions,
   parseSubjects,
 } from 'MAPI/organizations/AccessControl/utils';
-import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -163,16 +162,6 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
       )}
     </Box>
   );
-};
-
-AccessControlSubjectAddForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
-  onToggleAdding: PropTypes.func.isRequired,
-  onClearError: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string,
-  isAdding: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  suggestions: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 AccessControlSubjectAddForm.defaultProps = {

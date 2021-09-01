@@ -52,6 +52,9 @@ export const getOrganizationListResponse = {
         uid: 'fa7b060d-a123-4bad-a92b-2f8f2f04b62c',
       },
       spec: {},
+      status: {
+        namespace: 'org-adrian',
+      },
     },
     {
       apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -74,6 +77,9 @@ export const getOrganizationListResponse = {
         uid: '43086490-d5f7-4b4a-8b1d-3a71833b03ea',
       },
       spec: {},
+      status: {
+        namespace: 'org-conformance-testing',
+      },
     },
     {
       apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -131,6 +137,9 @@ export const getOrganizationListResponse = {
         uid: '930359e6-4571-4e8a-a7ec-198f03db2d0f',
       },
       spec: {},
+      status: {
+        namespace: 'org-ghost',
+      },
     },
     {
       apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -152,6 +161,9 @@ export const getOrganizationListResponse = {
         uid: '5fc67165-38d0-4681-9727-0ed78f04c7f3',
       },
       spec: {},
+      status: {
+        namespace: 'org-giantswarm',
+      },
     },
     {
       apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -193,6 +205,9 @@ export const getOrganizationListResponse = {
         uid: 'db806f25-2a1f-47ca-926d-22745237e86f',
       },
       spec: {},
+      status: {
+        namespace: 'org-org1',
+      },
     },
     {
       apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -234,6 +249,9 @@ export const getOrganizationListResponse = {
         uid: 'd2381cd3-f8f9-46b2-b32a-d71a2105a0d6',
       },
       spec: {},
+      status: {
+        namespace: 'org-org2',
+      },
     },
     {
       apiVersion: 'security.giantswarm.io/v1alpha1',
@@ -275,6 +293,9 @@ export const getOrganizationListResponse = {
         uid: '172516f5-d1ca-48b5-b818-daa3e307c839',
       },
       spec: {},
+      status: {
+        namespace: 'org-org3',
+      },
     },
   ],
   kind: 'OrganizationList',

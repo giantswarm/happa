@@ -61,13 +61,7 @@ export async function deleteCluster(
 
     mutate(
       capiv1alpha3.getClusterListKey({
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelOrganization]: updatedCluster.metadata.labels![
-              capiv1alpha3.labelOrganization
-            ],
-          },
-        },
+        namespace: cluster.metadata.namespace!,
       }),
       produce((draft?: capiv1alpha3.IClusterList) => {
         if (!draft) return;

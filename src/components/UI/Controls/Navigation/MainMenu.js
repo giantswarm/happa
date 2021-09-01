@@ -1,5 +1,4 @@
 import { homeURL } from 'lib/docs';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { CSSBreakpoints } from 'shared/constants';
@@ -216,10 +215,5 @@ function MainMenu({ showApps, showUsers }) {
     </>
   );
 }
-
-MainMenu.propTypes = {
-  showApps: PropTypes.bool,
-  showUsers: PropTypes.bool,
-};
 
 export default MainMenu;

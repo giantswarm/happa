@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 // EmptyStateDisplay conditionally displays its children or a empty state
 // component depending on a boolean prop.
 //
@@ -12,12 +10,6 @@ const EmptyStateDisplay = (props) => {
   }
 
   return props.children;
-};
-
-EmptyStateDisplay.propTypes = {
-  children: PropTypes.object,
-  displayEmptyState: PropTypes.bool,
-  emptyState: PropTypes.object,
 };
 
 export default EmptyStateDisplay;

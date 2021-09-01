@@ -1,7 +1,5 @@
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
-import { ProviderNodePool } from 'MAPI/types';
 import { getProviderNodePoolMachineType } from 'MAPI/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import { INodePoolPropertyProps, withNodePoolMachineType } from './patches';
@@ -39,16 +37,6 @@ const WorkerNodesCreateNodePoolMachineType: React.FC<IWorkerNodesCreateNodePoolM
       {...props}
     />
   );
-};
-
-WorkerNodesCreateNodePoolMachineType.propTypes = {
-  id: PropTypes.string.isRequired,
-  providerNodePool: (PropTypes.object as PropTypes.Requireable<ProviderNodePool>)
-    .isRequired,
-  onChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  autoFocus: PropTypes.bool,
 };
 
 export default WorkerNodesCreateNodePoolMachineType;

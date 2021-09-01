@@ -22,6 +22,4 @@ const AddKeyPairGenericError: React.FC<IAddKeyPairFailureTemplateProps> = () => 
   );
 };
 
-AddKeyPairGenericError.propTypes = {};
-
 export default AddKeyPairGenericError;

@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { getProvider } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
@@ -33,7 +32,7 @@ const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const organizations = useSelector(selectOrganizations());
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const client = useHttpClient();
   const auth = useAuthProvider();
@@ -41,8 +40,8 @@ const OrganizationIndex: React.FC = () => {
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListKey(provider), () =>
-    fetchClusterList(client, auth, provider)
+  >(fetchClusterListKey(provider, ''), () =>
+    fetchClusterList(client, auth, provider, '')
   );
 
   useEffect(() => {
@@ -63,22 +62,22 @@ const OrganizationIndex: React.FC = () => {
       clusterList?.items
     );
 
-    const orgs = Object.keys(organizations).map((orgName) => {
+    const orgs = Object.values(organizations).map((org) => {
       // eslint-disable-next-line @typescript-eslint/init-declarations
       let clusterCount: number | undefined;
       if (clusterListError) {
         clusterCount = -1;
       } else if (clusterCounters) {
-        clusterCount = clusterCounters[orgName] ?? 0;
+        clusterCount = clusterCounters[org.name!] ?? 0;
       }
 
       return {
-        name: orgName,
+        name: org.id,
         clusterCount,
       };
     });
 
-    return Object.values(orgs);
+    return orgs;
   }, [organizations, clusterList, clusterListError]);
 
   const handleOrgClick = (name: string) => {

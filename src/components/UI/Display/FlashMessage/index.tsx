@@ -4,7 +4,6 @@
 // props on dismiss.
 //
 
-import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
@@ -54,12 +53,6 @@ const FlashMessage: FC<IFlashMessageProps> = ({
       {children}
     </FlashMessageOuter>
   );
-};
-
-FlashMessage.propTypes = {
-  type: PropTypes.oneOf(Object.values(FlashMessageType)).isRequired,
-  children: PropTypes.node,
-  className: PropTypes.string,
 };
 
 export default FlashMessage;

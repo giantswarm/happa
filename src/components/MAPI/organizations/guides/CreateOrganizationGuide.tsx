@@ -74,6 +74,4 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
   );
 };
 
-CreateOrganizationGuide.propTypes = {};
-
 export default CreateOrganizationGuide;

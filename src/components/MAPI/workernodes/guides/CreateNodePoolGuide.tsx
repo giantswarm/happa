@@ -7,9 +7,7 @@ import {
   withFormatting,
   withTemplateNodePool,
 } from 'MAPI/guides/utils';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -44,7 +42,7 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
   nodesMax,
   ...props
 }) => {
-  const context = useSelector(getCurrentInstallationContextName);
+  const context = getCurrentInstallationContextName();
 
   return (
     <CLIGuide
@@ -102,19 +100,6 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
       </CLIGuideStepList>
     </CLIGuide>
   );
-};
-
-CreateNodePoolGuide.propTypes = {
-  provider: PropTypes.oneOf(Object.values(Providers)).isRequired,
-  organizationName: PropTypes.string.isRequired,
-  clusterName: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  azureVMSize: PropTypes.string,
-  nodePoolAZs: PropTypes.arrayOf(PropTypes.string.isRequired),
-  azureUseSpotVMs: PropTypes.bool,
-  azureSpotVMsMaxPrice: PropTypes.number,
-  nodesMin: PropTypes.number,
-  nodesMax: PropTypes.number,
 };
 
 export default CreateNodePoolGuide;

@@ -1,5 +1,4 @@
 import formatDistance from 'date-fns/fp/formatDistance';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { CSSBreakpoints, Providers } from 'shared/constants';
@@ -205,22 +204,6 @@ class V4ClusterDetailTable extends React.Component {
     );
   }
 }
-
-V4ClusterDetailTable.propTypes = {
-  accessCluster: PropTypes.func,
-  cluster: PropTypes.object,
-  credentials: PropTypes.object,
-  provider: PropTypes.string,
-  release: PropTypes.object,
-  region: PropTypes.string,
-  showScalingModal: PropTypes.func,
-  showUpgradeModal: PropTypes.func,
-  setUpgradeVersion: PropTypes.func.isRequired,
-  workerNodesDesired: PropTypes.number,
-  resources: PropTypes.object,
-  isAdmin: PropTypes.bool,
-  releases: PropTypes.object,
-};
 
 // We use this wrapper function because we want different references for each cluster
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances

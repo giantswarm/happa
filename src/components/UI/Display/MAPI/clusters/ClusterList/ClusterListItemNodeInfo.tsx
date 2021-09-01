@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -106,13 +105,6 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
       </OptionalValue>
     </Box>
   );
-};
-
-ClusterListItemNodeInfo.propTypes = {
-  workerNodePoolsCount: PropTypes.number,
-  workerNodesCPU: PropTypes.number,
-  workerNodesCount: PropTypes.number,
-  workerNodesMemory: PropTypes.number,
 };
 
 export default ClusterListItemNodeInfo;

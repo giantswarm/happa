@@ -8,6 +8,7 @@ module.exports = {
     '^.+\\.(js|ts)(x?)$': [
       '@swc/jest',
       {
+        sourceMaps: true,
         jsc: {
           target: 'es2015',
           parser: {
@@ -24,6 +25,9 @@ module.exports = {
             },
           },
           externalHelpers: true,
+        },
+        module: {
+          type: 'commonjs',
         },
         env: {
           targets: '> 0.25%, not dead',
@@ -67,11 +71,39 @@ module.exports = {
         '{"m4.xlarge":{"cpu_cores":4,"description":"M4 General Purpose Extra Large","memory_size_gb":16,"storage_size_gb":0},"m3.large":{"description":"M3 General Purpose Large","memory_size_gb":7.5,"cpu_cores":2,"storage_size_gb":32},"m3.xlarge":{"description":"M3 General Purpose Extra Large","memory_size_gb":15,"cpu_cores":4,"storage_size_gb":80},"m3.2xlarge":{"description":"M3 General Purpose Double Extra Large","memory_size_gb":30,"cpu_cores":8,"storage_size_gb":160}}',
       azureCapabilitiesJSON:
         '{"Standard_A2_v2":{"additionalProperties":{},"description":"This is some description","maxDataDiskCount":4,"memoryInMb":4294.967296,"name":"Standard_A2_v2","numberOfCores":2,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":21474.83648},"Standard_A4_v2":{"additionalProperties":{},"description":"Here is a longer description that might be too long for the field","maxDataDiskCount":8,"memoryInMb":8589.934592,"name":"Standard_A4_v2","numberOfCores":4,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":42949.67296},"Standard_A8_v2":{"additionalProperties":{},"description":"Another VM size description text","maxDataDiskCount":16,"memoryInMb":17179.869184,"name":"Standard_A8_v2","numberOfCores":8,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":85899.34592}}',
+      info: {
+        general: {
+          availabilityZones: {
+            default: 0,
+            max: 0,
+            zones: [],
+          },
+          installationName: 'test',
+          provider: 'aws',
+          dataCenter: 'test',
+          kubernetesVersions: [],
+        },
+        workers: {
+          countPerCluster: {
+            default: 3,
+            max: 100,
+          },
+          instanceType: {
+            default: '',
+            options: [],
+          },
+          vmSize: {
+            default: '',
+            options: [],
+          },
+        },
+      },
     },
     featureFlags: {
       FEATURE_MAPI_AUTH: true,
       FEATURE_MAPI_CLUSTERS: false,
       FEATURE_MONITORING: true,
+      FEATURE_NEXTGEN_CLUSTER_APPS: false,
     },
   },
 };

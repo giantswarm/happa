@@ -2,7 +2,6 @@ import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -89,35 +88,6 @@ interface INodePoolsState {
 }
 
 class NodePool extends Component<INodePoolsProps, INodePoolsState> {
-  public static propTypes = {
-    /**
-     * We skip typechecking because we don't want to define the whole object
-     * structure (for now)
-     */
-    cluster: PropTypes.object,
-    // @ts-ignore
-    nodePool: PropTypes.shape({
-      availability_zones: PropTypes.any, // TODO fix it.
-      id: PropTypes.string,
-      name: PropTypes.string,
-      node_spec: PropTypes.object,
-      scaling: PropTypes.shape({
-        min: PropTypes.number,
-        max: PropTypes.number,
-      }),
-      status: PropTypes.shape({
-        nodes: PropTypes.number,
-        nodes_ready: PropTypes.number,
-      }),
-    }),
-    // @ts-ignore
-    dispatch: PropTypes.func,
-    // @ts-ignore
-    provider: PropTypes.string,
-    supportsAutoscaling: PropTypes.bool,
-    supportsSpotInstances: PropTypes.bool,
-  };
-
   public static defaultProps = {
     supportsAutoscaling: false,
     supportsSpotInstances: false,
@@ -132,10 +102,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
 
   toggleEditingState = (isNameBeingEdited: boolean): void => {
     this.setState({ isNameBeingEdited });
-  };
-
-  triggerEditName = () => {
-    this.viewEditNameRef?.activateEditMode();
   };
 
   editNodePoolName = (name: string): void => {
@@ -272,7 +238,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}
               showNodePoolScalingModal={this.showNodePoolScalingModal}
-              triggerEditName={this.triggerEditName}
             />
           </>
         )}

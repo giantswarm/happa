@@ -13,7 +13,6 @@ import { MainRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'stores/cluster/utils';
 import {
   getFirstNodePoolsRelease,
-  getProvider,
   getUserIsAdmin,
 } from 'stores/main/selectors';
 import {
@@ -49,7 +48,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
   const match = useRouteMatch<{ orgId: string }>();
   const { orgId } = match.params;
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
   const firstNodePoolsRelease = useSelector(getFirstNodePoolsRelease);
 
   const [
@@ -141,7 +140,5 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
     </Breadcrumb>
   );
 };
-
-NewClusterWrapper.propTypes = {};
 
 export default NewClusterWrapper;

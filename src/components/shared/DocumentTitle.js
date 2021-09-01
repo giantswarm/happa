@@ -1,5 +1,4 @@
 import useDocumentTitle from 'lib/hooks/useDocumentTitle';
-import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
 const DocumentTitle = ({ title, children }) => {
@@ -14,10 +13,6 @@ const DocumentTitle = ({ title, children }) => {
 
 DocumentTitle.defaultProps = {
   title: '',
-};
-
-DocumentTitle.propTypes = {
-  title: PropTypes.string,
 };
 
 export default DocumentTitle;

@@ -7,7 +7,6 @@ import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { extractErrorMessage } from 'MAPI/utils';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import PropTypes from 'prop-types';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
@@ -183,12 +182,6 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
       </Keyboard>
     </Collapsible>
   );
-};
-
-OrganizationListCreateOrg.propTypes = {
-  onSubmit: PropTypes.func,
-  onCancel: PropTypes.func,
-  open: PropTypes.bool,
 };
 
 export default OrganizationListCreateOrg;

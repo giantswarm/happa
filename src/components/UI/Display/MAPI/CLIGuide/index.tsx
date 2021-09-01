@@ -6,7 +6,6 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled, { css } from 'styled-components';
 
@@ -88,12 +87,6 @@ const CLIGuide: React.FC<ICLIGuideProps> = ({
       </StyledAccordion>
     </ThemeContext.Extend>
   );
-};
-
-CLIGuide.propTypes = {
-  children: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  footer: PropTypes.node,
 };
 
 export default CLIGuide;

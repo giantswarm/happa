@@ -1,5 +1,4 @@
 import { Card, CardBody, CardHeader, Text } from 'grommet';
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -50,15 +49,6 @@ const ClusterDetailWidget: React.FC<IClusterDetailWidgetProps> = ({
       </CardBody>
     </Card>
   );
-};
-
-ClusterDetailWidget.propTypes = {
-  title: PropTypes.string.isRequired,
-  children: PropTypes.node,
-  inline: PropTypes.bool,
-  contentProps: PropTypes.object as PropTypes.Requireable<
-    IClusterDetailWidgetProps['contentProps']
-  >,
 };
 
 ClusterDetailWidget.defaultProps = {

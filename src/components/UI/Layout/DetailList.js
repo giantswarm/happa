@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -42,12 +41,6 @@ const DetailList = (props) => {
       <Value className={props.className}>{props.children}</Value>
     </DetailItem>
   );
-};
-
-DetailList.propTypes = {
-  title: PropTypes.string,
-  className: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 export default DetailList;

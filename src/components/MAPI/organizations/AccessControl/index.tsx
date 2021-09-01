@@ -5,7 +5,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
@@ -196,11 +195,6 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       </Box>
     </DocumentTitle>
   );
-};
-
-AccessControl.propTypes = {
-  organizationName: PropTypes.string.isRequired,
-  organizationNamespace: PropTypes.string.isRequired,
 };
 
 export default AccessControl;

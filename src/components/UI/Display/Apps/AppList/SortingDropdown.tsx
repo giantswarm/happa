@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import DropdownMenu, {
@@ -84,11 +83,6 @@ const SortingDropdown: React.FC<ISortingDropdownProps> = (props) => {
       />
     </Wrapper>
   );
-};
-
-SortingDropdown.propTypes = {
-  setSortingOrder: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
 };
 
 export default SortingDropdown;

@@ -12,12 +12,11 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Redirect, Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getProvider } from 'stores/main/selectors';
 import useSWR from 'swr';
 import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedGetAccess';
 import GettingStartedInstallIngress from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
@@ -95,7 +94,7 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   const clientFactory = useHttpClientFactory();
 
@@ -239,7 +238,5 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
     </DocumentTitle>
   );
 };
-
-GettingStarted.propTypes = {};
 
 export default GettingStarted;

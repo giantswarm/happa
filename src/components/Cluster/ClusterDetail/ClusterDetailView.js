@@ -6,7 +6,6 @@ import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
@@ -424,26 +423,6 @@ class ClusterDetailView extends React.Component {
   }
 }
 
-ClusterDetailView.propTypes = {
-  cluster: PropTypes.object,
-  user: PropTypes.object,
-  canClusterUpgrade: PropTypes.bool,
-  catalogs: PropTypes.object,
-  clearInterval: PropTypes.func,
-  credentials: PropTypes.object,
-  dispatch: PropTypes.func,
-  isV5Cluster: PropTypes.bool,
-  releases: PropTypes.object,
-  defaultTargetRelease: PropTypes.object,
-  provider: PropTypes.string,
-  region: PropTypes.string,
-  setInterval: PropTypes.func,
-  loadingCluster: PropTypes.bool,
-  loadingNodePools: PropTypes.bool,
-  isAdmin: PropTypes.bool,
-  clusterIsAwaitingUpgrade: PropTypes.bool,
-};
-
 function mapStateToProps(state, props) {
   const clusterID = props.cluster?.id;
   const defaultTargetReleaseVersion = selectTargetRelease(state, props.cluster);
@@ -456,9 +435,9 @@ function mapStateToProps(state, props) {
     credentials: state.entities.organizations.credentials,
     catalogs: state.entities.catalogs,
     nodePools: selectNodePools(state),
-    provider: state.main.info.general.provider,
+    provider: window.config.info.general.provider,
     user: getLoggedInUser(state),
-    region: state.main.info.general.datacenter,
+    region: window.config.info.general.dataCenter,
     isAdmin: getUserIsAdmin(state),
     clusterIsAwaitingUpgrade: selectIsClusterAwaitingUpgrade(clusterID ?? '')(
       state

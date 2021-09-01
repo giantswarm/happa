@@ -1,5 +1,4 @@
 import { Box, FormField } from 'grommet';
-import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
@@ -152,23 +151,6 @@ const InstallAppForm: React.FC<IInstallAppFormProps> = ({
       />
     </Box>
   );
-};
-
-InstallAppForm.propTypes = {
-  appName: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  nameError: PropTypes.string.isRequired,
-  namespace: PropTypes.string.isRequired,
-  namespaceError: PropTypes.string.isRequired,
-  valuesYAMLError: PropTypes.string.isRequired,
-  version: PropTypes.string.isRequired,
-  availableVersions: PropTypes.array.isRequired,
-  secretsYAMLError: PropTypes.string.isRequired,
-  onChangeName: PropTypes.func.isRequired,
-  onChangeNamespace: PropTypes.func.isRequired,
-  onChangeValuesYAML: PropTypes.func.isRequired,
-  onChangeVersion: PropTypes.func.isRequired,
-  onChangeSecretsYAML: PropTypes.func.isRequired,
 };
 
 export default InstallAppForm;

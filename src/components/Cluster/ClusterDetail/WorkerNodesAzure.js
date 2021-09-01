@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import styled from 'styled-components';
@@ -73,13 +72,5 @@ function WorkerNodesAzure({
     </WrapperDiv>
   );
 }
-
-WorkerNodesAzure.propTypes = {
-  az: PropTypes.array,
-  isClusterCreating: PropTypes.bool,
-  instanceType: PropTypes.object,
-  nodes: PropTypes.number,
-  showScalingModal: PropTypes.func,
-};
 
 export default WorkerNodesAzure;

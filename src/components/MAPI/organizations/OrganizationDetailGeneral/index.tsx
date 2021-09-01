@@ -3,13 +3,16 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { extractErrorMessage } from 'MAPI/utils';
+import { ClusterList } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  fetchClusterList,
+  fetchClusterListKey,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { StatusCodes } from 'shared/constants';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
@@ -44,22 +47,22 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
+  const provider = window.config.info.general.provider;
+
   const clusterListClient = useRef(clientFactory());
-  const getOptions: capiv1alpha3.IGetClusterListOptions = useMemo(() => {
-    return {
-      labelSelector: {
-        matchingLabels: { [capiv1alpha3.labelOrganization]: organizationName },
-      },
-    };
-  }, [organizationName]);
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<capiv1alpha3.IClusterList, GenericResponseError>(
-    () => capiv1alpha3.getClusterListKey(getOptions),
+  } = useSWR<ClusterList, GenericResponseError>(
+    fetchClusterListKey(provider, organizationNamespace),
     () =>
-      capiv1alpha3.getClusterList(clusterListClient.current, auth, getOptions)
+      fetchClusterList(
+        clusterListClient.current,
+        auth,
+        provider,
+        organizationNamespace
+      )
   );
 
   useEffect(() => {
@@ -182,11 +185,6 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       </Box>
     </>
   );
-};
-
-OrganizationDetailGeneral.propTypes = {
-  organizationName: PropTypes.string.isRequired,
-  organizationNamespace: PropTypes.string.isRequired,
 };
 
 export default OrganizationDetailGeneral;

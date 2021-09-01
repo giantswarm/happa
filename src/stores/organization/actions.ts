@@ -4,11 +4,7 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpClientImpl } from 'model/clients/HttpClient';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
-import {
-  getOrganization,
-  getOrganizationList,
-} from 'model/services/mapi/securityv1alpha1/';
-import { getOrganizationUIName } from 'model/services/mapi/securityv1alpha1/key';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -126,14 +122,23 @@ export function organizationsLoadMAPI(
         canList = true;
       }
 
-      let orgs: string[] = [];
+      const orgs: Record<string, IOrganization> = {};
       if (canList) {
         // The user can list all orgs. So list them all and dispatch the action that
         // updates the global state with all the orgs
-        const orgListResponse = await getOrganizationList(client, auth);
-        orgs = orgListResponse.items
-          .filter((org) => !org.metadata.deletionTimestamp)
-          .map((o) => getOrganizationUIName(o));
+        const orgListResponse = await securityv1alpha1.getOrganizationList(
+          client,
+          auth
+        );
+        for (const org of orgListResponse.items) {
+          orgs[securityv1alpha1.getOrganizationName(org)] = {
+            id: securityv1alpha1.getOrganizationName(org),
+            name: securityv1alpha1.getOrganizationUIName(org),
+            namespace: org.status?.namespace,
+            credentials: [],
+            members: [],
+          };
+        }
       } else {
         const rulesReview: authorizationv1.ISelfSubjectRulesReview = {
           apiVersion: 'authorization.k8s.io/v1',
@@ -151,58 +156,45 @@ export function organizationsLoadMAPI(
           rulesReview
         );
 
-        rulesReviewResponse.status?.resourceRules.forEach((rule) => {
+        const organizationNames = [];
+        for (const rule of rulesReviewResponse.status?.resourceRules) {
           if (
             rule.verbs.includes('get') &&
             rule.resources.includes('organizations') &&
             rule.resourceNames
           ) {
-            orgs.push(...rule.resourceNames);
+            organizationNames.push(...rule.resourceNames);
           }
-        });
+        }
 
         // We now know what orgs they can get. We still need to fetch them
         // to check if the orgs have a 'ui.giantswarm.io/original-organization-name'
         // annotation.
-        const orgGetRequests = orgs.map((orgName) =>
-          getOrganization(client, auth, orgName)
+        const orgGetRequests = organizationNames.map((orgName) =>
+          securityv1alpha1.getOrganization(client, auth, orgName)
         );
 
         const orgGetResponses = await Promise.all(orgGetRequests);
-
-        orgs = orgGetResponses.map((org) => getOrganizationUIName(org));
+        for (const org of orgGetResponses) {
+          orgs[securityv1alpha1.getOrganizationName(org)] = {
+            id: securityv1alpha1.getOrganizationName(org),
+            name: securityv1alpha1.getOrganizationUIName(org),
+            namespace: org.status?.namespace,
+            credentials: [],
+            members: [],
+          };
+        }
       }
-
-      const uniqueOrgs = orgs.filter((v, i, a) => a.indexOf(v) === i);
-
-      const orgsAsIOrganiation: IOrganization[] = uniqueOrgs.map((o) => {
-        return {
-          id: o,
-          members: [],
-          credentials: [],
-        };
-      });
-
-      const organizationsAsMap = orgsAsIOrganiation.reduce(
-        (orgAcc: Record<string, IOrganization>, currentOrg: IOrganization) => {
-          orgAcc[currentOrg.id] = currentOrg;
-
-          return orgAcc;
-        },
-        {}
-      );
 
       const currentlySelectedOrganization = getState().main
         .selectedOrganization;
       const selectedOrganization = determineSelectedOrganization(
-        Object.keys(organizationsAsMap),
+        Object.keys(orgs),
         currentlySelectedOrganization
       );
       setOrganizationToStorage(selectedOrganization);
 
-      dispatch(
-        organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
-      );
+      dispatch(organizationsLoadSuccess(orgs, selectedOrganization));
 
       return Promise.resolve();
     } catch (error) {

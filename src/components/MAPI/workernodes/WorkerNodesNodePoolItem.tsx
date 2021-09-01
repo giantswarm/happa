@@ -13,7 +13,6 @@ import {
   getProviderNodePoolMachineType,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import PropTypes from 'prop-types';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -22,7 +21,9 @@ import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/Availa
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
-import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import ViewAndEditName, {
+  ViewAndEditNameVariant,
+} from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
 import { deleteNodePool, updateNodePoolDescription } from './utils';
@@ -99,15 +100,9 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
   const isScalingInProgress = scaling && scaling.desired !== scaling.current;
 
-  const viewAndEditNameRef = useRef<
-    { activateEditMode: () => boolean } & HTMLElement
-  >(null);
+  const viewAndEditNameRef = useRef<ViewAndEditName>(null);
 
   const [isEditingDescription, setIsEditingDescription] = useState(false);
-
-  const onStartEditingDescription = () => {
-    viewAndEditNameRef.current?.activateEditMode();
-  };
 
   const updateDescription = async (newValue: string) => {
     if (!nodePool) return;
@@ -238,6 +233,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                   aria-label={`Description: ${value}`}
                   onSave={updateDescription}
                   ref={viewAndEditNameRef}
+                  variant={ViewAndEditNameVariant.Description}
                 />
               )
             }
@@ -332,7 +328,6 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
             <Box align='center'>
               <WorkerNodesNodePoolActions
-                onRenameClick={onStartEditingDescription}
                 onDeleteClick={onDelete}
                 onScaleClick={onScale}
               />
@@ -365,12 +360,6 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       )}
     </Box>
   );
-};
-
-WorkerNodesNodePoolItem.propTypes = {
-  nodePool: PropTypes.object as PropTypes.Validator<NodePool>,
-  providerNodePool: PropTypes.object as PropTypes.Validator<ProviderNodePool>,
-  additionalColumns: PropTypes.array,
 };
 
 export default WorkerNodesNodePoolItem;

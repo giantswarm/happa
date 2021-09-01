@@ -8,7 +8,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
     class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hrJYol sc-dkQUaI fkbCbt"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-WZYut qvxWH"
       role="tablist"
     >
       <div
@@ -46,15 +46,14 @@ exports[`CLIGuide renders the contents when open 1`] = `
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-ofa7kd-0 iMQOFA"
+                class="StyledIcon-sc-ofa7kd-0 hhXiyB"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 15-6-6-6 6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
-                  transform="matrix(1 0 0 -1 0 24)"
                 />
               </svg>
             </div>
@@ -91,7 +90,7 @@ exports[`CLIGuide renders without crashing 1`] = `
     class="sc-gKAaRy ezfMqp"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hrJYol sc-dkQUaI fkbCbt"
+      class="StyledBox-sc-13pk1d4-0 hrJYol sc-WZYut qvxWH"
       role="tablist"
     >
       <div
@@ -129,12 +128,12 @@ exports[`CLIGuide renders without crashing 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-ofa7kd-0 iMQOFA"
+                class="StyledIcon-sc-ofa7kd-0 hhXiyB"
                 viewBox="0 0 24 24"
               >
-                <polyline
+                <path
+                  d="m18 9-6 6-6-6"
                   fill="none"
-                  points="18 9 12 15 6 9"
                   stroke="#000"
                   stroke-width="2"
                 />

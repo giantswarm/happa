@@ -12,7 +12,6 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import PropTypes from 'prop-types';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -21,14 +20,14 @@ import React, {
   useState,
 } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
+import * as featureFlags from 'shared/featureFlags';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/main/actions';
-import { getProvider } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
@@ -37,6 +36,7 @@ import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreins
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
 
+import ClusterDetailAppList from './ClusterDetailAppList';
 import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';
 import { filterUserInstalledApps, mapDefaultApps } from './utils';
 
@@ -66,10 +66,6 @@ const BrowseButtonContainer = styled.div`
   align-items: center;
   margin: ${({ theme }) => theme.spacingPx}px 0
     ${({ theme }) => theme.spacingPx * 2}px;
-`;
-
-const BrowseButton = styled(Button)`
-  margin: 0;
 `;
 
 const Disclaimer = styled.p`
@@ -121,7 +117,9 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       )
   );
   const appListIsLoading =
-    typeof appList === 'undefined' && appListIsValidating;
+    appListIsValidating &&
+    typeof appList === 'undefined' &&
+    typeof appListError === 'undefined';
 
   useEffect(() => {
     if (appListError) {
@@ -196,7 +194,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     setDetailsModalAppName('');
   };
 
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
   const hasOptionalIngress = supportsOptionalIngress(provider, releaseVersion);
 
   const userInstalledApps = useMemo(
@@ -213,29 +211,59 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         }}
       >
         <>
-          <UserInstalledApps
-            apps={userInstalledApps.map((a) => ({
-              name: a.metadata.name,
-              version: a.spec.version,
-              deletionTimestamp: a.metadata.deletionTimestamp,
-            }))}
-            error={extractErrorMessage(appListError) ?? null}
-            onShowDetail={showAppDetail}
-          >
-            <BrowseButtonContainer>
-              <BrowseButton
-                onClick={openAppCatalog}
-                disabled={appListIsLoading}
-                icon={<i className='fa fa-add-circle' />}
+          {featureFlags.flags.NextGenClusterApps.enabled ? (
+            <>
+              <h3>Installed Apps</h3>
+              <ClusterDetailAppList
+                apps={userInstalledApps}
+                isLoading={appListIsLoading}
+                border={{ side: 'bottom' }}
+                pad={{ bottom: 'medium' }}
+                margin={{ bottom: 'medium' }}
+                errorMessage={extractErrorMessage(appListError)}
               >
-                Install app
-              </BrowseButton>
-            </BrowseButtonContainer>
+                <Box margin={{ top: 'medium' }}>
+                  <Button
+                    onClick={openAppCatalog}
+                    disabled={appListIsLoading}
+                    icon={
+                      <i
+                        className='fa fa-add-circle'
+                        role='presentation'
+                        aria-hidden='true'
+                      />
+                    }
+                  >
+                    Install app
+                  </Button>
+                </Box>
+              </ClusterDetailAppList>
+            </>
+          ) : (
+            <UserInstalledApps
+              apps={userInstalledApps.map((a) => ({
+                name: a.metadata.name,
+                version: a.spec.version,
+                deletionTimestamp: a.metadata.deletionTimestamp,
+              }))}
+              error={extractErrorMessage(appListError) ?? null}
+              onShowDetail={showAppDetail}
+            >
+              <BrowseButtonContainer>
+                <Button
+                  onClick={openAppCatalog}
+                  disabled={appListIsLoading}
+                  icon={<i className='fa fa-add-circle' />}
+                >
+                  Install app
+                </Button>
+              </BrowseButtonContainer>
 
-            <Box margin={{ top: 'large' }} direction='column' gap='small'>
-              <ListAppsGuide namespace={clusterId} />
-            </Box>
-          </UserInstalledApps>
+              <Box margin={{ top: 'large' }} direction='column' gap='small'>
+                <ListAppsGuide namespace={clusterId} />
+              </Box>
+            </UserInstalledApps>
+          )}
 
           <div>
             <h3>Preinstalled Apps</h3>
@@ -349,10 +377,6 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       </Breadcrumb>
     </DocumentTitle>
   );
-};
-
-ClusterDetailApps.propTypes = {
-  releaseVersion: PropTypes.string.isRequired,
 };
 
 export default ClusterDetailApps;

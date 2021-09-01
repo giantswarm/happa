@@ -33,6 +33,4 @@ const ClusterListNoOrgsPlaceholder: React.FC<IClusterListNoOrgsPlaceholderProps>
   );
 };
 
-ClusterListNoOrgsPlaceholder.propTypes = {};
-
 export default ClusterListNoOrgsPlaceholder;

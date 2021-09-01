@@ -1,7 +1,6 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import RoutePath from 'lib/routePath';
 import InstallIngressButtonMAPI from 'MAPI/apps/InstallIngressButton';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useSelector } from 'react-redux';
@@ -9,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps } from 'shared/featureSupport';
 import { selectClusterById } from 'stores/cluster/selectors';
-import { getLoggedInUser, getProvider } from 'stores/main/selectors';
+import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
@@ -40,7 +39,7 @@ const InstallIngress = (props) => {
   );
 
   const user = useSelector(getLoggedInUser);
-  const provider = useSelector(getProvider);
+  const provider = window.config.info.general.provider;
 
   return (
     <Breadcrumb
@@ -98,11 +97,6 @@ const InstallIngress = (props) => {
       </>
     </Breadcrumb>
   );
-};
-
-InstallIngress.propTypes = {
-  match: PropTypes.object,
-  cluster: PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {

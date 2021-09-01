@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -36,12 +35,6 @@ const ClusterDetailPreinstalledApp = (props) => {
       <small>{props.version}&nbsp;</small>
     </Wrapper>
   );
-};
-
-ClusterDetailPreinstalledApp.propTypes = {
-  logoUrl: PropTypes.string,
-  name: PropTypes.string,
-  version: PropTypes.node,
 };
 
 export default ClusterDetailPreinstalledApp;

@@ -1,7 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
@@ -257,16 +256,6 @@ class Users extends React.Component {
   }
 }
 
-Users.propTypes = {
-  dispatch: PropTypes.func,
-  currentUser: PropTypes.object,
-  users: PropTypes.object,
-  organizations: PropTypes.object,
-  initialSelectedOrganizations: PropTypes.array,
-  invitations: PropTypes.object,
-  installation_name: PropTypes.string,
-};
-
 function mapStateToProps(state) {
   return {
     currentUser: getLoggedInUser(state),
@@ -274,7 +263,7 @@ function mapStateToProps(state) {
     invitations: state.entities.users.invitations,
     organizations: state.entities.organizations,
     initialSelectedOrganizations: [state.main.selectedOrganization],
-    installation_name: state.main.info.general.installation_name,
+    installation_name: window.config.info.general.installationName,
   };
 }
 

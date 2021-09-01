@@ -27,7 +27,11 @@ export default {
         provider: Providers.AWS,
       },
       stats: {
-        cluster_creation_duration: null,
+        cluster_creation_duration: {
+          median: 0,
+          p25: 0,
+          p75: 0,
+        },
       },
       workers: {
         count_per_cluster: {

@@ -2,7 +2,6 @@ import { Box } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import RoutePath from 'lib/routePath';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
@@ -322,13 +321,6 @@ ingress.networking.k8s.io "helloworld" deleted
     );
   }
 }
-
-SimpleExample.propTypes = {
-  cluster: PropTypes.object,
-  match: PropTypes.object,
-  steps: PropTypes.array,
-  stepIndex: PropTypes.number,
-};
 
 function mapStateToProps(state, ownProps) {
   const selectedCluster =

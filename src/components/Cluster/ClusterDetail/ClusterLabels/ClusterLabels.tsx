@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
 import styled from 'styled-components';
 import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
@@ -138,14 +137,6 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
       )}
     </ClusterLabelsWrapper>
   );
-};
-
-ClusterLabels.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  labels: PropTypes.object as PropTypes.Requireable<Record<string, string>>,
-  isLoading: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  showTitle: PropTypes.bool,
 };
 
 ClusterLabels.defaultProps = {

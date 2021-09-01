@@ -1,5 +1,4 @@
 import ClusterStatus from 'Home/ClusterStatus';
-import PropTypes from 'prop-types';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
@@ -128,14 +127,6 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
       </ClusterList>
     </ClusterPickerWrapper>
   );
-};
-
-ClusterPicker.propTypes = {
-  clusters: PropTypes.array.isRequired,
-  onChangeQuery: PropTypes.func.isRequired,
-  onSelectCluster: PropTypes.func.isRequired,
-  query: PropTypes.string.isRequired,
-  selectedClusterID: PropTypes.string,
 };
 
 export default ClusterPicker;

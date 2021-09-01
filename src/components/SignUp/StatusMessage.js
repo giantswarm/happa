@@ -1,6 +1,5 @@
 import { spinner } from 'images';
 import { PasswordStatusMessage } from 'lib/passwordValidation';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 class StatusMessage extends React.Component {
@@ -79,9 +78,5 @@ class StatusMessage extends React.Component {
     );
   }
 }
-
-StatusMessage.propTypes = {
-  status: PropTypes.string,
-};
 
 export default StatusMessage;

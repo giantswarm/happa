@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React from 'react';
 import ClusterIDLabel, {
   ClusterIDLabelType,
@@ -122,17 +121,6 @@ const ClusterDetailDeleteActionClusterDetails: React.FC<IClusterDetailDeleteActi
       </Box>
     </Box>
   );
-};
-
-ClusterDetailDeleteActionClusterDetails.propTypes = {
-  variant: (PropTypes.string as PropTypes.Requireable<ClusterDetailDeleteActionNameVariant>)
-    .isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  creationDate: PropTypes.string.isRequired,
-  workerNodesCount: PropTypes.number.isRequired,
-  nodePoolsCount: PropTypes.number.isRequired,
-  userInstalledAppsCount: PropTypes.number,
 };
 
 export default ClusterDetailDeleteActionClusterDetails;

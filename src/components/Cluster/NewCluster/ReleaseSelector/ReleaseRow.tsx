@@ -1,6 +1,5 @@
 import { Box, Keyboard, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
-import PropTypes from 'prop-types';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
@@ -205,23 +204,6 @@ const ReleaseRow: FC<IReleaseRow> = ({
       )}
     </>
   );
-};
-
-ReleaseRow.propTypes = {
-  active: PropTypes.bool.isRequired,
-  components: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      version: PropTypes.string.isRequired,
-    }).isRequired
-  ).isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  selectRelease: PropTypes.func.isRequired,
-  timestamp: PropTypes.string.isRequired,
-  version: PropTypes.string.isRequired,
-  kubernetesVersion: PropTypes.string,
-  k8sVersionEOLDate: PropTypes.string,
-  releaseNotesURL: PropTypes.string,
 };
 
 export default ReleaseRow;

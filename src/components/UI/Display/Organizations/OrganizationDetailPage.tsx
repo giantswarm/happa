@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
@@ -209,20 +208,6 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
       )}
     </Box>
   );
-};
-
-OrganizationDetailPage.propTypes = {
-  organizationName: PropTypes.string.isRequired,
-  organizationNamespace: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  clusterCount: PropTypes.number,
-  clusterCountLoading: PropTypes.bool,
-  clustersSummary: PropTypes.object,
-  clustersSummaryLoading: PropTypes.bool,
-  releasesSummary: PropTypes.object,
-  releasesSummaryLoading: PropTypes.bool,
-  appsSummary: PropTypes.object,
-  appsSummaryLoading: PropTypes.bool,
 };
 
 export default OrganizationDetailPage;

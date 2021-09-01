@@ -6,7 +6,6 @@ import {
   PasswordStatusMessage,
   validatePassword,
 } from 'lib/passwordValidation';
-import PropTypes from 'prop-types';
 import React, { createRef } from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
@@ -36,11 +35,6 @@ class ChangePassword extends React.Component<
   IChangePasswordProps,
   IChangePasswordState
 > {
-  public static propTypes = {
-    user: PropTypes.object,
-    giantswarmLogin: PropTypes.func,
-  };
-
   private currentPassword = createRef<HTMLInputElement>();
   private newPassword = createRef<HTMLInputElement>();
   private newPasswordConfirmation = createRef<HTMLInputElement>();
