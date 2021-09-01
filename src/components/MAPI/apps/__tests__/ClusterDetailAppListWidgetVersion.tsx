@@ -175,8 +175,6 @@ describe('ClusterDetailAppListWidgetVersion', () => {
 
     expect(screen.getByLabelText('App version: 1.1.0')).toBeInTheDocument();
 
-    expect(
-      await screen.findByText('Newer version available')
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Upgrade available')).toBeInTheDocument();
   });
 });

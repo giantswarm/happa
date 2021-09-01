@@ -85,22 +85,22 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
         <StyledBox wrap={true} direction='row'>
           <ClusterDetailAppListWidgetVersion
             app={app}
-            basis='200px'
+            basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
           <ClusterDetailAppListWidgetStatus
             app={app}
-            basis='200px'
+            basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
           <ClusterDetailAppListWidgetCatalog
             app={app}
-            basis='200px'
+            basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
           <ClusterDetailAppListWidgetNamespace
             app={app}
-            basis='200px'
+            basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
         </StyledBox>

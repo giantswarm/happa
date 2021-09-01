@@ -128,7 +128,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<IClusterDetailAppListWidgetVer
       {hasNewVersion && (
         <Text color='status-warning'>
           <i className='fa fa-warning' role='presentation' aria-hidden='true' />{' '}
-          Newer version available
+          Upgrade available
         </Text>
       )}
     </ClusterDetailAppListWidget>
