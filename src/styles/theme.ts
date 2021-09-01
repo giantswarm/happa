@@ -940,6 +940,12 @@ const theme = deepMerge(generate(16), {
   anchor: {
     color: 'text',
   },
+  accordion: {
+    border: false,
+    panel: {
+      border: false,
+    },
+  },
 });
 
 /* eslint-enable no-magic-numbers */

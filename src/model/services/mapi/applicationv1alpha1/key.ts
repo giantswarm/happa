@@ -1,5 +1,5 @@
 import { IAppCatalog } from './';
-import { IAppCatalogEntry } from './types';
+import { IApp, IAppCatalogEntry } from './types';
 
 export const labelAppOperator = 'app-operator.giantswarm.io/version';
 export const labelAppName = 'app.kubernetes.io/name';
@@ -29,4 +29,10 @@ export function getAppCatalogEntryReadmeURL(
   appCatalogEntry: IAppCatalogEntry
 ): string | undefined {
   return appCatalogEntry.metadata.annotations?.[annotationReadme];
+}
+
+export function getAppCurrentVersion(app: IApp): string {
+  if (!app.status) return app.spec.version;
+
+  return app.status.version;
 }
