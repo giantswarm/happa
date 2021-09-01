@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
+import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
 import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
 import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
 
@@ -87,6 +88,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             flex={{ grow: 1, shrink: 1 }}
           />
           <ClusterDetailAppListWidgetStatus
+            app={app}
+            basis='200px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetCatalog
             app={app}
             basis='200px'
             flex={{ grow: 1, shrink: 1 }}
