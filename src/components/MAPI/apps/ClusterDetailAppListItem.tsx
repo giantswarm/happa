@@ -20,6 +20,10 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
   app,
   isActive,
 }) => {
+  const currentVersion = app
+    ? applicationv1alpha1.getAppCurrentVersion(app)
+    : undefined;
+
   return (
     <AccordionPanel
       header={
@@ -52,7 +56,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             animation={{ type: isActive ? 'fadeOut' : 'fadeIn', duration: 150 }}
             margin={{ left: 'small' }}
           >
-            <OptionalValue value={app?.spec.version} loaderWidth={100}>
+            <OptionalValue value={currentVersion} loaderWidth={100}>
               {(value) => (
                 <Text color='text-weak' aria-label={`App version: ${value}`}>
                   {value}
