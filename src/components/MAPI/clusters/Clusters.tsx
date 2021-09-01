@@ -209,9 +209,11 @@ const Clusters: React.FC<{}> = () => {
             </AnimationWrapper>
           </Keyboard>
         </Box>
-        <Box margin={{ top: 'medium' }} direction='column' gap='small'>
-          <ListClustersGuide namespace={`org-${selectedOrgName}`} />
-        </Box>
+        {namespace && (
+          <Box margin={{ top: 'medium' }} direction='column' gap='small'>
+            <ListClustersGuide namespace={namespace} />
+          </Box>
+        )}
       </Box>
     </DocumentTitle>
   );
