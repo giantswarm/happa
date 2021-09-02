@@ -10,14 +10,7 @@ import AppsList from 'UI/Display/Apps/AppList/AppsListPage';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 
-function isAppCatalogVisibleToUsers(
-  appCatalog: applicationv1alpha1.IAppCatalog
-) {
-  return (
-    applicationv1alpha1.isAppCatalogPublic(appCatalog) &&
-    applicationv1alpha1.isAppCatalogStable(appCatalog)
-  );
-}
+import { computeAppCatalogUITitle, isAppCatalogVisibleToUsers } from '../utils';
 
 function compareAppCatalogEntriesByName(
   a: applicationv1alpha1.IAppCatalogEntry,
@@ -61,26 +54,6 @@ export const compareAppCatalogEntriesFns: Record<
   catalog: compareAppCatalogEntriesByAppCatalog,
   latest: compareAppCatalogEntriesByLatest,
 };
-
-/**
- * Remove the `Giant Swarm` prefix from
- * internal catalogs, to ease cognitive load.
- * @param catalog
- */
-export function computeAppCatalogUITitle(
-  catalog: applicationv1alpha1.IAppCatalog
-): string {
-  const prefix = 'Giant Swarm ';
-
-  if (
-    !isAppCatalogVisibleToUsers(catalog) &&
-    catalog.spec.title.startsWith(prefix)
-  ) {
-    return catalog.spec.title.slice(prefix.length);
-  }
-
-  return catalog.spec.title;
-}
 
 /**
  * Sort catalogs in an alphabetical order, but group

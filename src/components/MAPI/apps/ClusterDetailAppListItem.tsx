@@ -4,10 +4,19 @@ import React from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
+import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
+import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNamespace';
+import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
+import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
+
 const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
   transition: 0.15s ease-out;
+`;
+
+const StyledBox = styled(Box)`
+  gap: ${({ theme }) => theme.global.edgeSize.small};
 `;
 
 interface IClusterDetailAppListItemProps
@@ -71,9 +80,30 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
         round={{ corner: 'bottom', size: 'xsmall' }}
         background='background-front'
         fill='horizontal'
-        pad='medium'
+        pad={{ horizontal: 'small', top: 'xsmall', bottom: 'small' }}
       >
-        hi friends
+        <StyledBox wrap={true} direction='row'>
+          <ClusterDetailAppListWidgetVersion
+            app={app}
+            basis='250px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetStatus
+            app={app}
+            basis='250px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetCatalog
+            app={app}
+            basis='250px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetNamespace
+            app={app}
+            basis='250px'
+            flex={{ grow: 1, shrink: 1 }}
+          />
+        </StyledBox>
       </Box>
     </AccordionPanel>
   );

@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+>
+  <div
+    class="sc-gKAaRy ezfMqp"
+  >
+    <div
+      aria-label="Some widget"
+      class="StyledBox-sc-13pk1d4-0 erippm"
+    >
+      <div
+        class="StyledBox-sc-13pk1d4-0 kUTqHn"
+      >
+        <span
+          class="StyledText-sc-1sadyjn-0 fTVibh sc-tsGVs iEFaxe"
+        >
+          Some widget
+        </span>
+      </div>
+      <div
+        class="StyledBox-sc-13pk1d4-0 kUTqHn"
+      >
+        <span
+          class="StyledText-sc-1sadyjn-0 giPNPf"
+        >
+          Some content
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
