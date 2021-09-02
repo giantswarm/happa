@@ -3,7 +3,8 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 
-interface IYAMLFileUploadProps {
+interface IYAMLFileUploadProps
+  extends React.ComponentPropsWithoutRef<typeof Button> {
   buttonText: string;
   onInputChange: (values: string, done: () => void) => void;
 }
@@ -11,6 +12,7 @@ interface IYAMLFileUploadProps {
 const YAMLFileUpload: React.FC<IYAMLFileUploadProps> = ({
   buttonText,
   onInputChange,
+  ...props
 }) => {
   const [fileUploading, setFileUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -51,7 +53,7 @@ const YAMLFileUpload: React.FC<IYAMLFileUploadProps> = ({
 
   return (
     <>
-      <Button loading={fileUploading} onClick={handleUploadClick}>
+      <Button {...props} loading={fileUploading} onClick={handleUploadClick}>
         {buttonText}
       </Button>
 
