@@ -91,7 +91,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
         await dispatch(prepareIngressTabData({ clusterId }));
         setIsNew(false);
       } catch (err) {
-        ErrorReporter.getInstance().notify(err);
+        ErrorReporter.getInstance().notify(err as Error);
       }
     };
 
@@ -102,7 +102,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     try {
       await dispatch(installLatestIngress({ clusterId }));
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

@@ -15,7 +15,7 @@ export function fetchUserFromStorage(): ILoggedInUser | null {
   try {
     user = JSON.parse(String(localStorage.getItem('user')));
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
   if (!user) return null;
 

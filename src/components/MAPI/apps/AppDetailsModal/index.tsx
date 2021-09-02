@@ -201,7 +201,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const errorMessage = extractErrorMessage(err);
       setAppUpdateError(errorMessage);
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -233,7 +233,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -265,7 +265,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -291,7 +291,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -330,7 +330,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -369,7 +369,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -408,7 +408,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -447,7 +447,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 

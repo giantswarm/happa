@@ -224,7 +224,7 @@ const ClusterDetail: React.FC<{}> = () => {
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

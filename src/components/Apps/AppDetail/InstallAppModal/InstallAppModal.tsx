@@ -279,7 +279,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
     } catch (err) {
       setLoading(false);
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

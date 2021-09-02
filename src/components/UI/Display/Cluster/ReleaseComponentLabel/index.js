@@ -43,7 +43,11 @@ const VersionLabel = (props) => {
   } else if (isRemoved) {
     return 'removed';
   } else if (isAdded) {
-    return <Truncated as='span'>{newVersion} (added)</Truncated>;
+    return (
+      <>
+        <Truncated as='span'>{newVersion}</Truncated> <span>(added)</span>
+      </>
+    );
   }
 
   return <Truncated as='span'>{newVersion}</Truncated>;

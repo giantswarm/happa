@@ -304,7 +304,7 @@ export class HttpClientImpl implements IHttpClient {
       res.status = StatusCodes.BadRequest;
       res.message = `We couldn't execute a request. Please try again in a few moments.`;
 
-      if (err.name === 'AbortError') {
+      if ((err as Error).name === 'AbortError') {
         res.status = StatusCodes.Timeout;
         res.message = `Your request exceeded the maximum timeout of ${timeout}ms.`;
         res.headers = Object.assign({}, headers);

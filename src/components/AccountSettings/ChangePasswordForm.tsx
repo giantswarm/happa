@@ -191,7 +191,7 @@ class ChangePassword extends React.Component<
             buttonVisible: false,
           });
 
-          ErrorReporter.getInstance().notify(error);
+          ErrorReporter.getInstance().notify(error as Error);
         });
     }
   };

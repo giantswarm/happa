@@ -63,6 +63,7 @@ import {
 } from 'stores/appcatalog/types';
 import { v4orV5 } from 'stores/cluster/utils';
 import { IState } from 'stores/state';
+import { IGSAPIError } from 'utils/errorUtils';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 import { fixTestAppReadmeURLs, normalizeAppCatalogIndexURL } from './utils';
@@ -134,7 +135,7 @@ export function catalogLoadIndex(
         id: catalogName,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       return Promise.resolve();
     }
@@ -220,7 +221,7 @@ export function loadAppReadme(
         error: errorMessage,
       });
 
-      ErrorReporter.getInstance().notify(error);
+      ErrorReporter.getInstance().notify(error as Error);
 
       return Promise.resolve();
     }
@@ -274,13 +275,13 @@ export function updateAppConfig(
         appName,
       });
 
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
           `Could not find an app or ConfigMap containing user level config values to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (err.status === StatusCodes.BadRequest) {
+      } else if ((err as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
           messageType.ERROR,
@@ -294,7 +295,7 @@ export function updateAppConfig(
         );
       }
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -351,13 +352,13 @@ export function createAppConfig(
         appName,
       });
 
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
           `Could not find app <code>${appName}</code> on cluster <code>${clusterID}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (err.status === StatusCodes.BadRequest) {
+      } else if ((err as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
           messageType.ERROR,
@@ -371,7 +372,7 @@ export function createAppConfig(
         );
       }
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -420,13 +421,13 @@ export function deleteAppConfig(
         appName,
       });
 
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
           `Could not find the ConfigMap containing user level config values for the app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (err.status === StatusCodes.BadRequest) {
+      } else if ((err as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
           messageType.ERROR,
@@ -440,7 +441,7 @@ export function deleteAppConfig(
         );
       }
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -492,13 +493,13 @@ export function updateAppSecret(
         appName,
       });
 
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
           `Could not find an app or Secret containing user level secret values to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (err.status === StatusCodes.BadRequest) {
+      } else if ((err as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
           messageType.ERROR,
@@ -512,7 +513,7 @@ export function updateAppSecret(
         );
       }
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -567,13 +568,13 @@ export function createAppSecret(
         appName,
       });
 
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
           `Could not find <code>${appName}</code> on cluster <code>${clusterID}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (err.status === StatusCodes.BadRequest) {
+      } else if ((err as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
           messageType.ERROR,
@@ -587,7 +588,7 @@ export function createAppSecret(
         );
       }
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -636,13 +637,13 @@ export function deleteAppSecret(
         appName,
       });
 
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
           `Could not find the Secret containing user level secret values for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (err.status === StatusCodes.BadRequest) {
+      } else if ((err as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
           messageType.ERROR,
@@ -697,7 +698,7 @@ export const updateClusterApp = createAsynchronousAction<
       };
     } catch (error) {
       const errorMessage =
-        error?.message ||
+        (error as Error)?.message ||
         'Something went wrong while trying to update your app. Please try again later or contact support.';
 
       return Promise.reject(new Error(errorMessage));
@@ -853,19 +854,21 @@ export const installApp = createAsynchronousAction<
     try {
       await createApp(clusterId, name, request);
     } catch (error) {
-      if (error.status === StatusCodes.Conflict) {
+      if ((error as IGSAPIError).status === StatusCodes.Conflict) {
         new FlashMessage(
           `An app called <code>${name}</code> already exists on cluster <code>${clusterId}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (error.status === StatusCodes.ServiceUnavailable) {
+      } else if (
+        (error as IGSAPIError).status === StatusCodes.ServiceUnavailable
+      ) {
         new FlashMessage(
           `The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.`,
           messageType.ERROR,
           messageTTL.LONG
         );
-      } else if (error.status === StatusCodes.BadRequest) {
+      } else if ((error as IGSAPIError).status === StatusCodes.BadRequest) {
         new FlashMessage(
           `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
           messageType.ERROR,
@@ -933,16 +936,14 @@ export const installLatestIngress = createAsynchronousAction<
 
       return Promise.resolve();
     } catch (e) {
-      // report the error
-      const errorReporter = ErrorReporter.getInstance();
-      errorReporter.notify(e);
+      ErrorReporter.getInstance().notify(e as Error);
 
       // show error
       let errorMessage =
         'Something went wrong while trying to install Ingress Controller App.';
-      if (e.response?.message || e.message) {
+      if ((e as IGSAPIError).response?.message || (e as Error).message) {
         errorMessage = `There was a problem trying to install Ingress Controller App: ${
-          e.response?.message ?? e.message
+          (e as IGSAPIError).response?.message ?? (e as Error).message
         }`;
       }
 
@@ -989,16 +990,14 @@ export const prepareIngressTabData = createAsynchronousAction<
 
       return Promise.resolve();
     } catch (e) {
-      // report the error
-      const errorReporter = ErrorReporter.getInstance();
-      errorReporter.notify(e);
+      ErrorReporter.getInstance().notify(e as Error);
 
       // show error
       let errorMessage =
         'Something went wrong while preparing data for Ingress Controller App installation.';
-      if (e.response?.message || e.message) {
+      if ((e as IGSAPIError).response?.message || (e as Error).message) {
         errorMessage = `There was a problem preparing data for Ingress Controller App installation: ${
-          e.response?.message ?? e.message
+          (e as IGSAPIError).response?.message ?? (e as Error).message
         }`;
       }
 

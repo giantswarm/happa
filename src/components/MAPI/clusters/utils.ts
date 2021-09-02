@@ -139,7 +139,7 @@ export function isClusterUpgradable(
 
     return releaseHelper.getNextVersion() !== null;
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
 
     return false;
   }
@@ -419,7 +419,7 @@ export function findLatestReleaseVersion(
 
       versions.push(version.toString());
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       continue;
     }

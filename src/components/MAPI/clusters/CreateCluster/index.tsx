@@ -272,7 +272,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

@@ -13,6 +13,7 @@ import * as nodePoolActions from 'stores/nodepool/actions';
 import styled from 'styled-components';
 import { Code, Ellipsis } from 'styles/';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import { IGSAPIError } from 'utils/errorUtils';
 
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
@@ -114,9 +115,9 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
       );
     } catch (err) {
       let errorMessage = `Something went wrong while trying to update the node pool's name.`;
-      if (err.response?.message || err.message) {
+      if ((err as IGSAPIError).response?.message || (err as Error).message) {
         errorMessage = `There was a problem updating the node pool's name: ${
-          err.response?.message ?? err.message
+          (err as IGSAPIError).response?.message ?? (err as Error).message
         }`;
       }
       new FlashMessage(
@@ -126,7 +127,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
         'Please try again later or contact support: support@giantswarm.io'
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

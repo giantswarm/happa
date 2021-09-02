@@ -22,6 +22,7 @@ import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import { IGSAPIError } from 'utils/errorUtils';
 
 const StyledModal = styled(BootstrapModal)`
   .modal-dialog {
@@ -96,12 +97,13 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         setModal({
           visible: true,
           loading: false,
-          errorCode: err.status ?? StatusCodes.InternalServerError,
+          errorCode:
+            (err as IGSAPIError).status ?? StatusCodes.InternalServerError,
           status: KeypairCreateModalStatus.Adding,
         });
       }, MODAL_CHANGE_TIMEOUT);
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

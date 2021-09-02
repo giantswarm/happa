@@ -168,7 +168,7 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 
