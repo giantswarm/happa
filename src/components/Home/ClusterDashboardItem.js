@@ -14,7 +14,6 @@ import { isClusterCreating } from 'stores/cluster/utils';
 import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
 import { selectClusterNodePools } from 'stores/nodepool/selectors';
-import { selectOrganizationByID } from 'stores/organization/selectors';
 import { getAllReleases } from 'stores/releases/selectors';
 import { css } from 'styled-components';
 import styled from 'styled-components';
@@ -301,8 +300,7 @@ function mapStateToProps(state, props) {
   const cluster = selectClusterById(state, props.clusterId);
   let organizationID = '';
   if (cluster) {
-    organizationID =
-      selectOrganizationByID(cluster.owner)(state)?.id ?? cluster.owner;
+    organizationID = cluster.owner;
   }
 
   return {

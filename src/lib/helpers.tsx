@@ -331,7 +331,10 @@ export function clustersForOrg(
 ): Cluster[] {
   if (!allClusters) return [];
 
-  const organizationID = getOrganizationByID(orgId, organizations)?.id;
+  const organization = getOrganizationByID(orgId, organizations);
+  if (!organization) return [];
+
+  const organizationID = organization.name ?? organization?.id;
 
   return Object.values(allClusters).filter(
     (cluster) => cluster.owner === organizationID
