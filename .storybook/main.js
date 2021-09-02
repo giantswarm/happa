@@ -18,8 +18,12 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
   ],
-
-  webpackFinal: async (config, { _ }) => {
+  typescript: {
+    check: false,
+    checkOptions: {},
+    reactDocgen: 'react-docgen-typescript',
+  },
+  webpackFinal: async (config) => {
     config.resolve.modules = [
       ...(config.resolve.modules || []),
       'node_modules',
@@ -32,15 +36,6 @@ module.exports = {
       use: ['style-loader', 'css-loader', 'sass-loader'],
     });
 
-    config.module.rules.push({
-      test: /\.(ts|tsx)$/,
-      use: [
-        { loader: require.resolve('babel-loader') },
-        { loader: require.resolve('react-docgen-typescript-loader') },
-      ],
-    });
-    config.resolve.extensions.push('.ts', '.tsx');
-
     config.plugins.push(
       new MiniCssExtractPlugin({
         filename: '[name]-[contenthash].css',
@@ -49,5 +44,12 @@ module.exports = {
     );
 
     return config;
+  },
+  build: {
+    babel: {
+      plugins: [
+        ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+      ],
+    },
   },
 };
