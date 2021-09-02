@@ -29,11 +29,14 @@ export function selectClusterById(
 function selectOrganizationClusterNames(state: IState): string[] {
   const clusters = state.entities.clusters.items;
   const clusterIds = Object.keys(clusters);
-  const selectedOrganization =
-    state.main.selectedOrganization?.toLowerCase() ?? '';
-  const organizationID =
-    selectOrganizationByID(selectedOrganization)(state)?.id ??
-    selectedOrganization;
+
+  if (!state.main.selectedOrganization) return [];
+  const selectedOrganization = selectOrganizationByID(
+    state.main.selectedOrganization
+  )(state);
+  if (!selectedOrganization) return [];
+
+  const organizationID = selectedOrganization.name ?? selectedOrganization.id;
 
   return clusterIds
     .filter((id) => clusters[id].owner === organizationID)

@@ -136,11 +136,15 @@ export function clustersDetails(opts: {
       dispatch({ type: CLUSTERS_DETAILS_REQUEST });
     }
 
-    const selectedOrganization =
-      getState().main.selectedOrganization?.toLowerCase() ?? '';
-    const organizationID =
-      selectOrganizationByID(selectedOrganization)(getState())?.id ??
-      selectedOrganization;
+    const state = getState();
+    if (!state.main.selectedOrganization) return;
+
+    const selectedOrganization = selectOrganizationByID(
+      state.main.selectedOrganization
+    )(state);
+    if (!selectedOrganization) return;
+
+    const organizationID = selectedOrganization.name ?? selectedOrganization.id;
 
     const allClusters = getState().entities.clusters.items;
     // Remove deleted clusters from clusters array.
@@ -347,7 +351,7 @@ export function clusterCreate(
   void,
   ClusterActions
 > {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     try {
       dispatch({ type: CLUSTER_CREATE_REQUEST });
 
@@ -381,8 +385,7 @@ export function clusterCreate(
         clusterId,
       });
 
-      const organizationID =
-        selectOrganizationByID(cluster.owner)(getState())?.id ?? cluster.owner;
+      const organizationID = cluster.owner;
 
       return { clusterId, owner: organizationID };
     } catch (error) {

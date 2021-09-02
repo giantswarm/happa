@@ -105,11 +105,15 @@ export function nodePoolsLoad(opts?: {
     if (opts?.withLoadingFlags)
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
 
-    const selectedOrganization =
-      getState().main.selectedOrganization?.toLowerCase() ?? '';
-    const organizationID =
-      selectOrganizationByID(selectedOrganization)(getState())?.id ??
-      selectedOrganization;
+    const state = getState();
+    if (!state.main.selectedOrganization) return;
+
+    const selectedOrganization = selectOrganizationByID(
+      state.main.selectedOrganization
+    )(state);
+    if (!selectedOrganization) return;
+
+    const organizationID = selectedOrganization.name ?? selectedOrganization.id;
 
     const allClusters = getState().entities.clusters.items;
     const v5ClusterIDs: string[] =
