@@ -110,7 +110,7 @@ export async function fetchNodePoolListForCluster(
         {
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+              [capiv1alpha3.labelCluster]: cluster.metadata.name,
             },
           },
         }
@@ -126,7 +126,7 @@ export async function fetchNodePoolListForCluster(
         {
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+              [capiv1alpha3.labelCluster]: cluster.metadata.name,
             },
           },
         }
@@ -159,7 +159,7 @@ export function fetchNodePoolListForClusterKey(
       return capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+            [capiv1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
       });
@@ -169,7 +169,7 @@ export function fetchNodePoolListForClusterKey(
       return capiv1alpha3.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster!.metadata.name,
+            [capiv1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
       });
@@ -419,7 +419,7 @@ export function getProviderNodePoolSpotInstances(
           maxPrice: maxPrice as number,
         };
       } catch (err) {
-        ErrorReporter.getInstance().notify(err);
+        ErrorReporter.getInstance().notify(err as Error);
 
         return {
           enabled:

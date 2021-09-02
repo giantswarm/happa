@@ -30,7 +30,7 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
       try {
         await auth.logout();
       } catch (logoutError) {
-        ErrorReporter.getInstance().notify(logoutError);
+        ErrorReporter.getInstance().notify(logoutError as Error);
       }
 
       new FlashMessage(
@@ -40,7 +40,7 @@ export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
         'Please log in again. If the problem persists, contact support: support@giantswarm.io'
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
 
     return Promise.resolve();

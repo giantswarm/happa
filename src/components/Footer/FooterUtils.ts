@@ -21,7 +21,7 @@ export function formatVersion(version: string): string {
       ].join('');
     }
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
 
   return version;
@@ -37,7 +37,7 @@ export function getReleaseURL(version: string): string {
 
     return `https://docs.giantswarm.io/changes/web-ui/happa/v${version}/`;
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
 
     return 'https://github.com/giantswarm/happa';
   }

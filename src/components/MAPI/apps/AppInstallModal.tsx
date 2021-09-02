@@ -289,13 +289,13 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
       );
     } catch (error) {
       if (error) {
-        ErrorReporter.getInstance().notify(error);
+        ErrorReporter.getInstance().notify(error as Error);
       }
 
       let errorMessage = '';
       switch (true) {
         case metav1.isStatusError(
-          error?.data,
+          (error as GenericResponseError)?.data,
           metav1.K8sStatusErrorReasons.Invalid
         ):
           errorMessage = `Your input appears to be invalid. Please make sure all fields are filled in correctly.`;
@@ -303,7 +303,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           break;
 
         case metav1.isStatusError(
-          error?.data,
+          (error as GenericResponseError)?.data,
           metav1.K8sStatusErrorReasons.NotFound
         ):
           errorMessage = `The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.`;
@@ -311,7 +311,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           break;
 
         case metav1.isStatusError(
-          error?.data,
+          (error as GenericResponseError)?.data,
           metav1.K8sStatusErrorReasons.AlreadyExists
         ):
           errorMessage = `An app called <code>${name}</code> already exists on cluster <code>${clusterName}</code>`;

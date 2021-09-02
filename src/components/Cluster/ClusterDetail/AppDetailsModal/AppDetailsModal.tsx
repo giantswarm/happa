@@ -98,7 +98,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       );
 
       if (error) {
-        ErrorReporter.getInstance().notify(error);
+        ErrorReporter.getInstance().notify(new Error(error));
 
         return;
       }
@@ -106,7 +106,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       await dispatch(loadClusterApps({ clusterId: clusterId }));
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -116,7 +116,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       await dispatch(loadClusterApps({ clusterId: clusterId }));
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -126,7 +126,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       await dispatch(loadClusterApps({ clusterId: clusterId }));
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -136,7 +136,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       await dispatch(loadClusterApps({ clusterId: clusterId }));
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -147,7 +147,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       done();
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -158,7 +158,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       done();
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -169,7 +169,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       done();
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 
@@ -180,7 +180,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       done();
       handleClose();
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   }
 

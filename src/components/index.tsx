@@ -96,7 +96,7 @@ async function submitCustomRUM(
       },
     });
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
 }
 

@@ -59,7 +59,7 @@ async function ensureAppUserConfigMap(
     };
 
     return corev1.updateConfigMap(client, auth, cr);
-  } catch (err: unknown) {
+  } catch (err) {
     if (
       !metav1.isStatusError(
         (err as GenericResponse).data,
@@ -113,7 +113,7 @@ async function ensureAppUserSecret(
     };
 
     return corev1.updateSecret(client, auth, cr);
-  } catch (err: unknown) {
+  } catch (err) {
     if (
       !metav1.isStatusError(
         (err as GenericResponse).data,
@@ -611,7 +611,7 @@ export function isTestRelease(releaseVersion: string): boolean {
 
     return version.getPreRelease().length > 0;
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
 
     return false;
   }

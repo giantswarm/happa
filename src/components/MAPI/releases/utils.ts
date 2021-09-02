@@ -66,7 +66,7 @@ export function getSupportedUpgradeVersions(
       };
     });
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
 
     return [];
   }

@@ -45,6 +45,7 @@ import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
 import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
+import { IGSAPIError } from 'utils/errorUtils';
 import {
   fetchUserFromStorage,
   removeUserFromStorage,
@@ -176,7 +177,7 @@ export function refreshUserInfo(): ThunkAction<
 
       return Promise.resolve();
     } catch (err) {
-      if (err.status === StatusCodes.Unauthorized) {
+      if ((err as IGSAPIError).status === StatusCodes.Unauthorized) {
         new FlashMessage(
           'Please log in again, as your previously saved credentials appear to be invalid.',
           messageType.WARNING,
@@ -198,7 +199,7 @@ export function refreshUserInfo(): ThunkAction<
 
       dispatch({
         type: REFRESH_USER_INFO_ERROR,
-        error: err,
+        error: String(err),
       });
 
       return Promise.resolve();
@@ -380,7 +381,7 @@ export function logout(
 
       return Promise.resolve();
     } catch (err) {
-      dispatch(logoutError(err));
+      dispatch(logoutError(String(err)));
 
       return Promise.reject(err);
     }
@@ -402,10 +403,10 @@ export function mapiLogin(
       removeUserFromStorage();
       await auth.attemptLogin(connector);
     } catch (err) {
-      dispatch(loginError(err.message));
+      dispatch(loginError(String(err)));
       dispatch(push(MainRoutes.Login));
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }

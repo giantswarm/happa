@@ -152,7 +152,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
       // Success message and redirection are handled by the parent component.
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       const errorMessage = extractErrorMessage(err);
 

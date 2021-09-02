@@ -1,4 +1,4 @@
-import { ResponseError } from 'superagent';
+import { Response, ResponseError } from 'superagent';
 
 /**
  * Extract error messages from any type of error object.
@@ -21,4 +21,11 @@ export function extractMessageFromError(
     default:
       return fallbackMessage;
   }
+}
+
+export interface IGSAPIError extends ResponseError {
+  response: {
+    message: string;
+    status: string;
+  } & Response;
 }

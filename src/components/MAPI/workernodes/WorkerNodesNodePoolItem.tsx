@@ -130,7 +130,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 
@@ -179,7 +179,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 
@@ -222,7 +222,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 <Box direction='row' gap='medium' align='baseline'>
                   <Text>{value}</Text>
                   <Text size='small' color='text-xweak'>
-                    Deleted {relativeDate(nodePool!.metadata.deletionTimestamp)}
+                    Deleted {relativeDate(nodePool.metadata.deletionTimestamp)}
                   </Text>
                 </Box>
               ) : (

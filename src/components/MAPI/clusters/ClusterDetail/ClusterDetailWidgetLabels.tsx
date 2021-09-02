@@ -77,7 +77,7 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
 
       setLabelsError(errorMessage);
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       setLabelsIsLoading(false);
     }

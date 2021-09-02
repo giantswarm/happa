@@ -61,7 +61,7 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
 
   useEffect(() => {
     if (error) {
-      ErrorReporter.getInstance().notify(error);
+      ErrorReporter.getInstance().notify(error as Error);
     }
 
     if (

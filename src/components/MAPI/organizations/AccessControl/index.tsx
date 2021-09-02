@@ -49,7 +49,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
 
   useEffect(() => {
     if (error) {
-      ErrorReporter.getInstance().notify(error);
+      ErrorReporter.getInstance().notify(error as Error);
     }
   }, [error]);
 
@@ -97,8 +97,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       mutate(newData, false);
 
       return Promise.resolve(serviceAccountStatuses);
-    } catch (err: unknown) {
-      ErrorReporter.getInstance().notify(err as never);
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err as Error);
 
       const errorMessage = extractErrorMessage(err);
 
@@ -143,8 +143,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       mutate(newData, false);
 
       return Promise.resolve();
-    } catch (err: unknown) {
-      ErrorReporter.getInstance().notify(err as never);
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err as Error);
 
       const errorMessage = extractErrorMessage(err);
 
