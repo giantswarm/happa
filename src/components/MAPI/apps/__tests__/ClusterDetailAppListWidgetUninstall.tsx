@@ -126,7 +126,7 @@ describe('ClusterDetailAppWidgetUninstall', () => {
 
     const uninstallButton = screen.getByRole('button', {
       name: 'Uninstall...',
-    }) as HTMLButtonElement;
+    });
     fireEvent.click(uninstallButton);
 
     expect(

@@ -94,7 +94,7 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
           <ConfirmationPrompt
             title={
               <Text weight='bold' margin={{ bottom: 'small' }}>
-                Are you sure you want to uninstall {app.metadata.name} from
+                Are you sure you want to uninstall <code>{app.metadata.name}</code> from
                 cluster{' '}
                 <ClusterIDLabel
                   clusterID={app.metadata.namespace!}
@@ -131,7 +131,7 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
                 configuration resources.
               </Text>
               <Button secondary onClick={handleUninstall}>
-                Uninstall...
+                Uninstall…
               </Button>
             </Box>
           )}
