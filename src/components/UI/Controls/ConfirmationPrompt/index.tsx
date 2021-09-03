@@ -10,6 +10,7 @@ interface IConfirmationPromptProps
   cancelButton?: React.ReactNode;
   onConfirm?: () => void;
   onCancel?: () => void;
+  contentProps?: React.ComponentPropsWithoutRef<typeof Box>;
 }
 
 const ConfirmationPrompt = React.forwardRef<
@@ -24,6 +25,7 @@ const ConfirmationPrompt = React.forwardRef<
       cancelButton,
       onConfirm,
       onCancel,
+      contentProps,
       ...props
     },
     ref
@@ -69,13 +71,7 @@ const ConfirmationPrompt = React.forwardRef<
     return (
       <Collapsible {...props} ref={ref}>
         <Keyboard onEsc={handleCancel}>
-          <Box
-            ref={wrapperRef}
-            background='background-front'
-            round='xsmall'
-            pad='medium'
-            tabIndex={-1}
-          >
+          <Box ref={wrapperRef} round='xsmall' tabIndex={-1} {...contentProps}>
             {typeof title === 'string' ? (
               <Text weight='bold' margin={{ bottom: 'small' }}>
                 {title}
@@ -126,6 +122,7 @@ const ConfirmationPrompt = React.forwardRef<
 ConfirmationPrompt.defaultProps = {
   confirmButton: 'Confirm',
   cancelButton: 'Cancel',
+  contentProps: { pad: 'medium', background: 'background-front' },
 };
 
 export default ConfirmationPrompt;
