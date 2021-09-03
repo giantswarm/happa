@@ -116,7 +116,11 @@ describe('ClusterDetailAppWidgetUninstall', () => {
   it('displays the button to uninstall an app', () => {
     const app = generateApp();
     render(getComponent({ app }));
-    expect(screen.getByText('Uninstall...')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: /Uninstall/,
+      })
+    ).toBeInTheDocument();
   });
 
   it('displays the confirmation for uninstalling an app when the uninstall button is clicked', () => {
@@ -125,7 +129,7 @@ describe('ClusterDetailAppWidgetUninstall', () => {
     render(getComponent({ app }));
 
     const uninstallButton = screen.getByRole('button', {
-      name: 'Uninstall...',
+      name: /Uninstall/,
     });
     fireEvent.click(uninstallButton);
 
@@ -142,7 +146,7 @@ describe('ClusterDetailAppWidgetUninstall', () => {
     render(getComponent({ app }));
 
     const uninstallButton = screen.getByRole('button', {
-      name: 'Uninstall...',
+      name: /Uninstall/,
     });
     fireEvent.click(uninstallButton);
 
