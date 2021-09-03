@@ -66,6 +66,19 @@ workflows:
           <<: *job_filters
 
       - architect/push-to-docker:
+          name: push-happa-to-docker
+          context: "architect"
+          image: "docker.io/giantswarm/happa"
+          username_envar: "DOCKER_USERNAME"
+          password_envar: "DOCKER_PASSWORD"
+          requires:
+            - build-container
+          # Needed to trigger job also on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
           name: push-happa-to-quay
           context: architect
           image: *image_name
@@ -100,6 +113,7 @@ workflows:
           chart: "happa"
           requires:
             - push-happa-to-quay
+            - push-happa-to-docker
           # Needed to trigger job also on git tag.
           filters:
             tags:
