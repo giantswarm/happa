@@ -68,10 +68,21 @@ const ConfirmationPrompt = React.forwardRef<
       onCancel?.();
     };
 
+    const patchedContentProps = Object.assign(
+      {},
+      { pad: 'medium', background: 'background-front' },
+      contentProps
+    );
+
     return (
       <Collapsible {...props} ref={ref}>
         <Keyboard onEsc={handleCancel}>
-          <Box ref={wrapperRef} round='xsmall' tabIndex={-1} {...contentProps}>
+          <Box
+            ref={wrapperRef}
+            round='xsmall'
+            tabIndex={-1}
+            {...patchedContentProps}
+          >
             {typeof title === 'string' ? (
               <Text weight='bold' margin={{ bottom: 'small' }}>
                 {title}
@@ -122,7 +133,6 @@ const ConfirmationPrompt = React.forwardRef<
 ConfirmationPrompt.defaultProps = {
   confirmButton: 'Confirm',
   cancelButton: 'Cancel',
-  contentProps: { pad: 'medium', background: 'background-front' },
 };
 
 export default ConfirmationPrompt;
