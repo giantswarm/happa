@@ -1,3 +1,4 @@
+import produce from 'immer';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
@@ -12,6 +13,7 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { AppConstants, Constants } from 'shared/constants';
+import { mutate } from 'swr';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;
@@ -294,12 +296,7 @@ export async function ensureConfigMapForApp(
 
   if (!configMap) return null;
 
-  const app = await applicationv1alpha1.getApp(
-    client,
-    auth,
-    namespace,
-    appName
-  );
+  let app = await applicationv1alpha1.getApp(client, auth, namespace, appName);
   app.spec.userConfig = {
     ...app.spec.userConfig,
     configMap: {
@@ -308,7 +305,29 @@ export async function ensureConfigMapForApp(
     },
   };
 
-  return applicationv1alpha1.updateApp(client, auth, app);
+  app = await applicationv1alpha1.updateApp(client, auth, app);
+
+  mutate(
+    applicationv1alpha1.getAppKey(app.metadata.namespace!, app.metadata.name),
+    app,
+    false
+  );
+
+  mutate(
+    applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace }),
+    produce((draft?: applicationv1alpha1.IAppList) => {
+      if (!draft) return;
+
+      for (let i = 0; i < draft.items.length; i++) {
+        if (draft.items[i].metadata.name === app.metadata.name) {
+          draft.items[i] = app;
+        }
+      }
+    }),
+    false
+  );
+
+  return app;
 }
 
 export async function ensureSecretForApp(
@@ -329,12 +348,7 @@ export async function ensureSecretForApp(
 
   if (!secret) return null;
 
-  const app = await applicationv1alpha1.getApp(
-    client,
-    auth,
-    namespace,
-    appName
-  );
+  let app = await applicationv1alpha1.getApp(client, auth, namespace, appName);
   app.spec.userConfig = {
     ...app.spec.userConfig,
     secret: {
@@ -343,7 +357,29 @@ export async function ensureSecretForApp(
     },
   };
 
-  return applicationv1alpha1.updateApp(client, auth, app);
+  app = await applicationv1alpha1.updateApp(client, auth, app);
+
+  mutate(
+    applicationv1alpha1.getAppKey(app.metadata.namespace!, app.metadata.name),
+    app,
+    false
+  );
+
+  mutate(
+    applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace }),
+    produce((draft?: applicationv1alpha1.IAppList) => {
+      if (!draft) return;
+
+      for (let i = 0; i < draft.items.length; i++) {
+        if (draft.items[i].metadata.name === app.metadata.name) {
+          draft.items[i] = app;
+        }
+      }
+    }),
+    false
+  );
+
+  return app;
 }
 
 export async function deleteConfigMapForApp(
