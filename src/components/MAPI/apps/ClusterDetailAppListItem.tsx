@@ -112,12 +112,13 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             basis='100%'
             margin={{ top: 'small' }}
           />
+          <ClusterDetailAppListWidgetUninstall
+            app={app}
+            onAppUninstalled={onAppUninstalled}
+            basis='100%'
+            margin={{ top: 'small' }}
+          />
         </StyledBox>
-        <ClusterDetailAppListWidgetUninstall
-          app={app}
-          onAppUninstalled={onAppUninstalled}
-          margin={{ top: 'small' }}
-        />
       </Box>
     </AccordionPanel>
   );
