@@ -2,29 +2,29 @@
 
 exports[`ClusterDetailWidget renders a inline widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 kuOprO"
+      class="StyledBox-sc-13pk1d4-0 creiFH"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 ihVIAm"
+        class="StyledBox-sc-13pk1d4-0 fmJfdj"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 biMlWM sc-eEihID crGluz"
+          class="StyledText-sc-1sadyjn-0 eTVfRR sc-eDJueK kVkcwm"
         >
           Some widget
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 bsPEqS"
+        class="StyledBox-sc-13pk1d4-0 jpkMKD"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 giPNPf"
+          class="StyledText-sc-1sadyjn-0 fGZfQq"
         >
           Some content
         </span>
@@ -36,29 +36,29 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
 
 exports[`ClusterDetailWidget renders a simple widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 kuOprO"
+      class="StyledBox-sc-13pk1d4-0 creiFH"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 bbIfdU"
+        class="StyledBox-sc-13pk1d4-0 euFILx"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 biMlWM sc-eEihID crGluz"
+          class="StyledText-sc-1sadyjn-0 eTVfRR sc-eDJueK kVkcwm"
         >
           Some widget
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 bsPEqS"
+        class="StyledBox-sc-13pk1d4-0 jpkMKD"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 giPNPf"
+          class="StyledText-sc-1sadyjn-0 fGZfQq"
         >
           Some content
         </span>

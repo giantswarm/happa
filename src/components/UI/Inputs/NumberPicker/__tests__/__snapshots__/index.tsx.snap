@@ -2,34 +2,34 @@
 
 exports[`NumberPicker renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 cYwaIm"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 edaspP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 ZJQGZ"
+        class="StyledText-sc-1sadyjn-0 lPqQk"
         for="money"
       >
         Count your money
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 bmnpwp"
+        class="StyledText-sc-1sadyjn-0 cTuErc"
       >
         A very helpful message
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 dAJlVN FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 lkmfGs FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi sc-bxLXlR bAEZtL"
+            class="StyledTextInput-sc-1x30a0s-0 iIgwzP sc-bxnjHY hnbKaV"
             id="money"
             step="1"
             type="number"
@@ -37,18 +37,18 @@ exports[`NumberPicker renders a simple input 1`] = `
           />
         </div>
         <div
-          class="sc-jVSGNQ hOjaFx"
+          class="sc-jVKKMF fMidiY"
         >
           <div
             aria-label="Decrement"
-            class="sc-dHMioH gswHMu"
+            class="sc-dHnuKO nPJQP"
             role="button"
           >
             –
           </div>
           <div
             aria-label="Increment"
-            class="sc-dHMioH gswHMu"
+            class="sc-dHnuKO nPJQP"
             role="button"
           >
             +
@@ -56,7 +56,7 @@ exports[`NumberPicker renders a simple input 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 bTUvUa"
+        class="StyledText-sc-1sadyjn-0 kwoXLv"
       >
         Aha! Did not know that
       </span>
