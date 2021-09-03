@@ -2,23 +2,23 @@
 
 exports[`FileInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 cwwoTn FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 zyHQr"
+            class="StyledTextInput-sc-1x30a0s-0 bxDqkG"
             disabled=""
             type="file"
             value=""
@@ -32,23 +32,23 @@ exports[`FileInput renders a disabled input 1`] = `
 
 exports[`FileInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 SMFjn FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi"
+            class="StyledTextInput-sc-1x30a0s-0 iIgwzP"
             type="file"
             value=""
           />
@@ -61,28 +61,28 @@ exports[`FileInput renders a simple input 1`] = `
 
 exports[`FileInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
     >
       <span
-        class="StyledText-sc-1sadyjn-0 bmnpwp"
+        class="StyledText-sc-1sadyjn-0 cTuErc"
       >
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 SMFjn FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi"
+            class="StyledTextInput-sc-1x30a0s-0 iIgwzP"
             type="file"
             value=""
           />
@@ -95,29 +95,29 @@ exports[`FileInput renders an input with a help message 1`] = `
 
 exports[`FileInput renders an input with a label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 ZJQGZ"
+        class="StyledText-sc-1sadyjn-0 lPqQk"
         for="input"
       >
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 SMFjn FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi"
+            class="StyledTextInput-sc-1x30a0s-0 iIgwzP"
             id="input"
             type="file"
             value=""
@@ -131,30 +131,30 @@ exports[`FileInput renders an input with a label 1`] = `
 
 exports[`FileInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 HhzTD FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi"
+            class="StyledTextInput-sc-1x30a0s-0 iIgwzP"
             type="file"
             value=""
           />
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fnpEr"
+        class="StyledText-sc-1sadyjn-0 boCmmO"
       >
         You failed at this
       </span>
@@ -165,30 +165,30 @@ exports[`FileInput renders an input with a validation error 1`] = `
 
 exports[`FileInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hcMLLM FormField__FormFieldBox-m9hood-0 ofKvz"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 SMFjn FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 gXHnix"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 gHAWHi"
+            class="StyledTextInput-sc-1x30a0s-0 iIgwzP"
             type="file"
             value=""
           />
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 bTUvUa"
+        class="StyledText-sc-1sadyjn-0 kwoXLv"
       >
         You can set a cool value
       </span>
