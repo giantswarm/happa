@@ -7,6 +7,7 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
 import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNamespace';
 import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
+import ClusterDetailAppListWidgetUninstall from './ClusterDetailAppListWidgetUninstall';
 import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
@@ -23,11 +24,13 @@ interface IClusterDetailAppListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   app?: applicationv1alpha1.IApp;
   isActive?: boolean;
+  onAppUninstalled?: () => void;
 }
 
 const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
   app,
   isActive,
+  onAppUninstalled,
 }) => {
   const currentVersion = app
     ? applicationv1alpha1.getAppCurrentVersion(app)
@@ -104,6 +107,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             flex={{ grow: 1, shrink: 1 }}
           />
         </StyledBox>
+        <ClusterDetailAppListWidgetUninstall
+          app={app}
+          onAppUninstalled={onAppUninstalled}
+          margin={{ top: 'small' }}
+        />
       </Box>
     </AccordionPanel>
   );

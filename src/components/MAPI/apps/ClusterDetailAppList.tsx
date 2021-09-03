@@ -22,6 +22,8 @@ const ClusterDetailAppList: React.FC<IClusterDetailAppListProps> = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
+  const resetActiveIndex = () => setActiveIndex(-1);
+
   return (
     <Box {...props}>
       <Accordion
@@ -69,6 +71,7 @@ const ClusterDetailAppList: React.FC<IClusterDetailAppListProps> = ({
               key={app.metadata.name}
               app={app}
               isActive={activeIndex === idx}
+              onAppUninstalled={resetActiveIndex}
             />
           ))}
       </Accordion>
