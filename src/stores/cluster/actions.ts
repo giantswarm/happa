@@ -45,7 +45,7 @@ import {
 import { computeCapabilities, filterLabels } from 'stores/cluster/utils';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
-import { extractMessageFromError } from 'utils/errorUtils';
+import { extractMessageFromError, IGSAPIError } from 'utils/errorUtils';
 
 export function clustersList(opts: {
   withLoadingFlags?: boolean;
@@ -76,7 +76,7 @@ export function clustersList(opts: {
     } catch (err) {
       dispatch({
         type: CLUSTERS_LIST_ERROR,
-        error: err.message,
+        error: (err as Error).message,
       });
     }
   };
@@ -119,7 +119,7 @@ export function refreshClustersList(): ThunkAction<
     } catch (err) {
       dispatch({
         type: CLUSTERS_LIST_REFRESH_ERROR,
-        error: err.message,
+        error: (err as Error).message,
       });
     }
   };
@@ -136,11 +136,15 @@ export function clustersDetails(opts: {
       dispatch({ type: CLUSTERS_DETAILS_REQUEST });
     }
 
-    const selectedOrganization =
-      getState().main.selectedOrganization?.toLowerCase() ?? '';
-    const organizationID =
-      selectOrganizationByID(selectedOrganization)(getState())?.id ??
-      selectedOrganization;
+    const state = getState();
+    if (!state.main.selectedOrganization) return;
+
+    const selectedOrganization = selectOrganizationByID(
+      state.main.selectedOrganization
+    )(state);
+    if (!selectedOrganization) return;
+
+    const organizationID = selectedOrganization.name ?? selectedOrganization.id;
 
     const allClusters = getState().entities.clusters.items;
     // Remove deleted clusters from clusters array.
@@ -255,7 +259,7 @@ export function clusterLoadDetails(
 
       return (cluster as unknown) as Cluster;
     } catch (error) {
-      if (error.response?.status === StatusCodes.NotFound) {
+      if ((error as IGSAPIError).response?.status === StatusCodes.NotFound) {
         // Delete the cluster in the store.
         dispatch({
           type: CLUSTER_REMOVE_FROM_STORE,
@@ -269,13 +273,16 @@ export function clusterLoadDetails(
       dispatch({
         type: CLUSTER_LOAD_DETAILS_ERROR,
         id: clusterId,
-        error,
+        error: String(error),
       });
 
       let errorMessage = `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`;
-      if (error.response?.message || error.message) {
+      if (
+        (error as IGSAPIError).response?.message ||
+        (error as Error).message
+      ) {
         errorMessage = `There was a problem loading the cluster details: ${
-          error.response?.message ?? error.message
+          (error as IGSAPIError).response?.message ?? (error as Error).message
         }`;
       }
 
@@ -309,16 +316,16 @@ function clusterLoadStatus(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return JSON.parse((response as any).response.text);
     } catch (err) {
-      if (err.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         dispatch({ type: CLUSTER_LOAD_STATUS_NOT_FOUND, id });
       } else {
-        dispatch({ type: CLUSTER_LOAD_STATUS_ERROR, id, error: err });
+        dispatch({ type: CLUSTER_LOAD_STATUS_ERROR, id, error: String(err) });
 
         let errorMessage =
           'Something went wrong while trying to load the cluster status.';
-        if (err.response?.message || err.message) {
+        if ((err as IGSAPIError).response?.message || (err as Error).message) {
           errorMessage = `There was a problem loading the cluster status: ${
-            err.response?.message ?? err.message
+            (err as IGSAPIError).response?.message ?? (err as Error).message
           }`;
         }
 
@@ -344,7 +351,7 @@ export function clusterCreate(
   void,
   ClusterActions
 > {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     try {
       dispatch({ type: CLUSTER_CREATE_REQUEST });
 
@@ -378,12 +385,11 @@ export function clusterCreate(
         clusterId,
       });
 
-      const organizationID =
-        selectOrganizationByID(cluster.owner)(getState())?.id ?? cluster.owner;
+      const organizationID = cluster.owner;
 
       return { clusterId, owner: organizationID };
     } catch (error) {
-      dispatch({ type: CLUSTER_CREATE_ERROR, error: error.message });
+      dispatch({ type: CLUSTER_CREATE_ERROR, error: (error as Error).message });
 
       const errorBody = extractMessageFromError(
         error,
@@ -437,7 +443,7 @@ export function clusterDelete(
       dispatch({
         type: CLUSTER_DELETE_ERROR,
         id: cluster.id,
-        error: err,
+        error: String(err),
       });
     }
   };
@@ -481,7 +487,7 @@ export function clusterPatch(
       // Undo update to store if the API call fails.
       dispatch({
         type: CLUSTER_PATCH_ERROR,
-        error,
+        error: String(error),
         cluster,
       });
 
@@ -559,7 +565,7 @@ export function clusterCreateKeyPair(
     } catch (err) {
       dispatch({
         type: CLUSTER_CREATE_KEY_PAIR_ERROR,
-        error: err,
+        error: String(err),
       });
 
       return Promise.reject(err);

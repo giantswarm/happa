@@ -1,6 +1,7 @@
 import nock from 'nock';
 import { generateRandomString } from 'testUtils/mockHttpCalls';
 
+import { GenericResponseError } from '../GenericResponseError';
 import {
   HttpClientImpl,
   HttpRequestMethods,
@@ -301,7 +302,7 @@ describe('HttpClient', () => {
     try {
       await HttpClientImpl.get('/api/test', config);
     } catch (err) {
-      expect(err.data).toStrictEqual({
+      expect((err as GenericResponseError).data).toStrictEqual({
         testResponse: 'test value',
       });
     }
@@ -324,7 +325,7 @@ describe('HttpClient', () => {
         config
       );
     } catch (err) {
-      expect(err.message).toStrictEqual(
+      expect((err as GenericResponseError).message).toStrictEqual(
         `We couldn't execute a request. Please try again in a few moments.`
       );
     }
@@ -342,7 +343,7 @@ describe('HttpClient', () => {
     try {
       await client.execute();
     } catch (err) {
-      expect(err.message).toStrictEqual(
+      expect((err as GenericResponseError).message).toStrictEqual(
         `We couldn't execute a request. Please try again in a few moments.`
       );
     }

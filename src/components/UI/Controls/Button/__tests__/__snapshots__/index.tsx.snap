@@ -2,16 +2,16 @@
 
 exports[`Button renders a button with a loading animation 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 duqESE"
+        class="StyledButtonKind-sc-1vhfpnt-0 kUukqp"
         disabled=""
         type="button"
       >
@@ -22,7 +22,7 @@ exports[`Button renders a button with a loading animation 1`] = `
         aria-hidden="false"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       >
         <img
@@ -38,16 +38,16 @@ exports[`Button renders a button with a loading animation 1`] = `
 
 exports[`Button renders a danger button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 fyIUWJ"
+        class="StyledButtonKind-sc-1vhfpnt-0 jPJTyY"
         type="button"
       >
         Hi friends
@@ -57,7 +57,7 @@ exports[`Button renders a danger button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>
@@ -67,16 +67,16 @@ exports[`Button renders a danger button 1`] = `
 
 exports[`Button renders a disabled button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 duqESE"
+        class="StyledButtonKind-sc-1vhfpnt-0 kUukqp"
         disabled=""
         type="button"
       >
@@ -87,7 +87,7 @@ exports[`Button renders a disabled button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>
@@ -97,16 +97,16 @@ exports[`Button renders a disabled button 1`] = `
 
 exports[`Button renders a link button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 ehJRIz"
+        class="StyledButtonKind-sc-1vhfpnt-0 hCfXEO"
         type="button"
       >
         Hi friends
@@ -116,7 +116,7 @@ exports[`Button renders a link button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>
@@ -126,16 +126,16 @@ exports[`Button renders a link button 1`] = `
 
 exports[`Button renders a primary button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 jMJXUD"
+        class="StyledButtonKind-sc-1vhfpnt-0 kaJTBy"
         type="button"
       >
         Hi friends
@@ -145,7 +145,7 @@ exports[`Button renders a primary button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>
@@ -155,16 +155,16 @@ exports[`Button renders a primary button 1`] = `
 
 exports[`Button renders a secondary button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 jSHbzi"
+        class="StyledButtonKind-sc-1vhfpnt-0 dUbAgv"
         type="button"
       >
         Hi friends
@@ -174,7 +174,7 @@ exports[`Button renders a secondary button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>
@@ -184,16 +184,16 @@ exports[`Button renders a secondary button 1`] = `
 
 exports[`Button renders a warning button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 FXAWq"
+        class="StyledButtonKind-sc-1vhfpnt-0 FOcIP"
         type="button"
       >
         Hi friends
@@ -203,7 +203,7 @@ exports[`Button renders a warning button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>
@@ -213,16 +213,16 @@ exports[`Button renders a warning button 1`] = `
 
 exports[`Button renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 XLeeE sc-dlnjwi clPEKk"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 jSHbzi"
+        class="StyledButtonKind-sc-1vhfpnt-0 dUbAgv"
         type="button"
       >
         Hi friends
@@ -232,7 +232,7 @@ exports[`Button renders without crashing 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gtsrHT cpCxxM sc-hKFxyN jWPeIx"
+        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
         role="progressbar"
       />
     </div>

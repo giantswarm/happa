@@ -138,7 +138,7 @@ class CustomError extends Error implements ICustomError {
 
       stack = CustomError.stringifyStack(this.name, this.message, stackFrames);
     } catch (err) {
-      stack = `Couldn't get the detailed stack: ${err.message}
+      stack = `Couldn't get the detailed stack: ${(err as Error).message}
 
 ${this.stack}`;
     }

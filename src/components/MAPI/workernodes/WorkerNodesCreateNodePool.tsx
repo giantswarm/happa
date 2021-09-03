@@ -253,7 +253,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err as never);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

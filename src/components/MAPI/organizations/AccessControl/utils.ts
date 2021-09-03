@@ -548,7 +548,7 @@ export async function ensureServiceAccount(
     await corev1.getServiceAccount(client, auth, name, namespace);
 
     return { name, status: ui.AccessControlRoleSubjectStatus.Updated };
-  } catch (err: unknown) {
+  } catch (err) {
     // If the service account is not found, we'll create it.
     if (
       !metav1.isStatusError(

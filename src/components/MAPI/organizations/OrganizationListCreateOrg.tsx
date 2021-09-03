@@ -110,7 +110,7 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
         extractErrorMessage(err)
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

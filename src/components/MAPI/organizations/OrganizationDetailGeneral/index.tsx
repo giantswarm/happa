@@ -102,7 +102,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       await dispatch(organizationsLoadMAPI(auth));
 
       return Promise.resolve();
-    } catch (err: unknown) {
+    } catch (err) {
       const errorMessage = extractErrorMessage(err);
 
       return Promise.reject(new Error(errorMessage));

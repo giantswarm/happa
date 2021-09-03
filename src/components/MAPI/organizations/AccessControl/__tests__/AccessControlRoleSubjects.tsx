@@ -243,8 +243,8 @@ describe('AccessControlRoleSubjects', () => {
   it('can add subjects', async () => {
     jest.useFakeTimers();
     const onAddMockfn = jest.fn(() => {
-      // eslint-disable-next-line no-magic-numbers
       return new Promise<ui.IAccessControlServiceAccount[]>((resolve) =>
+        // eslint-disable-next-line no-magic-numbers
         setTimeout(resolve, 1000)
       );
     });

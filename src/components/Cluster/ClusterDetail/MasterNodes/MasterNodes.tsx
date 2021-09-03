@@ -68,7 +68,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
         setIsConverting(false);
       }
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       if (isMounted.current) {
         setIsLoading(false);

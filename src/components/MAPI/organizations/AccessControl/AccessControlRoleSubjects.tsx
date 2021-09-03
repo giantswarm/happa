@@ -278,7 +278,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
 
         new FlashMessage(message, messageType.SUCCESS, messageTTL.MEDIUM);
       }
-    } catch (err: unknown) {
+    } catch (err) {
       let message = '';
       switch (true) {
         case isServiceAccount && values.length > 1:
@@ -306,7 +306,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(err as never);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type });
     }
@@ -331,7 +331,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
       }
 
       new FlashMessage(deletionMessage, messageType.SUCCESS, messageTTL.SHORT);
-    } catch (err: unknown) {
+    } catch (err) {
       const message = (err as Error).message;
 
       new FlashMessage(
@@ -341,7 +341,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         message
       );
 
-      ErrorReporter.getInstance().notify(err as never);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       dispatch({ type: 'stopLoading', subjectType: type, subjectName: name });
     }

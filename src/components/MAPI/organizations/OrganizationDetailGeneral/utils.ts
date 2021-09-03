@@ -66,7 +66,7 @@ async function fetchSingleClusterSummary(
 
     appendMasterStats(masterList.items, machineTypes, summary);
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
 
   try {
@@ -91,7 +91,7 @@ async function fetchSingleClusterSummary(
       summary
     );
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
 
   return summary;
@@ -267,7 +267,7 @@ export async function fetchReleasesSummary(
       newestReleasePromise.value
     );
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
 
   return summary;
@@ -322,7 +322,7 @@ export async function fetchAppsSummary(
       }
     }
   } catch (err) {
-    ErrorReporter.getInstance().notify(err);
+    ErrorReporter.getInstance().notify(err as Error);
   }
 
   summary.appsInUseCount = Object.keys(apps).length;

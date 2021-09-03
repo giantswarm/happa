@@ -30,7 +30,7 @@ import {
 } from 'stores/nodepool/types';
 import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
-import { extractMessageFromError } from 'utils/errorUtils';
+import { extractMessageFromError, IGSAPIError } from 'utils/errorUtils';
 
 export function clusterNodePoolsLoad(
   clusterID: string,
@@ -55,9 +55,9 @@ export function clusterNodePoolsLoad(
         nodePoolIDs,
       });
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
-      if (err.response?.status === StatusCodes.NotFound) {
+      if ((err as IGSAPIError).response?.status === StatusCodes.NotFound) {
         /**
          * If the status code is 404, it means that the cluster
          * has been deleted. We want to just log the errors
@@ -76,14 +76,14 @@ export function clusterNodePoolsLoad(
       dispatch({
         type: CLUSTER_NODEPOOLS_LOAD_ERROR,
         id: clusterID,
-        error: err.message,
+        error: String(err),
       });
 
       let errorMessage =
         'Something went wrong while trying to load node pools on this cluster.';
-      if (err.response?.message || err.message) {
+      if ((err as IGSAPIError).response?.message || (err as Error).message) {
         errorMessage = `There was a problem loading node pools: ${
-          err.response?.message ?? err.message
+          (err as IGSAPIError).response?.message ?? (err as Error).message
         }`;
       }
 
@@ -105,11 +105,15 @@ export function nodePoolsLoad(opts?: {
     if (opts?.withLoadingFlags)
       dispatch({ type: NODEPOOL_MULTIPLE_LOAD_REQUEST });
 
-    const selectedOrganization =
-      getState().main.selectedOrganization?.toLowerCase() ?? '';
-    const organizationID =
-      selectOrganizationByID(selectedOrganization)(getState())?.id ??
-      selectedOrganization;
+    const state = getState();
+    if (!state.main.selectedOrganization) return;
+
+    const selectedOrganization = selectOrganizationByID(
+      state.main.selectedOrganization
+    )(state);
+    if (!selectedOrganization) return;
+
+    const organizationID = selectedOrganization.name ?? selectedOrganization.id;
 
     const allClusters = getState().entities.clusters.items;
     const v5ClusterIDs: string[] =
@@ -168,7 +172,7 @@ export function nodePoolPatch(
       // Undo update to store if the API call fails.
       dispatch({
         type: NODEPOOL_PATCH_ERROR,
-        error: err,
+        error: String(err),
         nodePool,
       });
 
@@ -218,10 +222,10 @@ export function nodePoolDeleteConfirmed(
       dispatch({
         type: NODEPOOL_DELETE_ERROR,
         nodePoolID: nodePool.id,
-        error: err,
+        error: String(err),
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -272,7 +276,7 @@ function makeNodePoolCreator(
     } catch (err) {
       dispatch({
         type: NODEPOOL_CREATE_ERROR,
-        error: err,
+        error: String(err),
         clusterID,
         nodePool,
       });

@@ -90,7 +90,7 @@ export function batchedLayout(
         messageTTL.MEDIUM
       );
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       return;
     }
@@ -139,7 +139,7 @@ export function batchedLayout(
       }
     } catch (err) {
       dispatch(globalLoadError());
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -168,7 +168,7 @@ export function batchedRefreshClusters(): ThunkAction<
         })
       );
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -237,7 +237,7 @@ export function batchedClusterCreate(
         ),
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       return Promise.resolve();
     } finally {
@@ -288,7 +288,7 @@ export function batchedClusterDetailView(
         );
       }
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -327,7 +327,7 @@ export function batchedRefreshClusterDetailView(
         dispatch(loadClusterApps({ clusterId }));
       }
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -341,7 +341,7 @@ export function batchedClusterDelete(
 
       dispatch(push(MainRoutes.Home));
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -359,7 +359,7 @@ export function batchedOrganizationDeleteConfirmed(
 
       dispatch(push(OrganizationsRoutes.Home));
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -390,7 +390,7 @@ export function batchedOrganizationSelect(
         );
       }
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }

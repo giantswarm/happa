@@ -343,7 +343,7 @@ export function organizationDeleteConfirmed(
         type: ORGANIZATION_DELETE_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       return false;
     }
@@ -407,7 +407,7 @@ export function organizationCreateConfirmed(
         type: ORGANIZATION_CREATE_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       dispatch(modalHide());
     }
@@ -470,7 +470,7 @@ export function organizationAddMemberConfirmed(
         errorMessage: `Could not add ${email} to organization ${orgId}.`,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -513,7 +513,7 @@ export function organizationRemoveMemberConfirmed(
         type: ORGANIZATION_REMOVE_MEMBER_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       dispatch(modalHide());
     }
@@ -558,7 +558,7 @@ export function organizationCredentialsLoad(
         type: ORGANIZATION_CREDENTIALS_LOAD_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -647,7 +647,7 @@ export function organizationCredentialsSetConfirmed(
         type: ORGANIZATION_CREDENTIALS_SET_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }

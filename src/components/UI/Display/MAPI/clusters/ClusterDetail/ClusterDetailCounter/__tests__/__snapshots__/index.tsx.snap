@@ -2,30 +2,30 @@
 
 exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 aYENS"
+      class="StyledBox-sc-13pk1d4-0 dsPxDL"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jcMcey"
+        class="StyledBox-sc-13pk1d4-0 hgvosH"
       >
         <div
-          class="sc-TtZnY dDiQmU sc-jHNicF dneNot"
+          class="sc-TmdmN kKDyvO sc-jHVedQ ipAbPA"
         >
           <span
             aria-label="35 dogs"
-            class="StyledText-sc-1sadyjn-0 cPxXuL"
+            class="StyledText-sc-1sadyjn-0 iscINy"
           >
             35
           </span>
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fTVibh sc-bfmRie kXKjAQ"
+        class="StyledText-sc-1sadyjn-0 cQrzvg sc-bfeVgT hXayfm"
       >
         dogs
       </span>
@@ -36,30 +36,30 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 
 exports[`ClusterDetailCounter renders a simple counter 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 iUQqn"
+  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKAaRy ezfMqp"
+    class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 aYENS"
+      class="StyledBox-sc-13pk1d4-0 dsPxDL"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jcMcey"
+        class="StyledBox-sc-13pk1d4-0 hgvosH"
       >
         <div
-          class="sc-TtZnY dDiQmU sc-jHNicF dneNot"
+          class="sc-TmdmN kKDyvO sc-jHVedQ ipAbPA"
         >
           <span
             aria-label="1 dog"
-            class="StyledText-sc-1sadyjn-0 cPxXuL"
+            class="StyledText-sc-1sadyjn-0 iscINy"
           >
             1
           </span>
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fTVibh sc-bfmRie kXKjAQ"
+        class="StyledText-sc-1sadyjn-0 cQrzvg sc-bfeVgT hXayfm"
       >
         dog
       </span>

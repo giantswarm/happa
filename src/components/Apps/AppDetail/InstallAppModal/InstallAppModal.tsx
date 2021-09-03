@@ -14,7 +14,6 @@ import { installApp } from 'stores/appcatalog/actions';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
 import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
-import { selectOrganizationByID } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
@@ -37,13 +36,10 @@ function selectClusters(state: IState) {
       selectIsClusterAwaitingUpgrade(cluster.id)(state);
     const isCreatingOrUpdating = isClusterCreating(cluster) || isUpdating;
 
-    const organizationID =
-      selectOrganizationByID(cluster.owner)(state)?.id ?? cluster.owner;
-
     clusters[cluster.id] = {
       id: cluster.id,
       name: cluster.name!,
-      owner: organizationID,
+      owner: cluster.owner,
       isAvailable: !isCreatingOrUpdating,
     };
   }
@@ -279,7 +275,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
     } catch (err) {
       setLoading(false);
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

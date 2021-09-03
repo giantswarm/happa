@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
+import ClusterDetailAppListWidgetConfiguration from './ClusterDetailAppListWidgetConfiguration';
 import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNamespace';
 import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
 import ClusterDetailAppListWidgetUninstall from './ClusterDetailAppListWidgetUninstall';
@@ -105,6 +106,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             app={app}
             basis='250px'
             flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetConfiguration
+            app={app}
+            basis='100%'
+            margin={{ top: 'small' }}
           />
         </StyledBox>
         <ClusterDetailAppListWidgetUninstall

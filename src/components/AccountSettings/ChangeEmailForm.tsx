@@ -122,7 +122,7 @@ class ChangeEmailForm extends React.Component<
 
           new FlashMessage(errorMessage, messageType.ERROR, messageTTL.SHORT);
 
-          ErrorReporter.getInstance().notify(error);
+          ErrorReporter.getInstance().notify(error as Error);
         });
     }
   };

@@ -15,6 +15,7 @@ import {
   getFirstNodePoolsRelease,
   getUserIsAdmin,
 } from 'stores/main/selectors';
+import { selectOrganizationByID } from 'stores/organization/selectors';
 import {
   getReleases,
   getReleasesError,
@@ -94,6 +95,10 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
 
   const isAdmin = useSelector(getUserIsAdmin);
 
+  const selectedOrganization = useSelector(selectOrganizationByID(orgId));
+  const selectedOrganizationName =
+    selectedOrganization?.name ?? selectedOrganization?.id ?? '';
+
   return (
     <Breadcrumb
       data={{
@@ -129,7 +134,7 @@ const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
           </FlexColumn>
           <CreationForm
             allowSubmit={clusterNameIsValid}
-            selectedOrganization={orgId}
+            selectedOrganization={selectedOrganizationName}
             selectedRelease={selectedRelease}
             clusterName={clusterName}
             capabilities={creationCapabilities}

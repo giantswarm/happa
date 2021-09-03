@@ -215,7 +215,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
           statusMessage: statusMessage,
         });
 
-        ErrorReporter.getInstance().notify(error);
+        ErrorReporter.getInstance().notify(error as Error);
       });
   }
 
@@ -307,7 +307,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
             submitting: false,
           });
 
-          ErrorReporter.getInstance().notify(err);
+          ErrorReporter.getInstance().notify(err as Error);
         });
     } else {
       this.advanceForm();

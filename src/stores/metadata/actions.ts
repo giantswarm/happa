@@ -64,7 +64,7 @@ const checkForUpdates = createAsynchronousAction<() => void, IState, void>({
         });
       }
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     } finally {
       callback?.();
     }

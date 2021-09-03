@@ -2,6 +2,7 @@ import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { extractErrorMessage } from 'MAPI/utils';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -58,8 +59,8 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
       );
 
       dispatch(push(OrganizationsRoutes.List));
-    } catch (err: unknown) {
-      const message = (err as Error).message;
+    } catch (err) {
+      const message = extractErrorMessage(err);
 
       setIsLoading(false);
 
@@ -70,7 +71,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
         message
       );
 
-      ErrorReporter.getInstance().notify(err as never);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 

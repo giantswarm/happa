@@ -75,7 +75,7 @@ export function usersLoad(): ThunkAction<
         type: USERS_LOAD_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       return Promise.resolve();
     }
@@ -115,7 +115,7 @@ export function userRemoveExpiration(
         type: USERS_REMOVE_EXPIRATION_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -146,7 +146,7 @@ export function userDelete(
         type: USERS_DELETE_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 }
@@ -198,7 +198,7 @@ export function invitationsLoad(): ThunkAction<
         type: INVITATIONS_LOAD_ERROR,
       });
 
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
     }
 
     return Promise.resolve();

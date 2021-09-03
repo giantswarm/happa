@@ -155,7 +155,7 @@ class ScaleNodePoolModal extends React.Component<
               error: error,
             });
 
-            ErrorReporter.getInstance().notify(error);
+            ErrorReporter.getInstance().notify(error as Error);
           });
       }
     );
