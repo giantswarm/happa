@@ -486,6 +486,29 @@ export async function deleteAppWithName(
       appName
     );
     await applicationv1alpha1.deleteApp(client, auth, app);
+
+    app.metadata.deletionTimestamp = new Date().toISOString();
+
+    mutate(
+      applicationv1alpha1.getAppKey(app.metadata.namespace!, app.metadata.name),
+      app,
+      false
+    );
+
+    mutate(
+      applicationv1alpha1.getAppListKey({
+        namespace: app.metadata.namespace,
+      }),
+      produce((draft?: applicationv1alpha1.IAppList) => {
+        if (!draft) return;
+
+        for (let i = 0; i < draft.items.length; i++) {
+          if (draft.items[i].metadata.name === app.metadata.name) {
+            draft.items[i] = app;
+          }
+        }
+      })
+    );
   } catch (err) {
     if (
       !metav1.isStatusError(
