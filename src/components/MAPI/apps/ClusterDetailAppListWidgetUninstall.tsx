@@ -57,7 +57,7 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
         messageTTL.SHORT
       );
     } catch (err) {
-      ErrorReporter.getInstance().notify(err);
+      ErrorReporter.getInstance().notify(err as Error);
 
       const errorMessage = extractErrorMessage(err);
       new FlashMessage(
@@ -115,7 +115,9 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
               pad: { left: '0', top: 'xsmall' },
               background: 'transparent',
             }}
-          />
+          >
+            <Text>There is no undo.</Text>
+          </ConfirmationPrompt>
 
           {!isConfirmationVisible && (
             <Box
