@@ -6,7 +6,6 @@ import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { extractErrorMessage } from 'MAPI/utils';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useState } from 'react';
-import { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 import ClusterIDLabel, {
@@ -43,10 +42,6 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
         auth,
         app.metadata.namespace!,
         app.metadata.name
-      );
-
-      mutate(
-        applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace })
       );
 
       if (onAppUninstalled) onAppUninstalled();
@@ -94,8 +89,8 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
           <ConfirmationPrompt
             title={
               <Text weight='bold' margin={{ bottom: 'small' }}>
-                Are you sure you want to uninstall <code>{app.metadata.name}</code> from
-                cluster{' '}
+                Are you sure you want to uninstall{' '}
+                <code>{app.metadata.name}</code> from cluster{' '}
                 <ClusterIDLabel
                   clusterID={app.metadata.namespace!}
                   variant={ClusterIDLabelType.Name}
