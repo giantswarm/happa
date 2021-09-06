@@ -1,6 +1,7 @@
 import { AccordionPanel, Box, Text } from 'grommet';
+import { relativeDate } from 'lib/helpers';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
@@ -22,6 +23,12 @@ const StyledBox = styled(Box)`
   gap: ${({ theme }) => theme.global.edgeSize.small};
 `;
 
+const Header = styled(Box)`
+  &[aria-disabled] {
+    cursor: default;
+  }
+`;
+
 interface IClusterDetailAppListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   app?: applicationv1alpha1.IApp;
@@ -38,15 +45,40 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     ? applicationv1alpha1.getAppCurrentVersion(app)
     : undefined;
 
+  const isDeleted = typeof app?.metadata?.deletionTimestamp !== 'undefined';
+  const isDisabled = typeof app === 'undefined' || isDeleted;
+
+  const accordionRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!accordionRef) return;
+
+    const accordionButton = accordionRef.current?.querySelector('button');
+    if (!accordionButton) return;
+
+    accordionButton.disabled = isDisabled;
+  }, [isDisabled]);
+
+  const handleHeaderClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (isDisabled) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   return (
     <AccordionPanel
+      ref={accordionRef}
       header={
-        <Box
-          background='background-front'
+        <Header
+          background={isDeleted ? 'background-back' : 'background-front'}
           round={isActive ? { corner: 'top', size: 'xsmall' } : 'xsmall'}
           pad={{ vertical: 'xsmall', horizontal: 'small' }}
           direction='row'
           align='center'
+          onClick={handleHeaderClick}
+          tabIndex={-1}
+          aria-disabled={isDisabled}
         >
           <Box margin={{ right: 'xsmall' }}>
             <Icon
@@ -55,7 +87,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
               role='presentation'
               aria-hidden='true'
               size='28px'
-              color={!app ? 'text-xweak' : 'text'}
+              color={isDisabled ? 'text-xweak' : 'text'}
             />
           </Box>
           <OptionalValue value={app?.metadata.name} loaderWidth={100}>
@@ -67,18 +99,27 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           </OptionalValue>
 
           <Box
-            animation={{ type: isActive ? 'fadeOut' : 'fadeIn', duration: 150 }}
+            animation={{
+              type: isActive ? 'fadeOut' : 'fadeIn',
+              duration: 150,
+            }}
             margin={{ left: 'small' }}
           >
-            <OptionalValue value={currentVersion} loaderWidth={100}>
-              {(value) => (
-                <Text color='text-weak' aria-label={`App version: ${value}`}>
-                  {value}
-                </Text>
-              )}
-            </OptionalValue>
+            {isDeleted ? (
+              <Text size='small' color='text-weak'>
+                Deleted {relativeDate(app.metadata.deletionTimestamp)}
+              </Text>
+            ) : (
+              <OptionalValue value={currentVersion} loaderWidth={100}>
+                {(value) => (
+                  <Text color='text-weak' aria-label={`App version: ${value}`}>
+                    {value}
+                  </Text>
+                )}
+              </OptionalValue>
+            )}
           </Box>
-        </Box>
+        </Header>
       }
     >
       <Box
