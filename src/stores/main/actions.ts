@@ -53,7 +53,7 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { computePermissions } from './utils';
+import { computePermissions, getNamespaceFromOrgName } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -417,7 +417,9 @@ export function fetchPermissions(
   return async (dispatch, getState) => {
     const orgs = Object.values(selectOrganizations()(getState()));
 
-    const namespaces = orgs.map((o) => o.namespace ?? '');
+    const namespaces = orgs.map(
+      (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
+    );
     // Also get permissions for the default namespace.
     namespaces.push('default');
 
