@@ -8,7 +8,13 @@ import { compare } from 'lib/semver';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Link } from 'react-router-dom';
 import { AppsRoutes } from 'shared/constants/routes';
 import useSWR from 'swr';
@@ -88,27 +94,49 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
   }, [appCatalogEntryListError]);
 
   const isLoading =
-    typeof app === 'undefined' || typeof appCatalogEntryList === 'undefined';
+    typeof app === 'undefined' ||
+    (typeof appCatalogEntryList === 'undefined' &&
+      typeof appCatalogEntryListError === 'undefined');
 
-  const [selectedEntry, setSelectedEntry] = useState<
-    applicationv1alpha1.IAppCatalogEntry | undefined
+  const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
+    string | undefined
   >(undefined);
 
+  const currentCreationDate = useRef<string | undefined>(undefined);
+  const currentUpstreamVersion = useRef<string | undefined>(undefined);
+
+  const setCurrentEntry = useCallback(
+    (entry: applicationv1alpha1.IAppCatalogEntry) => {
+      setCurrentSelectedVersion(entry.spec.version);
+      currentCreationDate.current = entry.spec.dateCreated!;
+      currentUpstreamVersion.current = entry.spec.appVersion;
+    },
+    []
+  );
+
   useEffect(() => {
-    // Select the current app version when all the catalog entries are loaded.
-    if (
-      typeof app !== 'undefined' &&
-      typeof appCatalogEntryList !== 'undefined' &&
-      typeof selectedEntry === 'undefined'
-    ) {
-      const entry = appCatalogEntryList.items.find(
+    // Select the current app version when everything is loaded.
+    if (!isLoading && typeof currentSelectedVersion === 'undefined') {
+      const entry = appCatalogEntryList!.items.find(
         (e) => e.spec.version === app.spec.version
       );
-      if (!entry) return;
+      if (!entry) {
+        setCurrentSelectedVersion(app.spec.version);
+        currentCreationDate.current = '';
+        currentUpstreamVersion.current = '';
 
-      setSelectedEntry(entry);
+        return;
+      }
+
+      setCurrentEntry(entry);
     }
-  }, [app, appCatalogEntryList, selectedEntry]);
+  }, [
+    app,
+    appCatalogEntryList,
+    currentSelectedVersion,
+    isLoading,
+    setCurrentEntry,
+  ]);
 
   const options = useMemo(() => {
     if (!appCatalogEntryList) return [];
@@ -118,20 +146,6 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
       .slice()
       .sort((a, b) => compare(b.spec.version, a.spec.version));
   }, [appCatalogEntryList]);
-
-  let currentSelectedVersion: string | undefined = app?.spec.version;
-  let currentCreationDate: string | undefined = '';
-  let currentUpstreamVersion: string | undefined = '';
-
-  if (isLoading) {
-    currentSelectedVersion = undefined;
-    currentCreationDate = undefined;
-    currentUpstreamVersion = undefined;
-  } else if (selectedEntry) {
-    currentSelectedVersion = selectedEntry.spec.version;
-    currentCreationDate = selectedEntry.spec.dateCreated!;
-    currentUpstreamVersion = selectedEntry.spec.appVersion;
-  }
 
   const isCurrentVersionSelected = currentSelectedVersion === app?.spec.version;
 
@@ -214,12 +228,12 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
             value={
               <AppVersionInspectorOption
                 version={currentSelectedVersion}
-                creationDate={currentCreationDate}
-                upstreamVersion={currentUpstreamVersion}
+                creationDate={currentCreationDate.current}
+                upstreamVersion={currentUpstreamVersion.current}
                 isCurrent={isCurrentVersionSelected}
               />
             }
-            onChange={(e) => setSelectedEntry(e.option)}
+            onChange={(e) => setCurrentEntry(e.option)}
             options={options}
             disabled={isLoading || isSwitchingVersion}
             margin='none'
@@ -234,7 +248,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
                   version={option.spec.version}
                   creationDate={option.spec.dateCreated!}
                   upstreamVersion={option.spec.appVersion}
-                  isSelected={option === selectedEntry}
+                  isSelected={option.spec.version === currentSelectedVersion}
                   isCurrent={option.spec.version === app?.spec.version}
                   aria-label={option.spec.version}
                 />
