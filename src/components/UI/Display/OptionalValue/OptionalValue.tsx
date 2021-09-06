@@ -18,6 +18,7 @@ interface IOptionalValueProps {
   replaceEmptyValue?: boolean;
   loaderHeight?: number;
   loaderWidth?: number;
+  flashOnValueChange?: boolean;
 }
 
 const OptionalValue: React.FC<IOptionalValueProps> = ({
@@ -26,6 +27,7 @@ const OptionalValue: React.FC<IOptionalValueProps> = ({
   replaceEmptyValue,
   loaderHeight,
   loaderWidth,
+  flashOnValueChange,
 }) => {
   if (typeof value === 'undefined') {
     return (
@@ -41,6 +43,10 @@ const OptionalValue: React.FC<IOptionalValueProps> = ({
     return <NotAvailable />;
   }
 
+  if (!flashOnValueChange) {
+    return children(value);
+  }
+
   const refreshableKey = JSON.stringify(value);
 
   return (
@@ -52,6 +58,7 @@ const OptionalValue: React.FC<IOptionalValueProps> = ({
 
 OptionalValue.defaultProps = {
   replaceEmptyValue: true,
+  flashOnValueChange: true,
 };
 
 export default OptionalValue;

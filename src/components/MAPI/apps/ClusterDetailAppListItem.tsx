@@ -10,6 +10,7 @@ import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNam
 import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
 import ClusterDetailAppListWidgetUninstall from './ClusterDetailAppListWidgetUninstall';
 import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
+import ClusterDetailAppListWidgetVersionInspector from './ClusterDetailAppListWidgetVersionInspector';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
@@ -106,6 +107,11 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             app={app}
             basis='250px'
             flex={{ grow: 1, shrink: 1 }}
+          />
+          <ClusterDetailAppListWidgetVersionInspector
+            app={app}
+            basis='100%'
+            margin={{ top: 'small' }}
           />
           <ClusterDetailAppListWidgetConfiguration
             app={app}
