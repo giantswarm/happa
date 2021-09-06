@@ -599,7 +599,7 @@ export function filterUserInstalledApps(
   apps: applicationv1alpha1.IApp[],
   supportsOptionalIngress: boolean
 ): applicationv1alpha1.IApp[] {
-  return apps.filter((app) => {
+  const userApps = apps.filter((app) => {
     switch (true) {
       case supportsOptionalIngress &&
         app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
@@ -613,6 +613,8 @@ export function filterUserInstalledApps(
         return true;
     }
   });
+
+  return userApps.sort(compareApps);
 }
 
 export function findIngressApp(
@@ -773,4 +775,21 @@ export function computeAppCatalogUITitle(
   }
 
   return catalog.spec.title;
+}
+
+export function compareApps(
+  a: applicationv1alpha1.IApp,
+  b: applicationv1alpha1.IApp
+) {
+  // Move apps that are currently deleting to the end of the list.
+  const aIsDeleting = typeof a.metadata.deletionTimestamp !== 'undefined';
+  const bIsDeleting = typeof b.metadata.deletionTimestamp !== 'undefined';
+
+  if (aIsDeleting && !bIsDeleting) {
+    return 1;
+  } else if (!aIsDeleting && bIsDeleting) {
+    return -1;
+  }
+
+  return a.metadata.name.localeCompare(b.metadata.name);
 }
