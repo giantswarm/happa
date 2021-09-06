@@ -443,7 +443,17 @@ export function fetchPermissions(
       return [namespace, review] as [typeof namespace, typeof review];
     });
 
-    const reviews = await Promise.all(requests);
+    const reviewRequests = await Promise.allSettled(requests);
+    const reviews: [
+      namespace: string,
+      review: authorizationv1.ISelfSubjectRulesReview
+    ][] = [];
+    for (const reviewRequest of reviewRequests) {
+      if (reviewRequest.status === 'fulfilled') {
+        reviews.push(reviewRequest.value);
+      }
+    }
+
     const permissions = computePermissions(reviews);
 
     dispatch(setPermissions(permissions));
