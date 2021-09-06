@@ -223,6 +223,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
             options={options}
             disabled={isLoading || isSwitchingVersion}
             margin='none'
+            aria-label='Select app version'
             contentProps={{
               border: { color: 'input-background' },
             }}
@@ -235,6 +236,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
                   upstreamVersion={option.spec.appVersion}
                   isSelected={option === selectedEntry}
                   isCurrent={option.spec.version === app?.spec.version}
+                  aria-label={option.spec.version}
                 />
               );
             }}
@@ -258,9 +260,9 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
           title={
             <Text weight='bold' margin={{ bottom: 'small' }}>
               Are you sure that you want to switch the{' '}
-              <code>cert-manager-app</code> version in cluster{' '}
+              <code>{app?.metadata.name}</code> version in cluster{' '}
               <ClusterIDLabel
-                clusterID={app!.metadata.namespace!}
+                clusterID={app?.metadata.namespace ?? ''}
                 variant={ClusterIDLabelType.Name}
               />{' '}
               from version{' '}
