@@ -162,5 +162,15 @@ export const validateLabelKey: IValidationFunction = (key) => {
     };
   }
 
+  /**
+   * Hide CAPI watch-filter label, because we don't allow editing it at this time.
+   */
+  if (strKey.toLowerCase() === 'cluster.x-k8s.io/watch-filter') {
+    return {
+      isValid: false,
+      validationError: `Key cannot be 'cluster.x-k8s.io/watch-filter'`,
+    };
+  }
+
   return isQualifiedName(strKey);
 };
