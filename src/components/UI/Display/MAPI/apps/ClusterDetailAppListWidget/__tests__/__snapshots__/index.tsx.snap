@@ -15,7 +15,7 @@ exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
         class="StyledBox-sc-13pk1d4-0 kSZjsO"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 cQrzvg sc-tkKUh ehEnkL"
+          class="StyledText-sc-1sadyjn-0 cQrzvg sc-fybuyZ inPFCF"
         >
           Some widget
         </span>
