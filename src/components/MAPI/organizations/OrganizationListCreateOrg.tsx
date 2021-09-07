@@ -163,6 +163,7 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
                 onChange={onChangeOrgName}
                 value={orgName}
                 error={debouncedValidationMessage}
+                aria-label='Name'
               />
             </Box>
             <Box direction='row' margin={{ top: 'small' }} gap='small'>
