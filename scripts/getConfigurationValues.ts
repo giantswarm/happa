@@ -100,6 +100,7 @@ export async function getConfigurationValues(
 
   config.setDefault('info.general.installationName', 'development');
   config.setDefault('info.general.dataCenter', 'development');
+  config.setDefault('info.general.kubernetesVersions', '{}');
 
   config.useEnvVariables();
   config.setEnvVariablePrefix('HAPPA');
