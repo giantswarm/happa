@@ -34,10 +34,13 @@ interface IGlobalConfig {
         zones: string[];
       };
       dataCenter: string;
-      kubernetesVersions: {
-        minorVersion: string;
-        eolDate: string;
-      }[];
+      kubernetesVersions: Record<
+        string,
+        {
+          minorVersion: string;
+          eolDate: string;
+        }
+      >;
     };
     workers: {
       countPerCluster: {

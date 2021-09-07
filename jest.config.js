@@ -81,7 +81,7 @@ module.exports = {
           installationName: 'test',
           provider: 'aws',
           dataCenter: 'test',
-          kubernetesVersions: [],
+          kubernetesVersions: {},
         },
         workers: {
           countPerCluster: {

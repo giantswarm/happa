@@ -56,7 +56,7 @@ data:
           zones: '{{ .Values.azure.availabilityZones | join " " }}'
           {{- end }}
         dataCenter: '{{ .Values.managementCluster.provider.region }}'
-        kubernetesVersions: ""
+        kubernetesVersions: '{{ .Values.kubernetes.versions | toJson }}'
       workers:
         countPerCluster:
           default: 3
