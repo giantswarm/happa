@@ -36,7 +36,6 @@ data:
     # Feature flags
     feature-mapi-auth: {{ .Values.happa.featureFlags.mapiAuth }}
     feature-mapi-clusters: {{ .Values.happa.featureFlags.mapiClusters }}
-    feature-nextgen-cluster-apps: false
 
     {{- if and (eq .Values.managementCluster.customer "giantswarm") (ne .Values.managementCluster.pipeline "testing") }}
     # Shared installations don't get the Monitoring feature

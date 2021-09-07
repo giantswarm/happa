@@ -19,7 +19,7 @@ export interface IFeatureFlag {
   persist?: boolean;
 }
 
-export type Feature = 'CustomerSSO' | 'NextGenClusters' | 'NextGenClusterApps';
+export type Feature = 'CustomerSSO' | 'NextGenClusters';
 
 export const flags: Record<Feature, IFeatureFlag> = {
   CustomerSSO: {
@@ -32,12 +32,6 @@ export const flags: Record<Feature, IFeatureFlag> = {
     enabled: false,
     init: () => window.featureFlags.FEATURE_MAPI_CLUSTERS,
     experimentName: 'Use Management API for cluster management',
-    persist: true,
-  },
-  NextGenClusterApps: {
-    enabled: false,
-    init: () => window.featureFlags.FEATURE_NEXTGEN_CLUSTER_APPS,
-    experimentName: 'Use NextGen cluster apps UI',
     persist: true,
   },
 };
