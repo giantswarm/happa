@@ -734,6 +734,14 @@ export function isAppChangingVersion(app: applicationv1alpha1.IApp): boolean {
   );
 }
 
+export function normalizeAppVersion(version: string): string {
+  if (version.toLowerCase().startsWith('v')) {
+    return version.substring(1);
+  }
+
+  return version;
+}
+
 export function getLatestVersionForApp(
   apps: applicationv1alpha1.IAppCatalogEntry[],
   appName: string
@@ -745,7 +753,9 @@ export function getLatestVersionForApp(
     }
   }
 
-  return versions.sort((a, b) => compare(b, a))[0];
+  return versions.sort((a, b) =>
+    compare(normalizeAppVersion(b), normalizeAppVersion(a))
+  )[0];
 }
 
 export function isAppCatalogVisibleToUsers(
