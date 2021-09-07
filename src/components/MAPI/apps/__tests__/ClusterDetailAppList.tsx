@@ -1,5 +1,7 @@
 import { screen } from '@testing-library/react';
+import sub from 'date-fns/fp/sub';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
 
@@ -152,5 +154,24 @@ describe('ClusterDetailAppList', () => {
 
     expect(screen.getByLabelText('App name: random-app')).toBeInTheDocument();
     expect(screen.getByLabelText('App version: 5.0.0')).toBeInTheDocument();
+  });
+
+  it('displays apps in a different state if they have been deleted', () => {
+    const deletedApp = generateApp('some-other-app', '2.3.1');
+
+    const deletionDate = sub({
+      hours: 1,
+    })(new Date());
+    deletedApp.metadata.deletionTimestamp = deletionDate.toISOString();
+
+    renderWithTheme(ClusterDetailAppList, {
+      apps: [deletedApp],
+      isLoading: false,
+    } as ComponentProps);
+
+    expect(screen.getByText('some-other-app')).toBeInTheDocument();
+    expect(
+      withMarkup(screen.getByText)('Deleted about 1 hour ago')
+    ).toBeInTheDocument();
   });
 });

@@ -530,15 +530,32 @@ export async function updateAppVersion(
   appName: string,
   version: string
 ) {
-  const app = await applicationv1alpha1.getApp(
-    client,
-    auth,
-    namespace,
-    appName
-  );
+  let app = await applicationv1alpha1.getApp(client, auth, namespace, appName);
   app.spec.version = version;
 
-  return applicationv1alpha1.updateApp(client, auth, app);
+  app = await applicationv1alpha1.updateApp(client, auth, app);
+
+  mutate(
+    applicationv1alpha1.getAppKey(app.metadata.namespace!, app.metadata.name),
+    app,
+    false
+  );
+
+  mutate(
+    applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace }),
+    produce((draft?: applicationv1alpha1.IAppList) => {
+      if (!draft) return;
+
+      for (let i = 0; i < draft.items.length; i++) {
+        if (draft.items[i].metadata.name === app.metadata.name) {
+          draft.items[i] = app;
+        }
+      }
+    }),
+    false
+  );
+
+  return app;
 }
 
 export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
@@ -582,7 +599,7 @@ export function filterUserInstalledApps(
   apps: applicationv1alpha1.IApp[],
   supportsOptionalIngress: boolean
 ): applicationv1alpha1.IApp[] {
-  return apps.filter((app) => {
+  const userApps = apps.filter((app) => {
     switch (true) {
       case supportsOptionalIngress &&
         app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
@@ -596,6 +613,8 @@ export function filterUserInstalledApps(
         return true;
     }
   });
+
+  return userApps.sort(compareApps);
 }
 
 export function findIngressApp(
@@ -756,4 +775,21 @@ export function computeAppCatalogUITitle(
   }
 
   return catalog.spec.title;
+}
+
+export function compareApps(
+  a: applicationv1alpha1.IApp,
+  b: applicationv1alpha1.IApp
+) {
+  // Move apps that are currently deleting to the end of the list.
+  const aIsDeleting = typeof a.metadata.deletionTimestamp !== 'undefined';
+  const bIsDeleting = typeof b.metadata.deletionTimestamp !== 'undefined';
+
+  if (aIsDeleting && !bIsDeleting) {
+    return 1;
+  } else if (!aIsDeleting && bIsDeleting) {
+    return -1;
+  }
+
+  return a.metadata.name.localeCompare(b.metadata.name);
 }
