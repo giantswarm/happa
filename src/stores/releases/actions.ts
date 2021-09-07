@@ -1,6 +1,7 @@
 import GiantSwarm from 'giantswarm';
+import { getK8sVersionEOLDate } from 'lib/config';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { getK8sVersionEOLDate, getUserIsAdmin } from 'stores/main/selectors';
+import { getUserIsAdmin } from 'stores/main/selectors';
 import { RELEASES_LOAD } from 'stores/releases/constants';
 import { IState } from 'stores/state';
 
@@ -28,7 +29,7 @@ export const loadReleases = createAsynchronousAction<
       if (kubernetesVersion) {
         releasePatch.kubernetesVersion = kubernetesVersion;
         releasePatch.k8sVersionEOLDate =
-          getK8sVersionEOLDate(kubernetesVersion)(state) ?? undefined;
+          getK8sVersionEOLDate(kubernetesVersion) ?? undefined;
       }
 
       releasePatch.releaseNotesURL = release.changelog[0].description;

@@ -54,26 +54,6 @@ export function getAllowedInstanceTypeNames(): string[] {
   }
 }
 
-export function getK8sVersionEOLDate(version: string) {
-  return (state: IState): string | null => {
-    if (!version) return null;
-
-    const k8sVersions = state.main.info.general.kubernetes_versions;
-    if (!k8sVersions) return null;
-
-    const versionParts = version.split('.');
-    if (versionParts.length < 2) return null;
-    const minor = `${versionParts[0]}.${versionParts[1]}`;
-
-    const versionInfo = k8sVersions.find((info) => {
-      return info.minor_version === minor;
-    });
-    if (!versionInfo) return null;
-
-    return versionInfo.eol_date;
-  };
-}
-
 export function getLoggedInUser(state: IState): ILoggedInUser | null {
   return state.main.loggedInUser;
 }
