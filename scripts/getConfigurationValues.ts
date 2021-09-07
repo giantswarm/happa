@@ -27,7 +27,6 @@ export interface IConfigurationValues {
   FEATURE_MAPI_AUTH: boolean;
   FEATURE_MAPI_CLUSTERS: boolean;
   FEATURE_MONITORING: boolean;
-  FEATURE_NEXTGEN_CLUSTER_APPS: boolean;
 
   info: {
     general: {
@@ -136,9 +135,6 @@ export async function getConfigurationValues(
     FEATURE_MAPI_AUTH: config.getBoolean('feature-mapi-auth'),
     FEATURE_MAPI_CLUSTERS: config.getBoolean('feature-mapi-clusters'),
     FEATURE_MONITORING: config.getBoolean('feature-monitoring'),
-    FEATURE_NEXTGEN_CLUSTER_APPS: config.getBoolean(
-      'feature-nextgen-cluster-apps'
-    ),
 
     info: {
       general: {

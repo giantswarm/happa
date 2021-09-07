@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import UserInstalledApps from 'Cluster/ClusterDetail/UserInstalledApps/UserInstalledApps';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import { ingressControllerInstallationURL } from 'lib/docs';
@@ -25,7 +24,6 @@ import { useLocation, useParams } from 'react-router';
 import { AppConstants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import * as featureFlags from 'shared/featureFlags';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/main/actions';
 import styled from 'styled-components';
@@ -59,13 +57,6 @@ const SmallHeading = styled.h6`
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-`;
-
-const BrowseButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin: ${({ theme }) => theme.spacingPx}px 0
-    ${({ theme }) => theme.spacingPx * 2}px;
 `;
 
 const Disclaimer = styled.p`
@@ -184,11 +175,6 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     dispatch(push(AppsRoutes.Home));
   };
 
-  const showAppDetail = (appName: string) => {
-    setDetailsModalAppName(appName);
-    setDetailsModalIsVisible(true);
-  };
-
   const hideAppModal = () => {
     setDetailsModalIsVisible(false);
     setDetailsModalAppName('');
@@ -211,59 +197,34 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         }}
       >
         <>
-          {featureFlags.flags.NextGenClusterApps.enabled ? (
-            <>
-              <h3>Installed Apps</h3>
-              <ClusterDetailAppList
-                apps={userInstalledApps}
-                isLoading={appListIsLoading}
-                border={{ side: 'bottom' }}
-                pad={{ bottom: 'medium' }}
-                margin={{ bottom: 'medium' }}
-                errorMessage={extractErrorMessage(appListError)}
+          <h3>Installed Apps</h3>
+          <ClusterDetailAppList
+            apps={userInstalledApps}
+            isLoading={appListIsLoading}
+            border={{ side: 'bottom' }}
+            pad={{ bottom: 'medium' }}
+            margin={{ bottom: 'medium' }}
+            errorMessage={extractErrorMessage(appListError)}
+          >
+            <Box margin={{ top: 'medium' }}>
+              <Button
+                onClick={openAppCatalog}
+                disabled={appListIsLoading}
+                icon={
+                  <i
+                    className='fa fa-add-circle'
+                    role='presentation'
+                    aria-hidden='true'
+                  />
+                }
               >
-                <Box margin={{ top: 'medium' }}>
-                  <Button
-                    onClick={openAppCatalog}
-                    disabled={appListIsLoading}
-                    icon={
-                      <i
-                        className='fa fa-add-circle'
-                        role='presentation'
-                        aria-hidden='true'
-                      />
-                    }
-                  >
-                    Install app
-                  </Button>
-                </Box>
-              </ClusterDetailAppList>
-            </>
-          ) : (
-            <UserInstalledApps
-              apps={userInstalledApps.map((a) => ({
-                name: a.metadata.name,
-                version: a.spec.version,
-                deletionTimestamp: a.metadata.deletionTimestamp,
-              }))}
-              error={extractErrorMessage(appListError) ?? null}
-              onShowDetail={showAppDetail}
-            >
-              <BrowseButtonContainer>
-                <Button
-                  onClick={openAppCatalog}
-                  disabled={appListIsLoading}
-                  icon={<i className='fa fa-add-circle' />}
-                >
-                  Install app
-                </Button>
-              </BrowseButtonContainer>
-
-              <Box margin={{ top: 'large' }} direction='column' gap='small'>
-                <ListAppsGuide namespace={clusterId} />
-              </Box>
-            </UserInstalledApps>
-          )}
+                Install app
+              </Button>
+            </Box>
+            <Box margin={{ top: 'large' }} direction='column' gap='small'>
+              <ListAppsGuide namespace={clusterId} />
+            </Box>
+          </ClusterDetailAppList>
 
           <div>
             <h3>Preinstalled Apps</h3>
