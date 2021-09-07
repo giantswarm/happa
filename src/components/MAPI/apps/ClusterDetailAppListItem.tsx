@@ -24,7 +24,7 @@ const StyledBox = styled(Box)`
 `;
 
 const Header = styled(Box)`
-  &[aria-disabled] {
+  &[aria-disabled='true'] {
     cursor: default;
   }
 `;
