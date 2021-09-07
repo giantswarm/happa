@@ -67,8 +67,8 @@
             },
             dataCenter: '{!= info.general.dataCenter !}',
             kubernetesVersions: {
-              {! Object.entries(JSON.parse(info.general.kubernetesVersions)).map(([version, versionInfo]) => { !}
-                  '{!= version !}': {
+              {! Object.values(JSON.parse(info.general.kubernetesVersions)).map((versionInfo) => { !}
+                  '{!= versionInfo.minorVersion !}': {
                     minorVersion: '{!= versionInfo.minorVersion !}',
                     eolDate: '{!= versionInfo.eolDate !}',
                   },
