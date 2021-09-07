@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
@@ -272,13 +273,18 @@ describe('OrganizationIndex', () => {
     });
     fireEvent.click(cancelButton);
 
-    expect(screen.queryByText('not-created-org')).not.toBeInTheDocument();
-
     expect(
       screen.queryByRole('button', {
         name: 'Create organization',
       })
     ).not.toBeInTheDocument();
+
+    expect(screen.queryByText('not-created-org')).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByDisplayValue('not-created-org')
+      ).not.toBeInTheDocument()
+    );
 
     expect(
       await screen.findByRole('button', {
@@ -291,9 +297,12 @@ describe('OrganizationIndex', () => {
     nock(window.config.mapiEndpoint)
       .post('/apis/security.giantswarm.io/v1alpha1/organizations/')
       .reply(StatusCodes.InternalServerError, {
-        apiVersion: 'security.giantswarm.io/v1alpha1',
+        apiVersion: 'v1',
         kind: 'Status',
         message: 'Some error occurred',
+        status: metav1.K8sStatuses.Failure,
+        reason: metav1.K8sStatusErrorReasons.InternalError,
+        code: StatusCodes.InternalServerError,
       });
 
     render(getComponent({}));
