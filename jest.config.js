@@ -103,7 +103,6 @@ module.exports = {
       FEATURE_MAPI_AUTH: true,
       FEATURE_MAPI_CLUSTERS: false,
       FEATURE_MONITORING: true,
-      FEATURE_NEXTGEN_CLUSTER_APPS: false,
     },
   },
 };
