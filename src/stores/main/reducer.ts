@@ -1,10 +1,8 @@
 import produce from 'immer';
-import { Providers } from 'shared/constants';
 import {
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_SUCCESS,
-  INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
   LOGOUT_ERROR,
@@ -31,26 +29,6 @@ const initialState = (): IMainState => ({
   firstLoadComplete: false,
   loggedInUser: fetchUserFromStorage(),
   permissions: {},
-  info: {
-    general: {
-      installation_name: '',
-      availability_zones: null,
-      provider: Providers.AWS,
-    },
-    stats: {
-      cluster_creation_duration: {
-        median: 0,
-        p25: 0,
-        p75: 0,
-      },
-    },
-    workers: {
-      count_per_cluster: {
-        max: null,
-        default: 0,
-      },
-    },
-  },
 });
 
 const makeMainReducer = () => {
@@ -62,11 +40,6 @@ const makeMainReducer = () => {
 
           break;
         }
-
-        case INFO_LOAD_SUCCESS:
-          draft.info = action.info;
-
-          break;
 
         case LOGIN_SUCCESS: {
           draft.loggedInUser = action.userData;

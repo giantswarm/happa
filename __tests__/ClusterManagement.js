@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -11,7 +10,6 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   getMockCall,
   getMockCallTimes,
   metadataResponse,
@@ -37,7 +35,6 @@ describe('ClusterManagement', () => {
   jest.mock('model/services/mapi/authorizationv1');
 
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
