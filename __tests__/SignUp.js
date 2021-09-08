@@ -2,14 +2,12 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import {
   authTokenResponse,
-  AWSInfoResponse,
   getMockCall,
   metadataResponse,
   postMockCall,
@@ -76,7 +74,6 @@ describe('Signup', () => {
   });
 
   it('registers a new user if the token is valid', async () => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');

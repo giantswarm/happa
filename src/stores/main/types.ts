@@ -3,9 +3,6 @@ import {
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
   GLOBAL_LOAD_SUCCESS,
-  INFO_LOAD_ERROR,
-  INFO_LOAD_REQUEST,
-  INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -28,7 +25,6 @@ export enum LoggedInUserTypes {
 
 export interface IMainState {
   loggedInUser: ILoggedInUser | null;
-  info: IInstallationInfo;
   permissions: IPermissionMap;
   selectedOrganization: string | null;
   firstLoadComplete: boolean;
@@ -38,20 +34,6 @@ export interface IMainState {
 export interface IMainSelectClusterAction {
   type: typeof CLUSTER_SELECT;
   clusterID: string;
-}
-
-export interface IMainInfoLoadRequestAction {
-  type: typeof INFO_LOAD_REQUEST;
-}
-
-export interface IMainInfoLoadSuccessAction {
-  type: typeof INFO_LOAD_SUCCESS;
-  info: IInstallationInfo;
-}
-
-export interface IMainInfoLoadErrorAction {
-  type: typeof INFO_LOAD_ERROR;
-  error: string;
 }
 
 export interface IGlobalLoadRequestAction {
@@ -127,9 +109,6 @@ export interface IMainSetPermissionsAction {
 
 export type MainActions =
   | IMainSelectClusterAction
-  | IMainInfoLoadRequestAction
-  | IMainInfoLoadSuccessAction
-  | IMainInfoLoadErrorAction
   | IGlobalLoadRequestAction
   | IGlobalLoadSuccessAction
   | IGlobalLoadErrorAction

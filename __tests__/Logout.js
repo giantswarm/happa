@@ -1,14 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
-  AWSInfoResponse,
   getMockCall,
   metadataResponse,
   userResponse,
@@ -25,8 +23,6 @@ it('logging out redirects to the login page', async () => {
 
   // The response to the user info call
   getMockCall('/v4/user/', userResponse);
-  // The response to the info call
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
   getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
