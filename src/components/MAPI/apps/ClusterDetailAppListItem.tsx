@@ -5,6 +5,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
+import ClusterDetailAppListItemStatus from './ClusterDetailAppListItemStatus';
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
 import ClusterDetailAppListWidgetConfiguration from './ClusterDetailAppListWidgetConfiguration';
 import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNamespace';
@@ -110,13 +111,20 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
                 Deleted {relativeDate(app.metadata.deletionTimestamp)}
               </Text>
             ) : (
-              <OptionalValue value={currentVersion} loaderWidth={100}>
-                {(value) => (
-                  <Text color='text-weak' aria-label={`App version: ${value}`}>
-                    {value}
-                  </Text>
-                )}
-              </OptionalValue>
+              <Box direction='row' wrap={true} gap='xsmall' align='center'>
+                <OptionalValue value={currentVersion} loaderWidth={100}>
+                  {(value) => (
+                    <Text
+                      color='text-weak'
+                      aria-label={`App version: ${value}`}
+                    >
+                      {value}
+                    </Text>
+                  )}
+                </OptionalValue>
+
+                {app && <ClusterDetailAppListItemStatus app={app} />}
+              </Box>
             )}
           </Box>
         </Header>
