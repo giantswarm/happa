@@ -28,7 +28,7 @@ import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppLis
 import Select from 'UI/Inputs/Select';
 import Truncated from 'UI/Util/Truncated';
 
-import { updateAppVersion } from './utils';
+import { normalizeAppVersion, updateAppVersion } from './utils';
 
 interface IClusterDetailAppListWidgetVersionInspectorProps
   extends Omit<
@@ -144,7 +144,12 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
     // Sort in a descending order, showing newest versions first.
     return appCatalogEntryList.items
       .slice()
-      .sort((a, b) => compare(b.spec.version, a.spec.version));
+      .sort((a, b) =>
+        compare(
+          normalizeAppVersion(b.spec.version),
+          normalizeAppVersion(a.spec.version)
+        )
+      );
   }, [appCatalogEntryList]);
 
   const isCurrentVersionSelected = currentSelectedVersion === app?.spec.version;
