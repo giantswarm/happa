@@ -4,6 +4,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useLayoutEffect, useRef } from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import Truncated from 'UI/Util/Truncated';
 
 import ClusterDetailAppListItemStatus from './ClusterDetailAppListItemStatus';
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
@@ -114,12 +115,14 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
               <Box direction='row' wrap={true} gap='xsmall' align='center'>
                 <OptionalValue value={currentVersion} loaderWidth={100}>
                   {(value) => (
-                    <Text
-                      color='text-weak'
+                    <Truncated
+                      as={Text}
                       aria-label={`App version: ${value}`}
+                      numStart={10}
+                      color='text-weak'
                     >
-                      {value}
-                    </Text>
+                      {value as string}
+                    </Truncated>
                   )}
                 </OptionalValue>
 
