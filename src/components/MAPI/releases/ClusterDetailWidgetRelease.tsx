@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
+import { getK8sVersionEOLDate } from 'lib/config';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
@@ -275,6 +276,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> = (
             <KubernetesVersionLabel
               hidePatchVersion={false}
               version={value as string}
+              eolDate={getK8sVersionEOLDate(value as string) ?? undefined}
             />
           )}
         </OptionalValue>

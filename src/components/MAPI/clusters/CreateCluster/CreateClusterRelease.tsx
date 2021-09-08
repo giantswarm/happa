@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import ReleaseSelector, {
   IRelease,
 } from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
+import { getK8sVersionEOLDate } from 'lib/config';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import * as releasesUtils from 'MAPI/releases/utils';
@@ -67,12 +68,18 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
         const components = releasesUtils.reduceReleaseToComponents(curr);
 
+        const k8sVersion = releasev1alpha1.getK8sVersion(curr);
+        const k8sVersionEOLDate = k8sVersion
+          ? getK8sVersionEOLDate(k8sVersion) ?? undefined
+          : undefined;
+
         acc[normalizedVersion] = {
           version: normalizedVersion,
           active: isActive,
           timestamp: curr.metadata.creationTimestamp ?? '',
           components: Object.values(components),
-          kubernetesVersion: releasev1alpha1.getK8sVersion(curr),
+          kubernetesVersion: k8sVersion,
+          k8sVersionEOLDate: k8sVersionEOLDate,
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
         };
 

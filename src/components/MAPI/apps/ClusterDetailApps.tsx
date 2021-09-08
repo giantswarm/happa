@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
+import { getK8sVersionEOLDate } from 'lib/config';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -21,11 +22,12 @@ import React, {
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
-import { AppConstants } from 'shared/constants';
+import { AppConstants, Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { supportsOptionalIngress } from 'stores/cluster/utils';
 import { selectCluster } from 'stores/main/actions';
+import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
@@ -41,12 +43,20 @@ import { filterUserInstalledApps, mapDefaultApps } from './utils';
 const LOADING_COMPONENTS = new Array(6).fill(0);
 
 function formatAppVersion(appMeta: AppConstants.IAppMetaApp) {
-  const { version } = appMeta;
-
-  // TODO(axbarsan): Handle K8s version EOL dates once available.
+  const { name, version } = appMeta;
 
   if (!version) {
     return <NotAvailable />;
+  }
+
+  if (name === 'kubernetes') {
+    const eolDate = getK8sVersionEOLDate(version);
+    if (!eolDate) return version;
+
+    const { isEol } = getKubernetesReleaseEOLStatus(eolDate);
+    if (isEol) {
+      return `${version} ${Constants.APP_VERSION_EOL_SUFFIX}`;
+    }
   }
 
   return version;
