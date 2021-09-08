@@ -116,8 +116,12 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
 
   useEffect(() => {
     // Select the current app version when everything is loaded.
-    if (!isLoading && typeof currentSelectedVersion === 'undefined') {
-      const entry = appCatalogEntryList!.items.find(
+    if (
+      typeof app !== 'undefined' &&
+      typeof appCatalogEntryList !== 'undefined' &&
+      typeof currentSelectedVersion === 'undefined'
+    ) {
+      const entry = appCatalogEntryList.items.find(
         (e) => e.spec.version === app.spec.version
       );
       if (!entry) {
