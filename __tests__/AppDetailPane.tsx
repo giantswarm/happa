@@ -6,7 +6,6 @@ import {
   within,
 } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -17,7 +16,6 @@ import {
   appResponseNoCatalog,
   appResponseWithCustomConfig,
   appsResponse,
-  AWSInfoResponse,
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
@@ -44,7 +42,6 @@ const clusterDetailPath = RoutePath.createUsablePath(
 
 describe('Installed app detail pane', () => {
   beforeEach(() => {
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);

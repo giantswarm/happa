@@ -3,9 +3,6 @@ export * from './constantsAndHelpers';
 
 /***** Responses *****/
 
-// Info
-export * from './info';
-
 // User
 export * from './user';
 

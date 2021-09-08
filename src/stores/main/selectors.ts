@@ -1,5 +1,4 @@
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { IState } from 'stores/state';
 
 import { LoggedInUserTypes } from './types';
@@ -9,12 +8,8 @@ export function getUserIsAdmin(state: IState) {
   return getLoggedInUser(state)?.isAdmin ?? false;
 }
 
-export function getProvider(state: IState): PropertiesOf<typeof Providers> {
-  return state.main.info.general.provider;
-}
-
-export function getMinHAMastersVersion(state: IState): string {
-  const provider = getProvider(state);
+export function getMinHAMastersVersion(_state: IState): string {
+  const provider = window.config.info.general.provider;
   let releaseVersion = '';
 
   switch (provider) {
@@ -26,8 +21,8 @@ export function getMinHAMastersVersion(state: IState): string {
   return releaseVersion;
 }
 
-export function getFirstNodePoolsRelease(state: IState): string {
-  const provider = getProvider(state);
+export function getFirstNodePoolsRelease(_state: IState): string {
+  const provider = window.config.info.general.provider;
   let releaseVersion = '';
 
   switch (provider) {

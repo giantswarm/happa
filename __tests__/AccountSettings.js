@@ -1,8 +1,6 @@
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
-  AWSInfoResponse,
   getMockCall,
   metadataResponse,
   userResponse,
@@ -23,7 +21,6 @@ const elementLabels = {
 
 describe('AccountSettings', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');

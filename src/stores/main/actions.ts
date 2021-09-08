@@ -10,10 +10,7 @@ import Passage, {
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
 } from 'lib/passageClient';
-import { GenericResponse } from 'model/clients/GenericResponse';
-import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { HttpClientImpl } from 'model/clients/HttpClient';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
@@ -24,9 +21,6 @@ import {
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
   GLOBAL_LOAD_SUCCESS,
-  INFO_LOAD_ERROR,
-  INFO_LOAD_REQUEST,
-  INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -59,40 +53,6 @@ export function selectCluster(clusterID: string): MainActions {
   return {
     type: CLUSTER_SELECT,
     clusterID,
-  };
-}
-
-export function getInfo(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions
-> {
-  return async (dispatch, getState) => {
-    dispatch({ type: INFO_LOAD_REQUEST });
-
-    try {
-      const user = getLoggedInUser(getState())!;
-      const httpClient = new GiantSwarmClient(
-        user.auth.token,
-        user.auth.scheme
-      );
-      const infoRes = await getInstallationInfo(httpClient);
-
-      dispatch({
-        type: INFO_LOAD_SUCCESS,
-        info: infoRes.data,
-      });
-
-      return Promise.resolve();
-    } catch (err) {
-      dispatch({
-        type: INFO_LOAD_ERROR,
-        error: (err as GenericResponse<string>).data,
-      });
-
-      return Promise.reject(err);
-    }
   };
 }
 
