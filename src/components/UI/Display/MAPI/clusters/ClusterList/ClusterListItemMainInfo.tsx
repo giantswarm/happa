@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { getK8sVersionEOLDate } from 'lib/config';
 import { relativeDate } from 'lib/helpers';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -39,7 +40,12 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
       </OptionalValue>
       <StyledDot />
       <OptionalValue value={k8sVersion} replaceEmptyValue={false}>
-        {(value) => <KubernetesVersionLabel version={value as string} />}
+        {(value) => (
+          <KubernetesVersionLabel
+            version={value as string}
+            eolDate={getK8sVersionEOLDate(value as string) ?? undefined}
+          />
+        )}
       </OptionalValue>
       <StyledDot />
       <OptionalValue value={creationDate} replaceEmptyValue={false}>
