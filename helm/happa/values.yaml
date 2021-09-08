@@ -39,6 +39,7 @@ guestCluster:
 kubernetes:
   auth:
     controlPlaneAdminTargetGroup: ""
+  versions: ""
 
 happa:
   address: ""
