@@ -19,7 +19,7 @@ const ListAndFacets = styled.div`
 
 const ListContainer = styled.div`
   border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
-  width: 100%;
+  flex-grow: 1;
   overflow: hidden;
   padding-left: 20px;
 `;
@@ -116,17 +116,17 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
               itemMinHeight={200}
               itemMinWidth={270}
               gridGap={20}
-            >
-              {(app: IAppProps) => (
+              render={(app: IAppProps, i: number) => (
                 <App
                   name={app.name}
                   appIconURL={app.appIconURL}
                   catalogTitle={app.catalogTitle}
                   catalogIconUrl={app.catalogIconUrl}
                   to={app.to}
+                  key={app.name + i.toString()}
                 />
               )}
-            </AppGrid>
+            />
           </ListContainer>
         )}
       </ListAndFacets>

@@ -1,150 +1,128 @@
-import useDebounce from 'lib/hooks/useDebounce';
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { memo, useLayoutEffect, useRef, useState } from 'react';
 import { WindowScroller } from 'react-virtualized';
-import { FixedSizeGrid } from 'react-window';
+import {
+  areEqual,
+  GridChildComponentProps,
+  VariableSizeGrid,
+} from 'react-window';
 import styled from 'styled-components';
 import { IAppProps } from 'UI/Display/Apps/AppList/App';
 
-interface IGridContainer extends React.PropsWithChildren<{}> {
+interface IAppList {
   items: IAppProps[];
   itemMinWidth: number;
   itemMinHeight: number;
   gridGap: number;
-  children: (item: IAppProps) => React.ReactNode;
+  render: (item: IAppProps, i: number) => React.ReactNode;
 }
 
 interface IScrollPosition {
   scrollTop: number;
 }
 
-interface IAppWrapper {
+interface IDataProps {
+  items: IAppProps[];
+  columnCount: number;
   gridGap: number;
+  render: (item: IAppProps, i: number) => React.ReactNode;
 }
 
-const GridContainer = styled.div`
-  flex-grow: 1;
-  margin: 0 -10px;
+const StyledContainer = styled.div<{ gridGap: number }>`
+  margin: 0 -${(props) => props.gridGap / 2}px;
 `;
 
-const StyledGrid = styled(FixedSizeGrid)`
-  width: 100% !important;
-  height: 100% !important;
-  overflow-x: hidden !important;
-`;
-
-const ItemWrapper = styled.div<IAppWrapper>`
-  padding: ${({ gridGap }) => `0 ${gridGap / 2}px`};
-`;
-
-const getIndexFromGridPosition = (
-  columnIndex: number,
+const getIndex = (
   rowIndex: number,
-  itemsPerRow: number
-): number => {
-  return itemsPerRow * rowIndex + columnIndex;
+  columnIndex: number,
+  columnCount: number
+) => {
+  return rowIndex * columnCount + columnIndex;
 };
 
-const getItemsPerRow = (itemMinWidth: number, containerWidth: number) => {
-  return Math.floor(containerWidth / itemMinWidth) || 1;
-};
+const ItemRenderer: React.FC<GridChildComponentProps> = memo(
+  ({ columnIndex, rowIndex, data, style }) => {
+    const { items, columnCount, render, gridGap }: IDataProps = data;
+    const index = getIndex(rowIndex, columnIndex, columnCount);
+    const item = items[index];
 
-const getElementDimensions = (refElement: ResizeObserverEntry) => {
-  let width = 0;
-  let height = 0;
+    const patchedStyle = Object.assign({}, style, {
+      padding: `0 ${gridGap / 2}px`,
+    });
 
-  if (refElement) {
-    const containerRefBoundingClient = refElement.contentRect;
+    return item ? <div style={patchedStyle}>{render(item, index)}</div> : null;
+  },
+  areEqual
+);
 
-    width = containerRefBoundingClient.width;
-    height = window.innerHeight;
-  }
-
-  return { width, height };
-};
-
-const AppGrid: React.FC<IGridContainer> = ({
+const AppList: React.FC<IAppList> = ({
   items,
   itemMinWidth,
   itemMinHeight,
   gridGap,
-  children,
+  render,
 }) => {
-  const gridContainerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<FixedSizeGrid>(null);
-  const [itemsPerRow, setItemsPerRow] = useState(1);
-  const [gridDimensions, setGridDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const debouncedGridDimensions = useDebounce(gridDimensions, 150);
+  const [width, setWidth] = useState<number>(0);
 
-  const columnWidth = Math.floor(debouncedGridDimensions.width / itemsPerRow);
-  const rowCount = Math.ceil(items.length / itemsPerRow);
-  const rowHeight = itemMinHeight + gridGap;
-
-  const handleResize = useCallback(
-    (node) => {
-      const dimensions = getElementDimensions(node);
-      setGridDimensions(dimensions);
-
-      const newItemsPerRow = getItemsPerRow(itemMinWidth, dimensions.width);
-      setItemsPerRow(newItemsPerRow);
-    },
-    [itemMinWidth]
-  );
-
-  useLayoutEffect(() => {
-    const observer = new ResizeObserver((entries) => handleResize(entries[0]));
-
-    if (gridContainerRef.current) {
-      observer.observe(gridContainerRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [gridContainerRef, handleResize]);
+  const gridRef = useRef<VariableSizeGrid>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = ({ scrollTop }: IScrollPosition) => {
     if (gridRef.current) gridRef.current.scrollTo({ scrollTop });
   };
 
-  return (
-    <>
-      <WindowScroller onScroll={handleScroll}>{() => <div />}</WindowScroller>
-      <GridContainer ref={gridContainerRef}>
-        <StyledGrid
-          ref={gridRef}
-          width={debouncedGridDimensions.width}
-          height={debouncedGridDimensions.height}
-          columnCount={itemsPerRow}
-          columnWidth={columnWidth}
-          rowCount={rowCount}
-          rowHeight={rowHeight}
-          overscanRowCount={10}
-        >
-          {({ columnIndex, rowIndex, style }) => {
-            const i = getIndexFromGridPosition(
-              columnIndex,
-              rowIndex,
-              itemsPerRow
-            );
-            const item = items[i];
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        setWidth(containerRef.current.getBoundingClientRect().width);
+      }
+      if (gridRef.current) {
+        gridRef.current.resetAfterIndices({
+          columnIndex: 0,
+          rowIndex: 0,
+        });
+      }
+    };
+    handleResize();
 
-            return item ? (
-              <ItemWrapper
-                style={style}
-                key={item.name + i.toString()}
-                gridGap={gridGap}
-              >
-                {children(item)}
-              </ItemWrapper>
-            ) : null;
-          }}
-        </StyledGrid>
-      </GridContainer>
-    </>
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const columnCount = Math.floor(width / (itemMinWidth + gridGap)) || 1;
+  const rowCount = Math.floor(items.length / columnCount);
+
+  const columnWidth = () => width / columnCount;
+  const rowHeight = () => itemMinHeight + gridGap;
+
+  const itemData: IDataProps = {
+    items,
+    columnCount,
+    gridGap,
+    render,
+  };
+
+  return (
+    <StyledContainer ref={containerRef} gridGap={gridGap}>
+      <WindowScroller onScroll={handleScroll}>
+        {({ height }) => (
+          <VariableSizeGrid
+            ref={gridRef}
+            width={width}
+            height={height}
+            columnWidth={columnWidth}
+            rowHeight={rowHeight}
+            columnCount={columnCount}
+            rowCount={rowCount}
+            itemData={itemData}
+            overscanRowCount={10}
+          >
+            {ItemRenderer}
+          </VariableSizeGrid>
+        )}
+      </WindowScroller>
+    </StyledContainer>
   );
 };
 
-export default AppGrid;
+export default AppList;
