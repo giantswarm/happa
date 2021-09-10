@@ -33,7 +33,7 @@ it('logging out redirects to the login page', async () => {
   nock(API_ENDPOINT).delete('/v4/auth-tokens/').reply(StatusCodes.Ok);
 
   // Given I am logged in and on the home page.
-  const { getByText } = renderRouteWithStore(MainRoutes.Home);
+  const { getByText, getByLabelText } = renderRouteWithStore(MainRoutes.Home);
 
   // Wait till the app is ready and we're on the home page.
   await waitFor(() => {
@@ -41,7 +41,7 @@ it('logging out redirects to the login page', async () => {
   });
 
   // When I click logout in the user dropdown.
-  const userDropdown = getByText('developer@giantswarm.io');
+  const userDropdown = getByLabelText('developer@giantswarm.io');
   fireEvent.click(userDropdown);
 
   const logoutButton = getByText('Logout');
