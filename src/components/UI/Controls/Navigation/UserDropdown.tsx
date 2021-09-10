@@ -5,6 +5,7 @@ import { AuthorizationTypes } from 'shared/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
+import Truncated from 'UI/Util/Truncated';
 
 const Wrapper = styled.div`
   display: flex;
@@ -92,7 +93,7 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
               type='button'
             >
               <StyledGravatar default='mm' email={user.email} size={100} />
-              <span>{user.email}</span>
+              <Truncated tooltipPlacement='bottom'>{user.email}</Truncated>
               <span className='caret' />
             </StyledDropdownTrigger>
             {isOpen && (
