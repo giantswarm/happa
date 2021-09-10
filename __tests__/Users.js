@@ -90,12 +90,8 @@ describe('Users', () => {
         status: 'READY',
       });
 
-    const {
-      findByText,
-      getByText,
-      getByLabelText,
-      getAllByText,
-    } = renderRouteWithStore(UsersRoutes.Home);
+    const { findByText, getByText, getByLabelText, getAllByText } =
+      renderRouteWithStore(UsersRoutes.Home);
 
     let inviteButton = await findByText(/invite user/i);
     expect(inviteButton).toBeInTheDocument();
@@ -110,7 +106,7 @@ describe('Users', () => {
     fireEvent.click(getByLabelText(/organizations/i));
 
     // Select `giantswarm` organizatio
-    fireEvent.click(getByLabelText(/giantswarm/i));
+    fireEvent.click(getByLabelText('giantswarm'));
 
     // Email input validation
 
@@ -200,9 +196,8 @@ describe('Users', () => {
     const expiryDate = within(selectedEmailCell).getByText(/in about 1 year/i);
     expect(expiryDate).toBeInTheDocument();
 
-    let unexpireButton = within(selectedEmailCell).getByTitle(
-      /remove expiration/i
-    );
+    let unexpireButton =
+      within(selectedEmailCell).getByTitle(/remove expiration/i);
     fireEvent.click(unexpireButton);
 
     expect(
