@@ -87,7 +87,7 @@ describe('Login', () => {
     // Then I should be logged in and see the home page with no orgs or clusters.
     await waitFor(() => {
       // Verify we are now on the layout page and I can see my username
-      expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
+      expect(getByLabelText(/developer@giantswarm.io/i)).toBeInTheDocument();
       expect(getByText(/Welcome to Giant Swarm!/i)).toBeInTheDocument();
       expect(
         getByText(/There are no organizations yet in your installation./i)
