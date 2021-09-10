@@ -69,7 +69,7 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
               namespace
             </>
           }
-          command={`kubectl get roles -n ${namespace}`}
+          command={`kubectl get roles -n ${namespace} -l ui.giantswarm.io/display=true`}
         />
       </CLIGuideStepList>
     </CLIGuide>
