@@ -93,7 +93,9 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
               type='button'
             >
               <StyledGravatar default='mm' email={user.email} size={100} />
-              <Truncated tooltipPlacement='bottom'>{user.email}</Truncated>
+              <Truncated tooltipPlacement='bottom' aria-label={user.email}>
+                {user.email}
+              </Truncated>
               <span className='caret' />
             </StyledDropdownTrigger>
             {isOpen && (
