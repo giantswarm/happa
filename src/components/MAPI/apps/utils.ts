@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { YAMLException } from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
@@ -802,4 +803,29 @@ export function compareApps(
   }
 
   return a.metadata.name.localeCompare(b.metadata.name);
+}
+
+export function formatYAMLError(err: unknown): string {
+  if (err instanceof YAMLException) {
+    interface IYAMLExceptionInternals extends YAMLException {
+      mark: {
+        line: number;
+        column: number;
+      };
+      reason: string;
+    }
+
+    const { reason, mark } = err as IYAMLExceptionInternals;
+    let { line, column } = mark;
+    /**
+     * Lines and columns are counted from 1, but the library
+     * counts from 0.
+     */
+    line++;
+    column++;
+
+    return `YAML parse error: ${reason} (${line}:${column})`;
+  }
+
+  return String(err);
 }

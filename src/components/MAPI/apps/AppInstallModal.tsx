@@ -27,7 +27,7 @@ import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 
-import { createApp, filterClusters } from './utils';
+import { createApp, filterClusters, formatYAMLError } from './utils';
 
 function getOrganizationForCluster(
   cluster: Cluster,
@@ -206,7 +206,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         setValuesYAML(yaml.dump(parsedYAML));
         setValuesYAMLError('');
       } catch (err) {
-        setValuesYAMLError('Unable to parse valid YAML from this file.');
+        setValuesYAMLError(formatYAMLError(err));
       }
     };
 
@@ -230,7 +230,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         setSecretsYAML(yaml.dump(parsedYAML));
         setSecretsYAMLError('');
       } catch (err) {
-        setSecretsYAMLError('Unable to parse valid YAML from this file.');
+        setSecretsYAMLError(formatYAMLError(err));
       }
     };
 
