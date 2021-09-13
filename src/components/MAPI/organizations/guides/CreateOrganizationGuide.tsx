@@ -1,7 +1,11 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
-import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
+import {
+  getCurrentInstallationContextName,
+  makeKubectlGSCommand,
+  withTemplateOrganization,
+} from 'MAPI/guides/utils';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -52,11 +56,12 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Create an organization manifest'
-          command={`
-              kubectl template organization \
-                --name example \
-                --output example-organization.yaml
-          `}
+          command={makeKubectlGSCommand(
+            withTemplateOrganization({
+              name: 'example',
+              output: 'example-organization.yaml',
+            })
+          )}
         >
           <Text>
             <strong>Note:</strong> please replace <code>example</code> with your
