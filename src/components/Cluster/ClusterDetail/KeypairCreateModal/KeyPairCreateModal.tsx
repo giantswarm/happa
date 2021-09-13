@@ -15,8 +15,8 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { makeKubeConfigTextFile } from 'lib/helpers';
 import useDebounce from 'lib/hooks/useDebounce';
+import GenericModal from 'Modals/GenericModal';
 import React, { useEffect, useState } from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Providers, StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
@@ -24,7 +24,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import { IGSAPIError } from 'utils/errorUtils';
 
-const StyledModal = styled(BootstrapModal)`
+const StyledModal = styled(GenericModal)`
   .modal-dialog {
     width: 95%;
     max-width: 700px;
@@ -191,61 +191,62 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
       </Button>
       <StyledModal
         data-testid='create-key-pair-modal'
-        onHide={close}
-        show={modal.visible}
-      >
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>{title}</BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <form onSubmit={confirmAddKeyPair}>
-          <BootstrapModal.Body>
-            {modal.status === KeypairCreateModalStatus.Success ? (
-              <AddKeyPairSuccessTemplate kubeconfig={kubeconfig} />
-            ) : (
-              <AddKeyPairTemplate
-                email={props.user.email}
-                provider={props.provider}
-                cnPrefix={cnPrefix}
-                cnPrefixError={cnPrefixError}
-                handleCNPrefixChange={handleCNPrefixChange}
-                certificateOrganizations={certificateOrganizations}
-                handleCertificateOrganizationsChange={
-                  handleCertificateOrganizationsChange
-                }
-                description={description}
-                handleDescriptionChange={handleDescriptionChange}
-                expireTTL={expireTTL}
-                handleTTLChange={handleTTLChange}
-                useInternalAPI={useInternalAPI}
-                handleUseInternalAPIChange={handleUseInternalAPIChange}
-                ingressBaseDomain={window.config.ingressBaseDomain}
-              />
+        onClose={close}
+        visible={modal.visible}
+        title={title}
+        footer={
+          <Box
+            direction='row'
+            gap='small'
+            justify='end'
+            data-testid='create-key-pair-modal-footer'
+          >
+            {modal.status !== KeypairCreateModalStatus.Success && (
+              <Button
+                primary={true}
+                disabled={cnPrefixError !== null}
+                loading={modal.loading}
+                onClick={confirmAddKeyPair}
+                type='submit'
+                loadingTimeout={0}
+              >
+                {submitButtonText}
+              </Button>
             )}
 
-            <AddKeyPairErrorTemplate>{modal.errorCode}</AddKeyPairErrorTemplate>
-          </BootstrapModal.Body>
-          <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
-            <Box direction='row' gap='small' justify='end'>
-              {modal.status !== KeypairCreateModalStatus.Success && (
-                <Button
-                  primary={true}
-                  disabled={cnPrefixError !== null}
-                  loading={modal.loading}
-                  onClick={confirmAddKeyPair}
-                  type='submit'
-                  loadingTimeout={0}
-                >
-                  {submitButtonText}
-                </Button>
-              )}
+            {!modal.loading && (
+              <Button link={true} onClick={close}>
+                {closeButtonText}
+              </Button>
+            )}
+          </Box>
+        }
+      >
+        <form onSubmit={confirmAddKeyPair}>
+          {modal.status === KeypairCreateModalStatus.Success ? (
+            <AddKeyPairSuccessTemplate kubeconfig={kubeconfig} />
+          ) : (
+            <AddKeyPairTemplate
+              email={props.user.email}
+              provider={props.provider}
+              cnPrefix={cnPrefix}
+              cnPrefixError={cnPrefixError}
+              handleCNPrefixChange={handleCNPrefixChange}
+              certificateOrganizations={certificateOrganizations}
+              handleCertificateOrganizationsChange={
+                handleCertificateOrganizationsChange
+              }
+              description={description}
+              handleDescriptionChange={handleDescriptionChange}
+              expireTTL={expireTTL}
+              handleTTLChange={handleTTLChange}
+              useInternalAPI={useInternalAPI}
+              handleUseInternalAPIChange={handleUseInternalAPIChange}
+              ingressBaseDomain={window.config.ingressBaseDomain}
+            />
+          )}
 
-              {!modal.loading && (
-                <Button link={true} onClick={close}>
-                  {closeButtonText}
-                </Button>
-              )}
-            </Box>
-          </BootstrapModal.Footer>
+          <AddKeyPairErrorTemplate>{modal.errorCode}</AddKeyPairErrorTemplate>
         </form>
       </StyledModal>
     </>

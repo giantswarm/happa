@@ -2,24 +2,25 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/Controls/Button';
 
-const GenericModal = (props) => {
+const GenericModal = ({
+  onClose,
+  visible,
+  title,
+  footer,
+  children,
+  ...props
+}) => {
   return (
-    <BootstrapModal
-      className={`modal ${props.className}`}
-      onHide={props.onClose}
-      show={props.visible}
-    >
+    <BootstrapModal onHide={onClose} show={visible} {...props}>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>{props.title}</BootstrapModal.Title>
+        <BootstrapModal.Title>{title}</BootstrapModal.Title>
       </BootstrapModal.Header>
-      <BootstrapModal.Body aria-label={props['aria-label']}>
-        {props.children}
-      </BootstrapModal.Body>
+      <BootstrapModal.Body>{children}</BootstrapModal.Body>
       <BootstrapModal.Footer>
-        {props.footer ? (
-          props.footer
+        {footer ? (
+          footer
         ) : (
-          <Button link={true} onClick={props.onClose}>
+          <Button link={true} onClick={onClose}>
             Close
           </Button>
         )}

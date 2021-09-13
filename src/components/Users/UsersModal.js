@@ -1,6 +1,6 @@
 import { Box } from 'grommet';
+import GenericModal from 'Modals/GenericModal';
 import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/Controls/Button';
 
 const UsersModal = ({
@@ -17,18 +17,12 @@ const UsersModal = ({
   ...props
 }) => {
   return (
-    <BootstrapModal
+    <GenericModal
       className='create-key-pair-modal'
-      onHide={onClose}
-      show={show}
-      {...props}
-    >
-      <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>{title}</BootstrapModal.Title>
-      </BootstrapModal.Header>
-
-      <BootstrapModal.Body>{children}</BootstrapModal.Body>
-      <BootstrapModal.Footer>
+      onClose={onClose}
+      visible={show}
+      title={title}
+      footer={
         <Box gap='small' direction='row' justify='end'>
           {!confirmHidden && (
             <Button
@@ -48,8 +42,11 @@ const UsersModal = ({
             </Button>
           )}
         </Box>
-      </BootstrapModal.Footer>
-    </BootstrapModal>
+      }
+      {...props}
+    >
+      {children}
+    </GenericModal>
   );
 };
 

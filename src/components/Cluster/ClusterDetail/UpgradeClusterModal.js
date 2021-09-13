@@ -3,8 +3,8 @@ import { Box } from 'grommet';
 import { clusterUpgradeChecklistURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import GenericModal from 'Modals/GenericModal';
 import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from 'stores/cluster/actions';
@@ -175,14 +175,10 @@ class UpgradeClusterModal extends React.Component {
   };
 
   aboutUpgradingPage = (targetRelease) => {
-    return (
-      <div>
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>
-            Upgrade to v{targetRelease}
-          </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>
+    return {
+      title: `Upgrade to v${targetRelease}`,
+      body: (
+        <>
           <p>
             Please read our{' '}
             <a
@@ -197,37 +193,33 @@ class UpgradeClusterModal extends React.Component {
             <strong>prepared for an upgrade</strong>.
           </p>
           {UpgradeClusterModal.getMasterNodesInfo(this.props.cluster)}
-        </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-          <Box gap='small' direction='row' justify='end'>
-            <Button
-              primary={true}
-              onClick={() => this.goToPage(Pages.InspectChanges)}
-            >
-              Inspect changes
-            </Button>
-            <Button link={true} onClick={this.close}>
-              Cancel
-            </Button>
-          </Box>
-        </BootstrapModal.Footer>
-      </div>
-    );
+        </>
+      ),
+      footer: (
+        <Box gap='small' direction='row' justify='end'>
+          <Button
+            primary={true}
+            onClick={() => this.goToPage(Pages.InspectChanges)}
+          >
+            Inspect changes
+          </Button>
+          <Button link={true} onClick={this.close}>
+            Cancel
+          </Button>
+        </Box>
+      ),
+    };
   };
 
   inspectChangesPage = () => {
     const { loading } = this.state;
 
-    return (
-      <div>
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>
-            Changes from v{this.props.cluster.release_version} to v
-            {this.props.targetRelease.version}
-          </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>{this.changedComponents()}</BootstrapModal.Body>
-        <BootstrapModal.Footer>
+    return {
+      title: `Changes from v${this.props.cluster.release_version} to v
+            ${this.props.targetRelease.version}`,
+      body: this.changedComponents(),
+      footer: (
+        <div>
           <Button
             primary={true}
             loading={loading}
@@ -242,9 +234,9 @@ class UpgradeClusterModal extends React.Component {
               Cancel
             </Button>
           )}
-        </BootstrapModal.Footer>
-      </div>
-    );
+        </div>
+      ),
+    };
   };
 
   submit = () => {
@@ -296,10 +288,17 @@ class UpgradeClusterModal extends React.Component {
   };
 
   render() {
+    const currPage = this.currentPage();
+
     return (
-      <BootstrapModal onHide={this.close} show={this.state.modalVisible}>
-        {this.currentPage()}
-      </BootstrapModal>
+      <GenericModal
+        onClose={this.close}
+        visible={this.state.modalVisible}
+        title={currPage?.title}
+        footer={currPage?.footer}
+      >
+        {currPage?.body}
+      </GenericModal>
     );
   }
 }

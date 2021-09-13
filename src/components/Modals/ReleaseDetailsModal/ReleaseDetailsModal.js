@@ -1,9 +1,8 @@
 import { relativeDate } from 'lib/helpers';
+import GenericModal from 'Modals/GenericModal';
 import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
-import Button from 'UI/Controls/Button';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import { groupBy, sortBy } from 'underscore';
@@ -64,70 +63,61 @@ class ReleaseDetailsModal extends React.Component {
     const changedComponents = Object.keys(changes).sort();
 
     return (
-      <BootstrapModal
+      <GenericModal
         className='release-selector-modal'
-        onHide={this.close}
-        show={this.state.modalVisible}
+        onClose={this.close}
+        visible={this.state.modalVisible}
+        title={`Details for release v${release.version}`}
       >
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>
-            Details for release v{release.version}
-          </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>
-          <div
-            className='release-selector-modal--release-details'
-            key={release.version}
-            data-testid={`release-${release.version}`}
-          >
-            <p className='release-selector-modal--release-details--date'>
-              Released <span>{relativeDate(release.timestamp)}</span>
-            </p>
+        <div
+          className='release-selector-modal--release-details'
+          key={release.version}
+          data-testid={`release-${release.version}`}
+        >
+          <p className='release-selector-modal--release-details--date'>
+            Released <span>{relativeDate(release.timestamp)}</span>
+          </p>
 
-            <div className='release-selector-modal--components'>
-              {sortBy(release.components, 'name').map((component) => (
-                <ReleaseComponentLabel
-                  key={component.name}
-                  name={component.name}
-                  version={ReleaseDetailsModal.formatComponentVersion(
-                    release,
-                    component
-                  )}
-                />
-              ))}
-            </div>
-
-            <ReleaseDetailsModalSection title='Changes'>
-              <dl>
-                {changedComponents.map((componentName, index) => {
-                  return (
-                    <ComponentChangelog
-                      changes={changes[componentName].map((c) => {
-                        return c.description;
-                      })}
-                      key={index}
-                      name={componentName}
-                    />
-                  );
-                })}
-              </dl>
-            </ReleaseDetailsModalSection>
-
-            <ReleaseDetailsModalUpgradeOptions
-              isAdmin={isAdmin}
-              currentVersion={release.version}
-              releases={releases}
-              provider={provider}
-              showUpgradeModal={showUpgradeModal}
-              setUpgradeVersion={setUpgradeVersion}
-              closeModal={this.close}
-            />
+          <div className='release-selector-modal--components'>
+            {sortBy(release.components, 'name').map((component) => (
+              <ReleaseComponentLabel
+                key={component.name}
+                name={component.name}
+                version={ReleaseDetailsModal.formatComponentVersion(
+                  release,
+                  component
+                )}
+              />
+            ))}
           </div>
-        </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-          <Button onClick={this.close}>Close</Button>
-        </BootstrapModal.Footer>
-      </BootstrapModal>
+
+          <ReleaseDetailsModalSection title='Changes'>
+            <dl>
+              {changedComponents.map((componentName, index) => {
+                return (
+                  <ComponentChangelog
+                    changes={changes[componentName].map((c) => {
+                      return c.description;
+                    })}
+                    key={index}
+                    name={componentName}
+                  />
+                );
+              })}
+            </dl>
+          </ReleaseDetailsModalSection>
+
+          <ReleaseDetailsModalUpgradeOptions
+            isAdmin={isAdmin}
+            currentVersion={release.version}
+            releases={releases}
+            provider={provider}
+            showUpgradeModal={showUpgradeModal}
+            setUpgradeVersion={setUpgradeVersion}
+            closeModal={this.close}
+          />
+        </div>
+      </GenericModal>
     );
   }
 }

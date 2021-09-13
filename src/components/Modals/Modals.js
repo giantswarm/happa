@@ -1,6 +1,5 @@
 import { Box } from 'grommet';
 import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { batchedOrganizationDeleteConfirmed } from 'stores/batchActions';
 import { modalHide } from 'stores/modal/actions';
@@ -15,8 +14,9 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
 
-const emailRegexp =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+import GenericModal from './GenericModal';
+
+const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const organizationNameRegexp = /^(([a-z0-9][-a-z0-9]*)?[a-z0-9])?$/;
 
 const NodePoolTextDiv = styled.div`
@@ -53,8 +53,9 @@ class Modals extends React.Component {
 
   clear() {
     const newOrgName = '';
-    const organizationNameValidationError =
-      this.validateOrganizationName(newOrgName);
+    const organizationNameValidationError = this.validateOrganizationName(
+      newOrgName
+    );
 
     const newEmail = '';
     const emailValidationError = this.validateOrganizationName(newEmail);
@@ -138,20 +139,11 @@ class Modals extends React.Component {
     switch (this.props.modal.template) {
       case 'organizationDelete':
         return (
-          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
-            <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>
-                Delete an Organization
-              </BootstrapModal.Title>
-            </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              <p>
-                Are you sure you want to delete{' '}
-                <code>{this.props.modal.templateValues.orgId}</code>?
-              </p>
-              <small>There is no undo</small>
-            </BootstrapModal.Body>
-            <BootstrapModal.Footer>
+          <GenericModal
+            onClose={this.close}
+            visible={this.props.modal.visible}
+            title='Delete an Organization'
+            footer={
               <Box gap='small' direction='row' justify='end'>
                 <Button
                   danger={true}
@@ -176,41 +168,23 @@ class Modals extends React.Component {
                   </Button>
                 )}
               </Box>
-            </BootstrapModal.Footer>
-          </BootstrapModal>
+            }
+          >
+            <p>
+              Are you sure you want to delete{' '}
+              <code>{this.props.modal.templateValues.orgId}</code>?
+            </p>
+            <small>There is no undo</small>
+          </GenericModal>
         );
 
       case 'organizationCreate':
         return (
-          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
-            <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>
-                Create an Organization
-              </BootstrapModal.Title>
-            </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              <p>Organization names must:</p>
-              <ul>
-                <li>be between 4 and 63 characters long</li>
-                <li>
-                  contain only letters, numbers, dots (.), hyphens (-) and
-                  underscores (_)
-                </li>
-                <li>must start and end with a letter or number</li>
-              </ul>
-              <form onSubmit={this.createOrganisation}>
-                <TextInput
-                  id='create-organization-name'
-                  name='create-organization-name'
-                  autoFocus={true}
-                  label='Organization Name'
-                  value={this.state.organizationName}
-                  onChange={this.onOrganizationNameChange}
-                  error={this.state.organizationNameValidationError}
-                />
-              </form>
-            </BootstrapModal.Body>
-            <BootstrapModal.Footer>
+          <GenericModal
+            onClose={this.close}
+            visible={this.props.modal.visible}
+            title='Create an Organization'
+            footer={
               <Box gap='small' direction='row' justify='end'>
                 <Button
                   primary={true}
@@ -232,35 +206,38 @@ class Modals extends React.Component {
                   </Button>
                 )}
               </Box>
-            </BootstrapModal.Footer>
-          </BootstrapModal>
+            }
+          >
+            <p>Organization names must:</p>
+            <ul>
+              <li>be between 4 and 63 characters long</li>
+              <li>
+                contain only letters, numbers, dots (.), hyphens (-) and
+                underscores (_)
+              </li>
+              <li>must start and end with a letter or number</li>
+            </ul>
+            <form onSubmit={this.createOrganisation}>
+              <TextInput
+                id='create-organization-name'
+                name='create-organization-name'
+                autoFocus={true}
+                label='Organization Name'
+                value={this.state.organizationName}
+                onChange={this.onOrganizationNameChange}
+                error={this.state.organizationNameValidationError}
+              />
+            </form>
+          </GenericModal>
         );
 
       case 'organizationAddMember':
         return (
-          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
-            <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>Add a Member</BootstrapModal.Title>
-            </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              <p>
-                You can only add users to this organization if they already have
-                a user account.
-              </p>
-
-              <form onSubmit={this.addMember}>
-                <TextInput
-                  label='Email'
-                  autoFocus={true}
-                  error={this.props.modal.templateValues.errorMessage}
-                  name='email'
-                  id='email'
-                  value={this.state.email}
-                  onChange={this.emailFieldChanged}
-                />
-              </form>
-            </BootstrapModal.Body>
-            <BootstrapModal.Footer>
+          <GenericModal
+            onClose={this.close}
+            visible={this.props.modal.visible}
+            title='Add a Member'
+            footer={
               <Box gap='small' direction='row' justify='end'>
                 <Button
                   primary={true}
@@ -280,24 +257,34 @@ class Modals extends React.Component {
                   </Button>
                 )}
               </Box>
-            </BootstrapModal.Footer>
-          </BootstrapModal>
+            }
+          >
+            <p>
+              You can only add users to this organization if they already have a
+              user account.
+            </p>
+
+            <form onSubmit={this.addMember}>
+              <TextInput
+                label='Email'
+                autoFocus={true}
+                error={this.props.modal.templateValues.errorMessage}
+                name='email'
+                id='email'
+                value={this.state.email}
+                onChange={this.emailFieldChanged}
+              />
+            </form>
+          </GenericModal>
         );
 
       case 'organizationRemoveMember':
         return (
-          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
-            <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>Remove Member</BootstrapModal.Title>
-            </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              <p>
-                Are you sure you want to remove{' '}
-                {this.props.modal.templateValues.email} from{' '}
-                {this.props.modal.templateValues.orgId}
-              </p>
-            </BootstrapModal.Body>
-            <BootstrapModal.Footer>
+          <GenericModal
+            onClose={this.close}
+            visible={this.props.modal.visible}
+            title='Remove Member'
+            footer={
               <Box gap='small' direction='row' justify='end'>
                 <Button
                   danger={true}
@@ -316,8 +303,14 @@ class Modals extends React.Component {
                   </Button>
                 )}
               </Box>
-            </BootstrapModal.Footer>
-          </BootstrapModal>
+            }
+          >
+            <p>
+              Are you sure you want to remove{' '}
+              {this.props.modal.templateValues.email} from{' '}
+              {this.props.modal.templateValues.orgId}
+            </p>
+          </GenericModal>
         );
 
       case 'nodePoolDelete': {
@@ -359,12 +352,11 @@ class Modals extends React.Component {
         );
 
         return (
-          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
-            <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>Delete node pool</BootstrapModal.Title>
-            </BootstrapModal.Header>
-            <BootstrapModal.Body>{bodyText}</BootstrapModal.Body>
-            <BootstrapModal.Footer>
+          <GenericModal
+            onClose={this.close}
+            visible={this.props.modal.visible}
+            title='Delete node pool'
+            footer={
               <Box gap='small' direction='row' justify='end'>
                 <Button
                   danger={true}
@@ -387,8 +379,10 @@ class Modals extends React.Component {
                   </Button>
                 )}
               </Box>
-            </BootstrapModal.Footer>
-          </BootstrapModal>
+            }
+          >
+            {bodyText}
+          </GenericModal>
         );
       }
 
