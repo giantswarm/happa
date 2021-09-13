@@ -387,9 +387,9 @@ class ScaleNodePoolModal extends React.Component<
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
-  return ({
+  return {
     nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
-  } as unknown) as IDispatchProps;
+  } as unknown as IDispatchProps;
 }
 
 export default connect<IState, IDispatchProps, IScaleNodePoolModalProps>(
