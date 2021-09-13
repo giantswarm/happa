@@ -55,7 +55,7 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
           command={`
               kubectl template organization \
                 --name example \
-                > example-organization.yaml
+                --output example-organization.yaml
           `}
         >
           <Text>
