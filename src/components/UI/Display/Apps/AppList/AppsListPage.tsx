@@ -116,7 +116,7 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
               itemMinHeight={200}
               itemMinWidth={270}
               gridGap={20}
-              render={(app: IAppProps, i: number) => (
+              render={(app: IAppProps) => (
                 <App
                   name={app.name}
                   appIconURL={app.appIconURL}

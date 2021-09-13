@@ -13,7 +13,7 @@ interface IAppGridProps {
   itemMinWidth: number;
   itemMinHeight: number;
   gridGap: number;
-  render: (item: IAppProps, i: number) => React.ReactNode;
+  render: (item: IAppProps) => React.ReactNode;
 }
 
 interface IScrollPosition {
@@ -24,7 +24,7 @@ interface IDataProps {
   items: IAppProps[];
   columnCount: number;
   gridGap: number;
-  render: (item: IAppProps, i: number) => React.ReactNode;
+  render: (item: IAppProps) => React.ReactNode;
 }
 
 const StyledContainer = styled.div<{ gridGap: number }>`
@@ -57,7 +57,7 @@ const ItemRenderer: React.FC<GridChildComponentProps> = memo(
       padding: `0 ${gridGap / 2}px`,
     });
 
-    return item ? <div style={patchedStyle}>{render(item, index)}</div> : null;
+    return item ? <div style={patchedStyle}>{render(item)}</div> : null;
   },
   areEqual
 );
