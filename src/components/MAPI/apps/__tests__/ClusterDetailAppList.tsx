@@ -1,9 +1,17 @@
-import { screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
+import { createMemoryHistory } from 'history';
+import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import React from 'react';
+import { cache, SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
+import {
+  getComponentWithStore,
+  getComponentWithTheme,
+  renderWithTheme,
+} from 'testUtils/renderUtils';
 
 import ClusterDetailAppList from '../ClusterDetailAppList';
 
@@ -84,22 +92,46 @@ function generateApp(
   };
 }
 
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailAppList
->;
+function getComponent(
+  props: React.ComponentPropsWithoutRef<typeof ClusterDetailAppList>
+) {
+  const history = createMemoryHistory();
+  const auth = new TestOAuth2(history, true);
+
+  const Component = (p: typeof props) => (
+    <SWRConfig value={{ dedupingInterval: 0 }}>
+      <ClusterDetailAppList {...p} />
+    </SWRConfig>
+  );
+
+  return getComponentWithStore(
+    Component,
+    props,
+    undefined,
+    undefined,
+    history,
+    auth
+  );
+}
 
 describe('ClusterDetailAppList', () => {
   it('renders without crashing', () => {
     renderWithTheme(ClusterDetailAppList, {
       apps: [],
-    } as ComponentProps);
+    });
   });
 
   it('displays loading animations', () => {
-    const { rerender } = renderWithTheme(ClusterDetailAppList, {
-      apps: [],
-      isLoading: true,
-    } as ComponentProps);
+    afterEach(() => {
+      cache.clear();
+    });
+
+    const { rerender } = render(
+      getComponent({
+        apps: [],
+        isLoading: true,
+      })
+    );
 
     expect(screen.getAllByLabelText('Loading...')).toHaveLength(6);
 
@@ -107,17 +139,19 @@ describe('ClusterDetailAppList', () => {
       getComponentWithTheme(ClusterDetailAppList, {
         apps: [],
         isLoading: false,
-      } as ComponentProps)
+      })
     );
 
     expect(screen.queryAllByLabelText('Loading...')).toHaveLength(0);
   });
 
   it('displays a placeholder if there are no apps', () => {
-    renderWithTheme(ClusterDetailAppList, {
-      apps: [],
-      isLoading: false,
-    } as ComponentProps);
+    render(
+      getComponent({
+        apps: [],
+        isLoading: false,
+      })
+    );
 
     expect(
       screen.getByText('No apps installed on this cluster')
@@ -125,24 +159,28 @@ describe('ClusterDetailAppList', () => {
   });
 
   it('displays the error message if it is provided', () => {
-    renderWithTheme(ClusterDetailAppList, {
-      apps: [],
-      isLoading: false,
-      errorMessage: 'Something went wrong',
-    } as ComponentProps);
+    render(
+      getComponent({
+        apps: [],
+        isLoading: false,
+        errorMessage: 'Something went wrong',
+      })
+    );
 
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
   });
 
   it('displays basic app information when the apps are collapsed', () => {
-    renderWithTheme(ClusterDetailAppList, {
-      apps: [
-        generateApp('some-app', '1.3.0'),
-        generateApp('some-other-app', '2.3.1'),
-        generateApp('random-app', '5.0.0'),
-      ],
-      isLoading: false,
-    } as ComponentProps);
+    render(
+      getComponent({
+        apps: [
+          generateApp('some-app', '1.3.0'),
+          generateApp('some-other-app', '2.3.1'),
+          generateApp('random-app', '5.0.0'),
+        ],
+        isLoading: false,
+      })
+    );
 
     expect(screen.getByLabelText('App name: some-app')).toBeInTheDocument();
     expect(screen.getByLabelText('App version: 1.3.0')).toBeInTheDocument();
@@ -164,10 +202,12 @@ describe('ClusterDetailAppList', () => {
     })(new Date());
     deletedApp.metadata.deletionTimestamp = deletionDate.toISOString();
 
-    renderWithTheme(ClusterDetailAppList, {
-      apps: [deletedApp],
-      isLoading: false,
-    } as ComponentProps);
+    render(
+      getComponent({
+        apps: [deletedApp],
+        isLoading: false,
+      })
+    );
 
     expect(screen.getByText('some-other-app')).toBeInTheDocument();
     expect(

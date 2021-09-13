@@ -2,12 +2,8 @@ import { Box, Keyboard, Text } from 'grommet';
 import { compare } from 'lib/semver';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { Constants } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
-import {
-  getKubernetesReleaseEOLStatus,
-  isPreRelease,
-} from 'stores/releases/utils';
+import { isPreRelease } from 'stores/releases/utils';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import { ListToggler } from 'UI/Controls/ExpandableSelector/Selector';
@@ -106,17 +102,7 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
 
     const { kubernetesVersion, k8sVersionEOLDate } = currentRelease;
 
-    if (
-      k8sVersionEOLDate &&
-      !kubernetesVersion?.endsWith(Constants.APP_VERSION_EOL_SUFFIX)
-    ) {
-      const { isEol } = getKubernetesReleaseEOLStatus(k8sVersionEOLDate);
-      if (isEol) {
-        return `${kubernetesVersion} ${Constants.APP_VERSION_EOL_SUFFIX}`;
-      }
-    }
-
-    return kubernetesVersion;
+    return [kubernetesVersion, k8sVersionEOLDate] as const;
   }, [allReleases, selectedRelease]);
 
   useEffect(() => {
@@ -195,7 +181,8 @@ const ReleaseSelector: FC<IReleaseSelectorProps> = ({
         <StyledDot />
         <KubernetesVersionLabel
           hidePatchVersion={false}
-          version={selectedKubernetesVersion}
+          version={selectedKubernetesVersion[0]}
+          eolDate={selectedKubernetesVersion[1]}
         />
       </Box>
       <div>

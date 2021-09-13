@@ -23,7 +23,7 @@ describe('MetadataService::configuration', () => {
     setRequestConfig: skipFnImplMock,
   };
 
-  describe('getInstallationInfo', () => {
+  describe('getConfiguration', () => {
     it('configures the client correctly', async () => {
       await getConfiguration(mockClient);
 

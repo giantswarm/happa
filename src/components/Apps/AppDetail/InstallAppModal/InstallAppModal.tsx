@@ -7,6 +7,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
+import { formatYAMLError } from 'MAPI/apps/utils';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -201,7 +202,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         setValuesYAML(parsedYAML);
         setValuesYAMLError('');
       } catch (err) {
-        setValuesYAMLError('Unable to parse valid YAML from this file.');
+        setValuesYAMLError(formatYAMLError(err));
       }
     };
 
@@ -225,7 +226,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         setSecretsYAML(parsedYAML);
         setSecretsYAMLError('');
       } catch (err) {
-        setSecretsYAMLError('Unable to parse valid YAML from this file.');
+        setSecretsYAMLError(formatYAMLError(err));
       }
     };
 

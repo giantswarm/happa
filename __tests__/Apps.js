@@ -1,7 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { isInternal } from 'Apps/AppsList/utils';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -10,7 +9,6 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
@@ -29,7 +27,6 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);

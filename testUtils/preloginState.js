@@ -1,4 +1,3 @@
-import { Providers } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 
 // This is what the state looks like when someone brand new arrives at the site
@@ -20,26 +19,6 @@ export default {
     firstLoadComplete: false,
     loggedInUser: null,
     permissions: {},
-    info: {
-      general: {
-        installation_name: '',
-        availability_zones: null,
-        provider: Providers.AWS,
-      },
-      stats: {
-        cluster_creation_duration: {
-          median: 0,
-          p25: 0,
-          p75: 0,
-        },
-      },
-      workers: {
-        count_per_cluster: {
-          max: null,
-          default: 0,
-        },
-      },
-    },
   },
   errors: {},
   metadata: {

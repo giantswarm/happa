@@ -54,7 +54,7 @@ export function clustersList(opts: {
     try {
       if (opts.withLoadingFlags) dispatch({ type: CLUSTERS_LIST_REQUEST });
 
-      const provider = getState().main.info.general.provider;
+      const provider = window.config.info.general.provider;
       const makeCapabilities = computeCapabilities(getState());
       const clustersApi = new GiantSwarm.ClustersApi();
       const response = await clustersApi.getClusters();
@@ -92,7 +92,7 @@ export function refreshClustersList(): ThunkAction<
     try {
       dispatch({ type: CLUSTERS_LIST_REFRESH_REQUEST });
 
-      const provider = getState().main.info.general.provider;
+      const provider = window.config.info.general.provider;
       const clusterStoredIds = Object.keys(getState().entities.clusters.items);
       const makeCapabilities = computeCapabilities(getState());
       const clustersApi = new GiantSwarm.ClustersApi();
@@ -216,7 +216,7 @@ export function clusterLoadDetails(
       if (isV5Cluster && opts.initializeNodePools)
         (cluster as V5.ICluster).nodePools = [];
 
-      const provider = getState().main.info.general.provider;
+      const provider = window.config.info.general.provider;
       cluster.capabilities = computeCapabilities(getState())(
         cluster.release_version ?? '',
         provider

@@ -1,14 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
-  AWSInfoResponse,
   getMockCall,
   metadataResponse,
   userResponse,
@@ -25,8 +23,6 @@ it('logging out redirects to the login page', async () => {
 
   // The response to the user info call
   getMockCall('/v4/user/', userResponse);
-  // The response to the info call
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
   getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
@@ -37,7 +33,7 @@ it('logging out redirects to the login page', async () => {
   nock(API_ENDPOINT).delete('/v4/auth-tokens/').reply(StatusCodes.Ok);
 
   // Given I am logged in and on the home page.
-  const { getByText } = renderRouteWithStore(MainRoutes.Home);
+  const { getByText, getByLabelText } = renderRouteWithStore(MainRoutes.Home);
 
   // Wait till the app is ready and we're on the home page.
   await waitFor(() => {
@@ -45,7 +41,7 @@ it('logging out redirects to the login page', async () => {
   });
 
   // When I click logout in the user dropdown.
-  const userDropdown = getByText('developer@giantswarm.io');
+  const userDropdown = getByLabelText('developer@giantswarm.io');
   fireEvent.click(userDropdown);
 
   const logoutButton = getByText('Logout');

@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { getK8sVersionEOLDate } from 'lib/config';
 import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
 import React from 'react';
 
@@ -49,6 +50,15 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   appsSummary,
   appsSummaryLoading,
 }) => {
+  const { oldestReleaseK8sVersion, newestReleaseK8sVersion } =
+    releasesSummary ?? {};
+  const oldestReleaseK8sVersionEOLDate = oldestReleaseK8sVersion
+    ? getK8sVersionEOLDate(oldestReleaseK8sVersion) ?? undefined
+    : undefined;
+  const newestReleaseK8sVersionEOLDate = newestReleaseK8sVersion
+    ? getK8sVersionEOLDate(newestReleaseK8sVersion) ?? undefined
+    : undefined;
+
   return (
     <Box direction='column' gap='large'>
       <Box direction='row' gap='large'>
@@ -138,7 +148,8 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
                 aria-label='Oldest release Kubernetes version'
               >
                 <KubernetesVersionLabel
-                  version={releasesSummary?.oldestReleaseK8sVersion}
+                  version={oldestReleaseK8sVersion}
+                  eolDate={oldestReleaseK8sVersionEOLDate}
                   hidePatchVersion={true}
                 />
               </OrganizationDetailStatistic>
@@ -155,7 +166,8 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
                 aria-label='Newest release Kubernetes version'
               >
                 <KubernetesVersionLabel
-                  version={releasesSummary?.newestReleaseK8sVersion}
+                  version={newestReleaseK8sVersion}
+                  eolDate={newestReleaseK8sVersionEOLDate}
                   hidePatchVersion={true}
                 />
               </OrganizationDetailStatistic>

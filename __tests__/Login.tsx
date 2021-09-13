@@ -1,7 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { isJwtExpired } from 'lib/helpers';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { createSelfSubjectAccessReview } from 'model/services/mapi/authorizationv1/createSelfSubjectAccessReview';
 import { createSelfSubjectRulesReview } from 'model/services/mapi/authorizationv1/createSelfSubjectRulesReview';
 import { getOrganization } from 'model/services/mapi/securityv1alpha1/';
@@ -13,7 +12,6 @@ import * as featureFlags from 'shared/featureFlags';
 import {
   API_ENDPOINT,
   authTokenResponse,
-  AWSInfoResponse,
   getMockCall,
   getOrganizationByName,
   metadataResponse,
@@ -59,7 +57,6 @@ describe('Login', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getMockCall('/v4/user/', userResponse as any);
     // The response to the info call
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     // The response to the org call (no orgs)
     getMockCall('/v4/organizations/');
     // The response to the clusters call (no clusters)
@@ -90,7 +87,7 @@ describe('Login', () => {
     // Then I should be logged in and see the home page with no orgs or clusters.
     await waitFor(() => {
       // Verify we are now on the layout page and I can see my username
-      expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
+      expect(getByLabelText(/developer@giantswarm.io/i)).toBeInTheDocument();
       expect(getByText(/Welcome to Giant Swarm!/i)).toBeInTheDocument();
       expect(
         getByText(/There are no organizations yet in your installation./i)
@@ -201,7 +198,6 @@ describe('Login', () => {
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       selfSubjectRulesReviewWithSomeOrgs
     );
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/releases/', releasesResponse);
 
@@ -264,7 +260,6 @@ describe('Login', () => {
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       selfSubjectRulesReviewWithNoOrgs
     );
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     const history = createInitialHistory(MainRoutes.Login);
 
     const testAuth = new TestOAuth2(history);
@@ -297,7 +292,6 @@ describe('Login', () => {
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       selfSubjectRulesReviewWithSomeOrgs
     );
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/');
     getMockCall('/v4/releases/', releasesResponse);
 
@@ -339,7 +333,6 @@ describe('Login', () => {
     (createSelfSubjectRulesReview as jest.Mock).mockResolvedValue(
       selfSubjectRulesReviewWithSomeOrgs
     );
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
 
     getMockCall('/v4/clusters/');
     getMockCall('/v4/releases/', releasesResponse);

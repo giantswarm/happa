@@ -1,12 +1,10 @@
 import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   emptyKeyPairsResponse,
   getMockCall,
   getMockCallTimes,
@@ -27,7 +25,6 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 // Responses to requests
 beforeEach(() => {
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   getConfiguration.mockResolvedValueOnce(metadataResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);

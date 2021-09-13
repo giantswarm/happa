@@ -388,7 +388,9 @@ function mapStateToProps(state) {
   const propsToPush = {
     minAvailabilityZones: window.config.info.general.availabilityZones.default,
     maxAvailabilityZones: window.config.info.general.availabilityZones.max,
-    clusterCreationStats: state.main.info.stats.cluster_creation_duration,
+    clusterCreationStats: {
+      cluster_creation_duration: { median: 0, p25: 0, p75: 0 },
+    },
     provider,
     defaultInstanceType: window.config.info.workers.instanceType.default,
     defaultVMSize: window.config.info.workers.vmSize.default,

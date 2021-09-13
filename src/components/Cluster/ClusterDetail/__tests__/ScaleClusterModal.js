@@ -5,7 +5,6 @@ import { Providers } from 'shared/constants';
 import { StatusCodes } from 'shared/constants';
 import {
   API_ENDPOINT,
-  AWSInfoResponse,
   v4AWSClusterResponse,
   v4AzureClusterResponse,
   v4KVMClusterResponse,
@@ -15,11 +14,7 @@ import { getComponentWithStore } from 'testUtils/renderUtils';
 import ScaleClusterModal from '../ScaleClusterModal';
 
 const getComponentWithProps = (props = {}) => {
-  const initialState = {
-    main: {
-      info: AWSInfoResponse.data,
-    },
-  };
+  const initialState = {};
   const defaultProps = Object.assign(
     {},
     {
