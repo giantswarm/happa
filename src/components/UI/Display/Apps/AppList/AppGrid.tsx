@@ -8,7 +8,7 @@ import {
 import styled from 'styled-components';
 import { IAppProps } from 'UI/Display/Apps/AppList/App';
 
-interface IAppGrid {
+interface IAppGridProps {
   items: IAppProps[];
   itemMinWidth: number;
   itemMinHeight: number;
@@ -62,7 +62,7 @@ const ItemRenderer: React.FC<GridChildComponentProps> = memo(
   areEqual
 );
 
-const AppGrid: React.FC<IAppGrid> = ({
+const AppGrid: React.FC<IAppGridProps> = ({
   items,
   itemMinWidth,
   itemMinHeight,
