@@ -57,36 +57,38 @@ interface IClusterDetailUpgradeModalChangelogProps {
   componentsDiff?: IReleaseComponentsDiff;
 }
 
-const ClusterDetailUpgradeModalChangelog: React.FC<IClusterDetailUpgradeModalChangelogProps> = ({
-  releaseNotesURL,
-  componentsDiff,
-}) => {
-  return (
-    <Box direction='column' gap='medium'>
-      {componentsDiff && (
-        <StyledReleaseDetailsModalSection title='Component changes'>
-          <Box
-            wrap={true}
-            direction='row'
-            gap='xxsmall'
-            margin={{ top: 'medium' }}
-          >
-            {componentsDiff.changes.map(formatReleaseComponentLabel)}
-          </Box>
-        </StyledReleaseDetailsModalSection>
-      )}
+const ClusterDetailUpgradeModalChangelog: React.FC<IClusterDetailUpgradeModalChangelogProps> =
+  ({ releaseNotesURL, componentsDiff }) => {
+    return (
+      <Box direction='column' gap='medium'>
+        {componentsDiff && (
+          <StyledReleaseDetailsModalSection title='Component changes'>
+            <Box
+              wrap={true}
+              direction='row'
+              gap='xxsmall'
+              margin={{ top: 'medium' }}
+            >
+              {componentsDiff.changes.map(formatReleaseComponentLabel)}
+            </Box>
+          </StyledReleaseDetailsModalSection>
+        )}
 
-      {releaseNotesURL && (
-        <StyledReleaseDetailsModalSection title='Release notes'>
-          <Text>
-            <a href={releaseNotesURL} rel='noopener noreferrer' target='_blank'>
-              {releaseNotesURL}
-            </a>
-          </Text>
-        </StyledReleaseDetailsModalSection>
-      )}
-    </Box>
-  );
-};
+        {releaseNotesURL && (
+          <StyledReleaseDetailsModalSection title='Release notes'>
+            <Text>
+              <a
+                href={releaseNotesURL}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                {releaseNotesURL}
+              </a>
+            </Text>
+          </StyledReleaseDetailsModalSection>
+        )}
+      </Box>
+    );
+  };
 
 export default ClusterDetailUpgradeModalChangelog;

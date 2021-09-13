@@ -55,12 +55,8 @@ describe('CodeBlock', () => {
         <Output key='2'>What did you expect to happen?</Output>,
       ],
     };
-    const {
-      getByLabelText,
-      findByTitle,
-      queryByText,
-      rerender,
-    } = renderWithProps(componentProps);
+    const { getByLabelText, findByTitle, queryByText, rerender } =
+      renderWithProps(componentProps);
 
     const copyButton = getByLabelText(/copy content to clipboard/i);
     expect(copyButton).toBeInTheDocument();

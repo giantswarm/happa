@@ -293,9 +293,7 @@ class ConfigKubeCtl extends React.Component {
         </p>
 
         <CodeBlock>
-          <Prompt>
-            {`export KUBECONFIG="\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig"`}
-          </Prompt>
+          <Prompt>{`export KUBECONFIG="\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig"`}</Prompt>
         </CodeBlock>
 
         <Aside>

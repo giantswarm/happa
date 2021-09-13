@@ -118,7 +118,10 @@ const GettingStarted = (props) => {
           title: 'GETTING STARTED',
           pathname: RoutePath.createUsablePath(
             OrganizationsRoutes.Clusters.GettingStarted.Overview,
-            { clusterId, orgId }
+            {
+              clusterId,
+              orgId,
+            }
           ),
         }}
       >

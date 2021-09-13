@@ -15,9 +15,7 @@ const maxLength = 249;
 const startAndEndWithAlphanumericRegExp = /^[a-z0-9].*[a-z0-9]$/;
 const characterSetRegExp = /^[a-z0-9\-\_]+$/;
 
-export function validateOrganizationName(
-  orgName: string
-): {
+export function validateOrganizationName(orgName: string): {
   valid: boolean;
   statusMessage: OrganizationNameStatusMessage;
 } {

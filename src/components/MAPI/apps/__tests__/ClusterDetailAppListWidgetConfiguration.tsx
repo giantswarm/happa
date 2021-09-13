@@ -237,14 +237,15 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', { name: 'Upload values' });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob(
       [
@@ -319,14 +320,15 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', { name: 'Replace values' });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob([''], {
       type: 'application/yaml',
@@ -403,16 +405,17 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', {
       name: 'Upload secret values',
     });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob(
       [
@@ -487,16 +490,17 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', {
       name: 'Replace secret values',
     });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob([''], {
       type: 'application/yaml',

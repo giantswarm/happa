@@ -5,9 +5,7 @@ export enum PasswordStatusMessage {
   Ok = 'password_ok',
 }
 
-export function validatePassword(
-  password: string
-): {
+export function validatePassword(password: string): {
   valid: boolean;
   statusMessage: PasswordStatusMessage;
 } {

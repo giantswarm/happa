@@ -251,7 +251,7 @@ function makeNodePoolCreator(
 
       const response = await nodePoolsApi.addNodePool(
         clusterID,
-        (nodePool as unknown) as GiantSwarm.V5AddNodePoolRequest
+        nodePool as unknown as GiantSwarm.V5AddNodePoolRequest
       );
       const newNodePool: INodePool = {
         ...response,

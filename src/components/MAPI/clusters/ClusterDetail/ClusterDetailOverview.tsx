@@ -71,11 +71,9 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     ? fetchProviderClusterForClusterKey(cluster)
     : null;
 
-  const {
-    data: providerCluster,
-    error: providerClusterError,
-  } = useSWR(providerClusterKey, () =>
-    fetchProviderClusterForCluster(clientFactory, auth, cluster!)
+  const { data: providerCluster, error: providerClusterError } = useSWR(
+    providerClusterKey,
+    () => fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
   useEffect(() => {

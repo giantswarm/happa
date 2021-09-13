@@ -257,9 +257,8 @@ describe('AccessControlRolePermissions', () => {
       cells = within(row).getAllByRole('cell');
 
       for (let j = 0; j < cells.length; j++) {
-        const { content, labelContent, tooltipContent } = testCase.cellContents[
-          j
-        ];
+        const { content, labelContent, tooltipContent } =
+          testCase.cellContents[j];
         if (content) {
           cellContent = within(cells[j]).getByText(content);
           expect(cellContent).toBeInTheDocument();

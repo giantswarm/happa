@@ -26,9 +26,8 @@ export async function updateClusterDescription(
   }
 
   cluster.metadata.annotations ??= {};
-  cluster.metadata.annotations[
-    capiv1alpha3.annotationClusterDescription
-  ] = newDescription;
+  cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
+    newDescription;
 
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
 }

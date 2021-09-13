@@ -58,13 +58,11 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     const { current: gridElement } = this.gridRef;
 
     if (gridElement && index !== -1) {
-      const [
-        rowIndex,
-        columnIndex,
-      ] = VirtualizedScrollableGrid.getGridIndexesFromAbsoluteIndex(
-        index,
-        colCount
-      );
+      const [rowIndex, columnIndex] =
+        VirtualizedScrollableGrid.getGridIndexesFromAbsoluteIndex(
+          index,
+          colCount
+        );
 
       gridElement.scrollToItem({
         align: 'center',
@@ -95,10 +93,8 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     if (typeof columnCount === 'number') {
       columnCountToSet = columnCount;
     } else {
-      const currentColumnCount = VirtualizedScrollableGrid.findCurrentColumnCount(
-        columnCount,
-        theme
-      );
+      const currentColumnCount =
+        VirtualizedScrollableGrid.findCurrentColumnCount(columnCount, theme);
       const maximumColumnCount = Math.max(...Object.values(columnCount));
 
       if (currentColumnCount === null) {
@@ -180,11 +176,12 @@ class VirtualizedScrollableGrid extends React.PureComponent {
             style={newStyle}
           >
             {({ columnIndex, rowIndex, style }) => {
-              const itemIndex = VirtualizedScrollableGrid.getAbsoluteIndexFromGridIndexes(
-                rowIndex,
-                columnIndex,
-                columnCount
-              );
+              const itemIndex =
+                VirtualizedScrollableGrid.getAbsoluteIndexFromGridIndexes(
+                  rowIndex,
+                  columnIndex,
+                  columnCount
+                );
               const item = data[itemIndex];
 
               if (!item) {

@@ -35,13 +35,12 @@ const ReleaseDetail = styled.span`
   }
 `;
 
-const showReleaseDetailsModal = (
-  modalRef: RefObject<ReleaseDetailsModal>
-) => () => {
-  const { current: modalElement } = modalRef;
+const showReleaseDetailsModal =
+  (modalRef: RefObject<ReleaseDetailsModal>) => () => {
+    const { current: modalElement } = modalRef;
 
-  if (modalElement) modalElement.show();
-};
+    if (modalElement) modalElement.show();
+  };
 
 // Versions data and icons at the top of cluster details view.
 const RegionAndVersions: FC<IRegionAndVersionsProps> = ({

@@ -301,9 +301,8 @@ export function batchedRefreshClusterDetailView(
         })
       );
 
-      const isV5Cluster = getState().entities.clusters.v5Clusters.includes(
-        clusterId
-      );
+      const isV5Cluster =
+        getState().entities.clusters.v5Clusters.includes(clusterId);
       if (isV5Cluster) {
         await dispatch(
           clusterNodePoolsLoad(clusterId, {

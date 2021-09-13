@@ -27,87 +27,88 @@ interface IClusterDetailKeyPairDetailsModalProps {
   visible?: boolean;
 }
 
-const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsModalProps> = ({
-  id,
-  commonName,
-  organizations,
-  creationDate,
-  expirationDate,
-  isExpiringSoon,
-  description,
-  onClose,
-  visible,
-}) => {
-  const title = `Key pair details`;
+const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsModalProps> =
+  ({
+    id,
+    commonName,
+    organizations,
+    creationDate,
+    expirationDate,
+    isExpiringSoon,
+    description,
+    onClose,
+    visible,
+  }) => {
+    const title = `Key pair details`;
 
-  return (
-    <GenericModal
-      footer={<Button onClick={onClose}>Close</Button>}
-      onClose={onClose}
-      title={title}
-      aria-label={title}
-      visible={visible}
-    >
-      <Box direction='column' gap='medium'>
-        <Box>
-          <Label>ID</Label>
-          {id ? (
-            <Copyable copyText={id}>
-              <Text>{id}</Text>
-            </Copyable>
-          ) : (
-            <NotAvailable />
-          )}
+    return (
+      <GenericModal
+        footer={<Button onClick={onClose}>Close</Button>}
+        onClose={onClose}
+        title={title}
+        aria-label={title}
+        visible={visible}
+      >
+        <Box direction='column' gap='medium'>
+          <Box>
+            <Label>ID</Label>
+            {id ? (
+              <Copyable copyText={id}>
+                <Text>{id}</Text>
+              </Copyable>
+            ) : (
+              <NotAvailable />
+            )}
+          </Box>
+          <Box>
+            <Label>Common Name (CN)</Label>
+            {commonName ? (
+              <Copyable copyText={commonName}>
+                <Text>{commonName}</Text>
+              </Copyable>
+            ) : (
+              <NotAvailable />
+            )}
+          </Box>
+          <Box>
+            <Label>Certificate Organizations (O)</Label>
+            {organizations ? (
+              <Copyable copyText={organizations}>
+                <Text>{organizations}</Text>
+              </Copyable>
+            ) : (
+              <NotAvailable />
+            )}
+          </Box>
+          <Box>
+            <Label>Created</Label>
+            {creationDate ? (
+              <Text>
+                {formatDate(creationDate)} &ndash;{' '}
+                {getRelativeDateFromNow(creationDate)}
+              </Text>
+            ) : (
+              <NotAvailable />
+            )}
+          </Box>
+          <Box>
+            <Label>Expiry</Label>
+            {expirationDate ? (
+              <Text color={isExpiringSoon ? 'status-warning' : undefined}>
+                {formatDate(expirationDate)} &ndash;{' '}
+                {getRelativeDateFromNow(expirationDate)}
+              </Text>
+            ) : (
+              <NotAvailable />
+            )}
+          </Box>
+          <Box>
+            <Label>Description</Label>
+            {description ? <Text>{description}</Text> : <NotAvailable />}
+          </Box>
         </Box>
-        <Box>
-          <Label>Common Name (CN)</Label>
-          {commonName ? (
-            <Copyable copyText={commonName}>
-              <Text>{commonName}</Text>
-            </Copyable>
-          ) : (
-            <NotAvailable />
-          )}
-        </Box>
-        <Box>
-          <Label>Certificate Organizations (O)</Label>
-          {organizations ? (
-            <Copyable copyText={organizations}>
-              <Text>{organizations}</Text>
-            </Copyable>
-          ) : (
-            <NotAvailable />
-          )}
-        </Box>
-        <Box>
-          <Label>Created</Label>
-          {creationDate ? (
-            <Text>
-              {formatDate(creationDate)} &ndash;{' '}
-              {getRelativeDateFromNow(creationDate)}
-            </Text>
-          ) : (
-            <NotAvailable />
-          )}
-        </Box>
-        <Box>
-          <Label>Expiry</Label>
-          {expirationDate ? (
-            <Text color={isExpiringSoon ? 'status-warning' : undefined}>
-              {formatDate(expirationDate)} &ndash;{' '}
-              {getRelativeDateFromNow(expirationDate)}
-            </Text>
-          ) : (
-            <NotAvailable />
-          )}
-        </Box>
-        <Box>
-          <Label>Description</Label>
-          {description ? <Text>{description}</Text> : <NotAvailable />}
-        </Box>
-      </Box>
-    </GenericModal>
-  );
-};
+      </GenericModal>
+    );
+  };
 
 export default ClusterDetailKeyPairDetailsModal;

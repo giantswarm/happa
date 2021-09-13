@@ -45,7 +45,7 @@ describe('cluster::selectors', () => {
       const initialState = createInitialState({});
       const releaseVersion = selectTargetRelease(
         initialState,
-        (v5ClusterResponse as unknown) as V5.ICluster
+        v5ClusterResponse as unknown as V5.ICluster
       );
       expect(releaseVersion).toBeNull();
     });
@@ -57,9 +57,9 @@ describe('cluster::selectors', () => {
         '2.0.1': createRelease('2.0.1', true),
         '3.0.0': createRelease('3.0.0', true),
       });
-      const cluster = (Object.assign({}, v5ClusterResponse, {
+      const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '1.0.0',
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.1');
     });
@@ -71,9 +71,9 @@ describe('cluster::selectors', () => {
         '2.0.1': createRelease('2.0.1', true),
         '3.0.0': createRelease('3.0.0', true),
       });
-      const cluster = (Object.assign({}, v5ClusterResponse, {
+      const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '3.0.0',
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBeNull();
     });
@@ -87,9 +87,9 @@ describe('cluster::selectors', () => {
         '3.0.1': createRelease('3.0.1', false),
         '3.0.1-beta': createRelease('3.0.1-beta', true),
       });
-      const cluster = (Object.assign({}, v5ClusterResponse, {
+      const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '3.0.0',
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBeNull();
     });
@@ -100,9 +100,9 @@ describe('cluster::selectors', () => {
         '2.0.1': createRelease('2.0.1', true),
         '3.0.0': createRelease('3.0.0', true),
       });
-      const cluster = (Object.assign({}, v5ClusterResponse, {
+      const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '2.0.0',
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.1');
     });
@@ -119,9 +119,9 @@ describe('cluster::selectors', () => {
         },
         true
       );
-      const cluster = (Object.assign({}, v5ClusterResponse, {
+      const cluster = Object.assign({}, v5ClusterResponse, {
         release_version: '2.0.0',
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       const releaseVersion = selectTargetRelease(initialState, cluster);
       expect(releaseVersion).toBe('2.0.2');
     });
@@ -129,7 +129,7 @@ describe('cluster::selectors', () => {
 
   describe('selectIsClusterAwaitingUpgrade', () => {
     it('returns true if a cluster ID is in the list', () => {
-      const state = ({
+      const state = {
         entities: {
           clusters: {
             idsAwaitingUpgrade: {
@@ -138,7 +138,7 @@ describe('cluster::selectors', () => {
             },
           },
         },
-      } as unknown) as IState;
+      } as unknown as IState;
 
       expect(selectIsClusterAwaitingUpgrade('as12d')(state)).toBeTruthy();
       expect(selectIsClusterAwaitingUpgrade('435sd')(state)).toBeTruthy();

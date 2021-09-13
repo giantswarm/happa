@@ -56,9 +56,10 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
     setTimeout(() => {
       if (!isOpen || !cancelButtonRef.current) return;
 
-      const cancelButtonElement = cancelButtonRef.current.querySelector<HTMLButtonElement>(
-        '.cancel-button'
-      );
+      const cancelButtonElement =
+        cancelButtonRef.current.querySelector<HTMLButtonElement>(
+          '.cancel-button'
+        );
       cancelButtonElement?.focus();
     });
   }, [isOpen]);

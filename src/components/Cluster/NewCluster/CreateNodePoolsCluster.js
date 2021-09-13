@@ -92,11 +92,8 @@ class CreateNodePoolsCluster extends Component {
   isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
-    const {
-      masterAZMode,
-      availabilityZonesLabels,
-      nodePoolsForms,
-    } = this.state;
+    const { masterAZMode, availabilityZonesLabels, nodePoolsForms } =
+      this.state;
 
     const areNodePoolsValid = Object.keys(nodePoolsForms.nodePools)
       .map((np) => nodePoolsForms.nodePools[np].isValid)

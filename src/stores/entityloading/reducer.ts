@@ -4,7 +4,8 @@ import {
   IEntityLoadingState,
 } from 'stores/entityloading/types';
 
-const loadingActionTypeRegexp = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)$/;
+const loadingActionTypeRegexp =
+  /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)$/;
 
 const initialState: IEntityLoadingState = {};
 

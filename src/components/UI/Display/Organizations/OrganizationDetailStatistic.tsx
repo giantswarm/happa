@@ -9,18 +9,15 @@ interface IOrganizationDetailStatisticProps
   isLoading?: boolean;
 }
 
-const OrganizationDetailStatistic: React.FC<IOrganizationDetailStatisticProps> = ({
-  children,
-  isLoading,
-  ...props
-}) => {
-  return (
-    <Text {...props}>
-      {isLoading && <LoadingPlaceholder height={20} width={80} />}
-      {typeof children === 'undefined' && !isLoading && <NotAvailable />}
-      {typeof children !== 'undefined' && !isLoading && children}
-    </Text>
-  );
-};
+const OrganizationDetailStatistic: React.FC<IOrganizationDetailStatisticProps> =
+  ({ children, isLoading, ...props }) => {
+    return (
+      <Text {...props}>
+        {isLoading && <LoadingPlaceholder height={20} width={80} />}
+        {typeof children === 'undefined' && !isLoading && <NotAvailable />}
+        {typeof children !== 'undefined' && !isLoading && children}
+      </Text>
+    );
+  };
 
 export default OrganizationDetailStatistic;

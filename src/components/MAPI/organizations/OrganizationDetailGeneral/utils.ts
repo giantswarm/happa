@@ -237,21 +237,19 @@ export async function fetchReleasesSummary(
   summary.newestReleaseVersion = releases[releases.length - 1];
 
   try {
-    const [
-      oldestReleasePromise,
-      newestReleasePromise,
-    ] = await Promise.allSettled([
-      releasev1alpha1.getRelease(
-        httpClientFactory(),
-        auth,
-        `v${summary.oldestReleaseVersion}`
-      ),
-      releasev1alpha1.getRelease(
-        httpClientFactory(),
-        auth,
-        `v${summary.newestReleaseVersion}`
-      ),
-    ]);
+    const [oldestReleasePromise, newestReleasePromise] =
+      await Promise.allSettled([
+        releasev1alpha1.getRelease(
+          httpClientFactory(),
+          auth,
+          `v${summary.oldestReleaseVersion}`
+        ),
+        releasev1alpha1.getRelease(
+          httpClientFactory(),
+          auth,
+          `v${summary.newestReleaseVersion}`
+        ),
+      ]);
 
     if (oldestReleasePromise.status === 'rejected') {
       throw oldestReleasePromise.reason;

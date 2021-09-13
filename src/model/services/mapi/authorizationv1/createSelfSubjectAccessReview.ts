@@ -26,6 +26,6 @@ export function createSelfSubjectAccessReview(
     client,
     auth,
     url.toString(),
-    (requestBody as unknown) as Record<string, unknown>
+    requestBody as unknown as Record<string, unknown>
   );
 }

@@ -14,46 +14,72 @@ interface IClusterDetailReleaseDetailsUpgradeOptionsProps {
   onVersionClick: (version: string) => void;
 }
 
-const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<IClusterDetailReleaseDetailsUpgradeOptionsProps> = ({
-  supportedVersions,
-  onVersionClick,
-}) => {
-  const handleVersionClick = (version: string) => () => {
-    onVersionClick(version);
-  };
+const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<IClusterDetailReleaseDetailsUpgradeOptionsProps> =
+  ({ supportedVersions, onVersionClick }) => {
+    const handleVersionClick = (version: string) => () => {
+      onVersionClick(version);
+    };
 
-  const handleKeyDown = (version: string) => (
-    e: React.KeyboardEvent<HTMLElement>
-  ) => {
-    e.preventDefault();
+    const handleKeyDown =
+      (version: string) => (e: React.KeyboardEvent<HTMLElement>) => {
+        e.preventDefault();
 
-    handleVersionClick(version)();
-  };
+        handleVersionClick(version)();
+      };
 
-  const containsBetaReleases = useMemo(() => {
-    return supportedVersions.some(isReleaseBeta);
-  }, [supportedVersions]);
+    const containsBetaReleases = useMemo(() => {
+      return supportedVersions.some(isReleaseBeta);
+    }, [supportedVersions]);
 
-  if (supportedVersions.length === 1) {
-    const release = supportedVersions[0];
+    if (supportedVersions.length === 1) {
+      const release = supportedVersions[0];
+
+      return (
+        <>
+          <Paragraph fill={true}>
+            This cluster can be upgraded to{' '}
+            <Keyboard
+              onSpace={handleKeyDown(release.version)}
+              onEnter={handleKeyDown(release.version)}
+            >
+              <ReleaseDetailsModalUpgradeOptionsVersion
+                version={release.version}
+                isBeta={isReleaseBeta(release)}
+                onClick={handleVersionClick(release.version)}
+                tabIndex={0}
+              />
+            </Keyboard>
+            .
+          </Paragraph>
+          {containsBetaReleases && (
+            <Box margin={{ top: 'medium' }}>
+              <ReleaseDetailsModalUpgradeOptionsBetaDisclaimer />
+            </Box>
+          )}
+        </>
+      );
+    }
 
     return (
       <>
         <Paragraph fill={true}>
-          This cluster can be upgraded to{' '}
-          <Keyboard
-            onSpace={handleKeyDown(release.version)}
-            onEnter={handleKeyDown(release.version)}
-          >
-            <ReleaseDetailsModalUpgradeOptionsVersion
-              version={release.version}
-              isBeta={isReleaseBeta(release)}
-              onClick={handleVersionClick(release.version)}
-              tabIndex={0}
-            />
-          </Keyboard>
-          .
+          This cluster can be upgraded to these releases:
         </Paragraph>
+        {supportedVersions.map((release) => (
+          <Box key={release.version}>
+            <Keyboard
+              onSpace={handleKeyDown(release.version)}
+              onEnter={handleKeyDown(release.version)}
+            >
+              <ReleaseDetailsModalUpgradeOptionsVersion
+                version={release.version}
+                isBeta={isReleaseBeta(release)}
+                onClick={handleVersionClick(release.version)}
+                tabIndex={0}
+              />
+            </Keyboard>
+          </Box>
+        ))}
         {containsBetaReleases && (
           <Box margin={{ top: 'medium' }}>
             <ReleaseDetailsModalUpgradeOptionsBetaDisclaimer />
@@ -61,35 +87,6 @@ const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<IClusterDetailReleaseD
         )}
       </>
     );
-  }
-
-  return (
-    <>
-      <Paragraph fill={true}>
-        This cluster can be upgraded to these releases:
-      </Paragraph>
-      {supportedVersions.map((release) => (
-        <Box key={release.version}>
-          <Keyboard
-            onSpace={handleKeyDown(release.version)}
-            onEnter={handleKeyDown(release.version)}
-          >
-            <ReleaseDetailsModalUpgradeOptionsVersion
-              version={release.version}
-              isBeta={isReleaseBeta(release)}
-              onClick={handleVersionClick(release.version)}
-              tabIndex={0}
-            />
-          </Keyboard>
-        </Box>
-      ))}
-      {containsBetaReleases && (
-        <Box margin={{ top: 'medium' }}>
-          <ReleaseDetailsModalUpgradeOptionsBetaDisclaimer />
-        </Box>
-      )}
-    </>
-  );
-};
+  };
 
 export default ClusterDetailReleaseDetailsUpgradeOptions;

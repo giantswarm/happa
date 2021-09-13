@@ -19,33 +19,31 @@ interface IClusterDetailWidgetCreatedProps
   cluster?: capiv1alpha3.ICluster;
 }
 
-const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> = ({
-  cluster,
-  ...props
-}) => {
-  const creationDate = cluster?.metadata.creationTimestamp;
+const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> =
+  ({ cluster, ...props }) => {
+    const creationDate = cluster?.metadata.creationTimestamp;
 
-  return (
-    <ClusterDetailWidget
-      title='Created'
-      inline={true}
-      contentProps={{
-        direction: 'row',
-        gap: 'xsmall',
-        wrap: true,
-        align: 'center',
-      }}
-      {...props}
-    >
-      <OptionalValue value={creationDate}>
-        {(value) => <Text>{relativeDate(value as string)}</Text>}
-      </OptionalValue>
-      <StyledDot />
-      <OptionalValue value={creationDate} loaderWidth={150}>
-        {(value) => <Text>{formatDate(value as string)}</Text>}
-      </OptionalValue>
-    </ClusterDetailWidget>
-  );
-};
+    return (
+      <ClusterDetailWidget
+        title='Created'
+        inline={true}
+        contentProps={{
+          direction: 'row',
+          gap: 'xsmall',
+          wrap: true,
+          align: 'center',
+        }}
+        {...props}
+      >
+        <OptionalValue value={creationDate}>
+          {(value) => <Text>{relativeDate(value as string)}</Text>}
+        </OptionalValue>
+        <StyledDot />
+        <OptionalValue value={creationDate} loaderWidth={150}>
+          {(value) => <Text>{formatDate(value as string)}</Text>}
+        </OptionalValue>
+      </ClusterDetailWidget>
+    );
+  };
 
 export default ClusterDetailWidgetCreated;

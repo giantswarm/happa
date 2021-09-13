@@ -246,12 +246,10 @@ function createDefaultV1Alpha3Cluster(config: {
 }): capiv1alpha3.ICluster {
   const namespace = config.providerCluster.metadata.namespace;
   const name = config.providerCluster.metadata.name;
-  const organization = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelOrganization
-  ];
-  const releaseVersion = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelReleaseVersion
-  ];
+  const organization =
+    config.providerCluster.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster.metadata.labels![capiv1alpha3.labelReleaseVersion];
 
   return {
     apiVersion: 'cluster.x-k8s.io/v1alpha3',
@@ -295,12 +293,10 @@ function createDefaultAzureMachine(config: {
 }): capzv1alpha3.IAzureMachine {
   const namespace = config.providerCluster.metadata.namespace;
   const name = config.providerCluster.metadata.name;
-  const organization = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelOrganization
-  ];
-  const releaseVersion = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelReleaseVersion
-  ];
+  const organization =
+    config.providerCluster.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster.metadata.labels![capiv1alpha3.labelReleaseVersion];
 
   return {
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',

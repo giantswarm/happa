@@ -105,8 +105,7 @@ describe('ClusterDetailWidgetRelease', () => {
     expect(screen.getByText('Release notes')).toBeInTheDocument();
     expect(
       screen.getByRole('link', {
-        name:
-          'https://github.com/giantswarm/releases/tree/master/azure/v14.1.5',
+        name: 'https://github.com/giantswarm/releases/tree/master/azure/v14.1.5',
       })
     );
 
@@ -157,9 +156,8 @@ describe('ClusterDetailWidgetRelease', () => {
           ...capiv1alpha3Mocks.randomCluster1.metadata,
           labels: {
             ...capiv1alpha3Mocks.randomCluster1.metadata.labels,
-            'release.giantswarm.io/version': releasev1alpha1Mocks.v15_0_0.metadata.name.slice(
-              1
-            ),
+            'release.giantswarm.io/version':
+              releasev1alpha1Mocks.v15_0_0.metadata.name.slice(1),
           },
         },
       });
@@ -218,8 +216,7 @@ describe('ClusterDetailWidgetRelease', () => {
     expect(screen.getByText('Release notes')).toBeInTheDocument();
     expect(
       screen.getByRole('link', {
-        name:
-          'https://github.com/giantswarm/releases/tree/master/azure/v15.0.0',
+        name: 'https://github.com/giantswarm/releases/tree/master/azure/v15.0.0',
       })
     ).toBeInTheDocument();
 

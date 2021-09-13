@@ -28,77 +28,77 @@ interface IClusterDetailAppListWidgetCatalogProps
   app?: applicationv1alpha1.IApp;
 }
 
-const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCatalogProps> = ({
-  app,
-  ...props
-}) => {
-  const auth = useAuthProvider();
-  const appCatalogClient = useHttpClient();
+const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCatalogProps> =
+  ({ app, ...props }) => {
+    const auth = useAuthProvider();
+    const appCatalogClient = useHttpClient();
 
-  const appCatalogKey = app
-    ? applicationv1alpha1.getAppCatalogKey('', app.spec.catalog)
-    : null;
+    const appCatalogKey = app
+      ? applicationv1alpha1.getAppCatalogKey('', app.spec.catalog)
+      : null;
 
-  const { data: appCatalog, error: appCatalogError } = useSWR<
-    applicationv1alpha1.IAppCatalog,
-    GenericResponseError
-  >(appCatalogKey, () =>
-    applicationv1alpha1.getAppCatalog(
-      appCatalogClient,
-      auth,
-      '',
-      app!.spec.catalog
-    )
-  );
+    const { data: appCatalog, error: appCatalogError } = useSWR<
+      applicationv1alpha1.IAppCatalog,
+      GenericResponseError
+    >(appCatalogKey, () =>
+      applicationv1alpha1.getAppCatalog(
+        appCatalogClient,
+        auth,
+        '',
+        app!.spec.catalog
+      )
+    );
 
-  useEffect(() => {
-    if (appCatalogError) {
-      const errorMessage = extractErrorMessage(appCatalogError);
+    useEffect(() => {
+      if (appCatalogError) {
+        const errorMessage = extractErrorMessage(appCatalogError);
 
-      new FlashMessage(
-        `There was a problem loading the app's catalog.`,
-        messageType.ERROR,
-        messageTTL.FOREVER,
-        errorMessage
-      );
+        new FlashMessage(
+          `There was a problem loading the app's catalog.`,
+          messageType.ERROR,
+          messageTTL.FOREVER,
+          errorMessage
+        );
 
-      ErrorReporter.getInstance().notify(appCatalogError);
-    }
-  }, [appCatalogError]);
+        ErrorReporter.getInstance().notify(appCatalogError);
+      }
+    }, [appCatalogError]);
 
-  const appCatalogTitle = appCatalog
-    ? computeAppCatalogUITitle(appCatalog)
-    : undefined;
-  const isManaged = appCatalog ? isAppCatalogVisibleToUsers(appCatalog) : false;
+    const appCatalogTitle = appCatalog
+      ? computeAppCatalogUITitle(appCatalog)
+      : undefined;
+    const isManaged = appCatalog
+      ? isAppCatalogVisibleToUsers(appCatalog)
+      : false;
 
-  return (
-    <ClusterDetailAppListWidget
-      title='Catalog'
-      contentProps={{
-        direction: 'row',
-        gap: 'small',
-        wrap: true,
-        align: 'baseline',
-      }}
-      {...props}
-    >
-      <OptionalValue value={appCatalogTitle} loaderWidth={150}>
-        {(value) => <Text aria-label={`App catalog: ${value}`}>{value}</Text>}
-      </OptionalValue>
+    return (
+      <ClusterDetailAppListWidget
+        title='Catalog'
+        contentProps={{
+          direction: 'row',
+          gap: 'small',
+          wrap: true,
+          align: 'baseline',
+        }}
+        {...props}
+      >
+        <OptionalValue value={appCatalogTitle} loaderWidth={150}>
+          {(value) => <Text aria-label={`App catalog: ${value}`}>{value}</Text>}
+        </OptionalValue>
 
-      {isManaged && (
-        <Box
-          pad={{ horizontal: 'xsmall', vertical: 'none' }}
-          round='xxsmall'
-          background='#8dc163'
-        >
-          <CatalogType size='xsmall' color='background' weight='bold'>
-            managed
-          </CatalogType>
-        </Box>
-      )}
-    </ClusterDetailAppListWidget>
-  );
-};
+        {isManaged && (
+          <Box
+            pad={{ horizontal: 'xsmall', vertical: 'none' }}
+            round='xxsmall'
+            background='#8dc163'
+          >
+            <CatalogType size='xsmall' color='background' weight='bold'>
+              managed
+            </CatalogType>
+          </Box>
+        )}
+      </ClusterDetailAppListWidget>
+    );
+  };
 
 export default ClusterDetailAppListWidgetCatalog;

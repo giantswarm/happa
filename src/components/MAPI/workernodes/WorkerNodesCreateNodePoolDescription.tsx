@@ -24,43 +24,36 @@ interface IWorkerNodesCreateNodePoolDescriptionProps
   autoFocus?: boolean;
 }
 
-const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolDescriptionProps> = ({
-  id,
-  nodePool,
-  onChange,
-  readOnly,
-  disabled,
-  autoFocus,
-  ...props
-}) => {
-  const [validationError, setValidationError] = useState('');
+const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolDescriptionProps> =
+  ({ id, nodePool, onChange, readOnly, disabled, autoFocus, ...props }) => {
+    const [validationError, setValidationError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const validationResult = validateValue(e.target.value, 'Description');
-    setValidationError(validationResult);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const validationResult = validateValue(e.target.value, 'Description');
+      setValidationError(validationResult);
 
-    onChange({
-      isValid: validationResult.length < 1,
-      patch: withNodePoolDescription(e.target.value),
-    });
+      onChange({
+        isValid: validationResult.length < 1,
+        patch: withNodePoolDescription(e.target.value),
+      });
+    };
+
+    const value = getNodePoolDescription(nodePool);
+
+    return (
+      <InputGroup htmlFor={id} label='Description' {...props}>
+        <TextInput
+          value={value}
+          id={id}
+          error={validationError}
+          onChange={handleChange}
+          help='Pick a description that helps team mates to understand what these nodes are here for. You can change this later.'
+          readOnly={readOnly}
+          disabled={disabled}
+          autoFocus={autoFocus}
+        />
+      </InputGroup>
+    );
   };
-
-  const value = getNodePoolDescription(nodePool);
-
-  return (
-    <InputGroup htmlFor={id} label='Description' {...props}>
-      <TextInput
-        value={value}
-        id={id}
-        error={validationError}
-        onChange={handleChange}
-        help='Pick a description that helps team mates to understand what these nodes are here for. You can change this later.'
-        readOnly={readOnly}
-        disabled={disabled}
-        autoFocus={autoFocus}
-      />
-    </InputGroup>
-  );
-};
 
 export default WorkerNodesCreateNodePoolDescription;

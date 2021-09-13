@@ -394,10 +394,11 @@ class V5ClusterDetailTable extends React.Component {
     const machineTypeLabel =
       provider === Providers.AWS ? 'Instance type' : 'VM Size';
 
-    const additionalColumnCount = V5ClusterDetailTable.getNumberOfAdditionalColumns(
-      supportsNodePoolAutoscaling,
-      supportsNodePoolSpotInstances
-    );
+    const additionalColumnCount =
+      V5ClusterDetailTable.getNumberOfAdditionalColumns(
+        supportsNodePoolAutoscaling,
+        supportsNodePoolSpotInstances
+      );
 
     const handleLabelChange = (patch) => {
       this.props.dispatch(

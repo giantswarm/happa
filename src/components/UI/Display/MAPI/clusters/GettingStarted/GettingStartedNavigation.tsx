@@ -11,13 +11,8 @@ interface IGettingStartedNavigationProps
 const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
   props
 ) => {
-  const {
-    nextStepPath,
-    prevStepPath,
-    currentStepIdx,
-    steps,
-    homePath,
-  } = useGettingStartedContext();
+  const { nextStepPath, prevStepPath, currentStepIdx, steps, homePath } =
+    useGettingStartedContext();
 
   const isHome = currentStepIdx < 0;
   const isFirstStep = currentStepIdx === 0;
