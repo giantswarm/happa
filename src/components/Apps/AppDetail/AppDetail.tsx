@@ -27,10 +27,8 @@ const AppDetail: React.FC = () => {
     selectApp(params.catalogName, params.app, params.version)
   );
 
-  const {
-    errorMessage: readmeErrorMessage,
-    clear: clearReadmeError,
-  } = useError(CLUSTER_LOAD_APP_README_ERROR);
+  const { errorMessage: readmeErrorMessage, clear: clearReadmeError } =
+    useError(CLUSTER_LOAD_APP_README_ERROR);
 
   useEffect(() => {
     clearReadmeError();

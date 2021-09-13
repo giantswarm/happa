@@ -7,9 +7,10 @@ import { IState } from 'stores/state';
  * Select an error message by a given type.
  * @param errorType - The internal error type (e.g. `CLUSTERS_LOAD_REQUEST`).
  */
-function useError(
-  errorType: string
-): { errorMessage: string; clear: () => void } {
+function useError(errorType: string): {
+  errorMessage: string;
+  clear: () => void;
+} {
   const dispatch = useDispatch();
   const errorMessage =
     useSelector<IState, string | null>((state) =>

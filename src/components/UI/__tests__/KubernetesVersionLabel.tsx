@@ -52,12 +52,12 @@ describe('KubernetesVersionLabel', () => {
       version: '1.0.0',
       eolDate: '1960-02-10',
     });
-    let versionLabel: HTMLElement | null = screen.getByLabelText(
-      /end of life/i
-    );
+    let versionLabel: HTMLElement | null =
+      screen.getByLabelText(/end of life/i);
     expect(versionLabel).toBeInTheDocument();
 
-    let tooltipMessageRegexp = /This Kubernetes version reached its end of life/i;
+    let tooltipMessageRegexp =
+      /This Kubernetes version reached its end of life/i;
     fireEvent.mouseEnter(versionLabel);
     expect(screen.getByText(tooltipMessageRegexp)).toBeInTheDocument();
     fireEvent.mouseLeave(versionLabel);
@@ -92,7 +92,8 @@ describe('KubernetesVersionLabel', () => {
     expect(versionLabel).not.toBeInTheDocument();
 
     versionLabel = screen.getByText(/1.0/i);
-    tooltipMessageRegexp = /This Kubernetes version will reach its end of life/i;
+    tooltipMessageRegexp =
+      /This Kubernetes version will reach its end of life/i;
     fireEvent.mouseEnter(versionLabel);
     expect(screen.getByText(tooltipMessageRegexp)).toBeInTheDocument();
     fireEvent.mouseLeave(versionLabel);

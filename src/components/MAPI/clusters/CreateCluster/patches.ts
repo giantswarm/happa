@@ -29,23 +29,20 @@ export function withClusterReleaseVersion(newVersion: string): ClusterPatch {
     cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
 
     providerCluster.metadata.labels ??= {};
-    providerCluster.metadata.labels[
-      capiv1alpha3.labelReleaseVersion
-    ] = newVersion;
+    providerCluster.metadata.labels[capiv1alpha3.labelReleaseVersion] =
+      newVersion;
 
     controlPlaneNode.metadata.labels ??= {};
-    controlPlaneNode.metadata.labels[
-      capiv1alpha3.labelReleaseVersion
-    ] = newVersion;
+    controlPlaneNode.metadata.labels[capiv1alpha3.labelReleaseVersion] =
+      newVersion;
   };
 }
 
 export function withClusterDescription(newDescription: string): ClusterPatch {
   return (cluster) => {
     cluster.metadata.annotations ??= {};
-    cluster.metadata.annotations[
-      capiv1alpha3.annotationClusterDescription
-    ] = newDescription;
+    cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
+      newDescription;
   };
 }
 

@@ -22,6 +22,6 @@ export function updateRoleBinding(
     client,
     auth,
     url.toString(),
-    (roleBinding as unknown) as Record<string, unknown>
+    roleBinding as unknown as Record<string, unknown>
   );
 }

@@ -152,9 +152,8 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
           clusterName: draft.nodePool.spec!.clusterName,
           namespace: draft.nodePool.metadata.namespace!,
           location: getProviderNodePoolLocation(draft.providerNodePool),
-          organization: draft.nodePool.metadata.labels![
-            capiv1alpha3.labelOrganization
-          ],
+          organization:
+            draft.nodePool.metadata.labels![capiv1alpha3.labelOrganization],
         });
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
@@ -202,20 +201,19 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     }, 200);
   };
 
-  const handleChange = (property: NodePoolPropertyField) => (
-    newValue: INodePoolPropertyValue
-  ) => {
-    dispatch({
-      type: 'applyPatch',
-      property,
-      value: newValue.patch,
-    });
-    dispatch({
-      type: 'changeValidationStatus',
-      property,
-      value: newValue.isValid,
-    });
-  };
+  const handleChange =
+    (property: NodePoolPropertyField) => (newValue: INodePoolPropertyValue) => {
+      dispatch({
+        type: 'applyPatch',
+        property,
+        value: newValue.patch,
+      });
+      dispatch({
+        type: 'changeValidationStatus',
+        property,
+        value: newValue.isValid,
+      });
+    };
 
   const isValid = Object.values(state.validationResults).every((r) => r);
 
@@ -261,9 +259,8 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   const supportsSpotInstances = clusterReleaseVersion
     ? supportsNodePoolSpotInstances(provider, clusterReleaseVersion)
     : false;
-  const orgName = state.nodePool.metadata.labels![
-    capiv1alpha3.labelOrganization
-  ];
+  const orgName =
+    state.nodePool.metadata.labels![capiv1alpha3.labelOrganization];
   const description = getNodePoolDescription(state.nodePool);
   const machineType = getProviderNodePoolMachineType(state.providerNodePool);
   const spotInstances = getProviderNodePoolSpotInstances(

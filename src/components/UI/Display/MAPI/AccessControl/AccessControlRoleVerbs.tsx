@@ -125,10 +125,10 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
   ...props
 }) => {
   const verbMap = useMemo(() => makeVerbMap(verbs), [verbs]);
-  const formattedVerbs = useMemo(() => formatVerbs(verbs, verbMap), [
-    verbs,
-    verbMap,
-  ]);
+  const formattedVerbs = useMemo(
+    () => formatVerbs(verbs, verbMap),
+    [verbs, verbMap]
+  );
 
   return (
     <OverlayTrigger

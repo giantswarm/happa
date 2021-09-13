@@ -265,15 +265,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const hasNoNodePools = nodePoolList?.items.length === 0;
 
-    const {
-      data: providerNodePools,
-      error: providerNodePoolsError,
-    } = useSWR(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
-      fetchProviderNodePoolsForNodePools(
-        clientFactory,
-        auth,
-        nodePoolList!.items
-      )
+    const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
+      fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
+      () =>
+        fetchProviderNodePoolsForNodePools(
+          clientFactory,
+          auth,
+          nodePoolList!.items
+        )
     );
 
     useEffect(() => {
@@ -291,9 +290,10 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const provider = window.config.info.general.provider;
 
-    const additionalColumns = useMemo(() => getAdditionalColumns(provider), [
-      provider,
-    ]);
+    const additionalColumns = useMemo(
+      () => getAdditionalColumns(provider),
+      [provider]
+    );
 
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 

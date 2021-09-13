@@ -56,11 +56,14 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   const auth = useAuthProvider();
 
   const appClient = useRef(clientFactory());
-  const { data: app, error: appError, mutate: mutateApp } = useSWR<
-    applicationv1alpha1.IApp,
-    GenericResponseError
-  >(applicationv1alpha1.getAppKey(clusterName, appName), () =>
-    applicationv1alpha1.getApp(appClient.current, auth, clusterName, appName)
+  const {
+    data: app,
+    error: appError,
+    mutate: mutateApp,
+  } = useSWR<applicationv1alpha1.IApp, GenericResponseError>(
+    applicationv1alpha1.getAppKey(clusterName, appName),
+    () =>
+      applicationv1alpha1.getApp(appClient.current, auth, clusterName, appName)
   );
 
   useEffect(() => {
@@ -100,18 +103,19 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
-    if (!app) return {};
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    useMemo(() => {
+      if (!app) return {};
 
-    return {
-      labelSelector: {
-        matchingLabels: {
-          [applicationv1alpha1.labelAppName]: app.spec.name,
-          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+      return {
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelAppName]: app.spec.name,
+            [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+          },
         },
-      },
-    };
-  }, [app]);
+      };
+    }, [app]);
   const appCatalogEntryListKey = useMemo(() => {
     if (!app) return null;
 

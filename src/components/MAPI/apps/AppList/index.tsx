@@ -30,19 +30,20 @@ const AppList: React.FC<{}> = () => {
   const auth = useAuthProvider();
 
   const appCatalogListClient = useRef(clientFactory());
-  const appCatalogListGetOptions: applicationv1alpha1.IGetAppCatalogListOptions = useMemo(() => {
-    // Admins can see any type of catalogs.
-    if (isAdmin) return {};
+  const appCatalogListGetOptions: applicationv1alpha1.IGetAppCatalogListOptions =
+    useMemo(() => {
+      // Admins can see any type of catalogs.
+      if (isAdmin) return {};
 
-    return {
-      labelSelector: {
-        matchingLabels: {
-          [applicationv1alpha1.labelCatalogVisibility]: 'public',
-          [applicationv1alpha1.labelCatalogType]: 'stable',
+      return {
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCatalogVisibility]: 'public',
+            [applicationv1alpha1.labelCatalogType]: 'stable',
+          },
         },
-      },
-    };
-  }, [isAdmin]);
+      };
+    }, [isAdmin]);
 
   const {
     data: appCatalogList,
@@ -113,14 +114,15 @@ const AppList: React.FC<{}> = () => {
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(
-    () => ({
-      labelSelector: {
-        matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
-      },
-    }),
-    []
-  );
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    useMemo(
+      () => ({
+        labelSelector: {
+          matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
+        },
+      }),
+      []
+    );
 
   const {
     data: appCatalogEntryList,

@@ -89,10 +89,10 @@ const ClusterDetail: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 
-  const paths = useMemo(() => computePaths(orgId, clusterId), [
-    orgId,
-    clusterId,
-  ]);
+  const paths = useMemo(
+    () => computePaths(orgId, clusterId),
+    [orgId, clusterId]
+  );
 
   const clientFactory = useHttpClientFactory();
 
@@ -132,10 +132,11 @@ const ClusterDetail: React.FC<{}> = () => {
     ? capiv1alpha3.getClusterKey(namespace, clusterId)
     : null;
 
-  const { data: cluster, error: clusterError, mutate: mutateCluster } = useSWR<
-    capiv1alpha3.ICluster,
-    GenericResponseError
-  >(clusterKey, () =>
+  const {
+    data: cluster,
+    error: clusterError,
+    mutate: mutateCluster,
+  } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(clusterKey, () =>
     capiv1alpha3.getCluster(clusterClient.current, auth, namespace!, clusterId)
   );
 

@@ -30,10 +30,8 @@ function useValidatingInternalValue(
     };
   };
 
-  const [
-    { internalValue, isValid, validationError },
-    setInternalValue,
-  ] = useReducer<Reducer<IReducerState, string>>(reducer, initialReducerValue);
+  const [{ internalValue, isValid, validationError }, setInternalValue] =
+    useReducer<Reducer<IReducerState, string>>(reducer, initialReducerValue);
 
   return [{ internalValue, isValid, validationError }, setInternalValue];
 }

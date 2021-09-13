@@ -112,7 +112,8 @@ const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
             <>
               <Text size='small' weight='normal' color='text-weak'>
                 When this is selected, the server entry of the created
-                kubeconfig will be https://internal-api.{ingressBaseDomain}
+                kubeconfig will be https://internal-api.
+                {ingressBaseDomain}
               </Text>
               <Text size='small' weight='normal' color='text-weak'>
                 This is preferred in some restricted environments.

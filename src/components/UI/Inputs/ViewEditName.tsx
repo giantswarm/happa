@@ -187,14 +187,8 @@ class ViewAndEditName extends Component<
   };
 
   render() {
-    const {
-      typeLabel,
-      value,
-      onSave,
-      onToggleEditingState,
-      variant,
-      ...rest
-    } = this.props;
+    const { typeLabel, value, onSave, onToggleEditingState, variant, ...rest } =
+      this.props;
     const { errorMessage } = this.state;
     const hasError = errorMessage !== '';
 

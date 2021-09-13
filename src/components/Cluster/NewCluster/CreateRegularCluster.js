@@ -277,10 +277,8 @@ class CreateRegularCluster extends React.Component {
       this.props.selectedRelease
     );
 
-    const {
-      component: WorkerConfiguration,
-      label: workerConfigurationLabel,
-    } = CreateRegularCluster.getWorkerConfigurationComponent(provider);
+    const { component: WorkerConfiguration, label: workerConfigurationLabel } =
+      CreateRegularCluster.getWorkerConfigurationComponent(provider);
 
     return (
       <WrapperDiv data-testid='cluster-creation-view'>

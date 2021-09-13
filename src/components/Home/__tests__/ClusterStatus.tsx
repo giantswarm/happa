@@ -32,7 +32,8 @@ describe('ClusterStatus', () => {
       },
       {
         [nodePoolRelease.version]: nodePoolRelease as IRelease,
-        [nodePoolWithFlatcarRelease.version]: nodePoolWithFlatcarRelease as IRelease,
+        [nodePoolWithFlatcarRelease.version]:
+          nodePoolWithFlatcarRelease as IRelease,
       }
     );
     const onClickMockFn = jest.fn();
@@ -50,7 +51,8 @@ describe('ClusterStatus', () => {
     fireEvent.click(statusLabel);
     expect(onClickMockFn).toHaveBeenCalled();
 
-    const hoverMessageRegex = /There's a new release version available\. Upgrade now to get the latest features\./i;
+    const hoverMessageRegex =
+      /There's a new release version available\. Upgrade now to get the latest features\./i;
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
@@ -90,7 +92,8 @@ describe('ClusterStatus', () => {
     fireEvent.click(statusLabel);
     expect(onClickMockFn).not.toHaveBeenCalled();
 
-    const hoverMessageRegex = /The cluster is currently creating\. This step usually takes about 30 minutes\./i;
+    const hoverMessageRegex =
+      /The cluster is currently creating\. This step usually takes about 30 minutes\./i;
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
@@ -130,7 +133,8 @@ describe('ClusterStatus', () => {
     fireEvent.click(statusLabel);
     expect(onClickMockFn).not.toHaveBeenCalled();
 
-    const hoverMessageRegex = /The cluster is currently upgrading\. This step usually takes about 30 minutes\./i;
+    const hoverMessageRegex =
+      /The cluster is currently upgrading\. This step usually takes about 30 minutes\./i;
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
@@ -257,7 +261,7 @@ describe('ClusterStatus', () => {
 });
 
 function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
-  return ({
+  return {
     ...preloginState,
     main: {
       loggedInUser: {
@@ -278,5 +282,5 @@ function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
         idsAwaitingUpgrade: {},
       },
     },
-  } as unknown) as IState;
+  } as unknown as IState;
 }

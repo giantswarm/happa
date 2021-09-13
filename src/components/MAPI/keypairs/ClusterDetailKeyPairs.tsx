@@ -109,19 +109,16 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     );
   }, [keyPairList, selectedKeyPairSerial]);
 
-  const [
-    selectedKeyPairExpirationDate,
-    isSelectedKeyPairExpiringSoon,
-  ] = useMemo(() => {
-    if (!selectedKeyPair) return [undefined, false];
+  const [selectedKeyPairExpirationDate, isSelectedKeyPairExpiringSoon] =
+    useMemo(() => {
+      if (!selectedKeyPair) return [undefined, false];
 
-    const expirationDate = getKeyPairExpirationDate(
-      selectedKeyPair
-    ).toISOString();
-    const isExpiringSoon = isKeyPairExpiringSoon(selectedKeyPair);
+      const expirationDate =
+        getKeyPairExpirationDate(selectedKeyPair).toISOString();
+      const isExpiringSoon = isKeyPairExpiringSoon(selectedKeyPair);
 
-    return [expirationDate, isExpiringSoon];
-  }, [selectedKeyPair]);
+      return [expirationDate, isExpiringSoon];
+    }, [selectedKeyPair]);
 
   const handleOpenDetails = (serial: string) => () => {
     setSelectedKeyPairSerial(serial);

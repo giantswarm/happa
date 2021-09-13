@@ -21,6 +21,6 @@ export function createServiceAccount(
     client,
     auth,
     url.toString(),
-    (serviceAccount as unknown) as Record<string, unknown>
+    serviceAccount as unknown as Record<string, unknown>
   );
 }

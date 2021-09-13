@@ -211,7 +211,9 @@ const AppDetails = (props) => {
 
   const appCatalogAppListPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppList,
-    { catalogName: params.catalogName }
+    {
+      catalogName: params.catalogName,
+    }
   );
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 

@@ -147,9 +147,9 @@ describe('Footer', () => {
     const originalLocation = window.location;
     // @ts-expect-error
     delete window.location;
-    window.location = ({
+    window.location = {
       reload: jest.fn(),
-    } as unknown) as Location;
+    } as unknown as Location;
 
     setConstants({
       // eslint-disable-next-line no-magic-numbers

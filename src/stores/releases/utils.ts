@@ -1,8 +1,9 @@
 import { compareDates, getRelativeDateFromNow } from 'lib/helpers';
 
-export function getKubernetesReleaseEOLStatus(
-  eolDate: string
-): { message: string; isEol: boolean } {
+export function getKubernetesReleaseEOLStatus(eolDate: string): {
+  message: string;
+  isEol: boolean;
+} {
   const result = {
     message: '',
     isEol: false,

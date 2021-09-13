@@ -27,7 +27,8 @@ describe('appcatalog::actions', () => {
     it('does the api call to get catalogs', async () => {
       getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
-      const dispatch: IAsynchronousDispatch<{}> = ((() => {}) as unknown) as IAsynchronousDispatch<{}>;
+      const dispatch: IAsynchronousDispatch<{}> =
+        (() => {}) as unknown as IAsynchronousDispatch<{}>;
       const response = (await listCatalogs().doPerform(
         {} as IState,
         dispatch
@@ -72,7 +73,7 @@ describe('appcatalog::actions', () => {
     it('dispatches an error if receiving an appVersion without a README annotation', async () => {
       const initialState = {} as IState;
       const store = mockStore(initialState);
-      const appVersionWithEmptySources = ({} as unknown) as IAppCatalogAppVersion;
+      const appVersionWithEmptySources = {} as unknown as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithEmptySources)
@@ -98,9 +99,9 @@ describe('appcatalog::actions', () => {
     it('dispatches an error if receiving an appVersion without a README URLs in its sources field', async () => {
       const initialState = {} as IState;
       const store = mockStore(initialState);
-      const appVersionWithEmptySources = ({
+      const appVersionWithEmptySources = {
         sources: [],
-      } as unknown) as IAppCatalogAppVersion;
+      } as unknown as IAppCatalogAppVersion;
 
       await store.dispatch(
         loadAppReadme('notUnderTest', appVersionWithEmptySources)
@@ -289,16 +290,17 @@ describe('appcatalog::actions', () => {
         })
         .reply(StatusCodes.Ok);
 
-      const dispatch: IAsynchronousDispatch<{}> = ((() => {}) as unknown) as IAsynchronousDispatch<{}>;
+      const dispatch: IAsynchronousDispatch<{}> =
+        (() => {}) as unknown as IAsynchronousDispatch<{}>;
 
       await updateClusterApp({ appName, clusterId, version }).doPerform(
-        ({
+        {
           entities: {
             clusters: {
               v5Clusters: [clusterId],
             },
           },
-        } as unknown) as IState,
+        } as unknown as IState,
         dispatch
       );
 

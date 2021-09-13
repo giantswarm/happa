@@ -73,9 +73,9 @@ describe('Clusters', () => {
         {},
         {
           entities: {
-            organizations: ({
+            organizations: {
               items: {},
-            } as unknown) as IOrganizationState,
+            } as unknown as IOrganizationState,
           } as IState['entities'],
         }
       )

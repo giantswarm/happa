@@ -139,9 +139,8 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
   versions,
   ...props
 }) => {
-  const [includeTestVersions, setIncludeTestVersions] = useState<boolean>(
-    false
-  );
+  const [includeTestVersions, setIncludeTestVersions] =
+    useState<boolean>(false);
 
   const containsTestVersions = useMemo(
     () => checkIfContainsTestVersions(versions),
@@ -159,13 +158,12 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
     setIncludeTestVersions(event.target.checked);
   };
 
-  const handleOnChange = (version: string) => (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault();
+  const handleOnChange =
+    (version: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
 
-    onChange?.(version);
-  };
+      onChange?.(version);
+    };
 
   return (
     <Wrapper>

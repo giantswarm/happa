@@ -126,11 +126,9 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     return version;
   }, [releases, releaseVersion]);
 
-  const {
-    data: nodePoolList,
-    error: nodePoolListError,
-  } = useSWR(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const { data: nodePoolList, error: nodePoolListError } = useSWR(
+    fetchNodePoolListForClusterKey(cluster),
+    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
   useEffect(() => {
@@ -139,11 +137,14 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     }
   }, [nodePoolListError]);
 
-  const {
-    data: providerNodePools,
-    error: providerNodePoolsError,
-  } = useSWR(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
-    fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
+  const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
+    fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
+    () =>
+      fetchProviderNodePoolsForNodePools(
+        clientFactory,
+        auth,
+        nodePoolList!.items
+      )
   );
 
   useEffect(() => {

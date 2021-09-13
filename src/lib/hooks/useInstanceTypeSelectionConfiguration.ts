@@ -77,9 +77,7 @@ function useNormalizedCapabilities(): Record<string, IInstanceType> {
   }, [provider]);
 }
 
-export function useInstanceTypeCapabilities(
-  instanceType: string
-): {
+export function useInstanceTypeCapabilities(instanceType: string): {
   cpu: string;
   ram: string;
 } {

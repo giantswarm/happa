@@ -453,9 +453,8 @@ export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
         current: -1,
       };
 
-      [status.min, status.max] = capiexpv1alpha3.getMachinePoolScaling(
-        nodePool
-      );
+      [status.min, status.max] =
+        capiexpv1alpha3.getMachinePoolScaling(nodePool);
 
       status.desired = nodePool.status?.replicas ?? -1;
       status.current = nodePool.status?.readyReplicas ?? -1;

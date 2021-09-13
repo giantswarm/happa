@@ -16,20 +16,19 @@ const Text = styled.div`
 interface IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps
   extends React.ComponentPropsWithoutRef<'div'> {}
 
-const ReleaseDetailsModalUpgradeOptionsBetaDisclaimer: React.FC<IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps> = (
-  props
-) => {
-  return (
-    <Wrapper {...props}>
-      <div>
-        <ReleaseDetailsModalUpgradeOptionsBetaLabel />
-      </div>
-      <Text>
-        Beta releases are not recommended for production use. Upgrading to newer
-        beta and non-beta releases is possible.
-      </Text>
-    </Wrapper>
-  );
-};
+const ReleaseDetailsModalUpgradeOptionsBetaDisclaimer: React.FC<IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps> =
+  (props) => {
+    return (
+      <Wrapper {...props}>
+        <div>
+          <ReleaseDetailsModalUpgradeOptionsBetaLabel />
+        </div>
+        <Text>
+          Beta releases are not recommended for production use. Upgrading to
+          newer beta and non-beta releases is possible.
+        </Text>
+      </Wrapper>
+    );
+  };
 
 export default ReleaseDetailsModalUpgradeOptionsBetaDisclaimer;

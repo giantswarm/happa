@@ -75,9 +75,10 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
     }
   }, [appListError]);
 
-  const installedIngressApp = useMemo(() => findIngressApp(appList?.items), [
-    appList?.items,
-  ]);
+  const installedIngressApp = useMemo(
+    () => findIngressApp(appList?.items),
+    [appList?.items]
+  );
 
   const appCatalogEntryClient = useRef(clientFactory());
   const {

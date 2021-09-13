@@ -69,11 +69,9 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     fetchCluster(clusterClient.current, auth, provider, namespace!, clusterId)
   );
 
-  const {
-    data: nodePoolList,
-    error: nodePoolListError,
-  } = useSWR(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const { data: nodePoolList, error: nodePoolListError } = useSWR(
+    fetchNodePoolListForClusterKey(cluster),
+    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
   useEffect(() => {

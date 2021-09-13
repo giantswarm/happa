@@ -105,8 +105,8 @@ export function catalogLoadIndex(
 ): ThunkAction<Promise<void>, IState, void, AppCatalogActions> {
   return async (dispatch, getState) => {
     try {
-      const currCatalog: IAppCatalog | undefined = getState().entities.catalogs
-        .items[catalogName];
+      const currCatalog: IAppCatalog | undefined =
+        getState().entities.catalogs.items[catalogName];
       if (currCatalog?.apps || currCatalog?.isFetchingIndex) {
         // Skip if we already have apps loaded.
         return Promise.resolve();
@@ -245,13 +245,11 @@ export function updateAppConfig(
       const isV5Cluster = v5Clusters.includes(clusterID);
 
       const appConfigsApi = new GiantSwarm.AppConfigsApi();
-      let updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV4.bind(
-        appConfigsApi
-      );
+      let updateClusterAppConfig =
+        appConfigsApi.modifyClusterAppConfigV4.bind(appConfigsApi);
       if (isV5Cluster) {
-        updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV5.bind(
-          appConfigsApi
-        );
+        updateClusterAppConfig =
+          appConfigsApi.modifyClusterAppConfigV5.bind(appConfigsApi);
       }
 
       await updateClusterAppConfig(clusterID, appName, {
@@ -322,13 +320,11 @@ export function createAppConfig(
       const isV5Cluster = v5Clusters.includes(clusterID);
 
       const appConfigsApi = new GiantSwarm.AppConfigsApi();
-      let createClusterAppConfig = appConfigsApi.createClusterAppConfigV4.bind(
-        appConfigsApi
-      );
+      let createClusterAppConfig =
+        appConfigsApi.createClusterAppConfigV4.bind(appConfigsApi);
       if (isV5Cluster) {
-        createClusterAppConfig = appConfigsApi.createClusterAppConfigV5.bind(
-          appConfigsApi
-        );
+        createClusterAppConfig =
+          appConfigsApi.createClusterAppConfigV5.bind(appConfigsApi);
       }
 
       await createClusterAppConfig(clusterID, appName, {
@@ -393,13 +389,11 @@ export function deleteAppConfig(
       const isV5Cluster = v5Clusters.includes(clusterID);
 
       const appConfigsApi = new GiantSwarm.AppConfigsApi();
-      let deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV4.bind(
-        appConfigsApi
-      );
+      let deleteClusterAppConfig =
+        appConfigsApi.deleteClusterAppConfigV4.bind(appConfigsApi);
       if (isV5Cluster) {
-        deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV5.bind(
-          appConfigsApi
-        );
+        deleteClusterAppConfig =
+          appConfigsApi.deleteClusterAppConfigV5.bind(appConfigsApi);
       }
 
       await deleteClusterAppConfig(clusterID, appName);
@@ -463,13 +457,11 @@ export function updateAppSecret(
       const isV5Cluster = v5Clusters.includes(clusterID);
 
       const appSecretsApi = new GiantSwarm.AppSecretsApi();
-      let updateClusterAppSecret = appSecretsApi.modifyClusterAppSecretV4.bind(
-        appSecretsApi
-      );
+      let updateClusterAppSecret =
+        appSecretsApi.modifyClusterAppSecretV4.bind(appSecretsApi);
       if (isV5Cluster) {
-        updateClusterAppSecret = appSecretsApi.modifyClusterAppSecretV5.bind(
-          appSecretsApi
-        );
+        updateClusterAppSecret =
+          appSecretsApi.modifyClusterAppSecretV5.bind(appSecretsApi);
       }
 
       await updateClusterAppSecret(clusterID, appName, {
@@ -540,13 +532,11 @@ export function createAppSecret(
       const isV5Cluster = v5Clusters.includes(clusterID);
 
       const appSecretsApi = new GiantSwarm.AppSecretsApi();
-      let createClusterAppSecret = appSecretsApi.createClusterAppSecretV4.bind(
-        appSecretsApi
-      );
+      let createClusterAppSecret =
+        appSecretsApi.createClusterAppSecretV4.bind(appSecretsApi);
       if (isV5Cluster) {
-        createClusterAppSecret = appSecretsApi.createClusterAppSecretV5.bind(
-          appSecretsApi
-        );
+        createClusterAppSecret =
+          appSecretsApi.createClusterAppSecretV5.bind(appSecretsApi);
       }
 
       await createClusterAppSecret(clusterID, appName, { body: values });
@@ -609,13 +599,11 @@ export function deleteAppSecret(
       const isV5Cluster = v5Clusters.includes(clusterID);
 
       const appSecretsApi = new GiantSwarm.AppSecretsApi();
-      let deleteClusterAppSecret = appSecretsApi.deleteClusterAppSecretV4.bind(
-        appSecretsApi
-      );
+      let deleteClusterAppSecret =
+        appSecretsApi.deleteClusterAppSecretV4.bind(appSecretsApi);
       if (isV5Cluster) {
-        deleteClusterAppSecret = appSecretsApi.deleteClusterAppSecretV5.bind(
-          appSecretsApi
-        );
+        deleteClusterAppSecret =
+          appSecretsApi.deleteClusterAppSecretV5.bind(appSecretsApi);
       }
 
       await deleteClusterAppSecret(clusterID, appName);

@@ -14,7 +14,8 @@ class MapiAuth extends OAuth2 {
     );
     authURL.searchParams.set('connector_id', connector);
 
-    this.userManager.settings.metadata!.authorization_endpoint = authURL.toString();
+    this.userManager.settings.metadata!.authorization_endpoint =
+      authURL.toString();
 
     return super.attemptLogin();
   }

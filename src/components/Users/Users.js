@@ -193,7 +193,8 @@ class Users extends React.Component {
       default:
         propsToAdd.onConfirm = this.confirmInviteUser;
         propsToAdd.organizations = organizations;
-        propsToAdd.initiallySelectedOrganizations = initialSelectedOrganizations;
+        propsToAdd.initiallySelectedOrganizations =
+          initialSelectedOrganizations;
         propsToAdd.invitationResult = modal.invitationResult;
     }
 

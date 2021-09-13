@@ -82,7 +82,7 @@ describe('AddNodePool', () => {
 
         expect(screen.getByLabelText('Price limit')).toHaveValue(0);
 
-        const expectedNodePool = ({
+        const expectedNodePool = {
           availability_zones: {
             number: 1,
           },
@@ -100,7 +100,7 @@ describe('AddNodePool', () => {
             max: 3,
             min: 3,
           },
-        } as unknown) as V5AddNodePoolRequest;
+        } as unknown as V5AddNodePoolRequest;
 
         expect(informParentMockFn).toHaveBeenLastCalledWith(
           {
@@ -147,7 +147,7 @@ describe('AddNodePool', () => {
           },
         });
 
-        const expectedNodePool = ({
+        const expectedNodePool = {
           availability_zones: {
             number: 1,
           },
@@ -165,7 +165,7 @@ describe('AddNodePool', () => {
             max: 3,
             min: 3,
           },
-        } as unknown) as V5AddNodePoolRequest;
+        } as unknown as V5AddNodePoolRequest;
 
         expect(informParentMockFn).toHaveBeenLastCalledWith(
           {

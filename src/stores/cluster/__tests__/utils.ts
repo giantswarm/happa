@@ -102,9 +102,9 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
       };
       expect(getNumberOfNodes(cluster)).toBe(0);
@@ -121,7 +121,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -151,7 +151,7 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
       };
 
@@ -168,7 +168,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -189,14 +189,14 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
         workers: [
-          ({
+          {
             memory: {
               size_gb: 1.337,
             },
-          } as unknown) as V4.IClusterWorker,
+          } as unknown as V4.IClusterWorker,
         ],
       };
       // eslint-disable-next-line no-magic-numbers
@@ -211,7 +211,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -232,7 +232,7 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
         workers: [],
       };
@@ -250,7 +250,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -271,14 +271,14 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
         workers: [
-          ({
+          {
             storage: {
               size_gb: 1.337,
             },
-          } as unknown) as V4.IClusterWorker,
+          } as unknown as V4.IClusterWorker,
         ],
       };
 
@@ -294,7 +294,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -315,7 +315,7 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
         workers: [],
       };
@@ -338,7 +338,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -359,14 +359,14 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
         workers: [
-          ({
+          {
             cpu: {
               cores: 2,
             },
-          } as unknown) as V4.IClusterWorker,
+          } as unknown as V4.IClusterWorker,
         ],
       };
 
@@ -381,7 +381,7 @@ describe('cluster::utils', () => {
         id: '',
         owner: '',
         status: {
-          cluster: ({
+          cluster: {
             nodes: [
               {
                 labels: {
@@ -402,7 +402,7 @@ describe('cluster::utils', () => {
                 lastTransitionTime: null,
               },
             ],
-          } as unknown) as V4.IClusterStatusCluster,
+          } as unknown as V4.IClusterStatusCluster,
         } as V4.IClusterStatus,
         workers: [],
       };
@@ -903,18 +903,18 @@ describe('cluster::utils', () => {
 
   describe('getClusterLatestCondition', () => {
     it('gets the latest cluster condition, on a v5 cluster', () => {
-      const cluster = (Object.assign(
+      const cluster = Object.assign(
         {},
         v5ClusterResponse
-      ) as unknown) as V5.ICluster;
+      ) as unknown as V5.ICluster;
 
       expect(getClusterLatestCondition(cluster)).toBe('Created');
     });
 
     it('gets the latest cluster condition, on a v4 cluster', () => {
-      const cluster = (Object.assign({}, v4AWSClusterResponse, {
+      const cluster = Object.assign({}, v4AWSClusterResponse, {
         status: v4AWSClusterStatusResponse,
-      }) as unknown) as V4.ICluster;
+      }) as unknown as V4.ICluster;
 
       expect(getClusterLatestCondition(cluster)).toBe('Created');
     });
@@ -928,9 +928,9 @@ describe('cluster::utils', () => {
     });
 
     it(`doesn't break if there are no conditions in a v4 cluster`, () => {
-      const cluster = (Object.assign({}, v4AWSClusterResponse, {
+      const cluster = Object.assign({}, v4AWSClusterResponse, {
         status: undefined,
-      }) as unknown) as V4.ICluster;
+      }) as unknown as V4.ICluster;
 
       expect(getClusterLatestCondition(cluster)).not.toBe('Created');
     });
@@ -938,27 +938,27 @@ describe('cluster::utils', () => {
 
   describe('isClusterCreating', () => {
     it('checks if the latest condition is the creating one, on a v5 cluster', () => {
-      let cluster = (Object.assign(
+      let cluster = Object.assign(
         {},
         v5ClusterResponse
-      ) as unknown) as V5.ICluster;
+      ) as unknown as V5.ICluster;
       expect(isClusterCreating(cluster)).toBeFalsy();
 
-      cluster = (Object.assign({}, v5ClusterResponse, {
+      cluster = Object.assign({}, v5ClusterResponse, {
         conditions: [
           {
             last_transition_time: new Date().toISOString(),
             condition: 'Creating',
           },
         ],
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       expect(isClusterCreating(cluster)).toBeTruthy();
     });
 
     it('checks if the latest condition is the creating one, on a v4 cluster', () => {
-      const cluster = (Object.assign({}, v4AWSClusterResponse, {
+      const cluster = Object.assign({}, v4AWSClusterResponse, {
         status: v4AWSClusterStatusResponse,
-      }) as unknown) as V4.ICluster;
+      }) as unknown as V4.ICluster;
       expect(isClusterCreating(cluster)).toBeFalsy();
 
       cluster.status = {
@@ -981,27 +981,27 @@ describe('cluster::utils', () => {
 
   describe('isClusterUpdating', () => {
     it('checks if the latest condition is the updating one, on a v5 cluster', () => {
-      let cluster = (Object.assign(
+      let cluster = Object.assign(
         {},
         v5ClusterResponse
-      ) as unknown) as V5.ICluster;
+      ) as unknown as V5.ICluster;
       expect(isClusterUpdating(cluster)).toBeFalsy();
 
-      cluster = (Object.assign({}, v5ClusterResponse, {
+      cluster = Object.assign({}, v5ClusterResponse, {
         conditions: [
           {
             last_transition_time: new Date().toISOString(),
             condition: 'Updating',
           },
         ],
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       expect(isClusterUpdating(cluster)).toBeTruthy();
     });
 
     it('checks if the latest condition is the updating one, on a v4 cluster', () => {
-      const cluster = (Object.assign({}, v4AWSClusterResponse, {
+      const cluster = Object.assign({}, v4AWSClusterResponse, {
         status: v4AWSClusterStatusResponse,
-      }) as unknown) as V4.ICluster;
+      }) as unknown as V4.ICluster;
       expect(isClusterUpdating(cluster)).toBeFalsy();
 
       cluster.status = {
@@ -1024,27 +1024,27 @@ describe('cluster::utils', () => {
 
   describe('isClusterDeleting', () => {
     it('checks if the latest condition is the deleting one, on a v5 cluster', () => {
-      let cluster = (Object.assign(
+      let cluster = Object.assign(
         {},
         v5ClusterResponse
-      ) as unknown) as V5.ICluster;
+      ) as unknown as V5.ICluster;
       expect(isClusterDeleting(cluster)).toBeFalsy();
 
-      cluster = (Object.assign({}, v5ClusterResponse, {
+      cluster = Object.assign({}, v5ClusterResponse, {
         conditions: [
           {
             last_transition_time: new Date().toISOString(),
             condition: 'Deleting',
           },
         ],
-      }) as unknown) as V5.ICluster;
+      }) as unknown as V5.ICluster;
       expect(isClusterDeleting(cluster)).toBeTruthy();
     });
 
     it('checks if the latest condition is the deleting one, on a v4 cluster', () => {
-      const cluster = (Object.assign({}, v4AWSClusterResponse, {
+      const cluster = Object.assign({}, v4AWSClusterResponse, {
         status: v4AWSClusterStatusResponse,
-      }) as unknown) as V4.ICluster;
+      }) as unknown as V4.ICluster;
       expect(isClusterDeleting(cluster)).toBeFalsy();
 
       cluster.status = {
@@ -1155,13 +1155,13 @@ describe('cluster::utils', () => {
   });
 
   describe('v4orV5', () => {
-    const state: IState = ({
+    const state: IState = {
       entities: {
         clusters: {
           v5Clusters: ['123sd', 'fas10', '349aa'],
         },
       },
-    } as unknown) as IState;
+    } as unknown as IState;
 
     const v4Fn = jest.fn();
     const v5Fn = jest.fn();

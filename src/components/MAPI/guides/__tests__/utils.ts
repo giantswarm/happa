@@ -378,8 +378,7 @@ describe('utils', () => {
           'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-min 0',
       },
       {
-        name:
-          'returns correct output if the minimum number of nodes equals the recommended default',
+        name: 'returns correct output if the minimum number of nodes equals the recommended default',
         modifierConfig: {
           clusterName: 'a1b2c',
           owner: 'some-owner',
@@ -401,8 +400,7 @@ describe('utils', () => {
           'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-max 8',
       },
       {
-        name:
-          'returns correct output if the maximum number of nodes equals the recommended default',
+        name: 'returns correct output if the maximum number of nodes equals the recommended default',
         modifierConfig: {
           clusterName: 'a1b2c',
           owner: 'some-owner',
@@ -488,8 +486,7 @@ describe('utils', () => {
   get some resources`,
       },
       {
-        name:
-          'returns correct output for a long command, a flag before it, and some more flags after it',
+        name: 'returns correct output for a long command, a flag before it, and some more flags after it',
         args: [
           '--some-flag',
           'super-value',
