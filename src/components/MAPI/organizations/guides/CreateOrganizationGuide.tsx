@@ -62,12 +62,6 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
             <strong>Note:</strong> please replace <code>example</code> with your
             intended organization name.
           </Text>
-          <Text>
-            As a result, the new <code>Organization</code> CR has been created.
-            In addition, there will be a new namespace named{' '}
-            <code>org-example</code> (where <code>example</code> represents your
-            chosen name) to be used for the resources of this organization.
-          </Text>
         </CLIGuideStep>
         <CLIGuideStep
           title='3. Apply the manifest'
