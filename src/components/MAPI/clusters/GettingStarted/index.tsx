@@ -196,10 +196,10 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
     [clusterId, orgId]
   );
 
-  const steps = useMemo(() => computeSteps(orgId, clusterId), [
-    orgId,
-    clusterId,
-  ]);
+  const steps = useMemo(
+    () => computeSteps(orgId, clusterId),
+    [orgId, clusterId]
+  );
 
   return (
     <DocumentTitle title={`Getting Started | ${clusterId}`}>

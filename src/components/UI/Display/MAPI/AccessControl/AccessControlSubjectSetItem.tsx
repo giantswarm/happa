@@ -46,90 +46,105 @@ interface IAccessControlSubjectSetItemProps
   deleteConfirmationMessage?: React.ReactNode;
 }
 
-const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> = ({
-  name,
-  isEditable,
-  isLoading,
-  isNewlyAdded,
-  onDelete,
-  deleteTooltipMessage,
-  deleteConfirmationMessage,
-  ...props
-}) => {
-  const deleteButtonRef = useRef<HTMLAnchorElement>(null);
+const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
+  ({
+    name,
+    isEditable,
+    isLoading,
+    isNewlyAdded,
+    onDelete,
+    deleteTooltipMessage,
+    deleteConfirmationMessage,
+    ...props
+  }) => {
+    const deleteButtonRef = useRef<HTMLAnchorElement>(null);
 
-  const [confirmationVisible, setConfirmationVisible] = useState(false);
-  const showConfirmation = (
-    e?:
-      | React.MouseEvent<HTMLElement>
-      | React.FocusEvent<HTMLElement>
-      | React.KeyboardEvent<HTMLElement>
-  ) => {
-    e?.preventDefault();
+    const [confirmationVisible, setConfirmationVisible] = useState(false);
+    const showConfirmation = (
+      e?:
+        | React.MouseEvent<HTMLElement>
+        | React.FocusEvent<HTMLElement>
+        | React.KeyboardEvent<HTMLElement>
+    ) => {
+      e?.preventDefault();
 
-    setConfirmationVisible(true);
-  };
+      setConfirmationVisible(true);
+    };
 
-  const hideConfirmation = (
-    e?:
-      | React.MouseEvent<HTMLElement>
-      | React.FocusEvent<HTMLElement>
-      | React.KeyboardEvent<HTMLElement>
-  ) => {
-    e?.preventDefault();
+    const hideConfirmation = (
+      e?:
+        | React.MouseEvent<HTMLElement>
+        | React.FocusEvent<HTMLElement>
+        | React.KeyboardEvent<HTMLElement>
+    ) => {
+      e?.preventDefault();
 
-    window.setTimeout(() => {
+      window.setTimeout(() => {
+        setConfirmationVisible(false);
+      });
+    };
+
+    const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+
       setConfirmationVisible(false);
-    });
-  };
+      onDelete();
+    };
 
-  const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
+    const [isHighlightedValue, setIsHiglightedValue] = useState(isNewlyAdded);
+    useEffect(() => {
+      if (isHighlightedValue) setIsHiglightedValue(false);
+    }, [isHighlightedValue]);
 
-    setConfirmationVisible(false);
-    onDelete();
-  };
-
-  const [isHighlightedValue, setIsHiglightedValue] = useState(isNewlyAdded);
-  useEffect(() => {
-    if (isHighlightedValue) setIsHiglightedValue(false);
-  }, [isHighlightedValue]);
-
-  return (
-    <Box
-      direction='row'
-      pad={{ vertical: 'xsmall', horizontal: 'small' }}
-      height='38px'
-      background='border'
-      round='xxsmall'
-      align='center'
-      margin={{ right: 'small', bottom: 'small' }}
-      {...props}
-    >
-      <RefreshableLabel value={Number(isHighlightedValue)}>
-        {typeof name === 'string' ? (
-          <Text color='text-weak'>{name}</Text>
-        ) : (
-          name
+    return (
+      <Box
+        direction='row'
+        pad={{ vertical: 'xsmall', horizontal: 'small' }}
+        height='38px'
+        background='border'
+        round='xxsmall'
+        align='center'
+        margin={{ right: 'small', bottom: 'small' }}
+        {...props}
+      >
+        <RefreshableLabel value={Number(isHighlightedValue)}>
+          {typeof name === 'string' ? (
+            <Text color='text-weak'>{name}</Text>
+          ) : (
+            name
+          )}
+        </RefreshableLabel>
+        {isLoading && (
+          <StyledLoadingIndicator
+            loading={true}
+            loadingPosition='right'
+            timeout={0}
+          />
         )}
-      </RefreshableLabel>
-      {isLoading && (
-        <StyledLoadingIndicator
-          loading={true}
-          loadingPosition='right'
-          timeout={0}
-        />
-      )}
 
-      {isEditable && !isLoading && deleteTooltipMessage && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id='delete'>
-              <Text size='xsmall'>{deleteTooltipMessage}</Text>
-            </Tooltip>
-          }
-          placement='top'
-        >
+        {isEditable && !isLoading && deleteTooltipMessage && (
+          <OverlayTrigger
+            overlay={
+              <Tooltip id='delete'>
+                <Text size='xsmall'>{deleteTooltipMessage}</Text>
+              </Tooltip>
+            }
+            placement='top'
+          >
+            <StyledAnchor
+              ref={deleteButtonRef}
+              size='large'
+              color='text-weak'
+              onClick={showConfirmation}
+              margin={{ left: 'xsmall' }}
+              tabIndex={0}
+            >
+              <i className='fa fa-close' role='presentation' title='Delete' />
+            </StyledAnchor>
+          </OverlayTrigger>
+        )}
+
+        {isEditable && !isLoading && !deleteTooltipMessage && (
           <StyledAnchor
             ref={deleteButtonRef}
             size='large'
@@ -140,54 +155,40 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
           >
             <i className='fa fa-close' role='presentation' title='Delete' />
           </StyledAnchor>
-        </OverlayTrigger>
-      )}
+        )}
 
-      {isEditable && !isLoading && !deleteTooltipMessage && (
-        <StyledAnchor
-          ref={deleteButtonRef}
-          size='large'
-          color='text-weak'
-          onClick={showConfirmation}
-          margin={{ left: 'xsmall' }}
-          tabIndex={0}
-        >
-          <i className='fa fa-close' role='presentation' title='Delete' />
-        </StyledAnchor>
-      )}
-
-      {confirmationVisible && deleteButtonRef.current && (
-        <Keyboard onEsc={hideConfirmation}>
-          <StyledDrop
-            align={{ bottom: 'top', right: 'right' }}
-            target={deleteButtonRef.current}
-            plain={true}
-            trapFocus={true}
-          >
-            <Box
-              background='background-front'
-              pad='medium'
-              round='small'
-              direction='column'
-              gap='medium'
-              border={{ color: 'text-xweak' }}
+        {confirmationVisible && deleteButtonRef.current && (
+          <Keyboard onEsc={hideConfirmation}>
+            <StyledDrop
+              align={{ bottom: 'top', right: 'right' }}
+              target={deleteButtonRef.current}
+              plain={true}
+              trapFocus={true}
             >
-              <Box>{deleteConfirmationMessage}</Box>
-              <Box direction='row' gap='small'>
-                <Button danger={true} onClick={handleDelete}>
-                  Remove
-                </Button>
-                <Button link={true} onClick={hideConfirmation}>
-                  Cancel
-                </Button>
+              <Box
+                background='background-front'
+                pad='medium'
+                round='small'
+                direction='column'
+                gap='medium'
+                border={{ color: 'text-xweak' }}
+              >
+                <Box>{deleteConfirmationMessage}</Box>
+                <Box direction='row' gap='small'>
+                  <Button danger={true} onClick={handleDelete}>
+                    Remove
+                  </Button>
+                  <Button link={true} onClick={hideConfirmation}>
+                    Cancel
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </StyledDrop>
-        </Keyboard>
-      )}
-    </Box>
-  );
-};
+            </StyledDrop>
+          </Keyboard>
+        )}
+      </Box>
+    );
+  };
 
 AccessControlSubjectSetItem.defaultProps = {
   deleteConfirmationMessage: <Text>Are you sure?</Text>,

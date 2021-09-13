@@ -9,21 +9,20 @@ interface IV5ClusterDetailTableSpotInstancesTabProps {
   provider: PropertiesOf<typeof Providers>;
 }
 
-const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotInstancesTabProps> = ({
-  provider,
-}) => {
-  const explanation = getExplanation(provider);
-  const tabLabel = getTabLabel(provider);
+const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotInstancesTabProps> =
+  ({ provider }) => {
+    const explanation = getExplanation(provider);
+    const tabLabel = getTabLabel(provider);
 
-  return (
-    <OverlayTrigger
-      overlay={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
-      placement='top'
-    >
-      <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
-    </OverlayTrigger>
-  );
-};
+    return (
+      <OverlayTrigger
+        overlay={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
+        placement='top'
+      >
+        <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
+      </OverlayTrigger>
+    );
+  };
 
 export default V5ClusterDetailTableSpotInstancesTab;
 

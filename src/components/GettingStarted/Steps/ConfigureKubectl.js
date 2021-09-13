@@ -207,9 +207,7 @@ class ConfigKubeCtl extends React.Component {
           <p>Run this command to make sure the installation succeeded:</p>
 
           <CodeBlock>
-            <Prompt>
-              {`gsctl --endpoint ${window.config.apiEndpoint} info`}
-            </Prompt>
+            <Prompt>{`gsctl --endpoint ${window.config.apiEndpoint} info`}</Prompt>
           </CodeBlock>
 
           <p>

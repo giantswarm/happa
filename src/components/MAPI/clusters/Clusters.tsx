@@ -118,11 +118,9 @@ const Clusters: React.FC<{}> = () => {
     typeof sortedClusters === 'undefined';
 
   const releaseListClient = useRef(clientFactory());
-  const {
-    data: releaseList,
-    error: releaseListError,
-  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
-    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {

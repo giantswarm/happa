@@ -63,95 +63,91 @@ interface IClusterDetailWidgetControlPlaneNodesProps
   cluster?: capiv1alpha3.ICluster;
 }
 
-const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControlPlaneNodesProps> = ({
-  cluster,
-  ...props
-}) => {
-  const clientFactory = useHttpClientFactory();
-  const auth = useAuthProvider();
+const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControlPlaneNodesProps> =
+  ({ cluster, ...props }) => {
+    const clientFactory = useHttpClientFactory();
+    const auth = useAuthProvider();
 
-  const controlPlaneNodeListKey = cluster
-    ? fetchMasterListForClusterKey(cluster)
-    : null;
+    const controlPlaneNodeListKey = cluster
+      ? fetchMasterListForClusterKey(cluster)
+      : null;
 
-  const {
-    data: controlPlaneNodeList,
-    error: controlPlaneNodeListError,
-  } = useSWR<ControlPlaneNodeList, GenericResponseError>(
-    controlPlaneNodeListKey,
-    () => fetchMasterListForCluster(clientFactory, auth, cluster!)
-  );
+    const { data: controlPlaneNodeList, error: controlPlaneNodeListError } =
+      useSWR<ControlPlaneNodeList, GenericResponseError>(
+        controlPlaneNodeListKey,
+        () => fetchMasterListForCluster(clientFactory, auth, cluster!)
+      );
 
-  useEffect(() => {
-    if (controlPlaneNodeListError) {
-      ErrorReporter.getInstance().notify(controlPlaneNodeListError);
-    }
-  }, [controlPlaneNodeListError]);
+    useEffect(() => {
+      if (controlPlaneNodeListError) {
+        ErrorReporter.getInstance().notify(controlPlaneNodeListError);
+      }
+    }, [controlPlaneNodeListError]);
 
-  const stats = useMemo(() => {
-    if (typeof controlPlaneNodeListError !== 'undefined') {
-      return {
-        totalCount: -1,
-        readyCount: -1,
-        availabilityZones: [],
-      };
-    }
+    const stats = useMemo(() => {
+      if (typeof controlPlaneNodeListError !== 'undefined') {
+        return {
+          totalCount: -1,
+          readyCount: -1,
+          availabilityZones: [],
+        };
+      }
 
-    if (!controlPlaneNodeList) {
-      return {
-        totalCount: undefined,
-        readyCount: undefined,
-        availabilityZones: undefined,
-      };
-    }
+      if (!controlPlaneNodeList) {
+        return {
+          totalCount: undefined,
+          readyCount: undefined,
+          availabilityZones: undefined,
+        };
+      }
 
-    return computeControlPlaneNodesStats(controlPlaneNodeList.items);
-  }, [controlPlaneNodeList, controlPlaneNodeListError]);
+      return computeControlPlaneNodesStats(controlPlaneNodeList.items);
+    }, [controlPlaneNodeList, controlPlaneNodeListError]);
 
-  return (
-    <ClusterDetailWidget
-      title='Control plane'
-      inline={true}
-      contentProps={{
-        direction: 'row',
-        gap: 'xsmall',
-        wrap: true,
-        align: 'center',
-      }}
-      {...props}
-    >
-      <OptionalValue
-        value={formatNodesCountLabel(stats.readyCount, stats.totalCount)}
-        loaderWidth={200}
-        replaceEmptyValue={false}
+    return (
+      <ClusterDetailWidget
+        title='Control plane'
+        inline={true}
+        contentProps={{
+          direction: 'row',
+          gap: 'xsmall',
+          wrap: true,
+          align: 'center',
+        }}
+        {...props}
       >
-        {(value) =>
-          value ? (
-            <Text aria-label={`${value} ready`}>
-              {value} <code>Ready</code>
-            </Text>
-          ) : (
-            <Text>
-              <NotAvailable /> control plane nodes <code>Ready</code>
-            </Text>
-          )
-        }
-      </OptionalValue>
-      <StyledDot />
-      <Text margin={{ right: 'xsmall' }}>
-        {formatAvailabilityZonesLabel(stats.availabilityZones)}
-      </Text>
-      <OptionalValue
-        value={stats.availabilityZones}
-        loaderWidth={100}
-        loaderHeight={26}
-      >
-        {(value) => (
-          <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
-        )}
-      </OptionalValue>
-    </ClusterDetailWidget>
-  );
-};
+        <OptionalValue
+          value={formatNodesCountLabel(stats.readyCount, stats.totalCount)}
+          loaderWidth={200}
+          replaceEmptyValue={false}
+        >
+          {(value) =>
+            value ? (
+              <Text aria-label={`${value} ready`}>
+                {value} <code>Ready</code>
+              </Text>
+            ) : (
+              <Text>
+                <NotAvailable /> control plane nodes <code>Ready</code>
+              </Text>
+            )
+          }
+        </OptionalValue>
+        <StyledDot />
+        <Text margin={{ right: 'xsmall' }}>
+          {formatAvailabilityZonesLabel(stats.availabilityZones)}
+        </Text>
+        <OptionalValue
+          value={stats.availabilityZones}
+          loaderWidth={100}
+          loaderHeight={26}
+        >
+          {(value) => (
+            <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+          )}
+        </OptionalValue>
+      </ClusterDetailWidget>
+    );
+  };
 
 export default ClusterDetailWidgetControlPlaneNodes;

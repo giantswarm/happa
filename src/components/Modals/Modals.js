@@ -15,7 +15,8 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
 
-const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegexp =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const organizationNameRegexp = /^(([a-z0-9][-a-z0-9]*)?[a-z0-9])?$/;
 
 const NodePoolTextDiv = styled.div`
@@ -52,9 +53,8 @@ class Modals extends React.Component {
 
   clear() {
     const newOrgName = '';
-    const organizationNameValidationError = this.validateOrganizationName(
-      newOrgName
-    );
+    const organizationNameValidationError =
+      this.validateOrganizationName(newOrgName);
 
     const newEmail = '';
     const emailValidationError = this.validateOrganizationName(newEmail);

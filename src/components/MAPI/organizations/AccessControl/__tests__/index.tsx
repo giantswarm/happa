@@ -335,7 +335,7 @@ describe('AccessControl', () => {
     expect(within(section).getByLabelText('subject2')).toBeInTheDocument();
     expect(within(section).getByLabelText('subject3')).toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it.skip('displays an error if creating groups fails', async () => {
@@ -434,7 +434,7 @@ describe('AccessControl', () => {
       within(section).queryByLabelText('subject3')
     ).not.toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it.skip('can create users', async () => {
@@ -543,7 +543,7 @@ describe('AccessControl', () => {
     ).toBeInTheDocument();
     expect(within(section).getByLabelText('subject2')).toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it.skip('displays an error if creating users fails', async () => {
@@ -634,7 +634,7 @@ describe('AccessControl', () => {
       within(section).queryByLabelText('subject2')
     ).not.toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it.skip('can delete a group', async () => {
@@ -1221,7 +1221,7 @@ describe('AccessControl', () => {
     expect(within(section).getByLabelText('automation')).toBeInTheDocument();
     expect(within(section).getByLabelText('random')).toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it('can re-use existing service accounts', async () => {
@@ -1334,7 +1334,7 @@ describe('AccessControl', () => {
 
     expect(within(section).getByLabelText('random')).toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it('displays an error if creating service accounts fails', async () => {
@@ -1436,7 +1436,7 @@ describe('AccessControl', () => {
     ).not.toBeInTheDocument();
     expect(within(section).queryByLabelText('random')).not.toBeInTheDocument();
 
-    ((Date.now as unknown) as jest.SpyInstance).mockClear();
+    (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
   it('can delete a service account', async () => {

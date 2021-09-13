@@ -112,11 +112,12 @@ export function organizationsLoadMAPI(
           resource: 'organizations',
         },
       };
-      const accessReviewResponse = await authorizationv1.createSelfSubjectAccessReview(
-        client,
-        auth,
-        request
-      );
+      const accessReviewResponse =
+        await authorizationv1.createSelfSubjectAccessReview(
+          client,
+          auth,
+          request
+        );
 
       if (accessReviewResponse.status?.allowed) {
         canList = true;
@@ -150,11 +151,12 @@ export function organizationsLoadMAPI(
 
         // The user can't list all orgs. So do a selfSubjectRulesReview to figure out
         // which ones they can get.
-        const rulesReviewResponse = await authorizationv1.createSelfSubjectRulesReview(
-          client,
-          auth,
-          rulesReview
-        );
+        const rulesReviewResponse =
+          await authorizationv1.createSelfSubjectRulesReview(
+            client,
+            auth,
+            rulesReview
+          );
 
         const organizationNames = [];
         for (const rule of rulesReviewResponse.status?.resourceRules) {
@@ -186,8 +188,8 @@ export function organizationsLoadMAPI(
         }
       }
 
-      const currentlySelectedOrganization = getState().main
-        .selectedOrganization;
+      const currentlySelectedOrganization =
+        getState().main.selectedOrganization;
       const selectedOrganization = determineSelectedOrganization(
         Object.keys(orgs),
         currentlySelectedOrganization
@@ -252,8 +254,8 @@ export function organizationsLoad(): ThunkAction<
         {}
       );
 
-      const currentlySelectedOrganization = getState().main
-        .selectedOrganization;
+      const currentlySelectedOrganization =
+        getState().main.selectedOrganization;
       const selectedOrganization = determineSelectedOrganization(
         Object.keys(organizationsAsMap),
         currentlySelectedOrganization
@@ -604,12 +606,13 @@ export function organizationCredentialsSetConfirmed(
       const requestBody = new GiantSwarm.V4AddCredentialsRequest(provider);
       if (provider === Providers.AZURE) {
         requestBody.azure = new GiantSwarm.V4AddCredentialsRequestAzure();
-        requestBody.azure.credential = new GiantSwarm.V4AddCredentialsRequestAzureCredential(
-          data.azureClientID,
-          data.azureClientSecret,
-          data.azureSubscriptionID,
-          data.azureTenantID
-        );
+        requestBody.azure.credential =
+          new GiantSwarm.V4AddCredentialsRequestAzureCredential(
+            data.azureClientID,
+            data.azureClientSecret,
+            data.azureSubscriptionID,
+            data.azureTenantID
+          );
       } else if (provider === Providers.AWS) {
         requestBody.aws = new GiantSwarm.V4AddCredentialsRequestAws();
         requestBody.aws.roles = new GiantSwarm.V4AddCredentialsRequestAwsRoles(

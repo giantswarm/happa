@@ -77,75 +77,72 @@ interface IClusterDetailWidgetProviderProps
   providerCluster?: ProviderCluster;
 }
 
-const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> = ({
-  cluster,
-  providerCluster,
-  ...props
-}) => {
-  const region = providerCluster?.spec.location;
+const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
+  ({ cluster, providerCluster, ...props }) => {
+    const region = providerCluster?.spec.location;
 
-  const accountID = useMemo(() => {
-    if (!providerCluster) return undefined;
-    if (!providerCluster.spec.subscriptionID) return '';
+    const accountID = useMemo(() => {
+      if (!providerCluster) return undefined;
+      if (!providerCluster.spec.subscriptionID) return '';
 
-    return providerCluster.spec.subscriptionID;
-  }, [providerCluster]);
+      return providerCluster.spec.subscriptionID;
+    }, [providerCluster]);
 
-  const accountIDPath = getClusterAccountIDPath(cluster, accountID);
+    const accountIDPath = getClusterAccountIDPath(cluster, accountID);
 
-  return (
-    <ClusterDetailWidget
-      title='Provider'
-      inline={true}
-      contentProps={{
-        direction: 'row',
-        gap: 'xsmall',
-        wrap: true,
-        align: 'center',
-      }}
-      {...props}
-    >
-      <OptionalValue value={getClusterRegionLabel(cluster)} loaderWidth={85}>
-        {(value) => <Text>{value}</Text>}
-      </OptionalValue>
-      <OptionalValue value={region} loaderWidth={80}>
-        {(value) => (
-          <Text>
-            <code>{value}</code>
-          </Text>
-        )}
-      </OptionalValue>
-      <StyledDot />
-      <OptionalValue value={getClusterAccountIDLabel(cluster)}>
-        {(value) => <Text>{value}</Text>}
-      </OptionalValue>
-      <OptionalValue
-        value={accountID}
-        loaderWidth={300}
-        replaceEmptyValue={false}
+    return (
+      <ClusterDetailWidget
+        title='Provider'
+        inline={true}
+        contentProps={{
+          direction: 'row',
+          gap: 'xsmall',
+          wrap: true,
+          align: 'center',
+        }}
+        {...props}
       >
-        {(value) =>
-          value === '' ? (
-            <NotAvailable />
-          ) : (
-            <StyledLink
-              color='text-weak'
-              href={accountIDPath}
-              rel='noopener noreferrer'
-              target='_blank'
-            >
+        <OptionalValue value={getClusterRegionLabel(cluster)} loaderWidth={85}>
+          {(value) => <Text>{value}</Text>}
+        </OptionalValue>
+        <OptionalValue value={region} loaderWidth={80}>
+          {(value) => (
+            <Text>
               <code>{value}</code>
-              <i
-                className='fa fa-open-in-new'
-                aria-hidden={true}
-                role='presentation'
-              />
-            </StyledLink>
-          )
-        }
-      </OptionalValue>
-    </ClusterDetailWidget>
-  );
-};
+            </Text>
+          )}
+        </OptionalValue>
+        <StyledDot />
+        <OptionalValue value={getClusterAccountIDLabel(cluster)}>
+          {(value) => <Text>{value}</Text>}
+        </OptionalValue>
+        <OptionalValue
+          value={accountID}
+          loaderWidth={300}
+          replaceEmptyValue={false}
+        >
+          {(value) =>
+            value === '' ? (
+              <NotAvailable />
+            ) : (
+              <StyledLink
+                color='text-weak'
+                href={accountIDPath}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                <code>{value}</code>
+                <i
+                  className='fa fa-open-in-new'
+                  aria-hidden={true}
+                  role='presentation'
+                />
+              </StyledLink>
+            )
+          }
+        </OptionalValue>
+      </ClusterDetailWidget>
+    );
+  };
 
 export default ClusterDetailWidgetProvider;

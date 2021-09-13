@@ -89,7 +89,9 @@ export function withNodePoolSpotInstances(
       }
 
       providerNodePool.spec!.template.spotVMOptions ??= {};
-      providerNodePool.spec!.template.spotVMOptions.maxPrice = (config as INodePoolSpotInstancesConfigAzure).maxPrice;
+      providerNodePool.spec!.template.spotVMOptions.maxPrice = (
+        config as INodePoolSpotInstancesConfigAzure
+      ).maxPrice;
       providerNodePool.spec!.template.spotVMOptions.maxPrice ??= '-1';
     }
   };

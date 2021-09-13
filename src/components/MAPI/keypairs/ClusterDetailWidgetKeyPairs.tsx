@@ -24,74 +24,73 @@ interface IClusterDetailWidgetKeyPairsProps
     'title'
   > {}
 
-const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> = (
-  props
-) => {
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
+const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
+  (props) => {
+    const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
-  const keyPairListClient = useHttpClient();
-  const auth = useAuthProvider();
+    const keyPairListClient = useHttpClient();
+    const auth = useAuthProvider();
 
-  const { data: keyPairList, error: keyPairListError } = useSWR<
-    legacyKeyPairs.IKeyPairList,
-    GenericResponseError
-  >(legacyKeyPairs.getKeyPairListKey(clusterId), () =>
-    legacyKeyPairs.getKeyPairList(keyPairListClient, auth, clusterId)
-  );
+    const { data: keyPairList, error: keyPairListError } = useSWR<
+      legacyKeyPairs.IKeyPairList,
+      GenericResponseError
+    >(legacyKeyPairs.getKeyPairListKey(clusterId), () =>
+      legacyKeyPairs.getKeyPairList(keyPairListClient, auth, clusterId)
+    );
 
-  useEffect(() => {
-    if (keyPairListError) {
-      ErrorReporter.getInstance().notify(keyPairListError);
-    }
-  }, [keyPairListError]);
+    useEffect(() => {
+      if (keyPairListError) {
+        ErrorReporter.getInstance().notify(keyPairListError);
+      }
+    }, [keyPairListError]);
 
-  const activeKeyPairsCount = useMemo(() => {
-    if (keyPairListError) return -1;
-    if (!keyPairList) return undefined;
+    const activeKeyPairsCount = useMemo(() => {
+      if (keyPairListError) return -1;
+      if (!keyPairList) return undefined;
 
-    return keyPairList.items.filter(isKeyPairActive).length;
-  }, [keyPairList, keyPairListError]);
+      return keyPairList.items.filter(isKeyPairActive).length;
+    }, [keyPairList, keyPairListError]);
 
-  const hasNoKeyPairs =
-    typeof activeKeyPairsCount === 'number' && activeKeyPairsCount === 0;
+    const hasNoKeyPairs =
+      typeof activeKeyPairsCount === 'number' && activeKeyPairsCount === 0;
 
-  return (
-    <ClusterDetailWidget
-      title='Key pairs'
-      contentProps={{
-        direction: 'row',
-        gap: 'small',
-        wrap: true,
-        justify: 'around',
-      }}
-      {...props}
-    >
-      {hasNoKeyPairs && (
-        <Box fill={true} pad={{ bottom: 'xsmall' }}>
-          <Text margin={{ bottom: 'small' }}>No key pairs</Text>
-          <Text size='small'>
-            Use{' '}
-            <StyledLink
-              target='_blank'
-              href={docs.gsctlCreateKubeconfigURL}
-              rel='noopener noreferrer'
-            >
-              gsctl create kubeconfig
-            </StyledLink>{' '}
-            to create one.
-          </Text>
-        </Box>
-      )}
+    return (
+      <ClusterDetailWidget
+        title='Key pairs'
+        contentProps={{
+          direction: 'row',
+          gap: 'small',
+          wrap: true,
+          justify: 'around',
+        }}
+        {...props}
+      >
+        {hasNoKeyPairs && (
+          <Box fill={true} pad={{ bottom: 'xsmall' }}>
+            <Text margin={{ bottom: 'small' }}>No key pairs</Text>
+            <Text size='small'>
+              Use{' '}
+              <StyledLink
+                target='_blank'
+                href={docs.gsctlCreateKubeconfigURL}
+                rel='noopener noreferrer'
+              >
+                gsctl create kubeconfig
+              </StyledLink>{' '}
+              to create one.
+            </Text>
+          </Box>
+        )}
 
-      {!hasNoKeyPairs && (
-        <ClusterDetailCounter
-          label='key pair'
-          pluralize={true}
-          value={activeKeyPairsCount}
-        />
-      )}
-    </ClusterDetailWidget>
-  );
-};
+        {!hasNoKeyPairs && (
+          <ClusterDetailCounter
+            label='key pair'
+            pluralize={true}
+            value={activeKeyPairsCount}
+          />
+        )}
+      </ClusterDetailWidget>
+    );
+  };
 
 export default ClusterDetailWidgetKeyPairs;

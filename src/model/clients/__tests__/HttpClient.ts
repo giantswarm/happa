@@ -321,7 +321,7 @@ describe('HttpClient', () => {
 
     try {
       await HttpClientImpl.get(
-        ({ url: '/api/test' } as unknown) as string,
+        { url: '/api/test' } as unknown as string,
         config
       );
     } catch (err) {

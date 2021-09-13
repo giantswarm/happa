@@ -193,20 +193,19 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     globalDispatch(push(MainRoutes.Home));
   };
 
-  const handleChange = (property: ClusterPropertyField) => (
-    newValue: IClusterPropertyValue
-  ) => {
-    dispatch({
-      type: 'applyPatch',
-      property,
-      value: newValue.patch,
-    });
-    dispatch({
-      type: 'changeValidationStatus',
-      property,
-      value: newValue.isValid,
-    });
-  };
+  const handleChange =
+    (property: ClusterPropertyField) => (newValue: IClusterPropertyValue) => {
+      dispatch({
+        type: 'applyPatch',
+        property,
+        value: newValue.patch,
+      });
+      dispatch({
+        type: 'changeValidationStatus',
+        property,
+        value: newValue.isValid,
+      });
+    };
 
   const isValid =
     state.latestRelease &&
@@ -216,11 +215,9 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const auth = useAuthProvider();
 
   const releaseListClient = useRef(clientFactory());
-  const {
-    data: releaseList,
-    error: releaseListError,
-  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
-    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {
@@ -257,7 +254,10 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
       // Navigate to the cluster's detail page.
       const detailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Clusters.Detail.Home,
-        { orgId, clusterId: state.cluster.metadata.name }
+        {
+          orgId,
+          clusterId: state.cluster.metadata.name,
+        }
       );
       globalDispatch(push(detailPath));
     } catch (err) {

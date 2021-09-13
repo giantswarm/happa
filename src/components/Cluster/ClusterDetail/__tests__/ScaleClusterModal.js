@@ -187,16 +187,12 @@ describe('ScaleClusterModal', () => {
      * Autoscaling on
      * @provider AWS
      */
-    const {
-      getByLabelText,
-      rerender,
-      getByDisplayValue,
-      findByText,
-    } = renderWithProps({
-      provider: Providers.AWS,
-      cluster: v4AWSClusterResponse,
-      workerNodesRunning: 5,
-    });
+    const { getByLabelText, rerender, getByDisplayValue, findByText } =
+      renderWithProps({
+        provider: Providers.AWS,
+        cluster: v4AWSClusterResponse,
+        workerNodesRunning: 5,
+      });
 
     const maxInput = getByLabelText(/maximum/i);
 
@@ -286,15 +282,11 @@ describe('ScaleClusterModal', () => {
      * Autoscaling on
      * @provider AWS
      */
-    const {
-      getByLabelText,
-      rerender,
-      getByDisplayValue,
-      findByText,
-    } = renderWithProps({
-      provider: Providers.AWS,
-      cluster: v4AWSClusterResponse,
-    });
+    const { getByLabelText, rerender, getByDisplayValue, findByText } =
+      renderWithProps({
+        provider: Providers.AWS,
+        cluster: v4AWSClusterResponse,
+      });
 
     const minInput = getByLabelText(/minimum/i);
 

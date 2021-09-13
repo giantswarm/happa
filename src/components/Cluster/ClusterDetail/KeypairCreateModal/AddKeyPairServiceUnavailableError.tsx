@@ -10,20 +10,21 @@ const PKILabel = styled.span`
 
 interface IAddKeyPairServiceUnavailableErrorTemplateProps {}
 
-const AddKeyPairServiceUnavailableError: React.FC<IAddKeyPairServiceUnavailableErrorTemplateProps> = () => {
-  return (
-    <>
-      <i className='fa fa-warning' />
-      <span>Could not create the key pair. The </span>
-      <OverlayTrigger
-        overlay={<Tooltip id='tooltip'>Public Key Infrastructure</Tooltip>}
-        placement='top'
-      >
-        <PKILabel>PKI</PKILabel>
-      </OverlayTrigger>{' '}
-      <span>backend is not yet available. Please try again in a moment.</span>
-    </>
-  );
-};
+const AddKeyPairServiceUnavailableError: React.FC<IAddKeyPairServiceUnavailableErrorTemplateProps> =
+  () => {
+    return (
+      <>
+        <i className='fa fa-warning' />
+        <span>Could not create the key pair. The </span>
+        <OverlayTrigger
+          overlay={<Tooltip id='tooltip'>Public Key Infrastructure</Tooltip>}
+          placement='top'
+        >
+          <PKILabel>PKI</PKILabel>
+        </OverlayTrigger>{' '}
+        <span>backend is not yet available. Please try again in a moment.</span>
+      </>
+    );
+  };
 
 export default AddKeyPairServiceUnavailableError;

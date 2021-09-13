@@ -21,24 +21,21 @@ interface IReleaseDetailsModalUpgradeOptionsVersionProps
   isBeta: boolean;
 }
 
-const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<IReleaseDetailsModalUpgradeOptionsVersionProps> = ({
-  version,
-  isBeta,
-  ...rest
-}) => {
-  const formattedVersion = `v${version}`;
+const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<IReleaseDetailsModalUpgradeOptionsVersionProps> =
+  ({ version, isBeta, ...rest }) => {
+    const formattedVersion = `v${version}`;
 
-  let label = formattedVersion;
-  if (isBeta) {
-    label += ' (BETA)';
-  }
+    let label = formattedVersion;
+    if (isBeta) {
+      label += ' (BETA)';
+    }
 
-  return (
-    <span role='button' aria-label={label} {...rest}>
-      <Version>{formattedVersion}</Version>{' '}
-      {isBeta && <ReleaseDetailsModalUpgradeOptionsBetaLabel />}
-    </span>
-  );
-};
+    return (
+      <span role='button' aria-label={label} {...rest}>
+        <Version>{formattedVersion}</Version>{' '}
+        {isBeta && <ReleaseDetailsModalUpgradeOptionsBetaLabel />}
+      </span>
+    );
+  };
 
 export default ReleaseDetailsModalUpgradeOptionsVersion;

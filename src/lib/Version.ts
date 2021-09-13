@@ -43,7 +43,8 @@ export interface IVersion {
   toString(): string;
 }
 
-const semverRegexp = /(?<major>([0-9]+))\.(?<minor>([0-9]+))\.(?<patch>([0-9]+))(\-(?<prerelease>(.*?(?=\+|$))))?(\+(?<metadata>(.*?(?=\s|$))))?/;
+const semverRegexp =
+  /(?<major>([0-9]+))\.(?<minor>([0-9]+))\.(?<patch>([0-9]+))(\-(?<prerelease>(.*?(?=\+|$))))?(\+(?<metadata>(.*?(?=\s|$))))?/;
 
 export class VersionImpl implements IVersion {
   constructor(from?: string) {

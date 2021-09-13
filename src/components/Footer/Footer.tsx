@@ -38,9 +38,8 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
     selectLoadingFlagByAction(state, METADATA_UPDATE_EXECUTE_REQUEST)
   );
 
-  const isToastVisible: React.MutableRefObject<boolean> = useRef<boolean>(
-    false
-  );
+  const isToastVisible: React.MutableRefObject<boolean> =
+    useRef<boolean>(false);
 
   const releaseURL: string = getReleaseURL(currentVersion);
   const isLoggedIn: boolean = useSelector<IState>(getLoggedInUser) !== null;

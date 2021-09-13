@@ -93,17 +93,18 @@ const AppDetail: React.FC<{}> = () => {
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(
-    () => ({
-      labelSelector: {
-        matchingLabels: {
-          [applicationv1alpha1.labelAppName]: app,
-          [applicationv1alpha1.labelAppCatalog]: catalogName,
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    useMemo(
+      () => ({
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelAppName]: app,
+            [applicationv1alpha1.labelAppCatalog]: catalogName,
+          },
         },
-      },
-    }),
-    [app, catalogName]
-  );
+      }),
+      [app, catalogName]
+    );
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,

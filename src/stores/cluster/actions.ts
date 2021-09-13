@@ -59,7 +59,7 @@ export function clustersList(opts: {
       const clustersApi = new GiantSwarm.ClustersApi();
       const response = await clustersApi.getClusters();
       const clusters = reduceClustersIntoMap(
-        (response as unknown) as Cluster[],
+        response as unknown as Cluster[],
         provider,
         makeCapabilities
       );
@@ -102,7 +102,7 @@ export function refreshClustersList(): ThunkAction<
         (cluster) => !clusterStoredIds.includes(cluster.id)
       );
       const clusters = reduceClustersIntoMap(
-        (newClusters as unknown) as Cluster[],
+        newClusters as unknown as Cluster[],
         provider,
         makeCapabilities
       );
@@ -204,9 +204,9 @@ export function clusterLoadDetails(
       const getClusterDetails = isV5Cluster
         ? clustersApi.getClusterV5.bind(clustersApi)
         : clustersApi.getCluster.bind(clustersApi);
-      const cluster = ((await getClusterDetails(
+      const cluster = (await getClusterDetails(
         clusterId
-      )) as unknown) as Cluster;
+      )) as unknown as Cluster;
 
       if (newPath) {
         cluster.path = newPath;
@@ -230,8 +230,9 @@ export function clusterLoadDetails(
         if (!(cluster as V4.ICluster).workers) {
           (cluster as V4.ICluster).workers = [];
         }
-        (cluster as V4.ICluster).workers = ((cluster as V4.ICluster)
-          .workers as V4.IClusterWorker[]).map((worker) => {
+        (cluster as V4.ICluster).workers = (
+          (cluster as V4.ICluster).workers as V4.IClusterWorker[]
+        ).map((worker) => {
           if (!worker.aws) worker.aws = { instance_type: '' };
 
           return worker;
@@ -257,7 +258,7 @@ export function clusterLoadDetails(
         isV5Cluster,
       });
 
-      return (cluster as unknown) as Cluster;
+      return cluster as unknown as Cluster;
     } catch (error) {
       if ((error as IGSAPIError).response?.status === StatusCodes.NotFound) {
         // Delete the cluster in the store.
@@ -552,10 +553,10 @@ export function clusterCreateKeyPair(
       });
 
       const keypairsApi = new GiantSwarm.KeyPairsApi();
-      const keypair = ((await keypairsApi.addKeyPair(
+      const keypair = (await keypairsApi.addKeyPair(
         clusterId,
         payload
-      )) as unknown) as IKeyPair;
+      )) as unknown as IKeyPair;
       dispatch({
         type: CLUSTER_CREATE_KEY_PAIR_SUCCESS,
         keypair,
