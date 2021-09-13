@@ -31,6 +31,14 @@ const StyledContainer = styled.div<{ gridGap: number }>`
   margin: 0 -${(props) => props.gridGap / 2}px;
 `;
 
+const StyledGrid = styled(VariableSizeGrid)<{ minHeight: number }>`
+  height: 100% !important;
+
+  > div {
+    height: ${(props) => props.minHeight}px !important;
+  }
+`;
+
 const getIndex = (
   rowIndex: number,
   columnIndex: number,
@@ -91,6 +99,7 @@ const AppList: React.FC<IAppList> = ({
 
   const columnCount = Math.floor(width / (itemMinWidth + gridGap)) || 1;
   const rowCount = Math.floor(items.length / columnCount);
+  const minHeight = (itemMinHeight + gridGap) * rowCount;
 
   const columnWidth = () => width / columnCount;
   const rowHeight = () => itemMinHeight + gridGap;
@@ -106,7 +115,7 @@ const AppList: React.FC<IAppList> = ({
     <StyledContainer ref={containerRef} gridGap={gridGap}>
       <WindowScroller onScroll={handleScroll}>
         {({ height }) => (
-          <VariableSizeGrid
+          <StyledGrid
             ref={gridRef}
             width={width}
             height={height}
@@ -116,9 +125,10 @@ const AppList: React.FC<IAppList> = ({
             rowCount={rowCount}
             itemData={itemData}
             overscanRowCount={10}
+            minHeight={minHeight}
           >
             {ItemRenderer}
-          </VariableSizeGrid>
+          </StyledGrid>
         )}
       </WindowScroller>
     </StyledContainer>
