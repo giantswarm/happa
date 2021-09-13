@@ -1,7 +1,9 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -13,6 +15,8 @@ interface ICreateOrganizationsGuidProps
 const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
   props
 ) => {
+  const context = useSelector(getCurrentInstallationContextName);
+
   return (
     <CLIGuide
       title='Create an organization via the Management API'
@@ -47,15 +51,11 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Create the organization'
+          title='2. Create an organization manifest'
           command={`
-              kubectl create -f - <<EOF
-                apiVersion: security.giantswarm.io/v1alpha1
-                kind: Organization
-                metadata:
-                  name: example
-                spec: {}
-                EOF
+              kubectl template organization \
+                --name example \
+                > example-organization.yaml
           `}
         >
           <Text>
@@ -67,6 +67,14 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
             In addition, there will be a new namespace named{' '}
             <code>org-example</code> (where <code>example</code> represents your
             chosen name) to be used for the resources of this organization.
+          </Text>
+        </CLIGuideStep>
+        <CLIGuideStep
+          title='3. Apply the manifest'
+          command={`kubectl --context ${context} apply -f example-organization.yaml`}
+        >
+          <Text>
+            As a result, the CR and the according namespace will get created.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
