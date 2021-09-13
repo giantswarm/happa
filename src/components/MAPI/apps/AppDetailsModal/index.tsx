@@ -463,7 +463,6 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           title={appName}
           onClose={handleClose}
           visible={visible}
-          footer={null}
         >
           <AppDetailsModalInitialPane
             app={app}
