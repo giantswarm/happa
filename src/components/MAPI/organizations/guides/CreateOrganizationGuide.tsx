@@ -1,7 +1,13 @@
 import { Text } from 'grommet';
 import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import {
+  getCurrentInstallationContextName,
+  makeKubectlGSCommand,
+  withTemplateOrganization,
+} from 'MAPI/guides/utils';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -13,6 +19,8 @@ interface ICreateOrganizationsGuidProps
 const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
   props
 ) => {
+  const context = useSelector(getCurrentInstallationContextName);
+
   return (
     <CLIGuide
       title='Create an organization via the Management API'
@@ -47,26 +55,25 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
       <CLIGuideStepList>
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Create the organization'
-          command={`
-              kubectl create -f - <<EOF
-                apiVersion: security.giantswarm.io/v1alpha1
-                kind: Organization
-                metadata:
-                  name: example
-                spec: {}
-                EOF
-          `}
+          title='2. Create an organization manifest'
+          command={makeKubectlGSCommand(
+            withTemplateOrganization({
+              name: 'example',
+              output: 'example-organization.yaml',
+            })
+          )}
         >
           <Text>
             <strong>Note:</strong> please replace <code>example</code> with your
             intended organization name.
           </Text>
+        </CLIGuideStep>
+        <CLIGuideStep
+          title='3. Apply the manifest'
+          command={`kubectl --context ${context} apply -f example-organization.yaml`}
+        >
           <Text>
-            As a result, the new <code>Organization</code> CR has been created.
-            In addition, there will be a new namespace named{' '}
-            <code>org-example</code> (where <code>example</code> represents your
-            chosen name) to be used for the resources of this organization.
+            As a result, the CR and the according namespace will get created.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
