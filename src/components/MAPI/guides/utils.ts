@@ -270,6 +270,39 @@ export function withTemplateNodePool(
   };
 }
 
+/**
+ * Configuration options supported by the `template organization` command.
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/organization/flag.go}
+ * */
+export interface IKubectlGSTemplateOrganizationCommandConfig {
+  name: string;
+  output?: string;
+}
+
+/**
+ * Generate a modifier for constructing the
+ * `kubectl gs template organization` command.
+ * */
+export function withTemplateOrganization(
+  config: IKubectlGSTemplateOrganizationCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [
+      ...parts,
+      'template',
+      'organization',
+      '--name',
+      config.name,
+    ];
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
 function isFlag(value: string): boolean {
   return value.startsWith('--');
 }
