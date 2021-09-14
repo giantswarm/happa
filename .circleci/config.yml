@@ -136,6 +136,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "aws-app-collection"
           requires:
+            - push-happa-to-aliyun
             - push-happa-to-control-plane-app-catalog
           filters:
             branches:
