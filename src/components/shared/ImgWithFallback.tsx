@@ -18,24 +18,25 @@ interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
 
 const ImgWithFallback: FC<IImgWithFallback> = (props) => {
   const { fallback, src, ...restProps } = props;
+  const [loadError, setLoadError] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [loadError, setLoadError] = useState(false);
-  const [loading, setLoading] = useState(typeof src !== 'undefined');
-
-  const isMounted = useRef<boolean>(true);
-
+  const isMounted = useRef<boolean>(false);
   useEffect(() => {
+    isMounted.current = true;
     const loadImage = async (imageSrc: string) => {
       try {
         const image = new Image();
         image.src = imageSrc;
         await image.decode();
-
-        setLoading(false);
+        if (isMounted.current) {
+          setLoadError(false);
+          setLoading(false);
+        }
       } catch {
         if (isMounted.current) {
-          setLoading(false);
           setLoadError(true);
+          setLoading(false);
         }
       }
     };
@@ -46,7 +47,9 @@ const ImgWithFallback: FC<IImgWithFallback> = (props) => {
     };
   }, [src]);
 
-  return loading ? null : loadError || !src ? (
+  if (loading && src) return null;
+
+  return loadError || !src ? (
     <div
       {...restProps}
       style={{
