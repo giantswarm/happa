@@ -98,7 +98,7 @@ const AppGrid: React.FC<IAppGridProps> = ({
   }, []);
 
   const columnCount = Math.floor(width / (itemMinWidth + gridGap)) || 1;
-  const rowCount = items.length / columnCount;
+  const rowCount = Math.ceil(items.length / columnCount);
   const minHeight = (itemMinHeight + gridGap) * rowCount;
 
   const columnWidth = () => width / columnCount;
