@@ -2,8 +2,8 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
+import GenericModal from 'Modals/GenericModal';
 import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
@@ -320,7 +320,7 @@ class ScaleClusterModal extends React.Component {
     }
 
     let body = (
-      <BootstrapModal.Body>
+      <div>
         <p>
           {ScaleClusterModal.supportsAutoscaling(
             this.props.provider,
@@ -342,10 +342,10 @@ class ScaleClusterModal extends React.Component {
           />
         </div>
         <TransitionGroup>{warnings}</TransitionGroup>
-      </BootstrapModal.Body>
+      </div>
     );
     let footer = (
-      <BootstrapModal.Footer>
+      <div>
         {this.buttonProperties().disabled ? undefined : (
           <Button
             primary={this.buttonProperties().primary}
@@ -361,22 +361,22 @@ class ScaleClusterModal extends React.Component {
         <Button link={true} disabled={this.state.loading} onClick={this.close}>
           Cancel
         </Button>
-      </BootstrapModal.Footer>
+      </div>
     );
 
     if (this.state.error) {
       body = (
-        <BootstrapModal.Body>
+        <div>
           <p>Something went wrong while trying to scale your cluster:</p>
           <FlashMessageComponent type='danger'>
             {this.state.error.body && this.state.error.body.message
               ? this.state.error.body.message
               : this.state.error.message}
           </FlashMessageComponent>
-        </BootstrapModal.Body>
+        </div>
       );
       footer = (
-        <BootstrapModal.Footer>
+        <div>
           <Box gap='small' direction='row' justify='end'>
             <Button
               link={true}
@@ -393,21 +393,24 @@ class ScaleClusterModal extends React.Component {
               Cancel
             </Button>
           </Box>
-        </BootstrapModal.Footer>
+        </div>
       );
     }
 
     return (
-      <BootstrapModal onHide={this.close} show={this.state.modalVisible}>
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>
+      <GenericModal
+        onClose={this.close}
+        visible={this.state.modalVisible}
+        title={
+          <>
             Edit scaling settings for{' '}
             <ClusterIDLabel clusterID={this.props.cluster.id} />
-          </BootstrapModal.Title>
-        </BootstrapModal.Header>
+          </>
+        }
+        footer={footer}
+      >
         {body}
-        {footer}
-      </BootstrapModal>
+      </GenericModal>
     );
   }
 }

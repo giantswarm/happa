@@ -1,8 +1,8 @@
 import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import GenericModal from 'Modals/GenericModal';
 import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect, DispatchProp } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -308,7 +308,7 @@ class ScaleNodePoolModal extends React.Component<
     }
 
     let body = (
-      <BootstrapModal.Body>
+      <div>
         <p>
           {supportsAutoscaling
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
@@ -323,10 +323,10 @@ class ScaleNodePoolModal extends React.Component<
           />
         </div>
         <TransitionGroup>{warnings}</TransitionGroup>
-      </BootstrapModal.Body>
+      </div>
     );
     let footer = (
-      <BootstrapModal.Footer>
+      <div>
         <Box gap='small' direction='row' justify='end'>
           {this.buttonProperties().disabled ? undefined : (
             <Button
@@ -344,43 +344,44 @@ class ScaleNodePoolModal extends React.Component<
             Cancel
           </Button>
         </Box>
-      </BootstrapModal.Footer>
+      </div>
     );
 
     if (error) {
       body = (
-        <BootstrapModal.Body>
+        <div>
           <p>Something went wrong while trying to scale your node pool:</p>
           <FlashMessageComponent type={FlashMessageType.Danger}>
             {extractMessageFromError(error, 'Could not scale node pool')}
           </FlashMessageComponent>
-        </BootstrapModal.Body>
+        </div>
       );
       footer = (
-        <BootstrapModal.Footer>
+        <div>
           <Button link={true} disabled={loading} onClick={this.back}>
             Back
           </Button>
           <Button link={true} disabled={loading} onClick={this.close}>
             Cancel
           </Button>
-        </BootstrapModal.Footer>
+        </div>
       );
     }
 
     return (
-      <BootstrapModal onHide={this.close} show={this.state.modalVisible}>
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>
+      <GenericModal
+        onClose={this.close}
+        visible={this.state.modalVisible}
+        title={
+          <>
             Edit scaling settings for{' '}
-            <ClusterIDLabel clusterID={this.props.nodePool.id} />
-          </BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <div>
-          {body}
-          {footer}
-        </div>
-      </BootstrapModal>
+            <ClusterIDLabel clusterID={this.props.nodePool.id} />{' '}
+          </>
+        }
+        footer={footer}
+      >
+        {body}
+      </GenericModal>
     );
   }
 }

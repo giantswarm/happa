@@ -71,8 +71,8 @@ function formatVisiblePane(
 interface IClusterDetailUpgradeModalProps {
   fromRelease: releasev1alpha1.IRelease;
   toRelease: releasev1alpha1.IRelease;
+  onClose: () => void;
   onUpgrade: () => Promise<void>;
-  onClose?: () => void;
   visible?: boolean;
 }
 
