@@ -28,6 +28,4 @@ exclude-labels:
 
 change-template: '- $TITLE (#$NUMBER)'
 template: |
-  ## What's changed
-
   $CHANGES
