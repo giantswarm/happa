@@ -218,7 +218,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
         new FlashMessage(
           `<code>${app.metadata.name}</code> on cluster <code>${app.metadata.namespace}</code> will be ${updateAction} to version <code>${truncatedVersion}</code>.`,
           messageType.SUCCESS,
-          messageTTL.SHORT
+          messageTTL.LONG
         );
       } catch (err) {
         setAppUpdateIsLoading(false);
