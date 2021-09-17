@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { truncate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
@@ -37,6 +38,9 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
   > {
   app?: applicationv1alpha1.IApp;
 }
+
+const TRUNCATE_START_CHARS = 10;
+const TRUNCATE_END_CHARS = 5;
 
 const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppListWidgetVersionInspectorProps> =
   ({ app, ...props }) => {
@@ -202,10 +206,19 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
         setAppUpdateIsLoading(false);
         handleCancelSwitchingVersion();
 
+        const truncatedVersion = truncate(
+          currentSelectedVersion,
+          '…',
+          TRUNCATE_START_CHARS,
+          TRUNCATE_END_CHARS
+        );
+
+        const updateAction = isUpgrading ? 'upgraded' : 'downgraded';
+
         new FlashMessage(
-          `App <code>${app.metadata.name}</code> on <code>${app.metadata.namespace}</code> has been updated. Changes might take some time to take effect.`,
+          `<code>${app.metadata.name}</code> on cluster <code>${app.metadata.namespace}</code> will be ${updateAction} to version <code>${truncatedVersion}</code>.`,
           messageType.SUCCESS,
-          messageTTL.SHORT
+          messageTTL.LONG
         );
       } catch (err) {
         setAppUpdateIsLoading(false);
@@ -291,11 +304,11 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
                   variant={ClusterIDLabelType.Name}
                 />{' '}
                 from version{' '}
-                <Truncated as='code' numStart={10}>
+                <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
                   {app?.spec.version ?? ''}
                 </Truncated>{' '}
                 to{' '}
-                <Truncated as='code' numStart={10}>
+                <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
                   {currentSelectedVersion ?? ''}
                 </Truncated>
                 ?
