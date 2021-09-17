@@ -279,7 +279,7 @@ describe('ClusterDetailAppListWidgetVersionInspector', () => {
     );
 
     await withMarkup(screen.findByText)(
-      `App ${app.metadata.name} on ${app.metadata.namespace} has been updated. Changes might take some time to take effect.`
+      `${app.metadata.name} on cluster ${app.metadata.namespace} will be upgraded to version ${newVersion}.`
     );
   });
 
@@ -342,7 +342,7 @@ describe('ClusterDetailAppListWidgetVersionInspector', () => {
     );
 
     await withMarkup(screen.findByText)(
-      `App ${app.metadata.name} on ${app.metadata.namespace} has been updated. Changes might take some time to take effect.`
+      `${app.metadata.name} on cluster ${app.metadata.namespace} will be downgraded to version ${newVersion}.`
     );
   });
 });
