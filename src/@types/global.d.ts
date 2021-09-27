@@ -8,6 +8,7 @@ interface IGlobalConfig {
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
   mapiEndpoint: string;
+  athenaEndpoint: string;
   mapiAudience: string;
   defaultRequestTimeoutSeconds: number;
   enableRealUserMonitoring: boolean;

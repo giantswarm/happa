@@ -54,6 +54,9 @@ happaapi:
   host: ""
   letsencrypt: ""
 
+athena:
+  address: ""
+
 managementCluster:
   name: ""
   customer: ""
