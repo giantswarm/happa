@@ -8,7 +8,8 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { SentryErrorNotifier } from 'lib/errors/SentryErrorNotifier';
 import { makeDefaultConfig } from 'lib/MapiAuth/makeDefaultConfig';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
-import { HttpClientImpl } from 'model/clients/HttpClient';
+import { GraphQLClientImpl } from 'model/clients/GraphQLClient';
+import * as athena from 'model/services/athena';
 import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
@@ -72,6 +73,10 @@ const getSizes = () => {
   };
 };
 
+const athenaClient = new GraphQLClientImpl(
+  `${window.config.athenaEndpoint}/graphql`
+);
+
 async function submitCustomRUM(
   payloadType: string,
   payloadSchemaVersion: number,
@@ -82,18 +87,14 @@ async function submitCustomRUM(
     return;
   }
 
-  const url: string = `${window.config.apiEndpoint}/v5/analytics/`;
-
   try {
-    await HttpClientImpl.post(url, {
-      data: {
-        app_id: 'happa',
-        session_id: sessionID,
-        payload_type: payloadType,
-        payload_schema_version: payloadSchemaVersion,
-        payload: payload,
-        uri_path: location.pathname,
-      },
+    await athena.createAnalyticsEvent(athenaClient, {
+      appID: 'happa',
+      sessionID,
+      payloadType,
+      payloadSchemaVersion,
+      payload,
+      uri: location.pathname,
     });
   } catch (err) {
     ErrorReporter.getInstance().notify(err as Error);
