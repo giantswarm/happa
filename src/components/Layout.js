@@ -60,7 +60,7 @@ class Layout extends React.Component {
     const showApps =
       supportsAppsViaMapi || Object.keys(this.props.catalogs.items).length > 0;
 
-    const showUsers = !featureFlags.flags.CustomerSSO.enabled;
+    const showUsers = !featureFlags.flags.CustomerSSO.enabled && user?.isAdmin;
 
     return (
       <DocumentTitle>
