@@ -63,8 +63,8 @@ export class GraphQLClientImpl implements IGraphQLClient {
 
     const res = await this.httpClient.execute<IGraphQLResponse<T>>();
 
-    if (res.data.errors?.length !== 0) {
-      return Promise.reject(new GraphQLError(...res.data.errors!));
+    if (res.data.errors) {
+      return Promise.reject(new GraphQLError(...res.data.errors));
     }
 
     if (!res.data.data) {
