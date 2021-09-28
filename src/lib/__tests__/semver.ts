@@ -54,5 +54,21 @@ describe('semver', () => {
         '47.48.11.2',
       ]);
     });
+
+    it('compares versions with the same version number and different labels', () => {
+      const versionA = '1.2.0-alpha';
+      const versionB = '1.2.0-beta';
+
+      expect(compare(versionA, versionB)).toEqual(-1);
+      expect(compare(versionB, versionA)).toEqual(1);
+    });
+
+    it('compares versions with the same version number, one without a label', () => {
+      const versionA = '1.2.0-alpha';
+      const versionB = '1.2.0';
+
+      expect(compare(versionA, versionB)).toEqual(-1);
+      expect(compare(versionB, versionA)).toEqual(1);
+    });
   });
 });
