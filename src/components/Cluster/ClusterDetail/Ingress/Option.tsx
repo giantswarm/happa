@@ -32,12 +32,12 @@ const Column = styled.div`
   }
 `;
 
-interface IOptionProps extends ComponentPropsWithoutRef<typeof Info> {
+type OptionProps = ComponentPropsWithoutRef<typeof Info> & {
   id?: string;
   footer?: ReactNode;
-}
+};
 
-const Option: React.FC<IOptionProps> = ({ id, footer, children, ...rest }) => {
+const Option: React.FC<OptionProps> = ({ id, footer, children, ...rest }) => {
   return (
     <Info {...rest}>
       <StyledInfoRow>
