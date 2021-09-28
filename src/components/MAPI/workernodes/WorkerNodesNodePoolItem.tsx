@@ -74,12 +74,14 @@ interface IWorkerNodesNodePoolItemProps
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool;
   additionalColumns?: IWorkerNodesAdditionalColumn[];
+  readOnly?: boolean;
 }
 
 const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   nodePool,
   providerNodePool,
   additionalColumns,
+  readOnly,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -234,6 +236,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                   onSave={updateDescription}
                   ref={viewAndEditNameRef}
                   variant={ViewAndEditNameVariant.Description}
+                  readOnly={readOnly}
                 />
               )
             }
@@ -330,6 +333,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               <WorkerNodesNodePoolActions
                 onDeleteClick={onDelete}
                 onScaleClick={onScale}
+                disabled={readOnly}
               />
             </Box>
           </>

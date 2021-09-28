@@ -12,6 +12,7 @@ import {
   fetchProviderClusterForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
+  isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -305,6 +306,8 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       setIsCreateFormOpen(false);
     };
 
+    const isReadOnly = cluster && isNodePoolMngmtReadOnly(cluster);
+
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
         <Breadcrumb
@@ -389,6 +392,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                         key={idx}
                         additionalColumns={additionalColumns}
                         margin={{ bottom: 'small' }}
+                        readOnly={isReadOnly}
                       />
                     ))}
 
@@ -410,6 +414,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                               providerNodePool={providerNodePools?.[idx]}
                               additionalColumns={additionalColumns}
                               margin={{ bottom: 'small' }}
+                              readOnly={isReadOnly}
                             />
                           </BaseTransition>
                         ))}
@@ -437,7 +442,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   <Box animation={{ type: 'fadeIn', duration: 300 }}>
                     <Button
                       onClick={handleOpenCreateForm}
-                      disabled={!cluster || !providerCluster}
+                      disabled={!cluster || !providerCluster || isReadOnly}
                     >
                       <i
                         className='fa fa-add-circle'
@@ -471,12 +476,17 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                     provider
                   )}
                 />
-                <ModifyNodePoolGuide
-                  clusterNamespace={cluster.metadata.namespace!}
-                />
-                <DeleteNodePoolGuide
-                  clusterNamespace={cluster.metadata.namespace!}
-                />
+
+                {!isReadOnly && (
+                  <>
+                    <ModifyNodePoolGuide
+                      clusterNamespace={cluster.metadata.namespace!}
+                    />
+                    <DeleteNodePoolGuide
+                      clusterNamespace={cluster.metadata.namespace!}
+                    />
+                  </>
+                )}
               </Box>
             )}
           </Box>
