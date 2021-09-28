@@ -19,7 +19,7 @@ export async function updateNodePoolDescription(
   nodePool: NodePool,
   newDescription: string
 ) {
-  if (nodePool.kind === capiexpv1alpha3.MachinePool) {
+  if (nodePool.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3') {
     let machinePool = await capiexpv1alpha3.getMachinePool(
       httpClient,
       auth,
@@ -72,7 +72,7 @@ export async function deleteNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  if (nodePool.kind === capiexpv1alpha3.MachinePool) {
+  if (nodePool.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3') {
     const machinePool = await capiexpv1alpha3.getMachinePool(
       httpClient,
       auth,
@@ -130,7 +130,7 @@ export async function updateNodePoolScaling(
   min: number,
   max: number
 ) {
-  if (nodePool.kind === capiexpv1alpha3.MachinePool) {
+  if (nodePool.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3') {
     let machinePool = await capiexpv1alpha3.getMachinePool(
       httpClient,
       auth,
@@ -295,7 +295,10 @@ export function createDefaultNodePool(config: {
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }) {
-  if (config.providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
+  if (
+    config.providerNodePool?.apiVersion ===
+    'exp.infrastructure.cluster.x-k8s.io/v1alpha3'
+  ) {
     return createDefaultMachinePool(config);
   }
 
@@ -366,7 +369,10 @@ export async function createNodePool(
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }> {
-  if (config.providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
+  if (
+    config.providerNodePool?.apiVersion ===
+    'exp.infrastructure.cluster.x-k8s.io/v1alpha3'
+  ) {
     const bootstrapConfig = await gscorev1alpha1.createSpark(
       httpClient,
       auth,

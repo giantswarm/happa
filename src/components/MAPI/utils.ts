@@ -1,12 +1,15 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { compare } from 'lib/semver';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capiv1alpha4 from 'model/services/mapi/capiv1alpha4';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -71,13 +74,26 @@ export function compareNodePools(a: NodePool, b: NodePool) {
   }
 
   if (
-    a.kind === capiexpv1alpha3.MachinePool &&
-    b.kind === capiexpv1alpha3.MachinePool
+    a.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3' &&
+    a.apiVersion === b.apiVersion
   ) {
     // Sort by description.
     const descriptionComparison = capiexpv1alpha3
       .getMachinePoolDescription(a)
       .localeCompare(capiexpv1alpha3.getMachinePoolDescription(b));
+    if (descriptionComparison !== 0) {
+      return descriptionComparison;
+    }
+  }
+
+  if (
+    a.apiVersion === 'cluster.x-k8s.io/v1alpha4' &&
+    a.apiVersion === b.apiVersion
+  ) {
+    // Sort by description.
+    const descriptionComparison = capiv1alpha4
+      .getMachinePoolDescription(a)
+      .localeCompare(capiv1alpha4.getMachinePoolDescription(b));
     if (descriptionComparison !== 0) {
       return descriptionComparison;
     }
@@ -104,17 +120,31 @@ export async function fetchNodePoolListForCluster(
 
   switch (infrastructureRef.kind) {
     case capzv1alpha3.AzureCluster:
-      list = await capiexpv1alpha3.getMachinePoolList(
-        httpClientFactory(),
-        auth,
-        {
-          labelSelector: {
-            matchingLabels: {
-              [capiv1alpha3.labelCluster]: cluster.metadata.name,
+      if (isCAPZCluster(cluster)) {
+        list = await capiv1alpha4.getMachinePoolList(
+          httpClientFactory(),
+          auth,
+          {
+            labelSelector: {
+              matchingLabels: {
+                [capiv1alpha4.labelClusterName]: cluster.metadata.name,
+              },
             },
-          },
-        }
-      );
+          }
+        );
+      } else {
+        list = await capiexpv1alpha3.getMachinePoolList(
+          httpClientFactory(),
+          auth,
+          {
+            labelSelector: {
+              matchingLabels: {
+                [capiv1alpha3.labelCluster]: cluster.metadata.name,
+              },
+            },
+          }
+        );
+      }
 
       break;
 
@@ -156,6 +186,16 @@ export function fetchNodePoolListForClusterKey(
 
   switch (infrastructureRef.kind) {
     case capzv1alpha3.AzureCluster:
+      if (isCAPZCluster(cluster)) {
+        return capiv1alpha4.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha4.labelClusterName]: cluster.metadata.name,
+            },
+          },
+        });
+      }
+
       return capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
@@ -182,32 +222,38 @@ export function fetchNodePoolListForClusterKey(
 export async function fetchProviderNodePoolsForNodePools(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  nodePools: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
+  nodePools: NodePool[]
 ): Promise<ProviderNodePool[]> {
   const responses = await Promise.allSettled(
-    nodePools.map(
-      (np: capiv1alpha3.IMachineDeployment | capiexpv1alpha3.IMachinePool) => {
-        const infrastructureRef = np.spec?.template.spec.infrastructureRef;
-        if (!infrastructureRef) {
-          return Promise.reject(
-            new Error('There is no infrastructure reference defined.')
-          );
-        }
-
-        switch (infrastructureRef.kind) {
-          case capzexpv1alpha3.AzureMachinePool:
-            return capzexpv1alpha3.getAzureMachinePool(
-              httpClientFactory(),
-              auth,
-              np.metadata.namespace!,
-              infrastructureRef.name
-            );
-
-          default:
-            return Promise.reject(new Error('Unsupported provider.'));
-        }
+    nodePools.map((np: NodePool) => {
+      const infrastructureRef = np.spec?.template.spec?.infrastructureRef;
+      if (!infrastructureRef) {
+        return Promise.reject(
+          new Error('There is no infrastructure reference defined.')
+        );
       }
-    )
+
+      switch (infrastructureRef.apiVersion) {
+        case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+          return capzexpv1alpha3.getAzureMachinePool(
+            httpClientFactory(),
+            auth,
+            np.metadata.namespace!,
+            infrastructureRef.name
+          );
+
+        case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+          return capzv1alpha4.getAzureMachinePool(
+            httpClientFactory(),
+            auth,
+            np.metadata.namespace!,
+            infrastructureRef.name
+          );
+
+        default:
+          return Promise.reject(new Error('Unsupported provider.'));
+      }
+    })
   );
 
   const providerNodePools: ProviderNodePool[] = responses.map((r) => {
@@ -221,19 +267,17 @@ export async function fetchProviderNodePoolsForNodePools(
   return providerNodePools;
 }
 
-export function fetchProviderNodePoolsForNodePoolsKey(
-  nodePools?: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
-) {
+export function fetchProviderNodePoolsForNodePoolsKey(nodePools?: NodePool[]) {
   if (!nodePools) return null;
 
   const keys = ['fetchProviderNodePoolsForNodePools/'];
   for (const np of nodePools) {
-    if (np.spec?.template.spec.infrastructureRef) {
+    if (np.spec?.template.spec?.infrastructureRef) {
       keys.push(np.metadata.name);
     }
   }
 
-  return keys.join();
+  return keys.sort().join();
 }
 
 export async function fetchCluster(
@@ -370,9 +414,11 @@ export function fetchProviderClusterForClusterKey(
 }
 
 export function getNodePoolDescription(nodePool: NodePool): string {
-  switch (nodePool.kind) {
-    case capiexpv1alpha3.MachinePool:
+  switch (nodePool.apiVersion) {
+    case 'exp.cluster.x-k8s.io/v1alpha3':
       return capiexpv1alpha3.getMachinePoolDescription(nodePool);
+    case 'cluster.x-k8s.io/v1alpha4':
+      return capiv1alpha4.getMachinePoolDescription(nodePool);
     default:
       return Constants.DEFAULT_NODEPOOL_DESCRIPTION;
   }
@@ -381,8 +427,9 @@ export function getNodePoolDescription(nodePool: NodePool): string {
 export function getProviderNodePoolMachineType(
   providerNodePool: ProviderNodePool
 ): string {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return providerNodePool.spec?.template.vmSize ?? '';
     default:
       return '';
@@ -405,8 +452,9 @@ export type NodePoolSpotInstances =
 export function getProviderNodePoolSpotInstances(
   providerNodePool: ProviderNodePool
 ): INodePoolSpotInstancesAzure | INodePoolSpotInstancesAWS {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool: {
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
       try {
         const maxPriceQty =
           providerNodePool.spec?.template.spotVMOptions?.maxPrice;
@@ -444,8 +492,8 @@ interface INodesStatus {
 }
 
 export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
-  switch (nodePool.kind) {
-    case capiexpv1alpha3.MachinePool: {
+  switch (nodePool.apiVersion) {
+    case 'exp.cluster.x-k8s.io/v1alpha3': {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -462,14 +510,31 @@ export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
       return status;
     }
 
+    case 'cluster.x-k8s.io/v1alpha4': {
+      const status: INodesStatus = {
+        min: -1,
+        max: -1,
+        desired: -1,
+        current: -1,
+      };
+
+      [status.min, status.max] = capiv1alpha4.getMachinePoolScaling(nodePool);
+
+      status.desired = nodePool.status?.replicas ?? -1;
+      status.current = nodePool.status?.readyReplicas ?? -1;
+
+      return status;
+    }
+
     default:
       return { min: -1, max: -1, desired: -1, current: -1 };
   }
 }
 
 export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
-  switch (nodePool.kind) {
-    case capiexpv1alpha3.MachinePool:
+  switch (nodePool.apiVersion) {
+    case 'exp.cluster.x-k8s.io/v1alpha3':
+    case 'cluster.x-k8s.io/v1alpha4':
       return nodePool.spec?.failureDomains ?? [];
     default:
       return [];
@@ -508,8 +573,9 @@ export function getProviderClusterLocation(
 export function getProviderNodePoolLocation(
   providerNodePool: ProviderNodePool
 ): string {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return providerNodePool.spec?.location ?? '';
     default:
       return '';
@@ -638,4 +704,19 @@ export function getK8sAPIUrl(): string {
   );
 
   return audienceURL.toString();
+}
+
+export function isCAPZCluster(cluster: Cluster): boolean {
+  if (cluster.spec?.infrastructureRef?.kind !== capzv1alpha3.AzureCluster) {
+    return false;
+  }
+
+  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  if (!releaseVersion) return false;
+
+  return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
+}
+
+export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
+  return isCAPZCluster(cluster);
 }
