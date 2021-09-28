@@ -91,10 +91,10 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     <StyledBox wrap={true} direction='row'>
       <ClusterDetailWidgetWorkerNodes
         cluster={cluster}
-        basis='500px'
+        basis='425px'
         flex={{ grow: 1, shrink: 1 }}
       />
-      <ClusterDetailWidgetApps basis='350px' flex={{ grow: 1, shrink: 1 }} />
+      <ClusterDetailWidgetApps basis='425px' flex={{ grow: 1, shrink: 1 }} />
       <ClusterDetailWidgetKeyPairs
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
