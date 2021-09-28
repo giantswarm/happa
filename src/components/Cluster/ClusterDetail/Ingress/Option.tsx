@@ -32,10 +32,10 @@ const Column = styled.div`
   }
 `;
 
-interface IOptionProps extends ComponentPropsWithoutRef<typeof Info> {
+type IOptionProps = ComponentPropsWithoutRef<typeof Info> & {
   id?: string;
   footer?: ReactNode;
-}
+};
 
 const Option: React.FC<IOptionProps> = ({ id, footer, children, ...rest }) => {
   return (
