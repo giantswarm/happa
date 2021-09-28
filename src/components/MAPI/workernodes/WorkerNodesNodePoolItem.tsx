@@ -97,8 +97,8 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   const scaling = useMemo(() => {
     if (!nodePool) return undefined;
 
-    return getNodePoolScaling(nodePool);
-  }, [nodePool]);
+    return getNodePoolScaling(nodePool, providerNodePool);
+  }, [nodePool, providerNodePool]);
 
   const isScalingInProgress = scaling && scaling.desired !== scaling.current;
 
@@ -356,6 +356,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         <Box margin={{ top: isScaleConfirmOpen ? 'small' : undefined }}>
           <WorkerNodesNodePoolItemScale
             nodePool={nodePool}
+            providerNodePool={providerNodePool}
             onConfirm={onCancelScale}
             onCancel={onCancelScale}
             open={isScaleConfirmOpen}

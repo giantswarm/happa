@@ -491,7 +491,10 @@ interface INodesStatus {
   current: number;
 }
 
-export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
+export function getNodePoolScaling(
+  nodePool: NodePool,
+  providerNodePool: ProviderNodePool
+): INodesStatus {
   switch (nodePool.apiVersion) {
     case 'exp.cluster.x-k8s.io/v1alpha3': {
       const status: INodesStatus = {
@@ -518,7 +521,11 @@ export function getNodePoolScaling(nodePool: NodePool): INodesStatus {
         current: -1,
       };
 
-      [status.min, status.max] = capiv1alpha4.getMachinePoolScaling(nodePool);
+      if (providerNodePool) {
+        [status.min, status.max] = capzv1alpha4.getAzureMachinePoolScaling(
+          providerNodePool as capzv1alpha4.IAzureMachinePool
+        );
+      }
 
       status.desired = nodePool.status?.replicas ?? -1;
       status.current = nodePool.status?.readyReplicas ?? -1;
