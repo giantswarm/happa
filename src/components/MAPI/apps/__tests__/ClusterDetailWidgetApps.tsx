@@ -15,7 +15,8 @@ import ClusterDetailWidgetApps from '../ClusterDetailWidgetApps';
 
 function generateApp(
   specName: string = 'some-app',
-  status = 'deployed' as 'deployed' | 'not-deployed'
+  status = 'deployed' as 'deployed' | 'not-deployed',
+  version: string = '1.0.1'
 ): applicationv1alpha1.IApp {
   const appName = generateRandomString();
   const namespace = capiv1alpha3Mocks.randomCluster1.metadata.name;
@@ -78,7 +79,7 @@ function generateApp(
           namespace: '',
         },
       },
-      version: '1.2.1',
+      version,
     },
     status: {
       appVersion: '0.4.1',
@@ -86,7 +87,7 @@ function generateApp(
         lastDeployed: '2021-04-27T16:21:37Z',
         status,
       },
-      version: '1.2.1',
+      version,
     },
   };
 }
@@ -129,7 +130,7 @@ describe('ClusterDetailWidgetApps', () => {
   it('displays loading animations if the cluster is still loading', () => {
     render(getComponent({}));
 
-    expect(screen.getAllByLabelText('Loading...').length).toEqual(3);
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
   });
 
   it('displays a placeholder if there are no apps', async () => {
@@ -183,5 +184,41 @@ describe('ClusterDetailWidgetApps', () => {
     expect(await screen.findByLabelText('6 apps')).toBeInTheDocument();
     expect(await screen.findByLabelText('2 unique apps')).toBeInTheDocument();
     expect(await screen.findByLabelText('5 deployed')).toBeInTheDocument();
+  });
+
+  it('displays the number of upgradable apps', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...applicationv1alpha1Mocks.randomCluster1AppsList,
+        items: [
+          generateApp('coredns', 'deployed', '1.2.0'),
+          generateApp('coredns', 'deployed', '1.3.0'),
+        ],
+      });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
+
+    render(getComponent({}));
+
+    expect(await screen.findByLabelText('1 upgradable')).toBeInTheDocument();
   });
 });
