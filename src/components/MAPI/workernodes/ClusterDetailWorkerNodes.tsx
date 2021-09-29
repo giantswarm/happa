@@ -458,6 +458,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 <WorkerNodesNodePoolListPlaceholder
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
+                  disabled={isReadOnly}
                 />
               )}
             </Box>
@@ -478,14 +479,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 />
 
                 {!isReadOnly && (
-                  <>
-                    <ModifyNodePoolGuide
-                      clusterNamespace={cluster.metadata.namespace!}
-                    />
-                    <DeleteNodePoolGuide
-                      clusterNamespace={cluster.metadata.namespace!}
-                    />
-                  </>
+                  <ModifyNodePoolGuide
+                    clusterNamespace={cluster.metadata.namespace!}
+                  />
+                )}
+                {!isReadOnly && (
+                  <DeleteNodePoolGuide
+                    clusterNamespace={cluster.metadata.namespace!}
+                  />
                 )}
               </Box>
             )}
