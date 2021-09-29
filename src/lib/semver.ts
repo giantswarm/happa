@@ -37,7 +37,7 @@ export function compare(a: string, b: string): -1 | 0 | 1 {
    */
   switch (true) {
     case aParts[1] && bParts[1] && aParts[1] > bParts[1]:
-    case !aParts[1] && bParts[1]:
+    case bParts[1] && !aParts[1]:
       return 1;
 
     case aParts[1] && bParts[1] && aParts[1] < bParts[1]:

@@ -2,13 +2,14 @@ import useDelayedChange from 'lib/hooks/useDelayedChange';
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-interface IBaseTransitionProps
-  extends React.ComponentPropsWithoutRef<typeof CSSTransition> {
+type BaseTransitionProps = React.ComponentPropsWithoutRef<
+  typeof CSSTransition
+> & {
   classNames: string;
   delayTimeout?: number;
-}
+};
 
-const BaseTransition: React.FC<IBaseTransitionProps> = ({
+const BaseTransition: React.FC<BaseTransitionProps> = ({
   children,
   in: inProp,
   delayTimeout,
