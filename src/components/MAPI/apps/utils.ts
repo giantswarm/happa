@@ -829,3 +829,75 @@ export function formatYAMLError(err: unknown): string {
 
   return String(err);
 }
+
+/**
+ * Determines whether an app has a newer version
+ * @param app
+ * @param client
+ * @param auth
+ */
+export async function hasNewerVersion(
+  app: applicationv1alpha1.IApp,
+  client: IHttpClient,
+  auth: IOAuth2Provider
+): Promise<{ name: string; hasNewerVersion: boolean }> {
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    {
+      labelSelector: {
+        matchingLabels: {
+          [applicationv1alpha1.labelAppName]: app.spec.name,
+          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+        },
+      },
+    };
+
+  const appCatalogEntryList = await applicationv1alpha1.getAppCatalogEntryList(
+    client,
+    auth,
+    appCatalogEntryListGetOptions
+  );
+
+  const latestVersion = getLatestVersionForApp(
+    appCatalogEntryList.items,
+    app.spec.name
+  );
+
+  return {
+    name: app.spec.name,
+    hasNewerVersion:
+      typeof latestVersion !== 'undefined' &&
+      latestVersion !== app.spec.version,
+  };
+}
+
+/**
+ * Get names of apps that can be upgraded (i.e. has newer versions)
+ * @param apps
+ * @param clientFactory
+ * @param auth
+ */
+export async function getUpgradableApps(
+  apps: applicationv1alpha1.IApp[],
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider
+) {
+  const response = await Promise.all(
+    apps.map((app) => hasNewerVersion(app, clientFactory(), auth))
+  );
+
+  const upgradableApps = [];
+
+  for (const app of response) {
+    if (app.hasNewerVersion) upgradableApps.push(app.name);
+  }
+
+  return upgradableApps;
+}
+
+/**
+ * Key used for caching upgradable apps
+ * @param apps
+ */
+export function getUpgradableAppsKey(apps: applicationv1alpha1.IApp[]) {
+  return apps.reduce((key, app) => key + app.spec.name, '');
+}
