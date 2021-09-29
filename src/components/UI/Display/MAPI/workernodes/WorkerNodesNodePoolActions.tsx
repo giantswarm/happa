@@ -15,10 +15,11 @@ interface IWorkerNodesNodePoolActionsProps
   extends React.ComponentPropsWithoutRef<'div'> {
   onDeleteClick?: () => void;
   onScaleClick?: () => void;
+  disabled?: boolean;
 }
 
 const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> =
-  ({ onDeleteClick, onScaleClick, ...props }) => {
+  ({ onDeleteClick, onScaleClick, disabled, ...props }) => {
     const handleListKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
       e.stopPropagation();
       e.preventDefault();
@@ -44,6 +45,7 @@ const WorkerNodesNodePoolActions: React.FC<IWorkerNodesNodePoolActionsProps> =
               onKeyDown={onKeyDownHandler}
               type='button'
               aria-label='Actions'
+              disabled={disabled}
             >
               &bull;&bull;&bull;
             </StyledDropdownTrigger>

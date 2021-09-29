@@ -20,6 +20,7 @@ interface IViewAndEditNameProps extends React.ComponentPropsWithRef<'span'> {
   onSave(value: string): void;
   onToggleEditingState?(editing: boolean): void;
   variant?: ViewAndEditNameVariant;
+  readOnly?: boolean;
 }
 
 interface IViewAndEditNameState {
@@ -187,8 +188,15 @@ class ViewAndEditName extends Component<
   };
 
   render() {
-    const { typeLabel, value, onSave, onToggleEditingState, variant, ...rest } =
-      this.props;
+    const {
+      typeLabel,
+      value,
+      onSave,
+      onToggleEditingState,
+      variant,
+      readOnly,
+      ...rest
+    } = this.props;
     const { errorMessage } = this.state;
     const hasError = errorMessage !== '';
 
@@ -246,18 +254,22 @@ class ViewAndEditName extends Component<
         onEnter={this.handleFocusKeyDown}
       >
         <span tabIndex={0} {...rest}>
-          <OverlayTrigger
-            overlay={
-              <Tooltip id='tooltip'>
-                Click to edit {typeLabel} {variant}
-              </Tooltip>
-            }
-            placement='top'
-          >
-            <NameLabel onClick={this.activateEditMode}>
-              {this.state.value}
-            </NameLabel>
-          </OverlayTrigger>
+          {readOnly && this.state.value}
+
+          {!readOnly && (
+            <OverlayTrigger
+              overlay={
+                <Tooltip id='tooltip'>
+                  Click to edit {typeLabel} {variant}
+                </Tooltip>
+              }
+              placement='top'
+            >
+              <NameLabel onClick={this.activateEditMode}>
+                {this.state.value}
+              </NameLabel>
+            </OverlayTrigger>
+          )}
         </span>
       </Keyboard>
     );

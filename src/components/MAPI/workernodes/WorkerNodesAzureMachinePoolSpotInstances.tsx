@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolSpotInstances,
   INodePoolSpotInstancesAzure,
@@ -9,7 +10,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 interface IWorkerNodesAzureMachinePoolSpotInstancesProps {
-  providerNodePool?: capzexpv1alpha3.IAzureMachinePool;
+  providerNodePool?: ProviderNodePool;
 }
 
 const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachinePoolSpotInstancesProps> =

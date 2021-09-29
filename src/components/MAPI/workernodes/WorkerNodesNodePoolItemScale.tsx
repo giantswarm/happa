@@ -3,7 +3,7 @@ import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { NodePool } from 'MAPI/types';
+import { NodePool, ProviderNodePool } from 'MAPI/types';
 import { extractErrorMessage, getNodePoolScaling } from 'MAPI/utils';
 import React, { useMemo, useState } from 'react';
 import NodeCountSelector from 'shared/NodeCountSelector';
@@ -76,13 +76,14 @@ function getSubmitButtonAttributes(fromValue: {
 interface IWorkerNodesNodePoolItemScaleProps
   extends React.ComponentPropsWithoutRef<typeof ConfirmationPrompt> {
   nodePool: NodePool;
+  providerNodePool: ProviderNodePool;
 }
 
 const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps> =
-  ({ nodePool, onConfirm, onCancel, open, ...props }) => {
+  ({ nodePool, providerNodePool, onConfirm, onCancel, open, ...props }) => {
     const initialScaling = useMemo(
-      () => getNodePoolScaling(nodePool),
-      [nodePool]
+      () => getNodePoolScaling(nodePool, providerNodePool),
+      [nodePool, providerNodePool]
     );
 
     const [scalingMin, setScalingMin] = useState(initialScaling.min);

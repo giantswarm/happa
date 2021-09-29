@@ -13,7 +13,6 @@ import {
 import { fetchProviderClusterForClusterKey, IMachineType } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -21,9 +20,7 @@ import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
 
-export function getWorkerNodesCount(
-  nodePools?: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
-) {
+export function getWorkerNodesCount(nodePools?: NodePool[]) {
   if (!nodePools) return undefined;
 
   let count = 0;

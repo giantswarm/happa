@@ -74,12 +74,14 @@ interface IWorkerNodesNodePoolItemProps
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool;
   additionalColumns?: IWorkerNodesAdditionalColumn[];
+  readOnly?: boolean;
 }
 
 const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   nodePool,
   providerNodePool,
   additionalColumns,
+  readOnly,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -95,8 +97,8 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   const scaling = useMemo(() => {
     if (!nodePool) return undefined;
 
-    return getNodePoolScaling(nodePool);
-  }, [nodePool]);
+    return getNodePoolScaling(nodePool, providerNodePool);
+  }, [nodePool, providerNodePool]);
 
   const isScalingInProgress = scaling && scaling.desired !== scaling.current;
 
@@ -234,6 +236,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                   onSave={updateDescription}
                   ref={viewAndEditNameRef}
                   variant={ViewAndEditNameVariant.Description}
+                  readOnly={readOnly}
                 />
               )
             }
@@ -330,6 +333,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               <WorkerNodesNodePoolActions
                 onDeleteClick={onDelete}
                 onScaleClick={onScale}
+                disabled={readOnly}
               />
             </Box>
           </>
@@ -352,6 +356,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         <Box margin={{ top: isScaleConfirmOpen ? 'small' : undefined }}>
           <WorkerNodesNodePoolItemScale
             nodePool={nodePool}
+            providerNodePool={providerNodePool}
             onConfirm={onCancelScale}
             onCancel={onCancelScale}
             open={isScaleConfirmOpen}
