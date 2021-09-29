@@ -1,0 +1,10 @@
+mutation CreateAnalyticsEvent($input: AnalyticsEventInput!) {
+  createAnalyticsEvent(event: $input) {
+    appID
+    sessionID
+    payloadType
+    payloadSchemaVersion
+    payload
+    uri
+  }
+}

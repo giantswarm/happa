@@ -267,7 +267,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     state.providerNodePool
   ) as INodePoolSpotInstancesAzure;
   const nodePoolAZs = getNodePoolAvailabilityZones(state.nodePool);
-  const scaling = getNodePoolScaling(state.nodePool);
+  const scaling = getNodePoolScaling(state.nodePool, state.providerNodePool);
 
   return (
     <Collapsible {...props}>

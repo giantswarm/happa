@@ -1,7 +1,9 @@
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capiv1alpha4 from 'model/services/mapi/capiv1alpha4';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 
 export type ControlPlaneNode = capzv1alpha3.IAzureMachine;
@@ -18,14 +20,21 @@ export type ProviderClusterList = capzv1alpha3.IAzureClusterList;
 
 export type NodePool =
   | capiv1alpha3.IMachineDeployment
-  | capiexpv1alpha3.IMachinePool;
+  | capiexpv1alpha3.IMachinePool
+  | capiv1alpha4.IMachinePool;
 
 export type NodePoolList =
   | capiv1alpha3.IMachineDeploymentList
-  | capiexpv1alpha3.IMachinePoolList;
+  | capiexpv1alpha3.IMachinePoolList
+  | capiv1alpha4.IMachinePoolList;
 
-export type ProviderNodePool = capzexpv1alpha3.IAzureMachinePool | undefined;
+export type ProviderNodePool =
+  | capzexpv1alpha3.IAzureMachinePool
+  | capzv1alpha4.IAzureMachinePool
+  | undefined;
 
-export type ProviderNodePoolList = capzexpv1alpha3.IAzureMachinePoolList;
+export type ProviderNodePoolList =
+  | capzexpv1alpha3.IAzureMachinePoolList
+  | capzv1alpha4.IAzureMachinePoolList;
 
 export type BootstrapConfig = gscorev1alpha1.ISpark;

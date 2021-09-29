@@ -5,10 +5,11 @@ import Button from 'UI/Controls/Button';
 interface IWorkerNodesNodePoolListPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   onCreateButtonClick?: () => void;
+  disabled?: boolean;
 }
 
 const WorkerNodesNodePoolListPlaceholder: React.FC<IWorkerNodesNodePoolListPlaceholderProps> =
-  ({ onCreateButtonClick, ...props }) => {
+  ({ onCreateButtonClick, disabled, ...props }) => {
     return (
       <Box
         background='background-back'
@@ -23,7 +24,7 @@ const WorkerNodesNodePoolListPlaceholder: React.FC<IWorkerNodesNodePoolListPlace
           </Text>
         </Box>
         <Box>
-          <Button onClick={onCreateButtonClick}>
+          <Button onClick={onCreateButtonClick} disabled={disabled}>
             <i
               className='fa fa-add-circle'
               role='presentation'

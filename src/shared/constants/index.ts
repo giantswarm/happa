@@ -38,6 +38,8 @@ export const Constants = {
   AWS_HA_MASTERS_VERSION: '11.4.0',
   AWS_HA_MASTERS_MAX_NODES: 3,
 
+  AZURE_CAPZ_VERSION: '20.0.0',
+
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
     'Current number of worker nodes in the node pool',

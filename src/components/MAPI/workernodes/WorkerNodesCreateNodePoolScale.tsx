@@ -13,7 +13,15 @@ interface IWorkerNodesCreateNodePoolScaleProps
     > {}
 
 const WorkerNodesCreateNodePoolScale: React.FC<IWorkerNodesCreateNodePoolScaleProps> =
-  ({ id, nodePool, onChange, readOnly, disabled, ...props }) => {
+  ({
+    id,
+    nodePool,
+    providerNodePool,
+    onChange,
+    readOnly,
+    disabled,
+    ...props
+  }) => {
     const isMinValid = useRef(false);
     const isMaxValid = useRef(false);
 
@@ -36,7 +44,7 @@ const WorkerNodesCreateNodePoolScale: React.FC<IWorkerNodesCreateNodePoolScalePr
       });
     };
 
-    const value = getNodePoolScaling(nodePool);
+    const value = getNodePoolScaling(nodePool, providerNodePool);
 
     return (
       <InputGroup htmlFor={id} label='Scaling range' {...props}>

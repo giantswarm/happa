@@ -97,6 +97,11 @@ const config: webpack.Configuration = {
         },
       },
       {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'raw-loader',
+      },
+      {
         test: /node_modules\/vfile\/core\.js/,
         use: [
           {
@@ -128,7 +133,7 @@ const config: webpack.Configuration = {
     cacheWithContext: false,
   },
   plugins: [
-    (new CleanWebpackPlugin() as unknown) as webpack.WebpackPluginInstance,
+    new CleanWebpackPlugin() as unknown as webpack.WebpackPluginInstance,
     new HtmlWebpackPlugin({
       template: 'src/index.ejs',
       filename: 'index.ejs',
