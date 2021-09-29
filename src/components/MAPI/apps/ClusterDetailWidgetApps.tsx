@@ -4,7 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
@@ -37,12 +37,18 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const appListClient = useRef(clientFactory());
+
   const appListGetOptions = { namespace: clusterId };
   const { data: appList, error: appListError } = useSWR<
     applicationv1alpha1.IAppList,
     GenericResponseError
   >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
-    applicationv1alpha1.getAppList(clientFactory(), auth, appListGetOptions)
+    applicationv1alpha1.getAppList(
+      appListClient.current,
+      auth,
+      appListGetOptions
+    )
   );
 
   useEffect(() => {
