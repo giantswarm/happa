@@ -57,6 +57,12 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
     }
   }, [appListError]);
 
+  const userInstalledApps = useMemo(() => {
+    if (!appList) return [];
+
+    return filterUserInstalledApps(appList.items, true);
+  }, [appList]);
+
   const appCounters = useMemo(() => {
     if (appListError) {
       return {
@@ -74,23 +80,21 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
       };
     }
 
-    const userInstalledApps = filterUserInstalledApps(appList.items, true);
-
     return computeAppsCategorizedCounters(userInstalledApps);
-  }, [appList, appListError]);
+  }, [appList, appListError, userInstalledApps]);
 
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;
 
   const upgradableAppsKey = appList
-    ? getUpgradableAppsKey(appList.items)
+    ? getUpgradableAppsKey(userInstalledApps)
     : null;
 
   const { data: upgradableApps, error: upgradableAppsError } = useSWR<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(appList!.items, clientFactory, auth)
+    getUpgradableApps(userInstalledApps, clientFactory, auth)
   );
 
   useEffect(() => {
