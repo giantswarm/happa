@@ -1,10 +1,11 @@
-import { Box, Drop, Text, Tip } from 'grommet';
-import React, { useRef } from 'react';
+import { Box, Drop, Text } from 'grommet';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 interface ITooltipProps {
-  content: string;
+  content: string | React.ReactNode;
   placement?: 'top' | 'bottom';
+  target?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 const TooltipCaret = styled(Box)<{ placement: 'top' | 'bottom' }>`
@@ -41,24 +42,39 @@ const TooltipCaret = styled(Box)<{ placement: 'top' | 'bottom' }>`
 const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
   content,
   placement,
+  target,
   children,
 }) => {
-  const marginPosition = placement === 'top' ? 'bottom' : 'top';
+  const [tooltipVisible, setTooltipVisible] = useState(false);
   const targetRef = useRef<HTMLElement>();
 
+  const tooltipTarget = target ?? targetRef;
+
+  const marginPosition = placement === 'top' ? 'bottom' : 'top';
+
+  const handleMouseOver = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTooltipVisible(true);
+  };
+
+  const TooltipContent =
+    typeof content === 'string' ? (
+      <Text size='xsmall' color='text-strong'>
+        {content}
+      </Text>
+    ) : (
+      content
+    );
+
   return (
-    <Tip
-      plain
-      dropProps={{
-        target: targetRef.current,
-        align: placement === 'top' ? { bottom: 'top' } : { top: 'bottom' },
-      }}
-      content={
+    <>
+      {tooltipVisible && (
         <>
           <Drop
             plain
-            target={targetRef.current}
+            target={tooltipTarget.current}
             align={placement === 'top' ? { bottom: 'top' } : { top: 'bottom' }}
+            trapFocus={false}
             stretch='align'
           >
             <TooltipCaret
@@ -70,29 +86,37 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
               animation={{ type: 'fadeIn', duration: 300 }}
             />
           </Drop>
-          <Box
-            role='tooltip'
-            id='tooltip'
-            margin={{ [marginPosition]: 'small' }}
-            pad={{ vertical: 'xxsmall', horizontal: 'small' }}
-            round='xxsmall'
-            align='center'
-            justify='center'
-            background='tooltip-background'
-            animation={{ type: 'fadeIn', duration: 300 }}
+          <Drop
+            plain
+            target={tooltipTarget.current}
+            align={placement === 'top' ? { bottom: 'top' } : { top: 'bottom' }}
+            trapFocus={false}
           >
-            <Text size='xsmall' color='text-strong'>
-              {content}
-            </Text>
-          </Box>
+            <Box
+              role='tooltip'
+              id='tooltip'
+              margin={{ [marginPosition]: 'small' }}
+              pad={{ vertical: 'xxsmall', horizontal: 'small' }}
+              round='xxsmall'
+              align='center'
+              justify='center'
+              background='tooltip-background'
+              animation={{ type: 'fadeIn', duration: 300 }}
+            >
+              {TooltipContent}
+            </Box>
+          </Drop>
         </>
-      }
-    >
+      )}
       {React.cloneElement(children as React.ReactElement, {
-        ref: targetRef,
-        'aria-describedby': 'tooltip',
+        ref: tooltipTarget,
+        'aria-describedby': tooltipVisible ? 'tooltip' : undefined,
+        onMouseOver: handleMouseOver,
+        onMouseLeave: () => setTooltipVisible(false),
+        onFocus: () => setTooltipVisible(true),
+        onBlur: () => setTooltipVisible(false),
       })}
-    </Tip>
+    </>
   );
 };
 
