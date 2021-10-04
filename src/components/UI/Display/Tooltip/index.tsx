@@ -1,5 +1,5 @@
-import { Box, Text, Tip } from 'grommet';
-import React from 'react';
+import { Box, Drop, Text, Tip } from 'grommet';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 
 interface ITooltipProps {
@@ -7,7 +7,7 @@ interface ITooltipProps {
   placement?: 'top' | 'bottom';
 }
 
-const StyledBox = styled(Box)<{ placement: 'top' | 'bottom' }>`
+const TooltipCaret = styled(Box)<{ placement: 'top' | 'bottom' }>`
   ::after {
     content: '';
     position: absolute;
@@ -44,33 +44,54 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
   children,
 }) => {
   const marginPosition = placement === 'top' ? 'bottom' : 'top';
+  const targetRef = useRef<HTMLElement>();
 
   return (
     <Tip
       plain
       dropProps={{
+        target: targetRef.current,
         align: placement === 'top' ? { bottom: 'top' } : { top: 'bottom' },
       }}
       content={
-        <StyledBox
-          role='tooltip'
-          id='tooltip'
-          placement={placement ?? 'top'}
-          margin={{ [marginPosition]: 'small' }}
-          pad={{ vertical: 'xxsmall', horizontal: 'small' }}
-          round='xxsmall'
-          align='center'
-          justify='center'
-          background='tooltip-background'
-          animation={{ type: 'fadeIn', duration: 300 }}
-        >
-          <Text size='xsmall' color='text-strong'>
-            {content}
-          </Text>
-        </StyledBox>
+        <>
+          <Drop
+            plain
+            target={targetRef.current}
+            align={placement === 'top' ? { bottom: 'top' } : { top: 'bottom' }}
+            stretch='align'
+          >
+            <TooltipCaret
+              role='presentation'
+              aria-hidden='true'
+              placement={placement ?? 'top'}
+              width='xxsmall'
+              margin={{ [marginPosition]: 'small' }}
+              animation={{ type: 'fadeIn', duration: 300 }}
+            />
+          </Drop>
+          <Box
+            role='tooltip'
+            id='tooltip'
+            margin={{ [marginPosition]: 'small' }}
+            pad={{ vertical: 'xxsmall', horizontal: 'small' }}
+            round='xxsmall'
+            align='center'
+            justify='center'
+            background='tooltip-background'
+            animation={{ type: 'fadeIn', duration: 300 }}
+          >
+            <Text size='xsmall' color='text-strong'>
+              {content}
+            </Text>
+          </Box>
+        </>
       }
     >
-      {children}
+      {React.cloneElement(children as React.ReactElement, {
+        ref: targetRef,
+        'aria-describedby': 'tooltip',
+      })}
     </Tip>
   );
 };
