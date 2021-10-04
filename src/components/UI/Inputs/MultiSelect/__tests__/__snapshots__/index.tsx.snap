@@ -8,7 +8,7 @@ exports[`MultiSelect renders a simple input 1`] = `
     class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -17,7 +17,7 @@ exports[`MultiSelect renders a simple input 1`] = `
         Pets I want to get
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"

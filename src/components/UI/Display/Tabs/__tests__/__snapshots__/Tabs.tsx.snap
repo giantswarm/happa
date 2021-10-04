@@ -8,11 +8,11 @@ exports[`Tabs renders a basic tab layout 1`] = `
     class="sc-gKseQn hEEPLy"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kSZjsO StyledTabs-a4fwxl-2 bDoHYe"
+      class="StyledBox-sc-13pk1d4-0 kSZjsO StyledTabs-sc-a4fwxl-2 keuzHD"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 wJxKB StyledTabs__StyledTabsHeader-a4fwxl-0 drFjkF"
+        class="StyledBox-sc-13pk1d4-0 wJxKB StyledTabs__StyledTabsHeader-sc-a4fwxl-0 emAudU"
       >
         <button
           aria-expanded="true"
@@ -68,7 +68,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
       </div>
       <div
         aria-label="first Tab Contents"
-        class="StyledTabs__StyledTabPanel-a4fwxl-1 kfqJsu"
+        class="StyledTabs__StyledTabPanel-sc-a4fwxl-1 jAscLT"
         role="tabpanel"
       >
         <h1>
