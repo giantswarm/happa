@@ -192,7 +192,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
   const dispatch = useDispatch();
 
-  const handleGetStartedClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGetStartedClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
     if (!organization || !name) return;
