@@ -43,6 +43,7 @@ const TooltipCaret = styled(Box)<{
           top: 0;
           border-left: 0;
           border-right: ${toolTipBorder};
+          left: 25%;
         `;
       }
 
