@@ -215,8 +215,7 @@ class UpgradeClusterModal extends React.Component {
     const { loading } = this.state;
 
     return {
-      title: `Changes from v${this.props.cluster.release_version} to v
-            ${this.props.targetRelease.version}`,
+      title: `Changes from v${this.props.cluster.release_version} to v${this.props.targetRelease.version}`,
       body: this.changedComponents(),
       footer: (
         <div>
