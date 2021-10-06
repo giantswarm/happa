@@ -24,6 +24,8 @@ const ClusterDetailDeleteActionClusterName: React.FC<IClusterDetailDeleteActionC
       onChange(e.target.value);
     };
 
+    const blockEvent = (e: React.SyntheticEvent) => e.preventDefault();
+
     return (
       <Box direction='row' gap='small' align='baseline' {...props}>
         <Text>If yes, please enter the cluster {variant}:</Text>
@@ -37,6 +39,8 @@ const ClusterDetailDeleteActionClusterName: React.FC<IClusterDetailDeleteActionC
             autoCorrect='false'
             autoCapitalize='false'
             aria-label={`Cluster ${variant}`}
+            onPaste={blockEvent}
+            onDrop={blockEvent}
           />
         </Keyboard>
       </Box>
