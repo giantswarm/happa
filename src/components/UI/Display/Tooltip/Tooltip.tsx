@@ -56,6 +56,10 @@ const TooltipCaret = styled(Box)<{
   }
 `;
 
+const StyledDrop = styled(Drop)`
+  z-index: 1070; /* Keeping the z-index the same as Bootstrap tooltips */
+`;
+
 interface ITooltipProps {
   target?: React.RefObject<HTMLElement>;
   maxWidth?: string;
@@ -118,7 +122,7 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
 
   return (
     <>
-      <Drop
+      <StyledDrop
         plain
         target={target?.current ?? undefined}
         align={alignment}
@@ -136,8 +140,8 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
           tooltipColor={background as string}
           animation={{ type: 'fadeIn', duration: 300, delay: 50 }}
         />
-      </Drop>
-      <Drop
+      </StyledDrop>
+      <StyledDrop
         plain
         target={target?.current ?? undefined}
         align={alignment}
@@ -159,7 +163,7 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
         >
           {Tooltipmessage}
         </Box>
-      </Drop>
+      </StyledDrop>
     </>
   );
 };
