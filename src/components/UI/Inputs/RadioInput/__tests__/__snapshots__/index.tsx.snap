@@ -5,10 +5,10 @@ exports[`RadioInput renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-bAffKu ktZquw"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-jYCGPb klSynA"
       tabindex="0"
     >
       <div
@@ -49,10 +49,10 @@ exports[`RadioInput renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-bAffKu ktZquw"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-jYCGPb klSynA"
       tabindex="0"
     >
       <div
@@ -91,10 +91,10 @@ exports[`RadioInput renders an input with a form field label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-bAffKu ktZquw"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-jYCGPb klSynA"
       tabindex="0"
     >
       <label
@@ -141,10 +141,10 @@ exports[`RadioInput renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-bAffKu ktZquw"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-jYCGPb klSynA"
       tabindex="0"
     >
       <span
@@ -188,10 +188,10 @@ exports[`RadioInput renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-bAffKu ktZquw"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-jYCGPb klSynA"
       tabindex="0"
     >
       <div
@@ -235,10 +235,10 @@ exports[`RadioInput renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-bAffKu ktZquw"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-jYCGPb klSynA"
       tabindex="0"
     >
       <div

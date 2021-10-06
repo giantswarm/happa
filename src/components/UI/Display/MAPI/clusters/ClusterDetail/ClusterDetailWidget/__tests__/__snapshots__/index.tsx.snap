@@ -5,7 +5,7 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
       aria-label="Some widget"
@@ -39,7 +39,7 @@ exports[`ClusterDetailWidget renders a simple widget 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
       aria-label="Some widget"

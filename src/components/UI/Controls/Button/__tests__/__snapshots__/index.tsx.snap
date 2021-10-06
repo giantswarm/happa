@@ -5,10 +5,10 @@ exports[`Button renders a button with a loading animation 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 kUukqp"
@@ -22,7 +22,7 @@ exports[`Button renders a button with a loading animation 1`] = `
         aria-hidden="false"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       >
         <img
@@ -41,10 +41,10 @@ exports[`Button renders a danger button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 jPJTyY"
@@ -57,7 +57,7 @@ exports[`Button renders a danger button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
@@ -70,10 +70,10 @@ exports[`Button renders a disabled button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 kUukqp"
@@ -87,7 +87,7 @@ exports[`Button renders a disabled button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
@@ -100,10 +100,10 @@ exports[`Button renders a link button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 hCfXEO"
@@ -116,7 +116,7 @@ exports[`Button renders a link button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
@@ -129,10 +129,10 @@ exports[`Button renders a primary button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 kaJTBy"
@@ -145,7 +145,7 @@ exports[`Button renders a primary button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
@@ -158,10 +158,10 @@ exports[`Button renders a secondary button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 dUbAgv"
@@ -174,7 +174,7 @@ exports[`Button renders a secondary button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
@@ -187,10 +187,10 @@ exports[`Button renders a warning button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 FOcIP"
@@ -203,7 +203,7 @@ exports[`Button renders a warning button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
@@ -216,10 +216,10 @@ exports[`Button renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-dlfnuX eVTOTa"
+      class="StyledBox-sc-13pk1d4-0 fNnIMx sc-eCstlR dChwgE"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 dUbAgv"
@@ -232,7 +232,7 @@ exports[`Button renders without crashing 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="sc-gsTEea cZOJFW sc-hKgJUU gfuphE"
+        class="sc-hKgJUU fqcvpN sc-jSgvzq hvzmwF"
         role="progressbar"
       />
     </div>
