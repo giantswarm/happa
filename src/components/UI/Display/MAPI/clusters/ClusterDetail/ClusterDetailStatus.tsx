@@ -1,6 +1,6 @@
 import { Box, Text } from 'grommet';
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface IClusterDetailStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
@@ -41,17 +41,14 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   }
 
   return (
-    <OverlayTrigger
-      overlay={<Tooltip id='tooltip'>{tooltip}</Tooltip>}
-      placement='top'
-    >
+    <TooltipContainer content={<Tooltip>{tooltip}</Tooltip>}>
       <Box aria-label='Cluster status' {...props}>
         <Text color='status-warning'>
           <i className={iconClassName} role='presentation' aria-hidden='true' />{' '}
           {message}
         </Text>
       </Box>
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 };
 

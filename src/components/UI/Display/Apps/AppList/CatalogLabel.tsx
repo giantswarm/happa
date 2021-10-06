@@ -1,7 +1,6 @@
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const LOW_OPACITY = 0.4;
 const NORMAL_OPACITY = 1;
@@ -44,17 +43,16 @@ export interface ICatalogLabelProps {
 
 const ErrorIcon: React.FC<{ name: string }> = ({ name }) => {
   return (
-    <OverlayTrigger
-      overlay={
+    <TooltipContainer
+      content={
         <Tooltip id={`app-catalog-load-error-${name}`}>
           This app catalog could not be loaded. Apps from this catalog cannot be
           displayed.
         </Tooltip>
       }
-      placement='top'
     >
       <RedIcon className='fa fa-warning' />
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 };
 
@@ -76,16 +74,15 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
       </IconArea>
       <Text>
         {props.description && (
-          <OverlayTrigger
-            placement='top'
-            overlay={
+          <TooltipContainer
+            content={
               <Tooltip id={`app-catalog-description-${props.catalogName}`}>
                 {props.description}
               </Tooltip>
             }
           >
             {text}
-          </OverlayTrigger>
+          </TooltipContainer>
         )}
 
         {!props.description && text}

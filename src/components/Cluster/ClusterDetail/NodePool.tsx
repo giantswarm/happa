@@ -1,10 +1,9 @@
 import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
+import { Text } from 'grommet';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React, { Component } from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Providers } from 'shared/constants';
@@ -12,6 +11,7 @@ import { INodePool, PropertiesOf } from 'shared/types';
 import * as nodePoolActions from 'stores/nodepool/actions';
 import styled from 'styled-components';
 import { Code, Ellipsis } from 'styles/';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 import { IGSAPIError } from 'utils/errorUtils';
 
@@ -162,17 +162,18 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     const instanceTypes = status?.instance_types ?? null;
 
     return (
-      <OverlayTrigger
-        overlay={
+      <TooltipContainer
+        content={
           <Tooltip id={`${id}-instance-types`}>
-            Similar instances enabled.
-            <br />
-            {instanceTypes
-              ? `Currently used: ${instanceTypes.join(', ')}`
-              : 'Unable to display used instance types'}
+            <Text size='xsmall'>
+              Similar instances enabled.
+              <br />
+              {instanceTypes
+                ? `Currently used: ${instanceTypes.join(', ')}`
+                : 'Unable to display used instance types'}
+            </Text>
           </Tooltip>
         }
-        placement='top'
       >
         <InstanceTypesWrapperDiv>
           <MixedInstanceType>
@@ -182,7 +183,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             <small>+{instanceTypes.length - 1}</small>
           )}
         </InstanceTypesWrapperDiv>
-      </OverlayTrigger>
+      </TooltipContainer>
     );
   };
 

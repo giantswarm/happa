@@ -1,9 +1,8 @@
 import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const TooltipWrapper = styled.div`
   top: 0px;
@@ -77,12 +76,9 @@ const Copyable: React.FC<ICopyableProps> = ({ children, copyText }) => {
               title='Content copied to clipboard'
             />
           ) : (
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
-              placement='top'
-            >
+            <TooltipContainer content={<Tooltip>Copy to clipboard.</Tooltip>}>
               <i aria-hidden='true' className='fa fa-content-copy' />
-            </OverlayTrigger>
+            </TooltipContainer>
           )}
         </TooltipWrapper>
       </Wrapper>

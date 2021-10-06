@@ -1,9 +1,8 @@
 import { Keyboard } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import CachingColorHash from 'utils/cachingColorHash';
 
 const colorHash = new CachingColorHash();
@@ -74,14 +73,11 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
 
   const labelComponent = (
     <Label clusterID={clusterID}>
-      <OverlayTrigger
-        overlay={
-          <Tooltip id='idtooltip'>{`Cluster ${variant}: ${clusterID}`}</Tooltip>
-        }
-        placement='top'
+      <TooltipContainer
+        content={<Tooltip>{`Cluster ${variant}: ${clusterID}`}</Tooltip>}
       >
         <span aria-label={clusterID}>{label}</span>
-      </OverlayTrigger>
+      </TooltipContainer>
     </Label>
   );
 
@@ -104,11 +100,8 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
               className='fa fa-done'
             />
           ) : (
-            <OverlayTrigger
-              overlay={
-                <Tooltip id='tooltip'>{`Copy ${variant} to clipboard`}</Tooltip>
-              }
-              placement='top'
+            <TooltipContainer
+              content={<Tooltip>{`Copy ${variant} to clipboard`}</Tooltip>}
             >
               <i
                 key='cluster-id-copy-button'
@@ -117,7 +110,7 @@ const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
                 role='button'
                 tabIndex={0}
               />
-            </OverlayTrigger>
+            </TooltipContainer>
           ))}
       </Wrapper>
     </Keyboard>

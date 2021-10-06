@@ -2,10 +2,10 @@ import { Box, Text } from 'grommet';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useMemo } from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { isClusterUpgradable } from '../utils';
 
@@ -84,17 +84,14 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   }
 
   return (
-    <OverlayTrigger
-      overlay={<Tooltip id='tooltip'>{tooltip}</Tooltip>}
-      placement='top'
-    >
+    <TooltipContainer content={<Tooltip>{tooltip}</Tooltip>}>
       <Box>
         <Text color={color}>
           <i className={iconClassName} role='presentation' aria-hidden='true' />{' '}
           {message}
         </Text>
       </Box>
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 };
 

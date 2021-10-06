@@ -2,8 +2,6 @@ import ClusterStatus from 'Home/ClusterStatus';
 import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal/ReleaseDetailsModal';
 import React, { FC, RefObject, useRef } from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
@@ -11,6 +9,7 @@ import { Code, Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface IRegionAndVersionsProps {
   clusterId: string;
@@ -60,12 +59,9 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
   return (
     <>
       {region && (
-        <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>Region</Tooltip>}
-          placement='top'
-        >
+        <TooltipContainer content={<Tooltip>Region</Tooltip>}>
           <Code>{region}</Code>
-        </OverlayTrigger>
+        </TooltipContainer>
       )}
       <div>
         <span>

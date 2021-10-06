@@ -6,11 +6,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import StyledDeleteButton from 'UI/Display/Cluster/ClusterLabels/DeleteLabelButton';
-import EditValueTooltip from 'UI/Display/Cluster/ClusterLabels/EditValueTooltip';
+import { Tooltip } from 'UI/Display/Tooltip';
 
 const DeleteLabelButtonWrapper = styled.div`
   display: inline-block;
@@ -76,14 +75,12 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
       >
         &times;
       </StyledDeleteButton>
-      <Overlay
-        target={divElement.current as HTMLDivElement}
-        placement='top'
-        show={isOpen}
-        shouldUpdatePosition={true}
-        animation={false}
-      >
-        <EditValueTooltip id='delete-label'>
+      {isOpen && (
+        <Tooltip
+          id='delete-label'
+          target={divElement}
+          background='background-weak'
+        >
           <Keyboard onEsc={close}>
             <DeleteLabelTooltipInner>
               <span>Are you sure you want to delete this label?</span>
@@ -106,8 +103,8 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
               </Button>
             </DeleteLabelTooltipInner>
           </Keyboard>
-        </EditValueTooltip>
-      </Overlay>
+        </Tooltip>
+      )}
     </DeleteLabelButtonWrapper>
   );
 };
