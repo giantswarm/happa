@@ -9,6 +9,7 @@
 
 import 'webpack-dev-server';
 
+import path from 'path';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
@@ -32,8 +33,8 @@ const config: webpack.Configuration = merge(common, {
   },
   // @ts-expect-error
   devServer: {
-    contentBase: './src',
-    hotOnly: true,
+    static: path.join(__dirname, 'src'),
+    hot: true,
     port: 7000,
     host: 'localhost',
     historyApiFallback: {
