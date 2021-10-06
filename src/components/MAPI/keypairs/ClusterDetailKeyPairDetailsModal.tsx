@@ -1,11 +1,11 @@
 import { Box, Text } from 'grommet';
 import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
-import GenericModal from 'Modals/GenericModal';
 import React from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import NotAvailable from 'UI/Display/NotAvailable';
+import Modal from 'UI/Layout/Modal';
 
 const Label = styled(Text).attrs({
   color: 'text-weak',
@@ -42,7 +42,7 @@ const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsMod
     const title = `Key pair details`;
 
     return (
-      <GenericModal
+      <Modal
         footer={<Button onClick={onClose}>Close</Button>}
         onClose={onClose}
         title={title}
@@ -107,7 +107,7 @@ const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsMod
             {description ? <Text>{description}</Text> : <NotAvailable />}
           </Box>
         </Box>
-      </GenericModal>
+      </Modal>
     );
   };
 

@@ -2,7 +2,6 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { compare } from 'lib/semver';
-import GenericModal from 'Modals/GenericModal';
 import React from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -13,6 +12,7 @@ import * as clusterActions from 'stores/cluster/actions';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import Modal from 'UI/Layout/Modal';
 
 class ScaleClusterModal extends React.Component {
   // eslint-disable-next-line no-magic-numbers
@@ -398,7 +398,7 @@ class ScaleClusterModal extends React.Component {
     }
 
     return (
-      <GenericModal
+      <Modal
         onClose={this.close}
         visible={this.state.modalVisible}
         title={
@@ -410,7 +410,7 @@ class ScaleClusterModal extends React.Component {
         footer={footer}
       >
         {body}
-      </GenericModal>
+      </Modal>
     );
   }
 }

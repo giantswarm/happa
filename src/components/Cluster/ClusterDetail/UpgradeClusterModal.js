@@ -3,7 +3,6 @@ import { Box } from 'grommet';
 import { clusterUpgradeChecklistURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import GenericModal from 'Modals/GenericModal';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,6 +12,7 @@ import Button from 'UI/Controls/Button';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import Modal from 'UI/Layout/Modal';
 import { groupBy, sortBy } from 'underscore';
 
 const Pages = {
@@ -290,14 +290,14 @@ class UpgradeClusterModal extends React.Component {
     const currPage = this.currentPage();
 
     return (
-      <GenericModal
+      <Modal
         onClose={this.close}
         visible={this.state.modalVisible}
         title={currPage?.title}
         footer={currPage?.footer}
       >
         {currPage?.body}
-      </GenericModal>
+      </Modal>
     );
   }
 }

@@ -13,8 +13,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
-
-import GenericModal from './GenericModal';
+import Modal from 'UI/Layout/Modal';
 
 const emailRegexp =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -139,7 +138,7 @@ class Modals extends React.Component {
     switch (this.props.modal.template) {
       case 'organizationDelete':
         return (
-          <GenericModal
+          <Modal
             onClose={this.close}
             visible={this.props.modal.visible}
             title='Delete an Organization'
@@ -175,12 +174,12 @@ class Modals extends React.Component {
               <code>{this.props.modal.templateValues.orgId}</code>?
             </p>
             <small>There is no undo</small>
-          </GenericModal>
+          </Modal>
         );
 
       case 'organizationCreate':
         return (
-          <GenericModal
+          <Modal
             onClose={this.close}
             visible={this.props.modal.visible}
             title='Create an Organization'
@@ -228,12 +227,12 @@ class Modals extends React.Component {
                 error={this.state.organizationNameValidationError}
               />
             </form>
-          </GenericModal>
+          </Modal>
         );
 
       case 'organizationAddMember':
         return (
-          <GenericModal
+          <Modal
             onClose={this.close}
             visible={this.props.modal.visible}
             title='Add a Member'
@@ -275,12 +274,12 @@ class Modals extends React.Component {
                 onChange={this.emailFieldChanged}
               />
             </form>
-          </GenericModal>
+          </Modal>
         );
 
       case 'organizationRemoveMember':
         return (
-          <GenericModal
+          <Modal
             onClose={this.close}
             visible={this.props.modal.visible}
             title='Remove Member'
@@ -310,7 +309,7 @@ class Modals extends React.Component {
               {this.props.modal.templateValues.email} from{' '}
               {this.props.modal.templateValues.orgId}
             </p>
-          </GenericModal>
+          </Modal>
         );
 
       case 'nodePoolDelete': {
@@ -352,7 +351,7 @@ class Modals extends React.Component {
         );
 
         return (
-          <GenericModal
+          <Modal
             onClose={this.close}
             visible={this.props.modal.visible}
             title='Delete node pool'
@@ -382,7 +381,7 @@ class Modals extends React.Component {
             }
           >
             {bodyText}
-          </GenericModal>
+          </Modal>
         );
       }
 

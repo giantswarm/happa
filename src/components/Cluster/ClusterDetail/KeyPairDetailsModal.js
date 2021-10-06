@@ -5,8 +5,8 @@ import React from 'react';
 import Copyable from 'shared/Copyable';
 import NotAvailable from 'UI/Display/NotAvailable';
 import DetailItem from 'UI/Layout/DetailList';
+import Modal from 'UI/Layout/Modal';
 
-import GenericModal from '../../Modals/GenericModal';
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 
 class KeyPairDetailsModal extends React.Component {
@@ -48,7 +48,7 @@ class KeyPairDetailsModal extends React.Component {
     }
 
     return (
-      <GenericModal
+      <Modal
         onClose={this.props.onClose}
         title='Key Pair Details'
         visible={this.props.visible}
@@ -96,7 +96,7 @@ class KeyPairDetailsModal extends React.Component {
             this.props.keyPair.description
           )}
         </DetailItem>
-      </GenericModal>
+      </Modal>
     );
   }
 }

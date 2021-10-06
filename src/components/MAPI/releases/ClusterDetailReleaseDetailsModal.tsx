@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
-import GenericModal from 'Modals/GenericModal';
 import ReleaseDetailsModalSection from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalSection';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
@@ -8,6 +7,7 @@ import Button from 'UI/Controls/Button';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import ClusterDetailReleaseDetailsUpgradeOptions from 'UI/Display/MAPI/releases/ClusterDetailReleaseDetailsUpgradeOptions';
 import * as ui from 'UI/Display/MAPI/releases/types';
+import Modal from 'UI/Layout/Modal';
 
 const StyledReleaseDetailsModalSection = styled(ReleaseDetailsModalSection)`
   margin-top: 0;
@@ -51,7 +51,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
     }, [components]);
 
     return (
-      <GenericModal
+      <Modal
         footer={<Button onClick={onClose}>Close</Button>}
         onClose={onClose}
         title={title}
@@ -98,7 +98,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
             </StyledReleaseDetailsModalSection>
           )}
         </Box>
-      </GenericModal>
+      </Modal>
     );
   };
 
