@@ -8,10 +8,10 @@ exports[`FileInput renders a disabled input 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
@@ -38,10 +38,10 @@ exports[`FileInput renders a simple input 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
@@ -67,7 +67,7 @@ exports[`FileInput renders an input with a help message 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <span
         class="StyledText-sc-1sadyjn-0 cTuErc"
@@ -75,7 +75,7 @@ exports[`FileInput renders an input with a help message 1`] = `
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
@@ -101,7 +101,7 @@ exports[`FileInput renders an input with a label 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -110,7 +110,7 @@ exports[`FileInput renders an input with a label 1`] = `
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
@@ -137,10 +137,10 @@ exports[`FileInput renders an input with a validation error 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
@@ -171,10 +171,10 @@ exports[`FileInput renders an input with an info message 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
