@@ -87,7 +87,7 @@
     "dotenv": "8.6.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "grommet": "2.18.0",
-    "history": "4.10.1",
+    "history": "5.0.1",
     "immer": "9.0.6",
     "js-base64": "3.7.2",
     "js-yaml": "4.1.0",
