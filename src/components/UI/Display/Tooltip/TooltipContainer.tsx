@@ -3,12 +3,11 @@ import React, { useRef, useState } from 'react';
 interface ITooltipContainerProps {
   content: React.ReactNode;
   target?: React.RefObject<HTMLElement>;
-  show?: boolean;
 }
 
 const TooltipContainer: React.FC<
   React.PropsWithChildren<ITooltipContainerProps>
-> = ({ content, target, show, children }) => {
+> = ({ content, target, children }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const createdTargetRef = useRef<HTMLElement>(null);
 
@@ -21,7 +20,7 @@ const TooltipContainer: React.FC<
 
   return (
     <>
-      {(tooltipVisible || show) &&
+      {tooltipVisible &&
         React.cloneElement(content as React.ReactElement, {
           target: tooltipTargetRef,
         })}
