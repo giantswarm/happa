@@ -8,11 +8,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <div
@@ -56,11 +52,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <div
@@ -100,11 +92,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <label
@@ -162,11 +150,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <label
@@ -211,11 +195,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <span
@@ -260,11 +240,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <div
@@ -309,11 +285,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
     class="sc-fubCzh hsvamz"
   >
     <div
-<<<<<<< HEAD
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS sc-iwyWTf fwYddT"
-=======
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-fKFxtB dEhskw"
->>>>>>> master
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX sc-iwyWTf fwYddT"
       tabindex="0"
     >
       <div
