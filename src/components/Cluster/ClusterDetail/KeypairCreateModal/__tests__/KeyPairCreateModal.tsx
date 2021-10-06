@@ -29,6 +29,7 @@ const getComponent = (
       actions: mockActions,
       cluster: v4AWSClusterResponse,
       provider: Providers.AWS,
+      animate: false,
     },
     props
   );

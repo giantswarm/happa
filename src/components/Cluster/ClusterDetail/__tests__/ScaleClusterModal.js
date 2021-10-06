@@ -20,6 +20,7 @@ const getComponentWithProps = (props = {}) => {
     {
       cluster: v4AWSClusterResponse,
       provider: Providers.AWS,
+      animate: false,
     },
     props
   );
@@ -57,19 +58,19 @@ describe('ScaleClusterModal', () => {
     renderWithProps();
   });
 
-  it('has the cluster id in the title', () => {
-    const { getByText } = renderWithProps();
+  it('has the cluster id in the title', async () => {
+    const { findByText } = renderWithProps();
 
-    const titleTextElement = getByText(/edit scaling settings for/i);
+    const titleTextElement = await findByText(/edit scaling settings for/i);
     const idElement = titleTextElement.children[0];
 
     expect(idElement).toHaveTextContent(v4AWSClusterResponse.id);
   });
 
   it('has a cancel button in the footer, that closes the modal', async () => {
-    const { getByText, queryByText } = renderWithProps();
+    const { findByText, queryByText } = renderWithProps();
 
-    const cancelButton = getByText('Cancel');
+    const cancelButton = await findByText('Cancel');
 
     fireEvent.click(cancelButton);
 
@@ -80,17 +81,17 @@ describe('ScaleClusterModal', () => {
     });
   });
 
-  it('renders different descriptions if autoscaling is supported or not', () => {
+  it('renders different descriptions if autoscaling is supported or not', async () => {
     /**
      * Autoscaling on
      * @provider AWS
      */
-    const { getByText, rerender } = renderWithProps({
+    const { findByText, rerender } = renderWithProps({
       provider: Providers.AWS,
       cluster: v4AWSClusterResponse,
     });
 
-    let description = getByText(
+    let description = await findByText(
       /set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage./i
     );
 
@@ -107,7 +108,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    description = getByText(
+    description = await findByText(
       /how many workers would you like your cluster to have?/i
     );
 
@@ -124,24 +125,25 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    description = getByText(
+    description = await findByText(
       /how many workers would you like your cluster to have?/i
     );
 
     expect(description).toBeInTheDocument();
   });
 
-  it('renders a single node counter or multiple, based on the current autoscaling state', () => {
+  it('renders a single node counter or multiple, based on the current autoscaling state', async () => {
     /**
      * Autoscaling on, shows 2 node counters
      * @provider AWS
      */
-    const { getByLabelText, rerender, getByDisplayValue } = renderWithProps({
-      provider: Providers.AWS,
-      cluster: v4AWSClusterResponse,
-    });
+    const { getByLabelText, findByLabelText, rerender, findByDisplayValue } =
+      renderWithProps({
+        provider: Providers.AWS,
+        cluster: v4AWSClusterResponse,
+      });
 
-    const minInput = getByLabelText(/minimum/i);
+    const minInput = await findByLabelText(/minimum/i);
     const maxInput = getByLabelText(/maximum/i);
 
     expect(minInput).toBeInTheDocument();
@@ -158,7 +160,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    let valueInput = getByDisplayValue(
+    let valueInput = await findByDisplayValue(
       new RegExp(v4AzureClusterResponse.scaling.min)
     );
 
@@ -175,7 +177,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    valueInput = getByDisplayValue(
+    valueInput = await findByDisplayValue(
       new RegExp(v4KVMClusterResponse.scaling.min)
     );
 
@@ -187,14 +189,14 @@ describe('ScaleClusterModal', () => {
      * Autoscaling on
      * @provider AWS
      */
-    const { getByLabelText, rerender, getByDisplayValue, findByText } =
+    const { findByLabelText, rerender, findByDisplayValue, findByText } =
       renderWithProps({
         provider: Providers.AWS,
         cluster: v4AWSClusterResponse,
         workerNodesRunning: 5,
       });
 
-    const maxInput = getByLabelText(/maximum/i);
+    const maxInput = await findByLabelText(/maximum/i);
 
     fireEvent.change(maxInput, {
       target: {
@@ -226,7 +228,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    let valueInput = getByDisplayValue(
+    let valueInput = await findByDisplayValue(
       new RegExp(v4AzureClusterResponse.scaling.max)
     );
 
@@ -260,7 +262,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    valueInput = getByDisplayValue(
+    valueInput = await findByDisplayValue(
       new RegExp(v4KVMClusterResponse.scaling.max)
     );
 
@@ -282,13 +284,13 @@ describe('ScaleClusterModal', () => {
      * Autoscaling on
      * @provider AWS
      */
-    const { getByLabelText, rerender, getByDisplayValue, findByText } =
+    const { findByLabelText, rerender, findByDisplayValue, findByText } =
       renderWithProps({
         provider: Providers.AWS,
         cluster: v4AWSClusterResponse,
       });
 
-    const minInput = getByLabelText(/minimum/i);
+    const minInput = await findByLabelText(/minimum/i);
 
     fireEvent.change(minInput, {
       target: {
@@ -319,7 +321,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    let valueInput = getByDisplayValue(
+    let valueInput = await findByDisplayValue(
       new RegExp(v4AzureClusterResponse.scaling.min)
     );
 
@@ -352,7 +354,7 @@ describe('ScaleClusterModal', () => {
       })
     );
 
-    valueInput = getByDisplayValue(
+    valueInput = await findByDisplayValue(
       new RegExp(v4KVMClusterResponse.scaling.min)
     );
 
@@ -380,7 +382,7 @@ describe('ScaleClusterModal', () => {
       cluster: v4AWSClusterResponse,
     });
 
-    const minInput = screen.getByLabelText(/minimum/i);
+    const minInput = await screen.findByLabelText(/minimum/i);
     const maxInput = screen.getByLabelText(/maximum/i);
 
     fireEvent.change(maxInput, {
@@ -443,7 +445,7 @@ describe('ScaleClusterModal', () => {
       workerNodesDesired: 3,
     });
 
-    let valueInput = screen.getByDisplayValue(
+    let valueInput = await screen.findByDisplayValue(
       new RegExp(v4AzureClusterResponse.scaling.min)
     );
 
@@ -483,7 +485,7 @@ describe('ScaleClusterModal', () => {
       workerNodesDesired: 3,
     });
 
-    valueInput = screen.getByDisplayValue(
+    valueInput = await screen.findByDisplayValue(
       new RegExp(v4KVMClusterResponse.scaling.min)
     );
 
@@ -525,12 +527,12 @@ describe('ScaleClusterModal', () => {
       .intercept(`/v4/clusters/${v4AWSClusterResponse.id}/`, 'PATCH')
       .reply(StatusCodes.Ok, scaleResponse);
 
-    const { getByLabelText, findByText, queryByText } = renderWithProps({
+    const { findByLabelText, findByText, queryByText } = renderWithProps({
       workerNodesDesired: 4,
       workerNodesRunning: 3,
     });
 
-    const maxInput = getByLabelText(/maximum/i);
+    const maxInput = await findByLabelText(/maximum/i);
 
     fireEvent.change(maxInput, {
       target: {
@@ -571,12 +573,12 @@ describe('ScaleClusterModal', () => {
       .intercept(`/v4/clusters/${v4AWSClusterResponse.id}/`, 'PATCH')
       .reply(StatusCodes.InternalServerError, scaleResponse);
 
-    const { getByLabelText, findByText, findAllByText } = renderWithProps({
+    const { findByLabelText, findByText, findAllByText } = renderWithProps({
       workerNodesDesired: 4,
       workerNodesRunning: 3,
     });
 
-    const maxInput = getByLabelText(/maximum/i);
+    const maxInput = await findByLabelText(/maximum/i);
 
     fireEvent.change(maxInput, {
       target: {

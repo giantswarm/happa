@@ -295,6 +295,7 @@ class UpgradeClusterModal extends React.Component {
         visible={this.state.modalVisible}
         title={currPage?.title}
         footer={currPage?.footer}
+        animate={this.props.animate}
       >
         {currPage?.body}
       </Modal>

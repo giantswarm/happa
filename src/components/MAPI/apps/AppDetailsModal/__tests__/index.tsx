@@ -21,7 +21,7 @@ function getComponent(
 
   const Component = (p: typeof props) => (
     <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
-      <AppDetailsModal {...p} />
+      <AppDetailsModal {...p} animate={false} visible={true} />
     </SWRConfig>
   );
 

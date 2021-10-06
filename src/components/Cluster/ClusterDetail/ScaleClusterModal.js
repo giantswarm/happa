@@ -401,6 +401,7 @@ class ScaleClusterModal extends React.Component {
       <Modal
         onClose={this.close}
         visible={this.state.modalVisible}
+        animate={this.props.animate}
         title={
           <>
             Edit scaling settings for{' '}

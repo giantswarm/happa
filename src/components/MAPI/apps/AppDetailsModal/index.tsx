@@ -39,7 +39,8 @@ enum ModalPanes {
   EditChartVersion,
 }
 
-interface IAppDetailsModalProps {
+interface IAppDetailsModalProps
+  extends Omit<React.ComponentPropsWithoutRef<typeof Modal>, 'title'> {
   appName: string;
   clusterName: string;
   onClose: () => void;
@@ -51,6 +52,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   clusterName,
   onClose,
   visible,
+  ...props
 }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -467,6 +469,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           title={appName}
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <AppDetailsModalInitialPane
             app={app}
@@ -513,6 +516,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <EditChartVersionPane
             currentVersion={app.spec.version}
@@ -541,6 +545,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete user level config values for{' '}
@@ -571,6 +576,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete user level secret values for{' '}
@@ -600,6 +606,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete {appName}&nbsp; on{' '}

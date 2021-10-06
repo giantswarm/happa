@@ -36,6 +36,7 @@ interface IKeyPairCreateModalProps {
   actions: Record<string, (...args: unknown[]) => Promise<never>>;
   cluster: Cluster;
   provider: PropertiesOf<typeof Providers>;
+  animate?: boolean;
 }
 
 const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
@@ -194,6 +195,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         onClose={close}
         visible={modal.visible}
         title={title}
+        animate={props.animate}
         footer={
           <Box
             direction='row'
