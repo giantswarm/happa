@@ -5,7 +5,7 @@ exports[`Select renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -77,7 +77,7 @@ exports[`Select renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -142,7 +142,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -207,7 +207,7 @@ exports[`Select renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -283,7 +283,7 @@ exports[`Select renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -354,7 +354,7 @@ exports[`Select renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -430,7 +430,7 @@ exports[`Select renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-fubCzh hsvamz"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
