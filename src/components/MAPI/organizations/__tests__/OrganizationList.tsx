@@ -9,7 +9,7 @@ import { StatusCodes } from 'shared/constants';
 import { IMainState } from 'stores/main/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IState } from 'stores/state';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
@@ -121,7 +121,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <OrganizationIndex {...p} />
     </SWRConfig>
   );
@@ -142,10 +142,6 @@ jest.unmock(
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
 describe('OrganizationIndex', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });

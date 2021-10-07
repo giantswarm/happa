@@ -5,7 +5,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { generateRandomString } from 'testUtils/mockHttpCalls';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
@@ -99,7 +99,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailWidgetApps {...p} />
     </SWRConfig>
   );
@@ -123,10 +123,6 @@ jest.mock('react-router', () => ({
 }));
 
 describe('ClusterDetailWidgetApps', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('displays loading animations if the cluster is still loading', () => {
     render(getComponent({}));
 

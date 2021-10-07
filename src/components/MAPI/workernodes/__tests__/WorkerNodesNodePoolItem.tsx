@@ -6,7 +6,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
 import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
@@ -22,7 +22,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <WorkerNodesNodePoolItem {...p} />
     </SWRConfig>
   );
@@ -44,10 +44,6 @@ describe('WorkerNodesNodePoolItem', () => {
 
   afterAll(() => {
     jest.useRealTimers();
-  });
-
-  afterEach(() => {
-    cache.clear();
   });
 
   it('renders without crashing', () => {
