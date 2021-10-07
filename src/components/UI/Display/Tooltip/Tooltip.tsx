@@ -1,6 +1,8 @@
-import { Box, Drop, Text } from 'grommet';
+import { Box, BoxExtendedProps, Drop, DropExtendedProps, Text } from 'grommet';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+
+const Z_INDEX = 1070; /* Keeping the z-index the same as Bootstrap tooltips */
 
 type XPosition = 'left' | 'right';
 type YPosition = 'top' | 'bottom';
@@ -57,25 +59,20 @@ const TooltipCaret = styled(Box)<{
   }
 `;
 
-const StyledDrop = styled(Drop)`
-  z-index: 1070; /* Keeping the z-index the same as Bootstrap tooltips */
-`;
-
-interface ITooltipProps {
-  target?: React.RefObject<HTMLElement>;
-  maxWidth?: string;
-  background?: string;
+interface ITooltipProps extends DropExtendedProps {
+  background?: BoxExtendedProps['background'];
+  width?: BoxExtendedProps['width'];
   placement?: Position;
   id?: string;
 }
 
 const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
   placement,
-  target,
   id,
-  maxWidth,
+  width,
   background,
   children,
+  ...props
 }) => {
   const marginPosition = useMemo(() => {
     switch (placement) {
@@ -121,14 +118,21 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
       children
     );
 
+  const patchedWidth = Object.assign(
+    {},
+    { width: 'fit-content', max: '350px' },
+    width
+  );
+
   return (
     <>
-      <StyledDrop
+      <Drop
         plain
-        target={target?.current ?? undefined}
         align={alignment}
         trapFocus={false}
         stretch='align'
+        style={{ zIndex: Z_INDEX }}
+        {...props}
       >
         <TooltipCaret
           role='presentation'
@@ -141,18 +145,19 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
           tooltipColor={background as string}
           animation={{ type: 'fadeIn', duration: 300, delay: 50 }}
         />
-      </StyledDrop>
-      <StyledDrop
+      </Drop>
+      <Drop
         plain
-        target={target?.current ?? undefined}
         align={alignment}
         trapFocus={false}
         stretch={false}
+        style={{ zIndex: Z_INDEX }}
+        {...props}
       >
         <Box
           role='tooltip'
           id={id}
-          width={{ width: 'fit-message', max: maxWidth }}
+          width={patchedWidth}
           margin={{ [marginPosition]: 'small' }}
           pad={{ vertical: 'xxsmall', horizontal: 'small' }}
           round='xxsmall'
@@ -164,7 +169,7 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
         >
           {TooltipMessage}
         </Box>
-      </StyledDrop>
+      </Drop>
     </>
   );
 };
@@ -172,7 +177,6 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
 Tooltip.defaultProps = {
   placement: 'top',
   id: 'tooltip',
-  maxWidth: '350px',
   background: 'tooltip-background',
 };
 
