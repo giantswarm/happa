@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 
 interface ITooltipContainerProps {
-  content: React.ReactNode;
+  content: React.ReactElement;
   target?: React.RefObject<HTMLElement>;
+  children?: React.ReactElement;
 }
 
 const TooltipContainer: React.FC<
@@ -21,11 +22,11 @@ const TooltipContainer: React.FC<
   return (
     <>
       {tooltipVisible &&
-        React.cloneElement(content as React.ReactElement, {
+        React.cloneElement(content, {
           target: tooltipTargetRef,
         })}
       {children &&
-        React.cloneElement(children as React.ReactElement, {
+        React.cloneElement(children, {
           ref: tooltipTargetRef,
           'aria-describedby': tooltipVisible ? 'tooltip' : undefined,
           onMouseOver: handleMouseOver,
