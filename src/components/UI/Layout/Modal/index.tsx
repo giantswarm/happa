@@ -49,19 +49,20 @@ const Modal = React.forwardRef<HTMLDivElement, IModalProps>(
           round='small'
           {...contentProps}
         >
-          <Box
-            as='header'
-            pad='medium'
-            justify='between'
-            align='center'
-            direction='row'
-          >
-            <Heading level={1} margin='none'>
-              {title}
-            </Heading>
-            <CloseButton onClick={onClose} aria-label='Close' link={true}>
-              <CloseButtonText size='xxlarge'>&times;</CloseButtonText>
-            </CloseButton>
+          <Box as='header' justify='between' align='start' direction='row'>
+            <Box pad='medium'>
+              <Heading level={1} margin='none'>
+                {title}
+              </Heading>
+            </Box>
+            <Box
+              pad={{ top: 'small', right: 'small' }}
+              margin={{ top: 'xsmall', right: 'xsmall' }}
+            >
+              <CloseButton onClick={onClose} aria-label='Close' link={true}>
+                <CloseButtonText size='xxlarge'>&times;</CloseButtonText>
+              </CloseButton>
+            </Box>
           </Box>
 
           <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
