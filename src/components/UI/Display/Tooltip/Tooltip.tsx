@@ -107,7 +107,7 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
     };
   })(placement);
 
-  const Tooltipmessage =
+  const TooltipMessage =
     typeof children === 'string' ? (
       <Text
         size='xsmall'
@@ -162,7 +162,7 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
           background={background}
           animation={{ type: 'fadeIn', duration: 300, delay: 50 }}
         >
-          {Tooltipmessage}
+          {TooltipMessage}
         </Box>
       </StyledDrop>
     </>
