@@ -10,7 +10,7 @@ import * as releasesUtils from 'MAPI/releases/utils';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -26,7 +26,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailWidgetRelease {...p} />
     </SWRConfig>
   );
@@ -42,10 +42,6 @@ function getComponent(
 }
 
 describe('ClusterDetailWidgetRelease', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });

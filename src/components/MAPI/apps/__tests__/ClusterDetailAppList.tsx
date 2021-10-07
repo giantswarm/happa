@@ -4,7 +4,7 @@ import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import {
@@ -99,7 +99,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailAppList {...p} />
     </SWRConfig>
   );
@@ -122,10 +122,6 @@ describe('ClusterDetailAppList', () => {
   });
 
   it('displays loading animations', () => {
-    afterEach(() => {
-      cache.clear();
-    });
-
     const { rerender } = render(
       getComponent({
         apps: [],

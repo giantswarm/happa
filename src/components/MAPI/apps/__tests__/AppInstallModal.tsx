@@ -8,7 +8,7 @@ import { StatusCodes } from 'shared/constants';
 import { IMainState } from 'stores/main/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IState } from 'stores/state';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
@@ -44,7 +44,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <AppInstallModal {...p} />
     </SWRConfig>
   );
@@ -60,10 +60,6 @@ function getComponent(
 }
 
 describe('AppInstallModal', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
