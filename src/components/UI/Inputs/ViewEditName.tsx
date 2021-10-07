@@ -219,7 +219,10 @@ class ViewAndEditName extends Component<
               contentProps={{ width: 'medium' }}
             />
             {hasError && (
-              <Tooltip placement='bottom' target={this.inputRef}>
+              <Tooltip
+                placement='bottom'
+                target={this.inputRef.current ?? undefined}
+              >
                 {errorMessage}
               </Tooltip>
             )}

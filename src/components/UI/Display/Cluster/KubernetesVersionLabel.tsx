@@ -79,7 +79,9 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
         )}
       </span>
       {isTooltipVisible && (
-        <Tooltip target={labelRef}>{eolStatus.message}</Tooltip>
+        <Tooltip target={labelRef.current ?? undefined}>
+          {eolStatus.message}
+        </Tooltip>
       )}
     </>
   );

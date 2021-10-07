@@ -23,7 +23,7 @@ const TooltipContainer: React.FC<
     <>
       {tooltipVisible &&
         React.cloneElement(content, {
-          target: tooltipTargetRef,
+          target: tooltipTargetRef.current ?? undefined,
         })}
       {children &&
         React.cloneElement(children, {

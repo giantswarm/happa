@@ -175,7 +175,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
       {currentlyEditing && (
         <Tooltip
           id='add-label-tooltip'
-          target={divElement}
+          target={divElement.current ?? undefined}
           background='background-weak'
         >
           <Keyboard onEsc={keyHandler} onEnter={keyHandler}>

@@ -44,7 +44,10 @@ const Truncated: React.FC<ITruncatedProps> = ({
       ) : (
         <TooltipContainer
           content={
-            <Tooltip placement={tooltipPlacement ?? 'top'} maxWidth='none'>
+            <Tooltip
+              placement={tooltipPlacement ?? 'top'}
+              width={{ max: 'none' }}
+            >
               {String(children)}
             </Tooltip>
           }

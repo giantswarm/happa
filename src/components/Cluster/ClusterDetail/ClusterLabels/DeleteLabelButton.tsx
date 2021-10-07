@@ -78,7 +78,7 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
       {isOpen && (
         <Tooltip
           id='delete-label'
-          target={divElement}
+          target={divElement.current ?? undefined}
           background='background-weak'
         >
           <Keyboard onEsc={close}>

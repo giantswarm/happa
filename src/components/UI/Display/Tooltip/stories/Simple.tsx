@@ -22,7 +22,7 @@ export const Simple: Story<React.ComponentPropsWithoutRef<typeof Tooltip>> = (
       >
         Set the tooltip placement
       </Box>
-      <Tooltip target={targetRef} {...args} />
+      <Tooltip target={targetRef.current ?? undefined} {...args} />
     </>
   );
 };
