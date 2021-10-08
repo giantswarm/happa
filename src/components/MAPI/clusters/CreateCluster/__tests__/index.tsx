@@ -6,7 +6,7 @@ import * as MAPIUtils from 'MAPI/utils';
 import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
@@ -23,7 +23,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterCreate {...p} />
     </SWRConfig>
   );
@@ -73,10 +73,6 @@ describe('ClusterCreate', () => {
 
   afterAll(() => {
     window.config.info = originalInfo;
-  });
-
-  afterEach(() => {
-    cache.clear();
   });
 
   it('renders without crashing', () => {

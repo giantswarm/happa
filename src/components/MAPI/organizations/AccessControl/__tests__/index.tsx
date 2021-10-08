@@ -6,7 +6,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
 import * as rbacv1Mocks from 'testUtils/mockHttpCalls/rbacv1';
@@ -18,7 +18,7 @@ function getComponent(
   props: React.ComponentPropsWithoutRef<typeof AccessControl>
 ) {
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <AccessControl {...p} />
     </SWRConfig>
   );
@@ -53,10 +53,6 @@ describe('AccessControl', () => {
         '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/'
       )
       .reply(StatusCodes.Ok, rbacv1Mocks.roleBindingList);
-  });
-
-  afterEach(() => {
-    cache.clear();
   });
 
   it('fetches, formats and renders a cluster role', async () => {

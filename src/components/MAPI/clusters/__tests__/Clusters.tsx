@@ -9,7 +9,7 @@ import { StatusCodes } from 'shared/constants';
 import { IMainState } from 'stores/main/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IState } from 'stores/state';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import preloginState from 'testUtils/preloginState';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -43,7 +43,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <Clusters {...p} />
     </SWRConfig>
   );
@@ -59,10 +59,6 @@ function getComponent(
 }
 
 describe('Clusters', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
