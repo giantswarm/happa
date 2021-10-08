@@ -1,12 +1,10 @@
 import { Box, Keyboard } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import React, { Component, FormEvent, GetDerivedStateFromProps } from 'react';
-import Overlay from 'react-bootstrap/lib/Overlay';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import TextInput from './TextInput';
 
@@ -220,15 +218,14 @@ class ViewAndEditName extends Component<
               }}
               contentProps={{ width: 'medium' }}
             />
-            <Overlay
-              target={this.inputRef.current as HTMLInputElement}
-              placement='bottom'
-              show={hasError}
-              shouldUpdatePosition={true}
-              animation={false}
-            >
-              <Tooltip id='name-form-error'>{errorMessage}</Tooltip>
-            </Overlay>
+            {hasError && (
+              <Tooltip
+                placement='bottom'
+                target={this.inputRef.current ?? undefined}
+              >
+                {errorMessage}
+              </Tooltip>
+            )}
             <Box direction='row' gap='small'>
               <Button
                 type='submit'
@@ -257,18 +254,15 @@ class ViewAndEditName extends Component<
           {readOnly && this.state.value}
 
           {!readOnly && (
-            <OverlayTrigger
-              overlay={
-                <Tooltip id='tooltip'>
-                  Click to edit {typeLabel} {variant}
-                </Tooltip>
+            <TooltipContainer
+              content={
+                <Tooltip>{`Click to edit ${typeLabel} ${variant}`}</Tooltip>
               }
-              placement='top'
             >
               <NameLabel onClick={this.activateEditMode}>
                 {this.state.value}
               </NameLabel>
-            </OverlayTrigger>
+            </TooltipContainer>
           )}
         </span>
       </Keyboard>

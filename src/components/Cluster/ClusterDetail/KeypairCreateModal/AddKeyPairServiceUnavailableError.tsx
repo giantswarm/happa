@@ -1,7 +1,6 @@
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const PKILabel = styled.span`
   text-decoration: underline;
@@ -16,12 +15,11 @@ const AddKeyPairServiceUnavailableError: React.FC<IAddKeyPairServiceUnavailableE
       <>
         <i className='fa fa-warning' />
         <span>Could not create the key pair. The </span>
-        <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>Public Key Infrastructure</Tooltip>}
-          placement='top'
+        <TooltipContainer
+          content={<Tooltip>Public Key Infrastructure</Tooltip>}
         >
           <PKILabel>PKI</PKILabel>
-        </OverlayTrigger>{' '}
+        </TooltipContainer>{' '}
         <span>backend is not yet available. Please try again in a moment.</span>
       </>
     );

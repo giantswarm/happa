@@ -5,7 +5,7 @@ exports[`TextArea renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -31,7 +31,7 @@ exports[`TextArea renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -57,7 +57,7 @@ exports[`TextArea renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -87,7 +87,7 @@ exports[`TextArea renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -119,7 +119,7 @@ exports[`TextArea renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
@@ -149,7 +149,7 @@ exports[`TextArea renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="sc-iBPTik bYpoIC"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"

@@ -4,12 +4,11 @@ import { spinner } from 'images';
 import { compare } from 'lib/semver';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import DetailItem from 'UI/Layout/DetailList';
 import Truncated from 'UI/Util/Truncated';
 import { memoize } from 'underscore';
@@ -72,20 +71,19 @@ const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
 
           {typeof props.appCatalogEntries === 'undefined' &&
             !props.appCatalogEntriesIsLoading && (
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id='tooltip'>
+              <TooltipContainer
+                content={
+                  <Tooltip>
                     Unable to fetch versions for this app. Could not find the
                     corresponding catalog. Changing versions is disabled.
                   </Tooltip>
                 }
-                placement='top'
               >
                 <span>
                   <Truncated as='span'>{props.app.spec.version}</Truncated>{' '}
                   <i className='fa fa-warning' />
                 </span>
-              </OverlayTrigger>
+              </TooltipContainer>
             )}
 
           {props.appCatalogEntries && (

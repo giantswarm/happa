@@ -1,11 +1,10 @@
 import { Box, Keyboard, Text } from 'grommet';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
-import Overlay from 'react-bootstrap/lib/Overlay';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-import EditValueTooltip from 'UI/Display/Cluster/ClusterLabels/EditValueTooltip';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
+import { Tooltip } from 'UI/Display/Tooltip';
 import ValueLabel from 'UI/Display/ValueLabel';
 import TextInput from 'UI/Inputs/TextInput';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
@@ -173,14 +172,12 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           />
         </Keyboard>
       )}
-      <Overlay
-        target={divElement.current as HTMLDivElement}
-        placement='top'
-        show={currentlyEditing}
-        shouldUpdatePosition={false}
-        animation={false}
-      >
-        <EditValueTooltip id='add-label-tooltip'>
+      {currentlyEditing && (
+        <Tooltip
+          id='add-label-tooltip'
+          target={divElement.current ?? undefined}
+          background='background-weak'
+        >
           <Keyboard onEsc={keyHandler} onEnter={keyHandler}>
             <FormWrapper>
               <KeyInputWrapper>
@@ -234,12 +231,14 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
             </FormWrapper>
           </Keyboard>
           <ValidationError isValid={keyIsValid && valueIsValid}>
-            {[keyValidationError, valueValidationError]
-              .filter((err) => err)
-              .join(',')}
+            <Text size='small'>
+              {[keyValidationError, valueValidationError]
+                .filter((err) => err)
+                .join(',')}
+            </Text>
           </ValidationError>
-        </EditValueTooltip>
-      </Overlay>
+        </Tooltip>
+      )}
     </EditLabelTooltipWrapper>
   );
 };

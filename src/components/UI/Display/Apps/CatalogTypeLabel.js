@@ -1,7 +1,6 @@
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const Wrapper = styled.div`
   font-size: 14px;
@@ -65,14 +64,11 @@ const CatalogTypeLabel = (props) => {
 
   return (
     <Wrapper className={className}>
-      <OverlayTrigger
-        overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
-        placement='top'
-      >
+      <TooltipContainer content={<Tooltip>{message}</Tooltip>}>
         <>
           <span>{catalogType}</span> <i className={`fa fa-${icon}`} />
         </>
-      </OverlayTrigger>
+      </TooltipContainer>
     </Wrapper>
   );
 };

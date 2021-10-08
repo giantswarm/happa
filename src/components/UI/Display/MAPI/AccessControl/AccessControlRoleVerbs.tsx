@@ -1,6 +1,6 @@
 import { Box, Text } from 'grommet';
 import React, { useMemo } from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import {
   AccessControlRoleItemVerb,
@@ -131,13 +131,12 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
   );
 
   return (
-    <OverlayTrigger
-      overlay={
-        <Tooltip id='role-verbs'>
-          <Text size='xsmall'>{formattedVerbs}</Text>
+    <TooltipContainer
+      content={
+        <Tooltip placement='left' id='role-verbs'>
+          {formattedVerbs}
         </Tooltip>
       }
-      placement='left'
     >
       <Box
         gap='xxsmall'
@@ -165,7 +164,7 @@ const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
           </Box>
         ))}
       </Box>
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 };
 

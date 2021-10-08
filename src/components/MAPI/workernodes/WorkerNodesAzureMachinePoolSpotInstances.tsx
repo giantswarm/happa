@@ -6,8 +6,8 @@ import {
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface IWorkerNodesAzureMachinePoolSpotInstancesProps {
   providerNodePool?: ProviderNodePool;
@@ -43,24 +43,29 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
         replaceEmptyValue={false}
       >
         {(value) => (
-          <OverlayTrigger
-            overlay={
+          <TooltipContainer
+            content={
               <Tooltip
                 id={`${
                   (value as capzexpv1alpha3.IAzureMachinePool).metadata.name
                 }-spot-instances-tooltip`}
               >
-                <Box width='small'>
-                  <Text size='xsmall'>{headline}</Text>
+                <Box width='180px'>
+                  <Text size='xsmall' textAlign='center'>
+                    {headline}
+                  </Text>
                   {maxPriceText && (
-                    <Text size='xsmall' margin={{ top: 'xsmall' }}>
+                    <Text
+                      size='xsmall'
+                      margin={{ top: 'xsmall' }}
+                      textAlign='center'
+                    >
                       {maxPriceText}
                     </Text>
                   )}
                 </Box>
               </Tooltip>
             }
-            placement='top'
           >
             <Text>
               <i
@@ -69,7 +74,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
                 aria-label={headline}
               />
             </Text>
-          </OverlayTrigger>
+          </TooltipContainer>
         )}
       </OptionalValue>
     );

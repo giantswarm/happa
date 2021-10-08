@@ -1,11 +1,11 @@
 import { Anchor, Box, Drop, Keyboard, Text } from 'grommet';
 import React, { useEffect, useRef, useState } from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import { IAccessControlSubjectSetRenderer } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const StyledLoadingIndicator = styled(LoadingIndicator)`
   margin-left: 5px;
@@ -123,13 +123,9 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
         )}
 
         {isEditable && !isLoading && deleteTooltipMessage && (
-          <OverlayTrigger
-            overlay={
-              <Tooltip id='delete'>
-                <Text size='xsmall'>{deleteTooltipMessage}</Text>
-              </Tooltip>
-            }
-            placement='top'
+          <TooltipContainer
+            target={deleteButtonRef}
+            content={<Tooltip id='delete'>{deleteTooltipMessage}</Tooltip>}
           >
             <StyledAnchor
               ref={deleteButtonRef}
@@ -141,7 +137,7 @@ const AccessControlSubjectSetItem: React.FC<IAccessControlSubjectSetItemProps> =
             >
               <i className='fa fa-close' role='presentation' title='Delete' />
             </StyledAnchor>
-          </OverlayTrigger>
+          </TooltipContainer>
         )}
 
         {isEditable && !isLoading && !deleteTooltipMessage && (

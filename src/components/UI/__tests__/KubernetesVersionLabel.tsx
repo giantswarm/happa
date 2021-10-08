@@ -1,8 +1,4 @@
-import {
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 
@@ -47,7 +43,7 @@ describe('KubernetesVersionLabel', () => {
     expect(screen.queryByTitle(/kubernetes version/i)).not.toBeInTheDocument();
   });
 
-  it('can show if a version reached its EOL or not', async () => {
+  it('can show if a version reached its EOL or not', () => {
     const { rerender } = renderWithTheme(KubernetesVersionLabel, {
       version: '1.0.0',
       eolDate: '1960-02-10',
@@ -61,9 +57,7 @@ describe('KubernetesVersionLabel', () => {
     fireEvent.mouseEnter(versionLabel);
     expect(screen.getByText(tooltipMessageRegexp)).toBeInTheDocument();
     fireEvent.mouseLeave(versionLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.getByText(tooltipMessageRegexp)
-    );
+    expect(screen.queryByText(tooltipMessageRegexp)).not.toBeInTheDocument();
 
     rerender(
       getComponentWithTheme(KubernetesVersionLabel, {
@@ -78,9 +72,7 @@ describe('KubernetesVersionLabel', () => {
     fireEvent.mouseEnter(versionLabel);
     expect(screen.getByText(tooltipMessageRegexp)).toBeInTheDocument();
     fireEvent.mouseLeave(versionLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.getByText(tooltipMessageRegexp)
-    );
+    expect(screen.queryByText(tooltipMessageRegexp)).not.toBeInTheDocument();
 
     rerender(
       getComponentWithTheme(KubernetesVersionLabel, {
@@ -97,8 +89,6 @@ describe('KubernetesVersionLabel', () => {
     fireEvent.mouseEnter(versionLabel);
     expect(screen.getByText(tooltipMessageRegexp)).toBeInTheDocument();
     fireEvent.mouseLeave(versionLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.getByText(tooltipMessageRegexp)
-    );
+    expect(screen.queryByText(tooltipMessageRegexp)).not.toBeInTheDocument();
   });
 });

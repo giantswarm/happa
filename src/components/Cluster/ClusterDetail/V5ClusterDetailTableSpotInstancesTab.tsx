@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { NodePoolsColumnHeader } from './V5ClusterDetailTable';
 
@@ -15,12 +15,11 @@ const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotIn
     const tabLabel = getTabLabel(provider);
 
     return (
-      <OverlayTrigger
-        overlay={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
-        placement='top'
+      <TooltipContainer
+        content={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
       >
         <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
-      </OverlayTrigger>
+      </TooltipContainer>
     );
   };
 

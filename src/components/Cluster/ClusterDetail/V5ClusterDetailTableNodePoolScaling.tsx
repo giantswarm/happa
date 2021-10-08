@@ -1,9 +1,8 @@
 import { NodePoolsColumnHeader } from 'Cluster/ClusterDetail/V5ClusterDetailTable';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import V5ClusterDetailTableSpotInstancesTab from './V5ClusterDetailTableSpotInstancesTab';
 
@@ -23,47 +22,43 @@ const V5ClusterDetailTableNodePoolScaling: React.FC<IV5ClusterDetailTableNodePoo
       <>
         {supportsAutoscaling && (
           <>
-            <OverlayTrigger
-              overlay={
+            <TooltipContainer
+              content={
                 <Tooltip id='min-tooltip'>
                   {Constants.MIN_NODES_EXPLANATION}
                 </Tooltip>
               }
-              placement='top'
             >
               <NodePoolsColumnHeader>Min</NodePoolsColumnHeader>
-            </OverlayTrigger>
-            <OverlayTrigger
-              overlay={
+            </TooltipContainer>
+            <TooltipContainer
+              content={
                 <Tooltip id='max-tooltip'>
                   {Constants.MAX_NODES_EXPLANATION}
                 </Tooltip>
               }
-              placement='top'
             >
               <NodePoolsColumnHeader>Max</NodePoolsColumnHeader>
-            </OverlayTrigger>
+            </TooltipContainer>
           </>
         )}
 
-        <OverlayTrigger
-          overlay={
+        <TooltipContainer
+          content={
             <Tooltip id='desired-tooltip'>{desiredCountTooltipMessage}</Tooltip>
           }
-          placement='top'
         >
           <NodePoolsColumnHeader>Desired</NodePoolsColumnHeader>
-        </OverlayTrigger>
-        <OverlayTrigger
-          overlay={
+        </TooltipContainer>
+        <TooltipContainer
+          content={
             <Tooltip id='current-tooltip'>
               {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
             </Tooltip>
           }
-          placement='top'
         >
           <NodePoolsColumnHeader>Current</NodePoolsColumnHeader>
-        </OverlayTrigger>
+        </TooltipContainer>
 
         {supportsSpotInstances && (
           <V5ClusterDetailTableSpotInstancesTab provider={provider} />
