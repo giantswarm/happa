@@ -2,6 +2,7 @@ import { Story } from '@storybook/react';
 import { Box } from 'grommet';
 import React, { useRef } from 'react';
 
+import { TooltipContainer } from '..';
 import Tooltip from '../Tooltip';
 
 export const Simple: Story<React.ComponentPropsWithoutRef<typeof Tooltip>> = (
@@ -10,20 +11,21 @@ export const Simple: Story<React.ComponentPropsWithoutRef<typeof Tooltip>> = (
   const targetRef = useRef(null);
 
   return (
-    <>
+    <TooltipContainer
+      content={<Tooltip target={targetRef.current ?? undefined} {...args} />}
+    >
       <Box
         ref={targetRef}
-        width='medium'
+        width='small'
         border={{ color: '#ffffff', size: 'xsmall' }}
         pad='small'
         margin='auto'
         round='xsmall'
         align='center'
       >
-        Set the tooltip placement
+        Hover for more info
       </Box>
-      <Tooltip target={targetRef.current ?? undefined} {...args} />
-    </>
+    </TooltipContainer>
   );
 };
 
@@ -47,3 +49,42 @@ Simple.argTypes = {
   },
   content: { table: { disable: true } },
 };
+
+// import { Story } from '@storybook/react';
+// import { Box } from 'grommet';
+// import React from 'react';
+
+// import Tooltip from '../Tooltip';
+// import TooltipContainer from '../TooltipContainer';
+
+// export const Simple: Story<
+//   React.ComponentPropsWithoutRef<typeof TooltipContainer>
+// > = (args) => {
+//   return (
+//     <TooltipContainer
+//       {...args}
+//       content={<Tooltip>Additional information</Tooltip>}
+//     />
+//   );
+// };
+
+// Simple.args = {
+//   content: <Tooltip>Additional information</Tooltip>,
+//   children: (
+//     <Box
+//       width='medium'
+//       border={{ color: '#ffffff', size: 'xsmall' }}
+//       pad='small'
+//       margin='auto'
+//       round='xsmall'
+//       align='center'
+//     >
+//       Hover over me for additional information
+//     </Box>
+//   ),
+// };
+
+// Simple.argTypes = {
+//   children: { table: { disable: true } },
+//   content: { table: { disable: true } },
+// };

@@ -120,7 +120,10 @@ const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
 
   const patchedWidth = Object.assign(
     {},
-    { width: 'fit-content', max: '350px' },
+    {
+      width: 'fit-content',
+      max: placement === 'top' || placement === 'bottom' ? '350px' : '100px',
+    },
     width
   );
 
