@@ -1,7 +1,7 @@
 import { Box } from 'grommet';
-import GenericModal from 'Modals/GenericModal';
 import React from 'react';
 import Button from 'UI/Controls/Button';
+import Modal from 'UI/Layout/Modal';
 
 const UsersModal = ({
   show,
@@ -17,7 +17,7 @@ const UsersModal = ({
   ...props
 }) => {
   return (
-    <GenericModal
+    <Modal
       className='create-key-pair-modal'
       onClose={onClose}
       visible={show}
@@ -46,7 +46,7 @@ const UsersModal = ({
       {...props}
     >
       {children}
-    </GenericModal>
+    </Modal>
   );
 };
 

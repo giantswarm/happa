@@ -2,7 +2,6 @@ import ClusterPicker from 'Apps/AppDetail/InstallAppModal/ClusterPicker';
 import InstallAppForm from 'Apps/AppDetail/InstallAppModal/InstallAppForm';
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
@@ -26,6 +25,7 @@ import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Modal from 'UI/Layout/Modal';
 
 import { createApp, filterClusters, formatYAMLError } from './utils';
 
@@ -341,7 +341,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         switch (pages[page]) {
           case CLUSTER_PICKER_PAGE:
             return (
-              <GenericModal
+              <Modal
                 footer={
                   <Button link={true} onClick={onClose}>
                     Cancel
@@ -358,12 +358,12 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   query={query}
                   selectedClusterID={clusterName}
                 />
-              </GenericModal>
+              </Modal>
             );
 
           case APP_FORM_PAGE:
             return (
-              <GenericModal
+              <Modal
                 footer={
                   <Box direction='row' gap='small' justify='end'>
                     <Button
@@ -407,7 +407,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   secretsYAMLError={secretsYAMLError}
                   valuesYAMLError={valuesYAMLError}
                 />
-              </GenericModal>
+              </Modal>
             );
         }
 

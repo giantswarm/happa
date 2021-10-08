@@ -1,10 +1,10 @@
 import { relativeDate } from 'lib/helpers';
-import GenericModal from 'Modals/GenericModal';
 import React from 'react';
 import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import Modal from 'UI/Layout/Modal';
 import { groupBy, sortBy } from 'underscore';
 
 import ReleaseDetailsModalSection from './ReleaseDetailsModalSection';
@@ -63,7 +63,7 @@ class ReleaseDetailsModal extends React.Component {
     const changedComponents = Object.keys(changes).sort();
 
     return (
-      <GenericModal
+      <Modal
         className='release-selector-modal'
         onClose={this.close}
         visible={this.state.modalVisible}
@@ -117,7 +117,7 @@ class ReleaseDetailsModal extends React.Component {
             closeModal={this.close}
           />
         </div>
-      </GenericModal>
+      </Modal>
     );
   }
 }

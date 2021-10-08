@@ -1,7 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteConfirmFooter';
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
-import GenericModal from 'components/Modals/GenericModal';
 import yaml from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -20,6 +19,7 @@ import React, {
 import useSWR, { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Modal from 'UI/Layout/Modal';
 
 import {
   deleteAppWithName,
@@ -39,7 +39,8 @@ enum ModalPanes {
   EditChartVersion,
 }
 
-interface IAppDetailsModalProps {
+interface IAppDetailsModalProps
+  extends Omit<React.ComponentPropsWithoutRef<typeof Modal>, 'title'> {
   appName: string;
   clusterName: string;
   onClose: () => void;
@@ -51,6 +52,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   clusterName,
   onClose,
   visible,
+  ...props
 }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -462,11 +464,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   switch (pane) {
     case ModalPanes.Initial:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details'
           title={appName}
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <AppDetailsModalInitialPane
             app={app}
@@ -484,12 +487,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             showDeleteAppSecretPane={showPane(ModalPanes.DeleteAppSecret)}
             showEditChartVersionPane={showEditChartVersionPane}
           />
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.EditChartVersion:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Edit chart version'
           title={
             <>
@@ -513,18 +516,19 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <EditChartVersionPane
             currentVersion={app.spec.version}
             desiredVersion={desiredVersion}
             errorMessage={appUpdateError}
           />
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteAppConfig:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app config'
           title={
             <>
@@ -541,6 +545,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete user level config values for{' '}
@@ -549,12 +554,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteAppSecret:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app secret'
           title={
             <>
@@ -571,6 +576,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete user level secret values for{' '}
@@ -579,12 +585,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteApp:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app'
           title={
             <>
@@ -600,6 +606,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete {appName}&nbsp; on{' '}
@@ -608,7 +615,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     default:

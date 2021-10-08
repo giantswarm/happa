@@ -14,7 +14,11 @@ function renderAndOpen(
   }
 
   const elementRef = React.createRef<IComponent>();
-  const defaultProps = Object.assign({}, { ref: elementRef }, props);
+  const defaultProps = Object.assign(
+    {},
+    { ref: elementRef, animate: false },
+    props
+  );
   const element = renderWithStore(UpgradeClusterModal, defaultProps, state);
 
   // Make modal visible.
@@ -33,7 +37,7 @@ describe('UpgradeClusterModal', () => {
     });
   });
 
-  it('renders the inspect changes page by default', () => {
+  it('renders the inspect changes page by default', async () => {
     const cluster = Object.assign({}, v5ClusterResponse, {
       capabilities: {},
     });
@@ -41,10 +45,10 @@ describe('UpgradeClusterModal', () => {
       cluster,
     });
 
-    expect(screen.getByText(/Please read our/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Please read our/i)).toBeInTheDocument();
   });
 
-  it(`can't change the upgrade release version if the user is not an admin`, () => {
+  it(`can't change the upgrade release version if the user is not an admin`, async () => {
     const cluster = Object.assign({}, v5ClusterResponse, {
       capabilities: {},
     });
@@ -62,6 +66,6 @@ describe('UpgradeClusterModal', () => {
       targetRelease,
     });
 
-    fireEvent.click(screen.getByText(/inspect changes/i));
+    fireEvent.click(await screen.findByText(/inspect changes/i));
   });
 });

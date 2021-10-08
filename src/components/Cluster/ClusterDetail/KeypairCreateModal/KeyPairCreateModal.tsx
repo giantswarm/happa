@@ -15,16 +15,16 @@ import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { makeKubeConfigTextFile } from 'lib/helpers';
 import useDebounce from 'lib/hooks/useDebounce';
-import GenericModal from 'Modals/GenericModal';
 import React, { useEffect, useState } from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import Modal from 'UI/Layout/Modal';
 import { IGSAPIError } from 'utils/errorUtils';
 
-const StyledModal = styled(GenericModal)`
+const StyledModal = styled(Modal)`
   .modal-dialog {
     width: 95%;
     max-width: 700px;
@@ -36,6 +36,7 @@ interface IKeyPairCreateModalProps {
   actions: Record<string, (...args: unknown[]) => Promise<never>>;
   cluster: Cluster;
   provider: PropertiesOf<typeof Providers>;
+  animate?: boolean;
 }
 
 const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
@@ -194,6 +195,7 @@ const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
         onClose={close}
         visible={modal.visible}
         title={title}
+        animate={props.animate}
         footer={
           <Box
             direction='row'

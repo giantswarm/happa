@@ -1,7 +1,6 @@
 import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import GenericModal from 'Modals/GenericModal';
 import React from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -14,6 +13,7 @@ import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import Modal from 'UI/Layout/Modal';
 import { extractMessageFromError } from 'utils/errorUtils';
 
 interface IDispatchProps extends DispatchProp {
@@ -369,7 +369,7 @@ class ScaleNodePoolModal extends React.Component<
     }
 
     return (
-      <GenericModal
+      <Modal
         onClose={this.close}
         visible={this.state.modalVisible}
         title={
@@ -381,7 +381,7 @@ class ScaleNodePoolModal extends React.Component<
         footer={footer}
       >
         {body}
-      </GenericModal>
+      </Modal>
     );
   }
 }
