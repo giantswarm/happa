@@ -12,7 +12,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
@@ -106,7 +106,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailAppListWidgetVersionInspector {...p} />
     </SWRConfig>
   );
@@ -122,10 +122,6 @@ function getComponent(
 }
 
 describe('ClusterDetailAppListWidgetVersionInspector', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });

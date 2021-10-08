@@ -10,14 +10,14 @@ import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { mapOAuth2UserToUser } from 'stores/main/utils';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
 import preloginState from 'testUtils/preloginState';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 function getComponent(props: React.ComponentPropsWithoutRef<typeof Layout>) {
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <Layout {...p} />
     </SWRConfig>
   );
@@ -101,10 +101,6 @@ describe('Layout', () => {
         StatusCodes.Ok,
         authorizationv1Mocks.selfSubjectAccessReviewCanListOrgs
       );
-  });
-
-  afterEach(() => {
-    cache.clear();
   });
 
   it('blocks users that do not have the required permissions to use the app', async () => {

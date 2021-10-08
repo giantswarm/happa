@@ -5,7 +5,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -19,7 +19,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailWorkerNodes {...p} />
     </SWRConfig>
   );
@@ -45,10 +45,6 @@ jest.mock('react-router', () => ({
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 
 describe('ClusterDetailWorkerNodes', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });

@@ -6,7 +6,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
 import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
@@ -21,7 +21,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailWidgetWorkerNodes {...p} />
     </SWRConfig>
   );
@@ -37,10 +37,6 @@ function getComponent(
 }
 
 describe('ClusterDetailWidgetWorkerNodes', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
