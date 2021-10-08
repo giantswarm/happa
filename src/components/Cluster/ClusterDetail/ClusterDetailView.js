@@ -109,7 +109,11 @@ class ClusterDetailView extends React.Component {
       : 'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.';
 
     new FlashMessage(
-      `Cluster <code>${clusterID}</code> not found`,
+      (
+        <>
+          Cluster <code>{clusterID}</code> not found
+        </>
+      ),
       messageType.ERROR,
       messageTTL.FOREVER,
       text

@@ -2,6 +2,7 @@ import add from 'date-fns/fp/add';
 import toDate from 'date-fns-tz/toDate';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import React from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { Providers, StatusCodes } from 'shared/constants';
 import { IKeyPair, PropertiesOf } from 'shared/types';
@@ -277,7 +278,12 @@ export function clusterLoadDetails(
         error: String(error),
       });
 
-      let errorMessage = `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`;
+      let errorMessage: React.ReactNode = (
+        <>
+          Something went wrong while trying to load cluster details for{' '}
+          <code>{clusterId}</code>.
+        </>
+      );
       if (
         (error as IGSAPIError).response?.message ||
         (error as Error).message
@@ -429,13 +435,22 @@ export function clusterDelete(
       });
 
       new FlashMessage(
-        `Cluster <code>${cluster.id}</code> will be deleted`,
+        (
+          <>
+            Cluster <code>{cluster.id}</code> will be deleted
+          </>
+        ),
         messageType.INFO,
         messageTTL.SHORT
       );
     } catch (err) {
       new FlashMessage(
-        `An error occurred when trying to delete cluster <code>${cluster.id}</code>.`,
+        (
+          <>
+            An error occurred when trying to delete cluster{' '}
+            <code>{cluster.id}</code>.
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'

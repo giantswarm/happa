@@ -246,7 +246,12 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
       dispatch({ type: 'endCreation' });
 
       new FlashMessage(
-        `Cluster <code>${state.cluster.metadata.name}</code> created successfully`,
+        (
+          <>
+            Cluster <code>{state.cluster.metadata.name}</code> created
+            successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -266,7 +271,11 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not create cluster <code>${state.cluster.metadata.name}</code>`,
+        (
+          <>
+            Could not create cluster <code>{state.cluster.metadata.name}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage

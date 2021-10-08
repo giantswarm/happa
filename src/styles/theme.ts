@@ -154,6 +154,10 @@ const theme = deepMerge(generate(16), {
         dark: '#798691',
         light: '#798691',
       },
+      'text-xxweak': {
+        dark: '#313131',
+        light: '#313131',
+      },
       border: {
         dark: '#3a5f7b',
         light: '#3a5f7b',

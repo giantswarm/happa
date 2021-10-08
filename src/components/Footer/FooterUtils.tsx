@@ -1,6 +1,7 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { VersionImpl } from 'lib/Version';
+import React from 'react';
 import { Constants } from 'shared/constants';
 
 export function formatVersion(version: string): string {
@@ -92,7 +93,13 @@ export function showUpdateToast(callback?: () => void) {
     `There's a new version of the web interface available.`,
     messageType.INFO,
     messageTTL.FOREVER,
-    `Please press the <code>${Constants.METADATA_UPDATE_LABEL}</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
+    (
+      <>
+        Please press the <code>{Constants.METADATA_UPDATE_LABEL}</code> button
+        in the footer of the page to use the latest version (it only takes a
+        couple of seconds).
+      </>
+    ),
     callback
   );
 }

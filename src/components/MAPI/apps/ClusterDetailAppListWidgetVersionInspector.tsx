@@ -216,7 +216,13 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
         const updateAction = isUpgrading ? 'upgraded' : 'downgraded';
 
         new FlashMessage(
-          `<code>${app.metadata.name}</code> on cluster <code>${app.metadata.namespace}</code> will be ${updateAction} to version <code>${truncatedVersion}</code>.`,
+          (
+            <>
+              <code>{app.metadata.name}</code> on cluster{' '}
+              <code>{app.metadata.namespace}</code> will be {updateAction} to
+              version <code>{truncatedVersion}</code>.
+            </>
+          ),
           messageType.SUCCESS,
           messageTTL.LONG
         );
@@ -226,7 +232,13 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
         const errorMessage = extractErrorMessage(err);
 
         new FlashMessage(
-          `Something went wrong while trying to update <code>${app.metadata.name}</code> on <code>${app.metadata.namespace}</code>.`,
+          (
+            <>
+              Something went wrong while trying to update{' '}
+              <code>{app.metadata.name}</code> on{' '}
+              <code>{app.metadata.namespace}</code>.
+            </>
+          ),
           messageType.ERROR,
           messageTTL.LONG,
           errorMessage

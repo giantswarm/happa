@@ -1,12 +1,18 @@
+import { screen } from '@testing-library/react';
 import {
   FlashMessage,
   forceRemoveAll,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
+import React from 'react';
+import { renderWithTheme } from 'testUtils/renderUtils';
 
 describe('FlashMessage', () => {
-  it(`won't display messages that are already in the queue by default`, () => {
+  it(`won't display messages that are already in the queue by default`, async () => {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    renderWithTheme(() => <></>, {});
+
     for (let i = 0; i < 6; i++) {
       new FlashMessage(
         `Yo! Something went wrong.`,
@@ -15,15 +21,12 @@ describe('FlashMessage', () => {
       );
     }
 
-    let notificationWrapper = document.querySelector(
-      '.noty_layout'
-    ) as HTMLElement;
-    expect(notificationWrapper.children).toHaveLength(1);
-    expect(FlashMessage.queue).toHaveLength(1);
+    expect(
+      await screen.findAllByText('Yo! Something went wrong.')
+    ).toHaveLength(1);
 
     forceRemoveAll();
 
-    expect(FlashMessage.queue).toHaveLength(0);
     new FlashMessage(
       `Yo! Something went wrong.`,
       messageType.ERROR,
@@ -46,8 +49,8 @@ describe('FlashMessage', () => {
       messageTTL.MEDIUM
     );
 
-    notificationWrapper = document.querySelector('.noty_layout') as HTMLElement;
-    expect(notificationWrapper.children).toHaveLength(2);
-    expect(FlashMessage.queue).toHaveLength(2);
+    expect(
+      await screen.findAllByText('Yo! Something went wrong.')
+    ).toHaveLength(2);
   });
 });

@@ -118,7 +118,12 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
 
       const errorMessage = extractErrorMessage(orgError);
       new FlashMessage(
-        `There was a problem loading cluster <code>${clusterId}</code> for <code>${orgId}</code>`,
+        (
+          <>
+            There was a problem loading cluster <code>{clusterId}</code> for{' '}
+            <code>{orgId}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -153,7 +158,11 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
       )
     ) {
       new FlashMessage(
-        `Cluster <code>${clusterId}</code> not found`,
+        (
+          <>
+            Cluster <code>{clusterId}</code> not found
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Cluster name is correct and that you have access to it.'
@@ -163,7 +172,11 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
     } else if (clusterError) {
       const errorMessage = extractErrorMessage(clusterError);
       new FlashMessage(
-        `There was a problem loading cluster <code>${clusterId}</code>`,
+        (
+          <>
+            There was a problem loading cluster <code>{clusterId}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -178,7 +191,12 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
   useEffect(() => {
     if (typeof cluster?.metadata.deletionTimestamp !== 'undefined') {
       new FlashMessage(
-        `Cluster <code>${cluster.metadata.name}</code> is currently being deleted`,
+        (
+          <>
+            Cluster <code>{cluster.metadata.name}</code> is currently being
+            deleted
+          </>
+        ),
         messageType.INFO,
         messageTTL.MEDIUM
       );

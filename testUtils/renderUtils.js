@@ -11,6 +11,8 @@ import configureStore from 'stores/configureStore';
 import { LoggedInUserTypes } from 'stores/main/types';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
+import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
+import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
 
 export const initialStorage = {
   user: JSON.stringify({
@@ -49,8 +51,11 @@ export function renderRouteWithStore(
   localStorage.replaceWith(storage);
 
   const store = configureStore(state, history, auth);
+  const flashMessagesController = FlashMessagesController.getInstance();
 
-  const app = render(<App {...{ store, theme, history, auth }} />);
+  const app = render(
+    <App {...{ store, theme, history, auth, flashMessagesController }} />
+  );
 
   return app;
 }
@@ -71,9 +76,12 @@ export function renderWithTheme(component, props, options) {
  * @param {Object} props Props to pass to the component
  */
 export function getComponentWithTheme(Component, props) {
+  const flashMessagesController = FlashMessagesController.getInstance();
+
   return (
     <ThemeProvider theme={theme}>
       <Component {...props} />
+      <FlashMessagesProvider controller={flashMessagesController} />
     </ThemeProvider>
   );
 }
@@ -109,6 +117,7 @@ export function getComponentWithStore(
   localStorage.replaceWith(storage);
 
   const store = configureStore(state, history, auth);
+  const flashMessagesController = FlashMessagesController.getInstance();
 
   const app = (
     <Provider store={store}>
@@ -117,6 +126,7 @@ export function getComponentWithStore(
           <MapiAuthProvider auth={auth}>
             <Component {...props} />
           </MapiAuthProvider>
+          <FlashMessagesProvider controller={flashMessagesController} />
         </ConnectedRouter>
       </ThemeProvider>
     </Provider>
