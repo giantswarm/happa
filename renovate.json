@@ -78,9 +78,7 @@
     {
       "matchPackageNames": [
         "@types/bootstrap",
-        "bootstrap",
-        "@types/react-bootstrap",
-        "react-bootstrap"
+        "bootstrap"
       ],
       "enabled": false
     }
