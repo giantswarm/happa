@@ -14,7 +14,7 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { AppConstants, Constants } from 'shared/constants';
-import { mutate } from 'swr';
+import { Cache, mutate } from 'swr';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;
@@ -760,7 +760,7 @@ export function getLatestVersionForApp(
 }
 
 export function isAppCatalogVisibleToUsers(
-  appCatalog: applicationv1alpha1.IAppCatalog
+  appCatalog: applicationv1alpha1.ICatalog
 ) {
   return (
     applicationv1alpha1.isAppCatalogPublic(appCatalog) &&
@@ -774,7 +774,7 @@ export function isAppCatalogVisibleToUsers(
  * @param catalog
  */
 export function computeAppCatalogUITitle(
-  catalog: applicationv1alpha1.IAppCatalog
+  catalog: applicationv1alpha1.ICatalog
 ): string {
   const prefix = 'Giant Swarm ';
 
@@ -900,4 +900,67 @@ export async function getUpgradableApps(
  */
 export function getUpgradableAppsKey(apps: applicationv1alpha1.IApp[]) {
   return apps.reduce((key, app) => key + app.spec.name, '');
+}
+
+/**
+ * Get the namespace for an app's catalog
+ * @param clientFactory
+ * @param auth
+ * @param cache
+ * @param app
+ */
+export async function getCatalogNamespace(
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cache: Cache,
+  app: applicationv1alpha1.IApp
+): Promise<string | null> {
+  if (!app) return null;
+
+  if (!app.spec.catalogNamespace) {
+    const catalogs: applicationv1alpha1.ICatalog[] = [];
+
+    // Look in 'default' and 'giantswarm' namespaces to find the catalog by name
+    const namespaces = ['default', 'giantswarm'];
+
+    for (const namespace of namespaces) {
+      const getCatalogListOptions = { namespace };
+      const catalogListKey = applicationv1alpha1.getCatalogListKey(
+        getCatalogListOptions
+      );
+      const cachedCatalogList: applicationv1alpha1.ICatalogList | undefined =
+        cache.get(catalogListKey);
+
+      if (cachedCatalogList) {
+        catalogs.push(...cachedCatalogList.items);
+      } else {
+        const catalogList = await applicationv1alpha1.getCatalogList(
+          clientFactory(),
+          auth,
+          getCatalogListOptions
+        );
+
+        cache.set(catalogListKey, catalogList);
+        catalogs.push(...catalogList.items);
+      }
+    }
+
+    const catalogOfApp = catalogs.find(
+      (catalog) => catalog.metadata.name === app.spec.catalog
+    );
+
+    if (!catalogOfApp) return null;
+
+    return catalogOfApp.metadata.namespace!;
+  }
+
+  return app.spec.catalogNamespace;
+}
+
+/**
+ * Key used for getting the namespace for an app's catalog
+ * @param app
+ */
+export function getCatalogNamespaceKey(app: applicationv1alpha1.IApp): string {
+  return `getCatalogNamespace/${app.spec.catalog}/${app.metadata.name}`;
 }

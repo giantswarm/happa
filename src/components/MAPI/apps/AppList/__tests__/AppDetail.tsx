@@ -61,18 +61,18 @@ describe('AppDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/appcatalogs/${catalog.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, catalog);
-
-    nock(window.config.mapiEndpoint)
-      .get(
         `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${appCatalogEntry.spec.appName}%2Capplication.giantswarm.io%2Fcatalog%3D${appCatalogEntry.spec.catalog.name}`
       )
       .reply(
         StatusCodes.Ok,
         applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
       );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${catalog.metadata.namespace}/catalogs/${catalog.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, catalog);
 
     render(getComponent({}));
 

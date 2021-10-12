@@ -1,4 +1,4 @@
-import { IAppCatalog } from './';
+import { ICatalog } from './';
 import { IApp, IAppCatalogEntry } from './types';
 
 export const labelAppOperator = 'app-operator.giantswarm.io/version';
@@ -13,13 +13,13 @@ export const labelCatalogType = 'application.giantswarm.io/catalog-type';
 
 export const annotationReadme = 'application.giantswarm.io/readme';
 
-export function isAppCatalogPublic(catalog: IAppCatalog): boolean {
+export function isAppCatalogPublic(catalog: ICatalog): boolean {
   const visibility = catalog.metadata.labels?.[labelCatalogVisibility];
 
   return visibility === 'public';
 }
 
-export function isAppCatalogStable(catalog: IAppCatalog): boolean {
+export function isAppCatalogStable(catalog: ICatalog): boolean {
   const type = catalog.metadata.labels?.[labelCatalogType];
 
   return type === 'stable';

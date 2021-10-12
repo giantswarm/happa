@@ -3,33 +3,33 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 
 import { getResource } from '../generic/getResource';
-import { IAppCatalogList } from './types';
+import { ICatalogList } from './types';
 
-export interface IGetAppCatalogListOptions {
+export interface IGetCatalogListOptions {
   namespace?: string;
   labelSelector?: k8sUrl.IK8sLabelSelector;
 }
 
-export function getAppCatalogList(
+export function getCatalogList(
   client: IHttpClient,
   auth: IOAuth2Provider,
-  options?: IGetAppCatalogListOptions
+  options?: IGetCatalogListOptions
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'application.giantswarm.io/v1alpha1',
-    kind: 'appcatalogs',
+    kind: 'catalogs',
     ...options,
   });
 
-  return getResource<IAppCatalogList>(client, auth, url.toString());
+  return getResource<ICatalogList>(client, auth, url.toString());
 }
 
-export function getAppCatalogListKey(options?: IGetAppCatalogListOptions) {
+export function getCatalogListKey(options?: IGetCatalogListOptions) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'application.giantswarm.io/v1alpha1',
-    kind: 'appcatalogs',
+    kind: 'catalogs',
     ...options,
   });
 

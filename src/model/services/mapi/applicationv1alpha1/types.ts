@@ -71,6 +71,7 @@ export interface IAppSpec {
   namespace: string;
   version: string;
   catalog: string;
+  catalogNamespace?: string;
   kubeConfig: IAppSpecKubeConfig;
   config?: IAppSpecConfig;
   install?: IAppSpecInstall;
@@ -95,48 +96,48 @@ export interface IAppList extends metav1.IList<IApp> {
   kind: typeof AppList;
 }
 
-export interface IAppCatalogSpecStorage {
+export interface ICatalogSpecStorage {
   type: string;
   URL: string;
 }
 
-export interface IAppCatalogSpecConfigSecret {
+export interface ICatalogSpecConfigSecret {
   name: string;
   namespace: string;
 }
 
-export interface IAppCatalogSpecConfigConfigMap {
+export interface ICatalogSpecConfigConfigMap {
   name: string;
   namespace: string;
 }
 
-export interface IAppCatalogSpecConfig {
-  configMap?: IAppCatalogSpecConfigConfigMap;
-  secret?: IAppCatalogSpecConfigSecret;
+export interface ICatalogSpecConfig {
+  configMap?: ICatalogSpecConfigConfigMap;
+  secret?: ICatalogSpecConfigSecret;
 }
 
-export interface IAppCatalogSpec {
+export interface ICatalogSpec {
   title: string;
   description: string;
-  storage: IAppCatalogSpecStorage;
+  storage: ICatalogSpecStorage;
   logoURL?: string;
-  config?: IAppCatalogSpecConfig;
+  config?: ICatalogSpecConfig;
 }
 
-export const AppCatalog = 'AppCatalog';
+export const Catalog = 'Catalog';
 
-export interface IAppCatalog {
+export interface ICatalog {
   apiVersion: 'application.giantswarm.io/v1alpha1';
-  kind: typeof AppCatalog;
+  kind: typeof Catalog;
   metadata: metav1.IObjectMeta;
-  spec: IAppCatalogSpec;
+  spec: ICatalogSpec;
 }
 
-export const AppCatalogList = 'AppCatalogList';
+export const CatalogList = 'CatalogList';
 
-export interface IAppCatalogList extends metav1.IList<IAppCatalog> {
+export interface ICatalogList extends metav1.IList<ICatalog> {
   apiVersion: 'application.giantswarm.io/v1alpha1';
-  kind: typeof AppCatalogList;
+  kind: typeof CatalogList;
 }
 
 export type Provider = 'aws' | 'azure' | 'kvm';
@@ -160,7 +161,7 @@ export interface IAppCatalogEntrySpecChart {
 
 export interface IAppCatalogEntrySpecCatalog {
   name: string;
-  namespace?: string;
+  namespace: string;
 }
 
 export interface IAppCatalogEntrySpec {
