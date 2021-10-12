@@ -62,8 +62,8 @@ export const compareAppCatalogEntriesFns: Record<
  * @param b
  */
 function compareAppCatalogs(
-  a: applicationv1alpha1.IAppCatalog,
-  b: applicationv1alpha1.IAppCatalog
+  a: applicationv1alpha1.ICatalog,
+  b: applicationv1alpha1.ICatalog
 ) {
   const aIsVisible = isAppCatalogVisibleToUsers(a);
   const bIsVisible = isAppCatalogVisibleToUsers(b);
@@ -94,7 +94,7 @@ function compareAppCatalogs(
  * @param appCatalogErrors - Errors that occured during loading each catalog.
  */
 export function mapAppCatalogsToFacets(
-  appCatalogs: applicationv1alpha1.IAppCatalog[] = [],
+  appCatalogs: applicationv1alpha1.ICatalog[] = [],
   selectedAppCatalogs: Record<string, boolean> = {},
   error: string = ''
 ): IFacetOption[] {
@@ -205,10 +205,10 @@ type AppPageApps = React.ComponentPropsWithoutRef<typeof AppsList>['apps'];
 
 export function mapAppCatalogEntriesToAppPageApps(
   appCatalogEntries: applicationv1alpha1.IAppCatalogEntry[],
-  catalogs: applicationv1alpha1.IAppCatalog[] = []
+  catalogs: applicationv1alpha1.ICatalog[] = []
 ): AppPageApps {
   const appCatalogs = catalogs.reduce<
-    Record<string, applicationv1alpha1.IAppCatalog>
+    Record<string, applicationv1alpha1.ICatalog>
   >((acc, catalog) => {
     acc[catalog.metadata.name] = catalog;
 
