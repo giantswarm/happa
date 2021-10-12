@@ -918,7 +918,7 @@ export async function getCatalogNamespace(
   if (!app) return null;
 
   if (!app.spec.catalogNamespace) {
-    let catalogs: applicationv1alpha1.ICatalog[] = [];
+    const catalogs: applicationv1alpha1.ICatalog[] = [];
 
     // Look in 'default' and 'giantswarm' namespaces to find the catalog by name
     const namespaces = ['default', 'giantswarm'];
@@ -932,7 +932,7 @@ export async function getCatalogNamespace(
         cache.get(catalogListKey);
 
       if (cachedCatalogList) {
-        catalogs = [...catalogs, ...cachedCatalogList.items];
+        catalogs.push(...cachedCatalogList.items);
       } else {
         const catalogList = await applicationv1alpha1.getCatalogList(
           clientFactory(),
@@ -941,16 +941,17 @@ export async function getCatalogNamespace(
         );
 
         cache.set(catalogListKey, catalogList);
-        catalogs = [...catalogs, ...catalogList.items];
+        catalogs.push(...catalogList.items);
       }
     }
 
-    for (const catalog of catalogs) {
-      if (catalog.metadata.name === app.spec.catalog)
-        return catalog.metadata.namespace!;
-    }
+    const catalogOfApp = catalogs.find(
+      (catalog) => catalog.metadata.name === app.spec.catalog
+    );
 
-    return null;
+    if (!catalogOfApp) return null;
+
+    return catalogOfApp.metadata.namespace!;
   }
 
   return app.spec.catalogNamespace;
@@ -958,8 +959,8 @@ export async function getCatalogNamespace(
 
 /**
  * Key used for getting the namespace for an app's catalog
- * @param appName
+ * @param app
  */
-export function getCatalogNamespaceKey(appName: string): string {
-  return `getCatalogNamespace/${appName}`;
+export function getCatalogNamespaceKey(app: applicationv1alpha1.IApp): string {
+  return `getCatalogNamespace/${app.spec.catalog}/${app.metadata.name}`;
 }

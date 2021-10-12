@@ -36,9 +36,7 @@ const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCat
     const clientFactory = useHttpClientFactory();
     const { cache } = useSWRConfig();
 
-    const catalogNamespaceKey = app
-      ? getCatalogNamespaceKey(app.spec.name)
-      : null;
+    const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
 
     const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
       string | null,
