@@ -3,9 +3,9 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 
 import { getResource } from '../generic/getResource';
-import { IAppCatalog } from './types';
+import { ICatalog } from './types';
 
-export function getAppCatalog(
+export function getCatalog(
   client: IHttpClient,
   auth: IOAuth2Provider,
   namespace: string,
@@ -14,14 +14,14 @@ export function getAppCatalog(
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'application.giantswarm.io/v1alpha1',
-    kind: 'appcatalogs',
+    kind: 'catalogs',
     namespace,
     name,
   });
 
-  return getResource<IAppCatalog>(client, auth, url.toString());
+  return getResource<ICatalog>(client, auth, url.toString());
 }
 
-export function getAppCatalogKey(namespace: string, name: string) {
-  return `getAppCatalog/${namespace}/${name}`;
+export function getCatalogKey(namespace: string, name: string) {
+  return `getCatalog/${namespace}/${name}`;
 }

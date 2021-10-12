@@ -6,5 +6,5 @@ export * from './getApp';
 export * from './updateApp';
 export * from './deleteApp';
 export * from './getAppCatalogEntryList';
-export * from './getAppCatalog';
-export * from './getAppCatalogList';
+export * from './getCatalog';
+export * from './getCatalogList';
