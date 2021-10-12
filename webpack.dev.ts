@@ -33,7 +33,7 @@ const config: webpack.Configuration = merge(common, {
   },
   // @ts-expect-error
   devServer: {
-    static: path.join(__dirname, 'src'),
+    static: { directory: path.join(__dirname, 'src'), watch: false },
     hot: true,
     port: 7000,
     host: 'localhost',
@@ -58,7 +58,6 @@ const config: webpack.Configuration = merge(common, {
     },
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ConfigurationPlugin({
       filename: 'index.ejs',
       outputFilename: 'index.html',
