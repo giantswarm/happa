@@ -29,8 +29,8 @@ const AppList: React.FC<{}> = () => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const appCatalogListClient = useRef(clientFactory());
-  const appCatalogListGetOptions: applicationv1alpha1.IGetAppCatalogListOptions =
+  const catalogListClient = useRef(clientFactory());
+  const catalogListGetOptions: applicationv1alpha1.IGetCatalogListOptions =
     useMemo(() => {
       // Admins can see any type of catalogs.
       if (isAdmin) return {};
@@ -46,37 +46,37 @@ const AppList: React.FC<{}> = () => {
     }, [isAdmin]);
 
   const {
-    data: appCatalogList,
-    error: appCatalogListError,
-    isValidating: appCatalogListIsValidating,
-  } = useSWR<applicationv1alpha1.IAppCatalogList, GenericResponseError>(
-    applicationv1alpha1.getAppCatalogListKey(appCatalogListGetOptions),
+    data: catalogList,
+    error: catalogListError,
+    isValidating: catalogListIsValidating,
+  } = useSWR<applicationv1alpha1.ICatalogList, GenericResponseError>(
+    applicationv1alpha1.getCatalogListKey(catalogListGetOptions),
     () =>
-      applicationv1alpha1.getAppCatalogList(
-        appCatalogListClient.current,
+      applicationv1alpha1.getCatalogList(
+        catalogListClient.current,
         auth,
-        appCatalogListGetOptions
+        catalogListGetOptions
       )
   );
-  const prevAppCatalogList = usePrevious(appCatalogList);
+  const prevcatalogList = usePrevious(catalogList);
 
   useEffect(() => {
-    if (appCatalogListError) {
-      const errorMessage = extractErrorMessage(appCatalogListError);
+    if (catalogListError) {
+      const errorMessage = extractErrorMessage(catalogListError);
 
       new FlashMessage(
-        'There was a problem loading app catalogs.',
+        'There was a problem loading catalogs.',
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(appCatalogListError);
+      ErrorReporter.getInstance().notify(catalogListError);
     }
-  }, [appCatalogListError]);
+  }, [catalogListError]);
 
-  const appCatalogListIsLoading =
-    typeof appCatalogList === 'undefined' && appCatalogListIsValidating;
+  const catalogListIsLoading =
+    typeof catalogList === 'undefined' && catalogListIsValidating;
 
   const {
     selectedCatalogs,
@@ -97,20 +97,20 @@ const AppList: React.FC<{}> = () => {
     // Only execute this after the initial catalog load.
     if (
       Object.keys(selectedCatalogs).length > 0 ||
-      typeof prevAppCatalogList !== 'undefined' ||
-      typeof appCatalogList === 'undefined'
+      typeof prevcatalogList !== 'undefined' ||
+      typeof catalogList === 'undefined'
     ) {
       return;
     }
 
     // Pre-select all catalogs.
-    for (const catalog of appCatalogList.items) {
+    for (const catalog of catalogList.items) {
       selectCatalog(catalog.metadata.name);
     }
 
     // We don't need to run this again if the selected catalogs change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appCatalogList, prevAppCatalogList, selectedCatalogs]);
+  }, [catalogList, prevcatalogList, selectedCatalogs]);
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
@@ -156,7 +156,7 @@ const AppList: React.FC<{}> = () => {
   }, [appCatalogEntryListError]);
 
   const appCatalogEntryListIsLoading =
-    appCatalogListIsLoading ||
+    catalogListIsLoading ||
     (typeof appCatalogEntryList === 'undefined' &&
       appCatalogEntryListIsValidating);
 
@@ -175,14 +175,14 @@ const AppList: React.FC<{}> = () => {
 
     return mapAppCatalogEntriesToAppPageApps(
       filteredAppCatalogEntryList,
-      appCatalogList?.items
+      catalogList?.items
     );
   }, [
     appCatalogEntryList,
     debouncedSearchQuery,
     selectedCatalogs,
     sortOrder,
-    appCatalogList?.items,
+    catalogList?.items,
   ]);
 
   const handleChangeFacets = (value: string, checked: boolean) => {
@@ -204,11 +204,11 @@ const AppList: React.FC<{}> = () => {
       matchCount={apps.length}
       apps={apps}
       facetOptions={mapAppCatalogsToFacets(
-        appCatalogList?.items,
+        catalogList?.items,
         selectedCatalogs,
         extractErrorMessage(appCatalogEntryListError)
       )}
-      facetsIsLoading={appCatalogListIsLoading}
+      facetsIsLoading={catalogListIsLoading}
       appsIsLoading={appCatalogEntryListIsLoading}
     />
   );

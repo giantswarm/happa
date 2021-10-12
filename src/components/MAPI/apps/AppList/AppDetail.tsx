@@ -59,37 +59,7 @@ const AppDetail: React.FC<{}> = () => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const appCatalogClient = useRef(clientFactory());
-  const { data: appCatalog, error: appCatalogError } = useSWR<
-    applicationv1alpha1.IAppCatalog,
-    GenericResponseError
-  >(applicationv1alpha1.getAppCatalogKey('', catalogName), () =>
-    applicationv1alpha1.getAppCatalog(
-      appCatalogClient.current,
-      auth,
-      '',
-      catalogName
-    )
-  );
-
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (appCatalogError) {
-      const errorMessage = extractErrorMessage(appCatalogError);
-
-      new FlashMessage(
-        'There was a problem loading the app catalog.',
-        messageType.ERROR,
-        messageTTL.FOREVER,
-        errorMessage
-      );
-
-      ErrorReporter.getInstance().notify(appCatalogError);
-
-      dispatch(push(AppsRoutes.Home));
-    }
-  }, [appCatalogError, dispatch]);
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
@@ -206,7 +176,45 @@ const AppDetail: React.FC<{}> = () => {
     return selectedEntry.spec.chart.keywords ?? [];
   }, [selectedEntry]);
 
-  const catalogIcon = appCatalog ? appCatalog.spec.logoURL ?? '' : undefined;
+  const catalogClient = useRef(clientFactory());
+
+  const catalogKey = selectedEntry
+    ? applicationv1alpha1.getCatalogKey(
+        selectedEntry.spec.catalog.namespace,
+        catalogName
+      )
+    : null;
+
+  const { data: catalog, error: catalogError } = useSWR<
+    applicationv1alpha1.ICatalog,
+    GenericResponseError
+  >(catalogKey, () =>
+    applicationv1alpha1.getCatalog(
+      catalogClient.current,
+      auth,
+      selectedEntry!.spec.catalog.namespace,
+      catalogName
+    )
+  );
+
+  useEffect(() => {
+    if (catalogError) {
+      const errorMessage = extractErrorMessage(catalogError);
+
+      new FlashMessage(
+        `There was a problem loading the app's catalog.`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(catalogError);
+
+      dispatch(push(AppsRoutes.Home));
+    }
+  }, [catalogError, dispatch]);
+
+  const catalogIcon = catalog ? catalog.spec.logoURL ?? '' : undefined;
 
   const appIconURL = selectedEntry
     ? selectedEntry.spec.chart.icon ?? ''
@@ -234,9 +242,9 @@ const AppDetail: React.FC<{}> = () => {
         }}
       >
         <AppDetailPage
-          catalogName={appCatalog?.spec.title}
+          catalogName={catalog?.spec.title}
           catalogIcon={catalogIcon}
-          catalogDescription={appCatalog?.spec.description}
+          catalogDescription={catalog?.spec.description}
           otherVersions={otherEntries}
           appTitle={appName}
           appIconURL={appIconURL}
@@ -251,11 +259,11 @@ const AppDetail: React.FC<{}> = () => {
           readme={appReadme}
           selectVersion={selectVersion}
           installAppModal={
-            selectedEntry && otherEntries ? (
+            selectedEntry && otherEntries && catalog ? (
               <AppInstallModal
                 appName={appName!}
                 chartName={appName!}
-                catalogName={appCatalog!.metadata.name}
+                catalogName={catalog.metadata.name}
                 versions={otherEntries}
                 selectedClusterID={selectedClusterID}
               />

@@ -2,17 +2,19 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import {
   computeAppCatalogUITitle,
+  getCatalogNamespace,
+  getCatalogNamespaceKey,
   isAppCatalogVisibleToUsers,
 } from 'MAPI/apps/utils';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
@@ -31,27 +33,23 @@ interface IClusterDetailAppListWidgetCatalogProps
 const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCatalogProps> =
   ({ app, ...props }) => {
     const auth = useAuthProvider();
-    const appCatalogClient = useHttpClient();
+    const clientFactory = useHttpClientFactory();
+    const { cache } = useSWRConfig();
 
-    const appCatalogKey = app
-      ? applicationv1alpha1.getAppCatalogKey('', app.spec.catalog)
+    const catalogNamespaceKey = app
+      ? getCatalogNamespaceKey(app.spec.name)
       : null;
 
-    const { data: appCatalog, error: appCatalogError } = useSWR<
-      applicationv1alpha1.IAppCatalog,
+    const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
+      string | null,
       GenericResponseError
-    >(appCatalogKey, () =>
-      applicationv1alpha1.getAppCatalog(
-        appCatalogClient,
-        auth,
-        '',
-        app!.spec.catalog
-      )
+    >(catalogNamespaceKey, () =>
+      getCatalogNamespace(clientFactory, auth, cache, app!)
     );
 
     useEffect(() => {
-      if (appCatalogError) {
-        const errorMessage = extractErrorMessage(appCatalogError);
+      if (catalogNamespaceError) {
+        const errorMessage = extractErrorMessage(catalogNamespaceError);
 
         new FlashMessage(
           `There was a problem loading the app's catalog.`,
@@ -60,16 +58,46 @@ const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCat
           errorMessage
         );
 
-        ErrorReporter.getInstance().notify(appCatalogError);
+        ErrorReporter.getInstance().notify(catalogNamespaceError);
       }
-    }, [appCatalogError]);
+    }, [catalogNamespaceError]);
 
-    const appCatalogTitle = appCatalog
-      ? computeAppCatalogUITitle(appCatalog)
+    const catalogClient = useRef(clientFactory());
+    const catalogKey = catalogNamespace
+      ? applicationv1alpha1.getCatalogKey(catalogNamespace, app!.spec.catalog)
+      : null;
+
+    const { data: catalog, error: catalogError } = useSWR<
+      applicationv1alpha1.ICatalog,
+      GenericResponseError
+    >(catalogKey, () =>
+      applicationv1alpha1.getCatalog(
+        catalogClient.current,
+        auth,
+        catalogNamespace!,
+        app!.spec.catalog
+      )
+    );
+
+    useEffect(() => {
+      if (catalogError) {
+        const errorMessage = extractErrorMessage(catalogError);
+
+        new FlashMessage(
+          `There was a problem loading the app's catalog.`,
+          messageType.ERROR,
+          messageTTL.FOREVER,
+          errorMessage
+        );
+
+        ErrorReporter.getInstance().notify(catalogError);
+      }
+    }, [catalogError]);
+
+    const catalogTitle = catalog
+      ? computeAppCatalogUITitle(catalog)
       : undefined;
-    const isManaged = appCatalog
-      ? isAppCatalogVisibleToUsers(appCatalog)
-      : false;
+    const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
 
     return (
       <ClusterDetailAppListWidget
@@ -82,7 +110,7 @@ const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCat
         }}
         {...props}
       >
-        <OptionalValue value={appCatalogTitle} loaderWidth={150}>
+        <OptionalValue value={catalogTitle} loaderWidth={150}>
           {(value) => <Text aria-label={`App catalog: ${value}`}>{value}</Text>}
         </OptionalValue>
 
