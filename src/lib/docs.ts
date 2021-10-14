@@ -67,6 +67,9 @@ export const kubectlGSLoginURL =
 export const kubectlGSGetClustersURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
 
+export const kubectlGSGetCatalogsURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-catalogs/';
+
 export const kubectlGSTemplateClusterURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
 
@@ -106,6 +109,7 @@ export const crds = {
     app: 'apps.application.giantswarm.io',
     organization: 'organizations.security.giantswarm.io',
     release: 'releases.release.giantswarm.io',
+    catalog: 'catalogs.application.giantswarm.io/',
     appCatalogEntry: 'appcatalogentries.application.giantswarm.io',
   },
   xk8sio: {

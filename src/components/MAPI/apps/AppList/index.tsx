@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
@@ -14,6 +15,7 @@ import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
 import { useAppsContext } from '../AppsProvider';
+import ListAppCatalogsAndAppsGuide from '../guides/ListAppCatalogsAndAppsGuide';
 import {
   compareAppCatalogEntriesFns,
   filterAppCatalogEntries,
@@ -194,23 +196,30 @@ const AppList: React.FC<{}> = () => {
   };
 
   return (
-    <AppsListPage
-      onChangeSearchQuery={setSearchQuery}
-      searchQuery={searchQuery}
-      onChangeFacets={handleChangeFacets}
-      sortOrder={sortOrder}
-      onChangeSortOrder={setSortOrder}
-      onResetSearch={() => setSearchQuery('')}
-      matchCount={apps.length}
-      apps={apps}
-      facetOptions={mapAppCatalogsToFacets(
-        catalogList?.items,
-        selectedCatalogs,
-        extractErrorMessage(appCatalogEntryListError)
+    <>
+      <AppsListPage
+        onChangeSearchQuery={setSearchQuery}
+        searchQuery={searchQuery}
+        onChangeFacets={handleChangeFacets}
+        sortOrder={sortOrder}
+        onChangeSortOrder={setSortOrder}
+        onResetSearch={() => setSearchQuery('')}
+        matchCount={apps.length}
+        apps={apps}
+        facetOptions={mapAppCatalogsToFacets(
+          catalogList?.items,
+          selectedCatalogs,
+          extractErrorMessage(appCatalogEntryListError)
+        )}
+        facetsIsLoading={catalogListIsLoading}
+        appsIsLoading={appCatalogEntryListIsLoading}
+      />
+      {catalogList && (
+        <Box margin={{ top: 'medium' }} direction='column' gap='small'>
+          <ListAppCatalogsAndAppsGuide />
+        </Box>
       )}
-      facetsIsLoading={catalogListIsLoading}
-      appsIsLoading={appCatalogEntryListIsLoading}
-    />
+    </>
   );
 };
 
