@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import {
   FlashMessage,
   forceRemoveAll,
@@ -13,44 +13,53 @@ describe('FlashMessage', () => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     renderWithTheme(() => <></>, {});
 
-    for (let i = 0; i < 6; i++) {
+    await act(async () => {
+      for (let i = 0; i < 6; i++) {
+        new FlashMessage(
+          `Yo! Something went wrong.`,
+          messageType.ERROR,
+          messageTTL.MEDIUM
+        );
+      }
+
+      expect(
+        await screen.findAllByText('Yo! Something went wrong.')
+      ).toHaveLength(1);
+    });
+
+    await act(async () => {
+      forceRemoveAll();
+      expect(
+        await screen.findByText('Yo! Something went wrong.')
+      ).not.toBeInTheDocument();
+    });
+
+    await act(async () => {
       new FlashMessage(
         `Yo! Something went wrong.`,
         messageType.ERROR,
         messageTTL.MEDIUM
       );
-    }
+      new FlashMessage(
+        `Yo! Something went wrong.`,
+        messageType.ERROR,
+        messageTTL.MEDIUM
+      );
 
-    expect(
-      await screen.findAllByText('Yo! Something went wrong.')
-    ).toHaveLength(1);
+      /**
+       * Create a message with the same text, but a different type,
+       * so we can check if types are taken into consideration when
+       * checking if a message already exists.
+       */
+      new FlashMessage(
+        `Yo! Something went wrong.`,
+        messageType.INFO,
+        messageTTL.MEDIUM
+      );
 
-    forceRemoveAll();
-
-    new FlashMessage(
-      `Yo! Something went wrong.`,
-      messageType.ERROR,
-      messageTTL.MEDIUM
-    );
-    new FlashMessage(
-      `Yo! Something went wrong.`,
-      messageType.ERROR,
-      messageTTL.MEDIUM
-    );
-
-    /**
-     * Create a message with the same text, but a different type,
-     * so we can check if types are taken into consideration when
-     * checking if a message already exists.
-     */
-    new FlashMessage(
-      `Yo! Something went wrong.`,
-      messageType.INFO,
-      messageTTL.MEDIUM
-    );
-
-    expect(
-      await screen.findAllByText('Yo! Something went wrong.')
-    ).toHaveLength(2);
+      expect(
+        await screen.findAllByText('Yo! Something went wrong.')
+      ).toHaveLength(2);
+    });
   });
 });

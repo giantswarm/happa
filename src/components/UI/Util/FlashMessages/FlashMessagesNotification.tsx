@@ -64,9 +64,9 @@ const FlashMessagesNotification: React.FC<IFlashMessagesNotificationProps> = ({
 
   return (
     <Box
+      role='status'
       background={background}
       round='xsmall'
-      role={onClose && 'button'}
       onClick={onClose}
       direction='row'
       width='medium'

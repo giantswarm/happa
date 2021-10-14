@@ -53,9 +53,4 @@ export function clearQueues() {
  */
 export function forceRemoveAll() {
   clearQueues();
-
-  const notificationWrapper = document.querySelector('#flash-messages');
-  if (!notificationWrapper) return;
-
-  notificationWrapper.textContent = '';
 }

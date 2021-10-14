@@ -79,6 +79,10 @@ export class FlashMessagesController {
   }
 
   public clear() {
+    for (const entry of this.queue) {
+      this.removeEntryTimer(entry);
+    }
+
     this.queue.clear();
 
     this.dispatchEvent(FlashMessageEvents.Clear, {
