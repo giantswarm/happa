@@ -36,10 +36,12 @@ const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
 
       uniqueEntries.add(hash);
       queueValue.push(entry);
+
+      // Limit the amount of messages that can be shown at once.
+      if (queueValue.length >= MAX_COUNT_AT_ONCE) break;
     }
 
-    // Limit the amount of messages that can be shown at once.
-    setQueue(queueValue.slice(0, MAX_COUNT_AT_ONCE));
+    setQueue(queueValue);
   }, []);
 
   const onEnqueue = useCallback<
