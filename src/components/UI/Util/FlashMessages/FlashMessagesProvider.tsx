@@ -15,10 +15,12 @@ const MAX_COUNT_AT_ONCE = 5;
 
 interface IFlashMessagesProviderProps {
   controller: FlashMessagesController;
+  animate?: boolean;
 }
 
 const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
   controller,
+  animate,
 }) => {
   const [queue, setQueue] = useState<IFlashMessageEntry[]>([]);
 
@@ -74,14 +76,34 @@ const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
       role='log'
       animation='none'
     >
-      <TransitionGroup id='flash-messages'>
-        {queue.map((entry) => (
-          <SlideTransition
-            key={JSON.stringify(entry)}
-            appear={true}
-            direction='up'
-          >
+      {animate && (
+        <TransitionGroup id='flash-messages'>
+          {queue.map((entry) => (
+            <SlideTransition
+              key={JSON.stringify(entry)}
+              appear={true}
+              direction='up'
+            >
+              <FlashMessagesNotification
+                onMouseEnter={() => controller.pause(entry)}
+                onMouseLeave={() => controller.resume(entry)}
+                onClose={() => controller.remove(entry)}
+                title={entry.title}
+                type={entry.type}
+                margin={{ bottom: 'small' }}
+              >
+                {entry.message}
+              </FlashMessagesNotification>
+            </SlideTransition>
+          ))}
+        </TransitionGroup>
+      )}
+
+      {!animate && (
+        <div id='flash-messages'>
+          {queue.map((entry) => (
             <FlashMessagesNotification
+              key={JSON.stringify(entry)}
               onMouseEnter={() => controller.pause(entry)}
               onMouseLeave={() => controller.resume(entry)}
               onClose={() => controller.remove(entry)}
@@ -91,11 +113,15 @@ const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
             >
               {entry.message}
             </FlashMessagesNotification>
-          </SlideTransition>
-        ))}
-      </TransitionGroup>
+          ))}
+        </div>
+      )}
     </Layer>
   );
+};
+
+FlashMessagesProvider.defaultProps = {
+  animate: true,
 };
 
 export default FlashMessagesProvider;

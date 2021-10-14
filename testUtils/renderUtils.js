@@ -81,7 +81,10 @@ export function getComponentWithTheme(Component, props) {
   return (
     <ThemeProvider theme={theme}>
       <Component {...props} />
-      <FlashMessagesProvider controller={flashMessagesController} />
+      <FlashMessagesProvider
+        controller={flashMessagesController}
+        animate={false}
+      />
     </ThemeProvider>
   );
 }
@@ -126,7 +129,10 @@ export function getComponentWithStore(
           <MapiAuthProvider auth={auth}>
             <Component {...props} />
           </MapiAuthProvider>
-          <FlashMessagesProvider controller={flashMessagesController} />
+          <FlashMessagesProvider
+            controller={flashMessagesController}
+            animate={false}
+          />
         </ConnectedRouter>
       </ThemeProvider>
     </Provider>
