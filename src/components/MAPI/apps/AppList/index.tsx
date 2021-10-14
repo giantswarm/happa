@@ -15,8 +15,7 @@ import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
 import { useAppsContext } from '../AppsProvider';
-import ListAppCatalogsGuide from '../guides/ListAppCatalogsGuide';
-import ListAppsInCatalogGuide from '../guides/ListAppsInCatalogGuide';
+import ListAppCatalogsAndAppsGuide from '../guides/ListAppCatalogsAndAppsGuide';
 import {
   compareAppCatalogEntriesFns,
   filterAppCatalogEntries,
@@ -217,8 +216,7 @@ const AppList: React.FC<{}> = () => {
       />
       {catalogList && (
         <Box margin={{ top: 'medium' }} direction='column' gap='small'>
-          <ListAppCatalogsGuide />
-          <ListAppsInCatalogGuide />
+          <ListAppCatalogsAndAppsGuide />
         </Box>
       )}
     </>
