@@ -14,7 +14,7 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import { ConfigurationPlugin } from './scripts/webpack/ConfigurationPlugin';
-import common, { compilerConfig } from './webpack.common';
+import common from './webpack.common';
 
 const config: webpack.Configuration = merge(common, {
   mode: 'development',
@@ -107,10 +107,7 @@ const config: webpack.Configuration = merge(common, {
       {
         test: /\.(js|ts)(x?)$/,
         exclude: /node_modules/,
-        use: {
-          loader: require.resolve('swc-loader'),
-          options: compilerConfig,
-        },
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,

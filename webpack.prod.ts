@@ -13,9 +13,10 @@ import dotenv from 'dotenv';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+import WebpackBundleAnalyzer from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
 
-import common, { compilerConfig } from './webpack.common';
+import common from './webpack.common';
 
 const envFileVars = dotenv.config().parsed;
 
@@ -23,11 +24,13 @@ const {
   SENTRY_UPLOAD_SOURCEMAPS,
   SENTRY_API_KEY,
   SENTRY_RELEASE_VERSION,
+  HAPPA_ANALYZE_BUNDLE,
 } = Object.assign(
   {
     SENTRY_UPLOAD_SOURCEMAPS: 'false',
     SENTRY_API_KEY: '',
     SENTRY_RELEASE_VERSION: 'happa@development',
+    HAPPA_ANALYZE_BUNDLE: 'false',
   },
   envFileVars,
   process.env
@@ -38,11 +41,11 @@ const plugins: webpack.WebpackPluginInstance[] = [
     filename: '[file].map[query]',
     append: '//# sourceMappingURL=[url]',
   }),
-  (new MiniCssExtractPlugin({
+  new MiniCssExtractPlugin({
     filename: 'assets/[name].[chunkhash:12].css',
     chunkFilename: 'assets/[id].[chunkhash:12].css',
-  }) as unknown) as webpack.WebpackPluginInstance,
-  (new CopyPlugin({
+  }) as unknown as webpack.WebpackPluginInstance,
+  new CopyPlugin({
     patterns: [
       { from: 'src/metadata.json', to: 'metadata.json' },
       {
@@ -53,7 +56,7 @@ const plugins: webpack.WebpackPluginInstance[] = [
         to: 'images',
       },
     ],
-  }) as unknown) as webpack.WebpackPluginInstance,
+  }) as unknown as webpack.WebpackPluginInstance,
 ];
 
 if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
@@ -71,6 +74,10 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
   );
 }
 
+if (HAPPA_ANALYZE_BUNDLE.toLowerCase() === 'true') {
+  plugins.push(new WebpackBundleAnalyzer.BundleAnalyzerPlugin());
+}
+
 const config: webpack.Configuration = merge(common, {
   mode: 'production',
   devtool: false,
@@ -79,14 +86,24 @@ const config: webpack.Configuration = merge(common, {
     reasons: true,
   },
   optimization: {
+    nodeEnv: 'production',
+    removeEmptyChunks: true,
+    providedExports: true,
+    mangleExports: 'deterministic',
+    mergeDuplicateChunks: true,
+    innerGraph: true,
+    concatenateModules: true,
+    minimize: true,
     minimizer: [
-      (new TerserPlugin({
-        extractComments: 'some',
+      new TerserPlugin({
+        extractComments: 'all',
         terserOptions: {
           sourceMap: true,
+          mangle: true,
+          compress: true,
         },
-      }) as unknown) as webpack.WebpackPluginInstance,
-      (new CssMinimizerPlugin() as unknown) as webpack.WebpackPluginInstance,
+      }) as unknown as webpack.WebpackPluginInstance,
+      new CssMinimizerPlugin() as unknown as webpack.WebpackPluginInstance,
     ],
     moduleIds: 'deterministic',
     runtimeChunk: 'single',
@@ -106,10 +123,7 @@ const config: webpack.Configuration = merge(common, {
       {
         test: /\.(js|ts)(x?)$/,
         exclude: /node_modules/,
-        use: {
-          loader: require.resolve('swc-loader'),
-          options: compilerConfig,
-        },
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,

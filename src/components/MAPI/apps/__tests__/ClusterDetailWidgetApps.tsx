@@ -8,7 +8,7 @@ import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import { generateRandomString } from 'testUtils/mockHttpCalls';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
 import ClusterDetailWidgetApps from '../ClusterDetailWidgetApps';
@@ -19,7 +19,7 @@ function generateApp(
   version: string = '1.0.1'
 ): applicationv1alpha1.IApp {
   const appName = generateRandomString();
-  const namespace = capiv1alpha3Mocks.randomCluster1.metadata.name;
+  const namespace = mockCapiv1alpha3.randomCluster1.metadata.name;
 
   return {
     apiVersion: 'application.giantswarm.io/v1alpha1',
@@ -118,7 +118,7 @@ jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
     orgId: 'org1',
-    clusterId: capiv1alpha3Mocks.randomCluster1.metadata.name,
+    clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
   }),
 }));
 
@@ -132,7 +132,7 @@ describe('ClusterDetailWidgetApps', () => {
   it('displays a placeholder if there are no apps', async () => {
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'application.giantswarm.io/v1alpha1',
@@ -160,7 +160,7 @@ describe('ClusterDetailWidgetApps', () => {
   it('displays stats about the apps installed in the cluster', async () => {
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,
@@ -185,7 +185,7 @@ describe('ClusterDetailWidgetApps', () => {
   it('displays the number of upgradable apps', async () => {
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,

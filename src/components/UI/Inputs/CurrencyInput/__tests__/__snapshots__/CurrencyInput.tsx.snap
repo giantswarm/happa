@@ -5,7 +5,7 @@ exports[`CurrencyInput renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-iBPTik bYpoIC"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"

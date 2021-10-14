@@ -6,7 +6,7 @@ import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -38,7 +38,7 @@ jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
     orgId: 'org1',
-    clusterId: capiv1alpha3Mocks.randomCluster1.metadata.name,
+    clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
   }),
 }));
 
@@ -56,13 +56,13 @@ describe('ClusterDetailWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.NotFound, {
         apiVersion: 'v1',
@@ -87,13 +87,13 @@ describe('ClusterDetailWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',

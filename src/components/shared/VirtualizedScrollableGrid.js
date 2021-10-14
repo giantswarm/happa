@@ -1,5 +1,5 @@
 import React from 'react';
-import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';
+import { WindowScroller } from 'react-virtualized';
 import { FixedSizeGrid as List } from 'react-window';
 import { withTheme } from 'styled-components';
 import { debounce } from 'underscore';
