@@ -152,10 +152,10 @@ const compareSubjects = (
 
 const formatAccountNames = (accountNames: string[]): React.ReactNode => {
   return accountNames.map((accountName, idx, arr) => (
-    <>
-      <code key={accountName}>{accountName}</code>
+    <React.Fragment key={accountName}>
+      <code>{accountName}</code>
       {idx !== arr.length - 1 && ', '}
-    </>
+    </React.Fragment>
   ));
 };
 
@@ -181,38 +181,40 @@ const getBindServiceAccountSuccessMessages = (
     const isUpdatedAccounts =
       status === ui.AccessControlRoleSubjectStatus.Updated;
 
+    const key = filteredAccounts.join(',');
+
     let message: React.ReactNode = null;
     switch (true) {
       case isCreatedAccounts && filteredAccounts.length > 1:
         message = (
-          <>
+          <React.Fragment key={key}>
             Service accounts {formatAccountNames(filteredAccounts)} have been
             created and bound to the role.
-          </>
+          </React.Fragment>
         );
         break;
       case isCreatedAccounts && filteredAccounts.length === 1:
         message = (
-          <>
+          <React.Fragment key={key}>
             Service account {formatAccountNames(filteredAccounts)} has been
             created and bound to the role.
-          </>
+          </React.Fragment>
         );
         break;
       case isUpdatedAccounts && filteredAccounts.length > 1:
         message = (
-          <>
+          <React.Fragment key={key}>
             Service accounts {formatAccountNames(filteredAccounts)} have been
             bound to the role.
-          </>
+          </React.Fragment>
         );
         break;
       case isUpdatedAccounts && filteredAccounts.length === 1:
         message = (
-          <>
+          <React.Fragment key={key}>
             Service account {formatAccountNames(filteredAccounts)} has been
             bound to the role.
-          </>
+          </React.Fragment>
         );
         break;
     }
