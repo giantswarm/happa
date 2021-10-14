@@ -51,8 +51,8 @@ const ListAppsInCatalogGuide: React.FC<IListAppsInCatalogGuideProps> = ({
           command='kubectl gs get catalogs giantswarm'
         >
           <Text>
-            This lists apps in the giantswarm catalog with their latest
-            releases.
+            This lists apps in the <code>giantswarm</code> catalog with their
+            latest releases.
           </Text>
           <Text>
             To see apps from other catalogs, replace <code>giantswarm</code>{' '}
