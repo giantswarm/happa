@@ -80,7 +80,12 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
       const errorMessage = extractErrorMessage(nodePoolListError);
       new FlashMessage(
-        `There was a problem loading node pools for cluster <code>${clusterId}</code>.`,
+        (
+          <>
+            There was a problem loading node pools for cluster{' '}
+            <code>{clusterId}</code>.
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -107,7 +112,12 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
       const errorMessage = extractErrorMessage(appListError);
       new FlashMessage(
-        `There was a problem loading apps for cluster <code>${clusterId}</code>.`,
+        (
+          <>
+            There was a problem loading apps for cluster{' '}
+            <code>{clusterId}</code>.
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -155,7 +165,11 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not delete cluster <code>${cluster.metadata.name}</code>:`,
+        (
+          <>
+            Could not delete cluster <code>{cluster.metadata.name}</code>:
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage

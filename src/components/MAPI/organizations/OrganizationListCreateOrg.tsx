@@ -91,7 +91,11 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
       onSubmit?.();
 
       new FlashMessage(
-        `Organization <code>${orgName}</code> created successfully`,
+        (
+          <>
+            Organization <code>{orgName}</code> created successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -104,7 +108,11 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
       onCancel?.();
 
       new FlashMessage(
-        `Unable to create organization <code>${orgName}</code>`,
+        (
+          <>
+            Unable to create organization <code>{orgName}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         extractErrorMessage(err)

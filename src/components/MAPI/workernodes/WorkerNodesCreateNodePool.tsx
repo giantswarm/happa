@@ -235,7 +235,12 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       }, 200);
 
       new FlashMessage(
-        `Node pool <code>${state.nodePool.metadata.name}</code> created successfully`,
+        (
+          <>
+            Node pool <code>{state.nodePool.metadata.name}</code> created
+            successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -245,7 +250,12 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not create node pool <code>${state.nodePool.metadata.name}</code>`,
+        (
+          <>
+            Could not create node pool{' '}
+            <code>{state.nodePool.metadata.name}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage

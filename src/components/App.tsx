@@ -11,6 +11,8 @@ import { Store } from 'redux';
 import ErrorBoundary from 'shared/ErrorBoundary';
 import { DefaultTheme } from 'styled-components';
 import ThemeProvider from 'styles/ThemeProvider';
+import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
+import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
 
 import Routes from './Routes';
 
@@ -19,9 +21,16 @@ interface IAppProps {
   theme: DefaultTheme;
   history: History<History.LocationState>;
   auth: IOAuth2Provider;
+  flashMessagesController: FlashMessagesController;
 }
 
-const App: React.FC<IAppProps> = ({ store, theme, history, auth }) => (
+const App: React.FC<IAppProps> = ({
+  store,
+  theme,
+  history,
+  auth,
+  flashMessagesController,
+}) => (
   <ErrorBoundary
     reportError={true}
     fallback={
@@ -51,6 +60,7 @@ const App: React.FC<IAppProps> = ({ store, theme, history, auth }) => (
               <Routes />
             </main>
           </MapiAuthProvider>
+          <FlashMessagesProvider controller={flashMessagesController} />
           <Footer />
         </ConnectedRouter>
       </ThemeProvider>
