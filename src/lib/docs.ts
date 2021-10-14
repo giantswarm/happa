@@ -70,6 +70,9 @@ export const kubectlGSGetClustersURL =
 export const kubectlGSTemplateClusterURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
 
+export const kubectlGSTemplateAppURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-app/';
+
 export const kubectlGSGetNodePoolsURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-nodepools/';
 
@@ -103,6 +106,7 @@ export const crds = {
     app: 'apps.application.giantswarm.io',
     organization: 'organizations.security.giantswarm.io',
     release: 'releases.release.giantswarm.io',
+    appCatalogEntry: 'appcatalogentries.application.giantswarm.io',
   },
   xk8sio: {
     azureCluster: 'azureclusters.infrastructure.cluster.x-k8s.io',
