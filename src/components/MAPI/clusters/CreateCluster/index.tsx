@@ -34,7 +34,7 @@ import CreateClusterGuide from '../guides/CreateClusterGuide';
 import {
   createCluster,
   createDefaultCluster,
-  createDefaultControlPlaneNode,
+  createDefaultControlPlaneNodes,
   createDefaultProviderCluster,
   findLatestReleaseVersion,
 } from '../utils';
@@ -91,7 +91,7 @@ interface IClusterState {
   provider: PropertiesOf<typeof Providers>;
   cluster: Cluster;
   providerCluster: ProviderCluster;
-  controlPlaneNode: ControlPlaneNode;
+  controlPlaneNodes: ControlPlaneNode[];
   validationResults: Record<ClusterPropertyField, boolean>;
   isCreating: boolean;
   latestRelease: string;
@@ -113,14 +113,14 @@ function makeInitialState(
     provider,
     resourceConfig
   );
-  const controlPlaneNode = createDefaultControlPlaneNode({ providerCluster });
+  const controlPlaneNodes = createDefaultControlPlaneNodes({ providerCluster });
   const cluster = createDefaultCluster({ providerCluster });
 
   return {
     provider,
     cluster,
     providerCluster,
-    controlPlaneNode,
+    controlPlaneNodes,
     validationResults: {
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
@@ -139,7 +139,7 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
         action.value(
           draft.cluster,
           draft.providerCluster,
-          draft.controlPlaneNode
+          draft.controlPlaneNodes
         );
         break;
       case 'changeValidationStatus':
@@ -157,7 +157,7 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
           withClusterReleaseVersion(action.value)(
             draft.cluster,
             draft.providerCluster,
-            draft.controlPlaneNode
+            draft.controlPlaneNodes
           );
         }
 
@@ -288,9 +288,9 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const releaseVersion = getClusterReleaseVersion(state.cluster);
   const description = getClusterDescription(state.cluster);
   const controlPlaneAZs = useMemo(() => {
-    return computeControlPlaneNodesStats([state.controlPlaneNode])
+    return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
-  }, [state.controlPlaneNode]);
+  }, [state.controlPlaneNodes]);
   const labels = getVisibleLabels(state.cluster);
 
   return (
@@ -315,14 +315,14 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               id={`cluster-${ClusterPropertyField.Name}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Name)}
             />
             <CreateClusterDescription
               id={`cluster-${ClusterPropertyField.Description}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Description)}
               autoFocus={true}
             />
@@ -330,14 +330,14 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               id={`cluster-${ClusterPropertyField.Release}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Release)}
             />
             <CreateClusterControlPlaneNodeAZs
               id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
             />
             <Box margin={{ top: 'medium' }}>
