@@ -47,7 +47,11 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { computePermissions, getNamespaceFromOrgName } from './utils';
+import {
+  computePermissions,
+  getNamespaceFromOrgName,
+  mapOAuth2UserToUser,
+} from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -269,20 +273,24 @@ export function setNewPassword(
 
 export function resumeLogin(
   auth: IOAuth2Provider
-): ThunkAction<Promise<void>, IState, void, MainActions> {
+): ThunkAction<Promise<ILoggedInUser>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
     const location = getState().router.location;
     const urlParams = new URLSearchParams(location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
 
     if (isLoginResponse) {
-      await auth.handleLoginResponse(window.location.href);
+      const user = await auth.handleLoginResponse(window.location.href);
       // Login callbacks are handled by `OAuth2`.
 
       // Remove state and code from url.
       dispatch(replace(location.pathname));
 
-      return Promise.resolve();
+      if (!user) {
+        return Promise.reject(new Error('Failed to process login response.'));
+      }
+
+      return Promise.resolve(mapOAuth2UserToUser(user));
     }
 
     // Try to resume GS user first.
@@ -290,14 +298,14 @@ export function resumeLogin(
     if (user) {
       dispatch(loginSuccess(user));
 
-      return Promise.resolve();
+      return Promise.resolve(user);
     }
 
     const mapiUser = await auth.getLoggedInUser();
     if (mapiUser) {
       // Login callbacks are handled by `OAuth2`.
 
-      return Promise.resolve();
+      return Promise.resolve(mapOAuth2UserToUser(mapiUser));
     }
 
     return Promise.reject(new Error('You are not logged in.'));
