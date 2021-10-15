@@ -6,7 +6,7 @@ import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -40,7 +40,7 @@ jest.mock('react-router', () => ({
     url: '',
     params: {
       orgId: 'org1',
-      clusterId: capiv1alpha3Mocks.randomCluster1.metadata.name,
+      clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
     },
   }),
 }));
@@ -65,9 +65,9 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
 
     render(getComponent({}));
 
@@ -81,26 +81,26 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
-        ...capiv1alpha3Mocks.randomCluster1,
+        ...mockCapiv1alpha3.randomCluster1,
         metadata: {
-          ...capiv1alpha3Mocks.randomCluster1.metadata,
+          ...mockCapiv1alpha3.randomCluster1.metadata,
           annotations: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata.annotations,
+            ...mockCapiv1alpha3.randomCluster1.metadata.annotations,
             'cluster.giantswarm.io/description': 'Some Cluster',
           },
         },

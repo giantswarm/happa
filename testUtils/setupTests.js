@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 import { act, configure, screen, waitFor } from '@testing-library/react';
 import GiantSwarm from 'giantswarm';

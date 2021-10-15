@@ -4,37 +4,6 @@ const path = require('path');
 process.env.DEBUG_PRINT_LIMIT = 10000;
 
 module.exports = {
-  transform: {
-    '^.+\\.(js|ts)(x?)$': [
-      '@swc/jest',
-      {
-        sourceMaps: true,
-        jsc: {
-          target: 'es2015',
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-            decorators: true,
-            dynamicImport: true,
-          },
-          transform: {
-            legacyDecorator: true,
-            decoratorMetadata: true,
-            react: {
-              runtime: 'automatic',
-            },
-          },
-          externalHelpers: true,
-        },
-        module: {
-          type: 'commonjs',
-        },
-        env: {
-          targets: '> 0.25%, not dead',
-        },
-      },
-    ],
-  },
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
   setupFiles: [

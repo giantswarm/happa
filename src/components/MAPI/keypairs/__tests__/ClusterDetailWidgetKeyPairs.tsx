@@ -6,7 +6,7 @@ import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as legacyMocks from 'testUtils/mockHttpCalls/legacy';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -38,7 +38,7 @@ jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
     orgId: 'org1',
-    clusterId: capiv1alpha3Mocks.randomCluster1.metadata.name,
+    clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
   }),
 }));
 
