@@ -56,7 +56,7 @@ const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
 
     return (
       <ClusterDetailWidget
-        title='Key pairs'
+        title='Client certificates'
         contentProps={{
           direction: 'row',
           gap: 'small',
@@ -67,7 +67,7 @@ const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
       >
         {hasNoKeyPairs && (
           <Box fill={true} pad={{ bottom: 'xsmall' }}>
-            <Text margin={{ bottom: 'small' }}>No key pairs</Text>
+            <Text margin={{ bottom: 'small' }}>No client certificates</Text>
             <Text size='small'>
               Use{' '}
               <StyledLink
@@ -84,7 +84,7 @@ const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
 
         {!hasNoKeyPairs && (
           <ClusterDetailCounter
-            label='key pair'
+            label='client certificate'
             pluralize={true}
             value={activeKeyPairsCount}
           />

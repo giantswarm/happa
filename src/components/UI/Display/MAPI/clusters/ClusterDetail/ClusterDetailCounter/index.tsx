@@ -39,7 +39,7 @@ const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
   }
 
   return (
-    <Box align='center' basis='100px' flex={{ grow: 0, shrink: 1 }} {...props}>
+    <Box align='center' basis='100px' flex={{ grow: 1, shrink: 1 }} {...props}>
       <Box margin={{ bottom: 'xsmall' }}>
         <OptionalValue
           value={value}

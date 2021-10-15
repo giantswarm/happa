@@ -38,6 +38,8 @@ const OrganizationsRoutes = {
     Detail: {
       Home: '/organizations/:orgId/clusters/:clusterId',
       KeyPairs: '/organizations/:orgId/clusters/:clusterId/keypairs',
+      ClientCertificates:
+        '/organizations/:orgId/clusters/:clusterId/clientcertificates',
       Apps: '/organizations/:orgId/clusters/:clusterId/apps',
       Ingress: '/organizations/:orgId/clusters/:clusterId/ingress',
       WorkerNodes: '/organizations/:orgId/clusters/:clusterId/worker-nodes',
