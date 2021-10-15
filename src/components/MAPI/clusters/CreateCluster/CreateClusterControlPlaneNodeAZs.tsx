@@ -24,7 +24,7 @@ interface ICreateClusterControlPlaneNodeAZsProps
     > {}
 
 const CreateClusterControlPlaneNodeAZs: React.FC<ICreateClusterControlPlaneNodeAZsProps> =
-  ({ id, cluster, controlPlaneNode, onChange, ...props }) => {
+  ({ id, cluster, controlPlaneNodes, onChange, ...props }) => {
     const [azSelector, setAzSelector] = useState(
       AvailabilityZoneSelection.Automatic
     );
@@ -33,9 +33,8 @@ const CreateClusterControlPlaneNodeAZs: React.FC<ICreateClusterControlPlaneNodeA
     const azStats = getSupportedAvailabilityZones();
 
     const value = useMemo(() => {
-      return computeControlPlaneNodesStats([controlPlaneNode])
-        .availabilityZones;
-    }, [controlPlaneNode]);
+      return computeControlPlaneNodesStats(controlPlaneNodes).availabilityZones;
+    }, [controlPlaneNodes]);
 
     const [manualZones, setManualZones] = useState<string[]>(value);
     const [manualZonesIsValid, setManualZonesIsValid] = useState(false);
