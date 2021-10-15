@@ -104,3 +104,24 @@ export interface IAWSClusterList extends metav1.IList<IAWSCluster> {
   apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
   kind: typeof AWSClusterList;
 }
+
+export interface IAWSControlPlaneSpec {
+  availabilityZones?: string[];
+  instanceType?: string;
+}
+
+export const AWSControlPlane = 'AWSControlPlane';
+
+export interface IAWSControlPlane {
+  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  kind: typeof AWSControlPlane;
+  metadata: metav1.IObjectMeta;
+  spec: IAWSControlPlaneSpec;
+}
+
+export const AWSControlPlaneList = 'AWSControlPlaneList';
+
+export interface IAWSControlPlaneList extends metav1.IList<IAWSControlPlane> {
+  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  kind: typeof AWSControlPlaneList;
+}

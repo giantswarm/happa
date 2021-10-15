@@ -5,3 +5,6 @@ export * from './deleteAWSCluster';
 export * from './getAWSCluster';
 export * from './getAWSClusterList';
 export * from './updateAWSCluster';
+export * from './createAWSControlPlane';
+export * from './deleteAWSControlPlane';
+export * from './getAWSControlPlaneList';
