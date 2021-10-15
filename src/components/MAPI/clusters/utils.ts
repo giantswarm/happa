@@ -10,7 +10,11 @@ import {
   ProviderCluster,
   ProviderNodePool,
 } from 'MAPI/types';
-import { fetchProviderClusterForClusterKey, IMachineType } from 'MAPI/utils';
+import {
+  fetchMasterListForClusterKey,
+  fetchProviderClusterForClusterKey,
+  IMachineType,
+} from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -275,11 +279,11 @@ function createDefaultV1Alpha3Cluster(config: {
   };
 }
 
-export function createDefaultControlPlaneNode(config: {
+export function createDefaultControlPlaneNodes(config: {
   providerCluster: ProviderCluster;
-}) {
+}): ControlPlaneNode[] {
   if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
-    return createDefaultAzureMachine(config);
+    return [createDefaultAzureMachine(config)];
   }
 
   throw new Error('Unsupported provider.');
@@ -341,12 +345,12 @@ export async function createCluster(
   config: {
     cluster: Cluster;
     providerCluster: ProviderCluster;
-    controlPlaneNode: ControlPlaneNode;
+    controlPlaneNodes: ControlPlaneNode[];
   }
 ): Promise<{
   cluster: Cluster;
   providerCluster: ProviderCluster;
-  controlPlaneNode: ControlPlaneNode;
+  controlPlaneNodes: ControlPlaneNode[];
 }> {
   if (config.providerCluster.kind === capzv1alpha3.AzureCluster) {
     const providerCluster = await capzv1alpha3.createAzureCluster(
@@ -361,10 +365,16 @@ export async function createCluster(
       false
     );
 
-    const controlPlaneNode = await capzv1alpha3.createAzureMachine(
-      httpClient,
-      auth,
-      config.controlPlaneNode
+    const controlPlaneNodes = await Promise.all(
+      config.controlPlaneNodes.map((n) =>
+        capzv1alpha3.createAzureMachine(httpClient, auth, n)
+      )
+    );
+
+    mutate(
+      fetchMasterListForClusterKey(config.cluster),
+      controlPlaneNodes,
+      false
     );
 
     const cluster = await capiv1alpha3.createCluster(
@@ -393,7 +403,7 @@ export async function createCluster(
       false
     );
 
-    return { cluster, providerCluster, controlPlaneNode };
+    return { cluster, providerCluster, controlPlaneNodes };
   }
 
   return Promise.reject(new Error('Unsupported provider.'));

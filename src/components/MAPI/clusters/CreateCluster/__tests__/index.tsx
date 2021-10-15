@@ -90,7 +90,7 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockResolvedValue({
       cluster: capiv1alpha3Mocks.randomCluster1,
       providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNode: capzv1alpha3Mocks.randomAzureMachine1,
+      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -137,7 +137,7 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockResolvedValue({
       cluster: capiv1alpha3Mocks.randomCluster1,
       providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNode: capzv1alpha3Mocks.randomAzureMachine1,
+      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -180,13 +180,15 @@ describe('ClusterCreate', () => {
             }),
           }),
         }),
-        controlPlaneNode: expect.objectContaining({
-          metadata: expect.objectContaining({
-            labels: expect.objectContaining({
-              'release.giantswarm.io/version': '14.1.5',
+        controlPlaneNodes: expect.arrayContaining([
+          expect.objectContaining({
+            metadata: expect.objectContaining({
+              labels: expect.objectContaining({
+                'release.giantswarm.io/version': '14.1.5',
+              }),
             }),
           }),
-        }),
+        ]),
       })
     );
 
@@ -202,7 +204,7 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockResolvedValue({
       cluster: capiv1alpha3Mocks.randomCluster1,
       providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNode: capzv1alpha3Mocks.randomAzureMachine1,
+      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -226,11 +228,13 @@ describe('ClusterCreate', () => {
       expect.any(Object),
       expect.any(Object),
       expect.objectContaining({
-        controlPlaneNode: expect.objectContaining({
-          spec: expect.objectContaining({
-            failureDomain: '3',
+        controlPlaneNodes: expect.arrayContaining([
+          expect.objectContaining({
+            spec: expect.objectContaining({
+              failureDomain: '3',
+            }),
           }),
-        }),
+        ]),
       })
     );
 
