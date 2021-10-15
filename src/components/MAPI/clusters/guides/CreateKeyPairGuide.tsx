@@ -13,12 +13,13 @@ const CreateKeyPairGuide: React.FC<ICreateKeyPairGuideProps> = ({
 }) => {
   return (
     <CLIGuide
-      title='Create a key pair via the Management API'
+      title='Create a client certificate via the Management API'
       footer={
         <CLIGuideAdditionalInfo
           links={[
             {
-              label: 'Creating key pairs via the Management API',
+              label:
+                'Creating client certificates (key pairs) via the Management API',
               href: docs.creatingWorkloadClusterKeyPairsURL,
               external: true,
             },

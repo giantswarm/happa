@@ -53,8 +53,8 @@ function computePaths(orgName: string, clusterName: string) {
         clusterId: clusterName,
       }
     ),
-    KeyPairs: RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail.KeyPairs,
+    ClientCertificates: RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.ClientCertificates,
       {
         orgId: orgName,
         clusterId: clusterName,
@@ -285,7 +285,7 @@ const ClusterDetail: React.FC<{}> = () => {
           <Tabs useRoutes={true}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />
-            <Tab path={paths.KeyPairs} title='Key pairs' />
+            <Tab path={paths.ClientCertificates} title='Client certificates' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
             <Tab path={paths.Actions} title='Actions' />
@@ -304,7 +304,7 @@ const ClusterDetail: React.FC<{}> = () => {
               }
             />
             <Route
-              path={OrganizationsRoutes.Clusters.Detail.KeyPairs}
+              path={OrganizationsRoutes.Clusters.Detail.ClientCertificates}
               component={ClusterDetailKeyPairs}
             />
             <Route

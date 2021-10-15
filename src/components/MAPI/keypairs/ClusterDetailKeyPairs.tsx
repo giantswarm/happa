@@ -89,7 +89,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   useEffect(() => {
     if (keyPairListError) {
       new FlashMessage(
-        'There was a problem loading key pairs.',
+        'There was a problem loading client certificates.',
         messageType.ERROR,
         messageTTL.LONG,
         extractErrorMessage(keyPairListError)
@@ -129,19 +129,20 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   };
 
   return (
-    <DocumentTitle title={`Key Pairs | ${clusterId}`}>
+    <DocumentTitle title={`Client Certificates | ${clusterId}`}>
       <Breadcrumb
         data={{
-          title: 'KEY PAIRS',
+          title: 'CLIENT CERTIFICATES',
           pathname,
         }}
       >
         <Box>
           <Box>
             <Text>
-              Key pairs consist of an RSA private key and certificate, signed by
-              the certificate authority (CA) belonging to this cluster. They are
-              used for access to the cluster via the Kubernetes API.
+              Client certificates consist of an RSA private key and an X.509
+              certificate, signed by the certificate authority (CA) belonging to
+              this cluster. They are used for access to the cluster via the
+              Kubernetes API.
             </Text>
           </Box>
           <Table width='100%' margin={{ top: 'medium' }}>
@@ -203,7 +204,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                 <TableRow>
                   <TableCell>
                     <Text color='text-weak'>
-                      There are no key pairs to display.
+                      There are no client certificates to display.
                     </Text>
                   </TableCell>
                 </TableRow>
