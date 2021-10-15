@@ -36,7 +36,11 @@ const GettingStarted = (props) => {
   useEffect(() => {
     if (!clusterExists) {
       new FlashMessage(
-        `Cluster <code>${clusterId}</code> no longer exists.`,
+        (
+          <>
+            Cluster <code>{clusterId}</code> no longer exists.
+          </>
+        ),
         messageType.INFO,
         messageTTL.MEDIUM
       );

@@ -141,7 +141,12 @@ const AppDetail: React.FC<{}> = () => {
   useEffect(() => {
     if (appCatalogEntryList && !selectedEntry) {
       new FlashMessage(
-        `Couldn't find version <code>${version}</code> for <code>${app}</code>`,
+        (
+          <>
+            Couldn&apos;t find version <code>{version}</code> for{' '}
+            <code>{app}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER
       );

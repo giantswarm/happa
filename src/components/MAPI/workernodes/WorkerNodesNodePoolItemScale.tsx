@@ -149,7 +149,12 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
         }, 200);
 
         new FlashMessage(
-          `Node pool <code>${nodePool.metadata.name}</code> updated successfully`,
+          (
+            <>
+              Node pool <code>{nodePool.metadata.name}</code> updated
+              successfully
+            </>
+          ),
           messageType.SUCCESS,
           messageTTL.SHORT
         );
@@ -159,7 +164,11 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
         const errorMessage = extractErrorMessage(err);
 
         new FlashMessage(
-          `Could not update node pool <code>${nodePool.metadata.name}</code>`,
+          (
+            <>
+              Could not update node pool <code>{nodePool.metadata.name}</code>
+            </>
+          ),
           messageType.ERROR,
           messageTTL.FOREVER,
           errorMessage

@@ -1,6 +1,7 @@
 import GiantSwarm from 'giantswarm';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import React from 'react';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
 import { INodePool } from 'shared/types';
@@ -205,7 +206,11 @@ export function nodePoolDeleteConfirmed(
       dispatch(modalHide());
 
       new FlashMessage(
-        `Node Pool <code>${nodePool.id}</code> will be deleted`,
+        (
+          <>
+            Node Pool <code>{nodePool.id}</code> will be deleted
+          </>
+        ),
         messageType.INFO,
         messageTTL.SHORT
       );
@@ -213,7 +218,12 @@ export function nodePoolDeleteConfirmed(
       dispatch(modalHide());
 
       new FlashMessage(
-        `An error occurred when trying to delete node pool <code>${nodePool.id}</code>.`,
+        (
+          <>
+            An error occurred when trying to delete node pool{' '}
+            <code>{nodePool.id}</code>.
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'
@@ -266,7 +276,12 @@ function makeNodePoolCreator(
 
       if (emitFlashMessage) {
         new FlashMessage(
-          `Your new node pool with ID <code>${newNodePool.id}</code> is being created.`,
+          (
+            <>
+              Your new node pool with ID <code>{newNodePool.id}</code> is being
+              created.
+            </>
+          ),
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );

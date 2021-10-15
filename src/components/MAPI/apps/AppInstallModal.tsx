@@ -283,7 +283,12 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
       dispatch(push(clusterDetailPath));
 
       new FlashMessage(
-        `Your app <code>${name}</code> is being installed on <code>${clusterName}</code>`,
+        (
+          <>
+            Your app <code>{name}</code> is being installed on{' '}
+            <code>{clusterName}</code>
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -292,7 +297,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         ErrorReporter.getInstance().notify(error as Error);
       }
 
-      let errorMessage = '';
+      let errorMessage: React.ReactNode = '';
       switch (true) {
         case metav1.isStatusError(
           (error as GenericResponseError)?.data,
@@ -314,7 +319,12 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           (error as GenericResponseError)?.data,
           metav1.K8sStatusErrorReasons.AlreadyExists
         ):
-          errorMessage = `An app called <code>${name}</code> already exists on cluster <code>${clusterName}</code>`;
+          errorMessage = (
+            <>
+              An app called <code>{name}</code> already exists on cluster{' '}
+              <code>{clusterName}</code>
+            </>
+          );
 
           break;
 

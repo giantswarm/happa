@@ -165,7 +165,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       }, 200);
 
       new FlashMessage(
-        `Node pool <code>${nodePool.metadata.name}</code> deleted successfully`,
+        (
+          <>
+            Node pool <code>{nodePool.metadata.name}</code> deleted successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -175,7 +179,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not delete node pool <code>${nodePool.metadata.name}</code>`,
+        (
+          <>
+            Could not delete node pool <code>{nodePool.metadata.name}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage

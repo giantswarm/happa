@@ -1,6 +1,5 @@
-import QueueImpl from 'lib/Queue';
-import Noty from 'noty';
 import { PropertiesOf } from 'shared/types';
+import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 
 /**
  * Message severity.
@@ -24,78 +23,28 @@ export const messageTTL = {
 };
 
 export class FlashMessage {
-  /**
-   * The messages waiting to be displayed.
-   */
-  public static queue = new QueueImpl();
-
-  public static hashQueueItem(
-    type: PropertiesOf<typeof messageType>,
-    text: string
-  ) {
-    return `${type}:${text}`;
-  }
-
   constructor(
-    text: string,
+    text: React.ReactNode,
     type: PropertiesOf<typeof messageType>,
     ttl?: number | false,
-    subtext?: string,
+    subtext?: React.ReactNode,
     onClose?: () => void
   ) {
-    const hash = FlashMessage.hashQueueItem(type, text);
-
-    // make sure to only pass escaped HTML to this.text!
-    this.text = `<p>${escapeHTML(text)}</p>`;
-    if (subtext) {
-      this.text += `<p>${escapeHTML(subtext)}</p>`;
-    }
-
-    if (ttl) {
-      this.timeout = ttl;
-    }
-
-    this.noty = new Noty({
-      type: type as Noty.Type,
-      text: this.text,
-      timeout: this.timeout,
-      callbacks: {
-        beforeShow: this.onBeforeShow(hash),
-        afterClose: this.onAfterClose(hash),
-        onClose,
-      },
-      theme: 'bootstrap-v3',
-      layout: 'topRight',
-      closeWith: ['click', 'button'],
-      animation: {
-        close: 'flash_message_close',
-      },
+    FlashMessagesController.getInstance().enqueue({
+      title: text,
+      ttl: ttl ?? false,
+      type,
+      message: subtext,
+      onClose,
     });
-
-    if (!FlashMessage.queue.includes(hash)) {
-      this.noty.show();
-    }
   }
-
-  onBeforeShow = (hash: string) => () => {
-    FlashMessage.queue.add(hash);
-  };
-
-  onAfterClose = (hash: string) => () => {
-    FlashMessage.queue.remove(hash);
-  };
-
-  protected readonly noty: Noty;
-  protected readonly text: string;
-  protected readonly timeout: number | false = false;
 }
 
 /**
  * Remove all queued messages and close those that are displayed.
  */
 export function clearQueues() {
-  Noty.closeAll();
-  FlashMessage.queue.clear();
+  FlashMessagesController.getInstance().clear();
 }
 
 /**
@@ -104,30 +53,4 @@ export function clearQueues() {
  */
 export function forceRemoveAll() {
   clearQueues();
-
-  const notificationWrapper = document.querySelector('.noty_layout');
-  notificationWrapper?.remove();
-}
-
-/**
- * Escapes HTML in a notification text.
- *
- * The following tag can be used (in lowercase only, without attributes):
- *
- *   <code>...</code>
- *
- * @param unsafe - Input HTML code.
- */
-function escapeHTML(unsafe: string): string {
-  let safe = unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-  safe = safe
-    .replace(/&lt;code&gt;/g, '<code>')
-    .replace(/&lt;\/code&gt;/g, '</code>');
-
-  return safe;
 }

@@ -21,7 +21,11 @@ class DetailIndex extends React.Component {
 
     if (!this.props.organization) {
       new FlashMessage(
-        `Organization <code>${orgId}</code> not found`,
+        (
+          <>
+            Organization <code>{orgId}</code> not found
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Organization ID is correct and that you have access to it.'

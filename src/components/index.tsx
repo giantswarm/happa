@@ -1,6 +1,5 @@
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'noty/lib/noty.css';
 import 'styles/app.sass';
 
 import ErrorReporter from 'lib/errors/ErrorReporter';
@@ -16,6 +15,7 @@ import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import { IState } from 'stores/state';
 import theme from 'styles/theme';
+import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 
 import App from './App';
 
@@ -23,6 +23,8 @@ featureFlags.init();
 
 const authConfig = makeDefaultConfig();
 const auth = new MapiAuth(authConfig);
+
+const flashMessagesController = FlashMessagesController.getInstance();
 
 // Configure the redux store.
 const store: Store = configureStore({} as IState, history, auth);
@@ -54,4 +56,7 @@ body.classList.remove('loading');
 
 // Finally, render the app!
 const appContainer = document.getElementById('app');
-render(<App {...{ store, theme, history, auth }} />, appContainer);
+render(
+  <App {...{ store, theme, history, auth, flashMessagesController }} />,
+  appContainer
+);

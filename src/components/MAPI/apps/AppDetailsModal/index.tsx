@@ -80,7 +80,11 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       )
     ) {
       new FlashMessage(
-        `App <code>${appName}</code> not found`,
+        (
+          <>
+            App <code>{appName}</code> not found
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the app exists and that you have access to it.'
@@ -91,7 +95,11 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const message = extractErrorMessage(appError);
 
       new FlashMessage(
-        `There was a problem loading app <code>${appName}</code>`,
+        (
+          <>
+            There was a problem loading app <code>{appName}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         message
@@ -197,7 +205,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `App <code>${appName}</code> on <code>${clusterName}</code> has been updated. Changes might take some time to take effect.`,
+        (
+          <>
+            App <code>{appName}</code> on <code>{clusterName}</code> has been
+            updated. Changes might take some time to take effect.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -225,7 +238,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterName}</code> has been deleted.`,
+        (
+          <>
+            The ConfigMap containing user level config values for{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has been
+            deleted.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -257,7 +276,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterName}</code> has been deleted.`,
+        (
+          <>
+            The Secret containing user level secret values for{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has been
+            deleted.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -283,7 +308,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterName}</code>. This may take a couple of minutes.`,
+        (
+          <>
+            App <code>{appName}</code> was scheduled for deletion on{' '}
+            <code>{clusterName}</code>. This may take a couple of minutes.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -320,7 +350,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterName}</code> has successfully been created.`,
+        (
+          <>
+            A ConfigMap containing user level config values for{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been created.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -359,7 +395,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
+        (
+          <>
+            The ConfigMap containing the user level config values of{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been updated.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -398,7 +440,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
+        (
+          <>
+            The Secret containing the user level secret values of{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been updated.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -437,7 +485,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
+        (
+          <>
+            The Secret containing the user level secret values of{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been updated.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );

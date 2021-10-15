@@ -44,7 +44,12 @@ const ClusterDetailAppListWidgetUninstall: React.FC<IClusterDetailAppListWidgetU
         if (onAppUninstalled) onAppUninstalled();
 
         new FlashMessage(
-          `App <code>${app.metadata.name}</code> will be uninstalled from cluster <code>${app.metadata.namespace}</code>.`,
+          (
+            <>
+              App <code>{app.metadata.name}</code> will be uninstalled from
+              cluster <code>{app.metadata.namespace}</code>.
+            </>
+          ),
           messageType.SUCCESS,
           messageTTL.SHORT
         );
