@@ -139,9 +139,9 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
         <Box>
           <Box>
             <Text>
-              Client certificates consist of an RSA private key and certificate,
-              signed by the certificate authority (CA) belonging to this
-              cluster. They are used for access to the cluster via the
+              Client certificates consist of an RSA private key and an X.509
+              certificate, signed by the certificate authority (CA) belonging to
+              this cluster. They are used for access to the cluster via the
               Kubernetes API.
             </Text>
           </Box>
