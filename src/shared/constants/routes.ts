@@ -39,7 +39,7 @@ const OrganizationsRoutes = {
       Home: '/organizations/:orgId/clusters/:clusterId',
       KeyPairs: '/organizations/:orgId/clusters/:clusterId/keypairs',
       ClientCertificates:
-        '/organizations/:orgId/clusters/:clusterId/clientcertificates',
+        '/organizations/:orgId/clusters/:clusterId/client-certificates',
       Apps: '/organizations/:orgId/clusters/:clusterId/apps',
       Ingress: '/organizations/:orgId/clusters/:clusterId/ingress',
       WorkerNodes: '/organizations/:orgId/clusters/:clusterId/worker-nodes',
