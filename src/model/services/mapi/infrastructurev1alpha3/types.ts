@@ -153,3 +153,71 @@ export interface IG8sControlPlaneList extends metav1.IList<IG8sControlPlane> {
   apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
   kind: typeof G8sControlPlaneList;
 }
+
+export interface IAWSMachineDeploymentSpecNodePoolMachine {
+  dockerVolumeSizeGB: number;
+  kubeletVolumeSizeGB: number;
+}
+
+export interface IAWSMachineDeploymentSpecNodePoolScaling {
+  min: number;
+  max: number;
+}
+
+export interface IAWSMachineDeploymentSpecNodePool {
+  description: string;
+  machine: IAWSMachineDeploymentSpecNodePoolMachine;
+  scaling: IAWSMachineDeploymentSpecNodePoolScaling;
+}
+
+export interface IAWSMachineDeploymentSpecProviderInstanceDistribution {
+  onDemandBaseCapacity: number;
+  onDemandPercentageAboveBaseCapacity: number | null;
+}
+
+export interface IAWSMachineDeploymentSpecProviderWorker {
+  instanceType: string;
+  useAlikeInstanceTypes: boolean;
+}
+
+export interface IAWSMachineDeploymentSpecProvider {
+  availabilityZones: string[];
+  worker: IAWSMachineDeploymentSpecProviderWorker;
+  instanceDistribution?: IAWSMachineDeploymentSpecProviderInstanceDistribution;
+}
+
+export interface IAWSMachineDeploymentSpec {
+  nodePool: IAWSMachineDeploymentSpecNodePool;
+  provider: IAWSMachineDeploymentSpecProvider;
+}
+
+export interface IAWSMachineDeploymentStatusProviderWorker {
+  instanceTypes?: string[];
+  spotInstances?: number;
+}
+
+export interface IAWSMachineDeploymentStatusProvider {
+  worker?: IAWSMachineDeploymentStatusProviderWorker;
+}
+
+export interface IAWSMachineDeploymentStatus {
+  provider?: IAWSMachineDeploymentStatusProvider;
+}
+
+export const AWSMachineDeployment = 'AWSMachineDeployment';
+
+export interface IAWSMachineDeployment {
+  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  kind: typeof AWSMachineDeployment;
+  metadata: metav1.IObjectMeta;
+  spec: IAWSMachineDeploymentSpec;
+  status?: IAWSMachineDeploymentStatus;
+}
+
+export const AWSMachineDeploymentList = 'AWSMachineDeploymentList';
+
+export interface IAWSMachineDeploymentList
+  extends metav1.IList<IAWSMachineDeployment> {
+  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  kind: typeof AWSMachineDeploymentList;
+}

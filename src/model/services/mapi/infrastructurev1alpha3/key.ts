@@ -1,6 +1,6 @@
 import { Constants } from 'shared/constants';
 
-import { IAWSCluster } from '.';
+import { IAWSCluster, IAWSMachineDeployment } from '.';
 
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
@@ -32,4 +32,13 @@ export function getAWSClusterLabels(
   if (!awsCluster.metadata.labels) return {};
 
   return awsCluster.metadata.labels;
+}
+
+export function getAWSMachineDeploymentDescription(
+  awsMachineDeployment: IAWSMachineDeployment
+): string {
+  let name = awsMachineDeployment.spec.nodePool.description;
+  name ??= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
+
+  return name;
 }

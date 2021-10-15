@@ -11,3 +11,6 @@ export * from './getAWSControlPlaneList';
 export * from './createG8sControlPlane';
 export * from './deleteG8sControlPlane';
 export * from './getG8sControlPlaneList';
+export * from './createAWSMachineDeployment';
+export * from './deleteAWSMachineDeployment';
+export * from './getAWSMachineDeployment';
