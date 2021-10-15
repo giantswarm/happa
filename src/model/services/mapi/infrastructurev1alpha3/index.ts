@@ -8,3 +8,6 @@ export * from './updateAWSCluster';
 export * from './createAWSControlPlane';
 export * from './deleteAWSControlPlane';
 export * from './getAWSControlPlaneList';
+export * from './createG8sControlPlane';
+export * from './deleteG8sControlPlane';
+export * from './getG8sControlPlaneList';

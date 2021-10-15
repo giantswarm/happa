@@ -1,3 +1,4 @@
+import * as corev1 from '../corev1';
 import * as metav1 from '../metav1';
 
 export interface IAWSClusterSpecClusterDNS {
@@ -124,4 +125,31 @@ export const AWSControlPlaneList = 'AWSControlPlaneList';
 export interface IAWSControlPlaneList extends metav1.IList<IAWSControlPlane> {
   apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
   kind: typeof AWSControlPlaneList;
+}
+
+export interface IG8sControlPlaneSpec {
+  replicas?: number;
+  infrastructureRef: corev1.IObjectReference;
+}
+
+export interface IG8sControlPlaneStatus {
+  replicas?: number;
+  readyReplicas?: number;
+}
+
+export const G8sControlPlane = 'G8sControlPlane';
+
+export interface IG8sControlPlane {
+  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  kind: typeof G8sControlPlane;
+  metadata: metav1.IObjectMeta;
+  spec: IG8sControlPlaneSpec;
+  status: IG8sControlPlaneStatus;
+}
+
+export const G8sControlPlaneList = 'G8sControlPlaneList';
+
+export interface IG8sControlPlaneList extends metav1.IList<IG8sControlPlane> {
+  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  kind: typeof G8sControlPlaneList;
 }
