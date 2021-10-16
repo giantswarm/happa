@@ -5,7 +5,7 @@ import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 interface ICLIGuideStepProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Box>, 'title'> {
   title: React.ReactNode;
-  command: React.ReactNode;
+  command?: React.ReactNode;
 }
 
 const CLIGuideStep: React.FC<ICLIGuideStepProps> = ({
@@ -17,9 +17,11 @@ const CLIGuideStep: React.FC<ICLIGuideStepProps> = ({
   return (
     <Box direction='column' gap='small' {...props}>
       <Text>{title}</Text>
-      <CodeBlock>
-        <Prompt>{command}</Prompt>
-      </CodeBlock>
+      {command && (
+        <CodeBlock>
+          <Prompt>{command}</Prompt>
+        </CodeBlock>
+      )}
       {children}
     </Box>
   );

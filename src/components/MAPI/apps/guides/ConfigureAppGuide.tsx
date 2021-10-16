@@ -74,10 +74,7 @@ const ConfigureAppGuide: React.FC<IConfigureAppGuideProps> = ({
             contain the name and namespace of these.
           </Text>
         </CLIGuideStep>
-        <CLIGuideStep
-          title='3. Modify the user-defined configmap or secret'
-          command=''
-        >
+        <CLIGuideStep title='3. Modify the user-defined configmap or secret'>
           <Text>
             Using the name and namespace information determined in step 2, you
             can locate the resources to be updated. Then use{' '}
