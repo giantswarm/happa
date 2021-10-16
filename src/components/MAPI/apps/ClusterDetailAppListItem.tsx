@@ -1,7 +1,7 @@
 import { AccordionPanel, Box, Text } from 'grommet';
 import { relativeDate } from 'lib/helpers';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
@@ -67,6 +67,10 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
       e.stopPropagation();
     }
   };
+
+  const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
+    string | undefined
+  >(undefined);
 
   return (
     <AccordionPanel
@@ -162,6 +166,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetVersionInspector
             app={app}
+            currentSelectedVersion={currentSelectedVersion}
+            onSelectVersion={setCurrentSelectedVersion}
             basis='100%'
             margin={{ top: 'small' }}
           />
