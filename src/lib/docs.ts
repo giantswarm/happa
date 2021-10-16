@@ -8,6 +8,14 @@
 // Entry point for app platform docs.
 export const appPlatformURL = 'https://docs.giantswarm.io/app-platform/';
 
+// App CR configuration guide
+export const appCRConfigurationURL =
+  'https://docs.giantswarm.io/app-platform/getting-started/#configuring-an-app-cr';
+
+// App configuration guide
+export const appConfigurationURL =
+  'https://docs.giantswarm.io/app-platform/app-configuration/';
+
 // How to prepare an AWS account for use with Giant Swarm.
 export const cloudProviderAccountSetupAwsURL =
   'https://docs.giantswarm.io/getting-started/cloud-provider-accounts/aws/';
