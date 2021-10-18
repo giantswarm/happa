@@ -124,7 +124,7 @@ function getComponent(
 
 describe('ClusterDetailAppListItem', () => {
   // eslint-disable-next-line no-magic-numbers
-  jest.setTimeout(30000);
+  jest.setTimeout(40000);
 
   it('renders without crashing', () => {
     render(getComponent({}));
@@ -286,7 +286,7 @@ describe('ClusterDetailAppListItem', () => {
     fireEvent.click(screen.getByRole('button', { name: /Upgrade/ }));
 
     await waitForElementToBeRemoved(() =>
-      screen.getByRole('button', { name: /Upgrade/ }, { timeout: 5000 })
+      screen.getByRole('button', { name: /Upgrade/ }, { timeout: 10000 })
     );
 
     await withMarkup(screen.findByText)(
@@ -350,7 +350,7 @@ describe('ClusterDetailAppListItem', () => {
 
     await waitForElementToBeRemoved(
       () => screen.getByRole('button', { name: /Downgrade/ }),
-      { timeout: 5000 }
+      { timeout: 10000 }
     );
 
     await withMarkup(screen.findByText)(
