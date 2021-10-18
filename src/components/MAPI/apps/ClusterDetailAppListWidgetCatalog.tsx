@@ -47,15 +47,6 @@ const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCat
 
     useEffect(() => {
       if (catalogNamespaceError) {
-        const errorMessage = extractErrorMessage(catalogNamespaceError);
-
-        new FlashMessage(
-          `There was a problem loading the app's catalog.`,
-          messageType.ERROR,
-          messageTTL.FOREVER,
-          errorMessage
-        );
-
         ErrorReporter.getInstance().notify(catalogNamespaceError);
       }
     }, [catalogNamespaceError]);
