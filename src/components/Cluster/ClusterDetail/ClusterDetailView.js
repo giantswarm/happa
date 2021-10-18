@@ -301,12 +301,12 @@ class ClusterDetailView extends React.Component {
     let kvmTCPHTTPSPort = 0;
 
     if (kvm && kvm.port_mappings && kvm.port_mappings.length === 2) {
-      const httpIndex = kvm.port_mappings.findIndex(
+      kvmTCPHTTPPort = kvm.port_mappings.find(
         ({ protocol }) => protocol.toLowerCase() === 'http'
-      );
-
-      kvmTCPHTTPPort = kvm.port_mappings[httpIndex].port;
-      kvmTCPHTTPSPort = kvm.port_mappings[Math.abs((0 % 2) - 1)].port;
+      ).port;
+      kvmTCPHTTPSPort = kvm.port_mappings.find(
+        ({ protocol }) => protocol.toLowerCase() === 'https'
+      ).port;
     }
 
     return (
