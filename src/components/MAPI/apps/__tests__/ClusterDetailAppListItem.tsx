@@ -124,7 +124,7 @@ function getComponent(
 
 describe('ClusterDetailAppListItem', () => {
   // eslint-disable-next-line no-magic-numbers
-  jest.setTimeout(20000);
+  jest.setTimeout(30000);
 
   it('renders without crashing', () => {
     render(getComponent({}));
