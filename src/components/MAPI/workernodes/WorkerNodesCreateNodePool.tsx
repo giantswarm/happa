@@ -189,7 +189,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       clusterName: cluster.metadata.name,
       namespace: cluster.metadata.namespace!,
       organization: cluster.metadata.labels![capiv1alpha3.labelOrganization],
-      location: getProviderClusterLocation(providerCluster),
+      location: getProviderClusterLocation(providerCluster)!,
     })
   );
 

@@ -82,9 +82,10 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
     );
 
     const isLoading =
-      typeof controlPlaneNodeList === 'undefined' &&
-      typeof controlPlaneNodeListError === 'undefined' &&
-      controlPlaneNodeListIsValidating;
+      typeof cluster === 'undefined' ||
+      (typeof controlPlaneNodeList === 'undefined' &&
+        typeof controlPlaneNodeListError === 'undefined' &&
+        controlPlaneNodeListIsValidating);
 
     useEffect(() => {
       if (controlPlaneNodeListError) {
@@ -93,15 +94,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
     }, [controlPlaneNodeListError]);
 
     const stats = useMemo(() => {
-      if (typeof controlPlaneNodeList === 'undefined' && !isLoading) {
-        return {
-          totalCount: -1,
-          readyCount: -1,
-          availabilityZones: [],
-        };
-      }
-
-      if (!controlPlaneNodeList) {
+      if (isLoading) {
         return {
           totalCount: undefined,
           readyCount: undefined,
@@ -109,8 +102,16 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
         };
       }
 
+      if (typeof controlPlaneNodeList === 'undefined') {
+        return {
+          totalCount: -1,
+          readyCount: -1,
+          availabilityZones: [],
+        };
+      }
+
       return computeControlPlaneNodesStats(controlPlaneNodeList.items);
-    }, [controlPlaneNodeList, controlPlaneNodeListError]);
+    }, [controlPlaneNodeList, isLoading]);
 
     return (
       <ClusterDetailWidget

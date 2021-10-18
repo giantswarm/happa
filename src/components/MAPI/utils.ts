@@ -675,27 +675,39 @@ export function getClusterDescription(cluster: Cluster): string {
 
 export function getProviderClusterLocation(
   providerCluster: ProviderCluster
-): string {
+): string | undefined {
   switch (providerCluster?.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return providerCluster.spec?.location ?? '';
-    case 'infrastructure.giantswarm.io/v1alpha3':
-      return providerCluster.spec?.provider.region ?? '';
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const region = providerCluster.spec?.provider.region;
+      if (typeof region === 'undefined') return '';
+
+      return region;
+    }
 
     default:
-      return '';
+      return undefined;
   }
 }
 
 export function getProviderClusterAccountID(
   providerCluster: ProviderCluster
-): string {
+): string | undefined {
   switch (providerCluster?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-      return providerCluster.spec?.subscriptionID ?? '';
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+      const id = providerCluster.spec?.subscriptionID;
+      if (typeof id === 'undefined') return '';
+
+      return id;
+    }
+
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return '';
 
     default:
-      return '';
+      return undefined;
   }
 }
 

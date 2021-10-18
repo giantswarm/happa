@@ -371,9 +371,16 @@ export async function createCluster(
       )
     );
 
+    const controlPlaneNodesList: capzv1alpha3.IAzureMachineList = {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+      kind: capzv1alpha3.AzureMachineList,
+      metadata: {},
+      items: controlPlaneNodes,
+    };
+
     mutate(
       fetchMasterListForClusterKey(config.cluster),
-      controlPlaneNodes,
+      controlPlaneNodesList,
       false
     );
 
