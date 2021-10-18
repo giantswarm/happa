@@ -35,6 +35,7 @@ export type NodePoolList =
 export type ProviderNodePool =
   | capzexpv1alpha3.IAzureMachinePool
   | capzv1alpha4.IAzureMachinePool
+  | infrav1alpha3.IAWSMachineDeployment
   | undefined;
 
 export type ProviderNodePoolList =

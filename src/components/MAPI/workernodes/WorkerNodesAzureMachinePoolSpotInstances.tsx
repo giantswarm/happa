@@ -1,16 +1,18 @@
 import { Box, Text } from 'grommet';
-import { ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolSpotInstances,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import React from 'react';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface IWorkerNodesAzureMachinePoolSpotInstancesProps {
-  providerNodePool?: ProviderNodePool;
+  providerNodePool?:
+    | capzexpv1alpha3.IAzureMachinePool
+    | capzv1alpha4.IAzureMachinePool;
 }
 
 const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachinePoolSpotInstancesProps> =

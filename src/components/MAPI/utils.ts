@@ -248,6 +248,14 @@ export async function fetchProviderNodePoolsForNodePools(
             infrastructureRef.name
           );
 
+        case 'infrastructure.giantswarm.io/v1alpha3':
+          return infrav1alpha3.getAWSMachineDeployment(
+            httpClientFactory(),
+            auth,
+            np.metadata.namespace!,
+            infrastructureRef.name
+          );
+
         default:
           return Promise.reject(new Error('Unsupported provider.'));
       }
@@ -859,5 +867,9 @@ export function isCAPZCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return isCAPZCluster(cluster);
+  return (
+    isCAPZCluster(cluster) ||
+    cluster.spec?.infrastructureRef?.apiVersion ===
+      'infrastructure.giantswarm.io/v1alpha3'
+  );
 }
