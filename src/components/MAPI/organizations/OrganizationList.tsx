@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { ClusterList } from 'MAPI/types';
 import {
@@ -34,14 +34,14 @@ const OrganizationIndex: React.FC = () => {
 
   const provider = window.config.info.general.provider;
 
-  const client = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
   >(fetchClusterListKey(provider, ''), () =>
-    fetchClusterList(client, auth, provider, '')
+    fetchClusterList(clientFactory, auth, provider, '')
   );
 
   useEffect(() => {

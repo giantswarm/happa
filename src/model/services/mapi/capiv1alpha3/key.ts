@@ -1,4 +1,5 @@
 import * as corev1 from 'model/services/mapi/corev1';
+import { Constants } from 'shared/constants';
 
 import { ICluster, ICondition } from './';
 
@@ -22,7 +23,7 @@ export const conditionReasonUpgradePending = 'UpgradePending';
 
 export function getClusterDescription(cluster: ICluster): string {
   let name = cluster.metadata.annotations?.[annotationClusterDescription];
-  name ??= 'Unnamed cluster';
+  name ??= Constants.DEFAULT_CLUSTER_DESCRIPTION;
 
   return name;
 }

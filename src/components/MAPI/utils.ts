@@ -299,23 +299,68 @@ export function fetchClusterKey(
 }
 
 export async function fetchClusterList(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  _provider: PropertiesOf<typeof Providers>,
-  namespace?: string
+  provider: PropertiesOf<typeof Providers>,
+  namespace?: string,
+  organization?: string
 ): Promise<ClusterList> {
+  if (namespace && organization && provider === Providers.AWS) {
+    const [namespacedClusters, nonNamespacedClusters] =
+      await Promise.allSettled([
+        capiv1alpha3.getClusterList(httpClientFactory(), auth, { namespace }),
+        capiv1alpha3.getClusterList(httpClientFactory(), auth, {
+          namespace: 'default',
+          labelSelector: {
+            matchingLabels: { [capiv1alpha3.labelOrganization]: organization },
+          },
+        }),
+      ]);
+
+    if (
+      namespacedClusters.status === 'rejected' &&
+      nonNamespacedClusters.status === 'rejected'
+    ) {
+      return Promise.reject(nonNamespacedClusters.reason);
+    }
+
+    const clusterList: capiv1alpha3.IClusterList = {
+      apiVersion: 'cluster.x-k8s.io/v1alpha3',
+      kind: capiv1alpha3.ClusterList,
+      metadata: {},
+      items: [],
+    };
+
+    if (namespacedClusters.status === 'fulfilled') {
+      clusterList.items.push(...namespacedClusters.value.items);
+    }
+
+    if (nonNamespacedClusters.status === 'fulfilled') {
+      clusterList.items.push(...nonNamespacedClusters.value.items);
+    }
+
+    return clusterList;
+  }
+
   const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
 
-  return capiv1alpha3.getClusterList(httpClient, auth, getOptions);
+  return capiv1alpha3.getClusterList(httpClientFactory(), auth, getOptions);
 }
 
 export function fetchClusterListKey(
-  _provider: PropertiesOf<typeof Providers>,
-  namespace?: string
+  provider: PropertiesOf<typeof Providers>,
+  namespace?: string,
+  organization?: string
 ): string | null {
   if (typeof namespace === 'undefined') return null;
 
   const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
+
+  if (organization && provider === Providers.AWS) {
+    getOptions.labelSelector = {
+      matchingLabels: { [capiv1alpha3.labelOrganization]: organization },
+    };
+  }
 
   return capiv1alpha3.getClusterListKey(getOptions);
 }
