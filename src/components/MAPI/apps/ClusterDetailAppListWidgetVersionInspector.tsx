@@ -37,13 +37,15 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  currentSelectedVersion?: string;
+  onSelectVersion: (newVersion: string) => void;
 }
 
 const TRUNCATE_START_CHARS = 10;
 const TRUNCATE_END_CHARS = 5;
 
 const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppListWidgetVersionInspectorProps> =
-  ({ app, ...props }) => {
+  ({ app, currentSelectedVersion, onSelectVersion, ...props }) => {
     const clientFactory = useHttpClientFactory();
     const auth = useAuthProvider();
 
@@ -101,16 +103,12 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
       (typeof appCatalogEntryList === 'undefined' &&
         typeof appCatalogEntryListError === 'undefined');
 
-    const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
-      string | undefined
-    >(undefined);
-
     const currentCreationDate = useRef<string | undefined>(undefined);
     const currentUpstreamVersion = useRef<string | undefined>(undefined);
 
     const setCurrentEntry = useCallback(
       (entry: applicationv1alpha1.IAppCatalogEntry) => {
-        setCurrentSelectedVersion(entry.spec.version);
+        onSelectVersion(entry.spec.version);
         currentCreationDate.current = entry.spec.dateCreated!;
         currentUpstreamVersion.current = entry.spec.appVersion;
       },
@@ -128,7 +126,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
           (e) => e.spec.version === app.spec.version
         );
         if (!entry) {
-          setCurrentSelectedVersion(app.spec.version);
+          onSelectVersion(app.spec.version);
           currentCreationDate.current = '';
           currentUpstreamVersion.current = '';
 
