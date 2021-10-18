@@ -63,8 +63,8 @@ const ConfigureAppGuide: React.FC<IConfigureAppGuideProps> = ({
           title='2. Find your app configuration'
           command={`
           kubectl --context ${context} \\
-            get apps ${appName} \\
             --namespace ${namespace} \\
+            get apps ${appName} \\
             --output "jsonpath={.spec.userConfig}"
         `}
         >
