@@ -8,7 +8,6 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -80,8 +79,6 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
       e.stopPropagation();
     }
   };
-
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
@@ -235,22 +232,22 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           >
             <InspectInstalledAppGuide
               appName={app.metadata.name}
-              namespace={clusterId}
+              namespace={app.metadata.namespace!}
             />
             <UpdateAppGuide
               appName={app.metadata.name}
-              namespace={clusterId}
+              namespace={app.metadata.namespace!}
               newVersion={currentSelectedVersion ?? app.spec.version}
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
             />
             <ConfigureAppGuide
               appName={app.metadata.name}
-              namespace={clusterId}
+              namespace={app.metadata.namespace!}
             />
             <UninstallAppGuide
               appName={app.metadata.name}
-              namespace={clusterId}
+              namespace={app.metadata.namespace!}
             />
           </Box>
         )}
