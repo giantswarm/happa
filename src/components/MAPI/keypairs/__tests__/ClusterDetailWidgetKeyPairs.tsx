@@ -73,7 +73,9 @@ describe('ClusterDetailWidgetKeyPairs', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByText('No key pairs')).toBeInTheDocument();
+    expect(
+      await screen.findByText('No client certificates')
+    ).toBeInTheDocument();
     expect(
       screen.getByText((_, node) => {
         return (
@@ -92,6 +94,8 @@ describe('ClusterDetailWidgetKeyPairs', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByLabelText('2 key pairs')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('2 client certificates')
+    ).toBeInTheDocument();
   });
 });

@@ -8,7 +8,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dsPxDL"
+      class="StyledBox-sc-13pk1d4-0 ixwEPe"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 hgvosH"
@@ -42,7 +42,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
     class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dsPxDL"
+      class="StyledBox-sc-13pk1d4-0 ixwEPe"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 hgvosH"

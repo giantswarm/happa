@@ -39,7 +39,7 @@ const ClusterDetailKeyPairDetailsModal: React.FC<IClusterDetailKeyPairDetailsMod
     onClose,
     visible,
   }) => {
-    const title = `Key pair details`;
+    const title = `Client certificate details`;
 
     return (
       <Modal
