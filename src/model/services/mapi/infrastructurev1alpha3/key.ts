@@ -15,7 +15,7 @@ export const conditionTypeUpdating = 'Updating';
 
 export function getAWSClusterDescription(awsCluster: IAWSCluster): string {
   let name = awsCluster.spec?.cluster?.description;
-  name ??= Constants.DEFAULT_CLUSTER_DESCRIPTION;
+  name ||= Constants.DEFAULT_CLUSTER_DESCRIPTION;
 
   return name;
 }
@@ -38,7 +38,7 @@ export function getAWSMachineDeploymentDescription(
   awsMachineDeployment: IAWSMachineDeployment
 ): string {
   let name = awsMachineDeployment.spec.nodePool.description;
-  name ??= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
+  name ||= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
 
   return name;
 }

@@ -100,7 +100,6 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
 
   const auth = useAuthProvider();
 
-  const clusterClient = useRef(clientFactory());
   const orgClient = useRef(clientFactory());
 
   const { data: org, error: orgError } = useSWR<
@@ -143,7 +142,7 @@ const GettingStarted: React.FC<IGettingStartedProps> = () => {
     Cluster,
     GenericResponseError
   >(clusterKey, () =>
-    fetchCluster(clusterClient.current, auth, provider, namespace!, clusterId)
+    fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
   useEffect(() => {

@@ -23,7 +23,7 @@ export const conditionReasonUpgradePending = 'UpgradePending';
 
 export function getClusterDescription(cluster: ICluster): string {
   let name = cluster.metadata.annotations?.[annotationClusterDescription];
-  name ??= Constants.DEFAULT_CLUSTER_DESCRIPTION;
+  name ||= Constants.DEFAULT_CLUSTER_DESCRIPTION;
 
   return name;
 }

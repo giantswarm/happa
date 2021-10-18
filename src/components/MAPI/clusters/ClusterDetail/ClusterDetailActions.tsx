@@ -56,7 +56,6 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
   const namespace = org?.status?.namespace;
 
-  const clusterClient = useRef(clientFactory());
   const clusterKey = namespace
     ? fetchClusterKey(provider, namespace, clusterId)
     : null;
@@ -66,7 +65,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     Cluster,
     GenericResponseError
   >(clusterKey, () =>
-    fetchCluster(clusterClient.current, auth, provider, namespace!, clusterId)
+    fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
   const { data: nodePoolList, error: nodePoolListError } = useSWR(

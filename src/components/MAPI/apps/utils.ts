@@ -251,6 +251,7 @@ export async function createApp(
 /**
  * Filter a given collection of clusters by the given search query.
  * @param clusters
+ * @param providerClusters
  * @param searchQuery
  */
 export function filterClusters(

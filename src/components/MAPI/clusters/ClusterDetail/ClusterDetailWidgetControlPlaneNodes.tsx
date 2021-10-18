@@ -72,11 +72,19 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       ? fetchMasterListForClusterKey(cluster)
       : null;
 
-    const { data: controlPlaneNodeList, error: controlPlaneNodeListError } =
-      useSWR<ControlPlaneNodeList, GenericResponseError>(
-        controlPlaneNodeListKey,
-        () => fetchMasterListForCluster(clientFactory, auth, cluster!)
-      );
+    const {
+      data: controlPlaneNodeList,
+      error: controlPlaneNodeListError,
+      isValidating: controlPlaneNodeListIsValidating,
+    } = useSWR<ControlPlaneNodeList, GenericResponseError>(
+      controlPlaneNodeListKey,
+      () => fetchMasterListForCluster(clientFactory, auth, cluster!)
+    );
+
+    const isLoading =
+      typeof controlPlaneNodeList === 'undefined' &&
+      typeof controlPlaneNodeListError === 'undefined' &&
+      controlPlaneNodeListIsValidating;
 
     useEffect(() => {
       if (controlPlaneNodeListError) {
@@ -85,7 +93,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
     }, [controlPlaneNodeListError]);
 
     const stats = useMemo(() => {
-      if (typeof controlPlaneNodeListError !== 'undefined') {
+      if (typeof controlPlaneNodeList === 'undefined' && !isLoading) {
         return {
           totalCount: -1,
           readyCount: -1,
