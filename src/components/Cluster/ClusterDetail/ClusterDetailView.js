@@ -297,8 +297,8 @@ class ClusterDetailView extends React.Component {
 
     const supporsAppsViaMapi = supportsMapiApps(user, provider);
 
-    let kvmTCPHTTPPort = 0,
-      kvmTCPHTTPSPort = 0;
+    let kvmTCPHTTPPort = 0;
+    let kvmTCPHTTPSPort = 0;
 
     if (kvm && kvm.port_mappings && kvm.port_mappings.length === 2) {
       const httpIndex = kvm.port_mappings.findIndex(
