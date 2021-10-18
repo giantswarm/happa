@@ -10,7 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import { Constants, Providers } from 'shared/constants';
+import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps } from 'shared/featureSupport';
 import {
@@ -287,7 +287,7 @@ class ClusterDetailView extends React.Component {
     const loading = loadingNodePools || loadingCluster;
 
     if (!cluster) return null;
-    const { id, owner, release_version } = cluster;
+    const { id, owner, release_version, kvm } = cluster;
     const release = releases[release_version];
     const tabsPaths = this.getPathsForTabs(id, owner);
 
@@ -296,6 +296,18 @@ class ClusterDetailView extends React.Component {
       isClusterUpdating(cluster) || clusterIsAwaitingUpgrade;
 
     const supporsAppsViaMapi = supportsMapiApps(user, provider);
+
+    let kvmTCPHTTPPort = 0,
+      kvmTCPHTTPSPort = 0;
+
+    if (kvm && kvm.port_mappings && kvm.port_mappings.length === 2) {
+      const httpIndex = kvm.port_mappings.findIndex(
+        ({ protocol }) => protocol.toLowerCase() === 'http'
+      );
+
+      kvmTCPHTTPPort = kvm.port_mappings[httpIndex].port;
+      kvmTCPHTTPSPort = kvm.port_mappings[Math.abs((0 % 2) - 1)].port;
+    }
 
     return (
       <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
@@ -381,16 +393,16 @@ class ClusterDetailView extends React.Component {
                   <ClusterDetailIngress
                     provider={provider}
                     k8sEndpoint={cluster.api_endpoint}
-                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                    kvmTCPHTTPPort={kvmTCPHTTPPort}
+                    kvmTCPHTTPSPort={kvmTCPHTTPSPort}
                   />
                 ) : (
                   <Ingress
                     cluster={cluster}
                     provider={provider}
                     k8sEndpoint={cluster.api_endpoint}
-                    kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                    kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                    kvmTCPHTTPPort={kvmTCPHTTPPort}
+                    kvmTCPHTTPSPort={kvmTCPHTTPSPort}
                   />
                 )}
               </Tab>
