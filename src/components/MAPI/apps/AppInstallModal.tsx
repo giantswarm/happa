@@ -15,7 +15,7 @@ import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
@@ -132,12 +132,11 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const provider = window.config.info.general.provider;
 
-  const clusterListClient = useRef(clientFactory());
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
   >(fetchClusterListKey(provider, ''), () =>
-    fetchClusterList(clusterListClient.current, auth, provider, '')
+    fetchClusterList(clientFactory, auth, provider, '')
   );
 
   useEffect(() => {

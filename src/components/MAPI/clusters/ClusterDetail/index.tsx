@@ -8,7 +8,8 @@ import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
-import { extractErrorMessage } from 'MAPI/utils';
+import { Cluster } from 'MAPI/types';
+import { extractErrorMessage, fetchCluster, fetchClusterKey } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -98,7 +99,6 @@ const ClusterDetail: React.FC<{}> = () => {
 
   const auth = useAuthProvider();
 
-  const clusterClient = useRef(clientFactory());
   const orgClient = useRef(clientFactory());
 
   const { data: org, error: orgError } = useSWR<
@@ -133,16 +133,18 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [namespace, orgError, orgId, clusterId, dispatch]);
 
+  const provider = window.config.info.general.provider;
+
   const clusterKey = namespace
-    ? capiv1alpha3.getClusterKey(namespace, clusterId)
+    ? fetchClusterKey(provider, namespace, clusterId)
     : null;
 
   const {
     data: cluster,
     error: clusterError,
     mutate: mutateCluster,
-  } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(clusterKey, () =>
-    capiv1alpha3.getCluster(clusterClient.current, auth, namespace!, clusterId)
+  } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
+    fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
   useEffect(() => {
@@ -246,8 +248,6 @@ const ClusterDetail: React.FC<{}> = () => {
       ErrorReporter.getInstance().notify(err as Error);
     }
   };
-
-  const provider = window.config.info.general.provider;
 
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>

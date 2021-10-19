@@ -3,13 +3,13 @@ import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1alpha4 from 'model/services/mapi/capiv1alpha4';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -118,8 +118,8 @@ export async function fetchNodePoolListForCluster(
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let list: NodePoolList;
 
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       if (isCAPZCluster(cluster)) {
         list = await capiv1alpha4.getMachinePoolList(
           httpClientFactory(),
@@ -148,8 +148,7 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
+    case 'infrastructure.giantswarm.io/v1alpha3':
       list = await capiv1alpha3.getMachineDeploymentList(
         httpClientFactory(),
         auth,
@@ -184,8 +183,8 @@ export function fetchNodePoolListForClusterKey(
     return null;
   }
 
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       if (isCAPZCluster(cluster)) {
         return capiv1alpha4.getMachinePoolListKey({
           labelSelector: {
@@ -204,8 +203,7 @@ export function fetchNodePoolListForClusterKey(
         },
       });
 
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
+    case 'infrastructure.giantswarm.io/v1alpha3':
       return capiv1alpha3.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
@@ -281,13 +279,30 @@ export function fetchProviderNodePoolsForNodePoolsKey(nodePools?: NodePool[]) {
 }
 
 export async function fetchCluster(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  _provider: PropertiesOf<typeof Providers>,
+  provider: PropertiesOf<typeof Providers>,
   namespace: string,
   name: string
 ): Promise<Cluster> {
-  return capiv1alpha3.getCluster(httpClient, auth, namespace, name);
+  if (namespace && provider === Providers.AWS) {
+    const [namespacedCluster, nonNamespacedCluster] = await Promise.allSettled([
+      capiv1alpha3.getCluster(httpClientFactory(), auth, namespace, name),
+      capiv1alpha3.getCluster(httpClientFactory(), auth, 'default', name),
+    ]);
+
+    if (namespacedCluster.status === 'fulfilled') {
+      return namespacedCluster.value;
+    }
+
+    if (nonNamespacedCluster.status === 'fulfilled') {
+      return nonNamespacedCluster.value;
+    }
+
+    return Promise.reject(nonNamespacedCluster.reason);
+  }
+
+  return capiv1alpha3.getCluster(httpClientFactory(), auth, namespace, name);
 }
 
 export function fetchClusterKey(
@@ -299,23 +314,68 @@ export function fetchClusterKey(
 }
 
 export async function fetchClusterList(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  _provider: PropertiesOf<typeof Providers>,
-  namespace?: string
+  provider: PropertiesOf<typeof Providers>,
+  namespace?: string,
+  organization?: string
 ): Promise<ClusterList> {
+  if (namespace && organization && provider === Providers.AWS) {
+    const [namespacedClusters, nonNamespacedClusters] =
+      await Promise.allSettled([
+        capiv1alpha3.getClusterList(httpClientFactory(), auth, { namespace }),
+        capiv1alpha3.getClusterList(httpClientFactory(), auth, {
+          namespace: 'default',
+          labelSelector: {
+            matchingLabels: { [capiv1alpha3.labelOrganization]: organization },
+          },
+        }),
+      ]);
+
+    if (
+      namespacedClusters.status === 'rejected' &&
+      nonNamespacedClusters.status === 'rejected'
+    ) {
+      return Promise.reject(nonNamespacedClusters.reason);
+    }
+
+    const clusterList: capiv1alpha3.IClusterList = {
+      apiVersion: 'cluster.x-k8s.io/v1alpha3',
+      kind: capiv1alpha3.ClusterList,
+      metadata: {},
+      items: [],
+    };
+
+    if (namespacedClusters.status === 'fulfilled') {
+      clusterList.items.push(...namespacedClusters.value.items);
+    }
+
+    if (nonNamespacedClusters.status === 'fulfilled') {
+      clusterList.items.push(...nonNamespacedClusters.value.items);
+    }
+
+    return clusterList;
+  }
+
   const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
 
-  return capiv1alpha3.getClusterList(httpClient, auth, getOptions);
+  return capiv1alpha3.getClusterList(httpClientFactory(), auth, getOptions);
 }
 
 export function fetchClusterListKey(
-  _provider: PropertiesOf<typeof Providers>,
-  namespace?: string
+  provider: PropertiesOf<typeof Providers>,
+  namespace?: string,
+  organization?: string
 ): string | null {
   if (typeof namespace === 'undefined') return null;
 
   const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
+
+  if (organization && provider === Providers.AWS) {
+    getOptions.labelSelector = {
+      matchingLabels: { [capiv1alpha3.labelOrganization]: organization },
+    };
+  }
 
   return capiv1alpha3.getClusterListKey(getOptions);
 }
@@ -372,7 +432,7 @@ export function fetchMasterListForClusterKey(cluster: capiv1alpha3.ICluster) {
 export function fetchProviderClusterForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster: capiv1alpha3.ICluster
+  cluster: Cluster
 ) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
@@ -381,9 +441,17 @@ export function fetchProviderClusterForCluster(
     );
   }
 
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return capzv1alpha3.getAzureCluster(
+        httpClientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return infrav1alpha3.getAWSCluster(
         httpClientFactory(),
         auth,
         cluster.metadata.namespace!,
@@ -395,15 +463,19 @@ export function fetchProviderClusterForCluster(
   }
 }
 
-export function fetchProviderClusterForClusterKey(
-  cluster: capiv1alpha3.ICluster
-) {
+export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) return null;
 
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return capzv1alpha3.getAzureClusterKey(
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return infrav1alpha3.getAWSClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
@@ -411,6 +483,41 @@ export function fetchProviderClusterForClusterKey(
     default:
       return null;
   }
+}
+
+export async function fetchProviderClustersForClusters(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusters: Cluster[]
+): Promise<ProviderCluster[]> {
+  const responses = await Promise.allSettled(
+    clusters.map((cluster) =>
+      fetchProviderClusterForCluster(httpClientFactory, auth, cluster)
+    )
+  );
+
+  const providerClusters: ProviderCluster[] = responses.map((r) => {
+    if (r.status === 'rejected') {
+      return undefined;
+    }
+
+    return r.value;
+  });
+
+  return providerClusters;
+}
+
+export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {
+  if (!clusters) return null;
+
+  const keys = ['fetchProviderClustersForClusters/'];
+  for (const cluster of clusters) {
+    if (cluster.spec?.infrastructureRef) {
+      keys.push(cluster.metadata.name);
+    }
+  }
+
+  return keys.sort().join();
 }
 
 export function getNodePoolDescription(nodePool: NodePool): string {
@@ -568,12 +675,39 @@ export function getClusterDescription(cluster: Cluster): string {
 
 export function getProviderClusterLocation(
   providerCluster: ProviderCluster
-): string {
-  switch (providerCluster?.kind) {
-    case capzv1alpha3.AzureCluster:
+): string | undefined {
+  switch (providerCluster?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return providerCluster.spec?.location ?? '';
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const region = providerCluster.spec?.provider.region;
+      if (typeof region === 'undefined') return '';
+
+      return region;
+    }
+
     default:
+      return undefined;
+  }
+}
+
+export function getProviderClusterAccountID(
+  providerCluster: ProviderCluster
+): string | undefined {
+  switch (providerCluster?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+      const id = providerCluster.spec?.subscriptionID;
+      if (typeof id === 'undefined') return '';
+
+      return id;
+    }
+
+    case 'infrastructure.giantswarm.io/v1alpha3':
       return '';
+
+    default:
+      return undefined;
   }
 }
 

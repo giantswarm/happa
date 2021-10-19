@@ -58,6 +58,7 @@ const Clusters: React.FC<{}> = () => {
   const selectedOrg = selectedOrgName
     ? organizations[selectedOrgName]
     : undefined;
+  const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
   const hasOrgs = Object.values(organizations).length > 0;
 
   const clientFactory = useHttpClientFactory();
@@ -66,15 +67,14 @@ const Clusters: React.FC<{}> = () => {
   const namespace = selectedOrg?.namespace;
   const provider = window.config.info.general.provider;
 
-  const clusterListClient = useRef(clientFactory());
-
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
   } = useSWR<ClusterList, GenericResponseError>(
-    fetchClusterListKey(provider, namespace),
-    () => fetchClusterList(clusterListClient.current, auth, provider, namespace)
+    fetchClusterListKey(provider, namespace, selectedOrgID),
+    () =>
+      fetchClusterList(clientFactory, auth, provider, namespace, selectedOrgID)
   );
 
   useEffect(() => {
