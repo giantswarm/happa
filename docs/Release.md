@@ -1,6 +1,6 @@
 # How to publish a release
 
-TL;DR: Releasing is done via the GitHub release functions. Our CI takes
+TL;DR: Releasing is done via the GitHub release functionality. Our CI takes
 over from there and auto deploys the release to our installations.
 
 ## Create and push a new release
