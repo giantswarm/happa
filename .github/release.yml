@@ -1,0 +1,23 @@
+# Configuration for GitHub automatic release notes.
+# See https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+changelog:
+  exclude:
+    labels:
+      - dependencies
+      - kind/dev-change
+      - kind/refactor
+  categories:
+    - title: New features
+      labels:
+        - kind/feature
+    - title: Changes
+      labels:
+        - kind/change
+        - kind/bug
+        - kind/removal
+        - kind/ux-enhancement
+        - kind/security
+    - title: Other Changes
+      labels:
+        - "*"
