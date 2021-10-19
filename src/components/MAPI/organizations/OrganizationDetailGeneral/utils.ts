@@ -173,9 +173,26 @@ function appendProviderNodePoolsStats(
         break;
       }
 
-      case 'infrastructure.giantswarm.io/v1alpha3':
-        summary.workerNodesCPU = -1;
-        summary.workerNodesMemory = -1;
+      case 'infrastructure.giantswarm.io/v1alpha3': {
+        const instanceType = providerNp.spec.provider.worker.instanceType;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[instanceType];
+          if (!machineTypeProperties) {
+            throw new Error('Invalid machine type.');
+          }
+
+          summary.workerNodesCPU ??= 0;
+          summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
+
+          summary.workerNodesMemory ??= 0;
+          summary.workerNodesMemory +=
+            machineTypeProperties.memory * readyReplicas;
+        }
+
+        break;
+      }
     }
   }
 }
