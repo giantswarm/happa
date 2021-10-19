@@ -546,6 +546,8 @@ export function getProviderNodePoolMachineType(
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return providerNodePool.spec?.template.vmSize ?? '';
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return providerNodePool.spec.provider.worker.instanceType;
     default:
       return '';
   }
@@ -648,16 +650,43 @@ export function getNodePoolScaling(
       return status;
     }
 
+    case 'cluster.x-k8s.io/v1alpha3': {
+      if (
+        providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+      ) {
+        return {
+          min: providerNodePool.spec.nodePool.scaling.min,
+          max: providerNodePool.spec.nodePool.scaling.max,
+          desired: nodePool.status?.replicas ?? -1,
+          current: nodePool.status?.readyReplicas ?? -1,
+        };
+      }
+
+      return { min: -1, max: -1, desired: -1, current: -1 };
+    }
+
     default:
       return { min: -1, max: -1, desired: -1, current: -1 };
   }
 }
 
-export function getNodePoolAvailabilityZones(nodePool: NodePool): string[] {
+export function getNodePoolAvailabilityZones(
+  nodePool: NodePool,
+  providerNodePool: ProviderNodePool
+): string[] {
   switch (nodePool.apiVersion) {
     case 'exp.cluster.x-k8s.io/v1alpha3':
     case 'cluster.x-k8s.io/v1alpha4':
       return nodePool.spec?.failureDomains ?? [];
+    case 'cluster.x-k8s.io/v1alpha3': {
+      if (
+        providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+      ) {
+        return providerNodePool.spec.provider.availabilityZones;
+      }
+
+      return [];
+    }
     default:
       return [];
   }
