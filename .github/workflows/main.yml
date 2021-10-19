@@ -17,5 +17,5 @@ jobs:
         with:
           regex: '([ a-zA-Z0-9])+'
           prefix_case_sensitive: false
-          min_length: 5
-          max_length: 100
+          min_length: 10
+          max_length: 200
