@@ -28,9 +28,11 @@ export function withClusterReleaseVersion(newVersion: string): ClusterPatch {
     cluster.metadata.labels ??= {};
     cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
 
-    providerCluster.metadata.labels ??= {};
-    providerCluster.metadata.labels[capiv1alpha3.labelReleaseVersion] =
-      newVersion;
+    if (providerCluster) {
+      providerCluster.metadata.labels ??= {};
+      providerCluster.metadata.labels[capiv1alpha3.labelReleaseVersion] =
+        newVersion;
+    }
 
     for (const controlPlaneNode of controlPlaneNodes) {
       controlPlaneNode.metadata.labels ??= {};

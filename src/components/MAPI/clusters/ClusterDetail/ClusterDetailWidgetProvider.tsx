@@ -1,8 +1,11 @@
 import { Text } from 'grommet';
 import { ProviderCluster } from 'MAPI/types';
+import {
+  getProviderClusterAccountID,
+  getProviderClusterLocation,
+} from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
@@ -12,12 +15,11 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (cluster.spec?.infrastructureRef?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Azure region';
 
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
+    case 'infrastructure.giantswarm.io/v1alpha3':
       return 'AWS region';
 
     default:
@@ -28,12 +30,11 @@ export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
 export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (cluster.spec?.infrastructureRef?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Subscription ID';
 
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
+    case 'infrastructure.giantswarm.io/v1alpha3':
       return 'Account ID';
 
     default:
@@ -47,12 +48,11 @@ export function getClusterAccountIDPath(
 ) {
   if (!cluster || !accountID) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (cluster.spec?.infrastructureRef?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'https://portal.azure.com/';
 
-    // TODO(axbarsan): Use CAPA type once available.
-    case 'AWSCluster':
+    case 'infrastructure.giantswarm.io/v1alpha3':
       return `https://${accountID}.signin.aws.amazon.com/console`;
 
     default:
@@ -79,15 +79,9 @@ interface IClusterDetailWidgetProviderProps
 
 const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
   ({ cluster, providerCluster, ...props }) => {
-    const region = providerCluster?.spec.location;
+    const region = getProviderClusterLocation(providerCluster);
 
-    const accountID = useMemo(() => {
-      if (!providerCluster) return undefined;
-      if (!providerCluster.spec.subscriptionID) return '';
-
-      return providerCluster.spec.subscriptionID;
-    }, [providerCluster]);
-
+    const accountID = getProviderClusterAccountID(providerCluster);
     const accountIDPath = getClusterAccountIDPath(cluster, accountID);
 
     return (

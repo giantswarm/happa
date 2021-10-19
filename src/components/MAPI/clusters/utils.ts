@@ -245,12 +245,12 @@ export function createDefaultCluster(config: {
 function createDefaultV1Alpha3Cluster(config: {
   providerCluster: ProviderCluster;
 }): capiv1alpha3.ICluster {
-  const namespace = config.providerCluster.metadata.namespace;
-  const name = config.providerCluster.metadata.name;
+  const namespace = config.providerCluster!.metadata.namespace;
+  const name = config.providerCluster!.metadata.name;
   const organization =
-    config.providerCluster.metadata.labels![capiv1alpha3.labelOrganization];
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
   const releaseVersion =
-    config.providerCluster.metadata.labels![capiv1alpha3.labelReleaseVersion];
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
 
   return {
     apiVersion: 'cluster.x-k8s.io/v1alpha3',
@@ -270,7 +270,7 @@ function createDefaultV1Alpha3Cluster(config: {
       },
     },
     spec: {
-      infrastructureRef: corev1.getObjectReference(config.providerCluster),
+      infrastructureRef: corev1.getObjectReference(config.providerCluster!),
       controlPlaneEndpoint: {
         host: '',
         port: 0,
@@ -292,12 +292,12 @@ export function createDefaultControlPlaneNodes(config: {
 function createDefaultAzureMachine(config: {
   providerCluster: ProviderCluster;
 }): capzv1alpha3.IAzureMachine {
-  const namespace = config.providerCluster.metadata.namespace;
-  const name = config.providerCluster.metadata.name;
+  const namespace = config.providerCluster!.metadata.namespace;
+  const name = config.providerCluster!.metadata.name;
   const organization =
-    config.providerCluster.metadata.labels![capiv1alpha3.labelOrganization];
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
   const releaseVersion =
-    config.providerCluster.metadata.labels![capiv1alpha3.labelReleaseVersion];
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
 
   return {
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
@@ -352,11 +352,11 @@ export async function createCluster(
   providerCluster: ProviderCluster;
   controlPlaneNodes: ControlPlaneNode[];
 }> {
-  if (config.providerCluster.kind === capzv1alpha3.AzureCluster) {
+  if (config.providerCluster!.kind === capzv1alpha3.AzureCluster) {
     const providerCluster = await capzv1alpha3.createAzureCluster(
       httpClient,
       auth,
-      config.providerCluster
+      config.providerCluster as capzv1alpha3.IAzureCluster
     );
 
     mutate(
@@ -371,9 +371,16 @@ export async function createCluster(
       )
     );
 
+    const controlPlaneNodesList: capzv1alpha3.IAzureMachineList = {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+      kind: capzv1alpha3.AzureMachineList,
+      metadata: {},
+      items: controlPlaneNodes,
+    };
+
     mutate(
       fetchMasterListForClusterKey(config.cluster),
-      controlPlaneNodes,
+      controlPlaneNodesList,
       false
     );
 

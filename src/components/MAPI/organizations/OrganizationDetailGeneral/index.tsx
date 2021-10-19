@@ -12,11 +12,12 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import React, { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { StatusCodes } from 'shared/constants';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
 import { organizationsLoadMAPI } from 'stores/organization/actions';
+import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
@@ -42,6 +43,10 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   organizationName,
   organizationNamespace,
 }) => {
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = organizations[organizationName];
+  const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
+
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
 
@@ -49,19 +54,19 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
   const provider = window.config.info.general.provider;
 
-  const clusterListClient = useRef(clientFactory());
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
   } = useSWR<ClusterList, GenericResponseError>(
-    fetchClusterListKey(provider, organizationNamespace),
+    fetchClusterListKey(provider, organizationNamespace, selectedOrgID),
     () =>
       fetchClusterList(
-        clusterListClient.current,
+        clientFactory,
         auth,
         provider,
-        organizationNamespace
+        organizationNamespace,
+        selectedOrgID
       )
   );
 

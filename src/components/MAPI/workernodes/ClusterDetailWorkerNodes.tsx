@@ -4,8 +4,11 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { NodePool, ProviderCluster } from 'MAPI/types';
+import { Cluster } from 'MAPI/types';
 import {
   extractErrorMessage,
+  fetchCluster,
+  fetchClusterKey,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
   fetchProviderClusterForCluster,
@@ -15,7 +18,6 @@ import {
   isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
@@ -184,7 +186,6 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const auth = useAuthProvider();
 
-    const clusterClient = useRef(clientFactory());
     const orgClient = useRef(clientFactory());
 
     const { data: org, error: orgError } = useSWR<
@@ -202,21 +203,18 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const namespace = org?.status?.namespace;
 
+    const provider = window.config.info.general.provider;
+
     const clusterKey = namespace
-      ? capiv1alpha3.getClusterKey(namespace, clusterId)
+      ? fetchClusterKey(provider, namespace, clusterId)
       : null;
 
     const {
       data: cluster,
       error: clusterError,
       isValidating: clusterIsValidating,
-    } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(clusterKey, () =>
-      capiv1alpha3.getCluster(
-        clusterClient.current,
-        auth,
-        namespace!,
-        clusterId
-      )
+    } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
+      fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
     );
 
     const providerClusterKey = cluster
@@ -288,8 +286,6 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
         ErrorReporter.getInstance().notify(providerNodePoolsError);
       }
     }, [providerNodePoolsError]);
-
-    const provider = window.config.info.general.provider;
 
     const additionalColumns = useMemo(
       () => getAdditionalColumns(provider),

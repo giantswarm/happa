@@ -5,6 +5,7 @@ import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 
 export type ControlPlaneNode = capzv1alpha3.IAzureMachine;
 
@@ -14,7 +15,10 @@ export type Cluster = capiv1alpha3.ICluster;
 
 export type ClusterList = capiv1alpha3.IClusterList;
 
-export type ProviderCluster = capzv1alpha3.IAzureCluster;
+export type ProviderCluster =
+  | capzv1alpha3.IAzureCluster
+  | infrav1alpha3.IAWSCluster
+  | undefined;
 
 export type ProviderClusterList = capzv1alpha3.IAzureClusterList;
 
