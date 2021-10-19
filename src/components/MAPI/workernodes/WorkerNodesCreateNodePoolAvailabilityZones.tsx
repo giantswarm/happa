@@ -10,11 +10,11 @@ import {
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { computeControlPlaneNodesStats } from 'MAPI/clusters/ClusterDetail/utils';
-import { Cluster, ControlPlaneNodeList } from 'MAPI/types';
+import { Cluster, ControlPlaneNode } from 'MAPI/types';
 import {
   determineRandomAZs,
-  fetchMasterListForCluster,
-  fetchMasterListForClusterKey,
+  fetchControlPlaneNodesForCluster,
+  fetchControlPlaneNodesForClusterKey,
   getSupportedAvailabilityZones,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -48,33 +48,30 @@ const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<IWorkerNodesCreateNod
     const clientFactory = useHttpClientFactory();
     const auth = useAuthProvider();
 
-    const controlPlaneNodeListKey = cluster
-      ? fetchMasterListForClusterKey(cluster)
+    const controlPlaneNodesKey = cluster
+      ? fetchControlPlaneNodesForClusterKey(cluster)
       : null;
 
-    const { data: controlPlaneNodeList, error: controlPlaneNodeListError } =
-      useSWR<ControlPlaneNodeList, GenericResponseError>(
-        controlPlaneNodeListKey,
-        () => fetchMasterListForCluster(clientFactory, auth, cluster)
-      );
+    const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
+      ControlPlaneNode[],
+      GenericResponseError
+    >(controlPlaneNodesKey, () =>
+      fetchControlPlaneNodesForCluster(clientFactory, auth, cluster)
+    );
 
     useEffect(() => {
-      if (controlPlaneNodeListError) {
-        ErrorReporter.getInstance().notify(controlPlaneNodeListError);
+      if (controlPlaneNodesError) {
+        ErrorReporter.getInstance().notify(controlPlaneNodesError);
       }
-    }, [controlPlaneNodeListError]);
+    }, [controlPlaneNodesError]);
 
     const controlPlaneZones = useMemo(() => {
-      if (
-        typeof controlPlaneNodeListError !== 'undefined' ||
-        !controlPlaneNodeList
-      ) {
+      if (typeof controlPlaneNodesError !== 'undefined' || !controlPlaneNodes) {
         return undefined;
       }
 
-      return computeControlPlaneNodesStats(controlPlaneNodeList.items)
-        .availabilityZones;
-    }, [controlPlaneNodeList, controlPlaneNodeListError]);
+      return computeControlPlaneNodesStats(controlPlaneNodes).availabilityZones;
+    }, [controlPlaneNodes, controlPlaneNodesError]);
 
     const provider = window.config.info.general.provider;
     const azStats = getSupportedAvailabilityZones();

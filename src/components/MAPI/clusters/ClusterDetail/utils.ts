@@ -3,6 +3,8 @@ import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { Cluster, ControlPlaneNode } from 'MAPI/types';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { filterLabels } from 'stores/cluster/utils';
 import { mutate } from 'swr';
@@ -152,18 +154,40 @@ export function computeControlPlaneNodesStats(
   nodes: ControlPlaneNode[]
 ): IControlPlaneNodesStats {
   const stats: IControlPlaneNodesStats = {
-    totalCount: nodes.length,
+    totalCount: 0,
     readyCount: 0,
     availabilityZones: [],
   };
 
   for (const node of nodes) {
-    if (capiv1alpha3.isConditionTrue(node, capiv1alpha3.conditionTypeReady)) {
-      stats.readyCount++;
-    }
+    switch (node.kind) {
+      case capzv1alpha3.AzureMachine:
+        stats.totalCount++;
 
-    if (node.spec?.failureDomain) {
-      stats.availabilityZones.push(node.spec.failureDomain);
+        if (
+          capiv1alpha3.isConditionTrue(node, capiv1alpha3.conditionTypeReady)
+        ) {
+          stats.readyCount++;
+        }
+
+        if (node.spec?.failureDomain) {
+          stats.availabilityZones.push(node.spec.failureDomain);
+        }
+
+        break;
+
+      case infrav1alpha3.AWSControlPlane:
+        if (node.spec.availabilityZones) {
+          stats.availabilityZones.push(...node.spec.availabilityZones);
+        }
+
+        break;
+
+      case infrav1alpha3.G8sControlPlane:
+        stats.totalCount = node.spec.replicas ?? 0;
+        stats.readyCount = node.status?.readyReplicas ?? 0;
+
+        break;
     }
   }
 

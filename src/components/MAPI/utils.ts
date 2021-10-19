@@ -17,7 +17,7 @@ import { PropertiesOf } from 'shared/types';
 import {
   Cluster,
   ClusterList,
-  ControlPlaneNodeList,
+  ControlPlaneNode,
   NodePool,
   NodePoolList,
   ProviderCluster,
@@ -388,11 +388,11 @@ export function fetchClusterListKey(
   return capiv1alpha3.getClusterListKey(getOptions);
 }
 
-export async function fetchMasterListForCluster(
+export async function fetchControlPlaneNodesForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cluster: capiv1alpha3.ICluster
-): Promise<ControlPlaneNodeList> {
+): Promise<ControlPlaneNode[]> {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
@@ -400,34 +400,85 @@ export async function fetchMasterListForCluster(
     );
   }
 
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
-      return capzv1alpha3.getAzureMachineList(httpClientFactory(), auth, {
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
-            [capzv1alpha3.labelControlPlane]: 'true',
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+      const cpNodes = await capzv1alpha3.getAzureMachineList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]: cluster.metadata.name,
+              [capzv1alpha3.labelControlPlane]: 'true',
+            },
           },
-        },
-      });
+        }
+      );
+
+      return cpNodes.items;
+    }
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const [awsCP, g8sCP] = await Promise.allSettled([
+        infrav1alpha3.getAWSControlPlaneList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [infrav1alpha3.labelCluster]: cluster.metadata.name,
+            },
+          },
+        }),
+        infrav1alpha3.getG8sControlPlaneList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [infrav1alpha3.labelCluster]: cluster.metadata.name,
+            },
+          },
+        }),
+      ]);
+
+      if (awsCP.status === 'rejected' && g8sCP.status === 'rejected') {
+        return Promise.reject(awsCP.reason);
+      }
+
+      const cpNodes: ControlPlaneNode[] = [];
+      if (awsCP.status === 'fulfilled' && awsCP.value.items.length > 0) {
+        cpNodes.push(awsCP.value.items[0]);
+      }
+      if (g8sCP.status === 'fulfilled' && g8sCP.value.items.length > 0) {
+        cpNodes.push(g8sCP.value.items[0]);
+      }
+
+      return cpNodes;
+    }
 
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
 }
 
-export function fetchMasterListForClusterKey(cluster: capiv1alpha3.ICluster) {
+export function fetchControlPlaneNodesForClusterKey(
+  cluster: capiv1alpha3.ICluster
+) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return null;
   }
 
-  switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return capzv1alpha3.getAzureMachineListKey({
         labelSelector: {
           matchingLabels: {
             [capiv1alpha3.labelCluster]: cluster.metadata.name,
+          },
+        },
+      });
+
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return infrav1alpha3.getAWSControlPlaneListKey({
+        labelSelector: {
+          matchingLabels: {
+            [infrav1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
       });

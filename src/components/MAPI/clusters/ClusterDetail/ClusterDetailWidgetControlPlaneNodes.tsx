@@ -2,10 +2,10 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { ControlPlaneNodeList } from 'MAPI/types';
+import { ControlPlaneNode } from 'MAPI/types';
 import {
-  fetchMasterListForCluster,
-  fetchMasterListForClusterKey,
+  fetchControlPlaneNodesForCluster,
+  fetchControlPlaneNodesForClusterKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -68,30 +68,30 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
     const clientFactory = useHttpClientFactory();
     const auth = useAuthProvider();
 
-    const controlPlaneNodeListKey = cluster
-      ? fetchMasterListForClusterKey(cluster)
+    const controlPlaneNodesKey = cluster
+      ? fetchControlPlaneNodesForClusterKey(cluster)
       : null;
 
     const {
-      data: controlPlaneNodeList,
-      error: controlPlaneNodeListError,
-      isValidating: controlPlaneNodeListIsValidating,
-    } = useSWR<ControlPlaneNodeList, GenericResponseError>(
-      controlPlaneNodeListKey,
-      () => fetchMasterListForCluster(clientFactory, auth, cluster!)
+      data: controlPlaneNodes,
+      error: controlPlaneNodesError,
+      isValidating: controlPlaneNodesIsValidating,
+    } = useSWR<ControlPlaneNode[], GenericResponseError>(
+      controlPlaneNodesKey,
+      () => fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
     );
 
     const isLoading =
       typeof cluster === 'undefined' ||
-      (typeof controlPlaneNodeList === 'undefined' &&
-        typeof controlPlaneNodeListError === 'undefined' &&
-        controlPlaneNodeListIsValidating);
+      (typeof controlPlaneNodes === 'undefined' &&
+        typeof controlPlaneNodesError === 'undefined' &&
+        controlPlaneNodesIsValidating);
 
     useEffect(() => {
-      if (controlPlaneNodeListError) {
-        ErrorReporter.getInstance().notify(controlPlaneNodeListError);
+      if (controlPlaneNodesError) {
+        ErrorReporter.getInstance().notify(controlPlaneNodesError);
       }
-    }, [controlPlaneNodeListError]);
+    }, [controlPlaneNodesError]);
 
     const stats = useMemo(() => {
       if (isLoading) {
@@ -102,7 +102,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
         };
       }
 
-      if (typeof controlPlaneNodeList === 'undefined') {
+      if (typeof controlPlaneNodes === 'undefined') {
         return {
           totalCount: -1,
           readyCount: -1,
@@ -110,8 +110,8 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
         };
       }
 
-      return computeControlPlaneNodesStats(controlPlaneNodeList.items);
-    }, [controlPlaneNodeList, isLoading]);
+      return computeControlPlaneNodesStats(controlPlaneNodes);
+    }, [controlPlaneNodes, isLoading]);
 
     return (
       <ClusterDetailWidget
