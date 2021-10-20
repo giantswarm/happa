@@ -579,14 +579,25 @@ export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {
   return keys.sort().join();
 }
 
-export function getNodePoolDescription(nodePool: NodePool): string {
+export function getNodePoolDescription(
+  nodePool: NodePool,
+  defaultValue = Constants.DEFAULT_NODEPOOL_DESCRIPTION
+): string {
   switch (nodePool.apiVersion) {
     case 'exp.cluster.x-k8s.io/v1alpha3':
-      return capiexpv1alpha3.getMachinePoolDescription(nodePool);
+      return (
+        nodePool.metadata.annotations?.[
+          capiexpv1alpha3.annotationMachinePoolDescription
+        ] || defaultValue
+      );
     case 'cluster.x-k8s.io/v1alpha4':
-      return capiv1alpha4.getMachinePoolDescription(nodePool);
+      return (
+        nodePool.metadata.annotations?.[
+          capiv1alpha4.annotationMachinePoolDescription
+        ] || defaultValue
+      );
     default:
-      return Constants.DEFAULT_NODEPOOL_DESCRIPTION;
+      return defaultValue;
   }
 }
 
@@ -752,12 +763,19 @@ export function getClusterReleaseVersion(cluster: Cluster) {
   }
 }
 
-export function getClusterDescription(cluster: Cluster): string {
+export function getClusterDescription(
+  cluster: Cluster,
+  defaultValue = Constants.DEFAULT_CLUSTER_DESCRIPTION
+): string {
   switch (cluster.kind) {
     case capiv1alpha3.Cluster:
-      return capiv1alpha3.getClusterDescription(cluster);
+      return (
+        cluster.metadata.annotations?.[
+          capiv1alpha3.annotationClusterDescription
+        ] || defaultValue
+      );
     default:
-      return Constants.DEFAULT_CLUSTER_DESCRIPTION;
+      return defaultValue;
   }
 }
 
