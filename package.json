@@ -133,7 +133,7 @@
     "react-window": "1.8.6",
     "redux": "4.1.1",
     "redux-thunk": "2.3.0",
-    "regenerator-runtime": "^0.13.9",
+    "regenerator-runtime": "0.13.9",
     "remark-gfm": "1.0.0",
     "reselect": "4.0.0",
     "serialize-javascript": "5.0.1",
