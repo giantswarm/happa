@@ -11,7 +11,7 @@ import {
   ProviderNodePool,
 } from 'MAPI/types';
 import {
-  fetchMasterListForClusterKey,
+  fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   IMachineType,
 } from 'MAPI/utils';
@@ -424,20 +424,17 @@ export async function createCluster(
 
     const controlPlaneNodes = await Promise.all(
       config.controlPlaneNodes.map((n) =>
-        capzv1alpha3.createAzureMachine(httpClient, auth, n)
+        capzv1alpha3.createAzureMachine(
+          httpClient,
+          auth,
+          n as capzv1alpha3.IAzureMachine
+        )
       )
     );
 
-    const controlPlaneNodesList: capzv1alpha3.IAzureMachineList = {
-      apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
-      kind: capzv1alpha3.AzureMachineList,
-      metadata: {},
-      items: controlPlaneNodes,
-    };
-
     mutate(
-      fetchMasterListForClusterKey(config.cluster),
-      controlPlaneNodesList,
+      fetchControlPlaneNodesForClusterKey(config.cluster),
+      controlPlaneNodes,
       false
     );
 

@@ -285,8 +285,9 @@ describe('ClusterDetailAppListItem', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Upgrade/ }));
 
-    await waitForElementToBeRemoved(() =>
-      screen.getByRole('button', { name: /Upgrade/ }, { timeout: 10000 })
+    await waitForElementToBeRemoved(
+      () => screen.getByRole('button', { name: /Upgrade/ }),
+      { timeout: 10000 }
     );
 
     await withMarkup(screen.findByText)(

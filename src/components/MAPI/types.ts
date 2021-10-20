@@ -7,9 +7,15 @@ import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 
-export type ControlPlaneNode = capzv1alpha3.IAzureMachine;
+export type ControlPlaneNode =
+  | capzv1alpha3.IAzureMachine
+  | infrav1alpha3.IAWSControlPlane
+  | infrav1alpha3.IG8sControlPlane;
 
-export type ControlPlaneNodeList = capzv1alpha3.IAzureMachineList;
+export type ControlPlaneNodeList =
+  | capzv1alpha3.IAzureMachineList
+  | infrav1alpha3.IAWSControlPlaneList
+  | infrav1alpha3.IG8sControlPlaneList;
 
 export type Cluster = capiv1alpha3.ICluster;
 
@@ -20,7 +26,9 @@ export type ProviderCluster =
   | infrav1alpha3.IAWSCluster
   | undefined;
 
-export type ProviderClusterList = capzv1alpha3.IAzureClusterList;
+export type ProviderClusterList =
+  | capzv1alpha3.IAzureClusterList
+  | infrav1alpha3.IAWSClusterList;
 
 export type NodePool =
   | capiv1alpha3.IMachineDeployment
