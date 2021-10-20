@@ -47,18 +47,47 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
-    const readyReplicas = nodePools[i].status?.readyReplicas;
+    const providerNp = providerNodePools[i];
 
-    if (!vmSize) return -1;
+    switch (providerNp?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+      case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+        {
+          const vmSize = providerNp.spec?.template.vmSize;
+          const readyReplicas = nodePools[i].status?.readyReplicas;
 
-    if (typeof readyReplicas !== 'undefined') {
-      const machineTypeProperties = machineTypes[vmSize];
-      if (!machineTypeProperties) {
-        return -1;
+          if (!vmSize) return -1;
+
+          if (typeof readyReplicas !== 'undefined') {
+            const machineTypeProperties = machineTypes[vmSize];
+            if (!machineTypeProperties) {
+              return -1;
+            }
+
+            count += machineTypeProperties.cpu * readyReplicas;
+          }
+        }
+
+        break;
+
+      case 'infrastructure.giantswarm.io/v1alpha3': {
+        const instanceType = providerNp.spec.provider.worker.instanceType;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[instanceType];
+          if (!machineTypeProperties) {
+            return -1;
+          }
+
+          count += machineTypeProperties.cpu * readyReplicas;
+        }
+
+        break;
       }
 
-      count += machineTypeProperties.cpu * readyReplicas;
+      default:
+        return -1;
     }
   }
 
@@ -75,18 +104,46 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
-    const readyReplicas = nodePools[i].status?.readyReplicas;
+    const providerNp = providerNodePools[i];
 
-    if (!vmSize) return -1;
+    switch (providerNp?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+      case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
+        const vmSize = providerNp.spec?.template.vmSize;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
 
-    if (typeof readyReplicas !== 'undefined') {
-      const machineTypeProperties = machineTypes[vmSize];
-      if (!machineTypeProperties) {
-        return -1;
+        if (!vmSize) return -1;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[vmSize];
+          if (!machineTypeProperties) {
+            return -1;
+          }
+
+          count += machineTypeProperties.memory * readyReplicas;
+        }
+
+        break;
       }
 
-      count += machineTypeProperties.memory * readyReplicas;
+      case 'infrastructure.giantswarm.io/v1alpha3': {
+        const instanceType = providerNp.spec.provider.worker.instanceType;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[instanceType];
+          if (!machineTypeProperties) {
+            return -1;
+          }
+
+          count += machineTypeProperties.memory * readyReplicas;
+        }
+
+        break;
+      }
+
+      default:
+        return -1;
     }
   }
 

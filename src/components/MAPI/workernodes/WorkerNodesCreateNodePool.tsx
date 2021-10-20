@@ -276,7 +276,10 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   const spotInstances = getProviderNodePoolSpotInstances(
     state.providerNodePool
   ) as INodePoolSpotInstancesAzure;
-  const nodePoolAZs = getNodePoolAvailabilityZones(state.nodePool);
+  const nodePoolAZs = getNodePoolAvailabilityZones(
+    state.nodePool,
+    state.providerNodePool
+  );
   const scaling = getNodePoolScaling(state.nodePool, state.providerNodePool);
 
   return (

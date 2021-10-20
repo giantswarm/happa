@@ -13,6 +13,7 @@ import {
   getProviderNodePoolMachineType,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -31,9 +32,19 @@ import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (true) {
+    case providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool &&
+      providerNodePool?.apiVersion ===
+        'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    case providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool &&
+      providerNodePool?.apiVersion ===
+        'infrastructure.cluster.x-k8s.io/v1alpha4':
       return `VM size: ${getProviderNodePoolMachineType(providerNodePool)}`;
+    case providerNodePool?.kind === infrav1alpha3.AWSMachineDeployment &&
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3':
+      return `Instance type: ${getProviderNodePoolMachineType(
+        providerNodePool
+      )}`;
     default:
       return undefined;
   }
@@ -89,9 +100,9 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
   const description = nodePool ? getNodePoolDescription(nodePool) : undefined;
   const availabilityZones = nodePool
-    ? getNodePoolAvailabilityZones(nodePool)
+    ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
     : undefined;
-  const machineType = providerNodePool
+  const machineType = nodePool
     ? getProviderNodePoolMachineType(providerNodePool)
     : undefined;
   const scaling = useMemo(() => {
