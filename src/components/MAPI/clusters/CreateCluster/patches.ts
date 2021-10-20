@@ -43,10 +43,17 @@ export function withClusterReleaseVersion(newVersion: string): ClusterPatch {
 }
 
 export function withClusterDescription(newDescription: string): ClusterPatch {
-  return (cluster) => {
+  return (cluster, providerCluster) => {
     cluster.metadata.annotations ??= {};
     cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
       newDescription;
+
+    if (
+      providerCluster?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3' &&
+      providerCluster.spec
+    ) {
+      providerCluster.spec.cluster.description = newDescription;
+    }
   };
 }
 

@@ -241,7 +241,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     dispatch({ type: 'startCreation' });
 
     try {
-      await createCluster(clientFactory(), auth, state);
+      await createCluster(clientFactory, auth, state);
 
       dispatch({ type: 'endCreation' });
 
@@ -333,13 +333,19 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Release)}
             />
-            <CreateClusterControlPlaneNodeAZs
-              id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
-              cluster={state.cluster}
-              providerCluster={state.providerCluster}
-              controlPlaneNodes={state.controlPlaneNodes}
-              onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
-            />
+
+            {provider === Providers.AZURE && (
+              <CreateClusterControlPlaneNodeAZs
+                id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
+                cluster={state.cluster}
+                providerCluster={state.providerCluster}
+                controlPlaneNodes={state.controlPlaneNodes}
+                onChange={handleChange(
+                  ClusterPropertyField.ControlPlaneNodeAZs
+                )}
+              />
+            )}
+
             <Box margin={{ top: 'medium' }}>
               <Box direction='row' gap='small'>
                 <Button

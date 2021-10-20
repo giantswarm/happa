@@ -5,6 +5,7 @@ import { IAWSCluster, IAWSMachineDeployment } from '.';
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
 export const labelReleaseVersion = 'release.giantswarm.io/version';
+export const labelControlPlane = 'giantswarm.io/control-plane';
 
 export const conditionTypeCreated = 'Created';
 export const conditionTypeCreating = 'Creating';
