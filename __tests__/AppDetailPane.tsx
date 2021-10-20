@@ -136,6 +136,9 @@ describe('Installed app detail pane', () => {
     });
 
     it('deletes the config map of an already installed app', async () => {
+      // eslint-disable-next-line no-magic-numbers
+      jest.setTimeout(10000);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -180,6 +183,9 @@ describe('Installed app detail pane', () => {
     });
 
     it('updates secrets of an already installed app', async () => {
+      // eslint-disable-next-line no-magic-numbers
+      jest.setTimeout(10000);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
