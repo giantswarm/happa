@@ -46,7 +46,7 @@ const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
     });
   };
 
-  const value = getClusterDescription(cluster);
+  const value = getClusterDescription(cluster, '');
 
   const textInputRef = useRef<HTMLInputElement>(null);
 

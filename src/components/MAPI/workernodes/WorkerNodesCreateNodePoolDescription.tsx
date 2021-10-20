@@ -38,7 +38,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
       });
     };
 
-    const value = getNodePoolDescription(nodePool);
+    const value = getNodePoolDescription(nodePool, '');
 
     return (
       <InputGroup htmlFor={id} label='Description' {...props}>
