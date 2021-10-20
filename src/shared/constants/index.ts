@@ -61,9 +61,6 @@ export const Constants = {
   KEYPAIR_MAX_SAFE_TTL: 24 * 30, // 30 days, in hours
   KEYPAIR_UNSAFE_TTL_EXPLANATION: `The desired expiry date is pretty far away. Please keep in mind that there is no way to revoke keypairs once they've been created.`,
 
-  KVM_INGRESS_TCP_HTTP_PORT: 36000,
-  KVM_INGRESS_TCP_HTTPS_PORT: 36001,
-
   FLATCAR_CONTAINERLINUX_SINCE: '2345.3.1',
 
   // Used to filter cluster labels in api responses
