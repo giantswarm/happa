@@ -16,13 +16,14 @@ import {
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { PropertiesOf } from 'shared/types';
 import { getNamespaceFromOrgName } from 'stores/main/utils';
+import { selectOrganizations } from 'stores/organization/selectors';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
@@ -95,11 +96,13 @@ interface IClusterState {
   validationResults: Record<ClusterPropertyField, boolean>;
   isCreating: boolean;
   latestRelease: string;
+  orgNamespace: string;
 }
 
 interface IReducerConfig {
   namespace: string;
   organization: string;
+  orgNamespace: string;
 }
 
 function makeInitialState(
@@ -129,6 +132,7 @@ function makeInitialState(
     },
     isCreating: false,
     latestRelease: '',
+    orgNamespace: config.orgNamespace,
   };
 }
 
@@ -154,7 +158,7 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
       case 'setLatestRelease':
         // Apply the version to the CRs if no version was set before.
         if (!draft.latestRelease) {
-          withClusterReleaseVersion(action.value)(
+          withClusterReleaseVersion(action.value, draft.orgNamespace)(
             draft.cluster,
             draft.providerCluster,
             draft.controlPlaneNodes
@@ -173,7 +177,10 @@ interface ICreateClusterProps
 const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const match = useRouteMatch<{ orgId: string }>();
   const { orgId } = match.params;
-  const namespace = getNamespaceFromOrgName(orgId);
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+
+  const namespace = selectedOrg?.namespace ?? getNamespaceFromOrgName(orgId);
 
   const provider = window.config.info.general.provider;
 
@@ -182,6 +189,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     makeInitialState(provider, {
       namespace,
       organization: orgId,
+      orgNamespace: namespace,
     })
   );
 
@@ -332,6 +340,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               providerCluster={state.providerCluster}
               controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Release)}
+              orgNamespace={state.orgNamespace}
             />
 
             {provider === Providers.AZURE && (
