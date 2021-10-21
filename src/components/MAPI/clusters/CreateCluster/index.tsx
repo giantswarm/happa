@@ -40,6 +40,7 @@ import {
   findLatestReleaseVersion,
 } from '../utils';
 import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
+import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNodesCount';
 import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
 import CreateClusterRelease from './CreateClusterRelease';
@@ -54,6 +55,7 @@ enum ClusterPropertyField {
   Description,
   Release,
   ControlPlaneNodeAZs,
+  ControlPlaneNodesCount,
 }
 
 interface IApplyPatchAction {
@@ -129,6 +131,7 @@ function makeInitialState(
       [ClusterPropertyField.Description]: true,
       [ClusterPropertyField.Release]: true,
       [ClusterPropertyField.ControlPlaneNodeAZs]: true,
+      [ClusterPropertyField.ControlPlaneNodesCount]: true,
     },
     isCreating: false,
     latestRelease: '',
@@ -351,6 +354,18 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
                 controlPlaneNodes={state.controlPlaneNodes}
                 onChange={handleChange(
                   ClusterPropertyField.ControlPlaneNodeAZs
+                )}
+              />
+            )}
+
+            {provider === Providers.AWS && (
+              <CreateClusterControlPlaneNodesCount
+                id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
+                cluster={state.cluster}
+                providerCluster={state.providerCluster}
+                controlPlaneNodes={state.controlPlaneNodes}
+                onChange={handleChange(
+                  ClusterPropertyField.ControlPlaneNodesCount
                 )}
               />
             )}

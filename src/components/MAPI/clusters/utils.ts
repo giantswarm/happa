@@ -12,9 +12,11 @@ import {
   ProviderNodePool,
 } from 'MAPI/types';
 import {
+  determineRandomAZs,
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   generateUID,
+  getSupportedAvailabilityZones,
   IMachineType,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -485,6 +487,12 @@ function createDefaultAWSControlPlane(config: {
   const releaseVersion =
     config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
 
+  const azStats = getSupportedAvailabilityZones();
+  const azs = determineRandomAZs(
+    Constants.AWS_HA_MASTERS_MAX_NODES,
+    azStats.all
+  );
+
   return {
     apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
     kind: infrav1alpha3.AWSControlPlane,
@@ -499,7 +507,7 @@ function createDefaultAWSControlPlane(config: {
       },
     },
     spec: {
-      availabilityZones: [],
+      availabilityZones: azs,
       instanceType: Constants.AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE,
     },
   };
@@ -532,7 +540,7 @@ function createDefaultG8sControlPlane(config: {
       },
     },
     spec: {
-      replicas: 0,
+      replicas: config.awsControlPlane.spec.availabilityZones!.length,
       infrastructureRef: corev1.getObjectReference(config.awsControlPlane),
     },
     status: {},

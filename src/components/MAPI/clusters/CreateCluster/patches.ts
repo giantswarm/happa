@@ -1,7 +1,9 @@
 import { compare } from 'lib/semver';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
+import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import { Constants } from 'shared/constants';
 
 export type ClusterPatch = (
@@ -81,6 +83,32 @@ export function withClusterControlPlaneNodeAZs(zones?: string[]): ClusterPatch {
     for (const controlPlaneNode of controlPlaneNodes) {
       if (controlPlaneNode.kind === capzv1alpha3.AzureMachine) {
         controlPlaneNode.spec!.failureDomain = zones?.[0];
+      }
+    }
+  };
+}
+
+export function withClusterControlPlaneNodesCount(count: number): ClusterPatch {
+  return (_, _p, controlPlaneNodes) => {
+    const supportedAZs = getSupportedAvailabilityZones().all;
+
+    for (const controlPlaneNode of controlPlaneNodes) {
+      if (
+        controlPlaneNode.apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
+      ) {
+        continue;
+      }
+
+      switch (controlPlaneNode.kind) {
+        case infrav1alpha3.G8sControlPlane:
+          controlPlaneNode.spec.replicas = count;
+          break;
+        case infrav1alpha3.AWSControlPlane:
+          controlPlaneNode.spec.availabilityZones = determineRandomAZs(
+            count,
+            supportedAZs
+          );
+          break;
       }
     }
   };
