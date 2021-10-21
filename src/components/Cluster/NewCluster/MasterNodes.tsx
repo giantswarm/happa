@@ -1,14 +1,10 @@
+import { Box, Text } from 'grommet';
 import React from 'react';
-import styled from 'styled-components';
 import InputGroup from 'UI/Inputs/InputGroup';
 import RadioInput from 'UI/Inputs/RadioInput';
 
-const InputSubtitle = styled.small`
-  font-size: 0.74rem;
-  padding-left: 29px;
-`;
-
-interface IMasterNodesProps {
+interface IMasterNodesProps
+  extends Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange'> {
   isHighAvailability?: boolean;
   onChange?: (isHA: boolean) => void;
 }
@@ -16,6 +12,7 @@ interface IMasterNodesProps {
 const MasterNodes: React.FC<IMasterNodesProps> = ({
   isHighAvailability,
   onChange,
+  ...props
 }) => {
   const handleChange = (isHA: boolean) => () => {
     onChange?.(isHA);
@@ -30,6 +27,7 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
       margin={{
         bottom: 'small',
       }}
+      {...props}
     >
       <fieldset>
         <RadioInput
@@ -41,10 +39,12 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           onChange={handleChange(true)}
           formFieldProps={{ margin: { bottom: 'none' } }}
         />
-        <InputSubtitle>
-          Three control plane nodes, each placed in a separate availability
-          zone, selected at random. Preferred for production clusters.
-        </InputSubtitle>
+        <Box as='span' pad={{ left: '29px' }}>
+          <Text size='small' color='text-weak'>
+            Three control plane nodes, each placed in a separate availability
+            zone, selected at random. Preferred for production clusters.
+          </Text>
+        </Box>
       </fieldset>
       <fieldset>
         <RadioInput
@@ -56,10 +56,12 @@ const MasterNodes: React.FC<IMasterNodesProps> = ({
           onChange={handleChange(false)}
           formFieldProps={{ margin: { bottom: 'none' } }}
         />
-        <InputSubtitle>
-          One control plane node, placed in an availability zone selected at
-          random.
-        </InputSubtitle>
+        <Box as='span' pad={{ left: '29px' }}>
+          <Text size='small' color='text-weak'>
+            One control plane node, placed in an availability zone selected at
+            random.
+          </Text>
+        </Box>
       </fieldset>
     </InputGroup>
   );

@@ -1,4 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
@@ -11,14 +12,17 @@ import {
   ProviderNodePool,
 } from 'MAPI/types';
 import {
+  determineRandomAZs,
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
+  generateUID,
+  getSupportedAvailabilityZones,
   IMachineType,
 } from 'MAPI/utils';
-import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -240,8 +244,11 @@ export function createDefaultProviderCluster(
     releaseVersion: string;
   }
 ) {
-  if (provider === Providers.AZURE) {
-    return createDefaultAzureCluster(config);
+  switch (provider) {
+    case Providers.AZURE:
+      return createDefaultAzureCluster(config);
+    case Providers.AWS:
+      return createDefaultAWSCluster(config);
   }
 
   throw new Error('Unsupported provider.');
@@ -289,14 +296,76 @@ function createDefaultAzureCluster(config: {
   };
 }
 
+function createDefaultAWSCluster(config: {
+  namespace: string;
+  name: string;
+  organization: string;
+  releaseVersion: string;
+}): infrav1alpha3.IAWSCluster {
+  return {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: infrav1alpha3.AWSCluster,
+    metadata: {
+      namespace: config.namespace,
+      name: config.name,
+      labels: {
+        [infrav1alpha3.labelCluster]: config.name,
+        [capiv1alpha3.labelClusterName]: config.name,
+        [infrav1alpha3.labelOrganization]: config.organization,
+        [infrav1alpha3.labelReleaseVersion]: config.releaseVersion,
+      },
+    },
+    spec: {
+      cluster: {
+        description: Constants.DEFAULT_CLUSTER_DESCRIPTION,
+        dns: {
+          domain: '',
+        },
+        oidc: {
+          issuerURL: '',
+          claims: {
+            groups: '',
+            username: '',
+          },
+          clientID: '',
+        },
+        kubeProxy: {
+          conntrackMaxPerCore: 0,
+        },
+      },
+      provider: {
+        credentialSecret: {
+          name: '',
+          namespace: 'giantswarm',
+        },
+        master: {
+          availabilityZone: '',
+          instanceType: '',
+        },
+        region: window.config.info.general.dataCenter,
+        nodes: {
+          networkPool: '',
+        },
+        pods: {
+          cidrBlock: '',
+          externalSNAT: false,
+        },
+      },
+    },
+  };
+}
+
 export function createDefaultCluster(config: {
   providerCluster: ProviderCluster;
 }) {
-  if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
-    return createDefaultV1Alpha3Cluster(config);
-  }
+  switch (config.providerCluster?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return createDefaultV1Alpha3Cluster(config);
 
-  throw new Error('Unsupported provider.');
+    default:
+      throw new Error('Unsupported provider.');
+  }
 }
 
 function createDefaultV1Alpha3Cluster(config: {
@@ -339,8 +408,19 @@ function createDefaultV1Alpha3Cluster(config: {
 export function createDefaultControlPlaneNodes(config: {
   providerCluster: ProviderCluster;
 }): ControlPlaneNode[] {
-  if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
-    return [createDefaultAzureMachine(config)];
+  switch (config.providerCluster?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+      return [createDefaultAzureMachine(config)];
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const name = generateUID(5);
+      const awsCP = createDefaultAWSControlPlane({ ...config, name });
+      const g8sCP = createDefaultG8sControlPlane({
+        ...config,
+        awsControlPlane: awsCP,
+      });
+
+      return [awsCP, g8sCP];
+    }
   }
 
   throw new Error('Unsupported provider.');
@@ -396,8 +476,79 @@ function createDefaultAzureMachine(config: {
   };
 }
 
+function createDefaultAWSControlPlane(config: {
+  name: string;
+  providerCluster: ProviderCluster;
+}): infrav1alpha3.IAWSControlPlane {
+  const namespace = config.providerCluster!.metadata.namespace;
+  const clusterName = config.providerCluster!.metadata.name;
+  const organization =
+    config.providerCluster!.metadata.labels![infrav1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
+
+  const azStats = getSupportedAvailabilityZones();
+  const azs = determineRandomAZs(
+    Constants.AWS_HA_MASTERS_MAX_NODES,
+    azStats.all
+  );
+
+  return {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: infrav1alpha3.AWSControlPlane,
+    metadata: {
+      namespace,
+      name: config.name,
+      labels: {
+        [infrav1alpha3.labelCluster]: clusterName,
+        [infrav1alpha3.labelControlPlane]: config.name,
+        [infrav1alpha3.labelOrganization]: organization,
+        [infrav1alpha3.labelReleaseVersion]: releaseVersion,
+      },
+    },
+    spec: {
+      availabilityZones: azs,
+      instanceType: Constants.AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE,
+    },
+  };
+}
+
+function createDefaultG8sControlPlane(config: {
+  providerCluster: ProviderCluster;
+  awsControlPlane: infrav1alpha3.IAWSControlPlane;
+}): infrav1alpha3.IG8sControlPlane {
+  const namespace = config.providerCluster!.metadata.namespace;
+  const clusterName = config.providerCluster!.metadata.name;
+  const organization =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
+
+  const name = config.awsControlPlane.metadata.name;
+
+  return {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: infrav1alpha3.G8sControlPlane,
+    metadata: {
+      namespace,
+      name,
+      labels: {
+        [capiv1alpha3.labelCluster]: clusterName,
+        [infrav1alpha3.labelControlPlane]: name,
+        [capiv1alpha3.labelOrganization]: organization,
+        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
+      },
+    },
+    spec: {
+      replicas: config.awsControlPlane.spec.availabilityZones!.length,
+      infrastructureRef: corev1.getObjectReference(config.awsControlPlane),
+    },
+    status: {},
+  };
+}
+
 export async function createCluster(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   config: {
     cluster: Cluster;
@@ -409,65 +560,139 @@ export async function createCluster(
   providerCluster: ProviderCluster;
   controlPlaneNodes: ControlPlaneNode[];
 }> {
-  if (config.providerCluster!.kind === capzv1alpha3.AzureCluster) {
-    const providerCluster = await capzv1alpha3.createAzureCluster(
-      httpClient,
-      auth,
-      config.providerCluster as capzv1alpha3.IAzureCluster
-    );
+  switch (config.providerCluster!.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+      const providerCluster = await capzv1alpha3.createAzureCluster(
+        httpClientFactory(),
+        auth,
+        config.providerCluster as capzv1alpha3.IAzureCluster
+      );
 
-    mutate(
-      fetchProviderClusterForClusterKey(config.cluster),
-      providerCluster,
-      false
-    );
+      mutate(
+        fetchProviderClusterForClusterKey(config.cluster),
+        providerCluster,
+        false
+      );
 
-    const controlPlaneNodes = await Promise.all(
-      config.controlPlaneNodes.map((n) =>
-        capzv1alpha3.createAzureMachine(
-          httpClient,
-          auth,
-          n as capzv1alpha3.IAzureMachine
+      const controlPlaneNodes = await Promise.all(
+        config.controlPlaneNodes.map((n) =>
+          capzv1alpha3.createAzureMachine(
+            httpClientFactory(),
+            auth,
+            n as capzv1alpha3.IAzureMachine
+          )
         )
-      )
-    );
+      );
 
-    mutate(
-      fetchControlPlaneNodesForClusterKey(config.cluster),
-      controlPlaneNodes,
-      false
-    );
+      mutate(
+        fetchControlPlaneNodesForClusterKey(config.cluster),
+        controlPlaneNodes,
+        false
+      );
 
-    const cluster = await capiv1alpha3.createCluster(
-      httpClient,
-      auth,
-      config.cluster
-    );
+      const cluster = await capiv1alpha3.createCluster(
+        httpClientFactory(),
+        auth,
+        config.cluster
+      );
 
-    mutate(
-      capiv1alpha3.getClusterKey(
-        cluster.metadata.namespace!,
-        cluster.metadata.name
-      ),
-      cluster,
-      false
-    );
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        cluster,
+        false
+      );
 
-    // Add the created cluster to the existing list.
-    mutate(
-      capiv1alpha3.getClusterListKey({
-        namespace: cluster.metadata.namespace!,
-      }),
-      (draft?: capiv1alpha3.IClusterList) => {
-        draft?.items.push(cluster);
-      },
-      false
-    );
+      // Add the created cluster to the existing list.
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          namespace: cluster.metadata.namespace!,
+        }),
+        (draft?: capiv1alpha3.IClusterList) => {
+          draft?.items.push(cluster);
+        },
+        false
+      );
 
-    return { cluster, providerCluster, controlPlaneNodes };
+      return { cluster, providerCluster, controlPlaneNodes };
+    }
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const providerCluster = await infrav1alpha3.createAWSCluster(
+        httpClientFactory(),
+        auth,
+        config.providerCluster as infrav1alpha3.IAWSCluster
+      );
+
+      mutate(
+        fetchProviderClusterForClusterKey(config.cluster),
+        providerCluster,
+        false
+      );
+
+      const cluster = await capiv1alpha3.createCluster(
+        httpClientFactory(),
+        auth,
+        config.cluster
+      );
+
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        cluster,
+        false
+      );
+
+      // Add the created cluster to the existing list.
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          namespace: cluster.metadata.namespace!,
+        }),
+        (draft?: capiv1alpha3.IClusterList) => {
+          draft?.items.push(cluster);
+        },
+        false
+      );
+
+      const controlPlaneNodes = await Promise.all<ControlPlaneNode>(
+        config.controlPlaneNodes.map((n) => {
+          switch (n.kind) {
+            case infrav1alpha3.AWSControlPlane:
+              return infrav1alpha3.createAWSControlPlane(
+                httpClientFactory(),
+                auth,
+                n
+              );
+            case infrav1alpha3.G8sControlPlane:
+              return infrav1alpha3.createG8sControlPlane(
+                httpClientFactory(),
+                auth,
+                n
+              );
+            default:
+              return Promise.reject(
+                new Error('Unknown control plane node type.')
+              );
+          }
+        })
+      );
+
+      mutate(
+        fetchControlPlaneNodesForClusterKey(config.cluster),
+        controlPlaneNodes,
+        false
+      );
+
+      return { cluster, providerCluster, controlPlaneNodes };
+    }
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
   }
-
-  return Promise.reject(new Error('Unsupported provider.'));
 }
 
 export function findLatestReleaseVersion(

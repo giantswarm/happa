@@ -112,7 +112,7 @@ describe('ClusterCreate', () => {
     fireEvent.click(createButton);
 
     expect(createClusterMockFn).toHaveBeenCalledWith(
-      expect.any(Object),
+      expect.any(Function),
       expect.any(Object),
       expect.objectContaining({
         cluster: expect.objectContaining({
@@ -163,7 +163,7 @@ describe('ClusterCreate', () => {
     fireEvent.click(createButton);
 
     expect(createClusterMockFn).toHaveBeenCalledWith(
-      expect.any(Object),
+      expect.any(Function),
       expect.any(Object),
       expect.objectContaining({
         cluster: expect.objectContaining({
@@ -225,7 +225,7 @@ describe('ClusterCreate', () => {
     fireEvent.click(createButton);
 
     expect(createClusterMockFn).toHaveBeenCalledWith(
-      expect.any(Object),
+      expect.any(Function),
       expect.any(Object),
       expect.objectContaining({
         controlPlaneNodes: expect.arrayContaining([

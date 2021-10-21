@@ -19,15 +19,15 @@ import { IClusterPropertyProps, withClusterReleaseVersion } from './patches';
 
 interface ICreateClusterReleaseProps
   extends IClusterPropertyProps,
-    Omit<
-      React.ComponentPropsWithoutRef<typeof InputGroup>,
-      'onChange' | 'id'
-    > {}
+    Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
+  orgNamespace: string;
+}
 
 const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
   id,
   cluster,
   onChange,
+  orgNamespace,
   ...props
 }) => {
   const isAdmin = useSelector(getUserIsAdmin);
@@ -92,7 +92,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
   const handleChange = (newVersion: string) => {
     onChange({
       isValid: true,
-      patch: withClusterReleaseVersion(newVersion),
+      patch: withClusterReleaseVersion(newVersion, orgNamespace),
     });
   };
 

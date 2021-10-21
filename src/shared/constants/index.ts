@@ -26,6 +26,7 @@ export const Constants = {
   DEFAULT_CLUSTER_DESCRIPTION: 'Please add description',
   AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AZURE_CONTROL_PLANE_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
+  AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE: 'm5.xlarge',
   AWS_V5_VERSION: '10.0.0',
   AZURE_V5_VERSION: '13.0.0-alpha',
 
@@ -39,6 +40,7 @@ export const Constants = {
   AWS_HA_MASTERS_MAX_NODES: 3,
 
   AZURE_CAPZ_VERSION: '20.0.0',
+  AWS_NAMESPACED_CLUSTERS_VERSION: '16.0.0',
 
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
