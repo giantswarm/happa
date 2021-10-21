@@ -8,8 +8,15 @@ import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
-import { Cluster } from 'MAPI/types';
-import { extractErrorMessage, fetchCluster, fetchClusterKey } from 'MAPI/utils';
+import { Cluster, ProviderCluster } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  fetchCluster,
+  fetchClusterKey,
+  fetchProviderClusterForCluster,
+  fetchProviderClusterForClusterKey,
+  getClusterDescription,
+} from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -206,8 +213,25 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [cluster, dispatch]);
 
+  const providerClusterKey = cluster
+    ? fetchProviderClusterForClusterKey(cluster)
+    : null;
+
+  const { data: providerCluster, error: providerClusterError } = useSWR<
+    ProviderCluster,
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClusterForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (providerClusterError) {
+      ErrorReporter.getInstance().notify(providerClusterError);
+    }
+  }, [providerClusterError]);
+
   const clusterDescription = cluster
-    ? capiv1alpha3.getClusterDescription(cluster)
+    ? getClusterDescription(cluster, providerCluster)
     : undefined;
   const clusterReleaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)

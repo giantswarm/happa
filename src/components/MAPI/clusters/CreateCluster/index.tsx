@@ -297,7 +297,10 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   };
 
   const releaseVersion = getClusterReleaseVersion(state.cluster);
-  const description = getClusterDescription(state.cluster);
+  const description = getClusterDescription(
+    state.cluster,
+    state.providerCluster
+  );
   const controlPlaneAZs = useMemo(() => {
     return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
