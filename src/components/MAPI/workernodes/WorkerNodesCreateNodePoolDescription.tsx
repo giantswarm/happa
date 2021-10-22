@@ -1,6 +1,6 @@
 import { hasAppropriateLength } from 'lib/helpers';
 import { getNodePoolDescription } from 'MAPI/utils';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
@@ -49,6 +49,19 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
 
     const value = getNodePoolDescription(nodePool, providerNodePool, '');
 
+    const textInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      if (!textInputRef.current || !autoFocus) return;
+
+      setTimeout(() => {
+        textInputRef.current?.select();
+      });
+
+      // Only run for the initial render.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
       <InputGroup htmlFor={id} label='Description' {...props}>
         <TextInput
@@ -60,6 +73,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
           readOnly={readOnly}
           disabled={disabled}
           autoFocus={autoFocus}
+          ref={textInputRef}
         />
       </InputGroup>
     );
