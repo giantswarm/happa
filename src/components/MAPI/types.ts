@@ -50,4 +50,4 @@ export type ProviderNodePoolList =
   | capzexpv1alpha3.IAzureMachinePoolList
   | capzv1alpha4.IAzureMachinePoolList;
 
-export type BootstrapConfig = gscorev1alpha1.ISpark;
+export type BootstrapConfig = gscorev1alpha1.ISpark | undefined;

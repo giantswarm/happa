@@ -25,7 +25,16 @@ interface IWorkerNodesCreateNodePoolDescriptionProps
 }
 
 const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolDescriptionProps> =
-  ({ id, nodePool, onChange, readOnly, disabled, autoFocus, ...props }) => {
+  ({
+    id,
+    nodePool,
+    providerNodePool,
+    onChange,
+    readOnly,
+    disabled,
+    autoFocus,
+    ...props
+  }) => {
     const [validationError, setValidationError] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +47,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
       });
     };
 
-    const value = getNodePoolDescription(nodePool, '');
+    const value = getNodePoolDescription(nodePool, providerNodePool, '');
 
     return (
       <InputGroup htmlFor={id} label='Description' {...props}>
