@@ -10,12 +10,22 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { Cluster, ClusterList } from 'MAPI/types';
-import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
+import {
+  IClusterWithProviderCluster,
+  mapClustersToProviderClusters,
+} from 'MAPI/clusters/utils';
+import { Cluster, ClusterList, ProviderCluster } from 'MAPI/types';
+import {
+  fetchClusterList,
+  fetchClusterListKey,
+  fetchProviderClustersForClusters,
+  fetchProviderClustersForClustersKey,
+  getClusterDescription,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
@@ -40,14 +50,15 @@ function getOrganizationForCluster(
 }
 
 function mapClusterToClusterPickerInput(
-  cluster: Cluster,
+  entry: IClusterWithProviderCluster,
   organizations: Record<string, IOrganization>
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
+  const { cluster, providerCluster } = entry;
   const organization = getOrganizationForCluster(cluster, organizations);
 
   return {
     id: cluster.metadata.name,
-    name: capiv1alpha3.getClusterDescription(cluster),
+    name: getClusterDescription(cluster, providerCluster),
     owner: organization?.id ?? '',
     isAvailable: true,
   };
@@ -151,6 +162,38 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     }
   }, [clusterListError]);
 
+  const providerClusterKey = clusterList
+    ? fetchProviderClustersForClustersKey(clusterList.items)
+    : null;
+
+  const { data: providerClusterList, error: providerClusterError } = useSWR<
+    ProviderCluster[],
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (providerClusterError) {
+      new FlashMessage(
+        'There was a problem loading provider-specific clusters.',
+        messageType.ERROR,
+        messageTTL.FOREVER
+      );
+
+      ErrorReporter.getInstance().notify(providerClusterError);
+    }
+  }, [providerClusterError]);
+
+  const clustersWithProviderClusters = useMemo(() => {
+    if (!clusterList?.items || !providerClusterList) return [];
+
+    return mapClustersToProviderClusters(
+      clusterList.items,
+      providerClusterList
+    );
+  }, [clusterList?.items, providerClusterList]);
+
   const [filteredClusters, setFilteredClusters] = useState<
     React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters']
   >([]);
@@ -159,12 +202,17 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   useEffect(() => {
     const clusterCollection = filterClusters(
-      clusterList?.items ?? [],
+      clustersWithProviderClusters,
       debouncedQuery
     ).map((c) => mapClusterToClusterPickerInput(c, organizations));
 
     setFilteredClusters(clusterCollection);
-  }, [debouncedQuery, clusterList, organizations]);
+  }, [
+    debouncedQuery,
+    clusterList,
+    organizations,
+    clustersWithProviderClusters,
+  ]);
 
   const updateNamespace = useCallback(
     (ns) => {

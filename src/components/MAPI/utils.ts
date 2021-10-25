@@ -774,14 +774,29 @@ export function getClusterReleaseVersion(cluster: Cluster) {
 
 export function getClusterDescription(
   cluster: Cluster,
+  providerCluster: ProviderCluster,
   defaultValue = Constants.DEFAULT_CLUSTER_DESCRIPTION
 ): string {
-  switch (cluster.kind) {
-    case capiv1alpha3.Cluster:
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return defaultValue;
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return (
         cluster.metadata.annotations?.[
           capiv1alpha3.annotationClusterDescription
         ] || defaultValue
+      );
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return (
+        (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
+          .description ||
+        cluster.metadata.annotations?.[
+          capiv1alpha3.annotationClusterDescription
+        ] ||
+        defaultValue
       );
     default:
       return defaultValue;

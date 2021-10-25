@@ -3,8 +3,13 @@ import { Box, Keyboard, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { ClusterList } from 'MAPI/types';
-import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
+import { ClusterList, ProviderCluster } from 'MAPI/types';
+import {
+  fetchClusterList,
+  fetchClusterListKey,
+  fetchProviderClustersForClusters,
+  fetchProviderClustersForClustersKey,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -25,7 +30,7 @@ import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/C
 
 import ClusterListItem from './ClusterList/ClusterListItem';
 import ListClustersGuide from './guides/ListClustersGuide';
-import { compareClusters } from './utils';
+import { compareClusters, mapClustersToProviderClusters } from './utils';
 
 const LOADING_COMPONENTS = new Array(6).fill(0);
 
@@ -83,15 +88,40 @@ const Clusters: React.FC<{}> = () => {
     }
   }, [clusterListError]);
 
-  const clusterListIsLoading =
-    typeof clusterList === 'undefined' &&
-    typeof clusterListError === 'undefined' &&
-    clusterListIsValidating;
+  const providerClusterKey = clusterList
+    ? fetchProviderClustersForClustersKey(clusterList.items)
+    : null;
 
-  const sortedClusters = useMemo(
-    () => clusterList?.items.slice().sort(compareClusters),
-    [clusterList?.items]
+  const {
+    data: providerClusterList,
+    error: providerClusterError,
+    isValidating: providerClusterListIsValidating,
+  } = useSWR<ProviderCluster[], GenericResponseError>(providerClusterKey, () =>
+    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
   );
+
+  useEffect(() => {
+    if (providerClusterError) {
+      ErrorReporter.getInstance().notify(providerClusterError);
+    }
+  }, [providerClusterError]);
+
+  const clusterListIsLoading =
+    (typeof clusterList === 'undefined' &&
+      typeof clusterListError === 'undefined' &&
+      clusterListIsValidating) ||
+    (typeof providerClusterList === 'undefined' &&
+      typeof providerClusterError === 'undefined' &&
+      providerClusterListIsValidating);
+
+  const sortedClustersWithProviderClusters = useMemo(() => {
+    if (!clusterList?.items || !providerClusterList) return undefined;
+
+    return mapClustersToProviderClusters(
+      clusterList.items,
+      providerClusterList
+    ).sort(compareClusters);
+  }, [clusterList?.items, providerClusterList]);
 
   const newClusterPath = useMemo(() => {
     if (!selectedOrg) return '';
@@ -109,13 +139,14 @@ const Clusters: React.FC<{}> = () => {
     hasOrgs &&
     namespace &&
     !clusterListIsLoading &&
-    sortedClusters?.length === 0;
+    sortedClustersWithProviderClusters?.length === 0;
 
   const hasError =
     hasOrgs &&
     namespace &&
-    typeof clusterListError !== 'undefined' &&
-    typeof sortedClusters === 'undefined';
+    (typeof clusterListError !== 'undefined' ||
+      typeof providerClusterError !== 'undefined') &&
+    typeof sortedClustersWithProviderClusters === 'undefined';
 
   const releaseListClient = useRef(clientFactory());
   const { data: releaseList, error: releaseListError } = useSWR(
@@ -185,24 +216,27 @@ const Clusters: React.FC<{}> = () => {
             <AnimationWrapper>
               <TransitionGroup>
                 {!clusterListIsLoading &&
-                  sortedClusters?.map((cluster) => (
-                    <BaseTransition
-                      in={false}
-                      key={cluster.metadata.name}
-                      appear={false}
-                      exit={true}
-                      timeout={{ enter: 200, exit: 200 }}
-                      delayTimeout={0}
-                      classNames='cluster-list-item'
-                    >
-                      <ClusterListItem
-                        cluster={cluster}
-                        releases={releaseList?.items}
-                        organizations={organizations}
-                        margin={{ bottom: 'medium' }}
-                      />
-                    </BaseTransition>
-                  ))}
+                  sortedClustersWithProviderClusters?.map(
+                    ({ cluster, providerCluster }) => (
+                      <BaseTransition
+                        in={false}
+                        key={cluster.metadata.name}
+                        appear={false}
+                        exit={true}
+                        timeout={{ enter: 200, exit: 200 }}
+                        delayTimeout={0}
+                        classNames='cluster-list-item'
+                      >
+                        <ClusterListItem
+                          cluster={cluster}
+                          providerCluster={providerCluster}
+                          releases={releaseList?.items}
+                          organizations={organizations}
+                          margin={{ bottom: 'medium' }}
+                        />
+                      </BaseTransition>
+                    )
+                  )}
               </TransitionGroup>
             </AnimationWrapper>
           </Keyboard>

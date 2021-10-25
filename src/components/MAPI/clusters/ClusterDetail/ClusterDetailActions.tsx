@@ -4,13 +4,15 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { filterUserInstalledApps } from 'MAPI/apps/utils';
-import { Cluster } from 'MAPI/types';
+import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchCluster,
   fetchClusterKey,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
+  fetchProviderClusterForCluster,
+  fetchProviderClusterForClusterKey,
   getClusterDescription,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -32,6 +34,7 @@ import { deleteCluster } from './utils';
 interface IClusterDetailActionsProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
+// eslint-disable-next-line complexity
 const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
@@ -66,6 +69,18 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     GenericResponseError
   >(clusterKey, () =>
     fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
+  );
+
+  const providerClusterKey = cluster
+    ? fetchProviderClusterForClusterKey(cluster)
+    : null;
+
+  // The error is handled in the parent component.
+  const { data: providerCluster, error: providerClusterError } = useSWR<
+    ProviderCluster,
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
   const { data: nodePoolList, error: nodePoolListError } = useSWR(
@@ -133,6 +148,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const hasError =
     typeof orgError !== 'undefined' ||
     typeof clusterError !== 'undefined' ||
+    typeof providerClusterError !== 'undefined' ||
     typeof nodePoolListError !== 'undefined';
 
   const isLoadingResources =
@@ -140,6 +156,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     typeof orgError === 'undefined' &&
     typeof cluster === 'undefined' &&
     typeof clusterError === 'undefined' &&
+    typeof providerClusterError === 'undefined' &&
     typeof nodePoolList === 'undefined' &&
     typeof nodePoolListError === 'undefined' &&
     typeof appList === 'undefined' &&
@@ -181,7 +198,9 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const isLoading = isLoadingResources || isDeleting;
 
   const name = cluster?.metadata.name ?? '';
-  const description = cluster ? getClusterDescription(cluster) : '';
+  const description = cluster
+    ? getClusterDescription(cluster, providerCluster)
+    : '';
   const creationDate = cluster?.metadata.creationTimestamp ?? '';
 
   const workerNodePoolsCount = nodePoolList?.items.length ?? 0;
