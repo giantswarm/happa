@@ -740,12 +740,12 @@ export function mapClustersToProviderClusters(
     if (
       !providerCluster ||
       mappedClusterNameToProviderClusters.hasOwnProperty(
-        providerCluster?.metadata.name
+        providerCluster.metadata.name
       )
     )
       continue;
 
-    mappedClusterNameToProviderClusters[providerCluster?.metadata.name] =
+    mappedClusterNameToProviderClusters[providerCluster.metadata.name] =
       providerCluster;
   }
 
@@ -756,7 +756,7 @@ export function mapClustersToProviderClusters(
       cluster,
       providerCluster: cluster.spec?.infrastructureRef?.name
         ? mappedClusterNameToProviderClusters[
-            cluster.spec?.infrastructureRef?.name
+            cluster.spec.infrastructureRef.name
           ]
         : undefined,
     };
