@@ -750,19 +750,18 @@ export function mapClustersToProviderClusters(
       providerCluster;
   }
 
-  const mappedClustersToProviderClusters: IClusterWithProviderCluster[] = [];
+  const mappedClustersToProviderClusters: IClusterWithProviderCluster[] =
+    new Array(clusters.length);
 
-  for (const cluster of clusters) {
-    const entry: IClusterWithProviderCluster = {
-      cluster,
-      providerCluster: cluster.spec?.infrastructureRef?.name
-        ? mappedClusterNameToProviderClusters[
-            cluster.spec.infrastructureRef.name
-          ]
+  for (let i = 0; i < clusters.length; i++) {
+    const clusterName = clusters[i].spec?.infrastructureRef?.name;
+
+    mappedClustersToProviderClusters[i] = {
+      cluster: clusters[i],
+      providerCluster: clusterName
+        ? mappedClusterNameToProviderClusters[clusterName]
         : undefined,
     };
-
-    mappedClustersToProviderClusters.push(entry);
   }
 
   return mappedClustersToProviderClusters;
