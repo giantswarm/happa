@@ -176,7 +176,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   useEffect(() => {
     if (providerClusterError) {
       new FlashMessage(
-        'There was a problem loading provider clusters.',
+        'There was a problem loading provider-specific clusters.',
         messageType.ERROR,
         messageTTL.FOREVER
       );

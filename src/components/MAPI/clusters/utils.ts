@@ -742,8 +742,9 @@ export function mapClustersToProviderClusters(
       mappedClusterNameToProviderClusters.hasOwnProperty(
         providerCluster.metadata.name
       )
-    )
+    ) {
       continue;
+    }
 
     mappedClusterNameToProviderClusters[providerCluster.metadata.name] =
       providerCluster;
