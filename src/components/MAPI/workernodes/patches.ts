@@ -22,34 +22,47 @@ export interface INodePoolPropertyProps {
 }
 
 export function withNodePoolDescription(newDescription: string): NodePoolPatch {
-  return (nodePool: NodePool) => {
+  return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.metadata.annotations ??= {};
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolDescription
       ] = newDescription;
+    } else if (
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      providerNodePool.spec.nodePool.description = newDescription;
     }
   };
 }
 
 export function withNodePoolMachineType(newMachineType: string): NodePoolPatch {
-  return (_, providerNodePool: ProviderNodePool) => {
-    if (providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
-      providerNodePool.spec!.template.vmSize = newMachineType;
+  return (_, providerNodePool) => {
+    switch (providerNodePool?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+        providerNodePool.spec!.template.vmSize = newMachineType;
+        break;
+      case 'infrastructure.giantswarm.io/v1alpha3':
+        providerNodePool.spec.provider.worker.instanceType = newMachineType;
+        break;
     }
   };
 }
 
 export function withNodePoolAvailabilityZones(zones?: string[]): NodePoolPatch {
-  return (nodePool: NodePool) => {
+  return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.spec!.failureDomains = zones;
+    } else if (
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      providerNodePool.spec.provider.availabilityZones = zones ?? [];
     }
   };
 }
 
 export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
-  return (nodePool: NodePool) => {
+  return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.spec!.replicas = min;
 
@@ -60,6 +73,11 @@ export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolMaxSize
       ] = max.toString();
+    } else if (
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      providerNodePool.spec.nodePool.scaling.min = min;
+      providerNodePool.spec.nodePool.scaling.max = max;
     }
   };
 }
