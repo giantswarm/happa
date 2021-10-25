@@ -7,6 +7,7 @@ import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
+import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
 import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -87,9 +88,29 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
+          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
         `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
+          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
