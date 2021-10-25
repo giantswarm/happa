@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { Cluster, ControlPlaneNode } from 'MAPI/types';
+import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchCluster,
   fetchProviderClusterForCluster,
@@ -33,11 +33,16 @@ export async function updateClusterDescription(
     name
   );
 
-  const providerCluster = await fetchProviderClusterForCluster(
-    httpClientFactory,
-    auth,
-    cluster
-  );
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let providerCluster: ProviderCluster;
+
+  if (provider === Providers.AWS) {
+    providerCluster = await fetchProviderClusterForCluster(
+      httpClientFactory,
+      auth,
+      cluster
+    );
+  }
 
   const description = getClusterDescription(cluster, providerCluster);
   if (description === newDescription) {
@@ -45,6 +50,7 @@ export async function updateClusterDescription(
   }
 
   if (
+    providerCluster &&
     providerCluster.apiVersion === 'infrastructure.giantswarm.io/v1alpha3' &&
     typeof providerCluster.spec !== 'undefined'
   ) {
