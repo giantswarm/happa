@@ -1,6 +1,6 @@
 import { hasAppropriateLength } from 'lib/helpers';
 import { getNodePoolDescription } from 'MAPI/utils';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
@@ -25,7 +25,16 @@ interface IWorkerNodesCreateNodePoolDescriptionProps
 }
 
 const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolDescriptionProps> =
-  ({ id, nodePool, onChange, readOnly, disabled, autoFocus, ...props }) => {
+  ({
+    id,
+    nodePool,
+    providerNodePool,
+    onChange,
+    readOnly,
+    disabled,
+    autoFocus,
+    ...props
+  }) => {
     const [validationError, setValidationError] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +47,20 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
       });
     };
 
-    const value = getNodePoolDescription(nodePool, '');
+    const value = getNodePoolDescription(nodePool, providerNodePool, '');
+
+    const textInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      if (!textInputRef.current || !autoFocus) return;
+
+      setTimeout(() => {
+        textInputRef.current?.select();
+      });
+
+      // Only run for the initial render.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
       <InputGroup htmlFor={id} label='Description' {...props}>
@@ -51,6 +73,7 @@ const WorkerNodesCreateNodePoolDescription: React.FC<IWorkerNodesCreateNodePoolD
           readOnly={readOnly}
           disabled={disabled}
           autoFocus={autoFocus}
+          ref={textInputRef}
         />
       </InputGroup>
     );

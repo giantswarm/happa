@@ -581,6 +581,7 @@ export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {
 
 export function getNodePoolDescription(
   nodePool: NodePool,
+  providerNodePool: ProviderNodePool,
   defaultValue = Constants.DEFAULT_NODEPOOL_DESCRIPTION
 ): string {
   switch (nodePool.apiVersion) {
@@ -596,6 +597,14 @@ export function getNodePoolDescription(
           capiv1alpha4.annotationMachinePoolDescription
         ] || defaultValue
       );
+    case 'cluster.x-k8s.io/v1alpha3':
+      if (
+        providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+      ) {
+        return providerNodePool.spec.nodePool.description || defaultValue;
+      }
+
+      return defaultValue;
     default:
       return defaultValue;
   }
@@ -965,9 +974,5 @@ export function isCAPZCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return (
-    isCAPZCluster(cluster) ||
-    cluster.spec?.infrastructureRef?.apiVersion ===
-      'infrastructure.giantswarm.io/v1alpha3'
-  );
+  return isCAPZCluster(cluster);
 }
