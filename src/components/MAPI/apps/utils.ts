@@ -5,7 +5,9 @@ import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
+import { IClusterWithProviderCluster } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
+import { getClusterDescription } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -250,22 +252,26 @@ export async function createApp(
 
 /**
  * Filter a given collection of clusters by the given search query.
- * @param clusters
+ * @param clustersWithProviderClusters
  * @param searchQuery
  */
 export function filterClusters(
-  clusters: capiv1alpha3.ICluster[],
+  clustersWithProviderClusters: IClusterWithProviderCluster[],
   searchQuery: string
-): capiv1alpha3.ICluster[] {
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  if (normalizedQuery.length < 1 || clusters.length < 1) return clusters;
+): IClusterWithProviderCluster[] {
+  if (clustersWithProviderClusters.length < 1)
+    return clustersWithProviderClusters;
 
-  return clusters.filter((cluster) => {
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  return clustersWithProviderClusters.filter((entry) => {
+    const { cluster, providerCluster } = entry;
+
     switch (true) {
-      case typeof cluster.metadata.deletionTimestamp === 'undefined':
+      case typeof cluster.metadata.deletionTimestamp !== 'undefined':
+        return false;
       case cluster.metadata.name.includes(normalizedQuery):
-      case capiv1alpha3
-        .getClusterDescription(cluster)
+      case getClusterDescription(cluster, providerCluster)
         .toLowerCase()
         .includes(normalizedQuery):
       case capiv1alpha3
