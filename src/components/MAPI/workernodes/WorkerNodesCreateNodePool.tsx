@@ -271,7 +271,10 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     : false;
   const orgName =
     state.nodePool.metadata.labels![capiv1alpha3.labelOrganization];
-  const description = getNodePoolDescription(state.nodePool);
+  const description = getNodePoolDescription(
+    state.nodePool,
+    state.providerNodePool
+  );
   const machineType = getProviderNodePoolMachineType(state.providerNodePool);
   const spotInstances = getProviderNodePoolSpotInstances(
     state.providerNodePool
@@ -334,7 +337,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 margin={{ top: 'small' }}
               />
 
-              {supportsSpotInstances && (
+              {provider === Providers.AZURE && supportsSpotInstances && (
                 <WorkerNodesCreateNodePoolSpotInstances
                   id={`node-pool-${id}-${NodePoolPropertyField.SpotInstances}`}
                   nodePool={state.nodePool}
