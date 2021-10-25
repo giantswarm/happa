@@ -1,37 +1,76 @@
 import produce from 'immer';
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { Cluster, ControlPlaneNode } from 'MAPI/types';
+import {
+  fetchCluster,
+  fetchProviderClusterForCluster,
+  getClusterDescription,
+} from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import { filterLabels } from 'stores/cluster/utils';
 import { mutate } from 'swr';
 
 export async function updateClusterDescription(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
+  provider: PropertiesOf<typeof Providers>,
   namespace: string,
   name: string,
   newDescription: string
 ) {
-  const cluster = await capiv1alpha3.getCluster(
-    httpClient,
+  const cluster = await fetchCluster(
+    httpClientFactory,
     auth,
+    provider,
     namespace,
     name
   );
-  const description = capiv1alpha3.getClusterDescription(cluster);
+
+  const providerCluster = await fetchProviderClusterForCluster(
+    httpClientFactory,
+    auth,
+    cluster
+  );
+
+  const description = getClusterDescription(cluster, providerCluster);
   if (description === newDescription) {
     return cluster;
+  }
+
+  if (
+    providerCluster.apiVersion === 'infrastructure.giantswarm.io/v1alpha3' &&
+    typeof providerCluster.spec !== 'undefined'
+  ) {
+    providerCluster.spec.cluster.description = newDescription;
+
+    const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
+      httpClientFactory(),
+      auth,
+      providerCluster
+    );
+
+    mutate(
+      infrav1alpha3.getAWSClusterKey(
+        cluster.metadata.namespace!,
+        cluster.metadata.name
+      ),
+      updatedProviderCluster,
+      false
+    );
   }
 
   cluster.metadata.annotations ??= {};
   cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
     newDescription;
 
-  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+  return capiv1alpha3.updateCluster(httpClientFactory(), auth, cluster);
 }
 
 export async function deleteCluster(

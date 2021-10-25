@@ -245,8 +245,9 @@ const ClusterDetail: React.FC<{}> = () => {
 
     try {
       const updatedCluster = await updateClusterDescription(
-        clientFactory(),
+        clientFactory,
         auth,
+        provider,
         cluster.metadata.namespace!,
         cluster.metadata.name,
         newValue
