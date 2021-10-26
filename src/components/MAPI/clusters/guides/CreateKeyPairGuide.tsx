@@ -73,8 +73,8 @@ const CreateKeyPairGuide: React.FC<ICreateKeyPairGuideProps> = ({
           added/updated in your <code>kubectl</code> configuration file.
         </Text>
         <Text>
-          <b>Note:</b> An existing cluster and user entry for the same workload
-          cluster will get overwritten.
+          <strong>Note:</strong> An existing cluster and user entry for the same
+          workload cluster will get overwritten.
         </Text>
       </CLIGuideStepList>
     </CLIGuide>
