@@ -106,10 +106,6 @@ export const kubectlCreateClusterRoleBindingURL =
 export const labellingWorkloadClustersURL =
   'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
 
-// How to create workload cluster key pairs via the Management API
-export const creatingWorkloadClusterKeyPairsURL =
-  'https://docs.giantswarm.io/ui-api/management-api/wc-key-pairs/';
-
 // CRD names we expect to find a docs schema page for,
 // grouped by publisher domain.
 export const crds = {
