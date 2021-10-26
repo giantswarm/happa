@@ -50,8 +50,8 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   );
 
   const isConditionUnknown = isProviderClusterConditionUnknown(
-    latestProviderClusterCondition,
-    provider
+    providerCluster,
+    latestProviderClusterCondition
   );
 
   let color = theme.colors.yellow1;

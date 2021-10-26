@@ -823,12 +823,12 @@ export function getLatestProviderClusterCondition(
 }
 
 export function isProviderClusterConditionUnknown(
-  latestProviderClusterCondition: string | undefined,
-  provider: PropertiesOf<typeof Providers>
+  providerCluster: ProviderCluster,
+  latestProviderClusterCondition: string | undefined
 ): boolean {
-  if (provider !== Providers.AWS) {
-    return false;
+  if (providerCluster?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3') {
+    return typeof latestProviderClusterCondition === 'undefined';
   }
 
-  return typeof latestProviderClusterCondition === 'undefined';
+  return false;
 }

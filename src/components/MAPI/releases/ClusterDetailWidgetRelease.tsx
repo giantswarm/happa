@@ -136,8 +136,8 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
     const isStatusUnknown =
       typeof cluster?.status === 'undefined' ||
       isProviderClusterConditionUnknown(
-        latestProviderClusterCondition,
-        provider
+        providerCluster,
+        latestProviderClusterCondition
       );
     const isDeleting =
       cluster && typeof cluster.metadata.deletionTimestamp !== 'undefined';
