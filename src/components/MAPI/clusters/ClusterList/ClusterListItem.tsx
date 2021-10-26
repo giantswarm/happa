@@ -260,9 +260,10 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                 )}
               </OptionalValue>
 
-              {cluster && (
+              {cluster && providerCluster && (
                 <ClusterListItemStatus
                   cluster={cluster}
+                  providerCluster={providerCluster}
                   provider={provider}
                   isAdmin={isAdmin}
                   releases={releases}
