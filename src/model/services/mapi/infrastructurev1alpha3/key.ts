@@ -1,6 +1,10 @@
 import { Constants } from 'shared/constants';
 
-import { IAWSCluster, IAWSMachineDeployment } from '.';
+import {
+  IAWSCluster,
+  IAWSClusterStatusClusterCondition,
+  IAWSMachineDeployment,
+} from '.';
 
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
@@ -43,4 +47,10 @@ export function getAWSMachineDeploymentDescription(
   name ||= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
 
   return name;
+}
+
+export function getAWSClusterConditions(
+  awsCluster: IAWSCluster
+): IAWSClusterStatusClusterCondition[] | undefined {
+  return awsCluster.status?.cluster?.conditions;
 }

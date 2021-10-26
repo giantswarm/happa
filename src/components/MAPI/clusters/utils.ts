@@ -1,4 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { compareDates } from 'lib/helpers';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
@@ -211,32 +212,69 @@ export function isClusterUpgradable(
   }
 }
 
-export function isClusterUpgrading(cluster: capiv1alpha3.ICluster): boolean {
-  return (
-    capiv1alpha3.isConditionTrue(
-      cluster,
-      capiv1alpha3.conditionTypeUpgrading,
-      capiv1alpha3.withReasonUpgradePending()
-    ) &&
-    capiv1alpha3.isConditionFalse(
-      cluster,
-      capiv1alpha3.conditionTypeUpgrading,
-      capiv1alpha3.withReasonUpgradeNotStarted(),
-      capiv1alpha3.withReasonUpgradeCompleted()
-    )
-  );
+export function isClusterUpgrading(
+  cluster: capiv1alpha3.ICluster,
+  latestProviderClusterCondition: string | undefined
+): boolean {
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return false;
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+      return (
+        capiv1alpha3.isConditionTrue(
+          cluster,
+          capiv1alpha3.conditionTypeUpgrading,
+          capiv1alpha3.withReasonUpgradePending()
+        ) &&
+        capiv1alpha3.isConditionFalse(
+          cluster,
+          capiv1alpha3.conditionTypeUpgrading,
+          capiv1alpha3.withReasonUpgradeNotStarted(),
+          capiv1alpha3.withReasonUpgradeCompleted()
+        )
+      );
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return (
+        latestProviderClusterCondition === infrav1alpha3.conditionTypeUpdating
+      );
+    default:
+      return false;
+  }
 }
 
-export function isClusterCreating(cluster: capiv1alpha3.ICluster): boolean {
-  return (
-    capiv1alpha3.isConditionTrue(cluster, capiv1alpha3.conditionTypeCreating) &&
-    capiv1alpha3.isConditionFalse(
-      cluster,
-      capiv1alpha3.conditionTypeCreating,
-      capiv1alpha3.withReasonCreationCompleted(),
-      capiv1alpha3.withReasonExistingObject()
-    )
-  );
+export function isClusterCreating(
+  cluster: capiv1alpha3.ICluster,
+  latestProviderClusterCondition: string | undefined
+): boolean {
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return false;
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+      return (
+        capiv1alpha3.isConditionTrue(
+          cluster,
+          capiv1alpha3.conditionTypeCreating
+        ) &&
+        capiv1alpha3.isConditionFalse(
+          cluster,
+          capiv1alpha3.conditionTypeCreating,
+          capiv1alpha3.withReasonCreationCompleted(),
+          capiv1alpha3.withReasonExistingObject()
+        )
+      );
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return (
+        latestProviderClusterCondition === infrav1alpha3.conditionTypeCreating
+      );
+    default:
+      return false;
+  }
 }
 
 export function createDefaultProviderCluster(
@@ -765,4 +803,32 @@ export function mapClustersToProviderClusters(
   }
 
   return mappedClustersToProviderClusters;
+}
+
+export function getLatestProviderClusterCondition(
+  providerCluster: ProviderCluster
+): string | undefined {
+  if (providerCluster?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3') {
+    const conditions = infrav1alpha3.getAWSClusterConditions(providerCluster);
+    if (!conditions || conditions.length < 1) return undefined;
+
+    const sortedConditions = conditions.sort((a, b) =>
+      compareDates(b.lastTransitionTime ?? 0, a.lastTransitionTime ?? 0)
+    );
+
+    return sortedConditions[0].condition;
+  }
+
+  return undefined;
+}
+
+export function isProviderClusterConditionUnknown(
+  latestProviderClusterCondition: string | undefined,
+  provider: PropertiesOf<typeof Providers>
+): boolean {
+  if (provider !== Providers.AWS) {
+    return false;
+  }
+
+  return typeof latestProviderClusterCondition === 'undefined';
 }
