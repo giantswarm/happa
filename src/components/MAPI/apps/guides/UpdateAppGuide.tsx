@@ -78,12 +78,11 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
         <CLIGuideStep
           title={`3. Update this installed app's version`}
           command={`
-          kubectl --context ${context} \\
-            --namespace ${namespace} \\
-            patch apps ${appName} \\
-            --type merge \\
-            --patch '{"spec": {"version": "${newVersion}"}}'
-          `}
+          kubectl gs update app \\
+            --name ${appName} \\
+            --version ${newVersion} \\
+            --context ${context} \\
+            --namespace ${namespace}`}
         >
           <Text />
         </CLIGuideStep>
