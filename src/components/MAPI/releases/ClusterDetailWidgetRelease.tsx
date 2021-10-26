@@ -5,11 +5,17 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
-import { isClusterCreating, isClusterUpgrading } from 'MAPI/clusters/utils';
+import {
+  getLatestProviderClusterCondition,
+  isClusterCreating,
+  isClusterUpgrading,
+  isProviderClusterConditionUnknown,
+} from 'MAPI/clusters/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
 } from 'MAPI/releases/utils';
+import { ProviderCluster } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -58,10 +64,11 @@ interface IClusterDetailWidgetReleaseProps
     'title'
   > {
   cluster?: capiv1alpha3.ICluster;
+  providerCluster?: ProviderCluster;
 }
 
 const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
-  ({ cluster, ...props }) => {
+  ({ cluster, providerCluster, ...props }) => {
     const clientFactory = useHttpClientFactory();
     const auth = useAuthProvider();
 
@@ -122,15 +129,26 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
       )?.version;
     }, [supportedUpgradeVersions]);
 
+    const latestProviderClusterCondition = useMemo(() => {
+      return getLatestProviderClusterCondition(providerCluster);
+    }, [providerCluster]);
+
+    const isStatusUnknown =
+      typeof cluster?.status === 'undefined' ||
+      isProviderClusterConditionUnknown(
+        latestProviderClusterCondition,
+        provider
+      );
     const isDeleting =
       cluster && typeof cluster.metadata.deletionTimestamp !== 'undefined';
-    const isUpgrading = cluster && isClusterUpgrading(cluster);
+    const isUpgrading =
+      cluster && isClusterUpgrading(cluster, latestProviderClusterCondition);
     const isUpgradable = typeof nextVersion !== 'undefined';
     const isCreating =
-      cluster &&
-      (isClusterCreating(cluster) || typeof cluster.status === 'undefined');
+      cluster && isClusterCreating(cluster, latestProviderClusterCondition);
 
-    const canUpgrade = !isUpgrading && !isCreating && isUpgradable;
+    const canUpgrade =
+      !isUpgrading && !isCreating && !isStatusUnknown && isUpgradable;
 
     const [versionModalVisible, setVersionModalVisible] = useState(false);
 
@@ -287,6 +305,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
             <ClusterDetailStatus
               isCreating={isCreating}
               isDeleting={isDeleting}
+              isStatusUnknown={isStatusUnknown}
               isUpgrading={isUpgrading}
               isUpgradable={isUpgradable}
               margin={{ left: 'small' }}
