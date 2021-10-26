@@ -39,13 +39,13 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
               external: true,
             },
             {
-              label: 'AppCatalogEntry CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.appCatalogEntry),
+              label: 'kubectl gs update app reference',
+              href: docs.kubectlGSUpdateAppURL,
               external: true,
             },
             {
-              label: 'App CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.app),
+              label: 'AppCatalogEntry CRD schema',
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.appCatalogEntry),
               external: true,
             },
             {
