@@ -10,7 +10,6 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useRouteMatch } from 'react-router';
 import { useLocation, useParams } from 'react-router';
 import Copyable from 'shared/Copyable';
 import DocumentTitle from 'shared/DocumentTitle';
@@ -68,13 +67,11 @@ interface IClusterDetailKeyPairsProps {}
 
 const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const { pathname } = useLocation();
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
+  const { clusterId, orgId } =
+    useParams<{ clusterId: string; orgId: string }>();
 
   const keyPairListClient = useHttpClient();
   const auth = useAuthProvider();
-
-  const match = useRouteMatch<{ orgId: string }>();
-  const { orgId } = match.params;
 
   const {
     data: keyPairList,
