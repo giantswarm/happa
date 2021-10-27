@@ -3,9 +3,9 @@ import { Text } from 'grommet';
 import { ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import React, { useState } from 'react';
 import { Providers } from 'shared/constants';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
@@ -16,21 +16,26 @@ import {
   NodePoolSpotInstancesConfig,
   withNodePoolSpotInstances,
 } from './patches';
+import WorkerNodesCreateNodePoolSpotInstancesAWS from './WorkerNodesCreateNodePoolSpotInstancesAWS';
 import WorkerNodesCreateNodePoolSpotInstancesAzure from './WorkerNodesCreateNodePoolSpotInstancesAzure';
 
 function getLabel(providerNodePool: ProviderNodePool): string {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Spot virtual machines';
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return 'Instance distribution';
     default:
       return '';
   }
 }
 
 function getToggleLabel(providerNodePool: ProviderNodePool): string {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Enabled';
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return 'Enable Spot instances';
     default:
       return '';
   }
@@ -48,7 +53,9 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
     const provider = window.config.info.general.provider;
 
     const value = getProviderNodePoolSpotInstances(providerNodePool);
-    const featureEnabled = value?.enabled ?? false;
+    const [featureEnabled, setFeatureEnabled] = useState(
+      value?.enabled ?? false
+    );
 
     const [validationError, setValidationError] = useState('');
 
@@ -66,9 +73,19 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
 
     const handleToggleFeature = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValidationError('');
+      setFeatureEnabled(e.target.checked);
 
-      if (provider === Providers.AZURE) {
-        appendChanges({ enabled: e.target.checked, maxPrice: '' });
+      switch (provider) {
+        case Providers.AZURE:
+          appendChanges({ enabled: e.target.checked, maxPrice: '' });
+          break;
+        case Providers.AWS:
+          appendChanges({
+            enabled: e.target.checked,
+            onDemandBaseCapacity: 0,
+            onDemandPercentageAboveBaseCapacity: 0,
+          });
+          break;
       }
     };
 
@@ -84,9 +101,18 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
             </Text>
           }
         />
-        {featureEnabled && provider === Providers.AZURE && (
+
+        {provider === Providers.AZURE && featureEnabled && (
           <WorkerNodesCreateNodePoolSpotInstancesAzure
             value={value as INodePoolSpotInstancesAzure}
+            onChange={appendChanges}
+            errorMessage={validationError}
+          />
+        )}
+
+        {provider === Providers.AWS && featureEnabled && (
+          <WorkerNodesCreateNodePoolSpotInstancesAWS
+            value={value as INodePoolSpotInstancesAWS}
             onChange={appendChanges}
             errorMessage={validationError}
           />

@@ -673,10 +673,10 @@ export function getProviderNodePoolSpotInstances(
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const onDemandBaseCapacity =
         providerNodePool.spec.provider.instanceDistribution
-          ?.onDemandBaseCapacity;
+          ?.onDemandBaseCapacity ?? 0;
 
       return {
-        enabled: typeof onDemandBaseCapacity !== 'undefined',
+        enabled: onDemandBaseCapacity > 0,
         onDemandBaseCapacity: onDemandBaseCapacity ?? 0,
         onDemandPercentageAboveBaseCapacity:
           providerNodePool.spec.provider.instanceDistribution

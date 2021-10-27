@@ -1,6 +1,5 @@
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 
 export type NodePoolPatch = (
   nodePool: NodePool,
@@ -101,18 +100,32 @@ export function withNodePoolSpotInstances(
   config: NodePoolSpotInstancesConfig
 ): NodePoolPatch {
   return (_, providerNodePool: ProviderNodePool) => {
-    if (providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
-      if (!config.enabled) {
-        providerNodePool.spec!.template.spotVMOptions = undefined;
+    switch (providerNodePool?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+        if (!config.enabled) {
+          providerNodePool.spec!.template.spotVMOptions = undefined;
 
-        return;
-      }
+          return;
+        }
 
-      providerNodePool.spec!.template.spotVMOptions ??= {};
-      providerNodePool.spec!.template.spotVMOptions.maxPrice = (
-        config as INodePoolSpotInstancesConfigAzure
-      ).maxPrice;
-      providerNodePool.spec!.template.spotVMOptions.maxPrice ||= '-1';
+        providerNodePool.spec!.template.spotVMOptions ??= {};
+        providerNodePool.spec!.template.spotVMOptions.maxPrice = (
+          config as INodePoolSpotInstancesConfigAzure
+        ).maxPrice;
+        providerNodePool.spec!.template.spotVMOptions.maxPrice ||= '-1';
+
+        break;
+
+      case 'infrastructure.giantswarm.io/v1alpha3':
+        providerNodePool.spec.provider.instanceDistribution = {
+          onDemandBaseCapacity: (config as INodePoolSpotInstancesConfigAWS)
+            .onDemandBaseCapacity,
+          onDemandPercentageAboveBaseCapacity: (
+            config as INodePoolSpotInstancesConfigAWS
+          ).onDemandPercentageAboveBaseCapacity,
+        };
+
+        break;
     }
   };
 }

@@ -337,7 +337,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 margin={{ top: 'small' }}
               />
 
-              {provider === Providers.AZURE && supportsSpotInstances && (
+              {supportsSpotInstances && (
                 <WorkerNodesCreateNodePoolSpotInstances
                   id={`node-pool-${id}-${NodePoolPropertyField.SpotInstances}`}
                   nodePool={state.nodePool}
