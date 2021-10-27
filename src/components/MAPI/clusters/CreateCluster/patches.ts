@@ -50,6 +50,10 @@ export function withClusterReleaseVersion(
       providerCluster.metadata.namespace = hasNonNamespacedResources
         ? defaultNamespace
         : orgNamespace;
+      if (cluster.spec?.infrastructureRef?.namespace) {
+        cluster.spec.infrastructureRef.namespace =
+          providerCluster.metadata.namespace;
+      }
     }
 
     for (const controlPlaneNode of controlPlaneNodes) {

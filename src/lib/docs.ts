@@ -90,6 +90,9 @@ export const kubectlGSGetNodePoolsURL =
 export const kubectlGSTemplateNodePoolURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-nodepool/';
 
+export const kubectlGSUpdateAppURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/update-app/';
+
 // Management API introduction page
 export const managementAPIIntroduction =
   'https://docs.giantswarm.io/ui-api/management-api/overview/';
