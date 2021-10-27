@@ -1,7 +1,13 @@
 import produce from 'immer';
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { BootstrapConfig, NodePool, ProviderNodePool } from 'MAPI/types';
-import { compareNodePools } from 'MAPI/utils';
+import {
+  compareNodePools,
+  fetchProviderNodePoolsForNodePools,
+  fetchProviderNodePoolsForNodePoolsKey,
+} from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
@@ -69,59 +75,190 @@ export async function updateNodePoolDescription(
 }
 
 export async function deleteNodePool(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  if (nodePool.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3') {
-    const machinePool = await capiexpv1alpha3.getMachinePool(
-      httpClient,
-      auth,
-      nodePool.metadata.namespace!,
-      nodePool.metadata.name
-    );
+  switch (nodePool.apiVersion) {
+    case 'exp.cluster.x-k8s.io/v1alpha3': {
+      const client = httpClientFactory();
 
-    await capiexpv1alpha3.deleteMachinePool(httpClient, auth, machinePool);
+      const machinePool = await capiexpv1alpha3.getMachinePool(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
 
-    machinePool.metadata.deletionTimestamp = new Date().toISOString();
+      await capiexpv1alpha3.deleteMachinePool(client, auth, machinePool);
 
-    mutate(
-      capiexpv1alpha3.getMachinePoolKey(
-        machinePool.metadata.namespace!,
-        machinePool.metadata.name
-      ),
-      machinePool,
-      false
-    );
+      machinePool.metadata.deletionTimestamp = new Date().toISOString();
 
-    // Update the deleted machine pool in place.
-    mutate(
-      capiexpv1alpha3.getMachinePoolListKey({
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelCluster]:
-              machinePool.metadata.labels![capiv1alpha3.labelCluster],
+      mutate(
+        capiexpv1alpha3.getMachinePoolKey(
+          machinePool.metadata.namespace!,
+          machinePool.metadata.name
+        ),
+        machinePool,
+        false
+      );
+
+      // Update the deleted machine pool in place.
+      mutate(
+        capiexpv1alpha3.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]:
+                machinePool.metadata.labels![capiv1alpha3.labelCluster],
+            },
           },
-        },
-      }),
-      produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
-        if (!draft) return;
+        }),
+        produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
+          if (!draft) return;
 
-        for (let i = 0; i < draft.items.length; i++) {
-          if (draft.items[i].metadata.name === machinePool.metadata.name) {
-            draft.items[i] = machinePool;
+          for (let i = 0; i < draft.items.length; i++) {
+            if (draft.items[i].metadata.name === machinePool.metadata.name) {
+              draft.items[i] = machinePool;
+            }
           }
-        }
 
-        draft.items = draft.items.sort(compareNodePools);
-      }),
-      false
-    );
+          draft.items = draft.items.sort(compareNodePools);
+        }),
+        false
+      );
 
-    return machinePool;
+      return machinePool;
+    }
+
+    case 'cluster.x-k8s.io/v1alpha3': {
+      const client = httpClientFactory();
+
+      const machineDeployment = await capiv1alpha3.getMachineDeployment(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
+
+      await capiv1alpha3.deleteMachineDeployment(
+        client,
+        auth,
+        machineDeployment
+      );
+
+      machineDeployment.metadata.deletionTimestamp = new Date().toISOString();
+
+      mutate(
+        capiv1alpha3.getMachineDeploymentKey(
+          machineDeployment.metadata.namespace!,
+          machineDeployment.metadata.name
+        ),
+        machineDeployment,
+        false
+      );
+
+      mutate(
+        capiv1alpha3.getMachineDeploymentListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]:
+                machineDeployment.metadata.labels![capiv1alpha3.labelCluster],
+            },
+          },
+        }),
+        produce((draft?: capiv1alpha3.IMachineDeploymentList) => {
+          if (!draft) return;
+
+          for (let i = 0; i < draft.items.length; i++) {
+            if (
+              draft.items[i].metadata.name === machineDeployment.metadata.name
+            ) {
+              draft.items[i] = machineDeployment;
+            }
+          }
+
+          draft.items = draft.items.sort(compareNodePools);
+        }),
+        false
+      );
+
+      return machineDeployment;
+    }
   }
 
   return Promise.reject(new Error('Unsupported provider.'));
+}
+
+export async function deleteProviderNodePool(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  nodePool: NodePool
+) {
+  let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+    httpClientFactory,
+    auth,
+    [nodePool]
+  );
+
+  switch (providerNodePool?.apiVersion) {
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const client = httpClientFactory();
+
+      providerNodePool = await infrav1alpha3.getAWSMachineDeployment(
+        client,
+        auth,
+        providerNodePool.metadata.namespace!,
+        providerNodePool.metadata.name
+      );
+
+      await infrav1alpha3.deleteAWSMachineDeployment(
+        client,
+        auth,
+        providerNodePool
+      );
+
+      providerNodePool.metadata.deletionTimestamp = new Date().toISOString();
+
+      mutate(
+        fetchProviderNodePoolsForNodePoolsKey([nodePool]),
+        providerNodePool,
+        false
+      );
+
+      return providerNodePool;
+    }
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
+}
+
+export async function deleteNodePoolResources(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  nodePool: NodePool
+) {
+  try {
+    await deleteNodePool(httpClientFactory, auth, nodePool);
+
+    if (
+      nodePool.spec?.template.spec?.infrastructureRef?.apiVersion ===
+      'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      await deleteProviderNodePool(httpClientFactory, auth, nodePool);
+    }
+  } catch (err) {
+    if (
+      !metav1.isStatusError(
+        (err as GenericResponseError).data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      return Promise.reject(err);
+    }
+  }
+
+  return Promise.resolve();
 }
 
 export async function updateNodePoolScaling(

@@ -27,7 +27,7 @@ import ViewAndEditName, {
 } from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
-import { deleteNodePool, updateNodePoolDescription } from './utils';
+import { deleteNodePoolResources, updateNodePoolDescription } from './utils';
 import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
@@ -169,7 +169,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     setIsDeleteLoading(true);
 
     try {
-      await deleteNodePool(clientFactory(), auth, nodePool);
+      await deleteNodePoolResources(clientFactory, auth, nodePool);
 
       setIsDeleteConfirmOpen(false);
       setTimeout(() => {

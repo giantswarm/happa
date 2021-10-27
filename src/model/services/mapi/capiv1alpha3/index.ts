@@ -6,5 +6,6 @@ export * from './updateCluster';
 export * from './deleteCluster';
 export * from './getMachineDeploymentList';
 export * from './getMachineDeployment';
+export * from './deleteMachineDeployment';
 export * from './createMachineDeployment';
 export * from './key';
