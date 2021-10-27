@@ -39,13 +39,13 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
               external: true,
             },
             {
-              label: 'AppCatalogEntry CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.appCatalogEntry),
+              label: 'kubectl gs update app reference',
+              href: docs.kubectlGSUpdateAppURL,
               external: true,
             },
             {
-              label: 'App CRD schema',
-              href: docs.crdSchemaURL(docs.crds.giantswarmio.app),
+              label: 'AppCatalogEntry CRD schema',
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.appCatalogEntry),
               external: true,
             },
             {
@@ -78,12 +78,11 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
         <CLIGuideStep
           title={`3. Update this installed app's version`}
           command={`
-          kubectl --context ${context} \\
-            --namespace ${namespace} \\
-            patch apps ${appName} \\
-            --type merge \\
-            --patch '{"spec": {"version": "${newVersion}"}}'
-          `}
+          kubectl gs --context ${context} \\
+            update app \\
+            --name ${appName} \\
+            --version ${newVersion} \\
+            --namespace ${namespace}`}
         >
           <Text />
         </CLIGuideStep>
