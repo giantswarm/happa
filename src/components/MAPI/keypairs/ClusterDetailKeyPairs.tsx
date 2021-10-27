@@ -67,7 +67,8 @@ interface IClusterDetailKeyPairsProps {}
 
 const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const { pathname } = useLocation();
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
+  const { clusterId, orgId } =
+    useParams<{ clusterId: string; orgId: string }>();
 
   const keyPairListClient = useHttpClient();
   const auth = useAuthProvider();
@@ -226,7 +227,10 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
         </Box>
 
         <Box margin={{ top: 'large' }} direction='column' gap='small'>
-          <CreateKeyPairGuide />
+          <CreateKeyPairGuide
+            clusterName={clusterId}
+            organizationName={orgId}
+          />
         </Box>
       </Breadcrumb>
     </DocumentTitle>
