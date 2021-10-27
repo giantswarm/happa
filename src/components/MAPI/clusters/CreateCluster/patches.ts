@@ -42,6 +42,11 @@ export function withClusterReleaseVersion(
     cluster.metadata.namespace = hasNonNamespacedResources
       ? defaultNamespace
       : orgNamespace;
+    if (cluster.spec?.infrastructureRef?.namespace) {
+      cluster.spec.infrastructureRef.namespace = hasNonNamespacedResources
+        ? defaultNamespace
+        : orgNamespace;
+    }
 
     if (providerCluster) {
       providerCluster.metadata.labels ??= {};
