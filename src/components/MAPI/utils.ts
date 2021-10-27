@@ -631,6 +631,8 @@ export interface INodePoolSpotInstancesAzure {
 
 export interface INodePoolSpotInstancesAWS {
   enabled: boolean;
+  onDemandBaseCapacity: number;
+  onDemandPercentageAboveBaseCapacity: number;
 }
 
 export type NodePoolSpotInstances =
@@ -639,14 +641,16 @@ export type NodePoolSpotInstances =
 
 export function getProviderNodePoolSpotInstances(
   providerNodePool: ProviderNodePool
-): INodePoolSpotInstancesAzure | INodePoolSpotInstancesAWS {
+): NodePoolSpotInstances | undefined {
   switch (providerNodePool?.apiVersion) {
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
     case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
       try {
         const maxPriceQty =
           providerNodePool.spec?.template.spotVMOptions?.maxPrice;
-        const maxPrice = maxPriceQty ? metav1.quantityToScalar(maxPriceQty) : 0;
+        const maxPrice = maxPriceQty
+          ? metav1.quantityToScalar(maxPriceQty)
+          : -1;
 
         return {
           enabled:
@@ -661,14 +665,27 @@ export function getProviderNodePoolSpotInstances(
           enabled:
             typeof providerNodePool.spec?.template.spotVMOptions !==
             'undefined',
-          maxPrice: 0,
+          maxPrice: -1,
         };
       }
     }
-    default:
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const onDemandBaseCapacity =
+        providerNodePool.spec.provider.instanceDistribution
+          ?.onDemandBaseCapacity;
+
       return {
-        enabled: false,
+        enabled: typeof onDemandBaseCapacity !== 'undefined',
+        onDemandBaseCapacity: onDemandBaseCapacity ?? 0,
+        onDemandPercentageAboveBaseCapacity:
+          providerNodePool.spec.provider.instanceDistribution
+            ?.onDemandPercentageAboveBaseCapacity ?? 0,
       };
+    }
+
+    default:
+      return undefined;
   }
 }
 
