@@ -1,3 +1,4 @@
+import { compareDates } from 'lib/helpers';
 import { Constants } from 'shared/constants';
 
 import {
@@ -49,8 +50,28 @@ export function getAWSMachineDeploymentDescription(
   return name;
 }
 
-export function getAWSClusterConditions(
+export function getAWSClusterCondition(
   awsCluster: IAWSCluster
-): IAWSClusterStatusClusterCondition[] | undefined {
-  return awsCluster.status?.cluster?.conditions;
+): IAWSClusterStatusClusterCondition | undefined {
+  const clusterConditions = awsCluster.status?.cluster?.conditions;
+  if (!clusterConditions || clusterConditions.length < 1) return undefined;
+
+  return clusterConditions.sort((a, b) =>
+    compareDates(b.lastTransitionTime ?? 0, a.lastTransitionTime ?? 0)
+  )[0];
+}
+
+export function isConditionTrue(
+  awsCluster: IAWSCluster,
+  conditionType: string
+) {
+  const clusterCondition = getAWSClusterCondition(awsCluster);
+
+  return clusterCondition?.condition === conditionType;
+}
+
+export function isConditionUnknown(awsCluster: IAWSCluster) {
+  const clusterCondition = getAWSClusterCondition(awsCluster);
+
+  return typeof clusterCondition === 'undefined';
 }

@@ -1,5 +1,4 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { compareDates } from 'lib/helpers';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
@@ -212,69 +211,32 @@ export function isClusterUpgradable(
   }
 }
 
-export function isClusterUpgrading(
-  cluster: capiv1alpha3.ICluster,
-  latestProviderClusterCondition: string | undefined
-): boolean {
-  const infrastructureRef = cluster.spec?.infrastructureRef;
-  if (!infrastructureRef) {
-    return false;
-  }
-
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-      return (
-        capiv1alpha3.isConditionTrue(
-          cluster,
-          capiv1alpha3.conditionTypeUpgrading,
-          capiv1alpha3.withReasonUpgradePending()
-        ) &&
-        capiv1alpha3.isConditionFalse(
-          cluster,
-          capiv1alpha3.conditionTypeUpgrading,
-          capiv1alpha3.withReasonUpgradeNotStarted(),
-          capiv1alpha3.withReasonUpgradeCompleted()
-        )
-      );
-    case 'infrastructure.giantswarm.io/v1alpha3':
-      return (
-        latestProviderClusterCondition === infrav1alpha3.conditionTypeUpdating
-      );
-    default:
-      return false;
-  }
+export function isClusterUpgrading(cluster: capiv1alpha3.ICluster): boolean {
+  return (
+    capiv1alpha3.isConditionTrue(
+      cluster,
+      capiv1alpha3.conditionTypeUpgrading,
+      capiv1alpha3.withReasonUpgradePending()
+    ) &&
+    capiv1alpha3.isConditionFalse(
+      cluster,
+      capiv1alpha3.conditionTypeUpgrading,
+      capiv1alpha3.withReasonUpgradeNotStarted(),
+      capiv1alpha3.withReasonUpgradeCompleted()
+    )
+  );
 }
 
-export function isClusterCreating(
-  cluster: capiv1alpha3.ICluster,
-  latestProviderClusterCondition: string | undefined
-): boolean {
-  const infrastructureRef = cluster.spec?.infrastructureRef;
-  if (!infrastructureRef) {
-    return false;
-  }
-
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-      return (
-        capiv1alpha3.isConditionTrue(
-          cluster,
-          capiv1alpha3.conditionTypeCreating
-        ) &&
-        capiv1alpha3.isConditionFalse(
-          cluster,
-          capiv1alpha3.conditionTypeCreating,
-          capiv1alpha3.withReasonCreationCompleted(),
-          capiv1alpha3.withReasonExistingObject()
-        )
-      );
-    case 'infrastructure.giantswarm.io/v1alpha3':
-      return (
-        latestProviderClusterCondition === infrav1alpha3.conditionTypeCreating
-      );
-    default:
-      return false;
-  }
+export function isClusterCreating(cluster: capiv1alpha3.ICluster): boolean {
+  return (
+    capiv1alpha3.isConditionTrue(cluster, capiv1alpha3.conditionTypeCreating) &&
+    capiv1alpha3.isConditionFalse(
+      cluster,
+      capiv1alpha3.conditionTypeCreating,
+      capiv1alpha3.withReasonCreationCompleted(),
+      capiv1alpha3.withReasonExistingObject()
+    )
+  );
 }
 
 export function createDefaultProviderCluster(
@@ -805,30 +767,58 @@ export function mapClustersToProviderClusters(
   return mappedClustersToProviderClusters;
 }
 
-export function getLatestProviderClusterCondition(
-  providerCluster: ProviderCluster
-): string | undefined {
-  if (providerCluster?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3') {
-    const conditions = infrav1alpha3.getAWSClusterConditions(providerCluster);
-    if (!conditions || conditions.length < 1) return undefined;
-
-    const sortedConditions = conditions.sort((a, b) =>
-      compareDates(b.lastTransitionTime ?? 0, a.lastTransitionTime ?? 0)
-    );
-
-    return sortedConditions[0].condition;
-  }
-
-  return undefined;
+export interface IClusterConditions {
+  isConditionUnknown: boolean;
+  isCreating: boolean;
+  isUpgrading: boolean;
+  isDeleting: boolean;
 }
 
-export function isProviderClusterConditionUnknown(
-  providerCluster: ProviderCluster,
-  latestProviderClusterCondition: string | undefined
-): boolean {
-  if (providerCluster?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3') {
-    return typeof latestProviderClusterCondition === 'undefined';
+export function getClusterConditions(
+  cluster: capiv1alpha3.ICluster | undefined,
+  providerCluster: ProviderCluster
+): IClusterConditions {
+  const statuses: IClusterConditions = {
+    isConditionUnknown: true,
+    isCreating: false,
+    isUpgrading: false,
+    isDeleting: false,
+  };
+
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  if (!cluster || !infrastructureRef) return statuses;
+
+  if (typeof cluster.metadata.deletionTimestamp !== 'undefined') {
+    statuses.isConditionUnknown = false;
+    statuses.isDeleting = true;
+
+    return statuses;
   }
 
-  return false;
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+      statuses.isConditionUnknown = typeof cluster.spec === 'undefined';
+      statuses.isCreating = isClusterCreating(cluster);
+      statuses.isUpgrading = isClusterUpgrading(cluster);
+      break;
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      if (!providerCluster) break;
+
+      statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(
+        providerCluster as infrav1alpha3.IAWSCluster
+      );
+      statuses.isCreating = infrav1alpha3.isConditionTrue(
+        providerCluster as infrav1alpha3.IAWSCluster,
+        infrav1alpha3.conditionTypeCreating
+      );
+      statuses.isUpgrading = infrav1alpha3.isConditionTrue(
+        providerCluster as infrav1alpha3.IAWSCluster,
+        infrav1alpha3.conditionTypeUpdating
+      );
+      break;
+    }
+  }
+
+  return statuses;
 }

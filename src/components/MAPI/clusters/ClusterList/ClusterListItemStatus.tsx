@@ -8,13 +8,7 @@ import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
-import {
-  getLatestProviderClusterCondition,
-  isClusterCreating,
-  isClusterUpgradable,
-  isClusterUpgrading,
-  isProviderClusterConditionUnknown,
-} from '../utils';
+import { getClusterConditions, isClusterUpgradable } from '../utils';
 
 interface IClusterListItemStatusProps {
   cluster: capiv1alpha3.ICluster;
@@ -33,25 +27,12 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
 }) => {
   const theme = useTheme();
 
-  const latestProviderClusterCondition = useMemo(() => {
-    return getLatestProviderClusterCondition(providerCluster);
-  }, [providerCluster]);
-
-  const isCreating = isClusterCreating(cluster, latestProviderClusterCondition);
-
-  const isUpgrading = isClusterUpgrading(
-    cluster,
-    latestProviderClusterCondition
-  );
+  const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
+    getClusterConditions(cluster, providerCluster);
 
   const isUpgradable = useMemo(
     () => isClusterUpgradable(cluster, provider, isAdmin, releases),
     [cluster, provider, isAdmin, releases]
-  );
-
-  const isConditionUnknown = isProviderClusterConditionUnknown(
-    providerCluster,
-    latestProviderClusterCondition
   );
 
   let color = theme.colors.yellow1;
@@ -60,10 +41,9 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   let tooltip = '';
 
   switch (true) {
-    case typeof cluster.metadata.deletionTimestamp !== 'undefined':
+    case isDeleting:
       return null;
 
-    case typeof cluster.status === 'undefined':
     case isConditionUnknown:
     case isCreating:
       color = theme.colors.gray;

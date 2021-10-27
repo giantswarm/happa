@@ -6,7 +6,7 @@ interface IClusterDetailStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   isCreating?: boolean;
   isDeleting?: boolean;
-  isStatusUnknown?: boolean;
+  isConditionUnknown?: boolean;
   isUpgrading?: boolean;
   isUpgradable?: boolean;
 }
@@ -14,7 +14,7 @@ interface IClusterDetailStatusProps
 const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   isCreating,
   isDeleting,
-  isStatusUnknown,
+  isConditionUnknown,
   isUpgrading,
   isUpgradable,
   ...props
@@ -26,7 +26,7 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   switch (true) {
     case isCreating:
     case isDeleting:
-    case isStatusUnknown:
+    case isConditionUnknown:
       return null;
 
     case isUpgrading:

@@ -5,12 +5,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
-import {
-  getLatestProviderClusterCondition,
-  isClusterCreating,
-  isClusterUpgrading,
-  isProviderClusterConditionUnknown,
-} from 'MAPI/clusters/utils';
+import { getClusterConditions } from 'MAPI/clusters/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
@@ -129,26 +124,13 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
       )?.version;
     }, [supportedUpgradeVersions]);
 
-    const latestProviderClusterCondition = useMemo(() => {
-      return getLatestProviderClusterCondition(providerCluster);
-    }, [providerCluster]);
-
-    const isStatusUnknown =
-      typeof cluster?.status === 'undefined' ||
-      isProviderClusterConditionUnknown(
-        providerCluster,
-        latestProviderClusterCondition
-      );
-    const isDeleting =
-      cluster && typeof cluster.metadata.deletionTimestamp !== 'undefined';
-    const isUpgrading =
-      cluster && isClusterUpgrading(cluster, latestProviderClusterCondition);
     const isUpgradable = typeof nextVersion !== 'undefined';
-    const isCreating =
-      cluster && isClusterCreating(cluster, latestProviderClusterCondition);
+
+    const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
+      getClusterConditions(cluster, providerCluster);
 
     const canUpgrade =
-      !isUpgrading && !isCreating && !isStatusUnknown && isUpgradable;
+      !isUpgrading && !isCreating && !isConditionUnknown && isUpgradable;
 
     const [versionModalVisible, setVersionModalVisible] = useState(false);
 
@@ -305,7 +287,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
             <ClusterDetailStatus
               isCreating={isCreating}
               isDeleting={isDeleting}
-              isStatusUnknown={isStatusUnknown}
+              isConditionUnknown={isConditionUnknown}
               isUpgrading={isUpgrading}
               isUpgradable={isUpgradable}
               margin={{ left: 'small' }}
