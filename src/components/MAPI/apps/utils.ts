@@ -815,8 +815,12 @@ export function formatYAMLError(err: unknown): string {
   if (err instanceof YAMLException) {
     interface IYAMLExceptionInternals extends YAMLException {
       mark: {
-        line: number;
+        buffer: string;
         column: number;
+        line: number;
+        name: string;
+        position: number;
+        snippet: string;
       };
       reason: string;
     }

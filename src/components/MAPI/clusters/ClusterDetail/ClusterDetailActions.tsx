@@ -29,7 +29,7 @@ import ClusterDetailDeleteAction, {
 
 import DeleteClusterGuide from '../guides/DeleteClusterGuide';
 import { getWorkerNodesCount } from '../utils';
-import { deleteCluster } from './utils';
+import { deleteClusterResources } from './utils';
 
 interface IClusterDetailActionsProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
@@ -170,9 +170,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     setIsDeleting(true);
 
     try {
-      const client = clientFactory();
-
-      await deleteCluster(client, auth, cluster);
+      await deleteClusterResources(clientFactory, auth, cluster);
 
       // Success message and redirection are handled by the parent component.
     } catch (err) {
