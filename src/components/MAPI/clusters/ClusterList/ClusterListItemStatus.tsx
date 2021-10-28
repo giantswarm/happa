@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useMemo } from 'react';
@@ -7,10 +8,11 @@ import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
-import { isClusterUpgradable } from '../utils';
+import { getClusterConditions, isClusterUpgradable } from '../utils';
 
 interface IClusterListItemStatusProps {
   cluster: capiv1alpha3.ICluster;
+  providerCluster: ProviderCluster;
   isAdmin: boolean;
   provider: PropertiesOf<typeof Providers>;
   releases?: releasev1alpha1.IRelease[];
@@ -18,33 +20,15 @@ interface IClusterListItemStatusProps {
 
 const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   cluster,
+  providerCluster,
   releases,
   isAdmin,
   provider,
 }) => {
   const theme = useTheme();
 
-  const isCreating =
-    capiv1alpha3.isConditionTrue(cluster, capiv1alpha3.conditionTypeCreating) &&
-    capiv1alpha3.isConditionFalse(
-      cluster,
-      capiv1alpha3.conditionTypeCreating,
-      capiv1alpha3.withReasonCreationCompleted(),
-      capiv1alpha3.withReasonExistingObject()
-    );
-
-  const isUpgrading =
-    capiv1alpha3.isConditionTrue(
-      cluster,
-      capiv1alpha3.conditionTypeUpgrading,
-      capiv1alpha3.withReasonUpgradePending()
-    ) &&
-    capiv1alpha3.isConditionFalse(
-      cluster,
-      capiv1alpha3.conditionTypeUpgrading,
-      capiv1alpha3.withReasonUpgradeNotStarted(),
-      capiv1alpha3.withReasonUpgradeCompleted()
-    );
+  const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
+    getClusterConditions(cluster, providerCluster);
 
   const isUpgradable = useMemo(
     () => isClusterUpgradable(cluster, provider, isAdmin, releases),
@@ -57,10 +41,10 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
   let tooltip = '';
 
   switch (true) {
-    case typeof cluster.metadata.deletionTimestamp !== 'undefined':
+    case isDeleting:
       return null;
 
-    case typeof cluster.status === 'undefined':
+    case isConditionUnknown:
     case isCreating:
       color = theme.colors.gray;
       iconClassName = 'fa fa-change-in-progress';

@@ -1,6 +1,11 @@
+import { compareDates } from 'lib/helpers';
 import { Constants } from 'shared/constants';
 
-import { IAWSCluster, IAWSMachineDeployment } from '.';
+import {
+  IAWSCluster,
+  IAWSClusterStatusClusterCondition,
+  IAWSMachineDeployment,
+} from '.';
 
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
@@ -43,4 +48,30 @@ export function getAWSMachineDeploymentDescription(
   name ||= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
 
   return name;
+}
+
+export function getAWSClusterCondition(
+  awsCluster: IAWSCluster
+): IAWSClusterStatusClusterCondition | undefined {
+  const clusterConditions = awsCluster.status?.cluster?.conditions;
+  if (!clusterConditions || clusterConditions.length < 1) return undefined;
+
+  return clusterConditions.sort((a, b) =>
+    compareDates(b.lastTransitionTime ?? 0, a.lastTransitionTime ?? 0)
+  )[0];
+}
+
+export function isConditionTrue(
+  awsCluster: IAWSCluster,
+  conditionType: string
+) {
+  const clusterCondition = getAWSClusterCondition(awsCluster);
+
+  return clusterCondition?.condition === conditionType;
+}
+
+export function isConditionUnknown(awsCluster: IAWSCluster) {
+  const clusterCondition = getAWSClusterCondition(awsCluster);
+
+  return typeof clusterCondition === 'undefined';
 }

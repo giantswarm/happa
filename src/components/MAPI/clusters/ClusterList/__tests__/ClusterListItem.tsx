@@ -10,6 +10,7 @@ import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
+import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
 import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
 import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -207,6 +208,7 @@ describe('ClusterListItem', () => {
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
+        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
       })
     );
 
@@ -230,6 +232,7 @@ describe('ClusterListItem', () => {
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
+        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
       })
     );
 
@@ -257,6 +260,7 @@ describe('ClusterListItem', () => {
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
+        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
       })
     );
 

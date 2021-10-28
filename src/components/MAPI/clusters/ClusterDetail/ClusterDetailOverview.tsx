@@ -98,7 +98,11 @@ const ClusterDetailOverview: React.FC<{}> = () => {
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
       />
-      <ClusterDetailWidgetRelease cluster={cluster} basis='100%' />
+      <ClusterDetailWidgetRelease
+        cluster={cluster}
+        providerCluster={providerCluster}
+        basis='100%'
+      />
       <ClusterDetailWidgetLabels cluster={cluster} basis='100%' />
       <ClusterDetailWidgetControlPlaneNodes cluster={cluster} basis='100%' />
       <ClusterDetailWidgetKubernetesAPI cluster={cluster} basis='100%' />

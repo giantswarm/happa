@@ -766,3 +766,59 @@ export function mapClustersToProviderClusters(
 
   return mappedClustersToProviderClusters;
 }
+
+export interface IClusterConditions {
+  isConditionUnknown: boolean;
+  isCreating: boolean;
+  isUpgrading: boolean;
+  isDeleting: boolean;
+}
+
+export function getClusterConditions(
+  cluster: capiv1alpha3.ICluster | undefined,
+  providerCluster: ProviderCluster
+): IClusterConditions {
+  const statuses: IClusterConditions = {
+    isConditionUnknown: true,
+    isCreating: false,
+    isUpgrading: false,
+    isDeleting: false,
+  };
+
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  if (!cluster || !infrastructureRef) return statuses;
+
+  if (typeof cluster.metadata.deletionTimestamp !== 'undefined') {
+    statuses.isConditionUnknown = false;
+    statuses.isDeleting = true;
+
+    return statuses;
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+      statuses.isConditionUnknown = typeof cluster.spec === 'undefined';
+      statuses.isCreating = isClusterCreating(cluster);
+      statuses.isUpgrading = isClusterUpgrading(cluster);
+      break;
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      if (!providerCluster) break;
+
+      statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(
+        providerCluster as infrav1alpha3.IAWSCluster
+      );
+      statuses.isCreating = infrav1alpha3.isConditionTrue(
+        providerCluster as infrav1alpha3.IAWSCluster,
+        infrav1alpha3.conditionTypeCreating
+      );
+      statuses.isUpgrading = infrav1alpha3.isConditionTrue(
+        providerCluster as infrav1alpha3.IAWSCluster,
+        infrav1alpha3.conditionTypeUpdating
+      );
+      break;
+    }
+  }
+
+  return statuses;
+}
