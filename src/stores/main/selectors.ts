@@ -8,19 +8,6 @@ export function getUserIsAdmin(state: IState) {
   return getLoggedInUser(state)?.isAdmin ?? false;
 }
 
-export function getMinHAMastersVersion(_state: IState): string {
-  const provider = window.config.info.general.provider;
-  let releaseVersion = '';
-
-  switch (provider) {
-    case Providers.AWS:
-      releaseVersion = Constants.AWS_HA_MASTERS_VERSION;
-      break;
-  }
-
-  return releaseVersion;
-}
-
 export function getFirstNodePoolsRelease(_state: IState): string {
   const provider = window.config.info.general.provider;
   let releaseVersion = '';

@@ -47,3 +47,16 @@ export function supportsAlikeInstances(
       return false;
   }
 }
+
+export function supportsHACPNodes(
+  provider: PropertiesOf<typeof Providers>,
+  releaseVersion: string
+): boolean {
+  switch (provider) {
+    case Providers.AWS:
+      return compare(releaseVersion, Constants.AWS_HA_MASTERS_VERSION) >= 0;
+
+    default:
+      return false;
+  }
+}

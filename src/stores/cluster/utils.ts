@@ -3,9 +3,9 @@ import { compare } from 'lib/semver';
 import { Constants, Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
 import { IIDsAwaitingUpgradeMap } from 'stores/cluster/types';
-import { getMinHAMastersVersion } from 'stores/main/selectors';
 import {
   supportsAlikeInstances,
+  supportsHACPNodes,
   supportsNodePoolAutoscaling,
   supportsNodePoolSpotInstances,
 } from 'stores/nodepool/utils';
@@ -263,24 +263,13 @@ export function getCpusTotalNodePools(nodePools: INodePool[]) {
  * @param state - The app's global state.
  */
 export const computeCapabilities =
-  (state: IState) =>
+  (_state: IState) =>
   (
     releaseVersion: string,
     provider: PropertiesOf<typeof Providers>
   ): IClusterCapabilities => {
-    let supportsHAMasters = false;
-
-    const minHAMastersVersion = getMinHAMastersVersion(state);
-
-    switch (provider) {
-      case Providers.AWS:
-        supportsHAMasters = compare(releaseVersion, minHAMastersVersion) >= 0;
-
-        break;
-    }
-
     return {
-      supportsHAMasters,
+      supportsHAMasters: supportsHACPNodes(provider, releaseVersion),
       supportsNodePoolAutoscaling: supportsNodePoolAutoscaling(
         provider,
         releaseVersion
