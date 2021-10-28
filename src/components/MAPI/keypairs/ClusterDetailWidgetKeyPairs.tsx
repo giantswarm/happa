@@ -72,10 +72,10 @@ const ClusterDetailWidgetKeyPairs: React.FC<IClusterDetailWidgetKeyPairsProps> =
               Use{' '}
               <StyledLink
                 target='_blank'
-                href={docs.gsctlCreateKubeconfigURL}
+                href={docs.kubectlGSLoginURL}
                 rel='noopener noreferrer'
               >
-                gsctl create kubeconfig
+                kubectl gs login
               </StyledLink>{' '}
               to create one.
             </Text>
