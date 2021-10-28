@@ -1,24 +1,28 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { ControlPlaneNode } from 'MAPI/types';
+import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchControlPlaneNodesForCluster,
   fetchControlPlaneNodesForClusterKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR from 'swr';
+import Button from 'UI/Controls/Button';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
-import { computeControlPlaneNodesStats } from './utils';
+import ClusterDetailHACPNodesSwitcher from './ClusterDetailHACPNodesSwitcher';
+import {
+  canSwitchClusterToHACPNodes,
+  computeControlPlaneNodesStats,
+} from './utils';
 
 function formatNodesCountLabel(readyCount?: number, totalCount?: number) {
   if (typeof readyCount === 'undefined' || typeof totalCount === 'undefined') {
@@ -60,11 +64,12 @@ interface IClusterDetailWidgetControlPlaneNodesProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: Cluster;
+  providerCluster?: ProviderCluster;
 }
 
 const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControlPlaneNodesProps> =
-  ({ cluster, ...props }) => {
+  ({ cluster, providerCluster, ...props }) => {
     const clientFactory = useHttpClientFactory();
     const auth = useAuthProvider();
 
@@ -113,6 +118,25 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
       return computeControlPlaneNodesStats(controlPlaneNodes);
     }, [controlPlaneNodes, isLoading]);
 
+    const provider = window.config.info.general.provider;
+
+    const canSwitchToHA =
+      typeof cluster !== 'undefined' &&
+      typeof providerCluster !== 'undefined' &&
+      typeof controlPlaneNodes !== 'undefined' &&
+      canSwitchClusterToHACPNodes(
+        provider,
+        cluster,
+        providerCluster,
+        controlPlaneNodes
+      );
+
+    const [isSwitchingToHA, setIsSwitchingToHA] = useState(false);
+
+    const onSwitchToHAExit = () => {
+      setIsSwitchingToHA(false);
+    };
+
     return (
       <ClusterDetailWidget
         title='Control plane'
@@ -155,6 +179,25 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControl
             <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
           )}
         </OptionalValue>
+
+        {canSwitchToHA && (
+          <Box basis='100%' margin={{ top: 'small' }}>
+            <ClusterDetailHACPNodesSwitcher
+              open={isSwitchingToHA}
+              cluster={cluster}
+              onSubmit={onSwitchToHAExit}
+              onCancel={onSwitchToHAExit}
+            />
+
+            {!isSwitchingToHA && (
+              <Box animation={{ type: 'fadeIn', duration: 300 }}>
+                <Button onClick={() => setIsSwitchingToHA(true)}>
+                  Switch to high availability…
+                </Button>
+              </Box>
+            )}
+          </Box>
+        )}
       </ClusterDetailWidget>
     );
   };
