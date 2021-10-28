@@ -633,6 +633,7 @@ export interface INodePoolSpotInstancesAWS {
   enabled: boolean;
   onDemandBaseCapacity: number;
   onDemandPercentageAboveBaseCapacity: number;
+  nodeCount: number;
 }
 
 export type NodePoolSpotInstances =
@@ -681,6 +682,8 @@ export function getProviderNodePoolSpotInstances(
         onDemandPercentageAboveBaseCapacity:
           providerNodePool.spec.provider.instanceDistribution
             ?.onDemandPercentageAboveBaseCapacity ?? 0,
+        nodeCount:
+          providerNodePool.status?.provider?.worker?.spotInstances ?? 0,
       };
     }
 
