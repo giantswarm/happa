@@ -4,7 +4,7 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 
 import { credentialsNamespace, ICredential, ICredentialList } from './';
-import { decodeCredential } from './key';
+import { decodeCredential, extractIDFromARN } from './key';
 
 export async function getCredentialList(
   client: IHttpClient,
@@ -39,9 +39,11 @@ export async function getCredentialList(
     newCredential.name = secret.metadata.name;
 
     // AWS-specific options.
-    newCredential.awsAdminRole = decodeCredential(secret.data['aws.admin.arn']);
-    newCredential.awsOperatorRole = decodeCredential(
-      secret.data['aws.awsoperator.arn']
+    newCredential.awsAdminRole = extractIDFromARN(
+      decodeCredential(secret.data['aws.admin.arn'])
+    );
+    newCredential.awsOperatorRole = extractIDFromARN(
+      decodeCredential(secret.data['aws.awsoperator.arn'])
     );
 
     // Azure-specific options.
@@ -54,6 +56,13 @@ export async function getCredentialList(
     newCredential.azureClientID = decodeCredential(
       secret.data['azure.azureoperator.clientid']
     );
+
+    // Delete unset options.
+    for (const [key, value] of Object.entries(newCredential)) {
+      if (typeof value === 'undefined') {
+        delete newCredential[key as keyof ICredential];
+      }
+    }
 
     credentialList.items.push(newCredential);
   }

@@ -1,16 +1,29 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { ProviderCluster } from 'MAPI/types';
 import {
+  extractErrorMessage,
   getProviderClusterAccountID,
   getProviderClusterLocation,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import React from 'react';
+import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { selectHasPermission } from 'stores/main/selectors';
+import { selectOrganizations } from 'stores/organization/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
+import useSWR from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+
+import { getCredentialsAccountID } from './utils';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
@@ -79,10 +92,58 @@ interface IClusterDetailWidgetProviderProps
 
 const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
   ({ cluster, providerCluster, ...props }) => {
-    const region = getProviderClusterLocation(providerCluster);
+    const { orgId } = useParams<{ clusterId: string; orgId: string }>();
+    const organizations = useSelector(selectOrganizations());
+    const selectedOrg = orgId ? organizations[orgId] : undefined;
+    const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
 
-    const accountID = getProviderClusterAccountID(providerCluster);
+    const credentialListClient = useHttpClient();
+    const auth = useAuthProvider();
+
+    const hasPermissions = useSelector(
+      selectHasPermission(
+        legacyCredentials.credentialsNamespace,
+        'list',
+        '',
+        'secrets'
+      )
+    );
+
+    const credentialListKey =
+      hasPermissions && selectedOrgID
+        ? legacyCredentials.getCredentialListKey(selectedOrgID)
+        : null;
+
+    const { data: credentialList, error: credentialListError } = useSWR(
+      credentialListKey,
+      () =>
+        legacyCredentials.getCredentialList(
+          credentialListClient,
+          auth,
+          selectedOrgID!
+        )
+    );
+
+    useEffect(() => {
+      if (credentialListError) {
+        new FlashMessage(
+          `Could not fetch provider-specific credentials for organization ${orgId}`,
+          messageType.ERROR,
+          messageTTL.LONG,
+          extractErrorMessage(credentialListError)
+        );
+
+        ErrorReporter.getInstance().notify(credentialListError);
+      }
+    }, [credentialListError, orgId]);
+
+    const credentialAccountID = getCredentialsAccountID(credentialList?.items);
+    const accountID = credentialListKey
+      ? credentialAccountID
+      : getProviderClusterAccountID(providerCluster);
     const accountIDPath = getClusterAccountIDPath(cluster, accountID);
+
+    const region = getProviderClusterLocation(providerCluster);
 
     return (
       <ClusterDetailWidget
