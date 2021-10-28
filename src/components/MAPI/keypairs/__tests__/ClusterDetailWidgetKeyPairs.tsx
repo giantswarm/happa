@@ -78,9 +78,7 @@ describe('ClusterDetailWidgetKeyPairs', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText((_, node) => {
-        return (
-          node?.textContent === 'Use gsctl create kubeconfig to create one.'
-        );
+        return node?.textContent === 'Use kubectl gs login to create one.';
       })
     ).toBeInTheDocument();
   });
