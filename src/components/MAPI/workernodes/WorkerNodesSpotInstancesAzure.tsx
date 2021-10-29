@@ -9,16 +9,19 @@ import React from 'react';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
-interface IWorkerNodesAzureMachinePoolSpotInstancesProps {
+interface IWorkerNodesSpotInstancesAzureProps {
   providerNodePool?:
     | capzexpv1alpha3.IAzureMachinePool
     | capzv1alpha4.IAzureMachinePool;
 }
 
-const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachinePoolSpotInstancesProps> =
+const WorkerNodesSpotInstancesAzure: React.FC<IWorkerNodesSpotInstancesAzureProps> =
   ({ providerNodePool }) => {
-    const featureEnabled =
-      typeof providerNodePool?.spec?.template.spotVMOptions !== 'undefined';
+    const spotInstances = getProviderNodePoolSpotInstances(providerNodePool) as
+      | INodePoolSpotInstancesAzure
+      | undefined;
+    const featureEnabled = spotInstances?.enabled ?? false;
+
     let headline = 'Spot virtual machines disabled';
     if (featureEnabled) {
       headline = 'Spot virtual machines enabled';
@@ -26,11 +29,7 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
 
     let maxPriceText = '';
     if (featureEnabled) {
-      const maxPrice = (
-        getProviderNodePoolSpotInstances(
-          providerNodePool
-        ) as INodePoolSpotInstancesAzure
-      ).maxPrice;
+      const maxPrice = spotInstances!.maxPrice;
       if (maxPrice && maxPrice > 0) {
         maxPriceText = `Using maximum price: $${maxPrice}`;
       } else {
@@ -82,4 +81,4 @@ const WorkerNodesAzureMachinePoolSpotInstances: React.FC<IWorkerNodesAzureMachin
     );
   };
 
-export default WorkerNodesAzureMachinePoolSpotInstances;
+export default WorkerNodesSpotInstancesAzure;

@@ -1,4 +1,4 @@
-import { FormField } from 'grommet';
+import { Box, Text } from 'grommet';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
@@ -7,27 +7,15 @@ import NumberPicker from 'UI/Inputs/NumberPicker';
 
 import AddNodePoolSpotInstancesAzure from './AddNodePoolSpotInstancesAzure';
 
-const SpotValuesLabelText = styled.span`
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 32px;
-  display: inline-block;
-  width: 210px;
+const NumberPickerWrapper = styled(Box)`
+  position: relative;
 `;
 
-const SpotValuesNumberPickerWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-`;
-
-const SpotValuesHelpText = styled.p`
-  padding-bottom: 20px;
-  padding-left: 28px;
-  font-size: 14px;
-  i {
-    white-space: nowrap;
-  }
+const NumberPickerAdditionalText = styled(Box)`
+  position: absolute;
+  left: 170px;
+  top: 0;
+  bottom: 0;
 `;
 
 type SpecChangeHandler<T> = (patch: { value: T; valid: boolean }) => void;
@@ -59,58 +47,50 @@ const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
 }) => {
   if (provider === Providers.AWS) {
     return (
-      <FormField
-        label='Spot instances'
-        contentProps={{
-          border: false,
-        }}
-      >
-        <SpotValuesNumberPickerWrapper>
-          <SpotValuesLabelText>Spot instance percentage</SpotValuesLabelText>
+      <Box margin={{ bottom: 'xsmall' }}>
+        <NumberPickerWrapper>
           <NumberPicker
+            label='Spot instance percentage'
             max={100}
             min={0}
             step={10}
             value={spotPercentage}
             onChange={setSpotPercentage}
+            help={
+              <Text size='small' weight='normal' color='text-weak'>
+                Controls the percentage of spot instances to be used for worker
+                nodes beyond the number of{' '}
+                <strong>on demand base capacity</strong>.
+              </Text>
+            }
             contentProps={{
               width: 'small',
             }}
-            formFieldProps={{
-              margin: {
-                right: 'small',
-              },
-            }}
-          />
-          <SpotValuesLabelText>percent</SpotValuesLabelText>
-        </SpotValuesNumberPickerWrapper>
-        <SpotValuesHelpText>
-          Controls the percentage of spot instances to be used for worker nodes
-          beyond the number of <i>on demand base capacity</i>.
-        </SpotValuesHelpText>
-        <SpotValuesNumberPickerWrapper>
-          <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
+          >
+            <NumberPickerAdditionalText direction='column' justify='center'>
+              <Text>percent</Text>
+            </NumberPickerAdditionalText>
+          </NumberPicker>
+        </NumberPickerWrapper>
+        <NumberPickerWrapper>
           <NumberPicker
+            label='On demand base capacity'
             min={0}
             max={32767}
             value={onDemandBaseCapacity}
             onChange={setOnDemandBaseCapacity}
+            help='Controls how much of the initial capacity is made up of on-demand
+          instances.'
             contentProps={{
               width: 'small',
             }}
-            formFieldProps={{
-              margin: {
-                right: 'small',
-              },
-            }}
-          />
-          <SpotValuesLabelText>instances</SpotValuesLabelText>
-        </SpotValuesNumberPickerWrapper>
-        <SpotValuesHelpText>
-          Controls how much of the initial capacity is made up of on-demand
-          instances.
-        </SpotValuesHelpText>
-      </FormField>
+          >
+            <NumberPickerAdditionalText direction='column' justify='center'>
+              <Text>instances</Text>
+            </NumberPickerAdditionalText>
+          </NumberPicker>
+        </NumberPickerWrapper>
+      </Box>
     );
   } else if (provider === Providers.AZURE) {
     return (
