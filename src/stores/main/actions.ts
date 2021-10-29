@@ -388,8 +388,9 @@ export function fetchPermissions(
     const namespaces = orgs.map(
       (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
     );
-    // Also get permissions for the default namespace.
+    // These are not organization namespaces, but we have resources in them.
     namespaces.push('default');
+    namespaces.push('giantswarm');
 
     const requests = namespaces.map(async (namespace) => {
       const client = new HttpClientImpl();
