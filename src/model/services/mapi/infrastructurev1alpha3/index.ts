@@ -15,3 +15,4 @@ export * from './getG8sControlPlaneList';
 export * from './createAWSMachineDeployment';
 export * from './deleteAWSMachineDeployment';
 export * from './getAWSMachineDeployment';
+export * from './updateAWSMachineDeployment';

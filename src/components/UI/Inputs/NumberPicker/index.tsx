@@ -123,7 +123,10 @@ interface INumberPickerProps
  * straight into the input field.
  */
 const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
-  ({ value, min, max, step, readOnly, disabled, onChange, ...props }, ref) => {
+  (
+    { value, min, max, step, readOnly, disabled, onChange, children, ...props },
+    ref
+  ) => {
     const [currValue, setCurrValue] = useState<number>(value!);
     const [validationError, setValidationError] = useState('');
 
@@ -226,6 +229,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
               </IncrementDecrementButton>
             </Controls>
           )}
+          {children}
         </StyledTextInput>
       </ThemeContext.Extend>
     );
