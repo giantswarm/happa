@@ -17,10 +17,13 @@ import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { filterLabels } from 'stores/cluster/utils';
+import { supportsHACPNodes } from 'stores/nodepool/utils';
 import { mutate } from 'swr';
+
+import { getClusterConditions } from '../utils';
 
 export async function updateClusterDescription(
   httpClientFactory: HttpClientFactory,
@@ -385,4 +388,67 @@ export async function updateClusterReleaseVersion(
   cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
 
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+}
+
+export function canSwitchClusterToHACPNodes(
+  provider: PropertiesOf<typeof Providers>,
+  cluster: Cluster,
+  providerCluster: ProviderCluster,
+  controlPlaneNodes: ControlPlaneNode[]
+): boolean {
+  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  if (!releaseVersion) return false;
+
+  if (!supportsHACPNodes(provider, releaseVersion)) return false;
+
+  const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
+    getClusterConditions(cluster, providerCluster);
+  if (isConditionUnknown || isCreating || isUpgrading || isDeleting) {
+    return false;
+  }
+
+  for (const controlPlaneNode of controlPlaneNodes) {
+    if (controlPlaneNode.kind === infrav1alpha3.G8sControlPlane) {
+      const replicas = controlPlaneNode.spec.replicas;
+
+      return !replicas || replicas === 1;
+    }
+  }
+
+  return false;
+}
+
+export async function switchClusterToHACPNodes(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: Cluster
+) {
+  const controlPlaneNodes = await fetchControlPlaneNodesForCluster(
+    httpClientFactory,
+    auth,
+    cluster
+  );
+
+  const requests: Promise<ControlPlaneNode>[] = [];
+  for (const controlPlaneNode of controlPlaneNodes) {
+    if (controlPlaneNode.kind === infrav1alpha3.G8sControlPlane) {
+      const client = httpClientFactory();
+
+      controlPlaneNode.spec.replicas = Constants.AWS_HA_MASTERS_MAX_NODES;
+
+      requests.push(
+        infrav1alpha3.updateG8sControlPlane(client, auth, controlPlaneNode)
+      );
+    }
+  }
+
+  if (requests.length < 1) return;
+
+  const updatedControlPlaneNodes = await Promise.all(requests);
+
+  mutate(
+    fetchControlPlaneNodesForClusterKey(cluster),
+    updatedControlPlaneNodes,
+    false
+  );
 }

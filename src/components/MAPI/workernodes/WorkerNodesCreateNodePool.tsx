@@ -22,6 +22,7 @@ import {
   getProviderNodePoolLocation,
   getProviderNodePoolMachineType,
   getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -278,7 +279,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   const machineType = getProviderNodePoolMachineType(state.providerNodePool);
   const spotInstances = getProviderNodePoolSpotInstances(
     state.providerNodePool
-  ) as INodePoolSpotInstancesAzure;
+  );
   const nodePoolAZs = getNodePoolAvailabilityZones(
     state.nodePool,
     state.providerNodePool
@@ -337,7 +338,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 margin={{ top: 'small' }}
               />
 
-              {provider === Providers.AZURE && supportsSpotInstances && (
+              {supportsSpotInstances && (
                 <WorkerNodesCreateNodePoolSpotInstances
                   id={`node-pool-${id}-${NodePoolPropertyField.SpotInstances}`}
                   nodePool={state.nodePool}
@@ -379,10 +380,20 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 organizationName={orgName}
                 clusterName={cluster.metadata.name}
                 description={description}
-                azureVMSize={machineType}
+                machineType={machineType}
                 nodePoolAZs={nodePoolAZs}
-                azureUseSpotVMs={spotInstances.enabled}
-                azureSpotVMsMaxPrice={spotInstances.maxPrice}
+                azureUseSpotVMs={spotInstances?.enabled}
+                azureSpotVMsMaxPrice={
+                  (spotInstances as INodePoolSpotInstancesAzure)?.maxPrice
+                }
+                awsOnDemandBaseCapacity={
+                  (spotInstances as INodePoolSpotInstancesAWS)
+                    ?.onDemandBaseCapacity
+                }
+                awsOnDemandPercentageAboveBaseCapacity={
+                  (spotInstances as INodePoolSpotInstancesAWS)
+                    ?.onDemandPercentageAboveBaseCapacity
+                }
                 nodesMin={scaling.min}
                 nodesMax={scaling.max}
               />

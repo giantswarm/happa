@@ -1,17 +1,14 @@
+import { Box, Heading, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 
-const Strong = styled.strong`
-  font-weight: 700;
-`;
-
-const ButtonWrapper = styled.div`
-  margin: 16px 0 8px;
+const StyledHeading = styled(Heading)`
+  max-width: none;
 `;
 
 interface IMasterNodeConverterProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+  extends React.ComponentPropsWithoutRef<typeof Box> {
   onApply?: () => void;
   onCancel?: () => void;
   isLoading?: boolean;
@@ -35,22 +32,20 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
   };
 
   return (
-    <div {...rest}>
-      <p>
-        <Strong>
-          Do you want to convert this cluster to use three control plane nodes
-          instead of one?
-        </Strong>
-      </p>
-      <p>
+    <Box {...rest}>
+      <StyledHeading level={5} margin={{ top: 'none' }}>
+        Do you want to convert this cluster to use three control plane nodes
+        instead of one?
+      </StyledHeading>
+      <Text>
         This will improve the cluster&rsquo;s resilience against data center
         failures and keep the Kubernetes API available during upgrades, and will
         also increase the resource cost.
-      </p>
-      <p>
-        <Strong>Note:</Strong> there is no way to undo this switch.
-      </p>
-      <ButtonWrapper>
+      </Text>
+      <Text margin={{ top: 'small' }}>
+        <strong>Note:</strong> there is no way to undo this switch.
+      </Text>
+      <Box direction='row' gap='small' margin={{ top: 'medium' }}>
         <Button
           primary={true}
           loading={isLoading}
@@ -63,8 +58,8 @@ const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
         {!isLoading && (
           <Button onClick={handleEventListener(onCancel)}>Cancel</Button>
         )}
-      </ButtonWrapper>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

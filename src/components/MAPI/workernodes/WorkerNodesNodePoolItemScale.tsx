@@ -135,7 +135,7 @@ const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps>
 
       try {
         await updateNodePoolScaling(
-          clientFactory(),
+          clientFactory,
           auth,
           nodePool,
           scalingMin,

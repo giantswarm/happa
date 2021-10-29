@@ -373,7 +373,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         </Box>
       )}
 
-      {nodePool && (
+      {nodePool && providerNodePool && (
         <Box margin={{ top: isScaleConfirmOpen ? 'small' : undefined }}>
           <WorkerNodesNodePoolItemScale
             nodePool={nodePool}

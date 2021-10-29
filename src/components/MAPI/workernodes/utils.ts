@@ -262,81 +262,159 @@ export async function deleteNodePoolResources(
 }
 
 export async function updateNodePoolScaling(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   nodePool: NodePool,
   min: number,
   max: number
 ) {
-  if (nodePool.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3') {
-    let machinePool = await capiexpv1alpha3.getMachinePool(
-      httpClient,
-      auth,
-      nodePool.metadata.namespace!,
-      nodePool.metadata.name
-    );
+  switch (nodePool.apiVersion) {
+    case 'exp.cluster.x-k8s.io/v1alpha3': {
+      const client = httpClientFactory();
 
-    if (
-      nodePool.metadata.annotations?.[
+      let machinePool = await capiexpv1alpha3.getMachinePool(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
+
+      if (
+        nodePool.metadata.annotations?.[
+          capiexpv1alpha3.annotationMachinePoolMinSize
+        ] === min.toString() &&
+        nodePool.metadata.annotations?.[
+          capiexpv1alpha3.annotationMachinePoolMaxSize
+        ] === max.toString()
+      ) {
+        return machinePool;
+      }
+
+      machinePool.metadata.annotations ??= {};
+      machinePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolMinSize
-      ] === min.toString() &&
-      nodePool.metadata.annotations?.[
+      ] = min.toString();
+      machinePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolMaxSize
-      ] === max.toString()
-    ) {
+      ] = max.toString();
+
+      machinePool = await capiexpv1alpha3.updateMachinePool(
+        client,
+        auth,
+        machinePool
+      );
+
+      mutate(
+        capiexpv1alpha3.getMachinePoolKey(
+          machinePool.metadata.namespace!,
+          machinePool.metadata.name
+        ),
+        machinePool,
+        false
+      );
+
+      // Update the updated machine pool in place.
+      mutate(
+        capiexpv1alpha3.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]:
+                machinePool.metadata.labels![capiv1alpha3.labelCluster],
+            },
+          },
+        }),
+        produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
+          if (!draft) return;
+
+          for (let i = 0; i < draft.items.length; i++) {
+            if (draft.items[i].metadata.name === machinePool.metadata.name) {
+              draft.items[i] = machinePool;
+            }
+          }
+
+          draft.items = draft.items.sort(compareNodePools);
+        }),
+        false
+      );
+
       return machinePool;
     }
 
-    machinePool.metadata.annotations ??= {};
-    machinePool.metadata.annotations[
-      capiexpv1alpha3.annotationMachinePoolMinSize
-    ] = min.toString();
-    machinePool.metadata.annotations[
-      capiexpv1alpha3.annotationMachinePoolMaxSize
-    ] = max.toString();
+    case 'cluster.x-k8s.io/v1alpha3': {
+      let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+        httpClientFactory,
+        auth,
+        [nodePool]
+      );
 
-    machinePool = await capiexpv1alpha3.updateMachinePool(
-      httpClient,
-      auth,
-      machinePool
-    );
+      if (
+        providerNodePool?.apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
+      ) {
+        return Promise.reject(new Error('Unsupported provider.'));
+      }
 
-    mutate(
-      capiexpv1alpha3.getMachinePoolKey(
-        machinePool.metadata.namespace!,
-        machinePool.metadata.name
-      ),
-      machinePool
-    );
+      const client = httpClientFactory();
 
-    // Update the updated machine pool in place.
-    mutate(
-      capiexpv1alpha3.getMachinePoolListKey({
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelCluster]:
-              machinePool.metadata.labels![capiv1alpha3.labelCluster],
+      if (
+        providerNodePool.spec.nodePool.scaling.min === min &&
+        providerNodePool.spec.nodePool.scaling.max === max
+      ) {
+        return nodePool;
+      }
+
+      providerNodePool.spec.nodePool.scaling.min = min;
+      providerNodePool.spec.nodePool.scaling.max = max;
+
+      providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
+        client,
+        auth,
+        providerNodePool
+      );
+
+      mutate(
+        infrav1alpha3.getAWSMachineDeploymentKey(
+          providerNodePool.metadata.namespace!,
+          providerNodePool.metadata.name
+        ),
+        providerNodePool,
+        false
+      );
+
+      const nodePoolList = await capiv1alpha3.getMachineDeploymentList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [infrav1alpha3.labelCluster]:
+                nodePool.metadata.labels![infrav1alpha3.labelCluster],
+            },
           },
-        },
-      }),
-      produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
-        if (!draft) return;
-
-        for (let i = 0; i < draft.items.length; i++) {
-          if (draft.items[i].metadata.name === machinePool.metadata.name) {
-            draft.items[i] = machinePool;
-          }
         }
+      );
 
-        draft.items = draft.items.sort(compareNodePools);
-      }),
-      false
-    );
+      nodePoolList.items = nodePoolList.items.sort(compareNodePools);
 
-    return machinePool;
+      mutate(
+        fetchProviderNodePoolsForNodePoolsKey(nodePoolList.items),
+        produce((draft?: ProviderNodePool[]) => {
+          if (!draft) return;
+
+          for (let i = 0; i < draft.length; i++) {
+            if (draft[i]!.metadata.name === providerNodePool!.metadata.name) {
+              draft[i] = providerNodePool;
+            }
+          }
+        }),
+        false
+      );
+
+      return nodePool;
+    }
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
   }
-
-  return Promise.reject(new Error('Unsupported provider.'));
 }
 
 export function createDefaultBootstrapConfig(

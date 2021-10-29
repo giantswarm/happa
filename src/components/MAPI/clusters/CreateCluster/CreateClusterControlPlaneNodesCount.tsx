@@ -34,7 +34,7 @@ const CreateClusterControlPlaneNodesCount: React.FC<ICreateClusterControlPlaneNo
       const nodesCount =
         computeControlPlaneNodesStats(controlPlaneNodes).totalCount;
 
-      if (nodesCount >= Constants.AWS_HA_MASTERS_MAX_NODES) {
+      if (nodesCount > 1) {
         return true;
       }
 

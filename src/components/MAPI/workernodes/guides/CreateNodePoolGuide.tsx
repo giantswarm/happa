@@ -21,10 +21,12 @@ interface ICreateNodePoolGuide
   organizationName: string;
   clusterName: string;
   description?: string;
-  azureVMSize?: string;
+  machineType?: string;
   nodePoolAZs?: string[];
   azureUseSpotVMs?: boolean;
   azureSpotVMsMaxPrice?: number;
+  awsOnDemandBaseCapacity?: number;
+  awsOnDemandPercentageAboveBaseCapacity?: number;
   nodesMin?: number;
   nodesMax?: number;
 }
@@ -34,15 +36,20 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
   organizationName,
   clusterName,
   description,
-  azureVMSize,
+  machineType,
   nodePoolAZs,
   azureUseSpotVMs,
   azureSpotVMsMaxPrice,
+  awsOnDemandBaseCapacity,
+  awsOnDemandPercentageAboveBaseCapacity,
   nodesMin,
   nodesMax,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
+
+  const vmSize = provider === Providers.AZURE ? machineType : undefined;
+  const instanceType = provider === Providers.AWS ? machineType : undefined;
 
   return (
     <CLIGuide
@@ -80,10 +87,13 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
               owner: organizationName,
               clusterName,
               description,
-              azureVMSize,
+              azureVMSize: vmSize,
+              awsInstanceType: instanceType,
               nodePoolAZs,
               azureUseSpotVMs,
               azureSpotVMsMaxPrice,
+              awsOnDemandBaseCapacity,
+              awsOnDemandPercentageAboveBaseCapacity,
               nodesMin,
               nodesMax,
               output: `cluster-${clusterName}-nodepool.yaml`,
