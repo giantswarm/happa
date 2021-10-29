@@ -243,11 +243,14 @@ export interface IKubectlGSTemplateNodePoolCommandConfig {
   clusterName: string;
   description?: string;
   azureVMSize?: string;
+  awsInstanceType?: string;
   nodePoolAZs?: string[];
   azureUseSpotVMs?: boolean;
   azureSpotVMsMaxPrice?: number;
   nodesMin?: number;
   nodesMax?: number;
+  awsOnDemandPercentageAboveBaseCapacity?: number;
+  awsOnDemandBaseCapacity?: number;
   output?: string;
 }
 
@@ -279,6 +282,10 @@ export function withTemplateNodePool(
       newParts.push('--azure-vm-size', config.azureVMSize);
     }
 
+    if (config.awsInstanceType) {
+      newParts.push('--aws-instance-type', config.awsInstanceType);
+    }
+
     if (config.nodePoolAZs && config.nodePoolAZs.length > 0) {
       newParts.push('--availability-zones', config.nodePoolAZs.join(','));
     }
@@ -291,6 +298,20 @@ export function withTemplateNodePool(
       newParts.push(
         '--azure-spot-vms-max-price',
         `${config.azureSpotVMsMaxPrice}`
+      );
+    }
+
+    if (typeof config.awsOnDemandBaseCapacity !== 'undefined') {
+      newParts.push(
+        '--on-demand-base-capacity',
+        String(config.awsOnDemandBaseCapacity)
+      );
+    }
+
+    if (typeof config.awsOnDemandPercentageAboveBaseCapacity !== 'undefined') {
+      newParts.push(
+        '--on-demand-percentage-above-base-capacity',
+        String(config.awsOnDemandPercentageAboveBaseCapacity)
       );
     }
 
