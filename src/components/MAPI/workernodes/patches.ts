@@ -35,14 +35,32 @@ export function withNodePoolDescription(newDescription: string): NodePoolPatch {
   };
 }
 
-export function withNodePoolMachineType(newMachineType: string): NodePoolPatch {
+export interface INodePoolMachineTypesConfigAzure {
+  primary: string;
+}
+
+export interface INodePoolMachineTypesConfigAWS {
+  primary: string;
+  similarInstances: boolean;
+}
+
+export type NodePoolMachineTypesConfig =
+  | INodePoolMachineTypesConfigAzure
+  | INodePoolMachineTypesConfigAWS;
+
+export function withNodePoolMachineType(
+  config: NodePoolMachineTypesConfig
+): NodePoolPatch {
   return (_, providerNodePool) => {
     switch (providerNodePool?.apiVersion) {
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-        providerNodePool.spec!.template.vmSize = newMachineType;
+        providerNodePool.spec!.template.vmSize = config.primary;
         break;
       case 'infrastructure.giantswarm.io/v1alpha3':
-        providerNodePool.spec.provider.worker.instanceType = newMachineType;
+        providerNodePool.spec.provider.worker.instanceType = config.primary;
+        providerNodePool.spec.provider.worker.useAlikeInstanceTypes = (
+          config as INodePoolMachineTypesConfigAWS
+        ).similarInstances;
         break;
     }
   };

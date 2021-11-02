@@ -328,6 +328,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 id={`node-pool-${id}-${NodePoolPropertyField.MachineType}`}
                 nodePool={state.nodePool}
                 providerNodePool={state.providerNodePool}
+                cluster={cluster}
                 onChange={handleChange(NodePoolPropertyField.MachineType)}
               />
               <WorkerNodesCreateNodePoolAvailabilityZones
