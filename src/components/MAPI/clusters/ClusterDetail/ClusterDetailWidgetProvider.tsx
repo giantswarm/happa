@@ -30,6 +30,7 @@ export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
 
   switch (cluster.spec?.infrastructureRef?.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return 'Azure region';
 
     case 'infrastructure.giantswarm.io/v1alpha3':
@@ -45,6 +46,7 @@ export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
 
   switch (cluster.spec?.infrastructureRef?.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return 'Subscription ID';
 
     case 'infrastructure.giantswarm.io/v1alpha3':
@@ -63,6 +65,7 @@ export function getClusterAccountIDPath(
 
   switch (cluster.spec?.infrastructureRef?.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return 'https://portal.azure.com/';
 
     case 'infrastructure.giantswarm.io/v1alpha3':
