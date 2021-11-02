@@ -21,57 +21,127 @@ import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
 
 export async function updateNodePoolDescription(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   nodePool: NodePool,
   newDescription: string
 ) {
-  if (nodePool.apiVersion === 'exp.cluster.x-k8s.io/v1alpha3') {
-    let machinePool = await capiexpv1alpha3.getMachinePool(
-      httpClient,
-      auth,
-      nodePool.metadata.namespace!,
-      nodePool.metadata.name
-    );
-    const description = capiexpv1alpha3.getMachinePoolDescription(machinePool);
-    if (description === newDescription) {
+  switch (nodePool.apiVersion) {
+    case 'exp.cluster.x-k8s.io/v1alpha3': {
+      const client = httpClientFactory();
+
+      let machinePool = await capiexpv1alpha3.getMachinePool(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
+      const description =
+        capiexpv1alpha3.getMachinePoolDescription(machinePool);
+      if (description === newDescription) {
+        return machinePool;
+      }
+
+      machinePool.metadata.annotations ??= {};
+      machinePool.metadata.annotations[
+        capiexpv1alpha3.annotationMachinePoolDescription
+      ] = newDescription;
+
+      machinePool = await capiexpv1alpha3.updateMachinePool(
+        client,
+        auth,
+        machinePool
+      );
+
+      mutate(
+        capiexpv1alpha3.getMachinePoolKey(
+          machinePool.metadata.namespace!,
+          machinePool.metadata.name
+        ),
+        machinePool
+      );
+
+      mutate(
+        capiexpv1alpha3.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1alpha3.labelCluster]:
+                machinePool.metadata.labels![capiv1alpha3.labelCluster],
+            },
+          },
+        })
+      );
+
       return machinePool;
     }
 
-    machinePool.metadata.annotations ??= {};
-    machinePool.metadata.annotations[
-      capiexpv1alpha3.annotationMachinePoolDescription
-    ] = newDescription;
+    case 'cluster.x-k8s.io/v1alpha3': {
+      let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+        httpClientFactory,
+        auth,
+        [nodePool]
+      );
 
-    machinePool = await capiexpv1alpha3.updateMachinePool(
-      httpClient,
-      auth,
-      machinePool
-    );
+      if (
+        providerNodePool?.apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
+      ) {
+        return Promise.reject(new Error('Unsupported provider.'));
+      }
 
-    mutate(
-      capiexpv1alpha3.getMachinePoolKey(
-        machinePool.metadata.namespace!,
-        machinePool.metadata.name
-      ),
-      machinePool
-    );
+      const client = httpClientFactory();
 
-    mutate(
-      capiexpv1alpha3.getMachinePoolListKey({
-        labelSelector: {
-          matchingLabels: {
-            [capiv1alpha3.labelCluster]:
-              machinePool.metadata.labels![capiv1alpha3.labelCluster],
+      providerNodePool.spec.nodePool.description = newDescription;
+
+      providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
+        client,
+        auth,
+        providerNodePool
+      );
+
+      mutate(
+        infrav1alpha3.getAWSMachineDeploymentKey(
+          providerNodePool.metadata.namespace!,
+          providerNodePool.metadata.name
+        ),
+        providerNodePool,
+        false
+      );
+
+      const nodePoolList = await capiv1alpha3.getMachineDeploymentList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [infrav1alpha3.labelCluster]:
+                nodePool.metadata.labels![infrav1alpha3.labelCluster],
+            },
           },
-        },
-      })
-    );
+        }
+      );
 
-    return machinePool;
+      nodePoolList.items = nodePoolList.items.sort(compareNodePools);
+
+      mutate(
+        fetchProviderNodePoolsForNodePoolsKey(nodePoolList.items),
+        produce((draft?: ProviderNodePool[]) => {
+          if (!draft) return;
+
+          for (let i = 0; i < draft.length; i++) {
+            if (draft[i]!.metadata.name === providerNodePool!.metadata.name) {
+              draft[i] = providerNodePool;
+            }
+          }
+        }),
+        false
+      );
+
+      return nodePool;
+    }
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
   }
-
-  return Promise.reject(new Error('Unsupported provider.'));
 }
 
 export async function deleteNodePool(
