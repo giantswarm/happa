@@ -1,5 +1,5 @@
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
-import { getProviderNodePoolMachineType } from 'MAPI/utils';
+import { getProviderNodePoolMachineTypes } from 'MAPI/utils';
 import React from 'react';
 
 import { INodePoolPropertyProps, withNodePoolMachineType } from './patches';
@@ -28,7 +28,8 @@ const WorkerNodesCreateNodePoolMachineType: React.FC<IWorkerNodesCreateNodePoolM
       });
     };
 
-    const value = getProviderNodePoolMachineType(providerNodePool);
+    const value =
+      getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
 
     return (
       <AddNodePoolMachineType

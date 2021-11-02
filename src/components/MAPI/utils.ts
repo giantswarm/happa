@@ -610,17 +610,38 @@ export function getNodePoolDescription(
   }
 }
 
-export function getProviderNodePoolMachineType(
+export interface INodePoolMachineTypesAzure {
+  primary: string;
+}
+
+export interface INodePoolMachineTypesAWS {
+  primary: string;
+  all: string[];
+  similarInstances: boolean;
+}
+
+export type NodePoolMachineTypes =
+  | INodePoolMachineTypesAzure
+  | INodePoolMachineTypesAWS;
+
+export function getProviderNodePoolMachineTypes(
   providerNodePool: ProviderNodePool
-): string {
+): NodePoolMachineTypes | undefined {
   switch (providerNodePool?.apiVersion) {
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
-      return providerNodePool.spec?.template.vmSize ?? '';
+      return { primary: providerNodePool.spec?.template.vmSize ?? '' };
     case 'infrastructure.giantswarm.io/v1alpha3':
-      return providerNodePool.spec.provider.worker.instanceType;
+      return {
+        primary: providerNodePool.spec.provider.worker.instanceType,
+        all: providerNodePool.status?.provider?.worker?.instanceTypes ?? [
+          providerNodePool.spec.provider.worker.instanceType,
+        ],
+        similarInstances:
+          providerNodePool.spec.provider.worker.useAlikeInstanceTypes,
+      };
     default:
-      return '';
+      return undefined;
   }
 }
 

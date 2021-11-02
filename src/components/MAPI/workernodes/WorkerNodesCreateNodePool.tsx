@@ -20,7 +20,7 @@ import {
   getNodePoolScaling,
   getProviderClusterLocation,
   getProviderNodePoolLocation,
-  getProviderNodePoolMachineType,
+  getProviderNodePoolMachineTypes,
   getProviderNodePoolSpotInstances,
   INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
@@ -276,7 +276,8 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     state.nodePool,
     state.providerNodePool
   );
-  const machineType = getProviderNodePoolMachineType(state.providerNodePool);
+  const machineType =
+    getProviderNodePoolMachineTypes(state.providerNodePool)?.primary ?? '';
   const spotInstances = getProviderNodePoolSpotInstances(
     state.providerNodePool
   );

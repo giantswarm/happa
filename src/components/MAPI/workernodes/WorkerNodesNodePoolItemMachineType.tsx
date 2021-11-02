@@ -1,6 +1,10 @@
 import { Box, Text } from 'grommet';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
-import { getProviderNodePoolMachineType } from 'MAPI/utils';
+import {
+  getProviderNodePoolMachineTypes,
+  INodePoolMachineTypesAWS,
+  INodePoolMachineTypesAzure,
+} from 'MAPI/utils';
 import React from 'react';
 import styled from 'styled-components';
 import { Code } from 'styles';
@@ -14,15 +18,15 @@ const MixedInstanceType = styled(Code)`
 `;
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
+  const machineTypes = getProviderNodePoolMachineTypes(providerNodePool);
+
   switch (providerNodePool?.apiVersion) {
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
-      return `VM size: ${getProviderNodePoolMachineType(providerNodePool)}`;
+      return `VM size: ${machineTypes?.primary ?? 'n/a'}`;
 
     case 'infrastructure.giantswarm.io/v1alpha3':
-      return `Instance type: ${getProviderNodePoolMachineType(
-        providerNodePool
-      )}`;
+      return `Instance type: ${machineTypes?.primary ?? 'n/a'}`;
 
     default:
       return undefined;
@@ -37,28 +41,27 @@ interface IWorkerNodesNodePoolItemMachineTypeProps
 
 const WorkerNodesNodePoolItemMachineType: React.FC<IWorkerNodesNodePoolItemMachineTypeProps> =
   ({ nodePool, providerNodePool, ...props }) => {
-    const machineType = nodePool
-      ? getProviderNodePoolMachineType(providerNodePool)
+    const machineTypes = nodePool
+      ? getProviderNodePoolMachineTypes(providerNodePool)
       : undefined;
 
-    const useAlikeInstanceTypes =
-      providerNodePool?.apiVersion ===
-        'infrastructure.giantswarm.io/v1alpha3' &&
-      providerNodePool.spec.provider.worker.useAlikeInstanceTypes;
-    const instanceTypes =
-      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-        ? providerNodePool.status?.provider?.worker?.instanceTypes
-        : undefined;
+    const allMachineTypes = (
+      machineTypes as INodePoolMachineTypesAWS | undefined
+    )?.all;
+
+    const similarInstances =
+      (machineTypes as INodePoolMachineTypesAWS | undefined)
+        ?.similarInstances ?? false;
 
     return (
       <Box align='center' {...props}>
-        <OptionalValue value={machineType} loaderWidth={130}>
+        <OptionalValue value={machineTypes} loaderWidth={130}>
           {(value) =>
-            useAlikeInstanceTypes ? (
+            similarInstances ? (
               <TooltipContainer
                 content={
                   <Tooltip
-                    id={`${providerNodePool.metadata.name}-instance-types`}
+                    id={`${providerNodePool!.metadata.name}-instance-types`}
                   >
                     <Box width='180px'>
                       <Text size='xsmall' textAlign='center'>
@@ -66,7 +69,7 @@ const WorkerNodesNodePoolItemMachineType: React.FC<IWorkerNodesNodePoolItemMachi
                       </Text>
                       <Text size='xsmall' textAlign='center'>
                         Currently used:{' '}
-                        {instanceTypes?.join(', ') ?? <NotAvailable />}
+                        {allMachineTypes!.join(', ') || <NotAvailable />}
                       </Text>
                     </Box>
                   </Tooltip>
@@ -76,23 +79,22 @@ const WorkerNodesNodePoolItemMachineType: React.FC<IWorkerNodesNodePoolItemMachi
                   <MixedInstanceType
                     aria-label={formatMachineTypeLabel(providerNodePool)}
                   >
-                    {value}
+                    {(value as INodePoolMachineTypesAWS).primary}
                   </MixedInstanceType>
-                  {instanceTypes && instanceTypes.length > 1 && (
+                  {allMachineTypes!.length > 1 && (
                     <Text
                       size='xsmall'
                       margin={{ left: 'xsmall' }}
                       color='text-weak'
                     >
-                      +{instanceTypes.length - 1} more
+                      +{allMachineTypes!.length - 1} more
                     </Text>
                   )}
                 </div>
               </TooltipContainer>
             ) : (
               <Code aria-label={formatMachineTypeLabel(providerNodePool)}>
-                {' '}
-                {value}
+                {(value as INodePoolMachineTypesAzure).primary}
               </Code>
             )
           }
