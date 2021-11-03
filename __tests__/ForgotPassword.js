@@ -281,9 +281,8 @@ describe('PasswordReset', () => {
           valid_until: '2020-02-21T16:50:20.589772+00:00',
         });
 
-      const { findByLabelText, findByText } = renderRouteWithStore(
-        routeWithToken
-      );
+      const { findByLabelText, findByText } =
+        renderRouteWithStore(routeWithToken);
 
       const validationProgressMessage = await findByText(
         /validating your token/i

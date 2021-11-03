@@ -62,12 +62,8 @@ it('lets me create a keypair', async () => {
     }
   );
 
-  const {
-    findByText,
-    getByText,
-    queryByTestId,
-    getByLabelText,
-  } = renderRouteWithStore(clusterDetailPath);
+  const { findByText, getByText, queryByTestId, getByLabelText } =
+    renderRouteWithStore(clusterDetailPath);
 
   // Then I should see also that there are no keypairs yet.
   const message = await findByText(

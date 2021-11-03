@@ -120,6 +120,7 @@ export async function fetchNodePoolListForCluster(
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       if (isCAPZCluster(cluster)) {
         list = await capiv1alpha4.getMachinePoolList(
           httpClientFactory(),
@@ -185,6 +186,7 @@ export function fetchNodePoolListForClusterKey(
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       if (isCAPZCluster(cluster)) {
         return capiv1alpha4.getMachinePoolListKey({
           labelSelector: {
@@ -401,7 +403,8 @@ export async function fetchControlPlaneNodesForCluster(
   }
 
   switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
       const cpNodes = await capzv1alpha3.getAzureMachineList(
         httpClientFactory(),
         auth,
@@ -466,6 +469,7 @@ export function fetchControlPlaneNodesForClusterKey(
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return capzv1alpha3.getAzureMachineListKey({
         labelSelector: {
           matchingLabels: {
@@ -502,6 +506,7 @@ export function fetchProviderClusterForCluster(
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return capzv1alpha3.getAzureCluster(
         httpClientFactory(),
         auth,
@@ -528,6 +533,7 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return capzv1alpha3.getAzureClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
@@ -825,6 +831,7 @@ export function getClusterDescription(
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return (
         cluster.metadata.annotations?.[
           capiv1alpha3.annotationClusterDescription

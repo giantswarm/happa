@@ -137,9 +137,8 @@ scales correctly`, async () => {
       clusterId: V4_CLUSTER.id,
     }
   );
-  const { getByText, findByText, getByDisplayValue } = renderRouteWithStore(
-    clusterDetailPath
-  );
+  const { getByText, findByText, getByDisplayValue } =
+    renderRouteWithStore(clusterDetailPath);
 
   const nodesTitle = await findByText('Nodes');
   const nodesCounter = nodesTitle.nextSibling;

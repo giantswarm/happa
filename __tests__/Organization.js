@@ -111,12 +111,8 @@ describe('', () => {
       });
       getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
 
-      const {
-        getByText,
-        getByLabelText,
-        findByText,
-        findByTestId,
-      } = renderRouteWithStore(OrganizationsRoutes.Home);
+      const { getByText, getByLabelText, findByText, findByTestId } =
+        renderRouteWithStore(OrganizationsRoutes.Home);
 
       const createOrgButton = await findByText('Create new organization');
       fireEvent.click(createOrgButton);
@@ -148,12 +144,8 @@ describe('', () => {
         OrganizationsRoutes.Detail,
         { orgId: orgResponse.id }
       );
-      const {
-        findByText,
-        getByText,
-        findByTestId,
-        getByLabelText,
-      } = renderRouteWithStore(organizationDetailsPath);
+      const { findByText, getByText, findByTestId, getByLabelText } =
+        renderRouteWithStore(organizationDetailsPath);
 
       const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
       expect(pageTitle).toBeInTheDocument();

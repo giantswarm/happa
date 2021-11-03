@@ -797,6 +797,7 @@ export function getClusterConditions(
 
   switch (infrastructureRef.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       statuses.isConditionUnknown = typeof cluster.spec === 'undefined';
       statuses.isCreating = isClusterCreating(cluster);
       statuses.isUpgrading = isClusterUpgrading(cluster);
