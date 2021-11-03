@@ -1,10 +1,10 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
@@ -15,6 +15,8 @@ import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterD
 import {
   computeAppsCategorizedCounters,
   filterUserInstalledApps,
+  getUpgradableApps,
+  getUpgradableAppsKey,
 } from './utils';
 
 const StyledLink = styled(Link)`
@@ -32,15 +34,21 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
 ) => {
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
-  const appListClient = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+
+  const appListClient = useRef(clientFactory());
 
   const appListGetOptions = { namespace: clusterId };
   const { data: appList, error: appListError } = useSWR<
     applicationv1alpha1.IAppList,
     GenericResponseError
   >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
-    applicationv1alpha1.getAppList(appListClient, auth, appListGetOptions)
+    applicationv1alpha1.getAppList(
+      appListClient.current,
+      auth,
+      appListGetOptions
+    )
   );
 
   useEffect(() => {
@@ -48,6 +56,12 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
       ErrorReporter.getInstance().notify(appListError);
     }
   }, [appListError]);
+
+  const userInstalledApps = useMemo(() => {
+    if (!appList) return [];
+
+    return filterUserInstalledApps(appList.items, true);
+  }, [appList]);
 
   const appCounters = useMemo(() => {
     if (appListError) {
@@ -66,13 +80,35 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
       };
     }
 
-    const userInstalledApps = filterUserInstalledApps(appList.items, true);
-
     return computeAppsCategorizedCounters(userInstalledApps);
-  }, [appList, appListError]);
+  }, [appList, appListError, userInstalledApps]);
 
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;
+
+  const upgradableAppsKey = appList
+    ? getUpgradableAppsKey(userInstalledApps)
+    : null;
+
+  const { data: upgradableApps, error: upgradableAppsError } = useSWR<
+    string[],
+    GenericResponseError
+  >(upgradableAppsKey, () =>
+    getUpgradableApps(userInstalledApps, clientFactory, auth)
+  );
+
+  useEffect(() => {
+    if (upgradableAppsError) {
+      ErrorReporter.getInstance().notify(upgradableAppsError);
+    }
+  }, [upgradableAppsError]);
+
+  const upgradableAppsCount = useMemo(() => {
+    if (!upgradableApps) return undefined;
+    if (upgradableAppsError) return -1;
+
+    return upgradableApps.length;
+  }, [upgradableApps, upgradableAppsError]);
 
   return (
     <ClusterDetailWidget
@@ -108,6 +144,10 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
             value={appCounters.uniqueApps}
           />
           <ClusterDetailCounter label='deployed' value={appCounters.deployed} />
+          <ClusterDetailCounter
+            label='upgradable'
+            value={upgradableAppsCount}
+          />
         </>
       )}
     </ClusterDetailWidget>

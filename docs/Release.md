@@ -1,6 +1,6 @@
 # How to publish a release
 
-TL;DR: Releasing involves pushing a tag to the GitHub repository. Our CI takes
+TL;DR: Releasing is done via the GitHub release functionality. Our CI takes
 over from there and auto deploys the release to our installations.
 
 ## Create and push a new release
@@ -15,4 +15,3 @@ CircleCI must be set up with certain environment variables:
   - [giantswarm/happa](https://github.com/giantswarm/gsctl/)
 - `GITHUB_USER_EMAIL` - Email address of the github user owning the personal token above
 - `GITHUB_USER_NAME` - Username of the above github user
-

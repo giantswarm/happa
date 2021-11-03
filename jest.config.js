@@ -4,37 +4,6 @@ const path = require('path');
 process.env.DEBUG_PRINT_LIMIT = 10000;
 
 module.exports = {
-  transform: {
-    '^.+\\.(js|ts)(x?)$': [
-      '@swc/jest',
-      {
-        sourceMaps: true,
-        jsc: {
-          target: 'es2015',
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-            decorators: true,
-            dynamicImport: true,
-          },
-          transform: {
-            legacyDecorator: true,
-            decoratorMetadata: true,
-            react: {
-              runtime: 'automatic',
-            },
-          },
-          externalHelpers: true,
-        },
-        module: {
-          type: 'commonjs',
-        },
-        env: {
-          targets: '> 0.25%, not dead',
-        },
-      },
-    ],
-  },
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
   setupFiles: [
@@ -50,9 +19,8 @@ module.exports = {
   ],
   moduleNameMapper: {
     '\\.css$': require.resolve('./testUtils/assetsMock.js'),
-    '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
-      './testUtils/assetsMock.js'
-    ),
+    '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+      require.resolve('./testUtils/assetsMock.js'),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
@@ -60,6 +28,7 @@ module.exports = {
     config: {
       apiEndpoint: 'http://1.2.3.4',
       mapiEndpoint: 'http://2.3.4.5',
+      athenaEndpoint: 'http://5.5.5.5',
       audience: 'http://1.2.3.4',
       mapiAudience: 'http://2.3.4.5',
       passageEndpoint: 'http://5.6.7.8',
@@ -81,7 +50,7 @@ module.exports = {
           installationName: 'test',
           provider: 'aws',
           dataCenter: 'test',
-          kubernetesVersions: [],
+          kubernetesVersions: {},
         },
         workers: {
           countPerCluster: {

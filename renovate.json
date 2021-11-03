@@ -21,10 +21,6 @@
       "groupName": "date-fns packages"
     },
     {
-      "matchPackagePrefixes": ["@swc", "swc-loader"],
-      "groupName": "swc packages"
-    },
-    {
       "matchPackagePrefixes": ["@storybook"],
       "groupName": "storybook packages"
     },
@@ -71,16 +67,16 @@
         "style-loader",
         "json-loader",
         "file-loader",
-        "imports-loader"
+        "imports-loader",
+        "webpack-bundle-analyzer",
+        "@types/webpack-bundle-analyzer"
       ],
       "groupName": "webpack packages"
     },
     {
       "matchPackageNames": [
         "@types/bootstrap",
-        "bootstrap",
-        "@types/react-bootstrap",
-        "react-bootstrap"
+        "bootstrap"
       ],
       "enabled": false
     }

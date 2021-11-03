@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import ReleaseSelector, {
   IRelease,
 } from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
+import { getK8sVersionEOLDate } from 'lib/config';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import * as releasesUtils from 'MAPI/releases/utils';
@@ -18,15 +19,15 @@ import { IClusterPropertyProps, withClusterReleaseVersion } from './patches';
 
 interface ICreateClusterReleaseProps
   extends IClusterPropertyProps,
-    Omit<
-      React.ComponentPropsWithoutRef<typeof InputGroup>,
-      'onChange' | 'id'
-    > {}
+    Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
+  orgNamespace: string;
+}
 
 const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
   id,
   cluster,
   onChange,
+  orgNamespace,
   ...props
 }) => {
   const isAdmin = useSelector(getUserIsAdmin);
@@ -67,12 +68,18 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
         const components = releasesUtils.reduceReleaseToComponents(curr);
 
+        const k8sVersion = releasev1alpha1.getK8sVersion(curr);
+        const k8sVersionEOLDate = k8sVersion
+          ? getK8sVersionEOLDate(k8sVersion) ?? undefined
+          : undefined;
+
         acc[normalizedVersion] = {
           version: normalizedVersion,
           active: isActive,
           timestamp: curr.metadata.creationTimestamp ?? '',
           components: Object.values(components),
-          kubernetesVersion: releasev1alpha1.getK8sVersion(curr),
+          kubernetesVersion: k8sVersion,
+          k8sVersionEOLDate: k8sVersionEOLDate,
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
         };
 
@@ -85,7 +92,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
   const handleChange = (newVersion: string) => {
     onChange({
       isValid: true,
-      patch: withClusterReleaseVersion(newVersion),
+      patch: withClusterReleaseVersion(newVersion, orgNamespace),
     });
   };
 

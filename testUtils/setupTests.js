@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom/extend-expect';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
-import { configure, waitFor } from '@testing-library/react';
+import { act, configure, screen, waitFor } from '@testing-library/react';
 import GiantSwarm from 'giantswarm';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
@@ -51,6 +53,13 @@ afterEach(async () => {
     expect(done).toBeTruthy();
   });
   nock.cleanAll();
-  forceRemoveAll();
+
+  await act(async () => {
+    forceRemoveAll();
+    await waitFor(() =>
+      expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    );
+  });
+
   jest.clearAllTimers();
 });

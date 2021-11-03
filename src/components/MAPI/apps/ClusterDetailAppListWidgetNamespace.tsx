@@ -12,19 +12,17 @@ interface IClusterDetailAppListWidgetNamespaceProps
   app?: applicationv1alpha1.IApp;
 }
 
-const ClusterDetailAppListWidgetNamespace: React.FC<IClusterDetailAppListWidgetNamespaceProps> = ({
-  app,
-  ...props
-}) => {
-  return (
-    <ClusterDetailAppListWidget title='Target namespace' {...props}>
-      <OptionalValue value={app?.spec.namespace} loaderWidth={100}>
-        {(value) => (
-          <Text aria-label={`App target namespace: ${value}`}>{value}</Text>
-        )}
-      </OptionalValue>
-    </ClusterDetailAppListWidget>
-  );
-};
+const ClusterDetailAppListWidgetNamespace: React.FC<IClusterDetailAppListWidgetNamespaceProps> =
+  ({ app, ...props }) => {
+    return (
+      <ClusterDetailAppListWidget title='Target namespace' {...props}>
+        <OptionalValue value={app?.spec.namespace} loaderWidth={100}>
+          {(value) => (
+            <Text aria-label={`App target namespace: ${value}`}>{value}</Text>
+          )}
+        </OptionalValue>
+      </ClusterDetailAppListWidget>
+    );
+  };
 
 export default ClusterDetailAppListWidgetNamespace;

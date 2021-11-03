@@ -1,11 +1,10 @@
-import { Keyboard } from 'grommet';
+import { Keyboard, Text } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { CSSBreakpoints } from 'shared/constants/cssBreakpoints';
 import styled from 'styled-components';
 import { Code, mq } from 'styles';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Truncated from 'UI/Util/Truncated';
 
 const StatusIcon = styled.i`
@@ -76,8 +75,10 @@ const Title = styled.span`
 `;
 
 const getTooltip = (content) => (
-  <Tooltip id='tooltip'>
-    Copy <Truncated>{content}</Truncated> to clipboard.
+  <Tooltip>
+    <Text size='xsmall'>
+      Copy <Truncated>{content}</Truncated> to clipboard.
+    </Text>
   </Tooltip>
 );
 
@@ -113,14 +114,14 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
               title='Content copied to clipboard'
             />
           ) : (
-            <OverlayTrigger placement='top' overlay={getTooltip(content)}>
+            <TooltipContainer content={getTooltip(content)}>
               <CopyButton onClick={copyToClipboard} role='button' tabIndex={0}>
                 <StatusIcon
                   className='fa fa-content-copy'
                   title='Copy content to clipboard'
                 />
               </CopyButton>
-            </OverlayTrigger>
+            </TooltipContainer>
           )}
         </CopyContent>
       </Keyboard>

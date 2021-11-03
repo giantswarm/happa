@@ -16,13 +16,14 @@ import {
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { PropertiesOf } from 'shared/types';
 import { getNamespaceFromOrgName } from 'stores/main/utils';
+import { selectOrganizations } from 'stores/organization/selectors';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 
@@ -34,11 +35,12 @@ import CreateClusterGuide from '../guides/CreateClusterGuide';
 import {
   createCluster,
   createDefaultCluster,
-  createDefaultControlPlaneNode,
+  createDefaultControlPlaneNodes,
   createDefaultProviderCluster,
   findLatestReleaseVersion,
 } from '../utils';
 import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
+import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNodesCount';
 import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
 import CreateClusterRelease from './CreateClusterRelease';
@@ -53,6 +55,7 @@ enum ClusterPropertyField {
   Description,
   Release,
   ControlPlaneNodeAZs,
+  ControlPlaneNodesCount,
 }
 
 interface IApplyPatchAction {
@@ -91,15 +94,17 @@ interface IClusterState {
   provider: PropertiesOf<typeof Providers>;
   cluster: Cluster;
   providerCluster: ProviderCluster;
-  controlPlaneNode: ControlPlaneNode;
+  controlPlaneNodes: ControlPlaneNode[];
   validationResults: Record<ClusterPropertyField, boolean>;
   isCreating: boolean;
   latestRelease: string;
+  orgNamespace: string;
 }
 
 interface IReducerConfig {
   namespace: string;
   organization: string;
+  orgNamespace: string;
 }
 
 function makeInitialState(
@@ -113,22 +118,24 @@ function makeInitialState(
     provider,
     resourceConfig
   );
-  const controlPlaneNode = createDefaultControlPlaneNode({ providerCluster });
+  const controlPlaneNodes = createDefaultControlPlaneNodes({ providerCluster });
   const cluster = createDefaultCluster({ providerCluster });
 
   return {
     provider,
     cluster,
     providerCluster,
-    controlPlaneNode,
+    controlPlaneNodes,
     validationResults: {
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
       [ClusterPropertyField.Release]: true,
       [ClusterPropertyField.ControlPlaneNodeAZs]: true,
+      [ClusterPropertyField.ControlPlaneNodesCount]: true,
     },
     isCreating: false,
     latestRelease: '',
+    orgNamespace: config.orgNamespace,
   };
 }
 
@@ -139,7 +146,7 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
         action.value(
           draft.cluster,
           draft.providerCluster,
-          draft.controlPlaneNode
+          draft.controlPlaneNodes
         );
         break;
       case 'changeValidationStatus':
@@ -154,10 +161,10 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
       case 'setLatestRelease':
         // Apply the version to the CRs if no version was set before.
         if (!draft.latestRelease) {
-          withClusterReleaseVersion(action.value)(
+          withClusterReleaseVersion(action.value, draft.orgNamespace)(
             draft.cluster,
             draft.providerCluster,
-            draft.controlPlaneNode
+            draft.controlPlaneNodes
           );
         }
 
@@ -173,7 +180,10 @@ interface ICreateClusterProps
 const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const match = useRouteMatch<{ orgId: string }>();
   const { orgId } = match.params;
-  const namespace = getNamespaceFromOrgName(orgId);
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+
+  const namespace = selectedOrg?.namespace ?? getNamespaceFromOrgName(orgId);
 
   const provider = window.config.info.general.provider;
 
@@ -182,6 +192,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     makeInitialState(provider, {
       namespace,
       organization: orgId,
+      orgNamespace: namespace,
     })
   );
 
@@ -193,20 +204,19 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     globalDispatch(push(MainRoutes.Home));
   };
 
-  const handleChange = (property: ClusterPropertyField) => (
-    newValue: IClusterPropertyValue
-  ) => {
-    dispatch({
-      type: 'applyPatch',
-      property,
-      value: newValue.patch,
-    });
-    dispatch({
-      type: 'changeValidationStatus',
-      property,
-      value: newValue.isValid,
-    });
-  };
+  const handleChange =
+    (property: ClusterPropertyField) => (newValue: IClusterPropertyValue) => {
+      dispatch({
+        type: 'applyPatch',
+        property,
+        value: newValue.patch,
+      });
+      dispatch({
+        type: 'changeValidationStatus',
+        property,
+        value: newValue.isValid,
+      });
+    };
 
   const isValid =
     state.latestRelease &&
@@ -216,11 +226,9 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const auth = useAuthProvider();
 
   const releaseListClient = useRef(clientFactory());
-  const {
-    data: releaseList,
-    error: releaseListError,
-  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
-    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {
@@ -244,12 +252,17 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     dispatch({ type: 'startCreation' });
 
     try {
-      await createCluster(clientFactory(), auth, state);
+      await createCluster(clientFactory, auth, state);
 
       dispatch({ type: 'endCreation' });
 
       new FlashMessage(
-        `Cluster <code>${state.cluster.metadata.name}</code> created successfully`,
+        (
+          <>
+            Cluster <code>{state.cluster.metadata.name}</code> created
+            successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -257,7 +270,10 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
       // Navigate to the cluster's detail page.
       const detailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Clusters.Detail.Home,
-        { orgId, clusterId: state.cluster.metadata.name }
+        {
+          orgId,
+          clusterId: state.cluster.metadata.name,
+        }
       );
       globalDispatch(push(detailPath));
     } catch (err) {
@@ -266,7 +282,11 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not create cluster <code>${state.cluster.metadata.name}</code>`,
+        (
+          <>
+            Could not create cluster <code>{state.cluster.metadata.name}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage
@@ -277,11 +297,14 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   };
 
   const releaseVersion = getClusterReleaseVersion(state.cluster);
-  const description = getClusterDescription(state.cluster);
+  const description = getClusterDescription(
+    state.cluster,
+    state.providerCluster
+  );
   const controlPlaneAZs = useMemo(() => {
-    return computeControlPlaneNodesStats([state.controlPlaneNode])
+    return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
-  }, [state.controlPlaneNode]);
+  }, [state.controlPlaneNodes]);
   const labels = getVisibleLabels(state.cluster);
 
   return (
@@ -306,14 +329,14 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               id={`cluster-${ClusterPropertyField.Name}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Name)}
             />
             <CreateClusterDescription
               id={`cluster-${ClusterPropertyField.Description}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Description)}
               autoFocus={true}
             />
@@ -321,16 +344,35 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
               id={`cluster-${ClusterPropertyField.Release}`}
               cluster={state.cluster}
               providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
+              controlPlaneNodes={state.controlPlaneNodes}
               onChange={handleChange(ClusterPropertyField.Release)}
+              orgNamespace={state.orgNamespace}
             />
-            <CreateClusterControlPlaneNodeAZs
-              id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
-              cluster={state.cluster}
-              providerCluster={state.providerCluster}
-              controlPlaneNode={state.controlPlaneNode}
-              onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
-            />
+
+            {provider === Providers.AZURE && (
+              <CreateClusterControlPlaneNodeAZs
+                id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
+                cluster={state.cluster}
+                providerCluster={state.providerCluster}
+                controlPlaneNodes={state.controlPlaneNodes}
+                onChange={handleChange(
+                  ClusterPropertyField.ControlPlaneNodeAZs
+                )}
+              />
+            )}
+
+            {provider === Providers.AWS && (
+              <CreateClusterControlPlaneNodesCount
+                id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
+                cluster={state.cluster}
+                providerCluster={state.providerCluster}
+                controlPlaneNodes={state.controlPlaneNodes}
+                onChange={handleChange(
+                  ClusterPropertyField.ControlPlaneNodesCount
+                )}
+              />
+            )}
+
             <Box margin={{ top: 'medium' }}>
               <Box direction='row' gap='small'>
                 <Button

@@ -7,12 +7,14 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
+import { ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
+  getClusterDescription,
   getMachineTypes,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -65,20 +67,25 @@ const StyledLink = styled(Link)`
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster?: capiv1alpha3.ICluster;
+  providerCluster?: ProviderCluster;
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
+  providerCluster,
   releases,
   organizations,
   ...props
 }) => {
   const name = cluster?.metadata.name;
-  const description = cluster
-    ? capiv1alpha3.getClusterDescription(cluster)
-    : undefined;
+  const description = useMemo(() => {
+    if (!cluster) return undefined;
+
+    return getClusterDescription(cluster, providerCluster, '');
+  }, [cluster, providerCluster]);
+
   const releaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;
@@ -107,9 +114,6 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     );
   }, [organization, name]);
 
-  const clientFactory = useHttpClientFactory();
-  const auth = useAuthProvider();
-
   const k8sVersion = useMemo(() => {
     const formattedReleaseVersion = `v${releaseVersion}`;
 
@@ -126,11 +130,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     return version;
   }, [releases, releaseVersion]);
 
-  const {
-    data: nodePoolList,
-    error: nodePoolListError,
-  } = useSWR(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const { data: nodePoolList, error: nodePoolListError } = useSWR(
+    fetchNodePoolListForClusterKey(cluster),
+    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
   useEffect(() => {
@@ -139,11 +144,14 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     }
   }, [nodePoolListError]);
 
-  const {
-    data: providerNodePools,
-    error: providerNodePoolsError,
-  } = useSWR(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
-    fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
+  const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
+    fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
+    () =>
+      fetchProviderNodePoolsForNodePools(
+        clientFactory,
+        auth,
+        nodePoolList!.items
+      )
   );
 
   useEffect(() => {
@@ -191,7 +199,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
   const dispatch = useDispatch();
 
-  const handleGetStartedClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGetStartedClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
     if (!organization || !name) return;
@@ -252,9 +260,10 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                 )}
               </OptionalValue>
 
-              {cluster && (
+              {cluster && providerCluster && (
                 <ClusterListItemStatus
                   cluster={cluster}
+                  providerCluster={providerCluster}
                   provider={provider}
                   isAdmin={isAdmin}
                   releases={releases}

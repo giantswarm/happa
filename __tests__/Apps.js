@@ -1,7 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { isInternal } from 'Apps/AppsList/utils';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -10,7 +9,6 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
@@ -29,7 +27,6 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
@@ -51,8 +48,7 @@ describe('Apps and App Catalog', () => {
 
       it('renders all non internal app catalogs in the app catalogs overview for non admins', async () => {
         const nonAdminUserInStorage = {
-          user:
-            '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
+          user: '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
         };
         const { findByText } = renderRouteWithStore(
           AppsRoutes.Home,
@@ -84,8 +80,7 @@ describe('Apps and App Catalog', () => {
 
       it('renders all app catalogs in the app catalogs overview for admins', async () => {
         const adminUserInStorage = {
-          user:
-            '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+          user: '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
         };
         const { findByText, findByTestId } = renderRouteWithStore(
           AppsRoutes.Home,
@@ -282,9 +277,8 @@ describe('Apps and App Catalog', () => {
           version: '1.1.1',
         }
       );
-      const { findByText, getByText, getByLabelText } = renderRouteWithStore(
-        appCatalogListPath
-      );
+      const { findByText, getByText, getByLabelText } =
+        renderRouteWithStore(appCatalogListPath);
 
       // Press the configure button
       let installButton = await findByText(/install in cluster/i);
@@ -438,9 +432,8 @@ describe('Apps and App Catalog', () => {
           clusterId: V4_CLUSTER.id,
         }
       );
-      const { findByText, findByTestId } = renderRouteWithStore(
-        clusterDetailPath
-      );
+      const { findByText, findByTestId } =
+        renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
       const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);

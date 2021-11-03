@@ -4,7 +4,7 @@ import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -17,7 +17,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailWidgetLabels {...p} />
     </SWRConfig>
   );
@@ -33,10 +33,6 @@ function getComponent(
 }
 
 describe('ClusterDetailWidgetLabels', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });

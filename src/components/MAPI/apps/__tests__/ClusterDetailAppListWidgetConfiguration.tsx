@@ -7,7 +7,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -100,7 +100,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailAppListWidgetConfiguration {...p} />
     </SWRConfig>
   );
@@ -116,10 +116,6 @@ function getComponent(
 }
 
 describe('ClusterDetailAppListWidgetConfiguration', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
@@ -237,14 +233,15 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', { name: 'Upload values' });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob(
       [
@@ -319,14 +316,15 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', { name: 'Replace values' });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob([''], {
       type: 'application/yaml',
@@ -403,16 +401,17 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', {
       name: 'Upload secret values',
     });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob(
       [
@@ -487,16 +486,17 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     nock(window.config.mapiEndpoint)
       .put(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        (app as unknown) as nock.DataMatcherMap
+        app as unknown as nock.DataMatcherMap
       )
       .reply(StatusCodes.Ok, app);
 
     const uploadButton = screen.getByRole('button', {
       name: 'Replace secret values',
     });
-    const fileInput = uploadButton.parentElement!.parentElement!.querySelector(
-      `input[type='file']`
-    )!;
+    const fileInput =
+      uploadButton.parentElement!.parentElement!.querySelector(
+        `input[type='file']`
+      )!;
 
     const file = new Blob([''], {
       type: 'application/yaml',

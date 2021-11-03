@@ -138,7 +138,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
   };
 
-  public mapiLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  public mapiLogin = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
     this.setState(

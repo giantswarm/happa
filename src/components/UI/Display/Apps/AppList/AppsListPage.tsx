@@ -5,6 +5,7 @@ import Button from 'UI/Controls/Button';
 import App, { IAppProps } from 'UI/Display/Apps/AppList/App';
 import Facets, { IFacetOption } from 'UI/Inputs/Facets';
 
+import AppGrid from './AppGrid';
 import AppListAppLoadingPlaceholder from './AppListAppLoadingPlaceholder';
 import Toolbar from './Toolbar';
 
@@ -16,14 +17,18 @@ const ListAndFacets = styled.div`
   display: flex;
 `;
 
-const List = styled.div`
+const ListContainer = styled.div`
+  border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
+  flex-grow: 1;
+  overflow: hidden;
+  padding-left: 20px;
+`;
+
+const List = styled(ListContainer)`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   grid-auto-rows: max-content;
   gap: 20px;
-  border-left: 1px solid ${({ theme }) => theme.colors.darkBlueLighter1};
-  width: 100%;
-  padding-left: 20px;
 `;
 
 const EmptyState = styled.div`
@@ -105,18 +110,24 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
         )}
 
         {!props.appsIsLoading && props.apps.length > 0 && (
-          <List>
-            {props.apps.map((app, i) => (
-              <App
-                key={app.name + i.toString()}
-                name={app.name}
-                appIconURL={app.appIconURL}
-                catalogTitle={app.catalogTitle}
-                catalogIconUrl={app.catalogIconUrl}
-                to={app.to}
-              />
-            ))}
-          </List>
+          <ListContainer>
+            <AppGrid
+              items={props.apps}
+              itemMinHeight={200}
+              itemMinWidth={270}
+              gridGap={20}
+              render={(app: IAppProps) => (
+                <App
+                  name={app.name}
+                  appIconURL={app.appIconURL}
+                  catalogTitle={app.catalogTitle}
+                  catalogIconUrl={app.catalogIconUrl}
+                  to={app.to}
+                  key={app.to}
+                />
+              )}
+            />
+          </ListContainer>
         )}
       </ListAndFacets>
     </Wrapper>

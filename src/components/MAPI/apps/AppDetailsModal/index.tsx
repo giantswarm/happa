@@ -1,7 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteConfirmFooter';
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
-import GenericModal from 'components/Modals/GenericModal';
 import yaml from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -20,6 +19,7 @@ import React, {
 import useSWR, { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Modal from 'UI/Layout/Modal';
 
 import {
   deleteAppWithName,
@@ -39,7 +39,8 @@ enum ModalPanes {
   EditChartVersion,
 }
 
-interface IAppDetailsModalProps {
+interface IAppDetailsModalProps
+  extends Omit<React.ComponentPropsWithoutRef<typeof Modal>, 'title'> {
   appName: string;
   clusterName: string;
   onClose: () => void;
@@ -51,16 +52,20 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   clusterName,
   onClose,
   visible,
+  ...props
 }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const appClient = useRef(clientFactory());
-  const { data: app, error: appError, mutate: mutateApp } = useSWR<
-    applicationv1alpha1.IApp,
-    GenericResponseError
-  >(applicationv1alpha1.getAppKey(clusterName, appName), () =>
-    applicationv1alpha1.getApp(appClient.current, auth, clusterName, appName)
+  const {
+    data: app,
+    error: appError,
+    mutate: mutateApp,
+  } = useSWR<applicationv1alpha1.IApp, GenericResponseError>(
+    applicationv1alpha1.getAppKey(clusterName, appName),
+    () =>
+      applicationv1alpha1.getApp(appClient.current, auth, clusterName, appName)
   );
 
   useEffect(() => {
@@ -75,7 +80,11 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       )
     ) {
       new FlashMessage(
-        `App <code>${appName}</code> not found`,
+        (
+          <>
+            App <code>{appName}</code> not found
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the app exists and that you have access to it.'
@@ -86,7 +95,11 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       const message = extractErrorMessage(appError);
 
       new FlashMessage(
-        `There was a problem loading app <code>${appName}</code>`,
+        (
+          <>
+            There was a problem loading app <code>{appName}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         message
@@ -100,18 +113,19 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
-    if (!app) return {};
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    useMemo(() => {
+      if (!app) return {};
 
-    return {
-      labelSelector: {
-        matchingLabels: {
-          [applicationv1alpha1.labelAppName]: app.spec.name,
-          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+      return {
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelAppName]: app.spec.name,
+            [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+          },
         },
-      },
-    };
-  }, [app]);
+      };
+    }, [app]);
   const appCatalogEntryListKey = useMemo(() => {
     if (!app) return null;
 
@@ -191,7 +205,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `App <code>${appName}</code> on <code>${clusterName}</code> has been updated. Changes might take some time to take effect.`,
+        (
+          <>
+            App <code>{appName}</code> on <code>{clusterName}</code> has been
+            updated. Changes might take some time to take effect.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -219,7 +238,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterName}</code> has been deleted.`,
+        (
+          <>
+            The ConfigMap containing user level config values for{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has been
+            deleted.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -251,7 +276,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterName}</code> has been deleted.`,
+        (
+          <>
+            The Secret containing user level secret values for{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has been
+            deleted.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -277,7 +308,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `App <code>${appName}</code> was scheduled for deletion on <code>${clusterName}</code>. This may take a couple of minutes.`,
+        (
+          <>
+            App <code>{appName}</code> was scheduled for deletion on{' '}
+            <code>{clusterName}</code>. This may take a couple of minutes.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -314,7 +350,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterName}</code> has successfully been created.`,
+        (
+          <>
+            A ConfigMap containing user level config values for{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been created.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -353,7 +395,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
+        (
+          <>
+            The ConfigMap containing the user level config values of{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been updated.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -392,7 +440,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
+        (
+          <>
+            The Secret containing the user level secret values of{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been updated.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -431,7 +485,13 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
       handleClose();
 
       new FlashMessage(
-        `The Secret containing the user level secret values of <code>${appName}</code> on <code>${clusterName}</code> has successfully been updated.`,
+        (
+          <>
+            The Secret containing the user level secret values of{' '}
+            <code>{appName}</code> on <code>{clusterName}</code> has
+            successfully been updated.
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -458,11 +518,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   switch (pane) {
     case ModalPanes.Initial:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details'
           title={appName}
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <AppDetailsModalInitialPane
             app={app}
@@ -480,12 +541,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             showDeleteAppSecretPane={showPane(ModalPanes.DeleteAppSecret)}
             showEditChartVersionPane={showEditChartVersionPane}
           />
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.EditChartVersion:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Edit chart version'
           title={
             <>
@@ -509,18 +570,19 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <EditChartVersionPane
             currentVersion={app.spec.version}
             desiredVersion={desiredVersion}
             errorMessage={appUpdateError}
           />
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteAppConfig:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app config'
           title={
             <>
@@ -537,6 +599,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete user level config values for{' '}
@@ -545,12 +608,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteAppSecret:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app secret'
           title={
             <>
@@ -567,6 +630,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete user level secret values for{' '}
@@ -575,12 +639,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteApp:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app'
           title={
             <>
@@ -596,6 +660,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
           }
           onClose={handleClose}
           visible={visible}
+          {...props}
         >
           <>
             Are you sure you want to delete {appName}&nbsp; on{' '}
@@ -604,7 +669,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     default:

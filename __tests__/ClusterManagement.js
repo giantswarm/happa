@@ -2,16 +2,15 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
+import { withMarkup } from 'testUtils/assertUtils';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   getMockCall,
   getMockCallTimes,
   metadataResponse,
@@ -37,7 +36,6 @@ describe('ClusterManagement', () => {
   jest.mock('model/services/mapi/authorizationv1');
 
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
@@ -92,12 +90,8 @@ describe('ClusterManagement', () => {
       OrganizationsRoutes.Clusters.New,
       { orgId: ORGANIZATION }
     );
-    const {
-      getAllByText,
-      findAllByText,
-      getByText,
-      getByTestId,
-    } = renderRouteWithStore(newClusterPath);
+    const { getAllByText, findAllByText, getByText, getByTestId } =
+      renderRouteWithStore(newClusterPath);
 
     await waitFor(() => {
       getByText('Create cluster');
@@ -152,12 +146,8 @@ details view`, async () => {
     // Empty response
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
 
-    const {
-      findByText,
-      findByTestId,
-      getAllByText,
-      getByTitle,
-    } = renderRouteWithStore(newClusterPath);
+    const { findByText, findByTestId, getAllByText, getByTitle } =
+      renderRouteWithStore(newClusterPath);
 
     fireEvent.click(await findByText(/Available releases/i));
 
@@ -189,17 +179,14 @@ details view`, async () => {
         clusterId: fakeCluster,
       }
     );
-    const { getByTestId } = renderRouteWithStore(clusterDetailPath);
+    const { getByTestId, findByText } = renderRouteWithStore(clusterDetailPath);
 
     // Expect we have been redirected to the clusters list.
     await waitFor(() =>
       expect(getByTestId('clusters-list')).toBeInTheDocument()
     );
 
-    const flashMessage = document.querySelector('#noty_layout__topRight');
-    expect(flashMessage).toContainHTML(
-      `Cluster <code>f4ke1</code> no longer exists.`
-    );
+    await withMarkup(findByText)(`Cluster f4ke1 no longer exists.`);
   });
 
   it('Cluster list shows all clusters, each one with its details, for the selected organization', async () => {
@@ -217,9 +204,8 @@ details view`, async () => {
     );
 
     const clusterDetailPath = RoutePath.createUsablePath(MainRoutes.Home);
-    const { getAllByTestId, getByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { getAllByTestId, getByText } =
+      renderRouteWithStore(clusterDetailPath);
 
     // Wait for the last elements to load.
     await waitFor(() =>
@@ -256,8 +242,7 @@ details view`, async () => {
     getMockCall('/v4/releases/', releasesResponse);
 
     const storage = {
-      user:
-        '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
+      user: '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":false}',
     };
 
     const newClusterPath = RoutePath.createUsablePath(
@@ -299,8 +284,7 @@ details view`, async () => {
     getMockCall('/v4/releases/', releasesResponse);
 
     const storage = {
-      user:
-        '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
+      user: '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
     };
 
     const newClusterPath = RoutePath.createUsablePath(

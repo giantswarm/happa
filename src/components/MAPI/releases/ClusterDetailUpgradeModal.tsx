@@ -1,10 +1,10 @@
 import { Box } from 'grommet';
-import GenericModal from 'Modals/GenericModal';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useMemo, useState } from 'react';
 import Button from 'UI/Controls/Button';
 import ClusterDetailUpgradeModalChangelog from 'UI/Display/MAPI/releases/ClusterDetailUpgradeModalChangelog';
 import ClusterDetailUpgradeModalDisclaimer from 'UI/Display/MAPI/releases/ClusterDetailUpgradeModalDisclaimer';
+import Modal from 'UI/Layout/Modal';
 
 import { getReleaseComponentsDiff } from './utils';
 
@@ -71,8 +71,8 @@ function formatVisiblePane(
 interface IClusterDetailUpgradeModalProps {
   fromRelease: releasev1alpha1.IRelease;
   toRelease: releasev1alpha1.IRelease;
+  onClose: () => void;
   onUpgrade: () => Promise<void>;
-  onClose?: () => void;
   visible?: boolean;
 }
 
@@ -109,7 +109,7 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
   };
 
   return (
-    <GenericModal
+    <Modal
       footer={
         <Box direction='row' gap='small' justify='end'>
           {primaryButtonText && (
@@ -126,7 +126,7 @@ const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
       visible={visible}
     >
       {visiblePane}
-    </GenericModal>
+    </Modal>
   );
 };
 

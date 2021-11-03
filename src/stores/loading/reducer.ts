@@ -1,7 +1,8 @@
 import produce from 'immer';
 import { ILoadingState, LoadingActions } from 'stores/loading/types';
 
-const loadingActionTypeRegexp = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)$/;
+const loadingActionTypeRegexp =
+  /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)$/;
 
 const initialState: ILoadingState = {};
 

@@ -14,7 +14,7 @@ export const annotationMachinePoolMaxSize =
 export function getMachinePoolDescription(machinePool: IMachinePool): string {
   let name =
     machinePool.metadata.annotations?.[annotationMachinePoolDescription];
-  name ??= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
+  name ||= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
 
   return name;
 }

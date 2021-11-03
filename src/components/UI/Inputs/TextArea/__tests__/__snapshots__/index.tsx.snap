@@ -5,16 +5,16 @@ exports[`TextArea renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <textarea
-          class="StyledTextArea-sc-17i3mwp-0 jttuGQ"
+          class="StyledTextArea-sc-17i3mwp-0 ZWXmk"
           disabled=""
           rows="5"
         >
@@ -31,16 +31,16 @@ exports[`TextArea renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <textarea
-          class="StyledTextArea-sc-17i3mwp-0 gJKkLB"
+          class="StyledTextArea-sc-17i3mwp-0 edOMZd"
           placeholder="Please write a story"
           rows="5"
         >
@@ -57,10 +57,10 @@ exports[`TextArea renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <span
         class="StyledText-sc-1sadyjn-0 cTuErc"
@@ -68,10 +68,10 @@ exports[`TextArea renders an input with a help message 1`] = `
         A helpful message
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <textarea
-          class="StyledTextArea-sc-17i3mwp-0 gJKkLB"
+          class="StyledTextArea-sc-17i3mwp-0 edOMZd"
           rows="5"
         >
           The quick brown fox jumps over the lazy dog
@@ -87,10 +87,10 @@ exports[`TextArea renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -99,10 +99,10 @@ exports[`TextArea renders an input with a label 1`] = `
         A helpful area of text
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <textarea
-          class="StyledTextArea-sc-17i3mwp-0 gJKkLB"
+          class="StyledTextArea-sc-17i3mwp-0 edOMZd"
           id="some-text"
           rows="5"
         >
@@ -119,16 +119,16 @@ exports[`TextArea renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <textarea
-          class="StyledTextArea-sc-17i3mwp-0 gJKkLB"
+          class="StyledTextArea-sc-17i3mwp-0 edOMZd"
           rows="5"
         >
           The quick brown fox jumps over the lazy dog
@@ -149,16 +149,16 @@ exports[`TextArea renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <textarea
-          class="StyledTextArea-sc-17i3mwp-0 gJKkLB"
+          class="StyledTextArea-sc-17i3mwp-0 edOMZd"
           rows="5"
         >
           The quick brown fox jumps over the lazy dog

@@ -1,23 +1,10 @@
-Release notes for happa are generated automatically, based on pull request titles and labels. Please provide a nice title and select the right labels for this PR. Thank you!
+Please set a PR title that is informative for end users, as it will end up in the generated release notes.
 
-Relevant labels are:
+PR labels define how this PR is categorized in the release notes:
 
-- Introduction of a new feature:
-  - `kind/feature`
-- Changes in existing functionality:
-  - `kind/change`
-  - `kind/ux-enhancement`
-- Soon-to-be removed features:
-  - `kind/deprecation`
-- Removal of a user-facing feature:
-  - `kind/removal`
-- Bugfix:
-  - `kind/bug`
-- Mitigation of security vulnerabilities:
-  - `kind/security`
+- **New features**: `kind/feature`
+- **Changes**: `kind/change`, `kind/bug`, `kind/removal`, `kind/ux-enhancement`, `kind/security`
 
-PRs with any of these labels will be excluded from the release notes:
+Using any of these labels will **exclude** this PR from the release notes: `dependencies`, `kind/dev-change`, `kind/refactor`
 
-- `dependencies` - Updating dependencies
-- `kind/dev-change` - Changing development commands, file structure, etc.
-- `kind/refactor` - Improving the implementation of a specific part of the codebase, without changing its functionality
+Please replace this info with a description of your changes for reviewers and for people seeking for explanation of changes after the fact.

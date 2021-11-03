@@ -1,6 +1,4 @@
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants, FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
 import Button from 'UI/Controls/Button';
@@ -8,6 +6,7 @@ import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/Availa
 import InstanceType from 'UI/Display/Cluster/InstanceType';
 import NotAvailable from 'UI/Display/NotAvailable';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 
@@ -56,16 +55,15 @@ function WorkerNodesAWS({
       <LineDiv data-testid='desired-nodes'>
         <div>
           Desired number{' '}
-          <OverlayTrigger
-            overlay={
+          <TooltipContainer
+            content={
               <Tooltip id='desired-tooltip'>
                 {Constants.DESIRED_NODES_EXPLANATION_AUTOSCALER}
               </Tooltip>
             }
-            placement='top'
           >
             <i className='fa fa-info' />
-          </OverlayTrigger>
+          </TooltipContainer>
         </div>
         <RefreshableLabel value={workerNodesDesired}>
           {workerNodesDesired === 0 && isClusterCreating ? (

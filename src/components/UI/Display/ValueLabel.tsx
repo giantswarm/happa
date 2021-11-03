@@ -8,13 +8,13 @@ const defaultThemeColor = 'shade5';
 
 const Wrapper = styled.div`
   display: inline-block;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   white-space: nowrap;
+  line-height: 30px;
 `;
 
 const CommonCSS = css`
   padding: 5px 8px;
-  font-size: 14px;
   font-weight: 300;
 `;
 

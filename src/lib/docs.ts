@@ -8,6 +8,14 @@
 // Entry point for app platform docs.
 export const appPlatformURL = 'https://docs.giantswarm.io/app-platform/';
 
+// App CR configuration guide
+export const appCRConfigurationURL =
+  'https://docs.giantswarm.io/app-platform/getting-started/#configuring-an-app-cr';
+
+// App configuration guide
+export const appConfigurationURL =
+  'https://docs.giantswarm.io/app-platform/app-configuration/';
+
 // How to prepare an AWS account for use with Giant Swarm.
 export const cloudProviderAccountSetupAwsURL =
   'https://docs.giantswarm.io/getting-started/cloud-provider-accounts/aws/';
@@ -67,14 +75,23 @@ export const kubectlGSLoginURL =
 export const kubectlGSGetClustersURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
 
+export const kubectlGSGetCatalogsURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-catalogs/';
+
 export const kubectlGSTemplateClusterURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
+
+export const kubectlGSTemplateAppURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-app/';
 
 export const kubectlGSGetNodePoolsURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-nodepools/';
 
 export const kubectlGSTemplateNodePoolURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/template-nodepool/';
+
+export const kubectlGSUpdateAppURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/update-app/';
 
 // Management API introduction page
 export const managementAPIIntroduction =
@@ -92,10 +109,6 @@ export const kubectlCreateClusterRoleBindingURL =
 export const labellingWorkloadClustersURL =
   'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
 
-// How to create workload cluster key pairs via the Management API
-export const creatingWorkloadClusterKeyPairsURL =
-  'https://docs.giantswarm.io/ui-api/management-api/wc-key-pairs/';
-
 // CRD names we expect to find a docs schema page for,
 // grouped by publisher domain.
 export const crds = {
@@ -103,6 +116,8 @@ export const crds = {
     app: 'apps.application.giantswarm.io',
     organization: 'organizations.security.giantswarm.io',
     release: 'releases.release.giantswarm.io',
+    catalog: 'catalogs.application.giantswarm.io/',
+    appCatalogEntry: 'appcatalogentries.application.giantswarm.io',
   },
   xk8sio: {
     azureCluster: 'azureclusters.infrastructure.cluster.x-k8s.io',

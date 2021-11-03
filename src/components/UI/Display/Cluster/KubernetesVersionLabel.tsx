@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Overlay } from 'react-bootstrap';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
+import { Tooltip } from 'UI/Display/Tooltip';
 
 const EolLabel = styled.span`
   background: ${({ theme }) => theme.colors.darkBlueDarker3};
@@ -79,13 +78,11 @@ const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
           </EolLabel>
         )}
       </span>
-      <Overlay
-        placement='top'
-        target={labelRef.current as HTMLSpanElement}
-        show={isTooltipVisible}
-      >
-        <Tooltip id='tooltip'>{eolStatus.message}</Tooltip>
-      </Overlay>
+      {isTooltipVisible && (
+        <Tooltip target={labelRef.current ?? undefined}>
+          {eolStatus.message}
+        </Tooltip>
+      )}
     </>
   );
 };

@@ -1,10 +1,19 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { AccordionPanel, Box, Text } from 'grommet';
+import ErrorReporter from 'lib/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { relativeDate } from 'lib/helpers';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { extractErrorMessage } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import useSWR, { useSWRConfig } from 'swr';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import Truncated from 'UI/Util/Truncated';
 
+import ClusterDetailAppListItemStatus from './ClusterDetailAppListItemStatus';
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
 import ClusterDetailAppListWidgetConfiguration from './ClusterDetailAppListWidgetConfiguration';
 import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNamespace';
@@ -12,6 +21,11 @@ import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus
 import ClusterDetailAppListWidgetUninstall from './ClusterDetailAppListWidgetUninstall';
 import ClusterDetailAppListWidgetVersion from './ClusterDetailAppListWidgetVersion';
 import ClusterDetailAppListWidgetVersionInspector from './ClusterDetailAppListWidgetVersionInspector';
+import ConfigureAppGuide from './guides/ConfigureAppGuide';
+import InspectInstalledAppGuide from './guides/InspectInstalledApp';
+import UninstallAppGuide from './guides/UninstallAppGuide';
+import UpdateAppGuide from './guides/UpdateAppGuide';
+import { getCatalogNamespace, getCatalogNamespaceKey } from './utils';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
@@ -66,6 +80,38 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     }
   };
 
+  const auth = useAuthProvider();
+  const clientFactory = useHttpClientFactory();
+  const { cache } = useSWRConfig();
+
+  const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
+
+  const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
+    string | null,
+    GenericResponseError
+  >(catalogNamespaceKey, () =>
+    getCatalogNamespace(clientFactory, auth, cache, app!)
+  );
+
+  useEffect(() => {
+    if (catalogNamespaceError) {
+      const errorMessage = extractErrorMessage(catalogNamespaceError);
+
+      new FlashMessage(
+        `There was a problem loading the app's catalog.`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(catalogNamespaceError);
+    }
+  }, [catalogNamespaceError]);
+
+  const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
+    string | undefined
+  >(undefined);
+
   return (
     <AccordionPanel
       ref={accordionRef}
@@ -110,13 +156,22 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
                 Deleted {relativeDate(app.metadata.deletionTimestamp)}
               </Text>
             ) : (
-              <OptionalValue value={currentVersion} loaderWidth={100}>
-                {(value) => (
-                  <Text color='text-weak' aria-label={`App version: ${value}`}>
-                    {value}
-                  </Text>
-                )}
-              </OptionalValue>
+              <Box direction='row' wrap={true} gap='xsmall' align='center'>
+                <OptionalValue value={currentVersion} loaderWidth={100}>
+                  {(value) => (
+                    <Truncated
+                      as={Text}
+                      aria-label={`App version: ${value}`}
+                      numStart={10}
+                      color='text-weak'
+                    >
+                      {value as string}
+                    </Truncated>
+                  )}
+                </OptionalValue>
+
+                {app && <ClusterDetailAppListItemStatus app={app} />}
+              </Box>
             )}
           </Box>
         </Header>
@@ -151,6 +206,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetVersionInspector
             app={app}
+            currentSelectedVersion={currentSelectedVersion}
+            onSelectVersion={setCurrentSelectedVersion}
             basis='100%'
             margin={{ top: 'small' }}
           />
@@ -166,6 +223,34 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             margin={{ top: 'small' }}
           />
         </StyledBox>
+        {app && catalogNamespace && (
+          <Box
+            margin={{ top: 'medium' }}
+            direction='column'
+            gap='small'
+            pad='xsmall'
+          >
+            <InspectInstalledAppGuide
+              appName={app.metadata.name}
+              namespace={app.metadata.namespace!}
+            />
+            <UpdateAppGuide
+              appName={app.metadata.name}
+              namespace={app.metadata.namespace!}
+              newVersion={currentSelectedVersion ?? app.spec.version}
+              catalogName={app.spec.catalog}
+              catalogNamespace={catalogNamespace}
+            />
+            <ConfigureAppGuide
+              appName={app.metadata.name}
+              namespace={app.metadata.namespace!}
+            />
+            <UninstallAppGuide
+              appName={app.metadata.name}
+              namespace={app.metadata.namespace!}
+            />
+          </Box>
+        )}
       </Box>
     </AccordionPanel>
   );

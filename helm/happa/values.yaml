@@ -39,6 +39,7 @@ guestCluster:
 kubernetes:
   auth:
     controlPlaneAdminTargetGroup: ""
+  versions: ""
 
 happa:
   address: ""
@@ -52,6 +53,9 @@ happaapi:
   address: ""
   host: ""
   letsencrypt: ""
+
+athena:
+  address: ""
 
 managementCluster:
   name: ""

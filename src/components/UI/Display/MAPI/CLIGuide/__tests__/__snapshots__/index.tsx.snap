@@ -5,10 +5,10 @@ exports[`CLIGuide renders the contents when open 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 bwcGXo sc-XhUvE cBCwCd"
+      class="StyledBox-sc-13pk1d4-0 bwcGXo CLIGuide__StyledAccordion-sc-1q6mc5x-0 igKKdz"
       role="tablist"
     >
       <div
@@ -17,7 +17,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
         <button
           aria-expanded="true"
           aria-selected="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 cWcrx"
+          class="StyledButtonKind-sc-1vhfpnt-0 bwEJFp"
           role="tab"
           type="button"
         >
@@ -46,7 +46,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 gAeRsc"
+                class="StyledIcon-sc-ofa7kd-0 ccbMYi"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -87,10 +87,10 @@ exports[`CLIGuide renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 bwcGXo sc-XhUvE cBCwCd"
+      class="StyledBox-sc-13pk1d4-0 bwcGXo CLIGuide__StyledAccordion-sc-1q6mc5x-0 igKKdz"
       role="tablist"
     >
       <div
@@ -99,7 +99,7 @@ exports[`CLIGuide renders without crashing 1`] = `
         <button
           aria-expanded="false"
           aria-selected="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 cWcrx"
+          class="StyledButtonKind-sc-1vhfpnt-0 bwEJFp"
           role="tab"
           type="button"
         >
@@ -128,7 +128,7 @@ exports[`CLIGuide renders without crashing 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gAeRsc"
+                class="StyledIcon-sc-ofa7kd-0 ccbMYi"
                 viewBox="0 0 24 24"
               >
                 <path

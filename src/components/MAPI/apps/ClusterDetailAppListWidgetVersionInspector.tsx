@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { truncate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { compare } from 'lib/semver';
@@ -28,7 +29,7 @@ import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppLis
 import Select from 'UI/Inputs/Select';
 import Truncated from 'UI/Util/Truncated';
 
-import { updateAppVersion } from './utils';
+import { normalizeAppVersion, updateAppVersion } from './utils';
 
 interface IClusterDetailAppListWidgetVersionInspectorProps
   extends Omit<
@@ -36,288 +37,321 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  currentSelectedVersion?: string;
+  onSelectVersion: (newVersion: string) => void;
 }
 
-const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppListWidgetVersionInspectorProps> = ({
-  app,
-  ...props
-}) => {
-  const clientFactory = useHttpClientFactory();
-  const auth = useAuthProvider();
+const TRUNCATE_START_CHARS = 10;
+const TRUNCATE_END_CHARS = 5;
 
-  const appCatalogEntryListClient = useRef(clientFactory());
+const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppListWidgetVersionInspectorProps> =
+  ({ app, currentSelectedVersion, onSelectVersion, ...props }) => {
+    const clientFactory = useHttpClientFactory();
+    const auth = useAuthProvider();
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(() => {
-    if (!app) return {};
+    const appCatalogEntryListClient = useRef(clientFactory());
 
-    return {
-      labelSelector: {
-        matchingLabels: {
-          [applicationv1alpha1.labelAppName]: app.spec.name,
-          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
-        },
-      },
-    };
-  }, [app]);
-  const appCatalogEntryListKey = useMemo(() => {
-    if (!app) return null;
+    const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+      useMemo(() => {
+        if (!app) return {};
 
-    return applicationv1alpha1.getAppCatalogEntryListKey(
-      appCatalogEntryListGetOptions
-    );
-  }, [app, appCatalogEntryListGetOptions]);
+        return {
+          labelSelector: {
+            matchingLabels: {
+              [applicationv1alpha1.labelAppName]: app.spec.name,
+              [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+            },
+          },
+        };
+      }, [app]);
+    const appCatalogEntryListKey = useMemo(() => {
+      if (!app) return null;
 
-  const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
-    applicationv1alpha1.IAppCatalogEntryList,
-    GenericResponseError
-  >(appCatalogEntryListKey, () =>
-    applicationv1alpha1.getAppCatalogEntryList(
-      appCatalogEntryListClient.current,
-      auth,
-      appCatalogEntryListGetOptions
-    )
-  );
+      return applicationv1alpha1.getAppCatalogEntryListKey(
+        appCatalogEntryListGetOptions
+      );
+    }, [app, appCatalogEntryListGetOptions]);
 
-  useEffect(() => {
-    if (appCatalogEntryListError) {
-      const errorMessage = extractErrorMessage(appCatalogEntryListError);
-
-      new FlashMessage(
-        'There was a problem loading app versions.',
-        messageType.ERROR,
-        messageTTL.FOREVER,
-        errorMessage
+    const { data: appCatalogEntryList, error: appCatalogEntryListError } =
+      useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
+        appCatalogEntryListKey,
+        () =>
+          applicationv1alpha1.getAppCatalogEntryList(
+            appCatalogEntryListClient.current,
+            auth,
+            appCatalogEntryListGetOptions
+          )
       );
 
-      ErrorReporter.getInstance().notify(appCatalogEntryListError);
-    }
-  }, [appCatalogEntryListError]);
+    useEffect(() => {
+      if (appCatalogEntryListError) {
+        const errorMessage = extractErrorMessage(appCatalogEntryListError);
 
-  const isLoading =
-    typeof app === 'undefined' ||
-    (typeof appCatalogEntryList === 'undefined' &&
-      typeof appCatalogEntryListError === 'undefined');
+        new FlashMessage(
+          'There was a problem loading app versions.',
+          messageType.ERROR,
+          messageTTL.FOREVER,
+          errorMessage
+        );
 
-  const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
-    string | undefined
-  >(undefined);
-
-  const currentCreationDate = useRef<string | undefined>(undefined);
-  const currentUpstreamVersion = useRef<string | undefined>(undefined);
-
-  const setCurrentEntry = useCallback(
-    (entry: applicationv1alpha1.IAppCatalogEntry) => {
-      setCurrentSelectedVersion(entry.spec.version);
-      currentCreationDate.current = entry.spec.dateCreated!;
-      currentUpstreamVersion.current = entry.spec.appVersion;
-    },
-    []
-  );
-
-  useEffect(() => {
-    // Select the current app version when everything is loaded.
-    if (!isLoading && typeof currentSelectedVersion === 'undefined') {
-      const entry = appCatalogEntryList!.items.find(
-        (e) => e.spec.version === app.spec.version
-      );
-      if (!entry) {
-        setCurrentSelectedVersion(app.spec.version);
-        currentCreationDate.current = '';
-        currentUpstreamVersion.current = '';
-
-        return;
+        ErrorReporter.getInstance().notify(appCatalogEntryListError);
       }
+    }, [appCatalogEntryListError]);
 
-      setCurrentEntry(entry);
-    }
-  }, [
-    app,
-    appCatalogEntryList,
-    currentSelectedVersion,
-    isLoading,
-    setCurrentEntry,
-  ]);
+    const isLoading =
+      typeof app === 'undefined' ||
+      (typeof appCatalogEntryList === 'undefined' &&
+        typeof appCatalogEntryListError === 'undefined');
 
-  const options = useMemo(() => {
-    if (!appCatalogEntryList) return [];
+    const currentCreationDate = useRef<string | undefined>(undefined);
+    const currentUpstreamVersion = useRef<string | undefined>(undefined);
 
-    // Sort in a descending order, showing newest versions first.
-    return appCatalogEntryList.items
-      .slice()
-      .sort((a, b) => compare(b.spec.version, a.spec.version));
-  }, [appCatalogEntryList]);
+    const setCurrentEntry = useCallback(
+      (entry: applicationv1alpha1.IAppCatalogEntry) => {
+        onSelectVersion(entry.spec.version);
+        currentCreationDate.current = entry.spec.dateCreated!;
+        currentUpstreamVersion.current = entry.spec.appVersion;
+      },
+      []
+    );
 
-  const isCurrentVersionSelected = currentSelectedVersion === app?.spec.version;
+    useEffect(() => {
+      // Select the current app version when everything is loaded.
+      if (
+        typeof app !== 'undefined' &&
+        typeof appCatalogEntryList !== 'undefined' &&
+        typeof currentSelectedVersion === 'undefined'
+      ) {
+        const entry = appCatalogEntryList.items.find(
+          (e) => e.spec.version === app.spec.version
+        );
+        if (!entry) {
+          onSelectVersion(app.spec.version);
+          currentCreationDate.current = '';
+          currentUpstreamVersion.current = '';
 
-  const appPath = useMemo(() => {
-    if (!app) return '';
+          return;
+        }
 
-    return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
-      catalogName: app.spec.catalog,
-      app: app.spec.name,
-      version: app.spec.version,
-    });
-  }, [app]);
+        setCurrentEntry(entry);
+      }
+    }, [
+      app,
+      appCatalogEntryList,
+      currentSelectedVersion,
+      isLoading,
+      setCurrentEntry,
+    ]);
 
-  const [isSwitchingVersion, setIsSwitchingVersion] = useState(false);
+    const options = useMemo(() => {
+      if (!appCatalogEntryList) return [];
 
-  const handleCancelSwitchingVersion = () => {
-    setIsSwitchingVersion(false);
-  };
+      // Sort in a descending order, showing newest versions first.
+      return appCatalogEntryList.items
+        .slice()
+        .sort((a, b) =>
+          compare(
+            normalizeAppVersion(b.spec.version),
+            normalizeAppVersion(a.spec.version)
+          )
+        );
+    }, [appCatalogEntryList]);
 
-  const versionSwitchComparison = useMemo(() => {
-    if (!currentSelectedVersion || !app) return 0;
+    const isCurrentVersionSelected =
+      currentSelectedVersion === app?.spec.version;
 
-    return compare(app.spec.version, currentSelectedVersion);
-  }, [app, currentSelectedVersion]);
+    const appPath = useMemo(() => {
+      if (!app) return '';
 
-  const isUpgrading = versionSwitchComparison < 0;
-  const isDowngrading = versionSwitchComparison > 0;
+      return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
+        catalogName: app.spec.catalog,
+        app: app.spec.name,
+        version: app.spec.version,
+      });
+    }, [app]);
 
-  const [appUpdateIsLoading, setAppUpdateIsLoading] = useState(false);
+    const [isSwitchingVersion, setIsSwitchingVersion] = useState(false);
 
-  const handleSwitchVersions = async () => {
-    if (!app || !currentSelectedVersion) return;
+    const handleCancelSwitchingVersion = () => {
+      setIsSwitchingVersion(false);
+    };
 
-    try {
-      setAppUpdateIsLoading(true);
+    const versionSwitchComparison = useMemo(() => {
+      if (!currentSelectedVersion || !app) return 0;
 
-      await updateAppVersion(
-        clientFactory(),
-        auth,
-        app.metadata.namespace!,
-        app.metadata.name,
-        currentSelectedVersion
-      );
+      return compare(app.spec.version, currentSelectedVersion);
+    }, [app, currentSelectedVersion]);
 
-      setAppUpdateIsLoading(false);
-      handleCancelSwitchingVersion();
+    const isUpgrading = versionSwitchComparison < 0;
+    const isDowngrading = versionSwitchComparison > 0;
 
-      new FlashMessage(
-        `App <code>${app.metadata.name}</code> on <code>${app.metadata.namespace}</code> has been updated. Changes might take some time to take effect.`,
-        messageType.SUCCESS,
-        messageTTL.SHORT
-      );
-    } catch (err) {
-      setAppUpdateIsLoading(false);
+    const [appUpdateIsLoading, setAppUpdateIsLoading] = useState(false);
 
-      const errorMessage = extractErrorMessage(err);
+    const handleSwitchVersions = async () => {
+      if (!app || !currentSelectedVersion) return;
 
-      new FlashMessage(
-        `Something went wrong while trying to update <code>${app.metadata.name}</code> on <code>${app.metadata.namespace}</code>.`,
-        messageType.ERROR,
-        messageTTL.LONG,
-        errorMessage
-      );
+      try {
+        setAppUpdateIsLoading(true);
 
-      ErrorReporter.getInstance().notify(err as Error);
-    }
-  };
+        await updateAppVersion(
+          clientFactory(),
+          auth,
+          app.metadata.namespace!,
+          app.metadata.name,
+          currentSelectedVersion
+        );
 
-  return (
-    <ClusterDetailAppListWidget title='Inspect versions' {...props}>
-      <Box
-        pad={{ top: 'small' }}
-        direction='row'
-        gap='small'
-        wrap={true}
-        align='center'
-      >
-        <Box flex={{ grow: 1, shrink: 0 }}>
-          <Select
-            value={
-              <AppVersionInspectorOption
-                version={currentSelectedVersion}
-                creationDate={currentCreationDate.current}
-                upstreamVersion={currentUpstreamVersion.current}
-                isCurrent={isCurrentVersionSelected}
-              />
+        setAppUpdateIsLoading(false);
+        handleCancelSwitchingVersion();
+
+        const truncatedVersion = truncate(
+          currentSelectedVersion,
+          '…',
+          TRUNCATE_START_CHARS,
+          TRUNCATE_END_CHARS
+        );
+
+        const updateAction = isUpgrading ? 'upgraded' : 'downgraded';
+
+        new FlashMessage(
+          (
+            <>
+              <code>{app.metadata.name}</code> on cluster{' '}
+              <code>{app.metadata.namespace}</code> will be {updateAction} to
+              version <code>{truncatedVersion}</code>.
+            </>
+          ),
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      } catch (err) {
+        setAppUpdateIsLoading(false);
+
+        const errorMessage = extractErrorMessage(err);
+
+        new FlashMessage(
+          (
+            <>
+              Something went wrong while trying to update{' '}
+              <code>{app.metadata.name}</code> on{' '}
+              <code>{app.metadata.namespace}</code>.
+            </>
+          ),
+          messageType.ERROR,
+          messageTTL.LONG,
+          errorMessage
+        );
+
+        ErrorReporter.getInstance().notify(err as Error);
+      }
+    };
+
+    return (
+      <ClusterDetailAppListWidget title='Inspect versions' {...props}>
+        <Box
+          pad={{ top: 'small' }}
+          direction='row'
+          gap='small'
+          wrap={true}
+          align='center'
+        >
+          <Box flex={{ grow: 1, shrink: 0 }}>
+            <Select
+              value={
+                <AppVersionInspectorOption
+                  version={currentSelectedVersion}
+                  creationDate={currentCreationDate.current}
+                  upstreamVersion={currentUpstreamVersion.current}
+                  isCurrent={isCurrentVersionSelected}
+                />
+              }
+              onChange={(e) => setCurrentEntry(e.option)}
+              options={options}
+              disabled={isLoading || isSwitchingVersion}
+              margin='none'
+              aria-label='Select app version'
+              contentProps={{
+                border: { color: 'input-background' },
+              }}
+            >
+              {(option: applicationv1alpha1.IAppCatalogEntry) => {
+                return (
+                  <AppVersionInspectorOption
+                    version={option.spec.version}
+                    creationDate={option.spec.dateCreated!}
+                    upstreamVersion={option.spec.appVersion}
+                    isSelected={option.spec.version === currentSelectedVersion}
+                    isCurrent={option.spec.version === app?.spec.version}
+                    aria-label={option.spec.version}
+                  />
+                );
+              }}
+            </Select>
+          </Box>
+          <Link to={appPath}>
+            <Button tabIndex={-1} disabled={isLoading}>
+              Details
+            </Button>
+          </Link>
+          <Button
+            disabled={
+              isLoading || isCurrentVersionSelected || isSwitchingVersion
             }
-            onChange={(e) => setCurrentEntry(e.option)}
-            options={options}
-            disabled={isLoading || isSwitchingVersion}
-            margin='none'
-            aria-label='Select app version'
+            onClick={() => setIsSwitchingVersion(true)}
+          >
+            Update…
+          </Button>
+        </Box>
+
+        <Box margin={{ top: isSwitchingVersion ? 'small' : undefined }}>
+          <ConfirmationPrompt
+            title={
+              <Text weight='bold' margin={{ bottom: 'small' }}>
+                Are you sure that you want to switch the{' '}
+                <code>{app?.metadata.name}</code> version in cluster{' '}
+                <ClusterIDLabel
+                  clusterID={app?.metadata.namespace ?? ''}
+                  variant={ClusterIDLabelType.Name}
+                />{' '}
+                from version{' '}
+                <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
+                  {app?.spec.version ?? ''}
+                </Truncated>{' '}
+                to{' '}
+                <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
+                  {currentSelectedVersion ?? ''}
+                </Truncated>
+                ?
+              </Text>
+            }
+            confirmButton={
+              <Button
+                primary={isUpgrading}
+                danger={isDowngrading}
+                onClick={handleSwitchVersions}
+                disabled={!isUpgrading && !isDowngrading}
+                loading={appUpdateIsLoading}
+              >
+                {isUpgrading && 'Upgrade'}
+                {isDowngrading && 'Downgrade'}
+                {!isUpgrading && !isDowngrading && 'Switch'}
+              </Button>
+            }
+            onConfirm={handleSwitchVersions}
+            onCancel={handleCancelSwitchingVersion}
+            open={isSwitchingVersion}
             contentProps={{
-              border: { color: 'input-background' },
+              background: 'background-contrast',
             }}
           >
-            {(option: applicationv1alpha1.IAppCatalogEntry) => {
-              return (
-                <AppVersionInspectorOption
-                  version={option.spec.version}
-                  creationDate={option.spec.dateCreated!}
-                  upstreamVersion={option.spec.appVersion}
-                  isSelected={option.spec.version === currentSelectedVersion}
-                  isCurrent={option.spec.version === app?.spec.version}
-                  aria-label={option.spec.version}
-                />
-              );
-            }}
-          </Select>
-        </Box>
-        <Link to={appPath}>
-          <Button tabIndex={-1} disabled={isLoading}>
-            Details
-          </Button>
-        </Link>
-        <Button
-          disabled={isLoading || isCurrentVersionSelected || isSwitchingVersion}
-          onClick={() => setIsSwitchingVersion(true)}
-        >
-          Update…
-        </Button>
-      </Box>
-
-      <Box margin={{ top: isSwitchingVersion ? 'small' : undefined }}>
-        <ConfirmationPrompt
-          title={
-            <Text weight='bold' margin={{ bottom: 'small' }}>
-              Are you sure that you want to switch the{' '}
-              <code>{app?.metadata.name}</code> version in cluster{' '}
-              <ClusterIDLabel
-                clusterID={app?.metadata.namespace ?? ''}
-                variant={ClusterIDLabelType.Name}
-              />{' '}
-              from version{' '}
-              <Truncated as='code' numStart={10}>
-                {app?.spec.version ?? ''}
-              </Truncated>{' '}
-              to{' '}
-              <Truncated as='code' numStart={10}>
-                {currentSelectedVersion ?? ''}
-              </Truncated>
-              ?
+            <Text>
+              Please make sure to verify if there are any breaking changes
+              between these versions.
             </Text>
-          }
-          confirmButton={
-            <Button
-              primary={isUpgrading}
-              danger={isDowngrading}
-              onClick={handleSwitchVersions}
-              disabled={!isUpgrading && !isDowngrading}
-              loading={appUpdateIsLoading}
-            >
-              {isUpgrading && 'Upgrade'}
-              {isDowngrading && 'Downgrade'}
-              {!isUpgrading && !isDowngrading && 'Switch'}
-            </Button>
-          }
-          onConfirm={handleSwitchVersions}
-          onCancel={handleCancelSwitchingVersion}
-          open={isSwitchingVersion}
-          contentProps={{
-            background: 'background-contrast',
-          }}
-        >
-          <Text>
-            Please make sure to verify if there are any breaking changes between
-            these versions.
-          </Text>
-        </ConfirmationPrompt>
-      </Box>
-    </ClusterDetailAppListWidget>
-  );
-};
+          </ConfirmationPrompt>
+        </Box>
+      </ClusterDetailAppListWidget>
+    );
+  };
 
 export default ClusterDetailAppListWidgetVersionInspector;

@@ -13,6 +13,7 @@ import {
   getProviderNodePoolMachineType,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -26,14 +27,24 @@ import ViewAndEditName, {
 } from 'UI/Inputs/ViewEditName';
 
 import { IWorkerNodesAdditionalColumn } from './types';
-import { deleteNodePool, updateNodePoolDescription } from './utils';
+import { deleteNodePoolResources, updateNodePoolDescription } from './utils';
 import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (true) {
+    case providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool &&
+      providerNodePool?.apiVersion ===
+        'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    case providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool &&
+      providerNodePool?.apiVersion ===
+        'infrastructure.cluster.x-k8s.io/v1alpha4':
       return `VM size: ${getProviderNodePoolMachineType(providerNodePool)}`;
+    case providerNodePool?.kind === infrav1alpha3.AWSMachineDeployment &&
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3':
+      return `Instance type: ${getProviderNodePoolMachineType(
+        providerNodePool
+      )}`;
     default:
       return undefined;
   }
@@ -74,29 +85,33 @@ interface IWorkerNodesNodePoolItemProps
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool;
   additionalColumns?: IWorkerNodesAdditionalColumn[];
+  readOnly?: boolean;
 }
 
 const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   nodePool,
   providerNodePool,
   additionalColumns,
+  readOnly,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const description = nodePool ? getNodePoolDescription(nodePool) : undefined;
-  const availabilityZones = nodePool
-    ? getNodePoolAvailabilityZones(nodePool)
+  const description = nodePool
+    ? getNodePoolDescription(nodePool, providerNodePool)
     : undefined;
-  const machineType = providerNodePool
+  const availabilityZones = nodePool
+    ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
+    : undefined;
+  const machineType = nodePool
     ? getProviderNodePoolMachineType(providerNodePool)
     : undefined;
   const scaling = useMemo(() => {
     if (!nodePool) return undefined;
 
-    return getNodePoolScaling(nodePool);
-  }, [nodePool]);
+    return getNodePoolScaling(nodePool, providerNodePool);
+  }, [nodePool, providerNodePool]);
 
   const isScalingInProgress = scaling && scaling.desired !== scaling.current;
 
@@ -154,7 +169,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     setIsDeleteLoading(true);
 
     try {
-      await deleteNodePool(clientFactory(), auth, nodePool);
+      await deleteNodePoolResources(clientFactory, auth, nodePool);
 
       setIsDeleteConfirmOpen(false);
       setTimeout(() => {
@@ -163,7 +178,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       }, 200);
 
       new FlashMessage(
-        `Node pool <code>${nodePool.metadata.name}</code> deleted successfully`,
+        (
+          <>
+            Node pool <code>{nodePool.metadata.name}</code> deleted successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -173,7 +192,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not delete node pool <code>${nodePool.metadata.name}</code>`,
+        (
+          <>
+            Could not delete node pool <code>{nodePool.metadata.name}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -234,6 +257,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                   onSave={updateDescription}
                   ref={viewAndEditNameRef}
                   variant={ViewAndEditNameVariant.Description}
+                  readOnly={readOnly}
                 />
               )
             }
@@ -330,6 +354,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
               <WorkerNodesNodePoolActions
                 onDeleteClick={onDelete}
                 onScaleClick={onScale}
+                disabled={readOnly}
               />
             </Box>
           </>
@@ -348,10 +373,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         </Box>
       )}
 
-      {nodePool && (
+      {nodePool && providerNodePool && (
         <Box margin={{ top: isScaleConfirmOpen ? 'small' : undefined }}>
           <WorkerNodesNodePoolItemScale
             nodePool={nodePool}
+            providerNodePool={providerNodePool}
             onConfirm={onCancelScale}
             onCancel={onCancelScale}
             open={isScaleConfirmOpen}

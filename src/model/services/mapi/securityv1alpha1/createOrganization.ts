@@ -29,6 +29,6 @@ export function createOrganization(
     client,
     auth,
     url.toString(),
-    (organization as unknown) as Record<string, unknown>
+    organization as unknown as Record<string, unknown>
   );
 }

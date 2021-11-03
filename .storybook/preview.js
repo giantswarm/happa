@@ -3,10 +3,10 @@ import { MemoryRouter } from 'react-router';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
 
-import 'babel-polyfill';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'noty/lib/noty.css';
 import 'styles/app.sass';
 
 export const parameters = {

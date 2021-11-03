@@ -367,6 +367,28 @@ describe('utils', () => {
           'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-spot-vms --azure-spot-vms-max-price 0.00001',
       },
       {
+        name: 'returns correct output with AWS spot instances on demand base capacity',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          awsOnDemandBaseCapacity: 20,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --on-demand-base-capacity 20',
+      },
+      {
+        name: 'returns correct output with AWS spot instances on demand percentage above base capacity',
+        modifierConfig: {
+          clusterName: 'a1b2c',
+          owner: 'some-owner',
+          provider: 'some-provider',
+          awsOnDemandPercentageAboveBaseCapacity: 100,
+        },
+        expectedOutput:
+          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --on-demand-percentage-above-base-capacity 100',
+      },
+      {
         name: 'returns correct output with minimum number of nodes',
         modifierConfig: {
           clusterName: 'a1b2c',
@@ -378,8 +400,7 @@ describe('utils', () => {
           'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-min 0',
       },
       {
-        name:
-          'returns correct output if the minimum number of nodes equals the recommended default',
+        name: 'returns correct output if the minimum number of nodes equals the recommended default',
         modifierConfig: {
           clusterName: 'a1b2c',
           owner: 'some-owner',
@@ -401,8 +422,7 @@ describe('utils', () => {
           'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-max 8',
       },
       {
-        name:
-          'returns correct output if the maximum number of nodes equals the recommended default',
+        name: 'returns correct output if the maximum number of nodes equals the recommended default',
         modifierConfig: {
           clusterName: 'a1b2c',
           owner: 'some-owner',
@@ -488,8 +508,7 @@ describe('utils', () => {
   get some resources`,
       },
       {
-        name:
-          'returns correct output for a long command, a flag before it, and some more flags after it',
+        name: 'returns correct output for a long command, a flag before it, and some more flags after it',
         args: [
           '--some-flag',
           'super-value',

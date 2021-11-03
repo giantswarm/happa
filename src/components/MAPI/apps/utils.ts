@@ -1,10 +1,13 @@
 import produce from 'immer';
+import { YAMLException } from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
+import { IClusterWithProviderCluster } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
+import { getClusterDescription } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -13,7 +16,7 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { AppConstants, Constants } from 'shared/constants';
-import { mutate } from 'swr';
+import { Cache, mutate } from 'swr';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;
@@ -249,22 +252,26 @@ export async function createApp(
 
 /**
  * Filter a given collection of clusters by the given search query.
- * @param clusters
+ * @param clustersWithProviderClusters
  * @param searchQuery
  */
 export function filterClusters(
-  clusters: capiv1alpha3.ICluster[],
+  clustersWithProviderClusters: IClusterWithProviderCluster[],
   searchQuery: string
-): capiv1alpha3.ICluster[] {
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  if (normalizedQuery.length < 1 || clusters.length < 1) return clusters;
+): IClusterWithProviderCluster[] {
+  if (clustersWithProviderClusters.length < 1)
+    return clustersWithProviderClusters;
 
-  return clusters.filter((cluster) => {
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  return clustersWithProviderClusters.filter((entry) => {
+    const { cluster, providerCluster } = entry;
+
     switch (true) {
-      case typeof cluster.metadata.deletionTimestamp === 'undefined':
+      case typeof cluster.metadata.deletionTimestamp !== 'undefined':
+        return false;
       case cluster.metadata.name.includes(normalizedQuery):
-      case capiv1alpha3
-        .getClusterDescription(cluster)
+      case getClusterDescription(cluster, providerCluster)
         .toLowerCase()
         .includes(normalizedQuery):
       case capiv1alpha3
@@ -734,6 +741,14 @@ export function isAppChangingVersion(app: applicationv1alpha1.IApp): boolean {
   );
 }
 
+export function normalizeAppVersion(version: string): string {
+  if (version.toLowerCase().startsWith('v')) {
+    return version.substring(1);
+  }
+
+  return version;
+}
+
 export function getLatestVersionForApp(
   apps: applicationv1alpha1.IAppCatalogEntry[],
   appName: string
@@ -745,11 +760,13 @@ export function getLatestVersionForApp(
     }
   }
 
-  return versions.sort((a, b) => compare(b, a))[0];
+  return versions.sort((a, b) =>
+    compare(normalizeAppVersion(b), normalizeAppVersion(a))
+  )[0];
 }
 
 export function isAppCatalogVisibleToUsers(
-  appCatalog: applicationv1alpha1.IAppCatalog
+  appCatalog: applicationv1alpha1.ICatalog
 ) {
   return (
     applicationv1alpha1.isAppCatalogPublic(appCatalog) &&
@@ -763,7 +780,7 @@ export function isAppCatalogVisibleToUsers(
  * @param catalog
  */
 export function computeAppCatalogUITitle(
-  catalog: applicationv1alpha1.IAppCatalog
+  catalog: applicationv1alpha1.ICatalog
 ): string {
   const prefix = 'Giant Swarm ';
 
@@ -792,4 +809,168 @@ export function compareApps(
   }
 
   return a.metadata.name.localeCompare(b.metadata.name);
+}
+
+export function formatYAMLError(err: unknown): string {
+  if (err instanceof YAMLException) {
+    interface IYAMLExceptionInternals extends YAMLException {
+      mark: {
+        buffer: string;
+        column: number;
+        line: number;
+        name: string;
+        position: number;
+        snippet: string;
+      };
+      reason: string;
+    }
+
+    const { reason, mark } = err as IYAMLExceptionInternals;
+    let { line, column } = mark;
+    /**
+     * Lines and columns are counted from 1, but the library
+     * counts from 0.
+     */
+    line++;
+    column++;
+
+    return `YAML parse error: ${reason} (${line}:${column})`;
+  }
+
+  return String(err);
+}
+
+/**
+ * Determines whether an app has a newer version
+ * @param app
+ * @param client
+ * @param auth
+ */
+export async function hasNewerVersion(
+  app: applicationv1alpha1.IApp,
+  client: IHttpClient,
+  auth: IOAuth2Provider
+): Promise<{ name: string; hasNewerVersion: boolean }> {
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    {
+      labelSelector: {
+        matchingLabels: {
+          [applicationv1alpha1.labelAppName]: app.spec.name,
+          [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
+        },
+      },
+    };
+
+  const appCatalogEntryList = await applicationv1alpha1.getAppCatalogEntryList(
+    client,
+    auth,
+    appCatalogEntryListGetOptions
+  );
+
+  const latestVersion = getLatestVersionForApp(
+    appCatalogEntryList.items,
+    app.spec.name
+  );
+
+  return {
+    name: app.spec.name,
+    hasNewerVersion:
+      typeof latestVersion !== 'undefined' &&
+      latestVersion !== app.spec.version,
+  };
+}
+
+/**
+ * Get names of apps that can be upgraded (i.e. has newer versions)
+ * @param apps
+ * @param clientFactory
+ * @param auth
+ */
+export async function getUpgradableApps(
+  apps: applicationv1alpha1.IApp[],
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider
+) {
+  const response = await Promise.all(
+    apps.map((app) => hasNewerVersion(app, clientFactory(), auth))
+  );
+
+  const upgradableApps = [];
+
+  for (const app of response) {
+    if (app.hasNewerVersion) upgradableApps.push(app.name);
+  }
+
+  return upgradableApps;
+}
+
+/**
+ * Key used for caching upgradable apps
+ * @param apps
+ */
+export function getUpgradableAppsKey(apps: applicationv1alpha1.IApp[]) {
+  return apps.reduce((key, app) => key + app.spec.name, '');
+}
+
+/**
+ * Get the namespace for an app's catalog
+ * @param clientFactory
+ * @param auth
+ * @param cache
+ * @param app
+ */
+export async function getCatalogNamespace(
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cache: Cache,
+  app: applicationv1alpha1.IApp
+): Promise<string | null> {
+  if (!app) return null;
+
+  if (!app.spec.catalogNamespace) {
+    const catalogs: applicationv1alpha1.ICatalog[] = [];
+
+    // Look in 'default' and 'giantswarm' namespaces to find the catalog by name
+    const namespaces = ['default', 'giantswarm'];
+
+    for (const namespace of namespaces) {
+      const getCatalogListOptions = { namespace };
+      const catalogListKey = applicationv1alpha1.getCatalogListKey(
+        getCatalogListOptions
+      );
+      const cachedCatalogList: applicationv1alpha1.ICatalogList | undefined =
+        cache.get(catalogListKey);
+
+      if (cachedCatalogList) {
+        catalogs.push(...cachedCatalogList.items);
+      } else {
+        const catalogList = await applicationv1alpha1.getCatalogList(
+          clientFactory(),
+          auth,
+          getCatalogListOptions
+        );
+
+        cache.set(catalogListKey, catalogList);
+        catalogs.push(...catalogList.items);
+      }
+    }
+
+    const catalogOfApp = catalogs.find(
+      (catalog) => catalog.metadata.name === app.spec.catalog
+    );
+
+    if (!catalogOfApp) return null;
+
+    return catalogOfApp.metadata.namespace!;
+  }
+
+  return app.spec.catalogNamespace;
+}
+
+/**
+ * Key used for getting the namespace for an app's catalog
+ * @param app
+ */
+export function getCatalogNamespaceKey(app: applicationv1alpha1.IApp): string {
+  return `getCatalogNamespace/${app.spec.catalog}/${app.metadata.name}`;
 }

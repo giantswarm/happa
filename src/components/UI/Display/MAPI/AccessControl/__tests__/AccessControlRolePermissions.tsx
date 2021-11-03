@@ -1,9 +1,4 @@
-import {
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { renderWithTheme } from 'testUtils/renderUtils';
 
 import AccessControlRolePermissions from '../AccessControlRolePermissions';
@@ -16,7 +11,7 @@ describe('AccessControlRolePermissions', () => {
     } as React.ComponentPropsWithoutRef<typeof AccessControlRolePermissions>);
   });
 
-  it('renders various permission combinations correctly', async () => {
+  it('renders various permission combinations correctly', () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
 
@@ -257,9 +252,8 @@ describe('AccessControlRolePermissions', () => {
       cells = within(row).getAllByRole('cell');
 
       for (let j = 0; j < cells.length; j++) {
-        const { content, labelContent, tooltipContent } = testCase.cellContents[
-          j
-        ];
+        const { content, labelContent, tooltipContent } =
+          testCase.cellContents[j];
         if (content) {
           cellContent = within(cells[j]).getByText(content);
           expect(cellContent).toBeInTheDocument();
@@ -274,9 +268,9 @@ describe('AccessControlRolePermissions', () => {
             screen.getByRole('tooltip', { name: tooltipContent })
           ).toBeInTheDocument();
           fireEvent.mouseLeave(cellContent);
-          await waitForElementToBeRemoved(() =>
+          expect(
             screen.queryByRole('tooltip', { name: tooltipContent })
-          );
+          ).not.toBeInTheDocument();
         }
       }
     }

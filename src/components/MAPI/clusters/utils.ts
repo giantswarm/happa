@@ -1,4 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
@@ -10,20 +11,25 @@ import {
   ProviderCluster,
   ProviderNodePool,
 } from 'MAPI/types';
-import { fetchProviderClusterForClusterKey, IMachineType } from 'MAPI/utils';
-import { IHttpClient } from 'model/clients/HttpClient';
+import {
+  determineRandomAZs,
+  fetchControlPlaneNodesForClusterKey,
+  fetchProviderClusterForClusterKey,
+  generateUID,
+  getClusterDescription,
+  getSupportedAvailabilityZones,
+  IMachineType,
+} from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
 
-export function getWorkerNodesCount(
-  nodePools?: capiv1alpha3.IMachineDeployment[] | capiexpv1alpha3.IMachinePool[]
-) {
+export function getWorkerNodesCount(nodePools?: NodePool[]) {
   if (!nodePools) return undefined;
 
   let count = 0;
@@ -46,18 +52,47 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
-    const readyReplicas = nodePools[i].status?.readyReplicas;
+    const providerNp = providerNodePools[i];
 
-    if (!vmSize) return -1;
+    switch (providerNp?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+      case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+        {
+          const vmSize = providerNp.spec?.template.vmSize;
+          const readyReplicas = nodePools[i].status?.readyReplicas;
 
-    if (typeof readyReplicas !== 'undefined') {
-      const machineTypeProperties = machineTypes[vmSize];
-      if (!machineTypeProperties) {
-        return -1;
+          if (!vmSize) return -1;
+
+          if (typeof readyReplicas !== 'undefined') {
+            const machineTypeProperties = machineTypes[vmSize];
+            if (!machineTypeProperties) {
+              return -1;
+            }
+
+            count += machineTypeProperties.cpu * readyReplicas;
+          }
+        }
+
+        break;
+
+      case 'infrastructure.giantswarm.io/v1alpha3': {
+        const instanceType = providerNp.spec.provider.worker.instanceType;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[instanceType];
+          if (!machineTypeProperties) {
+            return -1;
+          }
+
+          count += machineTypeProperties.cpu * readyReplicas;
+        }
+
+        break;
       }
 
-      count += machineTypeProperties.cpu * readyReplicas;
+      default:
+        return -1;
     }
   }
 
@@ -74,18 +109,46 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (let i = 0; i < providerNodePools.length; i++) {
-    const vmSize = providerNodePools[i]?.spec?.template.vmSize;
-    const readyReplicas = nodePools[i].status?.readyReplicas;
+    const providerNp = providerNodePools[i];
 
-    if (!vmSize) return -1;
+    switch (providerNp?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+      case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
+        const vmSize = providerNp.spec?.template.vmSize;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
 
-    if (typeof readyReplicas !== 'undefined') {
-      const machineTypeProperties = machineTypes[vmSize];
-      if (!machineTypeProperties) {
-        return -1;
+        if (!vmSize) return -1;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[vmSize];
+          if (!machineTypeProperties) {
+            return -1;
+          }
+
+          count += machineTypeProperties.memory * readyReplicas;
+        }
+
+        break;
       }
 
-      count += machineTypeProperties.memory * readyReplicas;
+      case 'infrastructure.giantswarm.io/v1alpha3': {
+        const instanceType = providerNp.spec.provider.worker.instanceType;
+        const readyReplicas = nodePools[i].status?.readyReplicas;
+
+        if (typeof readyReplicas !== 'undefined') {
+          const machineTypeProperties = machineTypes[instanceType];
+          if (!machineTypeProperties) {
+            return -1;
+          }
+
+          count += machineTypeProperties.memory * readyReplicas;
+        }
+
+        break;
+      }
+
+      default:
+        return -1;
     }
   }
 
@@ -93,12 +156,14 @@ export function getWorkerNodesMemory(
 }
 
 export function compareClusters(
-  a: capiv1alpha3.ICluster,
-  b: capiv1alpha3.ICluster
+  a: IClusterWithProviderCluster,
+  b: IClusterWithProviderCluster
 ) {
   // Move clusters that are currently deleting to the end of the list.
-  const aIsDeleting = typeof a.metadata.deletionTimestamp !== 'undefined';
-  const bIsDeleting = typeof b.metadata.deletionTimestamp !== 'undefined';
+  const aIsDeleting =
+    typeof a.cluster.metadata.deletionTimestamp !== 'undefined';
+  const bIsDeleting =
+    typeof b.cluster.metadata.deletionTimestamp !== 'undefined';
 
   if (aIsDeleting && !bIsDeleting) {
     return 1;
@@ -107,15 +172,16 @@ export function compareClusters(
   }
 
   // Sort by description.
-  const descriptionComparison = capiv1alpha3
-    .getClusterDescription(a)
-    .localeCompare(capiv1alpha3.getClusterDescription(b));
+  const descriptionComparison = getClusterDescription(
+    a.cluster,
+    a.providerCluster
+  ).localeCompare(getClusterDescription(b.cluster, b.providerCluster));
   if (descriptionComparison !== 0) {
     return descriptionComparison;
   }
 
   // If descriptions are the same, sort by resource name.
-  return a.metadata.name.localeCompare(b.metadata.name);
+  return a.cluster.metadata.name.localeCompare(b.cluster.metadata.name);
 }
 
 export function isClusterUpgradable(
@@ -182,8 +248,11 @@ export function createDefaultProviderCluster(
     releaseVersion: string;
   }
 ) {
-  if (provider === Providers.AZURE) {
-    return createDefaultAzureCluster(config);
+  switch (provider) {
+    case Providers.AZURE:
+      return createDefaultAzureCluster(config);
+    case Providers.AWS:
+      return createDefaultAWSCluster(config);
   }
 
   throw new Error('Unsupported provider.');
@@ -231,27 +300,87 @@ function createDefaultAzureCluster(config: {
   };
 }
 
+function createDefaultAWSCluster(config: {
+  namespace: string;
+  name: string;
+  organization: string;
+  releaseVersion: string;
+}): infrav1alpha3.IAWSCluster {
+  return {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: infrav1alpha3.AWSCluster,
+    metadata: {
+      namespace: config.namespace,
+      name: config.name,
+      labels: {
+        [infrav1alpha3.labelCluster]: config.name,
+        [capiv1alpha3.labelClusterName]: config.name,
+        [infrav1alpha3.labelOrganization]: config.organization,
+        [infrav1alpha3.labelReleaseVersion]: config.releaseVersion,
+      },
+    },
+    spec: {
+      cluster: {
+        description: Constants.DEFAULT_CLUSTER_DESCRIPTION,
+        dns: {
+          domain: '',
+        },
+        oidc: {
+          issuerURL: '',
+          claims: {
+            groups: '',
+            username: '',
+          },
+          clientID: '',
+        },
+        kubeProxy: {
+          conntrackMaxPerCore: 0,
+        },
+      },
+      provider: {
+        credentialSecret: {
+          name: '',
+          namespace: 'giantswarm',
+        },
+        master: {
+          availabilityZone: '',
+          instanceType: '',
+        },
+        region: window.config.info.general.dataCenter,
+        nodes: {
+          networkPool: '',
+        },
+        pods: {
+          cidrBlock: '',
+          externalSNAT: false,
+        },
+      },
+    },
+  };
+}
+
 export function createDefaultCluster(config: {
   providerCluster: ProviderCluster;
 }) {
-  if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
-    return createDefaultV1Alpha3Cluster(config);
-  }
+  switch (config.providerCluster?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return createDefaultV1Alpha3Cluster(config);
 
-  throw new Error('Unsupported provider.');
+    default:
+      throw new Error('Unsupported provider.');
+  }
 }
 
 function createDefaultV1Alpha3Cluster(config: {
   providerCluster: ProviderCluster;
 }): capiv1alpha3.ICluster {
-  const namespace = config.providerCluster.metadata.namespace;
-  const name = config.providerCluster.metadata.name;
-  const organization = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelOrganization
-  ];
-  const releaseVersion = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelReleaseVersion
-  ];
+  const namespace = config.providerCluster!.metadata.namespace;
+  const name = config.providerCluster!.metadata.name;
+  const organization =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
 
   return {
     apiVersion: 'cluster.x-k8s.io/v1alpha3',
@@ -271,7 +400,7 @@ function createDefaultV1Alpha3Cluster(config: {
       },
     },
     spec: {
-      infrastructureRef: corev1.getObjectReference(config.providerCluster),
+      infrastructureRef: corev1.getObjectReference(config.providerCluster!),
       controlPlaneEndpoint: {
         host: '',
         port: 0,
@@ -280,11 +409,22 @@ function createDefaultV1Alpha3Cluster(config: {
   };
 }
 
-export function createDefaultControlPlaneNode(config: {
+export function createDefaultControlPlaneNodes(config: {
   providerCluster: ProviderCluster;
-}) {
-  if (config.providerCluster?.kind === capzv1alpha3.AzureCluster) {
-    return createDefaultAzureMachine(config);
+}): ControlPlaneNode[] {
+  switch (config.providerCluster?.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+      return [createDefaultAzureMachine(config)];
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const name = generateUID(5);
+      const awsCP = createDefaultAWSControlPlane({ ...config, name });
+      const g8sCP = createDefaultG8sControlPlane({
+        ...config,
+        awsControlPlane: awsCP,
+      });
+
+      return [awsCP, g8sCP];
+    }
   }
 
   throw new Error('Unsupported provider.');
@@ -293,14 +433,12 @@ export function createDefaultControlPlaneNode(config: {
 function createDefaultAzureMachine(config: {
   providerCluster: ProviderCluster;
 }): capzv1alpha3.IAzureMachine {
-  const namespace = config.providerCluster.metadata.namespace;
-  const name = config.providerCluster.metadata.name;
-  const organization = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelOrganization
-  ];
-  const releaseVersion = config.providerCluster.metadata.labels![
-    capiv1alpha3.labelReleaseVersion
-  ];
+  const namespace = config.providerCluster!.metadata.namespace;
+  const name = config.providerCluster!.metadata.name;
+  const organization =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
 
   return {
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
@@ -342,68 +480,223 @@ function createDefaultAzureMachine(config: {
   };
 }
 
+function createDefaultAWSControlPlane(config: {
+  name: string;
+  providerCluster: ProviderCluster;
+}): infrav1alpha3.IAWSControlPlane {
+  const namespace = config.providerCluster!.metadata.namespace;
+  const clusterName = config.providerCluster!.metadata.name;
+  const organization =
+    config.providerCluster!.metadata.labels![infrav1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
+
+  const azStats = getSupportedAvailabilityZones();
+  const azs = determineRandomAZs(
+    Constants.AWS_HA_MASTERS_MAX_NODES,
+    azStats.all
+  );
+
+  return {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: infrav1alpha3.AWSControlPlane,
+    metadata: {
+      namespace,
+      name: config.name,
+      labels: {
+        [infrav1alpha3.labelCluster]: clusterName,
+        [infrav1alpha3.labelControlPlane]: config.name,
+        [infrav1alpha3.labelOrganization]: organization,
+        [infrav1alpha3.labelReleaseVersion]: releaseVersion,
+      },
+    },
+    spec: {
+      availabilityZones: azs,
+      instanceType: Constants.AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE,
+    },
+  };
+}
+
+function createDefaultG8sControlPlane(config: {
+  providerCluster: ProviderCluster;
+  awsControlPlane: infrav1alpha3.IAWSControlPlane;
+}): infrav1alpha3.IG8sControlPlane {
+  const namespace = config.providerCluster!.metadata.namespace;
+  const clusterName = config.providerCluster!.metadata.name;
+  const organization =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+  const releaseVersion =
+    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
+
+  const name = config.awsControlPlane.metadata.name;
+
+  return {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: infrav1alpha3.G8sControlPlane,
+    metadata: {
+      namespace,
+      name,
+      labels: {
+        [capiv1alpha3.labelCluster]: clusterName,
+        [infrav1alpha3.labelControlPlane]: name,
+        [capiv1alpha3.labelOrganization]: organization,
+        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
+      },
+    },
+    spec: {
+      replicas: config.awsControlPlane.spec.availabilityZones!.length,
+      infrastructureRef: corev1.getObjectReference(config.awsControlPlane),
+    },
+    status: {},
+  };
+}
+
 export async function createCluster(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   config: {
     cluster: Cluster;
     providerCluster: ProviderCluster;
-    controlPlaneNode: ControlPlaneNode;
+    controlPlaneNodes: ControlPlaneNode[];
   }
 ): Promise<{
   cluster: Cluster;
   providerCluster: ProviderCluster;
-  controlPlaneNode: ControlPlaneNode;
+  controlPlaneNodes: ControlPlaneNode[];
 }> {
-  if (config.providerCluster.kind === capzv1alpha3.AzureCluster) {
-    const providerCluster = await capzv1alpha3.createAzureCluster(
-      httpClient,
-      auth,
-      config.providerCluster
-    );
+  switch (config.providerCluster!.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+      const providerCluster = await capzv1alpha3.createAzureCluster(
+        httpClientFactory(),
+        auth,
+        config.providerCluster as capzv1alpha3.IAzureCluster
+      );
 
-    mutate(
-      fetchProviderClusterForClusterKey(config.cluster),
-      providerCluster,
-      false
-    );
+      mutate(
+        fetchProviderClusterForClusterKey(config.cluster),
+        providerCluster,
+        false
+      );
 
-    const controlPlaneNode = await capzv1alpha3.createAzureMachine(
-      httpClient,
-      auth,
-      config.controlPlaneNode
-    );
+      const controlPlaneNodes = await Promise.all(
+        config.controlPlaneNodes.map((n) =>
+          capzv1alpha3.createAzureMachine(
+            httpClientFactory(),
+            auth,
+            n as capzv1alpha3.IAzureMachine
+          )
+        )
+      );
 
-    const cluster = await capiv1alpha3.createCluster(
-      httpClient,
-      auth,
-      config.cluster
-    );
+      mutate(
+        fetchControlPlaneNodesForClusterKey(config.cluster),
+        controlPlaneNodes,
+        false
+      );
 
-    mutate(
-      capiv1alpha3.getClusterKey(
-        cluster.metadata.namespace!,
-        cluster.metadata.name
-      ),
-      cluster,
-      false
-    );
+      const cluster = await capiv1alpha3.createCluster(
+        httpClientFactory(),
+        auth,
+        config.cluster
+      );
 
-    // Add the created cluster to the existing list.
-    mutate(
-      capiv1alpha3.getClusterListKey({
-        namespace: cluster.metadata.namespace!,
-      }),
-      (draft?: capiv1alpha3.IClusterList) => {
-        draft?.items.push(cluster);
-      },
-      false
-    );
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        cluster,
+        false
+      );
 
-    return { cluster, providerCluster, controlPlaneNode };
+      // Add the created cluster to the existing list.
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          namespace: cluster.metadata.namespace!,
+        }),
+        (draft?: capiv1alpha3.IClusterList) => {
+          draft?.items.push(cluster);
+        },
+        false
+      );
+
+      return { cluster, providerCluster, controlPlaneNodes };
+    }
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const providerCluster = await infrav1alpha3.createAWSCluster(
+        httpClientFactory(),
+        auth,
+        config.providerCluster as infrav1alpha3.IAWSCluster
+      );
+
+      mutate(
+        fetchProviderClusterForClusterKey(config.cluster),
+        providerCluster,
+        false
+      );
+
+      const cluster = await capiv1alpha3.createCluster(
+        httpClientFactory(),
+        auth,
+        config.cluster
+      );
+
+      mutate(
+        capiv1alpha3.getClusterKey(
+          cluster.metadata.namespace!,
+          cluster.metadata.name
+        ),
+        cluster,
+        false
+      );
+
+      // Add the created cluster to the existing list.
+      mutate(
+        capiv1alpha3.getClusterListKey({
+          namespace: cluster.metadata.namespace!,
+        }),
+        (draft?: capiv1alpha3.IClusterList) => {
+          draft?.items.push(cluster);
+        },
+        false
+      );
+
+      const controlPlaneNodes = await Promise.all<ControlPlaneNode>(
+        config.controlPlaneNodes.map((n) => {
+          switch (n.kind) {
+            case infrav1alpha3.AWSControlPlane:
+              return infrav1alpha3.createAWSControlPlane(
+                httpClientFactory(),
+                auth,
+                n
+              );
+            case infrav1alpha3.G8sControlPlane:
+              return infrav1alpha3.createG8sControlPlane(
+                httpClientFactory(),
+                auth,
+                n
+              );
+            default:
+              return Promise.reject(
+                new Error('Unknown control plane node type.')
+              );
+          }
+        })
+      );
+
+      mutate(
+        fetchControlPlaneNodesForClusterKey(config.cluster),
+        controlPlaneNodes,
+        false
+      );
+
+      return { cluster, providerCluster, controlPlaneNodes };
+    }
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
   }
-
-  return Promise.reject(new Error('Unsupported provider.'));
 }
 
 export function findLatestReleaseVersion(
@@ -429,4 +722,104 @@ export function findLatestReleaseVersion(
   const sortedVersions = versions.sort((a, b) => compare(b, a));
 
   return sortedVersions[0];
+}
+
+export interface IClusterWithProviderCluster {
+  cluster: Cluster;
+  providerCluster: ProviderCluster;
+}
+
+export function mapClustersToProviderClusters(
+  clusters: Cluster[],
+  providerClusters: ProviderCluster[]
+): IClusterWithProviderCluster[] {
+  const mappedClusterNameToProviderClusters: Record<string, ProviderCluster> =
+    {};
+
+  for (const providerCluster of providerClusters) {
+    if (
+      !providerCluster ||
+      mappedClusterNameToProviderClusters.hasOwnProperty(
+        providerCluster.metadata.name
+      )
+    ) {
+      continue;
+    }
+
+    mappedClusterNameToProviderClusters[providerCluster.metadata.name] =
+      providerCluster;
+  }
+
+  const mappedClustersToProviderClusters: IClusterWithProviderCluster[] =
+    new Array(clusters.length);
+
+  for (let i = 0; i < clusters.length; i++) {
+    const clusterName = clusters[i].spec?.infrastructureRef?.name;
+
+    mappedClustersToProviderClusters[i] = {
+      cluster: clusters[i],
+      providerCluster: clusterName
+        ? mappedClusterNameToProviderClusters[clusterName]
+        : undefined,
+    };
+  }
+
+  return mappedClustersToProviderClusters;
+}
+
+export interface IClusterConditions {
+  isConditionUnknown: boolean;
+  isCreating: boolean;
+  isUpgrading: boolean;
+  isDeleting: boolean;
+}
+
+export function getClusterConditions(
+  cluster: capiv1alpha3.ICluster | undefined,
+  providerCluster: ProviderCluster
+): IClusterConditions {
+  const statuses: IClusterConditions = {
+    isConditionUnknown: true,
+    isCreating: false,
+    isUpgrading: false,
+    isDeleting: false,
+  };
+
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  if (!cluster || !infrastructureRef) return statuses;
+
+  if (typeof cluster.metadata.deletionTimestamp !== 'undefined') {
+    statuses.isConditionUnknown = false;
+    statuses.isDeleting = true;
+
+    return statuses;
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+      statuses.isConditionUnknown = typeof cluster.spec === 'undefined';
+      statuses.isCreating = isClusterCreating(cluster);
+      statuses.isUpgrading = isClusterUpgrading(cluster);
+      break;
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      if (!providerCluster) break;
+
+      statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(
+        providerCluster as infrav1alpha3.IAWSCluster
+      );
+      statuses.isCreating = infrav1alpha3.isConditionTrue(
+        providerCluster as infrav1alpha3.IAWSCluster,
+        infrav1alpha3.conditionTypeCreating
+      );
+      statuses.isUpgrading = infrav1alpha3.isConditionTrue(
+        providerCluster as infrav1alpha3.IAWSCluster,
+        infrav1alpha3.conditionTypeUpdating
+      );
+      break;
+    }
+  }
+
+  return statuses;
 }

@@ -5,8 +5,8 @@ import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import { SWRConfig } from 'swr';
+import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as legacyMocks from 'testUtils/mockHttpCalls/legacy';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -19,7 +19,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterDetailWidgetKeyPairs {...p} />
     </SWRConfig>
   );
@@ -38,15 +38,11 @@ jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
     orgId: 'org1',
-    clusterId: capiv1alpha3Mocks.randomCluster1.metadata.name,
+    clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
   }),
 }));
 
 describe('ClusterDetailWidgetKeyPairs', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('displays loading animations if the cluster is still loading', () => {
     render(getComponent({}));
 
@@ -77,12 +73,12 @@ describe('ClusterDetailWidgetKeyPairs', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByText('No key pairs')).toBeInTheDocument();
+    expect(
+      await screen.findByText('No client certificates')
+    ).toBeInTheDocument();
     expect(
       screen.getByText((_, node) => {
-        return (
-          node?.textContent === 'Use gsctl create kubeconfig to create one.'
-        );
+        return node?.textContent === 'Use kubectl gs login to create one.';
       })
     ).toBeInTheDocument();
   });
@@ -96,6 +92,8 @@ describe('ClusterDetailWidgetKeyPairs', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByLabelText('2 key pairs')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('2 client certificates')
+    ).toBeInTheDocument();
   });
 });

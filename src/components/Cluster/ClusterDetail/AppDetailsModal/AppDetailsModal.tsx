@@ -1,4 +1,3 @@
-import GenericModal from 'components/Modals/GenericModal';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import useError from 'lib/hooks/useError';
 import React, { useEffect, useState } from 'react';
@@ -21,6 +20,7 @@ import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { IState } from 'stores/state';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Modal from 'UI/Layout/Modal';
 
 import DeleteConfirmFooter from './DeleteConfirmFooter';
 import EditChartVersionPane from './EditChartVersionPane';
@@ -187,7 +187,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
   switch (pane) {
     case ModalPanes.Initial:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details'
           title={appName}
           onClose={handleClose}
@@ -206,12 +206,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             showDeleteAppSecretPane={showPane(ModalPanes.DeleteAppSecret)}
             showEditChartVersionPane={showEditChartVersionPane}
           />
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.EditChartVersion:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Edit chart version'
           title={
             <>
@@ -241,12 +241,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             desiredVersion={desiredVersion}
             errorMessage={errorMessage}
           />
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteAppConfig:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app config'
           title={
             <>
@@ -271,12 +271,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteAppSecret:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app secret'
           title={
             <>
@@ -301,12 +301,12 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     case ModalPanes.DeleteApp:
       return (
-        <GenericModal
+        <Modal
           aria-label='App details - Delete app'
           title={
             <>
@@ -331,7 +331,7 @@ const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
             <br />
             There is no undo.
           </>
-        </GenericModal>
+        </Modal>
       );
 
     default:

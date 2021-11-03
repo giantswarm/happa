@@ -10,10 +10,7 @@ import Passage, {
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
 } from 'lib/passageClient';
-import { GenericResponse } from 'model/clients/GenericResponse';
-import { GiantSwarmClient } from 'model/clients/GiantSwarmClient';
 import { HttpClientImpl } from 'model/clients/HttpClient';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
@@ -24,9 +21,6 @@ import {
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
   GLOBAL_LOAD_SUCCESS,
-  INFO_LOAD_ERROR,
-  INFO_LOAD_REQUEST,
-  INFO_LOAD_SUCCESS,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -53,46 +47,16 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import { computePermissions, getNamespaceFromOrgName } from './utils';
+import {
+  computePermissions,
+  getNamespaceFromOrgName,
+  mapOAuth2UserToUser,
+} from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
     type: CLUSTER_SELECT,
     clusterID,
-  };
-}
-
-export function getInfo(): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions
-> {
-  return async (dispatch, getState) => {
-    dispatch({ type: INFO_LOAD_REQUEST });
-
-    try {
-      const user = getLoggedInUser(getState())!;
-      const httpClient = new GiantSwarmClient(
-        user.auth.token,
-        user.auth.scheme
-      );
-      const infoRes = await getInstallationInfo(httpClient);
-
-      dispatch({
-        type: INFO_LOAD_SUCCESS,
-        info: infoRes.data,
-      });
-
-      return Promise.resolve();
-    } catch (err) {
-      dispatch({
-        type: INFO_LOAD_ERROR,
-        error: (err as GenericResponse<string>).data,
-      });
-
-      return Promise.reject(err);
-    }
   };
 }
 
@@ -309,20 +273,24 @@ export function setNewPassword(
 
 export function resumeLogin(
   auth: IOAuth2Provider
-): ThunkAction<Promise<void>, IState, void, MainActions> {
+): ThunkAction<Promise<ILoggedInUser>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
     const location = getState().router.location;
     const urlParams = new URLSearchParams(location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
 
     if (isLoginResponse) {
-      await auth.handleLoginResponse(window.location.href);
+      const user = await auth.handleLoginResponse(window.location.href);
       // Login callbacks are handled by `OAuth2`.
 
       // Remove state and code from url.
       dispatch(replace(location.pathname));
 
-      return Promise.resolve();
+      if (!user) {
+        return Promise.reject(new Error('Failed to process login response.'));
+      }
+
+      return Promise.resolve(mapOAuth2UserToUser(user));
     }
 
     // Try to resume GS user first.
@@ -330,14 +298,14 @@ export function resumeLogin(
     if (user) {
       dispatch(loginSuccess(user));
 
-      return Promise.resolve();
+      return Promise.resolve(user);
     }
 
     const mapiUser = await auth.getLoggedInUser();
     if (mapiUser) {
       // Login callbacks are handled by `OAuth2`.
 
-      return Promise.resolve();
+      return Promise.resolve(mapOAuth2UserToUser(mapiUser));
     }
 
     return Promise.reject(new Error('You are not logged in.'));
@@ -420,8 +388,9 @@ export function fetchPermissions(
     const namespaces = orgs.map(
       (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
     );
-    // Also get permissions for the default namespace.
+    // These are not organization namespaces, but we have resources in them.
     namespaces.push('default');
+    namespaces.push('giantswarm');
 
     const requests = namespaces.map(async (namespace) => {
       const client = new HttpClientImpl();

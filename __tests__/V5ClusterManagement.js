@@ -1,4 +1,5 @@
 import {
+  act,
   fireEvent,
   screen,
   waitFor,
@@ -6,7 +7,6 @@ import {
 } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -17,7 +17,6 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   generateRandomString,
   getMockCall,
   getMockCallTimes,
@@ -39,7 +38,6 @@ import { validateLabelKey } from 'utils/labelUtils';
 describe('V5ClusterManagement', () => {
   // Responses to requests
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
@@ -100,9 +98,8 @@ describe('V5ClusterManagement', () => {
         clusterId: V5_CLUSTER.id,
       }
     );
-    const { getByText, findAllByTestId } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { getByText, findAllByTestId } =
+      renderRouteWithStore(clusterDetailPath);
 
     await waitFor(() => findAllByTestId('node-pool-id'));
 
@@ -140,11 +137,8 @@ describe('V5ClusterManagement', () => {
       }
     );
     // Mounting
-    const {
-      getAllByTestId,
-      getByText,
-      getByDisplayValue,
-    } = renderRouteWithStore(clusterDetailPath);
+    const { getAllByTestId, getByText, getByDisplayValue } =
+      renderRouteWithStore(clusterDetailPath);
 
     await waitFor(() => getByText(nodePoolName));
 
@@ -213,12 +207,8 @@ scales node pools correctly`, async () => {
         clusterId: V5_CLUSTER.id,
       }
     );
-    const {
-      getByText,
-      getAllByText,
-      getAllByTestId,
-      getByLabelText,
-    } = renderRouteWithStore(clusterDetailPath);
+    const { getByText, getAllByText, getAllByTestId, getByLabelText } =
+      renderRouteWithStore(clusterDetailPath);
 
     await waitFor(() => getAllByTestId('node-pool-id'));
 
@@ -293,12 +283,8 @@ scales node pools correctly`, async () => {
         clusterId: V5_CLUSTER.id,
       }
     );
-    const {
-      getByText,
-      getAllByText,
-      queryByTestId,
-      getAllByTestId,
-    } = renderRouteWithStore(clusterDetailPath);
+    const { getByText, getAllByText, queryByTestId, getAllByTestId } =
+      renderRouteWithStore(clusterDetailPath);
 
     // Wait for node pools to render
     await waitFor(() => getAllByTestId('node-pool-id'));
@@ -334,7 +320,8 @@ scales node pools correctly`, async () => {
     });
 
     // Test that last nodepool warning appears.
-    const bodyTextLastNP = /do you want to delete this cluster\'s only node pool?/i;
+    const bodyTextLastNP =
+      /do you want to delete this cluster\'s only node pool?/i;
 
     fireEvent.click(getByText('•••'));
     fireEvent.click(getByText('Delete'));
@@ -386,8 +373,13 @@ scales node pools correctly`, async () => {
     const flashMessage = await findByText(/Your new node pool with ID/i);
     expect(flashMessage).toHaveTextContent(nodePoolCreationResponse.id);
 
-    // Remove flash message.
-    forceRemoveAll();
+    await act(async () => {
+      // Remove flash message.
+      forceRemoveAll();
+      await waitFor(() =>
+        expect(screen.queryByRole('status')).not.toBeInTheDocument()
+      );
+    });
 
     // Is the new NodePool in the document?
     const newNodePool = await findByText(nodePoolCreationResponse.id);
@@ -523,9 +515,8 @@ scales node pools correctly`, async () => {
         clusterId: V5_CLUSTER.id,
       }
     );
-    const { findByText, getByText, queryByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { findByText, getByText, queryByText } =
+      renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
 
@@ -559,9 +550,8 @@ scales node pools correctly`, async () => {
       filterLabels(v5ClusterResponse.labels)
     );
 
-    const { findByText, getByRole, findByRole } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { findByText, getByRole, findByRole } =
+      renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
 
@@ -583,12 +573,8 @@ scales node pools correctly`, async () => {
         clusterId: V5_CLUSTER.id,
       }
     );
-    const {
-      findByLabelText,
-      findByText,
-      getByLabelText,
-      getByRole,
-    } = renderRouteWithStore(clusterDetailPath);
+    const { findByLabelText, findByText, getByLabelText, getByRole } =
+      renderRouteWithStore(clusterDetailPath);
 
     await findByText('Labels:');
     fireEvent.click(getByRole('button', { name: 'Add label' }));

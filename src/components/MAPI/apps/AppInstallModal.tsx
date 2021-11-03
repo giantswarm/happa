@@ -2,7 +2,6 @@ import ClusterPicker from 'Apps/AppDetail/InstallAppModal/ClusterPicker';
 import InstallAppForm from 'Apps/AppDetail/InstallAppModal/InstallAppForm';
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
@@ -11,12 +10,22 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { Cluster, ClusterList } from 'MAPI/types';
-import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
+import {
+  IClusterWithProviderCluster,
+  mapClustersToProviderClusters,
+} from 'MAPI/clusters/utils';
+import { Cluster, ClusterList, ProviderCluster } from 'MAPI/types';
+import {
+  fetchClusterList,
+  fetchClusterListKey,
+  fetchProviderClustersForClusters,
+  fetchProviderClustersForClustersKey,
+  getClusterDescription,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { IAsynchronousDispatch } from 'stores/asynchronousAction';
@@ -26,8 +35,9 @@ import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Modal from 'UI/Layout/Modal';
 
-import { createApp, filterClusters } from './utils';
+import { createApp, filterClusters, formatYAMLError } from './utils';
 
 function getOrganizationForCluster(
   cluster: Cluster,
@@ -40,14 +50,15 @@ function getOrganizationForCluster(
 }
 
 function mapClusterToClusterPickerInput(
-  cluster: Cluster,
+  entry: IClusterWithProviderCluster,
   organizations: Record<string, IOrganization>
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
+  const { cluster, providerCluster } = entry;
   const organization = getOrganizationForCluster(cluster, organizations);
 
   return {
     id: cluster.metadata.name,
-    name: capiv1alpha3.getClusterDescription(cluster),
+    name: getClusterDescription(cluster, providerCluster),
     owner: organization?.id ?? '',
     isAvailable: true,
   };
@@ -132,12 +143,11 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const provider = window.config.info.general.provider;
 
-  const clusterListClient = useRef(clientFactory());
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
   >(fetchClusterListKey(provider, ''), () =>
-    fetchClusterList(clusterListClient.current, auth, provider, '')
+    fetchClusterList(clientFactory, auth, provider, '')
   );
 
   useEffect(() => {
@@ -152,6 +162,38 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     }
   }, [clusterListError]);
 
+  const providerClusterKey = clusterList
+    ? fetchProviderClustersForClustersKey(clusterList.items)
+    : null;
+
+  const { data: providerClusterList, error: providerClusterError } = useSWR<
+    ProviderCluster[],
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (providerClusterError) {
+      new FlashMessage(
+        'There was a problem loading provider-specific clusters.',
+        messageType.ERROR,
+        messageTTL.FOREVER
+      );
+
+      ErrorReporter.getInstance().notify(providerClusterError);
+    }
+  }, [providerClusterError]);
+
+  const clustersWithProviderClusters = useMemo(() => {
+    if (!clusterList?.items || !providerClusterList) return [];
+
+    return mapClustersToProviderClusters(
+      clusterList.items,
+      providerClusterList
+    );
+  }, [clusterList?.items, providerClusterList]);
+
   const [filteredClusters, setFilteredClusters] = useState<
     React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters']
   >([]);
@@ -160,12 +202,17 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   useEffect(() => {
     const clusterCollection = filterClusters(
-      clusterList?.items ?? [],
+      clustersWithProviderClusters,
       debouncedQuery
     ).map((c) => mapClusterToClusterPickerInput(c, organizations));
 
     setFilteredClusters(clusterCollection);
-  }, [debouncedQuery, clusterList, organizations]);
+  }, [
+    debouncedQuery,
+    clusterList,
+    organizations,
+    clustersWithProviderClusters,
+  ]);
 
   const updateNamespace = useCallback(
     (ns) => {
@@ -206,7 +253,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         setValuesYAML(yaml.dump(parsedYAML));
         setValuesYAMLError('');
       } catch (err) {
-        setValuesYAMLError('Unable to parse valid YAML from this file.');
+        setValuesYAMLError(formatYAMLError(err));
       }
     };
 
@@ -230,7 +277,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         setSecretsYAML(yaml.dump(parsedYAML));
         setSecretsYAMLError('');
       } catch (err) {
-        setSecretsYAMLError('Unable to parse valid YAML from this file.');
+        setSecretsYAMLError(formatYAMLError(err));
       }
     };
 
@@ -283,7 +330,12 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
       dispatch(push(clusterDetailPath));
 
       new FlashMessage(
-        `Your app <code>${name}</code> is being installed on <code>${clusterName}</code>`,
+        (
+          <>
+            Your app <code>{name}</code> is being installed on{' '}
+            <code>{clusterName}</code>
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -292,7 +344,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         ErrorReporter.getInstance().notify(error as Error);
       }
 
-      let errorMessage = '';
+      let errorMessage: React.ReactNode = '';
       switch (true) {
         case metav1.isStatusError(
           (error as GenericResponseError)?.data,
@@ -314,7 +366,12 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           (error as GenericResponseError)?.data,
           metav1.K8sStatusErrorReasons.AlreadyExists
         ):
-          errorMessage = `An app called <code>${name}</code> already exists on cluster <code>${clusterName}</code>`;
+          errorMessage = (
+            <>
+              An app called <code>{name}</code> already exists on cluster{' '}
+              <code>{clusterName}</code>
+            </>
+          );
 
           break;
 
@@ -341,7 +398,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         switch (pages[page]) {
           case CLUSTER_PICKER_PAGE:
             return (
-              <GenericModal
+              <Modal
                 footer={
                   <Button link={true} onClick={onClose}>
                     Cancel
@@ -358,12 +415,12 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   query={query}
                   selectedClusterID={clusterName}
                 />
-              </GenericModal>
+              </Modal>
             );
 
           case APP_FORM_PAGE:
             return (
-              <GenericModal
+              <Modal
                 footer={
                   <Box direction='row' gap='small' justify='end'>
                     <Button
@@ -407,7 +464,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   secretsYAMLError={secretsYAMLError}
                   valuesYAMLError={valuesYAMLError}
                 />
-              </GenericModal>
+              </Modal>
             );
         }
 

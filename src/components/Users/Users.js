@@ -6,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { MainRoutes, UsersRoutes } from 'shared/constants/routes';
 import { getLoggedInUser } from 'stores/main/selectors';
+import { getOrganizationByID } from 'stores/organization/utils';
 import {
   invitationCreate,
   invitationsLoad,
@@ -132,10 +133,23 @@ class Users extends React.Component {
       },
     });
 
+    const organizations = Object.values(this.props.organizations.items);
+
+    const invitationOrgs = invitationForm.organizations.map((id) => {
+      const org = getOrganizationByID(id, organizations);
+
+      return org.name ?? org.id;
+    });
+
+    const invitation = {
+      ...invitationForm,
+      organizations: invitationOrgs,
+    };
+
     this.props
       .dispatch(usersLoad()) // Hack to ensure fresh Giant Swarm access token before inviting the user.
       .then(() => {
-        return this.props.dispatch(invitationCreate(invitationForm));
+        return this.props.dispatch(invitationCreate(invitation));
       })
       .then((result) => {
         this.setState({
@@ -193,7 +207,8 @@ class Users extends React.Component {
       default:
         propsToAdd.onConfirm = this.confirmInviteUser;
         propsToAdd.organizations = organizations;
-        propsToAdd.initiallySelectedOrganizations = initialSelectedOrganizations;
+        propsToAdd.initiallySelectedOrganizations =
+          initialSelectedOrganizations;
         propsToAdd.invitationResult = modal.invitationResult;
     }
 
@@ -257,12 +272,17 @@ class Users extends React.Component {
 }
 
 function mapStateToProps(state) {
+  const initiallySelectedOrganizations = [];
+  if (state.main.selectedOrganization) {
+    initiallySelectedOrganizations.push(state.main.selectedOrganization);
+  }
+
   return {
     currentUser: getLoggedInUser(state),
     users: state.entities.users,
     invitations: state.entities.users.invitations,
     organizations: state.entities.organizations,
-    initialSelectedOrganizations: [state.main.selectedOrganization],
+    initialSelectedOrganizations: initiallySelectedOrganizations,
     installation_name: window.config.info.general.installationName,
   };
 }

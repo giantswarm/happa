@@ -4,17 +4,23 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { NodePool, ProviderCluster } from 'MAPI/types';
+import { Cluster } from 'MAPI/types';
 import {
   extractErrorMessage,
+  fetchCluster,
+  fetchClusterKey,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
+  isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
@@ -35,31 +41,54 @@ import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
 import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
 import { IWorkerNodesAdditionalColumn } from './types';
-import WorkerNodesAzureMachinePoolSpotInstances from './WorkerNodesAzureMachinePoolSpotInstances';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
 import WorkerNodesNodePoolItem from './WorkerNodesNodePoolItem';
+import WorkerNodesSpotInstancesAWS from './WorkerNodesSpotInstancesAWS';
+import WorkerNodesSpotInstancesAzure from './WorkerNodesSpotInstancesAzure';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
 
 export function getAdditionalColumns(
   provider: PropertiesOf<typeof Providers>
 ): IWorkerNodesAdditionalColumn[] {
-  if (provider === Providers.AZURE) {
-    return [
-      {
-        title: 'Spot VMs',
-        render: (_, providerNodePool) => {
-          return (
-            <WorkerNodesAzureMachinePoolSpotInstances
-              providerNodePool={providerNodePool}
-            />
-          );
+  switch (provider) {
+    case Providers.AZURE:
+      return [
+        {
+          title: 'Spot VMs',
+          render: (_, providerNodePool) => {
+            return (
+              <WorkerNodesSpotInstancesAzure
+                providerNodePool={
+                  providerNodePool as
+                    | capzexpv1alpha3.IAzureMachinePool
+                    | capzv1alpha4.IAzureMachinePool
+                }
+              />
+            );
+          },
         },
-      },
-    ];
-  }
+      ];
 
-  return [];
+    case Providers.AWS:
+      return [
+        {
+          title: 'Spot count',
+          render: (_, providerNodePool) => {
+            return (
+              <WorkerNodesSpotInstancesAWS
+                providerNodePool={
+                  providerNodePool as infrav1alpha3.IAWSMachineDeployment
+                }
+              />
+            );
+          },
+        },
+      ];
+
+    default:
+      return [];
+  }
 }
 
 function formatMachineTypeColumnTitle(
@@ -183,7 +212,6 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const auth = useAuthProvider();
 
-    const clusterClient = useRef(clientFactory());
     const orgClient = useRef(clientFactory());
 
     const { data: org, error: orgError } = useSWR<
@@ -201,21 +229,18 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const namespace = org?.status?.namespace;
 
+    const provider = window.config.info.general.provider;
+
     const clusterKey = namespace
-      ? capiv1alpha3.getClusterKey(namespace, clusterId)
+      ? fetchClusterKey(provider, namespace, clusterId)
       : null;
 
     const {
       data: cluster,
       error: clusterError,
       isValidating: clusterIsValidating,
-    } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(clusterKey, () =>
-      capiv1alpha3.getCluster(
-        clusterClient.current,
-        auth,
-        namespace!,
-        clusterId
-      )
+    } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
+      fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
     );
 
     const providerClusterKey = cluster
@@ -265,15 +290,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const hasNoNodePools = nodePoolList?.items.length === 0;
 
-    const {
-      data: providerNodePools,
-      error: providerNodePoolsError,
-    } = useSWR(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
-      fetchProviderNodePoolsForNodePools(
-        clientFactory,
-        auth,
-        nodePoolList!.items
-      )
+    const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
+      fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
+      () =>
+        fetchProviderNodePoolsForNodePools(
+          clientFactory,
+          auth,
+          nodePoolList!.items
+        )
     );
 
     useEffect(() => {
@@ -289,11 +313,10 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       }
     }, [providerNodePoolsError]);
 
-    const provider = window.config.info.general.provider;
-
-    const additionalColumns = useMemo(() => getAdditionalColumns(provider), [
-      provider,
-    ]);
+    const additionalColumns = useMemo(
+      () => getAdditionalColumns(provider),
+      [provider]
+    );
 
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 
@@ -304,6 +327,8 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
     const handleCloseCreateForm = () => {
       setIsCreateFormOpen(false);
     };
+
+    const isReadOnly = cluster && isNodePoolMngmtReadOnly(cluster);
 
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
@@ -389,6 +414,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                         key={idx}
                         additionalColumns={additionalColumns}
                         margin={{ bottom: 'small' }}
+                        readOnly={isReadOnly}
                       />
                     ))}
 
@@ -410,6 +436,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                               providerNodePool={providerNodePools?.[idx]}
                               additionalColumns={additionalColumns}
                               margin={{ bottom: 'small' }}
+                              readOnly={isReadOnly}
                             />
                           </BaseTransition>
                         ))}
@@ -420,7 +447,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
             )}
 
             <Box margin={{ top: 'medium' }}>
-              {cluster && providerCluster && (
+              {cluster && providerCluster && !isReadOnly && (
                 <WorkerNodesCreateNodePool
                   id='0'
                   open={isCreateFormOpen}
@@ -437,7 +464,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   <Box animation={{ type: 'fadeIn', duration: 300 }}>
                     <Button
                       onClick={handleOpenCreateForm}
-                      disabled={!cluster || !providerCluster}
+                      disabled={!cluster || !providerCluster || isReadOnly}
                     >
                       <i
                         className='fa fa-add-circle'
@@ -453,6 +480,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 <WorkerNodesNodePoolListPlaceholder
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
+                  disabled={isReadOnly}
                 />
               )}
             </Box>
@@ -471,12 +499,17 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                     provider
                   )}
                 />
-                <ModifyNodePoolGuide
-                  clusterNamespace={cluster.metadata.namespace!}
-                />
-                <DeleteNodePoolGuide
-                  clusterNamespace={cluster.metadata.namespace!}
-                />
+
+                {!isReadOnly && (
+                  <ModifyNodePoolGuide
+                    clusterNamespace={cluster.metadata.namespace!}
+                  />
+                )}
+                {!isReadOnly && (
+                  <DeleteNodePoolGuide
+                    clusterNamespace={cluster.metadata.namespace!}
+                  />
+                )}
               </Box>
             )}
           </Box>

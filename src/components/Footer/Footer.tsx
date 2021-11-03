@@ -7,8 +7,6 @@ import {
 } from 'Footer/FooterUtils';
 import FooterVersion from 'Footer/FooterVersion';
 import React, { useCallback, useEffect, useRef } from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import { getLoggedInUser } from 'stores/main/selectors';
@@ -20,6 +18,7 @@ import {
 } from 'stores/metadata/selectors';
 import { IState } from 'stores/state';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const FooterGroup = styled.span`
   & + & {
@@ -38,9 +37,8 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
     selectLoadingFlagByAction(state, METADATA_UPDATE_EXECUTE_REQUEST)
   );
 
-  const isToastVisible: React.MutableRefObject<boolean> = useRef<boolean>(
-    false
-  );
+  const isToastVisible: React.MutableRefObject<boolean> =
+    useRef<boolean>(false);
 
   const releaseURL: string = getReleaseURL(currentVersion);
   const isLoggedIn: boolean = useSelector<IState>(getLoggedInUser) !== null;
@@ -76,17 +74,14 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
     <footer {...props}>
       <FooterGroup>Giant Swarm web interface</FooterGroup>
       <FooterGroup>
-        <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>{tooltipMessage}</Tooltip>}
-          placement='top'
-        >
+        <TooltipContainer content={<Tooltip>{tooltipMessage}</Tooltip>}>
           <span>
             <FooterVersion
               currentVersion={currentVersion}
               hasUpdateReady={isUpdateReady}
             />
           </span>
-        </OverlayTrigger>
+        </TooltipContainer>
       </FooterGroup>
 
       {!isUpdateReady && <FooterGroup>&#183;</FooterGroup>}

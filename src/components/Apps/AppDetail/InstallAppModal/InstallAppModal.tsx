@@ -1,5 +1,4 @@
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
-import GenericModal from 'components/Modals/GenericModal';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
@@ -7,6 +6,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
+import { formatYAMLError } from 'MAPI/apps/utils';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -18,6 +18,7 @@ import { IState } from 'stores/state';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Modal from 'UI/Layout/Modal';
 
 import ClusterPicker from './ClusterPicker';
 import InstallAppForm from './InstallAppForm';
@@ -201,7 +202,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         setValuesYAML(parsedYAML);
         setValuesYAMLError('');
       } catch (err) {
-        setValuesYAMLError('Unable to parse valid YAML from this file.');
+        setValuesYAMLError(formatYAMLError(err));
       }
     };
 
@@ -225,7 +226,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         setSecretsYAML(parsedYAML);
         setSecretsYAMLError('');
       } catch (err) {
-        setSecretsYAMLError('Unable to parse valid YAML from this file.');
+        setSecretsYAMLError(formatYAMLError(err));
       }
     };
 
@@ -292,7 +293,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
         switch (pages[page]) {
           case CLUSTER_PICKER_PAGE:
             return (
-              <GenericModal
+              <Modal
                 {...props}
                 footer={
                   <Button link={true} onClick={onClose}>
@@ -310,12 +311,12 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
                   query={query}
                   selectedClusterID={clusterID}
                 />
-              </GenericModal>
+              </Modal>
             );
 
           case APP_FORM_PAGE:
             return (
-              <GenericModal
+              <Modal
                 {...props}
                 footer={
                   <Box direction='row' gap='small' justify='end'>
@@ -360,7 +361,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
                   secretsYAMLError={secretsYAMLError}
                   valuesYAMLError={valuesYAMLError}
                 />
-              </GenericModal>
+              </Modal>
             );
         }
 

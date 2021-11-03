@@ -120,12 +120,8 @@ class OrganizationDetail extends React.Component {
   };
 
   supportsDeletion() {
-    const {
-      clusters,
-      credentials,
-      loadingCredentials,
-      supportsMultiAccount,
-    } = this.props;
+    const { clusters, credentials, loadingCredentials, supportsMultiAccount } =
+      this.props;
 
     const result = {
       status: true,

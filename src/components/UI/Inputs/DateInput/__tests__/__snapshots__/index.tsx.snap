@@ -5,17 +5,17 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 hCfXEO"
+          class="StyledButtonKind-sc-1vhfpnt-0 jUHAua"
           id="dob"
           type="button"
         >
@@ -51,10 +51,10 @@ exports[`DateInput renders a disabled input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -63,7 +63,7 @@ exports[`DateInput renders a disabled input 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 cmOgly"
@@ -86,7 +86,7 @@ exports[`DateInput renders a disabled input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 bXAeBP"
+            class="StyledMaskedInput-sc-99vkfa-0 kJjiaL"
             disabled=""
             id="dob"
             placeholder="yyyy-mm-dd"
@@ -104,13 +104,13 @@ exports[`DateInput renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 cmOgly"
@@ -133,7 +133,7 @@ exports[`DateInput renders a simple input 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iUwtvC"
+            class="StyledMaskedInput-sc-99vkfa-0 fimyJu"
             placeholder="yyyy-mm-dd"
             value=""
           />
@@ -149,10 +149,10 @@ exports[`DateInput renders an input with a help message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -166,7 +166,7 @@ exports[`DateInput renders an input with a help message 1`] = `
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 cmOgly"
@@ -189,7 +189,7 @@ exports[`DateInput renders an input with a help message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iUwtvC"
+            class="StyledMaskedInput-sc-99vkfa-0 fimyJu"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -206,10 +206,10 @@ exports[`DateInput renders an input with a label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -218,7 +218,7 @@ exports[`DateInput renders an input with a label 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 cmOgly"
@@ -241,7 +241,7 @@ exports[`DateInput renders an input with a label 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iUwtvC"
+            class="StyledMaskedInput-sc-99vkfa-0 fimyJu"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -258,10 +258,10 @@ exports[`DateInput renders an input with a validation error 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -270,7 +270,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 cmOgly"
@@ -293,7 +293,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iUwtvC"
+            class="StyledMaskedInput-sc-99vkfa-0 fimyJu"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""
@@ -315,10 +315,10 @@ exports[`DateInput renders an input with an info message 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -327,7 +327,7 @@ exports[`DateInput renders an input with an info message 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 cmOgly"
@@ -350,7 +350,7 @@ exports[`DateInput renders an input with an info message 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 iUwtvC"
+            class="StyledMaskedInput-sc-99vkfa-0 fimyJu"
             id="dob"
             placeholder="yyyy-mm-dd"
             value=""

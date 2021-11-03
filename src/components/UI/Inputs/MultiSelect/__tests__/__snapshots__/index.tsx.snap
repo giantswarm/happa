@@ -5,10 +5,10 @@ exports[`MultiSelect renders a simple input 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <label
         class="StyledText-sc-1sadyjn-0 lPqQk"
@@ -17,11 +17,11 @@ exports[`MultiSelect renders a simple input 1`] = `
         Pets I want to get
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 jqooVk Select__StyledSelectDropButton-sc-17idtfo-2 djZTSo"
+          class="StyledButtonKind-sc-1vhfpnt-0 beSTOg Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
           id="pet"
           type="button"
         >
@@ -36,7 +36,7 @@ exports[`MultiSelect renders a simple input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 cvGVMp Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
+                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""

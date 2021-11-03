@@ -1,52 +1,108 @@
 import produce from 'immer';
+import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { Cluster, ControlPlaneNode } from 'MAPI/types';
+import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
+import {
+  fetchCluster,
+  fetchControlPlaneNodesForCluster,
+  fetchControlPlaneNodesForClusterKey,
+  fetchProviderClusterForCluster,
+  fetchProviderClusterForClusterKey,
+  getClusterDescription,
+} from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import * as metav1 from 'model/services/mapi/metav1';
+import { Constants, Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import { filterLabels } from 'stores/cluster/utils';
+import { supportsHACPNodes } from 'stores/nodepool/utils';
 import { mutate } from 'swr';
 
+import { getClusterConditions } from '../utils';
+
 export async function updateClusterDescription(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
+  provider: PropertiesOf<typeof Providers>,
   namespace: string,
   name: string,
   newDescription: string
 ) {
-  const cluster = await capiv1alpha3.getCluster(
-    httpClient,
+  const cluster = await fetchCluster(
+    httpClientFactory,
     auth,
+    provider,
     namespace,
     name
   );
-  const description = capiv1alpha3.getClusterDescription(cluster);
+
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let providerCluster: ProviderCluster;
+
+  if (provider === Providers.AWS) {
+    providerCluster = await fetchProviderClusterForCluster(
+      httpClientFactory,
+      auth,
+      cluster
+    );
+  }
+
+  const description = getClusterDescription(cluster, providerCluster);
   if (description === newDescription) {
     return cluster;
   }
 
-  cluster.metadata.annotations ??= {};
-  cluster.metadata.annotations[
-    capiv1alpha3.annotationClusterDescription
-  ] = newDescription;
+  if (
+    providerCluster &&
+    providerCluster.apiVersion === 'infrastructure.giantswarm.io/v1alpha3' &&
+    typeof providerCluster.spec !== 'undefined'
+  ) {
+    providerCluster.spec.cluster.description = newDescription;
 
-  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+    const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
+      httpClientFactory(),
+      auth,
+      providerCluster
+    );
+
+    mutate(
+      infrav1alpha3.getAWSClusterKey(
+        cluster.metadata.namespace!,
+        cluster.metadata.name
+      ),
+      updatedProviderCluster,
+      false
+    );
+  }
+
+  cluster.metadata.annotations ??= {};
+  cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
+    newDescription;
+
+  return capiv1alpha3.updateCluster(httpClientFactory(), auth, cluster);
 }
 
 export async function deleteCluster(
-  httpClient: IHttpClient,
+  httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cluster: Cluster
 ) {
   if (cluster.kind === capiv1alpha3.Cluster) {
+    const client = httpClientFactory();
+
     const updatedCluster = await capiv1alpha3.getCluster(
-      httpClient,
+      client,
       auth,
       cluster.metadata.namespace!,
       cluster.metadata.name
     );
 
-    await capiv1alpha3.deleteCluster(httpClient, auth, updatedCluster);
+    await capiv1alpha3.deleteCluster(client, auth, updatedCluster);
 
     updatedCluster.metadata.deletionTimestamp = new Date().toISOString();
 
@@ -79,6 +135,123 @@ export async function deleteCluster(
   }
 
   return Promise.reject(new Error('Unsupported provider.'));
+}
+
+export async function deleteProviderClusterForCluster(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: Cluster
+) {
+  const providerCluster = await fetchProviderClusterForCluster(
+    httpClientFactory,
+    auth,
+    cluster
+  );
+
+  switch (providerCluster?.apiVersion) {
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const client = httpClientFactory();
+
+      await infrav1alpha3.deleteAWSCluster(client, auth, providerCluster);
+
+      providerCluster.metadata.deletionTimestamp = new Date().toISOString();
+
+      mutate(
+        fetchProviderClusterForClusterKey(cluster),
+        providerCluster,
+        false
+      );
+
+      return providerCluster;
+    }
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
+}
+
+export async function deleteControlPlaneNodesForCluster(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: Cluster
+) {
+  const controlPlaneNodes = await fetchControlPlaneNodesForCluster(
+    httpClientFactory,
+    auth,
+    cluster
+  );
+
+  const requests = controlPlaneNodes.map(async (controlPlaneNode) => {
+    switch (controlPlaneNode.kind) {
+      case infrav1alpha3.AWSControlPlane: {
+        const client = httpClientFactory();
+
+        await infrav1alpha3.deleteAWSControlPlane(
+          client,
+          auth,
+          controlPlaneNode
+        );
+
+        controlPlaneNode.metadata.deletionTimestamp = new Date().toISOString();
+
+        return controlPlaneNode;
+      }
+
+      case infrav1alpha3.G8sControlPlane: {
+        const client = httpClientFactory();
+
+        await infrav1alpha3.deleteG8sControlPlane(
+          client,
+          auth,
+          controlPlaneNode
+        );
+
+        controlPlaneNode.metadata.deletionTimestamp = new Date().toISOString();
+
+        return controlPlaneNode;
+      }
+
+      default:
+        return Promise.reject(new Error('Unsupported provider.'));
+    }
+  });
+
+  const updatedControlPlaneNodes = await Promise.all(requests);
+
+  mutate(
+    fetchControlPlaneNodesForClusterKey(cluster),
+    updatedControlPlaneNodes,
+    false
+  );
+}
+
+export async function deleteClusterResources(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: Cluster
+) {
+  try {
+    await deleteCluster(httpClientFactory, auth, cluster);
+
+    if (
+      cluster.spec?.infrastructureRef?.apiVersion ===
+      'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      await deleteProviderClusterForCluster(httpClientFactory, auth, cluster);
+      await deleteControlPlaneNodesForCluster(httpClientFactory, auth, cluster);
+    }
+  } catch (err) {
+    if (
+      !metav1.isStatusError(
+        (err as GenericResponseError).data,
+        metav1.K8sStatusErrorReasons.NotFound
+      )
+    ) {
+      return Promise.reject(err);
+    }
+  }
+
+  return Promise.resolve();
 }
 
 export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
@@ -153,18 +326,40 @@ export function computeControlPlaneNodesStats(
   nodes: ControlPlaneNode[]
 ): IControlPlaneNodesStats {
   const stats: IControlPlaneNodesStats = {
-    totalCount: nodes.length,
+    totalCount: 0,
     readyCount: 0,
     availabilityZones: [],
   };
 
   for (const node of nodes) {
-    if (capiv1alpha3.isConditionTrue(node, capiv1alpha3.conditionTypeReady)) {
-      stats.readyCount++;
-    }
+    switch (node.kind) {
+      case capzv1alpha3.AzureMachine:
+        stats.totalCount++;
 
-    if (node.spec?.failureDomain) {
-      stats.availabilityZones.push(node.spec.failureDomain);
+        if (
+          capiv1alpha3.isConditionTrue(node, capiv1alpha3.conditionTypeReady)
+        ) {
+          stats.readyCount++;
+        }
+
+        if (node.spec?.failureDomain) {
+          stats.availabilityZones.push(node.spec.failureDomain);
+        }
+
+        break;
+
+      case infrav1alpha3.AWSControlPlane:
+        if (node.spec.availabilityZones) {
+          stats.availabilityZones.push(...node.spec.availabilityZones);
+        }
+
+        break;
+
+      case infrav1alpha3.G8sControlPlane:
+        stats.totalCount = node.spec.replicas ?? 0;
+        stats.readyCount = node.status?.readyReplicas ?? 0;
+
+        break;
     }
   }
 
@@ -193,4 +388,67 @@ export async function updateClusterReleaseVersion(
   cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
 
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+}
+
+export function canSwitchClusterToHACPNodes(
+  provider: PropertiesOf<typeof Providers>,
+  cluster: Cluster,
+  providerCluster: ProviderCluster,
+  controlPlaneNodes: ControlPlaneNode[]
+): boolean {
+  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  if (!releaseVersion) return false;
+
+  if (!supportsHACPNodes(provider, releaseVersion)) return false;
+
+  const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
+    getClusterConditions(cluster, providerCluster);
+  if (isConditionUnknown || isCreating || isUpgrading || isDeleting) {
+    return false;
+  }
+
+  for (const controlPlaneNode of controlPlaneNodes) {
+    if (controlPlaneNode.kind === infrav1alpha3.G8sControlPlane) {
+      const replicas = controlPlaneNode.spec.replicas;
+
+      return !replicas || replicas === 1;
+    }
+  }
+
+  return false;
+}
+
+export async function switchClusterToHACPNodes(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: Cluster
+) {
+  const controlPlaneNodes = await fetchControlPlaneNodesForCluster(
+    httpClientFactory,
+    auth,
+    cluster
+  );
+
+  const requests: Promise<ControlPlaneNode>[] = [];
+  for (const controlPlaneNode of controlPlaneNodes) {
+    if (controlPlaneNode.kind === infrav1alpha3.G8sControlPlane) {
+      const client = httpClientFactory();
+
+      controlPlaneNode.spec.replicas = Constants.AWS_HA_MASTERS_MAX_NODES;
+
+      requests.push(
+        infrav1alpha3.updateG8sControlPlane(client, auth, controlPlaneNode)
+      );
+    }
+  }
+
+  if (requests.length < 1) return;
+
+  const updatedControlPlaneNodes = await Promise.all(requests);
+
+  mutate(
+    fetchControlPlaneNodesForClusterKey(cluster),
+    updatedControlPlaneNodes,
+    false
+  );
 }

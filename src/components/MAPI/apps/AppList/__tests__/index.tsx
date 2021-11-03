@@ -11,7 +11,7 @@ import AppsProvider from 'MAPI/apps/AppsProvider';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -22,7 +22,7 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppList>) {
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <AppsProvider>
         <AppList {...p} />
       </AppsProvider>
@@ -40,18 +40,14 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppList>) {
 }
 
 describe('AppList', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
 
   it('displays all the apps in the pre-selected catalogs', async () => {
     nock(window.config.mapiEndpoint)
-      .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.appCatalogList);
+      .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.catalogList);
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -78,8 +74,8 @@ describe('AppList', () => {
 
   it('displays apps in the selected catalogs', async () => {
     nock(window.config.mapiEndpoint)
-      .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.appCatalogList);
+      .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.catalogList);
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -134,8 +130,8 @@ describe('AppList', () => {
     const app = 'coredns';
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/application.giantswarm.io/v1alpha1/appcatalogs/')
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.appCatalogList);
+      .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.catalogList);
 
     nock(window.config.mapiEndpoint)
       .get(

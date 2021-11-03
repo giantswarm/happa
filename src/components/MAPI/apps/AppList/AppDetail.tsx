@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push, replace } from 'connected-react-router';
+import { Box } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
@@ -22,6 +23,8 @@ import useSWR from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
+import InspectAppGuide from '../guides/InspectAppGuide';
+import InstallAppGuide from '../guides/InstallAppGuide';
 import { isTestRelease } from '../utils';
 import {
   fetchAppCatalogEntryReadme,
@@ -47,6 +50,7 @@ function formatVersion(version: string): string {
   return version.replace(/^v/, '');
 }
 
+// eslint-disable-next-line complexity
 const AppDetail: React.FC<{}> = () => {
   const match = useRouteMatch<{
     catalogName: string;
@@ -59,51 +63,22 @@ const AppDetail: React.FC<{}> = () => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const appCatalogClient = useRef(clientFactory());
-  const { data: appCatalog, error: appCatalogError } = useSWR<
-    applicationv1alpha1.IAppCatalog,
-    GenericResponseError
-  >(applicationv1alpha1.getAppCatalogKey('', catalogName), () =>
-    applicationv1alpha1.getAppCatalog(
-      appCatalogClient.current,
-      auth,
-      '',
-      catalogName
-    )
-  );
-
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (appCatalogError) {
-      const errorMessage = extractErrorMessage(appCatalogError);
-
-      new FlashMessage(
-        'There was a problem loading the app catalog.',
-        messageType.ERROR,
-        messageTTL.FOREVER,
-        errorMessage
-      );
-
-      ErrorReporter.getInstance().notify(appCatalogError);
-
-      dispatch(push(AppsRoutes.Home));
-    }
-  }, [appCatalogError, dispatch]);
 
   const appCatalogEntryListClient = useRef(clientFactory());
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions = useMemo(
-    () => ({
-      labelSelector: {
-        matchingLabels: {
-          [applicationv1alpha1.labelAppName]: app,
-          [applicationv1alpha1.labelAppCatalog]: catalogName,
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    useMemo(
+      () => ({
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelAppName]: app,
+            [applicationv1alpha1.labelAppCatalog]: catalogName,
+          },
         },
-      },
-    }),
-    [app, catalogName]
-  );
+      }),
+      [app, catalogName]
+    );
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
@@ -166,7 +141,12 @@ const AppDetail: React.FC<{}> = () => {
   useEffect(() => {
     if (appCatalogEntryList && !selectedEntry) {
       new FlashMessage(
-        `Couldn't find version <code>${version}</code> for <code>${app}</code>`,
+        (
+          <>
+            Couldn&apos;t find version <code>{version}</code> for{' '}
+            <code>{app}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER
       );
@@ -205,7 +185,45 @@ const AppDetail: React.FC<{}> = () => {
     return selectedEntry.spec.chart.keywords ?? [];
   }, [selectedEntry]);
 
-  const catalogIcon = appCatalog ? appCatalog.spec.logoURL ?? '' : undefined;
+  const catalogClient = useRef(clientFactory());
+
+  const catalogKey = selectedEntry
+    ? applicationv1alpha1.getCatalogKey(
+        selectedEntry.spec.catalog.namespace,
+        catalogName
+      )
+    : null;
+
+  const { data: catalog, error: catalogError } = useSWR<
+    applicationv1alpha1.ICatalog,
+    GenericResponseError
+  >(catalogKey, () =>
+    applicationv1alpha1.getCatalog(
+      catalogClient.current,
+      auth,
+      selectedEntry!.spec.catalog.namespace,
+      catalogName
+    )
+  );
+
+  useEffect(() => {
+    if (catalogError) {
+      const errorMessage = extractErrorMessage(catalogError);
+
+      new FlashMessage(
+        `There was a problem loading the app's catalog.`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(catalogError);
+
+      dispatch(push(AppsRoutes.Home));
+    }
+  }, [catalogError, dispatch]);
+
+  const catalogIcon = catalog ? catalog.spec.logoURL ?? '' : undefined;
 
   const appIconURL = selectedEntry
     ? selectedEntry.spec.chart.icon ?? ''
@@ -232,35 +250,56 @@ const AppDetail: React.FC<{}> = () => {
           pathname: match.url,
         }}
       >
-        <AppDetailPage
-          catalogName={appCatalog?.spec.title}
-          catalogIcon={catalogIcon}
-          catalogDescription={appCatalog?.spec.description}
-          otherVersions={otherEntries}
-          appTitle={appName}
-          appIconURL={appIconURL}
-          chartVersion={chartVersion}
-          createDate={creationDate}
-          includesVersion={appVersion}
-          description={chartDescription}
-          website={chartWebsite}
-          keywords={keywords}
-          readmeURL={readmeURL}
-          readmeError={extractErrorMessage(appReadmeError)}
-          readme={appReadme}
-          selectVersion={selectVersion}
-          installAppModal={
-            selectedEntry && otherEntries ? (
-              <AppInstallModal
-                appName={appName!}
-                chartName={appName!}
-                catalogName={appCatalog!.metadata.name}
-                versions={otherEntries}
-                selectedClusterID={selectedClusterID}
+        <>
+          <AppDetailPage
+            catalogName={catalog?.spec.title}
+            catalogIcon={catalogIcon}
+            catalogDescription={catalog?.spec.description}
+            otherVersions={otherEntries}
+            appTitle={appName}
+            appIconURL={appIconURL}
+            chartVersion={chartVersion}
+            createDate={creationDate}
+            includesVersion={appVersion}
+            description={chartDescription}
+            website={chartWebsite}
+            keywords={keywords}
+            readmeURL={readmeURL}
+            readmeError={extractErrorMessage(appReadmeError)}
+            readme={appReadme}
+            selectVersion={selectVersion}
+            installAppModal={
+              selectedEntry && otherEntries && catalog ? (
+                <AppInstallModal
+                  appName={appName!}
+                  chartName={appName!}
+                  catalogName={catalog.metadata.name}
+                  versions={otherEntries}
+                  selectedClusterID={selectedClusterID}
+                />
+              ) : undefined
+            }
+          />
+          {selectedEntry && (
+            <Box margin={{ top: 'medium' }} direction='column' gap='small'>
+              <InspectAppGuide
+                appName={selectedEntry.spec.appName}
+                catalogName={selectedEntry.spec.catalog.name}
+                catalogNamespace={
+                  selectedEntry.spec.catalog.namespace === 'default'
+                    ? undefined
+                    : selectedEntry.spec.catalog.namespace
+                }
+                selectedVersion={selectedEntry.spec.version}
               />
-            ) : undefined
-          }
-        />
+              <InstallAppGuide
+                appName={selectedEntry.spec.appName}
+                catalogName={selectedEntry.spec.catalog.name}
+                selectedVersion={selectedEntry.spec.version}
+              />
+            </Box>
+          )}
+        </>
       </Breadcrumb>
     </DocumentTitle>
   );

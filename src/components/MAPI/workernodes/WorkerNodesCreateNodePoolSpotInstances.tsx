@@ -1,57 +1,45 @@
 import AddNodePoolMachineType from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolMachineType';
-import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolSpotInstances';
 import { Text } from 'grommet';
 import { ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import React, { useRef, useState } from 'react';
-import { Constants } from 'shared/constants';
+import React, { useState } from 'react';
+import { Providers } from 'shared/constants';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import {
   INodePoolPropertyProps,
-  INodePoolSpotInstancesConfigAzure,
   NodePoolSpotInstancesConfig,
   withNodePoolSpotInstances,
 } from './patches';
+import WorkerNodesCreateNodePoolSpotInstancesAWS from './WorkerNodesCreateNodePoolSpotInstancesAWS';
+import WorkerNodesCreateNodePoolSpotInstancesAzure from './WorkerNodesCreateNodePoolSpotInstancesAzure';
 
 function getLabel(providerNodePool: ProviderNodePool): string {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Spot virtual machines';
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return 'Instance distribution';
     default:
       return '';
   }
 }
 
 function getToggleLabel(providerNodePool: ProviderNodePool): string {
-  switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  switch (providerNodePool?.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Enabled';
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return 'Enable Spot instances';
     default:
       return '';
   }
 }
-
-function validateMaxPrice(maxPrice: number): string {
-  if (maxPrice < Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN) {
-    return `The value should be between ${Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN} and ${Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MAX}.`;
-  }
-
-  return '';
-}
-
-function formatMaxPrice(maxPrice: number, useOnDemandPricing: boolean): number {
-  if (useOnDemandPricing && maxPrice < 0) return 0;
-
-  return maxPrice;
-}
-
-const notImplementedCallback = () => {};
 
 interface IWorkerNodesCreateNodePoolSpotInstancesProps
   extends INodePoolPropertyProps,
@@ -60,99 +48,77 @@ interface IWorkerNodesCreateNodePoolSpotInstancesProps
       'onChange' | 'id'
     > {}
 
-const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoolSpotInstancesProps> = ({
-  id,
-  providerNodePool,
-  onChange,
-  readOnly,
-  disabled,
-  ...props
-}) => {
-  const value = getProviderNodePoolSpotInstances(providerNodePool);
-  const useOnDemandPricing =
-    typeof (value as INodePoolSpotInstancesAzure).maxPrice === 'number' &&
-    (value as INodePoolSpotInstancesAzure).maxPrice < 0;
+const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoolSpotInstancesProps> =
+  ({ id, providerNodePool, onChange, readOnly, disabled, ...props }) => {
+    const provider = window.config.info.general.provider;
 
-  const patchConfig = useRef<NodePoolSpotInstancesConfig>({
-    enabled: value.enabled,
-  });
+    const value = getProviderNodePoolSpotInstances(providerNodePool);
+    const [featureEnabled, setFeatureEnabled] = useState(
+      value?.enabled ?? false
+    );
 
-  const [validationError, setValidationError] = useState('');
+    const [validationError, setValidationError] = useState('');
 
-  const appendChanges = (
-    config: NodePoolSpotInstancesConfig,
-    errorMessage = ''
-  ) => {
-    onChange({
-      isValid: errorMessage.length < 1,
-      patch: withNodePoolSpotInstances(config),
-    });
-  };
+    const appendChanges = (
+      config: NodePoolSpotInstancesConfig,
+      errorMessage = ''
+    ) => {
+      setValidationError(errorMessage);
 
-  const handleToggleFeature = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValidationError('');
+      onChange({
+        isValid: errorMessage.length < 1,
+        patch: withNodePoolSpotInstances(config),
+      });
+    };
 
-    patchConfig.current.enabled = e.target.checked;
+    const handleToggleFeature = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValidationError('');
+      setFeatureEnabled(e.target.checked);
 
-    appendChanges(patchConfig.current);
-  };
+      switch (provider) {
+        case Providers.AZURE:
+          appendChanges({ enabled: e.target.checked, maxPrice: '' });
+          break;
+        case Providers.AWS:
+          appendChanges({
+            enabled: e.target.checked,
+            onDemandBaseCapacity: 0,
+            onDemandPercentageAboveBaseCapacity: 0,
+          });
+          break;
+      }
+    };
 
-  const handleSetMaxPrice = (newPrice: number) => {
-    const validationResult = validateMaxPrice(newPrice);
-    setValidationError(validationResult);
-
-    (patchConfig.current as INodePoolSpotInstancesConfigAzure).maxPrice = newPrice.toString();
-
-    appendChanges(patchConfig.current, validationResult);
-  };
-
-  const toggleOnDemandPricing = (enabled: boolean) => {
-    setValidationError('');
-
-    const nextPrice = enabled
-      ? -1
-      : Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN;
-
-    (patchConfig.current as INodePoolSpotInstancesConfigAzure).maxPrice = nextPrice.toString();
-
-    appendChanges(patchConfig.current);
-  };
-
-  const provider = window.config.info.general.provider;
-
-  const formattedMaxPrice = formatMaxPrice(
-    (value as INodePoolSpotInstancesAzure).maxPrice,
-    useOnDemandPricing
-  );
-
-  return (
-    <InputGroup htmlFor={id} label={getLabel(providerNodePool)} {...props}>
-      <CheckBoxInput
-        id={id}
-        checked={value.enabled}
-        onChange={handleToggleFeature}
-        label={
-          <Text weight='normal' color='text'>
-            {getToggleLabel(providerNodePool)}
-          </Text>
-        }
-      />
-      {value.enabled && (
-        <AddNodePoolSpotInstances
-          provider={provider}
-          spotPercentage={-1}
-          setSpotPercentage={notImplementedCallback}
-          onDemandBaseCapacity={-1}
-          setOnDemandBaseCapacity={notImplementedCallback}
-          maxPrice={formattedMaxPrice}
-          setMaxPrice={handleSetMaxPrice}
-          maxPriceValidationError={validationError}
-          useOnDemandPricing={useOnDemandPricing}
-          setUseOnDemandPricing={toggleOnDemandPricing}
+    return (
+      <InputGroup htmlFor={id} label={getLabel(providerNodePool)} {...props}>
+        <CheckBoxInput
+          id={id}
+          checked={featureEnabled}
+          onChange={handleToggleFeature}
+          label={
+            <Text weight='normal' color='text'>
+              {getToggleLabel(providerNodePool)}
+            </Text>
+          }
         />
-      )}
-    </InputGroup>
-  );
-};
+
+        {provider === Providers.AZURE && featureEnabled && (
+          <WorkerNodesCreateNodePoolSpotInstancesAzure
+            value={value as INodePoolSpotInstancesAzure}
+            onChange={appendChanges}
+            errorMessage={validationError}
+          />
+        )}
+
+        {provider === Providers.AWS && featureEnabled && (
+          <WorkerNodesCreateNodePoolSpotInstancesAWS
+            value={value as INodePoolSpotInstancesAWS}
+            onChange={appendChanges}
+            errorMessage={validationError}
+          />
+        )}
+      </InputGroup>
+    );
+  };
 
 export default WorkerNodesCreateNodePoolSpotInstances;

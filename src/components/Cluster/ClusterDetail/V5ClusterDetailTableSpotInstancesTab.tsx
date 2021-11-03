@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Constants, Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { NodePoolsColumnHeader } from './V5ClusterDetailTable';
 
@@ -9,21 +9,19 @@ interface IV5ClusterDetailTableSpotInstancesTabProps {
   provider: PropertiesOf<typeof Providers>;
 }
 
-const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotInstancesTabProps> = ({
-  provider,
-}) => {
-  const explanation = getExplanation(provider);
-  const tabLabel = getTabLabel(provider);
+const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotInstancesTabProps> =
+  ({ provider }) => {
+    const explanation = getExplanation(provider);
+    const tabLabel = getTabLabel(provider);
 
-  return (
-    <OverlayTrigger
-      overlay={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
-      placement='top'
-    >
-      <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
-    </OverlayTrigger>
-  );
-};
+    return (
+      <TooltipContainer
+        content={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
+      >
+        <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
+      </TooltipContainer>
+    );
+  };
 
 export default V5ClusterDetailTableSpotInstancesTab;
 

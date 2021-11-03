@@ -43,9 +43,10 @@ const ConfirmationPrompt = React.forwardRef<
 
         if (cancelButtonRef.current) {
           // Focus on the cancel button if it exists.
-          const cancelButtonElement = cancelButtonRef.current.querySelector<HTMLButtonElement>(
-            '.cancel-button'
-          );
+          const cancelButtonElement =
+            cancelButtonRef.current.querySelector<HTMLButtonElement>(
+              '.cancel-button'
+            );
           cancelButtonElement?.focus();
         } else if (wrapperRef.current) {
           // Otherwise focus on the wrapper element.

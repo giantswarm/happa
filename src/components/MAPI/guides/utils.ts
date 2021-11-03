@@ -42,73 +42,6 @@ export function withContext(context: string): KubectlGSCommandModifier {
 }
 
 /**
- * All the configuration options supported by the
- * `template cluster` command.
- * Taken from:
- * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/cluster/flag.go#L14}
- * */
-export interface IKubectlGSTemplateClusterCommandConfig {
-  provider: string;
-  owner: string;
-  release?: string;
-  name?: string;
-  description?: string;
-  labels?: Record<string, string>;
-  controlPlaneAZs?: string[];
-  output?: string;
-}
-
-/**
- * Generate modifier for constructing the
- * `kubectl gs template cluster` command.
- * */
-export function withTemplateCluster(
-  config: IKubectlGSTemplateClusterCommandConfig
-): KubectlGSCommandModifier {
-  return (parts) => {
-    const newParts = [
-      ...parts,
-      'template',
-      'cluster',
-      '--provider',
-      config.provider,
-      '--owner',
-      config.owner,
-    ];
-
-    if (config.name) {
-      newParts.push('--name', config.name);
-    }
-
-    if (config.description) {
-      newParts.push('--description', `"${config.description}"`);
-    }
-
-    if (config.release) {
-      newParts.push('--release', config.release);
-    }
-
-    if (config.labels) {
-      for (const [key, value] of Object.entries(config.labels)) {
-        newParts.push('--label', `"${key}=${value}"`);
-      }
-    }
-
-    if (config.controlPlaneAZs) {
-      for (const controlPlaneAZ of config.controlPlaneAZs) {
-        newParts.push('--control-plane-az', controlPlaneAZ);
-      }
-    }
-
-    if (config.output) {
-      newParts.push('--output', `"${config.output}"`);
-    }
-
-    return newParts;
-  };
-}
-
-/**
  * Relevant configuration options supported by the
  * `get apps` command.
  * */
@@ -188,6 +121,119 @@ export function withGetClusters(
 }
 
 /**
+ * All the configuration options supported by the
+ * `login` command.
+ * Taken from:
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/login/flag.go}
+ * */
+export interface IKubectlGSLoginCommandConfig {
+  managementCluster: string;
+  workloadCluster?: string;
+  workloadClusterOrganization?: string;
+  certificateGroup?: string[];
+  certificateTTL?: string;
+}
+
+/**
+ * Generate modifier for constructing the
+ * `kubectl gs login` command.
+ * */
+export function withLogin(
+  config: IKubectlGSLoginCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [...parts, 'login', config.managementCluster];
+
+    if (config.workloadCluster) {
+      newParts.push('--workload-cluster', config.workloadCluster);
+    }
+
+    if (config.workloadClusterOrganization) {
+      newParts.push('--organization', config.workloadClusterOrganization);
+    }
+
+    if (config.certificateGroup) {
+      for (const group of config.certificateGroup) {
+        newParts.push('--certificate-group', group);
+      }
+    }
+
+    if (config.certificateTTL) {
+      newParts.push('--certificate-ttl', config.certificateTTL);
+    }
+
+    return newParts;
+  };
+}
+
+/**
+ * All the configuration options supported by the
+ * `template cluster` command.
+ * Taken from:
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/cluster/flag.go#L14}
+ * */
+export interface IKubectlGSTemplateClusterCommandConfig {
+  provider: string;
+  owner: string;
+  release?: string;
+  name?: string;
+  description?: string;
+  labels?: Record<string, string>;
+  controlPlaneAZs?: string[];
+  output?: string;
+}
+
+/**
+ * Generate modifier for constructing the
+ * `kubectl gs template cluster` command.
+ * */
+export function withTemplateCluster(
+  config: IKubectlGSTemplateClusterCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [
+      ...parts,
+      'template',
+      'cluster',
+      '--provider',
+      config.provider,
+      '--owner',
+      config.owner,
+    ];
+
+    if (config.name) {
+      newParts.push('--name', config.name);
+    }
+
+    if (config.description) {
+      newParts.push('--description', `"${config.description}"`);
+    }
+
+    if (config.release) {
+      newParts.push('--release', config.release);
+    }
+
+    if (config.labels) {
+      for (const [key, value] of Object.entries(config.labels)) {
+        newParts.push('--label', `"${key}=${value}"`);
+      }
+    }
+
+    if (config.controlPlaneAZs) {
+      for (const controlPlaneAZ of config.controlPlaneAZs) {
+        newParts.push('--control-plane-az', controlPlaneAZ);
+      }
+    }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
+/**
  * Configuration options supported by the `template nodepool` command.
  * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/nodepool/flag.go#L13}
  * */
@@ -197,11 +243,14 @@ export interface IKubectlGSTemplateNodePoolCommandConfig {
   clusterName: string;
   description?: string;
   azureVMSize?: string;
+  awsInstanceType?: string;
   nodePoolAZs?: string[];
   azureUseSpotVMs?: boolean;
   azureSpotVMsMaxPrice?: number;
   nodesMin?: number;
   nodesMax?: number;
+  awsOnDemandPercentageAboveBaseCapacity?: number;
+  awsOnDemandBaseCapacity?: number;
   output?: string;
 }
 
@@ -233,6 +282,10 @@ export function withTemplateNodePool(
       newParts.push('--azure-vm-size', config.azureVMSize);
     }
 
+    if (config.awsInstanceType) {
+      newParts.push('--aws-instance-type', config.awsInstanceType);
+    }
+
     if (config.nodePoolAZs && config.nodePoolAZs.length > 0) {
       newParts.push('--availability-zones', config.nodePoolAZs.join(','));
     }
@@ -245,6 +298,20 @@ export function withTemplateNodePool(
       newParts.push(
         '--azure-spot-vms-max-price',
         `${config.azureSpotVMsMaxPrice}`
+      );
+    }
+
+    if (typeof config.awsOnDemandBaseCapacity !== 'undefined') {
+      newParts.push(
+        '--on-demand-base-capacity',
+        String(config.awsOnDemandBaseCapacity)
+      );
+    }
+
+    if (typeof config.awsOnDemandPercentageAboveBaseCapacity !== 'undefined') {
+      newParts.push(
+        '--on-demand-percentage-above-base-capacity',
+        String(config.awsOnDemandPercentageAboveBaseCapacity)
       );
     }
 
@@ -261,6 +328,39 @@ export function withTemplateNodePool(
     ) {
       newParts.push('--nodes-max', `${config.nodesMax}`);
     }
+
+    if (config.output) {
+      newParts.push('--output', `"${config.output}"`);
+    }
+
+    return newParts;
+  };
+}
+
+/**
+ * Configuration options supported by the `template organization` command.
+ * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/organization/flag.go}
+ * */
+export interface IKubectlGSTemplateOrganizationCommandConfig {
+  name: string;
+  output?: string;
+}
+
+/**
+ * Generate a modifier for constructing the
+ * `kubectl gs template organization` command.
+ * */
+export function withTemplateOrganization(
+  config: IKubectlGSTemplateOrganizationCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [
+      ...parts,
+      'template',
+      'organization',
+      '--name',
+      config.name,
+    ];
 
     if (config.output) {
       newParts.push('--output', `"${config.output}"`);

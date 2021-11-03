@@ -1,9 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
   clustersForOrg,
   compareDates,
@@ -269,7 +264,7 @@ token: can't be blank`)
       expect(screen.getByText(/n\/a/)).toBeInTheDocument();
     });
 
-    it('renders a date relative from now', async () => {
+    it('renders a date relative from now', () => {
       // eslint-disable-next-line no-magic-numbers
       const date = new Date(Date.now() - 50000).toISOString();
       render(relativeDate(date));
@@ -281,7 +276,7 @@ token: can't be blank`)
       fireEvent.mouseEnter(label);
       expect(screen.getByText(formattedDate)).toBeInTheDocument();
       fireEvent.mouseLeave(label);
-      await waitForElementToBeRemoved(() => screen.getByText(formattedDate));
+      expect(screen.queryByText(formattedDate)).not.toBeInTheDocument();
     });
   });
 

@@ -67,7 +67,8 @@ interface IClusterDetailKeyPairsProps {}
 
 const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const { pathname } = useLocation();
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
+  const { clusterId, orgId } =
+    useParams<{ clusterId: string; orgId: string }>();
 
   const keyPairListClient = useHttpClient();
   const auth = useAuthProvider();
@@ -89,7 +90,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   useEffect(() => {
     if (keyPairListError) {
       new FlashMessage(
-        'There was a problem loading key pairs.',
+        'There was a problem loading client certificates.',
         messageType.ERROR,
         messageTTL.LONG,
         extractErrorMessage(keyPairListError)
@@ -109,19 +110,16 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     );
   }, [keyPairList, selectedKeyPairSerial]);
 
-  const [
-    selectedKeyPairExpirationDate,
-    isSelectedKeyPairExpiringSoon,
-  ] = useMemo(() => {
-    if (!selectedKeyPair) return [undefined, false];
+  const [selectedKeyPairExpirationDate, isSelectedKeyPairExpiringSoon] =
+    useMemo(() => {
+      if (!selectedKeyPair) return [undefined, false];
 
-    const expirationDate = getKeyPairExpirationDate(
-      selectedKeyPair
-    ).toISOString();
-    const isExpiringSoon = isKeyPairExpiringSoon(selectedKeyPair);
+      const expirationDate =
+        getKeyPairExpirationDate(selectedKeyPair).toISOString();
+      const isExpiringSoon = isKeyPairExpiringSoon(selectedKeyPair);
 
-    return [expirationDate, isExpiringSoon];
-  }, [selectedKeyPair]);
+      return [expirationDate, isExpiringSoon];
+    }, [selectedKeyPair]);
 
   const handleOpenDetails = (serial: string) => () => {
     setSelectedKeyPairSerial(serial);
@@ -132,19 +130,20 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   };
 
   return (
-    <DocumentTitle title={`Key Pairs | ${clusterId}`}>
+    <DocumentTitle title={`Client Certificates | ${clusterId}`}>
       <Breadcrumb
         data={{
-          title: 'KEY PAIRS',
+          title: 'CLIENT CERTIFICATES',
           pathname,
         }}
       >
         <Box>
           <Box>
             <Text>
-              Key pairs consist of an RSA private key and certificate, signed by
-              the certificate authority (CA) belonging to this cluster. They are
-              used for access to the cluster via the Kubernetes API.
+              Client certificates consist of an RSA private key and an X.509
+              certificate, signed by the certificate authority (CA) belonging to
+              this cluster. They are used for access to the cluster via the
+              Kubernetes API.
             </Text>
           </Box>
           <Table width='100%' margin={{ top: 'medium' }}>
@@ -206,7 +205,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                 <TableRow>
                   <TableCell>
                     <Text color='text-weak'>
-                      There are no key pairs to display.
+                      There are no client certificates to display.
                     </Text>
                   </TableCell>
                 </TableRow>
@@ -228,7 +227,10 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
         </Box>
 
         <Box margin={{ top: 'large' }} direction='column' gap='small'>
-          <CreateKeyPairGuide />
+          <CreateKeyPairGuide
+            clusterName={clusterId}
+            organizationName={orgId}
+          />
         </Box>
       </Breadcrumb>
     </DocumentTitle>

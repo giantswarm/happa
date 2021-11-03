@@ -74,9 +74,7 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         >
           <SelectedInstanceType>{selectedInstanceType}</SelectedInstanceType>
         </SelectedInstanceTypeItem>
-        <SelectedDescription>
-          {`${cpu} CPU cores, ${ram} GB RAM each`}
-        </SelectedDescription>
+        <SelectedDescription>{`${cpu} CPU cores, ${ram} GB RAM each`}</SelectedDescription>
       </SelectedWrapper>
       <div>
         <RUMActionTarget

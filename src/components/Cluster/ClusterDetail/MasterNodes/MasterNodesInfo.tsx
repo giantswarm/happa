@@ -58,7 +58,7 @@ const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
     maxNumOfNodes as number
   );
 
-  const handleOnConvert = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnConvert = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
 

@@ -39,9 +39,8 @@ describe('Copyable', () => {
       children: content,
       copyText: content,
     };
-    const { getByTitle, queryByText, rerender } = renderWithProps(
-      componentProps
-    );
+    const { getByTitle, queryByText, rerender } =
+      renderWithProps(componentProps);
 
     const copyButton = getByTitle(/copy content to clipboard/i);
     expect(copyButton).toBeInTheDocument();

@@ -2,9 +2,9 @@ import CustomError, { IStackFrame } from 'lib/errors/CustomError';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { IStackTraceGPS } from 'stacktrace-gps';
 
-const mockResolver: IStackTraceGPS = ({
+const mockResolver: IStackTraceGPS = {
   pinpoint: jest.fn(),
-} as unknown) as IStackTraceGPS;
+} as unknown as IStackTraceGPS;
 
 const mockStackFrame = ({
   functionName,
@@ -23,9 +23,9 @@ const mockStackFrame = ({
   };
 };
 
-const mockReporter: ErrorReporter = ({
+const mockReporter: ErrorReporter = {
   notify: jest.fn(),
-} as unknown) as ErrorReporter;
+} as unknown as ErrorReporter;
 
 describe('CustomError', () => {
   afterEach(() => {

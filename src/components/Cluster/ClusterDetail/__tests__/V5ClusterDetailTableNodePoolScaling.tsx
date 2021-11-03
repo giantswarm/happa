@@ -1,8 +1,4 @@
-import {
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { Providers } from 'shared/constants';
 import { renderWithTheme } from 'testUtils/renderUtils';
 
@@ -21,7 +17,7 @@ describe('V5ClusterDetailTableNodePoolScaling', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('renders the spot instances column if the feature is supported', async () => {
+    it('renders the spot instances column if the feature is supported', () => {
       renderWithTheme(V5ClusterDetailTableNodePoolScaling, {
         provider: Providers.AZURE,
         supportsSpotInstances: true,
@@ -37,7 +33,7 @@ describe('V5ClusterDetailTableNodePoolScaling', () => {
       expect(explanationElement).toBeInTheDocument();
       fireEvent.mouseLeave(labelElement);
 
-      await waitForElementToBeRemoved(() => screen.getByText(explanationText));
+      expect(screen.queryByText(explanationText)).not.toBeInTheDocument();
     });
   });
 });

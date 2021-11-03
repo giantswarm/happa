@@ -256,15 +256,8 @@ export class HttpClientImpl implements IHttpClient {
 
   async execute<T = HttpBody>(): Promise<GenericResponse<T>> {
     const currRequestConfig = this.getRequestConfig();
-    const {
-      baseURL,
-      headers,
-      url,
-      method,
-      data,
-      forceCORS,
-      timeout,
-    } = currRequestConfig;
+    const { baseURL, headers, url, method, data, forceCORS, timeout } =
+      currRequestConfig;
 
     try {
       await this.onBeforeRequest(currRequestConfig);

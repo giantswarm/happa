@@ -5,13 +5,13 @@ exports[`CurrencyInput renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-m9hood-0 cTSHiS"
+      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 lkmfGs FormField__FormFieldContentBox-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 lkmfGs FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"

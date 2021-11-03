@@ -42,127 +42,128 @@ interface IAccessControlSubjectAddFormProps
   isLoading?: boolean;
 }
 
-const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> = ({
-  onAdd,
-  onToggleAdding,
-  isAdding,
-  isLoading,
-  errorMessage,
-  onClearError,
-  suggestions,
-  ...props
-}) => {
-  const [value, setValue] = useState('');
-  const debouncedValue = useDebounce(value, FILTER_DEBOUNCE_RATE);
-  const [visibleSuggestions, setVisibleSuggestions] = useState<string[]>([]);
+const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
+  ({
+    onAdd,
+    onToggleAdding,
+    isAdding,
+    isLoading,
+    errorMessage,
+    onClearError,
+    suggestions,
+    ...props
+  }) => {
+    const [value, setValue] = useState('');
+    const debouncedValue = useDebounce(value, FILTER_DEBOUNCE_RATE);
+    const [visibleSuggestions, setVisibleSuggestions] = useState<string[]>([]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    const newValue = parseSubjects(value);
-    onAdd(newValue);
-  };
+      const newValue = parseSubjects(value);
+      onAdd(newValue);
+    };
 
-  const handleOnEsc = (e: React.KeyboardEvent<HTMLElement>) => {
-    e.preventDefault();
+    const handleOnEsc = (e: React.KeyboardEvent<HTMLElement>) => {
+      e.preventDefault();
 
-    onToggleAdding();
-  };
+      onToggleAdding();
+    };
 
-  const handleChangeSuggestions = (
-    currentValue: string,
-    suggestionCollection: string[]
-  ) => {
-    const newSuggestions = filterSubjectSuggestions(
-      currentValue,
-      suggestionCollection,
-      VISIBLE_SUGGESTION_COUNT
-    );
-    setVisibleSuggestions(newSuggestions);
-  };
+    const handleChangeSuggestions = (
+      currentValue: string,
+      suggestionCollection: string[]
+    ) => {
+      const newSuggestions = filterSubjectSuggestions(
+        currentValue,
+        suggestionCollection,
+        VISIBLE_SUGGESTION_COUNT
+      );
+      setVisibleSuggestions(newSuggestions);
+    };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-
-    if (errorMessage) {
-      onClearError();
-    }
-  };
-
-  const handleSuggestionSelect: React.ComponentPropsWithoutRef<
-    typeof TextInput
-  >['onSuggestionSelect'] = (e) => {
-    const newValue = appendSubjectSuggestionToValue(value, e.suggestion);
-    setValue(newValue);
-  };
-
-  useEffect(() => {
-    if (suggestions) {
-      handleChangeSuggestions(debouncedValue, suggestions);
-    }
-  }, [debouncedValue, suggestions]);
-
-  useLayoutEffect(() => {
-    if (!isAdding) {
-      setValue('');
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
 
       if (errorMessage) {
         onClearError();
       }
-    }
-  }, [errorMessage, isAdding, onClearError]);
+    };
 
-  return (
-    <Box {...props}>
-      {isAdding ? (
-        <Box direction='row' gap='small' align='center'>
-          <Keyboard onEsc={handleOnEsc}>
-            <form onSubmit={handleSubmit} aria-label='Subjects to add'>
-              <TextInput
-                name='values'
-                id='values'
-                size='small'
-                margin='none'
-                contentProps={{
-                  width: 'medium',
-                  direction: 'row',
-                  round: 'xxsmall',
-                }}
-                readOnly={isLoading}
-                autoFocus={true}
-                onChange={handleChange}
-                value={value}
-                error={errorMessage}
-                placeholder='e.g. subject1, subject2, subject3'
-                onSuggestionSelect={handleSuggestionSelect}
-                suggestions={visibleSuggestions}
-                spellCheck={false}
-              >
-                <SaveButton type='submit' primary={true} disabled={isLoading}>
-                  OK
-                </SaveButton>
-              </TextInput>
-            </form>
-          </Keyboard>
-          {isLoading && (
-            <StyledLoadingIndicator
-              loading={true}
-              loadingPosition='right'
-              timeout={0}
-            />
-          )}
-        </Box>
-      ) : (
-        <Button
-          onClick={onToggleAdding}
-          icon={<i className='fa fa-add-circle' />}
-        >
-          Add
-        </Button>
-      )}
-    </Box>
-  );
-};
+    const handleSuggestionSelect: React.ComponentPropsWithoutRef<
+      typeof TextInput
+    >['onSuggestionSelect'] = (e) => {
+      const newValue = appendSubjectSuggestionToValue(value, e.suggestion);
+      setValue(newValue);
+    };
+
+    useEffect(() => {
+      if (suggestions) {
+        handleChangeSuggestions(debouncedValue, suggestions);
+      }
+    }, [debouncedValue, suggestions]);
+
+    useLayoutEffect(() => {
+      if (!isAdding) {
+        setValue('');
+
+        if (errorMessage) {
+          onClearError();
+        }
+      }
+    }, [errorMessage, isAdding, onClearError]);
+
+    return (
+      <Box {...props}>
+        {isAdding ? (
+          <Box direction='row' gap='small' align='center'>
+            <Keyboard onEsc={handleOnEsc}>
+              <form onSubmit={handleSubmit} aria-label='Subjects to add'>
+                <TextInput
+                  name='values'
+                  id='values'
+                  size='small'
+                  margin='none'
+                  contentProps={{
+                    width: 'medium',
+                    direction: 'row',
+                    round: 'xxsmall',
+                  }}
+                  readOnly={isLoading}
+                  autoFocus={true}
+                  onChange={handleChange}
+                  value={value}
+                  error={errorMessage}
+                  placeholder='e.g. subject1, subject2, subject3'
+                  onSuggestionSelect={handleSuggestionSelect}
+                  suggestions={visibleSuggestions}
+                  spellCheck={false}
+                >
+                  <SaveButton type='submit' primary={true} disabled={isLoading}>
+                    OK
+                  </SaveButton>
+                </TextInput>
+              </form>
+            </Keyboard>
+            {isLoading && (
+              <StyledLoadingIndicator
+                loading={true}
+                loadingPosition='right'
+                timeout={0}
+              />
+            )}
+          </Box>
+        ) : (
+          <Button
+            onClick={onToggleAdding}
+            icon={<i className='fa fa-add-circle' />}
+          >
+            Add
+          </Button>
+        )}
+      </Box>
+    );
+  };
 
 AccessControlSubjectAddForm.defaultProps = {
   errorMessage: '',

@@ -26,6 +26,8 @@ export const Constants = {
   DEFAULT_CLUSTER_DESCRIPTION: 'Please add description',
   AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AZURE_CONTROL_PLANE_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
+  AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE: 'm5.xlarge',
+  AWS_NODEPOOL_DEFAULT_INSTANCE_TYPE: 'm5.xlarge',
   AWS_V5_VERSION: '10.0.0',
   AZURE_V5_VERSION: '13.0.0-alpha',
 
@@ -37,6 +39,9 @@ export const Constants = {
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.2.0',
   AWS_HA_MASTERS_VERSION: '11.4.0',
   AWS_HA_MASTERS_MAX_NODES: 3,
+
+  AZURE_CAPZ_VERSION: '20.0.0',
+  AWS_NAMESPACED_CLUSTERS_VERSION: '16.0.0',
 
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
@@ -58,9 +63,6 @@ export const Constants = {
   // eslint-disable-next-line no-magic-numbers
   KEYPAIR_MAX_SAFE_TTL: 24 * 30, // 30 days, in hours
   KEYPAIR_UNSAFE_TTL_EXPLANATION: `The desired expiry date is pretty far away. Please keep in mind that there is no way to revoke keypairs once they've been created.`,
-
-  KVM_INGRESS_TCP_HTTP_PORT: 36000,
-  KVM_INGRESS_TCP_HTTPS_PORT: 36001,
 
   FLATCAR_CONTAINERLINUX_SINCE: '2345.3.1',
 

@@ -6,7 +6,7 @@ import * as MAPIUtils from 'MAPI/utils';
 import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
 import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
@@ -23,7 +23,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <ClusterCreate {...p} />
     </SWRConfig>
   );
@@ -75,10 +75,6 @@ describe('ClusterCreate', () => {
     window.config.info = originalInfo;
   });
 
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
@@ -94,7 +90,7 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockResolvedValue({
       cluster: capiv1alpha3Mocks.randomCluster1,
       providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNode: capzv1alpha3Mocks.randomAzureMachine1,
+      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -116,7 +112,7 @@ describe('ClusterCreate', () => {
     fireEvent.click(createButton);
 
     expect(createClusterMockFn).toHaveBeenCalledWith(
-      expect.any(Object),
+      expect.any(Function),
       expect.any(Object),
       expect.objectContaining({
         cluster: expect.objectContaining({
@@ -141,7 +137,7 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockResolvedValue({
       cluster: capiv1alpha3Mocks.randomCluster1,
       providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNode: capzv1alpha3Mocks.randomAzureMachine1,
+      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -167,7 +163,7 @@ describe('ClusterCreate', () => {
     fireEvent.click(createButton);
 
     expect(createClusterMockFn).toHaveBeenCalledWith(
-      expect.any(Object),
+      expect.any(Function),
       expect.any(Object),
       expect.objectContaining({
         cluster: expect.objectContaining({
@@ -184,13 +180,15 @@ describe('ClusterCreate', () => {
             }),
           }),
         }),
-        controlPlaneNode: expect.objectContaining({
-          metadata: expect.objectContaining({
-            labels: expect.objectContaining({
-              'release.giantswarm.io/version': '14.1.5',
+        controlPlaneNodes: expect.arrayContaining([
+          expect.objectContaining({
+            metadata: expect.objectContaining({
+              labels: expect.objectContaining({
+                'release.giantswarm.io/version': '14.1.5',
+              }),
             }),
           }),
-        }),
+        ]),
       })
     );
 
@@ -206,7 +204,7 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockResolvedValue({
       cluster: capiv1alpha3Mocks.randomCluster1,
       providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNode: capzv1alpha3Mocks.randomAzureMachine1,
+      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -227,14 +225,16 @@ describe('ClusterCreate', () => {
     fireEvent.click(createButton);
 
     expect(createClusterMockFn).toHaveBeenCalledWith(
-      expect.any(Object),
+      expect.any(Function),
       expect.any(Object),
       expect.objectContaining({
-        controlPlaneNode: expect.objectContaining({
-          spec: expect.objectContaining({
-            failureDomain: '3',
+        controlPlaneNodes: expect.arrayContaining([
+          expect.objectContaining({
+            spec: expect.objectContaining({
+              failureDomain: '3',
+            }),
           }),
-        }),
+        ]),
       })
     );
 

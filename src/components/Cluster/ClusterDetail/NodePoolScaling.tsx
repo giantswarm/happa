@@ -1,9 +1,9 @@
+import { Text } from 'grommet';
 import * as React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Providers } from 'shared/constants';
 import { INodePool, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import NodePoolScalingSpotInstancesDetails from './NodePoolScalingSpotInstancesDetails';
 
@@ -56,16 +56,17 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
       <NodesWrapper highlight={current !== desired}>{current}</NodesWrapper>
 
       {supportsSpotInstances && (
-        <OverlayTrigger
-          overlay={
+        <TooltipContainer
+          content={
             <Tooltip id={`${id}-spot-instances-tooltip`}>
-              <NodePoolScalingSpotInstancesDetails
-                provider={provider}
-                nodePool={nodePool}
-              />
+              <Text size='xsmall'>
+                <NodePoolScalingSpotInstancesDetails
+                  provider={provider}
+                  nodePool={nodePool}
+                />
+              </Text>
             </Tooltip>
           }
-          placement='top'
         >
           <NodesWrapper>
             {provider === Providers.AWS && spotInstancesCount}
@@ -76,7 +77,7 @@ const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
               />
             )}
           </NodesWrapper>
-        </OverlayTrigger>
+        </TooltipContainer>
       )}
     </>
   );

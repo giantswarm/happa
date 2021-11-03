@@ -1,6 +1,4 @@
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useSelector } from 'react-redux';
 import {
   selectCanClusterUpgrade,
@@ -14,6 +12,7 @@ import {
 import { IState } from 'stores/state';
 import styled from 'styled-components';
 import theme from 'styles/theme';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const Wrapper = styled.div<{
   disabled: boolean;
@@ -114,10 +113,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
   };
 
   return (
-    <OverlayTrigger
-      overlay={<Tooltip id='tooltip'>{tooltip}</Tooltip>}
-      placement='top'
-    >
+    <TooltipContainer content={<Tooltip>{tooltip}</Tooltip>}>
       <Wrapper
         {...rest}
         onClick={handleClick}
@@ -131,7 +127,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
 
         {!hideText && <span>{message}</span>}
       </Wrapper>
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 };
 

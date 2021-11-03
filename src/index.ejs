@@ -35,6 +35,7 @@
       var config = {
         apiEndpoint: '{!= apiEndpoint !}',
         mapiEndpoint: '{!= mapiEndpoint !}',
+        athenaEndpoint: '{!= athenaEndpoint !}',
         audience: '{!= audience !}',
         mapiAudience: '{!= mapiAudience !}',
         passageEndpoint: '{!= passageEndpoint !}',
@@ -66,7 +67,14 @@
               ]
             },
             dataCenter: '{!= info.general.dataCenter !}',
-            kubernetesVersions: [],
+            kubernetesVersions: {
+              {! Object.values(JSON.parse(info.general.kubernetesVersions)).map((versionInfo) => { !}
+                  '{!= versionInfo.minorVersion !}': {
+                    minorVersion: '{!= versionInfo.minorVersion !}',
+                    eolDate: '{!= versionInfo.eolDate !}',
+                  },
+              {! }) !}
+            },
           },
           workers: {
             countPerCluster: {

@@ -110,9 +110,13 @@ interface IButtonProps extends React.ComponentPropsWithoutRef<typeof Control> {
   danger?: boolean;
   link?: boolean;
   wrapperProps?: React.ComponentPropsWithoutRef<typeof StyledBox>;
+  ref?: React.Ref<HTMLButtonElement | HTMLAnchorElement>;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
+const Button = React.forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  IButtonProps
+>(
   (
     {
       loading,
@@ -165,7 +169,7 @@ const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
             label={children}
             disabled={disabled || loading}
             {...props}
-            ref={ref}
+            ref={ref as never}
           />
           <StyledLoadingIndicator
             loading={loading}

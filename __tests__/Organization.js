@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -10,7 +9,6 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
-  AWSInfoResponse,
   generateRandomString,
   getMockCall,
   getMockCallTimes,
@@ -28,7 +26,6 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
@@ -114,12 +111,8 @@ describe('', () => {
       });
       getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
 
-      const {
-        getByText,
-        getByLabelText,
-        findByText,
-        findByTestId,
-      } = renderRouteWithStore(OrganizationsRoutes.Home);
+      const { getByText, getByLabelText, findByText, findByTestId } =
+        renderRouteWithStore(OrganizationsRoutes.Home);
 
       const createOrgButton = await findByText('Create new organization');
       fireEvent.click(createOrgButton);
@@ -151,12 +144,8 @@ describe('', () => {
         OrganizationsRoutes.Detail,
         { orgId: orgResponse.id }
       );
-      const {
-        findByText,
-        getByText,
-        findByTestId,
-        getByLabelText,
-      } = renderRouteWithStore(organizationDetailsPath);
+      const { findByText, getByText, findByTestId, getByLabelText } =
+        renderRouteWithStore(organizationDetailsPath);
 
       const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
       expect(pageTitle).toBeInTheDocument();
@@ -298,7 +287,6 @@ describe('', () => {
 
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);

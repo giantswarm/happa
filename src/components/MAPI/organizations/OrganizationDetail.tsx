@@ -68,7 +68,11 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
       metav1.isStatusError(error?.data, metav1.K8sStatusErrorReasons.NotFound)
     ) {
       new FlashMessage(
-        `Organization <code>${orgId}</code> not found`,
+        (
+          <>
+            Organization <code>{orgId}</code> not found
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Organization ID is correct and that you have access to it.'
@@ -79,7 +83,11 @@ const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
       const errorMessage = extractErrorMessage(error);
 
       new FlashMessage(
-        `There was a problem loading organization <code>${orgId}</code>`,
+        (
+          <>
+            There was a problem loading organization <code>{orgId}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage

@@ -5,11 +5,10 @@ import parseISO from 'date-fns/fp/parseISO';
 import toDate from 'date-fns-tz/toDate';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import React, { ReactElement } from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { IKeyPair } from 'shared/types';
 import { getOrganizationByID } from 'stores/organization/utils';
 import NotAvailable from 'UI/Display/NotAvailable';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import validate from 'validate.js';
 
 /**
@@ -222,12 +221,9 @@ export function relativeDate(date?: string | number | Date): ReactElement {
   const relDate = getRelativeDateFromNow(date);
 
   return (
-    <OverlayTrigger
-      overlay={<Tooltip id='tooltip'>{formattedDate}</Tooltip>}
-      placement='top'
-    >
+    <TooltipContainer content={<Tooltip>{formattedDate}</Tooltip>}>
       <span>{relDate}</span>
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 }
 

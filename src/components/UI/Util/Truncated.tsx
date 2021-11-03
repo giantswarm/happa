@@ -1,8 +1,7 @@
 import { truncate } from 'lib/helpers';
 import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface ITruncatedProps
   extends React.ComponentPropsWithoutRef<React.ElementType> {
@@ -17,12 +16,6 @@ interface ITruncatedProps
 
 const Wrapper = styled.span``;
 const Label = styled.span``;
-
-const StyledTooltip = styled(Tooltip)`
-  .tooltip-inner {
-    max-width: none;
-  }
-`;
 
 /**
  * A component that truncates a string/number in a smart way
@@ -49,12 +42,18 @@ const Truncated: React.FC<ITruncatedProps> = ({
       {skipTooltip ? (
         <Label {...labelProps}>{str}</Label>
       ) : (
-        <OverlayTrigger
-          overlay={<StyledTooltip id='tooltip'>{children}</StyledTooltip>}
-          placement={tooltipPlacement ?? 'top'}
+        <TooltipContainer
+          content={
+            <Tooltip
+              placement={tooltipPlacement ?? 'top'}
+              width={{ max: 'none' }}
+            >
+              {String(children)}
+            </Tooltip>
+          }
         >
           <Label {...labelProps}>{str}</Label>
-        </OverlayTrigger>
+        </TooltipContainer>
       )}
     </Wrapper>
   );

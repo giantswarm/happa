@@ -13,11 +13,11 @@ import { isPreRelease } from 'stores/releases/utils';
 import { IState } from 'stores/state';
 import { createDeepEqualSelector } from 'stores/utils';
 
-export const selectClusters = () => (
-  state: IState
-): Record<string, Cluster> => {
-  return state.entities.clusters.items;
-};
+export const selectClusters =
+  () =>
+  (state: IState): Record<string, Cluster> => {
+    return state.entities.clusters.items;
+  };
 
 export function selectClusterById(
   state: IState,
@@ -112,40 +112,37 @@ export function selectTargetRelease(state: IState, cluster?: Cluster | null) {
   return nextVersion;
 }
 
-export const selectIsClusterAwaitingUpgrade = (clusterID: string) => (
-  state: IState
-) => {
-  return Boolean(state.entities.clusters.idsAwaitingUpgrade[clusterID]);
-};
+export const selectIsClusterAwaitingUpgrade =
+  (clusterID: string) => (state: IState) => {
+    return Boolean(state.entities.clusters.idsAwaitingUpgrade[clusterID]);
+  };
 
-export const selectCanClusterUpgrade = (clusterID: string) => (
-  state: IState
-) => {
-  const cluster = state.entities.clusters.items[clusterID];
-  if (!cluster) return false;
+export const selectCanClusterUpgrade =
+  (clusterID: string) => (state: IState) => {
+    const cluster = state.entities.clusters.items[clusterID];
+    if (!cluster) return false;
 
-  if (
-    isClusterCreating(cluster) ||
-    isClusterUpdating(cluster) ||
-    selectIsClusterAwaitingUpgrade(clusterID)(state)
-  ) {
-    return false;
-  }
+    if (
+      isClusterCreating(cluster) ||
+      isClusterUpdating(cluster) ||
+      selectIsClusterAwaitingUpgrade(clusterID)(state)
+    ) {
+      return false;
+    }
 
-  const targetVersion = selectTargetRelease(state, cluster);
+    const targetVersion = selectTargetRelease(state, cluster);
 
-  return canClusterUpgrade(
-    cluster.release_version,
-    targetVersion,
-    window.config.info.general.provider
-  );
-};
+    return canClusterUpgrade(
+      cluster.release_version,
+      targetVersion,
+      window.config.info.general.provider
+    );
+  };
 
-export const selectIsClusterUpgrading = (clusterID: string) => (
-  state: IState
-) => {
-  const cluster = state.entities.clusters.items[clusterID];
-  if (!cluster) return false;
+export const selectIsClusterUpgrading =
+  (clusterID: string) => (state: IState) => {
+    const cluster = state.entities.clusters.items[clusterID];
+    if (!cluster) return false;
 
-  return isClusterUpdating(cluster);
-};
+    return isClusterUpdating(cluster);
+  };

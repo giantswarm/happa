@@ -51,10 +51,14 @@ export const DropdownTrigger = styled.button`
   &:focus {
     outline: 5px auto -webkit-focus-ring-color;
   }
-  &:hover,
+  &:hover:not(:disabled),
   &:focus,
   &:focus-within {
     background: ${(props) => props.theme.colors.shade8};
+  }
+
+  &:disabled {
+    color: ${({ theme }) => theme.global.colors['text-xweak'].dark};
   }
 `;
 

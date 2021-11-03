@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@4.2.0
+  architect: giantswarm/architect@4.6.0
 
 defaults: &defaults
   working_directory: ~/happa
   docker:
-    - image: circleci/node:16-buster
+    - image: cimg/node:16.10
 
 job_filters: &job_filters
   filters:
@@ -136,6 +136,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "aws-app-collection"
           requires:
+            - push-happa-to-aliyun
             - push-happa-to-control-plane-app-catalog
           filters:
             branches:
@@ -317,7 +318,7 @@ jobs:
 
   test:
     <<: *defaults
-    resource_class: large
+    resource_class: xlarge
 
     steps:
       - checkout

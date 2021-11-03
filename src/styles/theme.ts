@@ -154,6 +154,10 @@ const theme = deepMerge(generate(16), {
         dark: '#798691',
         light: '#798691',
       },
+      'text-xxweak': {
+        dark: '#313131',
+        light: '#313131',
+      },
       border: {
         dark: '#3a5f7b',
         light: '#3a5f7b',
@@ -180,6 +184,9 @@ const theme = deepMerge(generate(16), {
       'graph-1': 'status-warning',
       'input-background': '#32526a',
       'input-highlight': '#41B5F2',
+      'tooltip-background': '#000000E6',
+      'background-weak': '#4c6c7e',
+
       focus: {
         light: 'text-strong',
         dark: 'text-strong',

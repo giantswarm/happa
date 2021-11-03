@@ -8,7 +8,15 @@ import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
-import { extractErrorMessage } from 'MAPI/utils';
+import { Cluster, ProviderCluster } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  fetchCluster,
+  fetchClusterKey,
+  fetchProviderClusterForCluster,
+  fetchProviderClusterForClusterKey,
+  getClusterDescription,
+} from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -53,8 +61,8 @@ function computePaths(orgName: string, clusterName: string) {
         clusterId: clusterName,
       }
     ),
-    KeyPairs: RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail.KeyPairs,
+    ClientCertificates: RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail.ClientCertificates,
       {
         orgId: orgName,
         clusterId: clusterName,
@@ -89,16 +97,15 @@ const ClusterDetail: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 
-  const paths = useMemo(() => computePaths(orgId, clusterId), [
-    orgId,
-    clusterId,
-  ]);
+  const paths = useMemo(
+    () => computePaths(orgId, clusterId),
+    [orgId, clusterId]
+  );
 
   const clientFactory = useHttpClientFactory();
 
   const auth = useAuthProvider();
 
-  const clusterClient = useRef(clientFactory());
   const orgClient = useRef(clientFactory());
 
   const { data: org, error: orgError } = useSWR<
@@ -116,7 +123,12 @@ const ClusterDetail: React.FC<{}> = () => {
 
       const errorMessage = extractErrorMessage(orgError);
       new FlashMessage(
-        `There was a problem loading cluster <code>${clusterId}</code> for <code>${orgId}</code>`,
+        (
+          <>
+            There was a problem loading cluster <code>{clusterId}</code> for{' '}
+            <code>{orgId}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -128,15 +140,18 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [namespace, orgError, orgId, clusterId, dispatch]);
 
+  const provider = window.config.info.general.provider;
+
   const clusterKey = namespace
-    ? capiv1alpha3.getClusterKey(namespace, clusterId)
+    ? fetchClusterKey(provider, namespace, clusterId)
     : null;
 
-  const { data: cluster, error: clusterError, mutate: mutateCluster } = useSWR<
-    capiv1alpha3.ICluster,
-    GenericResponseError
-  >(clusterKey, () =>
-    capiv1alpha3.getCluster(clusterClient.current, auth, namespace!, clusterId)
+  const {
+    data: cluster,
+    error: clusterError,
+    mutate: mutateCluster,
+  } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
+    fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
   useEffect(() => {
@@ -151,7 +166,11 @@ const ClusterDetail: React.FC<{}> = () => {
       )
     ) {
       new FlashMessage(
-        `Cluster <code>${clusterId}</code> not found`,
+        (
+          <>
+            Cluster <code>{clusterId}</code> not found
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Cluster ID is correct and that you have access to it.'
@@ -161,7 +180,11 @@ const ClusterDetail: React.FC<{}> = () => {
     } else if (clusterError) {
       const errorMessage = extractErrorMessage(clusterError);
       new FlashMessage(
-        `There was a problem loading cluster <code>${clusterId}</code>`,
+        (
+          <>
+            There was a problem loading cluster <code>{clusterId}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -176,7 +199,12 @@ const ClusterDetail: React.FC<{}> = () => {
   useEffect(() => {
     if (typeof cluster?.metadata.deletionTimestamp !== 'undefined') {
       new FlashMessage(
-        `Cluster <code>${cluster.metadata.name}</code> is currently being deleted`,
+        (
+          <>
+            Cluster <code>{cluster.metadata.name}</code> is currently being
+            deleted
+          </>
+        ),
         messageType.INFO,
         messageTTL.MEDIUM
       );
@@ -185,8 +213,25 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [cluster, dispatch]);
 
+  const providerClusterKey = cluster
+    ? fetchProviderClusterForClusterKey(cluster)
+    : null;
+
+  const { data: providerCluster, error: providerClusterError } = useSWR<
+    ProviderCluster,
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClusterForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (providerClusterError) {
+      ErrorReporter.getInstance().notify(providerClusterError);
+    }
+  }, [providerClusterError]);
+
   const clusterDescription = cluster
-    ? capiv1alpha3.getClusterDescription(cluster)
+    ? getClusterDescription(cluster, providerCluster)
     : undefined;
   const clusterReleaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
@@ -200,8 +245,9 @@ const ClusterDetail: React.FC<{}> = () => {
 
     try {
       const updatedCluster = await updateClusterDescription(
-        clientFactory(),
+        clientFactory,
         auth,
+        provider,
         cluster.metadata.namespace!,
         cluster.metadata.name,
         newValue
@@ -227,8 +273,6 @@ const ClusterDetail: React.FC<{}> = () => {
       ErrorReporter.getInstance().notify(err as Error);
     }
   };
-
-  const provider = window.config.info.general.provider;
 
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
@@ -266,7 +310,7 @@ const ClusterDetail: React.FC<{}> = () => {
           <Tabs useRoutes={true}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />
-            <Tab path={paths.KeyPairs} title='Key pairs' />
+            <Tab path={paths.ClientCertificates} title='Client certificates' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
             <Tab path={paths.Actions} title='Actions' />
@@ -285,7 +329,7 @@ const ClusterDetail: React.FC<{}> = () => {
               }
             />
             <Route
-              path={OrganizationsRoutes.Clusters.Detail.KeyPairs}
+              path={OrganizationsRoutes.Clusters.Detail.ClientCertificates}
               component={ClusterDetailKeyPairs}
             />
             <Route

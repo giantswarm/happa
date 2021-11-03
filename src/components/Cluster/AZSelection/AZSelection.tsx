@@ -1,6 +1,5 @@
-import * as React from 'react';
-import Panel from 'react-bootstrap/lib/Panel';
-import PanelCollapse from 'react-bootstrap/lib/PanelCollapse';
+import { Box, Collapsible } from 'grommet';
+import React from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
@@ -15,31 +14,10 @@ import {
   AZSelectionZonesUpdater,
 } from './AZSelectionUtils';
 
-const StyledPanel = styled(Panel)`
-  background: transparent;
-  border-width: 0;
-  margin-bottom: ${({ theme }) => theme.spacingPx * 3}px;
-  box-shadow: none;
-`;
-
-const StyledPanelCollapse = styled(PanelCollapse)`
+const StyledPanelCollapse = styled(Box)`
   padding: ${({ theme }) => theme.spacingPx * 2}px 0 0
     ${({ theme }) => theme.spacingPx * 7}px;
-  opacity: 0;
-  transform: translate3d(0, 30px, 0);
-  will-change: opacity, height, transform;
-  transition: opacity 0.1s ease-in-out,
-    height 0.2s cubic-bezier(0.48, 0.28, 0.36, 1.02),
-    transform 0.2s cubic-bezier(0.48, 0.28, 0.36, 1.02);
-
-  &.in {
-    margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition: opacity 0.15s ease-in-out,
-      height 0.2s cubic-bezier(0.48, 0.28, 0.36, 1.02),
-      transform 0.15s cubic-bezier(0.48, 0.28, 0.36, 1.02);
-  }
+  margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
 `;
 
 interface IAZSelectionProps
@@ -82,30 +60,19 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
   baseActionName,
   ...rest
 }) => {
-  /**
-   * The `onToggle` prop is required because otherwise, the `Panel` component
-   * throws an error saying that our component should be uncontrolled and have
-   * a `defaultExpanded` prop. We don't need to use the `onToggle` prop to
-   * change anything, because we change the state based on the checked checkbox.
-   */
-  const onToggleFakeCallback = () => {};
-
   return (
     <div {...rest}>
       {maxNumOfZones! > 0 && (
         <>
-          <StyledPanel
-            expanded={value === AvailabilityZoneSelection.Automatic}
-            onToggle={onToggleFakeCallback}
-          >
-            <AZSelectionCheckbox
-              onChange={onChange}
-              value={value}
-              uniqueIdentifier={uniqueIdentifier}
-              label='Automatic selection'
-              type={AvailabilityZoneSelection.Automatic}
-              baseActionName={baseActionName}
-            />
+          <AZSelectionCheckbox
+            onChange={onChange}
+            value={value}
+            uniqueIdentifier={uniqueIdentifier}
+            label='Automatic selection'
+            type={AvailabilityZoneSelection.Automatic}
+            baseActionName={baseActionName}
+          />
+          <Collapsible open={value === AvailabilityZoneSelection.Automatic}>
             <StyledPanelCollapse>
               <AZSelectionAutomatic
                 onUpdateZones={onUpdateZones}
@@ -117,19 +84,16 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
                 numOfZones={numOfZones!}
               />
             </StyledPanelCollapse>
-          </StyledPanel>
-          <StyledPanel
-            expanded={value === AvailabilityZoneSelection.Manual}
-            onToggle={onToggleFakeCallback}
-          >
-            <AZSelectionCheckbox
-              onChange={onChange}
-              value={value}
-              uniqueIdentifier={uniqueIdentifier}
-              label='Manual selection'
-              type={AvailabilityZoneSelection.Manual}
-              baseActionName={baseActionName}
-            />
+          </Collapsible>
+          <AZSelectionCheckbox
+            onChange={onChange}
+            value={value}
+            uniqueIdentifier={uniqueIdentifier}
+            label='Manual selection'
+            type={AvailabilityZoneSelection.Manual}
+            baseActionName={baseActionName}
+          />
+          <Collapsible open={value === AvailabilityZoneSelection.Manual}>
             <StyledPanelCollapse>
               <AZSelectionManual
                 onUpdateZones={onUpdateZones}
@@ -141,15 +105,12 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
                 selectedZones={selectedZones!}
               />
             </StyledPanelCollapse>
-          </StyledPanel>
+          </Collapsible>
         </>
       )}
 
       {provider === Providers.AZURE && (
-        <StyledPanel
-          expanded={value === AvailabilityZoneSelection.NotSpecified}
-          onToggle={onToggleFakeCallback}
-        >
+        <>
           <AZSelectionCheckbox
             onChange={onChange}
             value={value}
@@ -158,10 +119,13 @@ const AZSelection: React.FC<IAZSelectionProps> = ({
             type={AvailabilityZoneSelection.NotSpecified}
             baseActionName={baseActionName}
           />
-          <StyledPanelCollapse>
-            <AZSelectionNotSpecified variant={variant!} />
-          </StyledPanelCollapse>
-        </StyledPanel>
+
+          <Collapsible open={value === AvailabilityZoneSelection.NotSpecified}>
+            <StyledPanelCollapse>
+              <AZSelectionNotSpecified variant={variant!} />
+            </StyledPanelCollapse>
+          </Collapsible>
+        </>
       )}
     </div>
   );

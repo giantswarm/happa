@@ -22,6 +22,7 @@ import {
   getProviderNodePoolLocation,
   getProviderNodePoolMachineType,
   getProviderNodePoolSpotInstances,
+  INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -152,9 +153,8 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
           clusterName: draft.nodePool.spec!.clusterName,
           namespace: draft.nodePool.metadata.namespace!,
           location: getProviderNodePoolLocation(draft.providerNodePool),
-          organization: draft.nodePool.metadata.labels![
-            capiv1alpha3.labelOrganization
-          ],
+          organization:
+            draft.nodePool.metadata.labels![capiv1alpha3.labelOrganization],
         });
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
@@ -190,7 +190,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       clusterName: cluster.metadata.name,
       namespace: cluster.metadata.namespace!,
       organization: cluster.metadata.labels![capiv1alpha3.labelOrganization],
-      location: getProviderClusterLocation(providerCluster),
+      location: getProviderClusterLocation(providerCluster)!,
     })
   );
 
@@ -202,20 +202,19 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     }, 200);
   };
 
-  const handleChange = (property: NodePoolPropertyField) => (
-    newValue: INodePoolPropertyValue
-  ) => {
-    dispatch({
-      type: 'applyPatch',
-      property,
-      value: newValue.patch,
-    });
-    dispatch({
-      type: 'changeValidationStatus',
-      property,
-      value: newValue.isValid,
-    });
-  };
+  const handleChange =
+    (property: NodePoolPropertyField) => (newValue: INodePoolPropertyValue) => {
+      dispatch({
+        type: 'applyPatch',
+        property,
+        value: newValue.patch,
+      });
+      dispatch({
+        type: 'changeValidationStatus',
+        property,
+        value: newValue.isValid,
+      });
+    };
 
   const isValid = Object.values(state.validationResults).every((r) => r);
 
@@ -237,7 +236,12 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       }, 200);
 
       new FlashMessage(
-        `Node pool <code>${state.nodePool.metadata.name}</code> created successfully`,
+        (
+          <>
+            Node pool <code>{state.nodePool.metadata.name}</code> created
+            successfully
+          </>
+        ),
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -247,7 +251,12 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not create node pool <code>${state.nodePool.metadata.name}</code>`,
+        (
+          <>
+            Could not create node pool{' '}
+            <code>{state.nodePool.metadata.name}</code>
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage
@@ -261,16 +270,21 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
   const supportsSpotInstances = clusterReleaseVersion
     ? supportsNodePoolSpotInstances(provider, clusterReleaseVersion)
     : false;
-  const orgName = state.nodePool.metadata.labels![
-    capiv1alpha3.labelOrganization
-  ];
-  const description = getNodePoolDescription(state.nodePool);
+  const orgName =
+    state.nodePool.metadata.labels![capiv1alpha3.labelOrganization];
+  const description = getNodePoolDescription(
+    state.nodePool,
+    state.providerNodePool
+  );
   const machineType = getProviderNodePoolMachineType(state.providerNodePool);
   const spotInstances = getProviderNodePoolSpotInstances(
     state.providerNodePool
-  ) as INodePoolSpotInstancesAzure;
-  const nodePoolAZs = getNodePoolAvailabilityZones(state.nodePool);
-  const scaling = getNodePoolScaling(state.nodePool);
+  );
+  const nodePoolAZs = getNodePoolAvailabilityZones(
+    state.nodePool,
+    state.providerNodePool
+  );
+  const scaling = getNodePoolScaling(state.nodePool, state.providerNodePool);
 
   return (
     <Collapsible {...props}>
@@ -366,10 +380,20 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 organizationName={orgName}
                 clusterName={cluster.metadata.name}
                 description={description}
-                azureVMSize={machineType}
+                machineType={machineType}
                 nodePoolAZs={nodePoolAZs}
-                azureUseSpotVMs={spotInstances.enabled}
-                azureSpotVMsMaxPrice={spotInstances.maxPrice}
+                azureUseSpotVMs={spotInstances?.enabled}
+                azureSpotVMsMaxPrice={
+                  (spotInstances as INodePoolSpotInstancesAzure)?.maxPrice
+                }
+                awsOnDemandBaseCapacity={
+                  (spotInstances as INodePoolSpotInstancesAWS)
+                    ?.onDemandBaseCapacity
+                }
+                awsOnDemandPercentageAboveBaseCapacity={
+                  (spotInstances as INodePoolSpotInstancesAWS)
+                    ?.onDemandPercentageAboveBaseCapacity
+                }
                 nodesMin={scaling.min}
                 nodesMax={scaling.max}
               />

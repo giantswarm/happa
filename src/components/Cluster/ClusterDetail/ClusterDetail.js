@@ -23,7 +23,11 @@ const ClusterDetail = () => {
   useEffect(() => {
     if (!clusterExists) {
       new FlashMessage(
-        `Cluster <code>${clusterID}</code> no longer exists.`,
+        (
+          <>
+            Cluster <code>{clusterID}</code> no longer exists.
+          </>
+        ),
         messageType.INFO,
         messageTTL.MEDIUM
       );

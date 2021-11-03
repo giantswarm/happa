@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { Providers, StatusCodes } from 'shared/constants';
@@ -12,7 +11,6 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  azureInfoResponse,
   getMockCall,
   getMockCallTimes,
   metadataResponse,
@@ -63,7 +61,6 @@ describe('V4AzureClusterManagement', () => {
 
   // Responses to requests
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(azureInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
@@ -96,9 +93,8 @@ describe('V4AzureClusterManagement', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { getByText, getAllByText, getByTitle } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { getByText, getAllByText, getByTitle } =
+      renderRouteWithStore(clusterDetailPath);
 
     await waitFor(() => {
       expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -180,10 +176,11 @@ describe('V4AzureClusterManagement', () => {
       { orgId: ORGANIZATION }
     );
     const { findByText, getByText } = renderRouteWithStore(clusterCreationPath);
-    const {
-      default: defaultAZCount,
-      max: maxAZCount,
-    } = azureInfoResponse.data.general.availability_zones;
+    const { default: defaultAZCount, max: maxAZCount } = {
+      default: 1,
+      max: 3,
+      zones: ['1', '2', '3'],
+    };
 
     const azLabel = await findByText(/number of availability zones to use:/i);
     expect(azLabel).toBeInTheDocument();
@@ -264,9 +261,8 @@ scales correctly`, async () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { getByText, findByText, getByDisplayValue } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { getByText, findByText, getByDisplayValue } =
+      renderRouteWithStore(clusterDetailPath);
 
     const nodesTitle = await findByText('Nodes');
     const nodesCounter = nodesTitle.nextSibling;

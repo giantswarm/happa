@@ -1,6 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -142,7 +141,6 @@ describe('PasswordReset', () => {
     it('sets a new password for the email in the form', async () => {
       const finalPassword = 'g00dPa$$w0rD';
 
-      getInstallationInfo.mockResolvedValueOnce(mockHttpCalls.AWSInfoResponse);
       mockHttpCalls.postMockCall(
         '/v4/auth-tokens/',
         mockHttpCalls.authTokenResponse
@@ -283,9 +281,8 @@ describe('PasswordReset', () => {
           valid_until: '2020-02-21T16:50:20.589772+00:00',
         });
 
-      const { findByLabelText, findByText } = renderRouteWithStore(
-        routeWithToken
-      );
+      const { findByLabelText, findByText } =
+        renderRouteWithStore(routeWithToken);
 
       const validationProgressMessage = await findByText(
         /validating your token/i

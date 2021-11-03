@@ -1,6 +1,5 @@
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 
 export type NodePoolPatch = (
   nodePool: NodePool,
@@ -22,34 +21,47 @@ export interface INodePoolPropertyProps {
 }
 
 export function withNodePoolDescription(newDescription: string): NodePoolPatch {
-  return (nodePool: NodePool) => {
+  return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.metadata.annotations ??= {};
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolDescription
       ] = newDescription;
+    } else if (
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      providerNodePool.spec.nodePool.description = newDescription;
     }
   };
 }
 
 export function withNodePoolMachineType(newMachineType: string): NodePoolPatch {
-  return (_, providerNodePool: ProviderNodePool) => {
-    if (providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
-      providerNodePool.spec!.template.vmSize = newMachineType;
+  return (_, providerNodePool) => {
+    switch (providerNodePool?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+        providerNodePool.spec!.template.vmSize = newMachineType;
+        break;
+      case 'infrastructure.giantswarm.io/v1alpha3':
+        providerNodePool.spec.provider.worker.instanceType = newMachineType;
+        break;
     }
   };
 }
 
 export function withNodePoolAvailabilityZones(zones?: string[]): NodePoolPatch {
-  return (nodePool: NodePool) => {
+  return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.spec!.failureDomains = zones;
+    } else if (
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      providerNodePool.spec.provider.availabilityZones = zones ?? [];
     }
   };
 }
 
 export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
-  return (nodePool: NodePool) => {
+  return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.spec!.replicas = min;
 
@@ -60,6 +72,11 @@ export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolMaxSize
       ] = max.toString();
+    } else if (
+      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
+    ) {
+      providerNodePool.spec.nodePool.scaling.min = min;
+      providerNodePool.spec.nodePool.scaling.max = max;
     }
   };
 }
@@ -71,6 +88,8 @@ export interface INodePoolSpotInstancesConfigAzure {
 
 export interface INodePoolSpotInstancesConfigAWS {
   enabled: boolean;
+  onDemandBaseCapacity: number;
+  onDemandPercentageAboveBaseCapacity: number;
 }
 
 export type NodePoolSpotInstancesConfig =
@@ -81,16 +100,32 @@ export function withNodePoolSpotInstances(
   config: NodePoolSpotInstancesConfig
 ): NodePoolPatch {
   return (_, providerNodePool: ProviderNodePool) => {
-    if (providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool) {
-      if (!config.enabled) {
-        providerNodePool.spec!.template.spotVMOptions = undefined;
+    switch (providerNodePool?.apiVersion) {
+      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+        if (!config.enabled) {
+          providerNodePool.spec!.template.spotVMOptions = undefined;
 
-        return;
-      }
+          return;
+        }
 
-      providerNodePool.spec!.template.spotVMOptions ??= {};
-      providerNodePool.spec!.template.spotVMOptions.maxPrice = (config as INodePoolSpotInstancesConfigAzure).maxPrice;
-      providerNodePool.spec!.template.spotVMOptions.maxPrice ??= '-1';
+        providerNodePool.spec!.template.spotVMOptions ??= {};
+        providerNodePool.spec!.template.spotVMOptions.maxPrice = (
+          config as INodePoolSpotInstancesConfigAzure
+        ).maxPrice;
+        providerNodePool.spec!.template.spotVMOptions.maxPrice ||= '-1';
+
+        break;
+
+      case 'infrastructure.giantswarm.io/v1alpha3':
+        providerNodePool.spec.provider.instanceDistribution = {
+          onDemandBaseCapacity: (config as INodePoolSpotInstancesConfigAWS)
+            .onDemandBaseCapacity,
+          onDemandPercentageAboveBaseCapacity: (
+            config as INodePoolSpotInstancesConfigAWS
+          ).onDemandPercentageAboveBaseCapacity,
+        };
+
+        break;
     }
   };
 }

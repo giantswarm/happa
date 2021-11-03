@@ -1,5 +1,6 @@
 import yaml from 'js-yaml';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { formatYAMLError } from 'MAPI/apps/utils';
 import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -38,10 +39,13 @@ const YAMLFileUpload: React.FC<IYAMLFileUploadProps> = ({
           setFileUploading(false);
         });
       } catch (err) {
+        const errorMessage = formatYAMLError(err);
+
         new FlashMessage(
           'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
           messageType.ERROR,
-          messageTTL.MEDIUM
+          messageTTL.MEDIUM,
+          errorMessage
         );
 
         setFileUploading(false);

@@ -125,10 +125,10 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
         </Paragraph>
         <ul>
           <li>
-            Create a new key pair (certificate and private key) for you to
-            access this cluster
+            Create a new client certificate (certificate and private key) for
+            you to access this cluster
           </li>
-          <li>Download your key pair</li>
+          <li>Download your client certificate</li>
           <li>Download the CA certificate for your cluster</li>
           <li>
             Update your kubectl configuration to add settings and credentials
@@ -160,7 +160,8 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
           </li>
           <li>
             <code>--certificate-organizations system:masters</code> ensures that
-            you will be authorized as an administrator when using this keypair.
+            you will be authorized as an administrator when using this client
+            certificate.
           </li>
           <li>
             <code>--auth-token &lt;token&gt;</code> saves you from having to

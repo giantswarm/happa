@@ -4,13 +4,15 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { filterUserInstalledApps } from 'MAPI/apps/utils';
-import { Cluster } from 'MAPI/types';
+import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchCluster,
   fetchClusterKey,
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
+  fetchProviderClusterForCluster,
+  fetchProviderClusterForClusterKey,
   getClusterDescription,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -27,11 +29,12 @@ import ClusterDetailDeleteAction, {
 
 import DeleteClusterGuide from '../guides/DeleteClusterGuide';
 import { getWorkerNodesCount } from '../utils';
-import { deleteCluster } from './utils';
+import { deleteClusterResources } from './utils';
 
 interface IClusterDetailActionsProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
+// eslint-disable-next-line complexity
 const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
@@ -56,7 +59,6 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
   const namespace = org?.status?.namespace;
 
-  const clusterClient = useRef(clientFactory());
   const clusterKey = namespace
     ? fetchClusterKey(provider, namespace, clusterId)
     : null;
@@ -66,14 +68,24 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     Cluster,
     GenericResponseError
   >(clusterKey, () =>
-    fetchCluster(clusterClient.current, auth, provider, namespace!, clusterId)
+    fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
-  const {
-    data: nodePoolList,
-    error: nodePoolListError,
-  } = useSWR(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const providerClusterKey = cluster
+    ? fetchProviderClusterForClusterKey(cluster)
+    : null;
+
+  // The error is handled in the parent component.
+  const { data: providerCluster, error: providerClusterError } = useSWR<
+    ProviderCluster,
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClusterForCluster(clientFactory, auth, cluster!)
+  );
+
+  const { data: nodePoolList, error: nodePoolListError } = useSWR(
+    fetchNodePoolListForClusterKey(cluster),
+    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
   useEffect(() => {
@@ -82,7 +94,12 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
       const errorMessage = extractErrorMessage(nodePoolListError);
       new FlashMessage(
-        `There was a problem loading node pools for cluster <code>${clusterId}</code>.`,
+        (
+          <>
+            There was a problem loading node pools for cluster{' '}
+            <code>{clusterId}</code>.
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -109,7 +126,12 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
       const errorMessage = extractErrorMessage(appListError);
       new FlashMessage(
-        `There was a problem loading apps for cluster <code>${clusterId}</code>.`,
+        (
+          <>
+            There was a problem loading apps for cluster{' '}
+            <code>{clusterId}</code>.
+          </>
+        ),
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -126,6 +148,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const hasError =
     typeof orgError !== 'undefined' ||
     typeof clusterError !== 'undefined' ||
+    typeof providerClusterError !== 'undefined' ||
     typeof nodePoolListError !== 'undefined';
 
   const isLoadingResources =
@@ -133,6 +156,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     typeof orgError === 'undefined' &&
     typeof cluster === 'undefined' &&
     typeof clusterError === 'undefined' &&
+    typeof providerClusterError === 'undefined' &&
     typeof nodePoolList === 'undefined' &&
     typeof nodePoolListError === 'undefined' &&
     typeof appList === 'undefined' &&
@@ -146,9 +170,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     setIsDeleting(true);
 
     try {
-      const client = clientFactory();
-
-      await deleteCluster(client, auth, cluster);
+      await deleteClusterResources(clientFactory, auth, cluster);
 
       // Success message and redirection are handled by the parent component.
     } catch (err) {
@@ -157,7 +179,11 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        `Could not delete cluster <code>${cluster.metadata.name}</code>:`,
+        (
+          <>
+            Could not delete cluster <code>{cluster.metadata.name}</code>:
+          </>
+        ),
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage
@@ -170,7 +196,9 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const isLoading = isLoadingResources || isDeleting;
 
   const name = cluster?.metadata.name ?? '';
-  const description = cluster ? getClusterDescription(cluster) : '';
+  const description = cluster
+    ? getClusterDescription(cluster, providerCluster)
+    : '';
   const creationDate = cluster?.metadata.creationTimestamp ?? '';
 
   const workerNodePoolsCount = nodePoolList?.items.length ?? 0;

@@ -9,11 +9,12 @@
 
 import 'webpack-dev-server';
 
+import path from 'path';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import { ConfigurationPlugin } from './scripts/webpack/ConfigurationPlugin';
-import common, { compilerConfig } from './webpack.common';
+import common from './webpack.common';
 
 const config: webpack.Configuration = merge(common, {
   mode: 'development',
@@ -32,8 +33,8 @@ const config: webpack.Configuration = merge(common, {
   },
   // @ts-expect-error
   devServer: {
-    contentBase: './src',
-    hotOnly: true,
+    static: { directory: path.join(__dirname, 'src'), watch: false },
+    hot: true,
     port: 7000,
     host: 'localhost',
     historyApiFallback: {
@@ -57,13 +58,13 @@ const config: webpack.Configuration = merge(common, {
     },
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ConfigurationPlugin({
       filename: 'index.ejs',
       outputFilename: 'index.html',
       overrides: {
         apiEndpoint: 'http://localhost:8000',
         mapiEndpoint: 'http://localhost:8888',
+        athenaEndpoint: 'http://localhost:7777',
         mapiAudience: 'http://localhost:9999',
         passageEndpoint: 'http://localhost:5001',
         mapiAuthRedirectURL: 'http://localhost:7000',
@@ -79,6 +80,10 @@ const config: webpack.Configuration = merge(common, {
         {
           port: 8888,
           host: (options) => options.mapiEndpoint,
+        },
+        {
+          port: 7777,
+          host: (options) => options.athenaEndpoint,
         },
         {
           port: 5001,
@@ -102,10 +107,7 @@ const config: webpack.Configuration = merge(common, {
       {
         test: /\.(js|ts)(x?)$/,
         exclude: /node_modules/,
-        use: {
-          loader: require.resolve('swc-loader'),
-          options: compilerConfig,
-        },
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,

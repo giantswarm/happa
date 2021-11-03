@@ -1,4 +1,10 @@
-import React, { FC, ImgHTMLAttributes, useState } from 'react';
+import React, {
+  FC,
+  ImgHTMLAttributes,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 interface IFallback {
   label: string;
@@ -11,43 +17,51 @@ interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 const ImgWithFallback: FC<IImgWithFallback> = (props) => {
+  const { fallback, src, ...restProps } = props;
   const [loadError, setLoadError] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const { fallback, ...restProps } = props;
-
-  if (loading && restProps.src) {
-    return (
-      <img
-        {...restProps}
-        onError={() => {
-          setLoadError(true);
-          setLoading(false);
-        }}
-        onLoad={() => {
+  const isMounted = useRef<boolean>(false);
+  useEffect(() => {
+    isMounted.current = true;
+    const loadImage = async (imageSrc: string) => {
+      try {
+        const image = new Image();
+        image.src = imageSrc;
+        await image.decode();
+        if (isMounted.current) {
           setLoadError(false);
           setLoading(false);
-        }}
-        style={{ opacity: 0 }}
-      />
-    );
-  }
+        }
+      } catch {
+        if (isMounted.current) {
+          setLoadError(true);
+          setLoading(false);
+        }
+      }
+    };
+    if (src) loadImage(src);
 
-  if (loadError || !restProps.src) {
-    return (
-      <div
-        {...restProps}
-        style={{
-          backgroundColor: fallback.backgroundColor,
-          color: fallback.textColor,
-        }}
-      >
-        {fallback.label}
-      </div>
-    );
-  }
+    return () => {
+      isMounted.current = false;
+    };
+  }, [src]);
 
-  return <img {...restProps} onLoad={() => setLoadError(false)} />;
+  if (loading && src) return null;
+
+  return loadError || !src ? (
+    <div
+      {...restProps}
+      style={{
+        backgroundColor: fallback.backgroundColor,
+        color: fallback.textColor,
+      }}
+    >
+      {fallback.label}
+    </div>
+  ) : (
+    <img {...restProps} src={src} />
+  );
 };
 
 export default ImgWithFallback;

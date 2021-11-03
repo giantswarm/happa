@@ -5,16 +5,16 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dsPxDL"
+      class="StyledBox-sc-13pk1d4-0 ixwEPe"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 hgvosH"
       >
         <div
-          class="sc-TmdmN kKDyvO sc-jHVedQ ipAbPA"
+          class="RefreshableLabel__Wrapper-sc-1joylxa-0 bMgRju OptionalValue__StyledRefreshableLabel-sc-8k6d37-0 eRkFis"
         >
           <span
             aria-label="35 dogs"
@@ -25,7 +25,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 cQrzvg sc-bcmZex kzGrR"
+        class="StyledText-sc-1sadyjn-0 cQrzvg ClusterDetailCounter__Label-sc-qai318-0 kDtfEg"
       >
         dogs
       </span>
@@ -39,16 +39,16 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
 >
   <div
-    class="sc-gKseQn hEEPLy"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dsPxDL"
+      class="StyledBox-sc-13pk1d4-0 ixwEPe"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 hgvosH"
       >
         <div
-          class="sc-TmdmN kKDyvO sc-jHVedQ ipAbPA"
+          class="RefreshableLabel__Wrapper-sc-1joylxa-0 bMgRju OptionalValue__StyledRefreshableLabel-sc-8k6d37-0 eRkFis"
         >
           <span
             aria-label="1 dog"
@@ -59,7 +59,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 cQrzvg sc-bcmZex kzGrR"
+        class="StyledText-sc-1sadyjn-0 cQrzvg ClusterDetailCounter__Label-sc-qai318-0 kDtfEg"
       >
         dog
       </span>

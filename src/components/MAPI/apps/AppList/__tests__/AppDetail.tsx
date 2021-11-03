@@ -9,7 +9,7 @@ import AppsProvider from 'MAPI/apps/AppsProvider';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
 
@@ -20,7 +20,7 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppDetail>) {
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <AppsProvider>
         <AppDetail {...p} />
       </AppsProvider>
@@ -50,10 +50,6 @@ jest.mock('react-router', () => ({
 }));
 
 describe('AppDetail', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
@@ -65,18 +61,18 @@ describe('AppDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/appcatalogs/${catalog.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, catalog);
-
-    nock(window.config.mapiEndpoint)
-      .get(
         `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${appCatalogEntry.spec.appName}%2Capplication.giantswarm.io%2Fcatalog%3D${appCatalogEntry.spec.catalog.name}`
       )
       .reply(
         StatusCodes.Ok,
         applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
       );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${catalog.metadata.namespace}/catalogs/${catalog.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, catalog);
 
     render(getComponent({}));
 

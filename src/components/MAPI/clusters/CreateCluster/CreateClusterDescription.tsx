@@ -28,6 +28,7 @@ interface ICreateClusterDescriptionProps
 const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
   id,
   cluster,
+  providerCluster,
   onChange,
   readOnly,
   disabled,
@@ -46,7 +47,7 @@ const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
     });
   };
 
-  const value = getClusterDescription(cluster);
+  const value = getClusterDescription(cluster, providerCluster, '');
 
   const textInputRef = useRef<HTMLInputElement>(null);
 

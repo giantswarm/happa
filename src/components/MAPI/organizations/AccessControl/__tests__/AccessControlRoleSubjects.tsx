@@ -11,7 +11,7 @@ import nock from 'nock';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 import { StatusCodes } from 'shared/constants';
-import { cache, SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 import { withMarkup } from 'testUtils/assertUtils';
 import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
 import { getComponentWithStore } from 'testUtils/renderUtils';
@@ -26,7 +26,7 @@ function getComponent(
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
-    <SWRConfig value={{ dedupingInterval: 0 }}>
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
       <AccessControlRoleSubjects {...p} />
     </SWRConfig>
   );
@@ -62,10 +62,6 @@ const defaultPermissions: ui.IAccessControlPermissions = {
 };
 
 describe('AccessControlRoleSubjects', () => {
-  afterEach(() => {
-    cache.clear();
-  });
-
   it('renders without crashing', () => {
     render(
       getComponent({

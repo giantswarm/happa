@@ -4,7 +4,10 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import ClusterDetailWidgetApps from 'MAPI/apps/ClusterDetailWidgetApps';
 import ClusterDetailWidgetRelease from 'MAPI/releases/ClusterDetailWidgetRelease';
+import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
+  fetchCluster,
+  fetchClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
 } from 'MAPI/utils';
@@ -35,11 +38,12 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 
+  const provider = window.config.info.general.provider;
+
   const clientFactory = useHttpClientFactory();
 
   const auth = useAuthProvider();
 
-  const clusterClient = useRef(clientFactory());
   const orgClient = useRef(clientFactory());
 
   const { data: org } = useSWR<
@@ -52,29 +56,23 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   const namespace = org?.status?.namespace;
 
   const clusterKey = namespace
-    ? capiv1alpha3.getClusterKey(namespace, clusterId)
+    ? fetchClusterKey(provider, namespace, clusterId)
     : null;
 
   // The error is handled in the parent component.
-  const { data: cluster } = useSWR<capiv1alpha3.ICluster, GenericResponseError>(
+  const { data: cluster } = useSWR<Cluster, GenericResponseError>(
     clusterKey,
-    () =>
-      capiv1alpha3.getCluster(
-        clusterClient.current,
-        auth,
-        namespace!,
-        clusterId
-      )
+    () => fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
   const providerClusterKey = cluster
     ? fetchProviderClusterForClusterKey(cluster)
     : null;
 
-  const {
-    data: providerCluster,
-    error: providerClusterError,
-  } = useSWR(providerClusterKey, () =>
+  const { data: providerCluster, error: providerClusterError } = useSWR<
+    ProviderCluster,
+    GenericResponseError
+  >(providerClusterKey, () =>
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
@@ -84,7 +82,6 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     }
   }, [providerClusterError]);
 
-  const provider = window.config.info.general.provider;
   const releaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;
@@ -93,17 +90,25 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     <StyledBox wrap={true} direction='row'>
       <ClusterDetailWidgetWorkerNodes
         cluster={cluster}
-        basis='500px'
+        basis='425px'
         flex={{ grow: 1, shrink: 1 }}
       />
-      <ClusterDetailWidgetApps basis='350px' flex={{ grow: 1, shrink: 1 }} />
+      <ClusterDetailWidgetApps basis='425px' flex={{ grow: 1, shrink: 1 }} />
       <ClusterDetailWidgetKeyPairs
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
       />
-      <ClusterDetailWidgetRelease cluster={cluster} basis='100%' />
+      <ClusterDetailWidgetRelease
+        cluster={cluster}
+        providerCluster={providerCluster}
+        basis='100%'
+      />
       <ClusterDetailWidgetLabels cluster={cluster} basis='100%' />
-      <ClusterDetailWidgetControlPlaneNodes cluster={cluster} basis='100%' />
+      <ClusterDetailWidgetControlPlaneNodes
+        cluster={cluster}
+        providerCluster={providerCluster}
+        basis='100%'
+      />
       <ClusterDetailWidgetKubernetesAPI cluster={cluster} basis='100%' />
       <ClusterDetailWidgetProvider
         cluster={cluster}

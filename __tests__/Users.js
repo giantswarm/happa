@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor, within } from '@testing-library/react';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -10,7 +9,6 @@ import * as featureFlags from 'shared/featureFlags';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
-  AWSInfoResponse,
   getMockCall,
   gsOrgResponse,
   invitesResponse,
@@ -41,7 +39,6 @@ describe('Users', () => {
 
   // Responses to requests
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/users/', usersResponse);
@@ -93,12 +90,8 @@ describe('Users', () => {
         status: 'READY',
       });
 
-    const {
-      findByText,
-      getByText,
-      getByLabelText,
-      getAllByText,
-    } = renderRouteWithStore(UsersRoutes.Home);
+    const { findByText, getByText, getByLabelText, getAllByText } =
+      renderRouteWithStore(UsersRoutes.Home);
 
     let inviteButton = await findByText(/invite user/i);
     expect(inviteButton).toBeInTheDocument();
@@ -113,7 +106,7 @@ describe('Users', () => {
     fireEvent.click(getByLabelText(/organizations/i));
 
     // Select `giantswarm` organizatio
-    fireEvent.click(getByLabelText(/giantswarm/i));
+    fireEvent.click(getByLabelText('giantswarm'));
 
     // Email input validation
 
@@ -203,9 +196,8 @@ describe('Users', () => {
     const expiryDate = within(selectedEmailCell).getByText(/in about 1 year/i);
     expect(expiryDate).toBeInTheDocument();
 
-    let unexpireButton = within(selectedEmailCell).getByTitle(
-      /remove expiration/i
-    );
+    let unexpireButton =
+      within(selectedEmailCell).getByTitle(/remove expiration/i);
     fireEvent.click(unexpireButton);
 
     expect(

@@ -8,6 +8,7 @@ interface IGlobalConfig {
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
   mapiEndpoint: string;
+  athenaEndpoint: string;
   mapiAudience: string;
   defaultRequestTimeoutSeconds: number;
   enableRealUserMonitoring: boolean;
@@ -34,10 +35,13 @@ interface IGlobalConfig {
         zones: string[];
       };
       dataCenter: string;
-      kubernetesVersions: {
-        minorVersion: string;
-        eolDate: string;
-      }[];
+      kubernetesVersions: Record<
+        string,
+        {
+          minorVersion: string;
+          eolDate: string;
+        }
+      >;
     };
     workers: {
       countPerCluster: {

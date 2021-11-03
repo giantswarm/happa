@@ -6,7 +6,6 @@ import {
   within,
 } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInstallationInfo } from 'model/services/giantSwarm/info';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -17,7 +16,6 @@ import {
   appResponseNoCatalog,
   appResponseWithCustomConfig,
   appsResponse,
-  AWSInfoResponse,
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
@@ -44,7 +42,6 @@ const clusterDetailPath = RoutePath.createUsablePath(
 
 describe('Installed app detail pane', () => {
   beforeEach(() => {
-    (getInstallationInfo as jest.Mock).mockResolvedValueOnce(AWSInfoResponse);
     (getConfiguration as jest.Mock).mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
@@ -96,9 +93,8 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const { findByText, findByTestId, getByText } = renderRouteWithStore(
-        clusterDetailPath
-      );
+      const { findByText, findByTestId, getByText } =
+        renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
       const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -109,12 +105,11 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Delete the existing file
-      const fileInputPlaceholder = getByText(
+      const fileInputPlaceholder = await findByText(
         /User level config values have been set/i
       );
-      const fileInput = fileInputPlaceholder.parentNode!.querySelector(
-        'input'
-      )!;
+      const fileInput =
+        fileInputPlaceholder.parentNode!.querySelector('input')!;
       const file = new Blob(
         [
           JSON.stringify({
@@ -141,6 +136,9 @@ describe('Installed app detail pane', () => {
     });
 
     it('deletes the config map of an already installed app', async () => {
+      // eslint-disable-next-line no-magic-numbers
+      jest.setTimeout(10000);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -148,13 +146,8 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const {
-        findByText,
-        findByTestId,
-        getByText,
-        getByRole,
-        queryByRole,
-      } = renderRouteWithStore(clusterDetailPath);
+      const { findByText, findByTestId, getByText, getByRole, queryByRole } =
+        renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
       const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -165,12 +158,13 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Upload a configmap file
-      const fileInputPlaceholder = getByText(
+      const fileInputPlaceholder = await findByText(
         /User level config values have been set/i
       );
-      let deleteButton = within(
-        fileInputPlaceholder.parentElement!
-      ).getByRole('button', { name: 'Delete' });
+      let deleteButton = within(fileInputPlaceholder.parentElement!).getByRole(
+        'button',
+        { name: 'Delete' }
+      );
       fireEvent.click(deleteButton);
 
       // Confirm deletion
@@ -189,6 +183,9 @@ describe('Installed app detail pane', () => {
     });
 
     it('updates secrets of an already installed app', async () => {
+      // eslint-disable-next-line no-magic-numbers
+      jest.setTimeout(10000);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -196,12 +193,8 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const {
-        findByText,
-        findByTestId,
-        getByText,
-        queryByRole,
-      } = renderRouteWithStore(clusterDetailPath);
+      const { findByText, findByTestId, getByText, queryByRole } =
+        renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
       const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -212,12 +205,11 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Upload a secrets file
-      const fileInputPlaceholder = getByText(
+      const fileInputPlaceholder = await findByText(
         /user level secret values have been set/i
       );
-      const fileInput = fileInputPlaceholder.parentNode!.querySelector(
-        'input'
-      )!;
+      const fileInput =
+        fileInputPlaceholder.parentNode!.querySelector('input')!;
       const file = new Blob(
         [
           JSON.stringify({
@@ -258,13 +250,8 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const {
-        findByText,
-        findByTestId,
-        getByText,
-        getByRole,
-        queryByRole,
-      } = renderRouteWithStore(clusterDetailPath);
+      const { findByText, findByTestId, getByText, getByRole, queryByRole } =
+        renderRouteWithStore(clusterDetailPath);
 
       const clusterDetailsView = await findByTestId('cluster-details-view');
       const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -275,12 +262,13 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Delete the existing file
-      const fileInputPlaceholder = getByText(
+      const fileInputPlaceholder = await findByText(
         /user level secret values have been set/i
       );
-      let deleteButton = within(
-        fileInputPlaceholder.parentElement!
-      ).getByRole('button', { name: 'Delete' });
+      let deleteButton = within(fileInputPlaceholder.parentElement!).getByRole(
+        'button',
+        { name: 'Delete' }
+      );
       fireEvent.click(deleteButton);
 
       // Confirm deletion
@@ -314,12 +302,8 @@ describe('Installed app detail pane', () => {
     // After deleting the app, there are no apps.
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
-    const {
-      findByText,
-      findByTestId,
-      getByText,
-      queryByText,
-    } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, findByTestId, getByText, queryByText } =
+      renderRouteWithStore(clusterDetailPath);
 
     const clusterDetailsView = await findByTestId('cluster-details-view');
     const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -330,7 +314,7 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appLabel);
 
     // Delete the app
-    let deleteButton = getByText(/delete app/i);
+    let deleteButton = await findByText(/delete app/i);
     fireEvent.click(deleteButton);
 
     // Confirm deletion
@@ -347,9 +331,8 @@ describe('Installed app detail pane', () => {
   it('shows a no apps installed message when there are no apps yet', async () => {
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
-    const { findByText, findByTestId } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { findByText, findByTestId } =
+      renderRouteWithStore(clusterDetailPath);
 
     const clusterDetailsView = await findByTestId('cluster-details-view');
     const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -385,9 +368,8 @@ describe('Installed app detail pane', () => {
       .get('/giantswarm-catalog/index.yaml')
       .reply(StatusCodes.Ok, catalogIndexResponse);
 
-    const { findByTestId, findByText, getByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { findByTestId, findByText, getByText } =
+      renderRouteWithStore(clusterDetailPath);
 
     const clusterDetailsView = await findByTestId('cluster-details-view');
     const appsTab = await within(clusterDetailsView).findByText(/^apps$/i);
@@ -398,7 +380,7 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appLabel);
 
     // Wait for the version picker to load.
-    const modal = screen.getByLabelText('App details');
+    const modal = await screen.findByLabelText('App details');
     const versionDropdown = await within(modal).findByText(/0.0.1/i);
     fireEvent.click(versionDropdown);
 

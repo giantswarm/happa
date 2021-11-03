@@ -1,4 +1,3 @@
-jest.mock('model/services/giantSwarm/info');
 jest.mock('model/services/metadata/configuration');
 
 jest.mock('model/services/mapi/authorizationv1/createSelfSubjectAccessReview');

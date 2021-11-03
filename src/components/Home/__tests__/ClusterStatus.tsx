@@ -1,8 +1,4 @@
-import {
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import ClusterStatus from 'Home/ClusterStatus';
 import { Providers } from 'shared/constants';
 import { IState } from 'stores/state';
@@ -18,7 +14,7 @@ describe('ClusterStatus', () => {
     renderWithStore(ClusterStatus, { clusterId: '' });
   });
 
-  it('shows that a cluster is ready to be upgraded', async () => {
+  it('shows that a cluster is ready to be upgraded', () => {
     const state = makeState(
       {
         id: 'as129',
@@ -32,7 +28,8 @@ describe('ClusterStatus', () => {
       },
       {
         [nodePoolRelease.version]: nodePoolRelease as IRelease,
-        [nodePoolWithFlatcarRelease.version]: nodePoolWithFlatcarRelease as IRelease,
+        [nodePoolWithFlatcarRelease.version]:
+          nodePoolWithFlatcarRelease as IRelease,
       }
     );
     const onClickMockFn = jest.fn();
@@ -50,16 +47,15 @@ describe('ClusterStatus', () => {
     fireEvent.click(statusLabel);
     expect(onClickMockFn).toHaveBeenCalled();
 
-    const hoverMessageRegex = /There's a new release version available\. Upgrade now to get the latest features\./i;
+    const hoverMessageRegex =
+      /There's a new release version available\. Upgrade now to get the latest features\./i;
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.queryByText(hoverMessageRegex)
-    );
+    expect(screen.queryByText(hoverMessageRegex)).not.toBeInTheDocument();
   });
 
-  it('shows that a cluster is in creation state', async () => {
+  it('shows that a cluster is in creation state', () => {
     const state = makeState(
       {
         id: 'as129',
@@ -90,16 +86,15 @@ describe('ClusterStatus', () => {
     fireEvent.click(statusLabel);
     expect(onClickMockFn).not.toHaveBeenCalled();
 
-    const hoverMessageRegex = /The cluster is currently creating\. This step usually takes about 30 minutes\./i;
+    const hoverMessageRegex =
+      /The cluster is currently creating\. This step usually takes about 30 minutes\./i;
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.queryByText(hoverMessageRegex)
-    );
+    expect(screen.queryByText(hoverMessageRegex)).not.toBeInTheDocument();
   });
 
-  it('shows that a cluster is in upgrading state', async () => {
+  it('shows that a cluster is in upgrading state', () => {
     const state = makeState(
       {
         id: 'as129',
@@ -130,16 +125,15 @@ describe('ClusterStatus', () => {
     fireEvent.click(statusLabel);
     expect(onClickMockFn).not.toHaveBeenCalled();
 
-    const hoverMessageRegex = /The cluster is currently upgrading\. This step usually takes about 30 minutes\./i;
+    const hoverMessageRegex =
+      /The cluster is currently upgrading\. This step usually takes about 30 minutes\./i;
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.queryByText(hoverMessageRegex)
-    );
+    expect(screen.queryByText(hoverMessageRegex)).not.toBeInTheDocument();
   });
 
-  it('shows that a cluster is in awaiting upgrade state', async () => {
+  it('shows that a cluster is in awaiting upgrade state', () => {
     const state = makeState(
       {
         id: 'as129',
@@ -176,9 +170,7 @@ describe('ClusterStatus', () => {
     fireEvent.mouseEnter(statusLabel);
     expect(screen.getByText(hoverMessageRegex)).toBeInTheDocument();
     fireEvent.mouseLeave(statusLabel);
-    await waitForElementToBeRemoved(() =>
-      screen.queryByText(hoverMessageRegex)
-    );
+    expect(screen.queryByText(hoverMessageRegex)).not.toBeInTheDocument();
   });
 
   it('renders an empty output if the cluster has a deleting condition', () => {
@@ -257,7 +249,7 @@ describe('ClusterStatus', () => {
 });
 
 function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
-  return ({
+  return {
     ...preloginState,
     main: {
       loggedInUser: {
@@ -278,5 +270,5 @@ function makeState(cluster: Partial<Cluster>, releases: IReleases): IState {
         idsAwaitingUpgrade: {},
       },
     },
-  } as unknown) as IState;
+  } as unknown as IState;
 }

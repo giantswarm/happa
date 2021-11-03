@@ -37,7 +37,7 @@ import {
   globalLoadStart,
   refreshUserInfo,
 } from 'stores/main/actions';
-import { getInfo, resumeLogin } from 'stores/main/actions';
+import { resumeLogin } from 'stores/main/actions';
 import { getLoggedInUser } from 'stores/main/selectors';
 import { LoggedInUserTypes } from 'stores/main/types';
 import { modalHide } from 'stores/modal/actions';
@@ -64,9 +64,7 @@ export function batchedLayout(
     dispatch(globalLoadStart());
 
     try {
-      await dispatch(resumeLogin(auth));
-
-      const user = getLoggedInUser(getState())!;
+      const user = await dispatch(resumeLogin(auth));
       if (user.type === LoggedInUserTypes.MAPI) {
         await dispatch(organizationsLoadMAPI(auth));
         await dispatch(fetchPermissions(auth));
@@ -75,11 +73,6 @@ export function batchedLayout(
       }
 
       await dispatch(refreshUserInfo());
-
-      // TODO(axbarsan): Remove this once [this](https://github.com/giantswarm/roadmap/issues/336) is done.
-      if (user.type === LoggedInUserTypes.GS) {
-        await dispatch(getInfo());
-      }
     } catch (err) {
       dispatch(push(MainRoutes.Login));
       dispatch(globalLoadError());
@@ -306,9 +299,8 @@ export function batchedRefreshClusterDetailView(
         })
       );
 
-      const isV5Cluster = getState().entities.clusters.v5Clusters.includes(
-        clusterId
-      );
+      const isV5Cluster =
+        getState().entities.clusters.v5Clusters.includes(clusterId);
       if (isV5Cluster) {
         await dispatch(
           clusterNodePoolsLoad(clusterId, {

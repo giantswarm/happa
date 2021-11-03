@@ -1,11 +1,12 @@
 import { Box, Text } from 'grommet';
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface IClusterDetailStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   isCreating?: boolean;
   isDeleting?: boolean;
+  isConditionUnknown?: boolean;
   isUpgrading?: boolean;
   isUpgradable?: boolean;
 }
@@ -13,6 +14,7 @@ interface IClusterDetailStatusProps
 const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   isCreating,
   isDeleting,
+  isConditionUnknown,
   isUpgrading,
   isUpgradable,
   ...props
@@ -24,6 +26,7 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   switch (true) {
     case isCreating:
     case isDeleting:
+    case isConditionUnknown:
       return null;
 
     case isUpgrading:
@@ -41,17 +44,14 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   }
 
   return (
-    <OverlayTrigger
-      overlay={<Tooltip id='tooltip'>{tooltip}</Tooltip>}
-      placement='top'
-    >
+    <TooltipContainer content={<Tooltip>{tooltip}</Tooltip>}>
       <Box aria-label='Cluster status' {...props}>
         <Text color='status-warning'>
           <i className={iconClassName} role='presentation' aria-hidden='true' />{' '}
           {message}
         </Text>
       </Box>
-    </OverlayTrigger>
+    </TooltipContainer>
   );
 };
 

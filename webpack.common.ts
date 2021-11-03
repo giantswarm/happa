@@ -1,34 +1,9 @@
 /* eslint-disable no-magic-numbers, no-console */
 
-import { Config, ReactConfig } from '@swc/core';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import webpack from 'webpack';
-
-export const compilerConfig: Config = {
-  sourceMaps: true,
-  jsc: {
-    target: 'es2015',
-    parser: {
-      syntax: 'typescript',
-      tsx: true,
-      decorators: true,
-      dynamicImport: true,
-    },
-    transform: {
-      legacyDecorator: true,
-      decoratorMetadata: true,
-      react: {
-        runtime: 'automatic',
-      } as ReactConfig,
-    },
-    externalHelpers: true,
-  },
-  env: {
-    targets: '> 0.25%, not dead',
-  },
-};
 
 const config: webpack.Configuration = {
   amd: false,
@@ -97,6 +72,11 @@ const config: webpack.Configuration = {
         },
       },
       {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'raw-loader',
+      },
+      {
         test: /node_modules\/vfile\/core\.js/,
         use: [
           {
@@ -128,7 +108,7 @@ const config: webpack.Configuration = {
     cacheWithContext: false,
   },
   plugins: [
-    (new CleanWebpackPlugin() as unknown) as webpack.WebpackPluginInstance,
+    new CleanWebpackPlugin() as unknown as webpack.WebpackPluginInstance,
     new HtmlWebpackPlugin({
       template: 'src/index.ejs',
       filename: 'index.ejs',
