@@ -59,12 +59,8 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
       clusterId: V4_CLUSTER.id,
     }
   );
-  const {
-    getByText,
-    findByText,
-    findAllByText,
-    findByTestId,
-  } = renderRouteWithStore(clusterDetailPath);
+  const { getByText, findByText, findAllByText, findByTestId } =
+    renderRouteWithStore(clusterDetailPath);
 
   const clusterHeader = await findByText(V4_CLUSTER.name);
   expect(clusterHeader).toBeInTheDocument();
@@ -77,7 +73,8 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
     status: v4AWSClusterStatusResponse,
   }).toString();
 
-  const expectedNodesDesired = v4AWSClusterStatusResponse.cluster.scaling.desiredCapacity.toString();
+  const expectedNodesDesired =
+    v4AWSClusterStatusResponse.cluster.scaling.desiredCapacity.toString();
 
   const nodesRunning = await findByTestId('running-nodes');
   expect(nodesRunning.querySelector('div:nth-child(2)').textContent).toBe(
@@ -127,9 +124,8 @@ scales correctly`, async () => {
       clusterId: V4_CLUSTER.id,
     }
   );
-  const { getByTestId, getByText, getByLabelText } = renderRouteWithStore(
-    clusterDetailPath
-  );
+  const { getByTestId, getByText, getByLabelText } =
+    renderRouteWithStore(clusterDetailPath);
 
   await waitFor(() => {
     expect(
@@ -197,9 +193,8 @@ it('patches v4 cluster name correctly', async () => {
     }
   );
   // Mounting
-  const { getByText, getByDisplayValue } = renderRouteWithStore(
-    clusterDetailPath
-  );
+  const { getByText, getByDisplayValue } =
+    renderRouteWithStore(clusterDetailPath);
 
   await waitFor(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);

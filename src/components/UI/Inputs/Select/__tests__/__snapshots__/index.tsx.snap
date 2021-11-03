@@ -2,42 +2,42 @@
 
 exports[`Select renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 lPqQk"
+        class="StyledText-sc-1sadyjn-0 eqjVSW"
         for="pet"
       >
         Which pet to get?
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 mCVRg FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 iIZSEp Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 tgLLr Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           disabled=""
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fhNCWX"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 cWhQGt"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -48,12 +48,12 @@ exports[`Select renders a disabled input 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -74,35 +74,35 @@ exports[`Select renders a disabled input 1`] = `
 
 exports[`Select renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 cFtJEk FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 beSTOg Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 ecWLed"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -113,12 +113,12 @@ exports[`Select renders a simple input 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -139,36 +139,36 @@ exports[`Select renders a simple input 1`] = `
 
 exports[`Select renders an input inside the dropdown, that can search through the options 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 gySsHC FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 mCVRg FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 iIZSEp Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 tgLLr Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           disabled=""
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fhNCWX"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 cWhQGt"
                   id="pet__input"
                   readonly=""
                   tabindex="-1"
@@ -178,12 +178,12 @@ exports[`Select renders an input inside the dropdown, that can search through th
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -204,46 +204,46 @@ exports[`Select renders an input inside the dropdown, that can search through th
 
 exports[`Select renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 lPqQk"
+        class="StyledText-sc-1sadyjn-0 eqjVSW"
         for="pet"
       >
         Which pet to get?
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 cTuErc"
+        class="StyledText-sc-1sadyjn-0 fqoiau"
       >
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 cFtJEk FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 beSTOg Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 ecWLed"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -254,12 +254,12 @@ exports[`Select renders an input with a help message 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -280,41 +280,41 @@ exports[`Select renders an input with a help message 1`] = `
 
 exports[`Select renders an input with a label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 lPqQk"
+        class="StyledText-sc-1sadyjn-0 eqjVSW"
         for="pet"
       >
         Which pet to get?
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 cFtJEk FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 beSTOg Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 ecWLed"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -325,12 +325,12 @@ exports[`Select renders an input with a label 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -351,41 +351,41 @@ exports[`Select renders an input with a label 1`] = `
 
 exports[`Select renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 lPqQk"
+        class="StyledText-sc-1sadyjn-0 eqjVSW"
         for="pet"
       >
         Which pet to get?
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 bxqGsO FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 joaA-dw FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 beSTOg Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 ecWLed"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -396,12 +396,12 @@ exports[`Select renders an input with a validation error 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -416,7 +416,7 @@ exports[`Select renders an input with a validation error 1`] = `
         </button>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 boCmmO"
+        class="StyledText-sc-1sadyjn-0 kVwhZo"
       >
         You failed at this
       </span>
@@ -427,41 +427,41 @@ exports[`Select renders an input with a validation error 1`] = `
 
 exports[`Select renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 jPjcaB FormField__FormFieldBox-sc-m9hood-0 dAuFqX"
+      class="StyledBox-sc-13pk1d4-0 lpfmhn FormField__FormFieldBox-sc-m9hood-0 bNDIlh"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 lPqQk"
+        class="StyledText-sc-1sadyjn-0 eqjVSW"
         for="pet"
       >
         Which pet to get?
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 exeki FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 cFtJEk FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 beSTOg Select__StyledSelectDropButton-sc-17idtfo-2 jXREDa"
+          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eWFPqT"
+            class="StyledBox-sc-13pk1d4-0 geEyrl"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iLmQXk"
+              class="StyledBox-sc-13pk1d4-0 fmclYe"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 bDhrKg"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 jqwtzG"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 enJwZb Select__SelectTextInput-sc-17idtfo-0 fPXvfn"
+                  class="StyledTextInput-sc-1x30a0s-0 cOcIup Select__SelectTextInput-sc-17idtfo-0 ecWLed"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -472,12 +472,12 @@ exports[`Select renders an input with an info message 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 dFXnlW"
+              class="StyledBox-sc-13pk1d4-0 cemHnk"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 dHUAHx"
+                class="StyledIcon-sc-ofa7kd-0 fOhoAb"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -492,7 +492,7 @@ exports[`Select renders an input with an info message 1`] = `
         </button>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 kwoXLv"
+        class="StyledText-sc-1sadyjn-0 heWbGB"
       >
         You can set a cool value
       </span>

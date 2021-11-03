@@ -138,13 +138,13 @@
     "reselect": "4.0.0",
     "serialize-javascript": "5.0.1",
     "stacktrace-js": "2.0.2",
-    "styled-components": "5.3.1",
+    "styled-components": "5.3.3",
     "superagent": "6.1.0",
     "swr": "1.0.1",
     "underscore": "1.13.1",
     "uuid": "8.3.2",
     "validate.js": "0.13.1",
-    "web-vitals": "1.1.2"
+    "web-vitals": "2.1.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.8",
@@ -262,7 +262,7 @@
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
-    "node-fetch": "2.6.5",
+    "node-fetch": "2.6.6",
     "trim": "0.0.3",
     "underscore": "1.13.1",
     "ws": "7.5.5"

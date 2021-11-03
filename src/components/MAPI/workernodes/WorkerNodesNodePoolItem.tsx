@@ -10,10 +10,7 @@ import {
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,
-  getProviderNodePoolMachineType,
 } from 'MAPI/utils';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -29,26 +26,8 @@ import ViewAndEditName, {
 import { IWorkerNodesAdditionalColumn } from './types';
 import { deleteNodePoolResources, updateNodePoolDescription } from './utils';
 import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
+import WorkerNodesNodePoolItemMachineType from './WorkerNodesNodePoolItemMachineType';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
-
-function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
-  switch (true) {
-    case providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool &&
-      providerNodePool?.apiVersion ===
-        'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-    case providerNodePool?.kind === capzexpv1alpha3.AzureMachinePool &&
-      providerNodePool?.apiVersion ===
-        'infrastructure.cluster.x-k8s.io/v1alpha4':
-      return `VM size: ${getProviderNodePoolMachineType(providerNodePool)}`;
-    case providerNodePool?.kind === infrav1alpha3.AWSMachineDeployment &&
-      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3':
-      return `Instance type: ${getProviderNodePoolMachineType(
-        providerNodePool
-      )}`;
-    default:
-      return undefined;
-  }
-}
 
 function formatAvailabilityZonesLabel(zones: string[]) {
   if (zones.length < 1) {
@@ -104,9 +83,6 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
       : undefined;
   const availabilityZones = nodePool
     ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
-    : undefined;
-  const machineType = nodePool
-    ? getProviderNodePoolMachineType(providerNodePool)
     : undefined;
   const scaling = useMemo(() => {
     if (!nodePool) return undefined;
@@ -261,15 +237,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         </StyledDescriptionWrapper>
         {!isDeleting && !isEditingDescription && (
           <>
-            <Box align='center'>
-              <OptionalValue value={machineType} loaderWidth={130}>
-                {(value) => (
-                  <Code aria-label={formatMachineTypeLabel(providerNodePool)}>
-                    {value}
-                  </Code>
-                )}
-              </OptionalValue>
-            </Box>
+            <WorkerNodesNodePoolItemMachineType
+              nodePool={nodePool}
+              providerNodePool={providerNodePool}
+            />
             <Box align='center'>
               <OptionalValue value={availabilityZones} loaderHeight={26}>
                 {(value) => (

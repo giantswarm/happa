@@ -87,11 +87,8 @@ describe('Signup', () => {
         is_valid: true,
       });
 
-    const {
-      findByText,
-      getByLabelText,
-      findByLabelText,
-    } = renderRouteWithStore(verifyingRoute);
+    const { findByText, getByLabelText, findByLabelText } =
+      renderRouteWithStore(verifyingRoute);
 
     await findByText(
       new RegExp(
@@ -224,11 +221,8 @@ describe('Signup', () => {
         is_valid: true,
       });
 
-    const {
-      findByText,
-      getByLabelText,
-      findByLabelText,
-    } = renderRouteWithStore(verifyingRoute);
+    const { findByText, getByLabelText, findByLabelText } =
+      renderRouteWithStore(verifyingRoute);
 
     const nextButton = await findByText(/^Next$/i);
     let fieldToUse = getByLabelText(/set a password/i);
