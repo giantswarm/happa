@@ -75,6 +75,7 @@ export function getWorkerNodesCPU(
 
         break;
 
+      case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
         const instanceType = providerNp.spec.provider.worker.instanceType;
         const readyReplicas = nodePools[i].status?.readyReplicas;
@@ -131,6 +132,7 @@ export function getWorkerNodesMemory(
         break;
       }
 
+      case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
         const instanceType = providerNp.spec.provider.worker.instanceType;
         const readyReplicas = nodePools[i].status?.readyReplicas;
@@ -364,6 +366,7 @@ export function createDefaultCluster(config: {
 }) {
   switch (config.providerCluster?.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return createDefaultV1Alpha3Cluster(config);
 
@@ -415,6 +418,7 @@ export function createDefaultControlPlaneNodes(config: {
   switch (config.providerCluster?.apiVersion) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return [createDefaultAzureMachine(config)];
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const name = generateUID(5);
       const awsCP = createDefaultAWSControlPlane({ ...config, name });
@@ -623,6 +627,7 @@ export async function createCluster(
       return { cluster, providerCluster, controlPlaneNodes };
     }
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const providerCluster = await infrav1alpha3.createAWSCluster(
         httpClientFactory(),
@@ -669,13 +674,13 @@ export async function createCluster(
               return infrav1alpha3.createAWSControlPlane(
                 httpClientFactory(),
                 auth,
-                n
+                n as infrav1alpha3.IAWSControlPlane
               );
             case infrav1alpha3.G8sControlPlane:
               return infrav1alpha3.createG8sControlPlane(
                 httpClientFactory(),
                 auth,
-                n
+                n as infrav1alpha3.IG8sControlPlane
               );
             default:
               return Promise.reject(
@@ -803,6 +808,7 @@ export function getClusterConditions(
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       if (!providerCluster) break;
 

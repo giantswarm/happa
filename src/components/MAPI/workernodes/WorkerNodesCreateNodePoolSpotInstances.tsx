@@ -23,6 +23,7 @@ function getLabel(providerNodePool: ProviderNodePool): string {
   switch (providerNodePool?.apiVersion) {
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Spot virtual machines';
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return 'Instance distribution';
     default:
@@ -34,6 +35,7 @@ function getToggleLabel(providerNodePool: ProviderNodePool): string {
   switch (providerNodePool?.apiVersion) {
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return 'Enabled';
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return 'Enable Spot instances';
     default:
