@@ -1039,3 +1039,34 @@ export function isCAPZCluster(cluster: Cluster): boolean {
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
   return isCAPZCluster(cluster);
 }
+
+export function supportsClientCertificates(cluster: Cluster): boolean {
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return false;
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+      return true;
+
+    case 'infrastructure.giantswarm.io/v1alpha3': {
+      const releaseVersion = getClusterReleaseVersion(cluster);
+      if (!releaseVersion) return false;
+
+      if (
+        compare(releaseVersion, Constants.AWS_CLIENT_CERTIFICATES_VERSION) < 0
+      ) {
+        return false;
+      }
+
+      if (cluster.metadata.namespace === 'default') return false;
+
+      return true;
+    }
+
+    default:
+      return false;
+  }
+}
