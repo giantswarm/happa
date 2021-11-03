@@ -77,9 +77,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const description = nodePool
-    ? getNodePoolDescription(nodePool, providerNodePool)
-    : undefined;
+  const description =
+    nodePool && providerNodePool
+      ? getNodePoolDescription(nodePool, providerNodePool)
+      : undefined;
   const availabilityZones = nodePool
     ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
     : undefined;
@@ -99,12 +100,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     if (!nodePool) return;
 
     try {
-      await updateNodePoolDescription(
-        clientFactory(),
-        auth,
-        nodePool,
-        newValue
-      );
+      await updateNodePoolDescription(clientFactory, auth, nodePool, newValue);
 
       new FlashMessage(
         `Successfully updated the node pool's description`,
