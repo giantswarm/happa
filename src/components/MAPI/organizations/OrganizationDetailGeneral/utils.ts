@@ -206,6 +206,7 @@ function appendProviderNodePoolsStats(
         break;
       }
 
+      case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
         const instanceType = providerNp.spec.provider.worker.instanceType;
         const readyReplicas = nodePools[i].status?.readyReplicas;

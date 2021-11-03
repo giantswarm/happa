@@ -149,6 +149,7 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       list = await capiv1alpha3.getMachineDeploymentList(
         httpClientFactory(),
@@ -205,6 +206,7 @@ export function fetchNodePoolListForClusterKey(
         },
       });
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return capiv1alpha3.getMachineDeploymentListKey({
         labelSelector: {
@@ -250,6 +252,7 @@ export async function fetchProviderNodePoolsForNodePools(
             infrastructureRef.name
           );
 
+        case 'infrastructure.giantswarm.io/v1alpha2':
         case 'infrastructure.giantswarm.io/v1alpha3':
           return infrav1alpha3.getAWSMachineDeployment(
             httpClientFactory(),
@@ -421,6 +424,7 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes.items;
     }
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const [awsCP, g8sCP] = await Promise.allSettled([
         infrav1alpha3.getAWSControlPlaneList(httpClientFactory(), auth, {
@@ -478,6 +482,7 @@ export function fetchControlPlaneNodesForClusterKey(
         },
       });
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return infrav1alpha3.getAWSControlPlaneListKey({
         labelSelector: {
@@ -492,11 +497,11 @@ export function fetchControlPlaneNodesForClusterKey(
   }
 }
 
-export function fetchProviderClusterForCluster(
+export async function fetchProviderClusterForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cluster: Cluster
-) {
+): Promise<ProviderCluster> {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
     return Promise.reject(
@@ -514,6 +519,7 @@ export function fetchProviderClusterForCluster(
         infrastructureRef.name
       );
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return infrav1alpha3.getAWSCluster(
         httpClientFactory(),
@@ -539,6 +545,7 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
         infrastructureRef.name
       );
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return infrav1alpha3.getAWSClusterKey(
         cluster.metadata.namespace!,
@@ -605,6 +612,8 @@ export function getNodePoolDescription(
       );
     case 'cluster.x-k8s.io/v1alpha3':
       if (
+        providerNodePool?.apiVersion ===
+          'infrastructure.giantswarm.io/v1alpha2' ||
         providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
       ) {
         return providerNodePool.spec.nodePool.description || defaultValue;
@@ -637,6 +646,7 @@ export function getProviderNodePoolMachineTypes(
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return { primary: providerNodePool.spec?.template.vmSize ?? '' };
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return {
         primary: providerNodePool.spec.provider.worker.instanceType,
@@ -698,6 +708,7 @@ export function getProviderNodePoolSpotInstances(
       }
     }
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const onDemandBaseCapacity =
         providerNodePool.spec.provider.instanceDistribution
@@ -770,6 +781,8 @@ export function getNodePoolScaling(
 
     case 'cluster.x-k8s.io/v1alpha3': {
       if (
+        providerNodePool?.apiVersion ===
+          'infrastructure.giantswarm.io/v1alpha2' ||
         providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
       ) {
         return {
@@ -798,6 +811,8 @@ export function getNodePoolAvailabilityZones(
       return nodePool.spec?.failureDomains ?? [];
     case 'cluster.x-k8s.io/v1alpha3': {
       if (
+        providerNodePool?.apiVersion ===
+          'infrastructure.giantswarm.io/v1alpha2' ||
         providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
       ) {
         return providerNodePool.spec.provider.availabilityZones;
@@ -837,6 +852,7 @@ export function getClusterDescription(
           capiv1alpha3.annotationClusterDescription
         ] || defaultValue
       );
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return (
         (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
@@ -858,6 +874,7 @@ export function getProviderClusterLocation(
     case 'infrastructure.cluster.x-k8s.io/v1alpha3':
       return providerCluster.spec?.location ?? '';
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const region = providerCluster.spec?.provider.region;
       if (typeof region === 'undefined') return '';
@@ -881,6 +898,7 @@ export function getProviderClusterAccountID(
       return id;
     }
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return '';
 
@@ -1051,6 +1069,7 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return true;
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const releaseVersion = getClusterReleaseVersion(cluster);
       if (!releaseVersion) return false;

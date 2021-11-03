@@ -82,20 +82,23 @@ export async function updateNodePoolDescription(
         [nodePool]
       );
 
+      const apiVersion = providerNodePool?.apiVersion;
+
       if (
-        providerNodePool?.apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
+        apiVersion !== 'infrastructure.giantswarm.io/v1alpha2' &&
+        apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
       ) {
         return Promise.reject(new Error('Unsupported provider.'));
       }
 
       const client = httpClientFactory();
 
-      providerNodePool.spec.nodePool.description = newDescription;
+      providerNodePool!.spec.nodePool.description = newDescription;
 
       providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
         client,
         auth,
-        providerNodePool
+        providerNodePool as infrav1alpha3.IAWSMachineDeployment
       );
 
       mutate(
@@ -271,6 +274,7 @@ export async function deleteProviderNodePool(
   );
 
   switch (providerNodePool?.apiVersion) {
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const client = httpClientFactory();
 
@@ -311,9 +315,12 @@ export async function deleteNodePoolResources(
   try {
     await deleteNodePool(httpClientFactory, auth, nodePool);
 
+    const apiVersion =
+      nodePool.spec?.template.spec?.infrastructureRef?.apiVersion;
+
     if (
-      nodePool.spec?.template.spec?.infrastructureRef?.apiVersion ===
-      'infrastructure.giantswarm.io/v1alpha3'
+      apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
+      apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
     ) {
       await deleteProviderNodePool(httpClientFactory, auth, nodePool);
     }
@@ -417,8 +424,10 @@ export async function updateNodePoolScaling(
         [nodePool]
       );
 
+      const apiVersion = providerNodePool?.apiVersion;
       if (
-        providerNodePool?.apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
+        apiVersion !== 'infrastructure.giantswarm.io/v1alpha2' &&
+        apiVersion !== 'infrastructure.giantswarm.io/v1alpha3'
       ) {
         return Promise.reject(new Error('Unsupported provider.'));
       }
@@ -426,19 +435,19 @@ export async function updateNodePoolScaling(
       const client = httpClientFactory();
 
       if (
-        providerNodePool.spec.nodePool.scaling.min === min &&
-        providerNodePool.spec.nodePool.scaling.max === max
+        providerNodePool!.spec.nodePool.scaling.min === min &&
+        providerNodePool!.spec.nodePool.scaling.max === max
       ) {
         return nodePool;
       }
 
-      providerNodePool.spec.nodePool.scaling.min = min;
-      providerNodePool.spec.nodePool.scaling.max = max;
+      providerNodePool!.spec.nodePool.scaling.min = min;
+      providerNodePool!.spec.nodePool.scaling.max = max;
 
       providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
         client,
         auth,
-        providerNodePool
+        providerNodePool as infrav1alpha3.IAWSMachineDeployment
       );
 
       mutate(
@@ -636,6 +645,7 @@ export function createDefaultNodePool(config: {
   switch (config.providerNodePool?.apiVersion) {
     case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return createDefaultMachinePool(config);
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return createDefaultMachineDeployment(config);
     default:
@@ -820,11 +830,12 @@ export async function createNodePool(
       return { nodePool, providerNodePool, bootstrapConfig };
     }
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const providerNodePool = await infrav1alpha3.createAWSMachineDeployment(
         httpClient,
         auth,
-        config.providerNodePool
+        config.providerNodePool as infrav1alpha3.IAWSMachineDeployment
       );
 
       mutate(

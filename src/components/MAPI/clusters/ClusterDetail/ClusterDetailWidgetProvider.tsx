@@ -33,6 +33,7 @@ export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return 'Azure region';
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return 'AWS region';
 
@@ -49,6 +50,7 @@ export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return 'Subscription ID';
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return 'Account ID';
 
@@ -68,6 +70,7 @@ export function getClusterAccountIDPath(
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return 'https://portal.azure.com/';
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return `https://${accountID}.signin.aws.amazon.com/console`;
 

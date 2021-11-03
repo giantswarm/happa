@@ -25,6 +25,7 @@ function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
     case 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return `VM size: ${machineTypes?.primary ?? 'n/a'}`;
 
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3':
       return `Instance type: ${machineTypes?.primary ?? 'n/a'}`;
 
