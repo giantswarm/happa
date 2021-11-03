@@ -144,7 +144,7 @@
     "underscore": "1.13.1",
     "uuid": "8.3.2",
     "validate.js": "0.13.1",
-    "web-vitals": "1.1.2"
+    "web-vitals": "2.1.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.8",
