@@ -2,23 +2,23 @@
 
 exports[`DataTable renders a simple table 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <table
-      class="StyledTable-sc-1m3u5g-6 hByHhn StyledDataTable-sc-xrlyjm-0 hsvjLV"
+      class="StyledTable-sc-1m3u5g-6 ixrRkt StyledDataTable-sc-xrlyjm-0 gxHxWr"
     >
       <thead
         class="StyledTable__StyledTableHeader-sc-1m3u5g-4 StyledDataTable__StyledDataTableHeader-sc-xrlyjm-4"
       >
         <tr
-          class="StyledTable__StyledTableRow-sc-1m3u5g-2 StyledDataTable__StyledDataTableRow-sc-xrlyjm-2 bhjpql"
+          class="StyledTable__StyledTableRow-sc-1m3u5g-2 StyledDataTable__StyledDataTableRow-sc-xrlyjm-2 jhQwuj"
         />
       </thead>
       <tbody
-        class="StyledTable__StyledTableBody-sc-1m3u5g-3 StyledDataTable__StyledDataTableBody-sc-xrlyjm-3 gXiYEj"
+        class="StyledTable__StyledTableBody-sc-1m3u5g-3 StyledDataTable__StyledDataTableBody-sc-xrlyjm-3 ivxQCZ"
       />
     </table>
   </div>
