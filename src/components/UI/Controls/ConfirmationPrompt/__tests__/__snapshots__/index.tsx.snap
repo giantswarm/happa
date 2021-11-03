@@ -2,14 +2,14 @@
 
 exports[`ConfirmationPrompt renders a component with a title 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
       aria-hidden="true"
-      class="StyledBox-sc-13pk1d4-0 kSZjsO Collapsible__AnimatedBox-sc-15kniua-0 dvSzsF"
+      class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
     />
   </div>
 </div>
@@ -17,14 +17,14 @@ exports[`ConfirmationPrompt renders a component with a title 1`] = `
 
 exports[`ConfirmationPrompt renders a component with buttons 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
       aria-hidden="true"
-      class="StyledBox-sc-13pk1d4-0 kSZjsO Collapsible__AnimatedBox-sc-15kniua-0 dvSzsF"
+      class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
     />
   </div>
 </div>
@@ -32,14 +32,14 @@ exports[`ConfirmationPrompt renders a component with buttons 1`] = `
 
 exports[`ConfirmationPrompt renders a simple component 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 dXGtPO"
+  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 kTyYdK"
+    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
   >
     <div
       aria-hidden="true"
-      class="StyledBox-sc-13pk1d4-0 kSZjsO Collapsible__AnimatedBox-sc-15kniua-0 dvSzsF"
+      class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
     />
   </div>
 </div>

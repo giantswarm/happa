@@ -93,9 +93,8 @@ describe('V4AzureClusterManagement', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { getByText, getAllByText, getByTitle } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { getByText, getAllByText, getByTitle } =
+      renderRouteWithStore(clusterDetailPath);
 
     await waitFor(() => {
       expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -262,9 +261,8 @@ scales correctly`, async () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { getByText, findByText, getByDisplayValue } = renderRouteWithStore(
-      clusterDetailPath
-    );
+    const { getByText, findByText, getByDisplayValue } =
+      renderRouteWithStore(clusterDetailPath);
 
     const nodesTitle = await findByText('Nodes');
     const nodesCounter = nodesTitle.nextSibling;
