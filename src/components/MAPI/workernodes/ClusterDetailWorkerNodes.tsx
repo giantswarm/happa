@@ -503,6 +503,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 {!isReadOnly && (
                   <ModifyNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
+                    provider={provider}
                   />
                 )}
                 {!isReadOnly && (
