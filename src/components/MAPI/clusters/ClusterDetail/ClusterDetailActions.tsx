@@ -196,9 +196,10 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const isLoading = isLoadingResources || isDeleting;
 
   const name = cluster?.metadata.name ?? '';
-  const description = cluster
-    ? getClusterDescription(cluster, providerCluster)
-    : '';
+  const description =
+    cluster && providerCluster
+      ? getClusterDescription(cluster, providerCluster)
+      : '';
   const creationDate = cluster?.metadata.creationTimestamp ?? '';
 
   const workerNodePoolsCount = nodePoolList?.items.length ?? 0;
