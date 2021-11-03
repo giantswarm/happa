@@ -57,6 +57,7 @@ class OrganizationDetail extends React.Component {
         property: 'id',
         header: 'Cluster ID',
         render: clusterIDCellFormatter.bind(this),
+        size: '110px',
       },
       {
         property: 'name',
