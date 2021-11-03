@@ -196,9 +196,10 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   const isLoading = isLoadingResources || isDeleting;
 
   const name = cluster?.metadata.name ?? '';
-  const description = cluster
-    ? getClusterDescription(cluster, providerCluster)
-    : '';
+  const description =
+    cluster && providerCluster
+      ? getClusterDescription(cluster, providerCluster)
+      : '';
   const creationDate = cluster?.metadata.creationTimestamp ?? '';
 
   const workerNodePoolsCount = nodePoolList?.items.length ?? 0;
@@ -246,7 +247,11 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
               basis='100%'
               animation={{ type: 'fadeIn', duration: 300 }}
             >
-              <DeleteClusterGuide clusterName={name} namespace={namespace!} />
+              <DeleteClusterGuide
+                clusterName={name}
+                namespace={namespace!}
+                provider={provider}
+              />
             </Box>
           )}
         </Box>

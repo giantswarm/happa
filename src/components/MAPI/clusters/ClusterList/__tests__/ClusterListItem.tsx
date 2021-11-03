@@ -134,6 +134,7 @@ describe('ClusterListItem', () => {
             creationTimestamp: creationDate.toISOString(),
           },
         },
+        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
         releases: releasev1alpha1Mocks.releasesList.items,
       })
     );

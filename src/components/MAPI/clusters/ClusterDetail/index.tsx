@@ -230,9 +230,10 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [providerClusterError]);
 
-  const clusterDescription = cluster
-    ? getClusterDescription(cluster, providerCluster)
-    : undefined;
+  const clusterDescription =
+    cluster && providerCluster
+      ? getClusterDescription(cluster, providerCluster)
+      : undefined;
   const clusterReleaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;

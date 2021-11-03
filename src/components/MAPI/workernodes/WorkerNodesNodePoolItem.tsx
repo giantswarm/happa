@@ -81,9 +81,10 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     nodePool && providerNodePool
       ? getNodePoolDescription(nodePool, providerNodePool)
       : undefined;
-  const availabilityZones = nodePool
-    ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
-    : undefined;
+  const availabilityZones =
+    nodePool && providerNodePool
+      ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
+      : undefined;
   const scaling = useMemo(() => {
     if (!nodePool) return undefined;
 

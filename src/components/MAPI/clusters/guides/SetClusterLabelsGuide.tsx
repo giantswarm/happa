@@ -3,6 +3,8 @@ import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import React from 'react';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -12,11 +14,13 @@ interface ISetClusterLabelsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterName: string;
   clusterNamespace: string;
+  provider: PropertiesOf<typeof Providers>;
 }
 
 const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
   clusterName,
   clusterNamespace,
+  provider,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -58,7 +62,11 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
           title='2. Add a label to this cluster'
           command={`
           kubectl --context ${context} \\
-            patch cluster ${clusterName} \\
+            patch ${
+              provider === Providers.AWS
+                ? 'clusters.cluster.x-k8s.io'
+                : 'cluster'
+            } ${clusterName} \\
             -n ${clusterNamespace} \\
             --type merge \\
             --patch '{"metadata": {"labels": {"foo": "bar"}}}'

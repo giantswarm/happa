@@ -42,9 +42,10 @@ interface IWorkerNodesNodePoolItemMachineTypeProps
 
 const WorkerNodesNodePoolItemMachineType: React.FC<IWorkerNodesNodePoolItemMachineTypeProps> =
   ({ nodePool, providerNodePool, ...props }) => {
-    const machineTypes = nodePool
-      ? getProviderNodePoolMachineTypes(providerNodePool)
-      : undefined;
+    const machineTypes =
+      nodePool && providerNodePool
+        ? getProviderNodePoolMachineTypes(providerNodePool)
+        : undefined;
 
     const allMachineTypes = (
       machineTypes as INodePoolMachineTypesAWS | undefined
