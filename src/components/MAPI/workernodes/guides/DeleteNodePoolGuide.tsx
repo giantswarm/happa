@@ -3,6 +3,8 @@ import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import React from 'react';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -11,10 +13,12 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 interface IDeleteNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterNamespace: string;
+  provider: PropertiesOf<typeof Providers>;
 }
 
 const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
   clusterNamespace,
+  provider,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -46,7 +50,11 @@ const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
           title='2. Delete a node pool'
           command={`
           kubectl --context ${context} \\
-            delete machinepools.exp.cluster.x-k8s.io my-np \\
+            delete ${
+              provider === Providers.AWS
+                ? 'machinedeployments.cluster.x-k8s.io,awsmachinedeployments.infrastructure.giantswarm.io'
+                : 'machinepools.exp.cluster.x-k8s.io'
+            } my-np \\
             --namespace ${clusterNamespace}
           `}
         >
