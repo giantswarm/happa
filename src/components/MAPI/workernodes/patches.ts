@@ -28,6 +28,8 @@ export function withNodePoolDescription(newDescription: string): NodePoolPatch {
         capiexpv1alpha3.annotationMachinePoolDescription
       ] = newDescription;
     } else if (
+      providerNodePool?.apiVersion ===
+        'infrastructure.giantswarm.io/v1alpha2' ||
       providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
     ) {
       providerNodePool.spec.nodePool.description = newDescription;
@@ -56,6 +58,7 @@ export function withNodePoolMachineType(
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
         providerNodePool.spec!.template.vmSize = config.primary;
         break;
+      case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3':
         providerNodePool.spec.provider.worker.instanceType = config.primary;
         providerNodePool.spec.provider.worker.useAlikeInstanceTypes = (
@@ -71,6 +74,8 @@ export function withNodePoolAvailabilityZones(zones?: string[]): NodePoolPatch {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.spec!.failureDomains = zones;
     } else if (
+      providerNodePool?.apiVersion ===
+        'infrastructure.giantswarm.io/v1alpha2' ||
       providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
     ) {
       providerNodePool.spec.provider.availabilityZones = zones ?? [];
@@ -91,6 +96,8 @@ export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
         capiexpv1alpha3.annotationMachinePoolMaxSize
       ] = max.toString();
     } else if (
+      providerNodePool?.apiVersion ===
+        'infrastructure.giantswarm.io/v1alpha2' ||
       providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
     ) {
       providerNodePool.spec.nodePool.scaling.min = min;
@@ -134,6 +141,7 @@ export function withNodePoolSpotInstances(
 
         break;
 
+      case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3':
         providerNodePool.spec.provider.instanceDistribution = {
           onDemandBaseCapacity: (config as INodePoolSpotInstancesConfigAWS)

@@ -57,17 +57,18 @@ export async function updateClusterDescription(
     return cluster;
   }
 
+  const apiVersion = providerCluster?.apiVersion;
   if (
-    providerCluster &&
-    providerCluster.apiVersion === 'infrastructure.giantswarm.io/v1alpha3' &&
-    typeof providerCluster.spec !== 'undefined'
+    (apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
+      apiVersion === 'infrastructure.giantswarm.io/v1alpha3') &&
+    typeof providerCluster!.spec !== 'undefined'
   ) {
-    providerCluster.spec.cluster.description = newDescription;
+    providerCluster!.spec.cluster.description = newDescription;
 
     const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
       httpClientFactory(),
       auth,
-      providerCluster
+      providerCluster as infrav1alpha3.IAWSCluster
     );
 
     mutate(
@@ -149,10 +150,15 @@ export async function deleteProviderClusterForCluster(
   );
 
   switch (providerCluster?.apiVersion) {
+    case 'infrastructure.giantswarm.io/v1alpha2':
     case 'infrastructure.giantswarm.io/v1alpha3': {
       const client = httpClientFactory();
 
-      await infrav1alpha3.deleteAWSCluster(client, auth, providerCluster);
+      await infrav1alpha3.deleteAWSCluster(
+        client,
+        auth,
+        providerCluster as infrav1alpha3.IAWSCluster
+      );
 
       providerCluster.metadata.deletionTimestamp = new Date().toISOString();
 
@@ -189,7 +195,7 @@ export async function deleteControlPlaneNodesForCluster(
         await infrav1alpha3.deleteAWSControlPlane(
           client,
           auth,
-          controlPlaneNode
+          controlPlaneNode as infrav1alpha3.IAWSControlPlane
         );
 
         controlPlaneNode.metadata.deletionTimestamp = new Date().toISOString();
@@ -203,7 +209,7 @@ export async function deleteControlPlaneNodesForCluster(
         await infrav1alpha3.deleteG8sControlPlane(
           client,
           auth,
-          controlPlaneNode
+          controlPlaneNode as infrav1alpha3.IG8sControlPlane
         );
 
         controlPlaneNode.metadata.deletionTimestamp = new Date().toISOString();
@@ -233,9 +239,10 @@ export async function deleteClusterResources(
   try {
     await deleteCluster(httpClientFactory, auth, cluster);
 
+    const apiVersion = cluster.spec?.infrastructureRef?.apiVersion;
     if (
-      cluster.spec?.infrastructureRef?.apiVersion ===
-      'infrastructure.giantswarm.io/v1alpha3'
+      apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
+      apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
     ) {
       await deleteProviderClusterForCluster(httpClientFactory, auth, cluster);
       await deleteControlPlaneNodesForCluster(httpClientFactory, auth, cluster);
@@ -437,7 +444,11 @@ export async function switchClusterToHACPNodes(
       controlPlaneNode.spec.replicas = Constants.AWS_HA_MASTERS_MAX_NODES;
 
       requests.push(
-        infrav1alpha3.updateG8sControlPlane(client, auth, controlPlaneNode)
+        infrav1alpha3.updateG8sControlPlane(
+          client,
+          auth,
+          controlPlaneNode as infrav1alpha3.IG8sControlPlane
+        )
       );
     }
   }
