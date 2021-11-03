@@ -4,15 +4,23 @@ import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { relativeDate } from 'lib/helpers';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
-import { extractErrorMessage } from 'MAPI/utils';
+import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
+import { Cluster } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  fetchCluster,
+  fetchClusterKey,
+  supportsClientCertificates,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import Copyable from 'shared/Copyable';
 import DocumentTitle from 'shared/DocumentTitle';
+import { selectOrganizations } from 'stores/organization/selectors';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
@@ -70,8 +78,10 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const { clusterId, orgId } =
     useParams<{ clusterId: string; orgId: string }>();
 
-  const keyPairListClient = useHttpClient();
+  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+
+  const keyPairListClient = useRef(clientFactory());
 
   const {
     data: keyPairList,
@@ -79,7 +89,8 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     isValidating: keyPairListIsValidating,
   } = useSWR<legacyKeyPairs.IKeyPairList, GenericResponseError>(
     legacyKeyPairs.getKeyPairListKey(clusterId),
-    () => legacyKeyPairs.getKeyPairList(keyPairListClient, auth, clusterId)
+    () =>
+      legacyKeyPairs.getKeyPairList(keyPairListClient.current, auth, clusterId)
   );
 
   const keyPairListIsLoading =
@@ -128,6 +139,26 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const handleCloseDetails = () => {
     setSelectedKeyPairSerial('');
   };
+
+  const provider = window.config.info.general.provider;
+
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const namespace = selectedOrg?.namespace;
+
+  const clusterKey = namespace
+    ? fetchClusterKey(provider, namespace, clusterId)
+    : null;
+
+  // The error is handled in the parent component.
+  const { data: cluster } = useSWR<Cluster, GenericResponseError>(
+    clusterKey,
+    () => fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
+  );
+
+  const canCreateClientCertificates = cluster
+    ? supportsClientCertificates(cluster)
+    : false;
 
   return (
     <DocumentTitle title={`Client Certificates | ${clusterId}`}>
@@ -227,10 +258,12 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
         </Box>
 
         <Box margin={{ top: 'large' }} direction='column' gap='small'>
-          <CreateKeyPairGuide
-            clusterName={clusterId}
-            organizationName={orgId}
-          />
+          {canCreateClientCertificates && (
+            <CreateKeyPairGuide
+              clusterName={clusterId}
+              organizationName={orgId}
+            />
+          )}
         </Box>
       </Breadcrumb>
     </DocumentTitle>
