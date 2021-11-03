@@ -142,6 +142,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
           <SetClusterLabelsGuide
             clusterName={cluster.metadata.name}
             clusterNamespace={cluster.metadata.namespace!}
+            provider={provider}
           />
         </Box>
       )}
