@@ -4,6 +4,8 @@ import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Providers } from 'shared/constants';
+import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
@@ -13,11 +15,13 @@ interface IDeleteClusterGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterName: string;
   namespace: string;
+  provider: PropertiesOf<typeof Providers>;
 }
 
 const DeleteClusterGuide: React.FC<IDeleteClusterGuideProps> = ({
   clusterName,
   namespace,
+  provider,
   ...props
 }) => {
   const context = useSelector(getCurrentInstallationContextName);
@@ -47,9 +51,18 @@ const DeleteClusterGuide: React.FC<IDeleteClusterGuideProps> = ({
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Delete the cluster'
-          command={`
-          kubectl --context ${context} delete cluster ${clusterName} --namespace ${namespace}
-          `}
+          command={
+            provider === Providers.AWS
+              ? `
+              kubectl --context ${context} \\
+                delete clusters.cluster.x-k8s.io,awsclusters.infrastructure.giantswarm.io,awscontrolplane,g8scontrolplane \\
+                --selector giantswarm.io/cluster=${clusterName} \\
+                --namespace ${namespace}
+              `
+              : `
+              kubectl --context ${context} delete cluster ${clusterName} --namespace ${namespace}
+              `
+          }
         >
           <Text>
             <strong>Warning:</strong> This action terminates all workloads and

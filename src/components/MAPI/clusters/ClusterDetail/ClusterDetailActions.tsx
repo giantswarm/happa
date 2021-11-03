@@ -246,7 +246,11 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
               basis='100%'
               animation={{ type: 'fadeIn', duration: 300 }}
             >
-              <DeleteClusterGuide clusterName={name} namespace={namespace!} />
+              <DeleteClusterGuide
+                clusterName={name}
+                namespace={namespace!}
+                provider={provider}
+              />
             </Box>
           )}
         </Box>
