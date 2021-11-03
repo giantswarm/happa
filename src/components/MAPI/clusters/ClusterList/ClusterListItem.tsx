@@ -81,7 +81,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 }) => {
   const name = cluster?.metadata.name;
   const description = useMemo(() => {
-    if (!cluster) return undefined;
+    if (!cluster || !providerCluster) return undefined;
 
     return getClusterDescription(cluster, providerCluster, '');
   }, [cluster, providerCluster]);

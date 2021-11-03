@@ -70,6 +70,16 @@ describe('ClusterDetail', () => {
       )
       .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
 
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
+          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+
     render(getComponent({}));
 
     expect(await screen.findByText('Random Cluster')).toBeInTheDocument();
