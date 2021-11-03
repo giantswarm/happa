@@ -960,10 +960,10 @@ export function determineRandomAZs(
       if (available.has(entry)) {
         azs.add(entry);
       }
-    }
 
-    if (azs.size === count) {
-      return Array.from(azs).sort();
+      if (azs.size === count) {
+        return Array.from(azs).sort();
+      }
     }
   }
 
