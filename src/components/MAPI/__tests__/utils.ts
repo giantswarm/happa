@@ -76,6 +76,12 @@ describe('mapi::utils', () => {
       expect(azs.includes('5')).toBeFalsy();
     });
 
+    it('returns the right number of availability zones when the list of supported ones is the same as the existing ones', () => {
+      const azs = determineRandomAZs(2, ['1', '2', '3'], ['1', '2', '3']);
+      expect(['1', '2', '3'].includes(azs[0])).toBeTruthy();
+      expect(['1', '2', '3'].includes(azs[1])).toBeTruthy();
+    });
+
     it('returns the maximum number of availability zones possible, even if the available ones are less than we need', () => {
       const azs = determineRandomAZs(3, ['1', '2']);
       expect(azs).toStrictEqual(['1', '2']);
