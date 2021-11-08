@@ -86,7 +86,7 @@ const InstallAppForm: React.FC<IInstallAppFormProps> = ({
   }, [appName, updateNamespace]);
 
   return (
-    <Box direction='column' gap='small'>
+    <Box direction='column' gap='small' height={{ min: 'fit-content' }}>
       <TextInput
         help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
         label='Application Name'

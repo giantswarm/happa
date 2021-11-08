@@ -15,6 +15,22 @@ const CloseButtonText = styled(Text)`
   line-height: normal;
 `;
 
+const Content = styled(Box)`
+  ::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.darkBlueLighter1};
+    border-radius: 5px;
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: ${({ theme }) => theme.colors.shade5};
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.global.colors.border.dark};
+    border-radius: 5px;
+  }
+`;
+
 interface IModalProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Layer>, 'title'> {
   title: React.ReactNode;
@@ -49,7 +65,13 @@ const Modal = React.forwardRef<HTMLDivElement, IModalProps>(
           round='small'
           {...contentProps}
         >
-          <Box as='header' justify='between' align='start' direction='row'>
+          <Box
+            as='header'
+            justify='between'
+            align='start'
+            direction='row'
+            height={{ min: 'fit-content' }}
+          >
             <Box pad='medium'>
               <Heading level={1} margin='none'>
                 {title}
@@ -65,9 +87,14 @@ const Modal = React.forwardRef<HTMLDivElement, IModalProps>(
             </Box>
           </Box>
 
-          <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
+          <Content
+            pad={{ left: 'medium', right: '15px', bottom: 'small' }}
+            margin={{ right: 'xsmall' }}
+            overflow={{ vertical: 'auto' }}
+            tabIndex={-1}
+          >
             {children}
-          </Box>
+          </Content>
 
           <Box as='footer' pad='medium' align='end'>
             {footer ? footer : <Button onClick={onClose}>Close</Button>}
