@@ -1,24 +1,11 @@
+import { Box } from 'grommet';
 import ClusterStatus from 'Home/ClusterStatus';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
 
-const ClusterPickerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-`;
-
-const ClusterList = styled.div`
-  overflow: auto;
-`;
-
-const Cluster = styled.div`
-  align-items: center;
-  border-radius: ${(props) => props.theme.border_radius};
-  display: flex;
-  padding: 10px 15px;
+const Cluster = styled(Box)`
   :hover {
     background-color: ${(props) => props.theme.colors.shade4};
     cursor: pointer;
@@ -81,13 +68,13 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
   };
 
   return (
-    <ClusterPickerWrapper>
+    <Box height={{ min: 'fit-content' }}>
       <TextInput
         icon={<i className='fa fa-search' />}
         onChange={(e) => props.onChangeQuery(e.target.value)}
         value={props.query}
       />
-      <ClusterList>
+      <Box>
         {props.clusters.length === 0 && (
           <NoSearchResults>
             {props.query.trim() !== '' ? (
@@ -107,6 +94,11 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
         {props.clusters.map((cluster) => {
           return (
             <Cluster
+              direction='row'
+              align='center'
+              pad={{ vertical: 'small', horizontal: '15px' }}
+              margin={{ bottom: 'xsmall' }}
+              round='xxsmall'
               className={[
                 cluster.id === props.selectedClusterID ? 'selected' : '',
                 !cluster.isAvailable ? 'disabled' : '',
@@ -124,8 +116,8 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
             </Cluster>
           );
         })}
-      </ClusterList>
-    </ClusterPickerWrapper>
+      </Box>
+    </Box>
   );
 };
 
