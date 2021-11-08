@@ -1,3 +1,5 @@
+import { isEqual } from 'underscore';
+
 export interface IQueue<T> {
   add: (entry: T) => void;
   remove: (entry: T) => void;
@@ -66,7 +68,7 @@ class QueueImpl<T> implements IQueue<T>, Iterable<T> {
    * @param entry
    */
   public includes(entry: T) {
-    return this.entries.includes(entry);
+    return this.entries.some((currentEntry) => isEqual(currentEntry, entry));
   }
 
   /**

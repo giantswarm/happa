@@ -53,7 +53,7 @@ export class FlashMessagesController {
   }
 
   public enqueue(entry: IFlashMessageEntry) {
-    if (this.queue.length >= MAX_COUNT) return;
+    if (this.queue.length >= MAX_COUNT || this.queue.includes(entry)) return;
 
     this.queue.add(entry);
 

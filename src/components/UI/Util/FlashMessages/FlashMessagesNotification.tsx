@@ -23,6 +23,8 @@ function mapMessageTypeToBackgroundColor(
 }
 
 const Content = styled(Box)`
+  word-break: break-word;
+
   code {
     background-color: ${({ theme }) => theme.global.colors['text-strong'].dark};
     color: ${({ theme }) => theme.global.colors['text-xxweak'].dark};
