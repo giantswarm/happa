@@ -66,7 +66,9 @@ class QueueImpl<T> implements IQueue<T>, Iterable<T> {
    * @param entry
    */
   public includes(entry: T) {
-    return this.entries.includes(entry);
+    return this.entries.some(
+      (currentEntry) => JSON.stringify(currentEntry) === JSON.stringify(entry)
+    );
   }
 
   /**
