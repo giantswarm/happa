@@ -1,4 +1,4 @@
-import { act, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import {
   FlashMessage,
   forceRemoveAll,
@@ -61,5 +61,34 @@ describe('FlashMessage', () => {
         await screen.findAllByText('Yo! Something went wrong.')
       ).toHaveLength(2);
     });
+  });
+
+  it(`won't display duplicate messages after the first one has been closed`, async () => {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    renderWithTheme(() => <></>, {});
+
+    await act(async () => {
+      new FlashMessage(
+        `Sorry, your request failed.`,
+        messageType.ERROR,
+        messageTTL.MEDIUM
+      );
+
+      new FlashMessage(
+        `Sorry, your request failed.`,
+        messageType.ERROR,
+        messageTTL.MEDIUM
+      );
+
+      expect(
+        await screen.findAllByText('Sorry, your request failed.')
+      ).toHaveLength(1);
+    });
+
+    fireEvent.click(screen.getByLabelText('Close'));
+
+    expect(
+      screen.queryByText('Sorry, your request failed.')
+    ).not.toBeInTheDocument();
   });
 });
