@@ -2,11 +2,6 @@
   "extends": ["config:js-app"],
   "dependencyDashboard": true,
   "labels": ["dependencies"],
-  "reviewers": [
-    "axbarsan",
-    "marians",
-    "kuosandys"
-  ],
   "packageRules": [
     {
       "matchPackagePrefixes": ["@types/jest", "jest"],
