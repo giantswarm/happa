@@ -99,7 +99,7 @@ class Layout extends React.Component {
                       <Route component={Users} exact path={UsersRoutes.Home} />
                     )}
 
-                    {user.type === LoggedInUserTypes.MAPI ? (
+                    {user?.type === LoggedInUserTypes.MAPI ? (
                       <Route
                         component={MAPIOrganizations}
                         path={OrganizationsRoutes.Home}
@@ -117,7 +117,7 @@ class Layout extends React.Component {
                       path={AccountSettingsRoutes.Home}
                     />
 
-                    {user.isAdmin && (
+                    {user?.isAdmin && (
                       <Route
                         component={Experiments}
                         exact
