@@ -89,7 +89,9 @@ export function batchedLayout(
     }
 
     try {
-      const user = getLoggedInUser(getState())!;
+      const user = getLoggedInUser(getState());
+      if (!user) return;
+
       const provider = window.config.info.general.provider;
 
       if (!supportsMapiApps(user, provider)) {
@@ -255,7 +257,9 @@ export function batchedClusterDetailView(
 
       dispatch(loadReleases());
 
-      const user = getLoggedInUser(getState())!;
+      const user = getLoggedInUser(getState());
+      if (!user) return;
+
       const provider = window.config.info.general.provider;
       if (!supportsMapiApps(user, provider)) {
         dispatch(loadClusterApps({ clusterId }));
@@ -309,7 +313,9 @@ export function batchedRefreshClusterDetailView(
         );
       }
 
-      const user = getLoggedInUser(getState())!;
+      const user = getLoggedInUser(getState());
+      if (!user) return;
+
       const provider = window.config.info.general.provider;
 
       if (
@@ -364,7 +370,9 @@ export function batchedOrganizationSelect(
     try {
       dispatch(organizationSelect(orgId));
 
-      const user = getLoggedInUser(getState())!;
+      const user = getLoggedInUser(getState());
+      if (!user) return;
+
       const provider = window.config.info.general.provider;
 
       if (!supportsMapiClusters(user, provider)) {

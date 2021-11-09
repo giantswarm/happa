@@ -138,6 +138,7 @@ class OAuth2 implements IOAuth2Provider {
     // If user is already expired, renew their authentication.
     if (origUser.expired) {
       origUser = await this.userManager.signinSilent();
+      if (!origUser) return null;
     }
 
     const newUser = getUserFromOIDCUser(origUser);
