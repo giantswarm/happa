@@ -31,7 +31,6 @@ import {
   CLUSTER_LOAD_DETAILS_REQUEST,
 } from 'stores/cluster/constants';
 import {
-  fetchPermissions,
   globalLoadError,
   globalLoadFinish,
   globalLoadStart,
@@ -67,7 +66,6 @@ export function batchedLayout(
       const user = await dispatch(resumeLogin(auth));
       if (user.type === LoggedInUserTypes.MAPI) {
         await dispatch(organizationsLoadMAPI(auth));
-        await dispatch(fetchPermissions(auth));
       } else {
         await dispatch(organizationsLoad());
       }

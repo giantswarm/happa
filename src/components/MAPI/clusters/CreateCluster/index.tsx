@@ -12,6 +12,7 @@ import {
   generateUID,
   getClusterDescription,
   getClusterReleaseVersion,
+  getNamespaceFromOrgName,
 } from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
@@ -22,7 +23,6 @@ import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import { PropertiesOf } from 'shared/types';
-import { getNamespaceFromOrgName } from 'stores/main/utils';
 import { selectOrganizations } from 'stores/organization/selectors';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';

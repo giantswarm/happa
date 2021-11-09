@@ -11,6 +11,7 @@ import configureStore from 'stores/configureStore';
 import { LoggedInUserTypes } from 'stores/main/types';
 import theme from 'styles/theme';
 import ThemeProvider from 'styles/ThemeProvider';
+import { SWRConfig } from 'swr';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
 
@@ -54,7 +55,9 @@ export function renderRouteWithStore(
   const flashMessagesController = FlashMessagesController.getInstance();
 
   const app = render(
-    <App {...{ store, theme, history, auth, flashMessagesController }} />
+    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
+      <App {...{ store, theme, history, auth, flashMessagesController }} />
+    </SWRConfig>
   );
 
   return app;
