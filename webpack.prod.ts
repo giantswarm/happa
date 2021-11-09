@@ -75,7 +75,9 @@ if (SENTRY_UPLOAD_SOURCEMAPS.toLowerCase() === 'true') {
 }
 
 if (HAPPA_ANALYZE_BUNDLE.toLowerCase() === 'true') {
-  plugins.push(new WebpackBundleAnalyzer.BundleAnalyzerPlugin());
+  plugins.push(
+    new WebpackBundleAnalyzer.BundleAnalyzerPlugin() as unknown as webpack.WebpackPluginInstance
+  );
 }
 
 const config: webpack.Configuration = merge(common, {
