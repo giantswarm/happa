@@ -14,7 +14,7 @@ interface IGettingStartedGetAccessProps {}
 
 const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
-  const { clusterId, orgId } = match.params;
+  const { clusterId } = match.params;
 
   const k8sAPIUrl = useRef(getK8sAPIUrl());
 
@@ -61,7 +61,7 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
           To update <code>kubectl gs</code> to the latest version:
         </Paragraph>
         <CodeBlock>
-          <Prompt>kubectl krew upgrade gs</Prompt>
+          <Prompt>kubectl gs selfupdate</Prompt>
         </CodeBlock>
         <Paragraph fill={true}>
           To install without Krew, download the{' '}
@@ -72,7 +72,7 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
           >
             latest release
           </a>{' '}
-          from GitHub for your platform, unpack the binary, and move it to a
+          from GitHub for your platform, unpack the archive, and move it to a
           location covered by your <code>PATH</code> environment variable. For
           more information, please see the{' '}
           <a
@@ -116,7 +116,6 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
             {`
                 kubectl gs login ${k8sAPIUrl.current} \\
                   --workload-cluster ${clusterId} \\
-                  --organization ${orgId} \\
                   --certificate-group system:masters \\
                   --certificate-ttl 3h`}
           </Prompt>
@@ -126,10 +125,6 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
           <li>
             <code>--workload-cluster &lt;cluster_name&gt;</code> selects the
             cluster to provide access to.
-          </li>
-          <li>
-            <code>--organization &lt;organization&gt;</code> selects the
-            organization the cluster belongs to.
           </li>
           <li>
             <code>--certificate-group system:masters</code> ensures that you
@@ -151,8 +146,7 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
           <code>--certificate-group</code> is a flag that sets what group you
           belong to when authenticating against the Kubernetes API. The default
           superadmin group on RBAC (Role Based Access Control) enabled clusters
-          is <code>system:masters</code> . All clusters on AWS have RBAC
-          enabled, some of our on-prem (KVM) clusters do not.
+          is <code>system:masters</code>.
         </Aside>
         <Paragraph fill={true}>
           After execution, you should see what happened in detail. After
