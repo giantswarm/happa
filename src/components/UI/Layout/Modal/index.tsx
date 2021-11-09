@@ -16,15 +16,16 @@ const CloseButtonText = styled(Text)`
 `;
 
 const Content = styled(Box)`
+  scrollbar-color: ${({ theme }) =>
+    `${theme.global.colors.border.dark} transparent`};
+  scrollbar-width: medium;
+
   ::-webkit-scrollbar {
-    background-color: ${({ theme }) => theme.colors.darkBlueLighter1};
+    background-color: ${({ theme }) => theme.colors.shade5};
     border-radius: 5px;
     width: 10px;
   }
-  ::-webkit-scrollbar-track {
-    background-color: ${({ theme }) => theme.colors.shade5};
-    border-radius: 5px;
-  }
+
   ::-webkit-scrollbar-thumb {
     background-color: ${({ theme }) => theme.global.colors.border.dark};
     border-radius: 5px;
