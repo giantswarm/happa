@@ -1,11 +1,12 @@
 import { Box, Heading, Paragraph } from 'grommet';
-import GettingStartedPlatformTabs from 'MAPI/clusters/GettingStarted/GettingStartedPlatformTabs';
-import React from 'react';
+import * as docs from 'lib/docs';
+import { getK8sAPIUrl } from 'MAPI/utils';
+import React, { useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
-import { getLoggedInUser } from 'stores/main/selectors';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import Aside from 'UI/Layout/Aside';
 
@@ -15,7 +16,7 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { clusterId } = match.params;
 
-  const loggedInUser = useSelector(getLoggedInUser)!;
+  const k8sAPIUrl = useRef(getK8sAPIUrl());
 
   return (
     <Breadcrumb
@@ -26,102 +27,74 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
     >
       <Box>
         <Heading level={1}>
-          Configure kubectl for cluster <ClusterIDLabel clusterID={clusterId} />
+          Configure a kubectl context for cluster{' '}
+          <ClusterIDLabel
+            clusterID={clusterId}
+            variant={ClusterIDLabelType.Name}
+          />
         </Heading>
         <Paragraph fill={true}>
-          The <code>gsctl</code> command line utility provides access to your
-          Giant Swarm resources. It&apos;s perfectly suited to create
-          credentials for <code>kubectl</code> in one step. Let&apos;s install{' '}
-          <code>gsctl</code> quickly.
-        </Paragraph>
-        <GettingStartedPlatformTabs
-          margin={{ top: 'medium', bottom: 'large' }}
-          linuxContent={
-            <Paragraph fill={true}>
-              Download the latest release{' '}
-              <a
-                href='https://github.com/giantswarm/gsctl/releases'
-                rel='noopener noreferrer'
-              >
-                from GitHub
-              </a>
-              , unpack the binary and move it to a location covered by your{' '}
-              <code>PATH</code> environment variable.
-            </Paragraph>
-          }
-          macOSContent={
-            <>
-              <Paragraph fill={true}>
-                Homebrew provides the most convenient way to install gsctl and
-                keep it up to date. To install, use this command:
-              </Paragraph>
-              <CodeBlock>
-                <Prompt>brew tap giantswarm/giantswarm</Prompt>
-                <Prompt>brew install gsctl</Prompt>
-              </CodeBlock>
-              <Paragraph fill={true}>For updating:</Paragraph>
-              <CodeBlock>
-                <Prompt>brew upgrade gsctl</Prompt>
-              </CodeBlock>
-              <Paragraph fill={true}>
-                To install without homebrew, download the latest release{' '}
-                <a
-                  href='https://github.com/giantswarm/gsctl/releases'
-                  rel='noopener noreferrer'
-                >
-                  from GitHub
-                </a>
-                , unpack the binary and move it to a location covered by your{' '}
-                <code>PATH</code> environment variable.
-              </Paragraph>
-            </>
-          }
-          windowsContent={
-            <>
-              <Paragraph fill={true}>
-                <a href='http://scoop.sh/' rel='noopener noreferrer'>
-                  scoop
-                </a>{' '}
-                enables convenient installs and updates for Windows PowerShell
-                users. Before you can install gsctl for the first time, execute
-                this:
-              </Paragraph>
-              <CodeBlock>
-                <Prompt>
-                  scoop bucket add giantswarm
-                  https://github.com/giantswarm/scoop-bucket.git
-                </Prompt>
-              </CodeBlock>
-              <Paragraph fill={true}>To install:</Paragraph>
-              <CodeBlock>
-                <Prompt>scoop install gsctl</Prompt>
-              </CodeBlock>
-              <Paragraph fill={true}>To update:</Paragraph>
-              <CodeBlock>
-                <Prompt>scoop update gsctl</Prompt>
-              </CodeBlock>
-              <Paragraph fill={true}>
-                To install without scoop, download the latest release{' '}
-                <a
-                  href='https://github.com/giantswarm/gsctl/releases'
-                  rel='noopener noreferrer'
-                >
-                  from GitHub
-                </a>
-                , unpack the binary and move it to a location covered by your{' '}
-                <code>PATH</code> environment variable.
-              </Paragraph>
-            </>
-          }
-        />
-        <Paragraph fill={true}>
-          Run this command to make sure the installation succeeded:
+          <code>kubectl gs</code> is a <code>kubectl</code> plugin for the Giant
+          Swarm Management API. It&apos;s perfectly suited to create credentials
+          for <code>kubectl</code> in one step.{' '}
+          <a
+            href='https://krew.sigs.k8s.io/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Krew
+          </a>{' '}
+          provides the most convenient way to install <code>kubectl gs</code>{' '}
+          and keep it up to date:
         </Paragraph>
         <CodeBlock>
-          <Prompt>{`gsctl --endpoint ${window.config.apiEndpoint} info`}</Prompt>
+          <Prompt>kubectl krew install gs</Prompt>
         </CodeBlock>
         <Paragraph fill={true}>
-          Next, we let <code>gsctl</code> do several things in one step:
+          Run this command to make sure the installation succeeded. You should
+          see information regarding the commands available:
+        </Paragraph>
+        <CodeBlock>
+          <Prompt>kubectl gs</Prompt>
+        </CodeBlock>
+        <Paragraph fill={true}>
+          To update <code>kubectl gs</code> to the latest version:
+        </Paragraph>
+        <CodeBlock>
+          <Prompt>kubectl gs selfupdate</Prompt>
+        </CodeBlock>
+        <Paragraph fill={true}>
+          To install without Krew, download the{' '}
+          <a
+            href='https://github.com/giantswarm/kubectl-gs/releases/latest'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            latest release
+          </a>{' '}
+          from GitHub for your platform, unpack the archive, and move it to a
+          location covered by your <code>PATH</code> environment variable. For
+          more information, please see the{' '}
+          <a
+            href={docs.kubectlGSInstallationURL}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            installation guide
+          </a>
+          .
+        </Paragraph>
+
+        <Aside>
+          <strong>Windows Subsystem for Linux 2 (WSL2):</strong> After
+          successfully installing <code>kubectl gs</code>, run the following
+          command so that <code>kubectl gs login</code> can open your browser:
+          <CodeBlock>
+            <Prompt>sudo ln -s $(which wslview) /usr/local/bin/xdg-open</Prompt>
+          </CodeBlock>
+        </Aside>
+        <Paragraph fill={true}>
+          Next, we let <code>kubectl gs</code> do several things in one step:
         </Paragraph>
         <ul>
           <li>
@@ -141,32 +114,26 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
         <CodeBlock>
           <Prompt>
             {`
-                gsctl --endpoint ${window.config.apiEndpoint} \\
-                  create kubeconfig \\
-                  --cluster ${clusterId} \\
-                  --certificate-organizations system:masters \\
-                  --auth-token ${loggedInUser.auth.token}`}
+                kubectl gs login ${k8sAPIUrl.current} \\
+                  --workload-cluster ${clusterId} \\
+                  --certificate-group system:masters \\
+                  --certificate-ttl 3h`}
           </Prompt>
         </CodeBlock>
-        <Paragraph fill={true}>In case you wonder:</Paragraph>
+        <Paragraph fill={true}>In case you were wondering:</Paragraph>
         <ul>
           <li>
-            <code>--endpoint</code> sets the right API endpoint to use for your
-            installation.
+            <code>--workload-cluster &lt;cluster_name&gt;</code> selects the
+            cluster to provide access to.
           </li>
           <li>
-            <code>--cluster &lt;cluster_id&gt;</code> selects the cluster to
-            provide access to.
-          </li>
-          <li>
-            <code>--certificate-organizations system:masters</code> ensures that
-            you will be authorized as an administrator when using this client
+            <code>--certificate-group system:masters</code> ensures that you
+            will be authorized as an administrator when using this client
             certificate.
           </li>
           <li>
-            <code>--auth-token &lt;token&gt;</code> saves you from having to
-            enter you password again in <code>gsctl</code>, by re-using the
-            token from your current web UI session.
+            <code>--certificate-ttl &lt;ttl&gt;</code> specifies how long the
+            client certificate should live for.
           </li>
         </ul>
         <Aside>
@@ -176,11 +143,10 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
             role='presentation'
             aria-hidden={true}
           />{' '}
-          <code>--certificate-organizations</code> is a flag that sets what
-          group you belong to when authenticating against the Kubernetes API.
-          The default superadmin group on RBAC (Role Based Access Control)
-          enabled clusters is <code>system:masters</code> . All clusters on AWS
-          have RBAC enabled, some of our on-prem (KVM) clusters do not.
+          <code>--certificate-group</code> is a flag that sets what group you
+          belong to when authenticating against the Kubernetes API. The default
+          superadmin group on RBAC (Role Based Access Control) enabled clusters
+          is <code>system:masters</code>.
         </Aside>
         <Paragraph fill={true}>
           After execution, you should see what happened in detail. After
