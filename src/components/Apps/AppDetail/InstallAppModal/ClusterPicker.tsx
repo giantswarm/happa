@@ -1,4 +1,4 @@
-import { Box } from 'grommet';
+import { Box, Keyboard } from 'grommet';
 import ClusterStatus from 'Home/ClusterStatus';
 import React, { FC } from 'react';
 import styled from 'styled-components';
@@ -67,6 +67,12 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
     }
   };
 
+  const handleSelect = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    (e.target as HTMLElement).click();
+  };
+
   return (
     <Box height={{ min: 'fit-content' }}>
       <TextInput
@@ -74,49 +80,51 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
         onChange={(e) => props.onChangeQuery(e.target.value)}
         value={props.query}
       />
-      <Box>
-        {props.clusters.length === 0 && (
-          <NoSearchResults>
-            {props.query.trim() !== '' ? (
-              <>
-                No clusters matched your search query: &quot;{props.query}&quot;{' '}
-                <br />
-                <small>
-                  Perhaps you have no clusters that support app installation.
-                </small>
-              </>
-            ) : (
-              <>No clusters available for app installation.</>
-            )}
-          </NoSearchResults>
-        )}
+      <Keyboard onSpace={handleSelect}>
+        <Box>
+          {props.clusters.length === 0 && (
+            <NoSearchResults>
+              {props.query.trim() !== '' ? (
+                <>
+                  No clusters matched your search query: &quot;{props.query}
+                  &quot; <br />
+                  <small>
+                    Perhaps you have no clusters that support app installation.
+                  </small>
+                </>
+              ) : (
+                <>No clusters available for app installation.</>
+              )}
+            </NoSearchResults>
+          )}
 
-        {props.clusters.map((cluster) => {
-          return (
-            <Cluster
-              direction='row'
-              align='center'
-              pad={{ vertical: 'small', horizontal: '15px' }}
-              margin={{ bottom: 'xsmall' }}
-              round='xxsmall'
-              className={[
-                cluster.id === props.selectedClusterID ? 'selected' : '',
-                !cluster.isAvailable ? 'disabled' : '',
-              ].join(' ')}
-              data-clusterid={cluster.id}
-              key={cluster.id}
-              onClick={cluster.isAvailable ? onSelectCluster : undefined}
-            >
-              <ClusterIDLabel clusterID={cluster.id} />
-              <ClusterTitle>{cluster.name}</ClusterTitle>
-              <ClusterNotice>
-                <ClusterStatus clusterId={cluster.id} />
-              </ClusterNotice>
-              <Organisation>{cluster.owner}</Organisation>
-            </Cluster>
-          );
-        })}
-      </Box>
+          {props.clusters.map((cluster) => {
+            return (
+              <Cluster
+                direction='row'
+                align='center'
+                pad={{ vertical: 'small', horizontal: '15px' }}
+                margin={{ bottom: 'xsmall' }}
+                round='xxsmall'
+                className={[
+                  cluster.id === props.selectedClusterID ? 'selected' : '',
+                  !cluster.isAvailable ? 'disabled' : '',
+                ].join(' ')}
+                data-clusterid={cluster.id}
+                key={cluster.id}
+                onClick={cluster.isAvailable ? onSelectCluster : undefined}
+              >
+                <ClusterIDLabel clusterID={cluster.id} />
+                <ClusterTitle>{cluster.name}</ClusterTitle>
+                <ClusterNotice>
+                  <ClusterStatus clusterId={cluster.id} />
+                </ClusterNotice>
+                <Organisation>{cluster.owner}</Organisation>
+              </Cluster>
+            );
+          })}
+        </Box>
+      </Keyboard>
     </Box>
   );
 };
