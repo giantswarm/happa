@@ -1,24 +1,11 @@
+import { Box, Keyboard } from 'grommet';
 import ClusterStatus from 'Home/ClusterStatus';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
 
-const ClusterPickerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-`;
-
-const ClusterList = styled.div`
-  overflow: auto;
-`;
-
-const Cluster = styled.div`
-  align-items: center;
-  border-radius: ${(props) => props.theme.border_radius};
-  display: flex;
-  padding: 10px 15px;
+const Cluster = styled(Box)`
   :hover {
     background-color: ${(props) => props.theme.colors.shade4};
     cursor: pointer;
@@ -80,52 +67,65 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
     }
   };
 
+  const handleSelect = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    (e.target as HTMLElement).click();
+  };
+
   return (
-    <ClusterPickerWrapper>
+    <Box height={{ min: 'fit-content' }}>
       <TextInput
         icon={<i className='fa fa-search' />}
         onChange={(e) => props.onChangeQuery(e.target.value)}
         value={props.query}
       />
-      <ClusterList>
-        {props.clusters.length === 0 && (
-          <NoSearchResults>
-            {props.query.trim() !== '' ? (
-              <>
-                No clusters matched your search query: &quot;{props.query}&quot;{' '}
-                <br />
-                <small>
-                  Perhaps you have no clusters that support app installation.
-                </small>
-              </>
-            ) : (
-              <>No clusters available for app installation.</>
-            )}
-          </NoSearchResults>
-        )}
+      <Keyboard onSpace={handleSelect}>
+        <Box>
+          {props.clusters.length === 0 && (
+            <NoSearchResults>
+              {props.query.trim() !== '' ? (
+                <>
+                  No clusters matched your search query: &quot;{props.query}
+                  &quot; <br />
+                  <small>
+                    Perhaps you have no clusters that support app installation.
+                  </small>
+                </>
+              ) : (
+                <>No clusters available for app installation.</>
+              )}
+            </NoSearchResults>
+          )}
 
-        {props.clusters.map((cluster) => {
-          return (
-            <Cluster
-              className={[
-                cluster.id === props.selectedClusterID ? 'selected' : '',
-                !cluster.isAvailable ? 'disabled' : '',
-              ].join(' ')}
-              data-clusterid={cluster.id}
-              key={cluster.id}
-              onClick={cluster.isAvailable ? onSelectCluster : undefined}
-            >
-              <ClusterIDLabel clusterID={cluster.id} />
-              <ClusterTitle>{cluster.name}</ClusterTitle>
-              <ClusterNotice>
-                <ClusterStatus clusterId={cluster.id} />
-              </ClusterNotice>
-              <Organisation>{cluster.owner}</Organisation>
-            </Cluster>
-          );
-        })}
-      </ClusterList>
-    </ClusterPickerWrapper>
+          {props.clusters.map((cluster) => {
+            return (
+              <Cluster
+                direction='row'
+                align='center'
+                pad={{ vertical: 'small', horizontal: '15px' }}
+                margin={{ bottom: 'xsmall' }}
+                round='xxsmall'
+                className={[
+                  cluster.id === props.selectedClusterID ? 'selected' : '',
+                  !cluster.isAvailable ? 'disabled' : '',
+                ].join(' ')}
+                data-clusterid={cluster.id}
+                key={cluster.id}
+                onClick={cluster.isAvailable ? onSelectCluster : undefined}
+              >
+                <ClusterIDLabel clusterID={cluster.id} />
+                <ClusterTitle>{cluster.name}</ClusterTitle>
+                <ClusterNotice>
+                  <ClusterStatus clusterId={cluster.id} />
+                </ClusterNotice>
+                <Organisation>{cluster.owner}</Organisation>
+              </Cluster>
+            );
+          })}
+        </Box>
+      </Keyboard>
+    </Box>
   );
 };
 
