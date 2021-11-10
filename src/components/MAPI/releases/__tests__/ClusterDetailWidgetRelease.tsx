@@ -4,6 +4,8 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import add from 'date-fns/fp/add';
+import format from 'date-fns/fp/format';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as releasesUtils from 'MAPI/releases/utils';
@@ -115,6 +117,35 @@ describe('ClusterDetailWidgetRelease', () => {
     await waitForElementToBeRemoved(() =>
       screen.queryByText('Details for release 14.1.5')
     );
+  });
+
+  it('displays information if an upgrade has been scheduled', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    const targetTime = `${format(
+      add(new Date(), { days: 1 }),
+      'dd MMM yy HH:mm'
+    )} UTC`;
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1alpha3Mocks.randomCluster1,
+          metadata: {
+            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            annotations: {
+              ...capiv1alpha3Mocks.randomCluster1.metadata.annotations,
+              'alpha.giantswarm.io/update-schedule-target-release': '15.0.0',
+              'alpha.giantswarm.io/update-schedule-target-time': targetTime,
+            },
+          },
+        },
+      })
+    );
+
+    expect(await screen.findByText('Upgrade scheduled')).toBeInTheDocument();
   });
 
   it('displays a warning when there is an upgrade available', async () => {

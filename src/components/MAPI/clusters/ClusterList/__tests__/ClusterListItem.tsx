@@ -1,5 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
+import add from 'date-fns/fp/add';
+import format from 'date-fns/fp/format';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
@@ -268,5 +270,31 @@ describe('ClusterListItem', () => {
     expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade available')).toBeInTheDocument();
+  });
+
+  it('displays information if an upgrade has been scheduled', async () => {
+    const targetTime = `${format(
+      add(new Date(), { days: 1 }),
+      'dd MMM yy HH:mm'
+    )} UTC`;
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1alpha3Mocks.randomCluster1,
+          metadata: {
+            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            annotations: {
+              ...capiv1alpha3Mocks.randomCluster1.metadata.annotations,
+              'alpha.giantswarm.io/update-schedule-target-release': '15.0.0',
+              'alpha.giantswarm.io/update-schedule-target-time': targetTime,
+            },
+          },
+        },
+        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+      })
+    );
+
+    expect(await screen.findByText('Upgrade scheduled')).toBeInTheDocument();
   });
 });
