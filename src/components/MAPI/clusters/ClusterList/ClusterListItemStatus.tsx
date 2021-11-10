@@ -71,7 +71,7 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       color = theme.colors.gray;
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade scheduled';
-      tooltip = `The cluster will upgrade to ${
+      tooltip = `The cluster will upgrade to v${
         clusterUpdateSchedule!.targetRelease
       } in ${getRelativeDateFromNow(clusterUpdateSchedule!.targetTime)}.`;
       break;
