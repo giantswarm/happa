@@ -267,9 +267,8 @@ class ConfigKubeCtl extends React.Component {
             <i className='fa fa-info' title='For learners' />{' '}
             <code>--certificate-organizations</code> is a flag that sets what
             group you belong to when authenticating against the Kubernetes API.
-            The default superadmin group on RBAC (Role Based Access Control)
-            enabled clusters is <code>system:masters</code> . All clusters on
-            AWS have RBAC enabled, some of our on-prem (KVM) clusters do not.
+            The default superadmin group on RBAC (role based access control)
+            enabled clusters is <code>system:masters</code>.
           </Aside>
 
           <div className='well' id='alternative'>
