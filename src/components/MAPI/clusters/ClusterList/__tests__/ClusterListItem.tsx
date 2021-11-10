@@ -273,9 +273,8 @@ describe('ClusterListItem', () => {
   });
 
   it('displays information if an upgrade has been scheduled', async () => {
-    const targetTime = `${format(
-      add(new Date(), { days: 1 }),
-      'dd MMM yy HH:mm'
+    const targetTime = `${format('dd MMM yy HH:mm')(
+      add({ days: 1 })(new Date())
     )} UTC`;
 
     render(

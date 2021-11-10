@@ -124,9 +124,8 @@ describe('ClusterDetailWidgetRelease', () => {
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
       .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
 
-    const targetTime = `${format(
-      add(new Date(), { days: 1 }),
-      'dd MMM yy HH:mm'
+    const targetTime = `${format('dd MMM yy HH:mm')(
+      add({ days: 1 })(new Date())
     )} UTC`;
 
     render(
