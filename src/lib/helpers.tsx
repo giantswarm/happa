@@ -2,6 +2,7 @@ import compareAsc from 'date-fns/fp/compareAsc';
 import format from 'date-fns/fp/format';
 import formatDistance from 'date-fns/fp/formatDistance';
 import parseISO from 'date-fns/fp/parseISO';
+import parse from 'date-fns/parse';
 import toDate from 'date-fns-tz/toDate';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import React, { ReactElement } from 'react';
@@ -10,7 +11,6 @@ import { getOrganizationByID } from 'stores/organization/utils';
 import NotAvailable from 'UI/Display/NotAvailable';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import validate from 'validate.js';
-
 /**
  * Format code in a user-friendly way.
  * Note: Newline backticks need to be escaped.
@@ -389,4 +389,12 @@ export function hasAppropriateLength(
   }
 
   return { isValid, message };
+}
+
+/**
+ * Parse a date in RFC822 format in UTC to a Date object
+ * @param date - date in RFC822 format (e.g. "05 Sep 21 08:00 UTC")
+ */
+export function parseRFC822DateFormat(date: string): Date {
+  return parse(date.replace('UTC', 'Z'), 'dd MMM yy HH:mm X', new Date());
 }

@@ -5,7 +5,10 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
-import { getClusterConditions } from 'MAPI/clusters/utils';
+import {
+  getClusterConditions,
+  getClusterUpdateSchedule,
+} from 'MAPI/clusters/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
@@ -131,6 +134,8 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
 
     const canUpgrade =
       !isUpgrading && !isCreating && !isConditionUnknown && isUpgradable;
+
+    const clusterUpdateSchedule = getClusterUpdateSchedule(cluster);
 
     const [versionModalVisible, setVersionModalVisible] = useState(false);
 
@@ -290,6 +295,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
               isConditionUnknown={isConditionUnknown}
               isUpgrading={isUpgrading}
               isUpgradable={isUpgradable}
+              clusterUpdateSchedule={clusterUpdateSchedule}
               margin={{ left: 'small' }}
             />
           )}

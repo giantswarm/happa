@@ -1,4 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { parseRFC822DateFormat } from 'lib/helpers';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
@@ -828,4 +829,25 @@ export function getClusterConditions(
   }
 
   return statuses;
+}
+
+export interface IClusterUpdateSchedule {
+  targetRelease: string;
+  targetTime: Date;
+}
+
+export function getClusterUpdateSchedule(
+  cluster: capiv1alpha3.ICluster | undefined
+): IClusterUpdateSchedule | undefined {
+  if (!cluster) return undefined;
+
+  const targetRelease =
+    capiv1alpha3.getClusterUpdateScheduleTargetRelease(cluster);
+  const targetTime = capiv1alpha3.getClusterUpdateScheduleTargetTime(cluster);
+  if (!targetRelease || !targetTime) return undefined;
+
+  return {
+    targetRelease,
+    targetTime: parseRFC822DateFormat(targetTime),
+  };
 }
