@@ -1,5 +1,5 @@
 import { Box, Text } from 'grommet';
-import { getRelativeDateFromNow } from 'lib/helpers';
+import { formatDate } from 'lib/helpers';
 import { ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -73,7 +73,7 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       message = 'Upgrade scheduled';
       tooltip = `The cluster will upgrade to v${
         clusterUpdateSchedule!.targetRelease
-      } in ${getRelativeDateFromNow(clusterUpdateSchedule!.targetTime)}.`;
+      } on ${formatDate(clusterUpdateSchedule!.targetTime)}`;
       break;
 
     case isUpgradable:

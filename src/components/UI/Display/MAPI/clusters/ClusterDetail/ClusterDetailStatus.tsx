@@ -1,5 +1,5 @@
 import { Box, Text } from 'grommet';
-import { getRelativeDateFromNow } from 'lib/helpers';
+import { formatDate } from 'lib/helpers';
 import { IClusterUpdateSchedule } from 'MAPI/clusters/utils';
 import React from 'react';
 import { useTheme } from 'styled-components';
@@ -49,7 +49,7 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
       message = 'Upgrade scheduled';
       tooltip = `The cluster will upgrade to v${
         clusterUpdateSchedule!.targetRelease
-      } in ${getRelativeDateFromNow(clusterUpdateSchedule!.targetTime)}.`;
+      } on ${formatDate(clusterUpdateSchedule!.targetTime)}`;
       break;
 
     case isUpgradable:
