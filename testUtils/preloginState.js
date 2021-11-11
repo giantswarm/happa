@@ -18,7 +18,6 @@ export default {
     selectedClusterID: null,
     firstLoadComplete: false,
     loggedInUser: null,
-    permissions: {},
   },
   errors: {},
   metadata: {

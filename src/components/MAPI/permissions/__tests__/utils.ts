@@ -1,12 +1,9 @@
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 
-import {
-  computePermissions,
-  getNamespaceFromOrgName,
-  hasPermission,
-} from '../utils';
+import { IPermissionMap } from '../types';
+import { computePermissions, hasPermission } from '../utils';
 
-describe('main::utils', () => {
+describe('permissions::utils', () => {
   describe('computePermissions', () => {
     interface ITestCase {
       rules: {
@@ -390,33 +387,6 @@ describe('main::utils', () => {
         expect(result).toEqual(expected);
       }
     );
-  });
-
-  describe('getNamespaceFromOrgName', () => {
-    test.each`
-      orgName                                                                            | expected
-      ${''}                                                                              | ${''}
-      ${'%_#!'}                                                                          | ${''}
-      ${'someorg'}                                                                       | ${'org-someorg'}
-      ${'someOrg'}                                                                       | ${'org-someorg'}
-      ${'some-org'}                                                                      | ${'org-some-org'}
-      ${'some-Org'}                                                                      | ${'org-some-org'}
-      ${'some_org'}                                                                      | ${'org-some-org'}
-      ${'some_Org'}                                                                      | ${'org-some-org'}
-      ${'some____Org'}                                                                   | ${'org-some-org'}
-      ${'some$Org'}                                                                      | ${'org-some-org'}
-      ${'some-random%org'}                                                               | ${'org-some-random-org'}
-      ${'some-org-'}                                                                     | ${'org-some-org'}
-      ${'-some-org-'}                                                                    | ${'org-some-org'}
-      ${'-some-org----'}                                                                 | ${'org-some-org'}
-      ${'-some-org%'}                                                                    | ${'org-some-org'}
-      ${'-some-random123_org'}                                                           | ${'org-some-random123-org'}
-      ${'some-random_org401'}                                                            | ${'org-some-random-org401'}
-      ${'some-random-org-with-random-keys-in-a-random-order-just-to-get-a-lot-of-chars'} | ${'org-some-random-org-with-random-keys-in-a-random-order-just-to'}
-    `(`computes namespace from '$orgName'`, ({ orgName, expected }) => {
-      const result = getNamespaceFromOrgName(orgName);
-      expect(result).toEqual(expected);
-    });
   });
 });
 
