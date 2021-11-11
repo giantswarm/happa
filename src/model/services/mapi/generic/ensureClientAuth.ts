@@ -24,6 +24,15 @@ export async function ensureClientAuth(
 
   client.setAuthorizationToken(user.authorizationType, user.idToken);
 
+  const impersonationMetadata = await auth.getImpersonationMetadata();
+  if (impersonationMetadata) {
+    client.setHeader('Impersonate-User', impersonationMetadata.user);
+
+    if (impersonationMetadata.groups?.length !== 0) {
+      client.setHeader('Impersonate-Group', impersonationMetadata.groups![0]);
+    }
+  }
+
   return Promise.resolve(client);
 }
 
