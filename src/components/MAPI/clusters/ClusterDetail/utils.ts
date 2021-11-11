@@ -1,6 +1,7 @@
 import produce from 'immer';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
+import { compare } from 'lib/semver';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchCluster,
@@ -389,6 +390,23 @@ export async function updateClusterReleaseVersion(
   const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
   if (releaseVersion === newVersion) {
     return cluster;
+  }
+
+  // If an upgrade has been scheduled, we remove the annotations if
+  // the current version we're upgrading to is newer or equal to the
+  // schedule release version. Otherwise the update request will be denied.
+  const scheduleReleaseVersion =
+    capiv1alpha3.getClusterUpdateScheduleTargetRelease(cluster);
+  if (
+    scheduleReleaseVersion &&
+    compare(scheduleReleaseVersion, newVersion) <= 0
+  ) {
+    delete cluster.metadata.annotations?.[
+      capiv1alpha3.annotationUpdateScheduleTargetRelease
+    ];
+    delete cluster.metadata.annotations?.[
+      capiv1alpha3.annotationUpdateScheduleTargetTime
+    ];
   }
 
   cluster.metadata.labels ??= {};

@@ -10,6 +10,10 @@ export const labelReleaseVersion = 'release.giantswarm.io/version';
 export const labelMachineControlPlane = 'cluster.x-k8s.io/control-plane';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
+export const annotationUpdateScheduleTargetRelease =
+  'alpha.giantswarm.io/update-schedule-target-release';
+export const annotationUpdateScheduleTargetTime =
+  'alpha.giantswarm.io/update-schedule-target-time';
 
 export const conditionTypeReady = 'Ready';
 export const conditionTypeCreating = 'Creating';
@@ -153,4 +157,16 @@ export function withReasonUpgradeNotStarted(): CheckOption {
 export function withReasonUpgradePending(): CheckOption {
   return (condition: ICondition) =>
     condition.reason === conditionReasonUpgradePending;
+}
+
+export function getClusterUpdateScheduleTargetRelease(
+  cluster: ICluster
+): string | undefined {
+  return cluster.metadata.annotations?.[annotationUpdateScheduleTargetRelease];
+}
+
+export function getClusterUpdateScheduleTargetTime(
+  cluster: ICluster
+): string | undefined {
+  return cluster.metadata.annotations?.[annotationUpdateScheduleTargetTime];
 }

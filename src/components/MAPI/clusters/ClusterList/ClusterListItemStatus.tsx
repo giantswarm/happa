@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { formatDate } from 'lib/helpers';
 import { ProviderCluster } from 'MAPI/types';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -8,7 +9,11 @@ import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
-import { getClusterConditions, isClusterUpgradable } from '../utils';
+import {
+  getClusterConditions,
+  getClusterUpdateSchedule,
+  isClusterUpgradable,
+} from '../utils';
 
 interface IClusterListItemStatusProps {
   cluster: capiv1alpha3.ICluster;
@@ -35,6 +40,8 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
     [cluster, provider, isAdmin, releases]
   );
 
+  const clusterUpdateSchedule = getClusterUpdateSchedule(cluster);
+
   let color = theme.colors.yellow1;
   let iconClassName = '';
   let message = '';
@@ -58,6 +65,15 @@ const ClusterListItemStatus: React.FC<IClusterListItemStatusProps> = ({
       message = 'Upgrade in progress…';
       tooltip =
         'The cluster is currently upgrading. This step usually takes about 30 minutes.';
+      break;
+
+    case typeof clusterUpdateSchedule !== 'undefined':
+      color = theme.colors.gray;
+      iconClassName = 'fa fa-version-upgrade';
+      message = 'Upgrade scheduled';
+      tooltip = `The cluster will upgrade to v${
+        clusterUpdateSchedule!.targetRelease
+      } on ${formatDate(clusterUpdateSchedule!.targetTime)}`;
       break;
 
     case isUpgradable:
