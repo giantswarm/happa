@@ -147,6 +147,14 @@ describe('Layout', () => {
       })
       .reply(StatusCodes.Ok, rulesReview);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectRulesReview',
+        spec: { namespace: 'giantswarm' },
+      })
+      .reply(StatusCodes.Ok, rulesReview);
+
     render(getComponent({}));
 
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
@@ -202,6 +210,14 @@ describe('Layout', () => {
         apiVersion: 'authorization.k8s.io/v1',
         kind: 'SelfSubjectRulesReview',
         spec: { namespace: 'default' },
+      })
+      .reply(StatusCodes.Ok, rulesReview);
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectRulesReview',
+        spec: { namespace: 'giantswarm' },
       })
       .reply(StatusCodes.Ok, rulesReview);
 

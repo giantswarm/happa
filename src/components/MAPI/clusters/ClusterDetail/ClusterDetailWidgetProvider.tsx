@@ -14,7 +14,6 @@ import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { selectHasPermission } from 'stores/main/selectors';
 import { selectOrganizations } from 'stores/organization/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -23,6 +22,7 @@ import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterD
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
+import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
 import { getCredentialsAccountID } from './utils';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
@@ -106,17 +106,15 @@ const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
     const credentialListClient = useHttpClient();
     const auth = useAuthProvider();
 
-    const hasPermissions = useSelector(
-      selectHasPermission(
-        legacyCredentials.credentialsNamespace,
-        'list',
-        '',
-        'secrets'
-      )
+    const provider = window.config.info.general.provider;
+
+    const { canList } = usePermissionsForOrgCredentials(
+      provider,
+      selectedOrg?.namespace ?? ''
     );
 
     const credentialListKey =
-      hasPermissions && selectedOrgID
+      canList && selectedOrgID
         ? legacyCredentials.getCredentialListKey(selectedOrgID)
         : null;
 
