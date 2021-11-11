@@ -13,7 +13,7 @@ RUN find /www \
 
 FROM quay.io/giantswarm/nginx:1.21-alpine
 
-ENV NODE_VERSION 16.7.0
+ENV NODE_VERSION 17.1.0
 
 RUN apk add --no-cache binutils libstdc++
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz"; \

@@ -30,7 +30,7 @@ Happa is a single page JavaScript application using React+Redux and runs in mode
 
 To run happa locally, you need:
 
-- [NodeJS 16](https://nodejs.org/)
+- [NodeJS 17](https://nodejs.org/)
 - [`yarn`](https://yarnpkg.com/)
 - [`kubectl`](https://github.com/giantswarm/kubectl) - Necessary to use happa against a Giant Swarm installation.
 
