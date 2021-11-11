@@ -137,9 +137,7 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
       >
         {hasNoNodePools && (
           <Box fill={true} pad={{ bottom: 'xsmall' }}>
-            <Text color='status-warning' margin={{ bottom: 'small' }}>
-              No node pools
-            </Text>
+            <Text margin={{ bottom: 'small' }}>No node pools</Text>
             <Text size='small'>
               To create node pools, switch to the{' '}
               <StyledLink to={workerNodesPath}>worker nodes</StyledLink> tab.
