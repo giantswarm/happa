@@ -159,8 +159,8 @@ export function getWorkerNodesMemory(
 }
 
 export function compareClusters(
-  a: IClusterWithProviderCluster,
-  b: IClusterWithProviderCluster
+  a: IProviderClusterForCluster,
+  b: IProviderClusterForCluster
 ) {
   // Move clusters that are currently deleting to the end of the list.
   const aIsDeleting =
@@ -730,43 +730,57 @@ export function findLatestReleaseVersion(
   return sortedVersions[0];
 }
 
-export interface IClusterWithProviderCluster {
+export interface IProviderClusterForCluster {
   cluster: Cluster;
-  providerCluster: ProviderCluster;
+  providerCluster: ProviderCluster | null;
 }
 
+/**
+ * Map clusters to provider clusters. If the provider cluster could not be
+ * fetched, 'null' is returned. If it is missing from the list for a given
+ * cluster, 'undefined' is returned.
+ * @param clusters
+ * @param providerClusters
+ */
 export function mapClustersToProviderClusters(
   clusters: Cluster[],
   providerClusters: ProviderCluster[]
-): IClusterWithProviderCluster[] {
-  const mappedClusterNameToProviderClusters: Record<string, ProviderCluster> =
-    {};
+): IProviderClusterForCluster[] {
+  const mappedClusterNameToProviderClusters: Record<
+    string,
+    ProviderCluster | null
+  > = {};
 
   for (const providerCluster of providerClusters) {
+    if (!providerCluster) continue;
+
+    const clusterName =
+      providerCluster.metadata.labels?.[infrav1alpha3.labelCluster];
     if (
-      !providerCluster ||
-      mappedClusterNameToProviderClusters.hasOwnProperty(
-        providerCluster.metadata.name
-      )
+      !clusterName ||
+      mappedClusterNameToProviderClusters.hasOwnProperty(clusterName)
     ) {
       continue;
     }
 
-    mappedClusterNameToProviderClusters[providerCluster.metadata.name] =
-      providerCluster;
+    mappedClusterNameToProviderClusters[clusterName] = providerCluster;
   }
 
-  const mappedClustersToProviderClusters: IClusterWithProviderCluster[] =
+  const mappedClustersToProviderClusters: IProviderClusterForCluster[] =
     new Array(clusters.length);
 
   for (let i = 0; i < clusters.length; i++) {
-    const clusterName = clusters[i].spec?.infrastructureRef?.name;
+    const clusterName = clusters[i].metadata.name;
+
+    const providerCluster = mappedClusterNameToProviderClusters.hasOwnProperty(
+      clusterName
+    )
+      ? mappedClusterNameToProviderClusters[clusterName]
+      : null;
 
     mappedClustersToProviderClusters[i] = {
       cluster: clusters[i],
-      providerCluster: clusterName
-        ? mappedClusterNameToProviderClusters[clusterName]
-        : undefined,
+      providerCluster,
     };
   }
 

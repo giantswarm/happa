@@ -836,7 +836,7 @@ export function getClusterReleaseVersion(cluster: Cluster) {
 
 export function getClusterDescription(
   cluster: Cluster,
-  providerCluster: ProviderCluster,
+  providerCluster: ProviderCluster | null,
   defaultValue = Constants.DEFAULT_CLUSTER_DESCRIPTION
 ): string {
   const infrastructureRef = cluster.spec?.infrastructureRef;
