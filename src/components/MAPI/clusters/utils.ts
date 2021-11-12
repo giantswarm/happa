@@ -175,10 +175,12 @@ export function compareClusters(
   }
 
   // Sort by description.
-  const descriptionComparison = getClusterDescription(
-    a.cluster,
-    a.providerCluster
-  ).localeCompare(getClusterDescription(b.cluster, b.providerCluster));
+  const aDescription = getClusterDescription(a.cluster, a.providerCluster, '');
+  const bDescription = getClusterDescription(b.cluster, b.providerCluster, '');
+  if (aDescription === '' && bDescription !== '') return 1;
+  if (bDescription === '' && aDescription !== '') return -1;
+
+  const descriptionComparison = aDescription.localeCompare(bDescription);
   if (descriptionComparison !== 0) {
     return descriptionComparison;
   }
