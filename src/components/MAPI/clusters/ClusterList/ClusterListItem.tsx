@@ -67,7 +67,7 @@ const StyledLink = styled(Link)`
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   cluster?: capiv1alpha3.ICluster;
-  providerCluster?: ProviderCluster;
+  providerCluster?: ProviderCluster | null;
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
 }
@@ -81,7 +81,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 }) => {
   const name = cluster?.metadata.name;
   const description = useMemo(() => {
-    if (!cluster || !providerCluster) return undefined;
+    if (!cluster || typeof providerCluster === 'undefined') return undefined;
 
     return getClusterDescription(cluster, providerCluster, '');
   }, [cluster, providerCluster]);
