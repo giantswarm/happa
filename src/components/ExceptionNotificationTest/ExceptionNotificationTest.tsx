@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Button from 'UI/Controls/Button';
 
 function generateUncaughtException() {
@@ -13,7 +13,7 @@ function reportException() {
   errorReporter.notify('test exception reported from Happa');
 }
 
-function ExceptionNotificationTest(): ReactNode {
+const ExceptionNotificationTest: React.FC<{}> = () => {
   return (
     <>
       <h1>Exception Notification Tester</h1>
@@ -37,6 +37,6 @@ function ExceptionNotificationTest(): ReactNode {
       <Button onClick={reportException}>Report exception</Button>
     </>
   );
-}
+};
 
 export default ExceptionNotificationTest;

@@ -10,8 +10,6 @@ import Passage, {
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
 } from 'lib/passageClient';
-import { HttpClientImpl } from 'model/clients/HttpClient';
-import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import { ThunkAction } from 'redux-thunk';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
@@ -32,12 +30,10 @@ import {
   REFRESH_USER_INFO_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
   SET_NEW_PASSWORD,
-  SET_PERMISSIONS,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'stores/main/constants';
 import { getLoggedInUser } from 'stores/main/selectors';
 import { MainActions } from 'stores/main/types';
-import { selectOrganizations } from 'stores/organization/selectors';
 import { IState } from 'stores/state';
 import { IGSAPIError } from 'utils/errorUtils';
 import {
@@ -47,11 +43,7 @@ import {
 } from 'utils/localStorageUtils';
 
 import { LoggedInUserTypes } from './types';
-import {
-  computePermissions,
-  getNamespaceFromOrgName,
-  mapOAuth2UserToUser,
-} from './utils';
+import { mapOAuth2UserToUser } from './utils';
 
 export function selectCluster(clusterID: string): MainActions {
   return {
@@ -376,62 +368,5 @@ export function mapiLogin(
 
       ErrorReporter.getInstance().notify(err as Error);
     }
-  };
-}
-
-export function fetchPermissions(
-  auth: IOAuth2Provider
-): ThunkAction<Promise<void>, IState, void, MainActions> {
-  return async (dispatch, getState) => {
-    const orgs = Object.values(selectOrganizations()(getState()));
-
-    const namespaces = orgs.map(
-      (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
-    );
-    // These are not organization namespaces, but we have resources in them.
-    namespaces.push('default');
-    namespaces.push('giantswarm');
-
-    const requests = namespaces.map(async (namespace) => {
-      const client = new HttpClientImpl();
-
-      const rulesReview: authorizationv1.ISelfSubjectRulesReview = {
-        apiVersion: 'authorization.k8s.io/v1',
-        kind: 'SelfSubjectRulesReview',
-        spec: {
-          namespace,
-        },
-      } as authorizationv1.ISelfSubjectRulesReview;
-
-      const review = await authorizationv1.createSelfSubjectRulesReview(
-        client,
-        auth,
-        rulesReview
-      );
-
-      return [namespace, review] as [typeof namespace, typeof review];
-    });
-
-    const reviewRequests = await Promise.allSettled(requests);
-    const reviews: [
-      namespace: string,
-      review: authorizationv1.ISelfSubjectRulesReview
-    ][] = [];
-    for (const reviewRequest of reviewRequests) {
-      if (reviewRequest.status === 'fulfilled') {
-        reviews.push(reviewRequest.value);
-      }
-    }
-
-    const permissions = computePermissions(reviews);
-
-    dispatch(setPermissions(permissions));
-  };
-}
-
-export function setPermissions(permissions: IPermissionMap): MainActions {
-  return {
-    type: SET_PERMISSIONS,
-    permissions,
   };
 }

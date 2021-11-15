@@ -11,6 +11,7 @@ import {
   ORGANIZATION_DELETE_ERROR,
   ORGANIZATION_DELETE_SUCCESS,
   ORGANIZATION_LOAD_ERROR,
+  ORGANIZATION_LOAD_MAPI_REQUEST,
   ORGANIZATION_LOAD_REQUEST,
   ORGANIZATION_LOAD_SUCCESS,
 } from 'stores/organization/constants';
@@ -34,6 +35,7 @@ const initialState: IOrganizationState = {
 const organizationReducer = produce(
   (draft: IOrganizationState, action: OrganizationActions) => {
     switch (action.type) {
+      case ORGANIZATION_LOAD_MAPI_REQUEST:
       case ORGANIZATION_LOAD_REQUEST:
         draft.isFetching = true;
 
