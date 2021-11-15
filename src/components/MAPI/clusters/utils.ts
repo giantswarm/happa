@@ -757,7 +757,8 @@ export function mapClustersToProviderClusters(
     if (!providerCluster) continue;
 
     const clusterName =
-      providerCluster.metadata.labels?.[infrav1alpha3.labelCluster];
+      providerCluster.metadata.labels?.[infrav1alpha3.labelCluster] ??
+      providerCluster.metadata.labels?.[capiv1alpha3.labelClusterName];
     if (
       !clusterName ||
       mappedClusterNameToProviderClusters.hasOwnProperty(clusterName)
