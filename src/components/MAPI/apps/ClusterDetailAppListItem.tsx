@@ -59,6 +59,18 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     ? applicationv1alpha1.getAppCurrentVersion(app)
     : undefined;
 
+  const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
+    string | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (
+      typeof app !== 'undefined' &&
+      typeof currentSelectedVersion === 'undefined'
+    )
+      setCurrentSelectedVersion(app.spec.version);
+  }, [app, currentSelectedVersion]);
+
   const isDeleted = typeof app?.metadata?.deletionTimestamp !== 'undefined';
   const isDisabled = typeof app === 'undefined' || isDeleted;
 
@@ -107,10 +119,6 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
       ErrorReporter.getInstance().notify(catalogNamespaceError);
     }
   }, [catalogNamespaceError]);
-
-  const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
-    string | undefined
-  >(undefined);
 
   return (
     <AccordionPanel

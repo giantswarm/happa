@@ -9,13 +9,7 @@ import { compare } from 'lib/semver';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppsRoutes } from 'shared/constants/routes';
 import useSWR from 'swr';
@@ -103,45 +97,20 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
       (typeof appCatalogEntryList === 'undefined' &&
         typeof appCatalogEntryListError === 'undefined');
 
-    const currentCreationDate = useRef<string | undefined>(undefined);
-    const currentUpstreamVersion = useRef<string | undefined>(undefined);
+    const currentEntry = useMemo(() => {
+      if (!appCatalogEntryList) return undefined;
 
-    const setCurrentEntry = useCallback(
-      (entry: applicationv1alpha1.IAppCatalogEntry) => {
-        onSelectVersion(entry.spec.version);
-        currentCreationDate.current = entry.spec.dateCreated!;
-        currentUpstreamVersion.current = entry.spec.appVersion;
-      },
-      []
-    );
+      return appCatalogEntryList.items.find(
+        (e) => e.spec.version === currentSelectedVersion
+      );
+    }, [appCatalogEntryList, currentSelectedVersion]);
 
-    useEffect(() => {
-      // Select the current app version when everything is loaded.
-      if (
-        typeof app !== 'undefined' &&
-        typeof appCatalogEntryList !== 'undefined' &&
-        typeof currentSelectedVersion === 'undefined'
-      ) {
-        const entry = appCatalogEntryList.items.find(
-          (e) => e.spec.version === app.spec.version
-        );
-        if (!entry) {
-          onSelectVersion(app.spec.version);
-          currentCreationDate.current = '';
-          currentUpstreamVersion.current = '';
-
-          return;
-        }
-
-        setCurrentEntry(entry);
-      }
-    }, [
-      app,
-      appCatalogEntryList,
-      currentSelectedVersion,
-      isLoading,
-      setCurrentEntry,
-    ]);
+    const currentCreationDate = isLoading
+      ? undefined
+      : currentEntry?.spec.dateCreated ?? '';
+    const currentUpstreamVersion = isLoading
+      ? undefined
+      : currentEntry?.spec.appVersion ?? '';
 
     const options = useMemo(() => {
       if (!appCatalogEntryList) return [];
@@ -260,12 +229,12 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<IClusterDetailAppList
               value={
                 <AppVersionInspectorOption
                   version={currentSelectedVersion}
-                  creationDate={currentCreationDate.current}
-                  upstreamVersion={currentUpstreamVersion.current}
+                  creationDate={currentCreationDate}
+                  upstreamVersion={currentUpstreamVersion}
                   isCurrent={isCurrentVersionSelected}
                 />
               }
-              onChange={(e) => setCurrentEntry(e.option)}
+              onChange={(e) => onSelectVersion(e.option.spec.version)}
               options={options}
               disabled={isLoading || isSwitchingVersion}
               margin='none'
