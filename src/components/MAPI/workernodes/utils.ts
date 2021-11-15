@@ -631,7 +631,7 @@ export function createDefaultAWSMachineDeployment(config: {
         },
         instanceDistribution: {
           onDemandBaseCapacity: 0,
-          onDemandPercentageAboveBaseCapacity: 0,
+          onDemandPercentageAboveBaseCapacity: 100,
         },
       },
     },

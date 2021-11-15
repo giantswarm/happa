@@ -85,7 +85,8 @@ const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoo
           appendChanges({
             enabled: e.target.checked,
             onDemandBaseCapacity: 0,
-            onDemandPercentageAboveBaseCapacity: 0,
+            // eslint-disable-next-line no-magic-numbers
+            onDemandPercentageAboveBaseCapacity: e.target.checked ? 0 : 100,
           });
           break;
       }
