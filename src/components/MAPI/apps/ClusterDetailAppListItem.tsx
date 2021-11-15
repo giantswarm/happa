@@ -86,6 +86,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
   }, [isDisabled]);
 
   const handleHeaderClick = (e: React.MouseEvent<HTMLElement>) => {
+    setCurrentSelectedVersion(app?.spec.version);
+
     if (isDisabled) {
       e.preventDefault();
       e.stopPropagation();
