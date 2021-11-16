@@ -17,6 +17,8 @@ import { fetchPermissions } from './utils';
 // eslint-disable-next-line no-magic-numbers
 const REFRESH_INTERVAL = 60 * 1000; // In ms.
 
+export const usePermissionsKey = 'getUserPermissions';
+
 export function usePermissions() {
   const user = useSelector(getLoggedInUser);
 
@@ -33,7 +35,7 @@ export function usePermissions() {
 
   const key =
     firstLoadComplete && user?.type === LoggedInUserTypes.MAPI
-      ? 'getUserPermissions'
+      ? usePermissionsKey
       : null;
   const { data, error, isValidating } = useSWR<
     IPermissionMap,

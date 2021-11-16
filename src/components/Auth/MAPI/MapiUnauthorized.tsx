@@ -1,8 +1,15 @@
 import { Anchor, Box, Heading, Paragraph, Text } from 'grommet';
-import * as React from 'react';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { IOAuth2ImpersonationMetadata } from 'lib/OAuth2/OAuth2';
+import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MainRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
+import { mutate } from 'swr';
+import Button from 'UI/Controls/Button';
+
+import { useAuthProvider } from './MapiAuthProvider';
 
 const StyledBox = styled(Box)`
   position: relative;
@@ -17,10 +24,40 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
   user,
   ...props
 }) => {
-  const email = user?.email ?? 'Not logged in';
+  const auth = useAuthProvider();
 
-  let groups = user?.groups?.join(', ');
-  groups ||= 'none';
+  const [impersonationMetadata, setImpersonationMetadata] =
+    useState<IOAuth2ImpersonationMetadata | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const metadata = await auth.getImpersonationMetadata();
+
+      setImpersonationMetadata(metadata);
+    })();
+  }, [auth]);
+
+  const groups = useMemo(() => {
+    if (impersonationMetadata) {
+      return impersonationMetadata.groups?.join(', ') || 'none';
+    }
+
+    return user?.groups?.join(', ') || 'none';
+  }, [impersonationMetadata, user?.groups]);
+
+  const clearImpersonation = async () => {
+    await auth.setImpersonationMetadata(null);
+
+    mutate(usePermissionsKey);
+
+    new FlashMessage(
+      'Impersonation removed successfully.',
+      messageType.SUCCESS,
+      messageTTL.MEDIUM
+    );
+  };
+
+  const email = user?.email ?? 'Not logged in';
 
   return (
     <StyledBox width='large' margin='auto' {...props}>
@@ -51,21 +88,38 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
         Please provide this additional information on request:
       </Paragraph>
       <Box direction='column' gap='xsmall' margin={{ top: 'small' }}>
-        <Box direction='row' gap='xsmall'>
-          <Text weight='bold'>Email:</Text>
-          <Text>{email}</Text>
-        </Box>
+        {impersonationMetadata ? (
+          <Box direction='row' gap='xsmall'>
+            <Text weight='bold'>User:</Text>
+            <Text>
+              {impersonationMetadata.user} (impersonated by {email})
+            </Text>
+          </Box>
+        ) : (
+          <Box direction='row' gap='xsmall'>
+            <Text weight='bold'>Email:</Text>
+            <Text>{email}</Text>
+          </Box>
+        )}
         <Box direction='row' gap='xsmall'>
           <Text weight='bold'>Groups:</Text>
           <Text>{groups}</Text>
         </Box>
       </Box>
-      <Box direction='column' gap='xsmall' margin={{ top: 'medium' }}>
-        <Paragraph fill={true}>
-          <NavLink href={MainRoutes.Logout} to={MainRoutes.Logout}>
-            Try logging in again
-          </NavLink>
-        </Paragraph>
+      <Box
+        direction='row'
+        gap='small'
+        align='center'
+        margin={{ top: 'medium' }}
+      >
+        {impersonationMetadata && (
+          <Button secondary={true} onClick={clearImpersonation}>
+            Clear impersonation
+          </Button>
+        )}
+        <NavLink href={MainRoutes.Logout} to={MainRoutes.Logout}>
+          Try logging in again
+        </NavLink>
       </Box>
     </StyledBox>
   );

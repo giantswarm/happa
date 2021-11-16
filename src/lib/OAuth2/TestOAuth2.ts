@@ -3,7 +3,12 @@ import { createMemoryHistory } from 'history';
 import { compareDates } from 'lib/helpers';
 import { AuthorizationTypes } from 'shared/constants';
 
-import { IOAuth2EventCallbacks, IOAuth2Provider, OAuth2Events } from './OAuth2';
+import {
+  IOAuth2EventCallbacks,
+  IOAuth2ImpersonationMetadata,
+  IOAuth2Provider,
+  OAuth2Events,
+} from './OAuth2';
 import { IOAuth2User } from './OAuth2User';
 
 class TestOAuth2 implements IOAuth2Provider {
@@ -56,6 +61,18 @@ class TestOAuth2 implements IOAuth2Provider {
     this.loggedInUser = null;
     this.dispatchEvent(OAuth2Events.UserUnloaded);
 
+    return Promise.resolve();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public async getImpersonationMetadata(): Promise<IOAuth2ImpersonationMetadata | null> {
+    return Promise.resolve(null);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public async setImpersonationMetadata(
+    _metadata: IOAuth2ImpersonationMetadata | null
+  ): Promise<void> {
     return Promise.resolve();
   }
 
