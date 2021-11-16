@@ -5,7 +5,7 @@ import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
 import { VersionImpl } from 'lib/Version';
-import { IClusterWithProviderCluster } from 'MAPI/clusters/utils';
+import { IProviderClusterForCluster } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import { getClusterDescription } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -256,9 +256,9 @@ export async function createApp(
  * @param searchQuery
  */
 export function filterClusters(
-  clustersWithProviderClusters: IClusterWithProviderCluster[],
+  clustersWithProviderClusters: IProviderClusterForCluster[],
   searchQuery: string
-): IClusterWithProviderCluster[] {
+): IProviderClusterForCluster[] {
   if (clustersWithProviderClusters.length < 1)
     return clustersWithProviderClusters;
 

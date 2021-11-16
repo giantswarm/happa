@@ -11,16 +11,17 @@ import useDebounce from 'lib/hooks/useDebounce';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import {
-  IClusterWithProviderCluster,
+  IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
-import { Cluster, ClusterList, ProviderCluster } from 'MAPI/types';
+import { Cluster, ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
   fetchClusterListKey,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   getClusterDescription,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -50,7 +51,7 @@ function getOrganizationForCluster(
 }
 
 function mapClusterToClusterPickerInput(
-  entry: IClusterWithProviderCluster,
+  entry: IProviderClusterForCluster,
   organizations: Record<string, IOrganization>
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
   const { cluster, providerCluster } = entry;
@@ -166,24 +167,24 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     ? fetchProviderClustersForClustersKey(clusterList.items)
     : null;
 
-  const { data: providerClusterList, error: providerClusterError } = useSWR<
-    ProviderCluster[],
+  const { data: providerClusterList, error: providerClusterListError } = useSWR<
+    IProviderClusterForClusterName[],
     GenericResponseError
   >(providerClusterKey, () =>
     fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
   );
 
   useEffect(() => {
-    if (providerClusterError) {
+    if (providerClusterListError) {
       new FlashMessage(
         'There was a problem loading provider-specific clusters.',
         messageType.ERROR,
         messageTTL.FOREVER
       );
 
-      ErrorReporter.getInstance().notify(providerClusterError);
+      ErrorReporter.getInstance().notify(providerClusterListError);
     }
-  }, [providerClusterError]);
+  }, [providerClusterListError]);
 
   const clustersWithProviderClusters = useMemo(() => {
     if (!clusterList?.items || !providerClusterList) return [];

@@ -3,12 +3,13 @@ import { Box, Keyboard, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { ClusterList, ProviderCluster } from 'MAPI/types';
+import { ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
   fetchClusterListKey,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -94,24 +95,26 @@ const Clusters: React.FC<{}> = () => {
 
   const {
     data: providerClusterList,
-    error: providerClusterError,
+    error: providerClusterListError,
     isValidating: providerClusterListIsValidating,
-  } = useSWR<ProviderCluster[], GenericResponseError>(providerClusterKey, () =>
-    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  } = useSWR<IProviderClusterForClusterName[], GenericResponseError>(
+    providerClusterKey,
+    () =>
+      fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
   );
 
   useEffect(() => {
-    if (providerClusterError) {
-      ErrorReporter.getInstance().notify(providerClusterError);
+    if (providerClusterListError) {
+      ErrorReporter.getInstance().notify(providerClusterListError);
     }
-  }, [providerClusterError]);
+  }, [providerClusterListError]);
 
   const clusterListIsLoading =
     (typeof clusterList === 'undefined' &&
       typeof clusterListError === 'undefined' &&
       clusterListIsValidating) ||
     (typeof providerClusterList === 'undefined' &&
-      typeof providerClusterError === 'undefined' &&
+      typeof providerClusterListError === 'undefined' &&
       providerClusterListIsValidating);
 
   const sortedClustersWithProviderClusters = useMemo(() => {
@@ -145,7 +148,7 @@ const Clusters: React.FC<{}> = () => {
     hasOrgs &&
     namespace &&
     (typeof clusterListError !== 'undefined' ||
-      typeof providerClusterError !== 'undefined') &&
+      typeof providerClusterListError !== 'undefined') &&
     typeof sortedClustersWithProviderClusters === 'undefined';
 
   const releaseListClient = useRef(clientFactory());

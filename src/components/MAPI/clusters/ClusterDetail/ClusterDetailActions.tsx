@@ -156,6 +156,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     typeof orgError === 'undefined' &&
     typeof cluster === 'undefined' &&
     typeof clusterError === 'undefined' &&
+    typeof providerCluster === 'undefined' &&
     typeof providerClusterError === 'undefined' &&
     typeof nodePoolList === 'undefined' &&
     typeof nodePoolListError === 'undefined' &&

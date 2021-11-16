@@ -217,10 +217,11 @@ const ClusterDetail: React.FC<{}> = () => {
     ? fetchProviderClusterForClusterKey(cluster)
     : null;
 
-  const { data: providerCluster, error: providerClusterError } = useSWR<
-    ProviderCluster,
-    GenericResponseError
-  >(providerClusterKey, () =>
+  const {
+    data: providerCluster,
+    error: providerClusterError,
+    isValidating: providerClusterIsValidating,
+  } = useSWR<ProviderCluster, GenericResponseError>(providerClusterKey, () =>
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
@@ -230,10 +231,16 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [providerClusterError]);
 
-  const clusterDescription =
-    cluster && providerCluster
-      ? getClusterDescription(cluster, providerCluster)
-      : undefined;
+  const providerClusterIsLoading =
+    typeof providerCluster === 'undefined' &&
+    typeof providerClusterError === 'undefined' &&
+    providerClusterIsValidating;
+
+  const clusterDescription = useMemo(() => {
+    if (!cluster || providerClusterIsLoading) return undefined;
+
+    return getClusterDescription(cluster, providerCluster, '');
+  }, [cluster, providerCluster, providerClusterIsLoading]);
   const clusterReleaseVersion = cluster
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;

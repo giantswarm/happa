@@ -20,6 +20,7 @@ import {
   getClusterDescription,
   getSupportedAvailabilityZones,
   IMachineType,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -159,8 +160,8 @@ export function getWorkerNodesMemory(
 }
 
 export function compareClusters(
-  a: IClusterWithProviderCluster,
-  b: IClusterWithProviderCluster
+  a: IProviderClusterForCluster,
+  b: IProviderClusterForCluster
 ) {
   // Move clusters that are currently deleting to the end of the list.
   const aIsDeleting =
@@ -175,10 +176,12 @@ export function compareClusters(
   }
 
   // Sort by description.
-  const descriptionComparison = getClusterDescription(
-    a.cluster,
-    a.providerCluster
-  ).localeCompare(getClusterDescription(b.cluster, b.providerCluster));
+  const aDescription = getClusterDescription(a.cluster, a.providerCluster, '');
+  const bDescription = getClusterDescription(b.cluster, b.providerCluster, '');
+  if (aDescription === '' && bDescription !== '') return 1;
+  if (bDescription === '' && aDescription !== '') return -1;
+
+  const descriptionComparison = aDescription.localeCompare(bDescription);
   if (descriptionComparison !== 0) {
     return descriptionComparison;
   }
@@ -730,43 +733,51 @@ export function findLatestReleaseVersion(
   return sortedVersions[0];
 }
 
-export interface IClusterWithProviderCluster {
+export interface IProviderClusterForCluster {
   cluster: Cluster;
-  providerCluster: ProviderCluster;
+  providerCluster: ProviderCluster | null;
 }
 
+/**
+ * Map clusters to provider clusters. If a provider cluster is undefined (i.e.
+ * there was an error in fetching the provider cluster), 'null' is returned as
+ * the provider cluster value.
+ * @param clusters
+ * @param providerClusters
+ */
 export function mapClustersToProviderClusters(
   clusters: Cluster[],
-  providerClusters: ProviderCluster[]
-): IClusterWithProviderCluster[] {
-  const mappedClusterNameToProviderClusters: Record<string, ProviderCluster> =
+  providerClusterForClusterName: IProviderClusterForClusterName[]
+): IProviderClusterForCluster[] {
+  const clusterNamesToProviderCluster: Record<string, ProviderCluster | null> =
     {};
 
-  for (const providerCluster of providerClusters) {
-    if (
-      !providerCluster ||
-      mappedClusterNameToProviderClusters.hasOwnProperty(
-        providerCluster.metadata.name
-      )
-    ) {
+  for (const {
+    clusterName,
+    providerCluster,
+  } of providerClusterForClusterName) {
+    if (!providerCluster) {
+      clusterNamesToProviderCluster[clusterName] = null;
       continue;
     }
-
-    mappedClusterNameToProviderClusters[providerCluster.metadata.name] =
-      providerCluster;
+    clusterNamesToProviderCluster[clusterName] = providerCluster;
   }
 
-  const mappedClustersToProviderClusters: IClusterWithProviderCluster[] =
+  const mappedClustersToProviderClusters: IProviderClusterForCluster[] =
     new Array(clusters.length);
 
   for (let i = 0; i < clusters.length; i++) {
-    const clusterName = clusters[i].spec?.infrastructureRef?.name;
+    const clusterName = clusters[i].metadata.name;
+
+    const providerCluster = clusterNamesToProviderCluster.hasOwnProperty(
+      clusterName
+    )
+      ? clusterNamesToProviderCluster[clusterName]
+      : undefined;
 
     mappedClustersToProviderClusters[i] = {
       cluster: clusters[i],
-      providerCluster: clusterName
-        ? mappedClusterNameToProviderClusters[clusterName]
-        : undefined,
+      providerCluster,
     };
   }
 
