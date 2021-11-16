@@ -2,6 +2,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { compare } from 'lib/semver';
+import { getWorkerNodesCPU, getWorkerNodesMemory } from 'MAPI/clusters/utils';
 import { ControlPlaneNode, NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   fetchControlPlaneNodesForCluster,
@@ -177,58 +178,27 @@ function appendProviderNodePoolsStats(
   machineTypes: Record<string, IMachineType>,
   summary: ui.IOrganizationDetailClustersSummary
 ) {
-  for (let i = 0; i < providerNodePools.length; i++) {
-    const providerNp = providerNodePools[i];
-
-    switch (providerNp?.apiVersion) {
-      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-      case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
-        const vmSize = providerNp.spec?.template.vmSize;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
-
-        if (
-          typeof vmSize !== 'undefined' &&
-          typeof readyReplicas !== 'undefined'
-        ) {
-          const machineTypeProperties = machineTypes[vmSize];
-          if (!machineTypeProperties) {
-            throw new Error('Invalid machine type.');
-          }
-
-          summary.workerNodesCPU ??= 0;
-          summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
-
-          summary.workerNodesMemory ??= 0;
-          summary.workerNodesMemory +=
-            machineTypeProperties.memory * readyReplicas;
-        }
-
-        break;
-      }
-
-      case 'infrastructure.giantswarm.io/v1alpha2':
-      case 'infrastructure.giantswarm.io/v1alpha3': {
-        const instanceType = providerNp.spec.provider.worker.instanceType;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
-
-        if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            throw new Error('Invalid machine type.');
-          }
-
-          summary.workerNodesCPU ??= 0;
-          summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
-
-          summary.workerNodesMemory ??= 0;
-          summary.workerNodesMemory +=
-            machineTypeProperties.memory * readyReplicas;
-        }
-
-        break;
-      }
-    }
+  const cpuCores = getWorkerNodesCPU(
+    nodePools,
+    providerNodePools,
+    machineTypes
+  );
+  if (cpuCores && cpuCores < 0) {
+    throw new Error('Invalid machine type.');
   }
+
+  summary.workerNodesCPU = cpuCores;
+
+  const memory = getWorkerNodesMemory(
+    nodePools,
+    providerNodePools,
+    machineTypes
+  );
+  if (memory && memory < 0) {
+    throw new Error('Invalid machine type.');
+  }
+
+  summary.workerNodesMemory = memory;
 }
 
 function mergeClusterSummaries(
