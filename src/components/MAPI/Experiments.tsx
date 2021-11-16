@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import * as featureFlags from 'shared/featureFlags';
+import { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import {
   Table,
@@ -16,6 +17,8 @@ import {
 } from 'UI/Display/Table';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
+
+import { usePermissionsKey } from './permissions/usePermissions';
 
 interface IExperimentsProps {}
 
@@ -45,13 +48,17 @@ const Experiments: React.FC<IExperimentsProps> = () => {
     })();
   }, [auth]);
 
-  const handleSetImpersonation = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSetImpersonation = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
-    auth.setImpersonationMetadata({
+    await auth.setImpersonationMetadata({
       user: impersonationUser,
       groups: impersonationGroup ? [impersonationGroup] : undefined,
     });
+
+    mutate(usePermissionsKey);
 
     new FlashMessage(
       'Impersonation configured successfully.',
@@ -60,11 +67,13 @@ const Experiments: React.FC<IExperimentsProps> = () => {
     );
   };
 
-  const handleClearImpersonation = () => {
+  const handleClearImpersonation = async () => {
     setImpersonationUser('');
     setImpersonationGroup('');
 
-    auth.setImpersonationMetadata(null);
+    await auth.setImpersonationMetadata(null);
+
+    mutate(usePermissionsKey);
 
     new FlashMessage(
       'Impersonation removed successfully.',

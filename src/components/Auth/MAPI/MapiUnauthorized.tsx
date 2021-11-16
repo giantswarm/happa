@@ -1,10 +1,12 @@
 import { Anchor, Box, Heading, Paragraph, Text } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2ImpersonationMetadata } from 'lib/OAuth2/OAuth2';
+import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
 import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MainRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
+import { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 
 import { useAuthProvider } from './MapiAuthProvider';
@@ -45,6 +47,8 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
 
   const clearImpersonation = async () => {
     await auth.setImpersonationMetadata(null);
+
+    mutate(usePermissionsKey);
 
     new FlashMessage(
       'Impersonation removed successfully.',
