@@ -14,13 +14,14 @@ import {
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
-import { Cluster, ClusterList, ProviderCluster } from 'MAPI/types';
+import { Cluster, ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
   fetchClusterListKey,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   getClusterDescription,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -167,7 +168,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     : null;
 
   const { data: providerClusterList, error: providerClusterListError } = useSWR<
-    ProviderCluster[],
+    IProviderClusterForClusterName[],
     GenericResponseError
   >(providerClusterKey, () =>
     fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)

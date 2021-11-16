@@ -20,6 +20,7 @@ import {
   getClusterDescription,
   getSupportedAvailabilityZones,
   IMachineType,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -738,35 +739,28 @@ export interface IProviderClusterForCluster {
 }
 
 /**
- * Map clusters to provider clusters. If the provider cluster could not be
- * fetched, 'null' is returned. If it is missing from the list for a given
- * cluster, 'undefined' is returned.
+ * Map clusters to provider clusters. If a provider cluster is undefined (i.e.
+ * there was an error in fetching the provider cluster), 'null' is returned as
+ * the provider cluster value.
  * @param clusters
  * @param providerClusters
  */
 export function mapClustersToProviderClusters(
   clusters: Cluster[],
-  providerClusters: ProviderCluster[]
+  providerClusterForClusterName: IProviderClusterForClusterName[]
 ): IProviderClusterForCluster[] {
-  const mappedClusterNameToProviderClusters: Record<
-    string,
-    ProviderCluster | null
-  > = {};
+  const clusterNamesToProviderCluster: Record<string, ProviderCluster | null> =
+    {};
 
-  for (const providerCluster of providerClusters) {
-    if (!providerCluster) continue;
-
-    const clusterName =
-      providerCluster.metadata.labels?.[infrav1alpha3.labelCluster] ??
-      providerCluster.metadata.labels?.[capiv1alpha3.labelClusterName];
-    if (
-      !clusterName ||
-      mappedClusterNameToProviderClusters.hasOwnProperty(clusterName)
-    ) {
+  for (const {
+    clusterName,
+    providerCluster,
+  } of providerClusterForClusterName) {
+    if (!providerCluster) {
+      clusterNamesToProviderCluster[clusterName] = null;
       continue;
     }
-
-    mappedClusterNameToProviderClusters[clusterName] = providerCluster;
+    clusterNamesToProviderCluster[clusterName] = providerCluster;
   }
 
   const mappedClustersToProviderClusters: IProviderClusterForCluster[] =
@@ -775,11 +769,11 @@ export function mapClustersToProviderClusters(
   for (let i = 0; i < clusters.length; i++) {
     const clusterName = clusters[i].metadata.name;
 
-    const providerCluster = mappedClusterNameToProviderClusters.hasOwnProperty(
+    const providerCluster = clusterNamesToProviderCluster.hasOwnProperty(
       clusterName
     )
-      ? mappedClusterNameToProviderClusters[clusterName]
-      : null;
+      ? clusterNamesToProviderCluster[clusterName]
+      : undefined;
 
     mappedClustersToProviderClusters[i] = {
       cluster: clusters[i],

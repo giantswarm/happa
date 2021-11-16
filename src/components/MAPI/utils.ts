@@ -557,26 +557,37 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   }
 }
 
+export interface IProviderClusterForClusterName {
+  clusterName: string;
+  providerCluster: ProviderCluster;
+}
+
 export async function fetchProviderClustersForClusters(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   clusters: Cluster[]
-): Promise<ProviderCluster[]> {
-  const responses = await Promise.allSettled(
-    clusters.map((cluster) =>
-      fetchProviderClusterForCluster(httpClientFactory, auth, cluster)
-    )
+): Promise<IProviderClusterForClusterName[]> {
+  return Promise.all(
+    clusters.map(async (cluster) => {
+      try {
+        const providerCluster = await fetchProviderClusterForCluster(
+          httpClientFactory,
+          auth,
+          cluster
+        );
+
+        return {
+          clusterName: cluster.metadata.name,
+          providerCluster,
+        };
+      } catch {
+        return {
+          clusterName: cluster.metadata.name,
+          providerCluster: undefined,
+        };
+      }
+    })
   );
-
-  const providerClusters: ProviderCluster[] = responses.map((r) => {
-    if (r.status === 'rejected') {
-      return undefined;
-    }
-
-    return r.value;
-  });
-
-  return providerClusters;
 }
 
 export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {

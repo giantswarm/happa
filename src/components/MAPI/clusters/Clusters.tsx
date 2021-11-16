@@ -3,12 +3,13 @@ import { Box, Keyboard, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
-import { ClusterList, ProviderCluster } from 'MAPI/types';
+import { ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
   fetchClusterListKey,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -96,8 +97,10 @@ const Clusters: React.FC<{}> = () => {
     data: providerClusterList,
     error: providerClusterListError,
     isValidating: providerClusterListIsValidating,
-  } = useSWR<ProviderCluster[], GenericResponseError>(providerClusterKey, () =>
-    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  } = useSWR<IProviderClusterForClusterName[], GenericResponseError>(
+    providerClusterKey,
+    () =>
+      fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
   );
 
   useEffect(() => {
