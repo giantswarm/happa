@@ -61,6 +61,9 @@ const Experiments: React.FC<IExperimentsProps> = () => {
   };
 
   const handleClearImpersonation = () => {
+    setImpersonationUser('');
+    setImpersonationGroup('');
+
     auth.setImpersonationMetadata(null);
 
     new FlashMessage(
