@@ -94,24 +94,24 @@ const Clusters: React.FC<{}> = () => {
 
   const {
     data: providerClusterList,
-    error: providerClusterError,
+    error: providerClusterListError,
     isValidating: providerClusterListIsValidating,
   } = useSWR<ProviderCluster[], GenericResponseError>(providerClusterKey, () =>
     fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
   );
 
   useEffect(() => {
-    if (providerClusterError) {
-      ErrorReporter.getInstance().notify(providerClusterError);
+    if (providerClusterListError) {
+      ErrorReporter.getInstance().notify(providerClusterListError);
     }
-  }, [providerClusterError]);
+  }, [providerClusterListError]);
 
   const clusterListIsLoading =
     (typeof clusterList === 'undefined' &&
       typeof clusterListError === 'undefined' &&
       clusterListIsValidating) ||
     (typeof providerClusterList === 'undefined' &&
-      typeof providerClusterError === 'undefined' &&
+      typeof providerClusterListError === 'undefined' &&
       providerClusterListIsValidating);
 
   const sortedClustersWithProviderClusters = useMemo(() => {
@@ -145,7 +145,7 @@ const Clusters: React.FC<{}> = () => {
     hasOrgs &&
     namespace &&
     (typeof clusterListError !== 'undefined' ||
-      typeof providerClusterError !== 'undefined') &&
+      typeof providerClusterListError !== 'undefined') &&
     typeof sortedClustersWithProviderClusters === 'undefined';
 
   const releaseListClient = useRef(clientFactory());
