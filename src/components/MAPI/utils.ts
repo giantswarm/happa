@@ -724,13 +724,16 @@ export function getProviderNodePoolSpotInstances(
       const onDemandBaseCapacity =
         providerNodePool.spec.provider.instanceDistribution
           ?.onDemandBaseCapacity ?? 0;
+      const onDemandPercentageAboveBaseCapacity =
+        providerNodePool.spec.provider.instanceDistribution
+          ?.onDemandPercentageAboveBaseCapacity ?? 0;
 
       return {
-        enabled: onDemandBaseCapacity > 0,
+        // eslint-disable-next-line no-magic-numbers
+        enabled: onDemandPercentageAboveBaseCapacity < 100,
         onDemandBaseCapacity: onDemandBaseCapacity ?? 0,
         onDemandPercentageAboveBaseCapacity:
-          providerNodePool.spec.provider.instanceDistribution
-            ?.onDemandPercentageAboveBaseCapacity ?? 0,
+          onDemandPercentageAboveBaseCapacity ?? 0,
         nodeCount:
           providerNodePool.status?.provider?.worker?.spotInstances ?? 0,
       };
