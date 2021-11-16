@@ -40,12 +40,21 @@ export interface IOAuth2SigningKey {
   e: string;
 }
 
+export interface IOAuth2ImpersonationMetadata {
+  user: string;
+  groups?: string[];
+}
+
 export interface IOAuth2Provider {
   attemptLogin: () => Promise<void>;
   handleLoginResponse: (fromURL: string) => Promise<IOAuth2User | null>;
   getLoggedInUser: () => Promise<IOAuth2User | null>;
   renewUser: () => Promise<IOAuth2User>;
   logout: () => Promise<void>;
+  getImpersonationMetadata: () => Promise<IOAuth2ImpersonationMetadata | null>;
+  setImpersonationMetadata: (
+    metadata: IOAuth2ImpersonationMetadata | null
+  ) => Promise<void>;
 
   addEventListener: <
     T extends OAuth2Events,
@@ -86,11 +95,14 @@ export interface IOAuth2Config {
 class OAuth2 implements IOAuth2Provider {
   protected userManager: UserManager;
   protected eventEmitter: EventTarget;
+  protected persistenceMethod: WebStorageStateStore;
+  protected authority: string;
 
   constructor(config: IOAuth2Config) {
-    const persistenceMethod = new WebStorageStateStore({
+    this.persistenceMethod = new WebStorageStateStore({
       store: config.persistenceMethod,
     });
+    this.authority = config.authority;
 
     const customMetadata = convertToOIDCMetadata(config.customMetadata);
 
@@ -109,7 +121,7 @@ class OAuth2 implements IOAuth2Provider {
       revokeAccessTokenOnSignout: config.revokeAccessTokenOnLogout,
       filterProtocolClaims: config.filterProtocolClaims,
       validateSubOnSilentRenew: config.validateSubOnSilentRenew,
-      userStore: persistenceMethod,
+      userStore: this.persistenceMethod,
       signingKeys: config.signingKeys,
       metadata: customMetadata,
     };
@@ -161,6 +173,29 @@ class OAuth2 implements IOAuth2Provider {
   public async logout(): Promise<void> {
     await this.userManager.removeUser();
     await this.userManager.clearStaleState();
+  }
+
+  public async getImpersonationMetadata(): Promise<IOAuth2ImpersonationMetadata | null> {
+    const key = this.getImpersonationStorageKey();
+    const value = await this.persistenceMethod.get(key);
+    if (!value) return null;
+
+    return JSON.parse(value);
+  }
+
+  public async setImpersonationMetadata(
+    metadata: IOAuth2ImpersonationMetadata | null
+  ): Promise<void> {
+    const key = this.getImpersonationStorageKey();
+    if (!metadata) {
+      await this.persistenceMethod.remove(key);
+
+      return;
+    }
+
+    const value = JSON.stringify(metadata);
+
+    await this.persistenceMethod.set(key, value);
   }
 
   public addEventListener<
@@ -231,6 +266,10 @@ class OAuth2 implements IOAuth2Provider {
     });
     this.eventEmitter.dispatchEvent(event);
   };
+
+  protected getImpersonationStorageKey(): string {
+    return `impersonation:${this.authority}`;
+  }
 }
 
 export default OAuth2;
