@@ -18,8 +18,11 @@ import {
   fetchProviderClusterForClusterKey,
   generateUID,
   getClusterDescription,
+  getProviderNodePoolMachineTypes,
   getSupportedAvailabilityZones,
   IMachineType,
+  INodePoolMachineTypesAWS,
+  INodePoolMachineTypesAzure,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -59,7 +62,11 @@ export function getWorkerNodesCPU(
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       case 'infrastructure.cluster.x-k8s.io/v1alpha4':
         {
-          const vmSize = providerNp.spec?.template.vmSize;
+          const vmSize = (
+            getProviderNodePoolMachineTypes(
+              providerNp
+            ) as INodePoolMachineTypesAzure
+          ).primary;
           const readyReplicas = nodePools[i].status?.readyReplicas;
 
           if (!vmSize) return -1;
@@ -78,16 +85,21 @@ export function getWorkerNodesCPU(
 
       case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
-        const instanceType = providerNp.spec.provider.worker.instanceType;
         const readyReplicas = nodePools[i].status?.readyReplicas;
 
         if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            return -1;
-          }
+          const providerNPMachineTypes = getProviderNodePoolMachineTypes(
+            providerNp
+          ) as INodePoolMachineTypesAWS;
 
-          count += machineTypeProperties.cpu * readyReplicas;
+          for (const instanceType of providerNPMachineTypes.all) {
+            const machineTypeProperties = machineTypes[instanceType];
+            if (!machineTypeProperties) {
+              return -1;
+            }
+
+            count += machineTypeProperties.cpu * readyReplicas;
+          }
         }
 
         break;
@@ -116,7 +128,11 @@ export function getWorkerNodesMemory(
     switch (providerNp?.apiVersion) {
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
-        const vmSize = providerNp.spec?.template.vmSize;
+        const vmSize = (
+          getProviderNodePoolMachineTypes(
+            providerNp
+          ) as INodePoolMachineTypesAzure
+        ).primary;
         const readyReplicas = nodePools[i].status?.readyReplicas;
 
         if (!vmSize) return -1;
@@ -135,16 +151,21 @@ export function getWorkerNodesMemory(
 
       case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
-        const instanceType = providerNp.spec.provider.worker.instanceType;
         const readyReplicas = nodePools[i].status?.readyReplicas;
 
         if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            return -1;
-          }
+          const providerNPMachineTypes = getProviderNodePoolMachineTypes(
+            providerNp
+          ) as INodePoolMachineTypesAWS;
 
-          count += machineTypeProperties.memory * readyReplicas;
+          for (const instanceType of providerNPMachineTypes.all) {
+            const machineTypeProperties = machineTypes[instanceType];
+            if (!machineTypeProperties) {
+              return -1;
+            }
+
+            count += machineTypeProperties.memory * readyReplicas;
+          }
         }
 
         break;
