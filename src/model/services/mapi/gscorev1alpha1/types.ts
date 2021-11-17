@@ -14,7 +14,7 @@ export interface IStorageConfig {
   apiVersion: 'core.giantswarm.io/v1alpha1';
   kind: typeof StorageConfig;
   metadata: metav1.IObjectMeta;
-  spec: IStorageConfigSpec;
+  spec?: IStorageConfigSpec;
 }
 
 export const StorageConfigList = 'StorageConfigList';
