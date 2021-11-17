@@ -264,7 +264,8 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
           </>
         ),
         messageType.SUCCESS,
-        messageTTL.SHORT
+        messageTTL.LONG,
+        `Create your first node pool by clicking the "Add node pool" button.`
       );
 
       // Navigate to the cluster's detail page.
