@@ -32,6 +32,8 @@ function findKeyPairsForCluster(
   clusterName: string,
   storageConfig: gscorev1alpha1.IStorageConfig
 ): IKeyPair[] {
+  if (typeof storageConfig.spec === 'undefined') return [];
+
   const storageKeyPrefix = createKeyPairStorageKey(clusterName, '');
 
   const keyPairs: IKeyPair[] = [];
