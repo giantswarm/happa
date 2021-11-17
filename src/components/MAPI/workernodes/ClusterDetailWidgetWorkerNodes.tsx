@@ -16,6 +16,7 @@ import { Link, useParams } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import useSWR from 'swr';
+import Button from 'UI/Controls/Button';
 import ClusterDetailCounter from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailCounter';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 
@@ -136,12 +137,27 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
         {...props}
       >
         {hasNoNodePools && (
-          <Box fill={true} pad={{ bottom: 'xsmall' }}>
-            <Text margin={{ bottom: 'small' }}>No node pools</Text>
-            <Text size='small'>
-              To create node pools, switch to the{' '}
-              <StyledLink to={workerNodesPath}>worker nodes</StyledLink> tab.
-            </Text>
+          <Box
+            fill={true}
+            direction='row'
+            pad={{ bottom: 'xsmall', right: 'xsmall' }}
+            justify='between'
+            align='end'
+          >
+            <Box>
+              <Text margin={{ bottom: 'small' }}>No node pools</Text>
+              <Text size='small'>Create node pools to run workloads.</Text>
+            </Box>
+            <StyledLink
+              to={{
+                pathname: workerNodesPath,
+                state: { hasNoNodePools: true },
+              }}
+            >
+              <Button icon={<i className='fa fa-add-circle' />} tabIndex={-1}>
+                Add node pool
+              </Button>
+            </StyledLink>
           </Box>
         )}
 
