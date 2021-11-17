@@ -154,7 +154,16 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
                 state: { hasNoNodePools: true },
               }}
             >
-              <Button icon={<i className='fa fa-add-circle' />} tabIndex={-1}>
+              <Button
+                icon={
+                  <i
+                    className='fa fa-add-circle'
+                    role='presentation'
+                    aria-hidden='true'
+                  />
+                }
+                tabIndex={-1}
+              >
                 Add node pool
               </Button>
             </StyledLink>

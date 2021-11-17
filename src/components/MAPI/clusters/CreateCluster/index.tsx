@@ -395,9 +395,13 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
                   available.
                 </Text>
                 <Text>
-                  <i className='fa fa-info' aria-hidden={true} /> As a next
-                  step, we recommend to add at least one node pool to the
-                  cluster so you could run workloads.
+                  <i
+                    className='fa fa-info'
+                    aria-hidden={true}
+                    role='presentation'
+                  />{' '}
+                  As a next step, we recommend to add at least one node pool to
+                  the cluster so you could run workloads.
                 </Text>
               </Box>
             </Box>
