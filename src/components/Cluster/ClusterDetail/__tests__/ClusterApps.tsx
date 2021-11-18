@@ -50,6 +50,27 @@ it('renders a block for installed apps if there are some', () => {
         },
         spec: {
           version: '',
+          catalog: '',
+          name: '',
+          namespace: '',
+          user_config: {
+            configmap: {
+              name: '',
+              namespace: '',
+            },
+            secret: {
+              name: '',
+              namespace: '',
+            },
+          },
+        },
+        status: {
+          app_version: '',
+          version: '',
+          release: {
+            last_deployed: '',
+            status: '',
+          },
         },
       },
     ],

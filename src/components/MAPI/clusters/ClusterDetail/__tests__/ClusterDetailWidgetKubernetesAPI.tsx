@@ -4,19 +4,15 @@ import { renderWithStore } from 'test/renderUtils';
 
 import ClusterDetailWidgetKubernetesAPI from '../ClusterDetailWidgetKubernetesAPI';
 
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailWidgetKubernetesAPI
->;
-
 describe('ClusterDetailWidgetKubernetesAPI', () => {
   it('renders without crashing', () => {
-    renderWithStore(ClusterDetailWidgetKubernetesAPI, {} as ComponentProps);
+    renderWithStore(ClusterDetailWidgetKubernetesAPI, {});
   });
 
   it('displays loading animations if the cluster is still loading', () => {
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
       cluster: undefined,
-    } as ComponentProps);
+    });
 
     expect(screen.getByLabelText('Loading...')).toBeInTheDocument();
   });
@@ -24,7 +20,7 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
   it('displays the kubernetes API endpoint URL for the cluster', () => {
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
       cluster: capiv1alpha3Mocks.randomCluster1,
-    } as ComponentProps);
+    });
 
     expect(screen.getByText('https://test.k8s.gs.com')).toBeInTheDocument();
   });
@@ -32,7 +28,7 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
   it('displays the getting started button', () => {
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
       cluster: capiv1alpha3Mocks.randomCluster1,
-    } as ComponentProps);
+    });
 
     expect(
       screen.getByRole('button', {

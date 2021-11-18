@@ -82,13 +82,9 @@ function generateApp(
   };
 }
 
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailAppListWidgetNamespace
->;
-
 describe('ClusterDetailAppListWidgetNamespace', () => {
   it('renders without crashing', () => {
-    renderWithTheme(ClusterDetailAppListWidgetNamespace, {} as ComponentProps);
+    renderWithTheme(ClusterDetailAppListWidgetNamespace, {});
   });
 
   it('displays the app target namespace', () => {
@@ -96,7 +92,7 @@ describe('ClusterDetailAppListWidgetNamespace', () => {
 
     renderWithTheme(ClusterDetailAppListWidgetNamespace, {
       app,
-    } as ComponentProps);
+    });
 
     expect(
       screen.getByLabelText('App target namespace: giantswarm')

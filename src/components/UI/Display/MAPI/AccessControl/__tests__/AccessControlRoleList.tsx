@@ -33,7 +33,7 @@ describe('AccessControlRoleList', () => {
       activeRoleName: '',
       setActiveRoleName: jest.fn(),
       roles: [],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
   });
 
   it('renders various roles correctly', () => {
@@ -96,7 +96,7 @@ describe('AccessControlRoleList', () => {
           ],
         },
       ],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
 
     let role = screen
       .getByText('some-role')
@@ -129,7 +129,7 @@ describe('AccessControlRoleList', () => {
       activeRoleName: '',
       setActiveRoleName: jest.fn(),
       roles: undefined,
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
     expect(screen.getAllByTitle('Loading...').length).toBeGreaterThan(0);
 
     rerender(
@@ -148,7 +148,7 @@ describe('AccessControlRoleList', () => {
       activeRoleName: '',
       setActiveRoleName: jest.fn(),
       roles: [],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
 
     expect(screen.getByText('No roles available')).toBeInTheDocument();
   });
@@ -197,7 +197,7 @@ describe('AccessControlRoleList', () => {
           ],
         },
       ],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
 
     fireEvent.click(screen.getByText('some-role').closest('[role=button]')!);
 
@@ -247,7 +247,7 @@ describe('AccessControlRoleList', () => {
           ],
         },
       ],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
 
     const searchInput = screen.getByPlaceholderText('Find role');
     fireEvent.change(searchInput, { target: { value: 'some-role' } });
@@ -299,7 +299,7 @@ describe('AccessControlRoleList', () => {
           ],
         },
       ],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
 
     const searchInput = screen.getByPlaceholderText('Find role');
     fireEvent.change(searchInput, { target: { value: 'randomjajaja' } });
@@ -318,7 +318,7 @@ describe('AccessControlRoleList', () => {
       setActiveRoleName: jest.fn(),
       roles: undefined,
       errorMessage: 'Oh no! There was an error.',
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRoleList>);
+    });
 
     expect(
       screen.getByText('Error loading roles: Oh no! There was an error.')

@@ -17,13 +17,34 @@ const defaultCluster = {
   apps: [appResponseWithCustomConfig],
 };
 
-const icApp = {
+const icApp: IInstalledApp = {
+  metadata: {
+    name: 'nginx-ingress-controller-app',
+    labels: {},
+  },
   spec: {
     catalog: 'giantswarm',
-    chartName: 'nginx-ingress-controller-app',
     namespace: 'kube-system',
     name: 'nginx-ingress-controller-app',
     version: '1.6.9',
+    user_config: {
+      configmap: {
+        name: '',
+        namespace: '',
+      },
+      secret: {
+        name: '',
+        namespace: '',
+      },
+    },
+  },
+  status: {
+    release: {
+      last_deployed: '',
+      status: '',
+    },
+    app_version: '',
+    version: '',
   },
 };
 
@@ -45,7 +66,7 @@ describe('InstallIngressButton', () => {
       {
         cluster: {
           ...v4AWSClusterResponse,
-          conditions: [{ condition: 'Ready' }],
+          conditions: [{ condition: 'Ready', last_transition_time: null }],
         },
       },
       catalogsState
@@ -97,7 +118,7 @@ describe('InstallIngressButton', () => {
       {
         cluster: {
           ...v4AWSClusterResponse,
-          conditions: [{ condition: 'Ready' }],
+          conditions: [{ condition: 'Ready', last_transition_time: null }],
         },
       },
       catalogsState
@@ -150,7 +171,7 @@ describe('InstallIngressButton', () => {
       {
         cluster: {
           ...v4AWSClusterResponse,
-          conditions: [{ condition: 'Ready' }],
+          conditions: [{ condition: 'Ready', last_transition_time: null }],
         },
       },
       catalogsState

@@ -7,7 +7,7 @@ import { Tab, Tabs } from '..';
 
 describe('Tabs', () => {
   const renderComponent = (
-    props: Partial<React.ComponentProps<typeof Tabs>> = {
+    props: React.ComponentProps<typeof Tabs> = {
       children: [],
     },
     history = createMemoryHistory()

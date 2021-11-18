@@ -9,6 +9,6 @@ describe('InstalledApp', () => {
       version: '',
       onIconError: jest.fn(),
       onClick: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof InstalledApp>);
+    });
   });
 });

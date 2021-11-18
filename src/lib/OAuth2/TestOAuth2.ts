@@ -1,5 +1,6 @@
 import add from 'date-fns/fp/add';
 import { createMemoryHistory } from 'history';
+import { History } from 'history';
 import { compareDates } from 'lib/helpers';
 import { AuthorizationTypes } from 'shared/constants';
 
@@ -13,7 +14,7 @@ import { IOAuth2User } from './OAuth2User';
 
 class TestOAuth2 implements IOAuth2Provider {
   constructor(
-    private history = createMemoryHistory(),
+    private history: History<History.LocationState> = createMemoryHistory(),
     autoLogin: boolean = false
   ) {
     if (autoLogin) {

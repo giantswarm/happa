@@ -8,7 +8,7 @@ describe('AccessControlRolePermissions', () => {
   it('renders without crashing', () => {
     renderWithTheme(AccessControlRolePermissions, {
       permissions: [],
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRolePermissions>);
+    });
   });
 
   it('renders various permission combinations correctly', () => {
@@ -224,7 +224,7 @@ describe('AccessControlRolePermissions', () => {
 
     renderWithTheme(AccessControlRolePermissions, {
       permissions: testCases.map((tc) => tc.permission),
-    } as React.ComponentPropsWithoutRef<typeof AccessControlRolePermissions>);
+    });
 
     const rows = within(screen.getByRole('table')).getAllByRole('row');
 

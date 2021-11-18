@@ -82,13 +82,9 @@ function generateApp(
   };
 }
 
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailAppListWidgetStatus
->;
-
 describe('ClusterDetailAppListWidgetStatus', () => {
   it('renders without crashing', () => {
-    renderWithTheme(ClusterDetailAppListWidgetStatus, {} as ComponentProps);
+    renderWithTheme(ClusterDetailAppListWidgetStatus, {});
   });
 
   it('displays the app status', () => {
@@ -97,7 +93,7 @@ describe('ClusterDetailAppListWidgetStatus', () => {
 
     renderWithTheme(ClusterDetailAppListWidgetStatus, {
       app,
-    } as ComponentProps);
+    });
 
     expect(screen.getByLabelText('App status: deployed')).toBeInTheDocument();
   });
@@ -108,7 +104,7 @@ describe('ClusterDetailAppListWidgetStatus', () => {
 
     renderWithTheme(ClusterDetailAppListWidgetStatus, {
       app,
-    } as ComponentProps);
+    });
 
     expect(
       screen.getByLabelText('no information available')
