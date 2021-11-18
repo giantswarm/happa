@@ -184,9 +184,8 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                   role='presentation'
                 />{' '}
                 <strong>Caution:</strong> This list does not include client
-                certificates created via the
-                <code>kubectl gs login</code> command or directly via CertConfig
-                resources.
+                certificates created via the <code>kubectl gs login</code>{' '}
+                command or directly via CertConfig resources.
               </Text>
             </Box>
             <Table width='100%' margin={{ top: 'medium' }}>
