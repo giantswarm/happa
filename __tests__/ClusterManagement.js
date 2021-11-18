@@ -226,7 +226,6 @@ details view`, async () => {
 
     // Expect resources to be in the view.
     // If we refactor resources selector this will break.
-    // TODO Use selectors in tests to produce resources and expect this info is in the view
     const v4ClusterResources = within(getAllByTestId('cluster-resources')[1]);
     expect(v4ClusterResources.getByText(/3 nodes/i)).toBeInTheDocument();
 

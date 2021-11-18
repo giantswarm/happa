@@ -30,7 +30,6 @@ const userReducer = produce((draft: IUserState, action: UserActions) => {
       break;
 
     case USERS_LOAD_SUCCESS:
-      // TODO move dates into action creators
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
       draft.items = action.users;

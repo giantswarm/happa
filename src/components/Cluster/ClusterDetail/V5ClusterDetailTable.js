@@ -268,10 +268,6 @@ const LabelsRow = styled(ClusterLabels)`
   background-color: ${({ theme }) => theme.colors.foreground};
 `;
 
-// TODO Now on every addition or deletion of a NP, this component will be rerendered.
-// It would be nice to split this into subcomponents so only the littele bits that need
-// to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
-
 class V5ClusterDetailTable extends React.Component {
   static getNumberOfAdditionalColumns(
     supportsNodePoolAutoscaling,
