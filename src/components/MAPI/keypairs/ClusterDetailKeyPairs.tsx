@@ -178,6 +178,11 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                 Kubernetes API.
               </Text>
               <Text>
+                <i
+                  className='fa fa-info'
+                  aria-hidden={true}
+                  role='presentation'
+                />{' '}
                 <strong>Caution:</strong> This list does not include client
                 certificates created via the
                 <code>kubectl gs login</code> command or directly via CertConfig
