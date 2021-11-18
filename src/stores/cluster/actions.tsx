@@ -319,7 +319,6 @@ function clusterLoadStatus(
       const response = await clustersApi.getClusterStatusWithHttpInfo(id);
       dispatch({ type: CLUSTER_LOAD_STATUS_SUCCESS, id });
 
-      // FIXME(axbarsan): Find the real types of the API response.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return JSON.parse((response as any).response.text);
     } catch (err) {
@@ -367,7 +366,6 @@ export function clusterCreate(
         ? clustersApi.addClusterV5WithHttpInfo.bind(clustersApi)
         : clustersApi.addClusterWithHttpInfo.bind(clustersApi);
       const response = await createCluster(cluster as never);
-      // FIXME(axbarsan): Find the real types of the API response.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const location = (response as any).response.headers.location;
       if (typeof location === 'undefined') {

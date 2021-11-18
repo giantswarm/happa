@@ -33,7 +33,6 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
   }
 `;
 
-// FIXME(axbarsan): Fetch cluster by ID in URL params once AWS has namespaced clusters.
 interface IClusterDetailIngressProps
   extends React.ComponentPropsWithoutRef<'div'> {
   provider?: PropertiesOf<typeof Providers>;
