@@ -71,12 +71,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     expect(await screen.findByText('No node pools')).toBeInTheDocument();
     expect(
-      screen.getByText((_, node) => {
-        return (
-          node?.textContent ===
-          'To create node pools, switch to the worker nodes tab.'
-        );
-      })
+      screen.getByRole('button', { name: 'Add node pool' })
     ).toBeInTheDocument();
   });
 

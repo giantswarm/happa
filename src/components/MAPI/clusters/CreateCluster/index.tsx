@@ -264,7 +264,8 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
           </>
         ),
         messageType.SUCCESS,
-        messageTTL.SHORT
+        messageTTL.LONG,
+        `Create your first node pool by clicking the "Add node pool" button.`
       );
 
       // Navigate to the cluster's detail page.
@@ -388,10 +389,19 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
                   <Button onClick={handleCancel}>Cancel</Button>
                 )}
               </Box>
-              <Box margin={{ top: 'medium' }}>
+              <Box margin={{ top: 'medium' }} gap='small'>
                 <Text color='text-weak'>
                   It will take around 15 minutes for the control plane to become
                   available.
+                </Text>
+                <Text>
+                  <i
+                    className='fa fa-info'
+                    aria-hidden={true}
+                    role='presentation'
+                  />{' '}
+                  As a next step, we recommend to add at least one node pool to
+                  the cluster so you could run workloads.
                 </Text>
               </Box>
             </Box>

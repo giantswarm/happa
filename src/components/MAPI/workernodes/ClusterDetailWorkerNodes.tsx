@@ -202,7 +202,7 @@ interface IClusterDetailWorkerNodesProps {}
 const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
   // eslint-disable-next-line complexity
   () => {
-    const { pathname } = useLocation();
+    const { pathname, state } = useLocation<{ hasNoNodePools?: boolean }>();
     const { clusterId, orgId } = useParams<{
       clusterId: string;
       orgId: string;
@@ -318,7 +318,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       [provider]
     );
 
-    const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+    const [isCreateFormOpen, setIsCreateFormOpen] = useState(
+      state?.hasNoNodePools ?? false
+    );
 
     const handleOpenCreateForm = () => {
       setIsCreateFormOpen(true);
