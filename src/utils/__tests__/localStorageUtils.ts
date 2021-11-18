@@ -75,20 +75,5 @@ describe('localStorageUtils', () => {
         type: LoggedInUserTypes.GS,
       });
     });
-
-    it('does not deserialize user logged in via Auth0', () => {
-      const user: Partial<ILoggedInUser> = {
-        auth: {
-          scheme: 'Bearer',
-          token: '',
-        },
-        email: '',
-        isAdmin: false,
-        authToken: '123',
-      };
-      localStorage.setItem('user', JSON.stringify(user));
-
-      expect(fetchUserFromStorage()).toBeNull();
-    });
   });
 });
