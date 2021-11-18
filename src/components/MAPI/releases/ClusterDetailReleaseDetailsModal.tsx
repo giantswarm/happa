@@ -1,10 +1,10 @@
 import { Box, Text } from 'grommet';
-import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModalSection from 'Modals/ReleaseDetailsModal/ReleaseDetailsModalSection';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import Date from 'UI/Display/Date';
 import ClusterDetailReleaseDetailsUpgradeOptions from 'UI/Display/MAPI/releases/ClusterDetailReleaseDetailsUpgradeOptions';
 import * as ui from 'UI/Display/MAPI/releases/types';
 import Modal from 'UI/Layout/Modal';
@@ -60,7 +60,9 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
       >
         <Box direction='column' gap='medium'>
           <Box>
-            <Text>Released {relativeDate(creationDate)}</Text>
+            <Text>
+              Released <Date relative={true} value={creationDate} />
+            </Text>
           </Box>
 
           {components && (

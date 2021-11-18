@@ -45,8 +45,6 @@ export function callAPIMiddleware({ dispatch, getState }) {
 
         ErrorReporter.getInstance().notify(error);
 
-        // TODO: Remove this, this supports a pattern we want to factor out
-        // eventually.
         return {
           error: error.message,
         };

@@ -2,7 +2,6 @@ import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { relativeDate } from 'lib/helpers';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -14,6 +13,7 @@ import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import DataTable from 'UI/DataTable';
+import FormattedDate from 'UI/Display/Date';
 import FlashMessage from 'UI/Display/FlashMessage';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 
 class KeyPairs extends React.Component {
   static createdCellFormatter(data) {
-    return <span>{relativeDate(data.create_date)}</span>;
+    return <FormattedDate relative={true} value={data.create_date} />;
   }
 
   static expireDateCellFormatter(data) {
@@ -50,7 +50,11 @@ class KeyPairs extends React.Component {
     }
 
     return (
-      <span className={expiryClass}>{relativeDate(data.expire_date)}</span>
+      <FormattedDate
+        className={expiryClass}
+        relative={true}
+        value={data.expire_date}
+      />
     );
   }
 

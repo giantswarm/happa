@@ -2,7 +2,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { AccordionPanel, Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -10,6 +9,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
+import Date from 'UI/Display/Date';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
 
@@ -163,7 +163,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           >
             {isDeleted ? (
               <Text size='small' color='text-weak'>
-                Deleted {relativeDate(app.metadata.deletionTimestamp)}
+                Deleted{' '}
+                <Date relative={true} value={app.metadata.deletionTimestamp} />
               </Text>
             ) : (
               <Box direction='row' wrap={true} gap='xsmall' align='center'>

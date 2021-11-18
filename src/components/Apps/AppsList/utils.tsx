@@ -5,8 +5,7 @@ import { IFacetOption } from 'UI/Inputs/Facets';
 
 // Determines if a catalog is an internal catalog or not.
 // We changed the location of this information at some point, so happa currently
-// supports both. TODO: Check if there are any catalogs left with the old label
-// if not, simplify this code.
+// supports both.
 export const isInternal = (catalog: IAppCatalog): boolean => {
   const labels = catalog.metadata.labels;
 

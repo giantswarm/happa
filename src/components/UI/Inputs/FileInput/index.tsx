@@ -1,4 +1,3 @@
-// TODO(axbarsan): Replace with `FileInput` once it's released.
 import { FormField, FormFieldProps, TextInput as Input } from 'grommet';
 import React, { useEffect, useRef } from 'react';
 import { setMultipleRefs } from 'utils/componentUtils';

@@ -1,4 +1,3 @@
-import { fireEvent, render, screen } from '@testing-library/react';
 import {
   clustersForOrg,
   compareDates,
@@ -9,7 +8,6 @@ import {
   IHumanFileSizeValue,
   isJwtExpired,
   makeKubeConfigTextFile,
-  relativeDate,
   toTitleCase,
   truncate,
   validateOrRaise,
@@ -255,28 +253,10 @@ token: can't be blank`)
       const date = new Date('05 January 1973 15:34 GMT+5').toISOString();
       expect(formatDate(date)).toEqual('5 Jan 1973, 10:34 UTC');
     });
-  });
 
-  describe('relativeDate', () => {
-    it('renders a placeholder if the date is empty', () => {
-      render(relativeDate());
-
-      expect(screen.getByText(/n\/a/)).toBeInTheDocument();
-    });
-
-    it('renders a date relative from now', () => {
-      // eslint-disable-next-line no-magic-numbers
-      const date = new Date(Date.now() - 50000).toISOString();
-      render(relativeDate(date));
-
-      const label = screen.getByText(/1 minute ago/i);
-      expect(label).toBeInTheDocument();
-
-      const formattedDate = formatDate(date);
-      fireEvent.mouseEnter(label);
-      expect(screen.getByText(formattedDate)).toBeInTheDocument();
-      fireEvent.mouseLeave(label);
-      expect(screen.queryByText(formattedDate)).not.toBeInTheDocument();
+    it('handles non-ISO formats', () => {
+      const date = '10-02-2021 GMT+5';
+      expect(formatDate(date)).toEqual('1 Oct 2021, 19:00 UTC');
     });
   });
 

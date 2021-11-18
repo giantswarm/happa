@@ -19,10 +19,7 @@ export function fetchUserFromStorage(): ILoggedInUser | null {
   }
   if (!user) return null;
 
-  // TODO(axbarsan): Remove this once all users transitioned away from Auth0.
-  if (user.auth.scheme === AuthorizationTypes.BEARER) {
-    return null;
-  } else if (!user.type) {
+  if (!user.type) {
     // Migrate users from the pre-MAPI era.
     user.type = LoggedInUserTypes.GS;
   }

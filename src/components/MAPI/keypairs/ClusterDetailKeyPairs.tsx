@@ -3,7 +3,6 @@ import CertificateOrgsLabel from 'Cluster/ClusterDetail/CertificateOrgsLabel';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { Cluster } from 'MAPI/types';
 import {
@@ -23,6 +22,7 @@ import DocumentTitle from 'shared/DocumentTitle';
 import { selectOrganizations } from 'stores/organization/selectors';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import Date from 'UI/Display/Date';
 import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import NotAvailable from 'UI/Display/NotAvailable';
 import {
@@ -65,9 +65,11 @@ const formatExpirationDate = (keyPair: legacyKeyPairs.IKeyPair) => {
   const isExpiringSoon = isKeyPairExpiringSoon(keyPair);
 
   return (
-    <Text color={isExpiringSoon ? 'status-warning' : undefined}>
-      {relativeDate(expirationDate)}
-    </Text>
+    <Date
+      relative={true}
+      color={isExpiringSoon ? 'status-warning' : undefined}
+      value={expirationDate}
+    />
   );
 };
 
@@ -227,7 +229,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                         {formatOrganization(keyPair.certificate_organizations)}
                       </TableCell>
                       <TableCell size='small'>
-                        {relativeDate(keyPair.create_date)}
+                        <Date relative={true} value={keyPair.create_date} />
                       </TableCell>
                       <TableCell size='small'>
                         {formatExpirationDate(keyPair)}

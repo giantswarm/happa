@@ -190,7 +190,6 @@ export function batchedClusterCreate(
       }
       const { clusterId, owner } = creationResponse;
 
-      // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
       await dispatch(
         clusterLoadDetails(clusterId, {
           withLoadingFlags: true,

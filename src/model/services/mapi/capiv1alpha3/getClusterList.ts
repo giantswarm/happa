@@ -26,8 +26,6 @@ export function getClusterList(
 }
 
 export function getClusterListKey(options?: IGetClusterListOptions) {
-  // TODO(axbarsan): This might be a good place to handle permissions.
-
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'cluster.x-k8s.io/v1alpha3',

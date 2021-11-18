@@ -165,9 +165,6 @@ export function getMemoryTotalNodePools(nodePools: INodePool[]): number {
   /**
    * Here we are returning (and accumulating) for each node pool the number
    * of RAM each instance has multiplied by the number of nodes the node pool has.
-   *
-   * TODO: When working with Spot Instances a node pool could have different types
-   * of instances, and this method will have to be modified.
    */
   const totalRAM = nodePools.reduce((accumulator, nodePool) => {
     let instanceTypeRAM = 0;

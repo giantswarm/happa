@@ -1,9 +1,8 @@
-import { Text } from 'grommet';
-import { formatDate, relativeDate } from 'lib/helpers';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
+import Date from 'UI/Display/Date';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
@@ -36,11 +35,11 @@ const ClusterDetailWidgetCreated: React.FC<IClusterDetailWidgetCreatedProps> =
         {...props}
       >
         <OptionalValue value={creationDate}>
-          {(value) => <Text>{relativeDate(value as string)}</Text>}
+          {(value) => <Date relative={true} value={value as string} />}
         </OptionalValue>
         <StyledDot />
         <OptionalValue value={creationDate} loaderWidth={150}>
-          {(value) => <Text>{formatDate(value as string)}</Text>}
+          {(value) => <Date value={value as string} />}
         </OptionalValue>
       </ClusterDetailWidget>
     );

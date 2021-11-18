@@ -88,7 +88,6 @@ const PreinstalledApps = styled.div`
   }
 `;
 
-// FIXME(axbarsan): Fetch cluster by ID in URL params once AWS has namespaced clusters.
 interface IClusterDetailApps {
   releaseVersion: string;
 }

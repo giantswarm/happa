@@ -1,7 +1,7 @@
 import { Box, Text } from 'grommet';
-import { relativeDate } from 'lib/helpers';
 import React from 'react';
 import styled from 'styled-components';
+import Date from 'UI/Display/Date';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 const Wrapper = styled(Box)`
@@ -81,7 +81,7 @@ const InstalledApp: React.FC<IInstalledAppProps> = ({
           </Text>
         ) : (
           <Text size='xsmall' color='text-xweak'>
-            Deleted {relativeDate(deletionTimestamp)}
+            Deleted <Date relative={true} value={deletionTimestamp} />
           </Text>
         )}
       </Box>
