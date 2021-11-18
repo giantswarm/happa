@@ -1,5 +1,4 @@
 import ClusterStatus from 'Home/ClusterStatus';
-import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal/ReleaseDetailsModal';
 import React, { FC, RefObject, useRef } from 'react';
 import { Providers } from 'shared/constants';
@@ -7,7 +6,7 @@ import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { Code, Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
-import NotAvailable from 'UI/Display/NotAvailable';
+import Date from 'UI/Display/Date';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
@@ -65,7 +64,7 @@ const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
       )}
       <div>
         <span>
-          Created {createDate ? relativeDate(createDate) : <NotAvailable />}
+          Created <Date relative={true} value={createDate} />
         </span>
         {release && (
           <>

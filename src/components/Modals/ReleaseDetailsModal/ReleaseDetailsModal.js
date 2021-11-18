@@ -1,9 +1,9 @@
-import { relativeDate } from 'lib/helpers';
 import React from 'react';
 import { Constants } from 'shared/constants';
 import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import Date from 'UI/Display/Date';
 import Modal from 'UI/Layout/Modal';
 import { groupBy, sortBy } from 'underscore';
 
@@ -75,7 +75,7 @@ class ReleaseDetailsModal extends React.Component {
           data-testid={`release-${release.version}`}
         >
           <p className='release-selector-modal--release-details--date'>
-            Released <span>{relativeDate(release.timestamp)}</span>
+            Released <Date relative={true} value={release.timestamp} />
           </p>
 
           <div className='release-selector-modal--components'>

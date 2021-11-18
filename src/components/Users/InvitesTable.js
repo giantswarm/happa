@@ -1,6 +1,6 @@
-import { relativeDate } from 'lib/helpers';
 import React from 'react';
 import DataTable from 'UI/DataTable';
+import Date from 'UI/Display/Date';
 
 // Provides the configuraiton for the clusters table
 const getTableColumnsConfig = () => {
@@ -13,7 +13,7 @@ const getTableColumnsConfig = () => {
     {
       property: 'created',
       header: 'Invited',
-      render: (data) => relativeDate(data.created),
+      render: (data) => <Date relative={true} value={data.created} />,
       size: 'small',
     },
     {
@@ -23,7 +23,7 @@ const getTableColumnsConfig = () => {
     {
       property: 'expiry',
       header: 'Expires',
-      render: (data) => relativeDate(data.expiry),
+      render: (data) => <Date relative={true} value={data.expiry} />,
       size: 'small',
     },
   ];

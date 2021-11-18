@@ -1,4 +1,3 @@
-import { relativeDate } from 'lib/helpers';
 import React, { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
@@ -9,6 +8,7 @@ import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppIcon from 'UI/Display/Apps/AppList/AppIcon';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
+import Date from 'UI/Display/Date';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -326,7 +326,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                 loaderWidth={200}
                 loaderHeight={28}
               >
-                {(value) => relativeDate(value as string)}
+                {(value) => <Date relative={true} value={value as string} />}
               </OptionalValue>
             </Detail>
 

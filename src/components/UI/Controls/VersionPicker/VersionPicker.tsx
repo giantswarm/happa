@@ -1,4 +1,3 @@
-import { relativeDate } from 'lib/helpers';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DropdownMenu, {
@@ -6,6 +5,7 @@ import DropdownMenu, {
   Link,
   List,
 } from 'UI/Controls/DropdownMenu';
+import Date from 'UI/Display/Date';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import Truncated from 'UI/Util/Truncated';
 
@@ -225,7 +225,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
                               {version.chartVersion}
                             </Truncated>
 
-                            {relativeDate(version.created)}
+                            <Date relative={true} value={version.created} />
                           </VersionPickerLink>
                         </VersionPickerItem>
                       );

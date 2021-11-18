@@ -5,11 +5,8 @@ import parseISO from 'date-fns/fp/parseISO';
 import parse from 'date-fns/parse';
 import toDate from 'date-fns-tz/toDate';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import React, { ReactElement } from 'react';
 import { IKeyPair } from 'shared/types';
 import { getOrganizationByID } from 'stores/organization/utils';
-import NotAvailable from 'UI/Display/NotAvailable';
-import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import validate from 'validate.js';
 /**
  * Format code in a user-friendly way.
@@ -172,7 +169,8 @@ export function validateOrRaise<T>(
  * @param date
  */
 export function formatDate(date: string | number | Date): string {
-  const givenDate = date instanceof Date ? date : parseISO(date);
+  const givenDate = parseDate(date);
+
   const parsedDate = utcToZonedTime(givenDate, 'UTC');
 
   return `${format('d MMM yyyy, HH:mm')(parsedDate)} UTC`;
@@ -183,7 +181,7 @@ export function formatDate(date: string | number | Date): string {
  * @param date
  */
 export function getRelativeDateFromNow(date: string | number | Date): string {
-  const givenDate = date instanceof Date ? date : parseISO(date);
+  const givenDate = parseDate(date);
   const now = new Date();
   let distance = formatDistance(now)(givenDate);
 
@@ -204,27 +202,6 @@ export function compareDates(
   const b = toDate(dateB, { timeZone: 'UTC' });
 
   return compareAsc(b)(a) as -1 | 0 | 1;
-}
-
-/**
- * Get a component containing a formatted given date, relative
- * from now (e.g. 2 days ago).
- * @param date
- */
-// TODO(axbarsan): Refactor a part of this into a UI component.
-export function relativeDate(date?: string | number | Date): ReactElement {
-  if (!date) {
-    return <NotAvailable />;
-  }
-
-  const formattedDate = formatDate(date);
-  const relDate = getRelativeDateFromNow(date);
-
-  return (
-    <TooltipContainer content={<Tooltip>{formattedDate}</Tooltip>}>
-      <span>{relDate}</span>
-    </TooltipContainer>
-  );
 }
 
 /**
@@ -397,4 +374,13 @@ export function hasAppropriateLength(
  */
 export function parseRFC822DateFormat(date: string): Date {
   return parse(date.replace('UTC', 'Z'), 'dd MMM yy HH:mm X', new Date());
+}
+
+export function parseDate(date: string | number | Date): Date {
+  const givenDate = date instanceof Date ? date : parseISO(date);
+  if (isNaN(givenDate.getTime())) {
+    return new Date(date);
+  }
+
+  return givenDate;
 }

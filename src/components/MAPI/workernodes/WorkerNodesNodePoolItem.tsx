@@ -2,7 +2,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import {
@@ -16,6 +15,7 @@ import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import { Code } from 'styles';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
+import Date from 'UI/Display/Date';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -218,7 +218,11 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 <Box direction='row' gap='medium' align='baseline'>
                   <Text>{value}</Text>
                   <Text size='small' color='text-xweak'>
-                    Deleted {relativeDate(nodePool.metadata.deletionTimestamp)}
+                    Deleted{' '}
+                    <Date
+                      relative={true}
+                      value={nodePool.metadata.deletionTimestamp}
+                    />
                   </Text>
                 </Box>
               ) : (

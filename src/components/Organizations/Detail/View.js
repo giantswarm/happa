@@ -1,6 +1,5 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import ClusterStatus from 'Home/ClusterStatus';
-import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -13,6 +12,7 @@ import { Ellipsis } from 'styles';
 import Button from 'UI/Controls/Button';
 import DataTable from 'UI/DataTable';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import Date from 'UI/Display/Date';
 import Section from 'UI/Layout/Section';
 
 import Credentials from './Credentials';
@@ -74,13 +74,13 @@ class OrganizationDetail extends React.Component {
       {
         property: 'create_date',
         header: 'Created',
-        render: (data) => relativeDate(data.create_date),
+        render: (data) => <Date relative={true} value={data.create_date} />,
         size: 'small',
       },
       {
         property: 'delete_date',
         header: 'Deleted',
-        render: (data) => relativeDate(data.delete_date),
+        render: (data) => <Date relative={true} value={data.delete_date} />,
         size: 'small',
       },
       {

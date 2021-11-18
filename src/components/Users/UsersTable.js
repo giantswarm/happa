@@ -1,7 +1,7 @@
-import { relativeDate } from 'lib/helpers';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 import DataTable from 'UI/DataTable';
+import Date from 'UI/Display/Date';
 
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
@@ -18,7 +18,7 @@ const getExpiryCellFormatter = (data, removeExpiration) => {
 
   return (
     <span className={expiryClass}>
-      {relativeDate(data.expiry)} &nbsp;
+      <Date relative={true} value={data.expiry} /> &nbsp;
       <i
         className='fa fa-close clickable'
         onClick={onRemoveExpiration}
@@ -58,7 +58,7 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
     {
       property: 'created',
       header: 'Created',
-      render: (data) => relativeDate(data.created),
+      render: (data) => <Date relative={true} value={data.created} />,
       size: 'small',
     },
     {

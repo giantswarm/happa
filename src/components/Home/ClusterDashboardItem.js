@@ -1,7 +1,6 @@
 import { push } from 'connected-react-router';
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
-import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -21,6 +20,7 @@ import { Dot, mq } from 'styles';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import FormattedDate from 'UI/Display/Date';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 import ErrorFallback from 'UI/Util/ErrorFallback/ErrorFallback';
 import ErrorText from 'UI/Util/ErrorFallback/ErrorText';
@@ -195,7 +195,7 @@ function ClusterDashboardItem({
           </TitleWrapper>
           <DeleteDateWrapper>
             Deleted{' '}
-            {!isNaN(cluster.delete_date) && relativeDate(cluster.delete_date)}
+            <FormattedDate relative={true} value={cluster.delete_date} />
           </DeleteDateWrapper>
         </ContentWrapper>
       </WrapperDeleted>
@@ -257,7 +257,8 @@ function ClusterDashboardItem({
               />
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
-            Created {relativeDate(cluster.create_date)}
+            Created{' '}
+            <FormattedDate relative={true} value={cluster.create_date} />
           </>
 
           {/* Cluster resources */}

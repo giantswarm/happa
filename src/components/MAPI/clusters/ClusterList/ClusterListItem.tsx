@@ -4,7 +4,6 @@ import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, Text } from 'grommet';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import { relativeDate } from 'lib/helpers';
 import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import RoutePath from 'lib/routePath';
 import { ProviderCluster } from 'MAPI/types';
@@ -30,6 +29,7 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
+import FormattedDate from 'UI/Display/Date';
 import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -273,7 +273,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
             {isDeleting ? (
               <Text color='text-xweak'>
-                Deleted {relativeDate(deletionDate)}
+                Deleted <FormattedDate relative={true} value={deletionDate} />
               </Text>
             ) : (
               <ClusterListItemMainInfo

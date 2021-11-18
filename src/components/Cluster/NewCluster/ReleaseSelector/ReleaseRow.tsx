@@ -1,5 +1,4 @@
 import { Box, Keyboard, Text } from 'grommet';
-import { relativeDate } from 'lib/helpers';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
@@ -7,6 +6,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
+import Date from 'UI/Display/Date';
 import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -100,7 +100,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
           <Text>{version}</Text>
         </StyledTableCell>
         <StyledTableCell size='medium' active={active} align='center'>
-          <Text>{relativeDate(timestamp)}</Text>
+          <Date relative={true} value={timestamp} />
         </StyledTableCell>
         <StyledTableCell active={active} align='center'>
           <KubernetesVersionLabel

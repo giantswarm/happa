@@ -1,10 +1,10 @@
 import { Box, Text } from 'grommet';
 import { getK8sVersionEOLDate } from 'lib/config';
-import { relativeDate } from 'lib/helpers';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import Date from 'UI/Display/Date';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 const StyledDot = styled(Dot)`
@@ -49,7 +49,11 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
       </OptionalValue>
       <StyledDot />
       <OptionalValue value={creationDate} replaceEmptyValue={false}>
-        {(value) => <Text>Created {relativeDate(value as string)}</Text>}
+        {(value) => (
+          <Text>
+            Created <Date relative={true} value={value as string} />
+          </Text>
+        )}
       </OptionalValue>
     </Box>
   );
