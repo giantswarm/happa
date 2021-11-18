@@ -170,12 +170,18 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
       >
         <>
           <Box>
-            <Box>
+            <Box gap='small'>
               <Text>
                 Client certificates consist of an RSA private key and an X.509
                 certificate, signed by the certificate authority (CA) belonging
                 to this cluster. They are used for access to the cluster via the
                 Kubernetes API.
+              </Text>
+              <Text>
+                <strong>Caution:</strong> This list does not include client
+                certificates created via the
+                <code>kubectl gs login</code> command or directly via CertConfig
+                resources.
               </Text>
             </Box>
             <Table width='100%' margin={{ top: 'medium' }}>
