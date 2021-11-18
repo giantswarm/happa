@@ -7,8 +7,8 @@ import {
   USER_EMAIL,
   v4AWSClusterResponse,
   v4AzureClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import { getComponentWithTheme } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { getComponentWithTheme } from 'test/renderUtils';
 
 const mockUser = {
   email: USER_EMAIL,

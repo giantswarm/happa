@@ -5,8 +5,8 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
-import { withMarkup } from 'testUtils/assertUtils';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,

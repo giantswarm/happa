@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme, renderWithTheme } from 'test/renderUtils';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 
 describe('KubernetesVersionLabel', () => {

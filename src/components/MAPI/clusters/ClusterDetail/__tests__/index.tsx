@@ -6,10 +6,10 @@ import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
-import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
-import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import * as mockCapiv1alpha3 from 'test/mockHttpCalls/capiv1alpha3';
+import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import ClusterDetail from '../';
 

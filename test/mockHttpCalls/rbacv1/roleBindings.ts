@@ -24,7 +24,8 @@ export const writeAllCustomerRoleBinding = {
           'f:metadata': {
             'f:finalizers': {
               '.': {},
-              'v:"operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller"': {},
+              'v:"operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller"':
+                {},
             },
             'f:labels': { '.': {}, 'f:giantswarm.io/managed-by': {} },
           },
@@ -150,7 +151,8 @@ export const haveFunRoleBinding = {
           'f:metadata': {
             'f:finalizers': {
               '.': {},
-              'v:"operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller"': {},
+              'v:"operatorkit.giantswarm.io/rbac-operator-orgpermissions-controller"':
+                {},
             },
             'f:labels': { '.': {}, 'f:giantswarm.io/managed-by': {} },
           },

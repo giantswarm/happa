@@ -1,4 +1,4 @@
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import InstalledApp from '../InstalledApp';
 

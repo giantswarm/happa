@@ -4,7 +4,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme, renderWithTheme } from 'test/renderUtils';
 
 import AccessControlRoleList from '../AccessControlRoleList';
 import { IAccessControlRoleSubjectItem } from '../types';

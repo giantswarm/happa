@@ -23,8 +23,8 @@ import {
   v4ClustersResponse,
   v4KVMClusterResponse,
   v4KVMClusterStatusResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 const minNodesCount = 3;
 

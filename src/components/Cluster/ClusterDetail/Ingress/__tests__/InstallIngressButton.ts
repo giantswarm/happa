@@ -2,15 +2,15 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { catalogsState } from 'testUtils/ingressCatalogStateMocks';
+import { catalogsState } from 'test/ingressCatalogStateMocks';
 import {
   API_ENDPOINT,
   appResponseWithCustomConfig,
   catalogIndexResponse,
   getMockCall,
   v4AWSClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { getComponentWithStore, renderWithStore } from 'test/renderUtils';
 
 const defaultCluster = {
   ...v4AWSClusterResponse,

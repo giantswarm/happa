@@ -11,9 +11,9 @@ import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { mapOAuth2UserToUser } from 'stores/main/utils';
 import { SWRConfig } from 'swr';
-import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
-import preloginState from 'testUtils/preloginState';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import preloginState from 'test/preloginState';
+import { getComponentWithStore } from 'test/renderUtils';
 
 function getComponent(props: React.ComponentPropsWithoutRef<typeof Layout>) {
   const Component = (p: typeof props) => (

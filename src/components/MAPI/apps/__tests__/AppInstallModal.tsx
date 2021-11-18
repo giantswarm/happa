@@ -9,11 +9,11 @@ import { IMainState } from 'stores/main/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IState } from 'stores/state';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import preloginState from 'testUtils/preloginState';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import preloginState from 'test/preloginState';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import AppInstallModal from '../AppInstallModal';
 

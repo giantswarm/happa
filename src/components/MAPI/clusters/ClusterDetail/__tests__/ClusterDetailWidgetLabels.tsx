@@ -5,8 +5,8 @@ import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import ClusterDetailWidgetLabels from '../ClusterDetailWidgetLabels';
 

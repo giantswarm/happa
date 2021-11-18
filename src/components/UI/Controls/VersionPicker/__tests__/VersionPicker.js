@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, within } from '@testing-library/react';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 import AppVersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 
 it('renders without crashing', () => {

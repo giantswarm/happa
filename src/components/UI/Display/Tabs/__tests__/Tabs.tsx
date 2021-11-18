@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
+import { getComponentWithStore, initialStorage } from 'test/renderUtils';
 
 import { Tab, Tabs } from '..';
 

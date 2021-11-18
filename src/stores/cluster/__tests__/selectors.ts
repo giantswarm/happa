@@ -3,7 +3,7 @@ import {
   selectTargetRelease,
 } from 'stores/cluster/selectors';
 import { IState } from 'stores/state';
-import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
+import { v5ClusterResponse } from 'test/mockHttpCalls';
 
 function createInitialState(
   releases: Record<string, IRelease>,

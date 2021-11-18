@@ -5,8 +5,8 @@ import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
 import * as featureFlags from 'shared/featureFlags';
-import * as mockHttpCalls from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+import * as mockHttpCalls from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 describe('PasswordReset', () => {
   beforeEach(() => {

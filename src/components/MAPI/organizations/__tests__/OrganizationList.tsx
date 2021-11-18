@@ -10,11 +10,11 @@ import { IMainState } from 'stores/main/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IState } from 'stores/state';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
-import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
-import preloginState from 'testUtils/preloginState';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
+import preloginState from 'test/preloginState';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import OrganizationIndex from '../OrganizationIndex';
 

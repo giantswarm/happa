@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import { renderWithStore } from 'testUtils/renderUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import { renderWithStore } from 'test/renderUtils';
 
 import ClusterDetailWidgetKubernetesAPI from '../ClusterDetailWidgetKubernetesAPI';
 

@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { generateRandomString } from 'testUtils/mockHttpCalls';
+import { generateRandomString } from 'test/mockHttpCalls';
 
 import { GenericResponseError } from '../GenericResponseError';
 import {

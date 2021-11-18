@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import { getComponentWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme } from 'test/renderUtils';
 
 const getComponent = (props) => getComponentWithTheme(NodeCountSelector, props);
 const renderWithProps = (props) => render(getComponent(props));

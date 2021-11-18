@@ -20,8 +20,8 @@ import {
   V5_CLUSTER,
   v5ClusterResponse,
   v5ClustersResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 // Responses to requests
 beforeEach(() => {

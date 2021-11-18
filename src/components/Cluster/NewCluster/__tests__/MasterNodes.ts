@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
-import { getComponentWithTheme, renderWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme, renderWithTheme } from 'test/renderUtils';
 
 describe('MasterNodes', () => {
   it('renders without crashing', () => {

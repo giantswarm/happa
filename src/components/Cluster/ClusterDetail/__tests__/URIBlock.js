@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import { getComponentWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme } from 'test/renderUtils';
 
 import URIBlock from '../URIBlock';
 

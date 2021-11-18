@@ -4,7 +4,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import MasterNodes from 'Cluster/ClusterDetail/MasterNodes/MasterNodes';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 describe('MasterNodes', () => {
   it('renders without crashing', () => {

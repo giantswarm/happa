@@ -1,8 +1,8 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { API_ENDPOINT, USER_EMAIL } from 'testUtils/mockHttpCalls';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { API_ENDPOINT, USER_EMAIL } from 'test/mockHttpCalls';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ChangeEmailForm from '../ChangeEmailForm';
 

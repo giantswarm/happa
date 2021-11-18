@@ -29,8 +29,8 @@ import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 const clusterDetailPath = RoutePath.createUsablePath(
   OrganizationsRoutes.Clusters.Detail.Home,

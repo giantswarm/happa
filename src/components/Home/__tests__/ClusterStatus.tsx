@@ -5,9 +5,9 @@ import { IState } from 'stores/state';
 import {
   nodePoolRelease,
   nodePoolWithFlatcarRelease,
-} from 'testUtils/mockHttpCalls';
-import preloginState from 'testUtils/preloginState';
-import { renderWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import preloginState from 'test/preloginState';
+import { renderWithStore } from 'test/renderUtils';
 
 describe('ClusterStatus', () => {
   it('renders without crashing', () => {

@@ -10,8 +10,8 @@ import {
   getMockCall,
   metadataResponse,
   userResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 beforeEach(() => {
   getConfiguration.mockResolvedValueOnce(metadataResponse);

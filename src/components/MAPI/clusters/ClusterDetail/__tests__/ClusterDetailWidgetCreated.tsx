@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailWidgetCreated from '../ClusterDetailWidgetCreated';
 

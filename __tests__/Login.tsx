@@ -21,11 +21,8 @@ import {
   selfSubjectRulesReviewWithNoOrgs,
   selfSubjectRulesReviewWithSomeOrgs,
   userResponse,
-} from 'testUtils/mockHttpCalls';
-import {
-  createInitialHistory,
-  renderRouteWithStore,
-} from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
 
 describe('Login', () => {
   beforeEach(() => {

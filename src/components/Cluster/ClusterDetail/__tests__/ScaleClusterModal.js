@@ -8,8 +8,8 @@ import {
   v4AWSClusterResponse,
   v4AzureClusterResponse,
   v4KVMClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import ScaleClusterModal from '../ScaleClusterModal';
 

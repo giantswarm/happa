@@ -1,5 +1,5 @@
 import { Constants } from 'shared/constants';
-import { appCatalogsResponse } from 'testUtils/mockHttpCalls';
+import { appCatalogsResponse } from 'test/mockHttpCalls';
 
 const ingressCatalog = appCatalogsResponse.find(
   (c) => c.metadata.name === Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME

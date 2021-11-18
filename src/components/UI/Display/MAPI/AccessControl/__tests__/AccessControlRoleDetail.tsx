@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
+import { getComponentWithStore, renderWithStore } from 'test/renderUtils';
 
 import AccessControlRoleDetail from '../AccessControlRoleDetail';
 import { AccessControlSubjectTypes, IAccessControlPermissions } from '../types';

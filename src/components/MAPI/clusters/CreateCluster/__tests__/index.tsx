@@ -7,11 +7,11 @@ import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
-import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import * as CreateClusterUtils from '../../utils';
 import ClusterCreate from '../';

@@ -3,9 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./src/components/*", "./src/*"],
-      "testUtils/*": ["./testUtils/*"],
+      "test/*": ["./test/*"],
       "__tests__/*": ["./__tests__/*"]
     }
   },
-  "include": ["src", "testUtils", "__tests__", "scripts"]
+  "include": ["src", "test", "__tests__", "scripts"]
 }

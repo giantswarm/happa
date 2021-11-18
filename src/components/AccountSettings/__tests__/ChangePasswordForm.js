@@ -3,8 +3,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { Base64 } from 'js-base64';
 import { StatusCodes } from 'shared/constants';
-import { postPayloadMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { postPayloadMockCall, USER_EMAIL } from 'test/mockHttpCalls';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ChangePasswordForm from '../ChangePasswordForm';
 

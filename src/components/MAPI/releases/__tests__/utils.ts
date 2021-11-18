@@ -1,5 +1,5 @@
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
+import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import * as ui from 'UI/Display/MAPI/releases/types';
 
 import { getReleaseComponentsDiff } from '../utils';

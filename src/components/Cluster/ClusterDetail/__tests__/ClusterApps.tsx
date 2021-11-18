@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import ClusterApps from '../ClusterApps';
 

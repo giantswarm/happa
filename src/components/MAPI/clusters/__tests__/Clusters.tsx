@@ -10,8 +10,8 @@ import { IMainState } from 'stores/main/types';
 import { IOrganizationState } from 'stores/organization/types';
 import { IState } from 'stores/state';
 import { SWRConfig } from 'swr';
-import preloginState from 'testUtils/preloginState';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import preloginState from 'test/preloginState';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import Clusters from '../Clusters';
 
