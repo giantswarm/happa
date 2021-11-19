@@ -15,6 +15,7 @@ import {
 } from 'MAPI/releases/utils';
 import { ProviderCluster } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -71,9 +72,11 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
     const auth = useAuthProvider();
 
     const releaseListClient = useRef(clientFactory());
-    const { data: releaseList, error: releaseListError } = useSWR(
-      releasev1alpha1.getReleaseListKey(),
-      () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+    const { data: releaseList, error: releaseListError } = useSWR<
+      releasev1alpha1.IReleaseList,
+      GenericResponseError
+    >(releasev1alpha1.getReleaseListKey(), () =>
+      releasev1alpha1.getReleaseList(releaseListClient.current, auth)
     );
 
     useEffect(() => {
@@ -160,6 +163,8 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
     const releaseNotesURL = currentRelease
       ? releasev1alpha1.getReleaseNotesURL(currentRelease)
       : undefined;
+
+    const releaseNotice = currentRelease?.spec.notice;
 
     const [targetVersion, setTargetVersion] = useState('');
     const targetRelease = useMemo(() => {
@@ -314,6 +319,7 @@ const ClusterDetailWidgetRelease: React.FC<IClusterDetailWidgetReleaseProps> =
             visible={versionModalVisible}
             creationDate={currentRelease?.metadata.creationTimestamp}
             components={releaseComponents}
+            releaseNotice={releaseNotice}
             releaseNotesURL={releaseNotesURL}
             supportedUpgradeVersions={
               canUpgrade ? supportedUpgradeVersions : undefined

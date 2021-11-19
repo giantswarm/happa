@@ -26,6 +26,7 @@ interface IClusterDetailReleaseDetailsModalProps {
   creationDate?: string;
   components?: IClusterDetailReleaseDetailsModalComponent[];
   releaseNotesURL?: string;
+  releaseNotice?: string;
   supportedUpgradeVersions?: ui.IReleaseVersion[];
 }
 
@@ -38,6 +39,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
     creationDate,
     components,
     releaseNotesURL,
+    releaseNotice,
     supportedUpgradeVersions,
   }) => {
     const title = `Details for release ${version}`;
@@ -59,10 +61,21 @@ const ClusterDetailReleaseDetailsModal: React.FC<IClusterDetailReleaseDetailsMod
         visible={visible}
       >
         <Box direction='column' gap='medium'>
-          <Box>
+          <Box gap='small'>
             <Text>
               Released <Date relative={true} value={creationDate} />
             </Text>
+            {releaseNotice && (
+              <Text>
+                <i
+                  className='fa fa-info'
+                  role='presentation'
+                  aria-hidden={true}
+                  aria-label='Release notice'
+                />{' '}
+                {releaseNotice}
+              </Text>
+            )}
           </Box>
 
           {components && (
