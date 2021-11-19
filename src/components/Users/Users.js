@@ -1,19 +1,19 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import ErrorReporter from 'lib/errors/ErrorReporter';
-import React from 'react';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
-import { MainRoutes, UsersRoutes } from 'shared/constants/routes';
-import { getLoggedInUser } from 'stores/main/selectors';
-import { getOrganizationByID } from 'stores/organization/utils';
+import { getLoggedInUser } from 'model/stores/main/selectors';
+import { getOrganizationByID } from 'model/stores/organization/utils';
 import {
   invitationCreate,
   invitationsLoad,
   userDelete,
   userRemoveExpiration,
   usersLoad,
-} from 'stores/user/actions';
+} from 'model/stores/user/actions';
+import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { MainRoutes, UsersRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import Section from 'UI/Layout/Section';
 

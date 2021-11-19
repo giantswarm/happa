@@ -1,6 +1,6 @@
+import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
 import React, { useRef, useState } from 'react';
 import { Constants } from 'shared/constants';
-import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
 import NotAvailable from 'UI/Display/NotAvailable';
 import { Tooltip } from 'UI/Display/Tooltip';

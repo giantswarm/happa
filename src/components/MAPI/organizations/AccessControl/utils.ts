@@ -5,7 +5,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
-import { IState } from 'stores/state';
+import { IState } from 'model/stores/state';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 const subjectDelimiterRegexp = /\s*(?:[,\s;])+\s*/;

@@ -26,10 +26,10 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
 import React, { useReducer } from 'react';
 import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
-import { supportsNodePoolSpotInstances } from 'stores/nodepool/utils';
 import Button from 'UI/Controls/Button';
 
 import CreateNodePoolGuide from './guides/CreateNodePoolGuide';

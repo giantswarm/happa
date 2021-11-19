@@ -12,6 +12,9 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { supportsOptionalIngress } from 'model/stores/cluster/utils';
+import { selectCluster } from 'model/stores/main/actions';
+import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -25,9 +28,6 @@ import { useLocation, useParams } from 'react-router';
 import { AppConstants, Constants } from 'shared/constants';
 import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { supportsOptionalIngress } from 'stores/cluster/utils';
-import { selectCluster } from 'stores/main/actions';
-import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';

@@ -11,10 +11,10 @@ import {
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { selectOrganizations } from 'stores/organization/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR from 'swr';

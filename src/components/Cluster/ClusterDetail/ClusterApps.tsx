@@ -1,24 +1,24 @@
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import React, { useLayoutEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppConstants, Constants } from 'shared/constants';
-import { AppsRoutes } from 'shared/constants/routes';
-import { loadClusterApps } from 'stores/appcatalog/actions';
+import { loadClusterApps } from 'model/stores/appcatalog/actions';
 import {
   selectClusterById,
   selectIsClusterAwaitingUpgrade,
-} from 'stores/cluster/selectors';
+} from 'model/stores/cluster/selectors';
 import {
   filterUserInstalledApps,
   isClusterCreating,
   isClusterUpdating,
-} from 'stores/cluster/utils';
-import { selectErrorByIdAndAction } from 'stores/entityerror/selectors';
-import { selectCluster } from 'stores/main/actions';
-import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
-import { IState } from 'stores/state';
+} from 'model/stores/cluster/utils';
+import { selectErrorByIdAndAction } from 'model/stores/entityerror/selectors';
+import { selectCluster } from 'model/stores/main/actions';
+import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
+import { IState } from 'model/stores/state';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppConstants, Constants } from 'shared/constants';
+import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';

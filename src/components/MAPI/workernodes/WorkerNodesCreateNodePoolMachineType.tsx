@@ -5,8 +5,8 @@ import {
   getProviderNodePoolMachineTypes,
   INodePoolMachineTypesAWS,
 } from 'MAPI/utils';
+import { supportsAlikeInstances } from 'model/stores/nodepool/utils';
 import React from 'react';
-import { supportsAlikeInstances } from 'stores/nodepool/utils';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
 import {

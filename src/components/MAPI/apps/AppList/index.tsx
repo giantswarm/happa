@@ -8,9 +8,9 @@ import usePrevious from 'lib/hooks/usePrevious';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { getUserIsAdmin } from 'model/stores/main/selectors';
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserIsAdmin } from 'stores/main/selectors';
 import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 

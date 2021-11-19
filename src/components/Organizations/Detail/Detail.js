@@ -1,16 +1,16 @@
 import Cluster from 'Cluster/Cluster';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'model/stores/organization/constants';
+import { selectOrganizationByID } from 'model/stores/organization/selectors';
+import { supportsMultiAccount } from 'model/stores/organization/utils';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'stores/organization/constants';
-import { selectOrganizationByID } from 'stores/organization/selectors';
-import { supportsMultiAccount } from 'stores/organization/utils';
 
 import DetailView from './View';
 

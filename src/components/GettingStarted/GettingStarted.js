@@ -2,13 +2,13 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
+import { selectClusterById } from 'model/stores/cluster/selectors';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Switch, useParams } from 'react-router-dom';
 import Route from 'Route';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
-import { selectClusterById } from 'stores/cluster/selectors';
 import styled from 'styled-components';
 
 import ConfigureKubeCTL from './Steps/ConfigureKubectl';

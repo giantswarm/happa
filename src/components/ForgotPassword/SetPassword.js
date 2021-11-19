@@ -9,13 +9,13 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import { validatePassword } from 'lib/passwordValidation';
+import * as mainActions from 'model/stores/main/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import ShadowMask from 'shared/ShadowMask';
-import * as mainActions from 'stores/main/actions';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';

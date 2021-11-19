@@ -1,4 +1,4 @@
-import { LoggedInUserTypes } from 'stores/main/types';
+import { LoggedInUserTypes } from 'model/stores/main/types';
 
 import { Providers } from './constants';
 import * as featureFlags from './featureFlags';

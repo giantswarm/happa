@@ -9,7 +9,7 @@ interface ILoggedInUser {
   auth: ILoggedInUserAuthScheme;
   email: string;
   isAdmin: boolean;
-  type: import('stores/main/types').LoggedInUserTypes;
+  type: import('model/stores/main/types').LoggedInUserTypes;
 
   /* OIDC specific. */
   groups?: string[];

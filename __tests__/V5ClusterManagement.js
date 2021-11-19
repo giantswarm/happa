@@ -8,11 +8,14 @@ import {
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { getConfiguration } from 'model/services/metadata/configuration';
+import {
+  filterLabels,
+  getNumberOfNodePoolsNodes,
+} from 'model/stores/cluster/utils';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { filterLabels, getNumberOfNodePoolsNodes } from 'stores/cluster/utils';
 import {
   API_ENDPOINT,
   appCatalogsResponse,

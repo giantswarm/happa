@@ -12,13 +12,13 @@ import {
   fetchClusterListKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectOrganizations } from 'stores/organization/selectors';
-import { IState } from 'stores/state';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';

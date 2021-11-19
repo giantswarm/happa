@@ -1,14 +1,14 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
 import { Box } from 'grommet';
+import { batchedClusterCreate } from 'model/stores/batchActions';
+import { BATCHED_CLUSTER_CREATION_REQUEST } from 'model/stores/cluster/constants';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
 import React from 'react';
 import { connect } from 'react-redux';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import { Constants, Providers } from 'shared/constants';
 import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import { batchedClusterCreate } from 'stores/batchActions';
-import { BATCHED_CLUSTER_CREATION_REQUEST } from 'stores/cluster/constants';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import HorizontalLine from 'UI/Display/Cluster/ClusterCreation/HorizontalLine';

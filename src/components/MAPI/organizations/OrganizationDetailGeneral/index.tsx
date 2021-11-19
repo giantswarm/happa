@@ -12,13 +12,13 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { organizationsLoadMAPI } from 'model/stores/organization/actions';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StatusCodes } from 'shared/constants';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { organizationsLoadMAPI } from 'stores/organization/actions';
-import { selectOrganizations } from 'stores/organization/selectors';
-import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';

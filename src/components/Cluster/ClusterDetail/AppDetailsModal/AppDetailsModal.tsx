@@ -1,7 +1,5 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import useError from 'lib/hooks/useError';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   catalogLoadIndex,
   createAppConfig as createAppConfigAction,
@@ -14,10 +12,12 @@ import {
   updateAppSecret as updateAppSecretAction,
   updateClusterApp as updateAppAction,
   updateClusterApp,
-} from 'stores/appcatalog/actions';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { IState } from 'stores/state';
+} from 'model/stores/appcatalog/actions';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import { IState } from 'model/stores/state';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Modal from 'UI/Layout/Modal';

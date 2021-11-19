@@ -5,8 +5,8 @@ import parseISO from 'date-fns/fp/parseISO';
 import parse from 'date-fns/parse';
 import toDate from 'date-fns-tz/toDate';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
+import { getOrganizationByID } from 'model/stores/organization/utils';
 import { IKeyPair } from 'shared/types';
-import { getOrganizationByID } from 'stores/organization/utils';
 import validate from 'validate.js';
 /**
  * Format code in a user-friendly way.

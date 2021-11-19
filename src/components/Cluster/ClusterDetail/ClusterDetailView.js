@@ -6,6 +6,28 @@ import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
+import {
+  batchedClusterDetailView,
+  batchedRefreshClusterDetailView,
+} from 'model/stores/batchActions';
+import * as clusterActions from 'model/stores/cluster/actions';
+import { CLUSTER_LOAD_DETAILS_REQUEST } from 'model/stores/cluster/constants';
+import {
+  selectIsClusterAwaitingUpgrade,
+  selectTargetRelease,
+} from 'model/stores/cluster/selectors';
+import {
+  getNumberOfNodes,
+  isClusterCreating,
+  isClusterUpdating,
+} from 'model/stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'model/stores/entityloading/selectors';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import { getLoggedInUser, getUserIsAdmin } from 'model/stores/main/selectors';
+import * as nodePoolActions from 'model/stores/nodepool/actions';
+import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'model/stores/nodepool/constants';
+import { selectNodePools } from 'model/stores/nodepool/selectors';
+import { getAllReleases } from 'model/stores/releases/selectors';
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
@@ -13,28 +35,6 @@ import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps } from 'shared/featureSupport';
-import {
-  batchedClusterDetailView,
-  batchedRefreshClusterDetailView,
-} from 'stores/batchActions';
-import * as clusterActions from 'stores/cluster/actions';
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'stores/cluster/constants';
-import {
-  selectIsClusterAwaitingUpgrade,
-  selectTargetRelease,
-} from 'stores/cluster/selectors';
-import {
-  getNumberOfNodes,
-  isClusterCreating,
-  isClusterUpdating,
-} from 'stores/cluster/utils';
-import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { getLoggedInUser, getUserIsAdmin } from 'stores/main/selectors';
-import * as nodePoolActions from 'stores/nodepool/actions';
-import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
-import { selectNodePools } from 'stores/nodepool/selectors';
-import { getAllReleases } from 'stores/releases/selectors';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

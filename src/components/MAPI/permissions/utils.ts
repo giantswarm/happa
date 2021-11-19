@@ -2,7 +2,7 @@ import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { getNamespaceFromOrgName } from 'MAPI/utils';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
-import { LoggedInUserTypes } from 'stores/main/types';
+import { LoggedInUserTypes } from 'model/stores/main/types';
 
 import { INamespacePermissions, IPermissionMap, PermissionVerb } from './types';
 

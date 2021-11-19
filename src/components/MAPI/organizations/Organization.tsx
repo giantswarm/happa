@@ -1,5 +1,6 @@
 import Cluster from 'Cluster/Cluster';
 import ClusterMapi from 'MAPI/clusters/Cluster';
+import { getLoggedInUser } from 'model/stores/main/selectors';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
@@ -7,7 +8,6 @@ import { Redirect, Switch, useParams, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiClusters } from 'shared/featureSupport';
-import { getLoggedInUser } from 'stores/main/selectors';
 
 import OrganizationDetail from './OrganizationDetail';
 

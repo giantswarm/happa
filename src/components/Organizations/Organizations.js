@@ -1,11 +1,11 @@
+import { CLUSTERS_DETAILS_REQUEST } from 'model/stores/cluster/constants';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { CLUSTERS_DETAILS_REQUEST } from 'stores/cluster/constants';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
 import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 
 import Detail from './Detail/Detail';

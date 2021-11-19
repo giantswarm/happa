@@ -7,6 +7,13 @@ import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasAppAccess } from 'MAPI/permissions/utils';
+import {
+  batchedLayout,
+  batchedOrganizationSelect,
+} from 'model/stores/batchActions';
+import { getLoggedInUser } from 'model/stores/main/selectors';
+import { LoggedInUserTypes } from 'model/stores/main/types';
+import { IState } from 'model/stores/state';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,10 +29,6 @@ import {
 } from 'shared/constants/routes';
 import * as featureFlags from 'shared/featureFlags';
 import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
-import { batchedLayout, batchedOrganizationSelect } from 'stores/batchActions';
-import { getLoggedInUser } from 'stores/main/selectors';
-import { LoggedInUserTypes } from 'stores/main/types';
-import { IState } from 'stores/state';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';

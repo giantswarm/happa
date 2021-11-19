@@ -8,6 +8,10 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import MapiAuth from 'lib/MapiAuth/MapiAuth';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import * as mainActions from 'model/stores/main/actions';
+import { getLoggedInUser } from 'model/stores/main/selectors';
+import { IState } from 'model/stores/state';
 import React, { ReactNode } from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -15,10 +19,6 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { MainRoutes } from 'shared/constants/routes';
 import * as featureFlags from 'shared/featureFlags';
 import ShadowMask from 'shared/ShadowMask';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import * as mainActions from 'stores/main/actions';
-import { getLoggedInUser } from 'stores/main/selectors';
-import { IState } from 'stores/state';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';

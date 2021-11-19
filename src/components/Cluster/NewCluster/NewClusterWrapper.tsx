@@ -4,23 +4,23 @@ import { Box } from 'grommet';
 import { hasAppropriateLength } from 'lib/helpers';
 import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import { compare } from 'lib/semver';
+import { computeCapabilities } from 'model/stores/cluster/utils';
+import {
+  getFirstNodePoolsRelease,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
+import { selectOrganizationByID } from 'model/stores/organization/selectors';
+import {
+  getReleases,
+  getReleasesError,
+  getReleasesIsFetching,
+} from 'model/stores/releases/selectors';
 import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { Constants, Providers } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
-import { computeCapabilities } from 'stores/cluster/utils';
-import {
-  getFirstNodePoolsRelease,
-  getUserIsAdmin,
-} from 'stores/main/selectors';
-import { selectOrganizationByID } from 'stores/organization/selectors';
-import {
-  getReleases,
-  getReleasesError,
-  getReleasesIsFetching,
-} from 'stores/releases/selectors';
 import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
