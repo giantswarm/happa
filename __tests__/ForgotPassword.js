@@ -1,10 +1,10 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import * as featureFlags from 'model/featureFlags';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes } from 'shared/constants/routes';
-import * as featureFlags from 'shared/featureFlags';
 import * as mockHttpCalls from 'test/mockHttpCalls';
 import { renderRouteWithStore } from 'test/renderUtils';
 

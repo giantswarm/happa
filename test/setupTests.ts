@@ -5,8 +5,8 @@ import 'regenerator-runtime/runtime';
 import { act, configure, screen, waitFor } from '@testing-library/react';
 import GiantSwarm from 'giantswarm';
 import { forceRemoveAll } from 'lib/flashMessage';
+import * as featureFlags from 'model/featureFlags';
 import nock from 'nock';
-import * as featureFlags from 'shared/featureFlags';
 
 let isOnline = false;
 // Let the browser know it's online, since we're disabling internet connectivity

@@ -86,7 +86,7 @@ This what you'll use in your code.
 
 Add the new flag name to the `Feature` type union.
 
-<FileBlock fileName='src/shared/featureFlags.ts'>
+<FileBlock fileName='src/model/featureFlags.ts'>
   {`...
 export type Feature =
     ...
@@ -96,7 +96,7 @@ export type Feature =
 
 Add the flag's configuration.
 
-<FileBlock fileName='src/shared/featureFlags.ts'>
+<FileBlock fileName='src/model/featureFlags.ts'>
   {`...
 export const flags: Record<Feature, IFeatureFlag> = {
 +    Login: {
@@ -111,7 +111,7 @@ export const flags: Record<Feature, IFeatureFlag> = {
 
 If you wish to make the flag configurable through the admin `Experiments` page, you can also configure that here.
 
-<FileBlock fileName='src/shared/featureFlags.ts'>
+<FileBlock fileName='src/model/featureFlags.ts'>
   {`...
 export const flags: Record<Feature, IFeatureFlag> = {
     Login: {
@@ -146,7 +146,7 @@ module.exports = {
 7. Use it in code
 
 <FileBlock fileName='YourFile.ts'>
-  {`import * as featureFlags from 'shared/featureFlags';
+  {`import * as featureFlags from 'model/featureFlags';
 ...
     function doSomething() {
         if (featureFlags.flags.Login.enabled) {

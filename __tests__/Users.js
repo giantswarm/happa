@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor, within } from '@testing-library/react';
+import * as featureFlags from 'model/featureFlags';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { UsersRoutes } from 'shared/constants/routes';
-import * as featureFlags from 'shared/featureFlags';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
