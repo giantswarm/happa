@@ -10,7 +10,7 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import ErrorBoundary from 'shared/ErrorBoundary';
 import { DefaultTheme } from 'styled-components';
-import ThemeProvider from 'styles/ThemeProvider';
+import ThemeProvider from 'ThemeProvider';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
 

@@ -1,7 +1,7 @@
 import { addDecorator } from '@storybook/react';
 import { MemoryRouter } from 'react-router';
 import theme from 'styles/theme';
-import ThemeProvider from 'styles/ThemeProvider';
+import ThemeProvider from 'components/ThemeProvider';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';

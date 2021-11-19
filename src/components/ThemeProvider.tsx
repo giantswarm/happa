@@ -2,7 +2,7 @@ import { Grommet } from 'grommet';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import theme from './theme';
+import theme from '../styles/theme';
 
 const AppWrapper = styled.div`
   max-width: 1200px;

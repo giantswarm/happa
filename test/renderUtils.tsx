@@ -13,8 +13,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MainRoutes } from 'shared/constants/routes';
 import theme from 'styles/theme';
-import ThemeProvider from 'styles/ThemeProvider';
 import { SWRConfig } from 'swr';
+import ThemeProvider from 'ThemeProvider';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
 
