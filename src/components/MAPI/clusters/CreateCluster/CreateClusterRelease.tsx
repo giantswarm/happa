@@ -64,8 +64,8 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
         const normalizedVersion = curr.metadata.name.slice(1);
 
         if (
-          !isAdmin &&
           !isPreview &&
+          !isAdmin &&
           (!isActive || isPreRelease(normalizedVersion))
         ) {
           return acc;
