@@ -542,6 +542,198 @@ export const v15_0_0: releasev1alpha1.IRelease = {
   },
 };
 
+export const v20_0_0_alpha: releasev1alpha1.IRelease = {
+  apiVersion: 'release.giantswarm.io/v1alpha1',
+  kind: 'Release',
+  metadata: {
+    annotations: {
+      'giantswarm.io/docs':
+        'https://docs.giantswarm.io/ui-api/management-api/crd/releases.release.giantswarm.io/',
+      'giantswarm.io/release-notes':
+        'https://github.com/giantswarm/releases/tree/master/aws/v20.0.0-alpha',
+      'meta.helm.sh/release-name': 'releases-aws',
+      'meta.helm.sh/release-namespace': 'giantswarm',
+    },
+    creationTimestamp: '2021-11-18T09:01:45Z',
+    finalizers: ['operatorkit.giantswarm.io/release-operator-release'],
+    generation: 1,
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+    },
+    name: 'v20.0.0-alpha',
+    resourceVersion: '344715917',
+    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/v20.0.0-alpha',
+    uid: '46e9a2b8-b998-4c24-ab5c-1437cca7aedc',
+  },
+  spec: {
+    apps: [
+      {
+        catalog: 'default',
+        componentVersion: '1.8.0',
+        name: 'aws-cni',
+        version: '0.1.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '3.18.0',
+        name: 'calico-policy-only',
+        version: '0.3.0',
+      },
+      {
+        catalog: 'default',
+        name: 'capi-node-labeler',
+        version: '0.3.3',
+      },
+      {
+        catalog: 'default',
+        name: 'cert-exporter',
+        version: '1.6.1',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.3.1',
+        name: 'cert-manager',
+        version: '2.7.1',
+      },
+      {
+        catalog: 'default',
+        name: 'chart-operator',
+        version: '2.19.0',
+      },
+      {
+        catalog: 'default',
+        name: 'cluster-autoscaler',
+        version: '1.19.3',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '0.7.6',
+        name: 'external-dns',
+        version: '2.3.1',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '4.1.0',
+        name: 'kiam',
+        version: '2.0.0',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.9.7',
+        name: 'kube-state-metrics',
+        version: '1.3.1',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '0.4.1',
+        name: 'metrics-server',
+        version: '1.3.0',
+      },
+      {
+        catalog: 'default',
+        name: 'net-exporter',
+        version: '1.10.1',
+      },
+      {
+        catalog: 'default',
+        componentVersion: '1.0.1',
+        name: 'node-exporter',
+        version: '1.7.2',
+      },
+    ],
+    components: [
+      {
+        catalog: 'control-plane-catalog',
+        name: 'app-operator',
+        releaseOperatorDeploy: false,
+        version: '5.2.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'capa-aws-cni-operator',
+        releaseOperatorDeploy: true,
+        version: '0.1.1',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'capa-iam-operator',
+        reference: '0.3.0',
+        releaseOperatorDeploy: true,
+        version: '0.3.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-api-bootstrap-provider-kubeadm',
+        releaseOperatorDeploy: true,
+        version: '0.3.22-gs6',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-api-control-plane',
+        releaseOperatorDeploy: true,
+        version: '0.3.22-gs9',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-api-core',
+        releaseOperatorDeploy: true,
+        version: '0.3.22-gs4',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-api-provider-aws',
+        releaseOperatorDeploy: true,
+        version: '0.6.8-gs8',
+      },
+      {
+        catalog: 'control-plane-test-catalog',
+        name: 'policies-common',
+        releaseOperatorDeploy: true,
+        version: '0.6.2',
+      },
+      {
+        catalog: 'control-plane-test-catalog',
+        name: 'policies-aws',
+        releaseOperatorDeploy: true,
+        version: '0.6.2',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'cluster-apps-operator',
+        releaseOperatorDeploy: true,
+        version: '0.6.1',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'kubernetes',
+        version: '1.19.9',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'containerlinux',
+        version: '2605.12.0',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'calico',
+        version: '3.15.3',
+      },
+      {
+        catalog: 'control-plane-catalog',
+        name: 'etcd',
+        version: '3.4.14',
+      },
+    ],
+    date: '2021-05-31T14:50:41Z',
+    state: 'preview',
+    notice: '',
+  },
+  status: {
+    inUse: true,
+    ready: true,
+  },
+};
+
 export const releasesList: releasev1alpha1.IReleaseList = {
   apiVersion: 'release.giantswarm.io/v1alpha1',
   kind: 'ReleaseList',
@@ -549,5 +741,5 @@ export const releasesList: releasev1alpha1.IReleaseList = {
     resourceVersion: '294659579',
     selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/',
   },
-  items: [v13_1_0, v14_0_1, v14_1_5, v15_0_0],
+  items: [v13_1_0, v14_0_1, v14_1_5, v15_0_0, v20_0_0_alpha],
 };
