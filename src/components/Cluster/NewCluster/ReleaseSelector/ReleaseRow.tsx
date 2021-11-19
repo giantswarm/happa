@@ -103,7 +103,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
             />
           </RUMActionTarget>
         </TableCell>
-        <StyledTableCell size='small' active={displayAsActive} align='left'>
+        <StyledTableCell size='small' active={displayAsActive}>
           {showPreviewNotice ? (
             <TooltipContainer content={<Tooltip>{notice}</Tooltip>}>
               <Box
@@ -135,14 +135,6 @@ const ReleaseRow: FC<IReleaseRow> = ({
               <Text textAlign='start' wordBreak='break-word'>
                 {version}
               </Text>
-              {preview && (
-                <i
-                  className='fa fa-info'
-                  aria-hidden={true}
-                  role='presentation'
-                  aria-label='This release is a preview release.'
-                />
-              )}
             </Box>
           )}
         </StyledTableCell>
