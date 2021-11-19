@@ -72,8 +72,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
     (e.target as HTMLElement).click();
   };
 
-  const showPreviewNotice = preview && notice && notice?.length > 0;
-
+  const releaseNotice = notice || 'This is a preview release.';
   const displayAsActive = active || preview;
 
   return (
@@ -104,8 +103,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
           </RUMActionTarget>
         </TableCell>
         <StyledTableCell size='small' active={displayAsActive}>
-          {showPreviewNotice ? (
-            <TooltipContainer content={<Tooltip>{notice}</Tooltip>}>
+          {preview ? (
+            <TooltipContainer content={<Tooltip>{releaseNotice}</Tooltip>}>
               <Box
                 width='xsmall'
                 direction='row'
@@ -120,7 +119,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
                   className='fa fa-info'
                   aria-hidden={true}
                   role='presentation'
-                  aria-label={notice}
+                  aria-label={releaseNotice}
                 />
               </Box>
             </TooltipContainer>
@@ -218,7 +217,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
       {!collapsed && (
         <TableRow>
           <TableCell colSpan={6}>
-            {showPreviewNotice && (
+            {preview && (
               <Box margin={{ bottom: 'small' }}>
                 <Text size='small'>
                   <i
@@ -227,7 +226,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
                     aria-hidden={true}
                     aria-label='Release notice'
                   />{' '}
-                  {notice}
+                  {releaseNotice}
                 </Text>
               </Box>
             )}

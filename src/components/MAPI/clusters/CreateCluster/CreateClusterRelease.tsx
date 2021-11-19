@@ -87,7 +87,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
           kubernetesVersion: k8sVersion,
           k8sVersionEOLDate: k8sVersionEOLDate,
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
-          notice: curr.spec.notice ?? '',
+          notice: curr.spec.notice,
         };
 
         return acc;
