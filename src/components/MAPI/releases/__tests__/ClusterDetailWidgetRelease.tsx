@@ -220,7 +220,7 @@ describe('ClusterDetailWidgetRelease', () => {
       })
     );
 
-    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'Upgrade cluster…' })
     ).not.toBeInTheDocument();
