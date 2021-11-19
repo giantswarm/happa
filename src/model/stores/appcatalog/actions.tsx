@@ -2,6 +2,7 @@ import GiantSwarm from 'giantswarm';
 import yaml from 'js-yaml';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { Constants, StatusCodes } from 'model/constants';
 import {
   CATALOG_LOAD_INDEX_ERROR,
   CATALOG_LOAD_INDEX_REQUEST,
@@ -63,7 +64,6 @@ import { v4orV5 } from 'model/stores/cluster/utils';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
-import { Constants, StatusCodes } from 'shared/constants';
 import { IGSAPIError } from 'utils/errorUtils';
 
 import { createAsynchronousAction } from '../asynchronousAction';

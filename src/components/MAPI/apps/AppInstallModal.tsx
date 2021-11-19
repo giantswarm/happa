@@ -24,6 +24,7 @@ import {
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -31,7 +32,6 @@ import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';

@@ -1,10 +1,10 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { isInternal } from 'Apps/AppsList/utils';
 import RoutePath from 'lib/routePath';
+import { StatusCodes } from 'model/constants';
+import { AppsRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
-import { AppsRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,

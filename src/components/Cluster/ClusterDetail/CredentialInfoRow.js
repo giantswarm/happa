@@ -1,5 +1,5 @@
+import { Providers } from 'model/constants';
 import React from 'react';
-import { Providers } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import AWSAccountID from 'UI/Display/Cluster/AWSAccountID';
 

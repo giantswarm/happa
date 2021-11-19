@@ -7,10 +7,10 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
-import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as corev1Mocks from 'test/mockHttpCalls/corev1';

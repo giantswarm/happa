@@ -1,6 +1,6 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
 
 export const API_ENDPOINT = 'http://1.2.3.4';
 export const USER_EMAIL = 'developer@giantswarm.io';

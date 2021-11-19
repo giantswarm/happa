@@ -1,13 +1,13 @@
 import { homeURL } from 'lib/docs';
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { CSSBreakpoints } from 'shared/constants';
+import { CSSBreakpoints } from 'model/constants';
 import {
   AppsRoutes,
   MainRoutes,
   OrganizationsRoutes,
   UsersRoutes,
-} from 'shared/constants/routes';
+} from 'model/constants/routes';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { mq } from 'styles';
 import DropdownMenu, { List } from 'UI/Controls/DropdownMenu';

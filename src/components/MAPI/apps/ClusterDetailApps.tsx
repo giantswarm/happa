@@ -10,6 +10,8 @@ import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { AppConstants, Constants } from 'model/constants';
+import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsOptionalIngress } from 'model/stores/cluster/utils';
@@ -25,8 +27,6 @@ import React, {
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
-import { AppConstants, Constants } from 'shared/constants';
-import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';

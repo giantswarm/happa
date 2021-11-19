@@ -7,8 +7,8 @@ import {
   withFormatting,
   withTemplateNodePool,
 } from 'MAPI/guides/utils';
+import { Providers } from 'model/constants';
 import React from 'react';
-import { Providers } from 'shared/constants';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';

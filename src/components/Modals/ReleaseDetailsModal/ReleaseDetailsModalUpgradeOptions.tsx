@@ -1,7 +1,7 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { ReleaseHelper } from 'lib/ReleaseHelper';
+import { Providers } from 'model/constants';
 import React, { useMemo } from 'react';
-import { Providers } from 'shared/constants';
 import styled from 'styled-components';
 
 import ReleaseDetailsModalSection from './ReleaseDetailsModalSection';

@@ -1,5 +1,5 @@
+import { Constants } from 'model/constants';
 import * as React from 'react';
-import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import CurrencyInput from 'UI/Inputs/CurrencyInput';

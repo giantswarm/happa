@@ -18,8 +18,8 @@ import {
   getSupportedAvailabilityZones,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { useEffect, useMemo, useState } from 'react';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
 

@@ -1,6 +1,8 @@
 import { push } from 'connected-react-router';
 import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { AppConstants, Constants } from 'model/constants';
+import { AppsRoutes } from 'model/constants/routes';
 import { loadClusterApps } from 'model/stores/appcatalog/actions';
 import {
   selectClusterById,
@@ -17,8 +19,6 @@ import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
 import { IState } from 'model/stores/state';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppConstants, Constants } from 'shared/constants';
-import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';

@@ -1,7 +1,7 @@
+import { Providers } from 'model/constants';
 import { getAllowedInstanceTypeNames } from 'model/stores/main/selectors';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Providers } from 'shared/constants';
 
 export function useInstanceTypeSelectionLabels(): {
   singular: string;

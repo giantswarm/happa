@@ -6,6 +6,8 @@ import {
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import { Box } from 'grommet';
 import produce from 'immer';
+import { Constants } from 'model/constants';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'model/stores/batchActions';
 import { BATCHED_CLUSTER_CREATION_REQUEST } from 'model/stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
@@ -13,8 +15,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { Constants } from 'shared/constants';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';

@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
-import { StatusCodes } from 'shared/constants';
 import { withMarkup } from 'test/assertUtils';
 import { getComponentWithStore } from 'test/renderUtils';
 

@@ -7,6 +7,14 @@ import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasAppAccess } from 'MAPI/permissions/utils';
+import {
+  AccountSettingsRoutes,
+  AppsRoutes,
+  ExceptionNotificationTestRoutes,
+  MainRoutes,
+  OrganizationsRoutes,
+  UsersRoutes,
+} from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import { supportsMapiApps, supportsMapiClusters } from 'model/featureSupport';
 import {
@@ -21,14 +29,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
-import {
-  AccountSettingsRoutes,
-  AppsRoutes,
-  ExceptionNotificationTestRoutes,
-  MainRoutes,
-  OrganizationsRoutes,
-  UsersRoutes,
-} from 'shared/constants/routes';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';

@@ -1,4 +1,4 @@
-import { Constants, Providers } from 'shared/constants';
+import { Constants, Providers } from 'model/constants';
 
 import { IVersion, VersionImpl } from './Version';
 

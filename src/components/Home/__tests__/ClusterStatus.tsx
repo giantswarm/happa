@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import ClusterStatus from 'Home/ClusterStatus';
+import { Providers } from 'model/constants';
 import { IState } from 'model/stores/state';
-import { Providers } from 'shared/constants';
 import {
   nodePoolRelease,
   nodePoolWithFlatcarRelease,

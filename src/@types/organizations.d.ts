@@ -19,7 +19,7 @@ interface IAWSCredential {
 
 interface ICredential {
   id: string;
-  provider: PropertiesOf<typeof import('shared/constants').Providers>;
+  provider: PropertiesOf<typeof import('model/constants').Providers>;
 
   azure?: IAzureCredential;
   aws?: IAWSCredential;

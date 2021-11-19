@@ -1,5 +1,5 @@
+import { Constants, Providers } from 'model/constants';
 import { IState } from 'model/stores/state';
-import { Constants, Providers } from 'shared/constants';
 
 export function getUserIsAdmin(state: IState) {
   return getLoggedInUser(state)?.isAdmin ?? false;

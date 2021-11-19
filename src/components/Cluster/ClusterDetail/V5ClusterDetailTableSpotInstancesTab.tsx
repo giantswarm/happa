@@ -1,5 +1,5 @@
+import { Constants, Providers } from 'model/constants';
 import * as React from 'react';
-import { Constants, Providers } from 'shared/constants';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { NodePoolsColumnHeader } from './V5ClusterDetailTable';

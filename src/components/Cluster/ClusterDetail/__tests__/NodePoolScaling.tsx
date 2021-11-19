@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { Providers } from 'shared/constants';
+import { Providers } from 'model/constants';
 import { renderWithTheme } from 'test/renderUtils';
 
 import NodePoolScaling from '../NodePoolScaling';

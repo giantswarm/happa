@@ -1,7 +1,7 @@
+import { MainRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import Route from 'Route';
-import { MainRoutes } from 'shared/constants/routes';
 
 import AdminLogin from './Auth/AdminLogin';
 import Login from './Auth/Login';

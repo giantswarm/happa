@@ -1,7 +1,7 @@
 import RoutePath from 'lib/routePath';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 import Truncated from 'UI/Util/Truncated';

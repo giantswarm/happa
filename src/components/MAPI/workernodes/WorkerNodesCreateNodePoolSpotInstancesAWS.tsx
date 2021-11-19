@@ -1,7 +1,7 @@
 import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolSpotInstances';
 import { INodePoolSpotInstancesAWS } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import React from 'react';
-import { Providers } from 'shared/constants';
 
 import { INodePoolSpotInstancesConfigAWS } from './patches';
 

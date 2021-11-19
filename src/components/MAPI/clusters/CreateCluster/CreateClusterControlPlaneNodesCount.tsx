@@ -1,6 +1,6 @@
 import MasterNodes from 'Cluster/NewCluster/MasterNodes';
+import { Constants } from 'model/constants';
 import React, { useMemo } from 'react';
-import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';

@@ -1,9 +1,9 @@
 import Bowser from 'bowser';
 import { History } from 'history';
 import { GraphQLClientImpl } from 'model/clients/GraphQLClient';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import { AthenaAnalyticsPayload } from 'model/services/athena';
 import * as athena from 'model/services/athena';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 import { v4 as uuid } from 'uuid';
 import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric } from 'web-vitals';

@@ -12,6 +12,7 @@ import {
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
@@ -19,7 +20,6 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';

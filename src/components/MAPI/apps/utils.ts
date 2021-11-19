@@ -10,12 +10,12 @@ import * as releasesUtils from 'MAPI/releases/utils';
 import { getClusterDescription } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { AppConstants, Constants } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { AppConstants, Constants } from 'shared/constants';
 import { Cache, mutate } from 'swr';
 
 function getUserConfigMapName(appName: string): string {

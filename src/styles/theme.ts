@@ -1,6 +1,6 @@
 import { generate, ThemeType } from 'grommet';
 import { deepMerge } from 'grommet/utils';
-import { CSSBreakpoints } from 'shared/constants';
+import { CSSBreakpoints } from 'model/constants';
 import { css, DefaultTheme } from 'styled-components';
 
 interface ICalendarDayProps {

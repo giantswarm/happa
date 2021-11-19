@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { V5AddNodePoolRequest } from 'giantswarm';
-import { Providers } from 'shared/constants';
+import { Providers } from 'model/constants';
 import { renderWithStore } from 'test/renderUtils';
 
 import AddNodePool from '../AddNodePool';

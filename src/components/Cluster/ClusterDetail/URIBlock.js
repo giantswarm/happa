@@ -1,7 +1,7 @@
 import { Keyboard, Text } from 'grommet';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
+import { CSSBreakpoints } from 'model/constants/cssBreakpoints';
 import React from 'react';
-import { CSSBreakpoints } from 'shared/constants/cssBreakpoints';
 import styled from 'styled-components';
 import { Code, mq } from 'styles';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';

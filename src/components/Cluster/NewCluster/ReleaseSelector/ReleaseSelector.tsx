@@ -1,9 +1,9 @@
 import { Box, Keyboard, Text } from 'grommet';
 import { compare } from 'lib/semver';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import { isPreRelease } from 'model/stores/releases/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import { ListToggler } from 'UI/Controls/ExpandableSelector/Selector';

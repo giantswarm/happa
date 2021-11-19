@@ -1,5 +1,5 @@
 import { compare } from 'lib/semver';
-import { Constants, Providers } from 'shared/constants';
+import { Constants, Providers } from 'model/constants';
 
 export function supportsNodePoolAutoscaling(
   provider: PropertiesOf<typeof Providers>,

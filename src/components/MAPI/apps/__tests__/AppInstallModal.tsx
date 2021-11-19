@@ -1,13 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IMainState } from 'model/stores/main/types';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
 import nock from 'nock';
 import React from 'react';
-import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';

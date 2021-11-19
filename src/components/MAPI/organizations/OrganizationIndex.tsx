@@ -1,8 +1,8 @@
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 
 import Organization from './Organization';

@@ -7,6 +7,7 @@ import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
 import { formatYAMLError } from 'MAPI/apps/utils';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import { installApp } from 'model/stores/appcatalog/actions';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import { selectIsClusterAwaitingUpgrade } from 'model/stores/cluster/selectors';
@@ -17,7 +18,6 @@ import {
 import { IState } from 'model/stores/state';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

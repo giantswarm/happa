@@ -4,9 +4,9 @@ import {
   useInstanceTypeCapabilities,
   useInstanceTypeSelectionLabels,
 } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import {
   ListToggler,

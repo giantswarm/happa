@@ -18,6 +18,7 @@ import {
   isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -27,7 +28,6 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import { TransitionGroup } from 'react-transition-group';
-import { Providers } from 'shared/constants';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';

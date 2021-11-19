@@ -22,12 +22,12 @@ import {
   IMachineType,
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
+import { Constants, Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { Constants, Providers } from 'shared/constants';
 import { mutate } from 'swr';
 
 export function getWorkerNodesCount(nodePools?: NodePool[]) {

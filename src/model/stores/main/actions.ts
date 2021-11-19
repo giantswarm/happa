@@ -10,6 +10,8 @@ import Passage, {
   ISetNewPasswordResponse,
   IVerifyPasswordRecoveryTokenResponse,
 } from 'lib/passageClient';
+import { AuthorizationTypes, StatusCodes } from 'model/constants';
+import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import {
   CLUSTER_SELECT,
@@ -33,8 +35,6 @@ import { getLoggedInUser } from 'model/stores/main/selectors';
 import { MainActions } from 'model/stores/main/types';
 import { IState } from 'model/stores/state';
 import { ThunkAction } from 'redux-thunk';
-import { AuthorizationTypes, StatusCodes } from 'shared/constants';
-import { MainRoutes } from 'shared/constants/routes';
 import { IGSAPIError } from 'utils/errorUtils';
 import {
   fetchUserFromStorage,

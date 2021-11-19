@@ -19,6 +19,7 @@ import {
 } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -27,7 +28,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';

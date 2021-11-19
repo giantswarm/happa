@@ -4,6 +4,7 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import RoutePath from 'lib/routePath';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { supportsMapiApps, supportsMapiClusters } from 'model/featureSupport';
 import {
   enableCatalog,
@@ -52,7 +53,6 @@ import { loadReleases } from 'model/stores/releases/actions';
 import { IState } from 'model/stores/state';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { extractMessageFromError } from 'utils/errorUtils';
 
 export function batchedLayout(

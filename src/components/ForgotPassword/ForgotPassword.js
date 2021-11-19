@@ -6,12 +6,12 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
+import { MainRoutes } from 'model/constants/routes';
 import * as mainActions from 'model/stores/main/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { MainRoutes } from 'shared/constants/routes';
 import ShadowMask from 'shared/ShadowMask';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';

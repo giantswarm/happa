@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { Providers } from 'shared/constants';
+import { Providers } from 'model/constants';
 import { v5ClustersResponse } from 'test/mockHttpCalls';
 import { getComponentWithStore, renderWithStore } from 'test/renderUtils';
 

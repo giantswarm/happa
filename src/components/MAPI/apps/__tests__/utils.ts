@@ -2,9 +2,9 @@ import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { HttpClientImpl } from 'model/clients/HttpClient';
+import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
 
 import { createApp } from '../utils';
 

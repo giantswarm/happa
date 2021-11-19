@@ -1,3 +1,4 @@
+import { Providers } from 'model/constants';
 import { IIDsAwaitingUpgradeMap } from 'model/stores/cluster/types';
 import {
   canClusterUpgrade,
@@ -19,7 +20,6 @@ import {
   v4orV5,
 } from 'model/stores/cluster/utils';
 import { IState } from 'model/stores/state';
-import { Providers } from 'shared/constants';
 import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,

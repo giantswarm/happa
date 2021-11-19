@@ -10,10 +10,10 @@ import {
   fetchProviderNodePoolsForNodePoolsKey,
   getMachineTypes,
 } from 'MAPI/utils';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';

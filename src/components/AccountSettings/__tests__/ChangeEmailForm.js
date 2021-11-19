@@ -1,6 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
 import { API_ENDPOINT, USER_EMAIL } from 'test/mockHttpCalls';
 import { renderWithTheme } from 'test/renderUtils';
 

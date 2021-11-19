@@ -2,10 +2,10 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { Box, Heading, Text } from 'grommet';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { AccountSettingsRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { AccountSettingsRoutes } from 'shared/constants/routes';
 import { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import {

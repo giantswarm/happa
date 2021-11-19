@@ -1,6 +1,6 @@
 import { compare } from 'lib/semver';
 
-import { Constants } from './';
+import { Constants } from '.';
 
 export interface IAppMetaApp {
   name: string;

@@ -12,12 +12,12 @@ import {
   fetchClusterListKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';

@@ -1,5 +1,7 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import RoutePath from 'lib/routePath';
+import { Constants } from 'model/constants';
+import { AppsRoutes } from 'model/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
@@ -19,8 +21,6 @@ import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Constants } from 'shared/constants';
-import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

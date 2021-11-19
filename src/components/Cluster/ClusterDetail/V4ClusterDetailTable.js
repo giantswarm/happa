@@ -1,9 +1,9 @@
 import formatDistance from 'date-fns/fp/formatDistance';
+import { CSSBreakpoints, Providers } from 'model/constants';
 import { selectResourcesV4 } from 'model/stores/cluster/selectors';
 import { isClusterCreating } from 'model/stores/cluster/utils';
 import React from 'react';
 import { connect } from 'react-redux';
-import { CSSBreakpoints, Providers } from 'shared/constants';
 import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq } from 'styles';
 import Button from 'UI/Controls/Button';

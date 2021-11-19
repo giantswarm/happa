@@ -1,5 +1,6 @@
 import { Box } from 'grommet';
 import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as clusterActions from 'model/stores/cluster/actions';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import React from 'react';
@@ -7,7 +8,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

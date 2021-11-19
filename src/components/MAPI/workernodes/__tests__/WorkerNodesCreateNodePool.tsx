@@ -8,9 +8,9 @@ import {
 import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as MAPIUtils from 'MAPI/utils';
+import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
-import { Providers, StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';

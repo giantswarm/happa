@@ -1,6 +1,6 @@
 import { Box, Collapsible } from 'grommet';
+import { Providers } from 'model/constants';
 import React from 'react';
-import { Providers } from 'shared/constants';
 import styled from 'styled-components';
 
 import AZSelectionAutomatic from './AZSelectionAutomatic';

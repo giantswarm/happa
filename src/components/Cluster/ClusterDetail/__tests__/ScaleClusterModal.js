@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { Providers } from 'model/constants';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
-import { Providers } from 'shared/constants';
-import { StatusCodes } from 'shared/constants';
 import {
   API_ENDPOINT,
   v4AWSClusterResponse,

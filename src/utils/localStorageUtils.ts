@@ -1,6 +1,6 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
+import { AuthorizationTypes } from 'model/constants';
 import { LoggedInUserTypes } from 'model/stores/main/types';
-import { AuthorizationTypes } from 'shared/constants';
 
 export function removeUserFromStorage() {
   localStorage.removeItem('user');

@@ -1,5 +1,5 @@
+import { Constants } from 'model/constants';
 import React from 'react';
-import { Constants } from 'shared/constants';
 
 interface IHeadingProps extends React.ComponentPropsWithoutRef<'h1'> {
   level: number;

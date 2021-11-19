@@ -27,7 +27,7 @@ interface IGlobalConfig {
   sentrySampleRate: number;
   info: {
     general: {
-      provider: PropertiesOf<typeof import('shared/constants').Providers>;
+      provider: PropertiesOf<typeof import('model/constants').Providers>;
       installationName: string;
       availabilityZones: {
         default: number;

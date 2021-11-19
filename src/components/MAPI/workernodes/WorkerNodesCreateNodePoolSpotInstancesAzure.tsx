@@ -1,7 +1,7 @@
 import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodePoolSpotInstances';
 import { INodePoolSpotInstancesAzure } from 'MAPI/utils';
+import { Constants, Providers } from 'model/constants';
 import React from 'react';
-import { Constants, Providers } from 'shared/constants';
 
 import { INodePoolSpotInstancesConfigAzure } from './patches';
 

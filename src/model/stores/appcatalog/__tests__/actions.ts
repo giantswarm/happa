@@ -1,3 +1,4 @@
+import { StatusCodes } from 'model/constants';
 import {
   listCatalogs,
   loadAppReadme,
@@ -14,7 +15,6 @@ import { IState } from 'model/stores/state';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { StatusCodes } from 'shared/constants';
 import {
   API_ENDPOINT,
   appCatalogsResponse,

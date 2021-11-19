@@ -1,4 +1,4 @@
-import { Constants } from 'shared/constants';
+import { Constants } from 'model/constants';
 
 export function normalizeAppCatalogIndexURL(url: string): string {
   let indexURL = `${url}index.yaml`;

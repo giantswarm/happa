@@ -2,6 +2,7 @@ import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAp
 import { push } from 'connected-react-router';
 import useError from 'lib/hooks/useError';
 import RoutePath from 'lib/routePath';
+import { AppsRoutes } from 'model/constants/routes';
 import { loadAppReadme } from 'model/stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'model/stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'model/stores/appcatalog/selectors';
@@ -11,7 +12,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
-import { AppsRoutes } from 'shared/constants/routes';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 
 const AppDetail: React.FC = () => {

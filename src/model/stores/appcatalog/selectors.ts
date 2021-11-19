@@ -1,6 +1,6 @@
+import { Constants } from 'model/constants';
 import { IState } from 'model/stores/state';
 import { createSelector } from 'reselect';
-import { Constants } from 'shared/constants';
 
 import { IAppCatalogsState } from './types';
 

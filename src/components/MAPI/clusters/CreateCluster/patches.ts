@@ -1,10 +1,10 @@
 import { compare } from 'lib/semver';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
+import { Constants } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
-import { Constants } from 'shared/constants';
 
 export type ClusterPatch = (
   cluster: Cluster,

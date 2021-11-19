@@ -2,8 +2,8 @@ import {
   cloudProviderAccountSetupAwsURL,
   cloudProviderAccountSetupAzureURL,
 } from 'lib/docs';
+import { Providers } from 'model/constants';
 import React from 'react';
-import { Providers } from 'shared/constants';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 

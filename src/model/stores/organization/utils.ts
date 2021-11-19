@@ -1,4 +1,4 @@
-import { Providers } from 'shared/constants';
+import { Providers } from 'model/constants';
 
 export function getOrganizationByID(
   id: string,

@@ -1,5 +1,6 @@
 import useDebounce from 'lib/hooks/useDebounce';
 import RoutePath from 'lib/routePath';
+import { AppsRoutes } from 'model/constants/routes';
 import {
   disableCatalog,
   enableCatalog,
@@ -19,7 +20,6 @@ import { selectErrorsByIdsAndAction } from 'model/stores/entityerror/selectors';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppsRoutes } from 'shared/constants/routes';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 
 import { catalogsToFacets, searchApps } from './utils';

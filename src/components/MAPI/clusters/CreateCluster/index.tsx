@@ -14,14 +14,14 @@ import {
   getClusterReleaseVersion,
   getNamespaceFromOrgName,
 } from 'MAPI/utils';
+import { Providers } from 'model/constants';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
-import { Providers } from 'shared/constants';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';

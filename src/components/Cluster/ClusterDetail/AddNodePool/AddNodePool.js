@@ -8,10 +8,10 @@ import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodeP
 import { Box } from 'grommet';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
+import { Constants, Providers } from 'model/constants';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Constants, Providers } from 'shared/constants';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import InputGroup from 'UI/Inputs/InputGroup';

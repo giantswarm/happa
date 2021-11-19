@@ -2,6 +2,7 @@ import add from 'date-fns/fp/add';
 import toDate from 'date-fns-tz/toDate';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { Providers, StatusCodes } from 'model/constants';
 import {
   CLUSTER_CREATE_ERROR,
   CLUSTER_CREATE_KEY_PAIR_ERROR,
@@ -44,7 +45,6 @@ import { selectOrganizationByID } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
-import { Providers, StatusCodes } from 'shared/constants';
 import { extractMessageFromError, IGSAPIError } from 'utils/errorUtils';
 
 export function clustersList(opts: {

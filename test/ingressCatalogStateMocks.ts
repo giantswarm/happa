@@ -1,5 +1,5 @@
+import { Constants } from 'model/constants';
 import { IState } from 'model/stores/state';
-import { Constants } from 'shared/constants';
 import { appCatalogsResponse } from 'test/mockHttpCalls';
 
 const ingressCatalog = appCatalogsResponse.find(

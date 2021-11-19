@@ -1,12 +1,12 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import ClusterStatus from 'Home/ClusterStatus';
 import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as organizationActions from 'model/stores/organization/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { Ellipsis } from 'styles';
 import Button from 'UI/Controls/Button';

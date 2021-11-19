@@ -1,5 +1,6 @@
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { SelfClient } from 'model/clients/SelfClient';
+import { Constants } from 'model/constants';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { createAsynchronousAction } from 'model/stores/asynchronousAction';
 import {
@@ -19,7 +20,6 @@ import { MetadataAction } from 'model/stores/metadata/types';
 import { IState } from 'model/stores/state';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Constants } from 'shared/constants';
 
 export const setInitialVersion = createAsynchronousAction<
   undefined,

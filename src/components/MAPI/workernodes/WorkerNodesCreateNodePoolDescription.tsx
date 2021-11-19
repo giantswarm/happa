@@ -1,7 +1,7 @@
 import { hasAppropriateLength } from 'lib/helpers';
 import { getNodePoolDescription } from 'MAPI/utils';
+import { Constants } from 'model/constants';
 import React, { useEffect, useRef, useState } from 'react';
-import { Constants } from 'shared/constants';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
 

@@ -1,5 +1,5 @@
 interface ILoggedInUserAuthScheme {
-  scheme: PropertiesOf<typeof import('shared/constants').AuthorizationTypes>;
+  scheme: PropertiesOf<typeof import('model/constants').AuthorizationTypes>;
   token: string;
 }
 

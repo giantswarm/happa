@@ -1,5 +1,5 @@
+import { CSSBreakpoints } from 'model/constants';
 import React from 'react';
-import { CSSBreakpoints } from 'shared/constants';
 import styled from 'styled-components';
 import { mq } from 'styles';
 

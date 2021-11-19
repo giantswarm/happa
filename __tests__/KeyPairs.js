@@ -1,7 +1,7 @@
 import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   appsResponse,

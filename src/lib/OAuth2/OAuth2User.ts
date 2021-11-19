@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
+import { AuthorizationTypes } from 'model/constants';
 import { User } from 'oidc-client';
-import { AuthorizationTypes } from 'shared/constants';
 
 export interface IOAuth2User {
   idToken: string;
