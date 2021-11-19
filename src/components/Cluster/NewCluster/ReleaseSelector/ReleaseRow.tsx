@@ -8,6 +8,7 @@ import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import Date from 'UI/Display/Date';
 import { TableCell, TableRow } from 'UI/Display/Table';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import RadioInput from 'UI/Inputs/RadioInput';
 
 import { IRelease } from './ReleaseSelector';
@@ -48,6 +49,8 @@ const ReleaseRow: FC<IReleaseRow> = ({
   kubernetesVersion,
   k8sVersionEOLDate,
   releaseNotesURL,
+  preview,
+  notice,
   selectRelease,
   timestamp,
   version,
@@ -68,6 +71,10 @@ const ReleaseRow: FC<IReleaseRow> = ({
 
     (e.target as HTMLElement).click();
   };
+
+  const showPreviewNotice = preview && notice && notice?.length > 0;
+
+  const displayAsActive = active || preview;
 
   return (
     <>
@@ -96,13 +103,53 @@ const ReleaseRow: FC<IReleaseRow> = ({
             />
           </RUMActionTarget>
         </TableCell>
-        <StyledTableCell size='small' active={active}>
-          <Text>{version}</Text>
+        <StyledTableCell size='small' active={displayAsActive} align='left'>
+          {showPreviewNotice ? (
+            <TooltipContainer content={<Tooltip>{notice}</Tooltip>}>
+              <Box
+                width='xsmall'
+                direction='row'
+                align='center'
+                justify='between'
+                pad={{ right: 'xsmall' }}
+              >
+                <Text textAlign='start' wordBreak='break-word'>
+                  {version}
+                </Text>
+                <i
+                  className='fa fa-info'
+                  aria-hidden={true}
+                  role='presentation'
+                  aria-label={notice}
+                />
+              </Box>
+            </TooltipContainer>
+          ) : (
+            <Box
+              width='xsmall'
+              direction='row'
+              align='center'
+              justify='between'
+              pad={{ right: 'xsmall' }}
+            >
+              <Text textAlign='start' wordBreak='break-word'>
+                {version}
+              </Text>
+              {preview && (
+                <i
+                  className='fa fa-info'
+                  aria-hidden={true}
+                  role='presentation'
+                  aria-label='This release is a preview release.'
+                />
+              )}
+            </Box>
+          )}
         </StyledTableCell>
-        <StyledTableCell size='medium' active={active} align='center'>
+        <StyledTableCell size='medium' active={displayAsActive} align='center'>
           <Date relative={true} value={timestamp} />
         </StyledTableCell>
-        <StyledTableCell active={active} align='center'>
+        <StyledTableCell active={displayAsActive} align='center'>
           <KubernetesVersionLabel
             version={kubernetesVersion}
             eolDate={k8sVersionEOLDate}
@@ -179,6 +226,19 @@ const ReleaseRow: FC<IReleaseRow> = ({
       {!collapsed && (
         <TableRow>
           <TableCell colSpan={6}>
+            {showPreviewNotice && (
+              <Box margin={{ bottom: 'small' }}>
+                <Text size='small'>
+                  <i
+                    className='fa fa-info'
+                    role='presentation'
+                    aria-hidden={true}
+                    aria-label='Release notice'
+                  />{' '}
+                  {notice}
+                </Text>
+              </Box>
+            )}
             <Box
               wrap={true}
               direction='row'

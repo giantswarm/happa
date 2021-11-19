@@ -51,6 +51,8 @@ export interface IRelease {
   kubernetesVersion?: string;
   releaseNotesURL?: string;
   k8sVersionEOLDate?: string;
+  preview?: boolean;
+  notice?: string;
 }
 
 interface IReleaseSelectorProps {

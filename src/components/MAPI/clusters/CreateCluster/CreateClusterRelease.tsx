@@ -60,9 +60,14 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
     return releaseList.items.reduce(
       (acc: Record<string, IRelease>, curr: releasev1alpha1.IRelease) => {
         const isActive = curr.spec.state === 'active';
+        const isPreview = curr.spec.state === 'preview';
         const normalizedVersion = curr.metadata.name.slice(1);
 
-        if (!isAdmin && (!isActive || isPreRelease(normalizedVersion))) {
+        if (
+          !isAdmin &&
+          !isPreview &&
+          (!isActive || isPreRelease(normalizedVersion))
+        ) {
           return acc;
         }
 
@@ -76,11 +81,13 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
         acc[normalizedVersion] = {
           version: normalizedVersion,
           active: isActive,
+          preview: isPreview,
           timestamp: curr.metadata.creationTimestamp ?? '',
           components: Object.values(components),
           kubernetesVersion: k8sVersion,
           k8sVersionEOLDate: k8sVersionEOLDate,
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
+          notice: curr.spec.notice ?? '',
         };
 
         return acc;
