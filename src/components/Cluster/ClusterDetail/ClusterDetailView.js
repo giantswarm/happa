@@ -6,6 +6,7 @@ import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
+import { supportsMapiApps } from 'model/featureSupport';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -34,7 +35,6 @@ import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
-import { supportsMapiApps } from 'shared/featureSupport';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

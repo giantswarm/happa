@@ -1,6 +1,7 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import RoutePath from 'lib/routePath';
 import InstallIngressButtonMAPI from 'MAPI/apps/InstallIngressButton';
+import { supportsMapiApps } from 'model/featureSupport';
 import { selectClusterById } from 'model/stores/cluster/selectors';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import React from 'react';
@@ -8,7 +9,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { supportsMapiApps } from 'shared/featureSupport';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';

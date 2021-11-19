@@ -7,6 +7,7 @@ import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasAppAccess } from 'MAPI/permissions/utils';
+import { supportsMapiApps, supportsMapiClusters } from 'model/featureSupport';
 import {
   batchedLayout,
   batchedOrganizationSelect,
@@ -28,7 +29,6 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 import * as featureFlags from 'shared/featureFlags';
-import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
