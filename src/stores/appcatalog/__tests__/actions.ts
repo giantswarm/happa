@@ -20,7 +20,7 @@ import {
   appCatalogsResponse,
   getMockCall,
   V5_CLUSTER,
-} from 'testUtils/mockHttpCalls';
+} from 'test/mockHttpCalls';
 
 describe('appcatalog::actions', () => {
   describe('listCatalogs', () => {

@@ -12,9 +12,9 @@ import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import * as corev1Mocks from 'test/mockHttpCalls/corev1';
+import { getComponentWithStore } from 'test/renderUtils';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 
 import AccessControlRoleSubjects from '../AccessControlRoleSubjects';

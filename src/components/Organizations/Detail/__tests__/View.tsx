@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { Providers } from 'shared/constants';
-import { v5ClustersResponse } from 'testUtils/mockHttpCalls';
-import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
+import { v5ClustersResponse } from 'test/mockHttpCalls';
+import { getComponentWithStore, renderWithStore } from 'test/renderUtils';
 
 import View from '../View';
 

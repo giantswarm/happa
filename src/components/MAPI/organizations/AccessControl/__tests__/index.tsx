@@ -7,10 +7,10 @@ import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as corev1Mocks from 'testUtils/mockHttpCalls/corev1';
-import * as rbacv1Mocks from 'testUtils/mockHttpCalls/rbacv1';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import * as corev1Mocks from 'test/mockHttpCalls/corev1';
+import * as rbacv1Mocks from 'test/mockHttpCalls/rbacv1';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import AccessControl from '..';
 

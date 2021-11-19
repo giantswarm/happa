@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailAppListWidgetStatus from '../ClusterDetailAppListWidgetStatus';
 
@@ -82,13 +82,9 @@ function generateApp(
   };
 }
 
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailAppListWidgetStatus
->;
-
 describe('ClusterDetailAppListWidgetStatus', () => {
   it('renders without crashing', () => {
-    renderWithTheme(ClusterDetailAppListWidgetStatus, {} as ComponentProps);
+    renderWithTheme(ClusterDetailAppListWidgetStatus, {});
   });
 
   it('displays the app status', () => {
@@ -97,7 +93,7 @@ describe('ClusterDetailAppListWidgetStatus', () => {
 
     renderWithTheme(ClusterDetailAppListWidgetStatus, {
       app,
-    } as ComponentProps);
+    });
 
     expect(screen.getByLabelText('App status: deployed')).toBeInTheDocument();
   });
@@ -108,7 +104,7 @@ describe('ClusterDetailAppListWidgetStatus', () => {
 
     renderWithTheme(ClusterDetailAppListWidgetStatus, {
       app,
-    } as ComponentProps);
+    });
 
     expect(
       screen.getByLabelText('no information available')

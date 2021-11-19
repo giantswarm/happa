@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailAppListWidgetNamespace from '../ClusterDetailAppListWidgetNamespace';
 
@@ -82,13 +82,9 @@ function generateApp(
   };
 }
 
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailAppListWidgetNamespace
->;
-
 describe('ClusterDetailAppListWidgetNamespace', () => {
   it('renders without crashing', () => {
-    renderWithTheme(ClusterDetailAppListWidgetNamespace, {} as ComponentProps);
+    renderWithTheme(ClusterDetailAppListWidgetNamespace, {});
   });
 
   it('displays the app target namespace', () => {
@@ -96,7 +92,7 @@ describe('ClusterDetailAppListWidgetNamespace', () => {
 
     renderWithTheme(ClusterDetailAppListWidgetNamespace, {
       app,
-    } as ComponentProps);
+    });
 
     expect(
       screen.getByLabelText('App target namespace: giantswarm')

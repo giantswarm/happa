@@ -40,8 +40,7 @@ export const randomAzureCluster1: capzv1alpha3.IAzureCluster = {
       subnets: [
         {
           cidrBlocks: ['10.14.3.0/24'],
-          id:
-            '/subscriptions/test-subscription/resourceGroups/j5y9m/providers/Microsoft.Network/virtualNetworks/j5y9m-VirtualNetwork/subnets/j5y9m',
+          id: '/subscriptions/test-subscription/resourceGroups/j5y9m/providers/Microsoft.Network/virtualNetworks/j5y9m-VirtualNetwork/subnets/j5y9m',
           name: 'j5y9m',
           role: 'node',
           routeTable: {},
@@ -49,8 +48,7 @@ export const randomAzureCluster1: capzv1alpha3.IAzureCluster = {
         },
         {
           cidrBlocks: ['10.14.5.0/24'],
-          id:
-            '/subscriptions/test-subscription/resourceGroups/j5y9m/providers/Microsoft.Network/virtualNetworks/j5y9m-VirtualNetwork/subnets/ew87z',
+          id: '/subscriptions/test-subscription/resourceGroups/j5y9m/providers/Microsoft.Network/virtualNetworks/j5y9m-VirtualNetwork/subnets/ew87z',
           name: 'ew87z',
           role: 'node',
           routeTable: {},
@@ -132,8 +130,7 @@ export const randomCluster2: capzv1alpha3.IAzureCluster = {
       subnets: [
         {
           cidrBlocks: ['10.14.3.0/24'],
-          id:
-            '/subscriptions/test-subscription/resourceGroups/as43z/providers/Microsoft.Network/virtualNetworks/as43z-VirtualNetwork/subnets/as43z',
+          id: '/subscriptions/test-subscription/resourceGroups/as43z/providers/Microsoft.Network/virtualNetworks/as43z-VirtualNetwork/subnets/as43z',
           name: 'as43z',
           role: 'node',
           routeTable: {},
@@ -141,8 +138,7 @@ export const randomCluster2: capzv1alpha3.IAzureCluster = {
         },
         {
           cidrBlocks: ['10.14.5.0/24'],
-          id:
-            '/subscriptions/test-subscription/resourceGroups/as43z/providers/Microsoft.Network/virtualNetworks/as43z-VirtualNetwork/subnets/ew87z',
+          id: '/subscriptions/test-subscription/resourceGroups/as43z/providers/Microsoft.Network/virtualNetworks/as43z-VirtualNetwork/subnets/ew87z',
           name: 'ew87z',
           role: 'node',
           routeTable: {},
@@ -224,8 +220,7 @@ export const randomCluster3: capzv1alpha3.IAzureCluster = {
       subnets: [
         {
           cidrBlocks: ['10.14.3.0/24'],
-          id:
-            '/subscriptions/test-subscription/resourceGroups/0fa12/providers/Microsoft.Network/virtualNetworks/0fa12-VirtualNetwork/subnets/0fa12',
+          id: '/subscriptions/test-subscription/resourceGroups/0fa12/providers/Microsoft.Network/virtualNetworks/0fa12-VirtualNetwork/subnets/0fa12',
           name: '0fa12',
           role: 'node',
           routeTable: {},
@@ -233,8 +228,7 @@ export const randomCluster3: capzv1alpha3.IAzureCluster = {
         },
         {
           cidrBlocks: ['10.14.5.0/24'],
-          id:
-            '/subscriptions/test-subscription/resourceGroups/0fa12/providers/Microsoft.Network/virtualNetworks/0fa12-VirtualNetwork/subnets/ew87z',
+          id: '/subscriptions/test-subscription/resourceGroups/0fa12/providers/Microsoft.Network/virtualNetworks/0fa12-VirtualNetwork/subnets/ew87z',
           name: 'ew87z',
           role: 'node',
           routeTable: {},

@@ -15,11 +15,8 @@ import {
   releasesResponse,
   selfSubjectAccessReviewCanListOrgs,
   selfSubjectRulesReviewWithSomeOrgs,
-} from 'testUtils/mockHttpCalls';
-import {
-  createInitialHistory,
-  renderRouteWithStore,
-} from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
 
 describe('AdminLogin', () => {
   it('performs the admin login flow via OAuth2', async () => {

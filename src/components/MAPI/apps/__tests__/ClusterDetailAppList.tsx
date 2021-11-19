@@ -5,13 +5,13 @@ import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
+import { withMarkup } from 'test/assertUtils';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import {
   getComponentWithStore,
   getComponentWithTheme,
   renderWithTheme,
-} from 'testUtils/renderUtils';
+} from 'test/renderUtils';
 
 import ClusterDetailAppList from '../ClusterDetailAppList';
 

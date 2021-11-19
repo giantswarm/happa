@@ -3,9 +3,9 @@ import { createMemoryHistory } from 'history';
 import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as mockCapiv1alpha3 from 'testUtils/mockHttpCalls/capiv1alpha3';
-import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import * as mockCapiv1alpha3 from 'test/mockHttpCalls/capiv1alpha3';
+import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import ClusterDetailWidgetProvider from '../ClusterDetailWidgetProvider';
 

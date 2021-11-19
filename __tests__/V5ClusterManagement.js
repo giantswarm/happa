@@ -31,8 +31,8 @@ import {
   V5_CLUSTER,
   v5ClusterResponse,
   v5ClustersResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 import { validateLabelKey } from 'utils/labelUtils';
 
 describe('V5ClusterManagement', () => {

@@ -1,4 +1,4 @@
-import { generateRandomString } from 'testUtils/mockHttpCalls';
+import { generateRandomString } from 'test/mockHttpCalls';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
 describe('labelUtils', () => {

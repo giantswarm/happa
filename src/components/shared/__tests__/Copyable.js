@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
-import { getComponentWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme } from 'test/renderUtils';
 
 import Copyable from '../Copyable';
 

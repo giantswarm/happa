@@ -6,7 +6,7 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import React from 'react';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 describe('FlashMessage', () => {
   it(`won't display messages that are already in the queue by default`, async () => {

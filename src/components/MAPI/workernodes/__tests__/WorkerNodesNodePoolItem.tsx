@@ -7,10 +7,10 @@ import nock from 'nock';
 import React from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import { withMarkup } from 'testUtils/assertUtils';
-import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
-import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
+import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import { getAdditionalColumns } from '../ClusterDetailWorkerNodes';
 import WorkerNodesNodePoolItem from '../WorkerNodesNodePoolItem';

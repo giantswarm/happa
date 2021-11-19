@@ -1,15 +1,21 @@
 import { MainRoutes } from 'shared/constants/routes';
+import { IState } from 'stores/state';
 
 // This is what the state looks like when someone brand new arrives at the site
 // and they are not logged in at all.
 
-export default {
+const state: IState = {
+  loadingFlags: {},
+  loadingFlagsByEntity: {},
+  errorsByEntity: {},
   router: {
     location: {
       pathname: MainRoutes.Login,
       search: '',
       hash: '',
       key: '0fgz24',
+      query: {},
+      state: {},
     },
     action: 'POP',
   },
@@ -33,6 +39,11 @@ export default {
       lastUpdated: 0,
       isFetching: false,
       items: {},
+      ui: {
+        selectedCatalogs: {},
+        searchQuery: '',
+        sortOrder: '',
+      },
     },
     clusters: {
       lastUpdated: 0,
@@ -82,3 +93,5 @@ export default {
     template: '',
   },
 };
+
+export default state;

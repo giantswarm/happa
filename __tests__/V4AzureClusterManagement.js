@@ -24,8 +24,8 @@ import {
   v4AzureClusterResponse,
   v4AzureClusterStatusResponse,
   v4ClustersResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 describe('V4AzureClusterManagement', () => {
   const minNodesCount = 3;

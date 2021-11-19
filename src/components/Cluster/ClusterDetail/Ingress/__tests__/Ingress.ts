@@ -2,14 +2,14 @@ import { screen, within } from '@testing-library/react';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { Providers } from 'shared/constants';
-import { catalogsState } from 'testUtils/ingressCatalogStateMocks';
+import { catalogsState } from 'test/ingressCatalogStateMocks';
 import {
   appResponseWithCustomConfig,
   catalogIndexResponse,
   getMockCall,
   v5ClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import { getComponentWithTheme, renderWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { getComponentWithTheme, renderWithStore } from 'test/renderUtils';
 
 import Ingress from '../Ingress';
 

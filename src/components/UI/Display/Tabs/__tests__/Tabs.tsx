@@ -1,13 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { getComponentWithStore, initialStorage } from 'testUtils/renderUtils';
+import { getComponentWithStore, initialStorage } from 'test/renderUtils';
 
 import { Tab, Tabs } from '..';
 
 describe('Tabs', () => {
   const renderComponent = (
-    props: Partial<React.ComponentProps<typeof Tabs>> = {
+    props: React.ComponentProps<typeof Tabs> = {
       children: [],
     },
     history = createMemoryHistory()

@@ -6,8 +6,8 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { withMarkup } from 'testUtils/assertUtils';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import ClusterDetailAppListWidgetUninstall from '../ClusterDetailAppListWidgetUninstall';
 

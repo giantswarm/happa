@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import ReleaseSelector from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
-import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
+import { getComponentWithStore, renderWithStore } from 'test/renderUtils';
 
 const mockReleases: IReleases = {
   '1001.0.0-alpha': {

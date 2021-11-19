@@ -2,28 +2,49 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { catalogsState } from 'testUtils/ingressCatalogStateMocks';
+import { catalogsState } from 'test/ingressCatalogStateMocks';
 import {
   API_ENDPOINT,
   appResponseWithCustomConfig,
   catalogIndexResponse,
   getMockCall,
   v4AWSClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import { getComponentWithStore, renderWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { getComponentWithStore, renderWithStore } from 'test/renderUtils';
 
 const defaultCluster = {
   ...v4AWSClusterResponse,
   apps: [appResponseWithCustomConfig],
 };
 
-const icApp = {
+const icApp: IInstalledApp = {
+  metadata: {
+    name: 'nginx-ingress-controller-app',
+    labels: {},
+  },
   spec: {
     catalog: 'giantswarm',
-    chartName: 'nginx-ingress-controller-app',
     namespace: 'kube-system',
     name: 'nginx-ingress-controller-app',
     version: '1.6.9',
+    user_config: {
+      configmap: {
+        name: '',
+        namespace: '',
+      },
+      secret: {
+        name: '',
+        namespace: '',
+      },
+    },
+  },
+  status: {
+    release: {
+      last_deployed: '',
+      status: '',
+    },
+    app_version: '',
+    version: '',
   },
 };
 
@@ -45,7 +66,7 @@ describe('InstallIngressButton', () => {
       {
         cluster: {
           ...v4AWSClusterResponse,
-          conditions: [{ condition: 'Ready' }],
+          conditions: [{ condition: 'Ready', last_transition_time: null }],
         },
       },
       catalogsState
@@ -97,7 +118,7 @@ describe('InstallIngressButton', () => {
       {
         cluster: {
           ...v4AWSClusterResponse,
-          conditions: [{ condition: 'Ready' }],
+          conditions: [{ condition: 'Ready', last_transition_time: null }],
         },
       },
       catalogsState
@@ -150,7 +171,7 @@ describe('InstallIngressButton', () => {
       {
         cluster: {
           ...v4AWSClusterResponse,
-          conditions: [{ condition: 'Ready' }],
+          conditions: [{ condition: 'Ready', last_transition_time: null }],
         },
       },
       catalogsState

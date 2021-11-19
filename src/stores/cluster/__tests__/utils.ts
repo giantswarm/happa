@@ -25,8 +25,8 @@ import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v5ClusterResponse,
-} from 'testUtils/mockHttpCalls';
-import preloginState from 'testUtils/preloginState';
+} from 'test/mockHttpCalls';
+import preloginState from 'test/preloginState';
 
 describe('cluster::utils', () => {
   describe('canClusterUpgrade', () => {

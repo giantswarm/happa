@@ -12,15 +12,15 @@ import nock from 'nock';
 import * as React from 'react';
 import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
-import * as applicationv1alpha1Mocks from 'testUtils/mockHttpCalls/applicationv1alpha1';
-import * as authorizationv1Mocks from 'testUtils/mockHttpCalls/authorizationv1';
-import * as capiv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3';
-import * as capiexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capiv1alpha3/exp';
-import * as capzv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3';
-import * as capzexpv1alpha3Mocks from 'testUtils/mockHttpCalls/capzv1alpha3/exp';
-import * as releasev1alpha1Mocks from 'testUtils/mockHttpCalls/releasev1alpha1';
-import * as securityv1alpha1Mocks from 'testUtils/mockHttpCalls/securityv1alpha1';
-import { getComponentWithStore } from 'testUtils/renderUtils';
+import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
+import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
+import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
+import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
+import { getComponentWithStore } from 'test/renderUtils';
 
 import OrganizationDetailGeneral from '../';
 

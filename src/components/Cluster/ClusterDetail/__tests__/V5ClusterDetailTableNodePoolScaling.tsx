@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { Providers } from 'shared/constants';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import V5ClusterDetailTableNodePoolScaling from '../V5ClusterDetailTableNodePoolScaling';
 

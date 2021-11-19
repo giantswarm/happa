@@ -1,16 +1,16 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path');
+import { Config } from '@jest/types';
+import path from 'path';
 
-process.env.DEBUG_PRINT_LIMIT = 10000;
+process.env.DEBUG_PRINT_LIMIT = '10000';
 
-module.exports = {
+const config: Config.InitialOptions = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
   setupFiles: [
-    path.resolve(`${__dirname}/testUtils/browserMocks.js`),
-    path.resolve(`${__dirname}/testUtils/modelMocks.js`),
+    path.resolve(`${__dirname}/test/browserMocks.ts`),
+    path.resolve(`${__dirname}/test/modelMocks.ts`),
   ],
-  setupFilesAfterEnv: [path.resolve(`${__dirname}/testUtils/setupTests.js`)],
+  setupFilesAfterEnv: [path.resolve(`${__dirname}/test/setupTests.ts`)],
   moduleDirectories: [
     'node_modules',
     path.resolve(`${__dirname}/src`),
@@ -18,9 +18,9 @@ module.exports = {
     path.resolve(`${__dirname}/`),
   ],
   moduleNameMapper: {
-    '\\.css$': require.resolve('./testUtils/assetsMock.js'),
+    '\\.css$': require.resolve('./test/assetsMock.ts'),
     '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      require.resolve('./testUtils/assetsMock.js'),
+      require.resolve('./test/assetsMock.ts'),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
   globals: {
@@ -75,3 +75,5 @@ module.exports = {
     },
   },
 };
+
+export default config;

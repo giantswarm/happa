@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import DocumentTitle from 'shared/DocumentTitle';
-import { getComponentWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme } from 'test/renderUtils';
 
 let initialTitle = '';
 

@@ -2,8 +2,8 @@ import { fireEvent, screen } from '@testing-library/react';
 import UpgradeClusterModal from 'Cluster/ClusterDetail/UpgradeClusterModal';
 import React from 'react';
 import { IState } from 'stores/state';
-import { v5ClusterResponse } from 'testUtils/mockHttpCalls';
-import { renderWithStore } from 'testUtils/renderUtils';
+import { v5ClusterResponse } from 'test/mockHttpCalls';
+import { renderWithStore } from 'test/renderUtils';
 
 function renderAndOpen(
   props: React.ComponentPropsWithoutRef<typeof UpgradeClusterModal> = {},

@@ -4,8 +4,8 @@ import {
   getMockCall,
   metadataResponse,
   userResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 const elementIDs = {
   ChangeEmailForm: 'account-settings/change-email',

@@ -5,16 +5,12 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
-import { withMarkup } from 'testUtils/assertUtils';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { withMarkup } from 'test/assertUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
 } from '../ClusterDetailDeleteAction';
-
-type ComponentProps = React.ComponentPropsWithoutRef<
-  typeof ClusterDetailDeleteAction
->;
 
 describe('ClusterDetailDeleteAction', () => {
   it('renders without crashing', () => {
@@ -25,7 +21,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 0,
       workerNodesCount: 0,
       onDelete: jest.fn(),
-    } as ComponentProps);
+    });
   });
 
   it('displays the delete button and disclaimer', () => {
@@ -36,7 +32,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 0,
       workerNodesCount: 0,
       onDelete: jest.fn(),
-    } as ComponentProps);
+    });
 
     expect(screen.getByRole('button', { name: /Delete/ })).toBeInTheDocument();
     expect(
@@ -59,7 +55,7 @@ describe('ClusterDetailDeleteAction', () => {
       workerNodesCount: 3,
       userInstalledAppsCount: 5,
       onDelete: jest.fn(),
-    } as ComponentProps);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
 
@@ -86,7 +82,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: jest.fn(),
-    } as ComponentProps);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
 
@@ -107,7 +103,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: onDeleteMockFn,
-    } as ComponentProps);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
     fireEvent.click(await screen.findByRole('button', { name: /Confirm/ }));
@@ -149,7 +145,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: jest.fn(),
-    } as ComponentProps);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
     fireEvent.click(await screen.findByRole('button', { name: /Cancel/ }));
@@ -168,7 +164,7 @@ describe('ClusterDetailDeleteAction', () => {
       workerNodesCount: 1,
       variant: ClusterDetailDeleteActionNameVariant.ID,
       onDelete: jest.fn(),
-    } as ComponentProps);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
 

@@ -1,4 +1,4 @@
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import InstalledApp from '../InstalledApp';
 
@@ -9,6 +9,6 @@ describe('InstalledApp', () => {
       version: '',
       onIconError: jest.fn(),
       onClick: jest.fn(),
-    } as React.ComponentPropsWithoutRef<typeof InstalledApp>);
+    });
   });
 });

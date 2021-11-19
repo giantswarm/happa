@@ -13,8 +13,8 @@ import {
   postMockCall,
   USER_EMAIL,
   userResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 const testToken = 'm0ckt0ken';
 const tokenTestPath = `/invite/${testToken}`;

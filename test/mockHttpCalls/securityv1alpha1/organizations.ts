@@ -37,7 +37,8 @@ export const getOrganizationListResponse = {
               'f:metadata': {
                 'f:finalizers': {
                   '.': {},
-                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"': {},
+                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"':
+                    {},
                 },
               },
             },
@@ -107,7 +108,8 @@ export const getOrganizationListResponse = {
               'f:metadata': {
                 'f:finalizers': {
                   '.': {},
-                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"': {},
+                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"':
+                    {},
                 },
               },
             },
@@ -190,7 +192,8 @@ export const getOrganizationListResponse = {
               'f:metadata': {
                 'f:finalizers': {
                   '.': {},
-                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"': {},
+                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"':
+                    {},
                 },
               },
             },
@@ -234,7 +237,8 @@ export const getOrganizationListResponse = {
               'f:metadata': {
                 'f:finalizers': {
                   '.': {},
-                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"': {},
+                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"':
+                    {},
                 },
               },
             },
@@ -278,7 +282,8 @@ export const getOrganizationListResponse = {
               'f:metadata': {
                 'f:finalizers': {
                   '.': {},
-                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"': {},
+                  'v:"operatorkit.giantswarm.io/organization-operator-organization-controller"':
+                    {},
                 },
               },
             },

@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import CurrencyInput from '..';
 

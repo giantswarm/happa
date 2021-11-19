@@ -6,7 +6,7 @@ import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
-import { withMarkup } from 'testUtils/assertUtils';
+import { withMarkup } from 'test/assertUtils';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -28,8 +28,8 @@ import {
   V5_CLUSTER,
   v5ClusterResponse,
   v5ClustersResponse,
-} from 'testUtils/mockHttpCalls';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+} from 'test/mockHttpCalls';
+import { renderRouteWithStore } from 'test/renderUtils';
 
 describe('ClusterManagement', () => {
   jest.setTimeout(15000);

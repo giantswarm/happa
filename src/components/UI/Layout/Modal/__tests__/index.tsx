@@ -1,4 +1,4 @@
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { renderWithTheme } from 'test/renderUtils';
 
 import { Simple } from '../stories/Simple';
 import { WithFooter } from '../stories/WithFooter';
@@ -9,6 +9,7 @@ describe('Modal', () => {
       title: 'Hello friend',
       children: 'Welcome to my new modal!',
       visible: false,
+      onClose: jest.fn(),
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -18,6 +19,7 @@ describe('Modal', () => {
       title: 'Hello friend',
       children: 'Welcome to my new modal!',
       visible: true,
+      onClose: jest.fn(),
     });
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -28,6 +30,7 @@ describe('Modal', () => {
       children: 'Welcome to my new modal!',
       visible: true,
       footer: `I'm the footer around here`,
+      onClose: jest.fn(),
     });
     expect(container.firstChild).toMatchSnapshot();
   });
