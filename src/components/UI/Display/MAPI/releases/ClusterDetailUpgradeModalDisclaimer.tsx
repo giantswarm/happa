@@ -1,5 +1,5 @@
 import { Box, Paragraph, Text } from 'grommet';
-import * as docs from 'lib/docs';
+import * as docs from 'model/constants/docs';
 import React from 'react';
 
 interface IClusterDetailUpgradeModalDisclaimerProps {}

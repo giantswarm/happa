@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router';
-import { ingressControllerInstallationURL } from 'lib/docs';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { AppConstants, Constants } from 'model/constants';
+import { ingressControllerInstallationURL } from 'model/constants/docs';
 import { AppsRoutes } from 'model/constants/routes';
 import { loadClusterApps } from 'model/stores/appcatalog/actions';
 import {

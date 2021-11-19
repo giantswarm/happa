@@ -1,9 +1,9 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import * as docs from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import * as docs from 'model/constants/docs';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
 import React, { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router';

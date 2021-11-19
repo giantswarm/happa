@@ -1,8 +1,8 @@
 import diff from 'deep-diff';
 import { Box } from 'grommet';
-import { clusterUpgradeChecklistURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { clusterUpgradeChecklistURL } from 'model/constants/docs';
 import * as clusterActions from 'model/stores/cluster/actions';
 import React from 'react';
 import { connect } from 'react-redux';

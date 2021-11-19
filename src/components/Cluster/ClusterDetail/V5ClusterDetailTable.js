@@ -3,9 +3,9 @@ import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5Cluster
 import formatDistance from 'date-fns/fp/formatDistance';
 import { Box } from 'grommet';
 import produce from 'immer';
-import { nodePoolsURL } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { CSSBreakpoints } from 'model/constants';
+import { nodePoolsURL } from 'model/constants/docs';
 import * as Providers from 'model/constants/providers';
 import { RUMActions } from 'model/constants/realUserMonitoring';
 import * as clusterActions from 'model/stores/cluster/actions';

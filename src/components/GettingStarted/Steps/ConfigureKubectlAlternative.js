@@ -1,7 +1,7 @@
-import { installingCACert } from 'lib/docs';
 import ErrorReporter from 'lib/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
+import { installingCACert } from 'model/constants/docs';
 import * as clusterActions from 'model/stores/cluster/actions';
 import React from 'react';
 import { connect } from 'react-redux';

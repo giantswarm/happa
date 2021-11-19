@@ -1,5 +1,5 @@
-import { homeURL } from 'lib/docs';
 import { CSSBreakpoints } from 'model/constants';
+import { homeURL } from 'model/constants/docs';
 import {
   AppsRoutes,
   MainRoutes,

@@ -1,6 +1,6 @@
 import { Box, Heading, Paragraph } from 'grommet';
-import * as blog from 'lib/blog';
-import * as docs from 'lib/docs';
+import * as blog from 'model/constants/blog';
+import * as docs from 'model/constants/docs';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useRouteMatch } from 'react-router';

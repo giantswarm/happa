@@ -1,5 +1,9 @@
-import { gettingStartedURL, homeURL, kubernetesResourcesURL } from 'lib/docs';
 import RoutePath from 'lib/routePath';
+import {
+  gettingStartedURL,
+  homeURL,
+  kubernetesResourcesURL,
+} from 'model/constants/docs';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';

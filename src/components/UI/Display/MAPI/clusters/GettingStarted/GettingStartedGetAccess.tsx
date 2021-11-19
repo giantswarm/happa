@@ -1,6 +1,6 @@
 import { Box, Heading, Paragraph } from 'grommet';
-import * as docs from 'lib/docs';
 import { getK8sAPIUrl } from 'MAPI/utils';
+import * as docs from 'model/constants/docs';
 import React, { useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useRouteMatch } from 'react-router';
