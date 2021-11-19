@@ -217,19 +217,6 @@ const ReleaseRow: FC<IReleaseRow> = ({
       {!collapsed && (
         <TableRow>
           <TableCell colSpan={6}>
-            {preview && (
-              <Box margin={{ bottom: 'small' }}>
-                <Text size='small'>
-                  <i
-                    className='fa fa-info'
-                    role='presentation'
-                    aria-hidden={true}
-                    aria-label='Release notice'
-                  />{' '}
-                  {releaseNotice}
-                </Text>
-              </Box>
-            )}
             <Box
               wrap={true}
               direction='row'
