@@ -1,9 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
-import { hasAppropriateLength } from 'lib/helpers';
-import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
-import { compare } from 'lib/semver';
 import { Constants, Providers } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
 import { computeCapabilities } from 'model/stores/cluster/utils';
@@ -25,6 +22,9 @@ import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
 import { FlexColumn } from 'UI/Layout/FlexDivs';
+import { hasAppropriateLength } from 'utils/helpers';
+import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
+import { compare } from 'utils/semver';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';

@@ -1,7 +1,4 @@
 import GiantSwarm, { V4Organization } from 'giantswarm';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpClientImpl } from 'model/clients/HttpClient';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
@@ -42,7 +39,10 @@ import { OrganizationActions } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { determineSelectedOrganization } from 'utils/organizationUtils';
 
 /**

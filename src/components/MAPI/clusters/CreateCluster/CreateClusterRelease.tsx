@@ -2,9 +2,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import ReleaseSelector, {
   IRelease,
 } from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
-import { getK8sVersionEOLDate } from 'lib/config';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import * as releasesUtils from 'MAPI/releases/utils';
 import { extractErrorMessage, getClusterReleaseVersion } from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -14,6 +11,9 @@ import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
+import { getK8sVersionEOLDate } from 'utils/config';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { IClusterPropertyProps, withClusterReleaseVersion } from './patches';
 

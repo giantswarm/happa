@@ -1,7 +1,7 @@
 import {
   PasswordStatusMessage,
   validatePassword,
-} from 'lib/passwordValidation';
+} from 'utils/passwordValidation';
 
 const getValidationResult = (
   isValid: boolean,

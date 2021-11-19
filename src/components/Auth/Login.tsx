@@ -1,13 +1,5 @@
 import { push } from 'connected-react-router';
 import { Box, Heading, Paragraph } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import {
-  clearQueues,
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from 'lib/flashMessage';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
 import { MainRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -23,6 +15,14 @@ import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import {
+  clearQueues,
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from 'utils/flashMessage';
+import MapiAuth from 'utils/MapiAuth/MapiAuth';
 
 import {
   IPropsWithAuthProvider,

@@ -1,4 +1,4 @@
-import { IOAuth2Config } from 'lib/OAuth2/OAuth2';
+import { IOAuth2Config } from 'utils/OAuth2/OAuth2';
 
 export function makeDefaultConfig(): IOAuth2Config {
   let authority = window.config.mapiAudience;

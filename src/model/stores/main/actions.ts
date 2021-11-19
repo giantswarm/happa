@@ -1,15 +1,6 @@
 import { CallHistoryMethodAction, push, replace } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import Passage, {
-  IRequestPasswordRecoveryTokenResponse,
-  ISetNewPasswordResponse,
-  IVerifyPasswordRecoveryTokenResponse,
-} from 'lib/passageClient';
 import { AuthorizationTypes, StatusCodes } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -35,12 +26,21 @@ import { getLoggedInUser } from 'model/stores/main/selectors';
 import { MainActions } from 'model/stores/main/types';
 import { IState } from 'model/stores/state';
 import { ThunkAction } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { IGSAPIError } from 'utils/errorUtils';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import {
   fetchUserFromStorage,
   removeUserFromStorage,
   setUserToStorage,
 } from 'utils/localStorageUtils';
+import MapiAuth, { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import Passage, {
+  IRequestPasswordRecoveryTokenResponse,
+  ISetNewPasswordResponse,
+  IVerifyPasswordRecoveryTokenResponse,
+} from 'utils/passageClient';
 
 import { LoggedInUserTypes } from './types';
 import { mapOAuth2UserToUser } from './utils';

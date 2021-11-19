@@ -1,6 +1,6 @@
-import CustomError, { IStackFrame } from 'lib/errors/CustomError';
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import { IStackTraceGPS } from 'stacktrace-gps';
+import CustomError, { IStackFrame } from 'utils/errors/CustomError';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 const mockResolver: IStackTraceGPS = {
   pinpoint: jest.fn(),

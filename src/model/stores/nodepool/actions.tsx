@@ -1,6 +1,4 @@
 import GiantSwarm from 'giantswarm';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { StatusCodes } from 'model/constants';
 import { modalHide } from 'model/stores/modal/actions';
 import { ModalActions } from 'model/stores/modal/types';
@@ -30,7 +28,9 @@ import { selectOrganizationByID } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { extractMessageFromError, IGSAPIError } from 'utils/errorUtils';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 export function clusterNodePoolsLoad(
   clusterID: string,

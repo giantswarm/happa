@@ -1,9 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import CertificateOrgsLabel from 'Cluster/ClusterDetail/CertificateOrgsLabel';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { Cluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -33,6 +30,9 @@ import {
   TableRow,
 } from 'UI/Display/Table';
 import Truncated from 'UI/Util/Truncated';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import CreateKeyPairGuide from '../clusters/guides/CreateKeyPairGuide';
 import ClusterDetailKeyPairDetailsModal from './ClusterDetailKeyPairDetailsModal';

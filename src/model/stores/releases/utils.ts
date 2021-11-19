@@ -1,4 +1,4 @@
-import { compareDates, getRelativeDateFromNow } from 'lib/helpers';
+import { compareDates, getRelativeDateFromNow } from 'utils/helpers';
 
 export function getKubernetesReleaseEOLStatus(eolDate: string): {
   message: string;

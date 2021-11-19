@@ -1,6 +1,4 @@
 import { push } from 'connected-react-router';
-import { IOAuth2Provider, OAuth2Events } from 'lib/OAuth2/OAuth2';
-import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import { MainRoutes } from 'model/constants/routes';
 import { loginSuccess, logoutSuccess } from 'model/stores/main/actions';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
@@ -12,6 +10,8 @@ import React, {
   useMemo,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { IOAuth2Provider, OAuth2Events } from 'utils/OAuth2/OAuth2';
+import { IOAuth2User } from 'utils/OAuth2/OAuth2User';
 
 const authContext = createContext<IOAuth2Provider | null>(null);
 

@@ -10,7 +10,7 @@ describe('platform', () => {
     jest.mock('platform', () => ({
       os: { family: 'Fedora' },
     }));
-    const gsPlatform = await import('lib/platform');
+    const gsPlatform = await import('utils/platform');
     expect(gsPlatform.default).toBe('Linux');
   });
 
@@ -18,7 +18,7 @@ describe('platform', () => {
     jest.mock('platform', () => ({
       os: { family: 'OS X' },
     }));
-    const gsPlatform = await import('lib/platform');
+    const gsPlatform = await import('utils/platform');
     expect(gsPlatform.default).toBe('Mac');
   });
 
@@ -26,7 +26,7 @@ describe('platform', () => {
     jest.mock('platform', () => ({
       os: { family: 'Windows' },
     }));
-    const gsPlatform = await import('lib/platform');
+    const gsPlatform = await import('utils/platform');
     expect(gsPlatform.default).toBe('Windows');
   });
 
@@ -34,7 +34,7 @@ describe('platform', () => {
     jest.mock('platform', () => ({
       os: { family: null },
     }));
-    const gsPlatform = await import('lib/platform');
+    const gsPlatform = await import('utils/platform');
     expect(gsPlatform.default).toBe('Unknown');
   });
 });

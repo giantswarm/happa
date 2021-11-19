@@ -3,7 +3,6 @@ import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5Cluster
 import formatDistance from 'date-fns/fp/formatDistance';
 import { Box } from 'grommet';
 import produce from 'immer';
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import { CSSBreakpoints } from 'model/constants';
 import { nodePoolsURL } from 'model/constants/docs';
 import * as Providers from 'model/constants/providers';
@@ -34,6 +33,7 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import { FlexColumn, FlexWrapperDiv } from 'UI/Layout/FlexDivs';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 import AddNodePool from './AddNodePool/AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';

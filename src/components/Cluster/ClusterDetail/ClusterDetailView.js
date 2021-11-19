@@ -1,9 +1,5 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import PageVisibilityTracker from 'lib/pageVisibilityTracker';
-import RoutePath from 'lib/routePath';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import { Providers } from 'model/constants';
@@ -43,6 +39,10 @@ import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
 import Well from 'UI/Layout/Well';
 import { memoize } from 'underscore';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import PageVisibilityTracker from 'utils/pageVisibilityTracker';
+import RoutePath from 'utils/routePath';
 
 import ClusterActions from './ClusterActions';
 import ClusterApps from './ClusterApps';

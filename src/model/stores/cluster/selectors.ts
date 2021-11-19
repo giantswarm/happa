@@ -1,4 +1,3 @@
-import { compare } from 'lib/semver';
 import {
   canClusterUpgrade,
   getCpusTotal,
@@ -12,6 +11,7 @@ import { selectOrganizationByID } from 'model/stores/organization/selectors';
 import { isPreRelease } from 'model/stores/releases/utils';
 import { IState } from 'model/stores/state';
 import { createDeepEqualSelector } from 'model/stores/utils';
+import { compare } from 'utils/semver';
 
 export const selectClusters =
   () =>

@@ -1,6 +1,5 @@
 import Cluster from 'Cluster/Cluster';
 import { push } from 'connected-react-router';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'model/stores/organization/constants';
@@ -11,6 +10,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import Route from 'Route';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import DetailView from './View';
 

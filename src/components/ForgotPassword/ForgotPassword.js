@@ -1,11 +1,4 @@
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import {
-  clearQueues,
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from 'lib/flashMessage';
 import { MainRoutes } from 'model/constants/routes';
 import * as mainActions from 'model/stores/main/actions';
 import React from 'react';
@@ -17,6 +10,13 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 import LoginFormContainer from 'UI/Layout/LoginFormContainer';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import {
+  clearQueues,
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from 'utils/flashMessage';
 
 class ForgotPassword extends React.Component {
   state = {

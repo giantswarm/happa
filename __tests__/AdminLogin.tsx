@@ -1,6 +1,4 @@
 import { screen } from '@testing-library/react';
-import { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { MainRoutes } from 'model/constants/routes';
 import {
   createSelfSubjectAccessReview,
@@ -17,6 +15,8 @@ import {
   selfSubjectRulesReviewWithSomeOrgs,
 } from 'test/mockHttpCalls';
 import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
+import { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 describe('AdminLogin', () => {
   it('performs the admin login flow via OAuth2', async () => {

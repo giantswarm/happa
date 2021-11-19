@@ -1,8 +1,8 @@
 import { Box, Paragraph, Text } from 'grommet';
-import { messageType } from 'lib/flashMessage';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import { messageType } from 'utils/flashMessage';
 
 function mapMessageTypeToBackgroundColor(
   type: PropertiesOf<typeof messageType>

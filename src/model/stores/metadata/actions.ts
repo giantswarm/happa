@@ -1,4 +1,3 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import { SelfClient } from 'model/clients/SelfClient';
 import { Constants } from 'model/constants';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -20,6 +19,7 @@ import { MetadataAction } from 'model/stores/metadata/types';
 import { IState } from 'model/stores/state';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 export const setInitialVersion = createAsynchronousAction<
   undefined,

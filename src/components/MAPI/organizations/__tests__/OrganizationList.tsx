@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -15,6 +14,7 @@ import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
 import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import OrganizationIndex from '../OrganizationIndex';
 

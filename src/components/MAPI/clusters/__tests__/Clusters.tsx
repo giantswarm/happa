@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IMainState } from 'model/stores/main/types';
@@ -12,6 +11,7 @@ import React from 'react';
 import { SWRConfig } from 'swr';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import Clusters from '../Clusters';
 

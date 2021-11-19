@@ -1,6 +1,5 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import { MainRoutes, UsersRoutes } from 'model/constants/routes';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { getOrganizationByID } from 'model/stores/organization/utils';
@@ -16,6 +15,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import Button from 'UI/Controls/Button';
 import Section from 'UI/Layout/Section';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 import DeleteUserModal from './DeleteUserModal';
 import InvitesTable from './InvitesTable';

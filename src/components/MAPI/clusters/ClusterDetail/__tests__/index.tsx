@@ -1,7 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
@@ -10,6 +9,7 @@ import * as mockCapiv1alpha3 from 'test/mockHttpCalls/capiv1alpha3';
 import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
 import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetail from '../';
 

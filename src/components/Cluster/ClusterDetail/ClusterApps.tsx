@@ -1,5 +1,4 @@
 import { push } from 'connected-react-router';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { AppConstants, Constants } from 'model/constants';
 import { ingressControllerInstallationURL } from 'model/constants/docs';
 import { AppsRoutes } from 'model/constants/routes';
@@ -25,6 +24,7 @@ import Button from 'UI/Controls/Button';
 import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 import UserInstalledApps from './UserInstalledApps/UserInstalledApps';

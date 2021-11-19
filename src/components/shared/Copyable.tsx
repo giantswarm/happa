@@ -1,8 +1,8 @@
 import { Keyboard } from 'grommet';
-import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
 const TooltipWrapper = styled.div`
   top: 0px;

@@ -1,14 +1,6 @@
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import { spinner } from 'images';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import {
-  clearQueues,
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from 'lib/flashMessage';
-import { validatePassword } from 'lib/passwordValidation';
 import { MainRoutes } from 'model/constants/routes';
 import * as mainActions from 'model/stores/main/actions';
 import React from 'react';
@@ -20,6 +12,14 @@ import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import {
+  clearQueues,
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from 'utils/flashMessage';
+import { validatePassword } from 'utils/passwordValidation';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
 import StatusMessage from '../SignUp/StatusMessage';

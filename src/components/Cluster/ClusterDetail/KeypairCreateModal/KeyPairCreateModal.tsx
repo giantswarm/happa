@@ -12,16 +12,16 @@ import {
   VALIDATION_DEBOUNCE_RATE,
 } from 'Cluster/ClusterDetail/KeypairCreateModal/Utils';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { makeKubeConfigTextFile } from 'lib/helpers';
-import useDebounce from 'lib/hooks/useDebounce';
 import { Providers, StatusCodes } from 'model/constants';
 import { Constants } from 'model/constants';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { IGSAPIError } from 'utils/errorUtils';
+import { makeKubeConfigTextFile } from 'utils/helpers';
+import useDebounce from 'utils/hooks/useDebounce';
 
 const StyledModal = styled(Modal)`
   .modal-dialog {

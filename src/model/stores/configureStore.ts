@@ -1,6 +1,5 @@
 import { routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { mainAuthMiddleware } from 'model/stores/main/middleware';
 import rootReducer from 'model/stores/rootReducer';
 import { IState } from 'model/stores/state';
@@ -13,6 +12,7 @@ import {
   Store,
 } from 'redux';
 import thunk from 'redux-thunk';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { callAPIMiddleware } from './callAPIMiddleware';
 

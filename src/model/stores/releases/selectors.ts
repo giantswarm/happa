@@ -1,7 +1,7 @@
-import { compare } from 'lib/semver';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
 import { IState } from 'model/stores/state';
 import { createDeepEqualSelector } from 'model/stores/utils';
+import { compare } from 'utils/semver';
 
 export function getReleasesIsFetching(state: IState): boolean {
   return state.entities.releases.isFetching;

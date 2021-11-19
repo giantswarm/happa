@@ -1,4 +1,4 @@
-import { VersionImpl } from 'lib/Version';
+import { VersionImpl } from 'utils/Version';
 
 describe('VersionImpl', () => {
   it('parses the version from a given string', () => {

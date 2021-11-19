@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import React, { useEffect, useReducer } from 'react';
 import useSWR from 'swr';
@@ -11,6 +8,9 @@ import AccessControlSubjectSet, {
 } from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSet';
 import AccessControlSubjectSetItem from 'UI/Display/MAPI/AccessControl/AccessControlSubjectSetItem';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import {
   canListSubjects,

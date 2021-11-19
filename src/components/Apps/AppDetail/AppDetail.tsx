@@ -1,7 +1,5 @@
 import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAppModal';
 import { push } from 'connected-react-router';
-import useError from 'lib/hooks/useError';
-import RoutePath from 'lib/routePath';
 import { AppsRoutes } from 'model/constants/routes';
 import { loadAppReadme } from 'model/stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'model/stores/appcatalog/constants';
@@ -13,6 +11,8 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
+import useError from 'utils/hooks/useError';
+import RoutePath from 'utils/routePath';
 
 const AppDetail: React.FC = () => {
   const match = useRouteMatch();

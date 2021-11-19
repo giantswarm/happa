@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import React from 'react';
 import Button from 'UI/Controls/Button';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 function generateUncaughtException() {
   throw Error('Error thrown on purpose from /exception-notification-test/');

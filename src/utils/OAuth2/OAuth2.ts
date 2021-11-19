@@ -1,15 +1,15 @@
 /* istanbul ignore file */
 
 import {
-  convertToOIDCMetadata,
-  IOAuth2CustomMetadata,
-} from 'lib/OAuth2/OAuth2CustomMetadata';
-import {
   User,
   UserManager,
   UserManagerSettings,
   WebStorageStateStore,
 } from 'oidc-client';
+import {
+  convertToOIDCMetadata,
+  IOAuth2CustomMetadata,
+} from 'utils/OAuth2/OAuth2CustomMetadata';
 
 import { getUserFromOIDCUser, IOAuth2User } from './OAuth2User';
 

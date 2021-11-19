@@ -1,4 +1,3 @@
-import RoutePath from 'lib/routePath';
 import { CSSBreakpoints } from 'model/constants';
 import { AppCatalogRoutes } from 'model/constants/routes';
 import React from 'react';
@@ -8,6 +7,7 @@ import styled from 'styled-components';
 import { mq } from 'styles';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import Truncated from 'UI/Util/Truncated';
+import RoutePath from 'utils/routePath';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';

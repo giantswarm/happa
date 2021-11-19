@@ -1,8 +1,6 @@
 import NodePoolScaling from 'Cluster/ClusterDetail/NodePoolScaling';
 import { Text } from 'grommet';
 import { spinner } from 'images';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Providers } from 'model/constants';
 import * as nodePoolActions from 'model/stores/nodepool/actions';
 import React, { Component } from 'react';
@@ -12,7 +10,9 @@ import styled from 'styled-components';
 import { Code, Ellipsis } from 'styles/';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import ViewAndEditName from 'UI/Inputs/ViewEditName';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { IGSAPIError } from 'utils/errorUtils';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';

@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { Providers, StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
@@ -11,6 +10,7 @@ import { withMarkup } from 'test/assertUtils';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import { getAdditionalColumns } from '../ClusterDetailWorkerNodes';
 import WorkerNodesNodePoolItem from '../WorkerNodesNodePoolItem';

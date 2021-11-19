@@ -1,6 +1,4 @@
 import produce from 'immer';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { BootstrapConfig, NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   compareNodePools,
@@ -18,6 +16,8 @@ import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import { mutate } from 'swr';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 export async function updateNodePoolDescription(
   httpClientFactory: HttpClientFactory,

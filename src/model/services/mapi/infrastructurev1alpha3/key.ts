@@ -1,5 +1,5 @@
-import { compareDates } from 'lib/helpers';
 import { Constants } from 'model/constants';
+import { compareDates } from 'utils/helpers';
 
 import {
   IAWSCluster,

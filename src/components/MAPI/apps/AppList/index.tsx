@@ -1,10 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import useDebounce from 'lib/hooks/useDebounce';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import usePrevious from 'lib/hooks/usePrevious';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -13,6 +8,11 @@ import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import useDebounce from 'utils/hooks/useDebounce';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import usePrevious from 'utils/hooks/usePrevious';
 
 import { useAppsContext } from '../AppsProvider';
 import ListAppCatalogsAndAppsGuide from '../guides/ListAppCatalogsAndAppsGuide';

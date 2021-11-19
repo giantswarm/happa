@@ -1,4 +1,4 @@
-import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
+import { IOAuth2User } from 'utils/OAuth2/OAuth2User';
 
 import { LoggedInUserTypes } from './types';
 

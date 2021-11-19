@@ -1,4 +1,4 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 export function callAPIMiddleware({ dispatch, getState }) {
   return (next) => (action) => {

@@ -1,8 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -17,6 +15,8 @@ import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
 import FlashMessage from 'UI/Display/FlashMessage';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { findIngressApp } from './utils';
 

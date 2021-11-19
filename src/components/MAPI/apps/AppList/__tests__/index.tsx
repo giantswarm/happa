@@ -6,7 +6,6 @@ import {
   within,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import AppsProvider from 'MAPI/apps/AppsProvider';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
@@ -14,6 +13,7 @@ import React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import AppList from '../';
 

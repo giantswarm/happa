@@ -11,7 +11,7 @@ import {
   toTitleCase,
   truncate,
   validateOrRaise,
-} from 'lib/helpers';
+} from 'utils/helpers';
 
 describe('helpers', () => {
   describe('dedent', () => {

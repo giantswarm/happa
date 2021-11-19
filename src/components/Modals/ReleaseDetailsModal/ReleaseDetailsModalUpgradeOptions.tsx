@@ -1,8 +1,8 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { ReleaseHelper } from 'lib/ReleaseHelper';
 import { Providers } from 'model/constants';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { ReleaseHelper } from 'utils/ReleaseHelper';
 
 import ReleaseDetailsModalSection from './ReleaseDetailsModalSection';
 import ReleaseDetailsModalUpgradeOptionsBetaDisclaimer from './ReleaseDetailsModalUpgradeOptionsBetaDisclaimer';

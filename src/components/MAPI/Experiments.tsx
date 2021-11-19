@@ -1,7 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { Box, Heading, Text } from 'grommet';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { AccountSettingsRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import React, { useEffect, useState } from 'react';
@@ -17,6 +16,7 @@ import {
 } from 'UI/Display/Table';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import { usePermissionsKey } from './permissions/usePermissions';
 

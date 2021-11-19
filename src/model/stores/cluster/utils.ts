@@ -1,5 +1,3 @@
-import { compareDates } from 'lib/helpers';
-import { compare } from 'lib/semver';
 import { Constants, Providers } from 'model/constants';
 import { IIDsAwaitingUpgradeMap } from 'model/stores/cluster/types';
 import {
@@ -10,7 +8,9 @@ import {
 } from 'model/stores/nodepool/utils';
 import { isPreRelease } from 'model/stores/releases/utils';
 import { IState } from 'model/stores/state';
+import { compareDates } from 'utils/helpers';
 import { validateLabelKey } from 'utils/labelUtils';
+import { compare } from 'utils/semver';
 
 export const clustersGroupedByOwner = (
   clusters: Cluster[]

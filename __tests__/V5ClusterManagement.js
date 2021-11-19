@@ -5,8 +5,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
-import RoutePath from 'lib/routePath';
 import { StatusCodes } from 'model/constants';
 import { Constants } from 'model/constants';
 import { OrganizationsRoutes } from 'model/constants/routes';
@@ -36,7 +34,9 @@ import {
   v5ClustersResponse,
 } from 'test/mockHttpCalls';
 import { renderRouteWithStore } from 'test/renderUtils';
+import { forceRemoveAll } from 'utils/flashMessage';
 import { validateLabelKey } from 'utils/labelUtils';
+import RoutePath from 'utils/routePath';
 
 describe('V5ClusterManagement', () => {
   // Responses to requests

@@ -6,7 +6,6 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as MAPIUtils from 'MAPI/utils';
 import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
@@ -19,6 +18,7 @@ import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as gscorev1alpha1Mocks from 'test/mockHttpCalls/gscorev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import * as NodePoolUtils from '../utils';
 import WorkerNodesCreateNodePool from '../WorkerNodesCreateNodePool';

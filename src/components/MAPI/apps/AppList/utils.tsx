@@ -1,6 +1,3 @@
-import { compareDates } from 'lib/helpers';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import RoutePath from 'lib/routePath';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -9,6 +6,9 @@ import React from 'react';
 import AppsList from 'UI/Display/Apps/AppList/AppsListPage';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
+import { compareDates } from 'utils/helpers';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import RoutePath from 'utils/routePath';
 
 import { computeAppCatalogUITitle, isAppCatalogVisibleToUsers } from '../utils';
 

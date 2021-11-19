@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import OAuth2 from 'lib/OAuth2/OAuth2';
+import OAuth2 from 'utils/OAuth2/OAuth2';
 
 export enum MapiAuthConnectors {
   Customer = 'customer',

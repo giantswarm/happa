@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react';
-import PageVisibilityTracker from 'lib/pageVisibilityTracker';
+import PageVisibilityTracker from 'utils/pageVisibilityTracker';
 
 describe('pageVisibilityTracker', () => {
   it('notifies listeners when the page became visible', () => {

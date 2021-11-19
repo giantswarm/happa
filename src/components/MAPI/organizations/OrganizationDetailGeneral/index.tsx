@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -22,6 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteOrganizationGuide from '../guides/DeleteOrganizationGuide';
 import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';

@@ -1,10 +1,4 @@
 import GiantSwarm from 'giantswarm';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Passage, {
-  IPassageCreateInvitationResponse,
-  IPassageInvitation,
-} from 'lib/passageClient';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { IState } from 'model/stores/state';
 import {
@@ -26,6 +20,12 @@ import {
 } from 'model/stores/user/constants';
 import { UserActions } from 'model/stores/user/types';
 import { ThunkAction } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import Passage, {
+  IPassageCreateInvitationResponse,
+  IPassageInvitation,
+} from 'utils/passageClient';
 
 export function usersLoad(): ThunkAction<
   Promise<void>,

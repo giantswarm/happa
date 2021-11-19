@@ -1,8 +1,8 @@
 import add from 'date-fns/fp/add';
 import { createMemoryHistory } from 'history';
 import { History } from 'history';
-import { compareDates } from 'lib/helpers';
 import { AuthorizationTypes } from 'model/constants';
+import { compareDates } from 'utils/helpers';
 
 import {
   IOAuth2EventCallbacks,

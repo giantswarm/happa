@@ -1,7 +1,5 @@
 import GiantSwarm from 'giantswarm';
 import yaml from 'js-yaml';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Constants, StatusCodes } from 'model/constants';
 import {
   CATALOG_LOAD_INDEX_ERROR,
@@ -64,7 +62,9 @@ import { v4orV5 } from 'model/stores/cluster/utils';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { IGSAPIError } from 'utils/errorUtils';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 import { fixTestAppReadmeURLs, normalizeAppCatalogIndexURL } from './utils';

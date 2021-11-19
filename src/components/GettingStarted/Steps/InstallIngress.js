@@ -1,5 +1,4 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
-import RoutePath from 'lib/routePath';
 import InstallIngressButtonMAPI from 'MAPI/apps/InstallIngressButton';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { supportsMapiApps } from 'model/featureSupport';
@@ -12,6 +11,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
+import RoutePath from 'utils/routePath';
 
 const InstallIngressButtonWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;

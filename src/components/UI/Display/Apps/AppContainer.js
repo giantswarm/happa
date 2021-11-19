@@ -1,9 +1,9 @@
-import RoutePath from 'lib/routePath';
 import { AppCatalogRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Truncated from 'UI/Util/Truncated';
+import RoutePath from 'utils/routePath';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;

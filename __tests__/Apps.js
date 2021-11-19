@@ -1,6 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { isInternal } from 'Apps/AppsList/utils';
-import RoutePath from 'lib/routePath';
 import { StatusCodes } from 'model/constants';
 import { AppsRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
@@ -24,6 +23,7 @@ import {
   v4ClustersResponse,
 } from 'test/mockHttpCalls';
 import { renderRouteWithStore } from 'test/renderUtils';
+import RoutePath from 'utils/routePath';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {

@@ -1,5 +1,4 @@
 import { Box, Keyboard, Text } from 'grommet';
-import { compare } from 'lib/semver';
 import { RUMActions } from 'model/constants/realUserMonitoring';
 import { isPreRelease } from 'model/stores/releases/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
@@ -16,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from 'UI/Display/Table';
+import { compare } from 'utils/semver';
 
 import ReleaseRow from './ReleaseRow';
 

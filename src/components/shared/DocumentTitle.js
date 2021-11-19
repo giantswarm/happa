@@ -1,5 +1,5 @@
-import useDocumentTitle from 'lib/hooks/useDocumentTitle';
 import { useEffect } from 'react';
+import useDocumentTitle from 'utils/hooks/useDocumentTitle';
 
 const DocumentTitle = ({ title, children }) => {
   const [_, setTitle] = useDocumentTitle(title);

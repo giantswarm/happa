@@ -1,4 +1,4 @@
-import { ReleaseHelper } from 'lib/ReleaseHelper';
+import { ReleaseHelper } from 'utils/ReleaseHelper';
 
 describe('ReleaseHelper', () => {
   const availableReleases: IReleases = {

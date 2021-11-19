@@ -1,7 +1,5 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import RoutePath from 'lib/routePath';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { selectClusterById } from 'model/stores/cluster/selectors';
 import React, { useEffect } from 'react';
@@ -10,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Switch, useParams } from 'react-router-dom';
 import Route from 'Route';
 import styled from 'styled-components';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import RoutePath from 'utils/routePath';
 
 import ConfigureKubeCTL from './Steps/ConfigureKubectl';
 import InstallIngress from './Steps/InstallIngress';

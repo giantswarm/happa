@@ -1,4 +1,4 @@
-import { compare } from 'lib/semver';
+import { compare } from 'utils/semver';
 
 describe('semver', () => {
   describe('compare', () => {

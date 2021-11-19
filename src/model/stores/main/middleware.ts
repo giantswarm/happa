@@ -1,9 +1,9 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { isJwtExpired } from 'lib/helpers';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { Middleware } from 'redux';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { isJwtExpired } from 'utils/helpers';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { LoggedInUserTypes } from './types';
 

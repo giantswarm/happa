@@ -1,6 +1,6 @@
 import { spinner } from 'images';
-import { PasswordStatusMessage } from 'lib/passwordValidation';
 import React from 'react';
+import { PasswordStatusMessage } from 'utils/passwordValidation';
 
 class StatusMessage extends React.Component {
   static statusMessage() {

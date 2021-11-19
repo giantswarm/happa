@@ -1,11 +1,11 @@
 import { Keyboard, Text } from 'grommet';
-import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import { CSSBreakpoints } from 'model/constants/cssBreakpoints';
 import React from 'react';
 import styled from 'styled-components';
 import { Code, mq } from 'styles';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Truncated from 'UI/Util/Truncated';
+import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
 const StatusIcon = styled.i`
   width: 14px;

@@ -1,7 +1,4 @@
 import produce from 'immer';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { compare } from 'lib/semver';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchCluster,
@@ -22,6 +19,9 @@ import * as metav1 from 'model/services/mapi/metav1';
 import { filterLabels } from 'model/stores/cluster/utils';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
 
 import { getClusterConditions } from '../utils';
 

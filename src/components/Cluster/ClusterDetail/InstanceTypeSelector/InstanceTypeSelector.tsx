@@ -1,9 +1,4 @@
 import { Keyboard } from 'grommet';
-import {
-  useAllowedInstanceTypes,
-  useInstanceTypeCapabilities,
-  useInstanceTypeSelectionLabels,
-} from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -22,6 +17,11 @@ import {
   TableHeader,
   TableRow,
 } from 'UI/Display/Table';
+import {
+  useAllowedInstanceTypes,
+  useInstanceTypeCapabilities,
+  useInstanceTypeSelectionLabels,
+} from 'utils/hooks/useInstanceTypeSelectionConfiguration';
 
 import InstanceTypeRow from './InstanceTypeRow';
 

@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import nock from 'nock';
@@ -9,6 +8,7 @@ import { SWRConfig } from 'swr';
 import * as mockCapiv1alpha3 from 'test/mockHttpCalls/capiv1alpha3';
 import * as legacyMocks from 'test/mockHttpCalls/legacy';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWidgetKeyPairs from '../ClusterDetailWidgetKeyPairs';
 

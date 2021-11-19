@@ -1,8 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import formatDistance from 'date-fns/fp/formatDistance';
 import { Box } from 'grommet';
-import PageVisibilityTracker from 'lib/pageVisibilityTracker';
-import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { batchedRefreshClusters } from 'model/stores/batchActions';
 import { CLUSTERS_LIST_REQUEST } from 'model/stores/cluster/constants';
@@ -17,6 +15,8 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterEmptyState from 'UI/Display/Cluster/ClusterEmptyState';
 import { memoize } from 'underscore';
+import PageVisibilityTracker from 'utils/pageVisibilityTracker';
+import RoutePath from 'utils/routePath';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
 

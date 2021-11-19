@@ -1,5 +1,4 @@
 import { Box } from 'grommet';
-import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as clusterActions from 'model/stores/cluster/actions';
 import { getLoggedInUser } from 'model/stores/main/selectors';
@@ -15,6 +14,7 @@ import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import Aside from 'UI/Layout/Aside';
+import RoutePath from 'utils/routePath';
 
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 

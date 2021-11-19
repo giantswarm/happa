@@ -1,6 +1,6 @@
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { IOAuth2User } from 'lib/OAuth2/OAuth2User';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { IOAuth2User } from 'utils/OAuth2/OAuth2User';
 
 /**
  * Make sure that the user is authenticated,

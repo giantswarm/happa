@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IMainState } from 'model/stores/main/types';
@@ -14,6 +13,7 @@ import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import AppInstallModal from '../AppInstallModal';
 

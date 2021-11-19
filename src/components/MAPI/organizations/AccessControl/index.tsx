@@ -1,8 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import produce from 'immer';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
@@ -13,6 +11,8 @@ import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessCo
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import BindRolesToSubjectsGuide from './guides/BindRolesToSubjectsGuide';
 import InspectRoleGuide from './guides/InspectRoleGuide';

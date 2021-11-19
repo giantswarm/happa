@@ -1,11 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { truncate } from 'lib/helpers';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
-import { compare } from 'lib/semver';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
@@ -22,6 +16,12 @@ import AppVersionInspectorOption from 'UI/Display/MAPI/apps/AppVersionInspectorO
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import Select from 'UI/Inputs/Select';
 import Truncated from 'UI/Util/Truncated';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { truncate } from 'utils/helpers';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
+import { compare } from 'utils/semver';
 
 import { normalizeAppVersion, updateAppVersion } from './utils';
 

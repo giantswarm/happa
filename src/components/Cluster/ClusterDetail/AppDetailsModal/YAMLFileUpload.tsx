@@ -1,8 +1,8 @@
 import yaml from 'js-yaml';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { formatYAMLError } from 'MAPI/apps/utils';
 import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 interface IYAMLFileUploadProps
   extends React.ComponentPropsWithoutRef<typeof Button> {

@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -11,6 +10,7 @@ import { withMarkup } from 'test/assertUtils';
 import * as corev1Mocks from 'test/mockHttpCalls/corev1';
 import * as rbacv1Mocks from 'test/mockHttpCalls/rbacv1';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import AccessControl from '..';
 

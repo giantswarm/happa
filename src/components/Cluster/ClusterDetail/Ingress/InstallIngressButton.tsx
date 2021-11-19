@@ -1,5 +1,3 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import RoutePath from 'lib/routePath';
 import { Constants } from 'model/constants';
 import { AppsRoutes } from 'model/constants/routes';
 import {
@@ -24,6 +22,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import RoutePath from 'utils/routePath';
 
 const Wrapper = styled.div`
   display: flex;

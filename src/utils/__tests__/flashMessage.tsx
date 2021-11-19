@@ -1,12 +1,12 @@
 import { act, fireEvent, screen } from '@testing-library/react';
+import React from 'react';
+import { renderWithTheme } from 'test/renderUtils';
 import {
   FlashMessage,
   forceRemoveAll,
   messageTTL,
   messageType,
-} from 'lib/flashMessage';
-import React from 'react';
-import { renderWithTheme } from 'test/renderUtils';
+} from 'utils/flashMessage';
 
 describe('FlashMessage', () => {
   it(`won't display messages that are already in the queue by default`, async () => {

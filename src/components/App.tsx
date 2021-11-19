@@ -3,7 +3,6 @@ import { ConnectedRouter } from 'connected-react-router';
 import Footer from 'Footer/Footer';
 import { Box, Heading, Text } from 'grommet';
 import { History } from 'history';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
@@ -13,6 +12,7 @@ import { DefaultTheme } from 'styled-components';
 import ThemeProvider from 'ThemeProvider';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import Routes from './Routes';
 

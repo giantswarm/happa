@@ -1,6 +1,4 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { isJwtExpired } from 'lib/helpers';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import { StatusCodes } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
@@ -23,6 +21,8 @@ import {
   userResponse,
 } from 'test/mockHttpCalls';
 import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
+import { isJwtExpired } from 'utils/helpers';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 describe('Login', () => {
   beforeEach(() => {

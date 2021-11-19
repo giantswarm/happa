@@ -1,5 +1,3 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import useError from 'lib/hooks/useError';
 import {
   catalogLoadIndex,
   createAppConfig as createAppConfigAction,
@@ -21,6 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import useError from 'utils/hooks/useError';
 
 import DeleteConfirmFooter from './DeleteConfirmFooter';
 import EditChartVersionPane from './EditChartVersionPane';

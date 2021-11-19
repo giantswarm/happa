@@ -1,9 +1,9 @@
-import { hasAppropriateLength } from 'lib/helpers';
 import { getNodePoolDescription } from 'MAPI/utils';
 import { Constants } from 'model/constants';
 import React, { useEffect, useRef, useState } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
+import { hasAppropriateLength } from 'utils/helpers';
 
 import { INodePoolPropertyProps, withNodePoolDescription } from './patches';
 

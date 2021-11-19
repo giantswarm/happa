@@ -1,9 +1,5 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
 import { push } from 'connected-react-router';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import RoutePath from 'lib/routePath';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { supportsMapiApps, supportsMapiClusters } from 'model/featureSupport';
 import {
@@ -53,7 +49,11 @@ import { loadReleases } from 'model/stores/releases/actions';
 import { IState } from 'model/stores/state';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { extractMessageFromError } from 'utils/errorUtils';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import RoutePath from 'utils/routePath';
 
 export function batchedLayout(
   auth: IOAuth2Provider

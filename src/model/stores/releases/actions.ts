@@ -1,9 +1,9 @@
 import GiantSwarm from 'giantswarm';
-import { getK8sVersionEOLDate } from 'lib/config';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
 import { RELEASES_LOAD } from 'model/stores/releases/constants';
 import { IState } from 'model/stores/state';
+import { getK8sVersionEOLDate } from 'utils/config';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import { createAsynchronousAction } from '../asynchronousAction';
 import { IReleaseLoadActionResponse } from './types';

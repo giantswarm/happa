@@ -1,7 +1,6 @@
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
 import { spinner } from 'images';
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import * as clusterActions from 'model/stores/cluster/actions';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'model/stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
@@ -15,6 +14,7 @@ import Button from 'UI/Controls/Button';
 import DataTable from 'UI/DataTable';
 import FormattedDate from 'UI/Display/Date';
 import FlashMessage from 'UI/Display/FlashMessage';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeypairCreateModal/KeyPairCreateModal';

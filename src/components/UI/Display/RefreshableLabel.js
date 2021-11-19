@@ -1,7 +1,7 @@
-import usePrevious from 'lib/hooks/usePrevious';
 import React, { useEffect, useState } from 'react';
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
+import usePrevious from 'utils/hooks/usePrevious';
 
 const yellowFade = keyframes`
   from {

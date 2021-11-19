@@ -1,4 +1,4 @@
-import QueueImpl from 'lib/Queue';
+import QueueImpl from 'utils/Queue';
 
 describe('QueueImpl', () => {
   it('is empty to start with', () => {

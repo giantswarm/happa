@@ -1,5 +1,4 @@
 import { Box, Text } from 'grommet';
-import { getRelativeDateFromNow } from 'lib/helpers';
 import React from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
@@ -7,6 +6,7 @@ import Button from 'UI/Controls/Button';
 import Date from 'UI/Display/Date';
 import NotAvailable from 'UI/Display/NotAvailable';
 import Modal from 'UI/Layout/Modal';
+import { getRelativeDateFromNow } from 'utils/helpers';
 
 const Label = styled(Text).attrs({
   color: 'text-weak',

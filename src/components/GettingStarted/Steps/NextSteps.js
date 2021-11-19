@@ -1,4 +1,3 @@
-import RoutePath from 'lib/routePath';
 import {
   gettingStartedURL,
   homeURL,
@@ -10,6 +9,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
+import RoutePath from 'utils/routePath';
 
 const NextSteps = (props) => {
   const pathParams = {

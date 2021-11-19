@@ -1,5 +1,4 @@
 import { push } from 'connected-react-router';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { MainRoutes } from 'model/constants/routes';
 import { selectClusterById } from 'model/stores/cluster/selectors';
 import React, { useEffect } from 'react';
@@ -7,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router-dom';
 import Route from 'Route';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import GettingStarted from '../../GettingStarted/GettingStarted';
 import ClusterDetailView from './ClusterDetailView';

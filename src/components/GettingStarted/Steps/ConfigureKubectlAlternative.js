@@ -1,6 +1,3 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import platform from 'lib/platform';
 import { installingCACert } from 'model/constants/docs';
 import * as clusterActions from 'model/stores/cluster/actions';
 import React from 'react';
@@ -12,6 +9,9 @@ import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import FileBlock from 'UI/Display/Documentation/FileBlock';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Aside from 'UI/Layout/Aside';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import platform from 'utils/platform';
 
 const KeyPairError = styled.div`
   height: 20px;

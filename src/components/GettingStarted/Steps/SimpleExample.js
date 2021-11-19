@@ -1,7 +1,4 @@
 import { Box } from 'grommet';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import platform from 'lib/platform';
-import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -13,6 +10,9 @@ import { CodeBlock, Output, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import Aside from 'UI/Layout/Aside';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import platform from 'utils/platform';
+import RoutePath from 'utils/routePath';
 
 const StyledTab = styled(Tab)`
   &[aria-expanded='true'] > div {

@@ -1,7 +1,6 @@
 import { push } from 'connected-react-router';
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
-import RoutePath from 'lib/routePath';
 import { CSSBreakpoints } from 'model/constants';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { selectClusterById } from 'model/stores/cluster/selectors';
@@ -24,6 +23,7 @@ import FormattedDate from 'UI/Display/Date';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 import ErrorFallback from 'UI/Util/ErrorFallback/ErrorFallback';
 import ErrorText from 'UI/Util/ErrorFallback/ErrorText';
+import RoutePath from 'utils/routePath';
 
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';

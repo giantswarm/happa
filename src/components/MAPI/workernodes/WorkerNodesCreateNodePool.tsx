@@ -1,9 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Collapsible, Heading, Keyboard } from 'grommet';
 import produce from 'immer';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import {
   BootstrapConfig,
   Cluster,
@@ -30,6 +27,9 @@ import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
 import React, { useReducer } from 'react';
 import Button from 'UI/Controls/Button';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import CreateNodePoolGuide from './guides/CreateNodePoolGuide';
 import { INodePoolPropertyValue, NodePoolPatch } from './patches';

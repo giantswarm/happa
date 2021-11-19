@@ -1,11 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push, replace } from 'connected-react-router';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
-import { compare } from 'lib/semver';
 import AppInstallModal from 'MAPI/apps/AppInstallModal';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -22,6 +17,11 @@ import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
+import { compare } from 'utils/semver';
 
 import InspectAppGuide from '../guides/InspectAppGuide';
 import InstallAppGuide from '../guides/InstallAppGuide';

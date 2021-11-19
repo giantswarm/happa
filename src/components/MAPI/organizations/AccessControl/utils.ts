@@ -1,5 +1,3 @@
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
@@ -7,6 +5,8 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import { IState } from 'model/stores/state';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 const subjectDelimiterRegexp = /\s*(?:[,\s;])+\s*/;
 

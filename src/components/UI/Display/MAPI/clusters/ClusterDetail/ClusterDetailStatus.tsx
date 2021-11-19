@@ -1,9 +1,9 @@
 import { Box, Text } from 'grommet';
-import { formatDate } from 'lib/helpers';
 import { IClusterUpdateSchedule } from 'MAPI/clusters/utils';
 import React from 'react';
 import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import { formatDate } from 'utils/helpers';
 
 interface IClusterDetailStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
