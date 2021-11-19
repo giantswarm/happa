@@ -3,7 +3,6 @@ import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import { selectIngressAppFromCluster } from 'model/stores/appcatalog/selectors';
 import React from 'react';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 
 import { Text } from './Components';

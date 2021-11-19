@@ -1,5 +1,7 @@
 declare module '*.md';
 
+type PropertiesOf<T> = T[keyof T];
+
 type GlobalEnvironment = 'development' | 'kubernetes' | 'docker-container';
 
 interface IGlobalConfig {
@@ -25,9 +27,7 @@ interface IGlobalConfig {
   sentrySampleRate: number;
   info: {
     general: {
-      provider: import('shared/types').PropertiesOf<
-        typeof import('shared/constants').Providers
-      >;
+      provider: PropertiesOf<typeof import('shared/constants').Providers>;
       installationName: string;
       availabilityZones: {
         default: number;

@@ -1,4 +1,3 @@
-import { PropertiesOf } from 'shared/types';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 
 /**

@@ -1,7 +1,6 @@
 import { Box, Paragraph, Text } from 'grommet';
 import { messageType } from 'lib/flashMessage';
 import React from 'react';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 

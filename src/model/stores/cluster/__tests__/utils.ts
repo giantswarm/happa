@@ -20,7 +20,6 @@ import {
 } from 'model/stores/cluster/utils';
 import { IState } from 'model/stores/state';
 import { Providers } from 'shared/constants';
-import { INodePool, INodePoolStatus, PropertiesOf } from 'shared/types';
 import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,

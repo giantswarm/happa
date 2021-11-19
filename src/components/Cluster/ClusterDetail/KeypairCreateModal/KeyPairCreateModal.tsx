@@ -18,7 +18,6 @@ import useDebounce from 'lib/hooks/useDebounce';
 import React, { useEffect, useState } from 'react';
 import { Providers, StatusCodes } from 'shared/constants';
 import { Constants } from 'shared/constants';
-import { IKeyPair, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import Modal from 'UI/Layout/Modal';

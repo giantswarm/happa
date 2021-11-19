@@ -2,7 +2,6 @@ import { LoggedInUserTypes } from 'model/stores/main/types';
 
 import { Providers } from './constants';
 import * as featureFlags from './featureFlags';
-import { PropertiesOf } from './types';
 
 export function supportsMapiApps(
   user: ILoggedInUser,

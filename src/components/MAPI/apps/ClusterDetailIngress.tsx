@@ -12,7 +12,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import { Providers } from 'shared/constants';
 import DocumentTitle from 'shared/DocumentTitle';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';

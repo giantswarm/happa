@@ -34,7 +34,6 @@ import {
   CLUSTERS_LIST_SUCCESS,
   V5_CLUSTER_CREATE_SUCCESS,
 } from 'model/stores/cluster/constants';
-import { IKeyPair } from 'shared/types';
 
 export interface IClusterState {
   lastUpdated: number;

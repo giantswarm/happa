@@ -3,7 +3,6 @@ import Ports from 'Cluster/ClusterDetail/Ingress/Ports';
 import { getBasePathFromK8sEndpoint } from 'Cluster/ClusterDetail/Ingress/util';
 import React from 'react';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 
 import {

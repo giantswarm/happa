@@ -8,7 +8,6 @@ import React, { Component } from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Providers } from 'shared/constants';
-import { INodePool, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { Code, Ellipsis } from 'styles/';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';

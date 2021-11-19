@@ -6,7 +6,6 @@ import {
 } from 'model/stores/cluster/utils';
 import { IState } from 'model/stores/state';
 import { createDeepEqualSelector } from 'model/stores/utils';
-import { INodePool } from 'shared/types';
 
 export function selectNodePools(state: IState): Record<string, INodePool> {
   return state.entities.nodePools.items;

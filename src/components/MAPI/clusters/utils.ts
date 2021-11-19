@@ -28,7 +28,6 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
 
 export function getWorkerNodesCount(nodePools?: NodePool[]) {

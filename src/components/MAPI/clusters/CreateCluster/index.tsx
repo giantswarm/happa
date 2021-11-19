@@ -23,7 +23,6 @@ import { useRouteMatch } from 'react-router';
 import { Providers } from 'shared/constants';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { PropertiesOf } from 'shared/types';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 

@@ -16,7 +16,6 @@ import {
   NODEPOOL_PATCH,
   NODEPOOL_PATCH_ERROR,
 } from 'model/stores/nodepool/constants';
-import { INodePool, INodePoolScaling } from 'shared/types';
 
 export interface INodePoolState {
   items: Record<string, INodePool>;

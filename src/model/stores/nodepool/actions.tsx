@@ -30,7 +30,6 @@ import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StatusCodes } from 'shared/constants';
-import { INodePool } from 'shared/types';
 import { extractMessageFromError, IGSAPIError } from 'utils/errorUtils';
 
 export function clusterNodePoolsLoad(

@@ -1,48 +1,48 @@
-export interface INodePoolNodeSpecAWSInstanceDistribution {
+interface INodePoolNodeSpecAWSInstanceDistribution {
   on_demand_base_capacity: number;
   on_demand_percentage_above_base_capacity: number;
 }
 
-export interface INodePoolNodeSpecAWS {
+interface INodePoolNodeSpecAWS {
   instance_distribution: INodePoolNodeSpecAWSInstanceDistribution;
   instance_type: string;
   use_alike_instance_types: boolean;
 }
 
-export interface INodePoolNodeSpecAzureSpotInstances {
+interface INodePoolNodeSpecAzureSpotInstances {
   enabled: boolean;
   max_price: number;
 }
 
-export interface INodePoolNodeSpecAzure {
+interface INodePoolNodeSpecAzure {
   vm_size: string;
   spot_instances?: INodePoolNodeSpecAzureSpotInstances;
 }
 
-export interface INodePoolNodeSpecVolumeSizesGB {
+interface INodePoolNodeSpecVolumeSizesGB {
   docker: number;
   kubelet: number;
 }
 
-export interface INodePoolNodeSpec {
+interface INodePoolNodeSpec {
   aws: INodePoolNodeSpecAWS | null;
   azure: INodePoolNodeSpecAzure | null;
   volume_sizes_gb: INodePoolNodeSpecVolumeSizesGB | null;
 }
 
-export interface INodePoolScaling {
+interface INodePoolScaling {
   min: number;
   max: number;
 }
 
-export interface INodePoolStatus {
+interface INodePoolStatus {
   nodes: number;
   nodes_ready: number;
   spot_instances: number;
   instance_types: string[] | null;
 }
 
-export interface INodePool {
+interface INodePool {
   availability_zones: string[] | null;
   id: string;
   name: string;
@@ -52,15 +52,3 @@ export interface INodePool {
   // When a node pool is created, this field is not in the server response.
   status?: INodePoolStatus | null;
 }
-
-export interface IKeyPair {
-  certificate_organizations: string;
-  cn_prefix: string;
-  description: string;
-  ttl_hours: number;
-  certificate_authority_data: string;
-  client_certificate_data: string;
-  client_key_data: string;
-}
-
-export type PropertiesOf<T> = T[keyof T];

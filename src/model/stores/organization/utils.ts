@@ -1,5 +1,4 @@
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 
 export function getOrganizationByID(
   id: string,

@@ -8,7 +8,6 @@ import { connect, DispatchProp } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators, Dispatch } from 'redux';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import { INodePool } from 'shared/types';
 import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

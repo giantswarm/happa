@@ -9,7 +9,6 @@ import {
 } from 'MAPI/guides/utils';
 import React from 'react';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';

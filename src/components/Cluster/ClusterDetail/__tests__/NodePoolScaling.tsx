@@ -1,6 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { Providers } from 'shared/constants';
-import { INodePool } from 'shared/types';
 import { renderWithTheme } from 'test/renderUtils';
 
 import NodePoolScaling from '../NodePoolScaling';

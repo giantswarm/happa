@@ -53,7 +53,6 @@ import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { supportsMapiApps, supportsMapiClusters } from 'shared/featureSupport';
-import { INodePool } from 'shared/types';
 import { extractMessageFromError } from 'utils/errorUtils';
 
 export function batchedLayout(

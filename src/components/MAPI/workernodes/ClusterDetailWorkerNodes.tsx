@@ -29,7 +29,6 @@ import { useLocation, useParams } from 'react-router';
 import { TransitionGroup } from 'react-transition-group';
 import { Providers } from 'shared/constants';
 import DocumentTitle from 'shared/DocumentTitle';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';

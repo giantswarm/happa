@@ -21,7 +21,6 @@ import * as metav1 from 'model/services/mapi/metav1';
 import { filterLabels } from 'model/stores/cluster/utils';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
 
 import { getClusterConditions } from '../utils';

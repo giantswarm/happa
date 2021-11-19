@@ -1,7 +1,6 @@
 import { NodePoolsColumnHeader } from 'Cluster/ClusterDetail/V5ClusterDetailTable';
 import React from 'react';
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import V5ClusterDetailTableSpotInstancesTab from './V5ClusterDetailTableSpotInstancesTab';

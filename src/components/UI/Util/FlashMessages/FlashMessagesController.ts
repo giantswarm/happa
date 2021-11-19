@@ -1,6 +1,5 @@
 import { messageTTL, messageType } from 'lib/flashMessage';
 import QueueImpl from 'lib/Queue';
-import { PropertiesOf } from 'shared/types';
 
 const MAX_COUNT = 25;
 

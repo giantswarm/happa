@@ -1,7 +1,6 @@
 import { Text } from 'grommet';
 import React, { ChangeEventHandler } from 'react';
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import ExpiryHoursPicker from 'UI/Controls/ExpiryHoursPicker';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';

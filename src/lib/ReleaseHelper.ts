@@ -1,5 +1,4 @@
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 
 import { IVersion, VersionImpl } from './Version';
 

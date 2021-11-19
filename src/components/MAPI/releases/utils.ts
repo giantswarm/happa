@@ -2,7 +2,6 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import { IRelease, ReleaseHelper } from 'lib/ReleaseHelper';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import * as ui from 'UI/Display/MAPI/releases/types';
 
 export function getReleaseHelper(

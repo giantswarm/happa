@@ -1,7 +1,6 @@
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 
 import { usePermissionsForCPNodes } from './usePermissionsForCPNodes';
 

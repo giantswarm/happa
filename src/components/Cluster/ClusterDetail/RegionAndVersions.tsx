@@ -2,7 +2,6 @@ import ClusterStatus from 'Home/ClusterStatus';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal/ReleaseDetailsModal';
 import React, { FC, RefObject, useRef } from 'react';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { Code, Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';

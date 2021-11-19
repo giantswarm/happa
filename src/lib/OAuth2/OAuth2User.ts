@@ -2,7 +2,6 @@
 
 import { User } from 'oidc-client';
 import { AuthorizationTypes } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 
 export interface IOAuth2User {
   idToken: string;

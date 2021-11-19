@@ -2,7 +2,6 @@ import AddKeyPairGenericError from 'Cluster/ClusterDetail/KeypairCreateModal/Add
 import AddKeyPairServiceUnavailableError from 'Cluster/ClusterDetail/KeypairCreateModal/AddKeyPairServiceUnavailableError';
 import React from 'react';
 import { StatusCodes } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/Display/FlashMessage';

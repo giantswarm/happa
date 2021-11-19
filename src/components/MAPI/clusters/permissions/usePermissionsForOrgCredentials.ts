@@ -2,7 +2,6 @@ import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 
 export function usePermissionsForOrgCredentials(
   _provider: PropertiesOf<typeof Providers>,

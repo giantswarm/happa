@@ -12,7 +12,6 @@ import {
   truncate,
   validateOrRaise,
 } from 'lib/helpers';
-import { IKeyPair } from 'shared/types';
 
 describe('helpers', () => {
   describe('dedent', () => {

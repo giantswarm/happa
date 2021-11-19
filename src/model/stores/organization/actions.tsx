@@ -42,7 +42,6 @@ import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import { determineSelectedOrganization } from 'utils/organizationUtils';
 

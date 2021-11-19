@@ -10,7 +10,6 @@ import {
 import { isPreRelease } from 'model/stores/releases/utils';
 import { IState } from 'model/stores/state';
 import { Constants, Providers } from 'shared/constants';
-import { INodePool, PropertiesOf } from 'shared/types';
 import { validateLabelKey } from 'utils/labelUtils';
 
 export const clustersGroupedByOwner = (

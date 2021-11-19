@@ -12,7 +12,6 @@ import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 
 import {
   Cluster,

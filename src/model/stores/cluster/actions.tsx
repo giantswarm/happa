@@ -45,7 +45,6 @@ import { IState } from 'model/stores/state';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { Providers, StatusCodes } from 'shared/constants';
-import { IKeyPair, PropertiesOf } from 'shared/types';
 import { extractMessageFromError, IGSAPIError } from 'utils/errorUtils';
 
 export function clustersList(opts: {

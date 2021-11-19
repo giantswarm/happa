@@ -1,7 +1,6 @@
 import { Box, Text } from 'grommet';
 import * as React from 'react';
 import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 
