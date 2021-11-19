@@ -296,4 +296,24 @@ describe('ClusterListItem', () => {
 
     expect(await screen.findByText('Upgrade scheduled')).toBeInTheDocument();
   });
+
+  it(`does not display an available upgrade to preview releases`, () => {
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1alpha3Mocks.randomCluster1,
+          metadata: {
+            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            labels: {
+              ...capiv1alpha3Mocks.randomCluster1.metadata.labels,
+              'release.giantswarm.io/version': '15.0.0',
+            },
+          },
+        },
+        releases: releasev1alpha1Mocks.releasesList.items,
+        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+      })
+    );
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+  });
 });

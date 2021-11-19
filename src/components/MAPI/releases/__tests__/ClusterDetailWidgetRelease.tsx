@@ -119,6 +119,45 @@ describe('ClusterDetailWidgetRelease', () => {
     );
   });
 
+  it('does not display that the cluster can be upgraded to a preview release', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1alpha3Mocks.randomCluster1,
+          metadata: {
+            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            labels: {
+              ...capiv1alpha3Mocks.randomCluster1.metadata.labels,
+              'release.giantswarm.io/version': '15.0.0',
+            },
+          },
+        },
+      })
+    );
+
+    await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
+
+    const version = screen.getByText('15.0.0');
+    expect(version).toBeInTheDocument();
+    fireEvent.click(version);
+
+    expect(await screen.findByText('Details for release 15.0.0'));
+
+    expect(
+      screen.queryByText(/This cluster can be upgraded to/)
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Close' })[1]);
+
+    await waitForElementToBeRemoved(() =>
+      screen.queryByText('Details for release 15.0.0')
+    );
+  });
+
   it('displays information if an upgrade has been scheduled', async () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
@@ -159,6 +198,32 @@ describe('ClusterDetailWidgetRelease', () => {
     );
 
     expect(await screen.findByText('Upgrade available')).toBeInTheDocument();
+  });
+
+  it('does not display an upgrade warning or upgrade button to a preview release', () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1alpha3Mocks.randomCluster1,
+          metadata: {
+            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            labels: {
+              ...capiv1alpha3Mocks.randomCluster1.metadata.labels,
+              'release.giantswarm.io/version': '15.0.0',
+            },
+          },
+        },
+      })
+    );
+
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Upgrade cluster…' })
+    ).not.toBeInTheDocument();
   });
 
   it('can upgrade a cluster', async () => {
