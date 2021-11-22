@@ -70,11 +70,11 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
         <Box direction='row' gap='small'>
           <Box width='medium' direction='column' gap='xsmall'>
             <Text>Workload clusters</Text>
-            <Text>Nodes</Text>
+            <Text>Control plane nodes</Text>
             <Text>Worker nodes</Text>
-            <Text>Memory in nodes</Text>
+            <Text>Memory in control plane nodes</Text>
             <Text>Memory in worker nodes</Text>
-            <Text>CPU in nodes</Text>
+            <Text>CPU in control plane nodes</Text>
             <Text>CPU in worker nodes</Text>
           </Box>
           <Box direction='column' gap='xsmall'>
@@ -86,7 +86,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic
               isLoading={clustersSummaryLoading}
-              aria-label='Nodes'
+              aria-label='Control plane nodes'
             >
               {clustersSummary?.nodesCount}
             </OrganizationDetailStatistic>
@@ -98,7 +98,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic
               isLoading={clustersSummaryLoading}
-              aria-label='Memory in nodes'
+              aria-label='Memory in control plane nodes'
             >
               {formatMemory(clustersSummary?.nodesMemory)}
             </OrganizationDetailStatistic>
@@ -110,7 +110,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
             </OrganizationDetailStatistic>
             <OrganizationDetailStatistic
               isLoading={clustersSummaryLoading}
-              aria-label='CPU in nodes'
+              aria-label='CPU in control plane nodes'
             >
               {formatCPU(clustersSummary?.nodesCPU)}
             </OrganizationDetailStatistic>
