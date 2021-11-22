@@ -297,7 +297,7 @@ export async function fetchReleasesSummary(
   }
   releases = releases.sort(compare);
 
-  summary.releasesInUseCount = releases.length;
+  summary.releasesInUseCount = new Set(releases).size;
 
   if (summary.releasesInUseCount < 1) return Promise.resolve(summary);
 
