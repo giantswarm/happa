@@ -1,0 +1,24 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+
+<Meta title='Development/Folder structure' />
+
+# Folder structure
+
+* [\_\_tests\_\_](https://github.com/giantswarm/happa/tree/master/__tests__) - Larger integration tests that include multiple parts of the application.
+* [.circleci](https://github.com/giantswarm/happa/tree/master/.circleci) - Configuration for CircleCI.
+* [.github](https://github.com/giantswarm/happa/tree/master/.github) - Configuration for GitHub workflows, releases and pull requests.
+* [.husky](https://github.com/giantswarm/happa/tree/master/.husky) - Configuration for `husky`, a tool for managing git hooks.
+* [.storybook](https://github.com/giantswarm/happa/tree/master/.storybook) - Configuration for `storybook`, the tool used for building this documentation.
+* [.vscode](https://github.com/giantswarm/happa/tree/master/.vscode) - Configuration and suggested usage with Visual Studio Code.
+* [docs](https://github.com/giantswarm/happa/tree/master/docs) - GitHub-related documentation.
+* [helm](https://github.com/giantswarm/happa/tree/master/helm) - Kubernetes deployment configuration via Helm for both `happa` and this documentation
+* [scripts](https://github.com/giantswarm/happa/tree/master/scripts) - Scripts used for building and running `happa`.
+* [src](https://github.com/giantswarm/happa/tree/master/src) - The application's source code
+    * [@types](https://github.com/giantswarm/happa/tree/master/src/@types) - Global type definitions and module type definition overrides.
+    * [components](https://github.com/giantswarm/happa/tree/master/src/components) - All the `React` UI components used in the application.
+    * [images](https://github.com/giantswarm/happa/tree/master/src/images) - All the images used in the application.
+    * [model](https://github.com/giantswarm/happa/tree/master/src/model) - Code related to the application's data layer.
+    * [stories](https://github.com/giantswarm/happa/tree/master/src/stories) - Global `storybook` stories.
+    * [styles](https://github.com/giantswarm/happa/tree/master/src/styles) - Global styles and theme configuration.
+    * [utils](https://github.com/giantswarm/happa/tree/master/src/utils) - Various utilities for different purposes.
+* [test](https://github.com/giantswarm/happa/tree/master/test) - Various testing utilities.
