@@ -1,13 +1,13 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import useSWR from 'swr';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { getLatestVersionForApp, isAppChangingVersion } from './utils';
 

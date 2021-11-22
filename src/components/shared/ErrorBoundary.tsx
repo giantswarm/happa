@@ -1,5 +1,5 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
 import React, { Component, ReactNode } from 'react';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 interface IErrorBoundaryProps {
   children: ReactNode;

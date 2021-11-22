@@ -1,9 +1,9 @@
 import { spinner } from 'images';
+import * as mainActions from 'model/stores/main/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ShadowMask from 'shared/ShadowMask';
-import * as mainActions from 'stores/main/actions';
 import styled from 'styled-components';
 
 import { withAuthProvider } from './MAPI/MapiAuthProvider';

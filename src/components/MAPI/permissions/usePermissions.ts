@@ -1,15 +1,15 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { getLoggedInUser } from 'model/stores/main/selectors';
+import { LoggedInUserTypes } from 'model/stores/main/types';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getLoggedInUser } from 'stores/main/selectors';
-import { LoggedInUserTypes } from 'stores/main/types';
-import { selectOrganizations } from 'stores/organization/selectors';
-import { IState } from 'stores/state';
 import useSWR from 'swr';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IPermissionMap } from './types';
 import { fetchPermissions } from './utils';

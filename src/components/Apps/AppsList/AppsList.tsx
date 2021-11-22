@@ -1,15 +1,11 @@
-import useDebounce from 'lib/hooks/useDebounce';
-import RoutePath from 'lib/routePath';
-import React, { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppsRoutes } from 'shared/constants/routes';
+import { AppsRoutes } from 'model/constants/routes';
 import {
   disableCatalog,
   enableCatalog,
   setAppSearchQuery,
   setAppSortOrder,
-} from 'stores/appcatalog/actions';
-import { CATALOG_LOAD_INDEX_REQUEST } from 'stores/appcatalog/constants';
+} from 'model/stores/appcatalog/actions';
+import { CATALOG_LOAD_INDEX_REQUEST } from 'model/stores/appcatalog/constants';
 import {
   selectApps,
   selectAppSearchQuery,
@@ -17,10 +13,14 @@ import {
   selectAppSortOrder,
   selectCatalogs,
   selectSelectedCatalogs,
-} from 'stores/appcatalog/selectors';
-import { selectErrorsByIdsAndAction } from 'stores/entityerror/selectors';
-import { getUserIsAdmin } from 'stores/main/selectors';
+} from 'model/stores/appcatalog/selectors';
+import { selectErrorsByIdsAndAction } from 'model/stores/entityerror/selectors';
+import { getUserIsAdmin } from 'model/stores/main/selectors';
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
+import useDebounce from 'utils/hooks/useDebounce';
+import RoutePath from 'utils/routePath';
 
 import { catalogsToFacets, searchApps } from './utils';
 

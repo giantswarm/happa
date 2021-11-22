@@ -1,7 +1,7 @@
 import { ThemeContext, ThemeType } from 'grommet';
-import usePrevious from 'lib/hooks/usePrevious';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import usePrevious from 'utils/hooks/usePrevious';
 
 import TextInput from '../TextInput';
 

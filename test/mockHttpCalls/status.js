@@ -1,4 +1,4 @@
-import { Providers } from 'shared/constants';
+import { Providers } from 'model/constants';
 
 import { V4_CLUSTER } from './constantsAndHelpers';
 

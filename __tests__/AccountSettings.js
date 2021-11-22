@@ -1,5 +1,5 @@
+import { AccountSettingsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
-import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
   getMockCall,
   metadataResponse,

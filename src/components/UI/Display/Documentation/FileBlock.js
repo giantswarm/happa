@@ -1,7 +1,7 @@
-import { dedent } from 'lib/helpers';
-import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React, { useState } from 'react';
 import BaseTransition from 'styles/transitions/BaseTransition';
+import { dedent } from 'utils/helpers';
+import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
 import Line from './Line';
 import Styles from './Styles';

@@ -1,17 +1,17 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Collapsible, Heading, Keyboard, Text } from 'grommet';
-import * as docs from 'lib/docs';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import useDebounce from 'lib/hooks/useDebounce';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { extractErrorMessage } from 'MAPI/utils';
+import * as docs from 'model/constants/docs';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
+import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { organizationsLoadMAPI } from 'stores/organization/actions';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import useDebounce from 'utils/hooks/useDebounce';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import {
   OrganizationNameStatusMessage,

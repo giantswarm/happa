@@ -1,7 +1,7 @@
 import InstanceTypeSelector from 'Cluster/ClusterDetail/InstanceTypeSelector/InstanceTypeSelector';
-import { useInstanceTypeSelectionLabels } from 'lib/hooks/useInstanceTypeSelectionConfiguration';
 import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
+import { useInstanceTypeSelectionLabels } from 'utils/hooks/useInstanceTypeSelectionConfiguration';
 
 type ChangeHandler = (machineType: string) => void;
 

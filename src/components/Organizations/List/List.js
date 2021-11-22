@@ -1,13 +1,13 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
-import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
+import { organizationCreate } from 'model/stores/organization/actions';
+import { supportsMultiAccount } from 'model/stores/organization/utils';
 import React from 'react';
 import { connect } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import { organizationCreate } from 'stores/organization/actions';
-import { supportsMultiAccount } from 'stores/organization/utils';
 import Button from 'UI/Controls/Button';
 import OrganizationList from 'UI/Display/OrganizationList/OrganizationList';
 import EmptyStateDisplay from 'UI/Util/EmptyStateDisplay';
+import RoutePath from 'utils/routePath';
 
 class OrganizationListWrapper extends React.Component {
   getOrganizationURL = (id) => {

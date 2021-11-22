@@ -1,8 +1,8 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { VersionImpl } from 'lib/Version';
+import { Constants } from 'model/constants';
 import React from 'react';
-import { Constants } from 'shared/constants';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { VersionImpl } from 'utils/Version';
 
 export function formatVersion(version: string): string {
   if (version.length < 1) return 'VERSION';

@@ -1,17 +1,17 @@
 import { screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
+import { IMainState } from 'model/stores/main/types';
+import { IOrganizationState } from 'model/stores/organization/types';
+import { IState } from 'model/stores/state';
 import nock from 'nock';
 import React from 'react';
-import { StatusCodes } from 'shared/constants';
-import { IMainState } from 'stores/main/types';
-import { IOrganizationState } from 'stores/organization/types';
-import { IState } from 'stores/state';
 import { SWRConfig } from 'swr';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import Clusters from '../Clusters';
 

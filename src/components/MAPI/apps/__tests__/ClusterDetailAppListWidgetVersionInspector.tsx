@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import React from 'react';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetVersionInspector from '../ClusterDetailAppListWidgetVersionInspector';
 

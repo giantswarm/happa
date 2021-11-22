@@ -1,11 +1,11 @@
 import { logo } from 'images';
+import { CSSBreakpoints } from 'model/constants';
+import { RUMActions } from 'model/constants/realUserMonitoring';
+import { MainRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { CSSBreakpoints } from 'shared/constants';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
-import { MainRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { mq } from 'styles';
 

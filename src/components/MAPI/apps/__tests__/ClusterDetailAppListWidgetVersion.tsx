@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import nock from 'nock';
 import React from 'react';
-import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetVersion from '../ClusterDetailAppListWidgetVersion';
 

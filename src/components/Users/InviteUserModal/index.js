@@ -1,5 +1,5 @@
-import usePrevious from 'lib/hooks/usePrevious';
 import React, { useEffect, useState } from 'react';
+import usePrevious from 'utils/hooks/usePrevious';
 
 import UsersModal from '../UsersModal';
 import InviteUserForm from './InviteUserForm';

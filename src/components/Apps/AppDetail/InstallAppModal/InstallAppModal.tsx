@@ -2,23 +2,26 @@ import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import useDebounce from 'lib/hooks/useDebounce';
-import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
 import { formatYAMLError } from 'MAPI/apps/utils';
+import { OrganizationsRoutes } from 'model/constants/routes';
+import { installApp } from 'model/stores/appcatalog/actions';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectIsClusterAwaitingUpgrade } from 'model/stores/cluster/selectors';
+import {
+  isClusterCreating,
+  isClusterUpdating,
+} from 'model/stores/cluster/utils';
+import { IState } from 'model/stores/state';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import { installApp } from 'stores/appcatalog/actions';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
-import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
-import { IState } from 'stores/state';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import useDebounce from 'utils/hooks/useDebounce';
+import RoutePath from 'utils/routePath';
 
 import ClusterPicker from './ClusterPicker';
 import InstallAppForm from './InstallAppForm';

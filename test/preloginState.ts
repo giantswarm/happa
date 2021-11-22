@@ -1,5 +1,5 @@
-import { MainRoutes } from 'shared/constants/routes';
-import { IState } from 'stores/state';
+import { MainRoutes } from 'model/constants/routes';
+import { IState } from 'model/stores/state';
 
 // This is what the state looks like when someone brand new arrives at the site
 // and they are not logged in at all.

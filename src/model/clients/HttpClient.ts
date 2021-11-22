@@ -1,4 +1,4 @@
-import { StatusCodes } from 'shared/constants';
+import { StatusCodes } from 'model/constants';
 
 import { GenericResponse } from './GenericResponse';
 import { GenericResponseError } from './GenericResponseError';

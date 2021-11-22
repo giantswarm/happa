@@ -1,22 +1,22 @@
 import produce from 'immer';
 import { YAMLException } from 'js-yaml';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { compare } from 'lib/semver';
-import { VersionImpl } from 'lib/Version';
 import { IProviderClusterForCluster } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import { getClusterDescription } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { AppConstants, Constants } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { AppConstants, Constants } from 'shared/constants';
 import { Cache, mutate } from 'swr';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
+import { VersionImpl } from 'utils/Version';
 
 function getUserConfigMapName(appName: string): string {
   return `${appName}-user-values`;

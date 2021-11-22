@@ -1,12 +1,10 @@
 import diff from 'deep-diff';
 import { Box } from 'grommet';
-import { clusterUpgradeChecklistURL } from 'lib/docs';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { clusterUpgradeChecklistURL } from 'model/constants/docs';
+import * as clusterActions from 'model/stores/cluster/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as clusterActions from 'stores/cluster/actions';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
@@ -14,6 +12,8 @@ import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Modal from 'UI/Layout/Modal';
 import { groupBy, sortBy } from 'underscore';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 const Pages = {
   AboutUpgrading: 'about-upgrading',

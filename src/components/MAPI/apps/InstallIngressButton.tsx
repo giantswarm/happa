@@ -1,21 +1,21 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import {
   createIngressApp,

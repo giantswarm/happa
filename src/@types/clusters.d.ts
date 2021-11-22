@@ -20,7 +20,7 @@ interface IBaseCluster {
 
   // Injected by client-side.
   capabilities?: IClusterCapabilities;
-  keyPairs?: import('shared/types').IKeyPair[];
+  keyPairs?: IKeyPair[];
   lastUpdated?: number;
   apps?: IInstalledApp[];
 }

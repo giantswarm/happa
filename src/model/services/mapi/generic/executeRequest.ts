@@ -1,5 +1,5 @@
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { ensureClientAuth } from './ensureClientAuth';
 

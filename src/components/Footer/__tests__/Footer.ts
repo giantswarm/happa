@@ -1,14 +1,14 @@
 import { fireEvent, within } from '@testing-library/react';
+import * as AllConstants from 'model/constants';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import { act } from 'react-dom/test-utils';
-import * as AllConstants from 'shared/constants';
 import { mockAPIResponse } from 'test/mockHttpCalls';
 import { renderWithStore } from 'test/renderUtils';
 
 import Footer from '../Footer';
 
 // Mock timers
-jest.mock('shared/constants');
+jest.mock('model/constants');
 const initialConstants = AllConstants.Constants;
 const setConstants = (value: Partial<typeof AllConstants.Constants>) => {
   // @ts-ignore

@@ -1,16 +1,16 @@
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import {
-  PasswordStatusMessage,
-  validatePassword,
-} from 'lib/passwordValidation';
 import React, { createRef } from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 import Section from 'UI/Layout/Section';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import {
+  PasswordStatusMessage,
+  validatePassword,
+} from 'utils/passwordValidation';
 
 interface IChangePasswordPropsUser {
   email: string;

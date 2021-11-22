@@ -1,5 +1,5 @@
 import { Anchor, Box, Text } from 'grommet';
-import * as docs from 'lib/docs';
+import * as docs from 'model/constants/docs';
 import * as React from 'react';
 
 interface IAccessControlRoleDescriptionProps

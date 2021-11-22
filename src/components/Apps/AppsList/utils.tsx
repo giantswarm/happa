@@ -1,5 +1,5 @@
+import { IAppCatalogsState } from 'model/stores/appcatalog/types';
 import React from 'react';
-import { IAppCatalogsState } from 'stores/appcatalog/types';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
 

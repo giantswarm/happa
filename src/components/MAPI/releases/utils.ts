@@ -1,9 +1,8 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { IRelease, ReleaseHelper } from 'lib/ReleaseHelper';
+import { Providers } from 'model/constants';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import * as ui from 'UI/Display/MAPI/releases/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { IRelease, ReleaseHelper } from 'utils/ReleaseHelper';
 
 export function getReleaseHelper(
   currVersion: string,

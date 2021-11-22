@@ -1,9 +1,9 @@
 import AppList from 'MAPI/apps/AppList';
+import { AppsRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Switch } from 'react-router-dom';
 import Route from 'Route';
-import { AppsRoutes } from 'shared/constants/routes';
 
 import AppDetail from './AppList/AppDetail';
 import AppsProvider from './AppsProvider';

@@ -1,8 +1,8 @@
 import { FormField } from 'grommet';
+import { Providers } from 'model/constants';
+import { organizationCredentialsLoad } from 'model/stores/organization/actions';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Providers } from 'shared/constants';
-import { organizationCredentialsLoad } from 'stores/organization/actions';
 import AWSAccountID from 'UI/Display/Cluster/AWSAccountID';
 import Section from 'UI/Display/Cluster/ClusterCreation/Section';
 

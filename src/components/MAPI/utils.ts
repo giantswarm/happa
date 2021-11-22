@@ -1,8 +1,5 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { compare } from 'lib/semver';
 import { GenericResponse } from 'model/clients/GenericResponse';
+import { Constants, Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1alpha4 from 'model/services/mapi/capiv1alpha4';
@@ -11,8 +8,10 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
 
 import {
   Cluster,

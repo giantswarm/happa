@@ -1,5 +1,5 @@
+import { FallbackMessages } from 'model/constants';
 import React, { FC } from 'react';
-import { FallbackMessages } from 'shared/constants';
 import { Dot, FallbackSpan } from 'styles';
 
 interface INodesRunningProps {

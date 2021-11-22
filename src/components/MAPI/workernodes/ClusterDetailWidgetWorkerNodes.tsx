@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import {
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
@@ -10,15 +7,18 @@ import {
   fetchProviderNodePoolsForNodePoolsKey,
   getMachineTypes,
 } from 'MAPI/utils';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterDetailCounter from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailCounter';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import {
   getWorkerNodesCount,

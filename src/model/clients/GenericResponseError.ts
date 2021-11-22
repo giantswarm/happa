@@ -1,4 +1,4 @@
-import { StatusCodes } from 'shared/constants';
+import { StatusCodes } from 'model/constants';
 
 import { IHttpResponseConfig } from './GenericResponse';
 import { HttpBody } from './HttpClient';

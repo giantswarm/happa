@@ -1,11 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
-import RoutePath from 'lib/routePath';
+import { StatusCodes } from 'model/constants';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -23,6 +22,7 @@ import {
   v4ClustersResponse,
 } from 'test/mockHttpCalls';
 import { renderRouteWithStore } from 'test/renderUtils';
+import RoutePath from 'utils/routePath';
 
 describe('', () => {
   beforeEach(() => {

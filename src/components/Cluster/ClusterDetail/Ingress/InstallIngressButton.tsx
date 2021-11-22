@@ -1,26 +1,29 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import RoutePath from 'lib/routePath';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Constants } from 'shared/constants';
-import { AppsRoutes } from 'shared/constants/routes';
+import { Constants } from 'model/constants';
+import { AppsRoutes } from 'model/constants/routes';
 import {
   installLatestIngress,
   prepareIngressTabData,
-} from 'stores/appcatalog/actions';
+} from 'model/stores/appcatalog/actions';
 import {
   selectIngressAppFromCluster,
   selectIngressAppToInstall,
-} from 'stores/appcatalog/selectors';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectIsClusterAwaitingUpgrade } from 'stores/cluster/selectors';
-import { isClusterCreating, isClusterUpdating } from 'stores/cluster/utils';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { IState } from 'stores/state';
+} from 'model/stores/appcatalog/selectors';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectIsClusterAwaitingUpgrade } from 'model/stores/cluster/selectors';
+import {
+  isClusterCreating,
+  isClusterUpdating,
+} from 'model/stores/cluster/utils';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import { IState } from 'model/stores/state';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import RoutePath from 'utils/routePath';
 
 const Wrapper = styled.div`
   display: flex;

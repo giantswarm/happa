@@ -1,22 +1,22 @@
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
+import { MainRoutes } from 'model/constants/routes';
+import * as mainActions from 'model/stores/main/actions';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import ShadowMask from 'shared/ShadowMask';
+import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Controls/Button';
+import TextInput from 'UI/Inputs/TextInput';
+import LoginFormContainer from 'UI/Layout/LoginFormContainer';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import {
   clearQueues,
   FlashMessage,
   messageTTL,
   messageType,
-} from 'lib/flashMessage';
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
-import { MainRoutes } from 'shared/constants/routes';
-import ShadowMask from 'shared/ShadowMask';
-import * as mainActions from 'stores/main/actions';
-import SlideTransition from 'styles/transitions/SlideTransition';
-import Button from 'UI/Controls/Button';
-import TextInput from 'UI/Inputs/TextInput';
-import LoginFormContainer from 'UI/Layout/LoginFormContainer';
+} from 'utils/flashMessage';
 
 class ForgotPassword extends React.Component {
   state = {

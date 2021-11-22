@@ -1,8 +1,8 @@
 import { fireEvent, render, RenderResult } from '@testing-library/react';
 import KeyPairCreateModal from 'Cluster/ClusterDetail/KeypairCreateModal/KeyPairCreateModal';
+import { Providers, StatusCodes } from 'model/constants';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { Providers, StatusCodes } from 'shared/constants';
 import {
   USER_EMAIL,
   v4AWSClusterResponse,

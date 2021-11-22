@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -10,18 +7,21 @@ import {
   fetchClusterListKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { organizationsLoadMAPI } from 'model/stores/organization/actions';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { StatusCodes } from 'shared/constants';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { organizationsLoadMAPI } from 'stores/organization/actions';
-import { selectOrganizations } from 'stores/organization/selectors';
-import { IState } from 'stores/state';
 import useSWR from 'swr';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteOrganizationGuide from '../guides/DeleteOrganizationGuide';
 import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';

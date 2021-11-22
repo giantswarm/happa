@@ -4,10 +4,9 @@ import add from 'date-fns/fp/add';
 import format from 'date-fns/fp/format';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
-import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
@@ -16,6 +15,7 @@ import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterListItem from '../ClusterListItem';
 

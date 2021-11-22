@@ -1,7 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchControlPlaneNodesForCluster,
@@ -17,6 +15,8 @@ import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/Availa
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailHACPNodesSwitcher from './ClusterDetailHACPNodesSwitcher';
 import {

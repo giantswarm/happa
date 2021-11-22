@@ -1,4 +1,4 @@
-import { appPlatformURL } from 'lib/docs';
+import { appPlatformURL } from 'model/constants/docs';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';

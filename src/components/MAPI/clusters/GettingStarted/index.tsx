@@ -1,13 +1,10 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import { Cluster } from 'MAPI/types';
 import { extractErrorMessage, fetchCluster, fetchClusterKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -15,7 +12,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { Redirect, Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedGetAccess';
@@ -24,6 +20,10 @@ import GettingStartedNavigation from 'UI/Display/MAPI/clusters/GettingStarted/Ge
 import GettingStartedNextSteps from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNextSteps';
 import GettingStartedOverview from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedOverview';
 import GettingStartedSimpleExample from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedSimpleExample';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import GettingStartedProvider, {
   IGettingStartedStep,

@@ -1,17 +1,17 @@
 import { Box, Heading } from 'grommet';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { batchedClusterDelete } from 'stores/batchActions';
-import { CLUSTER_DELETE_REQUEST } from 'stores/cluster/constants';
-import { selectClusterById } from 'stores/cluster/selectors';
+import { batchedClusterDelete } from 'model/stores/batchActions';
+import { CLUSTER_DELETE_REQUEST } from 'model/stores/cluster/constants';
+import { selectClusterById } from 'model/stores/cluster/selectors';
 import {
   filterUserInstalledApps,
   getNumberOfNodePoolsNodes,
-} from 'stores/cluster/utils';
-import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
-import { selectClusterNodePools } from 'stores/nodepool/selectors';
-import { IState } from 'stores/state';
+} from 'model/stores/cluster/utils';
+import { selectLoadingFlagByIdAndAction } from 'model/stores/entityloading/selectors';
+import { selectClusterNodePools } from 'model/stores/nodepool/selectors';
+import { IState } from 'model/stores/state';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
 } from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailDeleteAction';

@@ -1,5 +1,5 @@
 import { Box, Heading, Keyboard, Text } from 'grommet';
-import * as docs from 'lib/docs';
+import * as docs from 'model/constants/docs';
 import React from 'react';
 import styled from 'styled-components';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';

@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import UpgradeClusterModal from 'Cluster/ClusterDetail/UpgradeClusterModal';
+import { IState } from 'model/stores/state';
 import React from 'react';
-import { IState } from 'stores/state';
 import { v5ClusterResponse } from 'test/mockHttpCalls';
 import { renderWithStore } from 'test/renderUtils';
 

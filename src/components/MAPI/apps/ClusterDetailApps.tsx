@@ -1,17 +1,18 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
-import { getK8sVersionEOLDate } from 'lib/config';
-import { ingressControllerInstallationURL } from 'lib/docs';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { AppConstants, Constants } from 'model/constants';
+import { ingressControllerInstallationURL } from 'model/constants/docs';
+import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { supportsOptionalIngress } from 'model/stores/cluster/utils';
+import { selectCluster } from 'model/stores/main/actions';
+import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -22,12 +23,7 @@ import React, {
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
-import { AppConstants, Constants } from 'shared/constants';
-import { AppsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { supportsOptionalIngress } from 'stores/cluster/utils';
-import { selectCluster } from 'stores/main/actions';
-import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
@@ -35,6 +31,10 @@ import Button from 'UI/Controls/Button';
 import ClusterDetailPreinstalledApp from 'UI/Display/Cluster/ClusterDetailPreinstalledApp';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
+import { getK8sVersionEOLDate } from 'utils/config';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppList from './ClusterDetailAppList';
 import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';

@@ -1,12 +1,12 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import { Box, Collapsible } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { Cluster } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import React, { useState } from 'react';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { switchClusterToHACPNodes } from './utils';
 

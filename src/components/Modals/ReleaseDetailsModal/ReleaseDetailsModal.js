@@ -1,6 +1,6 @@
+import { Constants } from 'model/constants';
+import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
 import React from 'react';
-import { Constants } from 'shared/constants';
-import { getKubernetesReleaseEOLStatus } from 'stores/releases/utils';
 import ComponentChangelog from 'UI/Display/Cluster/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/Display/Cluster/ReleaseComponentLabel';
 import Date from 'UI/Display/Date';

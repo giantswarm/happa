@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
 import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,
-} from 'stores/cluster/constants';
-import { selectResourcesV4 } from 'stores/cluster/selectors';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
+} from 'model/stores/cluster/constants';
+import { selectResourcesV4 } from 'model/stores/cluster/selectors';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 

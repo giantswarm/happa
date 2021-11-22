@@ -1,12 +1,12 @@
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
-import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import RoutePath from 'utils/routePath';
 
 interface IClusterDetailWidgetKubernetesAPIProps
   extends Omit<

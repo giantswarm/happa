@@ -1,9 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
-import { getK8sVersionEOLDate } from 'lib/config';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import {
   getClusterConditions,
@@ -17,9 +13,9 @@ import { ProviderCluster } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { getUserIsAdmin } from 'model/stores/main/selectors';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR, { mutate } from 'swr';
@@ -30,6 +26,10 @@ import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterD
 import * as ui from 'UI/Display/MAPI/releases/types';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import { getK8sVersionEOLDate } from 'utils/config';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailReleaseDetailsModal from './ClusterDetailReleaseDetailsModal';
 import ClusterDetailUpgradeModal from './ClusterDetailUpgradeModal';

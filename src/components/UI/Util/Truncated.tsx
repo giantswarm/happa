@@ -1,7 +1,7 @@
-import { truncate } from 'lib/helpers';
 import React from 'react';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import { truncate } from 'utils/helpers';
 
 interface ITruncatedProps
   extends React.ComponentPropsWithoutRef<React.ElementType> {

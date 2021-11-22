@@ -1,11 +1,11 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { AccountSettingsRoutes } from 'model/constants/routes';
+import * as mainActions from 'model/stores/main/actions';
+import { getLoggedInUser } from 'model/stores/main/selectors';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { AccountSettingsRoutes } from 'shared/constants/routes';
-import * as mainActions from 'stores/main/actions';
-import { getLoggedInUser } from 'stores/main/selectors';
 import Section from 'UI/Layout/Section';
 
 import ChangeEmailForm from './ChangeEmailForm';

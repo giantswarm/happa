@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
 import { SWRConfig } from 'swr';
@@ -12,6 +11,7 @@ import {
   getComponentWithTheme,
   renderWithTheme,
 } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppList from '../ClusterDetailAppList';
 

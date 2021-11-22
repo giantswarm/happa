@@ -1,23 +1,22 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
-import { Providers } from 'shared/constants';
 import DocumentTitle from 'shared/DocumentTitle';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
 import FlashMessage from 'UI/Display/FlashMessage';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { findIngressApp } from './utils';
 

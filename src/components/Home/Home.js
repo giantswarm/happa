@@ -1,22 +1,22 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import formatDistance from 'date-fns/fp/formatDistance';
 import { Box } from 'grommet';
-import PageVisibilityTracker from 'lib/pageVisibilityTracker';
-import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
+import { batchedRefreshClusters } from 'model/stores/batchActions';
+import { CLUSTERS_LIST_REQUEST } from 'model/stores/cluster/constants';
+import { selectClustersList } from 'model/stores/cluster/selectors';
+import { selectErrorByAction } from 'model/stores/error/selectors';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import { batchedRefreshClusters } from 'stores/batchActions';
-import { CLUSTERS_LIST_REQUEST } from 'stores/cluster/constants';
-import { selectClustersList } from 'stores/cluster/selectors';
-import { selectErrorByAction } from 'stores/error/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterEmptyState from 'UI/Display/Cluster/ClusterEmptyState';
 import { memoize } from 'underscore';
+import PageVisibilityTracker from 'utils/pageVisibilityTracker';
+import RoutePath from 'utils/routePath';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
 

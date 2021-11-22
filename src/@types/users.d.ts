@@ -1,7 +1,5 @@
 interface ILoggedInUserAuthScheme {
-  scheme: import('shared/types').PropertiesOf<
-    typeof import('shared/constants').AuthorizationTypes
-  >;
+  scheme: PropertiesOf<typeof import('model/constants').AuthorizationTypes>;
   token: string;
 }
 
@@ -9,7 +7,7 @@ interface ILoggedInUser {
   auth: ILoggedInUserAuthScheme;
   email: string;
   isAdmin: boolean;
-  type: import('stores/main/types').LoggedInUserTypes;
+  type: import('model/stores/main/types').LoggedInUserTypes;
 
   /* OIDC specific. */
   groups?: string[];

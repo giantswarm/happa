@@ -6,8 +6,8 @@ import {
   INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import React, { useState } from 'react';
-import { Providers } from 'shared/constants';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import InputGroup from 'UI/Inputs/InputGroup';
 

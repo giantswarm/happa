@@ -1,6 +1,6 @@
+import { MainRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MainRoutes } from 'shared/constants/routes';
 
 const NotFound = () => (
   <>

@@ -1,14 +1,14 @@
 import { Text } from 'grommet';
-import {
-  IInstanceType,
-  useInstanceTypeSelectionLabels,
-} from 'lib/hooks/useInstanceTypeSelectionConfiguration';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
+import {
+  IInstanceType,
+  useInstanceTypeSelectionLabels,
+} from 'utils/hooks/useInstanceTypeSelectionConfiguration';
 
 const StyledTableRow = styled(TableRow)`
   cursor: pointer;

@@ -1,7 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import ClusterDetailWidgetApps from 'MAPI/apps/ClusterDetailWidgetApps';
 import ClusterDetailWidgetRelease from 'MAPI/releases/ClusterDetailWidgetRelease';
 import { Cluster, ProviderCluster } from 'MAPI/types';
@@ -18,6 +16,8 @@ import React, { useEffect, useRef } from 'react';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import useSWR from 'swr';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailWidgetKeyPairs from '../../keypairs/ClusterDetailWidgetKeyPairs';
 import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidgetWorkerNodes';

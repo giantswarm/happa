@@ -1,7 +1,6 @@
 import YAMLFileUpload from 'Cluster/ClusterDetail/AppDetailsModal/YAMLFileUpload';
 import { Box } from 'grommet';
 import { spinner } from 'images';
-import { compare } from 'lib/semver';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
 import styled from 'styled-components';
@@ -12,6 +11,7 @@ import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import DetailItem from 'UI/Layout/DetailList';
 import Truncated from 'UI/Util/Truncated';
 import { memoize } from 'underscore';
+import { compare } from 'utils/semver';
 
 import { isTestRelease } from '../utils';
 

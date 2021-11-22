@@ -1,30 +1,30 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
-import { hasAppropriateLength } from 'lib/helpers';
-import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
-import { compare } from 'lib/semver';
-import React, { FC, useMemo, useState } from 'react';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouteMatch } from 'react-router-dom';
-import { Constants, Providers } from 'shared/constants';
-import { MainRoutes } from 'shared/constants/routes';
-import { computeCapabilities } from 'stores/cluster/utils';
+import { Constants, Providers } from 'model/constants';
+import { MainRoutes } from 'model/constants/routes';
+import { computeCapabilities } from 'model/stores/cluster/utils';
 import {
   getFirstNodePoolsRelease,
   getUserIsAdmin,
-} from 'stores/main/selectors';
-import { selectOrganizationByID } from 'stores/organization/selectors';
+} from 'model/stores/main/selectors';
+import { selectOrganizationByID } from 'model/stores/organization/selectors';
 import {
   getReleases,
   getReleasesError,
   getReleasesIsFetching,
-} from 'stores/releases/selectors';
+} from 'model/stores/releases/selectors';
+import React, { FC, useMemo, useState } from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouteMatch } from 'react-router-dom';
 import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';
 import { FlexColumn } from 'UI/Layout/FlexDivs';
+import { hasAppropriateLength } from 'utils/helpers';
+import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
+import { compare } from 'utils/semver';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';

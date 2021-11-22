@@ -2,9 +2,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DeleteConfirmFooter from 'Cluster/ClusterDetail/AppDetailsModal/DeleteConfirmFooter';
 import EditChartVersionPane from 'Cluster/ClusterDetail/AppDetailsModal/EditChartVersionPane';
 import yaml from 'js-yaml';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -20,6 +17,9 @@ import useSWR, { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import {
   deleteAppWithName,

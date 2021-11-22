@@ -1,7 +1,7 @@
 import { Box, Text } from 'grommet';
-import { getK8sVersionEOLDate } from 'lib/config';
 import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
 import React from 'react';
+import { getK8sVersionEOLDate } from 'utils/config';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 import OrganizationDetailStatistic from './OrganizationDetailStatistic';

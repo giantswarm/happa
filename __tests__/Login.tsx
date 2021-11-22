@@ -1,14 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { isJwtExpired } from 'lib/helpers';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
+import { MainRoutes } from 'model/constants/routes';
+import * as featureFlags from 'model/featureFlags';
 import { createSelfSubjectAccessReview } from 'model/services/mapi/authorizationv1/createSelfSubjectAccessReview';
 import { createSelfSubjectRulesReview } from 'model/services/mapi/authorizationv1/createSelfSubjectRulesReview';
 import { getOrganization } from 'model/services/mapi/securityv1alpha1/';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
-import { MainRoutes } from 'shared/constants/routes';
-import * as featureFlags from 'shared/featureFlags';
 import {
   API_ENDPOINT,
   authTokenResponse,
@@ -23,6 +21,8 @@ import {
   userResponse,
 } from 'test/mockHttpCalls';
 import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
+import { isJwtExpired } from 'utils/helpers';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 describe('Login', () => {
   beforeEach(() => {
