@@ -5,7 +5,7 @@ exports[`Button renders a button with a loading animation 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -41,7 +41,7 @@ exports[`Button renders a danger button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -70,7 +70,7 @@ exports[`Button renders a disabled button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -100,7 +100,7 @@ exports[`Button renders a link button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -129,7 +129,7 @@ exports[`Button renders a primary button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -158,7 +158,7 @@ exports[`Button renders a secondary button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -187,7 +187,7 @@ exports[`Button renders a warning button 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
@@ -216,7 +216,7 @@ exports[`Button renders without crashing 1`] = `
   class="StyledGrommet-sc-19lkkz7-0 giQQcM"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-1qc9t9l-0 eZxISs"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
       class="StyledBox-sc-13pk1d4-0 bWEzJb Button__StyledBox-sc-160jtek-0 gfxCxG"
