@@ -410,15 +410,17 @@ describe('OrganizationDetailGeneral', () => {
       expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('3')
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('Nodes')).toHaveTextContent('3')
+      expect(screen.getByLabelText('Control plane nodes')).toHaveTextContent(
+        '3'
+      )
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('12')
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('Memory in nodes')).toHaveTextContent(
-        '52 GB'
-      )
+      expect(
+        screen.getByLabelText('Memory in control plane nodes')
+      ).toHaveTextContent('52 GB')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
@@ -426,7 +428,9 @@ describe('OrganizationDetailGeneral', () => {
       )
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('CPU in nodes')).toHaveTextContent('24')
+      expect(
+        screen.getByLabelText('CPU in control plane nodes')
+      ).toHaveTextContent('24')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
@@ -454,6 +458,10 @@ describe('OrganizationDetailGeneral', () => {
       expect(
         screen.getByLabelText('Newest release Kubernetes version')
       ).toHaveTextContent('1.19')
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Releases in use')).toHaveTextContent('3')
     );
 
     // Apps summary.
@@ -485,13 +493,17 @@ describe('OrganizationDetailGeneral', () => {
       expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('3')
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('Nodes')).toHaveTextContent('n/a')
+      expect(screen.getByLabelText('Control plane nodes')).toHaveTextContent(
+        'n/a'
+      )
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('n/a')
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('Memory in nodes')).toHaveTextContent('n/a')
+      expect(
+        screen.getByLabelText('Memory in control plane nodes')
+      ).toHaveTextContent('n/a')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
@@ -499,7 +511,9 @@ describe('OrganizationDetailGeneral', () => {
       )
     );
     await waitFor(() =>
-      expect(screen.getByLabelText('CPU in nodes')).toHaveTextContent('n/a')
+      expect(
+        screen.getByLabelText('CPU in control plane nodes')
+      ).toHaveTextContent('n/a')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
@@ -527,6 +541,10 @@ describe('OrganizationDetailGeneral', () => {
       expect(
         screen.getByLabelText('Newest release Kubernetes version')
       ).toHaveTextContent('n/a')
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Releases in use')).toHaveTextContent('3')
     );
 
     // Apps summary.
